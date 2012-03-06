@@ -25,6 +25,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 ///////////////////////////////////////////////////////////////////////
 //  Global Object
 ///////////////////////////////////////////////////////////////////////
@@ -119,6 +120,7 @@ window.requestAnimFrame = (function(callback){
         window.setTimeout(callback, 1000 / 60);
     };
 })();
+
 
 ///////////////////////////////////////////////////////////////////////
 //  Node
@@ -1835,7 +1837,6 @@ Kinetic.Polygon.prototype = {
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Polygon, Kinetic.Shape);
 
-
 ///////////////////////////////////////////////////////////////////////
 //  RegularPolygon
 ///////////////////////////////////////////////////////////////////////
@@ -1888,7 +1889,6 @@ Kinetic.RegularPolygon.prototype = {
 
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.RegularPolygon, Kinetic.Shape);
-
 
 ///////////////////////////////////////////////////////////////////////
 //  Star
@@ -2098,3 +2098,4 @@ Kinetic.Text.prototype = {
 };
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Text, Kinetic.Shape);
+
