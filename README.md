@@ -8,3 +8,11 @@ You can draw your own shapes or images using the existing canvas API, add event 
 
 # Tutorials
 Check out the official [KineticJS Tutorials](http://www.html5canvastutorials.com/kineticjs/html5-canvas-events-tutorials-introduction-with-kineticjs/) hosted on [HTML5 Canvas Tutorials](http://www.html5canvastutorials.com/).
+
+# Building the library
+To build the library, you need to have Ruby and Rubygems installed. After that, install the dependencies by running `bundle install`.
+
+To build a development version of the library, run `rake build:dev`. To build a minify version of the library, run `rake build:prod`.
+
+# Adding a new file in the src directory
+If you add a file in the src directory, add into the array in the Rakefile.
