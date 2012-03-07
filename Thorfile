@@ -1,9 +1,6 @@
 require 'json/pure'
 
-class Build < Thor
-  include Thor::Actions
-  # include Thor::Shell::Basic
-  
+class Build < Thor  
   # This is the list of files to concatenate. The first file will appear at the top of the final file. All files are relative to the lib directory.
   FILES = [
     "license.js", "src/GlobalObject.js", "src/Node.js", "src/Container.js", "src/Stage.js",
@@ -26,7 +23,9 @@ class Build < Thor
     require 'json/pure'
     require 'uglifier'
     File.open("dist/kinetic.min.js", "w") do |file|
-      file.puts Uglifier.compile(concatenate())
+      uglify = Uglifier.compile(concatenate())
+      uglify.sub!(/\*\/ .+ \*\//xm, "*/")
+      file.puts uglify
     end
     puts ":: Minifying the file /dist/kinetic.min.js..."
     puts "   -> Done!"
