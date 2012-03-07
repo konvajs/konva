@@ -9,21 +9,23 @@ class Build < Thor
   ]
   
   desc "dev", "Concatenate all the js files into /dist/kinetic.js."
-  def dev
+  method_option :date, aliases: "-d", required: false, type: :string, desc: "The release date"
+  def dev(version)
     puts ":: Building the file /dist/kinetic.js..."
     File.open("dist/kinetic.js", "w") do |file|
-      file.puts concatenate()
+      file.puts concatenate(version, options[:date])
     end
     puts "   -> Done!"
   end
   
   desc "prod", "Concatenate all the js files in into /dist/kinetic.min.js and minify it."
-  def prod
+  method_option :date, aliases: "-d", required: false, type: :string, desc: "The release date"
+  def prod(version)
     puts ":: Building the file /dist/kinetic.min.js..."
     require 'json/pure'
     require 'uglifier'
     File.open("dist/kinetic.min.js", "w") do |file|
-      uglify = Uglifier.compile(concatenate())
+      uglify = Uglifier.compile(concatenate(version, options[:date]))
       uglify.sub!(/\*\/ .+ \*\//xm, "*/")
       file.puts uglify
     end
@@ -31,21 +33,23 @@ class Build < Thor
     puts "   -> Done!"
   end
   
-  desc "all", "Build the development and the production files."
-  def all
-    invoke :dev
-    invoke :prod
-  end
-  
   private
   
-    def concatenate
+    def concatenate(version, date)
+      date ||= Time.now.strftime("%b %d %Y")
       content = ""
       FILES.each do |file|
         content << IO.read(File.expand_path(file)) << "\n"
       end
       
+      # Add the version number
+      content.sub!("@version", version)
+      
+      # Add the date
+      content.sub!("@date", date)
+      
       return content
     end
+
 end
   
