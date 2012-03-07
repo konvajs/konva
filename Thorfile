@@ -8,28 +8,47 @@ class Build < Thor
     "src/geometries/Polygon.js", "src/geometries/RegularPolygon.js", "src/geometries/Star.js", "src/geometries/Text.js"
   ]
   
-  desc "dev", "Concatenate all the js files into /dist/kinetic.js."
+  desc "dev", "Concatenate all the js files into /dist/kinetic-vVERSION.js."
   method_option :date, aliases: "-d", required: false, type: :string, desc: "The release date"
   def dev(version)
-    puts ":: Building the file /dist/kinetic.js..."
-    File.open("dist/kinetic.js", "w") do |file|
+    file_name = "dist/kinetic-v#{version}.js"
+    
+    puts ":: Deleting other development files..."
+    Dir.foreach("dist") do |file|
+      if file.match(/kinetic-v.+\.(\d|\.)+\.js/)
+        File.delete("dist/" + file)
+      end
+    end
+    
+    puts ":: Building the file /#{file_name}..."
+    File.open(file_name, "w") do |file|
       file.puts concatenate(version, options[:date])
     end
+    
     puts "   -> Done!"
   end
   
-  desc "prod", "Concatenate all the js files in into /dist/kinetic.min.js and minify it."
+  desc "prod", "Concatenate all the js files in into /dist/kinetic-vVERSION.min.js and minify it."
   method_option :date, aliases: "-d", required: false, type: :string, desc: "The release date"
   def prod(version)
-    puts ":: Building the file /dist/kinetic.min.js..."
+    file_name = "dist/kinetic-v#{version}.min.js"
+    
+    puts ":: Deleting other development files..."
+    Dir.foreach("dist") do |file|
+      if file.match(/kinetic-v.+\.min\.js/)
+        File.delete("dist/" + file)
+      end
+    end
+    
+    puts ":: Building the file /#{file_name}..."
     require 'json/pure'
     require 'uglifier'
-    File.open("dist/kinetic.min.js", "w") do |file|
+    File.open(file_name, "w") do |file|
       uglify = Uglifier.compile(concatenate(version, options[:date]))
       uglify.sub!(/\*\/ .+ \*\//xm, "*/")
       file.puts uglify
     end
-    puts ":: Minifying the file /dist/kinetic.min.js..."
+    puts ":: Minifying the file /#{file_name}..."
     puts "   -> Done!"
   end
   
