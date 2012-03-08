@@ -1,9 +1,9 @@
 /**
- * KineticJS JavaScript Library v3.8.3
+ * KineticJS JavaScript Library v@version
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mar 03 2012
+ * Date: @date
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *

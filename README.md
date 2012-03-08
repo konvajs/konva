@@ -12,7 +12,7 @@ Check out the official [KineticJS Tutorials](http://www.html5canvastutorials.com
 # Building the library
 To build the library, you need to have Ruby and Rubygems installed. After that, install the dependencies by running `bundle install`.
 
-To build a development version of the library, run `rake build:dev`. To build a minify version of the library, run `rake build:prod`.
+To build a development version of the library, run `thor build:dev VERSION`, where VERSION is in the format MAJOR.MINOR.PATCH. To build a minify version of the library, run `thor build:prod VERSION`. If you want to add a release date other than the current day, use `-d="DATE"` (e.g. `-d="Mar 07 2012`).
 
 # Adding a new file in the src directory
-If you add a file in the src directory, add into the array in the Rakefile.
+If you add a file in the src directory, add into the array in the Thorfile.
