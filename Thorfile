@@ -4,8 +4,8 @@ class Build < Thor
   # This is the list of files to concatenate. The first file will appear at the top of the final file. All files are relative to the lib directory.
   FILES = [
     "license.js", "src/GlobalObject.js", "src/Node.js", "src/Container.js", "src/Stage.js",
-    "src/Layer.js", "src/Group.js", "src/Shape.js", "src/geometries/Rect.js", "src/geometries/Circle.js", "src/geometries/Image.js",
-    "src/geometries/Polygon.js", "src/geometries/RegularPolygon.js", "src/geometries/Star.js", "src/geometries/Text.js"
+    "src/Layer.js", "src/Group.js", "src/Shape.js", "src/shapes/Rect.js", "src/shapes/Circle.js", "src/shapes/Image.js",
+    "src/shapes/Polygon.js", "src/shapes/RegularPolygon.js", "src/shapes/Star.js", "src/shapes/Text.js"
   ]
   
   desc "dev", "Concatenate all the js files into /dist/kinetic-VERSION.js."
