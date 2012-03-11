@@ -85,7 +85,7 @@ Kinetic.Container.prototype = {
          * and then readd all the layers
          */
         if(this.className === "Stage") {
-            var canvases = this.container.childNodes;
+            var canvases = this.container.children;
             var bufferCanvas = canvases[0];
             var backstageCanvas = canvases[1];
 

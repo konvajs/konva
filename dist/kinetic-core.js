@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mar 10 2012
+ * Date: Mar 11 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -730,7 +730,7 @@ Kinetic.Container.prototype = {
          * and then readd all the layers
          */
         if(this.className === "Stage") {
-            var canvases = this.container.childNodes;
+            var canvases = this.container.children;
             var bufferCanvas = canvases[0];
             var backstageCanvas = canvases[1];
 

@@ -95,6 +95,34 @@ function Test() {
 
             stage.draw();
         },
+        "STAGE - remove layer with shape": function(containerId) {
+            var stage = new Kinetic.Stage(containerId, 578, 200);
+            var layer = new Kinetic.Layer();
+            var circle = new Kinetic.Circle({
+                x: stage.width / 2,
+                y: stage.height / 2,
+                radius: 70,
+                fill: "green",
+                stroke: "black",
+                strokeWidth: 4,
+                name: "myCircle"
+            });
+
+            layer.add(circle);
+            stage.add(layer);
+
+            test(stage.children.length === 1, "stage should have 1 children");
+
+            stage.remove(layer);
+
+            test(stage.children.length === 0, "stage should have 0 children");
+        },
+        "STAGE - remove layer with no shapes": function(containerId) {
+            var stage = new Kinetic.Stage(containerId, 578, 200);
+            var layer = new Kinetic.Layer();
+            stage.add(layer);
+            stage.remove(layer);
+        },
         ////////////////////////////////////////////////////////////////////////
         //  LAYERS tests
         ////////////////////////////////////////////////////////////////////////
@@ -134,28 +162,6 @@ function Test() {
             layer.removeChildren();
 
             test(layer.children.length === 0, "layer should have 0 children");
-        },
-        "LAYERS - remove layer": function(containerId) {
-            var stage = new Kinetic.Stage(containerId, 578, 200);
-            var layer = new Kinetic.Layer();
-            var circle = new Kinetic.Circle({
-                x: stage.width / 2,
-                y: stage.height / 2,
-                radius: 70,
-                fill: "green",
-                stroke: "black",
-                strokeWidth: 4,
-                name: "myCircle"
-            });
-
-            layer.add(circle);
-            stage.add(layer);
-
-            test(stage.children.length === 1, "stage should have 1 children");
-
-            stage.remove(layer);
-
-            test(stage.children.length === 0, "stage should have 0 children");
         },
         "LAYERS - hide layer": function(containerId) {
             var stage = new Kinetic.Stage(containerId, 578, 200);
