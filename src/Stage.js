@@ -385,6 +385,7 @@ Kinetic.Stage.prototype = {
 
                 // set new target shape
                 this.targetShape = shape;
+                this.targetFound = true;
 
                 // handle onmouseover
                 shape._handleEvents("onmouseover", evt);
