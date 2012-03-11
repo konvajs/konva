@@ -31,7 +31,7 @@ Kinetic.Shape = function(config) {
  */
 Kinetic.Shape.prototype = {
     /**
-     * get layer context that the shape is being drawn.  When
+     * get layer context where the shape is being drawn.  When
      * the shape is being rendered, .getContext() returns the context of the
      * user created layer that contains the shape.  When the event detection
      * engine is determining whether or not an event has occured on that shape,
