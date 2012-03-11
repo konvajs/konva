@@ -31,7 +31,11 @@ Kinetic.Shape = function(config) {
  */
 Kinetic.Shape.prototype = {
     /**
-     * get temporary shape layer context
+     * get layer context that the shape is being drawn.  When
+     * the shape is being rendered, .getContext() returns the context of the
+     * user created layer that contains the shape.  When the event detection
+     * engine is determining whether or not an event has occured on that shape,
+     * .getContext() returns the context of the invisible backstage layer.
      */
     getContext: function() {
         return this.tempLayer.getContext();
