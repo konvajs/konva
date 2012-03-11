@@ -15,7 +15,7 @@ class Build < Thor
     
     puts ":: Deleting other development files..."
     Dir.foreach("dist") do |file|
-      if file.match(/kinetic-.+\.(\d|\.)+\.js/)
+      if file.match(/.*[^(min)]\.js/)
         File.delete("dist/" + file)
       end
     end
@@ -35,7 +35,7 @@ class Build < Thor
     
     puts ":: Deleting other development files..."
     Dir.foreach("dist") do |file|
-      if file.match(/kinetic-.+\.min\.js/)
+      if file.match(/.*min\.js/)
         File.delete("dist/" + file)
       end
     end
