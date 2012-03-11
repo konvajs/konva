@@ -258,6 +258,23 @@ function Test() {
             });
             //stage.start();
         },
+        "SHAPES - set fill after instantiation": function(containerId) {
+            var stage = new Kinetic.Stage(containerId, 578, 200);
+            var layer = new Kinetic.Layer();
+            var circle = new Kinetic.Circle({
+                x: stage.width / 2,
+                y: stage.height / 2,
+                radius: 70,
+                fill: "green",
+                stroke: "black",
+                strokeWidth: 4
+            });
+            layer.add(circle);
+
+            circle.setFill("blue");
+
+            stage.add(layer);
+        },
         "SHAPES - add image": function(containerId) {
             var imageObj = new Image();
             imageObj.onload = function() {
@@ -1184,7 +1201,6 @@ function Test() {
             });
 
             stage.start();
-
         }
     };
 }

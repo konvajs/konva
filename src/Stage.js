@@ -21,6 +21,7 @@ Kinetic.Stage = function(cont, width, height) {
     this.dblClickWindow = 400;
     this.targetShape = undefined;
     this.clickStart = false;
+    this.targetFound = false;
 
     // desktop flags
     this.mousePos = undefined;
@@ -286,6 +287,147 @@ Kinetic.Stage.prototype = {
         return this;
     },
     /**
+     * detect event
+     * @param {Shape} shape
+     */
+    _detectEvent: function(shape, evt) {
+        var isDragging = Kinetic.GlobalObject.drag.moving;
+        var backstageLayer = this.backstageLayer;
+        var backstageLayerContext = backstageLayer.getContext();
+        var go = Kinetic.GlobalObject;
+        var pos = this.getUserPosition();
+        var el = shape.eventListeners;
+
+        shape._draw(backstageLayer);
+
+        if(this.targetShape && shape.id === this.targetShape.id) {
+            this.targetFound = true;
+        }
+
+        if(shape.visible && pos !== undefined && backstageLayerContext.isPointInPath(pos.x, pos.y)) {
+            // handle onmousedown
+            if(!isDragging && this.mouseDown) {
+                this.mouseDown = false;
+                this.clickStart = true;
+                shape._handleEvents("onmousedown", evt);
+                return true;
+            }
+            // handle onmouseup & onclick
+            else if(this.mouseUp) {
+                this.mouseUp = false;
+                shape._handleEvents("onmouseup", evt);
+
+                // detect if click or double click occurred
+                if(this.clickStart) {
+                    /*
+                     * if dragging and dropping, don't fire click or dbl click
+                     * event
+                     */
+                    if((!go.drag.moving) || !go.drag.node) {
+                        shape._handleEvents("onclick", evt);
+
+                        if(shape.inDoubleClickWindow) {
+                            shape._handleEvents("ondblclick", evt);
+                        }
+                        shape.inDoubleClickWindow = true;
+                        setTimeout(function() {
+                            shape.inDoubleClickWindow = false;
+                        }, this.dblClickWindow);
+                    }
+                }
+                return true;
+            }
+
+            // handle touchstart
+            else if(this.touchStart) {
+                this.touchStart = false;
+                shape._handleEvents("touchstart", evt);
+
+                if(el.ondbltap && shape.inDoubleClickWindow) {
+                    var events = el.ondbltap;
+                    for(var i = 0; i < events.length; i++) {
+                        events[i].handler.apply(shape, [evt]);
+                    }
+                }
+
+                shape.inDoubleClickWindow = true;
+
+                setTimeout(function() {
+                    shape.inDoubleClickWindow = false;
+                }, this.dblClickWindow);
+                return true;
+            }
+
+            // handle touchend
+            else if(this.touchEnd) {
+                this.touchEnd = false;
+                shape._handleEvents("touchend", evt);
+                return true;
+            }
+
+            // handle touchmove
+            else if(!isDragging && el.touchmove) {
+                shape._handleEvents("touchmove", evt);
+                return true;
+            }
+
+            //this condition is used to identify a new target shape.
+            else if(!isDragging && (!this.targetShape || (!this.targetFound && shape.id !== this.targetShape.id))) {
+                /*
+                 * check if old target has an onmouseout event listener
+                 */
+                if(this.targetShape) {
+                    var oldEl = this.targetShape.eventListeners;
+                    if(oldEl) {
+                        this.targetShape._handleEvents("onmouseout", evt);
+                    }
+                }
+
+                // set new target shape
+                this.targetShape = shape;
+
+                // handle onmouseover
+                shape._handleEvents("onmouseover", evt);
+                return true;
+            }
+
+            // handle onmousemove
+            else if(!isDragging) {
+                shape._handleEvents("onmousemove", evt);
+                return true;
+            }
+        }
+        // handle mouseout condition
+        else if(!isDragging && this.targetShape && this.targetShape.id === shape.id) {
+            this.targetShape = undefined;
+            shape._handleEvents("onmouseout", evt);
+            return true;
+        }
+
+        return false;
+    },
+    /**
+     * traverse container children
+     * @param {Container} obj
+     */
+    _traverseChildren: function(obj, evt) {
+        var children = obj.children;
+        // propapgate backwards through children
+        for(var i = children.length - 1; i >= 0; i--) {
+            var child = children[i];
+            if(child.className === "Shape") {
+                var exit = this._detectEvent(child, evt);
+                if(exit) {
+                    return true;
+                }
+            } else {
+                this._traverseChildren(child);
+            }
+        }
+
+        return false;
+    },
+    /**
      * handle incoming event
      * @param {Event} evt
      */
@@ -299,9 +441,6 @@ Kinetic.Stage.prototype = {
         this._setTouchPosition(evt);
 
         var backstageLayer = this.backstageLayer;
-        var backstageLayerContext = backstageLayer.getContext();
-        var that = this;
-
         backstageLayer.clear();
 
         /*
@@ -309,145 +448,13 @@ Kinetic.Stage.prototype = {
          * is triggered, n is set to -1 which will break out of the
          * three nested loops
          */
-        var targetFound = false;
+        this.targetFound = false;
 
-        function detectEvent(shape) {
-            shape._draw(backstageLayer);
-            var pos = that.getUserPosition();
-            var el = shape.eventListeners;
-
-            if(that.targetShape && shape.id === that.targetShape.id) {
-                targetFound = true;
-            }
-
-            if(shape.visible && pos !== undefined && backstageLayerContext.isPointInPath(pos.x, pos.y)) {
-                // handle onmousedown
-                if(that.mouseDown) {
-                    that.mouseDown = false;
-                    that.clickStart = true;
-                    shape._handleEvents("onmousedown", evt);
-                    return true;
-                }
-                // handle onmouseup & onclick
-                else if(that.mouseUp) {
-                    that.mouseUp = false;
-                    shape._handleEvents("onmouseup", evt);
-
-                    // detect if click or double click occurred
-                    if(that.clickStart) {
-                        /*
-                         * if dragging and dropping, don't fire click or dbl click
-                         * event
-                         */
-                        if((!go.drag.moving) || !go.drag.node) {
-                            shape._handleEvents("onclick", evt);
-
-                            if(shape.inDoubleClickWindow) {
-                                shape._handleEvents("ondblclick", evt);
-                            }
-                            shape.inDoubleClickWindow = true;
-                            setTimeout(function() {
-                                shape.inDoubleClickWindow = false;
-                            }, that.dblClickWindow);
-                        }
-                    }
-                    return true;
-                }
-
-                // handle touchstart
-                else if(that.touchStart) {
-                    that.touchStart = false;
-                    shape._handleEvents("touchstart", evt);
-
-                    if(el.ondbltap && shape.inDoubleClickWindow) {
-                        var events = el.ondbltap;
-                        for(var i = 0; i < events.length; i++) {
-                            events[i].handler.apply(shape, [evt]);
-                        }
-                    }
-
-                    shape.inDoubleClickWindow = true;
-
-                    setTimeout(function() {
-                        shape.inDoubleClickWindow = false;
-                    }, that.dblClickWindow);
-                    return true;
-                }
-
-                // handle touchend
-                else if(that.touchEnd) {
-                    that.touchEnd = false;
-                    shape._handleEvents("touchend", evt);
-                    return true;
-                }
-
-                // handle touchmove
-                else if(el.touchmove) {
-                    shape._handleEvents("touchmove", evt);
-                    return true;
-                }
-
-                //this condition is used to identify a new target shape.
-                else if(!that.targetShape || (!targetFound && shape.id !== that.targetShape.id)) {
-                    /*
-                     * check if old target has an onmouseout event listener
-                     */
-                    if(that.targetShape) {
-                        var oldEl = that.targetShape.eventListeners;
-                        if(oldEl) {
-                            that.targetShape._handleEvents("onmouseout", evt);
-                        }
-                    }
-
-                    // set new target shape
-                    that.targetShape = shape;
-
-                    // handle onmouseover
-                    shape._handleEvents("onmouseover", evt);
-                    return true;
-                }
-
-                // handle onmousemove
-                else {
-                    shape._handleEvents("onmousemove", evt);
-                    return true;
-                }
-            }
-            // handle mouseout condition
-            else if(that.targetShape && that.targetShape.id === shape.id) {
-                that.targetShape = undefined;
-                shape._handleEvents("onmouseout", evt);
-                return true;
-            }
-
-            return false;
-        }
-
-        function traverseChildren(obj) {
-            var children = obj.children;
-            // propapgate backwards through children
-            for(var i = children.length - 1; i >= 0; i--) {
-                var child = children[i];
-                if(child.className === "Shape") {
-                    var exit = detectEvent(child);
-                    if(exit) {
-                        return true;
-                    }
-                } else {
-                    traverseChildren(child);
-                }
-            }
-
-            return false;
-        }
-
-        if(go.drag.node === undefined) {
-            for(var n = this.children.length - 1; n >= 0; n--) {
-                var layer = this.children[n];
-                if(layer.visible && n >= 0 && layer.isListening) {
-                    if(traverseChildren(layer)) {
-                        n = -1;
-                    }
+        for(var n = this.children.length - 1; n >= 0; n--) {
+            var layer = this.children[n];
+            if(layer.visible && n >= 0 && layer.isListening) {
+                if(this._traverseChildren(layer, evt)) {
+                    n = -1;
                 }
             }
         }

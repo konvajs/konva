@@ -29,7 +29,7 @@ Kinetic.GlobalObject = {
     },
     extend: function(obj1, obj2) {
         for(var key in obj2.prototype) {
-            if(obj2.prototype.hasOwnProperty(key)) {
+            if(obj2.prototype.hasOwnProperty(key) && obj1.prototype[key] === undefined) {
                 obj1.prototype[key] = obj2.prototype[key];
             }
         }
@@ -77,6 +77,7 @@ Kinetic.GlobalObject = {
             that._animationLoop();
         } else if(this.isAnimating && !this._isaCanvasAnimating()) {
             this.isAnimating = false;
+            this.frame.lastTime = 0;
         }
     }
 };
@@ -86,4 +87,5 @@ window.requestAnimFrame = (function(callback) {
     function(callback) {
         window.setTimeout(callback, 1000 / 60);
     };
+
 })();
