@@ -307,7 +307,7 @@ Kinetic.Node.prototype = {
     },
     /**
      * set zIndex
-     * @param {int} index
+     * @param {int} zIndex
      */
     setZIndex: function(zIndex) {
         var index = this.index;
@@ -405,7 +405,7 @@ Kinetic.Node.prototype = {
     },
     /**
      * move node to another container
-     * @param {Layer} newLayer
+     * @param {Container} newContainer
      */
     moveTo: function(newContainer) {
         var parent = this.parent;

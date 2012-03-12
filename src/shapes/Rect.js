@@ -9,7 +9,6 @@
  */
 Kinetic.Rect = function(config) {
     config.drawFunc = function() {
-        var canvas = this.getCanvas();
         var context = this.getContext();
         context.beginPath();
         context.rect(0, 0, this.width, this.height);

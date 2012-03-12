@@ -42,7 +42,7 @@ Kinetic.Image.prototype = {
     /**
      * get image
      */
-    getImage: function(image) {
+    getImage: function() {
         return this.image;
     },
     /**

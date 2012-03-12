@@ -29,7 +29,6 @@ Kinetic.Text = function(config) {
     }
 
     config.drawFunc = function() {
-        var canvas = this.getCanvas();
         var context = this.getContext();
         context.font = this.fontSize + "pt " + this.fontFamily;
         context.textBaseline = "middle";

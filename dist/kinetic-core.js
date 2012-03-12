@@ -427,7 +427,7 @@ Kinetic.Node.prototype = {
     },
     /**
      * set zIndex
-     * @param {int} index
+     * @param {int} zIndex
      */
     setZIndex: function(zIndex) {
         var index = this.index;
@@ -525,7 +525,7 @@ Kinetic.Node.prototype = {
     },
     /**
      * move node to another container
-     * @param {Layer} newLayer
+     * @param {Container} newContainer
      */
     moveTo: function(newContainer) {
         var parent = this.parent;
@@ -643,6 +643,7 @@ Kinetic.Node.prototype = {
         handle(this);
     }
 };
+
 ///////////////////////////////////////////////////////////////////////
 //  Container
 ///////////////////////////////////////////////////////////////////////
@@ -1540,11 +1541,11 @@ Kinetic.Shape = function(config) {
  */
 Kinetic.Shape.prototype = {
     /**
-     * get layer context where the shape is being drawn.  When
-     * the shape is being rendered, .getContext() returns the context of the
-     * user created layer that contains the shape.  When the event detection
-     * engine is determining whether or not an event has occured on that shape,
-     * .getContext() returns the context of the invisible backstage layer.
+     * get layer context where the shape is being drawn.  When 
+     * the shape is being rendered, .getContext() returns the context of the 
+     * user created layer that contains the shape.  When the event detection 
+     * engine is determining whether or not an event has occured on that shape, 
+     * .getContext() returns the context of the invisible backstage layer. 
      */
     getContext: function() {
         return this.tempLayer.getContext();
@@ -1688,7 +1689,6 @@ Kinetic.GlobalObject.extend(Kinetic.Shape, Kinetic.Node);
  */
 Kinetic.Rect = function(config) {
     config.drawFunc = function() {
-        var canvas = this.getCanvas();
         var context = this.getContext();
         context.beginPath();
         context.rect(0, 0, this.width, this.height);
@@ -1741,6 +1741,7 @@ Kinetic.Rect.prototype = {
 
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Rect, Kinetic.Shape);
+
 ///////////////////////////////////////////////////////////////////////
 //  Circle
 ///////////////////////////////////////////////////////////////////////
@@ -1828,7 +1829,7 @@ Kinetic.Image.prototype = {
     /**
      * get image
      */
-    getImage: function(image) {
+    getImage: function() {
         return this.image;
     },
     /**
@@ -1869,6 +1870,7 @@ Kinetic.Image.prototype = {
 };
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Image, Kinetic.Shape);
+
 ///////////////////////////////////////////////////////////////////////
 //  Polygon
 ///////////////////////////////////////////////////////////////////////
@@ -2090,7 +2092,6 @@ Kinetic.Text = function(config) {
     }
 
     config.drawFunc = function() {
-        var canvas = this.getCanvas();
         var context = this.getContext();
         context.font = this.fontSize + "pt " + this.fontFamily;
         context.textBaseline = "middle";
@@ -2274,3 +2275,4 @@ Kinetic.Text.prototype = {
 };
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Text, Kinetic.Shape);
+
