@@ -445,7 +445,11 @@ Kinetic.Node.prototype = {
      * get stage associated to node
      */
     getStage: function() {
-        return this.getParent().getStage();
+        if(this.className === 'Stage') {
+            return this;
+        } else {
+            return this.getParent().getStage();
+        }
     },
     /**
      * get name
@@ -467,6 +471,29 @@ Kinetic.Node.prototype = {
      */
     getCenterOffset: function() {
         return this.centerOffset;
+    },
+    /**
+     * transition node to another state
+     * @param {Object} config
+     */
+    transitionTo: function(config) {
+        var layer = this.getLayer();
+
+        var that = this;
+        var changes = {};
+        for(var key in config) {
+            if(config.hasOwnProperty(key)) {
+                changes[key] = (config[key] - that[key]) / (config.duration * 1000);
+            }
+        }
+
+        layer.transitions.push({
+            id: layer.transitionIdCounter++,
+            time: 0,
+            config: config,
+            node: this,
+            changes: changes
+        });
     },
     /**
      * initialize drag and drop

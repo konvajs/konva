@@ -2,6 +2,57 @@ function Test() {
     this.testOnly = "";
     this.counter = 0;
     this.tests = {
+        "TRANSITION - transition position": function(containerId) {
+            var stage = new Kinetic.Stage(containerId, 578, 200);
+            var layer = new Kinetic.Layer();
+            var rect = new Kinetic.Rect({
+                x: 10,
+                y: 100,
+                width: 100,
+                height: 50,
+                fill: "green",
+                stroke: "black",
+                strokeWidth: 4
+            });
+
+            layer.add(rect);
+            stage.add(layer);
+
+            rect.transitionTo({
+                x: 400,
+                y: 30,
+                rotation: Math.PI * 2,
+                duration: 1
+            });
+        },
+        "ANIMATION - run animation": function(containerId) {
+            var stage = new Kinetic.Stage(containerId, 578, 200);
+            var layer = new Kinetic.Layer();
+            var rect = new Kinetic.Rect({
+                x: 200,
+                y: 100,
+                width: 100,
+                height: 50,
+                fill: "green",
+                stroke: "black",
+                strokeWidth: 4
+            });
+
+            layer.add(rect);
+            stage.add(layer);
+
+            var amplitude = 150;
+            var period = 1000;
+            // in ms
+            var centerX = stage.width / 2 - 100 / 2;
+
+            stage.onFrame(function(frame) {
+                rect.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
+                layer.draw();
+            });
+
+            stage.start();
+        },
         "EVENTS - mousedown mouseup mouseover mouseout click dblclick / touchstart touchend dbltap": function(containerId) {
             var stage = new Kinetic.Stage(containerId, 578, 200);
             var layer = new Kinetic.Layer();

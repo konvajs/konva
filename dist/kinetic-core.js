@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mar 11 2012
+ * Date: Mar 12 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -70,10 +70,67 @@ Kinetic.GlobalObject = {
         }
         return false;
     },
+    _endTransition: function() {
+        var config = this.config;
+        for(var key in config) {
+            if(config.hasOwnProperty(key)) {
+                this.node[key] = config[key];
+                this.node.getLayer().draw();
+            }
+        }
+    },
+    _linearTransition: function(frame) {
+        var config = this.config;
+        for(var key in config) {
+            if(config.hasOwnProperty(key)) {
+                this.node[key] += this.changes[key] * frame.timeDiff;
+                this.node.getLayer().draw();
+            }
+        }
+    },
+    _removeTransition: function(transition) {
+        var layer = transition.node.getLayer();
+        var id = transition.id;
+
+        for(var n = 0; n < layer.transitions.length; n++) {
+            if(layer.transitions[n].id === id) {
+                layer.transitions.splice(0, 1);
+                return false;
+            }
+        }
+    },
     _runFrames: function() {
         for(var n = 0; n < this.stages.length; n++) {
-            if(this.stages[n].isAnimating) {
-                this.stages[n].onFrameFunc(this.frame);
+            var stage = this.stages[n];
+            // run animation if available
+            if(stage.isAnimating && stage.onFrameFunc !== undefined) {
+                stage.onFrameFunc(this.frame);
+            }
+
+            /*
+            * run transitions
+            */
+            // loop through layers
+            var layers = stage.getChildren();
+            for(var k = 0; k < layers.length; k++) {
+                var layer = layers[k];
+                var didTransition = false;
+                // loop through transitions
+                for(var i = 0; i < layer.transitions.length; i++) {
+                    var transition = layer.transitions[i];
+                    transition.time += this.frame.timeDiff;
+                    if(transition.time >= transition.config.duration * 1000) {
+                        this._endTransition.apply(transition);
+                        this._removeTransition(transition);
+                    } else {
+                        didTransition = true;
+                        this._linearTransition.apply(transition, [this.frame]);
+                    }
+                }
+
+                if(didTransition) {
+                    layer.draw();
+                }
             }
         }
     },
@@ -565,7 +622,11 @@ Kinetic.Node.prototype = {
      * get stage associated to node
      */
     getStage: function() {
-        return this.getParent().getStage();
+        if(this.className === 'Stage') {
+            return this;
+        } else {
+            return this.getParent().getStage();
+        }
     },
     /**
      * get name
@@ -587,6 +648,29 @@ Kinetic.Node.prototype = {
      */
     getCenterOffset: function() {
         return this.centerOffset;
+    },
+    /**
+     * transition node to another state
+     * @param {Object} config
+     */
+    transitionTo: function(config) {
+        var layer = this.getLayer();
+
+        var that = this;
+        var changes = {};
+        for(var key in config) {
+            if(config.hasOwnProperty(key)) {
+                changes[key] = (config[key] - that[key]) / (config.duration * 1000);
+            }
+        }
+
+        layer.transitions.push({
+            id: layer.transitionIdCounter++,
+            time: 0,
+            config: config,
+            node: this,
+            changes: changes
+        });
     },
     /**
      * initialize drag and drop
@@ -784,11 +868,17 @@ Kinetic.Stage = function(cont, width, height) {
     this.touchStart = false;
     this.touchEnd = false;
 
+    // set stage id
+    this.id = Kinetic.GlobalObject.idCounter++;
+
+    // animation support
+    this.isAnimating = false;
+    this.onFrameFunc = undefined;
+
     /*
      * Layer roles
-     *
-     * buffer - canvas compositing
-     * backstage - path detection
+     * - buffer: canvas compositing
+     * - backstage: path detection
      */
     this.bufferLayer = new Kinetic.Layer();
     this.backstageLayer = new Kinetic.Layer();
@@ -820,13 +910,6 @@ Kinetic.Stage = function(cont, width, height) {
     // add stage to global object
     var stages = Kinetic.GlobalObject.stages;
     stages.push(this);
-
-    // set stage id
-    this.id = Kinetic.GlobalObject.idCounter++;
-
-    // animation support
-    this.isAnimating = false;
-    this.onFrameFunc = undefined;
 
     // call super constructor
     Kinetic.Container.apply(this, []);
@@ -1397,6 +1480,8 @@ Kinetic.Layer = function(config) {
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
     this.canvas.style.position = 'absolute';
+    this.transitions = [];
+    this.transitionIdCounter = 0;
 
     // call super constructors
     Kinetic.Container.apply(this, []);
@@ -1459,6 +1544,7 @@ Kinetic.Layer.prototype = {
 // Extend Container and Node
 Kinetic.GlobalObject.extend(Kinetic.Layer, Kinetic.Container);
 Kinetic.GlobalObject.extend(Kinetic.Layer, Kinetic.Node);
+
 ///////////////////////////////////////////////////////////////////////
 //  Group
 ///////////////////////////////////////////////////////////////////////

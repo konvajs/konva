@@ -33,11 +33,17 @@ Kinetic.Stage = function(cont, width, height) {
     this.touchStart = false;
     this.touchEnd = false;
 
+    // set stage id
+    this.id = Kinetic.GlobalObject.idCounter++;
+
+    // animation support
+    this.isAnimating = false;
+    this.onFrameFunc = undefined;
+
     /*
      * Layer roles
-     *
-     * buffer - canvas compositing
-     * backstage - path detection
+     * - buffer: canvas compositing
+     * - backstage: path detection
      */
     this.bufferLayer = new Kinetic.Layer();
     this.backstageLayer = new Kinetic.Layer();
@@ -69,13 +75,6 @@ Kinetic.Stage = function(cont, width, height) {
     // add stage to global object
     var stages = Kinetic.GlobalObject.stages;
     stages.push(this);
-
-    // set stage id
-    this.id = Kinetic.GlobalObject.idCounter++;
-
-    // animation support
-    this.isAnimating = false;
-    this.onFrameFunc = undefined;
 
     // call super constructor
     Kinetic.Container.apply(this, []);

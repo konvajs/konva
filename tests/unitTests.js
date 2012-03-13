@@ -1179,34 +1179,6 @@ function Test() {
 
             test(stage.isAnimating === false, "stage should not be animating");
             test(Kinetic.GlobalObject.isAnimating === false, "global object should not be animating");
-        },
-        "ANIMATION - run animation": function(containerId) {
-            var stage = new Kinetic.Stage(containerId, 578, 200);
-            var layer = new Kinetic.Layer();
-            var rect = new Kinetic.Rect({
-                x: 200,
-                y: 100,
-                width: 100,
-                height: 50,
-                fill: "green",
-                stroke: "black",
-                strokeWidth: 4
-            });
-
-            layer.add(rect);
-            stage.add(layer);
-
-            var amplitude = 150;
-            var period = 1000;
-            // in ms
-            var centerX = stage.width / 2 - 100 / 2;
-
-            stage.onFrame(function(frame) {
-                rect.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
-                layer.draw();
-            });
-
-            stage.start();
         }
     };
 }
