@@ -228,10 +228,9 @@ Kinetic.Node = function(config) {
         y: 0
     };
     this.eventListeners = {};
-    this.drag = {
-        x: false,
-        y: false
-    };
+    this.dragConstraint = "none";
+    this.dragBounds = {};
+    this._draggable = false;
 
     // set properties from config
     if(config) {
@@ -240,12 +239,6 @@ Kinetic.Node = function(config) {
             switch (key) {
                 case "draggable":
                     this.draggable(config[key]);
-                    break;
-                case "draggableX":
-                    this.draggableX(config[key]);
-                    break;
-                case "draggableY":
-                    this.draggableY(config[key]);
                     break;
                 case "listen":
                     this.listen(config[key]);
@@ -552,56 +545,17 @@ Kinetic.Node.prototype = {
     },
     /**
      * enable or disable drag and drop
-     * @param {Boolean} setDraggable
+     * @param {Boolean} isDraggable
      */
-    draggable: function(setDraggable) {
-        if(setDraggable) {
-            var needInit = !this.drag.x && !this.drag.y;
-            this.drag.x = true;
-            this.drag.y = true;
-
-            if(needInit) {
+    draggable: function(isDraggable) {
+        if(this.draggable !== isDraggable) {
+            if(isDraggable) {
                 this._initDrag();
             }
-        }
-        else {
-            this.drag.x = false;
-            this.drag.y = false;
-            this._dragCleanup();
-        }
-    },
-    /**
-     * enable or disable horizontal drag and drop
-     * @param {Boolean} setDraggable
-     */
-    draggableX: function(setDraggable) {
-        if(setDraggable) {
-            var needInit = !this.drag.x && !this.drag.y;
-            this.drag.x = true;
-            if(needInit) {
-                this._initDrag();
+            else {
+                this._dragCleanup();
             }
-        }
-        else {
-            this.drag.x = false;
-            this._dragCleanup();
-        }
-    },
-    /**
-     * enable or disable vertical drag and drop
-     * @param {Boolean} setDraggable
-     */
-    draggableY: function(setDraggable) {
-        if(setDraggable) {
-            var needInit = !this.drag.x && !this.drag.y;
-            this.drag.y = true;
-            if(needInit) {
-                this._initDrag();
-            }
-        }
-        else {
-            this.drag.y = false;
-            this._dragCleanup();
+            this._draggable = isDraggable;
         }
     },
     /**
@@ -721,6 +675,36 @@ Kinetic.Node.prototype = {
         });
     },
     /**
+     * set drag constraint
+     * @param {String} constraint
+     */
+    setDragConstraint: function(constraint) {
+        this.dragConstraint = constraint;
+    },
+    /**
+     * get drag constraint
+     */
+    getDragConstraint: function() {
+        return this.dragConstraint;
+    },
+    /**
+     * set drag bounds
+     * @param {Object} bounds
+     * @config {Number} [left] left bounds position
+     * @config {Number} [top] top bounds position
+     * @config {Number} [right] right bounds position
+     * @config {Number} [bottom] bottom bounds position
+     */
+    setDragBounds: function(bounds) {
+        this.dragBounds = bounds;
+    },
+    /**
+     * get drag bounds
+     */
+    getDragBounds: function() {
+        return this.dragBounds;
+    },
+    /**
      * initialize drag and drop
      */
     _initDrag: function() {
@@ -741,10 +725,8 @@ Kinetic.Node.prototype = {
      * remove drag and drop event listener
      */
     _dragCleanup: function() {
-        if(!this.drag.x && !this.drag.y) {
-            this.off("mousedown.initdrag");
-            this.off("touchstart.initdrag");
-        }
+        this.off("mousedown.initdrag");
+        this.off("touchstart.initdrag");
     },
     /**
      * handle node events
@@ -1029,7 +1011,8 @@ Kinetic.Stage.prototype = {
         if(scaleY) {
             this.scale.x = scaleX;
             this.scale.y = scaleY;
-        } else {
+        }
+        else {
             this.scale.x = scaleX;
             this.scale.y = scaleX;
         }
@@ -1049,7 +1032,6 @@ Kinetic.Stage.prototype = {
                 }
             }
         }
-
         scaleChildren(layers);
     },
     /**
@@ -1084,13 +1066,13 @@ Kinetic.Stage.prototype = {
                 n++;
                 if(n < layers.length) {
                     addLayer(n);
-                } else {
+                }
+                else {
                     callback(bufferLayer.getCanvas().toDataURL());
                 }
             };
             imageObj.src = dataURL;
         }
-
 
         bufferLayer.clear();
         addLayer(0);
@@ -1194,7 +1176,8 @@ Kinetic.Stage.prototype = {
                 return true;
             }
             // handle onmouseup & onclick
-            else if(this.mouseUp) {
+            else
+            if(this.mouseUp) {
                 this.mouseUp = false;
                 shape._handleEvents("onmouseup", evt);
 
@@ -1220,7 +1203,8 @@ Kinetic.Stage.prototype = {
             }
 
             // handle touchstart
-            else if(this.touchStart) {
+            else
+            if(this.touchStart) {
                 this.touchStart = false;
                 shape._handleEvents("touchstart", evt);
 
@@ -1240,20 +1224,23 @@ Kinetic.Stage.prototype = {
             }
 
             // handle touchend
-            else if(this.touchEnd) {
+            else
+            if(this.touchEnd) {
                 this.touchEnd = false;
                 shape._handleEvents("touchend", evt);
                 return true;
             }
 
             // handle touchmove
-            else if(!isDragging && el.touchmove) {
+            else
+            if(!isDragging && el.touchmove) {
                 shape._handleEvents("touchmove", evt);
                 return true;
             }
 
             //this condition is used to identify a new target shape.
-            else if(!isDragging && (!this.targetShape || (!this.targetFound && shape.id !== this.targetShape.id))) {
+            else
+            if(!isDragging && (!this.targetShape || (!this.targetFound && shape.id !== this.targetShape.id))) {
                 /*
                  * check if old target has an onmouseout event listener
                  */
@@ -1274,13 +1261,15 @@ Kinetic.Stage.prototype = {
             }
 
             // handle onmousemove
-            else if(!isDragging) {
+            else
+            if(!isDragging) {
                 shape._handleEvents("onmousemove", evt);
                 return true;
             }
         }
         // handle mouseout condition
-        else if(!isDragging && this.targetShape && this.targetShape.id === shape.id) {
+        else
+        if(!isDragging && this.targetShape && this.targetShape.id === shape.id) {
             this.targetShape = undefined;
             shape._handleEvents("onmouseout", evt);
             return true;
@@ -1302,7 +1291,8 @@ Kinetic.Stage.prototype = {
                 if(exit) {
                     return true;
                 }
-            } else {
+            }
+            else {
                 this._traverseChildren(child);
             }
         }
@@ -1483,13 +1473,22 @@ Kinetic.Stage.prototype = {
 
         this.on("mousemove touchmove", function(evt) {
             var go = Kinetic.GlobalObject;
-            if(go.drag.node) {
+            var node = go.drag.node;
+            if(node) {
                 var pos = that.getUserPosition();
-                if(go.drag.node.drag.x) {
-                    go.drag.node.x = pos.x - go.drag.offset.x;
+                var ds = node.dragConstraint;
+                var db = node.dragBounds;
+                if(ds === "none" || ds === "horizontal") {
+                    var newX = pos.x - go.drag.offset.x;
+                    if((db.left === undefined || db.left < newX) && (db.right === undefined || db.right > newX)) {
+                        node.x = newX;
+                    }
                 }
-                if(go.drag.node.drag.y) {
-                    go.drag.node.y = pos.y - go.drag.offset.y;
+                if(ds === "none" || ds === "vertical") {
+                    var newY = pos.y - go.drag.offset.y;
+                    if((db.top === undefined || db.top < newY) && (db.bottom === undefined || db.bottom > newY)) {
+                        node.y = newY;
+                    }
                 }
                 go.drag.node.getLayer().draw();
 

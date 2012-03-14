@@ -716,6 +716,53 @@ function Test() {
 
             layer.draw();
         },
+        "NODE - test drag and drop properties and methods": function(containerId) {
+            var stage = new Kinetic.Stage(containerId, 578, 200);
+            var layer = new Kinetic.Layer();
+            var circle = new Kinetic.Circle({
+                x: stage.width / 2,
+                y: stage.height / 2,
+                radius: 70,
+                fill: "green",
+                stroke: "black",
+                strokeWidth: 4,
+                name: "myCircle"
+            });
+
+            stage.add(layer);
+            layer.add(circle);
+            layer.draw();
+
+            // test defaults
+            test(circle._draggable === false, "draggable should be false");
+            test(circle.dragConstraint === "none", "drag constraint should be none");
+            test(circle.dragBounds.left === undefined, "drag left should be undefined");
+            test(circle.dragBounds.top === undefined, "drag top should be undefined");
+            test(circle.dragBounds.right === undefined, "drag right should be undefined");
+            test(circle.dragBounds.bottom === undefined, "drag bottom should be undefined");
+            test(circle.getDragConstraint() === "none", "drag constraint should be none");
+            test(circle.getDragBounds().bottom === undefined, "drag bottom should be undefined");
+
+            //change properties
+            circle.draggable(true);
+            circle.setDragConstraint("vertical");
+            circle.setDragBounds({
+                left: 50,
+                top: 100,
+                right: 150,
+                bottom: 200
+            });
+
+            // test new properties
+            test(circle._draggable === true, "draggable should be true");
+            test(circle.dragConstraint === "vertical", "drag constraint should be vertical");
+            test(circle.dragBounds.left === 50, "drag left should be 50");
+            test(circle.dragBounds.top === 100, "drag top should be 100");
+            test(circle.dragBounds.right === 150, "drag right should be 150");
+            test(circle.dragBounds.bottom === 200, "drag bottom should be 200");
+            test(circle.getDragConstraint() === "vertical", "drag constraint should be vertical");
+            test(circle.getDragBounds().bottom === 200, "drag bottom should be 200");
+        },
         "STAGE - add layer then shape": function(containerId) {
             var stage = new Kinetic.Stage(containerId, 578, 200);
             var layer = new Kinetic.Layer();

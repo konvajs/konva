@@ -147,7 +147,8 @@ Kinetic.Stage.prototype = {
         if(scaleY) {
             this.scale.x = scaleX;
             this.scale.y = scaleY;
-        } else {
+        }
+        else {
             this.scale.x = scaleX;
             this.scale.y = scaleX;
         }
@@ -167,7 +168,6 @@ Kinetic.Stage.prototype = {
                 }
             }
         }
-
         scaleChildren(layers);
     },
     /**
@@ -202,13 +202,13 @@ Kinetic.Stage.prototype = {
                 n++;
                 if(n < layers.length) {
                     addLayer(n);
-                } else {
+                }
+                else {
                     callback(bufferLayer.getCanvas().toDataURL());
                 }
             };
             imageObj.src = dataURL;
         }
-
 
         bufferLayer.clear();
         addLayer(0);
@@ -312,7 +312,8 @@ Kinetic.Stage.prototype = {
                 return true;
             }
             // handle onmouseup & onclick
-            else if(this.mouseUp) {
+            else
+            if(this.mouseUp) {
                 this.mouseUp = false;
                 shape._handleEvents("onmouseup", evt);
 
@@ -338,7 +339,8 @@ Kinetic.Stage.prototype = {
             }
 
             // handle touchstart
-            else if(this.touchStart) {
+            else
+            if(this.touchStart) {
                 this.touchStart = false;
                 shape._handleEvents("touchstart", evt);
 
@@ -358,20 +360,23 @@ Kinetic.Stage.prototype = {
             }
 
             // handle touchend
-            else if(this.touchEnd) {
+            else
+            if(this.touchEnd) {
                 this.touchEnd = false;
                 shape._handleEvents("touchend", evt);
                 return true;
             }
 
             // handle touchmove
-            else if(!isDragging && el.touchmove) {
+            else
+            if(!isDragging && el.touchmove) {
                 shape._handleEvents("touchmove", evt);
                 return true;
             }
 
             //this condition is used to identify a new target shape.
-            else if(!isDragging && (!this.targetShape || (!this.targetFound && shape.id !== this.targetShape.id))) {
+            else
+            if(!isDragging && (!this.targetShape || (!this.targetFound && shape.id !== this.targetShape.id))) {
                 /*
                  * check if old target has an onmouseout event listener
                  */
@@ -392,13 +397,15 @@ Kinetic.Stage.prototype = {
             }
 
             // handle onmousemove
-            else if(!isDragging) {
+            else
+            if(!isDragging) {
                 shape._handleEvents("onmousemove", evt);
                 return true;
             }
         }
         // handle mouseout condition
-        else if(!isDragging && this.targetShape && this.targetShape.id === shape.id) {
+        else
+        if(!isDragging && this.targetShape && this.targetShape.id === shape.id) {
             this.targetShape = undefined;
             shape._handleEvents("onmouseout", evt);
             return true;
@@ -420,7 +427,8 @@ Kinetic.Stage.prototype = {
                 if(exit) {
                     return true;
                 }
-            } else {
+            }
+            else {
                 this._traverseChildren(child);
             }
         }
@@ -601,13 +609,22 @@ Kinetic.Stage.prototype = {
 
         this.on("mousemove touchmove", function(evt) {
             var go = Kinetic.GlobalObject;
-            if(go.drag.node) {
+            var node = go.drag.node;
+            if(node) {
                 var pos = that.getUserPosition();
-                if(go.drag.node.drag.x) {
-                    go.drag.node.x = pos.x - go.drag.offset.x;
+                var ds = node.dragConstraint;
+                var db = node.dragBounds;
+                if(ds === "none" || ds === "horizontal") {
+                    var newX = pos.x - go.drag.offset.x;
+                    if((db.left === undefined || db.left < newX) && (db.right === undefined || db.right > newX)) {
+                        node.x = newX;
+                    }
                 }
-                if(go.drag.node.drag.y) {
-                    go.drag.node.y = pos.y - go.drag.offset.y;
+                if(ds === "none" || ds === "vertical") {
+                    var newY = pos.y - go.drag.offset.y;
+                    if((db.top === undefined || db.top < newY) && (db.bottom === undefined || db.bottom > newY)) {
+                        node.y = newY;
+                    }
                 }
                 go.drag.node.getLayer().draw();
 

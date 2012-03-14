@@ -25,10 +25,9 @@ Kinetic.Node = function(config) {
         y: 0
     };
     this.eventListeners = {};
-    this.drag = {
-        x: false,
-        y: false
-    };
+    this.dragConstraint = "none";
+    this.dragBounds = {};
+    this._draggable = false;
 
     // set properties from config
     if(config) {
@@ -37,12 +36,6 @@ Kinetic.Node = function(config) {
             switch (key) {
                 case "draggable":
                     this.draggable(config[key]);
-                    break;
-                case "draggableX":
-                    this.draggableX(config[key]);
-                    break;
-                case "draggableY":
-                    this.draggableY(config[key]);
                     break;
                 case "listen":
                     this.listen(config[key]);
@@ -349,56 +342,17 @@ Kinetic.Node.prototype = {
     },
     /**
      * enable or disable drag and drop
-     * @param {Boolean} setDraggable
+     * @param {Boolean} isDraggable
      */
-    draggable: function(setDraggable) {
-        if(setDraggable) {
-            var needInit = !this.drag.x && !this.drag.y;
-            this.drag.x = true;
-            this.drag.y = true;
-
-            if(needInit) {
+    draggable: function(isDraggable) {
+        if(this.draggable !== isDraggable) {
+            if(isDraggable) {
                 this._initDrag();
             }
-        }
-        else {
-            this.drag.x = false;
-            this.drag.y = false;
-            this._dragCleanup();
-        }
-    },
-    /**
-     * enable or disable horizontal drag and drop
-     * @param {Boolean} setDraggable
-     */
-    draggableX: function(setDraggable) {
-        if(setDraggable) {
-            var needInit = !this.drag.x && !this.drag.y;
-            this.drag.x = true;
-            if(needInit) {
-                this._initDrag();
+            else {
+                this._dragCleanup();
             }
-        }
-        else {
-            this.drag.x = false;
-            this._dragCleanup();
-        }
-    },
-    /**
-     * enable or disable vertical drag and drop
-     * @param {Boolean} setDraggable
-     */
-    draggableY: function(setDraggable) {
-        if(setDraggable) {
-            var needInit = !this.drag.x && !this.drag.y;
-            this.drag.y = true;
-            if(needInit) {
-                this._initDrag();
-            }
-        }
-        else {
-            this.drag.y = false;
-            this._dragCleanup();
+            this._draggable = isDraggable;
         }
     },
     /**
@@ -518,6 +472,36 @@ Kinetic.Node.prototype = {
         });
     },
     /**
+     * set drag constraint
+     * @param {String} constraint
+     */
+    setDragConstraint: function(constraint) {
+        this.dragConstraint = constraint;
+    },
+    /**
+     * get drag constraint
+     */
+    getDragConstraint: function() {
+        return this.dragConstraint;
+    },
+    /**
+     * set drag bounds
+     * @param {Object} bounds
+     * @config {Number} [left] left bounds position
+     * @config {Number} [top] top bounds position
+     * @config {Number} [right] right bounds position
+     * @config {Number} [bottom] bottom bounds position
+     */
+    setDragBounds: function(bounds) {
+        this.dragBounds = bounds;
+    },
+    /**
+     * get drag bounds
+     */
+    getDragBounds: function() {
+        return this.dragBounds;
+    },
+    /**
      * initialize drag and drop
      */
     _initDrag: function() {
@@ -538,10 +522,8 @@ Kinetic.Node.prototype = {
      * remove drag and drop event listener
      */
     _dragCleanup: function() {
-        if(!this.drag.x && !this.drag.y) {
-            this.off("mousedown.initdrag");
-            this.off("touchstart.initdrag");
-        }
+        this.off("mousedown.initdrag");
+        this.off("touchstart.initdrag");
     },
     /**
      * handle node events
