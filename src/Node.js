@@ -132,7 +132,8 @@ Kinetic.Node.prototype = {
                         break;
                     }
                 }
-            } else {
+            }
+            else {
                 this.eventListeners[baseEvent] = undefined;
             }
         }
@@ -165,7 +166,8 @@ Kinetic.Node.prototype = {
         if(scaleY) {
             this.scale.x = scaleX;
             this.scale.y = scaleY;
-        } else {
+        }
+        else {
             this.scale.x = scaleX;
             this.scale.y = scaleX;
         }
@@ -358,7 +360,8 @@ Kinetic.Node.prototype = {
             if(needInit) {
                 this._initDrag();
             }
-        } else {
+        }
+        else {
             this.drag.x = false;
             this.drag.y = false;
             this._dragCleanup();
@@ -375,7 +378,8 @@ Kinetic.Node.prototype = {
             if(needInit) {
                 this._initDrag();
             }
-        } else {
+        }
+        else {
             this.drag.x = false;
             this._dragCleanup();
         }
@@ -391,7 +395,8 @@ Kinetic.Node.prototype = {
             if(needInit) {
                 this._initDrag();
             }
-        } else {
+        }
+        else {
             this.drag.y = false;
             this._dragCleanup();
         }
@@ -437,7 +442,8 @@ Kinetic.Node.prototype = {
     getLayer: function() {
         if(this.className === 'Layer') {
             return this;
-        } else {
+        }
+        else {
             return this.getParent().getLayer();
         }
     },
@@ -447,7 +453,8 @@ Kinetic.Node.prototype = {
     getStage: function() {
         if(this.className === 'Stage') {
             return this;
-        } else {
+        }
+        else {
             return this.getParent().getStage();
         }
     },
@@ -473,17 +480,32 @@ Kinetic.Node.prototype = {
         return this.centerOffset;
     },
     /**
-     * transition node to another state
+     * transition node to another state.  Any property that can accept a real
+     * number such as x, y, rotation, alpha, strokeWidth, radius, scale.x, scale.y,
+     * centerOffset.x and centerOffset.y can be transitioned
      * @param {Object} config
      */
     transitionTo: function(config) {
         var layer = this.getLayer();
-
         var that = this;
+        var duration = config.duration * 1000;
         var changes = {};
+
         for(var key in config) {
             if(config.hasOwnProperty(key)) {
-                changes[key] = (config[key] - that[key]) / (config.duration * 1000);
+                if(config[key].x !== undefined || config[key].y !== undefined) {
+                    changes[key] = {};
+                    var propArray = ["x", "y"];
+                    for(var n = 0; n < propArray.length; n++) {
+                        var prop = propArray[n];
+                        if(config[key][prop] !== undefined) {
+                            changes[key][prop] = (config[key][prop] - that[key][prop]) / duration;
+                        }
+                    }
+                }
+                else {
+                    changes[key] = (config[key] - that[key]) / duration;
+                }
             }
         }
 
@@ -541,7 +563,6 @@ Kinetic.Node.prototype = {
                 handle(obj.parent);
             }
         }
-
         /*
          * simulate bubbling by handling node events
          * first, followed by group events, followed

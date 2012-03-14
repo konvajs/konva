@@ -2,11 +2,11 @@ function Test() {
     this.testOnly = "";
     this.counter = 0;
     this.tests = {
-        "TRANSITION - transition position": function(containerId) {
+        "TRANSITION - transition position and rotation": function(containerId) {
             var stage = new Kinetic.Stage(containerId, 578, 200);
             var layer = new Kinetic.Layer();
             var rect = new Kinetic.Rect({
-                x: 10,
+                x: 100,
                 y: 100,
                 width: 100,
                 height: 50,

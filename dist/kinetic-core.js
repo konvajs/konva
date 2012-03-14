@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mar 12 2012
+ * Date: Mar 13 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -74,8 +74,18 @@ Kinetic.GlobalObject = {
         var config = this.config;
         for(var key in config) {
             if(config.hasOwnProperty(key)) {
-                this.node[key] = config[key];
-                this.node.getLayer().draw();
+                if(config[key].x !== undefined || config[key].y !== undefined) {
+                    var propArray = ["x", "y"];
+                    for(var n = 0; n < propArray.length; n++) {
+                        var prop = propArray[n];
+                        if(config[key][prop] !== undefined) {
+                            this.node[key][prop] = config[key][prop];
+                        }
+                    }
+                }
+                else {
+                    this.node[key] = config[key];
+                }
             }
         }
     },
@@ -83,8 +93,18 @@ Kinetic.GlobalObject = {
         var config = this.config;
         for(var key in config) {
             if(config.hasOwnProperty(key)) {
-                this.node[key] += this.changes[key] * frame.timeDiff;
-                this.node.getLayer().draw();
+                if(config[key].x !== undefined || config[key].y !== undefined) {
+                    var propArray = ["x", "y"];
+                    for(var n = 0; n < propArray.length; n++) {
+                        var prop = propArray[n];
+                        if(config[key][prop] !== undefined) {
+                            this.node[key][prop] += this.changes[key][prop] * frame.timeDiff;
+                        }
+                    }
+                }
+                else {
+                    this.node[key] += this.changes[key] * frame.timeDiff;
+                }
             }
         }
     },
@@ -117,13 +137,17 @@ Kinetic.GlobalObject = {
                 var didTransition = false;
                 // loop through transitions
                 for(var i = 0; i < layer.transitions.length; i++) {
+                    didTransition = true;
                     var transition = layer.transitions[i];
                     transition.time += this.frame.timeDiff;
                     if(transition.time >= transition.config.duration * 1000) {
                         this._endTransition.apply(transition);
                         this._removeTransition(transition);
-                    } else {
-                        didTransition = true;
+                        if(transition.config.callback !== undefined) {
+                            transition.config.callback();
+                        }
+                    }
+                    else {
                         this._linearTransition.apply(transition, [this.frame]);
                     }
                 }
@@ -139,7 +163,8 @@ Kinetic.GlobalObject = {
         var time = date.getTime();
         if(this.frame.lastTime === 0) {
             this.frame.lastTime = time;
-        } else {
+        }
+        else {
             this.frame.timeDiff = time - this.frame.lastTime;
             this.frame.lastTime = time;
             this.frame.time += this.frame.timeDiff;
@@ -160,7 +185,9 @@ Kinetic.GlobalObject = {
         if(!this.isAnimating && this._isaCanvasAnimating()) {
             this.isAnimating = true;
             that._animationLoop();
-        } else if(this.isAnimating && !this._isaCanvasAnimating()) {
+        }
+        else
+        if(this.isAnimating && !this._isaCanvasAnimating()) {
             this.isAnimating = false;
             this.frame.lastTime = 0;
         }
@@ -172,7 +199,6 @@ window.requestAnimFrame = (function(callback) {
     function(callback) {
         window.setTimeout(callback, 1000 / 60);
     };
-
 })();
 
 ///////////////////////////////////////////////////////////////////////
@@ -309,7 +335,8 @@ Kinetic.Node.prototype = {
                         break;
                     }
                 }
-            } else {
+            }
+            else {
                 this.eventListeners[baseEvent] = undefined;
             }
         }
@@ -342,7 +369,8 @@ Kinetic.Node.prototype = {
         if(scaleY) {
             this.scale.x = scaleX;
             this.scale.y = scaleY;
-        } else {
+        }
+        else {
             this.scale.x = scaleX;
             this.scale.y = scaleX;
         }
@@ -535,7 +563,8 @@ Kinetic.Node.prototype = {
             if(needInit) {
                 this._initDrag();
             }
-        } else {
+        }
+        else {
             this.drag.x = false;
             this.drag.y = false;
             this._dragCleanup();
@@ -552,7 +581,8 @@ Kinetic.Node.prototype = {
             if(needInit) {
                 this._initDrag();
             }
-        } else {
+        }
+        else {
             this.drag.x = false;
             this._dragCleanup();
         }
@@ -568,7 +598,8 @@ Kinetic.Node.prototype = {
             if(needInit) {
                 this._initDrag();
             }
-        } else {
+        }
+        else {
             this.drag.y = false;
             this._dragCleanup();
         }
@@ -614,7 +645,8 @@ Kinetic.Node.prototype = {
     getLayer: function() {
         if(this.className === 'Layer') {
             return this;
-        } else {
+        }
+        else {
             return this.getParent().getLayer();
         }
     },
@@ -624,7 +656,8 @@ Kinetic.Node.prototype = {
     getStage: function() {
         if(this.className === 'Stage') {
             return this;
-        } else {
+        }
+        else {
             return this.getParent().getStage();
         }
     },
@@ -650,17 +683,32 @@ Kinetic.Node.prototype = {
         return this.centerOffset;
     },
     /**
-     * transition node to another state
+     * transition node to another state.  Any property that can accept a real
+     * number such as x, y, rotation, alpha, strokeWidth, radius, scale.x, scale.y,
+     * centerOffset.x and centerOffset.y can be transitioned
      * @param {Object} config
      */
     transitionTo: function(config) {
         var layer = this.getLayer();
-
         var that = this;
+        var duration = config.duration * 1000;
         var changes = {};
+
         for(var key in config) {
             if(config.hasOwnProperty(key)) {
-                changes[key] = (config[key] - that[key]) / (config.duration * 1000);
+                if(config[key].x !== undefined || config[key].y !== undefined) {
+                    changes[key] = {};
+                    var propArray = ["x", "y"];
+                    for(var n = 0; n < propArray.length; n++) {
+                        var prop = propArray[n];
+                        if(config[key][prop] !== undefined) {
+                            changes[key][prop] = (config[key][prop] - that[key][prop]) / duration;
+                        }
+                    }
+                }
+                else {
+                    changes[key] = (config[key] - that[key]) / duration;
+                }
             }
         }
 
@@ -718,7 +766,6 @@ Kinetic.Node.prototype = {
                 handle(obj.parent);
             }
         }
-
         /*
          * simulate bubbling by handling node events
          * first, followed by group events, followed
@@ -1611,7 +1658,9 @@ Kinetic.Shape = function(config) {
     if(config.stroke !== undefined || config.strokeWidth !== undefined) {
         if(config.stroke === undefined) {
             config.stroke = "black";
-        } else if(config.strokeWidth === undefined) {
+        }
+        else
+        if(config.strokeWidth === undefined) {
             config.strokeWidth = 2;
         }
     }
@@ -1627,11 +1676,11 @@ Kinetic.Shape = function(config) {
  */
 Kinetic.Shape.prototype = {
     /**
-     * get layer context where the shape is being drawn.  When 
-     * the shape is being rendered, .getContext() returns the context of the 
-     * user created layer that contains the shape.  When the event detection 
-     * engine is determining whether or not an event has occured on that shape, 
-     * .getContext() returns the context of the invisible backstage layer. 
+     * get layer context where the shape is being drawn.  When
+     * the shape is being rendered, .getContext() returns the context of the
+     * user created layer that contains the shape.  When the event detection
+     * engine is determining whether or not an event has occured on that shape,
+     * .getContext() returns the context of the invisible backstage layer.
      */
     getContext: function() {
         return this.tempLayer.getContext();

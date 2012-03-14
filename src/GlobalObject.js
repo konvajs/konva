@@ -46,8 +46,18 @@ Kinetic.GlobalObject = {
         var config = this.config;
         for(var key in config) {
             if(config.hasOwnProperty(key)) {
-                this.node[key] = config[key];
-                this.node.getLayer().draw();
+                if(config[key].x !== undefined || config[key].y !== undefined) {
+                    var propArray = ["x", "y"];
+                    for(var n = 0; n < propArray.length; n++) {
+                        var prop = propArray[n];
+                        if(config[key][prop] !== undefined) {
+                            this.node[key][prop] = config[key][prop];
+                        }
+                    }
+                }
+                else {
+                    this.node[key] = config[key];
+                }
             }
         }
     },
@@ -55,8 +65,18 @@ Kinetic.GlobalObject = {
         var config = this.config;
         for(var key in config) {
             if(config.hasOwnProperty(key)) {
-                this.node[key] += this.changes[key] * frame.timeDiff;
-                this.node.getLayer().draw();
+                if(config[key].x !== undefined || config[key].y !== undefined) {
+                    var propArray = ["x", "y"];
+                    for(var n = 0; n < propArray.length; n++) {
+                        var prop = propArray[n];
+                        if(config[key][prop] !== undefined) {
+                            this.node[key][prop] += this.changes[key][prop] * frame.timeDiff;
+                        }
+                    }
+                }
+                else {
+                    this.node[key] += this.changes[key] * frame.timeDiff;
+                }
             }
         }
     },
@@ -89,13 +109,17 @@ Kinetic.GlobalObject = {
                 var didTransition = false;
                 // loop through transitions
                 for(var i = 0; i < layer.transitions.length; i++) {
+                    didTransition = true;
                     var transition = layer.transitions[i];
                     transition.time += this.frame.timeDiff;
                     if(transition.time >= transition.config.duration * 1000) {
                         this._endTransition.apply(transition);
                         this._removeTransition(transition);
-                    } else {
-                        didTransition = true;
+                        if(transition.config.callback !== undefined) {
+                            transition.config.callback();
+                        }
+                    }
+                    else {
                         this._linearTransition.apply(transition, [this.frame]);
                     }
                 }
@@ -111,7 +135,8 @@ Kinetic.GlobalObject = {
         var time = date.getTime();
         if(this.frame.lastTime === 0) {
             this.frame.lastTime = time;
-        } else {
+        }
+        else {
             this.frame.timeDiff = time - this.frame.lastTime;
             this.frame.lastTime = time;
             this.frame.time += this.frame.timeDiff;
@@ -132,7 +157,9 @@ Kinetic.GlobalObject = {
         if(!this.isAnimating && this._isaCanvasAnimating()) {
             this.isAnimating = true;
             that._animationLoop();
-        } else if(this.isAnimating && !this._isaCanvasAnimating()) {
+        }
+        else
+        if(this.isAnimating && !this._isaCanvasAnimating()) {
             this.isAnimating = false;
             this.frame.lastTime = 0;
         }
@@ -144,5 +171,4 @@ window.requestAnimFrame = (function(callback) {
     function(callback) {
         window.setTimeout(callback, 1000 / 60);
     };
-
 })();
