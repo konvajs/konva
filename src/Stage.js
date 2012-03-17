@@ -285,8 +285,7 @@ Kinetic.Stage.prototype = {
                 return true;
             }
             // handle onmouseup & onclick
-            else
-            if(this.mouseUp) {
+            else if(this.mouseUp) {
                 this.mouseUp = false;
                 shape._handleEvents('onmouseup', evt);
 
@@ -312,8 +311,7 @@ Kinetic.Stage.prototype = {
             }
 
             // handle touchstart
-            else
-            if(this.touchStart) {
+            else if(this.touchStart) {
                 this.touchStart = false;
                 shape._handleEvents('touchstart', evt);
 
@@ -333,23 +331,20 @@ Kinetic.Stage.prototype = {
             }
 
             // handle touchend
-            else
-            if(this.touchEnd) {
+            else if(this.touchEnd) {
                 this.touchEnd = false;
                 shape._handleEvents('touchend', evt);
                 return true;
             }
 
             // handle touchmove
-            else
-            if(!isDragging && el.touchmove) {
+            else if(!isDragging && el.touchmove) {
                 shape._handleEvents('touchmove', evt);
                 return true;
             }
 
             //this condition is used to identify a new target shape.
-            else
-            if(!isDragging && (!this.targetShape || (!this.targetFound && shape.id !== this.targetShape.id))) {
+            else if(!isDragging && (!this.targetShape || (!this.targetFound && shape.id !== this.targetShape.id))) {
                 /*
                  * check if old target has an onmouseout event listener
                  */
@@ -370,15 +365,13 @@ Kinetic.Stage.prototype = {
             }
 
             // handle onmousemove
-            else
-            if(!isDragging) {
+            else if(!isDragging) {
                 shape._handleEvents('onmousemove', evt);
                 return true;
             }
         }
         // handle mouseout condition
-        else
-        if(!isDragging && this.targetShape && this.targetShape.id === shape.id) {
+        else if(!isDragging && this.targetShape && this.targetShape.id === shape.id) {
             this.targetShape = undefined;
             shape._handleEvents('onmouseout', evt);
             return true;
@@ -402,7 +395,7 @@ Kinetic.Stage.prototype = {
                 }
             }
             else {
-                this._traverseChildren(child);
+                this._traverseChildren(child, evt);
             }
         }
 

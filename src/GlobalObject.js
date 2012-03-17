@@ -158,8 +158,7 @@ Kinetic.GlobalObject = {
             this.isAnimating = true;
             that._animationLoop();
         }
-        else
-        if(this.isAnimating && !this._isaCanvasAnimating()) {
+        else if(this.isAnimating && !this._isaCanvasAnimating()) {
             this.isAnimating = false;
             this.frame.lastTime = 0;
         }

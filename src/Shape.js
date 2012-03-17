@@ -16,8 +16,7 @@ Kinetic.Shape = function(config) {
         if(config.stroke === undefined) {
             config.stroke = 'black';
         }
-        else
-        if(config.strokeWidth === undefined) {
+        else if(config.strokeWidth === undefined) {
             config.strokeWidth = 2;
         }
     }

@@ -541,15 +541,11 @@ Kinetic.Node.prototype = {
                 }
             }
 
-            if(obj.parent.className !== 'Stage') {
+            // simulate event bubbling
+            if(!evt.cancelBubble && obj.parent.className !== 'Stage') {
                 handle(obj.parent);
             }
         }
-        /*
-         * simulate bubbling by handling node events
-         * first, followed by group events, followed
-         * by layer events
-         */
         handle(this);
     }
 };

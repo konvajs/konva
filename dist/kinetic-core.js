@@ -186,8 +186,7 @@ Kinetic.GlobalObject = {
             this.isAnimating = true;
             that._animationLoop();
         }
-        else
-        if(this.isAnimating && !this._isaCanvasAnimating()) {
+        else if(this.isAnimating && !this._isaCanvasAnimating()) {
             this.isAnimating = false;
             this.frame.lastTime = 0;
         }
@@ -744,15 +743,11 @@ Kinetic.Node.prototype = {
                 }
             }
 
-            if(obj.parent.className !== 'Stage') {
+            // simulate event bubbling
+            if(!evt.cancelBubble && obj.parent.className !== 'Stage') {
                 handle(obj.parent);
             }
         }
-        /*
-         * simulate bubbling by handling node events
-         * first, followed by group events, followed
-         * by layer events
-         */
         handle(this);
     }
 };
@@ -1151,8 +1146,7 @@ Kinetic.Stage.prototype = {
                 return true;
             }
             // handle onmouseup & onclick
-            else
-            if(this.mouseUp) {
+            else if(this.mouseUp) {
                 this.mouseUp = false;
                 shape._handleEvents('onmouseup', evt);
 
@@ -1178,8 +1172,7 @@ Kinetic.Stage.prototype = {
             }
 
             // handle touchstart
-            else
-            if(this.touchStart) {
+            else if(this.touchStart) {
                 this.touchStart = false;
                 shape._handleEvents('touchstart', evt);
 
@@ -1199,23 +1192,20 @@ Kinetic.Stage.prototype = {
             }
 
             // handle touchend
-            else
-            if(this.touchEnd) {
+            else if(this.touchEnd) {
                 this.touchEnd = false;
                 shape._handleEvents('touchend', evt);
                 return true;
             }
 
             // handle touchmove
-            else
-            if(!isDragging && el.touchmove) {
+            else if(!isDragging && el.touchmove) {
                 shape._handleEvents('touchmove', evt);
                 return true;
             }
 
             //this condition is used to identify a new target shape.
-            else
-            if(!isDragging && (!this.targetShape || (!this.targetFound && shape.id !== this.targetShape.id))) {
+            else if(!isDragging && (!this.targetShape || (!this.targetFound && shape.id !== this.targetShape.id))) {
                 /*
                  * check if old target has an onmouseout event listener
                  */
@@ -1236,15 +1226,13 @@ Kinetic.Stage.prototype = {
             }
 
             // handle onmousemove
-            else
-            if(!isDragging) {
+            else if(!isDragging) {
                 shape._handleEvents('onmousemove', evt);
                 return true;
             }
         }
         // handle mouseout condition
-        else
-        if(!isDragging && this.targetShape && this.targetShape.id === shape.id) {
+        else if(!isDragging && this.targetShape && this.targetShape.id === shape.id) {
             this.targetShape = undefined;
             shape._handleEvents('onmouseout', evt);
             return true;
@@ -1268,7 +1256,7 @@ Kinetic.Stage.prototype = {
                 }
             }
             else {
-                this._traverseChildren(child);
+                this._traverseChildren(child, evt);
             }
         }
 
@@ -1669,8 +1657,7 @@ Kinetic.Shape = function(config) {
         if(config.stroke === undefined) {
             config.stroke = 'black';
         }
-        else
-        if(config.strokeWidth === undefined) {
+        else if(config.strokeWidth === undefined) {
             config.strokeWidth = 2;
         }
     }
@@ -2060,6 +2047,7 @@ Kinetic.Polygon.prototype = {
 
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Polygon, Kinetic.Shape);
+
 ///////////////////////////////////////////////////////////////////////
 //  RegularPolygon
 ///////////////////////////////////////////////////////////////////////
@@ -2133,6 +2121,7 @@ Kinetic.RegularPolygon.prototype = {
 
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.RegularPolygon, Kinetic.Shape);
+
 ///////////////////////////////////////////////////////////////////////
 //  Star
 ///////////////////////////////////////////////////////////////////////
@@ -2206,6 +2195,7 @@ Kinetic.Star.prototype = {
 };
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Star, Kinetic.Shape);
+
 ///////////////////////////////////////////////////////////////////////
 //  Text
 ///////////////////////////////////////////////////////////////////////
@@ -2223,8 +2213,7 @@ Kinetic.Text = function(config) {
         if(config.textStroke === undefined) {
             config.textStroke = 'black';
         }
-        else
-        if(config.textStrokeWidth === undefined) {
+        else if(config.textStrokeWidth === undefined) {
             config.textStrokeWidth = 2;
         }
     }
@@ -2288,8 +2277,7 @@ Kinetic.Text = function(config) {
             if(this.textStroke === undefined) {
                 this.textStroke = 'black';
             }
-            else
-            if(this.textStrokeWidth === undefined) {
+            else if(this.textStrokeWidth === undefined) {
                 this.textStrokeWidth = 2;
             }
             context.lineWidth = this.textStrokeWidth;

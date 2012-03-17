@@ -15,8 +15,7 @@ Kinetic.Text = function(config) {
         if(config.textStroke === undefined) {
             config.textStroke = 'black';
         }
-        else
-        if(config.textStrokeWidth === undefined) {
+        else if(config.textStrokeWidth === undefined) {
             config.textStrokeWidth = 2;
         }
     }
@@ -80,8 +79,7 @@ Kinetic.Text = function(config) {
             if(this.textStroke === undefined) {
                 this.textStroke = 'black';
             }
-            else
-            if(this.textStrokeWidth === undefined) {
+            else if(this.textStrokeWidth === undefined) {
                 this.textStrokeWidth = 2;
             }
             context.lineWidth = this.textStrokeWidth;
