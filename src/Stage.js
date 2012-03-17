@@ -10,8 +10,10 @@
  * @param {int} height
  */
 Kinetic.Stage = function(cont, width, height) {
-    this.className = "Stage";
-    this.container = typeof cont === "string" ? document.getElementById(cont) : cont;
+    this.className = 'Stage';
+    this.container = typeof cont === 'string' ? document.getElementById(cont) : cont;
+    this.content = document.createElement('div');
+
     this.width = width;
     this.height = height;
     this.scale = {
@@ -41,10 +43,18 @@ Kinetic.Stage = function(cont, width, height) {
     this.onFrameFunc = undefined;
 
     /*
-     * Layer roles
-     * - buffer: canvas compositing
-     * - backstage: path detection
-     */
+    * build DOM
+    */
+
+    // content
+    this.content.style.width = width + 'px';
+    this.content.style.height = height + 'px';
+    this.content.style.position = 'relative';
+    this.content.style.display = 'inline-block';
+    this.content.className = 'kineticjs-content';
+    this.container.appendChild(this.content);
+
+    // default layers
     this.bufferLayer = new Kinetic.Layer();
     this.backstageLayer = new Kinetic.Layer();
 
@@ -55,26 +65,25 @@ Kinetic.Stage = function(cont, width, height) {
     // customize back stage context
     var backstageLayer = this.backstageLayer;
     this._stripLayer(backstageLayer);
-
     this.bufferLayer.getCanvas().style.display = 'none';
     this.backstageLayer.getCanvas().style.display = 'none';
 
     // add buffer layer
     this.bufferLayer.canvas.width = this.width;
     this.bufferLayer.canvas.height = this.height;
-    this.container.appendChild(this.bufferLayer.canvas);
+    this.content.appendChild(this.bufferLayer.canvas);
 
     // add backstage layer
     this.backstageLayer.canvas.width = this.width;
     this.backstageLayer.canvas.height = this.height;
-    this.container.appendChild(this.backstageLayer.canvas);
+    this.content.appendChild(this.backstageLayer.canvas);
 
+    // listen for events and prepare drag and drop
     this._listen();
     this._prepareDrag();
 
     // add stage to global object
-    var stages = Kinetic.GlobalObject.stages;
-    stages.push(this);
+    Kinetic.GlobalObject.stages.push(this);
 
     // call super constructor
     Kinetic.Container.apply(this, []);
@@ -219,7 +228,7 @@ Kinetic.Stage.prototype = {
      */
     remove: function(layer) {
         // remove layer canvas from dom
-        this.container.removeChild(layer.canvas);
+        this.content.removeChild(layer.canvas);
 
         this._remove(layer);
     },
@@ -230,7 +239,7 @@ Kinetic.Stage.prototype = {
      * @param {function} handler
      */
     on: function(typesStr, handler) {
-        var types = typesStr.split(" ");
+        var types = typesStr.split(' ');
         for(var n = 0; n < types.length; n++) {
             var baseEvent = types[n];
             this.container.addEventListener(baseEvent, handler, false);
@@ -250,7 +259,7 @@ Kinetic.Stage.prototype = {
 
         // draw layer and append canvas to container
         layer.draw();
-        this.container.appendChild(layer.canvas);
+        this.content.appendChild(layer.canvas);
     },
     /**
      * get mouse position for desktop apps
@@ -308,14 +317,14 @@ Kinetic.Stage.prototype = {
             if(!isDragging && this.mouseDown) {
                 this.mouseDown = false;
                 this.clickStart = true;
-                shape._handleEvents("onmousedown", evt);
+                shape._handleEvents('onmousedown', evt);
                 return true;
             }
             // handle onmouseup & onclick
             else
             if(this.mouseUp) {
                 this.mouseUp = false;
-                shape._handleEvents("onmouseup", evt);
+                shape._handleEvents('onmouseup', evt);
 
                 // detect if click or double click occurred
                 if(this.clickStart) {
@@ -324,10 +333,10 @@ Kinetic.Stage.prototype = {
                      * event
                      */
                     if((!go.drag.moving) || !go.drag.node) {
-                        shape._handleEvents("onclick", evt);
+                        shape._handleEvents('onclick', evt);
 
                         if(shape.inDoubleClickWindow) {
-                            shape._handleEvents("ondblclick", evt);
+                            shape._handleEvents('ondblclick', evt);
                         }
                         shape.inDoubleClickWindow = true;
                         setTimeout(function() {
@@ -342,7 +351,7 @@ Kinetic.Stage.prototype = {
             else
             if(this.touchStart) {
                 this.touchStart = false;
-                shape._handleEvents("touchstart", evt);
+                shape._handleEvents('touchstart', evt);
 
                 if(el.ondbltap && shape.inDoubleClickWindow) {
                     var events = el.ondbltap;
@@ -363,14 +372,14 @@ Kinetic.Stage.prototype = {
             else
             if(this.touchEnd) {
                 this.touchEnd = false;
-                shape._handleEvents("touchend", evt);
+                shape._handleEvents('touchend', evt);
                 return true;
             }
 
             // handle touchmove
             else
             if(!isDragging && el.touchmove) {
-                shape._handleEvents("touchmove", evt);
+                shape._handleEvents('touchmove', evt);
                 return true;
             }
 
@@ -383,7 +392,7 @@ Kinetic.Stage.prototype = {
                 if(this.targetShape) {
                     var oldEl = this.targetShape.eventListeners;
                     if(oldEl) {
-                        this.targetShape._handleEvents("onmouseout", evt);
+                        this.targetShape._handleEvents('onmouseout', evt);
                     }
                 }
 
@@ -392,14 +401,14 @@ Kinetic.Stage.prototype = {
                 this.targetFound = true;
 
                 // handle onmouseover
-                shape._handleEvents("onmouseover", evt);
+                shape._handleEvents('onmouseover', evt);
                 return true;
             }
 
             // handle onmousemove
             else
             if(!isDragging) {
-                shape._handleEvents("onmousemove", evt);
+                shape._handleEvents('onmousemove', evt);
                 return true;
             }
         }
@@ -407,7 +416,7 @@ Kinetic.Stage.prototype = {
         else
         if(!isDragging && this.targetShape && this.targetShape.id === shape.id) {
             this.targetShape = undefined;
-            shape._handleEvents("onmouseout", evt);
+            shape._handleEvents('onmouseout', evt);
             return true;
         }
 
@@ -422,7 +431,7 @@ Kinetic.Stage.prototype = {
         // propapgate backwards through children
         for(var i = children.length - 1; i >= 0; i--) {
             var child = children[i];
-            if(child.className === "Shape") {
+            if(child.className === 'Shape') {
                 var exit = this._detectEvent(child, evt);
                 if(exit) {
                     return true;
@@ -475,18 +484,18 @@ Kinetic.Stage.prototype = {
         var that = this;
 
         // desktop events
-        this.container.addEventListener("mousedown", function(evt) {
+        this.container.addEventListener('mousedown', function(evt) {
             that.mouseDown = true;
             that._handleEvent(evt);
         }, false);
 
-        this.container.addEventListener("mousemove", function(evt) {
+        this.container.addEventListener('mousemove', function(evt) {
             that.mouseUp = false;
             that.mouseDown = false;
             that._handleEvent(evt);
         }, false);
 
-        this.container.addEventListener("mouseup", function(evt) {
+        this.container.addEventListener('mouseup', function(evt) {
             that.mouseUp = true;
             that.mouseDown = false;
             that._handleEvent(evt);
@@ -494,26 +503,26 @@ Kinetic.Stage.prototype = {
             that.clickStart = false;
         }, false);
 
-        this.container.addEventListener("mouseover", function(evt) {
+        this.container.addEventListener('mouseover', function(evt) {
             that._handleEvent(evt);
         }, false);
 
-        this.container.addEventListener("mouseout", function(evt) {
+        this.container.addEventListener('mouseout', function(evt) {
             that.mousePos = undefined;
         }, false);
         // mobile events
-        this.container.addEventListener("touchstart", function(evt) {
+        this.container.addEventListener('touchstart', function(evt) {
             evt.preventDefault();
             that.touchStart = true;
             that._handleEvent(evt);
         }, false);
 
-        this.container.addEventListener("touchmove", function(evt) {
+        this.container.addEventListener('touchmove', function(evt) {
             evt.preventDefault();
             that._handleEvent(evt);
         }, false);
 
-        this.container.addEventListener("touchend", function(evt) {
+        this.container.addEventListener('touchend', function(evt) {
             evt.preventDefault();
             that.touchEnd = true;
             that._handleEvent(evt);
@@ -556,9 +565,9 @@ Kinetic.Stage.prototype = {
         var obj = this.container;
         var top = 0;
         var left = 0;
-        while(obj && obj.tagName !== "BODY") {
-            top += obj.offsetTop;
-            left += obj.offsetLeft;
+        while(obj && obj.tagName !== 'BODY') {
+            top += obj.offsetTop - obj.scrollTop;
+            left += obj.offsetLeft - obj.scrollLeft;
             obj = obj.offsetParent;
         }
         return {
@@ -596,7 +605,7 @@ Kinetic.Stage.prototype = {
         if(go.drag.node) {
             if(go.drag.moving) {
                 go.drag.moving = false;
-                go.drag.node._handleEvents("ondragend", evt);
+                go.drag.node._handleEvents('ondragend', evt);
             }
         }
         go.drag.node = undefined;
@@ -607,20 +616,20 @@ Kinetic.Stage.prototype = {
     _prepareDrag: function() {
         var that = this;
 
-        this.on("mousemove touchmove", function(evt) {
+        this.on('mousemove touchmove', function(evt) {
             var go = Kinetic.GlobalObject;
             var node = go.drag.node;
             if(node) {
                 var pos = that.getUserPosition();
                 var ds = node.dragConstraint;
                 var db = node.dragBounds;
-                if(ds === "none" || ds === "horizontal") {
+                if(ds === 'none' || ds === 'horizontal') {
                     var newX = pos.x - go.drag.offset.x;
                     if((db.left === undefined || db.left < newX) && (db.right === undefined || db.right > newX)) {
                         node.x = newX;
                     }
                 }
-                if(ds === "none" || ds === "vertical") {
+                if(ds === 'none' || ds === 'vertical') {
                     var newY = pos.y - go.drag.offset.y;
                     if((db.top === undefined || db.top < newY) && (db.bottom === undefined || db.bottom > newY)) {
                         node.y = newY;
@@ -631,14 +640,14 @@ Kinetic.Stage.prototype = {
                 if(!go.drag.moving) {
                     go.drag.moving = true;
                     // execute dragstart events if defined
-                    go.drag.node._handleEvents("ondragstart", evt);
+                    go.drag.node._handleEvents('ondragstart', evt);
                 }
                 // execute user defined ondragmove if defined
-                go.drag.node._handleEvents("ondragmove", evt);
+                go.drag.node._handleEvents('ondragmove', evt);
             }
         }, false);
 
-        this.on("mouseup touchend mouseout", function(evt) {
+        this.on('mouseup touchend mouseout', function(evt) {
             that._endDrag(evt);
         });
     }

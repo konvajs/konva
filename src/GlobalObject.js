@@ -47,7 +47,7 @@ Kinetic.GlobalObject = {
         for(var key in config) {
             if(config.hasOwnProperty(key)) {
                 if(config[key].x !== undefined || config[key].y !== undefined) {
-                    var propArray = ["x", "y"];
+                    var propArray = ['x', 'y'];
                     for(var n = 0; n < propArray.length; n++) {
                         var prop = propArray[n];
                         if(config[key][prop] !== undefined) {
@@ -66,7 +66,7 @@ Kinetic.GlobalObject = {
         for(var key in config) {
             if(config.hasOwnProperty(key)) {
                 if(config[key].x !== undefined || config[key].y !== undefined) {
-                    var propArray = ["x", "y"];
+                    var propArray = ['x', 'y'];
                     for(var n = 0; n < propArray.length; n++) {
                         var prop = propArray[n];
                         if(config[key][prop] !== undefined) {

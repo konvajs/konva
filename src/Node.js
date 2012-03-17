@@ -25,7 +25,7 @@ Kinetic.Node = function(config) {
         y: 0
     };
     this.eventListeners = {};
-    this.dragConstraint = "none";
+    this.dragConstraint = 'none';
     this.dragBounds = {};
     this._draggable = false;
 
@@ -34,13 +34,13 @@ Kinetic.Node = function(config) {
         for(var key in config) {
             // handle special keys
             switch (key) {
-                case "draggable":
+                case 'draggable':
                     this.draggable(config[key]);
                     break;
-                case "listen":
+                case 'listen':
                     this.listen(config[key]);
                     break;
-                case "rotationDeg":
+                case 'rotationDeg':
                     this.rotation = config[key] * Math.PI / 180;
                     break;
                 default:
@@ -67,24 +67,24 @@ Kinetic.Node.prototype = {
      * mouseout, mousedown, mouseup, click, dblclick, touchstart, touchmove,
      * touchend, dbltap, dragstart, dragmove, and dragend.  Pass in a string
      * of event types delimmited by a space to bind multiple events at once
-     * such as "mousedown mouseup mousemove". include a namespace to bind an
-     * event by name such as "click.foobar".
+     * such as 'mousedown mouseup mousemove'. include a namespace to bind an
+     * event by name such as 'click.foobar'.
      * @param {String} typesStr
      * @param {function} handler
      */
     on: function(typesStr, handler) {
-        var types = typesStr.split(" ");
+        var types = typesStr.split(' ');
         /*
          * loop through types and attach event listeners to
-         * each one.  eg. "click mouseover.namespace mouseout"
+         * each one.  eg. 'click mouseover.namespace mouseout'
          * will create three event bindings
          */
         for(var n = 0; n < types.length; n++) {
             var type = types[n];
             var event = (type.indexOf('touch') === -1) ? 'on' + type : type;
-            var parts = event.split(".");
+            var parts = event.split('.');
             var baseEvent = parts[0];
-            var name = parts.length > 1 ? parts[1] : "";
+            var name = parts.length > 1 ? parts[1] : '';
 
             if(!this.eventListeners[baseEvent]) {
                 this.eventListeners[baseEvent] = [];
@@ -99,18 +99,18 @@ Kinetic.Node.prototype = {
     /**
      * remove event bindings from the node.  Pass in a string of
      * event types delimmited by a space to remove multiple event
-     * bindings at once such as "mousedown mouseup mousemove".
+     * bindings at once such as 'mousedown mouseup mousemove'.
      * include a namespace to remove an event binding by name
-     * such as "click.foobar".
+     * such as 'click.foobar'.
      * @param {String} typesStr
      */
     off: function(typesStr) {
-        var types = typesStr.split(" ");
+        var types = typesStr.split(' ');
 
         for(var n = 0; n < types.length; n++) {
             var type = types[n];
             var event = (type.indexOf('touch') === -1) ? 'on' + type : type;
-            var parts = event.split(".");
+            var parts = event.split('.');
             var baseEvent = parts[0];
 
             if(this.eventListeners[baseEvent] && parts.length > 1) {
@@ -196,7 +196,7 @@ Kinetic.Node.prototype = {
         var x = this.x;
         var y = this.y;
         var parent = this.getParent();
-        while(parent.className !== "Stage") {
+        while(parent.className !== 'Stage') {
             x += parent.x;
             y += parent.y;
             parent = parent.parent;
@@ -334,7 +334,7 @@ Kinetic.Node.prototype = {
         var absAlpha = 1;
         var node = this;
         // traverse upwards
-        while(node.className !== "Stage") {
+        while(node.className !== 'Stage') {
             absAlpha *= node.alpha;
             node = node.parent;
         }
@@ -449,7 +449,7 @@ Kinetic.Node.prototype = {
             if(config.hasOwnProperty(key)) {
                 if(config[key].x !== undefined || config[key].y !== undefined) {
                     changes[key] = {};
-                    var propArray = ["x", "y"];
+                    var propArray = ['x', 'y'];
                     for(var n = 0; n < propArray.length; n++) {
                         var prop = propArray[n];
                         if(config[key][prop] !== undefined) {
@@ -507,7 +507,7 @@ Kinetic.Node.prototype = {
     _initDrag: function() {
         var go = Kinetic.GlobalObject;
         var that = this;
-        this.on("mousedown.initdrag touchstart.initdrag", function(evt) {
+        this.on('mousedown.initdrag touchstart.initdrag', function(evt) {
             var stage = that.getStage();
             var pos = stage.getUserPosition();
 
@@ -522,8 +522,8 @@ Kinetic.Node.prototype = {
      * remove drag and drop event listener
      */
     _dragCleanup: function() {
-        this.off("mousedown.initdrag");
-        this.off("touchstart.initdrag");
+        this.off('mousedown.initdrag');
+        this.off('touchstart.initdrag');
     },
     /**
      * handle node events
@@ -541,7 +541,7 @@ Kinetic.Node.prototype = {
                 }
             }
 
-            if(obj.parent.className !== "Stage") {
+            if(obj.parent.className !== 'Stage') {
                 handle(obj.parent);
             }
         }

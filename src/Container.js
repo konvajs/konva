@@ -54,9 +54,10 @@ Kinetic.Container.prototype = {
         var children = this.children;
         for(var n = 0; n < children.length; n++) {
             var child = children[n];
-            if(child.className === "Shape") {
+            if(child.className === 'Shape') {
                 child._draw(child.getLayer());
-            } else {
+            }
+            else {
                 child._draw();
             }
         }
@@ -84,21 +85,21 @@ Kinetic.Container.prototype = {
          * from the container except the buffer and backstage canvases
          * and then readd all the layers
          */
-        if(this.className === "Stage") {
-            var canvases = this.container.children;
+        if(this.className === 'Stage') {
+            var canvases = this.content.children;
             var bufferCanvas = canvases[0];
             var backstageCanvas = canvases[1];
 
-            this.container.innerHTML = "";
-            this.container.appendChild(bufferCanvas);
-            this.container.appendChild(backstageCanvas);
+            this.content.innerHTML = '';
+            this.content.appendChild(bufferCanvas);
+            this.content.appendChild(backstageCanvas);
         }
 
         for(var n = 0; n < this.children.length; n++) {
             this.children[n].index = n;
 
-            if(this.className === "Stage") {
-                this.container.appendChild(this.children[n].canvas);
+            if(this.className === 'Stage') {
+                this.content.appendChild(this.children[n].canvas);
             }
         }
     }

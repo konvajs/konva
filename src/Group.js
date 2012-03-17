@@ -10,7 +10,7 @@
  * @param {Object} config
  */
 Kinetic.Group = function(config) {
-    this.className = "Group";
+    this.className = 'Group';
 
     // call super constructors
     Kinetic.Container.apply(this, []);

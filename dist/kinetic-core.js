@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mar 13 2012
+ * Date: Mar 17 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -75,7 +75,7 @@ Kinetic.GlobalObject = {
         for(var key in config) {
             if(config.hasOwnProperty(key)) {
                 if(config[key].x !== undefined || config[key].y !== undefined) {
-                    var propArray = ["x", "y"];
+                    var propArray = ['x', 'y'];
                     for(var n = 0; n < propArray.length; n++) {
                         var prop = propArray[n];
                         if(config[key][prop] !== undefined) {
@@ -94,7 +94,7 @@ Kinetic.GlobalObject = {
         for(var key in config) {
             if(config.hasOwnProperty(key)) {
                 if(config[key].x !== undefined || config[key].y !== undefined) {
-                    var propArray = ["x", "y"];
+                    var propArray = ['x', 'y'];
                     for(var n = 0; n < propArray.length; n++) {
                         var prop = propArray[n];
                         if(config[key][prop] !== undefined) {
@@ -228,7 +228,7 @@ Kinetic.Node = function(config) {
         y: 0
     };
     this.eventListeners = {};
-    this.dragConstraint = "none";
+    this.dragConstraint = 'none';
     this.dragBounds = {};
     this._draggable = false;
 
@@ -237,13 +237,13 @@ Kinetic.Node = function(config) {
         for(var key in config) {
             // handle special keys
             switch (key) {
-                case "draggable":
+                case 'draggable':
                     this.draggable(config[key]);
                     break;
-                case "listen":
+                case 'listen':
                     this.listen(config[key]);
                     break;
-                case "rotationDeg":
+                case 'rotationDeg':
                     this.rotation = config[key] * Math.PI / 180;
                     break;
                 default:
@@ -270,24 +270,24 @@ Kinetic.Node.prototype = {
      * mouseout, mousedown, mouseup, click, dblclick, touchstart, touchmove,
      * touchend, dbltap, dragstart, dragmove, and dragend.  Pass in a string
      * of event types delimmited by a space to bind multiple events at once
-     * such as "mousedown mouseup mousemove". include a namespace to bind an
-     * event by name such as "click.foobar".
+     * such as 'mousedown mouseup mousemove'. include a namespace to bind an
+     * event by name such as 'click.foobar'.
      * @param {String} typesStr
      * @param {function} handler
      */
     on: function(typesStr, handler) {
-        var types = typesStr.split(" ");
+        var types = typesStr.split(' ');
         /*
          * loop through types and attach event listeners to
-         * each one.  eg. "click mouseover.namespace mouseout"
+         * each one.  eg. 'click mouseover.namespace mouseout'
          * will create three event bindings
          */
         for(var n = 0; n < types.length; n++) {
             var type = types[n];
             var event = (type.indexOf('touch') === -1) ? 'on' + type : type;
-            var parts = event.split(".");
+            var parts = event.split('.');
             var baseEvent = parts[0];
-            var name = parts.length > 1 ? parts[1] : "";
+            var name = parts.length > 1 ? parts[1] : '';
 
             if(!this.eventListeners[baseEvent]) {
                 this.eventListeners[baseEvent] = [];
@@ -302,18 +302,18 @@ Kinetic.Node.prototype = {
     /**
      * remove event bindings from the node.  Pass in a string of
      * event types delimmited by a space to remove multiple event
-     * bindings at once such as "mousedown mouseup mousemove".
+     * bindings at once such as 'mousedown mouseup mousemove'.
      * include a namespace to remove an event binding by name
-     * such as "click.foobar".
+     * such as 'click.foobar'.
      * @param {String} typesStr
      */
     off: function(typesStr) {
-        var types = typesStr.split(" ");
+        var types = typesStr.split(' ');
 
         for(var n = 0; n < types.length; n++) {
             var type = types[n];
             var event = (type.indexOf('touch') === -1) ? 'on' + type : type;
-            var parts = event.split(".");
+            var parts = event.split('.');
             var baseEvent = parts[0];
 
             if(this.eventListeners[baseEvent] && parts.length > 1) {
@@ -399,7 +399,7 @@ Kinetic.Node.prototype = {
         var x = this.x;
         var y = this.y;
         var parent = this.getParent();
-        while(parent.className !== "Stage") {
+        while(parent.className !== 'Stage') {
             x += parent.x;
             y += parent.y;
             parent = parent.parent;
@@ -537,7 +537,7 @@ Kinetic.Node.prototype = {
         var absAlpha = 1;
         var node = this;
         // traverse upwards
-        while(node.className !== "Stage") {
+        while(node.className !== 'Stage') {
             absAlpha *= node.alpha;
             node = node.parent;
         }
@@ -652,7 +652,7 @@ Kinetic.Node.prototype = {
             if(config.hasOwnProperty(key)) {
                 if(config[key].x !== undefined || config[key].y !== undefined) {
                     changes[key] = {};
-                    var propArray = ["x", "y"];
+                    var propArray = ['x', 'y'];
                     for(var n = 0; n < propArray.length; n++) {
                         var prop = propArray[n];
                         if(config[key][prop] !== undefined) {
@@ -710,7 +710,7 @@ Kinetic.Node.prototype = {
     _initDrag: function() {
         var go = Kinetic.GlobalObject;
         var that = this;
-        this.on("mousedown.initdrag touchstart.initdrag", function(evt) {
+        this.on('mousedown.initdrag touchstart.initdrag', function(evt) {
             var stage = that.getStage();
             var pos = stage.getUserPosition();
 
@@ -725,8 +725,8 @@ Kinetic.Node.prototype = {
      * remove drag and drop event listener
      */
     _dragCleanup: function() {
-        this.off("mousedown.initdrag");
-        this.off("touchstart.initdrag");
+        this.off('mousedown.initdrag');
+        this.off('touchstart.initdrag');
     },
     /**
      * handle node events
@@ -744,7 +744,7 @@ Kinetic.Node.prototype = {
                 }
             }
 
-            if(obj.parent.className !== "Stage") {
+            if(obj.parent.className !== 'Stage') {
                 handle(obj.parent);
             }
         }
@@ -813,9 +813,10 @@ Kinetic.Container.prototype = {
         var children = this.children;
         for(var n = 0; n < children.length; n++) {
             var child = children[n];
-            if(child.className === "Shape") {
+            if(child.className === 'Shape') {
                 child._draw(child.getLayer());
-            } else {
+            }
+            else {
                 child._draw();
             }
         }
@@ -843,25 +844,26 @@ Kinetic.Container.prototype = {
          * from the container except the buffer and backstage canvases
          * and then readd all the layers
          */
-        if(this.className === "Stage") {
-            var canvases = this.container.children;
+        if(this.className === 'Stage') {
+            var canvases = this.content.children;
             var bufferCanvas = canvases[0];
             var backstageCanvas = canvases[1];
 
-            this.container.innerHTML = "";
-            this.container.appendChild(bufferCanvas);
-            this.container.appendChild(backstageCanvas);
+            this.content.innerHTML = '';
+            this.content.appendChild(bufferCanvas);
+            this.content.appendChild(backstageCanvas);
         }
 
         for(var n = 0; n < this.children.length; n++) {
             this.children[n].index = n;
 
-            if(this.className === "Stage") {
-                this.container.appendChild(this.children[n].canvas);
+            if(this.className === 'Stage') {
+                this.content.appendChild(this.children[n].canvas);
             }
         }
     }
 };
+
 ///////////////////////////////////////////////////////////////////////
 //  Stage
 ///////////////////////////////////////////////////////////////////////
@@ -874,8 +876,10 @@ Kinetic.Container.prototype = {
  * @param {int} height
  */
 Kinetic.Stage = function(cont, width, height) {
-    this.className = "Stage";
-    this.container = typeof cont === "string" ? document.getElementById(cont) : cont;
+    this.className = 'Stage';
+    this.container = typeof cont === 'string' ? document.getElementById(cont) : cont;
+    this.content = document.createElement('div');
+
     this.width = width;
     this.height = height;
     this.scale = {
@@ -905,10 +909,18 @@ Kinetic.Stage = function(cont, width, height) {
     this.onFrameFunc = undefined;
 
     /*
-     * Layer roles
-     * - buffer: canvas compositing
-     * - backstage: path detection
-     */
+    * build DOM
+    */
+
+    // content
+    this.content.style.width = width + 'px';
+    this.content.style.height = height + 'px';
+    this.content.style.position = 'relative';
+    this.content.style.display = 'inline-block';
+    this.content.className = 'kineticjs-content';
+    this.container.appendChild(this.content);
+
+    // default layers
     this.bufferLayer = new Kinetic.Layer();
     this.backstageLayer = new Kinetic.Layer();
 
@@ -919,26 +931,25 @@ Kinetic.Stage = function(cont, width, height) {
     // customize back stage context
     var backstageLayer = this.backstageLayer;
     this._stripLayer(backstageLayer);
-
     this.bufferLayer.getCanvas().style.display = 'none';
     this.backstageLayer.getCanvas().style.display = 'none';
 
     // add buffer layer
     this.bufferLayer.canvas.width = this.width;
     this.bufferLayer.canvas.height = this.height;
-    this.container.appendChild(this.bufferLayer.canvas);
+    this.content.appendChild(this.bufferLayer.canvas);
 
     // add backstage layer
     this.backstageLayer.canvas.width = this.width;
     this.backstageLayer.canvas.height = this.height;
-    this.container.appendChild(this.backstageLayer.canvas);
+    this.content.appendChild(this.backstageLayer.canvas);
 
+    // listen for events and prepare drag and drop
     this._listen();
     this._prepareDrag();
 
     // add stage to global object
-    var stages = Kinetic.GlobalObject.stages;
-    stages.push(this);
+    Kinetic.GlobalObject.stages.push(this);
 
     // call super constructor
     Kinetic.Container.apply(this, []);
@@ -1083,7 +1094,7 @@ Kinetic.Stage.prototype = {
      */
     remove: function(layer) {
         // remove layer canvas from dom
-        this.container.removeChild(layer.canvas);
+        this.content.removeChild(layer.canvas);
 
         this._remove(layer);
     },
@@ -1094,7 +1105,7 @@ Kinetic.Stage.prototype = {
      * @param {function} handler
      */
     on: function(typesStr, handler) {
-        var types = typesStr.split(" ");
+        var types = typesStr.split(' ');
         for(var n = 0; n < types.length; n++) {
             var baseEvent = types[n];
             this.container.addEventListener(baseEvent, handler, false);
@@ -1114,7 +1125,7 @@ Kinetic.Stage.prototype = {
 
         // draw layer and append canvas to container
         layer.draw();
-        this.container.appendChild(layer.canvas);
+        this.content.appendChild(layer.canvas);
     },
     /**
      * get mouse position for desktop apps
@@ -1172,14 +1183,14 @@ Kinetic.Stage.prototype = {
             if(!isDragging && this.mouseDown) {
                 this.mouseDown = false;
                 this.clickStart = true;
-                shape._handleEvents("onmousedown", evt);
+                shape._handleEvents('onmousedown', evt);
                 return true;
             }
             // handle onmouseup & onclick
             else
             if(this.mouseUp) {
                 this.mouseUp = false;
-                shape._handleEvents("onmouseup", evt);
+                shape._handleEvents('onmouseup', evt);
 
                 // detect if click or double click occurred
                 if(this.clickStart) {
@@ -1188,10 +1199,10 @@ Kinetic.Stage.prototype = {
                      * event
                      */
                     if((!go.drag.moving) || !go.drag.node) {
-                        shape._handleEvents("onclick", evt);
+                        shape._handleEvents('onclick', evt);
 
                         if(shape.inDoubleClickWindow) {
-                            shape._handleEvents("ondblclick", evt);
+                            shape._handleEvents('ondblclick', evt);
                         }
                         shape.inDoubleClickWindow = true;
                         setTimeout(function() {
@@ -1206,7 +1217,7 @@ Kinetic.Stage.prototype = {
             else
             if(this.touchStart) {
                 this.touchStart = false;
-                shape._handleEvents("touchstart", evt);
+                shape._handleEvents('touchstart', evt);
 
                 if(el.ondbltap && shape.inDoubleClickWindow) {
                     var events = el.ondbltap;
@@ -1227,14 +1238,14 @@ Kinetic.Stage.prototype = {
             else
             if(this.touchEnd) {
                 this.touchEnd = false;
-                shape._handleEvents("touchend", evt);
+                shape._handleEvents('touchend', evt);
                 return true;
             }
 
             // handle touchmove
             else
             if(!isDragging && el.touchmove) {
-                shape._handleEvents("touchmove", evt);
+                shape._handleEvents('touchmove', evt);
                 return true;
             }
 
@@ -1247,7 +1258,7 @@ Kinetic.Stage.prototype = {
                 if(this.targetShape) {
                     var oldEl = this.targetShape.eventListeners;
                     if(oldEl) {
-                        this.targetShape._handleEvents("onmouseout", evt);
+                        this.targetShape._handleEvents('onmouseout', evt);
                     }
                 }
 
@@ -1256,14 +1267,14 @@ Kinetic.Stage.prototype = {
                 this.targetFound = true;
 
                 // handle onmouseover
-                shape._handleEvents("onmouseover", evt);
+                shape._handleEvents('onmouseover', evt);
                 return true;
             }
 
             // handle onmousemove
             else
             if(!isDragging) {
-                shape._handleEvents("onmousemove", evt);
+                shape._handleEvents('onmousemove', evt);
                 return true;
             }
         }
@@ -1271,7 +1282,7 @@ Kinetic.Stage.prototype = {
         else
         if(!isDragging && this.targetShape && this.targetShape.id === shape.id) {
             this.targetShape = undefined;
-            shape._handleEvents("onmouseout", evt);
+            shape._handleEvents('onmouseout', evt);
             return true;
         }
 
@@ -1286,7 +1297,7 @@ Kinetic.Stage.prototype = {
         // propapgate backwards through children
         for(var i = children.length - 1; i >= 0; i--) {
             var child = children[i];
-            if(child.className === "Shape") {
+            if(child.className === 'Shape') {
                 var exit = this._detectEvent(child, evt);
                 if(exit) {
                     return true;
@@ -1339,18 +1350,18 @@ Kinetic.Stage.prototype = {
         var that = this;
 
         // desktop events
-        this.container.addEventListener("mousedown", function(evt) {
+        this.container.addEventListener('mousedown', function(evt) {
             that.mouseDown = true;
             that._handleEvent(evt);
         }, false);
 
-        this.container.addEventListener("mousemove", function(evt) {
+        this.container.addEventListener('mousemove', function(evt) {
             that.mouseUp = false;
             that.mouseDown = false;
             that._handleEvent(evt);
         }, false);
 
-        this.container.addEventListener("mouseup", function(evt) {
+        this.container.addEventListener('mouseup', function(evt) {
             that.mouseUp = true;
             that.mouseDown = false;
             that._handleEvent(evt);
@@ -1358,26 +1369,26 @@ Kinetic.Stage.prototype = {
             that.clickStart = false;
         }, false);
 
-        this.container.addEventListener("mouseover", function(evt) {
+        this.container.addEventListener('mouseover', function(evt) {
             that._handleEvent(evt);
         }, false);
 
-        this.container.addEventListener("mouseout", function(evt) {
+        this.container.addEventListener('mouseout', function(evt) {
             that.mousePos = undefined;
         }, false);
         // mobile events
-        this.container.addEventListener("touchstart", function(evt) {
+        this.container.addEventListener('touchstart', function(evt) {
             evt.preventDefault();
             that.touchStart = true;
             that._handleEvent(evt);
         }, false);
 
-        this.container.addEventListener("touchmove", function(evt) {
+        this.container.addEventListener('touchmove', function(evt) {
             evt.preventDefault();
             that._handleEvent(evt);
         }, false);
 
-        this.container.addEventListener("touchend", function(evt) {
+        this.container.addEventListener('touchend', function(evt) {
             evt.preventDefault();
             that.touchEnd = true;
             that._handleEvent(evt);
@@ -1420,9 +1431,9 @@ Kinetic.Stage.prototype = {
         var obj = this.container;
         var top = 0;
         var left = 0;
-        while(obj && obj.tagName !== "BODY") {
-            top += obj.offsetTop;
-            left += obj.offsetLeft;
+        while(obj && obj.tagName !== 'BODY') {
+            top += obj.offsetTop - obj.scrollTop;
+            left += obj.offsetLeft - obj.scrollLeft;
             obj = obj.offsetParent;
         }
         return {
@@ -1460,7 +1471,7 @@ Kinetic.Stage.prototype = {
         if(go.drag.node) {
             if(go.drag.moving) {
                 go.drag.moving = false;
-                go.drag.node._handleEvents("ondragend", evt);
+                go.drag.node._handleEvents('ondragend', evt);
             }
         }
         go.drag.node = undefined;
@@ -1471,20 +1482,20 @@ Kinetic.Stage.prototype = {
     _prepareDrag: function() {
         var that = this;
 
-        this.on("mousemove touchmove", function(evt) {
+        this.on('mousemove touchmove', function(evt) {
             var go = Kinetic.GlobalObject;
             var node = go.drag.node;
             if(node) {
                 var pos = that.getUserPosition();
                 var ds = node.dragConstraint;
                 var db = node.dragBounds;
-                if(ds === "none" || ds === "horizontal") {
+                if(ds === 'none' || ds === 'horizontal') {
                     var newX = pos.x - go.drag.offset.x;
                     if((db.left === undefined || db.left < newX) && (db.right === undefined || db.right > newX)) {
                         node.x = newX;
                     }
                 }
-                if(ds === "none" || ds === "vertical") {
+                if(ds === 'none' || ds === 'vertical') {
                     var newY = pos.y - go.drag.offset.y;
                     if((db.top === undefined || db.top < newY) && (db.bottom === undefined || db.bottom > newY)) {
                         node.y = newY;
@@ -1495,14 +1506,14 @@ Kinetic.Stage.prototype = {
                 if(!go.drag.moving) {
                     go.drag.moving = true;
                     // execute dragstart events if defined
-                    go.drag.node._handleEvents("ondragstart", evt);
+                    go.drag.node._handleEvents('ondragstart', evt);
                 }
                 // execute user defined ondragmove if defined
-                go.drag.node._handleEvents("ondragmove", evt);
+                go.drag.node._handleEvents('ondragmove', evt);
             }
         }, false);
 
-        this.on("mouseup touchend mouseout", function(evt) {
+        this.on('mouseup touchend mouseout', function(evt) {
             that._endDrag(evt);
         });
     }
@@ -1522,7 +1533,7 @@ Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Container);
  * @param {Object} config
  */
 Kinetic.Layer = function(config) {
-    this.className = "Layer";
+    this.className = 'Layer';
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
     this.canvas.style.position = 'absolute';
@@ -1603,7 +1614,7 @@ Kinetic.GlobalObject.extend(Kinetic.Layer, Kinetic.Node);
  * @param {Object} config
  */
 Kinetic.Group = function(config) {
-    this.className = "Group";
+    this.className = 'Group';
 
     // call super constructors
     Kinetic.Container.apply(this, []);
@@ -1640,6 +1651,7 @@ Kinetic.Group.prototype = {
 // Extend Container and Node
 Kinetic.GlobalObject.extend(Kinetic.Group, Kinetic.Container);
 Kinetic.GlobalObject.extend(Kinetic.Group, Kinetic.Node);
+
 ///////////////////////////////////////////////////////////////////////
 //  Shape
 ///////////////////////////////////////////////////////////////////////
@@ -1651,12 +1663,12 @@ Kinetic.GlobalObject.extend(Kinetic.Group, Kinetic.Node);
  * @param {Object} config
  */
 Kinetic.Shape = function(config) {
-    this.className = "Shape";
+    this.className = 'Shape';
 
     // defaults
     if(config.stroke !== undefined || config.strokeWidth !== undefined) {
         if(config.stroke === undefined) {
-            config.stroke = "black";
+            config.stroke = 'black';
         }
         else
         if(config.strokeWidth === undefined) {
@@ -1760,7 +1772,7 @@ Kinetic.Shape.prototype = {
 
             family.unshift(this);
             var parent = this.parent;
-            while(parent.className !== "Stage") {
+            while(parent.className !== 'Stage') {
                 family.unshift(parent);
                 parent = parent.parent;
             }
@@ -2210,16 +2222,18 @@ Kinetic.Text = function(config) {
      */
     if(config.textStroke !== undefined || config.textStrokeWidth !== undefined) {
         if(config.textStroke === undefined) {
-            config.textStroke = "black";
-        } else if(config.textStrokeWidth === undefined) {
+            config.textStroke = 'black';
+        }
+        else
+        if(config.textStrokeWidth === undefined) {
             config.textStrokeWidth = 2;
         }
     }
     if(config.align === undefined) {
-        config.align = "left";
+        config.align = 'left';
     }
     if(config.verticalAlign === undefined) {
-        config.verticalAlign = "top";
+        config.verticalAlign = 'top';
     }
     if(config.padding === undefined) {
         config.padding = 0;
@@ -2227,8 +2241,8 @@ Kinetic.Text = function(config) {
 
     config.drawFunc = function() {
         var context = this.getContext();
-        context.font = this.fontSize + "pt " + this.fontFamily;
-        context.textBaseline = "middle";
+        context.font = this.fontSize + 'pt ' + this.fontFamily;
+        context.textBaseline = 'middle';
         var metrics = context.measureText(this.text);
         var textHeight = this.fontSize;
         var textWidth = metrics.width;
@@ -2237,19 +2251,19 @@ Kinetic.Text = function(config) {
         var y = 0;
 
         switch (this.align) {
-            case "center":
+            case 'center':
                 x = textWidth / -2 - p;
                 break;
-            case "right":
+            case 'right':
                 x = -1 * textWidth - p;
                 break;
         }
 
         switch (this.verticalAlign) {
-            case "middle":
+            case 'middle':
                 y = textHeight / -2 - p;
                 break;
-            case "bottom":
+            case 'bottom':
                 y = -1 * textHeight - p;
                 break;
         }
@@ -2273,8 +2287,10 @@ Kinetic.Text = function(config) {
         if(this.textStroke !== undefined || this.textStrokeWidth !== undefined) {
             // defaults
             if(this.textStroke === undefined) {
-                this.textStroke = "black";
-            } else if(this.textStrokeWidth === undefined) {
+                this.textStroke = 'black';
+            }
+            else
+            if(this.textStrokeWidth === undefined) {
                 this.textStrokeWidth = 2;
             }
             context.lineWidth = this.textStrokeWidth;
@@ -2369,7 +2385,7 @@ Kinetic.Text.prototype = {
     },
     /**
      * set horizontal align of text
-     * @param {String} align align can be "left", "center", or "right"
+     * @param {String} align align can be 'left', 'center', or 'right'
      */
     setAlign: function(align) {
         this.align = align;

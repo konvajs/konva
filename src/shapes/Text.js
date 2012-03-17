@@ -13,16 +13,18 @@ Kinetic.Text = function(config) {
      */
     if(config.textStroke !== undefined || config.textStrokeWidth !== undefined) {
         if(config.textStroke === undefined) {
-            config.textStroke = "black";
-        } else if(config.textStrokeWidth === undefined) {
+            config.textStroke = 'black';
+        }
+        else
+        if(config.textStrokeWidth === undefined) {
             config.textStrokeWidth = 2;
         }
     }
     if(config.align === undefined) {
-        config.align = "left";
+        config.align = 'left';
     }
     if(config.verticalAlign === undefined) {
-        config.verticalAlign = "top";
+        config.verticalAlign = 'top';
     }
     if(config.padding === undefined) {
         config.padding = 0;
@@ -30,8 +32,8 @@ Kinetic.Text = function(config) {
 
     config.drawFunc = function() {
         var context = this.getContext();
-        context.font = this.fontSize + "pt " + this.fontFamily;
-        context.textBaseline = "middle";
+        context.font = this.fontSize + 'pt ' + this.fontFamily;
+        context.textBaseline = 'middle';
         var metrics = context.measureText(this.text);
         var textHeight = this.fontSize;
         var textWidth = metrics.width;
@@ -40,19 +42,19 @@ Kinetic.Text = function(config) {
         var y = 0;
 
         switch (this.align) {
-            case "center":
+            case 'center':
                 x = textWidth / -2 - p;
                 break;
-            case "right":
+            case 'right':
                 x = -1 * textWidth - p;
                 break;
         }
 
         switch (this.verticalAlign) {
-            case "middle":
+            case 'middle':
                 y = textHeight / -2 - p;
                 break;
-            case "bottom":
+            case 'bottom':
                 y = -1 * textHeight - p;
                 break;
         }
@@ -76,8 +78,10 @@ Kinetic.Text = function(config) {
         if(this.textStroke !== undefined || this.textStrokeWidth !== undefined) {
             // defaults
             if(this.textStroke === undefined) {
-                this.textStroke = "black";
-            } else if(this.textStrokeWidth === undefined) {
+                this.textStroke = 'black';
+            }
+            else
+            if(this.textStrokeWidth === undefined) {
                 this.textStrokeWidth = 2;
             }
             context.lineWidth = this.textStrokeWidth;
@@ -172,7 +176,7 @@ Kinetic.Text.prototype = {
     },
     /**
      * set horizontal align of text
-     * @param {String} align align can be "left", "center", or "right"
+     * @param {String} align align can be 'left', 'center', or 'right'
      */
     setAlign: function(align) {
         this.align = align;

@@ -9,12 +9,12 @@
  * @param {Object} config
  */
 Kinetic.Shape = function(config) {
-    this.className = "Shape";
+    this.className = 'Shape';
 
     // defaults
     if(config.stroke !== undefined || config.strokeWidth !== undefined) {
         if(config.stroke === undefined) {
-            config.stroke = "black";
+            config.stroke = 'black';
         }
         else
         if(config.strokeWidth === undefined) {
@@ -118,7 +118,7 @@ Kinetic.Shape.prototype = {
 
             family.unshift(this);
             var parent = this.parent;
-            while(parent.className !== "Stage") {
+            while(parent.className !== 'Stage') {
                 family.unshift(parent);
                 parent = parent.parent;
             }

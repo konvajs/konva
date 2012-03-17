@@ -4,14 +4,6 @@ body {
 	font-family: monospace
 }
 
-canvas {
-    border-right: 2px solid #9C9898;
-}
-
-div {
-    height: 200px;
-}
-
 p {
     padding: 0px;
     margin: 0px;
@@ -25,4 +17,11 @@ p {
 .red {
 	background-color: red;
 	color: white;
+}
+
+.row > div {
+	display: inline-block;
+	background-color: #f0f0f0;
+	width: 578px;
+	height: 200px;
 }
