@@ -908,43 +908,7 @@ Kinetic.Stage = function(cont, width, height) {
     this.isAnimating = false;
     this.onFrameFunc = undefined;
 
-    /*
-    * build DOM
-    */
-
-    // content
-    this.content.style.width = width + 'px';
-    this.content.style.height = height + 'px';
-    this.content.style.position = 'relative';
-    this.content.style.display = 'inline-block';
-    this.content.className = 'kineticjs-content';
-    this.container.appendChild(this.content);
-
-    // default layers
-    this.bufferLayer = new Kinetic.Layer();
-    this.backstageLayer = new Kinetic.Layer();
-
-    // set parents
-    this.bufferLayer.parent = this;
-    this.backstageLayer.parent = this;
-
-    // customize back stage context
-    var backstageLayer = this.backstageLayer;
-    this._stripLayer(backstageLayer);
-    this.bufferLayer.getCanvas().style.display = 'none';
-    this.backstageLayer.getCanvas().style.display = 'none';
-
-    // add buffer layer
-    this.bufferLayer.canvas.width = this.width;
-    this.bufferLayer.canvas.height = this.height;
-    this.content.appendChild(this.bufferLayer.canvas);
-
-    // add backstage layer
-    this.backstageLayer.canvas.width = this.width;
-    this.backstageLayer.canvas.height = this.height;
-    this.content.appendChild(this.backstageLayer.canvas);
-
-    // listen for events and prepare drag and drop
+    this._buildDOM();
     this._listen();
     this._prepareDrag();
 
@@ -1516,6 +1480,41 @@ Kinetic.Stage.prototype = {
         this.on('mouseup touchend mouseout', function(evt) {
             that._endDrag(evt);
         });
+    },
+    /**
+     * build dom
+     */
+    _buildDOM: function() {
+        // content
+        this.content.style.width = this.width + 'px';
+        this.content.style.height = this.height + 'px';
+        this.content.style.position = 'relative';
+        this.content.style.display = 'inline-block';
+        this.content.className = 'kineticjs-content';
+        this.container.appendChild(this.content);
+
+        // default layers
+        this.bufferLayer = new Kinetic.Layer();
+        this.backstageLayer = new Kinetic.Layer();
+
+        // set parents
+        this.bufferLayer.parent = this;
+        this.backstageLayer.parent = this;
+
+        // customize back stage context
+        this._stripLayer(this.backstageLayer);
+        this.bufferLayer.getCanvas().style.display = 'none';
+        this.backstageLayer.getCanvas().style.display = 'none';
+
+        // add buffer layer
+        this.bufferLayer.canvas.width = this.width;
+        this.bufferLayer.canvas.height = this.height;
+        this.content.appendChild(this.bufferLayer.canvas);
+
+        // add backstage layer
+        this.backstageLayer.canvas.width = this.width;
+        this.backstageLayer.canvas.height = this.height;
+        this.content.appendChild(this.backstageLayer.canvas);
     }
 };
 // extend Container
