@@ -531,21 +531,40 @@ Kinetic.Node.prototype = {
      * @param {Event} evt
      */
     _handleEvents: function(eventType, evt) {
-        // generic events handler
-        function handle(obj) {
-            var el = obj.eventListeners;
-            if(el[eventType]) {
-                var events = el[eventType];
-                for(var i = 0; i < events.length; i++) {
-                    events[i].handler.apply(obj, [evt]);
-                }
-            }
+        var stage = this.getStage();
+        this._handleEvent(this, stage.mouseoverShape, stage.mouseoutShape, eventType, evt);
+    },
+    /**
+     * handle node event
+     */
+    _handleEvent: function(node, mouseoverNode, mouseoutNode, eventType, evt) {
+        var el = node.eventListeners;
+        var okayToRun = true;
 
-            // simulate event bubbling
-            if(!evt.cancelBubble && obj.parent.className !== 'Stage') {
-                handle(obj.parent);
+        /*
+         * determine if event handler should be skipped by comparing
+         * parent nodes
+         */
+        if(eventType === 'onmouseover' && mouseoutNode && mouseoutNode.id === node.id) {
+            okayToRun = false;
+        }
+        else if(eventType === 'onmouseout' && mouseoverNode && mouseoverNode.id === node.id) {
+            okayToRun = false;
+        }
+
+        if(el[eventType] && okayToRun) {
+            var events = el[eventType];
+            for(var i = 0; i < events.length; i++) {
+                events[i].handler.apply(node, [evt]);
             }
         }
-        handle(this);
+
+        var mouseoverParent = mouseoverNode ? mouseoverNode.parent : undefined;
+        var mouseoutParent = mouseoutNode ? mouseoutNode.parent : undefined;
+
+        // simulate event bubbling
+        if(!evt.cancelBubble && node.parent.className !== 'Stage') {
+            this._handleEvent(node.parent, mouseoverParent, mouseoutParent, eventType, evt);
+        }
     }
 };

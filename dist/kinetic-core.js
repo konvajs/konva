@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mar 17 2012
+ * Date: Mar 18 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -733,22 +733,41 @@ Kinetic.Node.prototype = {
      * @param {Event} evt
      */
     _handleEvents: function(eventType, evt) {
-        // generic events handler
-        function handle(obj) {
-            var el = obj.eventListeners;
-            if(el[eventType]) {
-                var events = el[eventType];
-                for(var i = 0; i < events.length; i++) {
-                    events[i].handler.apply(obj, [evt]);
-                }
-            }
+        var stage = this.getStage();
+        this._handleEvent(this, stage.mouseoverShape, stage.mouseoutShape, eventType, evt);
+    },
+    /**
+     * handle node event
+     */
+    _handleEvent: function(node, mouseoverNode, mouseoutNode, eventType, evt) {
+        var el = node.eventListeners;
+        var okayToRun = true;
 
-            // simulate event bubbling
-            if(!evt.cancelBubble && obj.parent.className !== 'Stage') {
-                handle(obj.parent);
+        /*
+         * determine if event handler should be skipped by comparing
+         * parent nodes
+         */
+        if(eventType === 'onmouseover' && mouseoutNode && mouseoutNode.id === node.id) {
+            okayToRun = false;
+        }
+        else if(eventType === 'onmouseout' && mouseoverNode && mouseoverNode.id === node.id) {
+            okayToRun = false;
+        }
+
+        if(el[eventType] && okayToRun) {
+            var events = el[eventType];
+            for(var i = 0; i < events.length; i++) {
+                events[i].handler.apply(node, [evt]);
             }
         }
-        handle(this);
+
+        var mouseoverParent = mouseoverNode ? mouseoverNode.parent : undefined;
+        var mouseoutParent = mouseoutNode ? mouseoutNode.parent : undefined;
+
+        // simulate event bubbling
+        if(!evt.cancelBubble && node.parent.className !== 'Stage') {
+            this._handleEvent(node.parent, mouseoverParent, mouseoutParent, eventType, evt);
+        }
     }
 };
 
@@ -882,9 +901,11 @@ Kinetic.Stage = function(cont, width, height) {
         y: 1
     };
     this.dblClickWindow = 400;
-    this.targetShape = undefined;
     this.clickStart = false;
+    this.targetShape = undefined;
     this.targetFound = false;
+    this.mouseoverShape = undefined;
+    this.mouseoutShape = undefined;
 
     // desktop flags
     this.mousePos = undefined;
@@ -1199,12 +1220,25 @@ Kinetic.Stage.prototype = {
             }
 
             /*
-             * NOTE: these event handlers require target shape
-             * handling
-             */
+            * NOTE: these event handlers require target shape
+            * handling
+            */
+
+            // handle onmouseover
             else if(!isDragging && this._isNewTarget(shape, evt)) {
-                // handle onmouseover
+                /*
+                 * check to see if there are stored mouseout events first.
+                 * if there are, run those before running the onmouseover
+                 * events
+                 */
+                if(this.mouseoutShape) {
+                    this.mouseoverShape = shape;
+                    this.mouseoutShape._handleEvents('onmouseout', evt);
+                    this.mouseoverShape = undefined;
+                }
+
                 shape._handleEvents('onmouseover', evt);
+                this._setTarget(shape);
                 return true;
             }
 
@@ -1217,13 +1251,24 @@ Kinetic.Stage.prototype = {
         }
         // handle mouseout condition
         else if(!isDragging && this.targetShape && this.targetShape.id === shape.id) {
-            this.targetShape = undefined;
-            shape._handleEvents('onmouseout', evt);
+            this._setTarget(undefined);
+            this.mouseoutShape = shape;
+            //shape._handleEvents('onmouseout', evt);
             return true;
         }
 
         return false;
     },
+    /**
+     * set new target
+     */
+    _setTarget: function(shape) {
+        this.targetShape = shape;
+        this.targetFound = true;
+    },
+    /**
+     * check if shape should be a new target
+     */
     _isNewTarget: function(shape, evt) {
         if(!this.targetShape || (!this.targetFound && shape.id !== this.targetShape.id)) {
             /*
@@ -1232,14 +1277,10 @@ Kinetic.Stage.prototype = {
             if(this.targetShape) {
                 var oldEl = this.targetShape.eventListeners;
                 if(oldEl) {
-                    this.targetShape._handleEvents('onmouseout', evt);
+                    this.mouseoutShape = this.targetShape;
+                    //this.targetShape._handleEvents('onmouseout', evt);
                 }
             }
-
-            // set new target shape
-            this.targetShape = shape;
-            this.targetFound = true;
-
             return true;
         }
         else {
@@ -1293,14 +1334,25 @@ Kinetic.Stage.prototype = {
          * three nested loops
          */
         this.targetFound = false;
-
+        var shapeDetected = false;
         for(var n = this.children.length - 1; n >= 0; n--) {
             var layer = this.children[n];
             if(layer.visible && n >= 0 && layer.isListening) {
                 if(this._traverseChildren(layer, evt)) {
                     n = -1;
+                    shapeDetected = true;
                 }
             }
+        }
+
+        /*
+         * if no shape was detected and a mouseout shape has been stored,
+         * then run the onmouseout event handlers
+         */
+        if(!shapeDetected && this.mouseoutShape) {
+            this.mouseoutShape._handleEvents('onmouseout', evt);
+            this.mouseoutShape = undefined;
+
         }
     },
     /**

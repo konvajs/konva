@@ -458,28 +458,54 @@ Test.prototype.tests = {
 
         stage.add(layer);
     },
-    'EVENTS - event bubbling': function(containerId) {
+    'EVENTS - group click events': function(containerId) {
         var stage = new Kinetic.Stage(containerId, 578, 200);
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
 
-        layer.on('mouseover', function() {
-            log('mouseover layer');
+
+
+        group.on('click', function() {
+            log('click group');
             //console.log(this);
         });
-        layer.on('mouseout', function() {
-            log('mouseout layer');
-            //console.log(this);
+        
+        var redCircle = new Kinetic.Circle({
+            x: stage.width / 2,
+            y: stage.height / 2,
+            radius: 80,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            name: 'red'
         });
 
-        group.on('mouseover', function() {
-            log('mouseover group');
+        var greenCircle = new Kinetic.Circle({
+            x: stage.width / 2,
+            y: stage.height / 2,
+            radius: 40,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black',
+            name: 'green'
+        });
+
+        group.add(redCircle);
+        group.add(greenCircle);
+
+        layer.add(group);
+        stage.add(layer);
+    },
+    'EVENTS - group mousemove events': function(containerId) {
+        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+
+        group.on('mousemove', function() {
+            log('mousemove group');
             //console.log(this);
         });
-        group.on('mouseout', function() {
-            log('mouseout group');
-            //console.log(this);
-        });
+        
         var redCircle = new Kinetic.Circle({
             x: stage.width / 2,
             y: stage.height / 2,
@@ -489,14 +515,6 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        redCircle.on('mouseover', function() {
-            log('mouseover red circle');
-            //console.log(this);
-        });
-        redCircle.on('mouseout', function() {
-            log('mouseout red circle');
-            //console.log(this);
-        });
         var greenCircle = new Kinetic.Circle({
             x: stage.width / 2,
             y: stage.height / 2,
@@ -506,13 +524,45 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        greenCircle.on('mouseover', function() {
-            log('mouseover green circle');
-            //console.log(this);
+        group.add(redCircle);
+        group.add(greenCircle);
+
+        layer.add(group);
+        stage.add(layer);
+    },
+    'EVENTS - group mouseover events': function(containerId) {
+        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group({
+        	name: 'group'
         });
-        greenCircle.on('mouseout', function() {
-            log('mouseout green circle');
-            //console.log(this);
+
+        group.on('mouseover', function() {
+            log('mouseover group');
+        });
+        
+        group.on('mouseout', function() {
+            log('mouseout group');
+        });
+        
+        var redCircle = new Kinetic.Circle({
+            x: stage.width / 2,
+            y: stage.height / 2,
+            radius: 80,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            name: 'red'
+        });
+
+        var greenCircle = new Kinetic.Circle({
+            x: stage.width / 2,
+            y: stage.height / 2,
+            radius: 40,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black',
+            name: 'green'
         });
 
         group.add(redCircle);
