@@ -34,7 +34,7 @@ Kinetic.Text = function(config) {
         context.font = this.fontSize + 'pt ' + this.fontFamily;
         context.textBaseline = 'middle';
         var metrics = context.measureText(this.text);
-        var textHeight = this.fontSize;
+        var textHeight = textHeight = parseInt(this.fontSize, 10);
         var textWidth = metrics.width;
         var p = this.padding;
         var x = 0;

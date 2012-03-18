@@ -1198,36 +1198,20 @@ Kinetic.Stage.prototype = {
                 return true;
             }
 
-            // handle touchmove
-            else if(!isDragging && el.touchmove) {
-                shape._handleEvents('touchmove', evt);
-                return true;
-            }
-
-            //this condition is used to identify a new target shape.
-            else if(!isDragging && (!this.targetShape || (!this.targetFound && shape.id !== this.targetShape.id))) {
-                /*
-                 * check if old target has an onmouseout event listener
-                 */
-                if(this.targetShape) {
-                    var oldEl = this.targetShape.eventListeners;
-                    if(oldEl) {
-                        this.targetShape._handleEvents('onmouseout', evt);
-                    }
-                }
-
-                // set new target shape
-                this.targetShape = shape;
-                this.targetFound = true;
-
+            /*
+             * NOTE: these event handlers require target shape
+             * handling
+             */
+            else if(!isDragging && this._isNewTarget(shape, evt)) {
                 // handle onmouseover
                 shape._handleEvents('onmouseover', evt);
                 return true;
             }
 
-            // handle onmousemove
+            // handle mousemove and touchmove
             else if(!isDragging) {
                 shape._handleEvents('onmousemove', evt);
+                shape._handleEvents('touchmove', evt);
                 return true;
             }
         }
@@ -1239,6 +1223,28 @@ Kinetic.Stage.prototype = {
         }
 
         return false;
+    },
+    _isNewTarget: function(shape, evt) {
+        if(!this.targetShape || (!this.targetFound && shape.id !== this.targetShape.id)) {
+            /*
+             * check if old target has an onmouseout event listener
+             */
+            if(this.targetShape) {
+                var oldEl = this.targetShape.eventListeners;
+                if(oldEl) {
+                    this.targetShape._handleEvents('onmouseout', evt);
+                }
+            }
+
+            // set new target shape
+            this.targetShape = shape;
+            this.targetFound = true;
+
+            return true;
+        }
+        else {
+            return false;
+        }
     },
     /**
      * traverse container children
@@ -1256,7 +1262,10 @@ Kinetic.Stage.prototype = {
                 }
             }
             else {
-                this._traverseChildren(child, evt);
+                var exit = this._traverseChildren(child, evt);
+                if(exit) {
+                    return true;
+                }
             }
         }
 
@@ -2232,7 +2241,7 @@ Kinetic.Text = function(config) {
         context.font = this.fontSize + 'pt ' + this.fontFamily;
         context.textBaseline = 'middle';
         var metrics = context.measureText(this.text);
-        var textHeight = this.fontSize;
+        var textHeight = textHeight = parseInt(this.fontSize, 10);
         var textWidth = metrics.width;
         var p = this.padding;
         var x = 0;

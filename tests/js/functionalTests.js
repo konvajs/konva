@@ -292,7 +292,7 @@ Test.prototype.tests = {
         layer.add(circle);
         stage.add(layer);
     },
-    'EVENTS - mousemove from shape to another shape in same layer': function(containerId) {
+    'EVENTS - move mouse from shape to another shape in same layer': function(containerId) {
         var stage = new Kinetic.Stage(containerId, 578, 200);
         var layer = new Kinetic.Layer();
 
@@ -332,7 +332,52 @@ Test.prototype.tests = {
 
         stage.add(layer);
     },
-    'EVENTS - mousemove from shape in one layer to shape in another layer': function(containerId) {
+    'EVENTS - move mouse from shape in one group to shape in another group': function(containerId) {
+        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var layer = new Kinetic.Layer();
+        var redGroup = new Kinetic.Group();
+        var greenGroup = new Kinetic.Group();
+
+        var redCircle = new Kinetic.Circle({
+            x: 200,
+            y: stage.height / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black'
+        });
+
+        redCircle.on('mouseover', function() {
+            log('mouseover red circle');
+        });
+        redCircle.on('mouseout', function() {
+            log('mouseout red circle');
+        });
+        var greenCircle = new Kinetic.Circle({
+            x: 280,
+            y: stage.height / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black'
+        });
+
+        greenCircle.on('mouseover', function() {
+            log('mouseover green circle');
+        });
+        greenCircle.on('mouseout', function() {
+            log('mouseout green circle');
+        });
+
+        redGroup.add(redCircle);
+        greenGroup.add(greenCircle);
+
+        layer.add(redGroup);
+        layer.add(greenGroup);
+
+        stage.add(layer);
+    },
+    'EVENTS - move mouse from shape in one layer to shape in another layer': function(containerId) {
         var stage = new Kinetic.Stage(containerId, 578, 200);
         var redLayer = new Kinetic.Layer();
         var greenLayer = new Kinetic.Layer();
@@ -373,6 +418,45 @@ Test.prototype.tests = {
 
         stage.add(redLayer);
         stage.add(greenLayer);
+    },
+    'EVENTS - mousemove from shape in one group to shape in another group': function(containerId) {
+        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var layer = new Kinetic.Layer();
+        var redGroup = new Kinetic.Group();
+        var greenGroup = new Kinetic.Group();
+
+        var redCircle = new Kinetic.Circle({
+            x: 200,
+            y: stage.height / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black'
+        });
+
+        redCircle.on('mousemove', function() {
+            log('mousemove red circle');
+        });
+        var greenCircle = new Kinetic.Circle({
+            x: 280,
+            y: stage.height / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black'
+        });
+
+        greenCircle.on('mousemove', function() {
+            log('mousemove green circle');
+        });
+
+        redGroup.add(redCircle);
+        greenGroup.add(greenCircle);
+
+        layer.add(redGroup);
+        layer.add(greenGroup);
+
+        stage.add(layer);
     },
     'EVENTS - event bubbling': function(containerId) {
         var stage = new Kinetic.Stage(containerId, 578, 200);
@@ -450,7 +534,6 @@ Test.prototype.tests = {
             log('click group');
             //console.log(this);
         });
-        
         var redCircle = new Kinetic.Circle({
             x: stage.width / 2,
             y: stage.height / 2,
