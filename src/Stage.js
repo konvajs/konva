@@ -5,6 +5,7 @@
  * Stage constructor.  A stage is used to contain multiple layers and handle
  * animations
  * @constructor
+ * @augments Kinetic.Container
  * @param {String|DomElement} cont Container id or DOM element
  * @param {int} width
  * @param {int} height

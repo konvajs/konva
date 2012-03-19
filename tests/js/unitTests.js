@@ -200,6 +200,76 @@ Test.prototype.tests = {
         layer.add(group);
         stage.add(layer);
     },
+    'GROUPS - hide group': function(containerId) {
+        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+        var circle = new Kinetic.Circle({
+            x: stage.width / 2,
+            y: stage.height / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        group.add(circle);
+        layer.add(group);
+        stage.add(layer);
+
+        group.hide();
+        layer.draw();
+    },
+    'GROUPS - create two groups, move first group': function(containerId) {
+        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var greenLayer = new Kinetic.Layer();
+        var blueLayer = new Kinetic.Layer();
+        var greenGroup = new Kinetic.Group();
+        var blueGroup = new Kinetic.Group();
+
+        var greenCircle = new Kinetic.Circle({
+            x: stage.width / 2 - 100,
+            y: stage.height / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true
+        });
+
+        var blueCircle = new Kinetic.Circle({
+            x: stage.width / 2 + 100,
+            y: stage.height / 2,
+            radius: 70,
+            fill: 'blue',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        greenGroup.add(greenCircle);
+        blueGroup.add(blueCircle);
+        greenLayer.add(greenGroup);
+        blueLayer.add(blueGroup);
+        stage.add(greenLayer);
+        stage.add(blueLayer);
+
+        blueLayer.removeChildren();
+        var blueGroup2 = new Kinetic.Group();
+        var blueCircle2 = new Kinetic.Circle({
+            x: stage.width / 2,
+            y: stage.height / 2,
+            radius: 70,
+            fill: 'blue',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+        blueGroup2.add(blueCircle2);
+        blueLayer.add(blueGroup2);
+        blueLayer.draw();
+
+        blueGroup2.setPosition(100, 0);
+        blueLayer.draw();
+    },
     ////////////////////////////////////////////////////////////////////////
     //  SHAPES tests
     ////////////////////////////////////////////////////////////////////////
@@ -850,26 +920,6 @@ Test.prototype.tests = {
         circle.show();
         layer.draw();
     },
-    'GROUPS - hide group': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-        var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
-            radius: 70,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-
-        group.add(circle);
-        layer.add(group);
-        stage.add(layer);
-
-        group.hide();
-        layer.draw();
-    },
     'SHAPES - set shape alpha to 0.5': function(containerId) {
         var stage = new Kinetic.Stage(containerId, 578, 200);
         var layer = new Kinetic.Layer();
@@ -1212,16 +1262,16 @@ Test.prototype.tests = {
             layer.draw();
         });
         test(stage.isAnimating === false, 'stage should not be animating');
-        test(Kinetic.GlobalObject.isAnimating === false, 'global object should not be animating');
+        test(Kinetic.GlobalObject._isaCanvasAnimating() === false, 'global object should not be animating');
 
         stage.start();
 
         test(stage.isAnimating === true, 'stage should be animating');
-        test(Kinetic.GlobalObject.isAnimating === true, 'global object should be animating');
+        test(Kinetic.GlobalObject._isaCanvasAnimating() === true, 'global object should be animating');
 
         stage.stop();
 
         test(stage.isAnimating === false, 'stage should not be animating');
-        test(Kinetic.GlobalObject.isAnimating === false, 'global object should not be animating');
+        test(Kinetic.GlobalObject._isaCanvasAnimating() === false, 'global object should not be animating');
     }
 };

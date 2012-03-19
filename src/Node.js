@@ -470,6 +470,9 @@ Kinetic.Node.prototype = {
             node: this,
             changes: changes
         });
+        
+        layer.isTransitioning = true;
+        Kinetic.GlobalObject._handleAnimation();
     },
     /**
      * set drag constraint

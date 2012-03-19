@@ -16,7 +16,8 @@ Kinetic.Layer = function(config) {
     this.canvas.style.position = 'absolute';
     this.transitions = [];
     this.transitionIdCounter = 0;
-
+    this.isTransitioning = false;
+    
     // call super constructors
     Kinetic.Container.apply(this, []);
     Kinetic.Node.apply(this, [config]);

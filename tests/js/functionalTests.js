@@ -76,6 +76,10 @@ Test.prototype.tests = {
         });
 
         stage.start();
+        
+        setTimeout(function() {
+        	stage.stop(); 
+        }, 1000);
     },
     'EVENTS - mousedown mouseup mouseover mouseout click dblclick / touchstart touchend dbltap': function(containerId) {
         var stage = new Kinetic.Stage(containerId, 578, 200);

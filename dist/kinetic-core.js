@@ -41,7 +41,6 @@ var Kinetic = {};
 Kinetic.GlobalObject = {
     stages: [],
     idCounter: 0,
-    isAnimating: false,
     frame: {
         time: 0,
         timeDiff: 0,
@@ -64,8 +63,16 @@ Kinetic.GlobalObject = {
     },
     _isaCanvasAnimating: function() {
         for(var n = 0; n < this.stages.length; n++) {
-            if(this.stages[n].isAnimating) {
+            var stage = this.stages[n];
+            if(stage.isAnimating) {
                 return true;
+            }
+
+            for(var i = 0; i < stage.children.length; i++) {
+                var layer = stage.children[i];
+                if(layer.isTransitioning) {
+                    return true;
+                }
             }
         }
         return false;
@@ -111,12 +118,16 @@ Kinetic.GlobalObject = {
     _removeTransition: function(transition) {
         var layer = transition.node.getLayer();
         var id = transition.id;
-
         for(var n = 0; n < layer.transitions.length; n++) {
             if(layer.transitions[n].id === id) {
                 layer.transitions.splice(0, 1);
-                return false;
+                // exit loop
+                n = layer.transitions.length;
             }
+        }
+
+        if(layer.transitions.length === 0) {
+            layer.isTransitioning = false;
         }
     },
     _runFrames: function() {
@@ -171,7 +182,7 @@ Kinetic.GlobalObject = {
         }
     },
     _animationLoop: function() {
-        if(this.isAnimating) {
+        if(this._isaCanvasAnimating()) {
             this._updateFrameObject();
             this._runFrames();
             var that = this;
@@ -182,12 +193,10 @@ Kinetic.GlobalObject = {
     },
     _handleAnimation: function() {
         var that = this;
-        if(!this.isAnimating && this._isaCanvasAnimating()) {
-            this.isAnimating = true;
+        if(this._isaCanvasAnimating()) {
             that._animationLoop();
         }
-        else if(this.isAnimating && !this._isaCanvasAnimating()) {
-            this.isAnimating = false;
+        else {
             this.frame.lastTime = 0;
         }
     }
@@ -672,6 +681,9 @@ Kinetic.Node.prototype = {
             node: this,
             changes: changes
         });
+        
+        layer.isTransitioning = true;
+        Kinetic.GlobalObject._handleAnimation();
     },
     /**
      * set drag constraint
@@ -885,6 +897,7 @@ Kinetic.Container.prototype = {
  * Stage constructor.  A stage is used to contain multiple layers and handle
  * animations
  * @constructor
+ * @augments Kinetic.Container
  * @param {String|DomElement} cont Container id or DOM element
  * @param {int} width
  * @param {int} height
@@ -1587,7 +1600,8 @@ Kinetic.Layer = function(config) {
     this.canvas.style.position = 'absolute';
     this.transitions = [];
     this.transitionIdCounter = 0;
-
+    this.isTransitioning = false;
+    
     // call super constructors
     Kinetic.Container.apply(this, []);
     Kinetic.Node.apply(this, [config]);

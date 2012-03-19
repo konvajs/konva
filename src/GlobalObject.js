@@ -13,7 +13,6 @@ var Kinetic = {};
 Kinetic.GlobalObject = {
     stages: [],
     idCounter: 0,
-    isAnimating: false,
     frame: {
         time: 0,
         timeDiff: 0,
@@ -36,8 +35,16 @@ Kinetic.GlobalObject = {
     },
     _isaCanvasAnimating: function() {
         for(var n = 0; n < this.stages.length; n++) {
-            if(this.stages[n].isAnimating) {
+            var stage = this.stages[n];
+            if(stage.isAnimating) {
                 return true;
+            }
+
+            for(var i = 0; i < stage.children.length; i++) {
+                var layer = stage.children[i];
+                if(layer.isTransitioning) {
+                    return true;
+                }
             }
         }
         return false;
@@ -83,12 +90,16 @@ Kinetic.GlobalObject = {
     _removeTransition: function(transition) {
         var layer = transition.node.getLayer();
         var id = transition.id;
-
         for(var n = 0; n < layer.transitions.length; n++) {
             if(layer.transitions[n].id === id) {
                 layer.transitions.splice(0, 1);
-                return false;
+                // exit loop
+                n = layer.transitions.length;
             }
+        }
+
+        if(layer.transitions.length === 0) {
+            layer.isTransitioning = false;
         }
     },
     _runFrames: function() {
@@ -143,7 +154,7 @@ Kinetic.GlobalObject = {
         }
     },
     _animationLoop: function() {
-        if(this.isAnimating) {
+        if(this._isaCanvasAnimating()) {
             this._updateFrameObject();
             this._runFrames();
             var that = this;
@@ -154,12 +165,10 @@ Kinetic.GlobalObject = {
     },
     _handleAnimation: function() {
         var that = this;
-        if(!this.isAnimating && this._isaCanvasAnimating()) {
-            this.isAnimating = true;
+        if(this._isaCanvasAnimating()) {
             that._animationLoop();
         }
-        else if(this.isAnimating && !this._isaCanvasAnimating()) {
-            this.isAnimating = false;
+        else {
             this.frame.lastTime = 0;
         }
     }
