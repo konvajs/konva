@@ -435,9 +435,14 @@ Kinetic.Node.prototype = {
     },
     /**
      * transition node to another state.  Any property that can accept a real
-     * number such as x, y, rotation, alpha, strokeWidth, radius, scale.x, scale.y,
-     * centerOffset.x and centerOffset.y can be transitioned
+     *  number can be transitioned, including x, y, rotation, alpha, strokeWidth,
+     *  radius, scale.x, scale.y, centerOffset.x, centerOffset.y, etc.
      * @param {Object} config
+     * @config {Number} [duration] duration that the transition runs in seconds
+     * @config {String} [easing] easing function.  can be linear, ease-in, ease-out, or ease-in-out.
+     *  linear is the default
+     * @config {Function} [callback] callback function to be executed when
+     *  transition completes
      */
     transitionTo: function(config) {
         var layer = this.getLayer();
