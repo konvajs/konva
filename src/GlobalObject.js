@@ -70,39 +70,57 @@ Kinetic.GlobalObject = {
             }
         }
     },
-    _linearTransition: function(transition, key, prop) {
+    _transitionPow: function(transition, key, prop, powFunc) {
+        var pow = powFunc();
+
         var config = transition.config;
         var timeDiff = this.frame.timeDiff;
         if(prop !== undefined) {
             var start = transition.starts[key][prop];
             var change = config[key][prop] - start;
-            var velocity = change / (config.duration * 1000);
-            transition.node[key][prop] = velocity * transition.time + start;
+            var b = change / (Math.pow(config.duration * 1000, pow));
+            transition.node[key][prop] = b * Math.pow(transition.time, pow) + start;
         }
         else {
             var start = transition.starts[key];
             var change = config[key] - start;
-            var velocity = change / (config.duration * 1000);
-            transition.node[key] = velocity * transition.time + start;
+            var b = change / (Math.pow(config.duration * 1000, pow));
+            transition.node[key] = b * Math.pow(transition.time, pow) + start;
         }
-    },
-    _easeInOutTransition: function(transition, key, prop) {
-
     },
     _chooseTransition: function(transition, key, prop) {
         var config = transition.config;
+        var that = this;
         switch(config.easing) {
-            case 'easeInOut':
+            case 'ease-in':
+                this._transitionPow(transition, key, prop, function() {
+                    return 2.5;
+                });
+                break;
+            case 'ease-out':
+                this._transitionPow(transition, key, prop, function() {
+                    return 0.4;
+                });
+                break;
+            case 'ease-in-out':
+                this._transitionPow(transition, key, prop, function() {
+                    var change = -2.1;
+                    var b = change / (config.duration * 1000);
+                    return 2.5 + b * transition.time;
+                });
                 break;
             // linear is default
             default:
-                this._linearTransition(transition, key, prop);
+                this._transitionPow(transition, key, prop, function() {
+                    return 1;
+                });
+                break;
         }
     },
     _runTransition: function(transition) {
         var config = transition.config;
         for(var key in config) {
-            if(config.hasOwnProperty(key) && key !== 'duration' && key !== 'easing') {
+            if(config.hasOwnProperty(key) && key !== 'duration' && key !== 'easing' && key !== 'callback') {
                 if(config[key].x !== undefined || config[key].y !== undefined) {
                     var propArray = ['x', 'y'];
                     for(var n = 0; n < propArray.length; n++) {
@@ -141,9 +159,6 @@ Kinetic.GlobalObject = {
                 stage.onFrameFunc(this.frame);
             }
 
-            /*
-            * run transitions
-            */
             // loop through layers
             var layers = stage.getChildren();
             for(var k = 0; k < layers.length; k++) {

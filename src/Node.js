@@ -453,7 +453,7 @@ Kinetic.Node.prototype = {
         layer._clearTransition(this);
 
         for(var key in config) {
-            if(config.hasOwnProperty(key) && key !== 'duration' && key !== 'easing') {
+            if(config.hasOwnProperty(key) && key !== 'duration' && key !== 'easing' && key !== 'callback') {
                 if(config[key].x !== undefined || config[key].y !== undefined) {
                     starts[key] = {};
                     var propArray = ['x', 'y'];

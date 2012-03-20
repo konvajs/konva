@@ -79,7 +79,7 @@ Test.prototype.tests = {
 
         setTimeout(function() {
             stage.stop();
-        }, 1000);
+        }, 3000);
     },
     'TRANSITION - hover linear transition': function(containerId) {
         var stage = new Kinetic.Stage(containerId, 578, 200);
@@ -101,10 +101,10 @@ Test.prototype.tests = {
         rect.on("mouseover", function() {
             this.transitionTo({
                 scale: {
-                    x: 1.3,
-                    y: 1.3
+                    x: 1.5,
+                    y: 1.5
                 },
-                duration: 0.3
+                duration: 1
             });
         });
 
@@ -114,7 +114,136 @@ Test.prototype.tests = {
                     x: 1,
                     y: 1
                 },
-                duration: 0.3
+                duration: 1
+            });
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+    },
+    'TRANSITION - hover ease-in transition': function(containerId) {
+        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: stage.width / 2 - 50,
+            y: stage.height / 2 - 25,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            centerOffset: {
+                x: 50,
+                y: 25
+            }
+        });
+
+        rect.on("mouseover", function() {
+            this.transitionTo({
+                scale: {
+                    x: 1.5,
+                    y: 1.5
+                },
+                duration: 1,
+                easing: "ease-in"
+            });
+        });
+
+        rect.on("mouseout", function() {
+            this.transitionTo({
+                scale: {
+                    x: 1,
+                    y: 1
+                },
+                duration: 1,
+                easing: "ease-in"
+            });
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+    },
+    'TRANSITION - hover ease-out transition': function(containerId) {
+        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: stage.width / 2 - 50,
+            y: stage.height / 2 - 25,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            centerOffset: {
+                x: 50,
+                y: 25
+            }
+        });
+
+        rect.on("mouseover", function() {
+            this.transitionTo({
+                scale: {
+                    x: 1.5,
+                    y: 1.5
+                },
+                duration: 1,
+                easing: "ease-out"
+            });
+        });
+
+        rect.on("mouseout", function() {
+            this.transitionTo({
+                scale: {
+                    x: 1,
+                    y: 1
+                },
+                duration: 1,
+                easing: "ease-out"
+            });
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+    },
+    'TRANSITION - hover ease-in-out transition': function(containerId) {
+        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: stage.width / 2 - 50,
+            y: stage.height / 2 - 25,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            centerOffset: {
+                x: 50,
+                y: 25
+            }
+        });
+
+        rect.on("mouseover", function() {
+            this.transitionTo({
+                scale: {
+                    x: 1.5,
+                    y: 1.5
+                },
+                duration: 1,
+                easing: "ease-in-out"
+            });
+        });
+
+        rect.on("mouseout", function() {
+            this.transitionTo({
+                scale: {
+                    x: 1,
+                    y: 1
+                },
+                duration: 1,
+                easing: "ease-in-out"
             });
         });
 

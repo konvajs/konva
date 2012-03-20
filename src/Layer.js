@@ -83,7 +83,6 @@ Kinetic.Layer.prototype = {
             var transition = this.transitions[n];
             if(transition.node.id === shape.id) {
                 Kinetic.GlobalObject._removeTransition(transition);
-                return false;
             }
         }
     }
