@@ -47,6 +47,8 @@ Kinetic.GlobalObject = {
                 }
             }
         }
+        
+        this.frame.lastTime = 0;
         return false;
     },
     _endTransition: function() {
@@ -167,9 +169,6 @@ Kinetic.GlobalObject = {
         var that = this;
         if(this._isaCanvasAnimating()) {
             that._animationLoop();
-        }
-        else {
-            this.frame.lastTime = 0;
         }
     }
 };

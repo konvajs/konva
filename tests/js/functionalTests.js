@@ -76,10 +76,51 @@ Test.prototype.tests = {
         });
 
         stage.start();
-        
+
         setTimeout(function() {
-        	stage.stop(); 
+            stage.stop();
         }, 1000);
+    },
+    'TRANSITION - hover transition': function(containerId) {
+        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: stage.width / 2 - 50,
+            y: stage.height / 2 - 25,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            centerOffset: {
+                x: 50,
+                y: 25
+            }
+        });
+
+        rect.on("mouseover", function() {
+            this.transitionTo({
+                scale: {
+                    x: 1.3,
+                    y: 1.3
+                },
+                duration: 0.3
+            });
+        });
+
+        rect.on("mouseout", function() {
+            this.transitionTo({
+                scale: {
+                    x: 1,
+                    y: 1
+                },
+                duration: 0.3
+            });
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
     },
     'EVENTS - mousedown mouseup mouseover mouseout click dblclick / touchstart touchend dbltap': function(containerId) {
         var stage = new Kinetic.Stage(containerId, 578, 200);
@@ -467,13 +508,10 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
 
-
-
         group.on('click', function() {
             log('click group');
             //console.log(this);
         });
-        
         var redCircle = new Kinetic.Circle({
             x: stage.width / 2,
             y: stage.height / 2,
@@ -509,7 +547,6 @@ Test.prototype.tests = {
             log('mousemove group');
             //console.log(this);
         });
-        
         var redCircle = new Kinetic.Circle({
             x: stage.width / 2,
             y: stage.height / 2,
@@ -538,17 +575,16 @@ Test.prototype.tests = {
         var stage = new Kinetic.Stage(containerId, 578, 200);
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group({
-        	name: 'group'
+            name: 'group'
         });
 
         group.on('mouseover', function() {
             log('mouseover group');
         });
-        
+
         group.on('mouseout', function() {
             log('mouseout group');
         });
-        
         var redCircle = new Kinetic.Circle({
             x: stage.width / 2,
             y: stage.height / 2,

@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mar 18 2012
+ * Date: Mar 19 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -75,6 +75,8 @@ Kinetic.GlobalObject = {
                 }
             }
         }
+        
+        this.frame.lastTime = 0;
         return false;
     },
     _endTransition: function() {
@@ -195,9 +197,6 @@ Kinetic.GlobalObject = {
         var that = this;
         if(this._isaCanvasAnimating()) {
             that._animationLoop();
-        }
-        else {
-            this.frame.lastTime = 0;
         }
     }
 };
