@@ -17,7 +17,7 @@ Kinetic.Layer = function(config) {
     this.transitions = [];
     this.transitionIdCounter = 0;
     this.isTransitioning = false;
-    
+
     // call super constructors
     Kinetic.Container.apply(this, []);
     Kinetic.Node.apply(this, [config]);
@@ -73,6 +73,18 @@ Kinetic.Layer.prototype = {
         this.clear();
         if(this.visible) {
             this._drawChildren();
+        }
+    },
+    /**
+     * clear transition if one is running
+     */
+    _clearTransition: function(shape) {
+        for(var n = 0; n < this.transitions.length; n++) {
+            var transition = this.transitions[n];
+            if(transition.node.id === shape.id) {
+                Kinetic.GlobalObject._removeTransition(transition);
+                return false;
+            }
         }
     }
 };

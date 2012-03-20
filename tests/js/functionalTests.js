@@ -81,7 +81,7 @@ Test.prototype.tests = {
             stage.stop();
         }, 1000);
     },
-    'TRANSITION - hover transition': function(containerId) {
+    'TRANSITION - hover linear transition': function(containerId) {
         var stage = new Kinetic.Stage(containerId, 578, 200);
         var layer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({

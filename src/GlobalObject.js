@@ -47,7 +47,7 @@ Kinetic.GlobalObject = {
                 }
             }
         }
-        
+
         this.frame.lastTime = 0;
         return false;
     },
@@ -70,21 +70,50 @@ Kinetic.GlobalObject = {
             }
         }
     },
-    _linearTransition: function(frame) {
-        var config = this.config;
+    _linearTransition: function(transition, key, prop) {
+        var config = transition.config;
+        var timeDiff = this.frame.timeDiff;
+        if(prop !== undefined) {
+            var start = transition.starts[key][prop];
+            var change = config[key][prop] - start;
+            var velocity = change / (config.duration * 1000);
+            transition.node[key][prop] = velocity * transition.time + start;
+        }
+        else {
+            var start = transition.starts[key];
+            var change = config[key] - start;
+            var velocity = change / (config.duration * 1000);
+            transition.node[key] = velocity * transition.time + start;
+        }
+    },
+    _easeInOutTransition: function(transition, key, prop) {
+
+    },
+    _chooseTransition: function(transition, key, prop) {
+        var config = transition.config;
+        switch(config.easing) {
+            case 'easeInOut':
+                break;
+            // linear is default
+            default:
+                this._linearTransition(transition, key, prop);
+        }
+    },
+    _runTransition: function(transition) {
+        var config = transition.config;
         for(var key in config) {
-            if(config.hasOwnProperty(key)) {
+            if(config.hasOwnProperty(key) && key !== 'duration' && key !== 'easing') {
                 if(config[key].x !== undefined || config[key].y !== undefined) {
                     var propArray = ['x', 'y'];
                     for(var n = 0; n < propArray.length; n++) {
                         var prop = propArray[n];
                         if(config[key][prop] !== undefined) {
-                            this.node[key][prop] += this.changes[key][prop] * frame.timeDiff;
+                            this._chooseTransition(transition, key, prop);
                         }
                     }
                 }
                 else {
-                    this.node[key] += this.changes[key] * frame.timeDiff;
+                    this._chooseTransition(transition, key);
                 }
             }
         }
@@ -133,7 +162,7 @@ Kinetic.GlobalObject = {
                         }
                     }
                     else {
-                        this._linearTransition.apply(transition, [this.frame]);
+                        this._runTransition(transition);
                     }
                 }
 

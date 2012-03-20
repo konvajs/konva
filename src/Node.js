@@ -443,22 +443,29 @@ Kinetic.Node.prototype = {
         var layer = this.getLayer();
         var that = this;
         var duration = config.duration * 1000;
-        var changes = {};
+        var starts = {};
+
+        /*
+         * clear transition if one is currenlty running.
+         * This make it easy to start new transitions without
+         * having to explicitly cancel old ones
+         */
+        layer._clearTransition(this);
 
         for(var key in config) {
-            if(config.hasOwnProperty(key)) {
+            if(config.hasOwnProperty(key) && key !== 'duration' && key !== 'easing') {
                 if(config[key].x !== undefined || config[key].y !== undefined) {
-                    changes[key] = {};
+                    starts[key] = {};
                     var propArray = ['x', 'y'];
                     for(var n = 0; n < propArray.length; n++) {
                         var prop = propArray[n];
                         if(config[key][prop] !== undefined) {
-                            changes[key][prop] = (config[key][prop] - that[key][prop]) / duration;
+                            starts[key][prop] = this[key][prop];
                         }
                     }
                 }
                 else {
-                    changes[key] = (config[key] - that[key]) / duration;
+                    starts[key] = this[key];
                 }
             }
         }
@@ -468,9 +475,9 @@ Kinetic.Node.prototype = {
             time: 0,
             config: config,
             node: this,
-            changes: changes
+            starts: starts
         });
-        
+
         layer.isTransitioning = true;
         Kinetic.GlobalObject._handleAnimation();
     },
