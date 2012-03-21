@@ -42,7 +42,7 @@ Kinetic.GlobalObject = {
 
             for(var i = 0; i < stage.children.length; i++) {
                 var layer = stage.children[i];
-                if(layer.isTransitioning) {
+                if(layer.transitions.length > 0) {
                     return true;
                 }
             }
@@ -136,19 +136,12 @@ Kinetic.GlobalObject = {
             }
         }
     },
-    _removeTransition: function(transition) {
-        var layer = transition.node.getLayer();
-        var id = transition.id;
+    _clearTransition: function(node) {
+        var layer = node.getLayer();
         for(var n = 0; n < layer.transitions.length; n++) {
-            if(layer.transitions[n].id === id) {
-                layer.transitions.splice(0, 1);
-                // exit loop
-                n = layer.transitions.length;
+            if(layer.transitions[n].node.id === node.id) {
+                layer.transitions.splice(n, 1);
             }
-        }
-
-        if(layer.transitions.length === 0) {
-            layer.isTransitioning = false;
         }
     },
     _runFrames: function() {
@@ -171,7 +164,7 @@ Kinetic.GlobalObject = {
                     transition.time += this.frame.timeDiff;
                     if(transition.time >= transition.config.duration * 1000) {
                         this._endTransition.apply(transition);
-                        this._removeTransition(transition);
+                        this._clearTransition(transition.node);
                         if(transition.config.callback !== undefined) {
                             transition.config.callback();
                         }

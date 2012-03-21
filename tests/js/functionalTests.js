@@ -251,6 +251,82 @@ Test.prototype.tests = {
         stage.add(layer);
 
     },
+    'TRANSITION - ease-in, ease-out, ease-in-out hovers': function(containerId) {
+        function addHovers(shape, easing) {
+            shape.on("mouseover", function() {
+                this.transitionTo({
+                    scale: {
+                        x: 1.5,
+                        y: 1.5 
+                    },
+                    duration: 1,
+                    easing: easing
+                });
+            });
+            shape.on("mouseout", function() {
+                this.transitionTo({
+                    scale: {
+                        x: 1,
+                        y: 1
+                    },
+                    duration: 1,
+                    easing: easing
+                });
+            });
+        }
+        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var layer = new Kinetic.Layer();
+        var greenBox = new Kinetic.Rect({
+            x: 50,
+            y: stage.height / 2 - 25,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            centerOffset: {
+                x: 50,
+                y: 25
+            }
+        });
+
+        var blueBox = new Kinetic.Rect({
+            x: stage.width / 2 - 50,
+            y: stage.height / 2 - 25,
+            width: 100,
+            height: 50,
+            fill: 'blue',
+            stroke: 'black',
+            strokeWidth: 4,
+            centerOffset: {
+                x: 50,
+                y: 25
+            }
+        });
+
+        var redBox = new Kinetic.Rect({
+            x: 428,
+            y: stage.height / 2 - 25,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4,
+            centerOffset: {
+                x: 50,
+                y: 25
+            }
+        });
+
+        addHovers(greenBox, "ease-in");
+        addHovers(blueBox, "ease-out");
+        addHovers(redBox, "ease-in-out");
+
+        layer.add(greenBox);
+        layer.add(blueBox);
+        layer.add(redBox);
+        stage.add(layer);
+    },
     'EVENTS - mousedown mouseup mouseover mouseout click dblclick / touchstart touchend dbltap': function(containerId) {
         var stage = new Kinetic.Stage(containerId, 578, 200);
         var layer = new Kinetic.Layer();

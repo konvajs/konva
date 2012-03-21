@@ -16,7 +16,6 @@ Kinetic.Layer = function(config) {
     this.canvas.style.position = 'absolute';
     this.transitions = [];
     this.transitionIdCounter = 0;
-    this.isTransitioning = false;
 
     // call super constructors
     Kinetic.Container.apply(this, []);
@@ -78,10 +77,10 @@ Kinetic.Layer.prototype = {
     /**
      * clear transition if one is running
      */
-    _clearTransition: function(shape) {
+    _clearTransition: function(node) {
         for(var n = 0; n < this.transitions.length; n++) {
             var transition = this.transitions[n];
-            if(transition.node.id === shape.id) {
+            if(transition.node.id === node.id) {
                 Kinetic.GlobalObject._removeTransition(transition);
             }
         }

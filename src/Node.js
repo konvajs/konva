@@ -455,7 +455,7 @@ Kinetic.Node.prototype = {
          * This make it easy to start new transitions without
          * having to explicitly cancel old ones
          */
-        layer._clearTransition(this);
+        Kinetic.GlobalObject._clearTransition(this);
 
         for(var key in config) {
             if(config.hasOwnProperty(key) && key !== 'duration' && key !== 'easing' && key !== 'callback') {
@@ -483,7 +483,6 @@ Kinetic.Node.prototype = {
             starts: starts
         });
 
-        layer.isTransitioning = true;
         Kinetic.GlobalObject._handleAnimation();
     },
     /**
