@@ -73,17 +73,6 @@ Kinetic.Layer.prototype = {
         if(this.visible) {
             this._drawChildren();
         }
-    },
-    /**
-     * clear transition if one is running
-     */
-    _clearTransition: function(node) {
-        for(var n = 0; n < this.transitions.length; n++) {
-            var transition = this.transitions[n];
-            if(transition.node.id === node.id) {
-                Kinetic.GlobalObject._removeTransition(transition);
-            }
-        }
     }
 };
 // Extend Container and Node

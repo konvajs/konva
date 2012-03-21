@@ -10,7 +10,7 @@ function log(message) {
  * Test constructor
  */
 function Test() {
-    this.testOnly = 'TRANSITION - ease-in, ease-out, ease-in-out hovers';
+    this.testOnly = '';
     this.counter = 0;
 }
 /**

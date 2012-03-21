@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mar 20 2012
+ * Date: Mar 21 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1550,6 +1550,18 @@ Kinetic.Stage.prototype = {
         go.drag.node = undefined;
     },
     /**
+     * get adusted component based on parent scales
+     */
+    _getAdjustedComponent: function(node, val, prop) {
+        var parent = node.parent;
+        var adj = 1;
+        while(parent.className !== 'Stage') {
+            adj /= parent.scale[prop];
+            parent = parent.parent;
+        }
+        return adj * val;
+    },
+    /**
      * prepare drag and drop
      */
     _prepareDrag: function() {
@@ -1703,17 +1715,6 @@ Kinetic.Layer.prototype = {
         this.clear();
         if(this.visible) {
             this._drawChildren();
-        }
-    },
-    /**
-     * clear transition if one is running
-     */
-    _clearTransition: function(node) {
-        for(var n = 0; n < this.transitions.length; n++) {
-            var transition = this.transitions[n];
-            if(transition.node.id === node.id) {
-                Kinetic.GlobalObject._removeTransition(transition);
-            }
         }
     }
 };

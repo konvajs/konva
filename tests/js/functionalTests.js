@@ -257,7 +257,7 @@ Test.prototype.tests = {
                 this.transitionTo({
                     scale: {
                         x: 1.5,
-                        y: 1.5 
+                        y: 1.5
                     },
                     duration: 1,
                     easing: easing
