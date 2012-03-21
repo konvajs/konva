@@ -1550,18 +1550,6 @@ Kinetic.Stage.prototype = {
         go.drag.node = undefined;
     },
     /**
-     * get adusted component based on parent scales
-     */
-    _getAdjustedComponent: function(node, val, prop) {
-        var parent = node.parent;
-        var adj = 1;
-        while(parent.className !== 'Stage') {
-            adj /= parent.scale[prop];
-            parent = parent.parent;
-        }
-        return adj * val;
-    },
-    /**
      * prepare drag and drop
      */
     _prepareDrag: function() {
