@@ -1163,4 +1163,28 @@ Test.prototype.tests = {
         layer.add(circle);
         stage.add(layer);
     },
+    'DRAG AND DROP - drag and drop shape inside scaled group': function(containerId) {
+        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group({
+            scale: {
+                x: 1.5,
+                y: 1.5
+            }
+        });
+
+        var circle = new Kinetic.Circle({
+            x: stage.width / 2,
+            y: stage.height / 2,
+            radius: 70,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true
+        });
+
+        group.add(circle);
+        layer.add(group);
+        stage.add(layer);
+    },
 };

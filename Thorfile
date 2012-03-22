@@ -5,7 +5,8 @@ class Build < Thor
   FILES = [
     "license.js", "src/GlobalObject.js", "src/Node.js", "src/Container.js", "src/Stage.js",
     "src/Layer.js", "src/Group.js", "src/Shape.js", "src/shapes/Rect.js", "src/shapes/Circle.js", "src/shapes/Image.js",
-    "src/shapes/Polygon.js", "src/shapes/RegularPolygon.js", "src/shapes/Star.js", "src/shapes/Text.js"
+    "src/shapes/Polygon.js", "src/shapes/RegularPolygon.js", "src/shapes/Star.js", "src/shapes/Text.js",
+    "src/Matrix.js"
   ]
   
   desc "dev", "Concatenate all the js files into /dist/kinetic-VERSION.js."

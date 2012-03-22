@@ -515,6 +515,24 @@ Kinetic.Node.prototype = {
     getDragBounds: function() {
         return this.dragBounds;
     },
+    getMatrix: function() {
+        var m = new Kinetic.Matrix();
+
+        if(this.x !== 0 || this.y !== 0) {
+            m.translate(this.x, this.y);
+        }
+        if(this.rotation !== 0) {
+            m.rotate(this.rotation);
+        }
+        if(this.scale.x !== 1 || this.scale.y !== 1) {
+            m.scale(this.scale.x, this.scale.y);
+        }
+        if(this.centerOffset.x !== 0 || this.centerOffset.y !== 0) {
+            m.translate(-1 * this.centerOffset.x, -1 * this.centerOffset.y);
+        }
+
+        return m;
+    },
     /**
      * initialize drag and drop
      */

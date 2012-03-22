@@ -830,6 +830,39 @@ Test.prototype.tests = {
         test(circle.getDragConstraint() === 'vertical', 'drag constraint should be vertical');
         test(circle.getDragBounds().bottom === 200, 'drag bottom should be 200');
     },
+    'NODE - translate, rotate, scale shape': function(containerId) {
+        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Rect({
+            x: 100,
+            y: 100,
+            rotationDeg: 20,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            scale: {
+            	x: 2,
+            	y: 1
+            },
+            centerOffset: {
+                x: 50,
+                y: 25
+            }
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        stage.onFrame(function(frame) {
+            circle.rotation += .1;
+            layer.draw();
+        });
+
+        //stage.start();
+
+    },
     'STAGE - add layer then shape': function(containerId) {
         var stage = new Kinetic.Stage(containerId, 578, 200);
         var layer = new Kinetic.Layer();

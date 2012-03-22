@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mar 21 2012
+ * Date: Mar 22 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -762,6 +762,24 @@ Kinetic.Node.prototype = {
     getDragBounds: function() {
         return this.dragBounds;
     },
+    getMatrix: function() {
+        var m = new Kinetic.Matrix();
+
+        if(this.x !== 0 || this.y !== 0) {
+            m.translate(this.x, this.y);
+        }
+        if(this.rotation !== 0) {
+            m.rotate(this.rotation);
+        }
+        if(this.scale.x !== 1 || this.scale.y !== 1) {
+            m.scale(this.scale.x, this.scale.y);
+        }
+        if(this.centerOffset.x !== 0 || this.centerOffset.y !== 0) {
+            m.translate(-1 * this.centerOffset.x, -1 * this.centerOffset.y);
+        }
+
+        return m;
+    },
     /**
      * initialize drag and drop
      */
@@ -945,6 +963,7 @@ Kinetic.Container.prototype = {
  * animations
  * @constructor
  * @augments Kinetic.Container
+ * @augments Kinetic.Node
  * @param {String|DomElement} cont Container id or DOM element
  * @param {int} width
  * @param {int} height
@@ -991,8 +1010,9 @@ Kinetic.Stage = function(cont, width, height) {
     // add stage to global object
     Kinetic.GlobalObject.stages.push(this);
 
-    // call super constructor
+    // call super constructors
     Kinetic.Container.apply(this, []);
+    Kinetic.Node.apply(this, []);
 };
 /*
  * Stage methods
@@ -1050,48 +1070,6 @@ Kinetic.Stage.prototype = {
         this.backstageLayer.getCanvas().height = height;
     },
     /**
-     * set stage scale.  If only one parameter is passed in, then
-     * both scaleX and scaleY are set to the parameter
-     * @param {int} scaleX
-     * @param {int} scaleY
-     */
-    setScale: function(scaleX, scaleY) {
-        var oldScaleX = this.scale.x;
-        var oldScaleY = this.scale.y;
-
-        if(scaleY) {
-            this.scale.x = scaleX;
-            this.scale.y = scaleY;
-        }
-        else {
-            this.scale.x = scaleX;
-            this.scale.y = scaleX;
-        }
-
-        /*
-         * scale all shape positions
-         */
-        var layers = this.children;
-        var that = this;
-        function scaleChildren(children) {
-            for(var i = 0; i < children.length; i++) {
-                var child = children[i];
-                child.x *= that.scale.x / oldScaleX;
-                child.y *= that.scale.y / oldScaleY;
-                if(child.children) {
-                    scaleChildren(child.children);
-                }
-            }
-        }
-        scaleChildren(layers);
-    },
-    /**
-     * get scale
-     */
-    getScale: function() {
-        return this.scale;
-    },
-    /**
      * clear all layers
      */
     clear: function() {
@@ -1135,16 +1113,14 @@ Kinetic.Stage.prototype = {
     remove: function(layer) {
         // remove layer canvas from dom
         this.content.removeChild(layer.canvas);
-
         this._remove(layer);
     },
     /**
-     * bind event listener to stage (which is essentially
-     * the container DOM)
+     * bind event listener to container DOM element
      * @param {String} typesStr
      * @param {function} handler
      */
-    on: function(typesStr, handler) {
+    onContainer: function(typesStr, handler) {
         var types = typesStr.split(' ');
         for(var n = 0; n < types.length; n++) {
             var baseEvent = types[n];
@@ -1376,7 +1352,7 @@ Kinetic.Stage.prototype = {
      * handle incoming event
      * @param {Event} evt
      */
-    _handleEvent: function(evt) {
+    _handleStageEvent: function(evt) {
         var go = Kinetic.GlobalObject;
         if(!evt) {
             evt = window.event;
@@ -1425,25 +1401,25 @@ Kinetic.Stage.prototype = {
         // desktop events
         this.container.addEventListener('mousedown', function(evt) {
             that.mouseDown = true;
-            that._handleEvent(evt);
+            that._handleStageEvent(evt);
         }, false);
 
         this.container.addEventListener('mousemove', function(evt) {
             that.mouseUp = false;
             that.mouseDown = false;
-            that._handleEvent(evt);
+            that._handleStageEvent(evt);
         }, false);
 
         this.container.addEventListener('mouseup', function(evt) {
             that.mouseUp = true;
             that.mouseDown = false;
-            that._handleEvent(evt);
+            that._handleStageEvent(evt);
 
             that.clickStart = false;
         }, false);
 
         this.container.addEventListener('mouseover', function(evt) {
-            that._handleEvent(evt);
+            that._handleStageEvent(evt);
         }, false);
 
         this.container.addEventListener('mouseout', function(evt) {
@@ -1453,18 +1429,18 @@ Kinetic.Stage.prototype = {
         this.container.addEventListener('touchstart', function(evt) {
             evt.preventDefault();
             that.touchStart = true;
-            that._handleEvent(evt);
+            that._handleStageEvent(evt);
         }, false);
 
         this.container.addEventListener('touchmove', function(evt) {
             evt.preventDefault();
-            that._handleEvent(evt);
+            that._handleStageEvent(evt);
         }, false);
 
         this.container.addEventListener('touchend', function(evt) {
             evt.preventDefault();
             that.touchEnd = true;
-            that._handleEvent(evt);
+            that._handleStageEvent(evt);
         }, false);
     },
     /**
@@ -1555,7 +1531,7 @@ Kinetic.Stage.prototype = {
     _prepareDrag: function() {
         var that = this;
 
-        this.on('mousemove touchmove', function(evt) {
+        this.onContainer('mousemove touchmove', function(evt) {
             var go = Kinetic.GlobalObject;
             var node = go.drag.node;
             if(node) {
@@ -1586,7 +1562,7 @@ Kinetic.Stage.prototype = {
             }
         }, false);
 
-        this.on('mouseup touchend mouseout', function(evt) {
+        this.onContainer('mouseup touchend mouseout', function(evt) {
             that._endDrag(evt);
         });
     },
@@ -1626,8 +1602,9 @@ Kinetic.Stage.prototype = {
         this.content.appendChild(this.backstageLayer.canvas);
     }
 };
-// extend Container
+// Extend Container and Node
 Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Container);
+Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Node);
 
 ///////////////////////////////////////////////////////////////////////
 //  Layer
@@ -1874,56 +1851,26 @@ Kinetic.Shape.prototype = {
         if(this.visible) {
             var stage = layer.getStage();
             var context = layer.getContext();
-
             var family = [];
+            var parent = this.parent;
 
             family.unshift(this);
-            var parent = this.parent;
-            while(parent.className !== 'Stage') {
+            while(parent) {
                 family.unshift(parent);
                 parent = parent.parent;
             }
-
-            // children transforms
-            for(var n = 0; n < family.length; n++) {
-                var obj = family[n];
-
-                context.save();
-                if(obj.x !== 0 || obj.y !== 0) {
-                    context.translate(obj.x, obj.y);
-                }
-                if(obj.centerOffset.x !== 0 || obj.centerOffset.y !== 0) {
-                    context.translate(obj.centerOffset.x, obj.centerOffset.y);
-                }
-                if(obj.rotation !== 0) {
-                    context.rotate(obj.rotation);
-                }
-                if(obj.scale.x !== 1 || obj.scale.y !== 1) {
-                    context.scale(obj.scale.x, obj.scale.y);
-                }
-                if(obj.centerOffset.x !== 0 || obj.centerOffset.y !== 0) {
-                    context.translate(-1 * obj.centerOffset.x, -1 * obj.centerOffset.y);
-                }
-                if(obj.getAbsoluteAlpha() !== 1) {
-                    context.globalAlpha = obj.getAbsoluteAlpha();
-                }
-            }
-
-            // stage transform
+            
             context.save();
-            if(stage && (stage.scale.x !== 1 || stage.scale.y !== 1)) {
-                context.scale(stage.scale.x, stage.scale.y);
+            for(var n = 0; n < family.length; n++) {
+                var node = family[n];
+                var m = node.getMatrix();
+                m.transformContext(context);
+                if(node.getAbsoluteAlpha() !== 1) {
+                    context.globalAlpha = node.getAbsoluteAlpha();
+                }
             }
-
             this.tempLayer = layer;
             this.drawFunc.call(this);
-
-            // children restore
-            for(var i = 0; i < family.length; i++) {
-                context.restore();
-            }
-
-            // stage restore
             context.restore();
         }
     }
@@ -2533,4 +2480,74 @@ Kinetic.Text.prototype = {
 };
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Text, Kinetic.Shape);
+
+/*
+* Last updated November 2011
+* By Simon Sarris
+* www.simonsarris.com
+* sarris@acm.org
+*
+* Free to use and distribute at will
+* So long as you are nice to people, etc
+*/
+
+/*
+* The usage of this class was inspired by some of the work done by a forked
+* project, KineticJS-Ext by Wappworks, which is based on Simon's Transform
+* class.  KineticJS has slightly modified the original class and added new methods
+* specific for canvas.
+*/
+
+/**
+ * Matrix object
+ */
+Kinetic.Matrix = function() {
+    this.m = [1, 0, 0, 1, 0, 0];
+}
+
+Kinetic.Matrix.prototype = {
+    /**
+     * Apply translation
+     * @param {Number} x
+     * @param {Number} y
+     */
+    translate: function(x, y) {
+        this.m[4] += this.m[0] * x + this.m[2] * y;
+        this.m[5] += this.m[1] * x + this.m[3] * y;
+    },
+    /**
+     * Apply scale
+     * @param {Number} sx
+     * @param {Number} sy
+     */
+    scale: function(sx, sy) {
+        this.m[0] *= sx;
+        this.m[1] *= sx;
+        this.m[2] *= sy;
+        this.m[3] *= sy;
+    },
+    /**
+     * Apply rotation
+     * @param {Number} rad  Angle in radians
+     */
+    rotate: function(rad) {
+        var c = Math.cos(rad);
+        var s = Math.sin(rad);
+        var m11 = this.m[0] * c + this.m[2] * s;
+        var m12 = this.m[1] * c + this.m[3] * s;
+        var m21 = this.m[0] * -s + this.m[2] * c;
+        var m22 = this.m[1] * -s + this.m[3] * c;
+        this.m[0] = m11;
+        this.m[1] = m12;
+        this.m[2] = m21;
+        this.m[3] = m22;
+    },
+    /**
+     * transform canvas context
+     */
+    transformContext: function(context) {
+        var m = this.m;
+        context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+    }
+};
 
