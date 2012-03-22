@@ -163,11 +163,11 @@ Kinetic.Stage.prototype = {
     },
     /**
      * Creates a composite data URL and passes it to a callback. If MIME type is not
-	 * specified, then "image/png" will result. For "image/jpeg", specify a quality
-	 * level as arg2 (range 0.0 - 1.0)
+     * specified, then "image/png" will result. For "image/jpeg", specify a quality
+     * level as arg2 (range 0.0 - 1.0)
      * @param {function} callback
-	 * @param {String} mimeType (optional)
-	 * @param {Number} arg2 (optional)
+     * @param {String} mimeType (optional)
+     * @param {Number} arg2 (optional)
      */
     toDataURL: function(callback, mimeType, arg2) {
         var bufferLayer = this.bufferLayer;
@@ -421,20 +421,20 @@ Kinetic.Stage.prototype = {
         // propapgate backwards through children
         for(var i = children.length - 1; i >= 0; i--) {
             var child = children[i];
-			if (child.isListening) {
-				if(child.className === 'Shape') {
-					var exit = this._detectEvent(child, evt);
-					if(exit) {
-						return true;
-					}
-				}
-				else {
-					var exit = this._traverseChildren(child, evt);
-					if(exit) {
-						return true;
-					}
-				}
-			}
+            if (child.isListening) {
+                if(child.className === 'Shape') {
+                    var exit = this._detectEvent(child, evt);
+                    if(exit) {
+                        return true;
+                    }
+                }
+                else {
+                    var exit = this._traverseChildren(child, evt);
+                    if(exit) {
+                        return true;
+                    }
+                }
+            }
         }
 
         return false;
