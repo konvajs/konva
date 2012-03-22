@@ -32,6 +32,14 @@ Kinetic.Shape = function(config) {
  */
 Kinetic.Shape.prototype = {
     /**
+     * isPointInShape
+     */
+    isPointInShape: function(backstageLayer,pos){
+        var backstageLayerContext = backstageLayer.getContext();
+        this._draw(backstageLayer);
+        return backstageLayerContext.isPointInPath(pos.x,pos.y);
+    },
+    /**
      * get layer context where the shape is being drawn.  When
      * the shape is being rendered, .getContext() returns the context of the
      * user created layer that contains the shape.  When the event detection
