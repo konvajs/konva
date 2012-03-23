@@ -49,14 +49,6 @@ Kinetic.Node = function(config) {
             }
         }
     }
-
-    // overrides
-    if(this.centerOffset.x === undefined) {
-        this.centerOffset.x = 0;
-    }
-    if(this.centerOffset.y === undefined) {
-        this.centerOffset.y = 0;
-    }
 };
 /*
  * Node methods

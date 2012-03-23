@@ -11,13 +11,21 @@
  * @param {int} width
  * @param {int} height
  */
-Kinetic.Stage = function(cont, width, height) {
+Kinetic.Stage = function(config) {
+    /*
+     * if container is a string, assume it's an id for
+     * a DOM element
+     */
+    if(typeof config.container === 'string') {
+        config.container = document.getElementById(config.container);
+    }
+
     this.className = 'Stage';
-    this.container = typeof cont === 'string' ? document.getElementById(cont) : cont;
+    this.container = config.container;
     this.content = document.createElement('div');
 
-    this.width = width;
-    this.height = height;
+    this.width = config.width;
+    this.height = config.height;
     this.scale = {
         x: 1,
         y: 1
@@ -55,7 +63,7 @@ Kinetic.Stage = function(cont, width, height) {
 
     // call super constructors
     Kinetic.Container.apply(this, []);
-    Kinetic.Node.apply(this, []);
+    Kinetic.Node.apply(this, [config]);
 };
 /*
  * Stage methods
