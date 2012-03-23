@@ -162,10 +162,14 @@ Kinetic.Stage.prototype = {
         }
     },
     /**
-     * creates a composite data URL and passes it to a callback
+     * Creates a composite data URL and passes it to a callback. If MIME type is not
+     * specified, then "image/png" will result. For "image/jpeg", specify a quality
+     * level as arg2 (range 0.0 - 1.0)
      * @param {function} callback
+     * @param {String} mimeType (optional)
+     * @param {Number} arg2 (optional)
      */
-    toDataURL: function(callback) {
+    toDataURL: function(callback, mimeType, arg2) {
         var bufferLayer = this.bufferLayer;
         var bufferContext = bufferLayer.getContext();
         var layers = this.children;
@@ -180,7 +184,7 @@ Kinetic.Stage.prototype = {
                     addLayer(n);
                 }
                 else {
-                    callback(bufferLayer.getCanvas().toDataURL());
+                    callback(bufferLayer.getCanvas().toDataURL(mimeType, arg2));
                 }
             };
             imageObj.src = dataURL;
@@ -417,16 +421,18 @@ Kinetic.Stage.prototype = {
         // propapgate backwards through children
         for(var i = children.length - 1; i >= 0; i--) {
             var child = children[i];
-            if(child.className === 'Shape') {
-                var exit = this._detectEvent(child, evt);
-                if(exit) {
-                    return true;
+            if (child.isListening) {
+                if(child.className === 'Shape') {
+                    var exit = this._detectEvent(child, evt);
+                    if(exit) {
+                        return true;
+                    }
                 }
-            }
-            else {
-                var exit = this._traverseChildren(child, evt);
-                if(exit) {
-                    return true;
+                else {
+                    var exit = this._traverseChildren(child, evt);
+                    if(exit) {
+                        return true;
+                    }
                 }
             }
         }
@@ -533,8 +539,8 @@ Kinetic.Stage.prototype = {
      * @param {Event} evt
      */
     _setMousePosition: function(evt) {
-        var mouseX = evt.clientX - this._getContainerPosition().left + window.pageXOffset;
-        var mouseY = evt.clientY - this._getContainerPosition().top + window.pageYOffset;
+        var mouseX = evt.offsetX || (evt.clientX - this._getContainerPosition().left + window.pageXOffset);
+        var mouseY = evt.offsetY || (evt.clientY - this._getContainerPosition().top + window.pageYOffset);
         this.mousePos = {
             x: mouseX,
             y: mouseY
