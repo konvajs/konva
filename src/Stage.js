@@ -595,8 +595,8 @@ Kinetic.Stage.prototype = {
                 var pos = that.getUserPosition();
                 var dc = node.dragConstraint;
                 var db = node.dragBounds;
-                var m = node.getMatrix().getTranslation();
-                var am = node.getAbsoluteMatrix().getTranslation();
+                var m = node.getTransform().getTranslation();
+                var am = node.getAbsoluteTransform().getTranslation();
 
                 if(dc === 'none' || dc === 'horizontal') {
                     var newX = pos.x - go.drag.offset.x;

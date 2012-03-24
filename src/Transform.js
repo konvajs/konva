@@ -17,11 +17,11 @@
 /**
  * Matrix object
  */
-Kinetic.Matrix = function() {
+Kinetic.Transform = function() {
     this.m = [1, 0, 0, 1, 0, 0];
 }
 
-Kinetic.Matrix.prototype = {
+Kinetic.Transform.prototype = {
     /**
      * Apply translation
      * @param {Number} x
@@ -70,7 +70,7 @@ Kinetic.Matrix.prototype = {
     },
     /**
      * Transform multiplication
-     * @param {Kinetic.Matrix} matrix
+     * @param {Kinetic.Transform} matrix
      */
     multiply: function(matrix) {
         var m11 = this.m[0] * matrix.m[0] + this.m[2] * matrix.m[1];
@@ -90,9 +90,9 @@ Kinetic.Matrix.prototype = {
         this.m[5] = dy;
     },
     /**
-     * return matrix as array
+     * return matrix
      */
-    toArray: function() {
+    getMatrix: function() {
         return this.m;
     }
 };

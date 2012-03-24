@@ -508,12 +508,12 @@ Kinetic.Node.prototype = {
         return this.dragBounds;
     },
     /**
-     * get matrix transform of the node while taking into
-     * account the matrix transforms of its parents
+     * get transform of the node while taking into
+     * account the transforms of its parents
      */
-    getAbsoluteMatrix: function() {
-        // absolute matrix
-        var am = new Kinetic.Matrix();
+    getAbsoluteTransform: function() {
+        // absolute transform
+        var am = new Kinetic.Transform();
 
         var family = [];
         var parent = this.parent;
@@ -526,18 +526,18 @@ Kinetic.Node.prototype = {
 
         for(var n = 0; n < family.length; n++) {
             var node = family[n];
-            var m = node.getMatrix();
+            var m = node.getTransform();
             am.multiply(m);
         }
 
         return am;
     },
     /**
-     * get matrix transform of the node while not taking
-     * into account the matrix transforms of its parents
+     * get transform of the node while not taking
+     * into account the transforms of its parents
      */
-    getMatrix: function() {
-        var m = new Kinetic.Matrix();
+    getTransform: function() {
+        var m = new Kinetic.Transform();
 
         if(this.x !== 0 || this.y !== 0) {
             m.translate(this.x, this.y);
@@ -565,8 +565,8 @@ Kinetic.Node.prototype = {
             var pos = stage.getUserPosition();
 
             if(pos) {
-                var m = that.getMatrix().getTranslation();
-                var am = that.getAbsoluteMatrix().getTranslation();
+                var m = that.getTransform().getTranslation();
+                var am = that.getAbsoluteTransform().getTranslation();
                 go.drag.node = that;
                 go.drag.offset.x = pos.x - that.x;
                 go.drag.offset.y = pos.y - that.y;

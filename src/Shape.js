@@ -124,7 +124,7 @@ Kinetic.Shape.prototype = {
             context.save();
             for(var n = 0; n < family.length; n++) {
                 var node = family[n];
-                var m = node.getMatrix().toArray();
+                var m = node.getTransform().getMatrix();
                 context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
 
                 if(node.getAbsoluteAlpha() !== 1) {
