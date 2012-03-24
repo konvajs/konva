@@ -112,56 +112,27 @@ Kinetic.Shape.prototype = {
         if(this.visible) {
             var stage = layer.getStage();
             var context = layer.getContext();
-
             var family = [];
+            var parent = this.parent;
 
             family.unshift(this);
-            var parent = this.parent;
-            while(parent.className !== 'Stage') {
+            while(parent) {
                 family.unshift(parent);
                 parent = parent.parent;
             }
 
-            // children transforms
-            for(var n = 0; n < family.length; n++) {
-                var obj = family[n];
-
-                context.save();
-                if(obj.x !== 0 || obj.y !== 0) {
-                    context.translate(obj.x, obj.y);
-                }
-                if(obj.centerOffset.x !== 0 || obj.centerOffset.y !== 0) {
-                    context.translate(obj.centerOffset.x, obj.centerOffset.y);
-                }
-                if(obj.rotation !== 0) {
-                    context.rotate(obj.rotation);
-                }
-                if(obj.scale.x !== 1 || obj.scale.y !== 1) {
-                    context.scale(obj.scale.x, obj.scale.y);
-                }
-                if(obj.centerOffset.x !== 0 || obj.centerOffset.y !== 0) {
-                    context.translate(-1 * obj.centerOffset.x, -1 * obj.centerOffset.y);
-                }
-                if(obj.getAbsoluteAlpha() !== 1) {
-                    context.globalAlpha = obj.getAbsoluteAlpha();
-                }
-            }
-
-            // stage transform
             context.save();
-            if(stage && (stage.scale.x !== 1 || stage.scale.y !== 1)) {
-                context.scale(stage.scale.x, stage.scale.y);
-            }
+            for(var n = 0; n < family.length; n++) {
+                var node = family[n];
+                var m = node.getMatrix().toArray();
+                context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
 
+                if(node.getAbsoluteAlpha() !== 1) {
+                    context.globalAlpha = node.getAbsoluteAlpha();
+                }
+            }
             this.tempLayer = layer;
             this.drawFunc.call(this);
-
-            // children restore
-            for(var i = 0; i < family.length; i++) {
-                context.restore();
-            }
-
-            // stage restore
             context.restore();
         }
     }

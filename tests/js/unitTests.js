@@ -4,14 +4,26 @@ Test.prototype.tests = {
     ////////////////////////////////////////////////////////////////////////
 
     'STAGE - instantiate stage with id': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
     },
     'STAGE - instantiate stage with dom element': function(containerId) {
         var containerDom = document.getElementById(containerId);
-        var stage = new Kinetic.Stage(containerDom, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerDom,
+            width: 578,
+            height: 200
+        });
     },
     'STAGE - add shape then stage then layer': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
         var circle = new Kinetic.Circle({
@@ -30,7 +42,11 @@ Test.prototype.tests = {
         layer.draw();
     },
     'STAGE - add layer then group then shape': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
         var circle = new Kinetic.Circle({
@@ -49,7 +65,11 @@ Test.prototype.tests = {
         layer.draw();
     },
     'STAGE - scale stage after add layer': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -68,7 +88,11 @@ Test.prototype.tests = {
         stage.draw();
     },
     'STAGE - scale stage before add shape': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -84,7 +108,11 @@ Test.prototype.tests = {
         stage.add(layer);
     },
     'STAGE - scale stage with no shapes': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
 
         stage.add(layer);
@@ -93,7 +121,11 @@ Test.prototype.tests = {
         stage.draw();
     },
     'STAGE - remove layer with shape': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -115,7 +147,11 @@ Test.prototype.tests = {
         test(stage.children.length === 0, 'stage should have 0 children');
     },
     'STAGE - remove layer with no shapes': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         stage.add(layer);
         stage.remove(layer);
@@ -125,12 +161,20 @@ Test.prototype.tests = {
     ////////////////////////////////////////////////////////////////////////
 
     'LAYERS - add layer': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         stage.add(layer);
     },
     'LAYERS - remove all children from layer': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle1 = new Kinetic.Circle({
             x: stage.width / 2,
@@ -161,7 +205,11 @@ Test.prototype.tests = {
         test(layer.children.length === 0, 'layer should have 0 children');
     },
     'LAYERS - hide layer': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -183,7 +231,11 @@ Test.prototype.tests = {
     ////////////////////////////////////////////////////////////////////////
 
     'GROUPS - add group': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
 
@@ -201,7 +253,11 @@ Test.prototype.tests = {
         stage.add(layer);
     },
     'GROUPS - hide group': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
         var circle = new Kinetic.Circle({
@@ -221,7 +277,11 @@ Test.prototype.tests = {
         layer.draw();
     },
     'GROUPS - create two groups, move first group': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var greenLayer = new Kinetic.Layer();
         var blueLayer = new Kinetic.Layer();
         var greenGroup = new Kinetic.Group();
@@ -275,7 +335,11 @@ Test.prototype.tests = {
     ////////////////////////////////////////////////////////////////////////
 
     'SHAPES - add rect': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
             x: 200,
@@ -304,7 +368,11 @@ Test.prototype.tests = {
         //stage.start();
     },
     'SHAPES - add circle': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -332,7 +400,11 @@ Test.prototype.tests = {
         //stage.start();
     },
     'SHAPES - set fill after instantiation': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -351,7 +423,11 @@ Test.prototype.tests = {
     'SHAPES - add image': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
-            var stage = new Kinetic.Stage(containerId, 578, 200);
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
             var layer = new Kinetic.Layer();
             var darth = new Kinetic.Image({
                 x: 10,
@@ -376,7 +452,11 @@ Test.prototype.tests = {
         imageObj.src = '../darth-vader.jpg';
     },
     'SHAPES - add polygon': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
 
         var points = [{
@@ -420,7 +500,11 @@ Test.prototype.tests = {
         //stage.start();
     },
     'SHAPES - add regular polygon triangle': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
 
         var poly = new Kinetic.RegularPolygon({
@@ -447,7 +531,11 @@ Test.prototype.tests = {
         //stage.start();
     },
     'SHAPES - add regular polygon square': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
 
         var poly = new Kinetic.RegularPolygon({
@@ -465,7 +553,11 @@ Test.prototype.tests = {
         stage.add(layer);
     },
     'SHAPES - add regular polygon pentagon': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
 
         var poly = new Kinetic.RegularPolygon({
@@ -483,7 +575,11 @@ Test.prototype.tests = {
         stage.add(layer);
     },
     'SHAPES - add regular polygon octogon': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
 
         var poly = new Kinetic.RegularPolygon({
@@ -501,7 +597,11 @@ Test.prototype.tests = {
         stage.add(layer);
     },
     'SHAPES - add 5 point star': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
 
         var star = new Kinetic.Star({
@@ -533,7 +633,11 @@ Test.prototype.tests = {
         //stage.start();
     },
     'SHAPES - add stroke rect': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
             x: 200,
@@ -548,7 +652,11 @@ Test.prototype.tests = {
         stage.add(layer);
     },
     'SHAPES - use default stroke': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
             x: 200,
@@ -564,7 +672,11 @@ Test.prototype.tests = {
         test(rect.stroke === 'black', 'stroke should be black');
     },
     'SHAPES - use default stroke width': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
             x: 200,
@@ -580,7 +692,11 @@ Test.prototype.tests = {
         test(rect.strokeWidth === 2, 'stroke width should be 2');
     },
     'SHAPES - set center offset after instantiation': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
             x: 200,
@@ -607,7 +723,11 @@ Test.prototype.tests = {
 
     },
     'SHAPES - custom shape with fill, stroke, and strokeWidth': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var shape = new Kinetic.Shape({
             drawFunc: function() {
@@ -630,7 +750,11 @@ Test.prototype.tests = {
         stage.add(layer);
     },
     'SHAPES - init with position, scale, rotation, then change scale': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
             x: 200,
@@ -661,7 +785,11 @@ Test.prototype.tests = {
         stage.add(layer);
     },
     'SHAPES - rotation in degrees': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
             x: 200,
@@ -684,7 +812,11 @@ Test.prototype.tests = {
         stage.add(layer);
     },
     'SHAPES - add text': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
 
         var text = new Kinetic.Text({
@@ -741,7 +873,11 @@ Test.prototype.tests = {
         test(text.getTextStrokeWidth() === 10, 'test stroke width should be 10');
     },
     'SHAPES - get shape name': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -759,7 +895,11 @@ Test.prototype.tests = {
         test(circle.getName() == 'myCircle', 'name should be myCircle');
     },
     'SHAPES - remove shape': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -784,7 +924,11 @@ Test.prototype.tests = {
         layer.draw();
     },
     'NODE - test drag and drop properties and methods': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -830,8 +974,48 @@ Test.prototype.tests = {
         test(circle.getDragConstraint() === 'vertical', 'drag constraint should be vertical');
         test(circle.getDragBounds().bottom === 200, 'drag bottom should be 200');
     },
+    'NODE - translate, rotate, scale shape': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Rect({
+            x: 100,
+            y: 100,
+            rotationDeg: 20,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            scale: {
+                x: 2,
+                y: 1
+            },
+            centerOffset: {
+                x: 50,
+                y: 25
+            }
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        stage.onFrame(function(frame) {
+            circle.rotation += .1;
+            layer.draw();
+        });
+        //stage.start();
+
+    },
     'STAGE - add layer then shape': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -848,7 +1032,11 @@ Test.prototype.tests = {
         layer.draw();
     },
     'SHAPES - move shape, group, and layer, and then get absolute position': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
 
@@ -882,7 +1070,11 @@ Test.prototype.tests = {
         layer.draw();
     },
     'SHAPES - hide circle': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -900,7 +1092,11 @@ Test.prototype.tests = {
         layer.draw();
     },
     'SHAPES - hide show circle': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -921,7 +1117,11 @@ Test.prototype.tests = {
         layer.draw();
     },
     'SHAPES - set shape alpha to 0.5': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -937,7 +1137,11 @@ Test.prototype.tests = {
         stage.add(layer);
     },
     'SHAPES - set shape alpha to 0.5 then back to 1': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -960,7 +1164,11 @@ Test.prototype.tests = {
         test(circle.getAbsoluteAlpha() === 1, 'abs alpha should be 1');
     },
     'STAGE - set shape and layer alpha to 0.5': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -980,7 +1188,11 @@ Test.prototype.tests = {
         test(layer.getAbsoluteAlpha() === 0.5, 'abs alpha should be 0.5');
     },
     'SHAPES - scale shape by half': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -996,7 +1208,11 @@ Test.prototype.tests = {
         stage.add(layer);
     },
     'SHAPES - scale shape by half then back to 1': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
@@ -1017,7 +1233,11 @@ Test.prototype.tests = {
     ////////////////////////////////////////////////////////////////////////
 
     'LAYERING - move blue circle on top of green circle with moveToTop': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
 
         var blueCircle = new Kinetic.Circle({
@@ -1053,7 +1273,11 @@ Test.prototype.tests = {
         layer.draw();
     },
     'LAYERING - move green circle below blue circle with moveDown': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
 
         var blueCircle = new Kinetic.Circle({
@@ -1089,7 +1313,11 @@ Test.prototype.tests = {
         layer.draw();
     },
     'LAYERING - move blue group on top of green group with moveToTop': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var greenGroup = new Kinetic.Group();
         var blueGroup = new Kinetic.Group();
@@ -1130,7 +1358,11 @@ Test.prototype.tests = {
         layer.draw();
     },
     'LAYERING - move blue group on top of green group with moveUp': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var greenGroup = new Kinetic.Group();
         var blueGroup = new Kinetic.Group();
@@ -1171,7 +1403,11 @@ Test.prototype.tests = {
         layer.draw();
     },
     'LAYERING - move blue layer on top of green layer with moveToTop': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var blueLayer = new Kinetic.Layer();
         var greenLayer = new Kinetic.Layer();
 
@@ -1202,7 +1438,11 @@ Test.prototype.tests = {
         blueLayer.moveToTop();
     },
     'LAYERING - move green layer below blue layer with moveToBottom': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var blueLayer = new Kinetic.Layer();
         var greenLayer = new Kinetic.Layer();
 
@@ -1237,7 +1477,11 @@ Test.prototype.tests = {
     ////////////////////////////////////////////////////////////////////////
 
     'ANIMATION - stage and global object animation properties': function(containerId) {
-        var stage = new Kinetic.Stage(containerId, 578, 200);
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
         var layer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
             x: 200,

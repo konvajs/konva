@@ -24,6 +24,10 @@ Kinetic.GlobalObject = {
         offset: {
             x: 0,
             y: 0
+        },
+        start: {
+            x: 0,
+            y: 0
         }
     },
     extend: function(obj1, obj2) {

@@ -6,17 +6,26 @@
  * animations
  * @constructor
  * @augments Kinetic.Container
+ * @augments Kinetic.Node
  * @param {String|DomElement} cont Container id or DOM element
  * @param {int} width
  * @param {int} height
  */
-Kinetic.Stage = function(cont, width, height) {
+Kinetic.Stage = function(config) {
+    /*
+     * if container is a string, assume it's an id for
+     * a DOM element
+     */
+    if( typeof config.container === 'string') {
+        config.container = document.getElementById(config.container);
+    }
+
     this.className = 'Stage';
-    this.container = typeof cont === 'string' ? document.getElementById(cont) : cont;
+    this.container = config.container;
     this.content = document.createElement('div');
 
-    this.width = width;
-    this.height = height;
+    this.width = config.width;
+    this.height = config.height;
     this.scale = {
         x: 1,
         y: 1
@@ -52,8 +61,9 @@ Kinetic.Stage = function(cont, width, height) {
     // add stage to global object
     Kinetic.GlobalObject.stages.push(this);
 
-    // call super constructor
+    // call super constructors
     Kinetic.Container.apply(this, []);
+    Kinetic.Node.apply(this, [config]);
 };
 /*
  * Stage methods
@@ -111,48 +121,6 @@ Kinetic.Stage.prototype = {
         this.backstageLayer.getCanvas().height = height;
     },
     /**
-     * set stage scale.  If only one parameter is passed in, then
-     * both scaleX and scaleY are set to the parameter
-     * @param {int} scaleX
-     * @param {int} scaleY
-     */
-    setScale: function(scaleX, scaleY) {
-        var oldScaleX = this.scale.x;
-        var oldScaleY = this.scale.y;
-
-        if(scaleY) {
-            this.scale.x = scaleX;
-            this.scale.y = scaleY;
-        }
-        else {
-            this.scale.x = scaleX;
-            this.scale.y = scaleX;
-        }
-
-        /*
-         * scale all shape positions
-         */
-        var layers = this.children;
-        var that = this;
-        function scaleChildren(children) {
-            for(var i = 0; i < children.length; i++) {
-                var child = children[i];
-                child.x *= that.scale.x / oldScaleX;
-                child.y *= that.scale.y / oldScaleY;
-                if(child.children) {
-                    scaleChildren(child.children);
-                }
-            }
-        }
-        scaleChildren(layers);
-    },
-    /**
-     * get scale
-     */
-    getScale: function() {
-        return this.scale;
-    },
-    /**
      * clear all layers
      */
     clear: function() {
@@ -200,16 +168,14 @@ Kinetic.Stage.prototype = {
     remove: function(layer) {
         // remove layer canvas from dom
         this.content.removeChild(layer.canvas);
-
         this._remove(layer);
     },
     /**
-     * bind event listener to stage (which is essentially
-     * the container DOM)
+     * bind event listener to container DOM element
      * @param {String} typesStr
      * @param {function} handler
      */
-    on: function(typesStr, handler) {
+    onContainer: function(typesStr, handler) {
         var types = typesStr.split(' ');
         for(var n = 0; n < types.length; n++) {
             var baseEvent = types[n];
@@ -443,7 +409,7 @@ Kinetic.Stage.prototype = {
      * handle incoming event
      * @param {Event} evt
      */
-    _handleEvent: function(evt) {
+    _handleStageEvent: function(evt) {
         var go = Kinetic.GlobalObject;
         if(!evt) {
             evt = window.event;
@@ -492,25 +458,25 @@ Kinetic.Stage.prototype = {
         // desktop events
         this.container.addEventListener('mousedown', function(evt) {
             that.mouseDown = true;
-            that._handleEvent(evt);
+            that._handleStageEvent(evt);
         }, false);
 
         this.container.addEventListener('mousemove', function(evt) {
             that.mouseUp = false;
             that.mouseDown = false;
-            that._handleEvent(evt);
+            that._handleStageEvent(evt);
         }, false);
 
         this.container.addEventListener('mouseup', function(evt) {
             that.mouseUp = true;
             that.mouseDown = false;
-            that._handleEvent(evt);
+            that._handleStageEvent(evt);
 
             that.clickStart = false;
         }, false);
 
         this.container.addEventListener('mouseover', function(evt) {
-            that._handleEvent(evt);
+            that._handleStageEvent(evt);
         }, false);
 
         this.container.addEventListener('mouseout', function(evt) {
@@ -520,18 +486,18 @@ Kinetic.Stage.prototype = {
         this.container.addEventListener('touchstart', function(evt) {
             evt.preventDefault();
             that.touchStart = true;
-            that._handleEvent(evt);
+            that._handleStageEvent(evt);
         }, false);
 
         this.container.addEventListener('touchmove', function(evt) {
             evt.preventDefault();
-            that._handleEvent(evt);
+            that._handleStageEvent(evt);
         }, false);
 
         this.container.addEventListener('touchend', function(evt) {
             evt.preventDefault();
             that.touchEnd = true;
-            that._handleEvent(evt);
+            that._handleStageEvent(evt);
         }, false);
     },
     /**
@@ -622,23 +588,26 @@ Kinetic.Stage.prototype = {
     _prepareDrag: function() {
         var that = this;
 
-        this.on('mousemove touchmove', function(evt) {
+        this.onContainer('mousemove touchmove', function(evt) {
             var go = Kinetic.GlobalObject;
             var node = go.drag.node;
             if(node) {
                 var pos = that.getUserPosition();
-                var ds = node.dragConstraint;
+                var dc = node.dragConstraint;
                 var db = node.dragBounds;
-                if(ds === 'none' || ds === 'horizontal') {
+                var m = node.getMatrix().getTranslation();
+                var am = node.getAbsoluteMatrix().getTranslation();
+
+                if(dc === 'none' || dc === 'horizontal') {
                     var newX = pos.x - go.drag.offset.x;
                     if((db.left === undefined || db.left < newX) && (db.right === undefined || db.right > newX)) {
-                        node.x = newX;
+                        node.x = newX + m.x - (am.x + go.drag.start.x);
                     }
                 }
-                if(ds === 'none' || ds === 'vertical') {
+                if(dc === 'none' || dc === 'vertical') {
                     var newY = pos.y - go.drag.offset.y;
                     if((db.top === undefined || db.top < newY) && (db.bottom === undefined || db.bottom > newY)) {
-                        node.y = newY;
+                        node.y = newY + m.y - (am.y + go.drag.start.y);
                     }
                 }
                 go.drag.node.getLayer().draw();
@@ -653,7 +622,7 @@ Kinetic.Stage.prototype = {
             }
         }, false);
 
-        this.on('mouseup touchend mouseout', function(evt) {
+        this.onContainer('mouseup touchend mouseout', function(evt) {
             that._endDrag(evt);
         });
     },
@@ -693,5 +662,6 @@ Kinetic.Stage.prototype = {
         this.content.appendChild(this.backstageLayer.canvas);
     }
 };
-// extend Container
+// Extend Container and Node
 Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Container);
+Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Node);

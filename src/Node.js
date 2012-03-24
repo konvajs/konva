@@ -49,14 +49,6 @@ Kinetic.Node = function(config) {
             }
         }
     }
-
-    // overrides
-    if(this.centerOffset.x === undefined) {
-        this.centerOffset.x = 0;
-    }
-    if(this.centerOffset.y === undefined) {
-        this.centerOffset.y = 0;
-    }
 };
 /*
  * Node methods
@@ -516,6 +508,53 @@ Kinetic.Node.prototype = {
         return this.dragBounds;
     },
     /**
+     * get matrix transform of the node while taking into
+     * account the matrix transforms of its parents
+     */
+    getAbsoluteMatrix: function() {
+        // absolute matrix
+        var am = new Kinetic.Matrix();
+
+        var family = [];
+        var parent = this.parent;
+
+        family.unshift(this);
+        while(parent) {
+            family.unshift(parent);
+            parent = parent.parent;
+        }
+
+        for(var n = 0; n < family.length; n++) {
+            var node = family[n];
+            var m = node.getMatrix();
+            am.multiply(m);
+        }
+
+        return am;
+    },
+    /**
+     * get matrix transform of the node while not taking
+     * into account the matrix transforms of its parents
+     */
+    getMatrix: function() {
+        var m = new Kinetic.Matrix();
+
+        if(this.x !== 0 || this.y !== 0) {
+            m.translate(this.x, this.y);
+        }
+        if(this.rotation !== 0) {
+            m.rotate(this.rotation);
+        }
+        if(this.scale.x !== 1 || this.scale.y !== 1) {
+            m.scale(this.scale.x, this.scale.y);
+        }
+        if(this.centerOffset.x !== 0 || this.centerOffset.y !== 0) {
+            m.translate(-1 * this.centerOffset.x, -1 * this.centerOffset.y);
+        }
+
+        return m;
+    },
+    /**
      * initialize drag and drop
      */
     _initDrag: function() {
@@ -526,9 +565,13 @@ Kinetic.Node.prototype = {
             var pos = stage.getUserPosition();
 
             if(pos) {
+                var m = that.getMatrix().getTranslation();
+                var am = that.getAbsoluteMatrix().getTranslation();
                 go.drag.node = that;
                 go.drag.offset.x = pos.x - that.x;
                 go.drag.offset.y = pos.y - that.y;
+                go.drag.start.x = m.x - am.x;
+                go.drag.start.y = m.y - am.y;
             }
         });
     },
