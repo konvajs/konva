@@ -11,8 +11,7 @@
 /*
 * The usage of this class was inspired by some of the work done by a forked
 * project, KineticJS-Ext by Wappworks, which is based on Simon's Transform
-* class.  KineticJS has slightly modified the original class and added new methods
-* specific for canvas.
+* class.
 */
 
 /**
@@ -60,10 +59,40 @@ Kinetic.Matrix.prototype = {
         this.m[3] = m22;
     },
     /**
-     * transform canvas context
+     * Returns the translation
+     * @returns {Object} 2D point(x, y)
      */
-    transformContext: function(context) {
-        var m = this.m;
-        context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+    getTranslation: function() {
+        return {
+            x: this.m[4],
+            y: this.m[5]
+        };
+    },
+    /**
+     * Transform multiplication
+     * @param {Kinetic.Matrix} matrix
+     */
+    multiply: function(matrix) {
+        var m11 = this.m[0] * matrix.m[0] + this.m[2] * matrix.m[1];
+        var m12 = this.m[1] * matrix.m[0] + this.m[3] * matrix.m[1];
+
+        var m21 = this.m[0] * matrix.m[2] + this.m[2] * matrix.m[3];
+        var m22 = this.m[1] * matrix.m[2] + this.m[3] * matrix.m[3];
+
+        var dx = this.m[0] * matrix.m[4] + this.m[2] * matrix.m[5] + this.m[4];
+        var dy = this.m[1] * matrix.m[4] + this.m[3] * matrix.m[5] + this.m[5];
+
+        this.m[0] = m11;
+        this.m[1] = m12;
+        this.m[2] = m21;
+        this.m[3] = m22;
+        this.m[4] = dx;
+        this.m[5] = dy;
+    },
+    /**
+     * return matrix as array
+     */
+    toArray: function() {
+        return this.m;
     }
 };

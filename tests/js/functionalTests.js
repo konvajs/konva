@@ -979,27 +979,28 @@ Test.prototype.tests = {
 
         circle.draggable(false);
     },
-    'DRAG AND DROP - scale stage after add layer then drag and drop shape': function(containerId) {
+    'DRAG AND DROP - scale and rotate stage after add layer then drag and drop shape': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
-            radius: 70,
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 80,
+            width: 100,
+            height: 50,
             fill: 'red',
             stroke: 'black',
-            strokeWidth: 4
+            strokeWidth: 4,
+            draggable: true
         });
 
-        circle.draggable(true);
-
-        layer.add(circle);
+        layer.add(rect);
         stage.add(layer);
 
+		stage.rotateDeg(20);
         stage.setScale(0.5);
 
         stage.draw();

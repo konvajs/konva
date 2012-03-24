@@ -16,7 +16,7 @@ Kinetic.Stage = function(config) {
      * if container is a string, assume it's an id for
      * a DOM element
      */
-    if(typeof config.container === 'string') {
+    if( typeof config.container === 'string') {
         config.container = document.getElementById(config.container);
     }
 
@@ -587,18 +587,21 @@ Kinetic.Stage.prototype = {
             var node = go.drag.node;
             if(node) {
                 var pos = that.getUserPosition();
-                var ds = node.dragConstraint;
+                var dc = node.dragConstraint;
                 var db = node.dragBounds;
-                if(ds === 'none' || ds === 'horizontal') {
+                var m = node.getMatrix().getTranslation();
+                var am = node.getAbsoluteMatrix().getTranslation();
+
+                if(dc === 'none' || dc === 'horizontal') {
                     var newX = pos.x - go.drag.offset.x;
                     if((db.left === undefined || db.left < newX) && (db.right === undefined || db.right > newX)) {
-                        node.x = newX;
+                        node.x = newX + m.x - (am.x + go.drag.start.x);
                     }
                 }
-                if(ds === 'none' || ds === 'vertical') {
+                if(dc === 'none' || dc === 'vertical') {
                     var newY = pos.y - go.drag.offset.y;
                     if((db.top === undefined || db.top < newY) && (db.bottom === undefined || db.bottom > newY)) {
-                        node.y = newY;
+                        node.y = newY + m.y - (am.y + go.drag.start.y);
                     }
                 }
                 go.drag.node.getLayer().draw();

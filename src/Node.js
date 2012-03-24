@@ -507,6 +507,35 @@ Kinetic.Node.prototype = {
     getDragBounds: function() {
         return this.dragBounds;
     },
+    /**
+     * get matrix transform of the node while taking into
+     * account the matrix transforms of its parents
+     */
+    getAbsoluteMatrix: function() {
+        // absolute matrix
+        var am = new Kinetic.Matrix();
+
+        var family = [];
+        var parent = this.parent;
+
+        family.unshift(this);
+        while(parent) {
+            family.unshift(parent);
+            parent = parent.parent;
+        }
+
+        for(var n = 0; n < family.length; n++) {
+            var node = family[n];
+            var m = node.getMatrix();
+            am.multiply(m);
+        }
+
+        return am;
+    },
+    /**
+     * get matrix transform of the node while not taking
+     * into account the matrix transforms of its parents
+     */
     getMatrix: function() {
         var m = new Kinetic.Matrix();
 
@@ -536,9 +565,13 @@ Kinetic.Node.prototype = {
             var pos = stage.getUserPosition();
 
             if(pos) {
+                var m = that.getMatrix().getTranslation();
+                var am = that.getAbsoluteMatrix().getTranslation();
                 go.drag.node = that;
                 go.drag.offset.x = pos.x - that.x;
                 go.drag.offset.y = pos.y - that.y;
+                go.drag.start.x = m.x - am.x;
+                go.drag.start.y = m.y - am.y;
             }
         });
     },

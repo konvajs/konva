@@ -26,13 +26,17 @@ Kinetic.Layer = function(config) {
  */
 Kinetic.Layer.prototype = {
     /**
-     * public draw children
+     * draw children nodes.  this includes any groups
+     *  or shapes
      */
     draw: function() {
         this._draw();
     },
     /**
-     * clear layer
+     * clears the canvas context tied to the layer.  Clearing
+     *  a layer does not remove its children.  The nodes within
+     *  the layer will be redrawn whenever the .draw() method
+     *  is used again.
      */
     clear: function() {
         var context = this.getContext();
@@ -52,7 +56,8 @@ Kinetic.Layer.prototype = {
         return this.context;
     },
     /**
-     * add node to layer
+     * add a node to the layer.  New nodes are always
+     * placed at the top.
      * @param {Node} node
      */
     add: function(child) {
