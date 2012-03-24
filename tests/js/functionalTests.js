@@ -303,9 +303,9 @@ Test.prototype.tests = {
             });
         }
         var stage = new Kinetic.Stage({
-        	container: containerId, 
-        	width: 578, 
-        	height: 200
+            container: containerId,
+            width: 578,
+            height: 200
         });
         var layer = new Kinetic.Layer();
         var greenBox = new Kinetic.Rect({
@@ -1000,7 +1000,7 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
 
-		stage.rotateDeg(20);
+        stage.rotateDeg(20);
         stage.setScale(0.5);
 
         stage.draw();
@@ -1344,4 +1344,97 @@ Test.prototype.tests = {
         layer.add(group);
         stage.add(layer);
     },
+    'STAGE - save image as png (click on circle to open new window)': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: stage.width / 2,
+            y: stage.height / 2,
+            radius: 70,
+            fill: 'violet',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        circle.on('click', function() {
+            stage.toDataURL(function(dataUrl) {
+                /*
+                 * here you can do anything you like with the data url.
+                 * In this tutorial we'll just open the url with the browser
+                 * so that you can see the result as an image
+                 */
+                window.open(dataUrl);
+            });
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+    },
+    'STAGE - save image as low quality jpg (click on circle to open new window)': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: stage.width / 2,
+            y: stage.height / 2,
+            radius: 70,
+            fill: 'violet',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        circle.on('click', function() {
+            stage.toDataURL(function(dataUrl) {
+                /*
+                 * here you can do anything you like with the data url.
+                 * In this tutorial we'll just open the url with the browser
+                 * so that you can see the result as an image
+                 */
+                window.open(dataUrl);
+            }, 'image/jpeg', 0);
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+    },
+    'STAGE - save image as high quality jpg (click on circle to open new window)': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: stage.width / 2,
+            y: stage.height / 2,
+            radius: 70,
+            fill: 'violet',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        circle.on('click', function() {
+            stage.toDataURL(function(dataUrl) {
+                /*
+                 * here you can do anything you like with the data url.
+                 * In this tutorial we'll just open the url with the browser
+                 * so that you can see the result as an image
+                 */
+                window.open(dataUrl);
+            }, 'image/jpeg', 1);
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+    }
 };

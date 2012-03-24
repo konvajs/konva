@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mar 23 2012
+ * Date: Mar 24 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1118,12 +1118,12 @@ Kinetic.Stage.prototype = {
     /**
      * Creates a composite data URL and passes it to a callback. If MIME type is not
      * specified, then "image/png" will result. For "image/jpeg", specify a quality
-     * level as arg2 (range 0.0 - 1.0)
+     * level as quality (range 0.0 - 1.0)
      * @param {function} callback
      * @param {String} mimeType (optional)
-     * @param {Number} arg2 (optional)
+     * @param {Number} quality (optional)
      */
-    toDataURL: function(callback, mimeType, arg2) {
+    toDataURL: function(callback, mimeType, quality) {
         var bufferLayer = this.bufferLayer;
         var bufferContext = bufferLayer.getContext();
         var layers = this.children;
@@ -1138,7 +1138,7 @@ Kinetic.Stage.prototype = {
                     addLayer(n);
                 }
                 else {
-                    callback(bufferLayer.getCanvas().toDataURL(mimeType, arg2));
+                    callback(bufferLayer.getCanvas().toDataURL(mimeType, quality));
                 }
             };
             imageObj.src = dataURL;
@@ -1373,7 +1373,7 @@ Kinetic.Stage.prototype = {
         // propapgate backwards through children
         for(var i = children.length - 1; i >= 0; i--) {
             var child = children[i];
-            if (child.isListening) {
+            if(child.isListening) {
                 if(child.className === 'Shape') {
                     var exit = this._detectEvent(child, evt);
                     if(exit) {
