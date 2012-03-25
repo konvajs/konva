@@ -935,6 +935,34 @@ Test.prototype.tests = {
         layer.add(group);
         stage.add(layer);
     },
+    'EVENTS - get currentTarget': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+
+        layer.on('click', function(evt) {
+            log(evt.shape.getName());
+  
+        });
+
+        var redCircle = new Kinetic.Circle({
+            x: stage.width / 2,
+            y: stage.height / 2,
+            radius: 80,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            name: 'circle'
+        });
+
+        group.add(redCircle);
+        layer.add(group);
+        stage.add(layer);
+    },
     'DRAG AND DROP - draggable true': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

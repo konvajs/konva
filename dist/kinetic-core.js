@@ -830,6 +830,9 @@ Kinetic.Node.prototype = {
      * @param {Event} evt
      */
     _handleEvents: function(eventType, evt) {
+    	if (this.className === 'Shape') {
+    		evt.shape = this;
+    	}
         var stage = this.getStage();
         this._handleEvent(this, stage.mouseoverShape, stage.mouseoutShape, eventType, evt);
     },
