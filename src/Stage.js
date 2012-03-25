@@ -628,7 +628,7 @@ Kinetic.Stage.prototype = {
                 var rot = node.rotation;
                 node.rotation = 0;
 
-				// unravel transform
+                // unravel transform
                 var it = node.getAbsoluteTransform();
                 it.invert();
                 it.translate(newNodePos.x, newNodePos.y);
