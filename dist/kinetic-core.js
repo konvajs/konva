@@ -52,10 +52,6 @@ Kinetic.GlobalObject = {
         offset: {
             x: 0,
             y: 0
-        },
-        start: {
-            x: 0,
-            y: 0
         }
     },
     extend: function(obj1, obj2) {
@@ -300,6 +296,14 @@ Kinetic.Node = function(config) {
             }
         }
     }
+
+    // overrides
+    if(this.centerOffset.x === undefined) {
+        this.centerOffset.x = 0;
+    }
+    if(this.centerOffset.y === undefined) {
+        this.centerOffset.y = 0;
+    }
 };
 /*
  * Node methods
@@ -436,18 +440,7 @@ Kinetic.Node.prototype = {
      * get absolute position relative to stage
      */
     getAbsolutePosition: function() {
-        var x = this.x;
-        var y = this.y;
-        var parent = this.getParent();
-        while(parent.className !== 'Stage') {
-            x += parent.x;
-            y += parent.y;
-            parent = parent.parent;
-        }
-        return {
-            x: x,
-            y: y
-        };
+        return this.getAbsoluteTransform().getTranslation();
     },
     /**
      * move node by an amount
@@ -819,10 +812,8 @@ Kinetic.Node.prototype = {
                 var m = that.getTransform().getTranslation();
                 var am = that.getAbsoluteTransform().getTranslation();
                 go.drag.node = that;
-                go.drag.offset.x = pos.x - that.x;
-                go.drag.offset.y = pos.y - that.y;
-                go.drag.start.x = m.x - am.x;
-                go.drag.start.y = m.y - am.y;
+                go.drag.offset.x = pos.x - that.getAbsoluteTransform().getTranslation().x;
+                go.drag.offset.y = pos.y - that.getAbsoluteTransform().getTranslation().y;
             }
         });
     },
@@ -1581,21 +1572,43 @@ Kinetic.Stage.prototype = {
                 var pos = that.getUserPosition();
                 var dc = node.dragConstraint;
                 var db = node.dragBounds;
-                var m = node.getTransform().getTranslation();
-                var am = node.getAbsoluteTransform().getTranslation();
 
-                if(dc === 'none' || dc === 'horizontal') {
-                    var newX = pos.x - go.drag.offset.x;
-                    if((db.left === undefined || db.left < newX) && (db.right === undefined || db.right > newX)) {
-                        node.x = newX + m.x - (am.x + go.drag.start.x);
-                    }
+                // default
+                var newNodePos = {
+                    x: pos.x - go.drag.offset.x,
+                    y: pos.y - go.drag.offset.y
+                };
+
+                // bounds overrides
+                if(db.left !== undefined && newNodePos.x < db.left) {
+                    newNodePos.x = db.left;
                 }
-                if(dc === 'none' || dc === 'vertical') {
-                    var newY = pos.y - go.drag.offset.y;
-                    if((db.top === undefined || db.top < newY) && (db.bottom === undefined || db.bottom > newY)) {
-                        node.y = newY + m.y - (am.y + go.drag.start.y);
-                    }
+                else if(db.right !== undefined && newNodePos.x > db.right) {
+                    newNodePos.x = db.right;
                 }
+                else if(db.top !== undefined && newNodePos.y < db.top) {
+                    newNodePos.y = db.top;
+                }
+                else if(db.bottom !== undefined && newNodePos.y > db.bottom) {
+                    newNodePos.y = db.bottom;
+                }
+
+                // constraint overrides
+                if(dc === 'horizontal') {
+                    newNodePos.y = node.y;
+                }
+                else if(dc === 'vertical') {
+                    newNodePos.x = node.x;
+                }
+
+                // magic
+                var it = node.getAbsoluteTransform();
+                it.invert();
+                it.translate(newNodePos.x, newNodePos.y);
+
+                node.x += it.getTranslation().x;
+                node.y += it.getTranslation().y;
+
                 go.drag.node.getLayer().draw();
 
                 if(!go.drag.moving) {
@@ -2623,6 +2636,24 @@ Kinetic.Transform.prototype = {
         this.m[3] = m22;
         this.m[4] = dx;
         this.m[5] = dy;
+    },
+    /**
+     * Invert the matrix
+     */
+    invert: function() {
+        var d = 1 / (this.m[0] * this.m[3] - this.m[1] * this.m[2]);
+        var m0 = this.m[3] * d;
+        var m1 = -this.m[1] * d;
+        var m2 = -this.m[2] * d;
+        var m3 = this.m[0] * d;
+        var m4 = d * (this.m[2] * this.m[5] - this.m[3] * this.m[4]);
+        var m5 = d * (this.m[1] * this.m[4] - this.m[0] * this.m[5]);
+        this.m[0] = m0;
+        this.m[1] = m1;
+        this.m[2] = m2;
+        this.m[3] = m3;
+        this.m[4] = m4;
+        this.m[5] = m5;
     },
     /**
      * return matrix

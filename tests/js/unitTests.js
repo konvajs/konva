@@ -1031,7 +1031,7 @@ Test.prototype.tests = {
         layer.add(circle);
         layer.draw();
     },
-    'SHAPES - move shape, group, and layer, and then get absolute position': function(containerId) {
+    'TRANSFORMS - move shape, group, and layer, and then get absolute position': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1066,6 +1066,44 @@ Test.prototype.tests = {
         test(circle.getAbsolutePosition().x == 300, 'circle should be at x = 300');
         test(group.getAbsolutePosition().x == 200, 'group should be at x = 200');
         test(layer.getAbsolutePosition().x == 100, 'layer should be at x = 100');
+
+        layer.draw();
+    },
+    'TRANSFORMS - scale layer, rotate group, position shape, and then get absolute position': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer({
+            scale: {
+                x: 2,
+                y: 2
+            }
+        });
+        var group = new Kinetic.Group({
+			x: 100,
+			rotationDeg: 90
+        });
+
+        var rect = new Kinetic.Rect({
+            x: 50,
+            y: 10,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true
+        });
+
+        group.add(rect);
+        layer.add(group);
+        stage.add(layer);
+        
+        // test absolute positions
+        test(rect.getAbsolutePosition().x == 180, 'rect should be at x = 180');
+        test(rect.getAbsolutePosition().y == 100, 'rect should be at y = 100');
 
         layer.draw();
     },

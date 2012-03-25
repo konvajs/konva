@@ -49,6 +49,14 @@ Kinetic.Node = function(config) {
             }
         }
     }
+
+    // overrides
+    if(this.centerOffset.x === undefined) {
+        this.centerOffset.x = 0;
+    }
+    if(this.centerOffset.y === undefined) {
+        this.centerOffset.y = 0;
+    }
 };
 /*
  * Node methods
@@ -185,18 +193,7 @@ Kinetic.Node.prototype = {
      * get absolute position relative to stage
      */
     getAbsolutePosition: function() {
-        var x = this.x;
-        var y = this.y;
-        var parent = this.getParent();
-        while(parent.className !== 'Stage') {
-            x += parent.x;
-            y += parent.y;
-            parent = parent.parent;
-        }
-        return {
-            x: x,
-            y: y
-        };
+        return this.getAbsoluteTransform().getTranslation();
     },
     /**
      * move node by an amount
@@ -568,10 +565,8 @@ Kinetic.Node.prototype = {
                 var m = that.getTransform().getTranslation();
                 var am = that.getAbsoluteTransform().getTranslation();
                 go.drag.node = that;
-                go.drag.offset.x = pos.x - that.x;
-                go.drag.offset.y = pos.y - that.y;
-                go.drag.start.x = m.x - am.x;
-                go.drag.start.y = m.y - am.y;
+                go.drag.offset.x = pos.x - that.getAbsoluteTransform().getTranslation().x;
+                go.drag.offset.y = pos.y - that.getAbsoluteTransform().getTranslation().y;
             }
         });
     },

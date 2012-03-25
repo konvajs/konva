@@ -988,7 +988,7 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
             x: 200,
-            y: 80,
+            y: 20,
             width: 100,
             height: 50,
             fill: 'red',
@@ -1325,14 +1325,14 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group({
             scale: {
-                x: 1.5,
-                y: 1.5
+                x: 2,
+                y: 2
             }
         });
 
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: 40,
+            y: 40,
             radius: 70,
             fill: 'red',
             stroke: 'black',
