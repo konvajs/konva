@@ -1583,13 +1583,13 @@ Kinetic.Stage.prototype = {
                 if(db.left !== undefined && newNodePos.x < db.left) {
                     newNodePos.x = db.left;
                 }
-                else if(db.right !== undefined && newNodePos.x > db.right) {
+                if(db.right !== undefined && newNodePos.x > db.right) {
                     newNodePos.x = db.right;
                 }
-                else if(db.top !== undefined && newNodePos.y < db.top) {
+                if(db.top !== undefined && newNodePos.y < db.top) {
                     newNodePos.y = db.top;
                 }
-                else if(db.bottom !== undefined && newNodePos.y > db.bottom) {
+                if(db.bottom !== undefined && newNodePos.y > db.bottom) {
                     newNodePos.y = db.bottom;
                 }
 
