@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mar 24 2012
+ * Date: Mar 25 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -830,9 +830,9 @@ Kinetic.Node.prototype = {
      * @param {Event} evt
      */
     _handleEvents: function(eventType, evt) {
-    	if (this.className === 'Shape') {
-    		evt.shape = this;
-    	}
+        if(this.className === 'Shape') {
+            evt.shape = this;
+        }
         var stage = this.getStage();
         this._handleEvent(this, stage.mouseoverShape, stage.mouseoutShape, eventType, evt);
     },
@@ -1604,13 +1604,20 @@ Kinetic.Stage.prototype = {
                     newNodePos.x = node.x;
                 }
 
-                // magic
+                // save rotation and remove it from transform
+                var rot = node.rotation;
+                node.rotation = 0;
+
+				// unravel transform
                 var it = node.getAbsoluteTransform();
                 it.invert();
                 it.translate(newNodePos.x, newNodePos.y);
 
                 node.x += it.getTranslation().x;
                 node.y += it.getTranslation().y;
+
+                // restore rotation
+                node.rotate(rot);
 
                 go.drag.node.getLayer().draw();
 
@@ -1619,6 +1626,7 @@ Kinetic.Stage.prototype = {
                     // execute dragstart events if defined
                     go.drag.node._handleEvents('ondragstart', evt);
                 }
+
                 // execute user defined ondragmove if defined
                 go.drag.node._handleEvents('ondragmove', evt);
             }

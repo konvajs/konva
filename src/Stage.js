@@ -624,13 +624,20 @@ Kinetic.Stage.prototype = {
                     newNodePos.x = node.x;
                 }
 
-                // magic
+                // save rotation and remove it from transform
+                var rot = node.rotation;
+                node.rotation = 0;
+
+				// unravel transform
                 var it = node.getAbsoluteTransform();
                 it.invert();
                 it.translate(newNodePos.x, newNodePos.y);
 
                 node.x += it.getTranslation().x;
                 node.y += it.getTranslation().y;
+
+                // restore rotation
+                node.rotate(rot);
 
                 go.drag.node.getLayer().draw();
 
@@ -639,6 +646,7 @@ Kinetic.Stage.prototype = {
                     // execute dragstart events if defined
                     go.drag.node._handleEvents('ondragstart', evt);
                 }
+
                 // execute user defined ondragmove if defined
                 go.drag.node._handleEvents('ondragmove', evt);
             }

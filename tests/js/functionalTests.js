@@ -1023,12 +1023,18 @@ Test.prototype.tests = {
             stroke: 'black',
             strokeWidth: 4,
             draggable: true
+            //rotationDeg: 60
+            //rotationDeg: Math.PI / 3
         });
 
         layer.add(rect);
         stage.add(layer);
+        
+        //stage.rotateDeg(20);
+        
+        //console.log(rect.getAbsoluteTransform().getTranslation())
 
-        stage.rotateDeg(20);
+        stage.rotate(Math.PI / 3);
         stage.setScale(0.5);
 
         stage.draw();
