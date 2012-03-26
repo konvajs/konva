@@ -1604,9 +1604,20 @@ Kinetic.Stage.prototype = {
                     newNodePos.x = node.x;
                 }
 
-                // save rotation and remove it from transform
+                /*
+                 * save rotation and scale and then
+                 * remove them from the transform
+                 */
                 var rot = node.rotation;
+                var scale = {
+                    x: node.scale.x,
+                    y: node.scale.y
+                };
                 node.rotation = 0;
+                node.scale = {
+                    x: 1,
+                    y: 1
+                };
 
                 // unravel transform
                 var it = node.getAbsoluteTransform();
@@ -1616,8 +1627,12 @@ Kinetic.Stage.prototype = {
                 node.x += it.getTranslation().x;
                 node.y += it.getTranslation().y;
 
-                // restore rotation
+                // restore rotation and scale
                 node.rotate(rot);
+                node.scale = {
+                    x: scale.x,
+                    y: scale.y
+                };
 
                 go.drag.node.getLayer().draw();
 
