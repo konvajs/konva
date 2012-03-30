@@ -28,10 +28,13 @@ Kinetic.Text = function(config) {
     if(config.padding === undefined) {
         config.padding = 0;
     }
+    if(config.fontStyle === undefined) {
+        config.fontStyle = 'normal';
+    }
 
     config.drawFunc = function() {
         var context = this.getContext();
-        context.font = this.fontSize + 'pt ' + this.fontFamily;
+        context.font = this.fontStyle + ' ' + this.fontSize + 'pt ' + this.fontFamily;
         context.textBaseline = 'middle';
         var metrics = context.measureText(this.text);
         var textHeight = textHeight = parseInt(this.fontSize, 10);
@@ -119,6 +122,21 @@ Kinetic.Text.prototype = {
      */
     getFontSize: function() {
         return this.fontSize;
+    },
+    /**
+     * set font style using same rules as the first argument for the css spec's shorthand font property:
+	 *		http://www.w3.org/TR/CSS21/fonts.html#propdef-font
+	 *	i.e. [ <'font-style'> || <'font-variant'> || <'font-weight'> ]
+     * @param {String} fontStyle
+     */
+    setFontStyle: function(fontStyle) {
+        this.fontStyle = fontStyle;
+    },
+    /**
+     * get font style
+     */
+    getFontStyle: function() {
+        return this.fontStyle;
     },
     /**
      * set text fill color
