@@ -905,7 +905,7 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
     },
-    'SHAPES - add text': function(containerId) {
+    'Text - add text': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -970,6 +970,35 @@ Test.prototype.tests = {
         test(text.getTextFill() === 'blue', 'text fill should be blue');
         test(text.getTextStroke() === 'red', 'text stroke should be red');
         test(text.getTextStrokeWidth() === 10, 'test stroke width should be 10');
+    },
+    'Text - get metrics': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var text = new Kinetic.Text({
+            x: stage.width / 2,
+            y: stage.height / 2,
+            text: 'Hello World!',
+            fontSize: 60,
+            fontFamily: 'Calibri',
+            fontStyle: 'normal',
+            textFill: 'green',
+            fontStyle: 'italic',
+            align: 'center',
+            verticalAlign: 'middle'
+        });
+
+        layer.add(text);
+        stage.add(layer);
+
+        test(text.getTextSize().width === 407, 'text width should be 407px');
+        test(text.getTextSize().height === 60, 'text height should be 60px');
+        test(text.getTextWidth() === 407, 'text width should be 407px');
+        test(text.getTextHeight() === 60, 'text height should be 60px');
     },
     'SHAPES - get shape name': function(containerId) {
         var stage = new Kinetic.Stage({

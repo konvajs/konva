@@ -2508,9 +2508,8 @@ Kinetic.Text = function(config) {
         var context = this.getContext();
         context.font = this.fontStyle + ' ' + this.fontSize + 'pt ' + this.fontFamily;
         context.textBaseline = 'middle';
-        var metrics = context.measureText(this.text);
-        var textHeight = textHeight = parseInt(this.fontSize, 10);
-        var textWidth = metrics.width;
+        var textHeight = this.getTextHeight();
+        var textWidth = this.getTextWidth();
         var p = this.padding;
         var x = 0;
         var y = 0;
@@ -2699,6 +2698,32 @@ Kinetic.Text.prototype = {
      */
     getText: function() {
         return this.text;
+    },
+    /**
+     * get text width in pixels
+     */
+    getTextWidth: function() {
+        return this.getTextSize().width;
+    },
+    /**
+     * get text height in pixels
+     */
+    getTextHeight: function() {
+        return this.getTextSize().height;
+    },
+    /**
+     * get text size in pixels
+     */
+    getTextSize: function() {
+        var context = this.getContext();
+        context.save();
+        context.font = this.fontStyle + ' ' + this.fontSize + 'pt ' + this.fontFamily;
+        var metrics = context.measureText(this.text);
+        context.restore();
+        return {
+            width: metrics.width,
+            height: parseInt(this.fontSize, 10)
+        };
     }
 };
 // extend Shape
