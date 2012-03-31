@@ -11,6 +11,7 @@ Kinetic.Star = function(config) {
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
+        this.applyLineJoin();
         context.moveTo(0, 0 - this.outerRadius);
 
         for(var n = 1; n < this.points * 2; n++) {

@@ -20,6 +20,7 @@ Kinetic.Image = function(config) {
         var canvas = this.getCanvas();
         var context = this.getContext();
         context.beginPath();
+        this.applyLineJoin();
         context.rect(0, 0, this.width, this.height);
         context.closePath();
         this.fillStroke();

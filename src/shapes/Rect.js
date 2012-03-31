@@ -11,6 +11,7 @@ Kinetic.Rect = function(config) {
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
+        this.applyLineJoin();
         context.rect(0, 0, this.width, this.height);
         context.closePath();
         this.fillStroke();

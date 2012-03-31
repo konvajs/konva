@@ -11,6 +11,7 @@ Kinetic.Polygon = function(config) {
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
+        this.applyLineJoin();
         context.moveTo(this.points[0].x, this.points[0].y);
         for(var n = 1; n < this.points.length; n++) {
             context.lineTo(this.points[n].x, this.points[n].y);

@@ -596,7 +596,7 @@ Test.prototype.tests = {
         layer.add(poly);
         stage.add(layer);
     },
-    'SHAPES - add 5 point star': function(containerId) {
+    'SHAPES - add five point star': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -631,6 +631,35 @@ Test.prototype.tests = {
             layer.draw();
         });
         //stage.start();
+    },
+    'SHAPES - add five point star with line join': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var star = new Kinetic.Star({
+            x: 200,
+            y: 100,
+            points: 5,
+            innerRadius: 40,
+            outerRadius: 70,
+            fill: 'green',
+            stroke: 'blue',
+            strokeWidth: 5,
+            lineJoin: "round"
+        });
+
+        layer.add(star);
+        stage.add(layer);
+
+        test(star.getLineJoin() === 'round', 'lineJoin property should be round');
+        star.setLineJoin('bevel');
+        test(star.getLineJoin() === 'bevel', 'lineJoin property should be bevel');
+
+        layer.draw();
     },
     'SHAPES - add stroke rect': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -828,7 +857,7 @@ Test.prototype.tests = {
             text: 'Hello World!',
             fontSize: 60,
             fontFamily: 'Calibri',
-			fontStyle: 'normal',
+            fontStyle: 'normal',
             textFill: '#888',
             textStroke: '#333',
             padding: 10,
@@ -853,7 +882,7 @@ Test.prototype.tests = {
         text.setText('Bye World!');
         test(text.getText() === 'Bye World!', 'text should be Bye World!');
         test(text.getPadding() === 10, 'padding should be 10');
-		test(text.getFontStyle() == 'normal', 'font style should be normal');
+        test(text.getFontStyle() == 'normal', 'font style should be normal');
         text.setPadding(20);
         test(text.getPadding() === 20, 'padding should be 20');
 
@@ -867,10 +896,10 @@ Test.prototype.tests = {
         text.setTextFill('blue');
         text.setTextStroke('red');
         text.setTextStrokeWidth(10);
-        
+
         test(text.getFontFamily() === 'Arial', 'font family should be Arial');
         test(text.getFontSize() === 30, 'text size should be 30');
-		test(text.getFontStyle() == 'italic', 'font style should be italic');
+        test(text.getFontStyle() == 'italic', 'font style should be italic');
         test(text.getAlign() === 'right', 'text align should be right');
         test(text.getVerticalAlign() === 'top', 'vertical align should be top');
         test(text.getTextFill() === 'blue', 'text fill should be blue');
@@ -1087,8 +1116,8 @@ Test.prototype.tests = {
             }
         });
         var group = new Kinetic.Group({
-			x: 100,
-			rotationDeg: 90
+            x: 100,
+            rotationDeg: 90
         });
 
         var rect = new Kinetic.Rect({
@@ -1105,7 +1134,7 @@ Test.prototype.tests = {
         group.add(rect);
         layer.add(group);
         stage.add(layer);
-        
+
         // test absolute positions
         test(rect.getAbsolutePosition().x == 180, 'rect should be at x = 180');
         test(rect.getAbsolutePosition().y == 100, 'rect should be at y = 100');

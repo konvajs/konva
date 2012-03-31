@@ -1836,6 +1836,11 @@ Kinetic.GlobalObject.extend(Kinetic.Group, Kinetic.Node);
  * @constructor
  * @augments Kinetic.Node
  * @param {Object} config
+ * @config {String|CanvasGradient|CanvasPattern} [fill] fill
+ * @config {String} [stroke] stroke color
+ * @config {Number} [strokeWidth] stroke width
+ * @config {String} [lineJoin] line join.  Can be "miter", "round", or "bevel".  The default
+ *  is "miter"
  */
 Kinetic.Shape = function(config) {
     this.className = 'Shape';
@@ -1877,8 +1882,8 @@ Kinetic.Shape.prototype = {
         return this.tempLayer.getCanvas();
     },
     /**
-     * helper method to fill and stroke a shape based on its
-     * fill, stroke, and strokeWidth properties
+     * helper method to fill and stroke a shape
+     *  based on its fill, stroke, and strokeWidth, properties
      */
     fillStroke: function() {
         var context = this.getContext();
@@ -1894,8 +1899,18 @@ Kinetic.Shape.prototype = {
         }
     },
     /**
+     * helper method to set the line join of a shape
+     * based on the lineJoin property
+     */
+    applyLineJoin: function() {
+        var context = this.getContext();
+        if(this.lineJoin !== undefined) {
+            context.lineJoin = this.lineJoin;
+        }
+    },
+    /**
      * set fill which can be a color, gradient object,
-     * or pattern object
+     *  or pattern object
      * @param {String|CanvasGradient|CanvasPattern} fill
      */
     setFill: function(fill) {
@@ -1919,6 +1934,20 @@ Kinetic.Shape.prototype = {
      */
     getStroke: function() {
         return this.stroke;
+    },
+    /**
+     * set line join
+     * @param {String} lineJoin.  Can be "miter", "round", or "bevel".  The
+     *  default is "miter"
+     */
+    setLineJoin: function(lineJoin) {
+        this.lineJoin = lineJoin;
+    },
+    /**
+     * get line join
+     */
+    getLineJoin: function() {
+        return this.lineJoin;
     },
     /**
      * set stroke width
@@ -1982,6 +2011,7 @@ Kinetic.Rect = function(config) {
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
+        this.applyLineJoin();
         context.rect(0, 0, this.width, this.height);
         context.closePath();
         this.fillStroke();
@@ -2046,7 +2076,8 @@ Kinetic.Circle = function(config) {
     config.drawFunc = function() {
         var canvas = this.getCanvas();
         var context = this.getContext();
-        context.beginPath();
+        context.beginPath();  
+        this.applyLineJoin();
         context.arc(0, 0, this.radius, 0, Math.PI * 2, true);
         context.closePath();
         this.fillStroke();
@@ -2098,6 +2129,7 @@ Kinetic.Image = function(config) {
         var canvas = this.getCanvas();
         var context = this.getContext();
         context.beginPath();
+        this.applyLineJoin();
         context.rect(0, 0, this.width, this.height);
         context.closePath();
         this.fillStroke();
@@ -2175,6 +2207,7 @@ Kinetic.Polygon = function(config) {
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
+        this.applyLineJoin();
         context.moveTo(this.points[0].x, this.points[0].y);
         for(var n = 1; n < this.points.length; n++) {
             context.lineTo(this.points[n].x, this.points[n].y);
@@ -2220,6 +2253,7 @@ Kinetic.RegularPolygon = function(config) {
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
+        this.applyLineJoin();
         context.moveTo(0, 0 - this.radius);
 
         for(var n = 1; n < this.sides; n++) {
@@ -2294,6 +2328,7 @@ Kinetic.Star = function(config) {
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
+        this.applyLineJoin();
         context.moveTo(0, 0 - this.outerRadius);
 
         for(var n = 1; n < this.points * 2; n++) {
@@ -2421,6 +2456,7 @@ Kinetic.Text = function(config) {
         // draw path
         context.save();
         context.beginPath();
+        this.applyLineJoin();
         context.rect(x, y, textWidth + p * 2, textHeight + p * 2);
         context.closePath();
         this.fillStroke();

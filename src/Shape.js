@@ -7,6 +7,11 @@
  * @constructor
  * @augments Kinetic.Node
  * @param {Object} config
+ * @config {String|CanvasGradient|CanvasPattern} [fill] fill
+ * @config {String} [stroke] stroke color
+ * @config {Number} [strokeWidth] stroke width
+ * @config {String} [lineJoin] line join.  Can be "miter", "round", or "bevel".  The default
+ *  is "miter"
  */
 Kinetic.Shape = function(config) {
     this.className = 'Shape';
@@ -48,8 +53,8 @@ Kinetic.Shape.prototype = {
         return this.tempLayer.getCanvas();
     },
     /**
-     * helper method to fill and stroke a shape based on its
-     * fill, stroke, and strokeWidth properties
+     * helper method to fill and stroke a shape
+     *  based on its fill, stroke, and strokeWidth, properties
      */
     fillStroke: function() {
         var context = this.getContext();
@@ -65,8 +70,18 @@ Kinetic.Shape.prototype = {
         }
     },
     /**
+     * helper method to set the line join of a shape
+     * based on the lineJoin property
+     */
+    applyLineJoin: function() {
+        var context = this.getContext();
+        if(this.lineJoin !== undefined) {
+            context.lineJoin = this.lineJoin;
+        }
+    },
+    /**
      * set fill which can be a color, gradient object,
-     * or pattern object
+     *  or pattern object
      * @param {String|CanvasGradient|CanvasPattern} fill
      */
     setFill: function(fill) {
@@ -90,6 +105,20 @@ Kinetic.Shape.prototype = {
      */
     getStroke: function() {
         return this.stroke;
+    },
+    /**
+     * set line join
+     * @param {String} lineJoin.  Can be "miter", "round", or "bevel".  The
+     *  default is "miter"
+     */
+    setLineJoin: function(lineJoin) {
+        this.lineJoin = lineJoin;
+    },
+    /**
+     * get line join
+     */
+    getLineJoin: function() {
+        return this.lineJoin;
     },
     /**
      * set stroke width
