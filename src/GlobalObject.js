@@ -109,7 +109,7 @@ Kinetic.GlobalObject = {
                     return 2.5 + b * transition.time;
                 });
                 break;
-            // linear is default
+            // none is default
             default:
                 this._transitionPow(transition, key, prop, function() {
                     return 1;

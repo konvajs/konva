@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mar 30 2012
+ * Date: Mar 31 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -137,7 +137,7 @@ Kinetic.GlobalObject = {
                     return 2.5 + b * transition.time;
                 });
                 break;
-            // linear is default
+            // none is default
             default:
                 this._transitionPow(transition, key, prop, function() {
                     return 1;
@@ -675,8 +675,8 @@ Kinetic.Node.prototype = {
      *  radius, scale.x, scale.y, centerOffset.x, centerOffset.y, etc.
      * @param {Object} config
      * @config {Number} [duration] duration that the transition runs in seconds
-     * @config {String} [easing] easing function.  can be linear, ease-in, ease-out, or ease-in-out.
-     *  linear is the default
+     * @config {String} [easing] easing function.  can be none, ease-in, ease-out, or ease-in-out.
+     *  none is the default
      * @config {Function} [callback] callback function to be executed when
      *  transition completes
      */
@@ -1099,6 +1099,15 @@ Kinetic.Stage.prototype = {
         this.bufferLayer.getCanvas().height = height;
         this.backstageLayer.getCanvas().width = width;
         this.backstageLayer.getCanvas().height = height;
+    },
+    /**
+     * return stage size
+     */
+    getSize: function() {
+        return {
+            width: this.width,
+            height: this.height
+        };
     },
     /**
      * clear all layers
@@ -2057,6 +2066,15 @@ Kinetic.Rect.prototype = {
     setSize: function(width, height) {
         this.width = width;
         this.height = height;
+    },
+    /**
+     * return rect size
+     */
+    getSize: function() {
+        return {
+            width: this.width,
+            height: this.height
+        };
     }
 };
 
@@ -2189,6 +2207,15 @@ Kinetic.Image.prototype = {
     setSize: function(width, height) {
         this.width = width;
         this.height = height;
+    },
+    /**
+     * return image size
+     */
+    getSize: function() {
+        return {
+            width: this.width,
+            height: this.height
+        };
     }
 };
 // extend Shape

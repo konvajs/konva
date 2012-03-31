@@ -64,6 +64,34 @@ Test.prototype.tests = {
         group.add(circle);
         layer.draw();
     },
+    'STAGE - set stage size': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.width / 2,
+            y: stage.height / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        test(stage.getSize().width === 578, 'stage height should be 578');
+        test(stage.getSize().height === 200, 'stage width should be 200');
+
+        stage.setSize(300, 150);
+
+        test(stage.getSize().width === 300, 'stage height should be 300');
+        test(stage.getSize().height === 150, 'stage width should be 150');
+
+        layer.add(circle);
+        stage.add(layer);
+
+    },
     'STAGE - scale stage after add layer': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

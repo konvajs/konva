@@ -121,6 +121,15 @@ Kinetic.Stage.prototype = {
         this.backstageLayer.getCanvas().height = height;
     },
     /**
+     * return stage size
+     */
+    getSize: function() {
+        return {
+            width: this.width,
+            height: this.height
+        };
+    },
+    /**
      * clear all layers
      */
     clear: function() {

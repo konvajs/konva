@@ -80,6 +80,15 @@ Kinetic.Image.prototype = {
     setSize: function(width, height) {
         this.width = width;
         this.height = height;
+    },
+    /**
+     * return image size
+     */
+    getSize: function() {
+        return {
+            width: this.width,
+            height: this.height
+        };
     }
 };
 // extend Shape
