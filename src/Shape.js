@@ -134,6 +134,13 @@ Kinetic.Shape.prototype = {
         return this.strokeWidth;
     },
     /**
+     * set draw function
+     * @param {Function} func drawing function
+     */
+    setDrawFunc: function(func) {
+        this.drawFunc = func;
+    },
+    /**
      * draw shape
      * @param {Layer} layer Layer that the shape will be drawn on
      */

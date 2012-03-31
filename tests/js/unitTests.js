@@ -806,6 +806,43 @@ Test.prototype.tests = {
         layer.add(shape);
         stage.add(layer);
     },
+    'SHAPES - change custom shape draw func': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var shape = new Kinetic.Shape({
+            drawFunc: function() {
+                var context = this.getContext();
+                context.beginPath();
+                context.moveTo(0, 0);
+                context.lineTo(100, 0);
+                context.lineTo(100, 100);
+                context.closePath();
+                this.fillStroke();
+            },
+            x: 200,
+            y: 100,
+            fill: 'green',
+            stroke: 'blue',
+            strokeWidth: 5
+        });
+
+        shape.setDrawFunc(function() {
+            var context = this.getContext();
+            context.beginPath();
+            context.moveTo(0, 0);
+            context.lineTo(200, 0);
+            context.lineTo(200, 100);
+            context.closePath();
+            this.fillStroke();
+        });
+
+        layer.add(shape);
+        stage.add(layer);
+    },
     'SHAPES - init with position, scale, rotation, then change scale': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
