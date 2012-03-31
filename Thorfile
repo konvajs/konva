@@ -10,7 +10,7 @@ class Build < Thor
   ]
   
   desc "dev", "Concatenate all the js files into /dist/kinetic-VERSION.js."
-  method_option :date, aliases: "-d", required: false, type: :string, desc: "The release date"
+  method_option :date, :aliases => "-d", :required => false, :type => :string, :desc => "The release date"
   def dev(version)
     file_name = "dist/kinetic-#{version}.js"
     
@@ -30,7 +30,7 @@ class Build < Thor
   end
   
   desc "prod", "Concatenate all the js files in into /dist/kinetic-VERSION.min.js and minify it."
-  method_option :date, aliases: "-d", required: false, type: :string, desc: "The release date"
+  method_option :date, :aliases => "-d", :required => false, :type => :string, :desc => "The release date"
   def prod(version)
     file_name = "dist/kinetic-#{version}.min.js"
     
