@@ -1218,16 +1218,18 @@ Kinetic.Stage.prototype = {
     _detectEvent: function(shape, evt) {
         var isDragging = Kinetic.GlobalObject.drag.moving;
         var backstageLayer = this.backstageLayer;
+        var backstageLayerContext = backstageLayer.getContext();
         var go = Kinetic.GlobalObject;
         var pos = this.getUserPosition();
         var el = shape.eventListeners;
 
+        shape._draw(backstageLayer);
 
         if(this.targetShape && shape.id === this.targetShape.id) {
             this.targetFound = true;
         }
 
-        if(shape.visible && pos !== undefined && shape.isPointInShape(backstageLayer,pos)) {
+        if(shape.visible && pos !== undefined && backstageLayerContext.isPointInPath(pos.x, pos.y)) {
             // handle onmousedown
             if(!isDragging && this.mouseDown) {
                 this.mouseDown = false;
@@ -1859,14 +1861,6 @@ Kinetic.Shape = function(config) {
  */
 Kinetic.Shape.prototype = {
     /**
-     * isPointInShape
-     */
-    isPointInShape: function(backstageLayer,pos){
-        var backstageLayerContext = backstageLayer.getContext();
-        this._draw(backstageLayer);
-        return backstageLayerContext.isPointInPath(pos.x,pos.y);
-    },
-    /**
      * get layer context where the shape is being drawn.  When
      * the shape is being rendered, .getContext() returns the context of the
      * user created layer that contains the shape.  When the event detection
@@ -2487,9 +2481,7 @@ Kinetic.Text.prototype = {
         return this.fontSize;
     },
     /**
-     * set font style using same rules as the first argument for the css spec's shorthand font property:
-	 *		http://www.w3.org/TR/CSS21/fonts.html#propdef-font
-	 *	i.e. [ <'font-style'> || <'font-variant'> || <'font-weight'> ]
+     * set font style.  Can be "normal", "italic", or "bold".  "normal" is the default.
      * @param {String} fontStyle
      */
     setFontStyle: function(fontStyle) {

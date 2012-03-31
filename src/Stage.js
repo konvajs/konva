@@ -238,16 +238,18 @@ Kinetic.Stage.prototype = {
     _detectEvent: function(shape, evt) {
         var isDragging = Kinetic.GlobalObject.drag.moving;
         var backstageLayer = this.backstageLayer;
+        var backstageLayerContext = backstageLayer.getContext();
         var go = Kinetic.GlobalObject;
         var pos = this.getUserPosition();
         var el = shape.eventListeners;
 
+        shape._draw(backstageLayer);
 
         if(this.targetShape && shape.id === this.targetShape.id) {
             this.targetFound = true;
         }
 
-        if(shape.visible && pos !== undefined && shape.isPointInShape(backstageLayer,pos)) {
+        if(shape.visible && pos !== undefined && backstageLayerContext.isPointInPath(pos.x, pos.y)) {
             // handle onmousedown
             if(!isDragging && this.mouseDown) {
                 this.mouseDown = false;
