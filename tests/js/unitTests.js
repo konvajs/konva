@@ -1369,6 +1369,67 @@ Test.prototype.tests = {
     //  LAYERING tests
     ////////////////////////////////////////////////////////////////////////
 
+    'LAYERING - get absolute z index': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group1 = new Kinetic.Group();
+        var group2 = new Kinetic.Group();
+        var group3 = new Kinetic.Group();
+        var group4 = new Kinetic.Group();
+
+        var shape1 = new Kinetic.Circle({
+            x: 150,
+            y: stage.height / 2,
+            radius: 40,
+            fill: 'green'
+        });
+
+        var shape2 = new Kinetic.Circle({
+            x: 250,
+            y: stage.height / 2,
+            radius: 40,
+            fill: 'green'
+        });
+
+        /*
+         *        Stage(0)
+         *          |
+         *        Layer(1)
+         *          |
+         *    +-----+-----+
+         *    |           |
+         *   G1(2)       G2(3)
+         *    |           |
+         *    +       +---+---+
+         *    |       |       |
+         *   S1(4)   G3(5)  G4(6)
+         *            |
+         *            +
+         *            |
+         *           S2(7)
+         */
+
+        group1.add(shape1);
+        group2.add(group3);
+        group2.add(group4);
+        group3.add(shape2);
+        layer.add(group1);
+        layer.add(group2);
+        stage.add(layer);
+
+        test(stage.getAbsoluteZIndex() === 0, 'stage abs zindex should be 0');
+        test(layer.getAbsoluteZIndex() === 1, 'layer abs zindex should be 1');
+        test(group1.getAbsoluteZIndex() === 2, 'group1 abs zindex should be 2');
+        test(group2.getAbsoluteZIndex() === 3, 'group2 abs zindex should be 3');
+        test(shape1.getAbsoluteZIndex() === 4, 'shape1 abs zindex should be 4');
+        test(group3.getAbsoluteZIndex() === 5, 'group3 abs zindex should be 5');
+        test(group4.getAbsoluteZIndex() === 6, 'group4 abs zindex should be 6');
+        test(shape2.getAbsoluteZIndex() === 7, 'shape2 abs zindex should be 7');
+    },
     'LAYERING - move blue circle on top of green circle with moveToTop': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

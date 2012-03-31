@@ -397,6 +397,52 @@ Kinetic.Node.prototype = {
         return this.index;
     },
     /**
+     * get absolute z-index by taking into account
+     * all parent and sibling indices
+     */
+    getAbsoluteZIndex: function() {
+        var level = this.getLevel();
+        var stage = this.getStage();
+        var that = this;
+        var index = 0;
+        function addChildren(children) {
+            var nodes = [];
+            for(var n = 0; n < children.length; n++) {
+                var child = children[n];
+                index++;
+
+                if(child.className !== 'Shape') {
+                    nodes = nodes.concat(child.getChildren());
+                }
+
+                if(child.id === that.id) {
+                    n = children.length;
+                }
+            }
+
+            if(nodes.length > 0 && nodes[0].getLevel() <= level) {
+                addChildren(nodes);
+            }
+        }
+        if(that.className !== 'Stage') {
+            addChildren(that.getStage().getChildren());
+        }
+
+        return index;
+    },
+    /**
+     * get node level in node tree
+     */
+    getLevel: function() {
+        var level = 0;
+        var parent = this.parent;
+        while(parent) {
+            level++;
+            parent = parent.parent;
+        }
+        return level;
+    },
+    /**
      * set node scale.  If only one parameter is passed in,
      * then both scaleX and scaleY are set with that parameter
      * @param {Number} scaleX
