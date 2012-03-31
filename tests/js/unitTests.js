@@ -828,6 +828,7 @@ Test.prototype.tests = {
             text: 'Hello World!',
             fontSize: 60,
             fontFamily: 'Calibri',
+			fontStyle: 'normal',
             textFill: '#888',
             textStroke: '#333',
             padding: 10,
@@ -851,6 +852,7 @@ Test.prototype.tests = {
         text.setText('Bye World!');
         test(text.getText() === 'Bye World!', 'text should be Bye World!');
         test(text.getPadding() === 10, 'padding should be 10');
+		test(text.getFontStyle() == 'normal', 'font style should be normal');
         text.setPadding(20);
         test(text.getPadding() === 20, 'padding should be 20');
 
@@ -858,6 +860,7 @@ Test.prototype.tests = {
 
         text.setFontFamily('Arial');
         text.setFontSize(30);
+        text.setFontStyle('italic');
         text.setAlign('right');
         text.setVerticalAlign('top');
         text.setTextFill('blue');
@@ -866,6 +869,7 @@ Test.prototype.tests = {
 
         test(text.getFontFamily() === 'Arial', 'font family should be Arial');
         test(text.getFontSize() === 30, 'text size should be 30');
+		test(text.getFontStyle() == 'italic', 'font style should be italic');
         test(text.getAlign() === 'right', 'text align should be right');
         test(text.getVerticalAlign() === 'top', 'vertical align should be top');
         test(text.getTextFill() === 'blue', 'text fill should be blue');
