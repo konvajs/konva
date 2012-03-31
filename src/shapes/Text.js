@@ -124,9 +124,7 @@ Kinetic.Text.prototype = {
         return this.fontSize;
     },
     /**
-     * set font style using same rules as the first argument for the css spec's shorthand font property:
-	 *		http://www.w3.org/TR/CSS21/fonts.html#propdef-font
-	 *	i.e. [ <'font-style'> || <'font-variant'> || <'font-weight'> ]
+     * set font style.  Can be "normal", "italic", or "bold".  "normal" is the default.
      * @param {String} fontStyle
      */
     setFontStyle: function(fontStyle) {

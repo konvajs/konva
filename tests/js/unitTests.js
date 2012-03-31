@@ -832,6 +832,7 @@ Test.prototype.tests = {
             textFill: '#888',
             textStroke: '#333',
             padding: 10,
+            fontStyle: 'normal',
             //draggable: true,
             align: 'center',
             verticalAlign: 'middle'
@@ -866,7 +867,7 @@ Test.prototype.tests = {
         text.setTextFill('blue');
         text.setTextStroke('red');
         text.setTextStrokeWidth(10);
-
+        
         test(text.getFontFamily() === 'Arial', 'font family should be Arial');
         test(text.getFontSize() === 30, 'text size should be 30');
 		test(text.getFontStyle() == 'italic', 'font style should be italic');
