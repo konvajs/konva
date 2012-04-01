@@ -381,7 +381,7 @@ Kinetic.Node.prototype = {
      */
     draggable: function(isDraggable) {
         if(this.draggable !== isDraggable) {
-            if(isDraggable) {
+            if(isDraggable && this.isDragging()) {
                 this._initDrag();
             }
             else {

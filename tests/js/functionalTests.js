@@ -561,9 +561,9 @@ Test.prototype.tests = {
                 width: 578,
                 height: 200
             });
-            
+
             var layer = new Kinetic.Layer({
-            	rotationDeg: 20
+                rotationDeg: 20
             });
             var star = new Kinetic.Star({
                 x: 200,
@@ -623,48 +623,6 @@ Test.prototype.tests = {
 
         circle.on('click', function() {
             log('click');
-        });
-
-        layer.add(circle);
-        stage.add(layer);
-    },
-    'EVENTS - isDragging': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
-            x: 380,
-            y: stage.height / 2,
-            radius: 70,
-            strokeWidth: 4,
-            fill: 'red',
-            stroke: 'black'
-        });
-
-        //log('not dragging yet before draggable, isDragging: ' + circle.isDragging());
-        test(circle.isDragging() === false, 'isDragging() should be false');
-
-        circle.draggable(true);
-
-        //log('not dragging yet after draggable, isDragging: ' + circle.isDragging());
-        test(circle.isDragging() === false, 'isDragging() should be false');
-
-        circle.on('dragstart', function() {
-            log('dragstart, isDragging: ' + this.isDragging());
-            test(circle.isDragging() === true, 'isDragging() should be true');
-        });
-
-        circle.on('dragmove', function() {
-            log('dragmove, isDragging: ' + this.isDragging());
-            test(circle.isDragging() === true, 'isDragging() should be true');
-        });
-
-        circle.on('dragend', function() {
-            log('dragend, isDragging: ' + this.isDragging());
-            test(circle.isDragging() === false, 'isDragging() should be false');
         });
 
         layer.add(circle);
@@ -1033,6 +991,80 @@ Test.prototype.tests = {
         group.add(redCircle);
         layer.add(group);
         stage.add(layer);
+    },
+    'DRAG AND DROP - isDragging': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: 380,
+            y: stage.height / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black'
+        });
+
+        //log('not dragging yet before draggable, isDragging: ' + circle.isDragging());
+        test(circle.isDragging() === false, 'isDragging() should be false');
+
+        circle.draggable(true);
+
+        //log('not dragging yet after draggable, isDragging: ' + circle.isDragging());
+        test(circle.isDragging() === false, 'isDragging() should be false');
+
+        circle.on('dragstart', function() {
+            log('dragstart, isDragging: ' + this.isDragging());
+            test(circle.isDragging() === true, 'isDragging() should be true');
+        });
+
+        circle.on('dragmove', function() {
+            log('dragmove, isDragging: ' + this.isDragging());
+            test(circle.isDragging() === true, 'isDragging() should be true');
+        });
+
+        circle.on('dragend', function() {
+            log('dragend, isDragging: ' + this.isDragging());
+            test(circle.isDragging() === false, 'isDragging() should be false');
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+    },
+    'DRAG AND DROP - multiple drag and drop sets with draggable() (circle should not be draggable)': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: 380,
+            y: stage.height / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black'
+        });
+
+        circle.draggable(true);
+        circle.draggable(true);
+        circle.draggable(true);
+        circle.draggable(false);
+        
+        circle.draggable(true);
+        circle.draggable(true);
+        circle.draggable(true);
+        
+        // circle should not be draggable
+        circle.draggable(false);
+
+        layer.add(circle);
+        stage.add(layer);
+
     },
     'DRAG AND DROP - draggable true': function(containerId) {
         var stage = new Kinetic.Stage({
