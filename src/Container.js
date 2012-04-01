@@ -40,12 +40,15 @@ Kinetic.Container.prototype = {
      * @param {Node} child
      */
     _remove: function(child) {
-        if(child.name !== undefined) {
-            this.childrenNames[child.name] = undefined;
+        if(this.children[child.index].id == child.id) {
+            if(child.name !== undefined) {
+                this.childrenNames[child.name] = undefined;
+            }
+
+            this.children.splice(child.index, 1);
+            this._setChildrenIndices();
+            child = undefined;
         }
-        this.children.splice(child.index, 1);
-        this._setChildrenIndices();
-        child = undefined;
     },
     /**
      * draw children

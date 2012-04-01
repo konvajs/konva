@@ -166,8 +166,7 @@ Kinetic.Stage.prototype = {
                         // then revert to previous no-parameter image/png behavior
                         callback(bufferLayer.getCanvas().toDataURL(mimeType, quality));
                     }
-                    catch(exception)
-                    {
+                    catch(exception) {
                         callback(bufferLayer.getCanvas().toDataURL());
                     }
                 }
@@ -183,8 +182,15 @@ Kinetic.Stage.prototype = {
      * @param {Layer} layer
      */
     remove: function(layer) {
-        // remove layer canvas from dom
-        this.content.removeChild(layer.canvas);
+        /*
+         * remove canvas DOM from the document if
+         * it exists
+         */
+        try {
+            this.content.removeChild(layer.canvas);
+        }
+        catch(e) {
+        }
         this._remove(layer);
     },
     /**

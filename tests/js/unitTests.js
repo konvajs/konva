@@ -184,6 +184,83 @@ Test.prototype.tests = {
         stage.add(layer);
         stage.remove(layer);
     },
+    'STAGE - remove shape multiple times': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var shape1 = new Kinetic.Circle({
+            x: 150,
+            y: 100,
+            radius: 50,
+            fill: 'green',
+            name: 'myCircle'
+        });
+
+        var shape2 = new Kinetic.Circle({
+            x: 250,
+            y: 100,
+            radius: 50,
+            fill: 'green',
+            name: 'myCircle'
+        });
+
+        layer.add(shape1);
+        layer.add(shape2);
+        stage.add(layer);
+
+        test(layer.getChildren().length === 2, 'layer should have two children');
+
+        layer.remove(shape1);
+        layer.remove(shape1);
+
+        test(layer.getChildren().length === 1, 'layer should have two children');
+
+        layer.draw();
+
+    },
+    'STAGE - remove layer multiple times': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer1 = new Kinetic.Layer();
+        var layer2 = new Kinetic.Layer();
+
+        var shape1 = new Kinetic.Circle({
+            x: 150,
+            y: 100,
+            radius: 50,
+            fill: 'green',
+            name: 'myCircle'
+        });
+
+        var shape2 = new Kinetic.Circle({
+            x: 250,
+            y: 100,
+            radius: 50,
+            fill: 'green',
+            name: 'myCircle'
+        });
+
+        layer1.add(shape1);
+        layer2.add(shape2);
+        stage.add(layer1);
+        stage.add(layer2);
+
+        test(stage.getChildren().length === 2, 'stage should have two children');
+
+        stage.remove(layer1);
+        stage.remove(layer1);
+
+        test(stage.getChildren().length === 1, 'stage should have one child');
+
+        stage.draw();
+
+    },
     ////////////////////////////////////////////////////////////////////////
     //  LAYERS tests
     ////////////////////////////////////////////////////////////////////////
