@@ -561,7 +561,10 @@ Test.prototype.tests = {
                 width: 578,
                 height: 200
             });
-            var layer = new Kinetic.Layer();
+            
+            var layer = new Kinetic.Layer({
+            	rotationDeg: 20
+            });
             var star = new Kinetic.Star({
                 x: 200,
                 y: 100,
