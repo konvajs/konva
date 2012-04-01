@@ -519,6 +519,75 @@ Test.prototype.tests = {
         };
         imageObj.src = '../darth-vader.jpg';
     },
+    /*
+     * WARNING: this functional test will only pass if it's hosted on
+     * a webserver due to cross domain security issues
+     */
+    'EVENTS - image pixel detection': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            var darth = new Kinetic.Image({
+                x: 200,
+                y: 40,
+                image: imageObj,
+                detectionType: 'pixel',
+                draggable: true
+            });
+
+            darth.on('mouseover', function() {
+                log('mouseover');
+            });
+
+            darth.on('mouseout', function() {
+                log('mouseout');
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+        };
+        imageObj.src = '../lion.png';
+    },
+    'EVENTS - star pixel detection': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            var star = new Kinetic.Star({
+                x: 200,
+                y: 100,
+                points: 10,
+                innerRadius: 40,
+                outerRadius: 70,
+                fill: 'green',
+                stroke: 'blue',
+                strokeWidth: 20,
+                detectionType: 'pixel',
+                draggable: true
+            });
+
+            star.on('mouseover', function() {
+                log('mouseover');
+            });
+
+            star.on('mouseout', function() {
+                log('mouseout');
+            });
+
+            layer.add(star);
+            stage.add(layer);
+        };
+        imageObj.src = '../lion.png';
+    },
     'EVENTS - drag events click': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

@@ -1280,7 +1280,7 @@ Kinetic.Stage.prototype = {
             this.targetFound = true;
         }
 
-        if(shape.visible && pos !== undefined && shape._isPointInPath(pos)) {
+        if(shape.visible && pos !== undefined && shape._isPointInShape(pos)) {
             // handle onmousedown
             if(!isDragging && this.mouseDown) {
                 this.mouseDown = false;
@@ -1482,8 +1482,8 @@ Kinetic.Stage.prototype = {
      * clear default layers
      */
     _clearDefaultLayers: function() {
-        var pathLayer = this.pathLayer;
-        pathLayer.clear();
+        this.bufferLayer.clear();
+        this.pathLayer.clear();
     },
     /**
      * begin listening for events by adding event handlers
@@ -1902,6 +1902,8 @@ Kinetic.GlobalObject.extend(Kinetic.Group, Kinetic.Node);
  * @config {Number} [strokeWidth] stroke width
  * @config {String} [lineJoin] line join.  Can be "miter", "round", or "bevel".  The default
  *  is "miter"
+ * @config {String} [detectionType] shape detection type.  Can be "path" or "pixel".
+ *  The default is "path" because it performs better
  */
 Kinetic.Shape = function(config) {
     this.className = 'Shape';
@@ -1914,6 +1916,10 @@ Kinetic.Shape = function(config) {
         else if(config.strokeWidth === undefined) {
             config.strokeWidth = 2;
         }
+    }
+
+    if(config.detectionType === undefined) {
+        config.detectionType = 'path';
     }
 
     // required
@@ -2066,12 +2072,33 @@ Kinetic.Shape.prototype = {
      * custom isPointInPath method which can use path detection
      * or pixel detection
      */
-    _isPointInPath: function(pos) {
+    _isPointInShape: function(pos) {
         var stage = this.getStage();
-        var pathLayer = stage.pathLayer;
-        var pathLayerContext = pathLayer.getContext();
-        this._draw(pathLayer);
-        return pathLayerContext.isPointInPath(pos.x, pos.y);
+
+        if(this.detectionType === 'path') {
+            var pathLayer = stage.pathLayer;
+            var pathLayerContext = pathLayer.getContext();
+
+            this._draw(pathLayer);
+
+            return pathLayerContext.isPointInPath(pos.x, pos.y);
+        }
+        else {
+            var bufferLayer = stage.bufferLayer;
+            var bufferLayerContext = bufferLayer.getContext();
+
+            this._draw(bufferLayer);
+
+            var w = stage.width;
+            var h = stage.height;
+            var x = pos.x;
+            var y = pos.y;
+            var imageData = bufferLayerContext.getImageData(0, 0, w, h);
+            var data = imageData.data;
+            var alpha = data[((w * y) + x) * 4 + 3];
+
+            return (alpha !== undefined && alpha !== 0);
+        }
     }
 };
 // extend Node

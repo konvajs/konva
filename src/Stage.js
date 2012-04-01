@@ -254,7 +254,7 @@ Kinetic.Stage.prototype = {
             this.targetFound = true;
         }
 
-        if(shape.visible && pos !== undefined && shape._isPointInPath(pos)) {
+        if(shape.visible && pos !== undefined && shape._isPointInShape(pos)) {
             // handle onmousedown
             if(!isDragging && this.mouseDown) {
                 this.mouseDown = false;
@@ -456,8 +456,8 @@ Kinetic.Stage.prototype = {
      * clear default layers
      */
     _clearDefaultLayers: function() {
-        var pathLayer = this.pathLayer;
-        pathLayer.clear();
+        this.bufferLayer.clear();
+        this.pathLayer.clear();
     },
     /**
      * begin listening for events by adding event handlers
