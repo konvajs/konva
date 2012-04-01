@@ -114,11 +114,11 @@ Kinetic.Stage.prototype = {
         this.width = width;
         this.height = height;
 
-        // set buffer layer and backstage layer sizes
+        // set buffer layer and path layer sizes
         this.bufferLayer.getCanvas().width = width;
         this.bufferLayer.getCanvas().height = height;
-        this.backstageLayer.getCanvas().width = width;
-        this.backstageLayer.getCanvas().height = height;
+        this.pathLayer.getCanvas().width = width;
+        this.pathLayer.getCanvas().height = height;
     },
     /**
      * return stage size
@@ -246,19 +246,15 @@ Kinetic.Stage.prototype = {
      */
     _detectEvent: function(shape, evt) {
         var isDragging = Kinetic.GlobalObject.drag.moving;
-        var backstageLayer = this.backstageLayer;
-        var backstageLayerContext = backstageLayer.getContext();
         var go = Kinetic.GlobalObject;
         var pos = this.getUserPosition();
         var el = shape.eventListeners;
-
-        shape._draw(backstageLayer);
 
         if(this.targetShape && shape.id === this.targetShape.id) {
             this.targetFound = true;
         }
 
-        if(shape.visible && pos !== undefined && backstageLayerContext.isPointInPath(pos.x, pos.y)) {
+        if(shape.visible && pos !== undefined && shape._isPointInPath(pos)) {
             // handle onmousedown
             if(!isDragging && this.mouseDown) {
                 this.mouseDown = false;
@@ -427,8 +423,7 @@ Kinetic.Stage.prototype = {
         this._setMousePosition(evt);
         this._setTouchPosition(evt);
 
-        var backstageLayer = this.backstageLayer;
-        backstageLayer.clear();
+        this._clearDefaultLayers();
 
         /*
          * loop through layers.  If at any point an event
@@ -456,6 +451,13 @@ Kinetic.Stage.prototype = {
             this.mouseoutShape = undefined;
 
         }
+    },
+    /**
+     * clear default layers
+     */
+    _clearDefaultLayers: function() {
+        var pathLayer = this.pathLayer;
+        pathLayer.clear();
     },
     /**
      * begin listening for events by adding event handlers
@@ -557,25 +559,25 @@ Kinetic.Stage.prototype = {
         };
     },
     /**
-     * disable layer rendering
-     * @param {Layer} layer
+     * modify path context
+     * @param {CanvasContext} context
      */
-    _stripLayer: function(layer) {
-        layer.context.stroke = function() {
+    _modifyPathContext: function(context) {
+        context.stroke = function() {
         };
-        layer.context.fill = function() {
+        context.fill = function() {
         };
-        layer.context.fillRect = function(x, y, width, height) {
+        context.fillRect = function(x, y, width, height) {
             layer.context.rect(x, y, width, height);
         };
-        layer.context.strokeRect = function(x, y, width, height) {
+        context.strokeRect = function(x, y, width, height) {
             layer.context.rect(x, y, width, height);
         };
-        layer.context.drawImage = function() {
+        context.drawImage = function() {
         };
-        layer.context.fillText = function() {
+        context.fillText = function() {
         };
-        layer.context.strokeText = function() {
+        context.strokeText = function() {
         };
     },
     /**
@@ -694,26 +696,30 @@ Kinetic.Stage.prototype = {
 
         // default layers
         this.bufferLayer = new Kinetic.Layer();
-        this.backstageLayer = new Kinetic.Layer();
+        this.pathLayer = new Kinetic.Layer();
 
         // set parents
         this.bufferLayer.parent = this;
-        this.backstageLayer.parent = this;
+        this.pathLayer.parent = this;
 
         // customize back stage context
-        this._stripLayer(this.backstageLayer);
+        this._modifyPathContext(this.pathLayer.context);
+
+        // hide canvases
         this.bufferLayer.getCanvas().style.display = 'none';
-        this.backstageLayer.getCanvas().style.display = 'none';
+        this.pathLayer.getCanvas().style.display = 'none';
 
         // add buffer layer
         this.bufferLayer.canvas.width = this.width;
         this.bufferLayer.canvas.height = this.height;
+        this.bufferLayer.canvas.className = 'kineticjs-buffer-layer';
         this.content.appendChild(this.bufferLayer.canvas);
 
-        // add backstage layer
-        this.backstageLayer.canvas.width = this.width;
-        this.backstageLayer.canvas.height = this.height;
-        this.content.appendChild(this.backstageLayer.canvas);
+        // add path layer
+        this.pathLayer.canvas.width = this.width;
+        this.pathLayer.canvas.height = this.height;
+        this.pathLayer.canvas.className = 'kineticjs-path-layer';
+        this.content.appendChild(this.pathLayer.canvas);
     }
 };
 // Extend Container and Node

@@ -41,7 +41,7 @@ Kinetic.Shape.prototype = {
      * the shape is being rendered, .getContext() returns the context of the
      * user created layer that contains the shape.  When the event detection
      * engine is determining whether or not an event has occured on that shape,
-     * .getContext() returns the context of the invisible backstage layer.
+     * .getContext() returns the context of the invisible path layer.
      */
     getContext: function() {
         return this.tempLayer.getContext();
@@ -171,6 +171,17 @@ Kinetic.Shape.prototype = {
             this.drawFunc.call(this);
             context.restore();
         }
+    },
+    /**
+     * custom isPointInPath method which can use path detection
+     * or pixel detection
+     */
+    _isPointInPath: function(pos) {
+        var stage = this.getStage();
+        var pathLayer = stage.pathLayer;
+        var pathLayerContext = pathLayer.getContext();
+        this._draw(pathLayer);
+        return pathLayerContext.isPointInPath(pos.x, pos.y);
     }
 };
 // extend Node
