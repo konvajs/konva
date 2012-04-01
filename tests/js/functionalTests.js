@@ -992,6 +992,31 @@ Test.prototype.tests = {
         layer.add(group);
         stage.add(layer);
     },
+    'EVENTS - shape mouseout handlers when mouse leaves stage': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var redCircle = new Kinetic.Circle({
+            x: 550,
+            y: stage.height / 2,
+            radius: 80,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            name: 'circle'
+        });
+
+        redCircle.on('mouseout', function() {
+            log('mouseout');
+        });
+
+        layer.add(redCircle);
+        stage.add(layer);
+    },
     'DRAG AND DROP - isDragging': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

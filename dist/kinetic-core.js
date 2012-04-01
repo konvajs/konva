@@ -1535,6 +1535,11 @@ Kinetic.Stage.prototype = {
         }, false);
 
         this.container.addEventListener('mouseout', function(evt) {
+            // if there's a current target shape, run mouseout handlers
+            var targetShape = that.targetShape;
+            if(targetShape) {
+                targetShape._handleEvents('onmouseout', evt);
+            }
             that.mousePos = undefined;
         }, false);
         // mobile events
