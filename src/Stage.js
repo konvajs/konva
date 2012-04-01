@@ -161,7 +161,15 @@ Kinetic.Stage.prototype = {
                     addLayer(n);
                 }
                 else {
-                    callback(bufferLayer.getCanvas().toDataURL(mimeType, quality));
+                    try {
+                        // If this call fails (due to browser bug, like in Firefox 3.6),
+                        // then revert to previous no-parameter image/png behavior
+                        callback(bufferLayer.getCanvas().toDataURL(mimeType, quality));
+                    }
+                    catch(exception)
+                    {
+                        callback(bufferLayer.getCanvas().toDataURL());
+                    }
                 }
             };
             imageObj.src = dataURL;
