@@ -137,7 +137,7 @@ Kinetic.GlobalObject = {
                     return 2.5 + b * transition.time;
                 });
                 break;
-            // none is default
+            // linear is default
             default:
                 this._transitionPow(transition, key, prop, function() {
                     return 1;
@@ -628,7 +628,7 @@ Kinetic.Node.prototype = {
      */
     draggable: function(isDraggable) {
         if(this.draggable !== isDraggable) {
-            if(isDraggable && this.isDragging()) {
+            if(isDraggable) {
                 this._initDrag();
             }
             else {
@@ -721,8 +721,8 @@ Kinetic.Node.prototype = {
      *  radius, scale.x, scale.y, centerOffset.x, centerOffset.y, etc.
      * @param {Object} config
      * @config {Number} [duration] duration that the transition runs in seconds
-     * @config {String} [easing] easing function.  can be none, ease-in, ease-out, or ease-in-out.
-     *  none is the default
+     * @config {String} [easing] easing function.  can be linear, ease-in, ease-out, or ease-in-out.
+     *  linear is the default
      * @config {Function} [callback] callback function to be executed when
      *  transition completes
      */
@@ -848,6 +848,7 @@ Kinetic.Node.prototype = {
      * initialize drag and drop
      */
     _initDrag: function() {
+    	this._dragCleanup();
         var go = Kinetic.GlobalObject;
         var that = this;
         this.on('mousedown.initdrag touchstart.initdrag', function(evt) {
@@ -1926,9 +1927,7 @@ Kinetic.Shape = function(config) {
         }
     }
 
-    if(config.detectionType === undefined) {
-        config.detectionType = 'path';
-    }
+    this.detectionType = 'path';
 
     // required
     this.drawFunc = config.drawFunc;

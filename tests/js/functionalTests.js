@@ -1052,14 +1052,6 @@ Test.prototype.tests = {
 
         circle.draggable(true);
         circle.draggable(true);
-        circle.draggable(true);
-        circle.draggable(false);
-        
-        circle.draggable(true);
-        circle.draggable(true);
-        circle.draggable(true);
-        
-        // circle should not be draggable
         circle.draggable(false);
 
         layer.add(circle);

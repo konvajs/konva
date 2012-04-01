@@ -28,9 +28,7 @@ Kinetic.Shape = function(config) {
         }
     }
 
-    if(config.detectionType === undefined) {
-        config.detectionType = 'path';
-    }
+    this.detectionType = 'path';
 
     // required
     this.drawFunc = config.drawFunc;
