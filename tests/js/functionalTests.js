@@ -1264,13 +1264,17 @@ Test.prototype.tests = {
         layer.add(circle2);
         stage.add(layer);
     },
-    'DRAG AND DROP - drag and drop constrianed horiztonally': function(containerId) {
+    'DRAG AND DROP - drag and drop constrianed horiztontally inside positioned group': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
             height: 200
         });
         var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group({
+        	x: 0,
+        	y: 10
+        });
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
             y: stage.height / 2,
@@ -1282,7 +1286,8 @@ Test.prototype.tests = {
             dragConstraint: 'horizontal'
         });
 
-        layer.add(circle);
+        group.add(circle);
+        layer.add(group);
         stage.add(layer);
     },
     'DRAG AND DROP - drag and drop constrianed vertically': function(containerId) {

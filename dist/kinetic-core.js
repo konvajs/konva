@@ -1676,14 +1676,6 @@ Kinetic.Stage.prototype = {
                     newNodePos.y = db.bottom;
                 }
 
-                // constraint overrides
-                if(dc === 'horizontal') {
-                    newNodePos.y = node.y;
-                }
-                else if(dc === 'vertical') {
-                    newNodePos.x = node.x;
-                }
-
                 /*
                  * save rotation and scale and then
                  * remove them from the transform
@@ -1703,9 +1695,20 @@ Kinetic.Stage.prototype = {
                 var it = node.getAbsoluteTransform();
                 it.invert();
                 it.translate(newNodePos.x, newNodePos.y);
+                newNodePos = {
+                    x: node.x + it.getTranslation().x,
+                    y: node.y + it.getTranslation().y
+                };
 
-                node.x += it.getTranslation().x;
-                node.y += it.getTranslation().y;
+                // constraint overrides
+                if(dc === 'horizontal') {
+                    newNodePos.y = node.y;
+                }
+                else if(dc === 'vertical') {
+                    newNodePos.x = node.x;
+                }
+
+                node.setPosition(newNodePos.x, newNodePos.y);
 
                 // restore rotation and scale
                 node.rotate(rot);
