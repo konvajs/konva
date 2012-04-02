@@ -192,20 +192,39 @@ Kinetic.Shape.prototype = {
             return pathLayerContext.isPointInPath(pos.x, pos.y);
         }
         else {
-            var bufferLayer = stage.bufferLayer;
-            var bufferLayerContext = bufferLayer.getContext();
+            var ax = this.getAbsolutePosition().x;
+            var ay = this.getAbsolutePosition().y;
+            var aw = this.getWidth();
+            var ah = this.getHeight();
 
-            this._draw(bufferLayer);
+            /*
+            * TODO: need to also take into account absolute
+            * rotation, absolute scale, and center offsets
+            * to calculate the correct aw, ah, ax, and ay values.  Also need
+            * to implement getHeight and getWidth methods for each Shape
+            * object
+            */
 
-            var w = stage.width;
-            var h = stage.height;
-            var x = pos.x;
-            var y = pos.y;
-            var imageData = bufferLayerContext.getImageData(0, 0, w, h);
-            var data = imageData.data;
-            var alpha = data[((w * y) + x) * 4 + 3];
+            // only check pixels if it's possibly in range
+            if(pos.x >= ax && pos.x <= (ax + aw) && pos.y >= ay && pos.y <= ay + ah) {
+                var bufferLayer = stage.bufferLayer;
+                var bufferLayerContext = bufferLayer.getContext();
 
-            return (alpha !== undefined && alpha !== 0);
+                this._draw(bufferLayer);
+
+                var px = pos.x - ax;
+                var py = pos.y - ay;
+
+                // only get the image data for possible area
+                var imageData = bufferLayerContext.getImageData(ax, ay, aw, ah);
+                var data = imageData.data;
+                var alpha = data[((aw * py) + px) * 4 + 3];
+
+                return (alpha !== undefined && alpha !== 0);
+            }
+            else {
+                return false;
+            }
         }
     }
 };

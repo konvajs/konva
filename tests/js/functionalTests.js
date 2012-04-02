@@ -553,6 +553,11 @@ Test.prototype.tests = {
         };
         imageObj.src = '../lion.png';
     },
+    /*
+     * TODO: need to implement area x, y, width and height 
+     * in order to support other shape pixel detection 
+     */
+    /*
     'EVENTS - star pixel detection': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
@@ -591,6 +596,7 @@ Test.prototype.tests = {
         };
         imageObj.src = '../lion.png';
     },
+    */
     'EVENTS - drag events click': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
