@@ -17,6 +17,7 @@
  */
 Kinetic.Shape = function(config) {
     this.className = 'Shape';
+    this.data = [];
 
     // defaults
     if(config.stroke !== undefined || config.strokeWidth !== undefined) {
@@ -145,6 +146,23 @@ Kinetic.Shape.prototype = {
         this.drawFunc = func;
     },
     /**
+     * save shape data when using pixel detection. 
+     */
+    save: function() {
+        var stage = this.getStage();
+        var w = stage.width;
+        var h = stage.height;
+
+        var bufferLayer = stage.bufferLayer;
+        var bufferLayerContext = bufferLayer.getContext();
+
+        bufferLayer.clear();
+        this._draw(bufferLayer);
+
+        var imageData = bufferLayerContext.getImageData(0, 0, w, h);
+        this.data = imageData.data;
+    },
+    /**
      * draw shape
      * @param {Layer} layer Layer that the shape will be drawn on
      */
@@ -192,39 +210,9 @@ Kinetic.Shape.prototype = {
             return pathLayerContext.isPointInPath(pos.x, pos.y);
         }
         else {
-            var ax = this.getAbsolutePosition().x;
-            var ay = this.getAbsolutePosition().y;
-            var aw = this.getWidth();
-            var ah = this.getHeight();
-
-            /*
-            * TODO: need to also take into account absolute
-            * rotation, absolute scale, and center offsets
-            * to calculate the correct aw, ah, ax, and ay values.  Also need
-            * to implement getHeight and getWidth methods for each Shape
-            * object
-            */
-
-            // only check pixels if it's possibly in range
-            if(pos.x >= ax && pos.x <= (ax + aw) && pos.y >= ay && pos.y <= ay + ah) {
-                var bufferLayer = stage.bufferLayer;
-                var bufferLayerContext = bufferLayer.getContext();
-
-                this._draw(bufferLayer);
-
-                var px = pos.x - ax;
-                var py = pos.y - ay;
-
-                // only get the image data for possible area
-                var imageData = bufferLayerContext.getImageData(ax, ay, aw, ah);
-                var data = imageData.data;
-                var alpha = data[((aw * py) + px) * 4 + 3];
-
-                return (alpha !== undefined && alpha !== 0);
-            }
-            else {
-                return false;
-            }
+            var w = stage.width;
+            var alpha = this.data[((w * pos.y) + pos.x) * 4 + 3];
+            return (alpha !== undefined && alpha !== 0);
         }
     }
 };

@@ -601,7 +601,7 @@ Kinetic.Node.prototype = {
      * initialize drag and drop
      */
     _initDrag: function() {
-    	this._dragCleanup();
+        this._dragCleanup();
         var go = Kinetic.GlobalObject;
         var that = this;
         this.on('mousedown.initdrag touchstart.initdrag', function(evt) {

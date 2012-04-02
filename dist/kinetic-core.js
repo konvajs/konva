@@ -848,7 +848,7 @@ Kinetic.Node.prototype = {
      * initialize drag and drop
      */
     _initDrag: function() {
-    	this._dragCleanup();
+        this._dragCleanup();
         var go = Kinetic.GlobalObject;
         var that = this;
         this.on('mousedown.initdrag touchstart.initdrag', function(evt) {
@@ -1228,11 +1228,11 @@ Kinetic.Stage.prototype = {
      * @param {String} typesStr
      * @param {function} handler
      */
-    onContainer: function(typesStr, handler) {
+    onContent: function(typesStr, handler) {
         var types = typesStr.split(' ');
         for(var n = 0; n < types.length; n++) {
             var baseEvent = types[n];
-            this.container.addEventListener(baseEvent, handler, false);
+            this.content.addEventListener(baseEvent, handler, false);
         }
     },
     /**
@@ -1277,6 +1277,12 @@ Kinetic.Stage.prototype = {
      */
     getContainer: function() {
         return this.container;
+    },
+    /**
+     * get content DOM element
+     */
+    getContent: function() {
+        return this.content;
     },
     /**
      * get stage
@@ -1466,8 +1472,7 @@ Kinetic.Stage.prototype = {
 
         this._setMousePosition(evt);
         this._setTouchPosition(evt);
-
-        this._clearDefaultLayers();
+        this.pathLayer.clear();
 
         /*
          * loop through layers.  If at any point an event
@@ -1497,13 +1502,6 @@ Kinetic.Stage.prototype = {
         }
     },
     /**
-     * clear default layers
-     */
-    _clearDefaultLayers: function() {
-        this.bufferLayer.clear();
-        this.pathLayer.clear();
-    },
-    /**
      * begin listening for events by adding event handlers
      * to the container
      */
@@ -1511,18 +1509,18 @@ Kinetic.Stage.prototype = {
         var that = this;
 
         // desktop events
-        this.container.addEventListener('mousedown', function(evt) {
+        this.content.addEventListener('mousedown', function(evt) {
             that.mouseDown = true;
             that._handleStageEvent(evt);
         }, false);
 
-        this.container.addEventListener('mousemove', function(evt) {
+        this.content.addEventListener('mousemove', function(evt) {
             that.mouseUp = false;
             that.mouseDown = false;
             that._handleStageEvent(evt);
         }, false);
 
-        this.container.addEventListener('mouseup', function(evt) {
+        this.content.addEventListener('mouseup', function(evt) {
             that.mouseUp = true;
             that.mouseDown = false;
             that._handleStageEvent(evt);
@@ -1530,11 +1528,11 @@ Kinetic.Stage.prototype = {
             that.clickStart = false;
         }, false);
 
-        this.container.addEventListener('mouseover', function(evt) {
+        this.content.addEventListener('mouseover', function(evt) {
             that._handleStageEvent(evt);
         }, false);
 
-        this.container.addEventListener('mouseout', function(evt) {
+        this.content.addEventListener('mouseout', function(evt) {
             // if there's a current target shape, run mouseout handlers
             var targetShape = that.targetShape;
             if(targetShape) {
@@ -1543,18 +1541,18 @@ Kinetic.Stage.prototype = {
             that.mousePos = undefined;
         }, false);
         // mobile events
-        this.container.addEventListener('touchstart', function(evt) {
+        this.content.addEventListener('touchstart', function(evt) {
             evt.preventDefault();
             that.touchStart = true;
             that._handleStageEvent(evt);
         }, false);
 
-        this.container.addEventListener('touchmove', function(evt) {
+        this.content.addEventListener('touchmove', function(evt) {
             evt.preventDefault();
             that._handleStageEvent(evt);
         }, false);
 
-        this.container.addEventListener('touchend', function(evt) {
+        this.content.addEventListener('touchend', function(evt) {
             evt.preventDefault();
             that.touchEnd = true;
             that._handleStageEvent(evt);
@@ -1565,8 +1563,8 @@ Kinetic.Stage.prototype = {
      * @param {Event} evt
      */
     _setMousePosition: function(evt) {
-        var mouseX = evt.offsetX || (evt.clientX - this._getContainerPosition().left + window.pageXOffset);
-        var mouseY = evt.offsetY || (evt.clientY - this._getContainerPosition().top + window.pageYOffset);
+        var mouseX = evt.offsetX || (evt.clientX - this._getContentPosition().left + window.pageXOffset);
+        var mouseY = evt.offsetY || (evt.clientY - this._getContentPosition().top + window.pageYOffset);
         this.mousePos = {
             x: mouseX,
             y: mouseY
@@ -1581,8 +1579,8 @@ Kinetic.Stage.prototype = {
             // one finger
             var touch = evt.touches[0];
             // Get the information for finger #1
-            var touchX = touch.clientX - this._getContainerPosition().left + window.pageXOffset;
-            var touchY = touch.clientY - this._getContainerPosition().top + window.pageYOffset;
+            var touchX = touch.clientX - this._getContentPosition().left + window.pageXOffset;
+            var touchY = touch.clientY - this._getContentPosition().top + window.pageYOffset;
 
             this.touchPos = {
                 x: touchX,
@@ -1593,8 +1591,8 @@ Kinetic.Stage.prototype = {
     /**
      * get container position
      */
-    _getContainerPosition: function() {
-        var obj = this.container;
+    _getContentPosition: function() {
+        var obj = this.content;
         var top = 0;
         var left = 0;
         while(obj && obj.tagName !== 'BODY') {
@@ -1648,7 +1646,7 @@ Kinetic.Stage.prototype = {
     _prepareDrag: function() {
         var that = this;
 
-        this.onContainer('mousemove touchmove', function(evt) {
+        this.onContent('mousemove touchmove', function(evt) {
             var go = Kinetic.GlobalObject;
             var node = go.drag.node;
             if(node) {
@@ -1730,7 +1728,7 @@ Kinetic.Stage.prototype = {
             }
         }, false);
 
-        this.onContainer('mouseup touchend mouseout', function(evt) {
+        this.onContent('mouseup touchend mouseout', function(evt) {
             that._endDrag(evt);
         });
     },
@@ -1747,8 +1745,12 @@ Kinetic.Stage.prototype = {
         this.container.appendChild(this.content);
 
         // default layers
-        this.bufferLayer = new Kinetic.Layer();
-        this.pathLayer = new Kinetic.Layer();
+        this.bufferLayer = new Kinetic.Layer({
+            name: 'bufferLayer'
+        });
+        this.pathLayer = new Kinetic.Layer({
+            name: 'pathLayer'
+        });
 
         // set parents
         this.bufferLayer.parent = this;
@@ -1933,6 +1935,7 @@ Kinetic.GlobalObject.extend(Kinetic.Group, Kinetic.Node);
  */
 Kinetic.Shape = function(config) {
     this.className = 'Shape';
+    this.data = [];
 
     // defaults
     if(config.stroke !== undefined || config.strokeWidth !== undefined) {
@@ -2061,6 +2064,23 @@ Kinetic.Shape.prototype = {
         this.drawFunc = func;
     },
     /**
+     * save shape data when using pixel detection. 
+     */
+    save: function() {
+        var stage = this.getStage();
+        var w = stage.width;
+        var h = stage.height;
+
+        var bufferLayer = stage.bufferLayer;
+        var bufferLayerContext = bufferLayer.getContext();
+
+        bufferLayer.clear();
+        this._draw(bufferLayer);
+
+        var imageData = bufferLayerContext.getImageData(0, 0, w, h);
+        this.data = imageData.data;
+    },
+    /**
      * draw shape
      * @param {Layer} layer Layer that the shape will be drawn on
      */
@@ -2108,39 +2128,9 @@ Kinetic.Shape.prototype = {
             return pathLayerContext.isPointInPath(pos.x, pos.y);
         }
         else {
-            var ax = this.getAbsolutePosition().x;
-            var ay = this.getAbsolutePosition().y;
-            var aw = this.getWidth();
-            var ah = this.getHeight();
-
-            /*
-            * TODO: need to also take into account absolute
-            * rotation, absolute scale, and center offsets
-            * to calculate the correct aw, ah, ax, and ay values.  Also need
-            * to implement getHeight and getWidth methods for each Shape
-            * object
-            */
-
-            // only check pixels if it's possibly in range
-            if(pos.x >= ax && pos.x <= (ax + aw) && pos.y >= ay && pos.y <= ay + ah) {
-                var bufferLayer = stage.bufferLayer;
-                var bufferLayerContext = bufferLayer.getContext();
-
-                this._draw(bufferLayer);
-
-                var px = pos.x - ax;
-                var py = pos.y - ay;
-
-                // only get the image data for possible area
-                var imageData = bufferLayerContext.getImageData(ax, ay, aw, ah);
-                var data = imageData.data;
-                var alpha = data[((aw * py) + px) * 4 + 3];
-
-                return (alpha !== undefined && alpha !== 0);
-            }
-            else {
-                return false;
-            }
+            var w = stage.width;
+            var alpha = this.data[((w * pos.y) + pos.x) * 4 + 3];
+            return (alpha !== undefined && alpha !== 0);
         }
     }
 };

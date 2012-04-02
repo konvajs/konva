@@ -548,16 +548,17 @@ Test.prototype.tests = {
                 log('mouseout');
             });
 
+            darth.on('dragend', function() {
+                this.save();
+            });
+
             layer.add(darth);
             stage.add(layer);
+
+            //darth.save();
         };
         imageObj.src = '../lion.png';
     },
-    /*
-     * TODO: need to implement area x, y, width and height 
-     * in order to support other shape pixel detection 
-     */
-    /*
     'EVENTS - star pixel detection': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
@@ -591,12 +592,17 @@ Test.prototype.tests = {
                 log('mouseout');
             });
 
+            star.on('dragend', function() {
+                this.save();
+            });
+
             layer.add(star);
             stage.add(layer);
+
+            star.save();
         };
         imageObj.src = '../lion.png';
     },
-    */
     'EVENTS - drag events click': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1278,8 +1284,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group({
-        	x: 0,
-        	y: 10
+            x: 0,
+            y: 10
         });
         var circle = new Kinetic.Circle({
             x: stage.width / 2,
