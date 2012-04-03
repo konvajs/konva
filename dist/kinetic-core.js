@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Apr 02 2012
+ * Date: Apr 03 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1015,6 +1015,8 @@ Kinetic.Stage = function(config) {
     this._listen();
     this._prepareDrag();
 
+    this.anim = undefined;
+
     // add stage to global object
     Kinetic.GlobalObject.stages.push(this);
 
@@ -1032,22 +1034,26 @@ Kinetic.Stage.prototype = {
      */
     onFrame: function(func) {
         var go = Kinetic.GlobalObject;
-        go.addAnimation({
+        this.anim = {
             id: go.animIdCounter++,
             func: func
-        });
+        };
     },
     /**
      * start animation
      */
     start: function() {
-        Kinetic.GlobalObject._handleAnimation();
+        var go = Kinetic.GlobalObject;
+        go.addAnimation(this.anim);
+        go._handleAnimation();
     },
     /**
      * stop animation
      */
     stop: function() {
-        Kinetic.GlobalObject._handleAnimation();
+        var go = Kinetic.GlobalObject;
+        go.removeAnimation(this.anim.id);
+        go._handleAnimation();
     },
     /**
      * draw children
@@ -2850,6 +2856,9 @@ Kinetic.Transform.prototype = {
     }
 };
 
+/*
+ * This class was ported from a Flash Tween library to JavaScript by Xaric.
+ */
 Kinetic.Transition = function(obj, propFunc, func, begin, finish, duration) {
     this._listeners = [];
     this.addListener(this);

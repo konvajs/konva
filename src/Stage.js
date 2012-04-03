@@ -54,6 +54,8 @@ Kinetic.Stage = function(config) {
     this._listen();
     this._prepareDrag();
 
+    this.anim = undefined;
+
     // add stage to global object
     Kinetic.GlobalObject.stages.push(this);
 
@@ -71,22 +73,26 @@ Kinetic.Stage.prototype = {
      */
     onFrame: function(func) {
         var go = Kinetic.GlobalObject;
-        go.addAnimation({
+        this.anim = {
             id: go.animIdCounter++,
             func: func
-        });
+        };
     },
     /**
      * start animation
      */
     start: function() {
-        Kinetic.GlobalObject._handleAnimation();
+        var go = Kinetic.GlobalObject;
+        go.addAnimation(this.anim);
+        go._handleAnimation();
     },
     /**
      * stop animation
      */
     stop: function() {
-        Kinetic.GlobalObject._handleAnimation();
+        var go = Kinetic.GlobalObject;
+        go.removeAnimation(this.anim.id);
+        go._handleAnimation();
     },
     /**
      * draw children
