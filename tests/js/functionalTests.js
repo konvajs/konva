@@ -19,12 +19,26 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
 
-        rect.transitionTo({
-            x: 400,
-            y: 30,
-            rotation: Math.PI * 2,
-            duration: 1
+        var tween = new Kinetic.Transition(rect, function(i) {
+            rect.setScale(i);
+        }, Kinetic.Transitions.bounceEaseOut, 10, 1, 2);
+
+        stage.onFrame(function(frame) {
+            tween.onEnterFrame();
+            layer.draw();
         });
+
+        tween.start();
+        stage.start();
+
+        /*
+         rect.transitionTo({
+         x: 400,
+         y: 30,
+         rotation: Math.PI * 2,
+         duration: 1
+         });
+         */
     },
     'TRANSITION - transition position and rotation with two transitions': function(containerId) {
         var stage = new Kinetic.Stage({

@@ -482,15 +482,19 @@ Kinetic.Node.prototype = {
     transitionTo: function(config) {
         var layer = this.getLayer();
         var that = this;
-        var duration = config.duration * 1000;
-        var starts = {};
+        
+        
+        //var duration = config.duration * 1000;
+        //var starts = {};
+        //var go = Kinetic.GlobalObject;
 
         /*
          * clear transition if one is currenlty running.
          * This make it easy to start new transitions without
          * having to explicitly cancel old ones
          */
-        Kinetic.GlobalObject._clearTransition(this);
+        /*
+        go._clearTransition(this);
 
         for(var key in config) {
             if(config.hasOwnProperty(key) && key !== 'duration' && key !== 'easing' && key !== 'callback') {
@@ -510,15 +514,16 @@ Kinetic.Node.prototype = {
             }
         }
 
-        layer.transitions.push({
+        go.transitions.push({
             id: layer.transitionIdCounter++,
             time: 0,
             config: config,
             node: this,
             starts: starts
         });
+        */
 
-        Kinetic.GlobalObject._handleAnimation();
+        go._handleAnimation();
     },
     /**
      * set drag constraint

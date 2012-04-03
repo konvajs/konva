@@ -50,10 +50,6 @@ Kinetic.Stage = function(config) {
     // set stage id
     this.id = Kinetic.GlobalObject.idCounter++;
 
-    // animation support
-    this.isAnimating = false;
-    this.onFrameFunc = undefined;
-
     this._buildDOM();
     this._listen();
     this._prepareDrag();
@@ -74,20 +70,22 @@ Kinetic.Stage.prototype = {
      * @param {function} func
      */
     onFrame: function(func) {
-        this.onFrameFunc = func;
+        var go = Kinetic.GlobalObject;
+        go.animations.push({
+        	id: go.animIdCounter++,
+        	func: func
+        });
     },
     /**
      * start animation
      */
     start: function() {
-        this.isAnimating = true;
         Kinetic.GlobalObject._handleAnimation();
     },
     /**
      * stop animation
      */
     stop: function() {
-        this.isAnimating = false;
         Kinetic.GlobalObject._handleAnimation();
     },
     /**
