@@ -618,8 +618,9 @@ Kinetic.Node.prototype = {
         var that = this;
         var go = Kinetic.GlobalObject;
 
+        // add transition for each property
         for(var key in config) {
-            if(key !== 'duration' && key !== 'easing') {
+            if(key !== 'duration' && key !== 'easing' && key !== 'on') {
 
                 if(config[key].x === undefined && config[key].y === undefined) {
                     this._addTransition(key, config);
@@ -713,6 +714,20 @@ Kinetic.Node.prototype = {
 
         return m;
     },
+    /**
+     * add transition listeners based on "on" config key.  Can subscribe to
+     * "finished", "looped", "started", "changed", "stopped" and "resumed" events
+     */
+    _addTransitionListeners: function(trans, config) {
+        if(config.on !== undefined) {
+            var on = config.on;
+
+            for(var key in on) {
+                var capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
+                trans['on' + capitalizedKey] = on[key];
+            }
+        }
+    },
     _addTransition: function(key, config) {
         var easing = config.easing;
         if(easing === undefined) {
@@ -724,24 +739,25 @@ Kinetic.Node.prototype = {
         var layer = this.getLayer();
         var id = go.animIdCounter++;
 
-        var tween = new Kinetic.Transition(that, function(i) {
+        var trans = new Kinetic.Transition(that, function(i) {
             that[key] = i;
         }, Kinetic.Transitions[easing], that[key], config[key], config.duration);
 
         go.addAnimation({
             id: id,
             func: function() {
-                tween.onEnterFrame();
+                trans.onEnterFrame();
             },
             drawId: layer.id,
             draw: layer
         });
 
-        tween.onTweenFinished = function() {
+        trans.onFinished = function() {
             go.removeAnimation(id);
         };
 
-        tween.start();
+        this._addTransitionListeners(trans, config);
+        trans.start();
     },
     _addComponentTransition: function(key, prop, config) {
         var easing = config.easing;
@@ -755,24 +771,24 @@ Kinetic.Node.prototype = {
 
         if(config[key][prop] !== undefined) {
             var id = go.animIdCounter++;
-            var tween = new Kinetic.Transition(that, function(i) {
+            var trans = new Kinetic.Transition(that, function(i) {
                 that[key][prop] = i;
             }, Kinetic.Transitions[easing], that[key][prop], config[key][prop], config.duration);
 
             go.addAnimation({
                 id: id,
                 func: function() {
-                    tween.onEnterFrame();
+                    trans.onEnterFrame();
                 },
                 drawId: layer.id,
                 draw: layer
             });
 
-            tween.onTweenFinished = function() {
+            trans.onFinished = function() {
                 go.removeAnimation(id);
             };
-
-            tween.start();
+            this._addTransitionListeners(trans, config);
+            trans.start();
         }
     },
     /**
@@ -2888,18 +2904,18 @@ Kinetic.Transition.prototype = {
             if(this.looping) {
                 this.rewind(t - this._duration);
                 this.update();
-                this.broadcastMessage('onTweenLooped', {
+                this.broadcastMessage('onLooped', {
                     target: this,
-                    type: 'onTweenLooped'
+                    type: 'onLooped'
                 });
             }
             else {
                 this._time = this._duration;
                 this.update();
                 this.stop();
-                this.broadcastMessage('onTweenFinished', {
+                this.broadcastMessage('onFinished', {
                     target: this,
-                    type: 'onTweenFinished'
+                    type: 'onFinished'
                 });
             }
         }
@@ -2928,9 +2944,9 @@ Kinetic.Transition.prototype = {
         //+ a;
         //this.obj(Math.round(p));
         this._pos = p;
-        this.broadcastMessage('onTweenChanged', {
+        this.broadcastMessage('onChanged', {
             target: this,
-            type: 'onTweenChanged'
+            type: 'onChanged'
         });
     },
     getPosition: function(t) {
@@ -2948,9 +2964,9 @@ Kinetic.Transition.prototype = {
     start: function() {
         this.rewind();
         this.startEnterFrame();
-        this.broadcastMessage('onTweenStarted', {
+        this.broadcastMessage('onStarted', {
             target: this,
-            type: 'onTweenStarted'
+            type: 'onStarted'
         });
     },
     rewind: function(t) {
@@ -2982,9 +2998,9 @@ Kinetic.Transition.prototype = {
     },
     stop: function() {
         this.stopEnterFrame();
-        this.broadcastMessage('onTweenStopped', {
+        this.broadcastMessage('onStopped', {
             target: this,
-            type: 'onTweenStopped'
+            type: 'onStopped'
         });
     },
     stopEnterFrame: function() {
@@ -3000,9 +3016,9 @@ Kinetic.Transition.prototype = {
     resume: function() {
         this.fixTime();
         this.startEnterFrame();
-        this.broadcastMessage('onTweenResumed', {
+        this.broadcastMessage('onResumed', {
             target: this,
-            type: 'onTweenResumed'
+            type: 'onResumed'
         });
     },
     yoyo: function() {

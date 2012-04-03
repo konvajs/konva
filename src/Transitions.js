@@ -30,18 +30,18 @@ Kinetic.Transition.prototype = {
             if(this.looping) {
                 this.rewind(t - this._duration);
                 this.update();
-                this.broadcastMessage('onTweenLooped', {
+                this.broadcastMessage('onLooped', {
                     target: this,
-                    type: 'onTweenLooped'
+                    type: 'onLooped'
                 });
             }
             else {
                 this._time = this._duration;
                 this.update();
                 this.stop();
-                this.broadcastMessage('onTweenFinished', {
+                this.broadcastMessage('onFinished', {
                     target: this,
-                    type: 'onTweenFinished'
+                    type: 'onFinished'
                 });
             }
         }
@@ -70,9 +70,9 @@ Kinetic.Transition.prototype = {
         //+ a;
         //this.obj(Math.round(p));
         this._pos = p;
-        this.broadcastMessage('onTweenChanged', {
+        this.broadcastMessage('onChanged', {
             target: this,
-            type: 'onTweenChanged'
+            type: 'onChanged'
         });
     },
     getPosition: function(t) {
@@ -90,9 +90,9 @@ Kinetic.Transition.prototype = {
     start: function() {
         this.rewind();
         this.startEnterFrame();
-        this.broadcastMessage('onTweenStarted', {
+        this.broadcastMessage('onStarted', {
             target: this,
-            type: 'onTweenStarted'
+            type: 'onStarted'
         });
     },
     rewind: function(t) {
@@ -124,9 +124,9 @@ Kinetic.Transition.prototype = {
     },
     stop: function() {
         this.stopEnterFrame();
-        this.broadcastMessage('onTweenStopped', {
+        this.broadcastMessage('onStopped', {
             target: this,
-            type: 'onTweenStopped'
+            type: 'onStopped'
         });
     },
     stopEnterFrame: function() {
@@ -142,9 +142,9 @@ Kinetic.Transition.prototype = {
     resume: function() {
         this.fixTime();
         this.startEnterFrame();
-        this.broadcastMessage('onTweenResumed', {
+        this.broadcastMessage('onResumed', {
             target: this,
-            type: 'onTweenResumed'
+            type: 'onResumed'
         });
     },
     yoyo: function() {

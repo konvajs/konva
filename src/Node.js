@@ -484,8 +484,9 @@ Kinetic.Node.prototype = {
         var that = this;
         var go = Kinetic.GlobalObject;
 
+        // add transition for each property
         for(var key in config) {
-            if(key !== 'duration' && key !== 'easing') {
+            if(key !== 'duration' && key !== 'easing' && key !== 'on') {
 
                 if(config[key].x === undefined && config[key].y === undefined) {
                     this._addTransition(key, config);
@@ -579,6 +580,20 @@ Kinetic.Node.prototype = {
 
         return m;
     },
+    /**
+     * add transition listeners based on "on" config key.  Can subscribe to
+     * "finished", "looped", "started", "changed", "stopped" and "resumed" events
+     */
+    _addTransitionListeners: function(trans, config) {
+        if(config.on !== undefined) {
+            var on = config.on;
+
+            for(var key in on) {
+                var capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
+                trans['on' + capitalizedKey] = on[key];
+            }
+        }
+    },
     _addTransition: function(key, config) {
         var easing = config.easing;
         if(easing === undefined) {
@@ -590,24 +605,25 @@ Kinetic.Node.prototype = {
         var layer = this.getLayer();
         var id = go.animIdCounter++;
 
-        var tween = new Kinetic.Transition(that, function(i) {
+        var trans = new Kinetic.Transition(that, function(i) {
             that[key] = i;
         }, Kinetic.Transitions[easing], that[key], config[key], config.duration);
 
         go.addAnimation({
             id: id,
             func: function() {
-                tween.onEnterFrame();
+                trans.onEnterFrame();
             },
             drawId: layer.id,
             draw: layer
         });
 
-        tween.onTweenFinished = function() {
+        trans.onFinished = function() {
             go.removeAnimation(id);
         };
 
-        tween.start();
+        this._addTransitionListeners(trans, config);
+        trans.start();
     },
     _addComponentTransition: function(key, prop, config) {
         var easing = config.easing;
@@ -621,24 +637,24 @@ Kinetic.Node.prototype = {
 
         if(config[key][prop] !== undefined) {
             var id = go.animIdCounter++;
-            var tween = new Kinetic.Transition(that, function(i) {
+            var trans = new Kinetic.Transition(that, function(i) {
                 that[key][prop] = i;
             }, Kinetic.Transitions[easing], that[key][prop], config[key][prop], config.duration);
 
             go.addAnimation({
                 id: id,
                 func: function() {
-                    tween.onEnterFrame();
+                    trans.onEnterFrame();
                 },
                 drawId: layer.id,
                 draw: layer
             });
 
-            tween.onTweenFinished = function() {
+            trans.onFinished = function() {
                 go.removeAnimation(id);
             };
-
-            tween.start();
+            this._addTransitionListeners(trans, config);
+            trans.start();
         }
     },
     /**
