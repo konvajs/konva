@@ -71,9 +71,9 @@ Kinetic.Stage.prototype = {
      */
     onFrame: function(func) {
         var go = Kinetic.GlobalObject;
-        go.animations.push({
-        	id: go.animIdCounter++,
-        	func: func
+        go.addAnimation({
+            id: go.animIdCounter++,
+            func: func
         });
     },
     /**

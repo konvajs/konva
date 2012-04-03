@@ -63,141 +63,32 @@ Kinetic.GlobalObject = {
             }
         }
     },
-    /*
-     _endTransition: function() {
-     var config = this.config;
-     for(var key in config) {
-     if(config.hasOwnProperty(key)) {
-     if(config[key].x !== undefined || config[key].y !== undefined) {
-     var propArray = ['x', 'y'];
-     for(var n = 0; n < propArray.length; n++) {
-     var prop = propArray[n];
-     if(config[key][prop] !== undefined) {
-     this.node[key][prop] = config[key][prop];
-     }
-     }
-     }
-     else {
-     this.node[key] = config[key];
-     }
-     }
-     }
-     },
-     _transitionPow: function(transition, key, prop, powFunc) {
-     var pow = powFunc();
-
-     var config = transition.config;
-     var timeDiff = this.frame.timeDiff;
-     if(prop !== undefined) {
-     var start = transition.starts[key][prop];
-     var change = config[key][prop] - start;
-     var b = change / (Math.pow(config.duration * 1000, pow));
-     transition.node[key][prop] = b * Math.pow(transition.time, pow) + start;
-     }
-     else {
-     var start = transition.starts[key];
-     var change = config[key] - start;
-     var b = change / (Math.pow(config.duration * 1000, pow));
-     transition.node[key] = b * Math.pow(transition.time, pow) + start;
-     }
-     },
-     _chooseTransition: function(transition, key, prop) {
-     var config = transition.config;
-     var that = this;
-     switch(config.easing) {
-     case 'ease-in':
-     this._transitionPow(transition, key, prop, function() {
-     return 2.5;
-     });
-     break;
-     case 'ease-out':
-     this._transitionPow(transition, key, prop, function() {
-     return 0.4;
-     });
-     break;
-     case 'ease-in-out':
-     this._transitionPow(transition, key, prop, function() {
-     var change = -2.1;
-     var b = change / (config.duration * 1000);
-     return 2.5 + b * transition.time;
-     });
-     break;
-     // linear is default
-     default:
-     this._transitionPow(transition, key, prop, function() {
-     return 1;
-     });
-     break;
-     }
-     },
-     _runTransition: function(transition) {
-     var config = transition.config;
-     for(var key in config) {
-     if(config.hasOwnProperty(key) && key !== 'duration' && key !== 'easing' && key !== 'callback') {
-     if(config[key].x !== undefined || config[key].y !== undefined) {
-     var propArray = ['x', 'y'];
-     for(var n = 0; n < propArray.length; n++) {
-     var prop = propArray[n];
-     if(config[key][prop] !== undefined) {
-     this._chooseTransition(transition, key, prop);
-     }
-     }
-     }
-     else {
-     this._chooseTransition(transition, key);
-     }
-     }
-     }
-     },
-     _clearTransition: function(node) {
-     var layer = node.getLayer();
-     for(var n = 0; n < layer.transitions.length; n++) {
-     if(layer.transitions[n].node.id === node.id) {
-     layer.transitions.splice(n, 1);
-     }
-     }
-     },
-     */
-    _runFrames: function() {
-        for(var n = 0; n < this.animations.length; n++) {
-            this.animations[n].func(this.frame);
+    addAnimation: function(func) {
+        this.animations.push(func);
+    },
+    removeAnimation: function(id) {
+        var animations = this.animations;
+        for(var n = 0; n < animations.length; n++) {
+            if(animations[n].id === id) {
+                this.animations.splice(n, 1);
+                return false;
+            }
         }
+    },
+    _runFrames: function() {
+        var draws = {};
+        for(var n = 0; n < this.animations.length; n++) {
+            var anim = this.animations[n];
+            draws[anim.drawId] = anim.draw;
+            anim.func(this.frame);
+        }
+
         /*
-         for(var n = 0; n < this.stages.length; n++) {
-         var stage = this.stages[n];
-         // run animation if available
-         if(stage.isAnimating && stage.onFrameFunc !== undefined) {
-         stage.onFrameFunc(this.frame);
-         }
-
-         // loop through layers
-         var layers = stage.getChildren();
-         for(var k = 0; k < layers.length; k++) {
-         var layer = layers[k];
-         var didTransition = false;
-         // loop through transitions
-         for(var i = 0; i < layer.transitions.length; i++) {
-         didTransition = true;
-         var transition = layer.transitions[i];
-         transition.time += this.frame.timeDiff;
-         if(transition.time >= transition.config.duration * 1000) {
-         this._endTransition.apply(transition);
-         this._clearTransition(transition.node);
-         if(transition.config.callback !== undefined) {
-         transition.config.callback();
-         }
-         }
-         else {
-         this._runTransition(transition);
-         }
-         }
-
-         if(didTransition) {
-         layer.draw();
-         }
-         }
-         }
+         * draw all necessary layers or stages
          */
+        for(var key in draws) {
+            draws[key].draw();
+        }
     },
     _updateFrameObject: function() {
         var date = new Date();
@@ -726,46 +617,23 @@ Kinetic.Node.prototype = {
     transitionTo: function(config) {
         var layer = this.getLayer();
         var that = this;
-        
-        
-        //var duration = config.duration * 1000;
-        //var starts = {};
-        //var go = Kinetic.GlobalObject;
-
-        /*
-         * clear transition if one is currenlty running.
-         * This make it easy to start new transitions without
-         * having to explicitly cancel old ones
-         */
-        /*
-        go._clearTransition(this);
+        var go = Kinetic.GlobalObject;
 
         for(var key in config) {
-            if(config.hasOwnProperty(key) && key !== 'duration' && key !== 'easing' && key !== 'callback') {
-                if(config[key].x !== undefined || config[key].y !== undefined) {
-                    starts[key] = {};
-                    var propArray = ['x', 'y'];
-                    for(var n = 0; n < propArray.length; n++) {
-                        var prop = propArray[n];
-                        if(config[key][prop] !== undefined) {
-                            starts[key][prop] = this[key][prop];
-                        }
-                    }
+            if(key !== 'duration' && key !== 'easing') {
+
+                if(config[key].x === undefined && config[key].y === undefined) {
+                    this._addTransition(key, config);
                 }
                 else {
-                    starts[key] = this[key];
+                    var props = ['x', 'y'];
+                    for(var n = 0; n < props.length; n++) {
+                        var prop = props[n];
+                        that._addComponentTransition(key, prop, config);
+                    }
                 }
             }
         }
-
-        go.transitions.push({
-            id: layer.transitionIdCounter++,
-            time: 0,
-            config: config,
-            node: this,
-            starts: starts
-        });
-        */
 
         go._handleAnimation();
     },
@@ -845,6 +713,69 @@ Kinetic.Node.prototype = {
         }
 
         return m;
+    },
+    _addTransition: function(key, config) {
+        var easing = config.easing;
+        if(easing === undefined) {
+            easing = 'linear';
+        }
+
+        var go = Kinetic.GlobalObject;
+        var that = this;
+        var layer = this.getLayer();
+        var id = go.animIdCounter++;
+
+        var tween = new Kinetic.Transition(that, function(i) {
+            that[key] = i;
+        }, Kinetic.Transitions[easing], that[key], config[key], config.duration);
+
+        go.addAnimation({
+            id: id,
+            func: function() {
+                tween.onEnterFrame();
+            },
+            drawId: layer.id,
+            draw: layer
+        });
+
+        tween.onTweenFinished = function() {
+            go.removeAnimation(id);
+        };
+
+        tween.start();
+    },
+    _addComponentTransition: function(key, prop, config) {
+        var easing = config.easing;
+        if(easing === undefined) {
+            easing = 'linear';
+        }
+
+        var go = Kinetic.GlobalObject;
+        var that = this;
+        var layer = this.getLayer();
+
+        if(config[key][prop] !== undefined) {
+            var id = go.animIdCounter++;
+            var tween = new Kinetic.Transition(that, function(i) {
+                console.log(prop);
+                that[key][prop] = i;
+            }, Kinetic.Transitions[easing], that[key][prop], config[key][prop], config.duration);
+
+            go.addAnimation({
+                id: id,
+                func: function() {
+                    tween.onEnterFrame();
+                },
+                drawId: layer.id,
+                draw: layer
+            });
+
+            tween.onTweenFinished = function() {
+                go.removeAnimation(id);
+            };
+
+            tween.start();
+        }
     },
     /**
      * initialize drag and drop
@@ -1103,9 +1034,9 @@ Kinetic.Stage.prototype = {
      */
     onFrame: function(func) {
         var go = Kinetic.GlobalObject;
-        go.animations.push({
-        	id: go.animIdCounter++,
-        	func: func
+        go.addAnimation({
+            id: go.animIdCounter++,
+            func: func
         });
     },
     /**
@@ -2993,7 +2924,7 @@ Kinetic.Transition.prototype = {
         return this._time;
     },
     setDuration: function(d) {
-        this._duration = (d == null || d <= 0) ? 100000 : d;
+        this._duration = (d === null || d <= 0) ? 100000 : d;
     },
     getDuration: function() {
         return this._duration;
@@ -3011,8 +2942,9 @@ Kinetic.Transition.prototype = {
         });
     },
     getPosition: function(t) {
-        if(t == undefined)
+        if(t === undefined) {
             t = this._time;
+        }
         return this.func(t, this.begin, this._change, this._duration);
     },
     setFinish: function(f) {
@@ -3031,7 +2963,7 @@ Kinetic.Transition.prototype = {
     },
     rewind: function(t) {
         this.stop();
-        this._time = (t == undefined) ? 0 : t;
+        this._time = (t === undefined) ? 0 : t;
         this.fixTime();
         this.update();
     },
@@ -3049,8 +2981,9 @@ Kinetic.Transition.prototype = {
         this.onEnterFrame();
     },
     onEnterFrame: function() {
-        if(this.isPlaying)
+        if(this.isPlaying) {
             this.nextFrame();
+        }
     },
     nextFrame: function() {
         this.setTime((this.getTimer() - this._startTime) / 1000);
@@ -3099,16 +3032,17 @@ Kinetic.Transition.prototype = {
         return false;
     },
     broadcastMessage: function() {
-        var arr = new Array();
+        var arr = [];
         for(var i = 0; i < arguments.length; i++) {
-            arr.push(arguments[i])
+            arr.push(arguments[i]);
         }
         var e = arr.shift();
         var a = this._listeners;
         var l = a.length;
         for(var i = 0; i < l; i++) {
-            if(a[i][e])
+            if(a[i][e]) {
                 a[i][e].apply(a[i], arr);
+            }
         }
     },
     fixTime: function() {
@@ -3120,22 +3054,22 @@ Kinetic.Transition.prototype = {
 };
 
 Kinetic.Transitions = {
-    backEaseIn: function(t, b, c, d, a, p) {
+    'back-ease-in': function(t, b, c, d, a, p) {
         var s = 1.70158;
         return c * (t /= d) * t * ((s + 1) * t - s) + b;
     },
-    backEaseOut: function(t, b, c, d, a, p) {
+    'back-ease-out': function(t, b, c, d, a, p) {
         var s = 1.70158;
         return c * (( t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
     },
-    backEaseInOut: function(t, b, c, d, a, p) {
+    'back-ease-in-out': function(t, b, c, d, a, p) {
         var s = 1.70158;
         if((t /= d / 2) < 1) {
             return c / 2 * (t * t * (((s *= (1.525)) + 1) * t - s)) + b;
         }
         return c / 2 * ((t -= 2) * t * (((s *= (1.525)) + 1) * t + s) + 2) + b;
     },
-    elasticEaseIn: function(t, b, c, d, a, p) {
+    'elastic-ease-in': function(t, b, c, d, a, p) {
         // added s = 0
         var s = 0;
         if(t === 0) {
@@ -3156,7 +3090,7 @@ Kinetic.Transitions = {
         }
         return -(a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
     },
-    elasticEaseOut: function(t, b, c, d, a, p) {
+    'elastic-ease-out': function(t, b, c, d, a, p) {
         // added s = 0
         var s = 0;
         if(t === 0) {
@@ -3177,7 +3111,7 @@ Kinetic.Transitions = {
         }
         return (a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b);
     },
-    elasticEaseInOut: function(t, b, c, d, a, p) {
+    'elastic-ease-in-out': function(t, b, c, d, a, p) {
         var s = 0;
         if(t === 0) {
             return b;
@@ -3200,7 +3134,7 @@ Kinetic.Transitions = {
         }
         return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * 0.5 + c + b;
     },
-    bounceEaseOut: function(t, b, c, d) {
+    'bounce-ease-out': function(t, b, c, d) {
         if((t /= d) < (1 / 2.75)) {
             return c * (7.5625 * t * t) + b;
         }
@@ -3214,10 +3148,10 @@ Kinetic.Transitions = {
             return c * (7.5625 * (t -= (2.625 / 2.75)) * t + 0.984375) + b;
         }
     },
-    bounceEaseIn: function(t, b, c, d) {
+    'bounce-ease-in': function(t, b, c, d) {
         return c - Kinetic.Transitions.bounceEaseOut(d - t, 0, c, d) + b;
     },
-    bounceEaseInOut: function(t, b, c, d) {
+    'bounce-ease-in-out': function(t, b, c, d) {
         if(t < d / 2) {
             return Kinetic.Transitions.bounceEaseIn(t * 2, 0, c, d) * 0.5 + b;
         }
@@ -3231,25 +3165,25 @@ Kinetic.Transitions = {
      return c * (t /= d) * t * t * t * t + b;
      },
      */
-    regularEaseIn: function(t, b, c, d) {
+    'ease-in': function(t, b, c, d) {
         return c * (t /= d) * t + b;
     },
-    regularEaseOut: function(t, b, c, d) {
+    'ease-out': function(t, b, c, d) {
         return -c * (t /= d) * (t - 2) + b;
     },
-    regularEaseInOut: function(t, b, c, d) {
+    'ease-in-out': function(t, b, c, d) {
         if((t /= d / 2) < 1) {
             return c / 2 * t * t + b;
         }
         return -c / 2 * ((--t) * (t - 2) - 1) + b;
     },
-    strongEaseIn: function(t, b, c, d) {
+    'strong-ease-in': function(t, b, c, d) {
         return c * (t /= d) * t * t * t * t + b;
     },
-    strongEaseOut: function(t, b, c, d) {
+    'strong-ease-out': function(t, b, c, d) {
         return c * (( t = t / d - 1) * t * t * t * t + 1) + b;
     },
-    strongEaseInOut: function(t, b, c, d) {
+    'strong-ease-in-out': function(t, b, c, d) {
         if((t /= d / 2) < 1) {
             return c / 2 * t * t * t * t * t + b;
         }

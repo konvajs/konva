@@ -482,46 +482,23 @@ Kinetic.Node.prototype = {
     transitionTo: function(config) {
         var layer = this.getLayer();
         var that = this;
-        
-        
-        //var duration = config.duration * 1000;
-        //var starts = {};
-        //var go = Kinetic.GlobalObject;
-
-        /*
-         * clear transition if one is currenlty running.
-         * This make it easy to start new transitions without
-         * having to explicitly cancel old ones
-         */
-        /*
-        go._clearTransition(this);
+        var go = Kinetic.GlobalObject;
 
         for(var key in config) {
-            if(config.hasOwnProperty(key) && key !== 'duration' && key !== 'easing' && key !== 'callback') {
-                if(config[key].x !== undefined || config[key].y !== undefined) {
-                    starts[key] = {};
-                    var propArray = ['x', 'y'];
-                    for(var n = 0; n < propArray.length; n++) {
-                        var prop = propArray[n];
-                        if(config[key][prop] !== undefined) {
-                            starts[key][prop] = this[key][prop];
-                        }
-                    }
+            if(key !== 'duration' && key !== 'easing') {
+
+                if(config[key].x === undefined && config[key].y === undefined) {
+                    this._addTransition(key, config);
                 }
                 else {
-                    starts[key] = this[key];
+                    var props = ['x', 'y'];
+                    for(var n = 0; n < props.length; n++) {
+                        var prop = props[n];
+                        that._addComponentTransition(key, prop, config);
+                    }
                 }
             }
         }
-
-        go.transitions.push({
-            id: layer.transitionIdCounter++,
-            time: 0,
-            config: config,
-            node: this,
-            starts: starts
-        });
-        */
 
         go._handleAnimation();
     },
@@ -601,6 +578,69 @@ Kinetic.Node.prototype = {
         }
 
         return m;
+    },
+    _addTransition: function(key, config) {
+        var easing = config.easing;
+        if(easing === undefined) {
+            easing = 'linear';
+        }
+
+        var go = Kinetic.GlobalObject;
+        var that = this;
+        var layer = this.getLayer();
+        var id = go.animIdCounter++;
+
+        var tween = new Kinetic.Transition(that, function(i) {
+            that[key] = i;
+        }, Kinetic.Transitions[easing], that[key], config[key], config.duration);
+
+        go.addAnimation({
+            id: id,
+            func: function() {
+                tween.onEnterFrame();
+            },
+            drawId: layer.id,
+            draw: layer
+        });
+
+        tween.onTweenFinished = function() {
+            go.removeAnimation(id);
+        };
+
+        tween.start();
+    },
+    _addComponentTransition: function(key, prop, config) {
+        var easing = config.easing;
+        if(easing === undefined) {
+            easing = 'linear';
+        }
+
+        var go = Kinetic.GlobalObject;
+        var that = this;
+        var layer = this.getLayer();
+
+        if(config[key][prop] !== undefined) {
+            var id = go.animIdCounter++;
+            var tween = new Kinetic.Transition(that, function(i) {
+                console.log(prop);
+                that[key][prop] = i;
+            }, Kinetic.Transitions[easing], that[key][prop], config[key][prop], config.duration);
+
+            go.addAnimation({
+                id: id,
+                func: function() {
+                    tween.onEnterFrame();
+                },
+                drawId: layer.id,
+                draw: layer
+            });
+
+            tween.onTweenFinished = function() {
+                go.removeAnimation(id);
+            };
+
+            tween.start();
+        }
     },
     /**
      * initialize drag and drop

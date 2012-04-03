@@ -70,7 +70,7 @@ Kinetic.Transition.prototype = {
         return this._time;
     },
     setDuration: function(d) {
-        this._duration = (d == null || d <= 0) ? 100000 : d;
+        this._duration = (d === null || d <= 0) ? 100000 : d;
     },
     getDuration: function() {
         return this._duration;
@@ -88,8 +88,9 @@ Kinetic.Transition.prototype = {
         });
     },
     getPosition: function(t) {
-        if(t == undefined)
+        if(t === undefined) {
             t = this._time;
+        }
         return this.func(t, this.begin, this._change, this._duration);
     },
     setFinish: function(f) {
@@ -108,7 +109,7 @@ Kinetic.Transition.prototype = {
     },
     rewind: function(t) {
         this.stop();
-        this._time = (t == undefined) ? 0 : t;
+        this._time = (t === undefined) ? 0 : t;
         this.fixTime();
         this.update();
     },
@@ -126,8 +127,9 @@ Kinetic.Transition.prototype = {
         this.onEnterFrame();
     },
     onEnterFrame: function() {
-        if(this.isPlaying)
+        if(this.isPlaying) {
             this.nextFrame();
+        }
     },
     nextFrame: function() {
         this.setTime((this.getTimer() - this._startTime) / 1000);
@@ -176,16 +178,17 @@ Kinetic.Transition.prototype = {
         return false;
     },
     broadcastMessage: function() {
-        var arr = new Array();
+        var arr = [];
         for(var i = 0; i < arguments.length; i++) {
-            arr.push(arguments[i])
+            arr.push(arguments[i]);
         }
         var e = arr.shift();
         var a = this._listeners;
         var l = a.length;
         for(var i = 0; i < l; i++) {
-            if(a[i][e])
+            if(a[i][e]) {
                 a[i][e].apply(a[i], arr);
+            }
         }
     },
     fixTime: function() {
@@ -197,22 +200,22 @@ Kinetic.Transition.prototype = {
 };
 
 Kinetic.Transitions = {
-    backEaseIn: function(t, b, c, d, a, p) {
+    'back-ease-in': function(t, b, c, d, a, p) {
         var s = 1.70158;
         return c * (t /= d) * t * ((s + 1) * t - s) + b;
     },
-    backEaseOut: function(t, b, c, d, a, p) {
+    'back-ease-out': function(t, b, c, d, a, p) {
         var s = 1.70158;
         return c * (( t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
     },
-    backEaseInOut: function(t, b, c, d, a, p) {
+    'back-ease-in-out': function(t, b, c, d, a, p) {
         var s = 1.70158;
         if((t /= d / 2) < 1) {
             return c / 2 * (t * t * (((s *= (1.525)) + 1) * t - s)) + b;
         }
         return c / 2 * ((t -= 2) * t * (((s *= (1.525)) + 1) * t + s) + 2) + b;
     },
-    elasticEaseIn: function(t, b, c, d, a, p) {
+    'elastic-ease-in': function(t, b, c, d, a, p) {
         // added s = 0
         var s = 0;
         if(t === 0) {
@@ -233,7 +236,7 @@ Kinetic.Transitions = {
         }
         return -(a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
     },
-    elasticEaseOut: function(t, b, c, d, a, p) {
+    'elastic-ease-out': function(t, b, c, d, a, p) {
         // added s = 0
         var s = 0;
         if(t === 0) {
@@ -254,7 +257,7 @@ Kinetic.Transitions = {
         }
         return (a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b);
     },
-    elasticEaseInOut: function(t, b, c, d, a, p) {
+    'elastic-ease-in-out': function(t, b, c, d, a, p) {
         var s = 0;
         if(t === 0) {
             return b;
@@ -277,7 +280,7 @@ Kinetic.Transitions = {
         }
         return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * 0.5 + c + b;
     },
-    bounceEaseOut: function(t, b, c, d) {
+    'bounce-ease-out': function(t, b, c, d) {
         if((t /= d) < (1 / 2.75)) {
             return c * (7.5625 * t * t) + b;
         }
@@ -291,10 +294,10 @@ Kinetic.Transitions = {
             return c * (7.5625 * (t -= (2.625 / 2.75)) * t + 0.984375) + b;
         }
     },
-    bounceEaseIn: function(t, b, c, d) {
+    'bounce-ease-in': function(t, b, c, d) {
         return c - Kinetic.Transitions.bounceEaseOut(d - t, 0, c, d) + b;
     },
-    bounceEaseInOut: function(t, b, c, d) {
+    'bounce-ease-in-out': function(t, b, c, d) {
         if(t < d / 2) {
             return Kinetic.Transitions.bounceEaseIn(t * 2, 0, c, d) * 0.5 + b;
         }
@@ -308,25 +311,25 @@ Kinetic.Transitions = {
      return c * (t /= d) * t * t * t * t + b;
      },
      */
-    regularEaseIn: function(t, b, c, d) {
+    'ease-in': function(t, b, c, d) {
         return c * (t /= d) * t + b;
     },
-    regularEaseOut: function(t, b, c, d) {
+    'ease-out': function(t, b, c, d) {
         return -c * (t /= d) * (t - 2) + b;
     },
-    regularEaseInOut: function(t, b, c, d) {
+    'ease-in-out': function(t, b, c, d) {
         if((t /= d / 2) < 1) {
             return c / 2 * t * t + b;
         }
         return -c / 2 * ((--t) * (t - 2) - 1) + b;
     },
-    strongEaseIn: function(t, b, c, d) {
+    'strong-ease-in': function(t, b, c, d) {
         return c * (t /= d) * t * t * t * t + b;
     },
-    strongEaseOut: function(t, b, c, d) {
+    'strong-ease-out': function(t, b, c, d) {
         return c * (( t = t / d - 1) * t * t * t * t + 1) + b;
     },
-    strongEaseInOut: function(t, b, c, d) {
+    'strong-ease-in-out': function(t, b, c, d) {
         if((t /= d / 2) < 1) {
             return c / 2 * t * t * t * t * t + b;
         }

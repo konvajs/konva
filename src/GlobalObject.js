@@ -35,141 +35,32 @@ Kinetic.GlobalObject = {
             }
         }
     },
-    /*
-     _endTransition: function() {
-     var config = this.config;
-     for(var key in config) {
-     if(config.hasOwnProperty(key)) {
-     if(config[key].x !== undefined || config[key].y !== undefined) {
-     var propArray = ['x', 'y'];
-     for(var n = 0; n < propArray.length; n++) {
-     var prop = propArray[n];
-     if(config[key][prop] !== undefined) {
-     this.node[key][prop] = config[key][prop];
-     }
-     }
-     }
-     else {
-     this.node[key] = config[key];
-     }
-     }
-     }
-     },
-     _transitionPow: function(transition, key, prop, powFunc) {
-     var pow = powFunc();
-
-     var config = transition.config;
-     var timeDiff = this.frame.timeDiff;
-     if(prop !== undefined) {
-     var start = transition.starts[key][prop];
-     var change = config[key][prop] - start;
-     var b = change / (Math.pow(config.duration * 1000, pow));
-     transition.node[key][prop] = b * Math.pow(transition.time, pow) + start;
-     }
-     else {
-     var start = transition.starts[key];
-     var change = config[key] - start;
-     var b = change / (Math.pow(config.duration * 1000, pow));
-     transition.node[key] = b * Math.pow(transition.time, pow) + start;
-     }
-     },
-     _chooseTransition: function(transition, key, prop) {
-     var config = transition.config;
-     var that = this;
-     switch(config.easing) {
-     case 'ease-in':
-     this._transitionPow(transition, key, prop, function() {
-     return 2.5;
-     });
-     break;
-     case 'ease-out':
-     this._transitionPow(transition, key, prop, function() {
-     return 0.4;
-     });
-     break;
-     case 'ease-in-out':
-     this._transitionPow(transition, key, prop, function() {
-     var change = -2.1;
-     var b = change / (config.duration * 1000);
-     return 2.5 + b * transition.time;
-     });
-     break;
-     // linear is default
-     default:
-     this._transitionPow(transition, key, prop, function() {
-     return 1;
-     });
-     break;
-     }
-     },
-     _runTransition: function(transition) {
-     var config = transition.config;
-     for(var key in config) {
-     if(config.hasOwnProperty(key) && key !== 'duration' && key !== 'easing' && key !== 'callback') {
-     if(config[key].x !== undefined || config[key].y !== undefined) {
-     var propArray = ['x', 'y'];
-     for(var n = 0; n < propArray.length; n++) {
-     var prop = propArray[n];
-     if(config[key][prop] !== undefined) {
-     this._chooseTransition(transition, key, prop);
-     }
-     }
-     }
-     else {
-     this._chooseTransition(transition, key);
-     }
-     }
-     }
-     },
-     _clearTransition: function(node) {
-     var layer = node.getLayer();
-     for(var n = 0; n < layer.transitions.length; n++) {
-     if(layer.transitions[n].node.id === node.id) {
-     layer.transitions.splice(n, 1);
-     }
-     }
-     },
-     */
-    _runFrames: function() {
-        for(var n = 0; n < this.animations.length; n++) {
-            this.animations[n].func(this.frame);
+    addAnimation: function(func) {
+        this.animations.push(func);
+    },
+    removeAnimation: function(id) {
+        var animations = this.animations;
+        for(var n = 0; n < animations.length; n++) {
+            if(animations[n].id === id) {
+                this.animations.splice(n, 1);
+                return false;
+            }
         }
+    },
+    _runFrames: function() {
+        var draws = {};
+        for(var n = 0; n < this.animations.length; n++) {
+            var anim = this.animations[n];
+            draws[anim.drawId] = anim.draw;
+            anim.func(this.frame);
+        }
+
         /*
-         for(var n = 0; n < this.stages.length; n++) {
-         var stage = this.stages[n];
-         // run animation if available
-         if(stage.isAnimating && stage.onFrameFunc !== undefined) {
-         stage.onFrameFunc(this.frame);
-         }
-
-         // loop through layers
-         var layers = stage.getChildren();
-         for(var k = 0; k < layers.length; k++) {
-         var layer = layers[k];
-         var didTransition = false;
-         // loop through transitions
-         for(var i = 0; i < layer.transitions.length; i++) {
-         didTransition = true;
-         var transition = layer.transitions[i];
-         transition.time += this.frame.timeDiff;
-         if(transition.time >= transition.config.duration * 1000) {
-         this._endTransition.apply(transition);
-         this._clearTransition(transition.node);
-         if(transition.config.callback !== undefined) {
-         transition.config.callback();
-         }
-         }
-         else {
-         this._runTransition(transition);
-         }
-         }
-
-         if(didTransition) {
-         layer.draw();
-         }
-         }
-         }
+         * draw all necessary layers or stages
          */
+        for(var key in draws) {
+            draws[key].draw();
+        }
     },
     _updateFrameObject: function() {
         var date = new Date();
