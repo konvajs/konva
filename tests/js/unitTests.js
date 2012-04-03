@@ -1809,17 +1809,11 @@ Test.prototype.tests = {
             rect.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
             layer.draw();
         });
-        test(stage.isAnimating === false, 'stage should not be animating');
-        test(Kinetic.GlobalObject._isaCanvasAnimating() === false, 'global object should not be animating');
+        // TODO: need to re-add support for stop
 
         stage.start();
 
-        test(stage.isAnimating === true, 'stage should be animating');
-        test(Kinetic.GlobalObject._isaCanvasAnimating() === true, 'global object should be animating');
-
         stage.stop();
 
-        test(stage.isAnimating === false, 'stage should not be animating');
-        test(Kinetic.GlobalObject._isaCanvasAnimating() === false, 'global object should not be animating');
     }
 };

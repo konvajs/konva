@@ -622,7 +622,6 @@ Kinetic.Node.prototype = {
         if(config[key][prop] !== undefined) {
             var id = go.animIdCounter++;
             var tween = new Kinetic.Transition(that, function(i) {
-                console.log(prop);
                 that[key][prop] = i;
             }, Kinetic.Transitions[easing], that[key][prop], config[key][prop], config.duration);
 

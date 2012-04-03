@@ -10,7 +10,7 @@ function log(message) {
  * Test constructor
  */
 function Test() {
-    this.testOnly = 'TRANSITION - transition position and rotation';
+    this.testOnly = '';
     this.counter = 0;
 }
 /**

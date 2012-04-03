@@ -51,13 +51,12 @@ Kinetic.GlobalObject = {
         var draws = {};
         for(var n = 0; n < this.animations.length; n++) {
             var anim = this.animations[n];
-            draws[anim.drawId] = anim.draw;
+            if(anim.drawId) {
+                draws[anim.drawId] = anim.draw;
+            }
             anim.func(this.frame);
         }
 
-        /*
-         * draw all necessary layers or stages
-         */
         for(var key in draws) {
             draws[key].draw();
         }

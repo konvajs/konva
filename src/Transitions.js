@@ -1,3 +1,6 @@
+/*
+ * This class was ported from a Flash Tween library to JavaScript by Xaric.
+ */
 Kinetic.Transition = function(obj, propFunc, func, begin, finish, duration) {
     this._listeners = [];
     this.addListener(this);
@@ -6,32 +9,17 @@ Kinetic.Transition = function(obj, propFunc, func, begin, finish, duration) {
     this.begin = begin;
     this._pos = begin;
     this.setDuration(duration);
-
     this.isPlaying = false;
-
     this._change = 0;
-
     this.prevTime = 0;
     this.prevPos = 0;
     this.looping = false;
-
     this._time = 0;
     this._position = 0;
     this._startTime = 0;
     this._finish = 0;
-
     this.name = '';
-
-    //set the tweening function
-    if(func !== null && func !== '') {
-        this.func = func;
-    }
-    else {
-        this.func = function(t, b, c, d) {
-            return c * t / d + b;
-        };
-    }
-
+    this.func = func;
     this.setFinish(finish);
 };
 
@@ -334,5 +322,8 @@ Kinetic.Transitions = {
             return c / 2 * t * t * t * t * t + b;
         }
         return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
-    }
+    },
+    'linear': function(t, b, c, d) {
+        return c * t / d + b;
+    },
 };

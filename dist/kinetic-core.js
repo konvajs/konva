@@ -79,13 +79,12 @@ Kinetic.GlobalObject = {
         var draws = {};
         for(var n = 0; n < this.animations.length; n++) {
             var anim = this.animations[n];
-            draws[anim.drawId] = anim.draw;
+            if(anim.drawId) {
+                draws[anim.drawId] = anim.draw;
+            }
             anim.func(this.frame);
         }
 
-        /*
-         * draw all necessary layers or stages
-         */
         for(var key in draws) {
             draws[key].draw();
         }
@@ -757,7 +756,6 @@ Kinetic.Node.prototype = {
         if(config[key][prop] !== undefined) {
             var id = go.animIdCounter++;
             var tween = new Kinetic.Transition(that, function(i) {
-                console.log(prop);
                 that[key][prop] = i;
             }, Kinetic.Transitions[easing], that[key][prop], config[key][prop], config.duration);
 
@@ -2860,32 +2858,17 @@ Kinetic.Transition = function(obj, propFunc, func, begin, finish, duration) {
     this.begin = begin;
     this._pos = begin;
     this.setDuration(duration);
-
     this.isPlaying = false;
-
     this._change = 0;
-
     this.prevTime = 0;
     this.prevPos = 0;
     this.looping = false;
-
     this._time = 0;
     this._position = 0;
     this._startTime = 0;
     this._finish = 0;
-
     this.name = '';
-
-    //set the tweening function
-    if(func !== null && func !== '') {
-        this.func = func;
-    }
-    else {
-        this.func = function(t, b, c, d) {
-            return c * t / d + b;
-        };
-    }
-
+    this.func = func;
     this.setFinish(finish);
 };
 
@@ -3188,6 +3171,9 @@ Kinetic.Transitions = {
             return c / 2 * t * t * t * t * t + b;
         }
         return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
-    }
+    },
+    'linear': function(t, b, c, d) {
+        return c * t / d + b;
+    },
 };
 
