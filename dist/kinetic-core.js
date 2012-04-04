@@ -3164,6 +3164,7 @@ Kinetic.Tweens = {
         return (a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b);
     },
     'elastic-ease-in-out': function(t, b, c, d, a, p) {
+    	// added s = 0
         var s = 0;
         if(t === 0) {
             return b;
@@ -3201,14 +3202,14 @@ Kinetic.Tweens = {
         }
     },
     'bounce-ease-in': function(t, b, c, d) {
-        return c - Kinetic.Tweens.bounceEaseOut(d - t, 0, c, d) + b;
+        return c - Kinetic.Tweens['bounce-ease-out'](d - t, 0, c, d) + b;
     },
     'bounce-ease-in-out': function(t, b, c, d) {
         if(t < d / 2) {
-            return Kinetic.Tweens.bounceEaseIn(t * 2, 0, c, d) * 0.5 + b;
+            return Kinetic.Tweens['bounce-ease-in'](t * 2, 0, c, d) * 0.5 + b;
         }
         else {
-            return Kinetic.Tweens.bounceEaseOut(t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b;
+            return Kinetic.Tweens['bounce-ease-out'](t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b;
         }
     },
     // duplicate
