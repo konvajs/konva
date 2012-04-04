@@ -1,5 +1,5 @@
 /*
-* The Tween class was ported from a Adobe Flash Tween library
+* The Tween class was ported from an Adobe Flash Tween library
 * to JavaScript by Xaric.  In the context of KineticJS, a Tween is
 * an animation of a single Node property.  A Transition is a set of
 * multiple tweens
@@ -8,6 +8,9 @@
 /**
  * Transition constructor.  KineticJS transitions contain
  * multiple Tweens
+ * @constructor
+ * @param {Kinetic.Node} node
+ * @param {Object} config
  */
 Kinetic.Transition = function(node, config) {
     this.node = node;
@@ -17,14 +20,14 @@ Kinetic.Transition = function(node, config) {
     // add tween for each property
     for(var key in config) {
         if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
-            if(config[key].x !== undefined) {
-                this.add(that._getComponentTween(key, 'x', config));
-            }
-            else if(config[key].y !== undefined) {
-                this.add(that._getComponentTween(key, 'y', config));
-            }
-            else {
+            if(config[key].x === undefined && config[key].y === undefined) {
                 this.add(this._getTween(key, config));
+            }
+            if(config[key].x !== undefined) {
+                this.add(this._getComponentTween(key, 'x', config));
+            }
+            if(config[key].y !== undefined) {
+                this.add(this._getComponentTween(key, 'y', config));
             }
         }
     }
@@ -33,17 +36,43 @@ Kinetic.Transition = function(node, config) {
  * Transition methods
  */
 Kinetic.Transition.prototype = {
+    /**
+     * add tween to tweens array
+     * @param {Kinetic.Tween} tween
+     */
     add: function(tween) {
         this.tweens.push(tween);
     },
+    /**
+     * start transition
+     */
     start: function() {
         for(var n = 0; n < this.tweens.length; n++) {
             this.tweens[n].start();
         }
     },
-    run: function() {
+    /**
+     * onEnterFrame
+     */
+    onEnterFrame: function() {
         for(var n = 0; n < this.tweens.length; n++) {
             this.tweens[n].onEnterFrame();
+        }
+    },
+    /**
+     * stop transition
+     */
+    stop: function() {
+        for(var n = 0; n < this.tweens.length; n++) {
+            this.tweens[n].stop();
+        }
+    },
+    /**
+     * resume transition
+     */
+    resume: function() {
+        for(var n = 0; n < this.tweens.length; n++) {
+            this.tweens[n].resume();
         }
     },
     _getTween: function(key) {

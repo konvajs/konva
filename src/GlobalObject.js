@@ -49,17 +49,17 @@ Kinetic.GlobalObject = {
         }
     },
     _runFrames: function() {
-        var draws = {};
+        var nodes = {};
         for(var n = 0; n < this.animations.length; n++) {
             var anim = this.animations[n];
-            if(anim.drawId) {
-                draws[anim.drawId] = anim.draw;
+            if(anim.node && anim.node.id !== undefined) {
+                nodes[anim.node.id] = anim.node;
             }
             anim.func(this.frame);
         }
 
-        for(var key in draws) {
-            draws[key].draw();
+        for(var key in nodes) {
+            nodes[key].draw();
         }
     },
     _updateFrameObject: function() {

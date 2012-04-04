@@ -77,17 +77,17 @@ Kinetic.GlobalObject = {
         }
     },
     _runFrames: function() {
-        var draws = {};
+        var nodes = {};
         for(var n = 0; n < this.animations.length; n++) {
             var anim = this.animations[n];
-            if(anim.drawId) {
-                draws[anim.drawId] = anim.draw;
+            if(anim.node && anim.node.id !== undefined) {
+                nodes[anim.node.id] = anim.node;
             }
             anim.func(this.frame);
         }
 
-        for(var key in draws) {
-            draws[key].draw();
+        for(var key in nodes) {
+            nodes[key].draw();
         }
     },
     _updateFrameObject: function() {
@@ -609,29 +609,46 @@ Kinetic.Node.prototype = {
      *  radius, scale.x, scale.y, centerOffset.x, centerOffset.y, etc.
      * @param {Object} config
      * @config {Number} [duration] duration that the transition runs in seconds
-     * @config {String} [easing] easing function.  can be linear, ease-in, ease-out, or ease-in-out.
+     * @config {String} [easing] easing function.  can be linear, ease-in, ease-out, ease-in-out,
+     *  back-ease-in, back-ease-out, back-ease-in-out, elastic-ease-in, elastic-ease-out,
+     *  elastic-ease-in-out, bounce-ease-out, bounce-ease-in, bounce-ease-in-out,
+     *  strong-ease-in, strong-ease-out, or strong-ease-in-out
      *  linear is the default
      * @config {Function} [callback] callback function to be executed when
      *  transition completes
      */
     transitionTo: function(config) {
-        var layer = this.getLayer();
+        var node = this.className === 'Stage' ? this : this.getLayer();
         var that = this;
         var go = Kinetic.GlobalObject;
-
         var trans = new Kinetic.Transition(this, config);
-
-        go.addAnimation({
+        var anim = {
             func: function() {
-                trans.run();
+                trans.onEnterFrame();
             },
-            drawId: layer.id,
-            draw: layer
-        });
+            node: node
+        };
+        
+        /*
+         * adding the animation with the addAnimation
+         * method auto generates an id
+         */
+        go.addAnimation(anim);
 
+        // subscribe to onFinished for first tween
+        trans.tweens[0].onFinished = function() {
+            go.removeAnimation(anim.id);
+            if(config.callback !== undefined) {
+                config.callback();
+            }
+        };
+        
+        // auto start
         trans.start();
 
         go._handleAnimation();
+
+        return trans;
     },
     /**
      * set drag constraint
@@ -2791,7 +2808,7 @@ Kinetic.Transform.prototype = {
 };
 
 /*
-* The Tween class was ported from a Adobe Flash Tween library
+* The Tween class was ported from an Adobe Flash Tween library
 * to JavaScript by Xaric.  In the context of KineticJS, a Tween is
 * an animation of a single Node property.  A Transition is a set of
 * multiple tweens
@@ -2800,6 +2817,9 @@ Kinetic.Transform.prototype = {
 /**
  * Transition constructor.  KineticJS transitions contain
  * multiple Tweens
+ * @constructor
+ * @param {Kinetic.Node} node
+ * @param {Object} config
  */
 Kinetic.Transition = function(node, config) {
     this.node = node;
@@ -2809,14 +2829,14 @@ Kinetic.Transition = function(node, config) {
     // add tween for each property
     for(var key in config) {
         if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
-            if(config[key].x !== undefined) {
-                this.add(that._getComponentTween(key, 'x', config));
-            }
-            else if(config[key].y !== undefined) {
-                this.add(that._getComponentTween(key, 'y', config));
-            }
-            else {
+            if(config[key].x === undefined && config[key].y === undefined) {
                 this.add(this._getTween(key, config));
+            }
+            if(config[key].x !== undefined) {
+                this.add(this._getComponentTween(key, 'x', config));
+            }
+            if(config[key].y !== undefined) {
+                this.add(this._getComponentTween(key, 'y', config));
             }
         }
     }
@@ -2825,17 +2845,43 @@ Kinetic.Transition = function(node, config) {
  * Transition methods
  */
 Kinetic.Transition.prototype = {
+    /**
+     * add tween to tweens array
+     * @param {Kinetic.Tween} tween
+     */
     add: function(tween) {
         this.tweens.push(tween);
     },
+    /**
+     * start transition
+     */
     start: function() {
         for(var n = 0; n < this.tweens.length; n++) {
             this.tweens[n].start();
         }
     },
-    run: function() {
+    /**
+     * onEnterFrame
+     */
+    onEnterFrame: function() {
         for(var n = 0; n < this.tweens.length; n++) {
             this.tweens[n].onEnterFrame();
+        }
+    },
+    /**
+     * stop transition
+     */
+    stop: function() {
+        for(var n = 0; n < this.tweens.length; n++) {
+            this.tweens[n].stop();
+        }
+    },
+    /**
+     * resume transition
+     */
+    resume: function() {
+        for(var n = 0; n < this.tweens.length; n++) {
+            this.tweens[n].resume();
         }
     },
     _getTween: function(key) {

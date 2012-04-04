@@ -27,6 +27,100 @@ Test.prototype.tests = {
             easing: 'bounce-ease-out'
         });
     },
+    'TRANSITION - transition callback': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 100,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        rect.transitionTo({
+            duration: 2,
+            x: 400,
+            y: 30,
+            rotation: Math.PI * 2,
+            easing: 'bounce-ease-out',
+            callback: function() {
+                console.log('transition done!');
+            }
+        });
+    },
+    'TRANSITION - stop and resume transition': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 100,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        var trans = rect.transitionTo({
+            duration: 2,
+            x: 400,
+            y: 30,
+            rotation: Math.PI * 2,
+            easing: 'bounce-ease-out'
+        });
+
+        setTimeout(function() {
+            trans.stop();
+        }, 1000);
+        setTimeout(function() {
+            trans.resume();
+        }, 2000);
+    },
+    'TRANSITION - transition stage': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 100,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        var trans = stage.transitionTo({
+            duration: 2,
+            x: 400,
+            y: 30,
+            rotation: Math.PI * 2,
+            easing: 'bounce-ease-out'
+        });
+    },
     'TRANSITION - transition position and rotation with two transitions': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

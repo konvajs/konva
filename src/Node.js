@@ -474,29 +474,46 @@ Kinetic.Node.prototype = {
      *  radius, scale.x, scale.y, centerOffset.x, centerOffset.y, etc.
      * @param {Object} config
      * @config {Number} [duration] duration that the transition runs in seconds
-     * @config {String} [easing] easing function.  can be linear, ease-in, ease-out, or ease-in-out.
+     * @config {String} [easing] easing function.  can be linear, ease-in, ease-out, ease-in-out,
+     *  back-ease-in, back-ease-out, back-ease-in-out, elastic-ease-in, elastic-ease-out,
+     *  elastic-ease-in-out, bounce-ease-out, bounce-ease-in, bounce-ease-in-out,
+     *  strong-ease-in, strong-ease-out, or strong-ease-in-out
      *  linear is the default
      * @config {Function} [callback] callback function to be executed when
      *  transition completes
      */
     transitionTo: function(config) {
-        var layer = this.getLayer();
+        var node = this.className === 'Stage' ? this : this.getLayer();
         var that = this;
         var go = Kinetic.GlobalObject;
-
         var trans = new Kinetic.Transition(this, config);
-
-        go.addAnimation({
+        var anim = {
             func: function() {
-                trans.run();
+                trans.onEnterFrame();
             },
-            drawId: layer.id,
-            draw: layer
-        });
+            node: node
+        };
+        
+        /*
+         * adding the animation with the addAnimation
+         * method auto generates an id
+         */
+        go.addAnimation(anim);
 
+        // subscribe to onFinished for first tween
+        trans.tweens[0].onFinished = function() {
+            go.removeAnimation(anim.id);
+            if(config.callback !== undefined) {
+                config.callback();
+            }
+        };
+        
+        // auto start
         trans.start();
 
         go._handleAnimation();
+
+        return trans;
     },
     /**
      * set drag constraint
