@@ -35,8 +35,9 @@ Kinetic.GlobalObject = {
             }
         }
     },
-    addAnimation: function(func) {
-        this.animations.push(func);
+    addAnimation: function(anim) {
+        anim.id = Kinetic.GlobalObject.animIdCounter++;
+        this.animations.push(anim);
     },
     removeAnimation: function(id) {
         var animations = this.animations;

@@ -24,12 +24,7 @@ Test.prototype.tests = {
             x: 400,
             y: 30,
             rotation: Math.PI * 2,
-            easing: 'bounce-ease-out',
-            on: {
-                finished: function() {
-                    console.log('finished');
-                }
-            }
+            easing: 'bounce-ease-out'
         });
     },
     'TRANSITION - transition position and rotation with two transitions': function(containerId) {

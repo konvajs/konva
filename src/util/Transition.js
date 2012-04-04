@@ -1,7 +1,85 @@
 /*
- * This class was ported from a Flash Tween library to JavaScript by Xaric.
+* The Tween class was ported from a Adobe Flash Tween library
+* to JavaScript by Xaric.  In the context of KineticJS, a Tween is
+* an animation of a single Node property.  A Transition is a set of
+* multiple tweens
+*/
+
+/**
+ * Transition constructor.  KineticJS transitions contain
+ * multiple Tweens
  */
-Kinetic.Transition = function(obj, propFunc, func, begin, finish, duration) {
+Kinetic.Transition = function(node, config) {
+    this.node = node;
+    this.config = config;
+    this.tweens = [];
+
+    // add tween for each property
+    for(var key in config) {
+        if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
+            if(config[key].x !== undefined) {
+                this.add(that._getComponentTween(key, 'x', config));
+            }
+            else if(config[key].y !== undefined) {
+                this.add(that._getComponentTween(key, 'y', config));
+            }
+            else {
+                this.add(this._getTween(key, config));
+            }
+        }
+    }
+};
+/*
+ * Transition methods
+ */
+Kinetic.Transition.prototype = {
+    add: function(tween) {
+        this.tweens.push(tween);
+    },
+    start: function() {
+        for(var n = 0; n < this.tweens.length; n++) {
+            this.tweens[n].start();
+        }
+    },
+    run: function() {
+        for(var n = 0; n < this.tweens.length; n++) {
+            this.tweens[n].onEnterFrame();
+        }
+    },
+    _getTween: function(key) {
+        var config = this.config;
+        var node = this.node;
+        var easing = config.easing;
+        if(easing === undefined) {
+            easing = 'linear';
+        }
+
+        var tween = new Kinetic.Tween(node, function(i) {
+            node[key] = i;
+        }, Kinetic.Tweens[easing], node[key], config[key], config.duration);
+
+        return tween;
+    },
+    _getComponentTween: function(key, prop) {
+        var config = this.config;
+        var node = this.node;
+        var easing = config.easing;
+        if(easing === undefined) {
+            easing = 'linear';
+        }
+
+        var tween = new Kinetic.Tween(node, function(i) {
+            node[key][prop] = i;
+        }, Kinetic.Tweens[easing], node[key][prop], config[key][prop], config.duration);
+
+        return tween;
+    },
+};
+
+/**
+ * Tween constructor
+ */
+Kinetic.Tween = function(obj, propFunc, func, begin, finish, duration) {
     this._listeners = [];
     this.addListener(this);
     this.obj = obj;
@@ -22,8 +100,10 @@ Kinetic.Transition = function(obj, propFunc, func, begin, finish, duration) {
     this.func = func;
     this.setFinish(finish);
 };
-
-Kinetic.Transition.prototype = {
+/*
+ * Tween methods
+ */
+Kinetic.Tween.prototype = {
     setTime: function(t) {
         this.prevTime = this._time;
         if(t > this.getDuration()) {
@@ -187,7 +267,7 @@ Kinetic.Transition.prototype = {
     }
 };
 
-Kinetic.Transitions = {
+Kinetic.Tweens = {
     'back-ease-in': function(t, b, c, d, a, p) {
         var s = 1.70158;
         return c * (t /= d) * t * ((s + 1) * t - s) + b;
@@ -283,14 +363,14 @@ Kinetic.Transitions = {
         }
     },
     'bounce-ease-in': function(t, b, c, d) {
-        return c - Kinetic.Transitions.bounceEaseOut(d - t, 0, c, d) + b;
+        return c - Kinetic.Tweens.bounceEaseOut(d - t, 0, c, d) + b;
     },
     'bounce-ease-in-out': function(t, b, c, d) {
         if(t < d / 2) {
-            return Kinetic.Transitions.bounceEaseIn(t * 2, 0, c, d) * 0.5 + b;
+            return Kinetic.Tweens.bounceEaseIn(t * 2, 0, c, d) * 0.5 + b;
         }
         else {
-            return Kinetic.Transitions.bounceEaseOut(t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b;
+            return Kinetic.Tweens.bounceEaseOut(t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b;
         }
     },
     // duplicate
