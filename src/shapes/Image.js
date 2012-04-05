@@ -8,6 +8,8 @@
  * @param {Object} config
  */
 Kinetic.Image = function(config) {
+	this.shapeType = "Image";
+	
     // defaults
     if(config.width === undefined) {
         config.width = config.image.width;

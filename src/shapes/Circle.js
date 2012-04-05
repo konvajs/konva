@@ -8,15 +8,20 @@
  * @param {Object} config
  */
 Kinetic.Circle = function(config) {
+    this.shapeType = "Circle";
+
     config.drawFunc = function() {
         var canvas = this.getCanvas();
         var context = this.getContext();
-        context.beginPath();  
+        context.beginPath();
         this.applyLineJoin();
         context.arc(0, 0, this.radius, 0, Math.PI * 2, true);
         context.closePath();
         this.fillStroke();
     };
+    // used for serialization
+    Kinetic.GlobalObject.jsonProps.call(this, ['radius']);
+
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
 };

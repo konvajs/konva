@@ -35,7 +35,7 @@ Kinetic.Shape = function(config) {
     this.drawFunc = config.drawFunc;
 
     // used for serialization
-    Kinetic.GlobalObject.jsonProps.call(this, ['fill', 'stroke', 'strokeWidth', 'detectionType']);
+    Kinetic.GlobalObject.jsonProps.call(this, ['fill', 'stroke', 'strokeWidth', 'detectionType', 'shapeType']);
 
     // call super constructor
     Kinetic.Node.apply(this, [config]);

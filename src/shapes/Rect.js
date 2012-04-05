@@ -8,6 +8,8 @@
  * @param {Object} config
  */
 Kinetic.Rect = function(config) {
+	this.shapeType = "Rect";
+	
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();

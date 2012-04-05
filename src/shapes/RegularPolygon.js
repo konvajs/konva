@@ -8,6 +8,8 @@
  * @param {Object} config
  */
 Kinetic.RegularPolygon = function(config) {
+	this.shapeType = "RegularPolygon";
+	
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();

@@ -8,6 +8,8 @@
  * @param {Object} config
  */
 Kinetic.Text = function(config) {
+	this.shapeType = "Text";
+	
     /*
      * defaults
      */

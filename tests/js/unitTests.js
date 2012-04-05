@@ -89,6 +89,17 @@ Test.prototype.tests = {
         
         console.log(stage.toJSON());
     },
+    'STAGE - load stage with json': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        
+        stage.load('{"nodeType":"Stage","width":578,"height":200,"scale":{"x":1,"y":1},"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Layer","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Group","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"shapeType":"Circle","nodeType":"Shape","detectionType":"path","visible":true,"listening":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"radius":70,"fill":"green","stroke":"black","strokeWidth":4}]}]}]}');
+
+		console.log(stage.toJSON());
+    },
     'STAGE - set stage size': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

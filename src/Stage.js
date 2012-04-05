@@ -187,8 +187,8 @@ Kinetic.Stage.prototype = {
      * serialize stage and children as JSON object
      */
     toJSON: function() {
-    	var go = Kinetic.GlobalObject;
-    	
+        var go = Kinetic.GlobalObject;
+
         function addNode(node) {
             var obj = {};
 
@@ -199,23 +199,58 @@ Kinetic.Stage.prototype = {
                 }
             }
 
-            if(node.nodeType === 'Shape') {
-            }
-            else {
-                obj.children = [];
+            if(node.nodeType !== 'Shape') {
+                obj._children = [];
                 var children = node.getChildren();
                 for(var n = 0; n < children.length; n++) {
                     var child = children[n];
-
-                    obj.children.push(addNode(child));
+                    obj._children.push(addNode(child));
                 }
             }
 
             return obj;
         }
-        var obj = addNode(this);
+        return JSON.stringify(addNode(this));
+    },
+    /**
+     * load stage with JSON string
+     */
+    load: function(json) {
+        function loadNode(node, obj) {
+            // copy properties over
+            for(var key in obj) {
+                node[key] = obj[key];
+            }
 
-        return obj;
+            var children = obj._children;
+            if(children !== undefined) {
+                for(var n = 0; n < children.length; n++) {
+                    var child = children[n];
+                    var type;
+
+                    // determine type
+                    if(child.nodeType === 'Shape') {
+                        // add custom shape
+                        if(child.shapeType === undefined) {
+                            type = 'Shape';
+                        }
+                        // add standard shape
+                        else {
+                            type = child.shapeType;
+                        }
+                    }
+                    else {
+                        type = child.nodeType;
+                    }
+
+                    var no = new Kinetic[type]({});
+                    node.add(no);
+                    loadNode(no, child);
+                }
+            }
+        }
+        loadNode(this, JSON.parse(json));
+        this.draw();
     },
     /**
      * remove layer from stage

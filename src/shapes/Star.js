@@ -8,6 +8,8 @@
  * @param {Object} config
  */
 Kinetic.Star = function(config) {
+	this.shapeType = "Star";
+	
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();

@@ -59,7 +59,7 @@ Kinetic.Node = function(config) {
     }
 
     // used for serialization
-    Kinetic.GlobalObject.jsonProps.call(this, ['alpha', 'centerOffset', 'dragBounds', 'dragConstraint', '_draggable', 'id', 'listening', 'name', 'nodeType', 'rotation', 'scale', 'visible', 'x', 'y']);
+    Kinetic.GlobalObject.jsonProps.call(this, ['alpha', 'centerOffset', 'dragBounds', 'dragConstraint', '_draggable', 'listening', 'name', 'nodeType', 'rotation', 'scale', 'visible', 'x', 'y']);
 };
 /*
  * Node methods

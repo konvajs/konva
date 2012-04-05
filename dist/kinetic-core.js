@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Apr 04 2012
+ * Date: Apr 05 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -210,7 +210,7 @@ Kinetic.Node = function(config) {
     }
 
     // used for serialization
-    Kinetic.GlobalObject.jsonProps.call(this, ['alpha', 'centerOffset', 'dragBounds', 'dragConstraint', '_draggable', 'id', 'listening', 'name', 'nodeType', 'rotation', 'scale', 'visible', 'x', 'y']);
+    Kinetic.GlobalObject.jsonProps.call(this, ['alpha', 'centerOffset', 'dragBounds', 'dragConstraint', '_draggable', 'listening', 'name', 'nodeType', 'rotation', 'scale', 'visible', 'x', 'y']);
 };
 /*
  * Node methods
@@ -1121,8 +1121,8 @@ Kinetic.Stage.prototype = {
      * serialize stage and children as JSON object
      */
     toJSON: function() {
-    	var go = Kinetic.GlobalObject;
-    	
+        var go = Kinetic.GlobalObject;
+
         function addNode(node) {
             var obj = {};
 
@@ -1133,23 +1133,58 @@ Kinetic.Stage.prototype = {
                 }
             }
 
-            if(node.nodeType === 'Shape') {
-            }
-            else {
-                obj.children = [];
+            if(node.nodeType !== 'Shape') {
+                obj._children = [];
                 var children = node.getChildren();
                 for(var n = 0; n < children.length; n++) {
                     var child = children[n];
-
-                    obj.children.push(addNode(child));
+                    obj._children.push(addNode(child));
                 }
             }
 
             return obj;
         }
-        var obj = addNode(this);
+        return JSON.stringify(addNode(this));
+    },
+    /**
+     * load stage with JSON string
+     */
+    load: function(json) {
+        function loadNode(node, obj) {
+            // copy properties over
+            for(var key in obj) {
+                node[key] = obj[key];
+            }
 
-        return obj;
+            var children = obj._children;
+            if(children !== undefined) {
+                for(var n = 0; n < children.length; n++) {
+                    var child = children[n];
+                    var type;
+
+                    // determine type
+                    if(child.nodeType === 'Shape') {
+                        // add custom shape
+                        if(child.shapeType === undefined) {
+                            type = 'Shape';
+                        }
+                        // add standard shape
+                        else {
+                            type = child.shapeType;
+                        }
+                    }
+                    else {
+                        type = child.nodeType;
+                    }
+
+                    var no = new Kinetic[type]({});
+                    node.add(no);
+                    loadNode(no, child);
+                }
+            }
+        }
+        loadNode(this, JSON.parse(json));
+        this.draw();
     },
     /**
      * remove layer from stage
@@ -1899,7 +1934,7 @@ Kinetic.Shape = function(config) {
     this.drawFunc = config.drawFunc;
 
     // used for serialization
-    Kinetic.GlobalObject.jsonProps.call(this, ['fill', 'stroke', 'strokeWidth', 'detectionType']);
+    Kinetic.GlobalObject.jsonProps.call(this, ['fill', 'stroke', 'strokeWidth', 'detectionType', 'shapeType']);
 
     // call super constructor
     Kinetic.Node.apply(this, [config]);
@@ -2101,6 +2136,8 @@ Kinetic.GlobalObject.extend(Kinetic.Shape, Kinetic.Node);
  * @param {Object} config
  */
 Kinetic.Rect = function(config) {
+	this.shapeType = "Rect";
+	
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
@@ -2175,15 +2212,20 @@ Kinetic.GlobalObject.extend(Kinetic.Rect, Kinetic.Shape);
  * @param {Object} config
  */
 Kinetic.Circle = function(config) {
+    this.shapeType = "Circle";
+
     config.drawFunc = function() {
         var canvas = this.getCanvas();
         var context = this.getContext();
-        context.beginPath();  
+        context.beginPath();
         this.applyLineJoin();
         context.arc(0, 0, this.radius, 0, Math.PI * 2, true);
         context.closePath();
         this.fillStroke();
     };
+    // used for serialization
+    Kinetic.GlobalObject.jsonProps.call(this, ['radius']);
+
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
 };
@@ -2219,6 +2261,8 @@ Kinetic.GlobalObject.extend(Kinetic.Circle, Kinetic.Shape);
  * @param {Object} config
  */
 Kinetic.Image = function(config) {
+	this.shapeType = "Image";
+	
     // defaults
     if(config.width === undefined) {
         config.width = config.image.width;
@@ -2315,6 +2359,8 @@ Kinetic.GlobalObject.extend(Kinetic.Image, Kinetic.Shape);
  * @param {Object} config
  */
 Kinetic.Polygon = function(config) {
+	this.shapeType = "Polygon";
+	
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
@@ -2361,6 +2407,8 @@ Kinetic.GlobalObject.extend(Kinetic.Polygon, Kinetic.Shape);
  * @param {Object} config
  */
 Kinetic.RegularPolygon = function(config) {
+	this.shapeType = "RegularPolygon";
+	
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
@@ -2436,6 +2484,8 @@ Kinetic.GlobalObject.extend(Kinetic.RegularPolygon, Kinetic.Shape);
  * @param {Object} config
  */
 Kinetic.Star = function(config) {
+	this.shapeType = "Star";
+	
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
@@ -2511,6 +2561,8 @@ Kinetic.GlobalObject.extend(Kinetic.Star, Kinetic.Shape);
  * @param {Object} config
  */
 Kinetic.Text = function(config) {
+	this.shapeType = "Text";
+	
     /*
      * defaults
      */
