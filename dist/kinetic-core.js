@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Apr 03 2012
+ * Date: Apr 04 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1948,7 +1948,7 @@ Kinetic.Shape.prototype = {
         this.drawFunc = func;
     },
     /**
-     * save shape data when using pixel detection. 
+     * save shape data when using pixel detection.
      */
     save: function() {
         var stage = this.getStage();
@@ -1994,6 +1994,11 @@ Kinetic.Shape.prototype = {
             this.tempLayer = layer;
             this.drawFunc.call(this);
             context.restore();
+        }
+
+        // clear shape data
+        if(this.detectionType === 'pixel') {
+            this.data = [];
         }
     },
     /**

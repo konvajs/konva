@@ -146,7 +146,7 @@ Kinetic.Shape.prototype = {
         this.drawFunc = func;
     },
     /**
-     * save shape data when using pixel detection. 
+     * save shape data when using pixel detection.
      */
     save: function() {
         var stage = this.getStage();
@@ -192,6 +192,11 @@ Kinetic.Shape.prototype = {
             this.tempLayer = layer;
             this.drawFunc.call(this);
             context.restore();
+        }
+
+        // clear shape data
+        if(this.detectionType === 'pixel') {
+            this.data = [];
         }
     },
     /**

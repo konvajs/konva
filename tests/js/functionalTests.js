@@ -28,8 +28,8 @@ Test.prototype.tests = {
         });
     },
     'TRANSITION - all transition types': function(containerId) {
-    	document.getElementById(containerId).style.height = '300px';
-    	
+        document.getElementById(containerId).style.height = '300px';
+
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
