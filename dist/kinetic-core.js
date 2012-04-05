@@ -56,6 +56,22 @@ Kinetic.GlobalObject = {
             y: 0
         }
     },
+    jsonProps: function(props) {
+        if(this.jsonProps === undefined) {
+            this.jsonProps = props;
+        }
+        else {
+            this.jsonProps = this.jsonProps.concat(props);
+        }
+    },
+    arrayHas: function(arr, key) {
+        for(var n = 0; n < arr.length; n++) {
+            if(arr[n] === key) {
+                return true;
+            }
+        }
+        return false;
+    },
     extend: function(obj1, obj2) {
         for(var key in obj2.prototype) {
             if(obj2.prototype.hasOwnProperty(key) && obj1.prototype[key] === undefined) {
@@ -145,7 +161,7 @@ window.requestAnimFrame = (function(callback) {
  */
 Kinetic.Node = function(config) {
     this.visible = true;
-    this.isListening = true;
+    this.listening = true;
     this.name = undefined;
     this.alpha = 1;
     this.x = 0;
@@ -192,6 +208,9 @@ Kinetic.Node = function(config) {
     if(this.centerOffset.y === undefined) {
         this.centerOffset.y = 0;
     }
+
+    // used for serialization
+    Kinetic.GlobalObject.jsonProps.call(this, ['alpha', 'centerOffset', 'dragBounds', 'dragConstraint', '_draggable', 'id', 'listening', 'name', 'nodeType', 'rotation', 'scale', 'visible', 'x', 'y']);
 };
 /*
  * Node methods
@@ -299,7 +318,7 @@ Kinetic.Node.prototype = {
                 var child = children[n];
                 index++;
 
-                if(child.className !== 'Shape') {
+                if(child.nodeType !== 'Shape') {
                     nodes = nodes.concat(child.getChildren());
                 }
 
@@ -312,7 +331,7 @@ Kinetic.Node.prototype = {
                 addChildren(nodes);
             }
         }
-        if(that.className !== 'Stage') {
+        if(that.nodeType !== 'Stage') {
             addChildren(that.getStage().getChildren());
         }
 
@@ -427,10 +446,10 @@ Kinetic.Node.prototype = {
     },
     /**
      * listen or don't listen to events
-     * @param {Boolean} isListening
+     * @param {Boolean} listening
      */
-    listen: function(isListening) {
-        this.isListening = isListening;
+    listen: function(listening) {
+        this.listening = listening;
     },
     /**
      * move node to top
@@ -504,7 +523,7 @@ Kinetic.Node.prototype = {
         var absAlpha = 1;
         var node = this;
         // traverse upwards
-        while(node.className !== 'Stage') {
+        while(node.nodeType !== 'Stage') {
             absAlpha *= node.alpha;
             node = node.parent;
         }
@@ -564,7 +583,7 @@ Kinetic.Node.prototype = {
      * get layer associated to node
      */
     getLayer: function() {
-        if(this.className === 'Layer') {
+        if(this.nodeType === 'Layer') {
             return this;
         }
         else {
@@ -575,7 +594,7 @@ Kinetic.Node.prototype = {
      * get stage associated to node
      */
     getStage: function() {
-        if(this.className === 'Stage') {
+        if(this.nodeType === 'Stage') {
             return this;
         }
         else {
@@ -618,7 +637,7 @@ Kinetic.Node.prototype = {
      *  transition completes
      */
     transitionTo: function(config) {
-        var node = this.className === 'Stage' ? this : this.getLayer();
+        var node = this.nodeType === 'Stage' ? this : this.getLayer();
         var that = this;
         var go = Kinetic.GlobalObject;
         var trans = new Kinetic.Transition(this, config);
@@ -628,7 +647,7 @@ Kinetic.Node.prototype = {
             },
             node: node
         };
-        
+
         /*
          * adding the animation with the addAnimation
          * method auto generates an id
@@ -642,7 +661,6 @@ Kinetic.Node.prototype = {
                 config.callback();
             }
         };
-        
         // auto start
         trans.start();
 
@@ -760,7 +778,7 @@ Kinetic.Node.prototype = {
      * @param {Event} evt
      */
     _handleEvents: function(eventType, evt) {
-        if(this.className === 'Shape') {
+        if(this.nodeType === 'Shape') {
             evt.shape = this;
         }
         var stage = this.getStage();
@@ -795,7 +813,7 @@ Kinetic.Node.prototype = {
         var mouseoutParent = mouseoutNode ? mouseoutNode.parent : undefined;
 
         // simulate event bubbling
-        if(!evt.cancelBubble && node.parent.className !== 'Stage') {
+        if(!evt.cancelBubble && node.parent.nodeType !== 'Stage') {
             this._handleEvent(node.parent, mouseoverParent, mouseoutParent, eventType, evt);
         }
     }
@@ -812,6 +830,9 @@ Kinetic.Node.prototype = {
 Kinetic.Container = function() {
     this.children = [];
     this.childrenNames = {};
+
+    // used for serialization
+    Kinetic.GlobalObject.jsonProps.call(this, []);
 };
 /*
  * Container methods
@@ -860,7 +881,7 @@ Kinetic.Container.prototype = {
         var children = this.children;
         for(var n = 0; n < children.length; n++) {
             var child = children[n];
-            if(child.className === 'Shape') {
+            if(child.nodeType === 'Shape') {
                 child._draw(child.getLayer());
             }
             else {
@@ -891,7 +912,7 @@ Kinetic.Container.prototype = {
          * from the container except the buffer and backstage canvases
          * and then readd all the layers
          */
-        if(this.className === 'Stage') {
+        if(this.nodeType === 'Stage') {
             var canvases = this.content.children;
             var bufferCanvas = canvases[0];
             var backstageCanvas = canvases[1];
@@ -904,7 +925,7 @@ Kinetic.Container.prototype = {
         for(var n = 0; n < this.children.length; n++) {
             this.children[n].index = n;
 
-            if(this.className === 'Stage') {
+            if(this.nodeType === 'Stage') {
                 this.content.appendChild(this.children[n].canvas);
             }
         }
@@ -933,7 +954,7 @@ Kinetic.Stage = function(config) {
         config.container = document.getElementById(config.container);
     }
 
-    this.className = 'Stage';
+    this.nodeType = 'Stage';
     this.container = config.container;
     this.content = document.createElement('div');
 
@@ -971,6 +992,9 @@ Kinetic.Stage = function(config) {
 
     // add stage to global object
     Kinetic.GlobalObject.stages.push(this);
+
+    // used for serialization
+    Kinetic.GlobalObject.jsonProps.call(this, ['height', 'width']);
 
     // call super constructors
     Kinetic.Container.apply(this, []);
@@ -1092,6 +1116,40 @@ Kinetic.Stage.prototype = {
 
         bufferLayer.clear();
         addLayer(0);
+    },
+    /**
+     * serialize stage and children as JSON object
+     */
+    toJSON: function() {
+    	var go = Kinetic.GlobalObject;
+    	
+        function addNode(node) {
+            var obj = {};
+
+            // copy attrs
+            for(var key in node) {
+                if(node.hasOwnProperty(key) && go.arrayHas(node.jsonProps, key)) {
+                    obj[key] = node[key];
+                }
+            }
+
+            if(node.nodeType === 'Shape') {
+            }
+            else {
+                obj.children = [];
+                var children = node.getChildren();
+                for(var n = 0; n < children.length; n++) {
+                    var child = children[n];
+
+                    obj.children.push(addNode(child));
+                }
+            }
+
+            return obj;
+        }
+        var obj = addNode(this);
+
+        return obj;
     },
     /**
      * remove layer from stage
@@ -1326,8 +1384,8 @@ Kinetic.Stage.prototype = {
         // propapgate backwards through children
         for(var i = children.length - 1; i >= 0; i--) {
             var child = children[i];
-            if(child.isListening) {
-                if(child.className === 'Shape') {
+            if(child.listening) {
+                if(child.nodeType === 'Shape') {
                     var exit = this._detectEvent(child, evt);
                     if(exit) {
                         return true;
@@ -1367,7 +1425,7 @@ Kinetic.Stage.prototype = {
         var shapeDetected = false;
         for(var n = this.children.length - 1; n >= 0; n--) {
             var layer = this.children[n];
-            if(layer.visible && n >= 0 && layer.isListening) {
+            if(layer.visible && n >= 0 && layer.listening) {
                 if(this._traverseChildren(layer, evt)) {
                     n = -1;
                     shapeDetected = true;
@@ -1433,7 +1491,8 @@ Kinetic.Stage.prototype = {
 
         this.content.addEventListener('touchmove', function(evt) {
             evt.preventDefault();
-            that._handleStageEvent(evt);}, false);
+            that._handleStageEvent(evt);
+        }, false);
 
         this.content.addEventListener('touchend', function(evt) {
             evt.preventDefault();
@@ -1675,10 +1734,13 @@ Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Node);
  * @param {Object} config
  */
 Kinetic.Layer = function(config) {
-    this.className = 'Layer';
+    this.nodeType = 'Layer';
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
     this.canvas.style.position = 'absolute';
+
+    // used for serialization
+    Kinetic.GlobalObject.jsonProps.call(this, []);
 
     // call super constructors
     Kinetic.Container.apply(this, []);
@@ -1759,7 +1821,10 @@ Kinetic.GlobalObject.extend(Kinetic.Layer, Kinetic.Node);
  * @param {Object} config
  */
 Kinetic.Group = function(config) {
-    this.className = 'Group';
+    this.nodeType = 'Group';
+
+    // used for serialization
+    Kinetic.GlobalObject.jsonProps.call(this, []);
 
     // call super constructors
     Kinetic.Container.apply(this, []);
@@ -1815,7 +1880,7 @@ Kinetic.GlobalObject.extend(Kinetic.Group, Kinetic.Node);
  *  The default is "path" because it performs better
  */
 Kinetic.Shape = function(config) {
-    this.className = 'Shape';
+    this.nodeType = 'Shape';
     this.data = [];
 
     // defaults
@@ -1832,6 +1897,9 @@ Kinetic.Shape = function(config) {
 
     // required
     this.drawFunc = config.drawFunc;
+
+    // used for serialization
+    Kinetic.GlobalObject.jsonProps.call(this, ['fill', 'stroke', 'strokeWidth', 'detectionType']);
 
     // call super constructor
     Kinetic.Node.apply(this, [config]);

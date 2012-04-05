@@ -28,6 +28,22 @@ Kinetic.GlobalObject = {
             y: 0
         }
     },
+    jsonProps: function(props) {
+        if(this.jsonProps === undefined) {
+            this.jsonProps = props;
+        }
+        else {
+            this.jsonProps = this.jsonProps.concat(props);
+        }
+    },
+    arrayHas: function(arr, key) {
+        for(var n = 0; n < arr.length; n++) {
+            if(arr[n] === key) {
+                return true;
+            }
+        }
+        return false;
+    },
     extend: function(obj1, obj2) {
         for(var key in obj2.prototype) {
             if(obj2.prototype.hasOwnProperty(key) && obj1.prototype[key] === undefined) {

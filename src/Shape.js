@@ -16,7 +16,7 @@
  *  The default is "path" because it performs better
  */
 Kinetic.Shape = function(config) {
-    this.className = 'Shape';
+    this.nodeType = 'Shape';
     this.data = [];
 
     // defaults
@@ -33,6 +33,9 @@ Kinetic.Shape = function(config) {
 
     // required
     this.drawFunc = config.drawFunc;
+
+    // used for serialization
+    Kinetic.GlobalObject.jsonProps.call(this, ['fill', 'stroke', 'strokeWidth', 'detectionType']);
 
     // call super constructor
     Kinetic.Node.apply(this, [config]);

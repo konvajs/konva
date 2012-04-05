@@ -20,7 +20,7 @@ Kinetic.Stage = function(config) {
         config.container = document.getElementById(config.container);
     }
 
-    this.className = 'Stage';
+    this.nodeType = 'Stage';
     this.container = config.container;
     this.content = document.createElement('div');
 
@@ -58,6 +58,9 @@ Kinetic.Stage = function(config) {
 
     // add stage to global object
     Kinetic.GlobalObject.stages.push(this);
+
+    // used for serialization
+    Kinetic.GlobalObject.jsonProps.call(this, ['height', 'width']);
 
     // call super constructors
     Kinetic.Container.apply(this, []);
@@ -179,6 +182,40 @@ Kinetic.Stage.prototype = {
 
         bufferLayer.clear();
         addLayer(0);
+    },
+    /**
+     * serialize stage and children as JSON object
+     */
+    toJSON: function() {
+    	var go = Kinetic.GlobalObject;
+    	
+        function addNode(node) {
+            var obj = {};
+
+            // copy attrs
+            for(var key in node) {
+                if(node.hasOwnProperty(key) && go.arrayHas(node.jsonProps, key)) {
+                    obj[key] = node[key];
+                }
+            }
+
+            if(node.nodeType === 'Shape') {
+            }
+            else {
+                obj.children = [];
+                var children = node.getChildren();
+                for(var n = 0; n < children.length; n++) {
+                    var child = children[n];
+
+                    obj.children.push(addNode(child));
+                }
+            }
+
+            return obj;
+        }
+        var obj = addNode(this);
+
+        return obj;
     },
     /**
      * remove layer from stage
@@ -413,8 +450,8 @@ Kinetic.Stage.prototype = {
         // propapgate backwards through children
         for(var i = children.length - 1; i >= 0; i--) {
             var child = children[i];
-            if(child.isListening) {
-                if(child.className === 'Shape') {
+            if(child.listening) {
+                if(child.nodeType === 'Shape') {
                     var exit = this._detectEvent(child, evt);
                     if(exit) {
                         return true;
@@ -454,7 +491,7 @@ Kinetic.Stage.prototype = {
         var shapeDetected = false;
         for(var n = this.children.length - 1; n >= 0; n--) {
             var layer = this.children[n];
-            if(layer.visible && n >= 0 && layer.isListening) {
+            if(layer.visible && n >= 0 && layer.listening) {
                 if(this._traverseChildren(layer, evt)) {
                     n = -1;
                     shapeDetected = true;
@@ -520,7 +557,8 @@ Kinetic.Stage.prototype = {
 
         this.content.addEventListener('touchmove', function(evt) {
             evt.preventDefault();
-            that._handleStageEvent(evt);}, false);
+            that._handleStageEvent(evt);
+        }, false);
 
         this.content.addEventListener('touchend', function(evt) {
             evt.preventDefault();

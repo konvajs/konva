@@ -10,10 +10,13 @@
  * @param {Object} config
  */
 Kinetic.Layer = function(config) {
-    this.className = 'Layer';
+    this.nodeType = 'Layer';
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
     this.canvas.style.position = 'absolute';
+
+    // used for serialization
+    Kinetic.GlobalObject.jsonProps.call(this, []);
 
     // call super constructors
     Kinetic.Container.apply(this, []);

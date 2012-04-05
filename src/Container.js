@@ -9,6 +9,9 @@
 Kinetic.Container = function() {
     this.children = [];
     this.childrenNames = {};
+
+    // used for serialization
+    Kinetic.GlobalObject.jsonProps.call(this, []);
 };
 /*
  * Container methods
@@ -57,7 +60,7 @@ Kinetic.Container.prototype = {
         var children = this.children;
         for(var n = 0; n < children.length; n++) {
             var child = children[n];
-            if(child.className === 'Shape') {
+            if(child.nodeType === 'Shape') {
                 child._draw(child.getLayer());
             }
             else {
@@ -88,7 +91,7 @@ Kinetic.Container.prototype = {
          * from the container except the buffer and backstage canvases
          * and then readd all the layers
          */
-        if(this.className === 'Stage') {
+        if(this.nodeType === 'Stage') {
             var canvases = this.content.children;
             var bufferCanvas = canvases[0];
             var backstageCanvas = canvases[1];
@@ -101,7 +104,7 @@ Kinetic.Container.prototype = {
         for(var n = 0; n < this.children.length; n++) {
             this.children[n].index = n;
 
-            if(this.className === 'Stage') {
+            if(this.nodeType === 'Stage') {
                 this.content.appendChild(this.children[n].canvas);
             }
         }

@@ -10,7 +10,7 @@
  */
 Kinetic.Node = function(config) {
     this.visible = true;
-    this.isListening = true;
+    this.listening = true;
     this.name = undefined;
     this.alpha = 1;
     this.x = 0;
@@ -57,6 +57,9 @@ Kinetic.Node = function(config) {
     if(this.centerOffset.y === undefined) {
         this.centerOffset.y = 0;
     }
+
+    // used for serialization
+    Kinetic.GlobalObject.jsonProps.call(this, ['alpha', 'centerOffset', 'dragBounds', 'dragConstraint', '_draggable', 'id', 'listening', 'name', 'nodeType', 'rotation', 'scale', 'visible', 'x', 'y']);
 };
 /*
  * Node methods
@@ -164,7 +167,7 @@ Kinetic.Node.prototype = {
                 var child = children[n];
                 index++;
 
-                if(child.className !== 'Shape') {
+                if(child.nodeType !== 'Shape') {
                     nodes = nodes.concat(child.getChildren());
                 }
 
@@ -177,7 +180,7 @@ Kinetic.Node.prototype = {
                 addChildren(nodes);
             }
         }
-        if(that.className !== 'Stage') {
+        if(that.nodeType !== 'Stage') {
             addChildren(that.getStage().getChildren());
         }
 
@@ -292,10 +295,10 @@ Kinetic.Node.prototype = {
     },
     /**
      * listen or don't listen to events
-     * @param {Boolean} isListening
+     * @param {Boolean} listening
      */
-    listen: function(isListening) {
-        this.isListening = isListening;
+    listen: function(listening) {
+        this.listening = listening;
     },
     /**
      * move node to top
@@ -369,7 +372,7 @@ Kinetic.Node.prototype = {
         var absAlpha = 1;
         var node = this;
         // traverse upwards
-        while(node.className !== 'Stage') {
+        while(node.nodeType !== 'Stage') {
             absAlpha *= node.alpha;
             node = node.parent;
         }
@@ -429,7 +432,7 @@ Kinetic.Node.prototype = {
      * get layer associated to node
      */
     getLayer: function() {
-        if(this.className === 'Layer') {
+        if(this.nodeType === 'Layer') {
             return this;
         }
         else {
@@ -440,7 +443,7 @@ Kinetic.Node.prototype = {
      * get stage associated to node
      */
     getStage: function() {
-        if(this.className === 'Stage') {
+        if(this.nodeType === 'Stage') {
             return this;
         }
         else {
@@ -483,7 +486,7 @@ Kinetic.Node.prototype = {
      *  transition completes
      */
     transitionTo: function(config) {
-        var node = this.className === 'Stage' ? this : this.getLayer();
+        var node = this.nodeType === 'Stage' ? this : this.getLayer();
         var that = this;
         var go = Kinetic.GlobalObject;
         var trans = new Kinetic.Transition(this, config);
@@ -493,7 +496,7 @@ Kinetic.Node.prototype = {
             },
             node: node
         };
-        
+
         /*
          * adding the animation with the addAnimation
          * method auto generates an id
@@ -507,7 +510,6 @@ Kinetic.Node.prototype = {
                 config.callback();
             }
         };
-        
         // auto start
         trans.start();
 
@@ -625,7 +627,7 @@ Kinetic.Node.prototype = {
      * @param {Event} evt
      */
     _handleEvents: function(eventType, evt) {
-        if(this.className === 'Shape') {
+        if(this.nodeType === 'Shape') {
             evt.shape = this;
         }
         var stage = this.getStage();
@@ -660,7 +662,7 @@ Kinetic.Node.prototype = {
         var mouseoutParent = mouseoutNode ? mouseoutNode.parent : undefined;
 
         // simulate event bubbling
-        if(!evt.cancelBubble && node.parent.className !== 'Stage') {
+        if(!evt.cancelBubble && node.parent.nodeType !== 'Stage') {
             this._handleEvent(node.parent, mouseoverParent, mouseoutParent, eventType, evt);
         }
     }

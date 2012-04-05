@@ -10,7 +10,10 @@
  * @param {Object} config
  */
 Kinetic.Group = function(config) {
-    this.className = 'Group';
+    this.nodeType = 'Group';
+
+    // used for serialization
+    Kinetic.GlobalObject.jsonProps.call(this, []);
 
     // call super constructors
     Kinetic.Container.apply(this, []);
