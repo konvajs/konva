@@ -585,10 +585,10 @@ Kinetic.Stage.prototype = {
         context.fill = function() {
         };
         context.fillRect = function(x, y, width, height) {
-            layer.context.rect(x, y, width, height);
+            context.rect(x, y, width, height);
         };
         context.strokeRect = function(x, y, width, height) {
-            layer.context.rect(x, y, width, height);
+            context.rect(x, y, width, height);
         };
         context.drawImage = function() {
         };
