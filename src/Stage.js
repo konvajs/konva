@@ -372,7 +372,6 @@ Kinetic.Stage.prototype = {
         else if(!isDragging && this.targetShape && this.targetShape.id === shape.id) {
             this._setTarget(undefined);
             this.mouseoutShape = shape;
-            //shape._handleEvents('onmouseout', evt);
             return true;
         }
 
@@ -397,7 +396,6 @@ Kinetic.Stage.prototype = {
                 var oldEl = this.targetShape.eventListeners;
                 if(oldEl) {
                     this.mouseoutShape = this.targetShape;
-                    //this.targetShape._handleEvents('onmouseout', evt);
                 }
             }
             return true;
@@ -471,7 +469,6 @@ Kinetic.Stage.prototype = {
         if(!shapeDetected && this.mouseoutShape) {
             this.mouseoutShape._handleEvents('onmouseout', evt);
             this.mouseoutShape = undefined;
-
         }
     },
     /**
@@ -510,6 +507,7 @@ Kinetic.Stage.prototype = {
             var targetShape = that.targetShape;
             if(targetShape) {
                 targetShape._handleEvents('onmouseout', evt);
+                that.targetShape = undefined;
             }
             that.mousePos = undefined;
         }, false);
@@ -522,8 +520,7 @@ Kinetic.Stage.prototype = {
 
         this.content.addEventListener('touchmove', function(evt) {
             evt.preventDefault();
-            that._handleStageEvent(evt);
-        }, false);
+            that._handleStageEvent(evt);}, false);
 
         this.content.addEventListener('touchend', function(evt) {
             evt.preventDefault();
