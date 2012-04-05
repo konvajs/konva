@@ -10,7 +10,7 @@ function log(message) {
  * Test constructor
  */
 function Test() {
-    this.testOnly = 'EVENTS - star pixel detection';
+    this.testOnly = '';
     this.counter = 0;
 }
 /**
