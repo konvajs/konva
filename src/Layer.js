@@ -15,9 +15,6 @@ Kinetic.Layer = function(config) {
     this.context = this.canvas.getContext('2d');
     this.canvas.style.position = 'absolute';
 
-    // used for serialization
-    Kinetic.GlobalObject.jsonProps.call(this, []);
-
     // call super constructors
     Kinetic.Container.apply(this, []);
     Kinetic.Node.apply(this, [config]);
@@ -76,7 +73,7 @@ Kinetic.Layer.prototype = {
      */
     _draw: function() {
         this.clear();
-        if(this.visible) {
+        if(this.attrs.visible) {
             this._drawChildren();
         }
     }

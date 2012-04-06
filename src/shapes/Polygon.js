@@ -8,15 +8,21 @@
  * @param {Object} config
  */
 Kinetic.Polygon = function(config) {
-	this.shapeType = "Polygon";
-	
+    // default attrs
+    if(this.attrs === undefined) {
+        this.attrs = {};
+    }
+    this.attrs.points = {};
+
+    this.shapeType = "Polygon";
+
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
         this.applyLineJoin();
-        context.moveTo(this.points[0].x, this.points[0].y);
-        for(var n = 1; n < this.points.length; n++) {
-            context.lineTo(this.points[n].x, this.points[n].y);
+        context.moveTo(this.attrs.points[0].x, this.attrs.points[0].y);
+        for(var n = 1; n < this.attrs.points.length; n++) {
+            context.lineTo(this.attrs.points[n].x, this.attrs.points[n].y);
         }
         context.closePath();
         this.fillStroke();
@@ -33,13 +39,13 @@ Kinetic.Polygon.prototype = {
      * @param {Array} points
      */
     setPoints: function(points) {
-        this.points = points;
+        this.attrs.points = points;
     },
     /**
      * get points array
      */
     getPoints: function() {
-        return this.points;
+        return this.attrs.points;
     }
 };
 

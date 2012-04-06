@@ -8,17 +8,24 @@
  * @param {Object} config
  */
 Kinetic.RegularPolygon = function(config) {
-	this.shapeType = "RegularPolygon";
-	
+    // default attrs
+    if(this.attrs === undefined) {
+        this.attrs = {};
+    }
+    this.attrs.radius = 0;
+    this.attrs.sides = 0;
+
+    this.shapeType = "RegularPolygon";
+
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
         this.applyLineJoin();
-        context.moveTo(0, 0 - this.radius);
+        context.moveTo(0, 0 - this.attrs.radius);
 
-        for(var n = 1; n < this.sides; n++) {
-            var x = this.radius * Math.sin(n * 2 * Math.PI / this.sides);
-            var y = -1 * this.radius * Math.cos(n * 2 * Math.PI / this.sides);
+        for(var n = 1; n < this.attrs.sides; n++) {
+            var x = this.attrs.radius * Math.sin(n * 2 * Math.PI / this.attrs.sides);
+            var y = -1 * this.attrs.radius * Math.cos(n * 2 * Math.PI / this.attrs.sides);
             context.lineTo(x, y);
         }
         context.closePath();
@@ -32,43 +39,30 @@ Kinetic.RegularPolygon = function(config) {
  */
 Kinetic.RegularPolygon.prototype = {
     /**
-     * set number of points
-     * @param {int} points
-     */
-    setPoints: function(points) {
-        this.points = points;
-    },
-    /**
-     * get number of points
-     */
-    getPoints: function() {
-        return this.points;
-    },
-    /**
      * set radius
      * @param {Number} radius
      */
     setRadius: function(radius) {
-        this.radius = radius;
+        this.attrs.radius = radius;
     },
     /**
      * get radius
      */
     getRadius: function() {
-        return this.radius;
+        return this.attrs.radius;
     },
     /**
      * set number of sides
      * @param {int} sides
      */
     setSides: function(sides) {
-        this.sides = sides;
+        this.attrs.sides = sides;
     },
     /**
      * get number of sides
      */
     getSides: function() {
-        return this.sides;
+        return this.attrs.sides;
     }
 };
 

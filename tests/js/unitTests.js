@@ -27,8 +27,8 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -40,6 +40,7 @@ Test.prototype.tests = {
         stage.add(layer);
         layer.add(group);
         layer.draw();
+
     },
     'STAGE - add layer then group then shape': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -50,8 +51,8 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -64,108 +65,110 @@ Test.prototype.tests = {
         group.add(circle);
         layer.draw();
     },
-    'STAGE - serialize stage': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-        var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
-            radius: 70,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4,
-            name: 'myCircle',
-            draggable: true
-        });
-
-        stage.add(layer);
-        layer.add(group);
-        group.add(circle);
-        layer.draw();
-
-		console.log(stage.toJSON())
-
-        var expectedJson = '{"attrs":{"nodeType":"Stage","width":578,"height":200,"scale":{"x":1,"y":1},"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"nodeType":"Layer","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"nodeType":"Group","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"shapeType":"Circle","nodeType":"Shape","detectionType":"path","visible":true,"listening":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true,"radius":70,"fill":"green","stroke":"black","strokeWidth":4}}]}]}]}';
-        test(stage.toJSON() === expectedJson, 'problem with serialization');
-    },
-    'STAGE - load stage with json': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-
-        var json = '{"attrs":{"nodeType":"Stage","width":578,"height":200,"scale":{"x":1,"y":1},"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"nodeType":"Layer","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"nodeType":"Group","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"shapeType":"Circle","nodeType":"Shape","detectionType":"path","visible":true,"listening":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true,"radius":70,"fill":"green","stroke":"black","strokeWidth":4}}]}]}]}';
-        stage.load(json);
-
-        test(stage.toJSON() === json, "serialized stage is incorrect");
-    },
     /*
-    'STAGE - serialize stage with custom shape': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
+     'STAGE - serialize stage': function(containerId) {
+     var stage = new Kinetic.Stage({
+     container: containerId,
+     width: 578,
+     height: 200
+     });
+     var layer = new Kinetic.Layer();
+     var group = new Kinetic.Group();
+     var circle = new Kinetic.Circle({
+     x: stage.getWidth() / 2,
+     y: stage.getHeight() / 2,
+     radius: 70,
+     fill: 'green',
+     stroke: 'black',
+     strokeWidth: 4,
+     name: 'myCircle',
+     draggable: true
+     });
 
-        var drawTriangle = function() {
-            var context = this.getContext();
-            context.beginPath();
-            context.moveTo(200, 50);
-            context.lineTo(420, 80);
-            context.quadraticCurveTo(300, 100, 260, 170);
-            context.closePath();
-            this.fillStroke();
-        };
-        var triangle = new Kinetic.Shape({
-            drawFunc: drawTriangle,
-            drawFuncName: 'drawTriangle',
-            fill: "#00D2FF",
-            stroke: "black",
-            strokeWidth: 4
-        });
+     stage.add(layer);
+     layer.add(group);
+     group.add(circle);
+     layer.draw();
 
-        stage.add(layer);
-        layer.add(group);
-        group.add(triangle);
-        layer.draw();
+     console.log(stage.toJSON())
 
-        var expectedJson = '{"nodeType":"Stage","width":578,"height":200,"scale":{"x":1,"y":1},"visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Layer","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Group","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Shape","detectionType":"path","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"drawFuncName":"drawTriangle","fill":"#00D2FF","stroke":"black","strokeWidth":4}]}]}]}';
-        test(stage.toJSON() === expectedJson, "problem with serialization");
+     var expectedJson = '{"attrs":{"nodeType":"Stage","width":578,"height":200,"scale":{"x":1,"y":1},"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"nodeType":"Layer","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"nodeType":"Group","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"shapeType":"Circle","nodeType":"Shape","detectionType":"path","visible":true,"listening":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true,"radius":70,"fill":"green","stroke":"black","strokeWidth":4}}]}]}]}';
+     test(stage.toJSON() === expectedJson, 'problem with serialization');
+     },
+     'STAGE - load stage with json': function(containerId) {
+     var stage = new Kinetic.Stage({
+     container: containerId,
+     width: 578,
+     height: 200
+     });
 
-        console.log(stage.toJSON());
-    },
-    'STAGE - load stage with custom shape': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+     var json = '{"attrs":{"nodeType":"Stage","width":578,"height":200,"scale":{"x":1,"y":1},"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"nodeType":"Layer","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"nodeType":"Group","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"shapeType":"Circle","nodeType":"Shape","detectionType":"path","visible":true,"listening":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true,"radius":70,"fill":"green","stroke":"black","strokeWidth":4}}]}]}]}';
+     stage.load(json);
 
-        var drawTriangle = function() {
-            var context = this.getContext();
-            context.beginPath();
-            context.moveTo(200, 50);
-            context.lineTo(420, 80);
-            context.quadraticCurveTo(300, 100, 260, 170);
-            context.closePath();
-            this.fillStroke();
-        };
-        var json = '{"nodeType":"Stage","width":578,"height":200,"scale":{"x":1,"y":1},"visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Layer","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Group","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Shape","detectionType":"path","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"drawFuncName":"drawTriangle","fill":"#00D2FF","stroke":"black","strokeWidth":4}]}]}]}';
-        stage.load(json, {
-            drawTriangle: drawTriangle
-        });
+     test(stage.toJSON() === json, "serialized stage is incorrect");
+     },
+     */
+    /*
+     'STAGE - serialize stage with custom shape': function(containerId) {
+     var stage = new Kinetic.Stage({
+     container: containerId,
+     width: 578,
+     height: 200
+     });
+     var layer = new Kinetic.Layer();
+     var group = new Kinetic.Group();
 
-        test(stage.toJSON() === json, "serialized stage is incorrect");
-    },
-    */
+     var drawTriangle = function() {
+     var context = this.getContext();
+     context.beginPath();
+     context.moveTo(200, 50);
+     context.lineTo(420, 80);
+     context.quadraticCurveTo(300, 100, 260, 170);
+     context.closePath();
+     this.fillStroke();
+     };
+     var triangle = new Kinetic.Shape({
+     drawFunc: drawTriangle,
+     drawFuncName: 'drawTriangle',
+     fill: "#00D2FF",
+     stroke: "black",
+     strokeWidth: 4
+     });
+
+     stage.add(layer);
+     layer.add(group);
+     group.add(triangle);
+     layer.draw();
+
+     var expectedJson = '{"nodeType":"Stage","width":578,"height":200,"scale":{"x":1,"y":1},"visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Layer","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Group","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Shape","detectionType":"path","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"drawFuncName":"drawTriangle","fill":"#00D2FF","stroke":"black","strokeWidth":4}]}]}]}';
+     test(stage.toJSON() === expectedJson, "problem with serialization");
+
+     console.log(stage.toJSON());
+     },
+     'STAGE - load stage with custom shape': function(containerId) {
+     var stage = new Kinetic.Stage({
+     container: containerId,
+     width: 578,
+     height: 200
+     });
+
+     var drawTriangle = function() {
+     var context = this.getContext();
+     context.beginPath();
+     context.moveTo(200, 50);
+     context.lineTo(420, 80);
+     context.quadraticCurveTo(300, 100, 260, 170);
+     context.closePath();
+     this.fillStroke();
+     };
+     var json = '{"nodeType":"Stage","width":578,"height":200,"scale":{"x":1,"y":1},"visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Layer","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Group","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Shape","detectionType":"path","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"drawFuncName":"drawTriangle","fill":"#00D2FF","stroke":"black","strokeWidth":4}]}]}]}';
+     stage.load(json, {
+     drawTriangle: drawTriangle
+     });
+
+     test(stage.toJSON() === json, "serialized stage is incorrect");
+     },
+     */
     'STAGE - set stage size': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -174,8 +177,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -202,8 +205,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -225,8 +228,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -258,8 +261,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -384,8 +387,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle1 = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: 100,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -393,8 +396,8 @@ Test.prototype.tests = {
         });
 
         var circle2 = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: 300,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -402,12 +405,13 @@ Test.prototype.tests = {
         });
 
         layer.add(circle1);
-        layer.add(circle1);
+        layer.add(circle2);
         stage.add(layer);
 
         test(layer.children.length === 2, 'layer should have 2 children');
 
         layer.removeChildren();
+        layer.draw();
 
         test(layer.children.length === 0, 'layer should have 0 children');
     },
@@ -419,8 +423,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -447,8 +451,8 @@ Test.prototype.tests = {
         var group = new Kinetic.Group();
 
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -468,8 +472,8 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -495,8 +499,8 @@ Test.prototype.tests = {
         var blueGroup = new Kinetic.Group();
 
         var greenCircle = new Kinetic.Circle({
-            x: stage.width / 2 - 100,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2 - 100,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -505,8 +509,8 @@ Test.prototype.tests = {
         });
 
         var blueCircle = new Kinetic.Circle({
-            x: stage.width / 2 + 100,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2 + 100,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'blue',
             stroke: 'black',
@@ -523,8 +527,8 @@ Test.prototype.tests = {
         blueLayer.removeChildren();
         var blueGroup2 = new Kinetic.Group();
         var blueCircle2 = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'blue',
             stroke: 'black',
@@ -582,8 +586,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -614,8 +618,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -636,25 +640,21 @@ Test.prototype.tests = {
                 height: 200
             });
             var layer = new Kinetic.Layer();
-            var darth = new Kinetic.Image({
-                x: 10,
-                y: 10,
+            darth = new Kinetic.Image({
+                x: 200,
+                y: 60,
                 image: imageObj,
                 width: 100,
                 centerOffset: {
-                    x: this.width / 2,
-                    y: this.height / 2
+                    x: 50,
+                    y: imageObj.height / 2
                 }
             });
 
+            console.log(darth);
+
             layer.add(darth);
             stage.add(layer);
-
-            stage.onFrame(function() {
-                darth.rotate(Math.PI / 100);
-                layer.draw();
-            });
-            //stage.start();
         };
         imageObj.src = '../darth-vader.jpg';
     },
@@ -690,11 +690,7 @@ Test.prototype.tests = {
             points: points,
             fill: 'green',
             stroke: 'blue',
-            strokeWidth: 5,
-            centerOffset: {
-                x: 300,
-                y: 100
-            }
+            strokeWidth: 5
         });
 
         layer.add(poly);
@@ -731,11 +727,6 @@ Test.prototype.tests = {
         layer.add(poly);
         stage.add(layer);
 
-        stage.onFrame(function() {
-            poly.rotate(Math.PI / 100);
-            layer.draw();
-        });
-        //stage.start();
     },
     'SHAPES - add regular polygon square': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -832,12 +823,6 @@ Test.prototype.tests = {
 
         layer.add(star);
         stage.add(layer);
-
-        stage.onFrame(function() {
-            star.rotate(Math.PI / 100);
-            layer.draw();
-        });
-        //stage.start();
     },
     'SHAPES - add five point star with line join': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -905,7 +890,7 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
 
-        test(rect.stroke === 'black', 'stroke should be black');
+        test(rect.getStroke() === 'black', 'stroke should be black');
     },
     'SHAPES - use default stroke width': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -925,7 +910,7 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
 
-        test(rect.strokeWidth === 2, 'stroke width should be 2');
+        test(rect.getStrokeWidth() === 2, 'stroke width should be 2');
     },
     'SHAPES - set center offset after instantiation': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -949,13 +934,13 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
 
-        test(rect.centerOffset.x === 20, 'center offset x should be 20');
-        test(rect.centerOffset.y === 20, 'center offset y should be 20');
+        test(rect.getCenterOffset().x === 20, 'center offset x should be 20');
+        test(rect.getCenterOffset().y === 20, 'center offset y should be 20');
 
         rect.setCenterOffset(40, 40);
 
-        test(rect.centerOffset.x === 40, 'center offset x should be 40');
-        test(rect.centerOffset.y === 40, 'center offset y should be 40');
+        test(rect.getCenterOffset().x === 40, 'center offset x should be 40');
+        test(rect.getCenterOffset().y === 40, 'center offset y should be 40');
 
     },
     'SHAPES - custom shape with fill, stroke, and strokeWidth': function(containerId) {
@@ -1093,8 +1078,8 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
 
         var text = new Kinetic.Text({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             stroke: 'green',
             strokeWidth: 5,
             fill: '#ddd',
@@ -1159,8 +1144,8 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
 
         var text = new Kinetic.Text({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             text: 'Hello World!',
             fontSize: 60,
             fontFamily: 'Calibri',
@@ -1173,8 +1158,6 @@ Test.prototype.tests = {
 
         layer.add(text);
         stage.add(layer);
-
-        console.log(text.getTextSize());
 
         test(text.getTextSize().width > 0, 'text width should have a value');
         test(text.getTextSize().height > 0, 'text height should have a value');
@@ -1189,8 +1172,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1211,8 +1194,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1240,8 +1223,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1254,12 +1237,12 @@ Test.prototype.tests = {
         layer.draw();
 
         // test defaults
-        test(circle._draggable === false, 'draggable should be false');
-        test(circle.dragConstraint === 'none', 'drag constraint should be none');
-        test(circle.dragBounds.left === undefined, 'drag left should be undefined');
-        test(circle.dragBounds.top === undefined, 'drag top should be undefined');
-        test(circle.dragBounds.right === undefined, 'drag right should be undefined');
-        test(circle.dragBounds.bottom === undefined, 'drag bottom should be undefined');
+        test(circle.attrs.draggable === false, 'draggable should be false');
+        test(circle.attrs.dragConstraint === 'none', 'drag constraint should be none');
+        test(circle.attrs.dragBounds.left === undefined, 'drag left should be undefined');
+        test(circle.attrs.dragBounds.top === undefined, 'drag top should be undefined');
+        test(circle.attrs.dragBounds.right === undefined, 'drag right should be undefined');
+        test(circle.attrs.dragBounds.bottom === undefined, 'drag bottom should be undefined');
         test(circle.getDragConstraint() === 'none', 'drag constraint should be none');
         test(circle.getDragBounds().bottom === undefined, 'drag bottom should be undefined');
 
@@ -1274,12 +1257,12 @@ Test.prototype.tests = {
         });
 
         // test new properties
-        test(circle._draggable === true, 'draggable should be true');
-        test(circle.dragConstraint === 'vertical', 'drag constraint should be vertical');
-        test(circle.dragBounds.left === 50, 'drag left should be 50');
-        test(circle.dragBounds.top === 100, 'drag top should be 100');
-        test(circle.dragBounds.right === 150, 'drag right should be 150');
-        test(circle.dragBounds.bottom === 200, 'drag bottom should be 200');
+        test(circle.attrs.draggable === true, 'draggable should be true');
+        test(circle.attrs.dragConstraint === 'vertical', 'drag constraint should be vertical');
+        test(circle.attrs.dragBounds.left === 50, 'drag left should be 50');
+        test(circle.attrs.dragBounds.top === 100, 'drag top should be 100');
+        test(circle.attrs.dragBounds.right === 150, 'drag right should be 150');
+        test(circle.attrs.dragBounds.bottom === 200, 'drag bottom should be 200');
         test(circle.getDragConstraint() === 'vertical', 'drag constraint should be vertical');
         test(circle.getDragBounds().bottom === 200, 'drag bottom should be 200');
     },
@@ -1327,8 +1310,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1350,8 +1333,8 @@ Test.prototype.tests = {
         var group = new Kinetic.Group();
 
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1424,8 +1407,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1446,8 +1429,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1471,8 +1454,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1491,8 +1474,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1518,8 +1501,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1542,8 +1525,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1562,8 +1545,8 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
-            x: stage.width / 2,
-            y: stage.height / 2,
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1593,14 +1576,14 @@ Test.prototype.tests = {
 
         var shape1 = new Kinetic.Circle({
             x: 150,
-            y: stage.height / 2,
+            y: stage.getHeight() / 2,
             radius: 40,
             fill: 'green'
         });
 
         var shape2 = new Kinetic.Circle({
             x: 250,
-            y: stage.height / 2,
+            y: stage.getHeight() / 2,
             radius: 40,
             fill: 'green'
         });
@@ -1650,7 +1633,7 @@ Test.prototype.tests = {
 
         var blueCircle = new Kinetic.Circle({
             x: 200,
-            y: stage.height / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'blue',
             stroke: 'black',
@@ -1659,7 +1642,7 @@ Test.prototype.tests = {
 
         var greenCircle = new Kinetic.Circle({
             x: 280,
-            y: stage.height / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1690,7 +1673,7 @@ Test.prototype.tests = {
 
         var blueCircle = new Kinetic.Circle({
             x: 200,
-            y: stage.height / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'blue',
             stroke: 'black',
@@ -1699,7 +1682,7 @@ Test.prototype.tests = {
 
         var greenCircle = new Kinetic.Circle({
             x: 280,
-            y: stage.height / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1732,7 +1715,7 @@ Test.prototype.tests = {
 
         var blueCircle = new Kinetic.Circle({
             x: 200,
-            y: stage.height / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'blue',
             stroke: 'black',
@@ -1741,7 +1724,7 @@ Test.prototype.tests = {
 
         var greenCircle = new Kinetic.Circle({
             x: 280,
-            y: stage.height / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1777,7 +1760,7 @@ Test.prototype.tests = {
 
         var blueCircle = new Kinetic.Circle({
             x: 200,
-            y: stage.height / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'blue',
             stroke: 'black',
@@ -1786,7 +1769,7 @@ Test.prototype.tests = {
 
         var greenCircle = new Kinetic.Circle({
             x: 280,
-            y: stage.height / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1821,7 +1804,7 @@ Test.prototype.tests = {
 
         var blueCircle = new Kinetic.Circle({
             x: 200,
-            y: stage.height / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'blue',
             stroke: 'black',
@@ -1830,7 +1813,7 @@ Test.prototype.tests = {
 
         var greenCircle = new Kinetic.Circle({
             x: 280,
-            y: stage.height / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1856,7 +1839,7 @@ Test.prototype.tests = {
 
         var blueCircle = new Kinetic.Circle({
             x: 200,
-            y: stage.height / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'blue',
             stroke: 'black',
@@ -1865,7 +1848,7 @@ Test.prototype.tests = {
 
         var greenCircle = new Kinetic.Circle({
             x: 280,
-            y: stage.height / 2,
+            y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
             stroke: 'black',
@@ -1907,7 +1890,7 @@ Test.prototype.tests = {
         var amplitude = 150;
         var period = 1000;
         // in ms
-        var centerX = stage.width / 2 - 100 / 2;
+        var centerX = stage.getWidth() / 2 - 100 / 2;
 
         stage.onFrame(function(frame) {
             rect.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;

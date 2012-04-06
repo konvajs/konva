@@ -12,6 +12,13 @@
  * @param {int} height
  */
 Kinetic.Stage = function(config) {
+    // default attrs
+    if(this.attrs === undefined) {
+        this.attrs = {};
+    }
+    this.attrs.width = 400;
+    this.attrs.height = 200;
+
     /*
      * if container is a string, assume it's an id for
      * a DOM element
@@ -23,13 +30,6 @@ Kinetic.Stage = function(config) {
     this.nodeType = 'Stage';
     this.container = config.container;
     this.content = document.createElement('div');
-
-    this.width = config.width;
-    this.height = config.height;
-    this.scale = {
-        x: 1,
-        y: 1
-    };
     this.dblClickWindow = 400;
     this.clickStart = false;
     this.targetShape = undefined;
@@ -58,9 +58,6 @@ Kinetic.Stage = function(config) {
 
     // add stage to global object
     Kinetic.GlobalObject.stages.push(this);
-
-    // used for serialization
-    Kinetic.GlobalObject.jsonProps.call(this, ['height', 'width']);
 
     // call super constructors
     Kinetic.Container.apply(this, []);
@@ -117,8 +114,8 @@ Kinetic.Stage.prototype = {
         }
 
         // set stage dimensions
-        this.width = width;
-        this.height = height;
+        this.attrs.width = width;
+        this.attrs.height = height;
 
         // set buffer layer and path layer sizes
         this.bufferLayer.getCanvas().width = width;
@@ -131,8 +128,8 @@ Kinetic.Stage.prototype = {
      */
     getSize: function() {
         return {
-            width: this.width,
-            height: this.height
+            width: this.attrs.width,
+            height: this.attrs.height
         };
     },
     /**
@@ -294,11 +291,11 @@ Kinetic.Stage.prototype = {
      * @param {Layer} layer
      */
     add: function(layer) {
-        if(layer.name) {
-            this.childrenNames[layer.name] = layer;
+        if(layer.attrs.name) {
+            this.childrenNames[layer.attrs.name] = layer;
         }
-        layer.canvas.width = this.width;
-        layer.canvas.height = this.height;
+        layer.canvas.width = this.attrs.width;
+        layer.canvas.height = this.attrs.height;
         this._add(layer);
 
         // draw layer and append canvas to container
@@ -345,6 +342,18 @@ Kinetic.Stage.prototype = {
         return this;
     },
     /**
+     * get width
+     */
+    getWidth: function() {
+        return this.attrs.width;
+    },
+    /**
+     * get height
+     */
+    getHeight: function() {
+        return this.attrs.height;
+    },
+    /**
      * detect event
      * @param {Shape} shape
      */
@@ -358,7 +367,7 @@ Kinetic.Stage.prototype = {
             this.targetFound = true;
         }
 
-        if(shape.visible && pos !== undefined && shape._isPointInShape(pos)) {
+        if(shape.attrs.visible && pos !== undefined && shape._isPointInShape(pos)) {
             // handle onmousedown
             if(!isDragging && this.mouseDown) {
                 this.mouseDown = false;
@@ -494,7 +503,7 @@ Kinetic.Stage.prototype = {
         // propapgate backwards through children
         for(var i = children.length - 1; i >= 0; i--) {
             var child = children[i];
-            if(child._listening) {
+            if(child.attrs.listening) {
                 if(child.nodeType === 'Shape') {
                     var exit = this._detectEvent(child, evt);
                     if(exit) {
@@ -535,7 +544,7 @@ Kinetic.Stage.prototype = {
         var shapeDetected = false;
         for(var n = this.children.length - 1; n >= 0; n--) {
             var layer = this.children[n];
-            if(layer.visible && n >= 0 && layer._listening) {
+            if(layer.attrs.visible && n >= 0 && layer.attrs.listening) {
                 if(this._traverseChildren(layer, evt)) {
                     n = -1;
                     shapeDetected = true;
@@ -703,13 +712,13 @@ Kinetic.Stage.prototype = {
             var node = go.drag.node;
             if(node) {
                 var pos = that.getUserPosition();
-                var dc = node.dragConstraint;
-                var db = node.dragBounds;
+                var dc = node.attrs.dragConstraint;
+                var db = node.attrs.dragBounds;
 
                 // default
                 var newNodePos = {
-                    x: pos.x - go.drag.offset.x,
-                    y: pos.y - go.drag.offset.y
+                    x: pos.attrs.x - go.drag.offset.x,
+                    y: pos.attrs.y - go.drag.offset.y
                 };
 
                 // bounds overrides
@@ -730,13 +739,13 @@ Kinetic.Stage.prototype = {
                  * save rotation and scale and then
                  * remove them from the transform
                  */
-                var rot = node.rotation;
+                var rot = node.attrs.rotation;
                 var scale = {
-                    x: node.scale.x,
-                    y: node.scale.y
+                    x: node.attrs.scale.x,
+                    y: node.attrs.scale.y
                 };
-                node.rotation = 0;
-                node.scale = {
+                node.attrs.rotation = 0;
+                node.attrs.scale = {
                     x: 1,
                     y: 1
                 };
@@ -746,23 +755,23 @@ Kinetic.Stage.prototype = {
                 it.invert();
                 it.translate(newNodePos.x, newNodePos.y);
                 newNodePos = {
-                    x: node.x + it.getTranslation().x,
-                    y: node.y + it.getTranslation().y
+                    x: node.attrs.x + it.getTranslation().x,
+                    y: node.attrs.y + it.getTranslation().y
                 };
 
                 // constraint overrides
                 if(dc === 'horizontal') {
-                    newNodePos.y = node.y;
+                    newNodePos.y = node.attrs.y;
                 }
                 else if(dc === 'vertical') {
-                    newNodePos.x = node.x;
+                    newNodePos.x = node.attrs.x;
                 }
 
                 node.setPosition(newNodePos.x, newNodePos.y);
 
                 // restore rotation and scale
                 node.rotate(rot);
-                node.scale = {
+                node.attrs.scale = {
                     x: scale.x,
                     y: scale.y
                 };
@@ -789,8 +798,8 @@ Kinetic.Stage.prototype = {
      */
     _buildDOM: function() {
         // content
-        this.content.style.width = this.width + 'px';
-        this.content.style.height = this.height + 'px';
+        this.content.style.width = this.attrs.width + 'px';
+        this.content.style.height = this.attrs.height + 'px';
         this.content.style.position = 'relative';
         this.content.style.display = 'inline-block';
         this.content.className = 'kineticjs-content';
@@ -816,14 +825,14 @@ Kinetic.Stage.prototype = {
         this.pathLayer.getCanvas().style.display = 'none';
 
         // add buffer layer
-        this.bufferLayer.canvas.width = this.width;
-        this.bufferLayer.canvas.height = this.height;
+        this.bufferLayer.canvas.width = this.attrs.width;
+        this.bufferLayer.canvas.height = this.attrs.height;
         this.bufferLayer.canvas.className = 'kineticjs-buffer-layer';
         this.content.appendChild(this.bufferLayer.canvas);
 
         // add path layer
-        this.pathLayer.canvas.width = this.width;
-        this.pathLayer.canvas.height = this.height;
+        this.pathLayer.canvas.width = this.attrs.width;
+        this.pathLayer.canvas.height = this.attrs.height;
         this.pathLayer.canvas.className = 'kineticjs-path-layer';
         this.content.appendChild(this.pathLayer.canvas);
     }

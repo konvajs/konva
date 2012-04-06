@@ -9,25 +9,30 @@
  * @param {Object} config
  */
 Kinetic.Node = function(config) {
-    this.visible = true;
-    this._listening = true;
-    this.name = undefined;
-    this.alpha = 1;
-    this.x = 0;
-    this.y = 0;
-    this.scale = {
+    // default attrs
+    if(this.attrs === undefined) {
+        this.attrs = {};
+    }
+    this.attrs.visible = true;
+    this.attrs.listening = true;
+    this.attrs.name = undefined;
+    this.attrs.alpha = 1;
+    this.attrs.x = 0;
+    this.attrs.y = 0;
+    this.attrs.scale = {
         x: 1,
         y: 1
     };
-    this.rotation = 0;
-    this.centerOffset = {
+    this.attrs.rotation = 0;
+    this.attrs.centerOffset = {
         x: 0,
         y: 0
     };
+    this.attrs.dragConstraint = 'none';
+    this.attrs.dragBounds = {};
+    this.attrs.draggable = false;
+
     this.eventListeners = {};
-    this.dragConstraint = 'none';
-    this.dragBounds = {};
-    this._draggable = false;
 
     // set properties from config
     if(config) {
@@ -41,25 +46,26 @@ Kinetic.Node = function(config) {
                     this.listen(config[key]);
                     break;
                 case 'rotationDeg':
-                    this.rotation = config[key] * Math.PI / 180;
+                    this.attrs.rotation = config[key] * Math.PI / 180;
+                    break;
+                case 'drawFunc':
+                    break;
+                case 'image':
                     break;
                 default:
-                    this[key] = config[key];
+                    this.attrs[key] = config[key];
                     break;
             }
         }
     }
 
     // overrides
-    if(this.centerOffset.x === undefined) {
-        this.centerOffset.x = 0;
+    if(this.attrs.centerOffset.x === undefined) {
+        this.attrs.centerOffset.x = 0;
     }
-    if(this.centerOffset.y === undefined) {
-        this.centerOffset.y = 0;
+    if(this.attrs.centerOffset.y === undefined) {
+        this.attrs.centerOffset.y = 0;
     }
-
-    // used for serialization
-    Kinetic.GlobalObject.jsonProps.call(this, ['alpha', 'centerOffset', 'dragBounds', 'dragConstraint', '_draggable', '_listening', 'name', 'nodeType', 'rotation', 'scale', 'visible', 'x', 'y']);
 };
 /*
  * Node methods
@@ -138,13 +144,13 @@ Kinetic.Node.prototype = {
      * show node
      */
     show: function() {
-        this.visible = true;
+        this.attrs.visible = true;
     },
     /**
      * hide node
      */
     hide: function() {
-        this.visible = false;
+        this.attrs.visible = false;
     },
     /**
      * get zIndex
@@ -206,19 +212,19 @@ Kinetic.Node.prototype = {
      */
     setScale: function(scaleX, scaleY) {
         if(scaleY) {
-            this.scale.x = scaleX;
-            this.scale.y = scaleY;
+            this.attrs.scale.x = scaleX;
+            this.attrs.scale.y = scaleY;
         }
         else {
-            this.scale.x = scaleX;
-            this.scale.y = scaleX;
+            this.attrs.scale.x = scaleX;
+            this.attrs.scale.y = scaleX;
         }
     },
     /**
      * get scale
      */
     getScale: function() {
-        return this.scale;
+        return this.attrs.scale;
     },
     /**
      * set node position
@@ -226,16 +232,16 @@ Kinetic.Node.prototype = {
      * @param {Number} y
      */
     setPosition: function(x, y) {
-        this.x = x;
-        this.y = y;
+        this.attrs.x = x;
+        this.attrs.y = y;
     },
     /**
      * get node position relative to container
      */
     getPosition: function() {
         return {
-            x: this.x,
-            y: this.y
+            x: this.attrs.x,
+            y: this.attrs.y
         };
     },
     /**
@@ -250,55 +256,55 @@ Kinetic.Node.prototype = {
      * @param {Number} y
      */
     move: function(x, y) {
-        this.x += x;
-        this.y += y;
+        this.attrs.x += x;
+        this.attrs.y += y;
     },
     /**
      * set node rotation in radians
      * @param {Number} theta
      */
     setRotation: function(theta) {
-        this.rotation = theta;
+        this.attrs.rotation = theta;
     },
     /**
      * set node rotation in degrees
      * @param {Number} deg
      */
     setRotationDeg: function(deg) {
-        this.rotation = (deg * Math.PI / 180);
+        this.attrs.rotation = (deg * Math.PI / 180);
     },
     /**
      * get rotation in radians
      */
     getRotation: function() {
-        return this.rotation;
+        return this.attrs.rotation;
     },
     /**
      * get rotation in degrees
      */
     getRotationDeg: function() {
-        return this.rotation * 180 / Math.PI;
+        return this.attrs.rotation * 180 / Math.PI;
     },
     /**
      * rotate node by an amount in radians
      * @param {Number} theta
      */
     rotate: function(theta) {
-        this.rotation += theta;
+        this.attrs.rotation += theta;
     },
     /**
      * rotate node by an amount in degrees
      * @param {Number} deg
      */
     rotateDeg: function(deg) {
-        this.rotation += (deg * Math.PI / 180);
+        this.attrs.rotation += (deg * Math.PI / 180);
     },
     /**
      * listen or don't listen to events
      * @param {Boolean} listening
      */
     listen: function(listening) {
-        this._listening = listening;
+        this.attrs.listening = listening;
     },
     /**
      * move node to top
@@ -355,7 +361,7 @@ Kinetic.Node.prototype = {
      * @param {Object} alpha
      */
     setAlpha: function(alpha) {
-        this.alpha = alpha;
+        this.attrs.alpha = alpha;
     },
     /**
      * get alpha.  Alpha values range from 0 to 1.
@@ -363,7 +369,7 @@ Kinetic.Node.prototype = {
      * with an alpha of 1 is fully opaque
      */
     getAlpha: function() {
-        return this.alpha;
+        return this.attrs.alpha;
     },
     /**
      * get absolute alpha
@@ -373,7 +379,7 @@ Kinetic.Node.prototype = {
         var node = this;
         // traverse upwards
         while(node.nodeType !== 'Stage') {
-            absAlpha *= node.alpha;
+            absAlpha *= node.attrs.alpha;
             node = node.parent;
         }
         return absAlpha;
@@ -383,14 +389,14 @@ Kinetic.Node.prototype = {
      * @param {Boolean} isDraggable
      */
     draggable: function(isDraggable) {
-        if(this.draggable !== isDraggable) {
+        if(this.attrs.draggable !== isDraggable) {
             if(isDraggable) {
                 this._initDrag();
             }
             else {
                 this._dragCleanup();
             }
-            this._draggable = isDraggable;
+            this.attrs.draggable = isDraggable;
         }
     },
     /**
@@ -417,9 +423,9 @@ Kinetic.Node.prototype = {
         newContainer._setChildrenIndices();
 
         // update children hashes
-        if(this.name) {
-            parent.childrenNames[this.name] = undefined;
-            newContainer.childrenNames[this.name] = this;
+        if(this.attrs.name) {
+            parent.childrenNames[this.attrs.name] = undefined;
+            newContainer.childrenNames[this.attrs.name] = this;
         }
     },
     /**
@@ -454,7 +460,7 @@ Kinetic.Node.prototype = {
      * get name
      */
     getName: function() {
-        return this.name;
+        return this.attrs.name;
     },
     /**
      * set center offset
@@ -462,14 +468,14 @@ Kinetic.Node.prototype = {
      * @param {Number} y
      */
     setCenterOffset: function(x, y) {
-        this.centerOffset.x = x;
-        this.centerOffset.y = y;
+        this.attrs.centerOffset.x = x;
+        this.attrs.centerOffset.y = y;
     },
     /**
      * get center offset
      */
     getCenterOffset: function() {
-        return this.centerOffset;
+        return this.attrs.centerOffset;
     },
     /**
      * transition node to another state.  Any property that can accept a real
@@ -522,13 +528,13 @@ Kinetic.Node.prototype = {
      * @param {String} constraint
      */
     setDragConstraint: function(constraint) {
-        this.dragConstraint = constraint;
+        this.attrs.dragConstraint = constraint;
     },
     /**
      * get drag constraint
      */
     getDragConstraint: function() {
-        return this.dragConstraint;
+        return this.attrs.dragConstraint;
     },
     /**
      * set drag bounds
@@ -539,13 +545,13 @@ Kinetic.Node.prototype = {
      * @config {Number} [bottom] bottom bounds position
      */
     setDragBounds: function(bounds) {
-        this.dragBounds = bounds;
+        this.attrs.dragBounds = bounds;
     },
     /**
      * get drag bounds
      */
     getDragBounds: function() {
-        return this.dragBounds;
+        return this.attrs.dragBounds;
     },
     /**
      * get transform of the node while taking into
@@ -579,17 +585,17 @@ Kinetic.Node.prototype = {
     getTransform: function() {
         var m = new Kinetic.Transform();
 
-        if(this.x !== 0 || this.y !== 0) {
-            m.translate(this.x, this.y);
+        if(this.attrs.x !== 0 || this.attrs.y !== 0) {
+            m.translate(this.attrs.x, this.attrs.y);
         }
-        if(this.rotation !== 0) {
-            m.rotate(this.rotation);
+        if(this.attrs.rotation !== 0) {
+            m.rotate(this.attrs.rotation);
         }
-        if(this.scale.x !== 1 || this.scale.y !== 1) {
-            m.scale(this.scale.x, this.scale.y);
+        if(this.attrs.scale.x !== 1 || this.attrs.scale.y !== 1) {
+            m.scale(this.attrs.scale.x, this.attrs.scale.y);
         }
-        if(this.centerOffset.x !== 0 || this.centerOffset.y !== 0) {
-            m.translate(-1 * this.centerOffset.x, -1 * this.centerOffset.y);
+        if(this.attrs.centerOffset.x !== 0 || this.attrs.centerOffset.y !== 0) {
+            m.translate(-1 * this.attrs.centerOffset.x, -1 * this.attrs.centerOffset.y);
         }
 
         return m;

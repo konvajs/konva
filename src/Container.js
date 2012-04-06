@@ -44,8 +44,8 @@ Kinetic.Container.prototype = {
      */
     _remove: function(child) {
         if(this.children[child.index].id == child.id) {
-            if(child.name !== undefined) {
-                this.childrenNames[child.name] = undefined;
+            if(child.attrs.name !== undefined) {
+                this.childrenNames[child.attrs.name] = undefined;
             }
 
             this.children.splice(child.index, 1);
@@ -73,8 +73,8 @@ Kinetic.Container.prototype = {
      * @param {Node} child
      */
     _add: function(child) {
-        if(child.name) {
-            this.childrenNames[child.name] = child;
+        if(child.attrs.name) {
+            this.childrenNames[child.attrs.name] = child;
         }
         child.id = Kinetic.GlobalObject.idCounter++;
         child.index = this.children.length;

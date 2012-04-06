@@ -11,10 +11,7 @@
  */
 Kinetic.Group = function(config) {
     this.nodeType = 'Group';
-
-    // used for serialization
-    Kinetic.GlobalObject.jsonProps.call(this, []);
-
+    
     // call super constructors
     Kinetic.Container.apply(this, []);
     Kinetic.Node.apply(this, [config]);
@@ -41,7 +38,7 @@ Kinetic.Group.prototype = {
      * draw children
      */
     _draw: function() {
-        if(this.visible) {
+        if(this.attrs.visible) {
             this._drawChildren();
         }
     }

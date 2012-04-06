@@ -8,18 +8,25 @@
  * @param {Object} config
  */
 Kinetic.Star = function(config) {
-	this.shapeType = "Star";
-	
+    // default attrs
+    if(this.attrs === undefined) {
+        this.attrs = {};
+    }
+    this.attrs.points = [];
+    this.attrs.innerRadius = 0;
+    this.attrs.outerRadius = 0;
+
+    this.shapeType = "Star";
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
         this.applyLineJoin();
-        context.moveTo(0, 0 - this.outerRadius);
+        context.moveTo(0, 0 - this.attrs.outerRadius);
 
-        for(var n = 1; n < this.points * 2; n++) {
-            var radius = n % 2 === 0 ? this.outerRadius : this.innerRadius;
-            var x = radius * Math.sin(n * Math.PI / this.points);
-            var y = -1 * radius * Math.cos(n * Math.PI / this.points);
+        for(var n = 1; n < this.attrs.points * 2; n++) {
+            var radius = n % 2 === 0 ? this.attrs.outerRadius : this.attrs.innerRadius;
+            var x = radius * Math.sin(n * Math.PI / this.attrs.points);
+            var y = -1 * radius * Math.cos(n * Math.PI / this.attrs.points);
             context.lineTo(x, y);
         }
         context.closePath();
@@ -37,39 +44,39 @@ Kinetic.Star.prototype = {
      * @param {Array} points
      */
     setPoints: function(points) {
-        this.points = points;
+        this.attrs.points = points;
     },
     /**
      * get points array
      */
     getPoints: function() {
-        return this.points;
+        return this.attrs.points;
     },
     /**
      * set outer radius
      * @param {Number} radius
      */
     setOuterRadius: function(radius) {
-        this.outerRadius = radius;
+        this.attrs.outerRadius = radius;
     },
     /**
      * get outer radius
      */
     getOuterRadius: function() {
-        return this.outerRadius;
+        return this.attrs.outerRadius;
     },
     /**
      * set inner radius
      * @param {Number} radius
      */
     setInnerRadius: function(radius) {
-        this.innerRadius = radius;
+        this.attrs.innerRadius = radius;
     },
     /**
      * get inner radius
      */
     getInnerRadius: function() {
-        return this.innerRadius;
+        return this.attrs.innerRadius;
     }
 };
 // extend Shape

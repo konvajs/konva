@@ -8,8 +8,16 @@
  * @param {Object} config
  */
 Kinetic.Image = function(config) {
-	this.shapeType = "Image";
-	
+    // default attrs
+    if(this.attrs === undefined) {
+        this.attrs = {};
+    }
+    this.attrs.width = 0;
+    this.attrs.height = 0;
+
+    // special
+    this.image = config.image;
+
     // defaults
     if(config.width === undefined) {
         config.width = config.image.width;
@@ -18,15 +26,16 @@ Kinetic.Image = function(config) {
         config.height = config.image.height;
     }
 
+    this.shapeType = "Image";
     config.drawFunc = function() {
         var canvas = this.getCanvas();
         var context = this.getContext();
         context.beginPath();
         this.applyLineJoin();
-        context.rect(0, 0, this.width, this.height);
+        context.rect(0, 0, this.attrs.width, this.attrs.height);
         context.closePath();
         this.fillStroke();
-        context.drawImage(this.image, 0, 0, this.width, this.height);
+        context.drawImage(this.image, 0, 0, this.attrs.width, this.attrs.height);
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
@@ -53,26 +62,26 @@ Kinetic.Image.prototype = {
      * @param {Number} width
      */
     setWidth: function(width) {
-        this.width = width;
+        this.attrs.width = width;
     },
     /**
      * get width
      */
     getWidth: function() {
-        return this.width;
+        return this.attrs.width;
     },
     /**
      * set height
      * @param {Number} height
      */
     setHeight: function(height) {
-        this.height = height;
+        this.attrs.height = height;
     },
     /**
      * get height
      */
     getHeight: function() {
-        return this.height;
+        return this.attrs.height;
     },
     /**
      * set width and height
@@ -80,16 +89,16 @@ Kinetic.Image.prototype = {
      * @param {Number} height
      */
     setSize: function(width, height) {
-        this.width = width;
-        this.height = height;
+        this.attrs.width = width;
+        this.attrs.height = height;
     },
     /**
      * return image size
      */
     getSize: function() {
         return {
-            width: this.width,
-            height: this.height
+            width: this.attrs.width,
+            height: this.attrs.height
         };
     }
 };

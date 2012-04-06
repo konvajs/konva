@@ -16,6 +16,20 @@
  *  The default is "path" because it performs better
  */
 Kinetic.Shape = function(config) {
+    // default attrs
+    if(this.attrs === undefined) {
+        this.attrs = {};
+    }
+    this.attrs.fill = undefined;
+    this.attrs.stroke = undefined;
+    this.attrs.strokeWidth = undefined;
+    this.attrs.lineJoin = undefined;
+    this.attrs.detectionType = 'path';
+    this.attrs.drawFuncName = undefined;
+
+    // special
+    this.drawFunc = config.drawFunc;
+
     this.nodeType = 'Shape';
     this.data = [];
 
@@ -28,14 +42,6 @@ Kinetic.Shape = function(config) {
             config.strokeWidth = 2;
         }
     }
-
-    this.detectionType = 'path';
-
-    // required
-    this.drawFunc = config.drawFunc;
-
-    // used for serialization
-    Kinetic.GlobalObject.jsonProps.call(this, ['fill', 'stroke', 'strokeWidth', 'detectionType', 'shapeType', 'drawFuncName']);
 
     // call super constructor
     Kinetic.Node.apply(this, [config]);
@@ -67,13 +73,13 @@ Kinetic.Shape.prototype = {
     fillStroke: function() {
         var context = this.getContext();
 
-        if(this.fill !== undefined) {
-            context.fillStyle = this.fill;
+        if(this.attrs.fill !== undefined) {
+            context.fillStyle = this.attrs.fill;
             context.fill();
         }
-        if(this.stroke !== undefined) {
-            context.lineWidth = this.strokeWidth === undefined ? 1 : this.strokeWidth;
-            context.strokeStyle = this.stroke;
+        if(this.attrs.stroke !== undefined) {
+            context.lineWidth = this.attrs.strokeWidth === undefined ? 1 : this.attrs.strokeWidth;
+            context.strokeStyle = this.attrs.stroke;
             context.stroke();
         }
     },
@@ -83,8 +89,8 @@ Kinetic.Shape.prototype = {
      */
     applyLineJoin: function() {
         var context = this.getContext();
-        if(this.lineJoin !== undefined) {
-            context.lineJoin = this.lineJoin;
+        if(this.attrs.lineJoin !== undefined) {
+            context.lineJoin = this.attrs.lineJoin;
         }
     },
     /**
@@ -93,26 +99,26 @@ Kinetic.Shape.prototype = {
      * @param {String|CanvasGradient|CanvasPattern} fill
      */
     setFill: function(fill) {
-        this.fill = fill;
+        this.attrs.fill = fill;
     },
     /**
      * get fill
      */
     getFill: function() {
-        return this.fill;
+        return this.attrs.fill;
     },
     /**
      * set stroke color
      * @param {String} stroke
      */
     setStroke: function(stroke) {
-        this.stroke = stroke;
+        this.attrs.stroke = stroke;
     },
     /**
      * get stroke color
      */
     getStroke: function() {
-        return this.stroke;
+        return this.attrs.stroke;
     },
     /**
      * set line join
@@ -120,26 +126,26 @@ Kinetic.Shape.prototype = {
      *  default is "miter"
      */
     setLineJoin: function(lineJoin) {
-        this.lineJoin = lineJoin;
+        this.attrs.lineJoin = lineJoin;
     },
     /**
      * get line join
      */
     getLineJoin: function() {
-        return this.lineJoin;
+        return this.attrs.lineJoin;
     },
     /**
      * set stroke width
      * @param {Number} strokeWidth
      */
     setStrokeWidth: function(strokeWidth) {
-        this.strokeWidth = strokeWidth;
+        this.attrs.strokeWidth = strokeWidth;
     },
     /**
      * get stroke width
      */
     getStrokeWidth: function() {
-        return this.strokeWidth;
+        return this.attrs.strokeWidth;
     },
     /**
      * set draw function
@@ -153,8 +159,8 @@ Kinetic.Shape.prototype = {
      */
     save: function() {
         var stage = this.getStage();
-        var w = stage.width;
-        var h = stage.height;
+        var w = stage.attrs.width;
+        var h = stage.attrs.height;
 
         var bufferLayer = stage.bufferLayer;
         var bufferLayerContext = bufferLayer.getContext();
@@ -170,7 +176,7 @@ Kinetic.Shape.prototype = {
      * @param {Layer} layer Layer that the shape will be drawn on
      */
     _draw: function(layer) {
-        if(this.visible) {
+        if(this.attrs.visible) {
             var stage = layer.getStage();
             var context = layer.getContext();
             var family = [];
@@ -198,7 +204,7 @@ Kinetic.Shape.prototype = {
         }
 
         // clear shape data
-        if(this.detectionType === 'pixel') {
+        if(this.attrs.detectionType === 'pixel') {
             this.data = [];
         }
     },
@@ -209,7 +215,7 @@ Kinetic.Shape.prototype = {
     _isPointInShape: function(pos) {
         var stage = this.getStage();
 
-        if(this.detectionType === 'path') {
+        if(this.attrs.detectionType === 'path') {
             var pathLayer = stage.pathLayer;
             var pathLayerContext = pathLayer.getContext();
 
@@ -218,7 +224,7 @@ Kinetic.Shape.prototype = {
             return pathLayerContext.isPointInPath(pos.x, pos.y);
         }
         else {
-            var w = stage.width;
+            var w = stage.attrs.width;
             var alpha = this.data[((w * pos.y) + pos.x) * 4 + 3];
             return (alpha !== undefined && alpha !== 0);
         }
