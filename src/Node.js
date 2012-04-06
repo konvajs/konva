@@ -10,7 +10,7 @@
  */
 Kinetic.Node = function(config) {
     this.visible = true;
-    this.listening = true;
+    this._listening = true;
     this.name = undefined;
     this.alpha = 1;
     this.x = 0;
@@ -37,7 +37,7 @@ Kinetic.Node = function(config) {
                 case 'draggable':
                     this.draggable(config[key]);
                     break;
-                case 'listen':
+                case 'listening':
                     this.listen(config[key]);
                     break;
                 case 'rotationDeg':
@@ -59,7 +59,7 @@ Kinetic.Node = function(config) {
     }
 
     // used for serialization
-    Kinetic.GlobalObject.jsonProps.call(this, ['alpha', 'centerOffset', 'dragBounds', 'dragConstraint', '_draggable', 'listening', 'name', 'nodeType', 'rotation', 'scale', 'visible', 'x', 'y']);
+    Kinetic.GlobalObject.jsonProps.call(this, ['alpha', 'centerOffset', 'dragBounds', 'dragConstraint', '_draggable', '_listening', 'name', 'nodeType', 'rotation', 'scale', 'visible', 'x', 'y']);
 };
 /*
  * Node methods
@@ -298,7 +298,7 @@ Kinetic.Node.prototype = {
      * @param {Boolean} listening
      */
     listen: function(listening) {
-        this.listening = listening;
+        this._listening = listening;
     },
     /**
      * move node to top

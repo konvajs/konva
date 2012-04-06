@@ -161,7 +161,7 @@ window.requestAnimFrame = (function(callback) {
  */
 Kinetic.Node = function(config) {
     this.visible = true;
-    this.listening = true;
+    this._listening = true;
     this.name = undefined;
     this.alpha = 1;
     this.x = 0;
@@ -188,7 +188,7 @@ Kinetic.Node = function(config) {
                 case 'draggable':
                     this.draggable(config[key]);
                     break;
-                case 'listen':
+                case 'listening':
                     this.listen(config[key]);
                     break;
                 case 'rotationDeg':
@@ -210,7 +210,7 @@ Kinetic.Node = function(config) {
     }
 
     // used for serialization
-    Kinetic.GlobalObject.jsonProps.call(this, ['alpha', 'centerOffset', 'dragBounds', 'dragConstraint', '_draggable', 'listening', 'name', 'nodeType', 'rotation', 'scale', 'visible', 'x', 'y']);
+    Kinetic.GlobalObject.jsonProps.call(this, ['alpha', 'centerOffset', 'dragBounds', 'dragConstraint', '_draggable', '_listening', 'name', 'nodeType', 'rotation', 'scale', 'visible', 'x', 'y']);
 };
 /*
  * Node methods
@@ -449,7 +449,7 @@ Kinetic.Node.prototype = {
      * @param {Boolean} listening
      */
     listen: function(listening) {
-        this.listening = listening;
+        this._listening = listening;
     },
     /**
      * move node to top
@@ -1125,20 +1125,22 @@ Kinetic.Stage.prototype = {
 
         function addNode(node) {
             var obj = {};
+            obj.attrs = {};
 
             // copy attrs
             for(var key in node) {
                 if(node.hasOwnProperty(key) && go.arrayHas(node.jsonProps, key)) {
-                    obj[key] = node[key];
+                    obj.attrs[key.replace('_', '')] = node[key];
                 }
             }
 
             if(node.nodeType !== 'Shape') {
-                obj._children = [];
+                obj.children = [];
+
                 var children = node.getChildren();
                 for(var n = 0; n < children.length; n++) {
                     var child = children[n];
-                    obj._children.push(addNode(child));
+                    obj.children.push(addNode(child));
                 }
             }
 
@@ -1149,41 +1151,48 @@ Kinetic.Stage.prototype = {
     /**
      * load stage with JSON string
      */
-    load: function(json) {
+    load: function(json, drawFuncs) {
         function loadNode(node, obj) {
-            // copy properties over
-            for(var key in obj) {
-                node[key] = obj[key];
+            // if custom shape then set draw function
+            if(obj.nodeType === 'Shape' && obj.shapeType === undefined) {
+                node.drawFunc = drawFuncs[obj.attrs.drawFuncName];
             }
 
-            var children = obj._children;
+            var children = obj.children;
             if(children !== undefined) {
                 for(var n = 0; n < children.length; n++) {
                     var child = children[n];
                     var type;
 
                     // determine type
-                    if(child.nodeType === 'Shape') {
+                    if(child.attrs.nodeType === 'Shape') {
                         // add custom shape
-                        if(child.shapeType === undefined) {
+                        if(child.attrs.shapeType === undefined) {
                             type = 'Shape';
                         }
                         // add standard shape
                         else {
-                            type = child.shapeType;
+                            type = child.attrs.shapeType;
                         }
                     }
                     else {
-                        type = child.nodeType;
+                        type = child.attrs.nodeType;
                     }
 
-                    var no = new Kinetic[type]({});
+                    var no = new Kinetic[type](child.attrs);
                     node.add(no);
                     loadNode(no, child);
                 }
             }
         }
-        loadNode(this, JSON.parse(json));
+        var obj = JSON.parse(json);
+
+        // copy over stage properties
+        for(var key in obj.attrs) {
+            this[key] = obj.attrs[key];
+        }
+
+        loadNode(this, obj);
         this.draw();
     },
     /**
@@ -1419,7 +1428,7 @@ Kinetic.Stage.prototype = {
         // propapgate backwards through children
         for(var i = children.length - 1; i >= 0; i--) {
             var child = children[i];
-            if(child.listening) {
+            if(child._listening) {
                 if(child.nodeType === 'Shape') {
                     var exit = this._detectEvent(child, evt);
                     if(exit) {
@@ -1460,7 +1469,7 @@ Kinetic.Stage.prototype = {
         var shapeDetected = false;
         for(var n = this.children.length - 1; n >= 0; n--) {
             var layer = this.children[n];
-            if(layer.visible && n >= 0 && layer.listening) {
+            if(layer.visible && n >= 0 && layer._listening) {
                 if(this._traverseChildren(layer, evt)) {
                     n = -1;
                     shapeDetected = true;
@@ -1934,7 +1943,7 @@ Kinetic.Shape = function(config) {
     this.drawFunc = config.drawFunc;
 
     // used for serialization
-    Kinetic.GlobalObject.jsonProps.call(this, ['fill', 'stroke', 'strokeWidth', 'detectionType', 'shapeType']);
+    Kinetic.GlobalObject.jsonProps.call(this, ['fill', 'stroke', 'strokeWidth', 'detectionType', 'shapeType', 'drawFuncName']);
 
     // call super constructor
     Kinetic.Node.apply(this, [config]);
