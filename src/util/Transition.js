@@ -84,8 +84,8 @@ Kinetic.Transition.prototype = {
         }
 
         var tween = new Kinetic.Tween(node, function(i) {
-            node[key] = i;
-        }, Kinetic.Tweens[easing], node[key], config[key], config.duration);
+            node.attrs[key] = i;
+        }, Kinetic.Tweens[easing], node.attrs[key], config[key], config.duration);
 
         return tween;
     },
@@ -98,8 +98,8 @@ Kinetic.Transition.prototype = {
         }
 
         var tween = new Kinetic.Tween(node, function(i) {
-            node[key][prop] = i;
-        }, Kinetic.Tweens[easing], node[key][prop], config[key][prop], config.duration);
+            node.attrs[key][prop] = i;
+        }, Kinetic.Tweens[easing], node.attrs[key][prop], config[key][prop], config.duration);
 
         return tween;
     },

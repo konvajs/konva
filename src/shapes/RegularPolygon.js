@@ -16,7 +16,6 @@ Kinetic.RegularPolygon = function(config) {
     this.attrs.sides = 0;
 
     this.shapeType = "RegularPolygon";
-
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();

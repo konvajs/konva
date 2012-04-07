@@ -15,7 +15,6 @@ Kinetic.Polygon = function(config) {
     this.attrs.points = {};
 
     this.shapeType = "Polygon";
-
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();

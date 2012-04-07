@@ -12,30 +12,22 @@ Kinetic.Image = function(config) {
     if(this.attrs === undefined) {
         this.attrs = {};
     }
-    this.attrs.width = 0;
-    this.attrs.height = 0;
 
     // special
     this.image = config.image;
 
-    // defaults
-    if(config.width === undefined) {
-        config.width = config.image.width;
-    }
-    if(config.height === undefined) {
-        config.height = config.image.height;
-    }
-
     this.shapeType = "Image";
     config.drawFunc = function() {
+    	var width = this.attrs.width !== undefined ? this.attrs.width : this.image.width;
+    	var height = this.attrs.height !== undefined ? this.attrs.height : this.image.height;
         var canvas = this.getCanvas();
         var context = this.getContext();
         context.beginPath();
         this.applyLineJoin();
-        context.rect(0, 0, this.attrs.width, this.attrs.height);
+        context.rect(0, 0, width, height);
         context.closePath();
         this.fillStroke();
-        context.drawImage(this.image, 0, 0, this.attrs.width, this.attrs.height);
+        context.drawImage(this.image, 0, 0, width, height);
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);

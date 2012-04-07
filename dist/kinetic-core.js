@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Apr 05 2012
+ * Date: Apr 07 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -967,6 +967,10 @@ Kinetic.Stage = function(config) {
         config.container = document.getElementById(config.container);
     }
 
+    // call super constructors
+    Kinetic.Container.apply(this, []);
+    Kinetic.Node.apply(this, [config]);
+    
     this.nodeType = 'Stage';
     this.container = config.container;
     this.content = document.createElement('div');
@@ -998,10 +1002,6 @@ Kinetic.Stage = function(config) {
 
     // add stage to global object
     Kinetic.GlobalObject.stages.push(this);
-
-    // call super constructors
-    Kinetic.Container.apply(this, []);
-    Kinetic.Node.apply(this, [config]);
 };
 /*
  * Stage methods
@@ -1093,9 +1093,11 @@ Kinetic.Stage.prototype = {
         var bufferLayer = this.bufferLayer;
         var bufferContext = bufferLayer.getContext();
         var layers = this.children;
+        var that = this;
 
         function addLayer(n) {
             var dataURL = layers[n].getCanvas().toDataURL();
+            console.log(dataURL);
             var imageObj = new Image();
             imageObj.onload = function() {
                 bufferContext.drawImage(this, 0, 0);
@@ -1657,8 +1659,8 @@ Kinetic.Stage.prototype = {
 
                 // default
                 var newNodePos = {
-                    x: pos.attrs.x - go.drag.offset.x,
-                    y: pos.attrs.y - go.drag.offset.y
+                    x: pos.x - go.drag.offset.x,
+                    y: pos.y - go.drag.offset.y
                 };
 
                 // bounds overrides
@@ -2299,30 +2301,22 @@ Kinetic.Image = function(config) {
     if(this.attrs === undefined) {
         this.attrs = {};
     }
-    this.attrs.width = 0;
-    this.attrs.height = 0;
 
     // special
     this.image = config.image;
 
-    // defaults
-    if(config.width === undefined) {
-        config.width = config.image.width;
-    }
-    if(config.height === undefined) {
-        config.height = config.image.height;
-    }
-
     this.shapeType = "Image";
     config.drawFunc = function() {
+    	var width = this.attrs.width !== undefined ? this.attrs.width : this.image.width;
+    	var height = this.attrs.height !== undefined ? this.attrs.height : this.image.height;
         var canvas = this.getCanvas();
         var context = this.getContext();
         context.beginPath();
         this.applyLineJoin();
-        context.rect(0, 0, this.attrs.width, this.attrs.height);
+        context.rect(0, 0, width, height);
         context.closePath();
         this.fillStroke();
-        context.drawImage(this.image, 0, 0, this.attrs.width, this.attrs.height);
+        context.drawImage(this.image, 0, 0, width, height);
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
@@ -2409,7 +2403,6 @@ Kinetic.Polygon = function(config) {
     this.attrs.points = {};
 
     this.shapeType = "Polygon";
-
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
@@ -2464,7 +2457,6 @@ Kinetic.RegularPolygon = function(config) {
     this.attrs.sides = 0;
 
     this.shapeType = "RegularPolygon";
-
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
@@ -2618,6 +2610,7 @@ Kinetic.Text = function(config) {
     this.attrs.fontFamily = '';
     this.attrs.text = '';
     this.attrs.fontSize = 12;
+    this.attrs.fill = undefined;
     this.attrs.textStroke = undefined;
     this.attrs.textStrokeWidth = undefined;
     this.attrs.align = 'left';
@@ -2626,18 +2619,6 @@ Kinetic.Text = function(config) {
     this.attrs.fontStyle = 'normal';
 
     this.shapeType = "Text";
-
-    /*
-     * special defaults
-     */
-    if(config.textStroke !== undefined || config.textStrokeWidth !== undefined) {
-        if(config.textStroke === undefined) {
-            config.textStroke = 'black';
-        }
-        else if(config.textStrokeWidth === undefined) {
-            config.textStrokeWidth = 2;
-        }
-    }
 
     config.drawFunc = function() {
         var context = this.getContext();
@@ -3067,8 +3048,8 @@ Kinetic.Transition.prototype = {
         }
 
         var tween = new Kinetic.Tween(node, function(i) {
-            node[key] = i;
-        }, Kinetic.Tweens[easing], node[key], config[key], config.duration);
+            node.attrs[key] = i;
+        }, Kinetic.Tweens[easing], node.attrs[key], config[key], config.duration);
 
         return tween;
     },
@@ -3081,8 +3062,8 @@ Kinetic.Transition.prototype = {
         }
 
         var tween = new Kinetic.Tween(node, function(i) {
-            node[key][prop] = i;
-        }, Kinetic.Tweens[easing], node[key][prop], config[key][prop], config.duration);
+            node.attrs[key][prop] = i;
+        }, Kinetic.Tweens[easing], node.attrs[key][prop], config[key][prop], config.duration);
 
         return tween;
     },

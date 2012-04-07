@@ -27,6 +27,10 @@ Kinetic.Stage = function(config) {
         config.container = document.getElementById(config.container);
     }
 
+    // call super constructors
+    Kinetic.Container.apply(this, []);
+    Kinetic.Node.apply(this, [config]);
+    
     this.nodeType = 'Stage';
     this.container = config.container;
     this.content = document.createElement('div');
@@ -58,10 +62,6 @@ Kinetic.Stage = function(config) {
 
     // add stage to global object
     Kinetic.GlobalObject.stages.push(this);
-
-    // call super constructors
-    Kinetic.Container.apply(this, []);
-    Kinetic.Node.apply(this, [config]);
 };
 /*
  * Stage methods
@@ -153,9 +153,11 @@ Kinetic.Stage.prototype = {
         var bufferLayer = this.bufferLayer;
         var bufferContext = bufferLayer.getContext();
         var layers = this.children;
+        var that = this;
 
         function addLayer(n) {
             var dataURL = layers[n].getCanvas().toDataURL();
+            console.log(dataURL);
             var imageObj = new Image();
             imageObj.onload = function() {
                 bufferContext.drawImage(this, 0, 0);
@@ -717,8 +719,8 @@ Kinetic.Stage.prototype = {
 
                 // default
                 var newNodePos = {
-                    x: pos.attrs.x - go.drag.offset.x,
-                    y: pos.attrs.y - go.drag.offset.y
+                    x: pos.x - go.drag.offset.x,
+                    y: pos.y - go.drag.offset.y
                 };
 
                 // bounds overrides

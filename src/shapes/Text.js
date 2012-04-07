@@ -15,6 +15,7 @@ Kinetic.Text = function(config) {
     this.attrs.fontFamily = '';
     this.attrs.text = '';
     this.attrs.fontSize = 12;
+    this.attrs.fill = undefined;
     this.attrs.textStroke = undefined;
     this.attrs.textStrokeWidth = undefined;
     this.attrs.align = 'left';
@@ -23,18 +24,6 @@ Kinetic.Text = function(config) {
     this.attrs.fontStyle = 'normal';
 
     this.shapeType = "Text";
-
-    /*
-     * special defaults
-     */
-    if(config.textStroke !== undefined || config.textStrokeWidth !== undefined) {
-        if(config.textStroke === undefined) {
-            config.textStroke = 'black';
-        }
-        else if(config.textStrokeWidth === undefined) {
-            config.textStrokeWidth = 2;
-        }
-    }
 
     config.drawFunc = function() {
         var context = this.getContext();
