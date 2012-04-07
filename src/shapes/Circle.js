@@ -13,7 +13,6 @@ Kinetic.Circle = function(config) {
         this.attrs = {};
     }
     this.attrs.radius = 0;
-
     this.shapeType = "Circle";
 
     config.drawFunc = function() {

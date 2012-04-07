@@ -65,49 +65,47 @@ Test.prototype.tests = {
         group.add(circle);
         layer.draw();
     },
-    /*
-     'STAGE - serialize stage': function(containerId) {
-     var stage = new Kinetic.Stage({
-     container: containerId,
-     width: 578,
-     height: 200
-     });
-     var layer = new Kinetic.Layer();
-     var group = new Kinetic.Group();
-     var circle = new Kinetic.Circle({
-     x: stage.getWidth() / 2,
-     y: stage.getHeight() / 2,
-     radius: 70,
-     fill: 'green',
-     stroke: 'black',
-     strokeWidth: 4,
-     name: 'myCircle',
-     draggable: true
-     });
+    'STAGE - serialize stage': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle',
+            draggable: true
+        });
 
-     stage.add(layer);
-     layer.add(group);
-     group.add(circle);
-     layer.draw();
+        stage.add(layer);
+        layer.add(group);
+        group.add(circle);
+        layer.draw();
 
-     console.log(stage.toJSON())
+        //console.log(stage.toJSON())
 
-     var expectedJson = '{"attrs":{"nodeType":"Stage","width":578,"height":200,"scale":{"x":1,"y":1},"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"nodeType":"Layer","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"nodeType":"Group","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"shapeType":"Circle","nodeType":"Shape","detectionType":"path","visible":true,"listening":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true,"radius":70,"fill":"green","stroke":"black","strokeWidth":4}}]}]}]}';
-     test(stage.toJSON() === expectedJson, 'problem with serialization');
-     },
-     'STAGE - load stage with json': function(containerId) {
-     var stage = new Kinetic.Stage({
-     container: containerId,
-     width: 578,
-     height: 200
-     });
+        var expectedJson = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
+        test(stage.toJSON() === expectedJson, 'problem with serialization');
+    },
+    'STAGE - load stage with json': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
 
-     var json = '{"attrs":{"nodeType":"Stage","width":578,"height":200,"scale":{"x":1,"y":1},"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"nodeType":"Layer","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"nodeType":"Group","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"children":[{"attrs":{"shapeType":"Circle","nodeType":"Shape","detectionType":"path","visible":true,"listening":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true,"radius":70,"fill":"green","stroke":"black","strokeWidth":4}}]}]}]}';
-     stage.load(json);
+        var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
+        stage.load(json);
 
-     test(stage.toJSON() === json, "serialized stage is incorrect");
-     },
-     */
+        test(stage.toJSON() === json, "serialized stage is incorrect");
+    },
     /*
      'STAGE - serialize stage with custom shape': function(containerId) {
      var stage = new Kinetic.Stage({

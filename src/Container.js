@@ -9,9 +9,6 @@
 Kinetic.Container = function() {
     this.children = [];
     this.childrenNames = {};
-
-    // used for serialization
-    Kinetic.GlobalObject.jsonProps.call(this, []);
 };
 /*
  * Container methods

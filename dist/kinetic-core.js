@@ -56,22 +56,6 @@ Kinetic.GlobalObject = {
             y: 0
         }
     },
-    jsonProps: function(props) {
-        if(this.jsonProps === undefined) {
-            this.jsonProps = props;
-        }
-        else {
-            this.jsonProps = this.jsonProps.concat(props);
-        }
-    },
-    arrayHas: function(arr, key) {
-        for(var n = 0; n < arr.length; n++) {
-            if(arr[n] === key) {
-                return true;
-            }
-        }
-        return false;
-    },
     extend: function(obj1, obj2) {
         for(var key in obj2.prototype) {
             if(obj2.prototype.hasOwnProperty(key) && obj1.prototype[key] === undefined) {
@@ -190,6 +174,10 @@ Kinetic.Node = function(config) {
         for(var key in config) {
             // handle special keys
             switch (key) {
+                /*
+                 * config properties that require a method to
+                 * be set
+                 */
                 case 'draggable':
                     this.draggable(config[key]);
                     break;
@@ -199,9 +187,14 @@ Kinetic.Node = function(config) {
                 case 'rotationDeg':
                     this.attrs.rotation = config[key] * Math.PI / 180;
                     break;
+                /*
+                 * config objects that we don't want in attrs
+                 */
                 case 'drawFunc':
                     break;
                 case 'image':
+                    break;
+                case 'container':
                     break;
                 default:
                     this.attrs[key] = config[key];
@@ -836,9 +829,6 @@ Kinetic.Node.prototype = {
 Kinetic.Container = function() {
     this.children = [];
     this.childrenNames = {};
-
-    // used for serialization
-    Kinetic.GlobalObject.jsonProps.call(this, []);
 };
 /*
  * Container methods
@@ -958,6 +948,7 @@ Kinetic.Stage = function(config) {
     }
     this.attrs.width = 400;
     this.attrs.height = 200;
+    this.nodeType = 'Stage';
 
     /*
      * if container is a string, assume it's an id for
@@ -970,8 +961,7 @@ Kinetic.Stage = function(config) {
     // call super constructors
     Kinetic.Container.apply(this, []);
     Kinetic.Node.apply(this, [config]);
-    
-    this.nodeType = 'Stage';
+
     this.container = config.container;
     this.content = document.createElement('div');
     this.dblClickWindow = 400;
@@ -1130,14 +1120,9 @@ Kinetic.Stage.prototype = {
 
         function addNode(node) {
             var obj = {};
-            obj.attrs = {};
-
-            // copy attrs
-            for(var key in node) {
-                if(node.hasOwnProperty(key) && go.arrayHas(node.jsonProps, key)) {
-                    obj.attrs[key.replace('_', '')] = node[key];
-                }
-            }
+            obj.attrs = node.attrs;
+            obj.nodeType = node.nodeType;
+            obj.shapeType = node.shapeType;
 
             if(node.nodeType !== 'Shape') {
                 obj.children = [];
@@ -1160,7 +1145,7 @@ Kinetic.Stage.prototype = {
         function loadNode(node, obj) {
             // if custom shape then set draw function
             if(obj.nodeType === 'Shape' && obj.shapeType === undefined) {
-                node.drawFunc = drawFuncs[obj.attrs.drawFuncName];
+                node.drawFunc = drawFuncs[obj.drawFuncName];
             }
 
             var children = obj.children;
@@ -1170,18 +1155,18 @@ Kinetic.Stage.prototype = {
                     var type;
 
                     // determine type
-                    if(child.attrs.nodeType === 'Shape') {
+                    if(child.nodeType === 'Shape') {
                         // add custom shape
-                        if(child.attrs.shapeType === undefined) {
+                        if(child.shapeType === undefined) {
                             type = 'Shape';
                         }
                         // add standard shape
                         else {
-                            type = child.attrs.shapeType;
+                            type = child.shapeType;
                         }
                     }
                     else {
-                        type = child.attrs.nodeType;
+                        type = child.nodeType;
                     }
 
                     var no = new Kinetic[type](child.attrs);
@@ -1193,9 +1178,7 @@ Kinetic.Stage.prototype = {
         var obj = JSON.parse(json);
 
         // copy over stage properties
-        for(var key in obj.attrs) {
-            this[key] = obj.attrs[key];
-        }
+        this.attrs = obj.attrs;
 
         loadNode(this, obj);
         this.draw();
@@ -1796,6 +1779,7 @@ Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Node);
  */
 Kinetic.Layer = function(config) {
     this.nodeType = 'Layer';
+    
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
     this.canvas.style.position = 'absolute';
@@ -1879,7 +1863,7 @@ Kinetic.GlobalObject.extend(Kinetic.Layer, Kinetic.Node);
  * @param {Object} config
  */
 Kinetic.Group = function(config) {
-    this.nodeType = 'Group';
+    this.nodeType = 'Group';;
     
     // call super constructors
     Kinetic.Container.apply(this, []);
@@ -1949,8 +1933,8 @@ Kinetic.Shape = function(config) {
     // special
     this.drawFunc = config.drawFunc;
 
-    this.nodeType = 'Shape';
     this.data = [];
+    this.nodeType = 'Shape';
 
     // defaults
     if(config.stroke !== undefined || config.strokeWidth !== undefined) {
@@ -2250,7 +2234,6 @@ Kinetic.Circle = function(config) {
         this.attrs = {};
     }
     this.attrs.radius = 0;
-
     this.shapeType = "Circle";
 
     config.drawFunc = function() {

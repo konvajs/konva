@@ -39,6 +39,10 @@ Kinetic.Node = function(config) {
         for(var key in config) {
             // handle special keys
             switch (key) {
+                /*
+                 * config properties that require a method to
+                 * be set
+                 */
                 case 'draggable':
                     this.draggable(config[key]);
                     break;
@@ -48,9 +52,14 @@ Kinetic.Node = function(config) {
                 case 'rotationDeg':
                     this.attrs.rotation = config[key] * Math.PI / 180;
                     break;
+                /*
+                 * config objects that we don't want in attrs
+                 */
                 case 'drawFunc':
                     break;
                 case 'image':
+                    break;
+                case 'container':
                     break;
                 default:
                     this.attrs[key] = config[key];

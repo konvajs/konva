@@ -18,6 +18,7 @@ Kinetic.Stage = function(config) {
     }
     this.attrs.width = 400;
     this.attrs.height = 200;
+    this.nodeType = 'Stage';
 
     /*
      * if container is a string, assume it's an id for
@@ -30,8 +31,7 @@ Kinetic.Stage = function(config) {
     // call super constructors
     Kinetic.Container.apply(this, []);
     Kinetic.Node.apply(this, [config]);
-    
-    this.nodeType = 'Stage';
+
     this.container = config.container;
     this.content = document.createElement('div');
     this.dblClickWindow = 400;
@@ -190,14 +190,9 @@ Kinetic.Stage.prototype = {
 
         function addNode(node) {
             var obj = {};
-            obj.attrs = {};
-
-            // copy attrs
-            for(var key in node) {
-                if(node.hasOwnProperty(key) && go.arrayHas(node.jsonProps, key)) {
-                    obj.attrs[key.replace('_', '')] = node[key];
-                }
-            }
+            obj.attrs = node.attrs;
+            obj.nodeType = node.nodeType;
+            obj.shapeType = node.shapeType;
 
             if(node.nodeType !== 'Shape') {
                 obj.children = [];
@@ -220,7 +215,7 @@ Kinetic.Stage.prototype = {
         function loadNode(node, obj) {
             // if custom shape then set draw function
             if(obj.nodeType === 'Shape' && obj.shapeType === undefined) {
-                node.drawFunc = drawFuncs[obj.attrs.drawFuncName];
+                node.drawFunc = drawFuncs[obj.drawFuncName];
             }
 
             var children = obj.children;
@@ -230,18 +225,18 @@ Kinetic.Stage.prototype = {
                     var type;
 
                     // determine type
-                    if(child.attrs.nodeType === 'Shape') {
+                    if(child.nodeType === 'Shape') {
                         // add custom shape
-                        if(child.attrs.shapeType === undefined) {
+                        if(child.shapeType === undefined) {
                             type = 'Shape';
                         }
                         // add standard shape
                         else {
-                            type = child.attrs.shapeType;
+                            type = child.shapeType;
                         }
                     }
                     else {
-                        type = child.attrs.nodeType;
+                        type = child.nodeType;
                     }
 
                     var no = new Kinetic[type](child.attrs);
@@ -253,9 +248,7 @@ Kinetic.Stage.prototype = {
         var obj = JSON.parse(json);
 
         // copy over stage properties
-        for(var key in obj.attrs) {
-            this[key] = obj.attrs[key];
-        }
+        this.attrs = obj.attrs;
 
         loadNode(this, obj);
         this.draw();

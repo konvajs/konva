@@ -30,8 +30,8 @@ Kinetic.Shape = function(config) {
     // special
     this.drawFunc = config.drawFunc;
 
-    this.nodeType = 'Shape';
     this.data = [];
+    this.nodeType = 'Shape';
 
     // defaults
     if(config.stroke !== undefined || config.strokeWidth !== undefined) {
