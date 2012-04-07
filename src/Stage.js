@@ -191,6 +191,7 @@ Kinetic.Stage.prototype = {
         function addNode(node) {
             var obj = {};
             obj.attrs = node.attrs;
+
             obj.nodeType = node.nodeType;
             obj.shapeType = node.shapeType;
 
@@ -215,7 +216,7 @@ Kinetic.Stage.prototype = {
         function loadNode(node, obj) {
             // if custom shape then set draw function
             if(obj.nodeType === 'Shape' && obj.shapeType === undefined) {
-                node.drawFunc = drawFuncs[obj.drawFuncName];
+                node.drawFunc = drawFuncs[obj.attrs.drawFuncName];
             }
 
             var children = obj.children;

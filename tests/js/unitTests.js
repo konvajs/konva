@@ -94,7 +94,7 @@ Test.prototype.tests = {
         var expectedJson = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
         test(stage.toJSON() === expectedJson, 'problem with serialization');
     },
-    'STAGE - load stage with json': function(containerId) {
+    'STAGE - load stage using json': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -106,67 +106,68 @@ Test.prototype.tests = {
 
         test(stage.toJSON() === json, "serialized stage is incorrect");
     },
-    /*
-     'STAGE - serialize stage with custom shape': function(containerId) {
-     var stage = new Kinetic.Stage({
-     container: containerId,
-     width: 578,
-     height: 200
-     });
-     var layer = new Kinetic.Layer();
-     var group = new Kinetic.Group();
+    'STAGE - serialize stage with custom shape': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
 
-     var drawTriangle = function() {
-     var context = this.getContext();
-     context.beginPath();
-     context.moveTo(200, 50);
-     context.lineTo(420, 80);
-     context.quadraticCurveTo(300, 100, 260, 170);
-     context.closePath();
-     this.fillStroke();
-     };
-     var triangle = new Kinetic.Shape({
-     drawFunc: drawTriangle,
-     drawFuncName: 'drawTriangle',
-     fill: "#00D2FF",
-     stroke: "black",
-     strokeWidth: 4
-     });
+        var drawTriangle = function() {
+            var context = this.getContext();
+            context.beginPath();
+            context.moveTo(200, 50);
+            context.lineTo(420, 80);
+            context.quadraticCurveTo(300, 100, 260, 170);
+            context.closePath();
+            this.fillStroke();
+        };
+        var triangle = new Kinetic.Shape({
+            drawFunc: drawTriangle,
+            drawFuncName: 'drawTriangle',
+            fill: "#00D2FF",
+            stroke: "black",
+            strokeWidth: 4
+        });
 
-     stage.add(layer);
-     layer.add(group);
-     group.add(triangle);
-     layer.draw();
+        stage.add(layer);
+        layer.add(group);
+        group.add(triangle);
+        layer.draw();
 
-     var expectedJson = '{"nodeType":"Stage","width":578,"height":200,"scale":{"x":1,"y":1},"visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Layer","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Group","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Shape","detectionType":"path","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"drawFuncName":"drawTriangle","fill":"#00D2FF","stroke":"black","strokeWidth":4}]}]}]}';
-     test(stage.toJSON() === expectedJson, "problem with serialization");
+        //console.log(stage.toJSON());
 
-     console.log(stage.toJSON());
-     },
-     'STAGE - load stage with custom shape': function(containerId) {
-     var stage = new Kinetic.Stage({
-     container: containerId,
-     width: 578,
-     height: 200
-     });
+        var expectedJson = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"drawFuncName":"drawTriangle"},"nodeType":"Shape"}]}]}]}';
+        test(stage.toJSON() === expectedJson, "problem with serialization");
 
-     var drawTriangle = function() {
-     var context = this.getContext();
-     context.beginPath();
-     context.moveTo(200, 50);
-     context.lineTo(420, 80);
-     context.quadraticCurveTo(300, 100, 260, 170);
-     context.closePath();
-     this.fillStroke();
-     };
-     var json = '{"nodeType":"Stage","width":578,"height":200,"scale":{"x":1,"y":1},"visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Layer","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Group","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"_children":[{"nodeType":"Shape","detectionType":"path","visible":true,"_listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"_draggable":false,"drawFuncName":"drawTriangle","fill":"#00D2FF","stroke":"black","strokeWidth":4}]}]}]}';
-     stage.load(json, {
-     drawTriangle: drawTriangle
-     });
+    },
+    'STAGE - load stage with custom shape using json': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
 
-     test(stage.toJSON() === json, "serialized stage is incorrect");
-     },
-     */
+        var drawTriangle = function() {
+            var context = this.getContext();
+            context.beginPath();
+            context.moveTo(200, 50);
+            context.lineTo(420, 80);
+            context.quadraticCurveTo(300, 100, 260, 170);
+            context.closePath();
+            this.fillStroke();
+        };
+        var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"drawFuncName":"drawTriangle"},"nodeType":"Shape"}]}]}]}';
+        stage.load(json, {
+            drawTriangle: drawTriangle
+        });
+
+        //console.log(stage.toJSON());
+
+        test(stage.toJSON() === json, "serialized stage is incorrect");
+    },
     'STAGE - set stage size': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -649,8 +650,6 @@ Test.prototype.tests = {
                 }
             });
 
-            console.log(darth);
-
             layer.add(darth);
             stage.add(layer);
         };
@@ -822,7 +821,7 @@ Test.prototype.tests = {
         layer.add(star);
         stage.add(layer);
     },
-    'SHAPES - add five point star with line join': function(containerId) {
+    'SHAPES - add five point star with line join (ends up as bevel line join)': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
