@@ -18,16 +18,18 @@ Kinetic.Image = function(config) {
 
     this.shapeType = "Image";
     config.drawFunc = function() {
-    	var width = this.attrs.width !== undefined ? this.attrs.width : this.image.width;
-    	var height = this.attrs.height !== undefined ? this.attrs.height : this.image.height;
-        var canvas = this.getCanvas();
-        var context = this.getContext();
-        context.beginPath();
-        this.applyLineJoin();
-        context.rect(0, 0, width, height);
-        context.closePath();
-        this.fillStroke();
-        context.drawImage(this.image, 0, 0, width, height);
+        if(this.image !== undefined) {
+            var width = this.attrs.width !== undefined ? this.attrs.width : this.image.width;
+            var height = this.attrs.height !== undefined ? this.attrs.height : this.image.height;
+            var canvas = this.getCanvas();
+            var context = this.getContext();
+            context.beginPath();
+            this.applyLineJoin();
+            context.rect(0, 0, width, height);
+            context.closePath();
+            this.fillStroke();
+            context.drawImage(this.image, 0, 0, width, height);
+        }
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);

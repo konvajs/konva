@@ -1943,16 +1943,6 @@ Kinetic.Shape = function(config) {
     this.data = [];
     this.nodeType = 'Shape';
 
-    // defaults
-    if(config.stroke !== undefined || config.strokeWidth !== undefined) {
-        if(config.stroke === undefined) {
-            config.stroke = 'black';
-        }
-        else if(config.strokeWidth === undefined) {
-            config.strokeWidth = 2;
-        }
-    }
-
     // call super constructor
     Kinetic.Node.apply(this, [config]);
 };
@@ -1987,7 +1977,16 @@ Kinetic.Shape.prototype = {
             context.fillStyle = this.attrs.fill;
             context.fill();
         }
-        if(this.attrs.stroke !== undefined) {
+
+        var stroke, strokeWidth;
+        if(this.attrs.stroke !== undefined || this.attrs.strokeWidth !== undefined) {
+            if(this.attrs.stroke === undefined) {
+                stroke = 'black';
+            }
+            else if(this.attrs.strokeWidth === undefined) {
+                strokeWidth = 2;
+            }
+
             context.lineWidth = this.attrs.strokeWidth === undefined ? 1 : this.attrs.strokeWidth;
             context.strokeStyle = this.attrs.stroke;
             context.stroke();
@@ -2297,16 +2296,18 @@ Kinetic.Image = function(config) {
 
     this.shapeType = "Image";
     config.drawFunc = function() {
-    	var width = this.attrs.width !== undefined ? this.attrs.width : this.image.width;
-    	var height = this.attrs.height !== undefined ? this.attrs.height : this.image.height;
-        var canvas = this.getCanvas();
-        var context = this.getContext();
-        context.beginPath();
-        this.applyLineJoin();
-        context.rect(0, 0, width, height);
-        context.closePath();
-        this.fillStroke();
-        context.drawImage(this.image, 0, 0, width, height);
+        if(this.image !== undefined) {
+            var width = this.attrs.width !== undefined ? this.attrs.width : this.image.width;
+            var height = this.attrs.height !== undefined ? this.attrs.height : this.image.height;
+            var canvas = this.getCanvas();
+            var context = this.getContext();
+            context.beginPath();
+            this.applyLineJoin();
+            context.rect(0, 0, width, height);
+            context.closePath();
+            this.fillStroke();
+            context.drawImage(this.image, 0, 0, width, height);
+        }
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);

@@ -693,6 +693,58 @@ Test.prototype.tests = {
         };
         imageObj.src = '../darth-vader.jpg';
     },
+    'STAGE - serialize stage with an image': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 200,
+                y: 60,
+                image: imageObj,
+                centerOffset: {
+                    x: 50,
+                    y: imageObj.height / 2
+                }
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+            var json = stage.toJSON();
+
+            //console.log(json);
+
+            test(json === '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Shape","shapeType":"Image"}]}]}', 'problem serializing stage');
+        };
+        imageObj.src = '../darth-vader.jpg';
+    },
+    'STAGE - load stage with an image': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+
+            var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Shape","shapeType":"Image"}]}]}';
+
+            stage.load(json);
+            
+            var image = stage.getChildren()[0].getChildren()[0];
+            
+            image.setImage(imageObj);
+            
+            stage.draw();
+
+        };
+        imageObj.src = '../darth-vader.jpg';
+    },
     'SHAPES - add polygon': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -907,7 +959,7 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
     },
-    'SHAPES - use default stroke': function(containerId) {
+    'SHAPES - use default stroke (stroke color should be black)': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -924,10 +976,8 @@ Test.prototype.tests = {
 
         layer.add(rect);
         stage.add(layer);
-
-        test(rect.getStroke() === 'black', 'stroke should be black');
     },
-    'SHAPES - use default stroke width': function(containerId) {
+    'SHAPES - use default stroke width (stroke width should be 2)': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -944,8 +994,6 @@ Test.prototype.tests = {
 
         layer.add(rect);
         stage.add(layer);
-
-        test(rect.getStrokeWidth() === 2, 'stroke width should be 2');
     },
     'SHAPES - set center offset after instantiation': function(containerId) {
         var stage = new Kinetic.Stage({
