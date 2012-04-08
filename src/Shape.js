@@ -28,7 +28,7 @@ Kinetic.Shape = function(config) {
 
     // special
     this.drawFunc = config.drawFunc;
-    
+
     this.data = [];
     this.nodeType = 'Shape';
 
@@ -175,7 +175,7 @@ Kinetic.Shape.prototype = {
      * @param {Layer} layer Layer that the shape will be drawn on
      */
     _draw: function(layer) {
-        if(this.attrs.visible) {
+        if(this.attrs.visible && this.drawFunc !== undefined) {
             var stage = layer.getStage();
             var context = layer.getContext();
             var family = [];

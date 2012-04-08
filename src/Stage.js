@@ -212,13 +212,8 @@ Kinetic.Stage.prototype = {
     /**
      * load stage with JSON string
      */
-    load: function(json, drawFuncs) {
+    load: function(json) {
         function loadNode(node, obj) {
-            // if custom shape then set draw function
-            if(obj.nodeType === 'Shape' && obj.shapeType === undefined) {
-                node.drawFunc = drawFuncs[obj.attrs.drawFuncName];
-            }
-
             var children = obj.children;
             if(children !== undefined) {
                 for(var n = 0; n < children.length; n++) {
