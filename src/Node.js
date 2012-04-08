@@ -192,7 +192,7 @@ Kinetic.Node.prototype = {
                     nodes = nodes.concat(child.getChildren());
                 }
 
-                if(child.id === that.id) {
+                if(child._id === that._id) {
                     n = children.length;
                 }
             }
@@ -419,7 +419,7 @@ Kinetic.Node.prototype = {
      */
     isDragging: function() {
         var go = Kinetic.GlobalObject;
-        return go.drag.node !== undefined && go.drag.node.id === this.id && go.drag.moving;
+        return go.drag.node !== undefined && go.drag.node._id === this._id && go.drag.moving;
     },
     /**
      * move node to another container
@@ -436,12 +436,6 @@ Kinetic.Node.prototype = {
         this.index = newContainer.children.length - 1;
         this.parent = newContainer;
         newContainer._setChildrenIndices();
-
-        // update children hashes
-        if(this.attrs.name) {
-            parent.childrenNames[this.attrs.name] = undefined;
-            newContainer.childrenNames[this.attrs.name] = this;
-        }
     },
     /**
      * get parent container
@@ -665,10 +659,10 @@ Kinetic.Node.prototype = {
          * determine if event handler should be skipped by comparing
          * parent nodes
          */
-        if(eventType === 'onmouseover' && mouseoutNode && mouseoutNode.id === node.id) {
+        if(eventType === 'onmouseover' && mouseoutNode && mouseoutNode._id === node._id) {
             okayToRun = false;
         }
-        else if(eventType === 'onmouseout' && mouseoverNode && mouseoverNode.id === node.id) {
+        else if(eventType === 'onmouseout' && mouseoverNode && mouseoverNode._id === node._id) {
             okayToRun = false;
         }
 

@@ -41,6 +41,8 @@ var Kinetic = {};
 Kinetic.GlobalObject = {
     stages: [],
     idCounter: 0,
+    ids: {},
+    names: {},
     animations: [],
     animIdCounter: 0,
     frame: {
@@ -123,6 +125,28 @@ Kinetic.GlobalObject = {
         else {
             this.frame.lastTime = 0;
         }
+    },
+    addId: function(node) {
+        var go = Kinetic.GlobalObject;
+        if(node.attrs.id !== undefined) {
+            go.ids[node.attrs.id] = node;
+        }
+    },
+    removeId: function(node) {
+
+    },
+    addName: function(node) {
+        var go = Kinetic.GlobalObject;
+        var name = node.attrs.name;
+        if(name !== undefined) {
+            if(go.names[name] === undefined) {
+                go.names[name] = [];
+            }
+            go.names[name].push(node);
+        }
+    },
+    removeName: function(node) {
+
     }
 };
 
@@ -327,7 +351,7 @@ Kinetic.Node.prototype = {
                     nodes = nodes.concat(child.getChildren());
                 }
 
-                if(child.id === that.id) {
+                if(child._id === that._id) {
                     n = children.length;
                 }
             }
@@ -554,7 +578,7 @@ Kinetic.Node.prototype = {
      */
     isDragging: function() {
         var go = Kinetic.GlobalObject;
-        return go.drag.node !== undefined && go.drag.node.id === this.id && go.drag.moving;
+        return go.drag.node !== undefined && go.drag.node._id === this._id && go.drag.moving;
     },
     /**
      * move node to another container
@@ -571,12 +595,6 @@ Kinetic.Node.prototype = {
         this.index = newContainer.children.length - 1;
         this.parent = newContainer;
         newContainer._setChildrenIndices();
-
-        // update children hashes
-        if(this.attrs.name) {
-            parent.childrenNames[this.attrs.name] = undefined;
-            newContainer.childrenNames[this.attrs.name] = this;
-        }
     },
     /**
      * get parent container
@@ -800,10 +818,10 @@ Kinetic.Node.prototype = {
          * determine if event handler should be skipped by comparing
          * parent nodes
          */
-        if(eventType === 'onmouseover' && mouseoutNode && mouseoutNode.id === node.id) {
+        if(eventType === 'onmouseover' && mouseoutNode && mouseoutNode._id === node._id) {
             okayToRun = false;
         }
-        else if(eventType === 'onmouseout' && mouseoverNode && mouseoverNode.id === node.id) {
+        else if(eventType === 'onmouseout' && mouseoverNode && mouseoverNode._id === node._id) {
             okayToRun = false;
         }
 
@@ -834,7 +852,6 @@ Kinetic.Node.prototype = {
  */
 Kinetic.Container = function() {
     this.children = [];
-    this.childrenNames = {};
 };
 /*
  * Container methods
@@ -845,13 +862,6 @@ Kinetic.Container.prototype = {
      */
     getChildren: function() {
         return this.children;
-    },
-    /**
-     * get child node by name
-     * @param {String} name
-     */
-    getChild: function(name) {
-        return this.childrenNames[name];
     },
     /**
      * remove all children
@@ -866,10 +876,7 @@ Kinetic.Container.prototype = {
      * @param {Node} child
      */
     _remove: function(child) {
-        if(this.children[child.index].id == child.id) {
-            if(child.attrs.name !== undefined) {
-                this.childrenNames[child.attrs.name] = undefined;
-            }
+        if(this.children[child.index]._id == child._id) {
 
             this.children.splice(child.index, 1);
             this._setChildrenIndices();
@@ -896,14 +903,15 @@ Kinetic.Container.prototype = {
      * @param {Node} child
      */
     _add: function(child) {
-        if(child.attrs.name) {
-            this.childrenNames[child.attrs.name] = child;
-        }
-        child.id = Kinetic.GlobalObject.idCounter++;
+        child._id = Kinetic.GlobalObject.idCounter++;
         child.index = this.children.length;
         child.parent = this;
 
         this.children.push(child);
+
+        var go = Kinetic.GlobalObject;
+        go.addId(child);
+        go.addName(child);
     },
     /**
      * set children indices
@@ -934,7 +942,7 @@ Kinetic.Container.prototype = {
     }
 };
 
-///////////////////////////////////////////////////////////////////////
+;///////////////////////////////////////////////////////////////////////
 //  Stage
 ///////////////////////////////////////////////////////////////////////
 /**
@@ -988,7 +996,7 @@ Kinetic.Stage = function(config) {
     this.touchEnd = false;
 
     // set stage id
-    this.id = Kinetic.GlobalObject.idCounter++;
+    this._id = Kinetic.GlobalObject.idCounter++;
 
     this._buildDOM();
     this._listen();
@@ -996,8 +1004,10 @@ Kinetic.Stage = function(config) {
 
     this.anim = undefined;
 
-    // add stage to global object
-    Kinetic.GlobalObject.stages.push(this);
+    var go = Kinetic.GlobalObject;
+    go.stages.push(this);
+    go.addId(this);
+    go.addName(this);
 };
 /*
  * Stage methods
@@ -1034,6 +1044,30 @@ Kinetic.Stage.prototype = {
      */
     draw: function() {
         this._drawChildren();
+    },
+    /**
+     * get selector.  can select nodes by id with # and by name
+     * with .
+     * ex:
+     * var node = stage.get('#foo'); // selects node with id foo
+     * var nodes = stage.get('.bar'); // selects nodes with name bar
+     * @param {String} selector
+     */
+    get: function(selector) {
+    	var go = Kinetic.GlobalObject;
+        var hash;
+        if(selector.charAt(0) === '#') {
+            hash = go.ids;
+        }
+        else if(selector.charAt(0) === '.') {
+            hash = go.names;
+        }
+        else {
+            return false;
+        }
+
+        var key = selector.slice(1);
+        return hash[key];
     },
     /**
      * set stage size
@@ -1224,9 +1258,6 @@ Kinetic.Stage.prototype = {
      * @param {Layer} layer
      */
     add: function(layer) {
-        if(layer.attrs.name) {
-            this.childrenNames[layer.attrs.name] = layer;
-        }
         layer.canvas.width = this.attrs.width;
         layer.canvas.height = this.attrs.height;
         this._add(layer);
@@ -1296,7 +1327,7 @@ Kinetic.Stage.prototype = {
         var pos = this.getUserPosition();
         var el = shape.eventListeners;
 
-        if(this.targetShape && shape.id === this.targetShape.id) {
+        if(this.targetShape && shape._id === this.targetShape._id) {
             this.targetFound = true;
         }
 
@@ -1392,7 +1423,7 @@ Kinetic.Stage.prototype = {
             }
         }
         // handle mouseout condition
-        else if(!isDragging && this.targetShape && this.targetShape.id === shape.id) {
+        else if(!isDragging && this.targetShape && this.targetShape._id === shape._id) {
             this._setTarget(undefined);
             this.mouseoutShape = shape;
             return true;
@@ -1411,7 +1442,7 @@ Kinetic.Stage.prototype = {
      * check if shape should be a new target
      */
     _isNewTarget: function(shape, evt) {
-        if(!this.targetShape || (!this.targetFound && shape.id !== this.targetShape.id)) {
+        if(!this.targetShape || (!this.targetFound && shape._id !== this.targetShape._id)) {
             /*
              * check if old target has an onmouseout event listener
              */

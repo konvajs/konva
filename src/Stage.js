@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////
+;///////////////////////////////////////////////////////////////////////
 //  Stage
 ///////////////////////////////////////////////////////////////////////
 /**
@@ -52,7 +52,7 @@ Kinetic.Stage = function(config) {
     this.touchEnd = false;
 
     // set stage id
-    this.id = Kinetic.GlobalObject.idCounter++;
+    this._id = Kinetic.GlobalObject.idCounter++;
 
     this._buildDOM();
     this._listen();
@@ -60,8 +60,10 @@ Kinetic.Stage = function(config) {
 
     this.anim = undefined;
 
-    // add stage to global object
-    Kinetic.GlobalObject.stages.push(this);
+    var go = Kinetic.GlobalObject;
+    go.stages.push(this);
+    go.addId(this);
+    go.addName(this);
 };
 /*
  * Stage methods
@@ -98,6 +100,30 @@ Kinetic.Stage.prototype = {
      */
     draw: function() {
         this._drawChildren();
+    },
+    /**
+     * get selector.  can select nodes by id with # and by name
+     * with .
+     * ex:
+     * var node = stage.get('#foo'); // selects node with id foo
+     * var nodes = stage.get('.bar'); // selects nodes with name bar
+     * @param {String} selector
+     */
+    get: function(selector) {
+    	var go = Kinetic.GlobalObject;
+        var hash;
+        if(selector.charAt(0) === '#') {
+            hash = go.ids;
+        }
+        else if(selector.charAt(0) === '.') {
+            hash = go.names;
+        }
+        else {
+            return false;
+        }
+
+        var key = selector.slice(1);
+        return hash[key];
     },
     /**
      * set stage size
@@ -288,9 +314,6 @@ Kinetic.Stage.prototype = {
      * @param {Layer} layer
      */
     add: function(layer) {
-        if(layer.attrs.name) {
-            this.childrenNames[layer.attrs.name] = layer;
-        }
         layer.canvas.width = this.attrs.width;
         layer.canvas.height = this.attrs.height;
         this._add(layer);
@@ -360,7 +383,7 @@ Kinetic.Stage.prototype = {
         var pos = this.getUserPosition();
         var el = shape.eventListeners;
 
-        if(this.targetShape && shape.id === this.targetShape.id) {
+        if(this.targetShape && shape._id === this.targetShape._id) {
             this.targetFound = true;
         }
 
@@ -456,7 +479,7 @@ Kinetic.Stage.prototype = {
             }
         }
         // handle mouseout condition
-        else if(!isDragging && this.targetShape && this.targetShape.id === shape.id) {
+        else if(!isDragging && this.targetShape && this.targetShape._id === shape._id) {
             this._setTarget(undefined);
             this.mouseoutShape = shape;
             return true;
@@ -475,7 +498,7 @@ Kinetic.Stage.prototype = {
      * check if shape should be a new target
      */
     _isNewTarget: function(shape, evt) {
-        if(!this.targetShape || (!this.targetFound && shape.id !== this.targetShape.id)) {
+        if(!this.targetShape || (!this.targetFound && shape._id !== this.targetShape._id)) {
             /*
              * check if old target has an onmouseout event listener
              */

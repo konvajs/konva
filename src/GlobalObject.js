@@ -13,6 +13,8 @@ var Kinetic = {};
 Kinetic.GlobalObject = {
     stages: [],
     idCounter: 0,
+    ids: {},
+    names: {},
     animations: [],
     animIdCounter: 0,
     frame: {
@@ -95,6 +97,28 @@ Kinetic.GlobalObject = {
         else {
             this.frame.lastTime = 0;
         }
+    },
+    addId: function(node) {
+        var go = Kinetic.GlobalObject;
+        if(node.attrs.id !== undefined) {
+            go.ids[node.attrs.id] = node;
+        }
+    },
+    removeId: function(node) {
+
+    },
+    addName: function(node) {
+        var go = Kinetic.GlobalObject;
+        var name = node.attrs.name;
+        if(name !== undefined) {
+            if(go.names[name] === undefined) {
+                go.names[name] = [];
+            }
+            go.names[name].push(node);
+        }
+    },
+    removeName: function(node) {
+
     }
 };
 

@@ -8,7 +8,6 @@
  */
 Kinetic.Container = function() {
     this.children = [];
-    this.childrenNames = {};
 };
 /*
  * Container methods
@@ -19,13 +18,6 @@ Kinetic.Container.prototype = {
      */
     getChildren: function() {
         return this.children;
-    },
-    /**
-     * get child node by name
-     * @param {String} name
-     */
-    getChild: function(name) {
-        return this.childrenNames[name];
     },
     /**
      * remove all children
@@ -40,10 +32,7 @@ Kinetic.Container.prototype = {
      * @param {Node} child
      */
     _remove: function(child) {
-        if(this.children[child.index].id == child.id) {
-            if(child.attrs.name !== undefined) {
-                this.childrenNames[child.attrs.name] = undefined;
-            }
+        if(this.children[child.index]._id == child._id) {
 
             this.children.splice(child.index, 1);
             this._setChildrenIndices();
@@ -70,14 +59,15 @@ Kinetic.Container.prototype = {
      * @param {Node} child
      */
     _add: function(child) {
-        if(child.attrs.name) {
-            this.childrenNames[child.attrs.name] = child;
-        }
-        child.id = Kinetic.GlobalObject.idCounter++;
+        child._id = Kinetic.GlobalObject.idCounter++;
         child.index = this.children.length;
         child.parent = this;
 
         this.children.push(child);
+
+        var go = Kinetic.GlobalObject;
+        go.addId(child);
+        go.addName(child);
     },
     /**
      * set children indices
