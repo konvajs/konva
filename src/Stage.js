@@ -19,6 +19,8 @@ Kinetic.Stage = function(config) {
     this.attrs.width = 400;
     this.attrs.height = 200;
     this.nodeType = 'Stage';
+    this.ids = {};
+    this.names = {};
 
     /*
      * if container is a string, assume it's an id for
@@ -62,8 +64,8 @@ Kinetic.Stage = function(config) {
 
     var go = Kinetic.GlobalObject;
     go.stages.push(this);
-    go.addId(this);
-    go.addName(this);
+    this._addId(this);
+    this._addName(this);
 };
 /*
  * Stage methods
@@ -110,13 +112,12 @@ Kinetic.Stage.prototype = {
      * @param {String} selector
      */
     get: function(selector) {
-    	var go = Kinetic.GlobalObject;
         var hash;
         if(selector.charAt(0) === '#') {
-            hash = go.ids;
+            hash = this.ids;
         }
         else if(selector.charAt(0) === '.') {
-            hash = go.names;
+            hash = this.names;
         }
         else {
             return false;
@@ -317,6 +318,10 @@ Kinetic.Stage.prototype = {
         layer.canvas.width = this.attrs.width;
         layer.canvas.height = this.attrs.height;
         this._add(layer);
+
+        // populate stage node ids and names
+        var go = Kinetic.GlobalObject;
+        go._pullNodes(this);
 
         // draw layer and append canvas to container
         layer.draw();
@@ -855,6 +860,26 @@ Kinetic.Stage.prototype = {
         this.pathLayer.canvas.height = this.attrs.height;
         this.pathLayer.canvas.className = 'kineticjs-path-layer';
         this.content.appendChild(this.pathLayer.canvas);
+    },
+    _addId: function(node) {
+        if(node.attrs.id !== undefined) {
+            this.ids[node.attrs.id] = node;
+        }
+    },
+    _removeId: function(node) {
+
+    },
+    _addName: function(node) {
+        var name = node.attrs.name;
+        if(name !== undefined) {
+            if(this.names[name] === undefined) {
+                this.names[name] = [];
+            }
+            this.names[name].push(node);
+        }
+    },
+    _removeName: function(node) {
+
     }
 };
 // Extend Container and Node

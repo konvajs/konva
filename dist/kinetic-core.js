@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Apr 07 2012
+ * Date: Apr 08 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -41,8 +41,7 @@ var Kinetic = {};
 Kinetic.GlobalObject = {
     stages: [],
     idCounter: 0,
-    ids: {},
-    names: {},
+    tempNodes: [],
     animations: [],
     animIdCounter: 0,
     frame: {
@@ -78,12 +77,25 @@ Kinetic.GlobalObject = {
             }
         }
     },
+    _pullNodes: function(stage) {
+        var go = Kinetic.GlobalObject;
+        var tempNodes = go.tempNodes;
+        for(var n = 0; n < tempNodes.length; n++) {
+            var node = tempNodes[n];
+            if(node.getStage() !== undefined && node.getStage()._id === stage._id) {
+                stage._addId(node);
+                stage._addName(node);
+                go.tempNodes.splice(n, 1);
+                n -= 1;
+            }
+        }
+    },
     _runFrames: function() {
         var nodes = {};
         for(var n = 0; n < this.animations.length; n++) {
             var anim = this.animations[n];
-            if(anim.node && anim.node.id !== undefined) {
-                nodes[anim.node.id] = anim.node;
+            if(anim.node && anim.node._id !== undefined) {
+                nodes[anim.node._id] = anim.node;
             }
             anim.func(this.frame);
         }
@@ -125,28 +137,6 @@ Kinetic.GlobalObject = {
         else {
             this.frame.lastTime = 0;
         }
-    },
-    addId: function(node) {
-        var go = Kinetic.GlobalObject;
-        if(node.attrs.id !== undefined) {
-            go.ids[node.attrs.id] = node;
-        }
-    },
-    removeId: function(node) {
-
-    },
-    addName: function(node) {
-        var go = Kinetic.GlobalObject;
-        var name = node.attrs.name;
-        if(name !== undefined) {
-            if(go.names[name] === undefined) {
-                go.names[name] = [];
-            }
-            go.names[name].push(node);
-        }
-    },
-    removeName: function(node) {
-
     }
 };
 
@@ -621,7 +611,12 @@ Kinetic.Node.prototype = {
             return this;
         }
         else {
-            return this.getParent().getStage();
+            if(this.getParent() === undefined) {
+                return undefined;
+            }
+            else {
+                return this.getParent().getStage();
+            }
         }
     },
     /**
@@ -909,9 +904,15 @@ Kinetic.Container.prototype = {
 
         this.children.push(child);
 
-        var go = Kinetic.GlobalObject;
-        go.addId(child);
-        go.addName(child);
+        var stage = child.getStage();
+        if (stage === undefined) {
+        	var go = Kinetic.GlobalObject;
+        	go.tempNodes.push(child);
+        }
+        else {
+            stage._addId(child);
+            stage._addName(child);
+        }
     },
     /**
      * set children indices
@@ -963,6 +964,8 @@ Kinetic.Stage = function(config) {
     this.attrs.width = 400;
     this.attrs.height = 200;
     this.nodeType = 'Stage';
+    this.ids = {};
+    this.names = {};
 
     /*
      * if container is a string, assume it's an id for
@@ -1006,8 +1009,8 @@ Kinetic.Stage = function(config) {
 
     var go = Kinetic.GlobalObject;
     go.stages.push(this);
-    go.addId(this);
-    go.addName(this);
+    this._addId(this);
+    this._addName(this);
 };
 /*
  * Stage methods
@@ -1054,13 +1057,12 @@ Kinetic.Stage.prototype = {
      * @param {String} selector
      */
     get: function(selector) {
-    	var go = Kinetic.GlobalObject;
         var hash;
         if(selector.charAt(0) === '#') {
-            hash = go.ids;
+            hash = this.ids;
         }
         else if(selector.charAt(0) === '.') {
-            hash = go.names;
+            hash = this.names;
         }
         else {
             return false;
@@ -1261,6 +1263,10 @@ Kinetic.Stage.prototype = {
         layer.canvas.width = this.attrs.width;
         layer.canvas.height = this.attrs.height;
         this._add(layer);
+
+        // populate stage node ids and names
+        var go = Kinetic.GlobalObject;
+        go._pullNodes(this);
 
         // draw layer and append canvas to container
         layer.draw();
@@ -1799,6 +1805,26 @@ Kinetic.Stage.prototype = {
         this.pathLayer.canvas.height = this.attrs.height;
         this.pathLayer.canvas.className = 'kineticjs-path-layer';
         this.content.appendChild(this.pathLayer.canvas);
+    },
+    _addId: function(node) {
+        if(node.attrs.id !== undefined) {
+            this.ids[node.attrs.id] = node;
+        }
+    },
+    _removeId: function(node) {
+
+    },
+    _addName: function(node) {
+        var name = node.attrs.name;
+        if(name !== undefined) {
+            if(this.names[name] === undefined) {
+                this.names[name] = [];
+            }
+            this.names[name].push(node);
+        }
+    },
+    _removeName: function(node) {
+
     }
 };
 // Extend Container and Node

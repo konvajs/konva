@@ -462,7 +462,12 @@ Kinetic.Node.prototype = {
             return this;
         }
         else {
-            return this.getParent().getStage();
+            if(this.getParent() === undefined) {
+                return undefined;
+            }
+            else {
+                return this.getParent().getStage();
+            }
         }
     },
     /**

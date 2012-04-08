@@ -321,7 +321,7 @@ Test.prototype.tests = {
         layer.add(circle);
         layer.add(rect);
         stage.add(layer);
-
+        
         var node = stage.get('#myCircle');
         var nodes = stage.get('.myRect');
 

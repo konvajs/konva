@@ -13,8 +13,7 @@ var Kinetic = {};
 Kinetic.GlobalObject = {
     stages: [],
     idCounter: 0,
-    ids: {},
-    names: {},
+    tempNodes: [],
     animations: [],
     animIdCounter: 0,
     frame: {
@@ -50,12 +49,25 @@ Kinetic.GlobalObject = {
             }
         }
     },
+    _pullNodes: function(stage) {
+        var go = Kinetic.GlobalObject;
+        var tempNodes = go.tempNodes;
+        for(var n = 0; n < tempNodes.length; n++) {
+            var node = tempNodes[n];
+            if(node.getStage() !== undefined && node.getStage()._id === stage._id) {
+                stage._addId(node);
+                stage._addName(node);
+                go.tempNodes.splice(n, 1);
+                n -= 1;
+            }
+        }
+    },
     _runFrames: function() {
         var nodes = {};
         for(var n = 0; n < this.animations.length; n++) {
             var anim = this.animations[n];
-            if(anim.node && anim.node.id !== undefined) {
-                nodes[anim.node.id] = anim.node;
+            if(anim.node && anim.node._id !== undefined) {
+                nodes[anim.node._id] = anim.node;
             }
             anim.func(this.frame);
         }
@@ -97,28 +109,6 @@ Kinetic.GlobalObject = {
         else {
             this.frame.lastTime = 0;
         }
-    },
-    addId: function(node) {
-        var go = Kinetic.GlobalObject;
-        if(node.attrs.id !== undefined) {
-            go.ids[node.attrs.id] = node;
-        }
-    },
-    removeId: function(node) {
-
-    },
-    addName: function(node) {
-        var go = Kinetic.GlobalObject;
-        var name = node.attrs.name;
-        if(name !== undefined) {
-            if(go.names[name] === undefined) {
-                go.names[name] = [];
-            }
-            go.names[name].push(node);
-        }
-    },
-    removeName: function(node) {
-
     }
 };
 

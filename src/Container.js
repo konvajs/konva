@@ -65,9 +65,15 @@ Kinetic.Container.prototype = {
 
         this.children.push(child);
 
-        var go = Kinetic.GlobalObject;
-        go.addId(child);
-        go.addName(child);
+        var stage = child.getStage();
+        if (stage === undefined) {
+        	var go = Kinetic.GlobalObject;
+        	go.tempNodes.push(child);
+        }
+        else {
+            stage._addId(child);
+            stage._addName(child);
+        }
     },
     /**
      * set children indices
