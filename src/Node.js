@@ -150,6 +150,12 @@ Kinetic.Node.prototype = {
         }
     },
     /**
+     * get attrs
+     */
+    getAttrs: function() {
+        return this.attrs;
+    },
+    /**
      * show node
      */
     show: function() {

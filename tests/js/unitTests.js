@@ -94,6 +94,41 @@ Test.prototype.tests = {
         var expectedJson = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
         test(stage.toJSON() === expectedJson, 'problem with serialization');
     },
+    'STAGE - test getAttrs()': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+        var circle = new Kinetic.Circle({
+            x: 100,
+            y: 100,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle',
+            draggable: true
+        });
+
+        stage.add(layer);
+        layer.add(group);
+        group.add(circle);
+        layer.draw();
+
+        var attrs = circle.getAttrs();
+
+        test(attrs.x === 100, 'x attr should be 100');
+        test(attrs.y === 100, 'y attr should be 100');
+        test(attrs.radius === 70, 'radius attr should be radius');
+        test(attrs.fill === 'green', 'fill attr should be fill');
+        test(attrs.stroke === 'black', 'stroke attr should be stroke');
+        test(attrs.strokeWidth === 4, 'strokeWidth attr should be strokeWidth');
+        test(attrs.name === 'myCircle', 'name attr should be myCircle');
+        test(attrs.draggable === true, 'draggable attr should be true');
+    },
     'STAGE - load stage using json': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -158,14 +193,13 @@ Test.prototype.tests = {
             context.closePath();
             this.fillStroke();
         };
-        
         var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Shape"}]}]}]}';
         stage.load(json);
-        
+
         var customShape = stage.getChildren()[0].getChildren()[0].getChildren()[0];
-        
+
         customShape.setDrawFunc(drawTriangle);
-        
+
         stage.draw();
 
         //console.log(stage.toJSON());
@@ -1164,7 +1198,7 @@ Test.prototype.tests = {
         test(text.getTextSize().height > 0, 'text height should have a value');
         test(text.getTextWidth() > 0, 'text width should have a value');
         test(text.getTextHeight() > 0, 'text height should have a value');
-        
+
     },
     'SHAPES - get shape name': function(containerId) {
         var stage = new Kinetic.Stage({
