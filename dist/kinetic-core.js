@@ -872,6 +872,18 @@ Kinetic.Container.prototype = {
      */
     _remove: function(child) {
         if(this.children[child.index]._id == child._id) {
+            var stage = this.getStage();
+            stage._removeId(child);
+            stage._removeName(child);
+
+            var go = Kinetic.GlobalObject;
+            for(var n = 0; n < go.tempNodes.length; n++) {
+                var node = go.tempNodes[n];
+                if(node._id === child._id) {
+                    go.tempNodes.splice(n, 1);
+                    n = go.tempNodes.length;
+                }
+            }
 
             this.children.splice(child.index, 1);
             this._setChildrenIndices();
@@ -905,13 +917,20 @@ Kinetic.Container.prototype = {
         this.children.push(child);
 
         var stage = child.getStage();
-        if (stage === undefined) {
-        	var go = Kinetic.GlobalObject;
-        	go.tempNodes.push(child);
+        if(stage === undefined) {
+            var go = Kinetic.GlobalObject;
+            go.tempNodes.push(child);
         }
         else {
             stage._addId(child);
             stage._addName(child);
+
+            /*
+             * pull in other nodes that are now linked
+             * to a stage
+             */
+            var go = Kinetic.GlobalObject;
+            go._pullNodes(stage);
         }
     },
     /**
@@ -1263,10 +1282,6 @@ Kinetic.Stage.prototype = {
         layer.canvas.width = this.attrs.width;
         layer.canvas.height = this.attrs.height;
         this._add(layer);
-
-        // populate stage node ids and names
-        var go = Kinetic.GlobalObject;
-        go._pullNodes(this);
 
         // draw layer and append canvas to container
         layer.draw();
@@ -1812,7 +1827,9 @@ Kinetic.Stage.prototype = {
         }
     },
     _removeId: function(node) {
-
+        if(node.attrs.id !== undefined) {
+            this.ids[node.attrs.id] = undefined;
+        }
     },
     _addName: function(node) {
         var name = node.attrs.name;
@@ -1824,7 +1841,17 @@ Kinetic.Stage.prototype = {
         }
     },
     _removeName: function(node) {
-
+        if(node.attrs.name !== undefined) {
+            var nodes = this.names[node.attrs.name];
+            if(nodes !== undefined) {
+                for(var n = 0; n < nodes.length; n++) {
+                    var no = nodes[n];
+                    if(no._id === node._id) {
+                        nodes.splice(n, 1);
+                    }
+                }
+            }
+        }
     }
 };
 // Extend Container and Node

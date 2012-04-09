@@ -321,12 +321,65 @@ Test.prototype.tests = {
         layer.add(circle);
         layer.add(rect);
         stage.add(layer);
-        
+
         var node = stage.get('#myCircle');
         var nodes = stage.get('.myRect');
 
         test(node.shapeType === 'Circle', 'shape type should be circle');
         test(nodes[0].shapeType === 'Rect', 'shape type should be rect');
+
+    },
+    'STAGE - remove shape by id or name': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            id: 'myCircle'
+        });
+
+        var rect = new Kinetic.Rect({
+            x: 300,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'purple',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myRect'
+        });
+
+        layer.add(circle);
+        layer.add(rect);
+        stage.add(layer);
+
+        var node = stage.get('#myCircle');
+        var nodes = stage.get('.myRect');
+
+        test(stage.ids.myCircle._id === circle._id, 'circle not in ids hash');
+        test(stage.names.myRect[0]._id === rect._id, 'rect not in names hash');
+
+        var node = stage.get('#myCircle');
+        var parent = node.getParent();
+
+        parent.remove(node);
+
+        test(stage.ids.myCircle === undefined, 'circle still in hash');
+        test(stage.names.myRect[0]._id === rect._id, 'rect not in names hash');
+
+        var parent = nodes[0].getParent();
+        parent.remove(nodes[0]);
+
+        test(stage.ids.myCircle === undefined, 'circle still in hash');
+        test(stage.names.myRect[0] === undefined, 'rect still in hash');
 
     },
     'STAGE - remove layer with shape': function(containerId) {

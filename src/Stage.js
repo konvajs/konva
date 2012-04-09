@@ -319,10 +319,6 @@ Kinetic.Stage.prototype = {
         layer.canvas.height = this.attrs.height;
         this._add(layer);
 
-        // populate stage node ids and names
-        var go = Kinetic.GlobalObject;
-        go._pullNodes(this);
-
         // draw layer and append canvas to container
         layer.draw();
         this.content.appendChild(layer.canvas);
@@ -867,7 +863,9 @@ Kinetic.Stage.prototype = {
         }
     },
     _removeId: function(node) {
-
+        if(node.attrs.id !== undefined) {
+            this.ids[node.attrs.id] = undefined;
+        }
     },
     _addName: function(node) {
         var name = node.attrs.name;
@@ -879,7 +877,17 @@ Kinetic.Stage.prototype = {
         }
     },
     _removeName: function(node) {
-
+        if(node.attrs.name !== undefined) {
+            var nodes = this.names[node.attrs.name];
+            if(nodes !== undefined) {
+                for(var n = 0; n < nodes.length; n++) {
+                    var no = nodes[n];
+                    if(no._id === node._id) {
+                        nodes.splice(n, 1);
+                    }
+                }
+            }
+        }
     }
 };
 // Extend Container and Node
