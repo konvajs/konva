@@ -382,6 +382,40 @@ Test.prototype.tests = {
         test(stage.names.myRect[0] === undefined, 'rect still in hash');
 
     },
+    'STAGE - remove shape without adding its parent to stage': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            id: 'myCircle'
+        });
+
+        var go = Kinetic.GlobalObject;
+        
+        test(go.tempNodes.length === 0, 'shouldn\'t be nodes in the tempNdoes array');
+
+        layer.add(circle);
+
+        var node = stage.get('#myCircle');
+
+        test(node === undefined, 'node should be undefined');
+        
+        test(go.tempNodes.length === 1, 'tempNodes array should have one node');
+
+        layer.remove(circle);
+
+        test(go.tempNodes.length === 0, 'shouldn\'t be nodes in the tempNdoes array');
+
+    },
     'STAGE - remove layer with shape': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

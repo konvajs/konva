@@ -873,8 +873,10 @@ Kinetic.Container.prototype = {
     _remove: function(child) {
         if(this.children[child.index]._id == child._id) {
             var stage = this.getStage();
-            stage._removeId(child);
-            stage._removeName(child);
+            if(stage !== undefined) {
+                stage._removeId(child);
+                stage._removeName(child);
+            }
 
             var go = Kinetic.GlobalObject;
             for(var n = 0; n < go.tempNodes.length; n++) {
