@@ -54,8 +54,8 @@ Kinetic.Container.prototype = {
         }
     },
     /**
-     * use for selectors.  select nodes by id with # and by name
-     * with .
+     * return an array of nodes that match the selector.  Use '#' for id selections
+     * and '.' for name selections
      * ex:
      * var node = stage.get('#foo'); // selects node with id foo
      * var nodes = layer.get('.bar'); // selects nodes with name bar inside layer
