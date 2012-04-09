@@ -155,7 +155,7 @@ Kinetic.Shape.prototype = {
     /**
      * save shape data when using pixel detection.
      */
-    save: function() {
+    saveData: function() {
         var stage = this.getStage();
         var w = stage.attrs.width;
         var h = stage.attrs.height;
@@ -168,6 +168,12 @@ Kinetic.Shape.prototype = {
 
         var imageData = bufferLayerContext.getImageData(0, 0, w, h);
         this.data = imageData.data;
+    },
+    /**
+     * clear shape data
+     */
+    clearData: function() {
+        this.data = [];
     },
     /**
      * draw shape
@@ -199,11 +205,6 @@ Kinetic.Shape.prototype = {
             this.tempLayer = layer;
             this.drawFunc.call(this);
             context.restore();
-        }
-
-        // clear shape data
-        if(this.attrs.detectionType === 'pixel') {
-            this.data = [];
         }
     },
     /**

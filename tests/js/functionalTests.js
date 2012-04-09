@@ -28,40 +28,40 @@ Test.prototype.tests = {
         });
     },
     /*
-    'TRANSITION - all transition types': function(containerId) {
-        document.getElementById(containerId).style.height = '300px';
+     'TRANSITION - all transition types': function(containerId) {
+     document.getElementById(containerId).style.height = '300px';
 
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 300
-        });
-        var layer = new Kinetic.Layer();
+     var stage = new Kinetic.Stage({
+     container: containerId,
+     width: 578,
+     height: 300
+     });
+     var layer = new Kinetic.Layer();
 
-        var easings = ['linear', 'ease-in', 'ease-out', 'ease-in-out', 'back-ease-in', 'back-ease-out', 'back-ease-in-out', 'elastic-ease-in', 'elastic-ease-out', 'elastic-ease-in-out', 'bounce-ease-out', 'bounce-ease-in', 'bounce-ease-in-out', 'strong-ease-in', 'strong-ease-out', 'strong-ease-in-out'];
-        for(var n = 0; n < easings.length; n++) {
-            var rect = new Kinetic.Rect({
-                x: 10,
-                y: 10 + (n * 200 / easings.length),
-                width: 100,
-                height: 10,
-                fill: 'green',
-                stroke: 'black',
-                strokeWidth: 2
-            });
+     var easings = ['linear', 'ease-in', 'ease-out', 'ease-in-out', 'back-ease-in', 'back-ease-out', 'back-ease-in-out', 'elastic-ease-in', 'elastic-ease-out', 'elastic-ease-in-out', 'bounce-ease-out', 'bounce-ease-in', 'bounce-ease-in-out', 'strong-ease-in', 'strong-ease-out', 'strong-ease-in-out'];
+     for(var n = 0; n < easings.length; n++) {
+     var rect = new Kinetic.Rect({
+     x: 10,
+     y: 10 + (n * 200 / easings.length),
+     width: 100,
+     height: 10,
+     fill: 'green',
+     stroke: 'black',
+     strokeWidth: 2
+     });
 
-            layer.add(rect);
+     layer.add(rect);
 
-            rect.transitionTo({
-                duration: 2,
-                width: 500,
-                easing: easings[n]
-            });
-        }
+     rect.transitionTo({
+     duration: 2,
+     width: 500,
+     easing: easings[n]
+     });
+     }
 
-        stage.add(layer);
-    },
-    */
+     stage.add(layer);
+     },
+     */
     'TRANSITION - transition callback': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -679,7 +679,7 @@ Test.prototype.tests = {
             });
 
             darth.on('dragend', function() {
-                this.save();
+                this.saveData();
             });
 
             layer.add(darth);
@@ -723,13 +723,13 @@ Test.prototype.tests = {
             });
 
             star.on('dragend', function() {
-                this.save();
+                this.saveData();
             });
 
             layer.add(star);
             stage.add(layer);
 
-            star.save();
+            star.saveData();
         };
         imageObj.src = '../lion.png';
     },
