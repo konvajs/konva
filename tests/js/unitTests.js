@@ -196,7 +196,7 @@ Test.prototype.tests = {
         var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
         stage.load(json);
 
-        var customShape = stage.get('#myTriangle');
+        var customShape = stage.get('#myTriangle')[0];
 
         customShape.setDrawFunc(drawTriangle);
 
@@ -296,7 +296,9 @@ Test.prototype.tests = {
             width: 578,
             height: 200
         });
-        var layer = new Kinetic.Layer();
+        var layer = new Kinetic.Layer({
+            id: 'myLayer'
+        });
         var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
@@ -322,11 +324,15 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
 
-        var node = stage.get('#myCircle');
-        var nodes = stage.get('.myRect');
-
+        var node;
+        node = stage.get('#myCircle')[0];
         test(node.shapeType === 'Circle', 'shape type should be circle');
-        test(nodes[0].shapeType === 'Rect', 'shape type should be rect');
+        node = layer.get('.myRect')[0];
+        test(node.shapeType === 'Rect', 'shape type should be rect');
+        node = layer.get('#myLayer')[0];
+        test(node === undefined, 'node should be undefined');
+        node = stage.get('#myLayer')[0];
+        test(node.nodeType === 'Layer', 'node type should be Layer');
 
     },
     'STAGE - remove shape by id or name': function(containerId) {
@@ -361,13 +367,13 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
 
-        var node = stage.get('#myCircle');
+        var node = stage.get('#myCircle')[0];
         var nodes = stage.get('.myRect');
 
         test(stage.ids.myCircle._id === circle._id, 'circle not in ids hash');
         test(stage.names.myRect[0]._id === rect._id, 'rect not in names hash');
 
-        var node = stage.get('#myCircle');
+        var node = stage.get('#myCircle')[0];
         var parent = node.getParent();
 
         parent.remove(node);
@@ -400,15 +406,15 @@ Test.prototype.tests = {
         });
 
         var go = Kinetic.GlobalObject;
-        
+
         test(go.tempNodes.length === 0, 'shouldn\'t be nodes in the tempNdoes array');
 
         layer.add(circle);
 
-        var node = stage.get('#myCircle');
+        var node = stage.get('#myCircle')[0];
 
         test(node === undefined, 'node should be undefined');
-        
+
         test(go.tempNodes.length === 1, 'tempNodes array should have one node');
 
         layer.remove(circle);
@@ -861,7 +867,7 @@ Test.prototype.tests = {
 
             stage.load(json);
 
-            var image = stage.get('#darth');
+            var image = stage.get('#darth')[0];
 
             image.setImage(imageObj);
 

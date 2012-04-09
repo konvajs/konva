@@ -54,6 +54,58 @@ Kinetic.Container.prototype = {
         }
     },
     /**
+     * use for selectors.  select nodes by id with # and by name
+     * with .
+     * ex:
+     * var node = stage.get('#foo'); // selects node with id foo
+     * var nodes = layer.get('.bar'); // selects nodes with name bar inside layer
+     * @param {String} selector
+     */
+    get: function(selector) {
+        var stage = this.getStage();
+        var arr;
+        var key = selector.slice(1);
+        if(selector.charAt(0) === '#') {
+            arr = stage.ids[key] !== undefined ? [stage.ids[key]] : [];
+        }
+        else if(selector.charAt(0) === '.') {
+            arr = stage.names[key] !== undefined ? stage.names[key] : [];
+        }
+        else {
+            return false;
+        }
+
+        var retArr = [];
+        for(var n = 0; n < arr.length; n++) {
+            var node = arr[n];
+            if(this.isAncestorOf(node)) {
+                retArr.push(node);
+            }
+        }
+
+        return retArr;
+    },
+    /**
+     * determine if node is an ancestor
+     * of descendant
+     * @param {Kinetic.Node} node
+     */
+    isAncestorOf: function(node) {
+        if(this.nodeType === 'Stage') {
+            return true;
+        }
+
+        var parent = node.getParent();
+        while(parent) {
+            if(parent._id === this._id) {
+                return true;
+            }
+            parent = parent.getParent();
+        }
+
+        return false;
+    },
+    /**
      * draw children
      */
     _drawChildren: function() {

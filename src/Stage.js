@@ -104,29 +104,6 @@ Kinetic.Stage.prototype = {
         this._drawChildren();
     },
     /**
-     * get selector.  can select nodes by id with # and by name
-     * with .
-     * ex:
-     * var node = stage.get('#foo'); // selects node with id foo
-     * var nodes = stage.get('.bar'); // selects nodes with name bar
-     * @param {String} selector
-     */
-    get: function(selector) {
-        var hash;
-        if(selector.charAt(0) === '#') {
-            hash = this.ids;
-        }
-        else if(selector.charAt(0) === '.') {
-            hash = this.names;
-        }
-        else {
-            return false;
-        }
-
-        var key = selector.slice(1);
-        return hash[key];
-    },
-    /**
      * set stage size
      * @param {int} width
      * @param {int} height
