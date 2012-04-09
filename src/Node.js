@@ -251,6 +251,20 @@ Kinetic.Node.prototype = {
         this.attrs.y = y;
     },
     /**
+     * set node x position
+     * @param {Number} x
+     */
+    setX: function(x) {
+        this.attrs.x = x;
+    },
+    /**
+     * set node y position
+     * @param {Number} y
+     */
+    setY: function(y) {
+        this.attrs.y = y;
+    },
+    /**
      * get node position relative to container
      */
     getPosition: function() {
