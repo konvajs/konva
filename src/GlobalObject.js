@@ -16,6 +16,8 @@ Kinetic.GlobalObject = {
     tempNodes: [],
     animations: [],
     animIdCounter: 0,
+    dragTimeInterval: 0,
+    maxDragTimeInterval: 15,
     frame: {
         time: 0,
         timeDiff: 0,
@@ -27,7 +29,8 @@ Kinetic.GlobalObject = {
         offset: {
             x: 0,
             y: 0
-        }
+        },
+        lastDrawTime: 0
     },
     extend: function(obj1, obj2) {
         for(var key in obj2.prototype) {

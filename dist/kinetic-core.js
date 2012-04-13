@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Apr 08 2012
+ * Date: Apr 12 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -44,6 +44,8 @@ Kinetic.GlobalObject = {
     tempNodes: [],
     animations: [],
     animIdCounter: 0,
+    dragTimeInterval: 0,
+    maxDragTimeInterval: 15,
     frame: {
         time: 0,
         timeDiff: 0,
@@ -55,7 +57,8 @@ Kinetic.GlobalObject = {
         offset: {
             x: 0,
             y: 0
-        }
+        },
+        lastDrawTime: 0
     },
     extend: function(obj1, obj2) {
         for(var key in obj2.prototype) {
@@ -1193,7 +1196,6 @@ Kinetic.Stage.prototype = {
 
         function addLayer(n) {
             var dataURL = layers[n].getCanvas().toDataURL();
-            console.log(dataURL);
             var imageObj = new Image();
             imageObj.onload = function() {
                 bufferContext.drawImage(this, 0, 0);
@@ -1741,81 +1743,99 @@ Kinetic.Stage.prototype = {
             var go = Kinetic.GlobalObject;
             var node = go.drag.node;
             if(node) {
-                var pos = that.getUserPosition();
-                var dc = node.attrs.dragConstraint;
-                var db = node.attrs.dragBounds;
+                var date = new Date();
+                var time = date.getTime();
 
-                // default
-                var newNodePos = {
-                    x: pos.x - go.drag.offset.x,
-                    y: pos.y - go.drag.offset.y
-                };
+                if(time - go.drag.lastDrawTime > go.dragTimeInterval) {
+                    go.drag.lastDrawTime = time;
 
-                // bounds overrides
-                if(db.left !== undefined && newNodePos.x < db.left) {
-                    newNodePos.x = db.left;
+                    var pos = that.getUserPosition();
+                    var dc = node.attrs.dragConstraint;
+                    var db = node.attrs.dragBounds;
+
+                    /*
+                     * handle dynamice drag time interval.  As the distance between
+                     * the mouse and cursor increases, we need to increase the drag
+                     * time interval to reduce the number of layer draws so that
+                     * the node position can catch back up to the cursor.  When the difference
+                     * is zero, the time interval is zero.  When the difference approahces
+                     * infinity, the time interval approaches the max drag time interval
+                     */
+                    var dragDiff = Math.abs(pos.x - node.attrs.x);
+                    go.dragTimeInterval = go.maxDragTimeInterval * dragDiff / (dragDiff + 1);
+
+                    // default
+                    var newNodePos = {
+                        x: pos.x - go.drag.offset.x,
+                        y: pos.y - go.drag.offset.y
+                    };
+
+                    // bounds overrides
+                    if(db.left !== undefined && newNodePos.x < db.left) {
+                        newNodePos.x = db.left;
+                    }
+                    if(db.right !== undefined && newNodePos.x > db.right) {
+                        newNodePos.x = db.right;
+                    }
+                    if(db.top !== undefined && newNodePos.y < db.top) {
+                        newNodePos.y = db.top;
+                    }
+                    if(db.bottom !== undefined && newNodePos.y > db.bottom) {
+                        newNodePos.y = db.bottom;
+                    }
+
+                    /*
+                     * save rotation and scale and then
+                     * remove them from the transform
+                     */
+                    var rot = node.attrs.rotation;
+                    var scale = {
+                        x: node.attrs.scale.x,
+                        y: node.attrs.scale.y
+                    };
+                    node.attrs.rotation = 0;
+                    node.attrs.scale = {
+                        x: 1,
+                        y: 1
+                    };
+
+                    // unravel transform
+                    var it = node.getAbsoluteTransform();
+                    it.invert();
+                    it.translate(newNodePos.x, newNodePos.y);
+                    newNodePos = {
+                        x: node.attrs.x + it.getTranslation().x,
+                        y: node.attrs.y + it.getTranslation().y
+                    };
+
+                    // constraint overrides
+                    if(dc === 'horizontal') {
+                        newNodePos.y = node.attrs.y;
+                    }
+                    else if(dc === 'vertical') {
+                        newNodePos.x = node.attrs.x;
+                    }
+
+                    node.setPosition(newNodePos.x, newNodePos.y);
+
+                    // restore rotation and scale
+                    node.rotate(rot);
+                    node.attrs.scale = {
+                        x: scale.x,
+                        y: scale.y
+                    };
+
+                    go.drag.node.getLayer().draw();
+
+                    if(!go.drag.moving) {
+                        go.drag.moving = true;
+                        // execute dragstart events if defined
+                        go.drag.node._handleEvents('ondragstart', evt);
+                    }
+
+                    // execute user defined ondragmove if defined
+                    go.drag.node._handleEvents('ondragmove', evt);
                 }
-                if(db.right !== undefined && newNodePos.x > db.right) {
-                    newNodePos.x = db.right;
-                }
-                if(db.top !== undefined && newNodePos.y < db.top) {
-                    newNodePos.y = db.top;
-                }
-                if(db.bottom !== undefined && newNodePos.y > db.bottom) {
-                    newNodePos.y = db.bottom;
-                }
-
-                /*
-                 * save rotation and scale and then
-                 * remove them from the transform
-                 */
-                var rot = node.attrs.rotation;
-                var scale = {
-                    x: node.attrs.scale.x,
-                    y: node.attrs.scale.y
-                };
-                node.attrs.rotation = 0;
-                node.attrs.scale = {
-                    x: 1,
-                    y: 1
-                };
-
-                // unravel transform
-                var it = node.getAbsoluteTransform();
-                it.invert();
-                it.translate(newNodePos.x, newNodePos.y);
-                newNodePos = {
-                    x: node.attrs.x + it.getTranslation().x,
-                    y: node.attrs.y + it.getTranslation().y
-                };
-
-                // constraint overrides
-                if(dc === 'horizontal') {
-                    newNodePos.y = node.attrs.y;
-                }
-                else if(dc === 'vertical') {
-                    newNodePos.x = node.attrs.x;
-                }
-
-                node.setPosition(newNodePos.x, newNodePos.y);
-
-                // restore rotation and scale
-                node.rotate(rot);
-                node.attrs.scale = {
-                    x: scale.x,
-                    y: scale.y
-                };
-
-                go.drag.node.getLayer().draw();
-
-                if(!go.drag.moving) {
-                    go.drag.moving = true;
-                    // execute dragstart events if defined
-                    go.drag.node._handleEvents('ondragstart', evt);
-                }
-
-                // execute user defined ondragmove if defined
-                go.drag.node._handleEvents('ondragmove', evt);
             }
         }, false);
 
