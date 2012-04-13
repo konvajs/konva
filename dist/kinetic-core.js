@@ -183,50 +183,10 @@ Kinetic.Node = function(config) {
     this.attrs.dragConstraint = 'none';
     this.attrs.dragBounds = {};
     this.attrs.draggable = false;
-
     this.eventListeners = {};
 
-    // set properties from config
-    if(config) {
-        for(var key in config) {
-            // handle special keys
-            switch (key) {
-                /*
-                 * config properties that require a method to
-                 * be set
-                 */
-                case 'draggable':
-                    this.draggable(config[key]);
-                    break;
-                case 'listening':
-                    this.listen(config[key]);
-                    break;
-                case 'rotationDeg':
-                    this.attrs.rotation = config[key] * Math.PI / 180;
-                    break;
-                /*
-                 * config objects that we don't want in attrs
-                 */
-                case 'drawFunc':
-                    break;
-                case 'image':
-                    break;
-                case 'container':
-                    break;
-                default:
-                    this.attrs[key] = config[key];
-                    break;
-            }
-        }
-    }
-
-    // overrides
-    if(this.attrs.centerOffset.x === undefined) {
-        this.attrs.centerOffset.x = 0;
-    }
-    if(this.attrs.centerOffset.y === undefined) {
-        this.attrs.centerOffset.y = 0;
-    }
+	// set attrs
+    this.setAttrs(config);
 };
 /*
  * Node methods
@@ -306,6 +266,65 @@ Kinetic.Node.prototype = {
      */
     getAttrs: function() {
         return this.attrs;
+    },
+    /**
+     * set attrs
+     * @param {Object} config
+     */
+    setAttrs: function(config) {
+        // set properties from config
+        if(config) {
+            for(var key in config) {
+                var val = config[key];
+                // handle special keys
+                switch (key) {
+                    /*
+                     * config properties that require a method to
+                     * be set
+                     */
+                    case 'draggable':
+                        this.draggable(config[key]);
+                        break;
+                    case 'listening':
+                        this.listen(config[key]);
+                        break;
+                    case 'rotationDeg':
+                        this.attrs.rotation = config[key] * Math.PI / 180;
+                        break;
+                    /*
+                     * config objects
+                     */
+                    case 'centerOffset':
+                        if(val.x !== undefined) {
+                            this.attrs[key].x = val.x;
+                        }
+                        if(val.y !== undefined) {
+                            this.attrs[key].y = val.y;
+                        }
+                        break;
+                    case 'scale':
+                        if(val.x !== undefined) {
+                            this.attrs[key].x = val.x;
+                        }
+                        if(val.y !== undefined) {
+                            this.attrs[key].y = val.y;
+                        }
+                        break;
+                    /*
+                     * config properties that we don't want in attrs
+                     */
+                    case 'drawFunc':
+                        break;
+                    case 'image':
+                        break;
+                    case 'container':
+                        break;
+                    default:
+                        this.attrs[key] = config[key];
+                        break;
+                }
+            }
+        }
     },
     /**
      * show node
