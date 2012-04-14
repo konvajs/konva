@@ -328,6 +328,12 @@ Kinetic.Node.prototype = {
         }
     },
     /**
+     * determine if shape is visible or not
+     */
+    isVisible: function() {
+        return this.attrs.visible;
+    },
+    /**
      * show node
      */
     show: function() {
@@ -1032,10 +1038,11 @@ Kinetic.Container.prototype = {
      * draw children
      */
     _drawChildren: function() {
+        var stage = this.getStage();
         var children = this.children;
         for(var n = 0; n < children.length; n++) {
             var child = children[n];
-            if(child.nodeType === 'Shape') {
+            if(child.nodeType === 'Shape' && child.isVisible() && stage.isVisible()) {
                 child._draw(child.getLayer());
             }
             else {
@@ -2281,7 +2288,7 @@ Kinetic.Shape.prototype = {
      * @param {Layer} layer Layer that the shape will be drawn on
      */
     _draw: function(layer) {
-        if(this.attrs.visible && this.drawFunc !== undefined) {
+        if(layer !== undefined && this.drawFunc !== undefined) {
             var stage = layer.getStage();
             var context = layer.getContext();
             var family = [];

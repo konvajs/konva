@@ -175,6 +175,12 @@ Kinetic.Node.prototype = {
         }
     },
     /**
+     * determine if shape is visible or not
+     */
+    isVisible: function() {
+        return this.attrs.visible;
+    },
+    /**
      * show node
      */
     show: function() {
