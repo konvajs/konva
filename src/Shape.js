@@ -67,17 +67,12 @@ Kinetic.Shape.prototype = {
             context.fill();
         }
 
-        var stroke, strokeWidth;
         if(this.attrs.stroke !== undefined || this.attrs.strokeWidth !== undefined) {
-            if(this.attrs.stroke === undefined) {
-                stroke = 'black';
-            }
-            else if(this.attrs.strokeWidth === undefined) {
-                strokeWidth = 2;
-            }
+            var stroke = this.attrs.stroke !== undefined ? this.attrs.stroke : 'black';
+            var strokeWidth = this.attrs.strokeWidth !== undefined ? this.attrs.strokeWidth : 2;
 
-            context.lineWidth = this.attrs.strokeWidth === undefined ? 1 : this.attrs.strokeWidth;
-            context.strokeStyle = this.attrs.stroke;
+            context.lineWidth = strokeWidth;
+            context.strokeStyle = stroke;
             context.stroke();
         }
     },
