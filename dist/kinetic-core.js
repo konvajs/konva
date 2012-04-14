@@ -46,7 +46,7 @@ Kinetic.GlobalObject = {
     animIdCounter: 0,
     dragTimeInterval: 0,
     maxDragTimeInterval: 20,
-    isChrome: navigator.userAgent.toLowerCase().indexOf('chrome') > -1,
+    //isChrome: navigator.userAgent.toLowerCase().indexOf('chrome') > -1,
     frame: {
         time: 0,
         timeDiff: 0,
@@ -1838,7 +1838,7 @@ Kinetic.Stage.prototype = {
                      * For google chrome instances, dynamically set the dragTimeInterval
                      * to improve drag and drop performance while not effecting other browsers
                      */
-                    if(go.isChrome) {
+                    //if(go.isChrome) {
                         /*
                          * handle dynamice drag time interval.  As the distance between
                          * the mouse and cursor increases, we need to increase the drag
@@ -1847,11 +1847,13 @@ Kinetic.Stage.prototype = {
                          * is zero, the time interval is zero.  When the difference approahces
                          * infinity, the time interval approaches the max drag time interval
                          */
+                        /*
                         var dragDiffX = Math.abs(newNodePos.x - node.attrs.x);
                         var dragDiffY = Math.abs(newNodePos.y - node.attrs.y);
                         var dragDiff = Math.sqrt(Math.pow(dragDiffX, 2) + Math.pow(dragDiffY, 2));
                         go.dragTimeInterval = go.maxDragTimeInterval * (dragDiff - 1) / (dragDiff + 1);
-                    }
+                        */
+                    //}
 
                     // bounds overrides
                     if(db.left !== undefined && newNodePos.x < db.left) {

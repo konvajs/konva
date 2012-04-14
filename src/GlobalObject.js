@@ -18,7 +18,7 @@ Kinetic.GlobalObject = {
     animIdCounter: 0,
     dragTimeInterval: 0,
     maxDragTimeInterval: 20,
-    isChrome: navigator.userAgent.toLowerCase().indexOf('chrome') > -1,
+    //isChrome: navigator.userAgent.toLowerCase().indexOf('chrome') > -1,
     frame: {
         time: 0,
         timeDiff: 0,
