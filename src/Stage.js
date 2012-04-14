@@ -725,20 +725,24 @@ Kinetic.Stage.prototype = {
                     };
 
                     /*
-                     * handle dynamice drag time interval.  As the distance between
-                     * the mouse and cursor increases, we need to increase the drag
-                     * time interval to reduce the number of layer draws so that
-                     * the node position can catch back up to the cursor.  When the difference
-                     * is zero, the time interval is zero.  When the difference approahces
-                     * infinity, the time interval approaches the max drag time interval
+                     * chrome currently has a bug that slows down drag and drop.
+                     * For google chrome instances, dynamically set the dragTimeInterval
+                     * to improve drag and drop performance while not effecting other browsers
                      */
-                    /*
-                    var dragDiffX = Math.abs(newNodePos.x - node.attrs.x);
-                    var dragDiffY = Math.abs(newNodePos.y - node.attrs.y);
-                    var dragDiff = Math.sqrt(Math.pow(dragDiffX, 2) + Math.pow(dragDiffY, 2));
-                    go.dragTimeInterval = go.maxDragTimeInterval * (dragDiff - 1) / (dragDiff + 1);
-                    console.log(dragDiff + ',' + go.dragTimeInterval);
-                    */
+                    if(go.isChrome) {
+                        /*
+                         * handle dynamice drag time interval.  As the distance between
+                         * the mouse and cursor increases, we need to increase the drag
+                         * time interval to reduce the number of layer draws so that
+                         * the node position can catch back up to the cursor.  When the difference
+                         * is zero, the time interval is zero.  When the difference approahces
+                         * infinity, the time interval approaches the max drag time interval
+                         */
+                        var dragDiffX = Math.abs(newNodePos.x - node.attrs.x);
+                        var dragDiffY = Math.abs(newNodePos.y - node.attrs.y);
+                        var dragDiff = Math.sqrt(Math.pow(dragDiffX, 2) + Math.pow(dragDiffY, 2));
+                        go.dragTimeInterval = go.maxDragTimeInterval * (dragDiff - 1) / (dragDiff + 1);
+                    }
 
                     // bounds overrides
                     if(db.left !== undefined && newNodePos.x < db.left) {
