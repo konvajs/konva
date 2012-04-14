@@ -718,6 +718,12 @@ Kinetic.Stage.prototype = {
                     var dc = node.attrs.dragConstraint;
                     var db = node.attrs.dragBounds;
 
+                    // default
+                    var newNodePos = {
+                        x: pos.x - go.drag.offset.x,
+                        y: pos.y - go.drag.offset.y
+                    };
+
                     /*
                      * handle dynamice drag time interval.  As the distance between
                      * the mouse and cursor increases, we need to increase the drag
@@ -726,14 +732,13 @@ Kinetic.Stage.prototype = {
                      * is zero, the time interval is zero.  When the difference approahces
                      * infinity, the time interval approaches the max drag time interval
                      */
-                    var dragDiff = Math.abs(pos.x - node.attrs.x);
-                    go.dragTimeInterval = go.maxDragTimeInterval * dragDiff / (dragDiff + 1);
-
-                    // default
-                    var newNodePos = {
-                        x: pos.x - go.drag.offset.x,
-                        y: pos.y - go.drag.offset.y
-                    };
+                    /*
+                    var dragDiffX = Math.abs(newNodePos.x - node.attrs.x);
+                    var dragDiffY = Math.abs(newNodePos.y - node.attrs.y);
+                    var dragDiff = Math.sqrt(Math.pow(dragDiffX, 2) + Math.pow(dragDiffY, 2));
+                    go.dragTimeInterval = go.maxDragTimeInterval * (dragDiff - 1) / (dragDiff + 1);
+                    console.log(dragDiff + ',' + go.dragTimeInterval);
+                    */
 
                     // bounds overrides
                     if(db.left !== undefined && newNodePos.x < db.left) {

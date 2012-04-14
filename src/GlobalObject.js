@@ -17,7 +17,7 @@ Kinetic.GlobalObject = {
     animations: [],
     animIdCounter: 0,
     dragTimeInterval: 0,
-    maxDragTimeInterval: 15,
+    maxDragTimeInterval: 20,
     frame: {
         time: 0,
         timeDiff: 0,
