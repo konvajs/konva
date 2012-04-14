@@ -10,7 +10,7 @@ function log(message) {
  * Test constructor
  */
 function Test() {
-    this.testOnly = 'DRAG AND DROP - draggable true';
+    this.testOnly = '';
     this.counter = 0;
 }
 /**

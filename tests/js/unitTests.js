@@ -171,11 +171,8 @@ Test.prototype.tests = {
         group.add(triangle);
         layer.draw();
 
-        console.log(stage.toJSON());
-
         var expectedJson = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
         test(stage.toJSON() === expectedJson, "problem with serialization");
-
     },
     'STAGE - load stage with custom shape using json': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1429,6 +1426,44 @@ Test.prototype.tests = {
         //test(layer.getChild('myCircle') === undefined, 'shape should be null');
 
         layer.draw();
+    },
+    'NODE - test getPosition and getAbsolutePosition for shape inside transformed stage': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 20,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true
+            //rotationDeg: 60
+            //rotationDeg: Math.PI / 3
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        //stage.rotateDeg(20);
+
+        //console.log(rect.getAbsoluteTransform().getTranslation())
+
+        stage.rotate(Math.PI / 3);
+        stage.setScale(0.5);
+
+        stage.draw();
+
+        test(rect.getPosition().x === 200, 'rect position x should be 200');
+        test(rect.getPosition().y === 20, 'rect position y should be 20');
+
+        test(Math.round(rect.getAbsolutePosition().x) === 41, 'rect absolute position x should be about 41');
+        test(Math.round(rect.getAbsolutePosition().y) === 92, 'rect absolute position y should be about 92');
     },
     'NODE - test drag and drop properties and methods': function(containerId) {
         var stage = new Kinetic.Stage({

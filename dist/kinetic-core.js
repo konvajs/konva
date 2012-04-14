@@ -186,7 +186,7 @@ Kinetic.Node = function(config) {
     this.attrs.draggable = false;
     this.eventListeners = {};
 
-	// set attrs
+    // set attrs
     this.setAttrs(config);
 };
 /*
@@ -450,6 +450,53 @@ Kinetic.Node.prototype = {
      */
     getAbsolutePosition: function() {
         return this.getAbsoluteTransform().getTranslation();
+    },
+    /**
+     * set absolute position relative to stage
+     */
+    setAbsolutePosition: function(pos, override) {
+        /*
+         * save rotation and scale and then
+         * remove them from the transform
+         */
+        var rot = this.attrs.rotation;
+        var scale = {
+            x: this.attrs.scale.x,
+            y: this.attrs.scale.y
+        };
+        this.attrs.rotation = 0;
+        this.attrs.scale = {
+            x: 1,
+            y: 1
+        };
+
+        // unravel transform
+        var it = this.getAbsoluteTransform();
+        it.invert();
+        it.translate(pos.x, pos.y);
+        pos = {
+            x: this.attrs.x + it.getTranslation().x,
+            y: this.attrs.y + it.getTranslation().y
+        };
+
+        // handle override
+        if(override !== undefined) {
+            if(override.x !== undefined) {
+                pos.x = override.x;
+            }
+            if(override.y !== undefined) {
+                pos.y = override.y;
+            }
+        }
+
+        this.setPosition(pos.x, pos.y);
+
+        // restore rotation and scale
+        this.rotate(rot);
+        this.attrs.scale = {
+            x: scale.x,
+            y: scale.y
+        };
     },
     /**
      * move node by an amount
@@ -1813,46 +1860,16 @@ Kinetic.Stage.prototype = {
                         newNodePos.y = db.bottom;
                     }
 
-                    /*
-                     * save rotation and scale and then
-                     * remove them from the transform
-                     */
-                    var rot = node.attrs.rotation;
-                    var scale = {
-                        x: node.attrs.scale.x,
-                        y: node.attrs.scale.y
-                    };
-                    node.attrs.rotation = 0;
-                    node.attrs.scale = {
-                        x: 1,
-                        y: 1
-                    };
-
-                    // unravel transform
-                    var it = node.getAbsoluteTransform();
-                    it.invert();
-                    it.translate(newNodePos.x, newNodePos.y);
-                    newNodePos = {
-                        x: node.attrs.x + it.getTranslation().x,
-                        y: node.attrs.y + it.getTranslation().y
-                    };
-
                     // constraint overrides
+                    var override = {};
                     if(dc === 'horizontal') {
-                        newNodePos.y = node.attrs.y;
+                        override.y = node.attrs.y;
                     }
                     else if(dc === 'vertical') {
-                        newNodePos.x = node.attrs.x;
+                        override.x = node.attrs.x;
                     }
 
-                    node.setPosition(newNodePos.x, newNodePos.y);
-
-                    // restore rotation and scale
-                    node.rotate(rot);
-                    node.attrs.scale = {
-                        x: scale.x,
-                        y: scale.y
-                    };
+                    node.setAbsolutePosition(newNodePos, override);
 
                     go.drag.node.getLayer().draw();
 
