@@ -46,7 +46,6 @@ Kinetic.GlobalObject = {
     animIdCounter: 0,
     dragTimeInterval: 0,
     maxDragTimeInterval: 20,
-    //isChrome: navigator.userAgent.toLowerCase().indexOf('chrome') > -1,
     frame: {
         time: 0,
         timeDiff: 0,
@@ -459,17 +458,24 @@ Kinetic.Node.prototype = {
     },
     /**
      * set absolute position relative to stage
+     * @param {Object} pos object containing an x and
+     *  y property
      */
-    setAbsolutePosition: function(pos, override) {
+    setAbsolutePosition: function(pos) {
         /*
-         * save rotation and scale and then
-         * remove them from the transform
+         * save rotation and scale and
+         * then remove them from the transform
          */
         var rot = this.attrs.rotation;
         var scale = {
             x: this.attrs.scale.x,
             y: this.attrs.scale.y
         };
+        var centerOffset = {
+            x: this.attrs.centerOffset.x,
+            y: this.attrs.centerOffset.y
+        };
+
         this.attrs.rotation = 0;
         this.attrs.scale = {
             x: 1,
@@ -484,16 +490,6 @@ Kinetic.Node.prototype = {
             x: this.attrs.x + it.getTranslation().x,
             y: this.attrs.y + it.getTranslation().y
         };
-
-        // handle override
-        if(override !== undefined) {
-            if(override.x !== undefined) {
-                pos.x = override.x;
-            }
-            if(override.y !== undefined) {
-                pos.y = override.y;
-            }
-        }
 
         this.setPosition(pos.x, pos.y);
 
@@ -1826,34 +1822,16 @@ Kinetic.Stage.prototype = {
                     var pos = that.getUserPosition();
                     var dc = node.attrs.dragConstraint;
                     var db = node.attrs.dragBounds;
+                    var lastNodePos = {
+                        x: node.attrs.x,
+                        y: node.attrs.y
+                    };
 
                     // default
                     var newNodePos = {
                         x: pos.x - go.drag.offset.x,
                         y: pos.y - go.drag.offset.y
                     };
-
-                    /*
-                     * chrome currently has a bug that slows down drag and drop.
-                     * For google chrome instances, dynamically set the dragTimeInterval
-                     * to improve drag and drop performance while not effecting other browsers
-                     */
-                    //if(go.isChrome) {
-                        /*
-                         * handle dynamice drag time interval.  As the distance between
-                         * the mouse and cursor increases, we need to increase the drag
-                         * time interval to reduce the number of layer draws so that
-                         * the node position can catch back up to the cursor.  When the difference
-                         * is zero, the time interval is zero.  When the difference approahces
-                         * infinity, the time interval approaches the max drag time interval
-                         */
-                        /*
-                        var dragDiffX = Math.abs(newNodePos.x - node.attrs.x);
-                        var dragDiffY = Math.abs(newNodePos.y - node.attrs.y);
-                        var dragDiff = Math.sqrt(Math.pow(dragDiffX, 2) + Math.pow(dragDiffY, 2));
-                        go.dragTimeInterval = go.maxDragTimeInterval * (dragDiff - 1) / (dragDiff + 1);
-                        */
-                    //}
 
                     // bounds overrides
                     if(db.left !== undefined && newNodePos.x < db.left) {
@@ -1869,16 +1847,15 @@ Kinetic.Stage.prototype = {
                         newNodePos.y = db.bottom;
                     }
 
+                    node.setAbsolutePosition(newNodePos);
+
                     // constraint overrides
-                    var override = {};
                     if(dc === 'horizontal') {
-                        override.y = node.attrs.y;
+                        node.attrs.y = lastNodePos.y;
                     }
                     else if(dc === 'vertical') {
-                        override.x = node.attrs.x;
+                        node.attrs.x = lastNodePos.x;
                     }
-
-                    node.setAbsolutePosition(newNodePos, override);
 
                     go.drag.node.getLayer().draw();
 
@@ -2293,25 +2270,16 @@ Kinetic.Shape.prototype = {
         if(layer !== undefined && this.drawFunc !== undefined) {
             var stage = layer.getStage();
             var context = layer.getContext();
-            var family = [];
-            var parent = this.parent;
-
-            family.unshift(this);
-            while(parent) {
-                family.unshift(parent);
-                parent = parent.parent;
-            }
 
             context.save();
-            for(var n = 0; n < family.length; n++) {
-                var node = family[n];
-                var m = node.getTransform().getMatrix();
-                context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
 
-                if(node.getAbsoluteAlpha() !== 1) {
-                    context.globalAlpha = node.getAbsoluteAlpha();
-                }
+            var m = this.getAbsoluteTransform().getMatrix();
+            context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+
+            if(this.getAbsoluteAlpha() !== 1) {
+                context.globalAlpha = this.getAbsoluteAlpha();
             }
+
             this.tempLayer = layer;
             this.drawFunc.call(this);
             context.restore();

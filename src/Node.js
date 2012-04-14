@@ -306,17 +306,24 @@ Kinetic.Node.prototype = {
     },
     /**
      * set absolute position relative to stage
+     * @param {Object} pos object containing an x and
+     *  y property
      */
-    setAbsolutePosition: function(pos, override) {
+    setAbsolutePosition: function(pos) {
         /*
-         * save rotation and scale and then
-         * remove them from the transform
+         * save rotation and scale and
+         * then remove them from the transform
          */
         var rot = this.attrs.rotation;
         var scale = {
             x: this.attrs.scale.x,
             y: this.attrs.scale.y
         };
+        var centerOffset = {
+            x: this.attrs.centerOffset.x,
+            y: this.attrs.centerOffset.y
+        };
+
         this.attrs.rotation = 0;
         this.attrs.scale = {
             x: 1,
@@ -331,16 +338,6 @@ Kinetic.Node.prototype = {
             x: this.attrs.x + it.getTranslation().x,
             y: this.attrs.y + it.getTranslation().y
         };
-
-        // handle override
-        if(override !== undefined) {
-            if(override.x !== undefined) {
-                pos.x = override.x;
-            }
-            if(override.y !== undefined) {
-                pos.y = override.y;
-            }
-        }
 
         this.setPosition(pos.x, pos.y);
 

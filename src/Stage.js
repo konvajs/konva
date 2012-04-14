@@ -717,34 +717,16 @@ Kinetic.Stage.prototype = {
                     var pos = that.getUserPosition();
                     var dc = node.attrs.dragConstraint;
                     var db = node.attrs.dragBounds;
+                    var lastNodePos = {
+                        x: node.attrs.x,
+                        y: node.attrs.y
+                    };
 
                     // default
                     var newNodePos = {
                         x: pos.x - go.drag.offset.x,
                         y: pos.y - go.drag.offset.y
                     };
-
-                    /*
-                     * chrome currently has a bug that slows down drag and drop.
-                     * For google chrome instances, dynamically set the dragTimeInterval
-                     * to improve drag and drop performance while not effecting other browsers
-                     */
-                    //if(go.isChrome) {
-                        /*
-                         * handle dynamice drag time interval.  As the distance between
-                         * the mouse and cursor increases, we need to increase the drag
-                         * time interval to reduce the number of layer draws so that
-                         * the node position can catch back up to the cursor.  When the difference
-                         * is zero, the time interval is zero.  When the difference approahces
-                         * infinity, the time interval approaches the max drag time interval
-                         */
-                        /*
-                        var dragDiffX = Math.abs(newNodePos.x - node.attrs.x);
-                        var dragDiffY = Math.abs(newNodePos.y - node.attrs.y);
-                        var dragDiff = Math.sqrt(Math.pow(dragDiffX, 2) + Math.pow(dragDiffY, 2));
-                        go.dragTimeInterval = go.maxDragTimeInterval * (dragDiff - 1) / (dragDiff + 1);
-                        */
-                    //}
 
                     // bounds overrides
                     if(db.left !== undefined && newNodePos.x < db.left) {
@@ -760,16 +742,15 @@ Kinetic.Stage.prototype = {
                         newNodePos.y = db.bottom;
                     }
 
+                    node.setAbsolutePosition(newNodePos);
+
                     // constraint overrides
-                    var override = {};
                     if(dc === 'horizontal') {
-                        override.y = node.attrs.y;
+                        node.attrs.y = lastNodePos.y;
                     }
                     else if(dc === 'vertical') {
-                        override.x = node.attrs.x;
+                        node.attrs.x = lastNodePos.x;
                     }
-
-                    node.setAbsolutePosition(newNodePos, override);
 
                     go.drag.node.getLayer().draw();
 
