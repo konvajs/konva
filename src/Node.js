@@ -330,6 +330,15 @@ Kinetic.Node.prototype = {
             y: 1
         };
 
+        /*
+        this.attrs.centerOffset = {
+        x: 0,
+        y: 0
+        };
+        */
+
+        //this.move(-1 * this.attrs.centerOffset.x, -1 * this.attrs.centerOffset.y);
+
         // unravel transform
         var it = this.getAbsoluteTransform();
         it.invert();
@@ -341,12 +350,15 @@ Kinetic.Node.prototype = {
 
         this.setPosition(pos.x, pos.y);
 
+        //this.move(-1* this.attrs.centerOffset.x, -1* this.attrs.centerOffset.y);
+
         // restore rotation and scale
         this.rotate(rot);
         this.attrs.scale = {
             x: scale.x,
             y: scale.y
         };
+
     },
     /**
      * move node by an amount
@@ -670,6 +682,7 @@ Kinetic.Node.prototype = {
         for(var n = 0; n < family.length; n++) {
             var node = family[n];
             var m = node.getTransform();
+
             am.multiply(m);
         }
 
@@ -690,9 +703,6 @@ Kinetic.Node.prototype = {
         }
         if(this.attrs.scale.x !== 1 || this.attrs.scale.y !== 1) {
             m.scale(this.attrs.scale.x, this.attrs.scale.y);
-        }
-        if(this.attrs.centerOffset.x !== 0 || this.attrs.centerOffset.y !== 0) {
-            m.translate(-1 * this.attrs.centerOffset.x, -1 * this.attrs.centerOffset.y);
         }
 
         return m;

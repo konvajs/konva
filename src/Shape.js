@@ -178,11 +178,28 @@ Kinetic.Shape.prototype = {
         if(layer !== undefined && this.drawFunc !== undefined) {
             var stage = layer.getStage();
             var context = layer.getContext();
+            var family = [];
+            var parent = this.parent;
+
+            family.unshift(this);
+            while(parent) {
+                family.unshift(parent);
+                parent = parent.parent;
+            }
 
             context.save();
+            for(var n = 0; n < family.length; n++) {
+                var node = family[n];
+                var t = node.getTransform();
 
-            var m = this.getAbsoluteTransform().getMatrix();
-            context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+                // center offset
+                if(node.attrs.centerOffset.x !== 0 || node.attrs.centerOffset.y !== 0) {
+                    t.translate(-1 * node.attrs.centerOffset.x, -1 * node.attrs.centerOffset.y);
+                }
+
+                var m = t.getMatrix();
+                context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+            }
 
             if(this.getAbsoluteAlpha() !== 1) {
                 context.globalAlpha = this.getAbsoluteAlpha();

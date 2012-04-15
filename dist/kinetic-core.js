@@ -482,6 +482,15 @@ Kinetic.Node.prototype = {
             y: 1
         };
 
+        /*
+        this.attrs.centerOffset = {
+        x: 0,
+        y: 0
+        };
+        */
+
+        //this.move(-1 * this.attrs.centerOffset.x, -1 * this.attrs.centerOffset.y);
+
         // unravel transform
         var it = this.getAbsoluteTransform();
         it.invert();
@@ -493,12 +502,15 @@ Kinetic.Node.prototype = {
 
         this.setPosition(pos.x, pos.y);
 
+        //this.move(-1* this.attrs.centerOffset.x, -1* this.attrs.centerOffset.y);
+
         // restore rotation and scale
         this.rotate(rot);
         this.attrs.scale = {
             x: scale.x,
             y: scale.y
         };
+
     },
     /**
      * move node by an amount
@@ -822,6 +834,7 @@ Kinetic.Node.prototype = {
         for(var n = 0; n < family.length; n++) {
             var node = family[n];
             var m = node.getTransform();
+
             am.multiply(m);
         }
 
@@ -842,9 +855,6 @@ Kinetic.Node.prototype = {
         }
         if(this.attrs.scale.x !== 1 || this.attrs.scale.y !== 1) {
             m.scale(this.attrs.scale.x, this.attrs.scale.y);
-        }
-        if(this.attrs.centerOffset.x !== 0 || this.attrs.centerOffset.y !== 0) {
-            m.translate(-1 * this.attrs.centerOffset.x, -1 * this.attrs.centerOffset.y);
         }
 
         return m;
@@ -2270,11 +2280,28 @@ Kinetic.Shape.prototype = {
         if(layer !== undefined && this.drawFunc !== undefined) {
             var stage = layer.getStage();
             var context = layer.getContext();
+            var family = [];
+            var parent = this.parent;
+
+            family.unshift(this);
+            while(parent) {
+                family.unshift(parent);
+                parent = parent.parent;
+            }
 
             context.save();
+            for(var n = 0; n < family.length; n++) {
+                var node = family[n];
+                var t = node.getTransform();
 
-            var m = this.getAbsoluteTransform().getMatrix();
-            context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+                // center offset
+                if(node.attrs.centerOffset.x !== 0 || node.attrs.centerOffset.y !== 0) {
+                    t.translate(-1 * node.attrs.centerOffset.x, -1 * node.attrs.centerOffset.y);
+                }
+
+                var m = t.getMatrix();
+                context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+            }
 
             if(this.getAbsoluteAlpha() !== 1) {
                 context.globalAlpha = this.getAbsoluteAlpha();
