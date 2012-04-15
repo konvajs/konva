@@ -578,7 +578,7 @@ Test.prototype.tests = {
         layer.add(circle);
         stage.add(layer);
     },
-    'EVENTS - modify fill stroke and stroke width on hover with circle with star': function(containerId) {
+    'EVENTS - modify fill stroke and stroke width on hover with star': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -615,7 +615,7 @@ Test.prototype.tests = {
         layer.add(star);
         stage.add(layer);
     },
-    'EVENTS - modify fill stroke and stroke width on hover with circle with image': function(containerId) {
+    'EVENTS - modify fill stroke and stroke width on hover with image': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = new Kinetic.Stage({
@@ -631,14 +631,12 @@ Test.prototype.tests = {
             });
 
             darth.on('mouseover', function() {
-                this.setFill('yellow');
                 this.setStroke('purple');
                 this.setStrokeWidth(20);
                 layer.draw();
             });
 
             darth.on('mouseout', function() {
-                this.setFill(undefined);
                 this.setStroke(undefined);
                 this.setStrokeWidth(0);
                 layer.draw();

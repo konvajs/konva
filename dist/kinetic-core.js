@@ -2182,9 +2182,12 @@ Kinetic.Shape.prototype = {
             context.fill();
         }
 
-        if(this.attrs.stroke !== undefined || this.attrs.strokeWidth !== undefined) {
-            var stroke = this.attrs.stroke !== undefined ? this.attrs.stroke : 'black';
-            var strokeWidth = this.attrs.strokeWidth !== undefined ? this.attrs.strokeWidth : 2;
+        var hasStroke = this.attrs.stroke !== undefined;
+        var hasStrokeWidth = this.attrs.strokeWidth !== undefined && this.attrs.strokeWidth !== 0;
+
+        if(hasStroke || hasStrokeWidth) {
+            var stroke = hasStroke ? this.attrs.stroke : 'black';
+            var strokeWidth = hasStrokeWidth ? this.attrs.strokeWidth : 2;
 
             context.lineWidth = strokeWidth;
             context.strokeStyle = stroke;
