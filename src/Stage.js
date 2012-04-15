@@ -364,7 +364,7 @@ Kinetic.Stage.prototype = {
             this.targetFound = true;
         }
 
-        if(shape.attrs.visible && pos !== undefined && shape._isPointInShape(pos)) {
+        if(shape.attrs.visible && pos !== undefined && shape.isPointInShape(pos)) {
             // handle onmousedown
             if(!isDragging && this.mouseDown) {
                 this.mouseDown = false;

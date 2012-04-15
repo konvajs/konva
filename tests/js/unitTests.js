@@ -1281,6 +1281,51 @@ Test.prototype.tests = {
         star.setDetectionType('pixel');
         test(star.getDetectionType() === 'pixel', 'detection type should be pixel');
     },
+    'SHAPES - test isPointInPath()': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        test(rect.isPointInShape({
+            x: 200,
+            y: 100
+        }) === true, 'problem with point in shape');
+
+        test(rect.isPointInShape({
+            x: 199,
+            y: 99
+        }) === false, 'problem with point in shape');
+
+        test(rect.isPointInShape({
+            x: 250,
+            y: 125
+        }) === true, 'problem with point in shape');
+
+        test(rect.isPointInShape({
+            x: 300,
+            y: 150
+        }) === true, 'problem with point in shape');
+
+        test(rect.isPointInShape({
+            x: 301,
+            y: 151
+        }) === false, 'problem with point in shape');
+    },
     'Text - add text': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

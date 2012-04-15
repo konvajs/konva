@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Apr 14 2012
+ * Date: Apr 15 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1492,7 +1492,7 @@ Kinetic.Stage.prototype = {
             this.targetFound = true;
         }
 
-        if(shape.attrs.visible && pos !== undefined && shape._isPointInShape(pos)) {
+        if(shape.attrs.visible && pos !== undefined && shape.isPointInShape(pos)) {
             // handle onmousedown
             if(!isDragging && this.mouseDown) {
                 this.mouseDown = false;
@@ -2289,6 +2289,27 @@ Kinetic.Shape.prototype = {
         this.data = [];
     },
     /**
+     * custom isPointInPath method which can use path detection
+     * or pixel detection
+     */
+    isPointInShape: function(pos) {
+        var stage = this.getStage();
+
+        if(this.attrs.detectionType === 'path') {
+            var pathLayer = stage.pathLayer;
+            var pathLayerContext = pathLayer.getContext();
+
+            this._draw(pathLayer);
+
+            return pathLayerContext.isPointInPath(pos.x, pos.y);
+        }
+        else {
+            var w = stage.attrs.width;
+            var alpha = this.data[((w * pos.y) + pos.x) * 4 + 3];
+            return (alpha !== undefined && alpha !== 0);
+        }
+    },
+    /**
      * draw shape
      * @param {Layer} layer Layer that the shape will be drawn on
      */
@@ -2326,27 +2347,6 @@ Kinetic.Shape.prototype = {
             this.tempLayer = layer;
             this.drawFunc.call(this);
             context.restore();
-        }
-    },
-    /**
-     * custom isPointInPath method which can use path detection
-     * or pixel detection
-     */
-    _isPointInShape: function(pos) {
-        var stage = this.getStage();
-
-        if(this.attrs.detectionType === 'path') {
-            var pathLayer = stage.pathLayer;
-            var pathLayerContext = pathLayer.getContext();
-
-            this._draw(pathLayer);
-
-            return pathLayerContext.isPointInPath(pos.x, pos.y);
-        }
-        else {
-            var w = stage.attrs.width;
-            var alpha = this.data[((w * pos.y) + pos.x) * 4 + 3];
-            return (alpha !== undefined && alpha !== 0);
         }
     }
 };
