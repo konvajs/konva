@@ -1234,6 +1234,53 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
     },
+    'SHAPES - test pixel detection setter and getter': function(containerId) {
+
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+
+        var layer = new Kinetic.Layer({
+            rotationDeg: 20
+        });
+        var star = new Kinetic.Star({
+            x: 200,
+            y: 100,
+            points: 10,
+            innerRadius: 40,
+            outerRadius: 70,
+            fill: 'green',
+            stroke: 'blue',
+            strokeWidth: 20,
+            detectionType: 'pixel',
+            draggable: true
+        });
+
+        star.on('mouseover', function() {
+            log('mouseover');
+        });
+
+        star.on('mouseout', function() {
+            log('mouseout');
+        });
+
+        star.on('dragend', function() {
+            this.saveData();
+        });
+
+        layer.add(star);
+        stage.add(layer);
+
+        star.saveData();
+
+        test(star.getDetectionType() === 'pixel', 'detection type should be pixel');
+        star.setDetectionType('path');
+        test(star.getDetectionType() === 'path', 'detection type should be path');
+        star.setDetectionType('pixel');
+        test(star.getDetectionType() === 'pixel', 'detection type should be pixel');
+    },
     'Text - add text': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1494,7 +1541,6 @@ Test.prototype.tests = {
             id: 'rectId'
         });
 
-        
         layer.add(group);
         group.add(rect);
         stage.add(layer);
@@ -1542,8 +1588,7 @@ Test.prototype.tests = {
             id: 'rectId'
         });
 
-        
-        layer.add(group);  
+        layer.add(group);
         stage.add(layer);
         group.add(rect);
 
@@ -1589,7 +1634,7 @@ Test.prototype.tests = {
             name: 'rectName',
             id: 'rectId'
         });
-    
+
         stage.add(layer);
         layer.add(group);
         group.add(rect);
@@ -1609,7 +1654,6 @@ Test.prototype.tests = {
         test(stage.get('.layerName')[0].attrs.id === 'layerId', 'problem with layer name selector');
         test(stage.get('#layerId')[0].attrs.id === 'layerId', 'problem with layer id selector');
     },
-    
     'NODE - test drag and drop properties and methods': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

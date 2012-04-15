@@ -690,48 +690,44 @@ Test.prototype.tests = {
         imageObj.src = '../lion.png';
     },
     'EVENTS - star pixel detection': function(containerId) {
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            var stage = new Kinetic.Stage({
-                container: containerId,
-                width: 578,
-                height: 200
-            });
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
 
-            var layer = new Kinetic.Layer({
-                rotationDeg: 20
-            });
-            var star = new Kinetic.Star({
-                x: 200,
-                y: 100,
-                points: 10,
-                innerRadius: 40,
-                outerRadius: 70,
-                fill: 'green',
-                stroke: 'blue',
-                strokeWidth: 20,
-                detectionType: 'pixel',
-                draggable: true
-            });
+        var layer = new Kinetic.Layer({
+            rotationDeg: 20
+        });
+        var star = new Kinetic.Star({
+            x: 200,
+            y: 100,
+            points: 10,
+            innerRadius: 40,
+            outerRadius: 70,
+            fill: 'green',
+            stroke: 'blue',
+            strokeWidth: 20,
+            detectionType: 'pixel',
+            draggable: true
+        });
 
-            star.on('mouseover', function() {
-                log('mouseover');
-            });
+        star.on('mouseover', function() {
+            log('mouseover');
+        });
 
-            star.on('mouseout', function() {
-                log('mouseout');
-            });
+        star.on('mouseout', function() {
+            log('mouseout');
+        });
 
-            star.on('dragend', function() {
-                this.saveData();
-            });
+        star.on('dragend', function() {
+            this.saveData();
+        });
 
-            layer.add(star);
-            stage.add(layer);
+        layer.add(star);
+        stage.add(layer);
 
-            star.saveData();
-        };
-        imageObj.src = '../lion.png';
+        star.saveData();
     },
     'EVENTS - drag events click': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1698,20 +1694,19 @@ Test.prototype.tests = {
                 y: 1
             },
             centerOffset: {
-            	x: 50,
-            	y: 25
+                x: 50,
+                y: 25
             }
         });
 
         group.add(rect);
         layer.add(group);
         stage.add(layer);
-        
-        stage.onFrame(function() {
-        	rect.rotate(0.01);
-        	layer.draw();
-        });
 
+        stage.onFrame(function() {
+            rect.rotate(0.01);
+            layer.draw();
+        });
         //stage.start();
 
     },
@@ -1743,9 +1738,9 @@ Test.prototype.tests = {
         group.add(rect);
         layer.add(group);
         stage.add(layer);
-        
+
         stage.hide();
-        
+
         stage.draw();
     },
     'STAGE - hide layer': function(containerId) {
@@ -1776,9 +1771,9 @@ Test.prototype.tests = {
         group.add(rect);
         layer.add(group);
         stage.add(layer);
-        
+
         layer.hide();
-        
+
         stage.draw();
     },
     'STAGE - hide group': function(containerId) {
@@ -1809,9 +1804,9 @@ Test.prototype.tests = {
         group.add(rect);
         layer.add(group);
         stage.add(layer);
-        
+
         group.hide();
-        
+
         stage.draw();
     },
     'STAGE - save image as png (click on circle to open new window)': function(containerId) {

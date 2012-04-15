@@ -442,6 +442,19 @@ Kinetic.Node.prototype = {
         this.attrs.y = y;
     },
     /**
+     * set detection type
+     * @param {String} type can be "path" or "pixel"
+     */
+    setDetectionType: function(type) {
+        this.attrs.detectionType = type;
+    },
+    /**
+     * get detection type
+     */
+    getDetectionType: function() {
+        return this.attrs.detectionType;
+    },
+    /**
      * get node position relative to container
      */
     getPosition: function() {
