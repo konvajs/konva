@@ -14,6 +14,7 @@ Kinetic.Rect = function(config) {
     }
     this.attrs.width = 0;
     this.attrs.height = 0;
+    this.attrs.cornerRadius = 0;
 
     this.shapeType = "Rect";
 
@@ -21,7 +22,22 @@ Kinetic.Rect = function(config) {
         var context = this.getContext();
         context.beginPath();
         this.applyLineJoin();
-        context.rect(0, 0, this.attrs.width, this.attrs.height);
+        if (this.attrs.cornerRadius === 0) {
+            // simple rect - don't bother doing all that complicated maths stuff.
+            context.rect(0, 0, this.attrs.width, this.attrs.height);
+        }
+        else {
+            // arcTo would be nicer, but browser support is patchy (Opera)
+            context.moveTo(this.attrs.cornerRadius, 0);
+            context.lineTo(this.attrs.width - this.attrs.cornerRadius, 0);
+            context.arc(this.attrs.width - this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI*3/2, 0, false);
+            context.lineTo(this.attrs.width, this.attrs.height - this.attrs.cornerRadius);
+            context.arc(this.attrs.width - this.attrs.cornerRadius, this.attrs.height - this.attrs.cornerRadius, this.attrs.cornerRadius, 0, Math.PI/2, false);
+            context.lineTo(this.attrs.cornerRadius, this.attrs.height);
+            context.arc(this.attrs.cornerRadius, this.attrs.height - this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI/2, Math.PI, false);
+            context.lineTo(0, this.attrs.cornerRadius);
+            context.arc(this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI, Math.PI*3/2, false);
+        }
         context.closePath();
         this.fillStroke();
     };
@@ -75,7 +91,20 @@ Kinetic.Rect.prototype = {
             width: this.attrs.width,
             height: this.attrs.height
         };
-    }
+    },
+    /**
+     * set corner radius
+     * @param {Number} radius
+     */
+    setCornerRadius: function(radius) {
+        this.attrs.cornerRadius = radius;
+    },
+    /**
+     * get corner radius
+     */
+    getCornerRadius: function() {
+        return this.attrs.cornerRadius;
+    },
 };
 
 // extend Shape
