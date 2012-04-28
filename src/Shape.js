@@ -59,17 +59,18 @@ Kinetic.Shape.prototype = {
     fillStroke: function() {
         var context = this.getContext();
 
-        if(this.attrs.fill !== undefined) {
+        /*
+         * expect that fill, stroke, and strokeWidth could be
+         * undfined, '', null, or 0.  Use !!
+         */
+        if(!!this.attrs.fill) {
             context.fillStyle = this.attrs.fill;
             context.fill();
         }
 
-        var hasStroke = this.attrs.stroke !== undefined;
-        var hasStrokeWidth = this.attrs.strokeWidth !== undefined && this.attrs.strokeWidth !== 0;
-
-        if(hasStroke || hasStrokeWidth) {
-            var stroke = hasStroke ? this.attrs.stroke : 'black';
-            var strokeWidth = hasStrokeWidth ? this.attrs.strokeWidth : 2;
+        if(!!this.attrs.stroke || !!this.attrs.strokeWidth) {
+            var stroke = !!this.attrs.stroke ? this.attrs.stroke : 'black';
+            var strokeWidth = !!this.attrs.strokeWidth ? this.attrs.strokeWidth : 2;
 
             context.lineWidth = strokeWidth;
             context.strokeStyle = stroke;
