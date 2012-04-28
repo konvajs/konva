@@ -8,13 +8,11 @@
  * @param {Object} config
  */
 Kinetic.Star = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.points = [];
-    this.attrs.innerRadius = 0;
-    this.attrs.outerRadius = 0;
+    this.setDefaultAttrs({
+        points: [],
+        innerRadius: 0,
+        outerRadius: 0
+    });
 
     this.shapeType = "Star";
     config.drawFunc = function() {

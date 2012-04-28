@@ -8,13 +8,11 @@
  * @param {Object} config
  */
 Kinetic.Rect = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.width = 0;
-    this.attrs.height = 0;
-    this.attrs.cornerRadius = 0;
+    this.setDefaultAttrs({
+        width: 0,
+        height: 0,
+        cornerRadius: 0
+    });
 
     this.shapeType = "Rect";
 

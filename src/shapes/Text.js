@@ -8,20 +8,18 @@
  * @param {Object} config
  */
 Kinetic.Text = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.fontFamily = '';
-    this.attrs.text = '';
-    this.attrs.fontSize = 12;
-    this.attrs.fill = undefined;
-    this.attrs.textStroke = undefined;
-    this.attrs.textStrokeWidth = undefined;
-    this.attrs.align = 'left';
-    this.attrs.verticalAlign = 'top';
-    this.attrs.padding = 0;
-    this.attrs.fontStyle = 'normal';
+    this.setDefaultAttrs({
+        fontFamily: 'Calibri',
+        text: '',
+        fontSize: 12,
+        fill: undefined,
+        textStroke: undefined,
+        textStrokeWidth: undefined,
+        align: 'left',
+        verticalAlign: 'top',
+        padding: 0,
+        fontStyle: 'normal'
+    });
 
     this.shapeType = "Text";
 

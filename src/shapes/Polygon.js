@@ -8,11 +8,9 @@
  * @param {Object} config
  */
 Kinetic.Polygon = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.points = {};
+    this.setDefaultAttrs({
+        points: {}
+    });
 
     this.shapeType = "Polygon";
     config.drawFunc = function() {

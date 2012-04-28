@@ -8,17 +8,15 @@
  * @param {Object} config
  */
 Kinetic.Image = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.crop = {
-        x: 0,
-        y: 0,
-        width: undefined,
-        height: undefined
-    };
-    
+    this.setDefaultAttrs({
+        crop: {
+            x: 0,
+            y: 0,
+            width: undefined,
+            height: undefined
+        }
+    });
+
     this.shapeType = "Image";
     config.drawFunc = function() {
         if(this.image !== undefined) {

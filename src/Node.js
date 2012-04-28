@@ -9,31 +9,28 @@
  * @param {Object} config
  */
 Kinetic.Node = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.visible = true;
-    this.attrs.listening = true;
-    this.attrs.name = undefined;
-    this.attrs.alpha = 1;
-    this.attrs.x = 0;
-    this.attrs.y = 0;
-    this.attrs.scale = {
-        x: 1,
-        y: 1
-    };
-    this.attrs.rotation = 0;
-    this.attrs.centerOffset = {
+    this.setDefaultAttrs({
+        visible: true,
+        listening: true,
+        name: undefined,
+        alpha: 1,
         x: 0,
-        y: 0
-    };
-    this.attrs.dragConstraint = 'none';
-    this.attrs.dragBounds = {};
-    this.attrs.draggable = false;
-    this.eventListeners = {};
+        y: 0,
+        scale: {
+            x: 1,
+            y: 1
+        },
+        rotation: 0,
+        centerOffset: {
+            x: 0,
+            y: 0
+        },
+        dragConstraint: 'none',
+        dragBounds: {},
+        draggable: false
+    });
 
-    // set attrs
+    this.eventListeners = {};
     this.setAttrs(config);
 };
 /*
@@ -114,6 +111,23 @@ Kinetic.Node.prototype = {
      */
     getAttrs: function() {
         return this.attrs;
+    },
+    /**
+     * set default attrs
+     * @param {Object} confic
+     */
+    setDefaultAttrs: function(config) {
+        // create attrs object if undefined
+        if(this.attrs === undefined) {
+            this.attrs = {};
+        }
+
+        if(config) {
+            for(var key in config) {
+                var val = config[key];
+                this.attrs[key] = config[key];
+            }
+        }
     },
     /**
      * set attrs

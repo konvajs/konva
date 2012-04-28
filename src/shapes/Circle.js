@@ -8,11 +8,10 @@
  * @param {Object} config
  */
 Kinetic.Circle = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.radius = 0;
+    this.setDefaultAttrs({
+        radius: 0
+    });
+
     this.shapeType = "Circle";
 
     config.drawFunc = function() {

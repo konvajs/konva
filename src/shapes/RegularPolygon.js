@@ -8,12 +8,10 @@
  * @param {Object} config
  */
 Kinetic.RegularPolygon = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.radius = 0;
-    this.attrs.sides = 0;
+    this.setDefaultAttrs({
+        radius: 0,
+        sides: 0
+    });
 
     this.shapeType = "RegularPolygon";
     config.drawFunc = function() {

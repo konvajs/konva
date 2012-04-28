@@ -178,31 +178,28 @@ window.requestAnimFrame = (function(callback) {
  * @param {Object} config
  */
 Kinetic.Node = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.visible = true;
-    this.attrs.listening = true;
-    this.attrs.name = undefined;
-    this.attrs.alpha = 1;
-    this.attrs.x = 0;
-    this.attrs.y = 0;
-    this.attrs.scale = {
-        x: 1,
-        y: 1
-    };
-    this.attrs.rotation = 0;
-    this.attrs.centerOffset = {
+    this.setDefaultAttrs({
+        visible: true,
+        listening: true,
+        name: undefined,
+        alpha: 1,
         x: 0,
-        y: 0
-    };
-    this.attrs.dragConstraint = 'none';
-    this.attrs.dragBounds = {};
-    this.attrs.draggable = false;
-    this.eventListeners = {};
+        y: 0,
+        scale: {
+            x: 1,
+            y: 1
+        },
+        rotation: 0,
+        centerOffset: {
+            x: 0,
+            y: 0
+        },
+        dragConstraint: 'none',
+        dragBounds: {},
+        draggable: false
+    });
 
-    // set attrs
+    this.eventListeners = {};
     this.setAttrs(config);
 };
 /*
@@ -283,6 +280,23 @@ Kinetic.Node.prototype = {
      */
     getAttrs: function() {
         return this.attrs;
+    },
+    /**
+     * set default attrs
+     * @param {Object} confic
+     */
+    setDefaultAttrs: function(config) {
+        // create attrs object if undefined
+        if(this.attrs === undefined) {
+            this.attrs = {};
+        }
+
+        if(config) {
+            for(var key in config) {
+                var val = config[key];
+                this.attrs[key] = config[key];
+            }
+        }
     },
     /**
      * set attrs
@@ -1213,12 +1227,11 @@ Kinetic.Container.prototype = {
  * @param {int} height
  */
 Kinetic.Stage = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.width = 400;
-    this.attrs.height = 200;
+    this.setDefaultAttrs({
+        width: 400,
+        height: 200
+    });
+
     this.nodeType = 'Stage';
     this.ids = {};
     this.names = {};
@@ -2089,11 +2102,9 @@ Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Node);
  * @param {Object} config
  */
 Kinetic.Layer = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.throttle = 12;
+    this.setDefaultAttrs({
+        throttle: 12
+    });
 
     this.nodeType = 'Layer';
     this.lastDrawTime = 0;
@@ -2130,13 +2141,13 @@ Kinetic.Layer.prototype = {
      * @param {Number} throttle in ms
      */
     setThrottle: function(throttle) {
-    	this.attrs.throttle = throttle;
+        this.attrs.throttle = throttle;
     },
     /**
      * get throttle
      */
     getThrottle: function() {
-    	return this.attrs.throttle;
+        return this.attrs.throttle;
     },
     /**
      * clears the canvas context tied to the layer.  Clearing
@@ -2258,15 +2269,13 @@ Kinetic.GlobalObject.extend(Kinetic.Group, Kinetic.Node);
  *  The default is "path" because it performs better
  */
 Kinetic.Shape = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.fill = undefined;
-    this.attrs.stroke = undefined;
-    this.attrs.strokeWidth = undefined;
-    this.attrs.lineJoin = undefined;
-    this.attrs.detectionType = 'path';
+    this.setDefaultAttrs({
+        fill: undefined,
+        stroke: undefined,
+        strokeWidth: undefined,
+        lineJoin: undefined,
+        detectionType: 'path'
+    });
 
     this.data = [];
     this.nodeType = 'Shape';
@@ -2488,13 +2497,11 @@ Kinetic.GlobalObject.extend(Kinetic.Shape, Kinetic.Node);
  * @param {Object} config
  */
 Kinetic.Rect = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.width = 0;
-    this.attrs.height = 0;
-    this.attrs.cornerRadius = 0;
+    this.setDefaultAttrs({
+        width: 0,
+        height: 0,
+        cornerRadius: 0
+    });
 
     this.shapeType = "Rect";
 
@@ -2600,11 +2607,10 @@ Kinetic.GlobalObject.extend(Kinetic.Rect, Kinetic.Shape);
  * @param {Object} config
  */
 Kinetic.Circle = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.radius = 0;
+    this.setDefaultAttrs({
+        radius: 0
+    });
+
     this.shapeType = "Circle";
 
     config.drawFunc = function() {
@@ -2651,17 +2657,15 @@ Kinetic.GlobalObject.extend(Kinetic.Circle, Kinetic.Shape);
  * @param {Object} config
  */
 Kinetic.Image = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.crop = {
-        x: 0,
-        y: 0,
-        width: undefined,
-        height: undefined
-    };
-    
+    this.setDefaultAttrs({
+        crop: {
+            x: 0,
+            y: 0,
+            width: undefined,
+            height: undefined
+        }
+    });
+
     this.shapeType = "Image";
     config.drawFunc = function() {
         if(this.image !== undefined) {
@@ -2787,11 +2791,9 @@ Kinetic.GlobalObject.extend(Kinetic.Image, Kinetic.Shape);
  * @param {Object} config
  */
 Kinetic.Polygon = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.points = {};
+    this.setDefaultAttrs({
+        points: {}
+    });
 
     this.shapeType = "Polygon";
     config.drawFunc = function() {
@@ -2840,12 +2842,10 @@ Kinetic.GlobalObject.extend(Kinetic.Polygon, Kinetic.Shape);
  * @param {Object} config
  */
 Kinetic.RegularPolygon = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.radius = 0;
-    this.attrs.sides = 0;
+    this.setDefaultAttrs({
+        radius: 0,
+        sides: 0
+    });
 
     this.shapeType = "RegularPolygon";
     config.drawFunc = function() {
@@ -2910,13 +2910,11 @@ Kinetic.GlobalObject.extend(Kinetic.RegularPolygon, Kinetic.Shape);
  * @param {Object} config
  */
 Kinetic.Star = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.points = [];
-    this.attrs.innerRadius = 0;
-    this.attrs.outerRadius = 0;
+    this.setDefaultAttrs({
+        points: [],
+        innerRadius: 0,
+        outerRadius: 0
+    });
 
     this.shapeType = "Star";
     config.drawFunc = function() {
@@ -2994,20 +2992,18 @@ Kinetic.GlobalObject.extend(Kinetic.Star, Kinetic.Shape);
  * @param {Object} config
  */
 Kinetic.Text = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.fontFamily = '';
-    this.attrs.text = '';
-    this.attrs.fontSize = 12;
-    this.attrs.fill = undefined;
-    this.attrs.textStroke = undefined;
-    this.attrs.textStrokeWidth = undefined;
-    this.attrs.align = 'left';
-    this.attrs.verticalAlign = 'top';
-    this.attrs.padding = 0;
-    this.attrs.fontStyle = 'normal';
+    this.setDefaultAttrs({
+        fontFamily: 'Calibri',
+        text: '',
+        fontSize: 12,
+        fill: undefined,
+        textStroke: undefined,
+        textStrokeWidth: undefined,
+        align: 'left',
+        verticalAlign: 'top',
+        padding: 0,
+        fontStyle: 'normal'
+    });
 
     this.shapeType = "Text";
 

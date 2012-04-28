@@ -12,12 +12,11 @@
  * @param {int} height
  */
 Kinetic.Stage = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.width = 400;
-    this.attrs.height = 200;
+    this.setDefaultAttrs({
+        width: 400,
+        height: 200
+    });
+
     this.nodeType = 'Stage';
     this.ids = {};
     this.names = {};

@@ -10,11 +10,9 @@
  * @param {Object} config
  */
 Kinetic.Layer = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.throttle = 12;
+    this.setDefaultAttrs({
+        throttle: 12
+    });
 
     this.nodeType = 'Layer';
     this.lastDrawTime = 0;
@@ -51,13 +49,13 @@ Kinetic.Layer.prototype = {
      * @param {Number} throttle in ms
      */
     setThrottle: function(throttle) {
-    	this.attrs.throttle = throttle;
+        this.attrs.throttle = throttle;
     },
     /**
      * get throttle
      */
     getThrottle: function() {
-    	return this.attrs.throttle;
+        return this.attrs.throttle;
     },
     /**
      * clears the canvas context tied to the layer.  Clearing

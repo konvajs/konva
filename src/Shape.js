@@ -16,15 +16,13 @@
  *  The default is "path" because it performs better
  */
 Kinetic.Shape = function(config) {
-    // default attrs
-    if(this.attrs === undefined) {
-        this.attrs = {};
-    }
-    this.attrs.fill = undefined;
-    this.attrs.stroke = undefined;
-    this.attrs.strokeWidth = undefined;
-    this.attrs.lineJoin = undefined;
-    this.attrs.detectionType = 'path';
+    this.setDefaultAttrs({
+        fill: undefined,
+        stroke: undefined,
+        strokeWidth: undefined,
+        lineJoin: undefined,
+        detectionType: 'path'
+    });
 
     this.data = [];
     this.nodeType = 'Shape';
