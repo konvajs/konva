@@ -8,9 +8,6 @@
 /**
  * Transition constructor.  KineticJS transitions contain
  * multiple Tweens
- * @constructor
- * @param {Kinetic.Node} node
- * @param {Object} config
  */
 Kinetic.Transition = function(node, config) {
     this.node = node;
