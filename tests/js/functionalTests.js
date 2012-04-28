@@ -193,7 +193,9 @@ Test.prototype.tests = {
             width: 578,
             height: 200
         });
-        var layer = new Kinetic.Layer();
+        var layer = new Kinetic.Layer({
+            throttle: 100
+        });
         var rect = new Kinetic.Rect({
             x: 200,
             y: 100,
@@ -1225,7 +1227,9 @@ Test.prototype.tests = {
             width: 578,
             height: 200
         });
-        var layer = new Kinetic.Layer();
+        var layer = new Kinetic.Layer({
+            throttle: 12
+        });
         var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
