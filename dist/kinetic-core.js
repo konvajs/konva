@@ -1456,6 +1456,8 @@ Kinetic.Stage.prototype = {
      * @param {String} JSON string
      */
     load: function(json) {
+        this.reset();
+
         function loadNode(node, obj) {
             var children = obj.children;
             if(children !== undefined) {
@@ -2173,6 +2175,9 @@ Kinetic.Layer.prototype = {
         if(timeDiff >= throttle) {
             this._draw();
             this.lastDrawTime = time;
+            if(this.drawTimeout !== undefined) {
+                clearTimeout(this.drawTimeout);
+            }
         }
         /*
          * if we cannot draw the layer due to throttling,

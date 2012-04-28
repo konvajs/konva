@@ -95,7 +95,8 @@ Test.prototype.tests = {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
-            height: 200
+            height: 200,
+            x: 100
         });
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
@@ -115,8 +116,11 @@ Test.prototype.tests = {
         group.add(circle);
         layer.draw();
 
-        var expectedJson = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":12,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
-        test(stage.toJSON() === expectedJson, 'problem with serialization');
+        test(stage.getChildren().length === 1, 'stage should have one child');
+        test(stage.getX() === 100, 'stage x should be 100');
+        stage.reset();
+        test(stage.getChildren().length === 0, 'stage should have no children');
+        test(stage.getX() === 0, 'stage x should be 0');
     },
     'STAGE - test getAttrs()': function(containerId) {
         var stage = new Kinetic.Stage({

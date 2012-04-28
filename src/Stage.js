@@ -241,6 +241,8 @@ Kinetic.Stage.prototype = {
      * @param {String} JSON string
      */
     load: function(json) {
+        this.reset();
+
         function loadNode(node, obj) {
             var children = obj.children;
             if(children !== undefined) {

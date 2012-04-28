@@ -42,6 +42,9 @@ Kinetic.Layer.prototype = {
         if(timeDiff >= throttle) {
             this._draw();
             this.lastDrawTime = time;
+            if(this.drawTimeout !== undefined) {
+                clearTimeout(this.drawTimeout);
+            }
         }
         /*
          * if we cannot draw the layer due to throttling,
