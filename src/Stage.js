@@ -109,6 +109,21 @@ Kinetic.Stage.prototype = {
      * @param {int} height
      */
     setSize: function(width, height) {
+        // set stage dimensions
+        this.attrs.width = width;
+        this.attrs.height = height;
+
+        // set content dimensions
+        this.content.style.width = this.attrs.width + 'px';
+        this.content.style.height = this.attrs.height + 'px';
+
+        // set buffer layer and path layer sizes
+        this.bufferLayer.getCanvas().width = width;
+        this.bufferLayer.getCanvas().height = height;
+        this.pathLayer.getCanvas().width = width;
+        this.pathLayer.getCanvas().height = height;
+
+        // set user defined layer dimensions
         var layers = this.children;
         for(var n = 0; n < layers.length; n++) {
             var layer = layers[n];
@@ -116,16 +131,6 @@ Kinetic.Stage.prototype = {
             layer.getCanvas().height = height;
             layer.draw();
         }
-
-        // set stage dimensions
-        this.attrs.width = width;
-        this.attrs.height = height;
-
-        // set buffer layer and path layer sizes
-        this.bufferLayer.getCanvas().width = width;
-        this.bufferLayer.getCanvas().height = height;
-        this.pathLayer.getCanvas().width = width;
-        this.pathLayer.getCanvas().height = height;
     },
     /**
      * return stage size
@@ -788,8 +793,6 @@ Kinetic.Stage.prototype = {
      */
     _buildDOM: function() {
         // content
-        this.content.style.width = this.attrs.width + 'px';
-        this.content.style.height = this.attrs.height + 'px';
         this.content.style.position = 'relative';
         this.content.style.display = 'inline-block';
         this.content.className = 'kineticjs-content';
@@ -815,16 +818,14 @@ Kinetic.Stage.prototype = {
         this.pathLayer.getCanvas().style.display = 'none';
 
         // add buffer layer
-        this.bufferLayer.canvas.width = this.attrs.width;
-        this.bufferLayer.canvas.height = this.attrs.height;
         this.bufferLayer.canvas.className = 'kineticjs-buffer-layer';
         this.content.appendChild(this.bufferLayer.canvas);
 
         // add path layer
-        this.pathLayer.canvas.width = this.attrs.width;
-        this.pathLayer.canvas.height = this.attrs.height;
         this.pathLayer.canvas.className = 'kineticjs-path-layer';
         this.content.appendChild(this.pathLayer.canvas);
+
+        this.setSize(this.attrs.width, this.attrs.height);
     },
     _addId: function(node) {
         if(node.attrs.id !== undefined) {

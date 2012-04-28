@@ -228,11 +228,15 @@ Test.prototype.tests = {
 
         test(stage.getSize().width === 578, 'stage height should be 578');
         test(stage.getSize().height === 200, 'stage width should be 200');
+        test(stage.getDOM().style.width === '578px', 'content height should be 578px');
+        test(stage.getDOM().style.height === '200px', 'content width should be 200px');
 
         stage.setSize(300, 150);
 
         test(stage.getSize().width === 300, 'stage height should be 300');
         test(stage.getSize().height === 150, 'stage width should be 150');
+        test(stage.getDOM().style.width === '300px', 'content height should be 300px');
+        test(stage.getDOM().style.height === '150px', 'content width should be 150px');
 
         layer.add(circle);
         stage.add(layer);
