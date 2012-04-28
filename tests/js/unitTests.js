@@ -1303,7 +1303,7 @@ Test.prototype.tests = {
         star.setDetectionType('pixel');
         test(star.getDetectionType() === 'pixel', 'detection type should be pixel');
     },
-    'SHAPES - test isPointInPath()': function(containerId) {
+    'SHAPES - test intersects()': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1323,30 +1323,30 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
 
-        test(rect.isPointInShape({
+        test(rect.intersects({
             x: 200,
             y: 100
         }) === true, 'problem with point in shape');
 
-        test(rect.isPointInShape({
+        test(rect.intersects({
             x: 199,
             y: 99
-        }) === false, 'problem with point in shape');
+        }) === false, 'intersects with point in shape');
 
-        test(rect.isPointInShape({
+        test(rect.intersects({
             x: 250,
             y: 125
-        }) === true, 'problem with point in shape');
+        }) === true, 'intersects with point in shape');
 
-        test(rect.isPointInShape({
+        test(rect.intersects({
             x: 300,
             y: 150
-        }) === true, 'problem with point in shape');
+        }) === true, 'intersects with point in shape');
 
-        test(rect.isPointInShape({
+        test(rect.intersects({
             x: 301,
             y: 151
-        }) === false, 'problem with point in shape');
+        }) === false, 'intersects with point in shape');
     },
     'Text - add text': function(containerId) {
         var stage = new Kinetic.Stage({

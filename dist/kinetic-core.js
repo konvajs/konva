@@ -1529,7 +1529,7 @@ Kinetic.Stage.prototype = {
             this.targetFound = true;
         }
 
-        if(shape.attrs.visible && pos !== undefined && shape.isPointInShape(pos)) {
+        if(shape.attrs.visible && pos !== undefined && shape.intersects(pos)) {
             // handle onmousedown
             if(!isDragging && this.mouseDown) {
                 this.mouseDown = false;
@@ -2323,10 +2323,9 @@ Kinetic.Shape.prototype = {
         this.data = [];
     },
     /**
-     * custom isPointInPath method which can use path detection
-     * or pixel detection
+     * determines if point is in the shape
      */
-    isPointInShape: function(pos) {
+    intersects: function(pos) {
         var stage = this.getStage();
 
         if(this.attrs.detectionType === 'path') {

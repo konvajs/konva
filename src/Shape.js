@@ -171,10 +171,9 @@ Kinetic.Shape.prototype = {
         this.data = [];
     },
     /**
-     * custom isPointInPath method which can use path detection
-     * or pixel detection
+     * determines if point is in the shape
      */
-    isPointInShape: function(pos) {
+    intersects: function(pos) {
         var stage = this.getStage();
 
         if(this.attrs.detectionType === 'path') {
