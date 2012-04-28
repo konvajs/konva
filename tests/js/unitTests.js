@@ -128,6 +128,15 @@ Test.prototype.tests = {
         test(attrs.name === 'myCircle', 'name attr should be myCircle');
         test(attrs.draggable === true, 'draggable attr should be true');
     },
+    'STAGE - get stage DOM': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+
+        test(stage.getDOM().className === 'kineticjs-content', 'stage DOM class name is wrong');
+    },
     'STAGE - load stage using json': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

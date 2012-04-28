@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Apr 27 2012
+ * Date: Apr 28 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1200,7 +1200,7 @@ Kinetic.Container.prototype = {
     }
 };
 
-;///////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
 //  Stage
 ///////////////////////////////////////////////////////////////////////
 /**
@@ -1477,18 +1477,6 @@ Kinetic.Stage.prototype = {
         this._remove(layer);
     },
     /**
-     * bind event listener to container DOM element
-     * @param {String} typesStr
-     * @param {function} handler
-     */
-    onContent: function(typesStr, handler) {
-        var types = typesStr.split(' ');
-        for(var n = 0; n < types.length; n++) {
-            var baseEvent = types[n];
-            this.content.addEventListener(baseEvent, handler, false);
-        }
-    },
-    /**
      * add layer to stage
      * @param {Layer} layer
      */
@@ -1557,7 +1545,7 @@ Kinetic.Stage.prototype = {
      * @param {Object} point
      */
     getIntersections: function() {
-    	var pos = Kinetic.GlobalObject._getPoint(arguments);
+        var pos = Kinetic.GlobalObject._getPoint(arguments);
         var arr = [];
         var shapes = this.get('Shape');
 
@@ -1569,6 +1557,13 @@ Kinetic.Stage.prototype = {
         }
 
         return arr;
+    },
+    /**
+     * get stage DOM node, which is a div element
+     * with the class name "kineticjs-content"
+     */
+    getDOM: function() {
+        return this.content;
     },
     /**
      * detect event
@@ -1924,7 +1919,7 @@ Kinetic.Stage.prototype = {
     _prepareDrag: function() {
         var that = this;
 
-        this.onContent('mousemove touchmove', function(evt) {
+        this._onContent('mousemove touchmove', function(evt) {
             var go = Kinetic.GlobalObject;
             var node = go.drag.node;
             if(node) {
@@ -1986,7 +1981,7 @@ Kinetic.Stage.prototype = {
             }
         }, false);
 
-        this.onContent('mouseup touchend mouseout', function(evt) {
+        this._onContent('mouseup touchend mouseout', function(evt) {
             that._endDrag(evt);
         });
     },
@@ -2063,6 +2058,18 @@ Kinetic.Stage.prototype = {
                     }
                 }
             }
+        }
+    },
+    /**
+     * bind event listener to container DOM element
+     * @param {String} typesStr
+     * @param {function} handler
+     */
+    _onContent: function(typesStr, handler) {
+        var types = typesStr.split(' ');
+        for(var n = 0; n < types.length; n++) {
+            var baseEvent = types[n];
+            this.content.addEventListener(baseEvent, handler, false);
         }
     }
 };
