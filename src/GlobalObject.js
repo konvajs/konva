@@ -39,11 +39,11 @@ Kinetic.GlobalObject = {
             }
         }
     },
-    addAnimation: function(anim) {
+    _addAnimation: function(anim) {
         anim.id = Kinetic.GlobalObject.animIdCounter++;
         this.animations.push(anim);
     },
-    removeAnimation: function(id) {
+    _removeAnimation: function(id) {
         var animations = this.animations;
         for(var n = 0; n < animations.length; n++) {
             if(animations[n].id === id) {

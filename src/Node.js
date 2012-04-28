@@ -661,11 +661,11 @@ Kinetic.Node.prototype = {
          * adding the animation with the addAnimation
          * method auto generates an id
          */
-        go.addAnimation(anim);
+        go._addAnimation(anim);
 
         // subscribe to onFinished for first tween
         trans.tweens[0].onFinished = function() {
-            go.removeAnimation(anim.id);
+            go._removeAnimation(anim.id);
             if(config.callback !== undefined) {
                 config.callback();
             }

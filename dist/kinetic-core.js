@@ -67,11 +67,11 @@ Kinetic.GlobalObject = {
             }
         }
     },
-    addAnimation: function(anim) {
+    _addAnimation: function(anim) {
         anim.id = Kinetic.GlobalObject.animIdCounter++;
         this.animations.push(anim);
     },
-    removeAnimation: function(id) {
+    _removeAnimation: function(id) {
         var animations = this.animations;
         for(var n = 0; n < animations.length; n++) {
             if(animations[n].id === id) {
@@ -831,11 +831,11 @@ Kinetic.Node.prototype = {
          * adding the animation with the addAnimation
          * method auto generates an id
          */
-        go.addAnimation(anim);
+        go._addAnimation(anim);
 
         // subscribe to onFinished for first tween
         trans.tweens[0].onFinished = function() {
-            go.removeAnimation(anim.id);
+            go._removeAnimation(anim.id);
             if(config.callback !== undefined) {
                 config.callback();
             }
@@ -1288,7 +1288,7 @@ Kinetic.Stage.prototype = {
      */
     start: function() {
         var go = Kinetic.GlobalObject;
-        go.addAnimation(this.anim);
+        go._addAnimation(this.anim);
         go._handleAnimation();
     },
     /**
@@ -1296,7 +1296,7 @@ Kinetic.Stage.prototype = {
      */
     stop: function() {
         var go = Kinetic.GlobalObject;
-        go.removeAnimation(this.anim.id);
+        go._removeAnimation(this.anim.id);
         go._handleAnimation();
     },
     /**
