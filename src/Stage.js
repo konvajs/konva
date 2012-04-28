@@ -18,8 +18,6 @@ Kinetic.Stage = function(config) {
     });
 
     this.nodeType = 'Stage';
-    this.ids = {};
-    this.names = {};
 
     /*
      * if container is a string, assume it's an id for
@@ -36,21 +34,8 @@ Kinetic.Stage = function(config) {
     this.container = config.container;
     this.content = document.createElement('div');
     this.dblClickWindow = 400;
-    this.clickStart = false;
-    this.targetShape = undefined;
-    this.targetFound = false;
-    this.mouseoverShape = undefined;
-    this.mouseoutShape = undefined;
 
-    // desktop flags
-    this.mousePos = undefined;
-    this.mouseDown = false;
-    this.mouseUp = false;
-
-    // mobile flags
-    this.touchPos = undefined;
-    this.touchStart = false;
-    this.touchEnd = false;
+    this._setDefaults();
 
     // set stage id
     this._id = Kinetic.GlobalObject.idCounter++;
@@ -58,8 +43,6 @@ Kinetic.Stage = function(config) {
     this._buildDOM();
     this._listen();
     this._prepareDrag();
-
-    this.anim = undefined;
 
     var go = Kinetic.GlobalObject;
     go.stages.push(this);
@@ -215,6 +198,38 @@ Kinetic.Stage.prototype = {
             return obj;
         }
         return JSON.stringify(addNode(this));
+    },
+    /**
+     * reset stage to default state
+     */
+    reset: function() {
+        // remove children
+        this.removeChildren();
+
+        // reset stage defaults
+        this._setDefaults();
+
+        // reset node attrs
+        this.setDefaultAttrs({
+            visible: true,
+            listening: true,
+            name: undefined,
+            alpha: 1,
+            x: 0,
+            y: 0,
+            scale: {
+                x: 1,
+                y: 1
+            },
+            rotation: 0,
+            centerOffset: {
+                x: 0,
+                y: 0
+            },
+            dragConstraint: 'none',
+            dragBounds: {},
+            draggable: false
+        });
     },
     /**
      * load stage with JSON string.  De-serializtion does not generate custom
@@ -869,6 +884,30 @@ Kinetic.Stage.prototype = {
             var baseEvent = types[n];
             this.content.addEventListener(baseEvent, handler, false);
         }
+    },
+    /**
+     * set defaults
+     */
+    _setDefaults: function() {
+        this.clickStart = false;
+        this.targetShape = undefined;
+        this.targetFound = false;
+        this.mouseoverShape = undefined;
+        this.mouseoutShape = undefined;
+
+        // desktop flags
+        this.mousePos = undefined;
+        this.mouseDown = false;
+        this.mouseUp = false;
+
+        // mobile flags
+        this.touchPos = undefined;
+        this.touchStart = false;
+        this.touchEnd = false;
+
+        this.ids = {};
+        this.names = {};
+        this.anim = undefined;
     }
 };
 // Extend Container and Node

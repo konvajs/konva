@@ -43,6 +43,17 @@ Kinetic.Layer.prototype = {
             this._draw();
             this.lastDrawTime = time;
         }
+        /*
+         * if we cannot draw the layer due to throttling,
+         * try to redraw the layer in the near future
+         */
+        else if(this.drawTimeout === undefined) {
+            var that = this;
+            this.drawTimeout = setTimeout(function() {
+                that.draw();
+                clearTimeout(that.drawTimeout);
+            }, 5);
+        }
     },
     /**
      * set throttle
