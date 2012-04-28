@@ -146,6 +146,18 @@ Kinetic.GlobalObject = {
     },
     _isFunction: function(obj) {
         return !!(obj && obj.constructor && obj.call && obj.apply);
+    },
+    _getPoint: function(arg) {
+    	
+        if(arg.length === 1) {
+            return arg[0];
+        }
+        else {
+            return {
+                x: arg[0],
+                y: arg[1]
+            }
+        }
     }
 };
 
@@ -445,12 +457,12 @@ Kinetic.Node.prototype = {
     },
     /**
      * set node position
-     * @param {Number} x
-     * @param {Number} y
+     * @param {Object} point
      */
-    setPosition: function(x, y) {
-        this.attrs.x = x;
-        this.attrs.y = y;
+    setPosition: function() {
+        var pos = Kinetic.GlobalObject._getPoint(arguments);
+        this.attrs.x = pos.x;
+        this.attrs.y = pos.y;
     },
     /**
      * set node x position
@@ -511,7 +523,8 @@ Kinetic.Node.prototype = {
      * @param {Object} pos object containing an x and
      *  y property
      */
-    setAbsolutePosition: function(pos) {
+    setAbsolutePosition: function() {
+        var pos = Kinetic.GlobalObject._getPoint(arguments);
         /*
          * save rotation and scale and
          * then remove them from the transform
@@ -1540,11 +1553,22 @@ Kinetic.Stage.prototype = {
         return this.attrs.height;
     },
     /**
-     * get shapes in point
+     * get shapes that intersect a point
      * @param {Object} point
      */
-    getShapesInPoint: function(pos) {
+    getIntersections: function() {
+    	var pos = Kinetic.GlobalObject._getPoint(arguments);
+        var arr = [];
+        var shapes = this.get('Shape');
 
+        for(var n = 0; n < shapes.length; n++) {
+            var shape = shapes[n];
+            if(shape.intersects(pos)) {
+                arr.push(shape);
+            }
+        }
+
+        return arr;
     },
     /**
      * detect event
@@ -2356,7 +2380,8 @@ Kinetic.Shape.prototype = {
     /**
      * determines if point is in the shape
      */
-    intersects: function(pos) {
+    intersects: function() {
+        var pos = Kinetic.GlobalObject._getPoint(arguments);
         var stage = this.getStage();
 
         if(this.attrs.detectionType === 'path') {

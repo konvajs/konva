@@ -287,12 +287,12 @@ Kinetic.Node.prototype = {
     },
     /**
      * set node position
-     * @param {Number} x
-     * @param {Number} y
+     * @param {Object} point
      */
-    setPosition: function(x, y) {
-        this.attrs.x = x;
-        this.attrs.y = y;
+    setPosition: function() {
+        var pos = Kinetic.GlobalObject._getPoint(arguments);
+        this.attrs.x = pos.x;
+        this.attrs.y = pos.y;
     },
     /**
      * set node x position
@@ -353,7 +353,8 @@ Kinetic.Node.prototype = {
      * @param {Object} pos object containing an x and
      *  y property
      */
-    setAbsolutePosition: function(pos) {
+    setAbsolutePosition: function() {
+        var pos = Kinetic.GlobalObject._getPoint(arguments);
         /*
          * save rotation and scale and
          * then remove them from the transform

@@ -1348,7 +1348,7 @@ Test.prototype.tests = {
             y: 151
         }) === false, 'intersects with point in shape');
     },
-    'STAGE - node type selector': function(containerId) {
+    'CONTAINER - node type selector': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1397,6 +1397,59 @@ Test.prototype.tests = {
         test(group.get('Shape').length === 1, 'group should have 1 shape');
         test(group.get('Layer').length === 0, 'group should have 0 layers');
         test(group.get('Group').length === 0, 'group should have 0 groups');
+
+    },
+    'STAGE - test getShapesInPoint': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var fooLayer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+
+        var blue = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'blue',
+            name: 'blue'
+        });
+
+        var red = new Kinetic.Rect({
+            x: 250,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'red'
+        });
+
+        group.add(red);
+        layer.add(blue);
+        layer.add(group);
+        stage.add(layer);
+        stage.add(fooLayer);
+
+        test(stage.getIntersections({
+            x: 201,
+            y: 101
+        }).length === 1, 'should be 1 shape ');
+
+        test(stage.getIntersections(201, 101).length === 1, 'should be 1 shape ');
+
+        test(stage.getIntersections(201, 101)[0].getName() === 'blue', 'shape name should be blue');
+
+        test(stage.getIntersections({
+            x: 251,
+            y: 101
+        }).length === 2, 'should be 2 shapes ');
+
+        test(stage.getIntersections({
+            x: 350,
+            y: 150
+        }).length === 1, 'should be 1 shape ');
 
     },
     'Text - add text': function(containerId) {

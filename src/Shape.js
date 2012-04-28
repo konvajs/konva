@@ -173,7 +173,8 @@ Kinetic.Shape.prototype = {
     /**
      * determines if point is in the shape
      */
-    intersects: function(pos) {
+    intersects: function() {
+        var pos = Kinetic.GlobalObject._getPoint(arguments);
         var stage = this.getStage();
 
         if(this.attrs.detectionType === 'path') {

@@ -351,11 +351,22 @@ Kinetic.Stage.prototype = {
         return this.attrs.height;
     },
     /**
-     * get shapes in point
+     * get shapes that intersect a point
      * @param {Object} point
      */
-    getShapesInPoint: function(pos) {
+    getIntersections: function() {
+    	var pos = Kinetic.GlobalObject._getPoint(arguments);
+        var arr = [];
+        var shapes = this.get('Shape');
 
+        for(var n = 0; n < shapes.length; n++) {
+            var shape = shapes[n];
+            if(shape.intersects(pos)) {
+                arr.push(shape);
+            }
+        }
+
+        return arr;
     },
     /**
      * detect event

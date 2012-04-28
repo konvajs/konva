@@ -118,6 +118,18 @@ Kinetic.GlobalObject = {
     },
     _isFunction: function(obj) {
         return !!(obj && obj.constructor && obj.call && obj.apply);
+    },
+    _getPoint: function(arg) {
+    	
+        if(arg.length === 1) {
+            return arg[0];
+        }
+        else {
+            return {
+                x: arg[0],
+                y: arg[1]
+            }
+        }
     }
 };
 
