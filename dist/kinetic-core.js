@@ -68,7 +68,7 @@ Kinetic.GlobalObject = {
         }
     },
     _addAnimation: function(anim) {
-        anim.id = Kinetic.GlobalObject.animIdCounter++;
+        anim.id = this.animIdCounter++;
         this.animations.push(anim);
     },
     _removeAnimation: function(id) {
@@ -81,14 +81,13 @@ Kinetic.GlobalObject = {
         }
     },
     _pullNodes: function(stage) {
-        var go = Kinetic.GlobalObject;
-        var tempNodes = go.tempNodes;
+        var tempNodes = this.tempNodes;
         for(var n = 0; n < tempNodes.length; n++) {
             var node = tempNodes[n];
             if(node.getStage() !== undefined && node.getStage()._id === stage._id) {
                 stage._addId(node);
                 stage._addName(node);
-                go.tempNodes.splice(n, 1);
+                this.tempNodes.splice(n, 1);
                 n -= 1;
             }
         }

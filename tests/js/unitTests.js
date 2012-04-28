@@ -552,6 +552,30 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         stage.add(layer);
     },
+    'LAYERS - throttling': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer({
+            throttle: 20
+        });
+        stage.add(layer);
+
+        test(layer.getThrottle() === 20, 'throttle should be 20');
+        layer.setThrottle(13);
+        test(layer.getThrottle() === 13, 'throttle should be 13');
+    },
+    'LAYERS - add layer': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        stage.add(layer);
+    },
     'LAYERS - remove all children from layer': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
