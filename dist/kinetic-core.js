@@ -1056,6 +1056,9 @@ Kinetic.Container.prototype = {
         else if(selector.charAt(0) === '.') {
             arr = stage.names[key] !== undefined ? stage.names[key] : [];
         }
+        else if(selector === 'Shape' || selector === 'Group' || selector === 'Layer') {
+            return this._getNodes(selector);
+        }
         else {
             return false;
         }
@@ -1089,6 +1092,27 @@ Kinetic.Container.prototype = {
         }
 
         return false;
+    },
+    /**
+     * get all shapes inside container
+     */
+    _getNodes: function(sel) {
+        var arr = [];
+        function traverse(cont) {
+            var children = cont.getChildren();
+            for(var n = 0; n < children.length; n++) {
+                var child = children[n];
+                if(child.nodeType === sel) {
+                    arr.push(child);
+                }
+                else if(child.nodeType !== 'Shape') {
+                    traverse(child);
+                }
+            }
+        }
+        traverse(this);
+
+        return arr;
     },
     /**
      * draw children
@@ -1514,6 +1538,13 @@ Kinetic.Stage.prototype = {
      */
     getHeight: function() {
         return this.attrs.height;
+    },
+    /**
+     * get shapes in point
+     * @param {Object} point
+     */
+    getShapesInPoint: function(pos) {
+
     },
     /**
      * detect event

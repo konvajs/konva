@@ -351,6 +351,13 @@ Kinetic.Stage.prototype = {
         return this.attrs.height;
     },
     /**
+     * get shapes in point
+     * @param {Object} point
+     */
+    getShapesInPoint: function(pos) {
+
+    },
+    /**
      * detect event
      * @param {Shape} shape
      */

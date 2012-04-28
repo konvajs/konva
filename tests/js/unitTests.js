@@ -1348,6 +1348,57 @@ Test.prototype.tests = {
             y: 151
         }) === false, 'intersects with point in shape');
     },
+    'STAGE - node type selector': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var fooLayer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+
+        var blue = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'blue'
+        });
+
+        var red = new Kinetic.Rect({
+            x: 250,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'red'
+        });
+
+        group.add(red);
+        layer.add(blue);
+        layer.add(group);
+        stage.add(layer);
+        stage.add(fooLayer);
+
+        test(stage.get('Shape').length === 2, 'stage should have 2 shapes');
+        test(layer.get('Shape').length === 2, 'layer should have 2 shapes');
+        test(group.get('Shape').length === 1, 'layer should have 2 shapes');
+
+        test(stage.get('Layer').length === 2, 'stage should have 2 layers');
+        test(stage.get('Group').length === 1, 'stage should have 1 group');
+
+        test(layer.get('Group').length === 1, 'layer should have 1 group');
+        test(layer.get('Shape').length === 2, 'layer should have 2 shapes');
+        test(layer.get('Layer').length === 0, 'layer should have 0 layers');
+
+        test(fooLayer.get('Group').length === 0, 'layer should have 0 groups');
+        test(fooLayer.get('Shape').length === 0, 'layer should have 0 shapes');
+
+        test(group.get('Shape').length === 1, 'group should have 1 shape');
+        test(group.get('Layer').length === 0, 'group should have 0 layers');
+        test(group.get('Group').length === 0, 'group should have 0 groups');
+
+    },
     'Text - add text': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
