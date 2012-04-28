@@ -674,7 +674,7 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
             x: 200,
-            y: 100,
+            y: 90,
             width: 100,
             height: 50,
             fill: 'green',
@@ -686,7 +686,9 @@ Test.prototype.tests = {
             scale: {
                 x: 2,
                 y: 2
-            }
+            },
+            cornerRadius: 15,
+            draggable: true
         });
 
         layer.add(rect);
@@ -765,14 +767,35 @@ Test.prototype.tests = {
                 y: 60,
                 image: imageObj,
                 width: 100,
+                height: 100,
                 centerOffset: {
                     x: 50,
-                    y: imageObj.height / 2
+                    y: 30
+                },
+                crop: {
+                    x: 20,
+                    y: 20,
+                    width: 200,
+                    height: 250
                 }
             });
 
             layer.add(darth);
             stage.add(layer);
+
+            test(darth.getX() === 200, 'x should be 200');
+            test(darth.getY() === 60, 'y should be 60');
+            test(darth.getWidth() === 100, 'width should be 100');
+            test(darth.getHeight() === 100, 'height should be 100');
+            test(darth.getCenterOffset().x === 50, 'center offset x should be 50');
+            test(darth.getCenterOffset().y === 30, 'center offset y should be 30');
+
+            var crop = darth.getCrop();
+            test(crop.x === 20, 'crop x should be 20');
+            test(crop.y === 20, 'crop y should be 20');
+            test(crop.width === 200, 'crop width should be 200');
+            test(crop.height === 250, 'crop height should be 250');
+
         };
         imageObj.src = '../darth-vader.jpg';
     },
@@ -800,8 +823,7 @@ Test.prototype.tests = {
             stage.add(layer);
 
             var json = stage.toJSON();
-
-            test(json === '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}', 'problem serializing stage');
+            test(json === '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"crop":{"x":0,"y":0},"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}', 'problem serializing stage');
         };
         imageObj.src = '../darth-vader.jpg';
     },
@@ -814,7 +836,7 @@ Test.prototype.tests = {
                 height: 200
             });
 
-            var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}';
+            var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"crop":{"x":0,"y":0},"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}';
 
             stage.load(json);
 

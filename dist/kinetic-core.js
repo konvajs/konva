@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Apr 15 2012
+ * Date: Apr 27 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -310,6 +310,20 @@ Kinetic.Node.prototype = {
                             this.attrs[key].y = val.y;
                         }
                         break;
+                    case 'crop':
+                        if(val.x !== undefined) {
+                            this.attrs[key].x = val.x;
+                        }
+                        if(val.y !== undefined) {
+                            this.attrs[key].y = val.y;
+                        }
+                        if(val.width !== undefined) {
+                            this.attrs[key].width = val.width;
+                        }
+                        if(val.height !== undefined) {
+                            this.attrs[key].height = val.height;
+                        }
+                        break;
                     /*
                      * config properties that we don't want in attrs
                      */
@@ -440,6 +454,18 @@ Kinetic.Node.prototype = {
      */
     setY: function(y) {
         this.attrs.y = y;
+    },
+    /**
+     * get node x position
+     */
+    getX: function() {
+        return this.attrs.x;
+    },
+    /**
+     * get node y position
+     */
+    getY: function() {
+        return this.attrs.y;
     },
     /**
      * set detection type
@@ -2369,6 +2395,7 @@ Kinetic.Rect = function(config) {
     }
     this.attrs.width = 0;
     this.attrs.height = 0;
+    this.attrs.cornerRadius = 0;
 
     this.shapeType = "Rect";
 
@@ -2376,7 +2403,22 @@ Kinetic.Rect = function(config) {
         var context = this.getContext();
         context.beginPath();
         this.applyLineJoin();
-        context.rect(0, 0, this.attrs.width, this.attrs.height);
+        if(this.attrs.cornerRadius === 0) {
+            // simple rect - don't bother doing all that complicated maths stuff.
+            context.rect(0, 0, this.attrs.width, this.attrs.height);
+        }
+        else {
+            // arcTo would be nicer, but browser support is patchy (Opera)
+            context.moveTo(this.attrs.cornerRadius, 0);
+            context.lineTo(this.attrs.width - this.attrs.cornerRadius, 0);
+            context.arc(this.attrs.width - this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI * 3 / 2, 0, false);
+            context.lineTo(this.attrs.width, this.attrs.height - this.attrs.cornerRadius);
+            context.arc(this.attrs.width - this.attrs.cornerRadius, this.attrs.height - this.attrs.cornerRadius, this.attrs.cornerRadius, 0, Math.PI / 2, false);
+            context.lineTo(this.attrs.cornerRadius, this.attrs.height);
+            context.arc(this.attrs.cornerRadius, this.attrs.height - this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI / 2, Math.PI, false);
+            context.lineTo(0, this.attrs.cornerRadius);
+            context.arc(this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI, Math.PI * 3 / 2, false);
+        }
         context.closePath();
         this.fillStroke();
     };
@@ -2430,7 +2472,20 @@ Kinetic.Rect.prototype = {
             width: this.attrs.width,
             height: this.attrs.height
         };
-    }
+    },
+    /**
+     * set corner radius
+     * @param {Number} radius
+     */
+    setCornerRadius: function(radius) {
+        this.attrs.cornerRadius = radius;
+    },
+    /**
+     * get corner radius
+     */
+    getCornerRadius: function() {
+        return this.attrs.cornerRadius;
+    },
 };
 
 // extend Shape
@@ -2501,6 +2556,12 @@ Kinetic.Image = function(config) {
     if(this.attrs === undefined) {
         this.attrs = {};
     }
+    this.attrs.crop = {
+        x: 0,
+        y: 0,
+        width: undefined,
+        height: undefined
+    };
 
     // special
     this.image = config.image;
@@ -2510,14 +2571,27 @@ Kinetic.Image = function(config) {
         if(this.image !== undefined) {
             var width = this.attrs.width !== undefined ? this.attrs.width : this.image.width;
             var height = this.attrs.height !== undefined ? this.attrs.height : this.image.height;
+            var cropX = this.attrs.crop.x;
+            var cropY = this.attrs.crop.y;
+            var cropWidth = this.attrs.crop.width;
+            var cropHeight = this.attrs.crop.height;
             var canvas = this.getCanvas();
             var context = this.getContext();
+
             context.beginPath();
             this.applyLineJoin();
             context.rect(0, 0, width, height);
             context.closePath();
             this.fillStroke();
-            context.drawImage(this.image, 0, 0, width, height);
+
+            // if cropping
+            if(cropWidth !== undefined && cropHeight !== undefined) {
+                context.drawImage(this.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height);
+            }
+            // no cropping
+            else {
+                context.drawImage(this.image, 0, 0, width, height);
+            }
         }
     };
     // call super constructor
@@ -2583,6 +2657,25 @@ Kinetic.Image.prototype = {
             width: this.attrs.width,
             height: this.attrs.height
         };
+    },
+    /**
+     * return cropping
+     */
+    getCrop: function() {
+        return this.attrs.crop;
+    },
+    /**
+     * set cropping
+     * @param {Object} crop
+     * @config {Number} [x] crop x
+     * @config {Number} [y] crop y
+     * @config {Number} [width] crop width
+     * @config {Number} [height] crop height
+     */
+    setCrop: function(config) {
+        var c = {};
+        c.crop = config;
+        this.setAttrs(c);
     }
 };
 // extend Shape

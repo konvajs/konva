@@ -12,8 +12,12 @@ Kinetic.Image = function(config) {
     if(this.attrs === undefined) {
         this.attrs = {};
     }
-    this.attrs.cropX = 0;
-    this.attrs.cropY = 0;
+    this.attrs.crop = {
+        x: 0,
+        y: 0,
+        width: undefined,
+        height: undefined
+    };
 
     // special
     this.image = config.image;
@@ -23,16 +27,27 @@ Kinetic.Image = function(config) {
         if(this.image !== undefined) {
             var width = this.attrs.width !== undefined ? this.attrs.width : this.image.width;
             var height = this.attrs.height !== undefined ? this.attrs.height : this.image.height;
-            var cropWidth = this.attrs.cropWidth !== undefined ? this.attrs.cropWidth : this.image.width;
-            var cropHeight = this.attrs.cropHeight !== undefined ? this.attrs.cropHeight : this.image.height;
+            var cropX = this.attrs.crop.x;
+            var cropY = this.attrs.crop.y;
+            var cropWidth = this.attrs.crop.width;
+            var cropHeight = this.attrs.crop.height;
             var canvas = this.getCanvas();
             var context = this.getContext();
+
             context.beginPath();
             this.applyLineJoin();
             context.rect(0, 0, width, height);
             context.closePath();
             this.fillStroke();
-            context.drawImage(this.image,this.attrs.cropX, this.attrs.cropY, cropWidth, cropHeight, 0, 0, width, height);
+
+            // if cropping
+            if(cropWidth !== undefined && cropHeight !== undefined) {
+                context.drawImage(this.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height);
+            }
+            // no cropping
+            else {
+                context.drawImage(this.image, 0, 0, width, height);
+            }
         }
     };
     // call super constructor
@@ -102,26 +117,21 @@ Kinetic.Image.prototype = {
     /**
      * return cropping
      */
-    getCropping: function() {
-        return {
-            cropX: this.attrs.cropX,
-            cropY: this.attrs.cropY,
-            cropWidth: this.attrs.cropWidth,
-            cropHeight: this.attrs.cropHeight
-        };
+    getCrop: function() {
+        return this.attrs.crop;
     },
     /**
      * set cropping
-     * @param {Number} cropX
-     * @param {Number} cropY
-     * @param {Number} cropWidth
-     * @param {Number} cropHeight
+     * @param {Object} crop
+     * @config {Number} [x] crop x
+     * @config {Number} [y] crop y
+     * @config {Number} [width] crop width
+     * @config {Number} [height] crop height
      */
-    setCropping: function() {
-        this.attrs.cropX = cropX;
-        this.attrs.cropY = cropY;
-        this.attrs.cropWidth = cropWidth;
-        this.attrs.cropHeight = cropHeight;
+    setCrop: function(config) {
+        var c = {};
+        c.crop = config;
+        this.setAttrs(c);
     }
 };
 // extend Shape

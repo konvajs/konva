@@ -158,6 +158,20 @@ Kinetic.Node.prototype = {
                             this.attrs[key].y = val.y;
                         }
                         break;
+                    case 'crop':
+                        if(val.x !== undefined) {
+                            this.attrs[key].x = val.x;
+                        }
+                        if(val.y !== undefined) {
+                            this.attrs[key].y = val.y;
+                        }
+                        if(val.width !== undefined) {
+                            this.attrs[key].width = val.width;
+                        }
+                        if(val.height !== undefined) {
+                            this.attrs[key].height = val.height;
+                        }
+                        break;
                     /*
                      * config properties that we don't want in attrs
                      */
@@ -288,6 +302,18 @@ Kinetic.Node.prototype = {
      */
     setY: function(y) {
         this.attrs.y = y;
+    },
+    /**
+     * get node x position
+     */
+    getX: function() {
+        return this.attrs.x;
+    },
+    /**
+     * get node y position
+     */
+    getY: function() {
+        return this.attrs.y;
     },
     /**
      * set detection type
