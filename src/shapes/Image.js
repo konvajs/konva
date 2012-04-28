@@ -18,10 +18,7 @@ Kinetic.Image = function(config) {
         width: undefined,
         height: undefined
     };
-
-    // special
-    this.image = config.image;
-
+    
     this.shapeType = "Image";
     config.drawFunc = function() {
         if(this.image !== undefined) {

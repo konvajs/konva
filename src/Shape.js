@@ -26,9 +26,6 @@ Kinetic.Shape = function(config) {
     this.attrs.lineJoin = undefined;
     this.attrs.detectionType = 'path';
 
-    // special
-    this.drawFunc = config.drawFunc;
-
     this.data = [];
     this.nodeType = 'Shape';
 

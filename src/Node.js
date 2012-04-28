@@ -120,70 +120,75 @@ Kinetic.Node.prototype = {
      * @param {Object} config
      */
     setAttrs: function(config) {
+        var go = Kinetic.GlobalObject;
         // set properties from config
         if(config) {
             for(var key in config) {
                 var val = config[key];
-                // handle special keys
-                switch (key) {
-                    /*
-                     * config properties that require a method to
-                     * be set
-                     */
-                    case 'draggable':
-                        this.draggable(config[key]);
-                        break;
-                    case 'listening':
-                        this.listen(config[key]);
-                        break;
-                    case 'rotationDeg':
-                        this.attrs.rotation = config[key] * Math.PI / 180;
-                        break;
-                    /*
-                     * config objects
-                     */
-                    case 'centerOffset':
-                        if(val.x !== undefined) {
-                            this.attrs[key].x = val.x;
-                        }
-                        if(val.y !== undefined) {
-                            this.attrs[key].y = val.y;
-                        }
-                        break;
-                    case 'scale':
-                        if(val.x !== undefined) {
-                            this.attrs[key].x = val.x;
-                        }
-                        if(val.y !== undefined) {
-                            this.attrs[key].y = val.y;
-                        }
-                        break;
-                    case 'crop':
-                        if(val.x !== undefined) {
-                            this.attrs[key].x = val.x;
-                        }
-                        if(val.y !== undefined) {
-                            this.attrs[key].y = val.y;
-                        }
-                        if(val.width !== undefined) {
-                            this.attrs[key].width = val.width;
-                        }
-                        if(val.height !== undefined) {
-                            this.attrs[key].height = val.height;
-                        }
-                        break;
-                    /*
-                     * config properties that we don't want in attrs
-                     */
-                    case 'drawFunc':
-                        break;
-                    case 'image':
-                        break;
-                    case 'container':
-                        break;
-                    default:
-                        this.attrs[key] = config[key];
-                        break;
+
+                /*
+                 * add functions, DOM elements, and images
+                 * directly to the node
+                 */
+                if(go._isFunction(val) || go._isElement(val)) {
+                    this[key] = val;
+                }
+                /*
+                 * add all other object types to attrs object
+                 */
+                else {
+                    // handle special keys
+                    switch (key) {
+                        /*
+                         * config properties that require a method to
+                         * be set
+                         */
+                        case 'draggable':
+                            this.draggable(config[key]);
+                            break;
+                        case 'listening':
+                            this.listen(config[key]);
+                            break;
+                        case 'rotationDeg':
+                            this.attrs.rotation = config[key] * Math.PI / 180;
+                            break;
+                        /*
+                         * config objects
+                         */
+                        case 'centerOffset':
+                            if(val.x !== undefined) {
+                                this.attrs[key].x = val.x;
+                            }
+                            if(val.y !== undefined) {
+                                this.attrs[key].y = val.y;
+                            }
+                            break;
+                        case 'scale':
+                            if(val.x !== undefined) {
+                                this.attrs[key].x = val.x;
+                            }
+                            if(val.y !== undefined) {
+                                this.attrs[key].y = val.y;
+                            }
+                            break;
+                        case 'crop':
+                            if(val.x !== undefined) {
+                                this.attrs[key].x = val.x;
+                            }
+                            if(val.y !== undefined) {
+                                this.attrs[key].y = val.y;
+                            }
+                            if(val.width !== undefined) {
+                                this.attrs[key].width = val.width;
+                            }
+                            if(val.height !== undefined) {
+                                this.attrs[key].height = val.height;
+                            }
+                            break;
+                        default:
+                            this.attrs[key] = config[key];
+                            break;
+                    }
                 }
             }
         }

@@ -112,6 +112,12 @@ Kinetic.GlobalObject = {
         else {
             this.frame.lastTime = 0;
         }
+    },
+    _isElement: function(obj) {
+        return !!(obj && obj.nodeType == 1);
+    },
+    _isFunction: function(obj) {
+        return !!(obj && obj.constructor && obj.call && obj.apply);
     }
 };
 
