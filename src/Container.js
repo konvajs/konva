@@ -30,9 +30,9 @@ Kinetic.Container.prototype = {
     /**
      * remove child from container
      * @param {Node} child
-     */
+     */ 
     _remove: function(child) {
-        if(this.children[child.index]._id == child._id) {
+        if(child.index !== undefined && this.children[child.index]._id == child._id) {
             var stage = this.getStage();
             if(stage !== undefined) {
                 stage._removeId(child);
