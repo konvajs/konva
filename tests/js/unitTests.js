@@ -2528,7 +2528,7 @@ Test.prototype.tests = {
     //  ANIMATION tests
     ////////////////////////////////////////////////////////////////////////
 
-    'ANIMATION - stage and global object animation properties': function(containerId) {
+    'ANIMATION - test start and stop': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2554,14 +2554,88 @@ Test.prototype.tests = {
         var centerX = stage.getWidth() / 2 - 100 / 2;
 
         stage.onFrame(function(frame) {
-            rect.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
+            rect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
             layer.draw();
         });
-        // TODO: need to re-add support for stop
+        var go = Kinetic.GlobalObject;
+
+        test(go.animations.length === 0, 'should be no animations running');
+        test(stage.animRunning === false, 'animRunning should be false');
 
         stage.start();
 
+        test(go.animations.length === 1, 'should be 1 animation running');
+        test(stage.animRunning === true, 'animRunning should be true');
+
+        stage.start();
+
+        test(go.animations.length === 1, 'should be 1 animation running');
+        test(stage.animRunning === true, 'animRunning should be true');
+
         stage.stop();
 
+        test(go.animations.length === 0, 'should be no animations running');
+        test(stage.animRunning === false, 'animRunning should be false');
+
+        stage.stop();
+
+        test(go.animations.length === 0, 'should be no animations running');
+        test(stage.animRunning === false, 'animRunning should be false');
+    },
+    ////////////////////////////////////////////////////////////////////////
+    //  TRANSITION tests
+    ////////////////////////////////////////////////////////////////////////
+
+    'TRANSITION - start animation when transition completes': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        var amplitude = 150;
+        var period = 1000;
+        // in ms
+        var centerX = 200;
+
+        stage.onFrame(function(frame) {
+            rect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
+            layer.draw();
+        });
+
+        stage.start();
+        stage.stop();
+        centerX = 300;
+
+        var go = Kinetic.GlobalObject;
+        test(go.animations.length === 0, 'should be no animations running');
+        test(stage.animRunning === false, 'animRunning should be false');
+
+        rect.transitionTo({
+            x: 300,
+            duration: 1,
+            callback: function() {
+                test(go.animations.length === 0, 'should be no animations running');
+                test(stage.animRunning === false, 'animRunning should be false');
+
+                stage.start();
+
+                test(go.animations.length === 1, 'should be no animations running');
+                test(stage.animRunning === true, 'animRunning should be false');
+            }
+        });
     }
 };

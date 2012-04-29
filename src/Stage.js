@@ -67,9 +67,12 @@ Kinetic.Stage.prototype = {
      * start animation
      */
     start: function() {
-        var go = Kinetic.GlobalObject;
-        go._addAnimation(this.anim);
-        go._handleAnimation();
+        if(!this.animRunning) {
+            var go = Kinetic.GlobalObject;
+            go._addAnimation(this.anim);
+            go._handleAnimation();
+            this.animRunning = true;
+        }
     },
     /**
      * stop animation
@@ -77,7 +80,7 @@ Kinetic.Stage.prototype = {
     stop: function() {
         var go = Kinetic.GlobalObject;
         go._removeAnimation(this.anim);
-        go._handleAnimation();
+        this.animRunning = false;
     },
     /**
      * draw children
@@ -910,6 +913,7 @@ Kinetic.Stage.prototype = {
         this.ids = {};
         this.names = {};
         this.anim = undefined;
+        this.animRunning = false;
     }
 };
 // Extend Container and Node
