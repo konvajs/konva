@@ -51,6 +51,21 @@ Kinetic.Shape.prototype = {
         return this.tempLayer.getCanvas();
     },
     /**
+     * helper method to stroke shape
+     */
+    stroke: function() {
+        var context = this.getContext();
+
+        if(!!this.attrs.stroke || !!this.attrs.strokeWidth) {
+            var stroke = !!this.attrs.stroke ? this.attrs.stroke : 'black';
+            var strokeWidth = !!this.attrs.strokeWidth ? this.attrs.strokeWidth : 2;
+
+            context.lineWidth = strokeWidth;
+            context.strokeStyle = stroke;
+            context.stroke();
+        }
+    },
+    /**
      * helper method to fill and stroke a shape
      *  based on its fill, stroke, and strokeWidth, properties
      */
@@ -66,14 +81,7 @@ Kinetic.Shape.prototype = {
             context.fill();
         }
 
-        if(!!this.attrs.stroke || !!this.attrs.strokeWidth) {
-            var stroke = !!this.attrs.stroke ? this.attrs.stroke : 'black';
-            var strokeWidth = !!this.attrs.strokeWidth ? this.attrs.strokeWidth : 2;
-
-            context.lineWidth = strokeWidth;
-            context.strokeStyle = stroke;
-            context.stroke();
-        }
+        this.stroke();
     },
     /**
      * helper method to set the line join of a shape

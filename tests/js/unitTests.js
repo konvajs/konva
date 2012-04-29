@@ -960,6 +960,38 @@ Test.prototype.tests = {
         });
         //stage.start();
     },
+    'SHAPES - add line': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var points = [{
+            x: 73,
+            y: 160
+        }, {
+            x: 340,
+            y: 23
+        }, {
+            x: 500,
+            y: 109
+        }];
+
+        var line = new Kinetic.Line({
+            points: points,
+            stroke: 'blue',
+            strokeWidth: 20,
+            lineCap: 'round',
+            lineJoin: 'round',
+            draggable: true
+        });
+
+        layer.add(line);
+        stage.add(layer);
+
+    },
     'SHAPES - add regular polygon triangle': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
