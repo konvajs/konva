@@ -67,19 +67,6 @@ Kinetic.GlobalObject = {
             }
         }
     },
-    _addAnimation: function(anim) {
-        anim.id = this.animIdCounter++;
-        this.animations.push(anim);
-    },
-    _removeAnimation: function(id) {
-        var animations = this.animations;
-        for(var n = 0; n < animations.length; n++) {
-            if(animations[n].id === id) {
-                this.animations.splice(n, 1);
-                return false;
-            }
-        }
-    },
     _pullNodes: function(stage) {
         var tempNodes = this.tempNodes;
         for(var n = 0; n < tempNodes.length; n++) {
@@ -89,6 +76,23 @@ Kinetic.GlobalObject = {
                 stage._addName(node);
                 this.tempNodes.splice(n, 1);
                 n -= 1;
+            }
+        }
+    },
+    /*
+     * animation support
+     */
+    _addAnimation: function(anim) {
+        anim.id = this.animIdCounter++;
+        this.animations.push(anim);
+    },
+    _removeAnimation: function(anim) {
+        var id = anim.id;
+        var animations = this.animations;
+        for(var n = 0; n < animations.length; n++) {
+            if(animations[n].id === id) {
+                this.animations.splice(n, 1);
+                return false;
             }
         }
     },
@@ -140,6 +144,9 @@ Kinetic.GlobalObject = {
             this.frame.lastTime = 0;
         }
     },
+    /*
+     * utilities
+     */
     _isElement: function(obj) {
         return !!(obj && obj.nodeType == 1);
     },
@@ -147,7 +154,7 @@ Kinetic.GlobalObject = {
         return !!(obj && obj.constructor && obj.call && obj.apply);
     },
     _getPoint: function(arg) {
-    	
+
         if(arg.length === 1) {
             return arg[0];
         }
@@ -829,9 +836,22 @@ Kinetic.Node.prototype = {
      *  transition completes
      */
     transitionTo: function(config) {
+        var go = Kinetic.GlobalObject;
+
+        /*
+         * clear transition if one is currently running for this
+         * node
+         */
+        if(this.transAnim !== undefined) {
+            go._removeAnimation(this.transAnim);
+            this.transAnim = undefined;
+        }
+
+        /*
+         * create new transition
+         */
         var node = this.nodeType === 'Stage' ? this : this.getLayer();
         var that = this;
-        var go = Kinetic.GlobalObject;
         var trans = new Kinetic.Transition(this, config);
         var anim = {
             func: function() {
@@ -839,6 +859,9 @@ Kinetic.Node.prototype = {
             },
             node: node
         };
+
+        // store reference to transition animation
+        this.transAnim = anim;
 
         /*
          * adding the animation with the addAnimation
@@ -848,7 +871,8 @@ Kinetic.Node.prototype = {
 
         // subscribe to onFinished for first tween
         trans.tweens[0].onFinished = function() {
-            go._removeAnimation(anim.id);
+            go._removeAnimation(anim);
+            this.transAnim = undefined;
             if(config.callback !== undefined) {
                 config.callback();
             }
@@ -1291,7 +1315,7 @@ Kinetic.Stage.prototype = {
      */
     stop: function() {
         var go = Kinetic.GlobalObject;
-        go._removeAnimation(this.anim.id);
+        go._removeAnimation(this.anim);
         go._handleAnimation();
     },
     /**

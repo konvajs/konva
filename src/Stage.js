@@ -76,7 +76,7 @@ Kinetic.Stage.prototype = {
      */
     stop: function() {
         var go = Kinetic.GlobalObject;
-        go._removeAnimation(this.anim.id);
+        go._removeAnimation(this.anim);
         go._handleAnimation();
     },
     /**

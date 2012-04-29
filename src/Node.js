@@ -660,9 +660,22 @@ Kinetic.Node.prototype = {
      *  transition completes
      */
     transitionTo: function(config) {
+        var go = Kinetic.GlobalObject;
+
+        /*
+         * clear transition if one is currently running for this
+         * node
+         */
+        if(this.transAnim !== undefined) {
+            go._removeAnimation(this.transAnim);
+            this.transAnim = undefined;
+        }
+
+        /*
+         * create new transition
+         */
         var node = this.nodeType === 'Stage' ? this : this.getLayer();
         var that = this;
-        var go = Kinetic.GlobalObject;
         var trans = new Kinetic.Transition(this, config);
         var anim = {
             func: function() {
@@ -670,6 +683,9 @@ Kinetic.Node.prototype = {
             },
             node: node
         };
+
+        // store reference to transition animation
+        this.transAnim = anim;
 
         /*
          * adding the animation with the addAnimation
@@ -679,7 +695,8 @@ Kinetic.Node.prototype = {
 
         // subscribe to onFinished for first tween
         trans.tweens[0].onFinished = function() {
-            go._removeAnimation(anim.id);
+            go._removeAnimation(anim);
+            this.transAnim = undefined;
             if(config.callback !== undefined) {
                 config.callback();
             }

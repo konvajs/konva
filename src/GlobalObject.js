@@ -39,19 +39,6 @@ Kinetic.GlobalObject = {
             }
         }
     },
-    _addAnimation: function(anim) {
-        anim.id = this.animIdCounter++;
-        this.animations.push(anim);
-    },
-    _removeAnimation: function(id) {
-        var animations = this.animations;
-        for(var n = 0; n < animations.length; n++) {
-            if(animations[n].id === id) {
-                this.animations.splice(n, 1);
-                return false;
-            }
-        }
-    },
     _pullNodes: function(stage) {
         var tempNodes = this.tempNodes;
         for(var n = 0; n < tempNodes.length; n++) {
@@ -61,6 +48,23 @@ Kinetic.GlobalObject = {
                 stage._addName(node);
                 this.tempNodes.splice(n, 1);
                 n -= 1;
+            }
+        }
+    },
+    /*
+     * animation support
+     */
+    _addAnimation: function(anim) {
+        anim.id = this.animIdCounter++;
+        this.animations.push(anim);
+    },
+    _removeAnimation: function(anim) {
+        var id = anim.id;
+        var animations = this.animations;
+        for(var n = 0; n < animations.length; n++) {
+            if(animations[n].id === id) {
+                this.animations.splice(n, 1);
+                return false;
             }
         }
     },
@@ -112,6 +116,9 @@ Kinetic.GlobalObject = {
             this.frame.lastTime = 0;
         }
     },
+    /*
+     * utilities
+     */
     _isElement: function(obj) {
         return !!(obj && obj.nodeType == 1);
     },
@@ -119,7 +126,7 @@ Kinetic.GlobalObject = {
         return !!(obj && obj.constructor && obj.call && obj.apply);
     },
     _getPoint: function(arg) {
-    	
+
         if(arg.length === 1) {
             return arg[0];
         }
