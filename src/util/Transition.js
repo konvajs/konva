@@ -28,6 +28,18 @@ Kinetic.Transition = function(node, config) {
             }
         }
     }
+
+    var finishedTweens = 0;
+    var that = this;
+    for(var n = 0; n < this.tweens.length; n++) {
+        var tween = this.tweens[n];
+        tween.onFinished = function() {
+            finishedTweens++;
+            if(finishedTweens >= that.tweens.length) {
+                that.onFinished();
+            }
+        };
+    }
 };
 /*
  * Transition methods
@@ -352,7 +364,7 @@ Kinetic.Tweens = {
         return (a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b);
     },
     'elastic-ease-in-out': function(t, b, c, d, a, p) {
-    	// added s = 0
+        // added s = 0
         var s = 0;
         if(t === 0) {
             return b;

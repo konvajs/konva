@@ -44,6 +44,7 @@ Kinetic.Layer.prototype = {
             this.lastDrawTime = time;
             if(this.drawTimeout !== undefined) {
                 clearTimeout(this.drawTimeout);
+                this.drawTimeout = undefined;
             }
         }
         /*
@@ -52,10 +53,15 @@ Kinetic.Layer.prototype = {
          */
         else if(this.drawTimeout === undefined) {
             var that = this;
+            /*
+             * if timeout duration is too short, we will
+             * get a lot of unecessary layer draws.  Make sure
+             * that the timeout is slightly more than the throttle
+             * amount
+             */
             this.drawTimeout = setTimeout(function() {
                 that.draw();
-                clearTimeout(that.drawTimeout);
-            }, 5);
+            }, throttle + 10);
         }
     },
     /**

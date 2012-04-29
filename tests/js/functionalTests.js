@@ -27,7 +27,7 @@ Test.prototype.tests = {
             easing: 'bounce-ease-out'
         });
     },
-    /*
+   
      'TRANSITION - all transition types': function(containerId) {
      document.getElementById(containerId).style.height = '300px';
 
@@ -61,7 +61,7 @@ Test.prototype.tests = {
 
      stage.add(layer);
      },
-     */
+  
     'TRANSITION - transition callback': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

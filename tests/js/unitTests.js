@@ -2594,7 +2594,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
-            x: 200,
+            x: 0,
             y: 100,
             width: 100,
             height: 50,
@@ -2609,7 +2609,7 @@ Test.prototype.tests = {
         var amplitude = 150;
         var period = 1000;
         // in ms
-        var centerX = 200;
+        var centerX = 0;
 
         stage.onFrame(function(frame) {
             rect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
@@ -2628,6 +2628,8 @@ Test.prototype.tests = {
             x: 300,
             duration: 1,
             callback: function() {
+            	test(rect.getX() === 300, 'rect x is not 300');
+            	
                 test(go.animations.length === 0, 'should be no animations running');
                 test(stage.animRunning === false, 'animRunning should be false');
 

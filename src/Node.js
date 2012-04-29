@@ -694,12 +694,17 @@ Kinetic.Node.prototype = {
         go._addAnimation(anim);
 
         // subscribe to onFinished for first tween
-        trans.tweens[0].onFinished = function() {
+        trans.onFinished = function() {
+            // remove animation
             go._removeAnimation(anim);
-            this.transAnim = undefined;
+            that.transAnim = undefined;
+
+            // callback
             if(config.callback !== undefined) {
                 config.callback();
             }
+
+            anim.node.draw();
         };
         // auto start
         trans.start();

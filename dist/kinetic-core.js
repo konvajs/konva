@@ -870,12 +870,17 @@ Kinetic.Node.prototype = {
         go._addAnimation(anim);
 
         // subscribe to onFinished for first tween
-        trans.tweens[0].onFinished = function() {
+        trans.onFinished = function() {
+            // remove animation
             go._removeAnimation(anim);
-            this.transAnim = undefined;
+            that.transAnim = undefined;
+
+            // callback
             if(config.callback !== undefined) {
                 config.callback();
             }
+
+            anim.node.draw();
         };
         // auto start
         trans.start();
@@ -2205,6 +2210,7 @@ Kinetic.Layer.prototype = {
             this.lastDrawTime = time;
             if(this.drawTimeout !== undefined) {
                 clearTimeout(this.drawTimeout);
+                this.drawTimeout = undefined;
             }
         }
         /*
@@ -2213,10 +2219,15 @@ Kinetic.Layer.prototype = {
          */
         else if(this.drawTimeout === undefined) {
             var that = this;
+            /*
+             * if timeout duration is too short, we will
+             * get a lot of unecessary layer draws.  Make sure
+             * that the timeout is slightly more than the throttle
+             * amount
+             */
             this.drawTimeout = setTimeout(function() {
                 that.draw();
-                clearTimeout(that.drawTimeout);
-            }, 5);
+            }, throttle + 10);
         }
     },
     /**
@@ -3462,6 +3473,18 @@ Kinetic.Transition = function(node, config) {
             }
         }
     }
+
+    var finishedTweens = 0;
+    var that = this;
+    for(var n = 0; n < this.tweens.length; n++) {
+        var tween = this.tweens[n];
+        tween.onFinished = function() {
+            finishedTweens++;
+            if(finishedTweens >= that.tweens.length) {
+                that.onFinished();
+            }
+        };
+    }
 };
 /*
  * Transition methods
@@ -3786,7 +3809,7 @@ Kinetic.Tweens = {
         return (a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b);
     },
     'elastic-ease-in-out': function(t, b, c, d, a, p) {
-    	// added s = 0
+        // added s = 0
         var s = 0;
         if(t === 0) {
             return b;
