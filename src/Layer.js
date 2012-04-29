@@ -16,6 +16,8 @@ Kinetic.Layer = function(config) {
 
     this.nodeType = 'Layer';
     this.lastDrawTime = 0;
+    this.beforeDrawFunc = undefined;
+    this.afterDrawFunc = undefined;
 
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
@@ -78,6 +80,18 @@ Kinetic.Layer.prototype = {
         return this.attrs.throttle;
     },
     /**
+     * set before draw function handler
+     */
+    beforeDraw: function(func) {
+        this.beforeDrawFunc = func;
+    },
+    /**
+     * set after draw function handler
+     */
+    afterDraw: function(func) {
+        this.afterDrawFunc = func;
+    },
+    /**
      * clears the canvas context tied to the layer.  Clearing
      *  a layer does not remove its children.  The nodes within
      *  the layer will be redrawn whenever the .draw() method
@@ -119,9 +133,19 @@ Kinetic.Layer.prototype = {
      * private draw children
      */
     _draw: function() {
+        // before draw  handler
+        if(this.beforeDrawFunc !== undefined) {
+            this.beforeDrawFunc();
+        }
+
         this.clear();
         if(this.attrs.visible) {
             this._drawChildren();
+        }
+
+        // after draw  handler
+        if(this.afterDrawFunc !== undefined) {
+            this.afterDrawFunc();
         }
     }
 };

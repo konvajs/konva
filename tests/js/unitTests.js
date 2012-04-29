@@ -587,6 +587,41 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         stage.add(layer);
     },
+    'LAYERS - beforeDraw and afterDraw': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: 100,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        var counter = 0;
+
+        layer.beforeDraw(function() {
+            counter++;
+            test(counter === 1, 'counter should be 1');
+        });
+
+        layer.afterDraw(function() {
+            counter++;
+            test(counter === 2, 'counter should be 2');
+        });
+
+        layer.draw();
+    },
     'LAYERS - throttling': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -2660,8 +2695,8 @@ Test.prototype.tests = {
             x: 300,
             duration: 1,
             callback: function() {
-            	test(rect.getX() === 300, 'rect x is not 300');
-            	
+                test(rect.getX() === 300, 'rect x is not 300');
+
                 test(go.animations.length === 0, 'should be no animations running');
                 test(stage.animRunning === false, 'animRunning should be false');
 
