@@ -900,6 +900,111 @@ Test.prototype.tests = {
         };
         imageObj.src = '../darth-vader.jpg';
     },
+    'SHAPES - add sprite': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            sprite = new Kinetic.Sprite({
+                x: 200,
+                y: 60,
+                image: imageObj,
+                animation: 'standing',
+                animations: {
+                    standing: [{
+                        x: 0,
+                        y: 0,
+                        width: 49,
+                        height: 109
+                    }, {
+                        x: 52,
+                        y: 0,
+                        width: 49,
+                        height: 109
+                    }, {
+                        x: 105,
+                        y: 0,
+                        width: 49,
+                        height: 109
+                    }, {
+                        x: 158,
+                        y: 0,
+                        width: 49,
+                        height: 109
+                    }, {
+                        x: 210,
+                        y: 0,
+                        width: 49,
+                        height: 109
+                    }, {
+                        x: 262,
+                        y: 0,
+                        width: 49,
+                        height: 109
+                    }],
+
+                    kicking: [{
+                        x: 0,
+                        y: 109,
+                        width: 45,
+                        height: 98
+                    }, {
+                        x: 45,
+                        y: 109,
+                        width: 45,
+                        height: 98
+                    }, {
+                        x: 95,
+                        y: 109,
+                        width: 63,
+                        height: 98
+                    }, {
+                        x: 156,
+                        y: 109,
+                        width: 70,
+                        height: 98
+                    }, {
+                        x: 229,
+                        y: 109,
+                        width: 60,
+                        height: 98
+                    }, {
+                        x: 287,
+                        y: 109,
+                        width: 41,
+                        height: 98
+                    }]
+                },
+                index: 0,
+                frameRate: 10,
+                draggable: true
+            });
+
+            layer.add(sprite);
+            stage.add(layer);
+
+            sprite.start();
+
+            // kick once
+
+            setTimeout(function() {
+                sprite.setIndex(0);
+                sprite.setAnimation('kicking');
+
+                sprite.afterFrame(0, function() {
+                    sprite.setAnimation('standing');
+                });
+            }, 2000);
+            setTimeout(function() {
+                //sprite.start();
+            }, 3000);
+        };
+        imageObj.src = '../scorpion-sprite.png';
+    },
     'STAGE - serialize stage with an image': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {

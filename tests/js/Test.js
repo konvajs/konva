@@ -10,7 +10,7 @@ function log(message) {
  * Test constructor
  */
 function Test() {
-    this.testOnly = '';
+    this.testOnly = 'SHAPES - add sprite';
     this.counter = 0;
 }
 /**
