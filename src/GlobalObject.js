@@ -16,6 +16,7 @@ Kinetic.GlobalObject = {
     tempNodes: [],
     animations: [],
     animIdCounter: 0,
+    animRunning: false,
     dragTimeInterval: 0,
     maxDragTimeInterval: 20,
     frame: {
@@ -104,12 +105,14 @@ Kinetic.GlobalObject = {
             });
         }
         else {
+            this.animRunning = false;
             this.frame.lastTime = 0;
         }
     },
     _handleAnimation: function() {
         var that = this;
-        if(this.animations.length > 0) {
+        if(!this.animRunning) {
+            this.animRunning = true;
             that._animationLoop();
         }
         else {
