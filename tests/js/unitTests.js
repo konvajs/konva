@@ -41,6 +41,78 @@ Test.prototype.tests = {
         layer.add(group);
         layer.draw();
     },
+    'STAGE - add shape with linear gradient fill': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: {
+                start: {
+                    color: 'red',
+                    x: -35,
+                    y: -35
+                },
+                end: {
+                    color: 'blue',
+                    x: 35,
+                    y: 35
+                }
+            },
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle',
+            draggable: true
+        });
+
+        group.add(circle);
+        layer.add(group);
+        stage.add(layer);
+
+    },
+    'STAGE - add shape with radial gradient fill': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: {
+                start: {
+                    color: '#8ED6FF',
+                    radius: 0,
+                    x: -20,
+                    y: -20
+                },
+                end: {
+                    color: '#004CB3',
+                    radius: 130
+                }
+            },
+            name: 'myCircle',
+            draggable: true,
+            scale: {
+            	x: 0.5,
+            	y: 0.5
+            }
+        });
+
+        group.add(circle);
+        layer.add(group);
+        stage.add(layer);
+
+    },
     'STAGE - add layer then group then shape': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -909,99 +981,108 @@ Test.prototype.tests = {
                 height: 200
             });
             var layer = new Kinetic.Layer();
+
+            var anims = {
+                standing: [{
+                    x: 0,
+                    y: 0,
+                    width: 49,
+                    height: 109
+                }, {
+                    x: 52,
+                    y: 0,
+                    width: 49,
+                    height: 109
+                }, {
+                    x: 105,
+                    y: 0,
+                    width: 49,
+                    height: 109
+                }, {
+                    x: 158,
+                    y: 0,
+                    width: 49,
+                    height: 109
+                }, {
+                    x: 210,
+                    y: 0,
+                    width: 49,
+                    height: 109
+                }, {
+                    x: 262,
+                    y: 0,
+                    width: 49,
+                    height: 109
+                }],
+
+                kicking: [{
+                    x: 0,
+                    y: 109,
+                    width: 45,
+                    height: 98
+                }, {
+                    x: 45,
+                    y: 109,
+                    width: 45,
+                    height: 98
+                }, {
+                    x: 95,
+                    y: 109,
+                    width: 63,
+                    height: 98
+                }, {
+                    x: 156,
+                    y: 109,
+                    width: 70,
+                    height: 98
+                }, {
+                    x: 229,
+                    y: 109,
+                    width: 60,
+                    height: 98
+                }, {
+                    x: 287,
+                    y: 109,
+                    width: 41,
+                    height: 98
+                }]
+            };
+
+            //for(var n = 0; n < 50; n++) {
             sprite = new Kinetic.Sprite({
+                //x: Math.random() * stage.getWidth() - 30,
                 x: 200,
-                y: 60,
+                //y: Math.random() * stage.getHeight() - 50,
+                y: 50,
                 image: imageObj,
                 animation: 'standing',
-                animations: {
-                    standing: [{
-                        x: 0,
-                        y: 0,
-                        width: 49,
-                        height: 109
-                    }, {
-                        x: 52,
-                        y: 0,
-                        width: 49,
-                        height: 109
-                    }, {
-                        x: 105,
-                        y: 0,
-                        width: 49,
-                        height: 109
-                    }, {
-                        x: 158,
-                        y: 0,
-                        width: 49,
-                        height: 109
-                    }, {
-                        x: 210,
-                        y: 0,
-                        width: 49,
-                        height: 109
-                    }, {
-                        x: 262,
-                        y: 0,
-                        width: 49,
-                        height: 109
-                    }],
-
-                    kicking: [{
-                        x: 0,
-                        y: 109,
-                        width: 45,
-                        height: 98
-                    }, {
-                        x: 45,
-                        y: 109,
-                        width: 45,
-                        height: 98
-                    }, {
-                        x: 95,
-                        y: 109,
-                        width: 63,
-                        height: 98
-                    }, {
-                        x: 156,
-                        y: 109,
-                        width: 70,
-                        height: 98
-                    }, {
-                        x: 229,
-                        y: 109,
-                        width: 60,
-                        height: 98
-                    }, {
-                        x: 287,
-                        y: 109,
-                        width: 41,
-                        height: 98
-                    }]
-                },
+                animations: anims,
                 index: 0,
+                //frameRate: Math.random() * 6 + 6,
                 frameRate: 10,
                 draggable: true
             });
 
             layer.add(sprite);
+            sprite.start();
+            //}
+
             stage.add(layer);
 
-            sprite.start();
-
             // kick once
+            /*
+             setTimeout(function() {
+             sprite.setIndex(0);
+             sprite.setAnimation('kicking');
 
-            setTimeout(function() {
-                sprite.setIndex(0);
-                sprite.setAnimation('kicking');
-
-                sprite.afterFrame(0, function() {
-                    sprite.setAnimation('standing');
-                });
-            }, 2000);
-            setTimeout(function() {
-                //sprite.start();
-            }, 3000);
+             sprite.afterFrame(0, function() {
+             sprite.setAnimation('standing');
+             });
+             }, 2000);
+             setTimeout(function() {
+             //sprite.start();
+             }, 3000);
+             */
         };
         imageObj.src = '../scorpion-sprite.png';
     },
@@ -2795,7 +2876,6 @@ Test.prototype.tests = {
         test(go.animations.length === 0, 'should be no animations running');
         test(stage.animRunning === false, 'animRunning should be false');
 
-		
         rect.transitionTo({
             x: 300,
             duration: 1,
@@ -2810,6 +2890,6 @@ Test.prototype.tests = {
                 test(go.animations.length === 1, 'should be no animations running');
                 test(stage.animRunning === true, 'animRunning should be false');
             }
-        });   
+        });
     }
 };

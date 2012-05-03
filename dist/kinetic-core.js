@@ -2447,13 +2447,42 @@ Kinetic.Shape.prototype = {
      */
     fillStroke: function() {
         var context = this.getContext();
-
+        var fill = this.attrs.fill;
         /*
          * expect that fill, stroke, and strokeWidth could be
          * undfined, '', null, or 0.  Use !!
          */
-        if(!!this.attrs.fill) {
-            context.fillStyle = this.attrs.fill;
+        if(!!fill) {
+            // color fill
+            if( typeof fill == 'string') {
+                f = this.attrs.fill;
+            }
+            else {
+                var s = fill.start;
+                var e = fill.end;
+
+                // linear gradient
+                if(s.x !== undefined && s.y !== undefined && e.x !== undefined && e.y !== undefined) {
+                    var context = this.getContext();
+                    var grd = context.createLinearGradient(s.x, s.y, e.x, e.y);
+                    grd.addColorStop(0, s.color);
+                    grd.addColorStop(1, e.color);
+                    f = grd;
+                }
+                // radial gradient
+                else if(s.radius !== undefined && e.radius !== undefined) {
+                    var context = this.getContext();
+                    var grd = context.createRadialGradient(s.x, s.y, s.radius, s.x, s.y, e.radius);
+                    grd.addColorStop(0, s.color);
+                    grd.addColorStop(1, e.color);
+                    f = grd;
+                }
+                else {
+                    f = 'black';
+                }
+            }
+
+            context.fillStyle = f;
             context.fill();
         }
 
