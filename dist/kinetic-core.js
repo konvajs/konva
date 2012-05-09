@@ -827,9 +827,10 @@ Kinetic.Node.prototype = {
      * @param {Number} x
      * @param {Number} y
      */
-    setCenterOffset: function(x, y) {
-        this.attrs.centerOffset.x = x;
-        this.attrs.centerOffset.y = y;
+    setCenterOffset: function() {
+    	var pos = Kinetic.GlobalObject._getPoint(arguments);
+        this.attrs.centerOffset.x = pos.x;
+        this.attrs.centerOffset.y = pos.y;
     },
     /**
      * get center offset
@@ -2429,7 +2430,13 @@ Kinetic.Shape = function(config) {
         stroke: undefined,
         strokeWidth: undefined,
         lineJoin: undefined,
-        detectionType: 'path'
+        detectionType: 'path',
+        shadowColor: undefined,
+        shadowBlur: undefined,
+        shadowOffset: {
+            x: 0,
+            y: 0
+        }
     });
 
     this.data = [];
@@ -2474,10 +2481,22 @@ Kinetic.Shape.prototype = {
         }
     },
     /**
+     * convenience method that both fills and strokes
+     * the shape
+     */
+    shadowFillStroke: function() {
+        var context = this.getContext();
+        context.save();
+        this.applyShadow();
+        this.fill();
+        context.restore();
+        this.stroke();
+    },
+    /**
      * helper method to fill and stroke a shape
      *  based on its fill, stroke, and strokeWidth, properties
      */
-    fillStroke: function() {
+    fill: function() {
         var context = this.getContext();
         var fill = this.attrs.fill;
         /*
@@ -2517,8 +2536,6 @@ Kinetic.Shape.prototype = {
             context.fillStyle = f;
             context.fill();
         }
-
-        this.stroke();
     },
     /**
      * helper method to set the line join of a shape
@@ -2528,6 +2545,18 @@ Kinetic.Shape.prototype = {
         var context = this.getContext();
         if(this.attrs.lineJoin !== undefined) {
             context.lineJoin = this.attrs.lineJoin;
+        }
+    },
+    /**
+     * apply shadow helper method
+     */
+    applyShadow: function() {
+        var context = this.getContext();
+        if(this.attrs.shadowColor !== undefined) {
+            context.shadowColor = this.attrs.shadowColor;
+            context.shadowBlur = this.attrs.shadowBlur;
+            context.shadowOffsetX = this.attrs.shadowOffset.x;
+            context.shadowOffsetY = this.attrs.shadowOffset.y;
         }
     },
     /**
@@ -2583,6 +2612,45 @@ Kinetic.Shape.prototype = {
      */
     getStrokeWidth: function() {
         return this.attrs.strokeWidth;
+    },
+    /**
+     * set shadow color
+     * @param {String} color
+     */
+    setShadowColor: function(color) {
+        this.attrs.shadowColor = color;
+    },
+    /**
+     * get shadow color
+     */
+    getShadowColor: function() {
+        return this.attrs.shadowColor;
+    },
+    /**
+     * set shadow blur
+     * @param {Integer}
+     */
+    setShadowBlur: function(blur) {
+        this.attrs.shadowBlur = blur;
+    },
+    /**
+     * get shadow blur
+     */
+    getShadowblur: function() {
+        return this.attrs.shadowBlur;
+    },
+    /**
+     * set shadow offset
+     * @param {Object} offset
+     */
+    setShadowOffset: function(offset) {
+        this.attrs.shadowOffset = offset;
+    },
+    /**
+     * get shadow offset
+     */
+    getShadowOffset: function() {
+        return this.attrs.shadowOffset;
     },
     /**
      * set draw function
@@ -2718,7 +2786,7 @@ Kinetic.Rect = function(config) {
             context.arc(this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI, Math.PI * 3 / 2, false);
         }
         context.closePath();
-        this.fillStroke();
+        this.shadowFillStroke();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
@@ -2812,7 +2880,7 @@ Kinetic.Circle = function(config) {
         this.applyLineJoin();
         context.arc(0, 0, this.attrs.radius, 0, Math.PI * 2, true);
         context.closePath();
-        this.fillStroke();
+        this.shadowFillStroke();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
@@ -2874,7 +2942,7 @@ Kinetic.Image = function(config) {
             this.applyLineJoin();
             context.rect(0, 0, width, height);
             context.closePath();
-            this.fillStroke();
+            this.shadowFillStroke();
 
             // if cropping
             if(cropWidth !== undefined && cropHeight !== undefined) {
@@ -3089,7 +3157,7 @@ Kinetic.Polygon = function(config) {
             context.lineTo(this.attrs.points[n].x, this.attrs.points[n].y);
         }
         context.closePath();
-        this.fillStroke();
+        this.shadowFillStroke();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
@@ -3144,7 +3212,7 @@ Kinetic.RegularPolygon = function(config) {
             context.lineTo(x, y);
         }
         context.closePath();
-        this.fillStroke();
+        this.shadowFillStroke();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
@@ -3205,6 +3273,7 @@ Kinetic.Star = function(config) {
         var context = this.getContext();
         context.beginPath();
         this.applyLineJoin();
+        
         context.moveTo(0, 0 - this.attrs.outerRadius);
 
         for(var n = 1; n < this.attrs.numPoints * 2; n++) {
@@ -3214,7 +3283,7 @@ Kinetic.Star = function(config) {
             context.lineTo(x, y);
         }
         context.closePath();
-        this.fillStroke();
+        this.shadowFillStroke();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
@@ -3325,7 +3394,7 @@ Kinetic.Text = function(config) {
         this.applyLineJoin();
         context.rect(x, y, textWidth + p * 2, textHeight + p * 2);
         context.closePath();
-        this.fillStroke();
+        this.shadowFillStroke();
         context.restore();
 
         var tx = p + x;
@@ -3559,6 +3628,7 @@ Kinetic.Line = function(config) {
         if(!!this.attrs.lineCap) {
             context.lineCap = this.attrs.lineCap;
         }
+        this.applyShadow();
         this.stroke();
     };
     // call super constructor

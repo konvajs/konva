@@ -19,6 +19,7 @@ Kinetic.Star = function(config) {
         var context = this.getContext();
         context.beginPath();
         this.applyLineJoin();
+        
         context.moveTo(0, 0 - this.attrs.outerRadius);
 
         for(var n = 1; n < this.attrs.numPoints * 2; n++) {
@@ -28,7 +29,7 @@ Kinetic.Star = function(config) {
             context.lineTo(x, y);
         }
         context.closePath();
-        this.fillStroke();
+        this.shadowFillStroke();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);

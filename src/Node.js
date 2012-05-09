@@ -643,9 +643,10 @@ Kinetic.Node.prototype = {
      * @param {Number} x
      * @param {Number} y
      */
-    setCenterOffset: function(x, y) {
-        this.attrs.centerOffset.x = x;
-        this.attrs.centerOffset.y = y;
+    setCenterOffset: function() {
+    	var pos = Kinetic.GlobalObject._getPoint(arguments);
+        this.attrs.centerOffset.x = pos.x;
+        this.attrs.centerOffset.y = pos.y;
     },
     /**
      * get center offset

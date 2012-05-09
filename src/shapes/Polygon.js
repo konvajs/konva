@@ -22,7 +22,7 @@ Kinetic.Polygon = function(config) {
             context.lineTo(this.attrs.points[n].x, this.attrs.points[n].y);
         }
         context.closePath();
-        this.fillStroke();
+        this.shadowFillStroke();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);

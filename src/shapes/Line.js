@@ -41,6 +41,7 @@ Kinetic.Line = function(config) {
         if(!!this.attrs.lineCap) {
             context.lineCap = this.attrs.lineCap;
         }
+        this.applyShadow();
         this.stroke();
     };
     // call super constructor

@@ -37,7 +37,7 @@ Kinetic.Rect = function(config) {
             context.arc(this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI, Math.PI * 3 / 2, false);
         }
         context.closePath();
-        this.fillStroke();
+        this.shadowFillStroke();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);

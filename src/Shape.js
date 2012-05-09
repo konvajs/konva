@@ -21,7 +21,13 @@ Kinetic.Shape = function(config) {
         stroke: undefined,
         strokeWidth: undefined,
         lineJoin: undefined,
-        detectionType: 'path'
+        detectionType: 'path',
+        shadowColor: undefined,
+        shadowBlur: undefined,
+        shadowOffset: {
+            x: 0,
+            y: 0
+        }
     });
 
     this.data = [];
@@ -66,10 +72,22 @@ Kinetic.Shape.prototype = {
         }
     },
     /**
+     * convenience method that both fills and strokes
+     * the shape
+     */
+    shadowFillStroke: function() {
+        var context = this.getContext();
+        context.save();
+        this.applyShadow();
+        this.fill();
+        context.restore();
+        this.stroke();
+    },
+    /**
      * helper method to fill and stroke a shape
      *  based on its fill, stroke, and strokeWidth, properties
      */
-    fillStroke: function() {
+    fill: function() {
         var context = this.getContext();
         var fill = this.attrs.fill;
         /*
@@ -109,8 +127,6 @@ Kinetic.Shape.prototype = {
             context.fillStyle = f;
             context.fill();
         }
-
-        this.stroke();
     },
     /**
      * helper method to set the line join of a shape
@@ -120,6 +136,18 @@ Kinetic.Shape.prototype = {
         var context = this.getContext();
         if(this.attrs.lineJoin !== undefined) {
             context.lineJoin = this.attrs.lineJoin;
+        }
+    },
+    /**
+     * apply shadow helper method
+     */
+    applyShadow: function() {
+        var context = this.getContext();
+        if(this.attrs.shadowColor !== undefined) {
+            context.shadowColor = this.attrs.shadowColor;
+            context.shadowBlur = this.attrs.shadowBlur;
+            context.shadowOffsetX = this.attrs.shadowOffset.x;
+            context.shadowOffsetY = this.attrs.shadowOffset.y;
         }
     },
     /**
@@ -175,6 +203,45 @@ Kinetic.Shape.prototype = {
      */
     getStrokeWidth: function() {
         return this.attrs.strokeWidth;
+    },
+    /**
+     * set shadow color
+     * @param {String} color
+     */
+    setShadowColor: function(color) {
+        this.attrs.shadowColor = color;
+    },
+    /**
+     * get shadow color
+     */
+    getShadowColor: function() {
+        return this.attrs.shadowColor;
+    },
+    /**
+     * set shadow blur
+     * @param {Integer}
+     */
+    setShadowBlur: function(blur) {
+        this.attrs.shadowBlur = blur;
+    },
+    /**
+     * get shadow blur
+     */
+    getShadowblur: function() {
+        return this.attrs.shadowBlur;
+    },
+    /**
+     * set shadow offset
+     * @param {Object} offset
+     */
+    setShadowOffset: function(offset) {
+        this.attrs.shadowOffset = offset;
+    },
+    /**
+     * get shadow offset
+     */
+    getShadowOffset: function() {
+        return this.attrs.shadowOffset;
     },
     /**
      * set draw function

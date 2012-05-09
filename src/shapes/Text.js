@@ -57,7 +57,7 @@ Kinetic.Text = function(config) {
         this.applyLineJoin();
         context.rect(x, y, textWidth + p * 2, textHeight + p * 2);
         context.closePath();
-        this.fillStroke();
+        this.shadowFillStroke();
         context.restore();
 
         var tx = p + x;

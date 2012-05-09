@@ -21,7 +21,7 @@ Kinetic.Circle = function(config) {
         this.applyLineJoin();
         context.arc(0, 0, this.attrs.radius, 0, Math.PI * 2, true);
         context.closePath();
-        this.fillStroke();
+        this.shadowFillStroke();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
