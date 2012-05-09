@@ -9,7 +9,7 @@
  */
 Kinetic.Star = function(config) {
     this.setDefaultAttrs({
-        points: [],
+        numPoints: 0,
         innerRadius: 0,
         outerRadius: 0
     });
@@ -21,10 +21,10 @@ Kinetic.Star = function(config) {
         this.applyLineJoin();
         context.moveTo(0, 0 - this.attrs.outerRadius);
 
-        for(var n = 1; n < this.attrs.points * 2; n++) {
+        for(var n = 1; n < this.attrs.numPoints * 2; n++) {
             var radius = n % 2 === 0 ? this.attrs.outerRadius : this.attrs.innerRadius;
-            var x = radius * Math.sin(n * Math.PI / this.attrs.points);
-            var y = -1 * radius * Math.cos(n * Math.PI / this.attrs.points);
+            var x = radius * Math.sin(n * Math.PI / this.attrs.numPoints);
+            var y = -1 * radius * Math.cos(n * Math.PI / this.attrs.numPoints);
             context.lineTo(x, y);
         }
         context.closePath();
@@ -38,17 +38,17 @@ Kinetic.Star = function(config) {
  */
 Kinetic.Star.prototype = {
     /**
-     * set points array
-     * @param {Array} points
+     * set number of points
+     * @param {Integer} points
      */
-    setPoints: function(points) {
-        this.attrs.points = points;
+    setNumPoints: function(numPoints) {
+        this.attrs.numPoints = numPoints;
     },
     /**
-     * get points array
+     * get number of points
      */
-    getPoints: function() {
-        return this.attrs.points;
+    getNumPoints: function() {
+        return this.attrs.numPoints;
     },
     /**
      * set outer radius

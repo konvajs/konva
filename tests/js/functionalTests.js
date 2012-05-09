@@ -589,7 +589,7 @@ Test.prototype.tests = {
         var star = new Kinetic.Star({
             x: 200,
             y: 100,
-            points: 10,
+            numPoints: 10,
             innerRadius: 40,
             outerRadius: 70,
             fill: 'green',
@@ -700,7 +700,7 @@ Test.prototype.tests = {
         var star = new Kinetic.Star({
             x: 200,
             y: 100,
-            points: 10,
+            numPoints: 10,
             innerRadius: 40,
             outerRadius: 70,
             fill: 'green',

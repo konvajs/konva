@@ -170,28 +170,36 @@ Kinetic.Node.prototype = {
                          * config objects
                          */
                         case 'centerOffset':
-                            if(val.x !== undefined) {
-                                this.attrs[key].x = val.x;
-                            }
-                            if(val.y !== undefined) {
-                                this.attrs[key].y = val.y;
-                            }
+                            this._setPointAttr(key, val);
                             break;
                         case 'scale':
-                            if(val.x !== undefined) {
-                                this.attrs[key].x = val.x;
+                            this._setPointAttr(key, val);
+                            break;
+                        case 'points':
+                            /*
+                             * if points contains an array of object, just set
+                             * the attr normally
+                             */
+                            if(Kinetic.GlobalObject._isObject(val[0])) {
+                                this.attrs[key] = config[key];
                             }
-                            if(val.y !== undefined) {
-                                this.attrs[key].y = val.y;
+                            else {
+                                /*
+                                 * convert array of numbers into an array
+                                 * of objects containing x, y
+                                 */
+                                var arr = [];
+                                for(var n = 0; n < val.length; n += 2) {
+                                    arr.push({
+                                        x: val[n],
+                                        y: val[n + 1]
+                                    });
+                                }
+                                this.attrs[key] = arr;
                             }
                             break;
                         case 'crop':
-                            if(val.x !== undefined) {
-                                this.attrs[key].x = val.x;
-                            }
-                            if(val.y !== undefined) {
-                                this.attrs[key].y = val.y;
-                            }
+                            this._setPointAttr(key, val);
                             if(val.width !== undefined) {
                                 this.attrs[key].width = val.width;
                             }
@@ -858,6 +866,25 @@ Kinetic.Node.prototype = {
         // simulate event bubbling
         if(!evt.cancelBubble && node.parent.nodeType !== 'Stage') {
             this._handleEvent(node.parent, mouseoverParent, mouseoutParent, eventType, evt);
+        }
+    },
+    /**
+     * set point attr
+     */
+    _setPointAttr: function(key, val) {
+        if(Kinetic.GlobalObject._isArray(val)) {
+            // val is an array
+            this.attrs[key].x = val[0];
+            this.attrs[key].y = val[1];
+        }
+        else {
+            // val is an object
+            if(val.x !== undefined) {
+                this.attrs[key].x = val.x;
+            }
+            if(val.y !== undefined) {
+                this.attrs[key].y = val.y;
+            }
         }
     }
 };

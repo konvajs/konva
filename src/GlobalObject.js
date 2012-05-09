@@ -128,8 +128,13 @@ Kinetic.GlobalObject = {
     _isFunction: function(obj) {
         return !!(obj && obj.constructor && obj.call && obj.apply);
     },
+    _isArray: function(obj) {
+        return Object.prototype.toString.call(obj) == '[object Array]';
+    },
+    _isObject: function(obj) {
+        return obj === Object(obj);
+    },
     _getPoint: function(arg) {
-
         if(arg.length === 1) {
             return arg[0];
         }

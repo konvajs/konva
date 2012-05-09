@@ -838,7 +838,7 @@ Test.prototype.tests = {
     //  SHAPES tests
     ////////////////////////////////////////////////////////////////////////
 
-    'SHAPES - add rect': function(containerId) {
+    'SHAPES - add rect with rounded corner and scale from array': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -856,10 +856,7 @@ Test.prototype.tests = {
             centerOffset: {
                 x: 50
             },
-            scale: {
-                x: 2,
-                y: 2
-            },
+            scale: [2, 2],
             cornerRadius: 15,
             draggable: true
         });
@@ -1221,22 +1218,24 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
-        var points = [{
-            x: 73,
-            y: 160
-        }, {
-            x: 340,
-            y: 23
-        }, {
-            x: 500,
-            y: 109
-        }, {
-        	x: 500,
-        	y: 180
-        }];
+        /*
+         var points = [{
+         x: 73,
+         y: 160
+         }, {
+         x: 340,
+         y: 23
+         }, {
+         x: 500,
+         y: 109
+         }, {
+         x: 500,
+         y: 180
+         }];
+         */
 
         var line = new Kinetic.Line({
-            points: points,
+            points: [73, 160, 340, 23, 500, 109, 500, 180],
             stroke: 'blue',
             strokeWidth: 5,
             lineCap: 'round',
@@ -1251,6 +1250,8 @@ Test.prototype.tests = {
         test(line.getDashArray().length === 6, 'dashArray should have 6 elements');
         line.setDashArray([10, 10]);
         test(line.getDashArray().length === 2, 'dashArray should have 2 elements');
+
+        test(line.getPoints().length === 4, 'line should have 4 points');
 
     },
     'SHAPES - add regular polygon triangle': function(containerId) {
@@ -1356,7 +1357,7 @@ Test.prototype.tests = {
         var star = new Kinetic.Star({
             x: 200,
             y: 100,
-            points: 5,
+            numPoints: 5,
             innerRadius: 40,
             outerRadius: 70,
             fill: 'green',
@@ -1386,7 +1387,7 @@ Test.prototype.tests = {
         var star = new Kinetic.Star({
             x: 200,
             y: 100,
-            points: 5,
+            numPoints: 5,
             innerRadius: 40,
             outerRadius: 70,
             fill: 'green',
@@ -1630,7 +1631,7 @@ Test.prototype.tests = {
         var star = new Kinetic.Star({
             x: 200,
             y: 100,
-            points: 10,
+            numPoints: 10,
             innerRadius: 40,
             outerRadius: 70,
             fill: 'green',
@@ -1840,13 +1841,9 @@ Test.prototype.tests = {
         });
 
         layer.add(text);
-        stage.add(layer);
 
-        stage.onFrame(function() {
-            text.rotate(Math.PI / 100);
-            layer.draw();
-        });
-        //stage.start();
+
+
 
         /*
          * test getters and setters
@@ -1858,8 +1855,8 @@ Test.prototype.tests = {
         text.setPadding(20);
         test(text.getPadding() === 20, 'padding should be 20');
 
-        layer.draw();
-
+		stage.add(layer);
+		
         text.setFontFamily('Arial');
         text.setFontSize(30);
         text.setFontStyle('italic');
@@ -1869,6 +1866,8 @@ Test.prototype.tests = {
         text.setTextStroke('red');
         text.setTextStrokeWidth(10);
 
+		
+		
         test(text.getFontFamily() === 'Arial', 'font family should be Arial');
         test(text.getFontSize() === 30, 'text size should be 30');
         test(text.getFontStyle() == 'italic', 'font style should be italic');
@@ -1877,6 +1876,9 @@ Test.prototype.tests = {
         test(text.getTextFill() === 'blue', 'text fill should be blue');
         test(text.getTextStroke() === 'red', 'text stroke should be red');
         test(text.getTextStrokeWidth() === 10, 'test stroke width should be 10');
+   
+        
+             
     },
     'Text - get metrics': function(containerId) {
         var stage = new Kinetic.Stage({

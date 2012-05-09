@@ -9,7 +9,7 @@
  */
 Kinetic.Line = function(config) {
     this.setDefaultAttrs({
-        points: {},
+        points: [],
         lineCap: 'butt',
         dashArray: []
     });

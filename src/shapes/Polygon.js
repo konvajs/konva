@@ -9,7 +9,7 @@
  */
 Kinetic.Polygon = function(config) {
     this.setDefaultAttrs({
-        points: {}
+        points: []
     });
 
     this.shapeType = "Polygon";

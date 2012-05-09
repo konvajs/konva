@@ -156,8 +156,13 @@ Kinetic.GlobalObject = {
     _isFunction: function(obj) {
         return !!(obj && obj.constructor && obj.call && obj.apply);
     },
+    _isArray: function(obj) {
+        return Object.prototype.toString.call(obj) == '[object Array]';
+    },
+    _isObject: function(obj) {
+        return obj === Object(obj);
+    },
     _getPoint: function(arg) {
-
         if(arg.length === 1) {
             return arg[0];
         }
@@ -349,28 +354,36 @@ Kinetic.Node.prototype = {
                          * config objects
                          */
                         case 'centerOffset':
-                            if(val.x !== undefined) {
-                                this.attrs[key].x = val.x;
-                            }
-                            if(val.y !== undefined) {
-                                this.attrs[key].y = val.y;
-                            }
+                            this._setPointAttr(key, val);
                             break;
                         case 'scale':
-                            if(val.x !== undefined) {
-                                this.attrs[key].x = val.x;
+                            this._setPointAttr(key, val);
+                            break;
+                        case 'points':
+                            /*
+                             * if points contains an array of object, just set
+                             * the attr normally
+                             */
+                            if(Kinetic.GlobalObject._isObject(val[0])) {
+                                this.attrs[key] = config[key];
                             }
-                            if(val.y !== undefined) {
-                                this.attrs[key].y = val.y;
+                            else {
+                                /*
+                                 * convert array of numbers into an array
+                                 * of objects containing x, y
+                                 */
+                                var arr = [];
+                                for(var n = 0; n < val.length; n += 2) {
+                                    arr.push({
+                                        x: val[n],
+                                        y: val[n + 1]
+                                    });
+                                }
+                                this.attrs[key] = arr;
                             }
                             break;
                         case 'crop':
-                            if(val.x !== undefined) {
-                                this.attrs[key].x = val.x;
-                            }
-                            if(val.y !== undefined) {
-                                this.attrs[key].y = val.y;
-                            }
+                            this._setPointAttr(key, val);
                             if(val.width !== undefined) {
                                 this.attrs[key].width = val.width;
                             }
@@ -1037,6 +1050,25 @@ Kinetic.Node.prototype = {
         // simulate event bubbling
         if(!evt.cancelBubble && node.parent.nodeType !== 'Stage') {
             this._handleEvent(node.parent, mouseoverParent, mouseoutParent, eventType, evt);
+        }
+    },
+    /**
+     * set point attr
+     */
+    _setPointAttr: function(key, val) {
+        if(Kinetic.GlobalObject._isArray(val)) {
+            // val is an array
+            this.attrs[key].x = val[0];
+            this.attrs[key].y = val[1];
+        }
+        else {
+            // val is an object
+            if(val.x !== undefined) {
+                this.attrs[key].x = val.x;
+            }
+            if(val.y !== undefined) {
+                this.attrs[key].y = val.y;
+            }
         }
     }
 };
@@ -3044,7 +3076,7 @@ Kinetic.GlobalObject.extend(Kinetic.Sprite, Kinetic.Shape);
  */
 Kinetic.Polygon = function(config) {
     this.setDefaultAttrs({
-        points: {}
+        points: []
     });
 
     this.shapeType = "Polygon";
@@ -3163,7 +3195,7 @@ Kinetic.GlobalObject.extend(Kinetic.RegularPolygon, Kinetic.Shape);
  */
 Kinetic.Star = function(config) {
     this.setDefaultAttrs({
-        points: [],
+        numPoints: 0,
         innerRadius: 0,
         outerRadius: 0
     });
@@ -3175,10 +3207,10 @@ Kinetic.Star = function(config) {
         this.applyLineJoin();
         context.moveTo(0, 0 - this.attrs.outerRadius);
 
-        for(var n = 1; n < this.attrs.points * 2; n++) {
+        for(var n = 1; n < this.attrs.numPoints * 2; n++) {
             var radius = n % 2 === 0 ? this.attrs.outerRadius : this.attrs.innerRadius;
-            var x = radius * Math.sin(n * Math.PI / this.attrs.points);
-            var y = -1 * radius * Math.cos(n * Math.PI / this.attrs.points);
+            var x = radius * Math.sin(n * Math.PI / this.attrs.numPoints);
+            var y = -1 * radius * Math.cos(n * Math.PI / this.attrs.numPoints);
             context.lineTo(x, y);
         }
         context.closePath();
@@ -3192,17 +3224,17 @@ Kinetic.Star = function(config) {
  */
 Kinetic.Star.prototype = {
     /**
-     * set points array
-     * @param {Array} points
+     * set number of points
+     * @param {Integer} points
      */
-    setPoints: function(points) {
-        this.attrs.points = points;
+    setNumPoints: function(numPoints) {
+        this.attrs.numPoints = numPoints;
     },
     /**
-     * get points array
+     * get number of points
      */
-    getPoints: function() {
-        return this.attrs.points;
+    getNumPoints: function() {
+        return this.attrs.numPoints;
     },
     /**
      * set outer radius
@@ -3495,7 +3527,7 @@ Kinetic.GlobalObject.extend(Kinetic.Text, Kinetic.Shape);
  */
 Kinetic.Line = function(config) {
     this.setDefaultAttrs({
-        points: {},
+        points: [],
         lineCap: 'butt',
         dashArray: []
     });
