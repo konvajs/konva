@@ -103,8 +103,8 @@ Test.prototype.tests = {
             name: 'myCircle',
             draggable: true,
             scale: {
-            	x: 0.5,
-            	y: 0.5
+                x: 0.5,
+                y: 0.5
             }
         });
 
@@ -1211,6 +1211,46 @@ Test.prototype.tests = {
 
         layer.add(line);
         stage.add(layer);
+
+    },
+    'SHAPES - add dashed line': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var points = [{
+            x: 73,
+            y: 160
+        }, {
+            x: 340,
+            y: 23
+        }, {
+            x: 500,
+            y: 109
+        }, {
+        	x: 500,
+        	y: 180
+        }];
+
+        var line = new Kinetic.Line({
+            points: points,
+            stroke: 'blue',
+            strokeWidth: 5,
+            lineCap: 'round',
+            lineJoin: 'round',
+            draggable: true,
+            dashArray: [30, 10, 0, 10, 10, 20]
+        });
+
+        layer.add(line);
+        stage.add(layer);
+
+        test(line.getDashArray().length === 6, 'dashArray should have 6 elements');
+        line.setDashArray([10, 10]);
+        test(line.getDashArray().length === 2, 'dashArray should have 2 elements');
 
     },
     'SHAPES - add regular polygon triangle': function(containerId) {
