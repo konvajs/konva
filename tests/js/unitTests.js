@@ -113,6 +113,33 @@ Test.prototype.tests = {
         stage.add(layer);
 
     },
+    'STAGE - add shape with alpha': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer({
+            throttle: 9999
+        });
+        var group = new Kinetic.Group();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'red'
+        });
+
+        group.add(circle);
+        layer.add(group);
+        stage.add(layer);
+
+        circle.setAlpha(0.5);
+        layer.draw();
+
+        circle.setAlpha(0.5);
+        layer.draw();
+    },
     'STAGE - add layer then group then shape': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1410,15 +1437,15 @@ Test.prototype.tests = {
         star.setLineJoin('bevel');
         test(star.getLineJoin() === 'bevel', 'lineJoin property should be bevel');
 
-		star.setLineJoin('round');
-		/*
-        stage.onFrame(function(frame) {
-            star.rotate(1 * frame.timeDiff / 1000);
-            layer.draw();
-        });
+        star.setLineJoin('round');
+        /*
+         stage.onFrame(function(frame) {
+         star.rotate(1 * frame.timeDiff / 1000);
+         layer.draw();
+         });
 
-        stage.start();
-        */
+         stage.start();
+         */
     },
     'SHAPES - add stroke rect': function(containerId) {
         var stage = new Kinetic.Stage({

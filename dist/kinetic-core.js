@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: May 08 2012
+ * Date: May 09 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -2220,6 +2220,7 @@ Kinetic.Layer = function(config) {
     this.lastDrawTime = 0;
     this.beforeDrawFunc = undefined;
     this.afterDrawFunc = undefined;
+    this.drawFunc = undefined;
 
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
@@ -2344,6 +2345,12 @@ Kinetic.Layer.prototype = {
 
         this.clear();
         if(this.attrs.visible) {
+        	// draw custom func
+        	if (this.drawFunc !== undefined) {
+        		this.drawFunc();	
+        	}
+        	
+        	// draw children
             this._drawChildren();
         }
 
@@ -2432,7 +2439,7 @@ Kinetic.Shape = function(config) {
         lineJoin: undefined,
         detectionType: 'path',
         shadowColor: undefined,
-        shadowBlur: undefined,
+        shadowBlur: 5,
         shadowOffset: {
             x: 0,
             y: 0
@@ -2548,7 +2555,8 @@ Kinetic.Shape.prototype = {
         }
     },
     /**
-     * apply shadow helper method
+     * apply shadow based on shadowColor, shadowBlur,
+     * and shadowOffset properties
      */
     applyShadow: function() {
         var context = this.getContext();

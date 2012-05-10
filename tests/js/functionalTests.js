@@ -1151,6 +1151,45 @@ Test.prototype.tests = {
         layer.add(redCircle);
         stage.add(layer);
     },
+    'DRAG AND DROP - custom draw func and drag and drop layer': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer({
+            drawFunc: function() {
+                var context = this.getContext();
+                context.beginPath();
+                context.moveTo(200, 50);
+                context.lineTo(420, 80);
+                context.quadraticCurveTo(300, 100, 260, 170);
+                context.closePath();
+                context.fillStyle = 'blue';
+                context.fill();
+            },
+            draggable: true
+        });
+
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'red'
+        });
+
+        var circle2 = new Kinetic.Circle({
+            x: 400,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green'
+        });
+
+        layer.add(circle);
+        layer.add(circle2);
+
+        stage.add(layer);
+    },
     'DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1187,12 +1226,12 @@ Test.prototype.tests = {
 
         layer.draw();
 
-		var trans = null;
-		
+        var trans = null;
+
         star.on('dragstart', function() {
-        	if (trans) {
-        		trans.stop();
-        	}
+            if(trans) {
+                trans.stop();
+            }
             star.setAttrs({
                 shadowOffset: {
                     x: 15,

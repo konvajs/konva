@@ -18,6 +18,7 @@ Kinetic.Layer = function(config) {
     this.lastDrawTime = 0;
     this.beforeDrawFunc = undefined;
     this.afterDrawFunc = undefined;
+    this.drawFunc = undefined;
 
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
@@ -142,6 +143,12 @@ Kinetic.Layer.prototype = {
 
         this.clear();
         if(this.attrs.visible) {
+        	// draw custom func
+        	if (this.drawFunc !== undefined) {
+        		this.drawFunc();	
+        	}
+        	
+        	// draw children
             this._drawChildren();
         }
 

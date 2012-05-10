@@ -23,7 +23,7 @@ Kinetic.Shape = function(config) {
         lineJoin: undefined,
         detectionType: 'path',
         shadowColor: undefined,
-        shadowBlur: undefined,
+        shadowBlur: 5,
         shadowOffset: {
             x: 0,
             y: 0
@@ -139,7 +139,8 @@ Kinetic.Shape.prototype = {
         }
     },
     /**
-     * apply shadow helper method
+     * apply shadow based on shadowColor, shadowBlur,
+     * and shadowOffset properties
      */
     applyShadow: function() {
         var context = this.getContext();
