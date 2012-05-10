@@ -172,12 +172,15 @@ Kinetic.Node.prototype = {
                         case 'centerOffset':
                             this._setPointAttr(key, val);
                             break;
+                        case 'shadowOffset':
+                            this._setPointAttr(key, val);
+                            break;
                         case 'scale':
                             this._setPointAttr(key, val);
                             break;
                         case 'points':
                             /*
-                             * if points contains an array of object, just set
+                             * if points contains an array of objects, just set
                              * the attr normally
                              */
                             if(Kinetic.GlobalObject._isObject(val[0])) {

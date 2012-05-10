@@ -1268,7 +1268,10 @@ Test.prototype.tests = {
             lineCap: 'round',
             lineJoin: 'round',
             draggable: true,
-            dashArray: [30, 10, 0, 10, 10, 20]
+            dashArray: [30, 10, 0, 10, 10, 20],
+            shadowColor: '#aaa',
+            shadowBlur: 10,
+            shadowOffset: [20, 20],
         });
 
         layer.add(line);
@@ -1423,10 +1426,7 @@ Test.prototype.tests = {
             lineJoin: "round",
             shadowColor: '#aaa',
             shadowBlur: 10,
-            shadowOffset: {
-                x: 20,
-                y: 20
-            },
+            shadowOffset: [20, 20],
             draggable: true
         });
 

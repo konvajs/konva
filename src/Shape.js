@@ -77,11 +77,25 @@ Kinetic.Shape.prototype = {
      */
     shadowFillStroke: function() {
         var context = this.getContext();
-        context.save();
-        this.applyShadow();
-        this.fill();
-        context.restore();
-        this.stroke();
+        /*
+         * if fill is defined, apply shadow to
+         * fill only and not the stroke
+         */
+        if(!!this.attrs.fill) {
+            context.save();
+            this.applyShadow();
+            this.fill();
+            context.restore();
+            this.stroke();
+        }
+        /*
+         * if fill is not defined, try applying the shadow
+         * to the stroke
+         */
+        else {
+            this.applyShadow();
+            this.stroke();
+        }
     },
     /**
      * helper method to fill and stroke a shape
@@ -90,10 +104,6 @@ Kinetic.Shape.prototype = {
     fill: function() {
         var context = this.getContext();
         var fill = this.attrs.fill;
-        /*
-         * expect that fill, stroke, and strokeWidth could be
-         * undfined, '', null, or 0.  Use !!
-         */
         if(!!fill) {
             // color fill
             if( typeof fill == 'string') {
