@@ -17,7 +17,6 @@ Kinetic.RegularPolygon = function(config) {
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
-        this.applyLineJoin();
         context.moveTo(0, 0 - this.attrs.radius);
 
         for(var n = 1; n < this.attrs.sides; n++) {
@@ -26,7 +25,7 @@ Kinetic.RegularPolygon = function(config) {
             context.lineTo(x, y);
         }
         context.closePath();
-        this.shadowFillStroke();
+        this.applyStyles();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);

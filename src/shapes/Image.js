@@ -30,10 +30,9 @@ Kinetic.Image = function(config) {
             var context = this.getContext();
 
             context.beginPath();
-            this.applyLineJoin();
             context.rect(0, 0, width, height);
             context.closePath();
-            this.shadowFillStroke();
+            this.applyStyles();
 
             // if cropping
             if(cropWidth !== undefined && cropHeight !== undefined) {

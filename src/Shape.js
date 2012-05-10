@@ -72,10 +72,9 @@ Kinetic.Shape.prototype = {
         }
     },
     /**
-     * convenience method that both fills and strokes
-     * the shape
+     * applies shadows, fills, and styles
      */
-    shadowFillStroke: function() {
+    applyStyles: function() {
         var context = this.getContext();
         /*
          * if fill is defined, apply shadow to
@@ -336,11 +335,17 @@ Kinetic.Shape.prototype = {
                 context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }
 
+            this.tempLayer = layer;
+
+            /*
+             * pre styles include alpha, linejoin, and line cap
+             */
             if(this.getAbsoluteAlpha() !== 1) {
                 context.globalAlpha = this.getAbsoluteAlpha();
             }
+            this.applyLineJoin();
 
-            this.tempLayer = layer;
+            // draw the shape
             this.drawFunc.call(this);
             context.restore();
         }

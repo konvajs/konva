@@ -19,7 +19,6 @@ Kinetic.Line = function(config) {
         var context = this.getContext();
         var lastPos = {};
         context.beginPath();
-        this.applyLineJoin();
 
         context.moveTo(this.attrs.points[0].x, this.attrs.points[0].y);
 
@@ -41,8 +40,7 @@ Kinetic.Line = function(config) {
         if(!!this.attrs.lineCap) {
             context.lineCap = this.attrs.lineCap;
         }
-        this.applyShadow();
-        this.stroke();
+        this.applyStyles();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);

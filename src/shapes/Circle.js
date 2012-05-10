@@ -18,10 +18,9 @@ Kinetic.Circle = function(config) {
         var canvas = this.getCanvas();
         var context = this.getContext();
         context.beginPath();
-        this.applyLineJoin();
         context.arc(0, 0, this.attrs.radius, 0, Math.PI * 2, true);
         context.closePath();
-        this.shadowFillStroke();
+        this.applyStyles();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);

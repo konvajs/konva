@@ -2491,10 +2491,9 @@ Kinetic.Shape.prototype = {
         }
     },
     /**
-     * convenience method that both fills and strokes
-     * the shape
+     * applies shadows, fills, and styles
      */
-    shadowFillStroke: function() {
+    applyStyles: function() {
         var context = this.getContext();
         /*
          * if fill is defined, apply shadow to
@@ -2755,11 +2754,17 @@ Kinetic.Shape.prototype = {
                 context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }
 
+            this.tempLayer = layer;
+
+            /*
+             * pre styles include alpha, linejoin, and line cap
+             */
             if(this.getAbsoluteAlpha() !== 1) {
                 context.globalAlpha = this.getAbsoluteAlpha();
             }
+            this.applyLineJoin();
 
-            this.tempLayer = layer;
+            // draw the shape
             this.drawFunc.call(this);
             context.restore();
         }
@@ -2789,7 +2794,6 @@ Kinetic.Rect = function(config) {
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
-        this.applyLineJoin();
         if(this.attrs.cornerRadius === 0) {
             // simple rect - don't bother doing all that complicated maths stuff.
             context.rect(0, 0, this.attrs.width, this.attrs.height);
@@ -2807,7 +2811,7 @@ Kinetic.Rect = function(config) {
             context.arc(this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI, Math.PI * 3 / 2, false);
         }
         context.closePath();
-        this.shadowFillStroke();
+        this.applyStyles();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
@@ -2898,10 +2902,9 @@ Kinetic.Circle = function(config) {
         var canvas = this.getCanvas();
         var context = this.getContext();
         context.beginPath();
-        this.applyLineJoin();
         context.arc(0, 0, this.attrs.radius, 0, Math.PI * 2, true);
         context.closePath();
-        this.shadowFillStroke();
+        this.applyStyles();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
@@ -2960,10 +2963,9 @@ Kinetic.Image = function(config) {
             var context = this.getContext();
 
             context.beginPath();
-            this.applyLineJoin();
             context.rect(0, 0, width, height);
             context.closePath();
-            this.shadowFillStroke();
+            this.applyStyles();
 
             // if cropping
             if(cropWidth !== undefined && cropHeight !== undefined) {
@@ -3172,13 +3174,12 @@ Kinetic.Polygon = function(config) {
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
-        this.applyLineJoin();
         context.moveTo(this.attrs.points[0].x, this.attrs.points[0].y);
         for(var n = 1; n < this.attrs.points.length; n++) {
             context.lineTo(this.attrs.points[n].x, this.attrs.points[n].y);
         }
         context.closePath();
-        this.shadowFillStroke();
+        this.applyStyles();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
@@ -3224,7 +3225,6 @@ Kinetic.RegularPolygon = function(config) {
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
-        this.applyLineJoin();
         context.moveTo(0, 0 - this.attrs.radius);
 
         for(var n = 1; n < this.attrs.sides; n++) {
@@ -3233,7 +3233,7 @@ Kinetic.RegularPolygon = function(config) {
             context.lineTo(x, y);
         }
         context.closePath();
-        this.shadowFillStroke();
+        this.applyStyles();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
@@ -3293,8 +3293,6 @@ Kinetic.Star = function(config) {
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
-        this.applyLineJoin();
-        
         context.moveTo(0, 0 - this.attrs.outerRadius);
 
         for(var n = 1; n < this.attrs.numPoints * 2; n++) {
@@ -3304,7 +3302,7 @@ Kinetic.Star = function(config) {
             context.lineTo(x, y);
         }
         context.closePath();
-        this.shadowFillStroke();
+        this.applyStyles();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
@@ -3412,10 +3410,9 @@ Kinetic.Text = function(config) {
         // draw path
         context.save();
         context.beginPath();
-        this.applyLineJoin();
         context.rect(x, y, textWidth + p * 2, textHeight + p * 2);
         context.closePath();
-        this.shadowFillStroke();
+        this.applyStyles();
         context.restore();
 
         var tx = p + x;
@@ -3627,7 +3624,6 @@ Kinetic.Line = function(config) {
         var context = this.getContext();
         var lastPos = {};
         context.beginPath();
-        this.applyLineJoin();
 
         context.moveTo(this.attrs.points[0].x, this.attrs.points[0].y);
 
@@ -3649,8 +3645,7 @@ Kinetic.Line = function(config) {
         if(!!this.attrs.lineCap) {
             context.lineCap = this.attrs.lineCap;
         }
-        this.applyShadow();
-        this.stroke();
+        this.applyStyles();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);

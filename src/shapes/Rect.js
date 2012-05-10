@@ -19,7 +19,6 @@ Kinetic.Rect = function(config) {
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
-        this.applyLineJoin();
         if(this.attrs.cornerRadius === 0) {
             // simple rect - don't bother doing all that complicated maths stuff.
             context.rect(0, 0, this.attrs.width, this.attrs.height);
@@ -37,7 +36,7 @@ Kinetic.Rect = function(config) {
             context.arc(this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI, Math.PI * 3 / 2, false);
         }
         context.closePath();
-        this.shadowFillStroke();
+        this.applyStyles();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);

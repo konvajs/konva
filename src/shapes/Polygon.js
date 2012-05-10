@@ -16,13 +16,12 @@ Kinetic.Polygon = function(config) {
     config.drawFunc = function() {
         var context = this.getContext();
         context.beginPath();
-        this.applyLineJoin();
         context.moveTo(this.attrs.points[0].x, this.attrs.points[0].y);
         for(var n = 1; n < this.attrs.points.length; n++) {
             context.lineTo(this.attrs.points[n].x, this.attrs.points[n].y);
         }
         context.closePath();
-        this.shadowFillStroke();
+        this.applyStyles();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
