@@ -213,7 +213,7 @@ Kinetic.Stage.prototype = {
         this._setDefaults();
 
         // reset node attrs
-        this.setDefaultAttrs({
+        this.setAttrs({
             visible: true,
             listening: true,
             name: undefined,

@@ -124,8 +124,16 @@ Kinetic.Node.prototype = {
 
         if(config) {
             for(var key in config) {
-                var val = config[key];
-                this.attrs[key] = config[key];
+                /*
+                 * only set the attr if it's undefined in case
+                 * a developer writes a custom class that extends
+                 * a Kinetic Class such that their default property
+                 * isn't overwritten by the Kinetic Class default
+                 * property
+                 */
+                if(this.attrs[key] === undefined) {
+                    this.attrs[key] = config[key];
+                }
             }
         }
     },
@@ -647,7 +655,7 @@ Kinetic.Node.prototype = {
      * @param {Number} y
      */
     setCenterOffset: function() {
-    	var pos = Kinetic.GlobalObject._getPoint(arguments);
+        var pos = Kinetic.GlobalObject._getPoint(arguments);
         this.attrs.centerOffset.x = pos.x;
         this.attrs.centerOffset.y = pos.y;
     },
