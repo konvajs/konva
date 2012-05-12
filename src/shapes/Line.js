@@ -11,7 +11,8 @@ Kinetic.Line = function(config) {
     this.setDefaultAttrs({
         points: [],
         lineCap: 'butt',
-        dashArray: []
+        dashArray: [],
+        detectionType: 'pixel'
     });
 
     this.shapeType = "Line";

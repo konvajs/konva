@@ -1219,10 +1219,11 @@ Test.prototype.tests = {
         }, {
             x: 340,
             y: 23
-        }, {
-            x: 500,
-            y: 109
-        }];
+        }
+        /*, {
+         x: 500,
+         y: 109
+         }*/];
 
         var line = new Kinetic.Line({
             points: points,
@@ -1233,9 +1234,17 @@ Test.prototype.tests = {
             draggable: true
         });
 
+        // test that default detection type is pixel
+        test(line.getDetectionType() === 'pixel', 'dection type should be pixel');
+
         layer.add(line);
         stage.add(layer);
 
+        line.saveData();
+
+        line.on('dragend', function() {
+            line.saveData();
+        });
     },
     'SHAPES - add dashed line': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1936,9 +1945,9 @@ Test.prototype.tests = {
             verticalAlign: 'middle'
         });
 
-		// test text width before adding it to stage
-		test(text.getTextWidth() > 0, 'text width should have a value');
-		
+        // test text width before adding it to stage
+        test(text.getTextWidth() > 0, 'text width should have a value');
+
         layer.add(text);
         stage.add(layer);
 

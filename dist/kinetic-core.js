@@ -3603,17 +3603,17 @@ Kinetic.Text.prototype = {
      */
     getTextSize: function() {
         var context = this.getContext();
-        
+
         /**
          * if the text hasn't been added a layer yet there
          * will be no associated context.  Will have to create
          * a dummy context
          */
-        if (!context) {
-        	var dummyCanvas = document.createElement('canvas');
-        	context = dummyCanvas.getContext('2d');
+        if(!context) {
+            var dummyCanvas = document.createElement('canvas');
+            context = dummyCanvas.getContext('2d');
         }
-        
+
         context.save();
         context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'pt ' + this.attrs.fontFamily;
         var metrics = context.measureText(this.attrs.text);
@@ -3640,7 +3640,8 @@ Kinetic.Line = function(config) {
     this.setDefaultAttrs({
         points: [],
         lineCap: 'butt',
-        dashArray: []
+        dashArray: [],
+        detectionType: 'pixel'
     });
 
     this.shapeType = "Line";
