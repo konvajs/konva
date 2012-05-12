@@ -1936,6 +1936,9 @@ Test.prototype.tests = {
             verticalAlign: 'middle'
         });
 
+		// test text width before adding it to stage
+		test(text.getTextWidth() > 0, 'text width should have a value');
+		
         layer.add(text);
         stage.add(layer);
 

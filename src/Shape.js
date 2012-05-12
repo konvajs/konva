@@ -48,7 +48,12 @@ Kinetic.Shape.prototype = {
      * .getContext() returns the context of the invisible path layer.
      */
     getContext: function() {
-        return this.tempLayer.getContext();
+        if(this.tempLayer === undefined) {
+            return null;
+        }
+        else {
+            return this.tempLayer.getContext();
+        }
     },
     /**
      * get shape temp layer canvas
