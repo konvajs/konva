@@ -12,14 +12,11 @@ Kinetic.Text = function(config) {
         fontFamily: 'Calibri',
         text: '',
         fontSize: 12,
-        fill: undefined,
-        textStroke: undefined,
-        textStrokeWidth: undefined,
         align: 'left',
         verticalAlign: 'top',
         padding: 0,
         fontStyle: 'normal',
-        maxWidth: undefined
+        width: 'auto'
     });
 
     this.shapeType = "Text";
@@ -29,7 +26,7 @@ Kinetic.Text = function(config) {
         context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'pt ' + this.attrs.fontFamily;
         context.textBaseline = 'middle';
         var textHeight = this.getTextHeight();
-        var textWidth = this.getMaxWidth() === undefined ? this.getTextWidth() : this.getMaxWidth();
+        var textWidth = this.attrs.width === 'auto' ? this.getTextWidth() : this.attrs.width;
         var p = this.attrs.padding;
         var x = 0;
         var y = 0;
@@ -65,7 +62,7 @@ Kinetic.Text = function(config) {
 
         // clipping region for max width
         context.save();
-        if(this.attrs.maxWidth !== undefined) {
+        if(this.attrs.width !== 'auto') {
             context.beginPath();
             context.rect(x, y, textWidth + p, textHeight + p * 2);
             context.closePath();
@@ -266,17 +263,17 @@ Kinetic.Text.prototype = {
         };
     },
     /**
-     * get max width in pixels
+     * get width in pixels
      */
-    getMaxWidth: function() {
-        return this.attrs.maxWidth;
+    getWidth: function() {
+        return this.attrs.width;
     },
     /**
      * set width
-     * @param {Number} max width
+     * @param {Number} width
      */
-    setMaxWidth: function(maxWidth) {
-        this.attrs.maxWidth = maxWidth;
+    setWidth: function(width) {
+        this.attrs.width = width;
     }
 };
 // extend Shape
