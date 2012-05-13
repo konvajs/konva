@@ -32,10 +32,11 @@ Kinetic.Polygon = function(config) {
 Kinetic.Polygon.prototype = {
     /**
      * set points array
-     * @param {Array} points
+     * @param {Array} can be an array of point objects or an array
+     *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] == [1,2,3,4]
      */
     setPoints: function(points) {
-        this.attrs.points = points;
+        Kinetic.GlobalObject._setPoints(this.attrs, 'points', points);
     },
     /**
      * get points array

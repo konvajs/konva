@@ -1271,6 +1271,12 @@ Test.prototype.tests = {
         line.on('dragend', function() {
             line.saveData();
         });
+
+        line.setPoints([1, 2, 3, 4]);
+        test(line.getPoints()[0].x === 1, 'first point x should be 1');
+        
+        line.setPoints([73, 160, 340, 23]);
+        test(line.getPoints()[0].x === 73, 'first point x should be 73');
     },
     'SHAPES - add dashed line': function(containerId) {
         var stage = new Kinetic.Stage({

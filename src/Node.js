@@ -187,27 +187,7 @@ Kinetic.Node.prototype = {
                             go._setXY(this.attrs, key, val);
                             break;
                         case 'points':
-                            /*
-                             * if points contains an array of objects, just set
-                             * the attr normally
-                             */
-                            if(Kinetic.GlobalObject._isObject(val[0])) {
-                                this.attrs[key] = config[key];
-                            }
-                            else {
-                                /*
-                                 * convert array of numbers into an array
-                                 * of objects containing x, y
-                                 */
-                                var arr = [];
-                                for(var n = 0; n < val.length; n += 2) {
-                                    arr.push({
-                                        x: val[n],
-                                        y: val[n + 1]
-                                    });
-                                }
-                                this.attrs[key] = arr;
-                            }
+                        	go._setPoints(this.attrs, key, val);
                             break;
                         case 'crop':
                             go._setXY(this.attrs, key, val);

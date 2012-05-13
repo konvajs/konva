@@ -135,9 +135,9 @@ Kinetic.GlobalObject = {
         return obj === Object(obj);
     },
     /*
-     * takes the arguments passed into a function and 
+     * takes the arguments passed into a function and
      * creates a point object from it.  The arguments
-     * can be an obect or an array
+     * can be a point object or an array of two elements
      */
     _getXY: function(arg) {
         if(arg.length === 1) {
@@ -150,6 +150,10 @@ Kinetic.GlobalObject = {
             }
         }
     },
+    /*
+     * val will be either a point object or an
+     * array with two elements
+     */
     _setXY: function(obj, key, val) {
         if(obj[key] === undefined) {
             obj[key] = {};
@@ -171,6 +175,11 @@ Kinetic.GlobalObject = {
             }
         }
     },
+    /*
+     * val will be either an object with height and
+     *  width properties or an array with four elements
+     *  in which the last two elements are width and height
+     */
     _setSize: function(obj, key, val) {
         if(obj[key] === undefined) {
             obj[key] = {};
@@ -190,6 +199,33 @@ Kinetic.GlobalObject = {
             if(val.y !== undefined) {
                 obj[key].height = val.height;
             }
+        }
+    },
+    /*
+     * val will be either an array of numbers or
+     *  an array of point objects
+     */
+    _setPoints: function(obj, key, val) {
+        /*
+         * if points contains an array of objects, just set
+         * the attr normally
+         */
+        if(this._isObject(val[0])) {
+            obj[key] = val;
+        }
+        else {
+            /*
+             * convert array of numbers into an array
+             * of objects containing x, y
+             */
+            var arr = [];
+            for(var n = 0; n < val.length; n += 2) {
+                arr.push({
+                    x: val[n],
+                    y: val[n + 1]
+                });
+            }
+            obj[key] = arr;
         }
     }
 };
