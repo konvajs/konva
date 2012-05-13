@@ -109,33 +109,40 @@ Kinetic.Shape.prototype = {
         var context = this.getContext();
         var fill = this.attrs.fill;
         if(!!fill) {
+            var s = fill.start;
+            var e = fill.end;
+            var f = null;
+
             // color fill
             if( typeof fill == 'string') {
                 f = this.attrs.fill;
             }
-            else {
-                var s = fill.start;
-                var e = fill.end;
+            // pattern fill
+            else if(fill.image !== undefined) {
+            	var o = Kinetic.GlobalObject._getPoint(fill.offset);
+            	
 
-                // linear gradient
-                if(s.x !== undefined && s.y !== undefined && e.x !== undefined && e.y !== undefined) {
-                    var context = this.getContext();
-                    var grd = context.createLinearGradient(s.x, s.y, e.x, e.y);
-                    grd.addColorStop(0, s.color);
-                    grd.addColorStop(1, e.color);
-                    f = grd;
-                }
-                // radial gradient
-                else if(s.radius !== undefined && e.radius !== undefined) {
-                    var context = this.getContext();
-                    var grd = context.createRadialGradient(s.x, s.y, s.radius, s.x, s.y, e.radius);
-                    grd.addColorStop(0, s.color);
-                    grd.addColorStop(1, e.color);
-                    f = grd;
-                }
-                else {
-                    f = 'black';
-                }
+                var repeat = fill.repeat === undefined ? 'repeat' : fill.repeat;
+                f = context.createPattern(fill.image, repeat);
+            }
+            // gradient fill
+            else if(s.x !== undefined && s.y !== undefined && e.x !== undefined && e.y !== undefined) {
+                var context = this.getContext();
+                var grd = context.createLinearGradient(s.x, s.y, e.x, e.y);
+                grd.addColorStop(0, s.color);
+                grd.addColorStop(1, e.color);
+                f = grd;
+            }
+            // radial gradient
+            else if(s.radius !== undefined && e.radius !== undefined) {
+                var context = this.getContext();
+                var grd = context.createRadialGradient(s.x, s.y, s.radius, s.x, s.y, e.radius);
+                grd.addColorStop(0, s.color);
+                grd.addColorStop(1, e.color);
+                f = grd;
+            }
+            else {
+                f = 'black';
             }
 
             context.fillStyle = f;

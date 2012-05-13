@@ -76,6 +76,39 @@ Test.prototype.tests = {
         stage.add(layer);
 
     },
+    'STAGE - add shape with pattern fill': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            var group = new Kinetic.Group();
+            var circle = new Kinetic.Circle({
+                x: stage.getWidth() / 2,
+                y: stage.getHeight() / 2,
+                radius: 70,
+                fill: {
+                    image: imageObj,
+                    repeat: 'repeat',
+                    offset: [20, 20]
+                },
+                stroke: 'black',
+                strokeWidth: 4,
+                name: 'myCircle',
+                draggable: true
+            });
+
+            group.add(circle);
+            layer.add(group);
+            stage.add(layer);
+
+        };
+        imageObj.src = '../darth-vader.jpg';
+
+    },
     'STAGE - add shape with radial gradient fill': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
