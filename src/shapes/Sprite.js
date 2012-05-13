@@ -9,8 +9,8 @@
  */
 Kinetic.Sprite = function(config) {
     this.setDefaultAttrs({
-		index: 0,
-		frameRate: 17
+        index: 0,
+        frameRate: 17
     });
 
     config.drawFunc = function() {
@@ -68,6 +68,25 @@ Kinetic.Sprite.prototype = {
      */
     setAnimation: function(anim) {
         this.attrs.animation = anim;
+    },
+    /**
+     * set animations obect
+     * @param {Object} animations
+     */
+    setAnimations: function(animations) {
+        this.attrs.animations = animations;
+    },
+    /**
+     * get animations object
+     */
+    getAnimations: function() {
+        return this.attrs.animations;
+    },
+    /**
+     * get animation key
+     */
+    getAnimation: function() {
+        return this.attrs.animation;
     },
     /**
      * set animation frame index

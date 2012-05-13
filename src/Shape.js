@@ -272,7 +272,7 @@ Kinetic.Shape.prototype = {
     /**
      * get shadow blur
      */
-    getShadowblur: function() {
+    getShadowBlur: function() {
         return this.attrs.shadowBlur;
     },
     /**
@@ -280,8 +280,9 @@ Kinetic.Shape.prototype = {
      * @param {Object|Array} offset
      */
     setShadowOffset: function() {
-        var pos = Kinetic.GlobalObject._getXY(arguments);
-        this.attrs.shadowOffset = pos;
+        var c = {};
+        c.shadowOffset = Kinetic.GlobalObject._getXY(arguments);
+        this.setAttrs(c);
     },
     /**
      * get shadow offset

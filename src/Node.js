@@ -187,7 +187,7 @@ Kinetic.Node.prototype = {
                             go._setXY(this.attrs, key, val);
                             break;
                         case 'points':
-                        	go._setPoints(this.attrs, key, val);
+                            go._setPoints(this.attrs, key, val);
                             break;
                         case 'crop':
                             go._setXY(this.attrs, key, val);
@@ -278,7 +278,7 @@ Kinetic.Node.prototype = {
      * @param {Number} scaleY
      */
     setScale: function(scaleX, scaleY) {
-        if(scaleY) {
+        if(scaleY !== undefined) {
             this.attrs.scale.x = scaleX;
             this.attrs.scale.y = scaleY;
         }

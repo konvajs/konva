@@ -454,7 +454,7 @@ Kinetic.Node.prototype = {
                             go._setXY(this.attrs, key, val);
                             break;
                         case 'points':
-                        	go._setPoints(this.attrs, key, val);
+                            go._setPoints(this.attrs, key, val);
                             break;
                         case 'crop':
                             go._setXY(this.attrs, key, val);
@@ -545,7 +545,7 @@ Kinetic.Node.prototype = {
      * @param {Number} scaleY
      */
     setScale: function(scaleX, scaleY) {
-        if(scaleY) {
+        if(scaleY !== undefined) {
             this.attrs.scale.x = scaleX;
             this.attrs.scale.y = scaleY;
         }
@@ -2738,7 +2738,7 @@ Kinetic.Shape.prototype = {
     /**
      * get shadow blur
      */
-    getShadowblur: function() {
+    getShadowBlur: function() {
         return this.attrs.shadowBlur;
     },
     /**
@@ -2746,8 +2746,9 @@ Kinetic.Shape.prototype = {
      * @param {Object|Array} offset
      */
     setShadowOffset: function() {
-        var pos = Kinetic.GlobalObject._getXY(arguments);
-        this.attrs.shadowOffset = pos;
+        var c = {};
+        c.shadowOffset = Kinetic.GlobalObject._getXY(arguments);
+        this.setAttrs(c);
     },
     /**
      * get shadow offset
@@ -3154,8 +3155,8 @@ Kinetic.GlobalObject.extend(Kinetic.Image, Kinetic.Shape);
  */
 Kinetic.Sprite = function(config) {
     this.setDefaultAttrs({
-		index: 0,
-		frameRate: 17
+        index: 0,
+        frameRate: 17
     });
 
     config.drawFunc = function() {
@@ -3213,6 +3214,25 @@ Kinetic.Sprite.prototype = {
      */
     setAnimation: function(anim) {
         this.attrs.animation = anim;
+    },
+    /**
+     * set animations obect
+     * @param {Object} animations
+     */
+    setAnimations: function(animations) {
+        this.attrs.animations = animations;
+    },
+    /**
+     * get animations object
+     */
+    getAnimations: function() {
+        return this.attrs.animations;
+    },
+    /**
+     * get animation key
+     */
+    getAnimation: function() {
+        return this.attrs.animation;
     },
     /**
      * set animation frame index
@@ -3273,7 +3293,9 @@ Kinetic.Polygon.prototype = {
      *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] == [1,2,3,4]
      */
     setPoints: function(points) {
-        Kinetic.GlobalObject._setPoints(this.attrs, 'points', points);
+        var c = {};
+        c.points = points;
+        this.setAttrs(c);
     },
     /**
      * get points array
@@ -3773,7 +3795,9 @@ Kinetic.Line.prototype = {
      *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] == [1,2,3,4]
      */
     setPoints: function(points) {
-        Kinetic.GlobalObject._setPoints(this.attrs, 'points', points);
+    	var c = {};
+        c.points = points;
+        this.setAttrs(c);
     },
     /**
      * get points array

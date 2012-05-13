@@ -36,7 +36,9 @@ Kinetic.Polygon.prototype = {
      *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] == [1,2,3,4]
      */
     setPoints: function(points) {
-        Kinetic.GlobalObject._setPoints(this.attrs, 'points', points);
+        var c = {};
+        c.points = points;
+        this.setAttrs(c);
     },
     /**
      * get points array
