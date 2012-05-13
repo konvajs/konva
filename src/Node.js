@@ -2,7 +2,7 @@
 //  Node
 ///////////////////////////////////////////////////////////////////////
 /**
- * Node constructor.&nbsp; Nodes are entities that can move around
+ * Node constructor.&nbsp; Nodes are entities that can be transformed, layered,
  * and have events bound to them.  They are the building blocks of a KineticJS
  * application
  * @constructor
@@ -45,7 +45,7 @@ Kinetic.Node.prototype = {
      * such as 'mousedown mouseup mousemove'. include a namespace to bind an
      * event by name such as 'click.foobar'.
      * @param {String} typesStr
-     * @param {function} handler
+     * @param {Function} handler
      */
     on: function(typesStr, handler) {
         var types = typesStr.split(' ');

@@ -206,8 +206,8 @@ Kinetic.GlobalObject = {
 
         // val is an array
         if(Kinetic.GlobalObject._isArray(val)) {
-            obj[key].x = val[2];
-            obj[key].y = val[3];
+            obj[key].width = val[2];
+            obj[key].height = val[3];
         }
         // val is an object
         else if(obj[key] !== undefined) {
@@ -233,7 +233,7 @@ window.requestAnimFrame = (function(callback) {
 //  Node
 ///////////////////////////////////////////////////////////////////////
 /**
- * Node constructor.&nbsp; Nodes are entities that can move around
+ * Node constructor.&nbsp; Nodes are entities that can be transformed, layered,
  * and have events bound to them.  They are the building blocks of a KineticJS
  * application
  * @constructor
@@ -276,7 +276,7 @@ Kinetic.Node.prototype = {
      * such as 'mousedown mouseup mousemove'. include a namespace to bind an
      * event by name such as 'click.foobar'.
      * @param {String} typesStr
-     * @param {function} handler
+     * @param {Function} handler
      */
     on: function(typesStr, handler) {
         var types = typesStr.split(' ');
@@ -2790,10 +2790,6 @@ Kinetic.Shape.prototype = {
             return (alpha !== undefined && alpha !== 0);
         }
     },
-    /**
-     * draw shape
-     * @param {Layer} layer Layer that the shape will be drawn on
-     */
     _draw: function(layer) {
         if(layer !== undefined && this.drawFunc !== undefined) {
             var stage = layer.getStage();

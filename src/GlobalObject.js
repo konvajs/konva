@@ -178,8 +178,8 @@ Kinetic.GlobalObject = {
 
         // val is an array
         if(Kinetic.GlobalObject._isArray(val)) {
-            obj[key].x = val[2];
-            obj[key].y = val[3];
+            obj[key].width = val[2];
+            obj[key].height = val[3];
         }
         // val is an object
         else if(obj[key] !== undefined) {

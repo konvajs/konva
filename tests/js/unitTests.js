@@ -105,7 +105,7 @@ Test.prototype.tests = {
             layer.add(group);
             stage.add(layer);
 
-			test(circle.getFill().repeat === 'no-repeat', 'repeat option should be no-repeat');
+            test(circle.getFill().repeat === 'no-repeat', 'repeat option should be no-repeat');
         };
         imageObj.src = '../darth-vader.jpg';
 
@@ -999,16 +999,8 @@ Test.prototype.tests = {
                 image: imageObj,
                 width: 100,
                 height: 100,
-                centerOffset: {
-                    x: 50,
-                    y: 30
-                },
-                crop: {
-                    x: 20,
-                    y: 20,
-                    width: 200,
-                    height: 250
-                }
+                centerOffset: [50, 30],
+                crop: [20, 20, 200, 250]
             });
 
             layer.add(darth);

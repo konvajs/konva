@@ -340,10 +340,6 @@ Kinetic.Shape.prototype = {
             return (alpha !== undefined && alpha !== 0);
         }
     },
-    /**
-     * draw shape
-     * @param {Layer} layer Layer that the shape will be drawn on
-     */
     _draw: function(layer) {
         if(layer !== undefined && this.drawFunc !== undefined) {
             var stage = layer.getStage();
