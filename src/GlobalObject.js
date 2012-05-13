@@ -146,6 +146,10 @@ Kinetic.GlobalObject = {
         }
     },
     _setXY: function(obj, key, val) {
+        if(obj[key] === undefined) {
+            obj[key] = {};
+        }
+
         // val is an array
         if(Kinetic.GlobalObject._isArray(val)) {
             obj[key].x = val[0];
@@ -163,6 +167,10 @@ Kinetic.GlobalObject = {
         }
     },
     _setSize: function(obj, key, val) {
+        if(obj[key] === undefined) {
+            obj[key] = {};
+        }
+
         // val is an array
         if(Kinetic.GlobalObject._isArray(val)) {
             obj[key].x = val[2];

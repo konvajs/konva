@@ -92,8 +92,8 @@ Test.prototype.tests = {
                 radius: 70,
                 fill: {
                     image: imageObj,
-                    repeat: 'repeat',
-                    offset: [20, 20]
+                    repeat: 'no-repeat',
+                    offset: [-200, -70]
                 },
                 stroke: 'black',
                 strokeWidth: 4,
@@ -105,6 +105,7 @@ Test.prototype.tests = {
             layer.add(group);
             stage.add(layer);
 
+			test(circle.getFill().repeat === 'no-repeat', 'repeat option should be no-repeat');
         };
         imageObj.src = '../darth-vader.jpg';
 

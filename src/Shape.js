@@ -116,14 +116,26 @@ Kinetic.Shape.prototype = {
             // color fill
             if( typeof fill == 'string') {
                 f = this.attrs.fill;
+                context.fillStyle = f;
+                context.fill();
             }
             // pattern fill
             else if(fill.image !== undefined) {
-            	var o = Kinetic.GlobalObject._getPoint(fill.offset);
-            	
+                var o = {};
+
+                // set offset o
+                if(fill.offset !== undefined) {
+                    Kinetic.GlobalObject._setXY(o, 'pos', fill.offset);
+                }
 
                 var repeat = fill.repeat === undefined ? 'repeat' : fill.repeat;
                 f = context.createPattern(fill.image, repeat);
+
+				context.save();
+				context.translate(o.pos.x, o.pos.y);
+                context.fillStyle = f;
+                context.fill();
+                context.restore();
             }
             // gradient fill
             else if(s.x !== undefined && s.y !== undefined && e.x !== undefined && e.y !== undefined) {
@@ -132,6 +144,8 @@ Kinetic.Shape.prototype = {
                 grd.addColorStop(0, s.color);
                 grd.addColorStop(1, e.color);
                 f = grd;
+                context.fillStyle = f;
+                context.fill();
             }
             // radial gradient
             else if(s.radius !== undefined && e.radius !== undefined) {
@@ -140,13 +154,17 @@ Kinetic.Shape.prototype = {
                 grd.addColorStop(0, s.color);
                 grd.addColorStop(1, e.color);
                 f = grd;
+                context.fillStyle = f;
+                context.fill();
             }
             else {
                 f = 'black';
+                context.fillStyle = f;
+                context.fill();
             }
 
-            context.fillStyle = f;
-            context.fill();
+            // TODO: if using fill offset, save context, translate offset, fill(), then restore
+
         }
     },
     /**
