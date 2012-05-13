@@ -56,7 +56,7 @@ Kinetic.Line.prototype = {
      *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] == [1,2,3,4]
      */
     setPoints: function(points) {
-    	var c = {};
+        var c = {};
         c.points = points;
         this.setAttrs(c);
     },
@@ -106,8 +106,9 @@ Kinetic.Line.prototype = {
         var dashCount = dashArray.length;
 
         var dx = (x2 - x), dy = (y2 - y);
-        var xSlope = (Math.abs(dx) > Math.abs(dy));
+        var xSlope = dx > dy;
         var slope = (xSlope) ? dy / dx : dx / dy;
+
         var distRemaining = Math.sqrt(dx * dx + dy * dy);
         var dashIndex = 0, draw = true;
         while(distRemaining >= 0.1 && dashIndex < 10000) {
@@ -119,18 +120,21 @@ Kinetic.Line.prototype = {
                 dashLength = distRemaining;
             }
             var step = Math.sqrt(dashLength * dashLength / (1 + slope * slope));
+
             if(xSlope) {
-                x += step;
-                y += slope * step;
+                x += dx < 0 && dy < 0 ? step * -1 : step;
+                y += dx < 0 && dy < 0 ? slope * step * -1 : slope * step;
             }
             else {
-                x += slope * step;
-                y += step;
+                x += dx < 0 && dy < 0 ? slope * step * -1 : slope * step;
+                y += dx < 0 && dy < 0 ? step * -1 : step;
             }
             context[draw ? 'lineTo' : 'moveTo'](x, y);
             distRemaining -= dashLength;
             draw = !draw;
         }
+
+        context.moveTo(x2, y2)
     }
 };
 
