@@ -109,6 +109,16 @@ Kinetic.Line.prototype = {
         var xSlope = dx > dy;
         var slope = (xSlope) ? dy / dx : dx / dy;
 
+        /*
+         * gaurd against slopes of infinity
+         */
+        if(slope > 9999) {
+            slope = 9999;
+        }
+        else if(slope < -9999) {
+            slope = -9999;
+        }
+
         var distRemaining = Math.sqrt(dx * dx + dy * dy);
         var dashIndex = 0, draw = true;
         while(distRemaining >= 0.1 && dashIndex < 10000) {
@@ -120,7 +130,6 @@ Kinetic.Line.prototype = {
                 dashLength = distRemaining;
             }
             var step = Math.sqrt(dashLength * dashLength / (1 + slope * slope));
-
             if(xSlope) {
                 x += dx < 0 && dy < 0 ? step * -1 : step;
                 y += dx < 0 && dy < 0 ? slope * step * -1 : slope * step;
