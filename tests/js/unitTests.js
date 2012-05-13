@@ -1021,11 +1021,11 @@ Test.prototype.tests = {
             test(darth.getCenterOffset().y === 30, 'center offset y should be 30');
 
             var crop = darth.getCrop();
+
             test(crop.x === 20, 'crop x should be 20');
             test(crop.y === 20, 'crop y should be 20');
             test(crop.width === 200, 'crop width should be 200');
             test(crop.height === 250, 'crop height should be 250');
-
         };
         imageObj.src = '../darth-vader.jpg';
     },

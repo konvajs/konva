@@ -144,6 +144,40 @@ Kinetic.GlobalObject = {
                 y: arg[1]
             }
         }
+    },
+    _setXY: function(obj, key, val) {
+        // val is an array
+        if(Kinetic.GlobalObject._isArray(val)) {
+            obj[key].x = val[0];
+            obj[key].y = val[1];
+        }
+        // val is an object
+        else if(obj[key] !== undefined) {
+
+            if(val.x !== undefined) {
+                obj[key].x = val.x;
+            }
+            if(val.y !== undefined) {
+                obj[key].y = val.y;
+            }
+        }
+    },
+    _setSize: function(obj, key, val) {
+        // val is an array
+        if(Kinetic.GlobalObject._isArray(val)) {
+            obj[key].x = val[2];
+            obj[key].y = val[3];
+        }
+        // val is an object
+        else if(obj[key] !== undefined) {
+
+            if(val.width !== undefined) {
+                obj[key].width = val.width;
+            }
+            if(val.y !== undefined) {
+                obj[key].height = val.height;
+            }
+        }
     }
 };
 

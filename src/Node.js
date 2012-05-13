@@ -178,13 +178,13 @@ Kinetic.Node.prototype = {
                          * config objects
                          */
                         case 'centerOffset':
-                            this._setPointAttr(key, val);
+                            go._setXY(this.attrs, key, val);
                             break;
                         case 'shadowOffset':
-                            this._setPointAttr(key, val);
+                            go._setXY(this.attrs, key, val);
                             break;
                         case 'scale':
-                            this._setPointAttr(key, val);
+                            go._setXY(this.attrs, key, val);
                             break;
                         case 'points':
                             /*
@@ -210,13 +210,8 @@ Kinetic.Node.prototype = {
                             }
                             break;
                         case 'crop':
-                            this._setPointAttr(key, val);
-                            if(val.width !== undefined) {
-                                this.attrs[key].width = val.width;
-                            }
-                            if(val.height !== undefined) {
-                                this.attrs[key].height = val.height;
-                            }
+                            go._setXY(this.attrs, key, val);
+                            go._setSize(this.attrs, key, val);
                             break;
                         default:
                             this.attrs[key] = config[key];
@@ -878,25 +873,6 @@ Kinetic.Node.prototype = {
         // simulate event bubbling
         if(!evt.cancelBubble && node.parent.nodeType !== 'Stage') {
             this._handleEvent(node.parent, mouseoverParent, mouseoutParent, eventType, evt);
-        }
-    },
-    /**
-     * set point attr
-     */
-    _setPointAttr: function(key, val) {
-        if(Kinetic.GlobalObject._isArray(val)) {
-            // val is an array
-            this.attrs[key].x = val[0];
-            this.attrs[key].y = val[1];
-        }
-        else {
-            // val is an object
-            if(val.x !== undefined) {
-                this.attrs[key].x = val.x;
-            }
-            if(val.y !== undefined) {
-                this.attrs[key].y = val.y;
-            }
         }
     }
 };
