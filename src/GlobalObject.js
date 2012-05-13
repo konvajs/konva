@@ -134,7 +134,12 @@ Kinetic.GlobalObject = {
     _isObject: function(obj) {
         return obj === Object(obj);
     },
-    _getPoint: function(arg) {
+    /*
+     * takes the arguments passed into a function and 
+     * creates a point object from it.  The arguments
+     * can be an obect or an array
+     */
+    _getXY: function(arg) {
         if(arg.length === 1) {
             return arg[0];
         }

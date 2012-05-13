@@ -367,7 +367,7 @@ Kinetic.Stage.prototype = {
      * @param {Object} point
      */
     getIntersections: function() {
-        var pos = Kinetic.GlobalObject._getPoint(arguments);
+        var pos = Kinetic.GlobalObject._getXY(arguments);
         var arr = [];
         var shapes = this.get('Shape');
 

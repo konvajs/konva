@@ -162,7 +162,12 @@ Kinetic.GlobalObject = {
     _isObject: function(obj) {
         return obj === Object(obj);
     },
-    _getPoint: function(arg) {
+    /*
+     * takes the arguments passed into a function and 
+     * creates a point object from it.  The arguments
+     * can be an obect or an array
+     */
+    _getXY: function(arg) {
         if(arg.length === 1) {
             return arg[0];
         }
@@ -544,7 +549,7 @@ Kinetic.Node.prototype = {
      * @param {Object} point
      */
     setPosition: function() {
-        var pos = Kinetic.GlobalObject._getPoint(arguments);
+        var pos = Kinetic.GlobalObject._getXY(arguments);
         this.attrs.x = pos.x;
         this.attrs.y = pos.y;
     },
@@ -608,7 +613,7 @@ Kinetic.Node.prototype = {
      *  y property
      */
     setAbsolutePosition: function() {
-        var pos = Kinetic.GlobalObject._getPoint(arguments);
+        var pos = Kinetic.GlobalObject._getXY(arguments);
         /*
          * save rotation and scale and
          * then remove them from the transform
@@ -876,7 +881,7 @@ Kinetic.Node.prototype = {
      * @param {Number} y
      */
     setCenterOffset: function() {
-        var pos = Kinetic.GlobalObject._getPoint(arguments);
+        var pos = Kinetic.GlobalObject._getXY(arguments);
         this.attrs.centerOffset.x = pos.x;
         this.attrs.centerOffset.y = pos.y;
     },
@@ -1676,7 +1681,7 @@ Kinetic.Stage.prototype = {
      * @param {Object} point
      */
     getIntersections: function() {
-        var pos = Kinetic.GlobalObject._getPoint(arguments);
+        var pos = Kinetic.GlobalObject._getXY(arguments);
         var arr = [];
         var shapes = this.get('Shape');
 
@@ -2452,11 +2457,16 @@ Kinetic.GlobalObject.extend(Kinetic.Group, Kinetic.Node);
  * @constructor
  * @augments Kinetic.Node
  * @param {Object} config
- * @config {String|CanvasGradient|CanvasPattern} [fill] fill
+ * @config {String|Object} [fill] fill can be a string color, a linear gradient object, a radial
+ *  gradient object, or a pattern object.
  * @config {String} [stroke] stroke color
  * @config {Number} [strokeWidth] stroke width
- * @config {String} [lineJoin] line join.  Can be "miter", "round", or "bevel".  The default
+ * @config {String} [lineJoin] line join can be "miter", "round", or "bevel".  The default
  *  is "miter"
+ * @config {String} [shadowColor] shadow color
+ * @config {Number} [shadowBlur] shadow blur
+ * @config {Object|Array} [shadowOffset] shadow offset. The shadow offset obect should contain an object
+ *  with an x and y property, or an array with two elements that represent x, y
  * @config {String} [detectionType] shape detection type.  Can be "path" or "pixel".
  *  The default is "path" because it performs better
  */
@@ -2547,8 +2557,8 @@ Kinetic.Shape.prototype = {
         }
     },
     /**
-     * helper method to fill and stroke a shape
-     *  based on its fill, stroke, and strokeWidth, properties
+     * helper method to fill the shape with a color, linear gradient,
+     * radial gradient, or pattern
      */
     fill: function() {
         var context = this.getContext();
@@ -2576,8 +2586,8 @@ Kinetic.Shape.prototype = {
                 var repeat = fill.repeat === undefined ? 'repeat' : fill.repeat;
                 f = context.createPattern(fill.image, repeat);
 
-				context.save();
-				context.translate(o.pos.x, o.pos.y);
+                context.save();
+                context.translate(o.pos.x, o.pos.y);
                 context.fillStyle = f;
                 context.fill();
                 context.restore();
@@ -2636,9 +2646,9 @@ Kinetic.Shape.prototype = {
         }
     },
     /**
-     * set fill which can be a color, gradient object,
-     *  or pattern object
-     * @param {String|CanvasGradient|CanvasPattern} fill
+     * set fill which can be a color, linear gradient object,
+     *  radial gradient object, or pattern object
+     * @param {String|Object} fill
      */
     setFill: function(fill) {
         this.attrs.fill = fill;
@@ -2664,8 +2674,8 @@ Kinetic.Shape.prototype = {
     },
     /**
      * set line join
-     * @param {String} lineJoin.  Can be "miter", "round", or "bevel".  The
-     *  default is "miter"
+     * @param {String} lineJoin.  Can be miter, round, or bevel.  The
+     *  default is miter
      */
     setLineJoin: function(lineJoin) {
         this.attrs.lineJoin = lineJoin;
@@ -2704,7 +2714,7 @@ Kinetic.Shape.prototype = {
     },
     /**
      * set shadow blur
-     * @param {Integer}
+     * @param {Number}
      */
     setShadowBlur: function(blur) {
         this.attrs.shadowBlur = blur;
@@ -2717,10 +2727,11 @@ Kinetic.Shape.prototype = {
     },
     /**
      * set shadow offset
-     * @param {Object} offset
+     * @param {Object|Array} offset
      */
-    setShadowOffset: function(offset) {
-        this.attrs.shadowOffset = offset;
+    setShadowOffset: function() {
+        var pos = Kinetic.GlobalObject._getXY(arguments);
+        this.attrs.shadowOffset = pos;
     },
     /**
      * get shadow offset
@@ -2762,7 +2773,7 @@ Kinetic.Shape.prototype = {
      * determines if point is in the shape
      */
     intersects: function() {
-        var pos = Kinetic.GlobalObject._getPoint(arguments);
+        var pos = Kinetic.GlobalObject._getXY(arguments);
         var stage = this.getStage();
 
         if(this.attrs.detectionType === 'path') {
