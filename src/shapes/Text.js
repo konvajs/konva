@@ -29,7 +29,7 @@ Kinetic.Text = function(config) {
         context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'pt ' + this.attrs.fontFamily;
         context.textBaseline = 'middle';
         var textHeight = this.getTextHeight();
-        var textWidth = this.getTextWidth();
+        var textWidth = this.getMaxWidth() === undefined ? this.getTextWidth() : this.getMaxWidth();
         var p = this.attrs.padding;
         var x = 0;
         var y = 0;
@@ -63,16 +63,19 @@ Kinetic.Text = function(config) {
         var tx = p + x;
         var ty = textHeight / 2 + p + y;
 
+        // clipping region for max width
+        context.save();
+        if(this.attrs.maxWidth !== undefined) {
+            context.beginPath();
+            context.rect(x, y, textWidth + p, textHeight + p * 2);
+            context.closePath();
+            context.clip();
+        }
+
         // draw text
         if(this.attrs.textFill !== undefined) {
             context.fillStyle = this.attrs.textFill;
-
-            if (this.attrs.maxWidth !== undefined) {
-                context.fillText(this.attrs.text, tx, ty, this.attrs.maxWidth);
-            }
-            else {
-                context.fillText(this.attrs.text, tx, ty);
-            }
+            context.fillText(this.attrs.text, tx, ty);
         }
         if(this.attrs.textStroke !== undefined || this.attrs.textStrokeWidth !== undefined) {
             // defaults
@@ -84,14 +87,9 @@ Kinetic.Text = function(config) {
             }
             context.lineWidth = this.attrs.textStrokeWidth;
             context.strokeStyle = this.attrs.textStroke;
-
-            if (this.attrs.maxWidth !== undefined) {
-                context.strokeText(this.attrs.text, tx, ty, this.attrs.maxWidth);
-            }
-            else {
-                context.strokeText(this.attrs.text, tx, ty);
-            }
+            context.strokeText(this.attrs.text, tx, ty);
         }
+        context.restore();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
@@ -274,8 +272,8 @@ Kinetic.Text.prototype = {
         return this.attrs.maxWidth;
     },
     /**
-     * set max width
-     * @param {float} max width
+     * set width
+     * @param {Number} max width
      */
     setMaxWidth: function(maxWidth) {
         this.attrs.maxWidth = maxWidth;

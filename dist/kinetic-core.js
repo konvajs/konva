@@ -3387,7 +3387,8 @@ Kinetic.Text = function(config) {
         align: 'left',
         verticalAlign: 'top',
         padding: 0,
-        fontStyle: 'normal'
+        fontStyle: 'normal',
+        maxWidth: undefined
     });
 
     this.shapeType = "Text";
@@ -3397,7 +3398,7 @@ Kinetic.Text = function(config) {
         context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'pt ' + this.attrs.fontFamily;
         context.textBaseline = 'middle';
         var textHeight = this.getTextHeight();
-        var textWidth = this.getTextWidth();
+        var textWidth = this.getMaxWidth() === undefined ? this.getTextWidth() : this.getMaxWidth();
         var p = this.attrs.padding;
         var x = 0;
         var y = 0;
@@ -3431,6 +3432,15 @@ Kinetic.Text = function(config) {
         var tx = p + x;
         var ty = textHeight / 2 + p + y;
 
+        // clipping region for max width
+        context.save();
+        if(this.attrs.maxWidth !== undefined) {
+            context.beginPath();
+            context.rect(x, y, textWidth + p, textHeight + p * 2);
+            context.closePath();
+            context.clip();
+        }
+
         // draw text
         if(this.attrs.textFill !== undefined) {
             context.fillStyle = this.attrs.textFill;
@@ -3448,6 +3458,7 @@ Kinetic.Text = function(config) {
             context.strokeStyle = this.attrs.textStroke;
             context.strokeText(this.attrs.text, tx, ty);
         }
+        context.restore();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
@@ -3622,6 +3633,19 @@ Kinetic.Text.prototype = {
             width: metrics.width,
             height: parseInt(this.attrs.fontSize, 10)
         };
+    },
+    /**
+     * get max width in pixels
+     */
+    getMaxWidth: function() {
+        return this.attrs.maxWidth;
+    },
+    /**
+     * set width
+     * @param {Number} max width
+     */
+    setMaxWidth: function(maxWidth) {
+        this.attrs.maxWidth = maxWidth;
     }
 };
 // extend Shape

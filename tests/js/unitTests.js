@@ -1888,7 +1888,8 @@ Test.prototype.tests = {
             fontStyle: 'normal',
             //draggable: true,
             align: 'center',
-            verticalAlign: 'middle'
+            verticalAlign: 'middle',
+            maxWidth: 200
         });
 
         layer.add(text);
@@ -1902,6 +1903,7 @@ Test.prototype.tests = {
         test(text.getFontStyle() == 'normal', 'font style should be normal');
         text.setPadding(20);
         test(text.getPadding() === 20, 'padding should be 20');
+        test(text.getMaxWidth() === 200, 'max width should be 200');
 
         stage.add(layer);
 
