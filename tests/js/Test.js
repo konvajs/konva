@@ -11,7 +11,6 @@ function log(message) {
  */
 function Test() {
     this.testOnly = '';
-    this.counter = 0;
 }
 /**
  * Test methods

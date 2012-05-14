@@ -4021,29 +4021,25 @@ Kinetic.Transition = function(node, config) {
     this.node = node;
     this.config = config;
     this.tweens = [];
+    var that = this;
 
     // add tween for each property
-    for(var key in config) {
-        if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
-            if(config[key].x === undefined && config[key].y === undefined && config[key].width === undefined && config[key].height === undefined) {
-                this.add(this._getTween(key, config));
-            }
-
-            if(config[key].x !== undefined) {
-                this.add(this._getComponentTween(key, 'x', config));
-            }
-            if(config[key].y !== undefined) {
-                this.add(this._getComponentTween(key, 'y', config));
-            }
-            if(config[key].width !== undefined) {
-                this.add(this._getComponentTween(key, 'width', config));
-            }
-            if(config[key].height !== undefined) {
-                this.add(this._getComponentTween(key, 'height', config));
+    function addTween(c, attrs) {
+        for(var key in c) {
+            if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
+                // if val is an object then traverse
+                if(Kinetic.GlobalObject._isObject(c[key])) {
+                   addTween(c[key], attrs[key]); 
+                }
+                else {
+                    that.add(that._getTween(attrs, key, c[key]));
+                }
             }
         }
     }
-
+    
+    addTween(config, node.attrs);
+    
     var finishedTweens = 0;
     var that = this;
     for(var n = 0; n < this.tweens.length; n++) {
@@ -4099,7 +4095,7 @@ Kinetic.Transition.prototype = {
             this.tweens[n].resume();
         }
     },
-    _getTween: function(key) {
+    _getTween: function(key, prop, val) {
         var config = this.config;
         var node = this.node;
         var easing = config.easing;
@@ -4108,25 +4104,11 @@ Kinetic.Transition.prototype = {
         }
 
         var tween = new Kinetic.Tween(node, function(i) {
-            node.attrs[key] = i;
-        }, Kinetic.Tweens[easing], node.attrs[key], config[key], config.duration);
+            key[prop] = i;
+        }, Kinetic.Tweens[easing], key[prop], val, config.duration);
 
         return tween;
-    },
-    _getComponentTween: function(key, prop) {
-        var config = this.config;
-        var node = this.node;
-        var easing = config.easing;
-        if(easing === undefined) {
-            easing = 'linear';
-        }
-
-        var tween = new Kinetic.Tween(node, function(i) {
-            node.attrs[key][prop] = i;
-        }, Kinetic.Tweens[easing], node.attrs[key][prop], config[key][prop], config.duration);
-
-        return tween;
-    },
+    }
 };
 
 /**

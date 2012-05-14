@@ -141,11 +141,23 @@ Test.prototype.tests = {
                 y: 0.5
             }
         });
+       
 
         group.add(circle);
         layer.add(group);
         stage.add(layer);
 
+		/*
+        circle.transitionTo({
+        	duration: 1,
+        	fill: {
+        		start: {
+        			x: 20
+        		}
+        	}
+        });
+        */
+        
     },
     'STAGE - add shape with alpha': function(containerId) {
         var stage = new Kinetic.Stage({
