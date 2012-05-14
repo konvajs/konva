@@ -35,7 +35,7 @@ Kinetic.Image = function(config) {
             this.applyStyles();
 
             // if cropping
-            if(cropWidth !== undefined && cropHeight !== undefined) {
+            if(cropWidth !== undefined && cropHeight !== undefined) {	
                 context.drawImage(this.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height);
             }
             // no cropping

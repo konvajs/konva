@@ -1019,6 +1019,18 @@ Test.prototype.tests = {
             test(crop.y === 20, 'crop y should be 20');
             test(crop.width === 200, 'crop width should be 200');
             test(crop.height === 250, 'crop height should be 250');
+            
+            /*
+            darth.transitionTo({
+            	crop: {
+
+            		width: 100,
+            		height: 125
+
+            	},
+            	duration: 1
+            });
+            */
         };
         imageObj.src = '../darth-vader.jpg';
     },

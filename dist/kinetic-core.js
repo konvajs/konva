@@ -3048,7 +3048,7 @@ Kinetic.Image = function(config) {
             this.applyStyles();
 
             // if cropping
-            if(cropWidth !== undefined && cropHeight !== undefined) {
+            if(cropWidth !== undefined && cropHeight !== undefined) {	
                 context.drawImage(this.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height);
             }
             // no cropping
@@ -4025,14 +4025,21 @@ Kinetic.Transition = function(node, config) {
     // add tween for each property
     for(var key in config) {
         if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
-            if(config[key].x === undefined && config[key].y === undefined) {
+            if(config[key].x === undefined && config[key].y === undefined && config[key].width === undefined && config[key].height === undefined) {
                 this.add(this._getTween(key, config));
             }
+
             if(config[key].x !== undefined) {
                 this.add(this._getComponentTween(key, 'x', config));
             }
             if(config[key].y !== undefined) {
                 this.add(this._getComponentTween(key, 'y', config));
+            }
+            if(config[key].width !== undefined) {
+                this.add(this._getComponentTween(key, 'width', config));
+            }
+            if(config[key].height !== undefined) {
+                this.add(this._getComponentTween(key, 'height', config));
             }
         }
     }

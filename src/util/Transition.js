@@ -17,14 +17,21 @@ Kinetic.Transition = function(node, config) {
     // add tween for each property
     for(var key in config) {
         if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
-            if(config[key].x === undefined && config[key].y === undefined) {
+            if(config[key].x === undefined && config[key].y === undefined && config[key].width === undefined && config[key].height === undefined) {
                 this.add(this._getTween(key, config));
             }
+
             if(config[key].x !== undefined) {
                 this.add(this._getComponentTween(key, 'x', config));
             }
             if(config[key].y !== undefined) {
                 this.add(this._getComponentTween(key, 'y', config));
+            }
+            if(config[key].width !== undefined) {
+                this.add(this._getComponentTween(key, 'width', config));
+            }
+            if(config[key].height !== undefined) {
+                this.add(this._getComponentTween(key, 'height', config));
             }
         }
     }
