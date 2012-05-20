@@ -23,7 +23,11 @@ Kinetic.Shape = function(config) {
         stroke: undefined,
         strokeWidth: undefined,
         lineJoin: undefined,
-        detectionType: 'path'
+        detectionType: 'path',
+        shadow: {
+            blur: 5,
+            alpha: 1
+        }
     });
 
     this.data = [];
@@ -73,28 +77,54 @@ Kinetic.Shape.prototype = {
         }
     },
     /**
-     * applies shadows, fills, and styles
+     * applies shadow, fill, and stroke
      */
     applyStyles: function() {
         var context = this.getContext();
+        var aa = this.getAbsoluteAlpha();
+
         /*
          * if fill is defined, apply shadow to
          * fill only and not the stroke
          */
         if(!!this.attrs.fill) {
+            var sa = this.attrs.shadow.alpha;
+
             context.save();
-            this.applyShadow();
-            this.fill();
+
+            if(sa === 1) {
+                this.applyShadow();
+                this.fill();
+            }
+            else {
+                context.save();
+                context.globalAlpha = sa * aa;
+                this.applyShadow();
+                this.fill();
+                context.restore();
+                this.fill();
+            }
+
             context.restore();
             this.stroke();
         }
         /*
-         * if fill is not defined, try applying the shadow
+         * if fill is not defined, apply the shadow
          * to the stroke
          */
         else {
-            this.applyShadow();
-            this.stroke();
+            if(sa === 1) {
+                this.applyShadow();
+                this.stroke();
+            }
+            else {
+                context.save();
+                context.globalAlpha = sa * aa;
+                this.applyShadow();
+                this.stroke();
+                context.restore();
+                this.stroke();
+            }
         }
     },
     /**
@@ -151,9 +181,6 @@ Kinetic.Shape.prototype = {
                 context.fillStyle = f;
                 context.fill();
             }
-
-            // TODO: if using fill offset, save context, translate offset, fill(), then restore
-
         }
     },
     /**
@@ -174,7 +201,7 @@ Kinetic.Shape.prototype = {
         var context = this.getContext();
         var s = this.attrs.shadow;
 
-        if(s !== undefined) {
+        if(s.color !== undefined) {
             context.shadowColor = s.color;
             context.shadowBlur = s.blur;
             context.shadowOffsetX = s.offset.x;

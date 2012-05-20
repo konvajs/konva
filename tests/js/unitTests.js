@@ -1490,6 +1490,14 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
+		var rect = new Kinetic.Rect({
+        	x: 250,
+        	y: 75,
+        	width: 100,
+        	height: 100,
+        	fill: 'red'
+        });
+        
         var star = new Kinetic.Star({
             x: 200,
             y: 100,
@@ -1501,14 +1509,17 @@ Test.prototype.tests = {
             strokeWidth: 5,
             lineJoin: "round",
             shadow: {
-            	color: '#aaa',
+            	color: 'black',
             	blur: 10,
-            	offset: [20, 20]
+            	offset: [20, 20],
+            	alpha: 0.5
             },
             draggable: true
         });
 
+		layer.add(rect);
         layer.add(star);
+       
         stage.add(layer);
 
         test(star.getLineJoin() === 'round', 'lineJoin property should be round');
