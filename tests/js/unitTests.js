@@ -40,6 +40,8 @@ Test.prototype.tests = {
         stage.add(layer);
         layer.add(group);
         layer.draw();
+        
+        console.log(circle);
     },
     'STAGE - add shape with linear gradient fill': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -318,8 +320,8 @@ Test.prototype.tests = {
             height: 200
         });
 
-        var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
-        stage.load(json);
+        //var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
+        //stage.load(json);
 
         //test(stage.toJSON() === json, "serialized stage is incorrect");
     },
@@ -357,6 +359,7 @@ Test.prototype.tests = {
         var expectedJson = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
         //test(stage.toJSON() === expectedJson, "problem with serialization");
     },
+    /*
     'STAGE - load stage with custom shape using json': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -373,8 +376,8 @@ Test.prototype.tests = {
             context.closePath();
             this.applyStyles();
         };
-        var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
-        stage.load(json);
+        //var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
+        //stage.load(json);
 
         var customShape = stage.get('#myTriangle')[0];
 
@@ -386,6 +389,7 @@ Test.prototype.tests = {
 
         //test(stage.toJSON() === json, "serialized stage is incorrect");
     },
+    */
     'STAGE - set stage size': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1026,7 +1030,7 @@ Test.prototype.tests = {
             test(darth.getCenterOffset().y === 30, 'center offset y should be 30');
 
             var crop = darth.getCrop();
-
+            
             test(crop.x === 20, 'crop x should be 20');
             test(crop.y === 20, 'crop y should be 20');
             test(crop.width === 200, 'crop width should be 200');
@@ -1183,12 +1187,13 @@ Test.prototype.tests = {
             layer.add(darth);
             stage.add(layer);
 
-            var json = stage.toJSON();
+            //var json = stage.toJSON();
 
             //test(json === '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"crop":{"x":0,"y":0},"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}');
         };
         imageObj.src = '../darth-vader.jpg';
     },
+    /*
     'STAGE - load stage with an image': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
@@ -1200,7 +1205,7 @@ Test.prototype.tests = {
 
             var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"crop":{"x":0,"y":0},"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}';
 
-            stage.load(json);
+            //stage.load(json);
 
             var image = stage.get('#darth')[0];
 
@@ -1211,6 +1216,7 @@ Test.prototype.tests = {
         };
         imageObj.src = '../darth-vader.jpg';
     },
+    */
     'SHAPES - add polygon': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1297,6 +1303,7 @@ Test.prototype.tests = {
         });
 
         line.setPoints([1, 2, 3, 4]);
+        
         test(line.getPoints()[0].x === 1, 'first point x should be 1');
         
         line.setPoints([73, 160, 340, 23]);
@@ -1334,9 +1341,11 @@ Test.prototype.tests = {
             lineJoin: 'round',
             draggable: true,
             dashArray: [30, 10, 0, 10, 10, 20],
-            shadowColor: '#aaa',
-            shadowBlur: 10,
-            shadowOffset: [20, 20],
+            shadow: {
+            	color: '#aaa',
+            	blur: 10,
+            	offset: [20 , 20]
+            }
         });
 
         layer.add(line);
@@ -1367,6 +1376,7 @@ Test.prototype.tests = {
             strokeWidth: 5,
             name: 'foobar',
             centerOffset: {
+            	x: 0,
                 y: -50
             }
         });
@@ -1460,6 +1470,7 @@ Test.prototype.tests = {
             strokeWidth: 5,
             name: 'foobar',
             centerOffset: {
+            	x: 0,
                 y: -70
             },
             scale: {
@@ -1489,9 +1500,11 @@ Test.prototype.tests = {
             stroke: 'blue',
             strokeWidth: 5,
             lineJoin: "round",
-            shadowColor: '#aaa',
-            shadowBlur: 10,
-            shadowOffset: [20, 20],
+            shadow: {
+            	color: '#aaa',
+            	blur: 10,
+            	offset: [20, 20]
+            },
             draggable: true
         });
 
@@ -1593,7 +1606,7 @@ Test.prototype.tests = {
         test(rect.getCenterOffset().y === 20, 'center offset y should be 20');
 
         rect.setCenterOffset(40, 40);
-
+        
         test(rect.getCenterOffset().x === 40, 'center offset x should be 40');
         test(rect.getCenterOffset().y === 40, 'center offset y should be 40');
 

@@ -7,16 +7,13 @@
  * @constructor
  * @augments Kinetic.Node
  * @param {Object} config
- * @config {String|Object} [fill] fill can be a string color, a linear gradient object, a radial
+ * @config {String|Object} [fill] can be a string color, a linear gradient object, a radial
  *  gradient object, or a pattern object.
  * @config {String} [stroke] stroke color
  * @config {Number} [strokeWidth] stroke width
  * @config {String} [lineJoin] line join can be "miter", "round", or "bevel".  The default
  *  is "miter"
- * @config {String} [shadowColor] shadow color
- * @config {Number} [shadowBlur] shadow blur
- * @config {Object|Array} [shadowOffset] shadow offset. The shadow offset obect should contain an object
- *  with an x and y property, or an array with two elements that represent x, y
+ * @config {Object} [shadow] shadow object
  * @config {String} [detectionType] shape detection type.  Can be "path" or "pixel".
  *  The default is "path" because it performs better
  */
@@ -26,13 +23,7 @@ Kinetic.Shape = function(config) {
         stroke: undefined,
         strokeWidth: undefined,
         lineJoin: undefined,
-        detectionType: 'path',
-        shadowColor: undefined,
-        shadowBlur: 5,
-        shadowOffset: {
-            x: 0,
-            y: 0
-        }
+        detectionType: 'path'
     });
 
     this.data = [];
@@ -126,18 +117,11 @@ Kinetic.Shape.prototype = {
             }
             // pattern fill
             else if(fill.image !== undefined) {
-                var o = {};
-
-                // set offset o
-                if(fill.offset !== undefined) {
-                    Kinetic.GlobalObject._setXY(o, 'pos', fill.offset);
-                }
-
                 var repeat = fill.repeat === undefined ? 'repeat' : fill.repeat;
                 f = context.createPattern(fill.image, repeat);
 
                 context.save();
-                context.translate(o.pos.x, o.pos.y);
+                context.translate(fill.offset.x, fill.offset.y);
                 context.fillStyle = f;
                 context.fill();
                 context.restore();
@@ -183,16 +167,18 @@ Kinetic.Shape.prototype = {
         }
     },
     /**
-     * apply shadow based on shadowColor, shadowBlur,
-     * and shadowOffset properties
+     * apply shadow based on shadow color, blur,
+     * and offset properties
      */
     applyShadow: function() {
         var context = this.getContext();
-        if(this.attrs.shadowColor !== undefined) {
-            context.shadowColor = this.attrs.shadowColor;
-            context.shadowBlur = this.attrs.shadowBlur;
-            context.shadowOffsetX = this.attrs.shadowOffset.x;
-            context.shadowOffsetY = this.attrs.shadowOffset.y;
+        var s = this.attrs.shadow;
+
+        if(s !== undefined) {
+            context.shadowColor = s.color;
+            context.shadowBlur = s.blur;
+            context.shadowOffsetX = s.offset.x;
+            context.shadowOffsetY = s.offset.y;
         }
     },
     /**
@@ -250,52 +236,24 @@ Kinetic.Shape.prototype = {
         return this.attrs.strokeWidth;
     },
     /**
-     * set shadow color
-     * @param {String} color
+     * set shadow object
+     * @param {Object} config
      */
-    setShadowColor: function(color) {
-        this.attrs.shadowColor = color;
+    setShadowColor: function(config) {
+        this.attrs.shadow = config;
     },
     /**
-     * get shadow color
+     * get shadow object
      */
-    getShadowColor: function() {
-        return this.attrs.shadowColor;
-    },
-    /**
-     * set shadow blur
-     * @param {Number}
-     */
-    setShadowBlur: function(blur) {
-        this.attrs.shadowBlur = blur;
-    },
-    /**
-     * get shadow blur
-     */
-    getShadowBlur: function() {
-        return this.attrs.shadowBlur;
-    },
-    /**
-     * set shadow offset
-     * @param {Object|Array} offset
-     */
-    setShadowOffset: function() {
-        var c = {};
-        c.shadowOffset = Kinetic.GlobalObject._getXY(arguments);
-        this.setAttrs(c);
-    },
-    /**
-     * get shadow offset
-     */
-    getShadowOffset: function() {
-        return this.attrs.shadowOffset;
+    getShadow: function() {
+        return this.attrs.shadow;
     },
     /**
      * set draw function
      * @param {Function} func drawing function
      */
     setDrawFunc: function(func) {
-        this.drawFunc = func;
+        this.attrs.drawFunc = func;
     },
     /**
      * save shape data when using pixel detection.
@@ -342,7 +300,7 @@ Kinetic.Shape.prototype = {
         }
     },
     _draw: function(layer) {
-        if(layer !== undefined && this.drawFunc !== undefined) {
+        if(layer !== undefined && this.attrs.drawFunc !== undefined) {
             var stage = layer.getStage();
             var context = layer.getContext();
             var family = [];
@@ -379,7 +337,7 @@ Kinetic.Shape.prototype = {
             this.applyLineJoin();
 
             // draw the shape
-            this.drawFunc.call(this);
+            this.attrs.drawFunc.call(this);
             context.restore();
         }
     }

@@ -143,62 +143,75 @@ Kinetic.Node.prototype = {
      */
     setAttrs: function(config) {
         var go = Kinetic.GlobalObject;
-        // set properties from config
-        if(config) {
-            for(var key in config) {
-                var val = config[key];
+        var that = this;
 
-                /*
-                 * add functions, DOM elements, and images
-                 * directly to the node
-                 */
-                if(go._isFunction(val) || go._isElement(val)) {
-                    this[key] = val;
-                }
-                /*
-                 * add all other object types to attrs object
-                 */
-                else {
-                    // handle special keys
-                    switch (key) {
-                        /*
-                         * config properties that require a method to
-                         * be set
-                         */
-                        case 'draggable':
-                            this.draggable(config[key]);
-                            break;
-                        case 'listening':
-                            this.listen(config[key]);
-                            break;
-                        case 'rotationDeg':
-                            this.attrs.rotation = config[key] * Math.PI / 180;
-                            break;
-                        /*
-                         * config objects
-                         */
-                        case 'centerOffset':
-                            go._setXY(this.attrs, key, val);
-                            break;
-                        case 'shadowOffset':
-                            go._setXY(this.attrs, key, val);
-                            break;
-                        case 'scale':
-                            go._setXY(this.attrs, key, val);
-                            break;
-                        case 'points':
-                            go._setPoints(this.attrs, key, val);
-                            break;
-                        case 'crop':
-                            go._setXY(this.attrs, key, val);
-                            go._setSize(this.attrs, key, val);
-                            break;
-                        default:
-                            this.attrs[key] = config[key];
-                            break;
+        // set properties from config
+        if(config !== undefined) {
+            function setAttrs(obj, c) {
+                for(var key in c) {
+                    var val = c[key];
+
+                    /*
+                     * if property is an object, then add an empty object
+                     * to the node and then traverse
+                     */
+                    if(go._isObject(val) && !go._isArray(val) && !go._isElement(val)) {
+                        if(obj[key] === undefined) {
+                            obj[key] = {};
+                        }
+                        setAttrs(obj[key], val);
+                    }
+                    /*
+                     * add all other object types to attrs object
+                     */
+                    else {
+                        // handle special keys
+                        switch (key) {
+                            /*
+                             * config properties that require a method to
+                             * be set
+                             */
+                            case 'draggable':
+                                that.draggable(c[key]);
+                                break;
+                            case 'listening':
+                                that.listen(c[key]);
+                                break;
+                            case 'rotationDeg':
+                                obj.rotation = c[key] * Math.PI / 180;
+                                break;
+                            /*
+                             * config objects
+                             */
+                            case 'centerOffset':
+                                obj[key] = go._getXY(val);
+                                break;
+                            case 'offset':
+                                obj[key] = go._getXY(val);
+                                break;
+                            case 'scale':
+                                obj[key] = go._getXY(val);
+                                break;
+                            case 'points':
+                                obj[key] = go._getPoints(val);
+                                break;
+                            case 'crop':
+                                var pos = go._getXY(val);
+                                var size = go._getSize(val);
+
+                                obj[key].x = pos.x;
+                                obj[key].y = pos.y;
+                                obj[key].width = size.width;
+                                obj[key].height = size.height;
+                                break;
+                            default:
+                                obj[key] = c[key];
+                                break;
+                        }
                     }
                 }
             }
+            setAttrs(this.attrs, config);
         }
     },
     /**

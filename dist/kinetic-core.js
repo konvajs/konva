@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: May 13 2012
+ * Date: May 19 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -157,103 +157,136 @@ Kinetic.GlobalObject = {
         return !!(obj && obj.constructor && obj.call && obj.apply);
     },
     _isArray: function(obj) {
-        return Object.prototype.toString.call(obj) == '[object Array]';
+        return obj.length !== undefined;
+        //return Object.prototype.toString.call(obj) == '[object Array]';
     },
     _isObject: function(obj) {
         return obj === Object(obj);
     },
     /*
-     * takes the arguments passed into a function and
-     * creates a point object from it.  The arguments
-     * can be a point object or an array of two elements
+     * The argument can be array of integers, an object, an array of one element
+     * which is an array of integers, or an array of one element of an object
      */
     _getXY: function(arg) {
-        if(arg.length === 1) {
-            return arg[0];
+    	
+        var go = Kinetic.GlobalObject;
+
+        if(arg === undefined) {
+            return {
+                x: 0,
+                y: 0
+            };
+        }
+        if(go._isArray(arg)) {
+            if(arg.length === 1) {
+                var val = arg[0];
+
+                if(go._isArray(val)) {
+                    return {
+                        x: val[0],
+                        y: val[1]
+                    };
+                }
+                else {
+                    return val;
+                }
+            }
+            else {
+                return {
+                    x: arg[0],
+                    y: arg[1]
+                };
+            }
         }
         else {
+            return arg;
+        }
+    },
+    /*
+     * The argument can be array of integers, an object, an array of one element
+     * which is an array of two integers, an array of one element
+     * which is an array of four integers, or an array of one element
+     * of an object
+     */
+    _getSize: function(arg) {
+        var go = Kinetic.GlobalObject;
+
+        if(arg === undefined) {
             return {
-                x: arg[0],
-                y: arg[1]
+                width: 0,
+                height: 0
+            };
+        }
+
+        if(go._isArray(arg)) {
+            if(arg.length === 1) {
+                var val = arg[0];
+
+                if(go._isArray(val)) {
+                    if(val.length === 2) {
+                        return {
+                            width: val[0],
+                            height: val[1]
+                        };
+                    }
+                    // should be an array of 4 elements
+                    else {
+                        return {
+                            width: val[2],
+                            height: val[3]
+                        };
+                    }
+                }
+                else {
+                    return val;
+                }
             }
+            else if(arg.length === 2) {
+                return {
+                    width: arg[0],
+                    height: arg[1]
+                };
+            }
+            // array length should be 4
+            else {
+                return {
+                    width: arg[2],
+                    height: arg[3]
+                };
+            }
+        }
+        else {
+            return arg;
         }
     },
     /*
-     * val will be either a point object or an
-     * array with two elements
-     */
-    _setXY: function(obj, key, val) {
-        if(obj[key] === undefined) {
-            obj[key] = {};
-        }
-
-        // val is an array
-        if(Kinetic.GlobalObject._isArray(val)) {
-            obj[key].x = val[0];
-            obj[key].y = val[1];
-        }
-        // val is an object
-        else if(obj[key] !== undefined) {
-
-            if(val.x !== undefined) {
-                obj[key].x = val.x;
-            }
-            if(val.y !== undefined) {
-                obj[key].y = val.y;
-            }
-        }
-    },
-    /*
-     * val will be either an object with height and
-     *  width properties or an array with four elements
-     *  in which the last two elements are width and height
-     */
-    _setSize: function(obj, key, val) {
-        if(obj[key] === undefined) {
-            obj[key] = {};
-        }
-
-        // val is an array
-        if(Kinetic.GlobalObject._isArray(val)) {
-            obj[key].width = val[2];
-            obj[key].height = val[3];
-        }
-        // val is an object
-        else if(obj[key] !== undefined) {
-
-            if(val.width !== undefined) {
-                obj[key].width = val.width;
-            }
-            if(val.y !== undefined) {
-                obj[key].height = val.height;
-            }
-        }
-    },
-    /*
-     * val will be either an array of numbers or
+     * arg will be an array of numbers or
      *  an array of point objects
      */
-    _setPoints: function(obj, key, val) {
-        /*
-         * if points contains an array of objects, just set
-         * the attr normally
-         */
-        if(this._isObject(val[0])) {
-            obj[key] = val;
+    _getPoints: function(arg) {
+        if(arg === undefined) {
+            return [];
         }
+
+        // an array of objects
+        if(this._isObject(arg[0])) {
+            return arg;
+        }
+        // an array of integers
         else {
             /*
              * convert array of numbers into an array
              * of objects containing x, y
              */
             var arr = [];
-            for(var n = 0; n < val.length; n += 2) {
+            for(var n = 0; n < arg.length; n += 2) {
                 arr.push({
-                    x: val[n],
-                    y: val[n + 1]
+                    x: arg[n],
+                    y: arg[n + 1]
                 });
             }
-            obj[key] = arr;
+
+            return arr;
         }
     }
 };
@@ -410,62 +443,75 @@ Kinetic.Node.prototype = {
      */
     setAttrs: function(config) {
         var go = Kinetic.GlobalObject;
-        // set properties from config
-        if(config) {
-            for(var key in config) {
-                var val = config[key];
+        var that = this;
 
-                /*
-                 * add functions, DOM elements, and images
-                 * directly to the node
-                 */
-                if(go._isFunction(val) || go._isElement(val)) {
-                    this[key] = val;
-                }
-                /*
-                 * add all other object types to attrs object
-                 */
-                else {
-                    // handle special keys
-                    switch (key) {
-                        /*
-                         * config properties that require a method to
-                         * be set
-                         */
-                        case 'draggable':
-                            this.draggable(config[key]);
-                            break;
-                        case 'listening':
-                            this.listen(config[key]);
-                            break;
-                        case 'rotationDeg':
-                            this.attrs.rotation = config[key] * Math.PI / 180;
-                            break;
-                        /*
-                         * config objects
-                         */
-                        case 'centerOffset':
-                            go._setXY(this.attrs, key, val);
-                            break;
-                        case 'shadowOffset':
-                            go._setXY(this.attrs, key, val);
-                            break;
-                        case 'scale':
-                            go._setXY(this.attrs, key, val);
-                            break;
-                        case 'points':
-                            go._setPoints(this.attrs, key, val);
-                            break;
-                        case 'crop':
-                            go._setXY(this.attrs, key, val);
-                            go._setSize(this.attrs, key, val);
-                            break;
-                        default:
-                            this.attrs[key] = config[key];
-                            break;
+        // set properties from config
+        if(config !== undefined) {
+            function setAttrs(obj, c) {
+                for(var key in c) {
+                    var val = c[key];
+
+                    /*
+                     * if property is an object, then add an empty object
+                     * to the node and then traverse
+                     */
+                    if(go._isObject(val) && !go._isArray(val) && !go._isElement(val)) {
+                        if(obj[key] === undefined) {
+                            obj[key] = {};
+                        }
+                        setAttrs(obj[key], val);
+                    }
+                    /*
+                     * add all other object types to attrs object
+                     */
+                    else {
+                        // handle special keys
+                        switch (key) {
+                            /*
+                             * config properties that require a method to
+                             * be set
+                             */
+                            case 'draggable':
+                                that.draggable(c[key]);
+                                break;
+                            case 'listening':
+                                that.listen(c[key]);
+                                break;
+                            case 'rotationDeg':
+                                obj.rotation = c[key] * Math.PI / 180;
+                                break;
+                            /*
+                             * config objects
+                             */
+                            case 'centerOffset':
+                                obj[key] = go._getXY(val);
+                                break;
+                            case 'offset':
+                                obj[key] = go._getXY(val);
+                                break;
+                            case 'scale':
+                                obj[key] = go._getXY(val);
+                                break;
+                            case 'points':
+                                obj[key] = go._getPoints(val);
+                                break;
+                            case 'crop':
+                                var pos = go._getXY(val);
+                                var size = go._getSize(val);
+
+                                obj[key].x = pos.x;
+                                obj[key].y = pos.y;
+                                obj[key].width = size.width;
+                                obj[key].height = size.height;
+                                break;
+                            default:
+                                obj[key] = c[key];
+                                break;
+                        }
                     }
                 }
             }
+            setAttrs(this.attrs, config);
         }
     },
     /**
@@ -1361,7 +1407,6 @@ Kinetic.Stage = function(config) {
     Kinetic.Container.apply(this, []);
     Kinetic.Node.apply(this, [config]);
 
-    this.container = config.container;
     this.content = document.createElement('div');
     this.dblClickWindow = 400;
 
@@ -1666,7 +1711,7 @@ Kinetic.Stage.prototype = {
      * get container DOM element
      */
     getContainer: function() {
-        return this.container;
+        return this.attrs.container;
     },
     /**
      * get content DOM element
@@ -2145,7 +2190,7 @@ Kinetic.Stage.prototype = {
         this.content.style.position = 'relative';
         this.content.style.display = 'inline-block';
         this.content.className = 'kineticjs-content';
-        this.container.appendChild(this.content);
+        this.attrs.container.appendChild(this.content);
 
         // default layers
         this.bufferLayer = new Kinetic.Layer({
@@ -2473,16 +2518,13 @@ Kinetic.GlobalObject.extend(Kinetic.Group, Kinetic.Node);
  * @constructor
  * @augments Kinetic.Node
  * @param {Object} config
- * @config {String|Object} [fill] fill can be a string color, a linear gradient object, a radial
+ * @config {String|Object} [fill] can be a string color, a linear gradient object, a radial
  *  gradient object, or a pattern object.
  * @config {String} [stroke] stroke color
  * @config {Number} [strokeWidth] stroke width
  * @config {String} [lineJoin] line join can be "miter", "round", or "bevel".  The default
  *  is "miter"
- * @config {String} [shadowColor] shadow color
- * @config {Number} [shadowBlur] shadow blur
- * @config {Object|Array} [shadowOffset] shadow offset. The shadow offset obect should contain an object
- *  with an x and y property, or an array with two elements that represent x, y
+ * @config {Object} [shadow] shadow object
  * @config {String} [detectionType] shape detection type.  Can be "path" or "pixel".
  *  The default is "path" because it performs better
  */
@@ -2492,13 +2534,7 @@ Kinetic.Shape = function(config) {
         stroke: undefined,
         strokeWidth: undefined,
         lineJoin: undefined,
-        detectionType: 'path',
-        shadowColor: undefined,
-        shadowBlur: 5,
-        shadowOffset: {
-            x: 0,
-            y: 0
-        }
+        detectionType: 'path'
     });
 
     this.data = [];
@@ -2592,18 +2628,11 @@ Kinetic.Shape.prototype = {
             }
             // pattern fill
             else if(fill.image !== undefined) {
-                var o = {};
-
-                // set offset o
-                if(fill.offset !== undefined) {
-                    Kinetic.GlobalObject._setXY(o, 'pos', fill.offset);
-                }
-
                 var repeat = fill.repeat === undefined ? 'repeat' : fill.repeat;
                 f = context.createPattern(fill.image, repeat);
 
                 context.save();
-                context.translate(o.pos.x, o.pos.y);
+                context.translate(fill.offset.x, fill.offset.y);
                 context.fillStyle = f;
                 context.fill();
                 context.restore();
@@ -2649,16 +2678,18 @@ Kinetic.Shape.prototype = {
         }
     },
     /**
-     * apply shadow based on shadowColor, shadowBlur,
-     * and shadowOffset properties
+     * apply shadow based on shadow color, blur,
+     * and offset properties
      */
     applyShadow: function() {
         var context = this.getContext();
-        if(this.attrs.shadowColor !== undefined) {
-            context.shadowColor = this.attrs.shadowColor;
-            context.shadowBlur = this.attrs.shadowBlur;
-            context.shadowOffsetX = this.attrs.shadowOffset.x;
-            context.shadowOffsetY = this.attrs.shadowOffset.y;
+        var s = this.attrs.shadow;
+
+        if(s !== undefined) {
+            context.shadowColor = s.color;
+            context.shadowBlur = s.blur;
+            context.shadowOffsetX = s.offset.x;
+            context.shadowOffsetY = s.offset.y;
         }
     },
     /**
@@ -2716,52 +2747,24 @@ Kinetic.Shape.prototype = {
         return this.attrs.strokeWidth;
     },
     /**
-     * set shadow color
-     * @param {String} color
+     * set shadow object
+     * @param {Object} config
      */
-    setShadowColor: function(color) {
-        this.attrs.shadowColor = color;
+    setShadowColor: function(config) {
+        this.attrs.shadow = config;
     },
     /**
-     * get shadow color
+     * get shadow object
      */
-    getShadowColor: function() {
-        return this.attrs.shadowColor;
-    },
-    /**
-     * set shadow blur
-     * @param {Number}
-     */
-    setShadowBlur: function(blur) {
-        this.attrs.shadowBlur = blur;
-    },
-    /**
-     * get shadow blur
-     */
-    getShadowBlur: function() {
-        return this.attrs.shadowBlur;
-    },
-    /**
-     * set shadow offset
-     * @param {Object|Array} offset
-     */
-    setShadowOffset: function() {
-        var c = {};
-        c.shadowOffset = Kinetic.GlobalObject._getXY(arguments);
-        this.setAttrs(c);
-    },
-    /**
-     * get shadow offset
-     */
-    getShadowOffset: function() {
-        return this.attrs.shadowOffset;
+    getShadow: function() {
+        return this.attrs.shadow;
     },
     /**
      * set draw function
      * @param {Function} func drawing function
      */
     setDrawFunc: function(func) {
-        this.drawFunc = func;
+        this.attrs.drawFunc = func;
     },
     /**
      * save shape data when using pixel detection.
@@ -2808,7 +2811,7 @@ Kinetic.Shape.prototype = {
         }
     },
     _draw: function(layer) {
-        if(layer !== undefined && this.drawFunc !== undefined) {
+        if(layer !== undefined && this.attrs.drawFunc !== undefined) {
             var stage = layer.getStage();
             var context = layer.getContext();
             var family = [];
@@ -2845,7 +2848,7 @@ Kinetic.Shape.prototype = {
             this.applyLineJoin();
 
             // draw the shape
-            this.drawFunc.call(this);
+            this.attrs.drawFunc.call(this);
             context.restore();
         }
     }

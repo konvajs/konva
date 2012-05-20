@@ -129,103 +129,136 @@ Kinetic.GlobalObject = {
         return !!(obj && obj.constructor && obj.call && obj.apply);
     },
     _isArray: function(obj) {
-        return Object.prototype.toString.call(obj) == '[object Array]';
+        return obj.length !== undefined;
+        //return Object.prototype.toString.call(obj) == '[object Array]';
     },
     _isObject: function(obj) {
         return obj === Object(obj);
     },
     /*
-     * takes the arguments passed into a function and
-     * creates a point object from it.  The arguments
-     * can be a point object or an array of two elements
+     * The argument can be array of integers, an object, an array of one element
+     * which is an array of integers, or an array of one element of an object
      */
     _getXY: function(arg) {
-        if(arg.length === 1) {
-            return arg[0];
+    	
+        var go = Kinetic.GlobalObject;
+
+        if(arg === undefined) {
+            return {
+                x: 0,
+                y: 0
+            };
+        }
+        if(go._isArray(arg)) {
+            if(arg.length === 1) {
+                var val = arg[0];
+
+                if(go._isArray(val)) {
+                    return {
+                        x: val[0],
+                        y: val[1]
+                    };
+                }
+                else {
+                    return val;
+                }
+            }
+            else {
+                return {
+                    x: arg[0],
+                    y: arg[1]
+                };
+            }
         }
         else {
+            return arg;
+        }
+    },
+    /*
+     * The argument can be array of integers, an object, an array of one element
+     * which is an array of two integers, an array of one element
+     * which is an array of four integers, or an array of one element
+     * of an object
+     */
+    _getSize: function(arg) {
+        var go = Kinetic.GlobalObject;
+
+        if(arg === undefined) {
             return {
-                x: arg[0],
-                y: arg[1]
+                width: 0,
+                height: 0
+            };
+        }
+
+        if(go._isArray(arg)) {
+            if(arg.length === 1) {
+                var val = arg[0];
+
+                if(go._isArray(val)) {
+                    if(val.length === 2) {
+                        return {
+                            width: val[0],
+                            height: val[1]
+                        };
+                    }
+                    // should be an array of 4 elements
+                    else {
+                        return {
+                            width: val[2],
+                            height: val[3]
+                        };
+                    }
+                }
+                else {
+                    return val;
+                }
             }
+            else if(arg.length === 2) {
+                return {
+                    width: arg[0],
+                    height: arg[1]
+                };
+            }
+            // array length should be 4
+            else {
+                return {
+                    width: arg[2],
+                    height: arg[3]
+                };
+            }
+        }
+        else {
+            return arg;
         }
     },
     /*
-     * val will be either a point object or an
-     * array with two elements
-     */
-    _setXY: function(obj, key, val) {
-        if(obj[key] === undefined) {
-            obj[key] = {};
-        }
-
-        // val is an array
-        if(Kinetic.GlobalObject._isArray(val)) {
-            obj[key].x = val[0];
-            obj[key].y = val[1];
-        }
-        // val is an object
-        else if(obj[key] !== undefined) {
-
-            if(val.x !== undefined) {
-                obj[key].x = val.x;
-            }
-            if(val.y !== undefined) {
-                obj[key].y = val.y;
-            }
-        }
-    },
-    /*
-     * val will be either an object with height and
-     *  width properties or an array with four elements
-     *  in which the last two elements are width and height
-     */
-    _setSize: function(obj, key, val) {
-        if(obj[key] === undefined) {
-            obj[key] = {};
-        }
-
-        // val is an array
-        if(Kinetic.GlobalObject._isArray(val)) {
-            obj[key].width = val[2];
-            obj[key].height = val[3];
-        }
-        // val is an object
-        else if(obj[key] !== undefined) {
-
-            if(val.width !== undefined) {
-                obj[key].width = val.width;
-            }
-            if(val.y !== undefined) {
-                obj[key].height = val.height;
-            }
-        }
-    },
-    /*
-     * val will be either an array of numbers or
+     * arg will be an array of numbers or
      *  an array of point objects
      */
-    _setPoints: function(obj, key, val) {
-        /*
-         * if points contains an array of objects, just set
-         * the attr normally
-         */
-        if(this._isObject(val[0])) {
-            obj[key] = val;
+    _getPoints: function(arg) {
+        if(arg === undefined) {
+            return [];
         }
+
+        // an array of objects
+        if(this._isObject(arg[0])) {
+            return arg;
+        }
+        // an array of integers
         else {
             /*
              * convert array of numbers into an array
              * of objects containing x, y
              */
             var arr = [];
-            for(var n = 0; n < val.length; n += 2) {
+            for(var n = 0; n < arg.length; n += 2) {
                 arr.push({
-                    x: val[n],
-                    y: val[n + 1]
+                    x: arg[n],
+                    y: arg[n + 1]
                 });
             }
-            obj[key] = arr;
+
+            return arr;
         }
     }
 };

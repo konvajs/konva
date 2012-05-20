@@ -31,7 +31,6 @@ Kinetic.Stage = function(config) {
     Kinetic.Container.apply(this, []);
     Kinetic.Node.apply(this, [config]);
 
-    this.container = config.container;
     this.content = document.createElement('div');
     this.dblClickWindow = 400;
 
@@ -336,7 +335,7 @@ Kinetic.Stage.prototype = {
      * get container DOM element
      */
     getContainer: function() {
-        return this.container;
+        return this.attrs.container;
     },
     /**
      * get content DOM element
@@ -815,7 +814,7 @@ Kinetic.Stage.prototype = {
         this.content.style.position = 'relative';
         this.content.style.display = 'inline-block';
         this.content.className = 'kineticjs-content';
-        this.container.appendChild(this.content);
+        this.attrs.container.appendChild(this.content);
 
         // default layers
         this.bufferLayer = new Kinetic.Layer({

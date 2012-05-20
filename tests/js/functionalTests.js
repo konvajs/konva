@@ -1208,11 +1208,13 @@ Test.prototype.tests = {
             stroke: 'blue',
             strokeWidth: 5,
             lineJoin: "round",
-            shadowColor: '#aaa',
-            shadowBlur: 10,
-            shadowOffset: {
-                x: 5,
-                y: 5
+            shadow: {
+                color: '#aaa',
+                blur: 10,
+                offset: {
+                    x: 5,
+                    y: 5
+                }
             },
             draggable: true
         });
@@ -1232,25 +1234,30 @@ Test.prototype.tests = {
             if(trans) {
                 trans.stop();
             }
+            
             star.setAttrs({
-                shadowOffset: {
-                    x: 15,
-                    y: 15
+                shadow: {
+                    offset: {
+                        x: 15,
+                        y: 15
+                    }
                 },
                 centerOffset: {
                     x: 10,
                     y: 10
                 }
-            })
+            });
         });
 
         star.on('dragend', function() {
             trans = star.transitionTo({
                 duration: 0.5,
                 easing: 'elastic-ease-out',
-                shadowOffset: {
-                    x: 5,
-                    y: 5
+                shadow: {
+                    offset: {
+                        x: 5,
+                        y: 5
+                    }
                 },
                 centerOffset: {
                     x: 0,
