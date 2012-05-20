@@ -57,15 +57,14 @@ Test.prototype.tests = {
             radius: 70,
             fill: {
                 start: {
-                    color: 'red',
                     x: -35,
                     y: -35
                 },
                 end: {
-                    color: 'blue',
                     x: 35,
                     y: 35
-                }
+                },
+                colorStops: [0, 'red', 1, 'blue']
             },
             stroke: 'black',
             strokeWidth: 4,
@@ -112,7 +111,7 @@ Test.prototype.tests = {
         imageObj.src = '../darth-vader.jpg';
 
     },
-    'STAGE - add shape with radial gradient fill': function(containerId) {
+    'SHAPE - add circle with radial gradient fill': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -126,15 +125,16 @@ Test.prototype.tests = {
             radius: 70,
             fill: {
                 start: {
-                    color: '#8ED6FF',
-                    radius: 0,
                     x: -20,
-                    y: -20
+                    y: -20,
+                    radius: 0
                 },
                 end: {
-                    color: '#004CB3',
+                    x: -60,
+                    y: -60,
                     radius: 130
-                }
+                },
+                colorStops: [0, 'red', 0.2, 'yellow', 1, 'blue']
             },
             name: 'myCircle',
             draggable: true,
@@ -148,16 +148,17 @@ Test.prototype.tests = {
         layer.add(group);
         stage.add(layer);
 
-        /*
-         circle.transitionTo({
-         duration: 1,
-         fill: {
-         start: {
-         x: 20
-         }
-         }
-         });
-         */
+        var fill = circle.getFill();
+
+        test(fill.start.x === -20, 'fill start x should be 20');
+        test(fill.start.y === -20, 'fill start y should be 20');
+        test(fill.start.radius === 0, 'fill start radius should be 0');
+
+        test(fill.end.x === -60, 'fill end x should be 60');
+        test(fill.end.y === -60, 'fill end y should be 60');
+        test(fill.end.radius === 130, 'fill end radius should be 130');
+        
+        test(fill.colorStops.length === 6, 'fill colorStops length should be 6');
 
     },
     'STAGE - add shape with alpha': function(containerId) {

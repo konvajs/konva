@@ -116,7 +116,7 @@ Kinetic.Shape.prototype = {
                 context.fillStyle = f;
                 context.fill();
             }
-            // pattern fill
+            // pattern
             else if(fill.image !== undefined) {
                 var repeat = fill.repeat === undefined ? 'repeat' : fill.repeat;
                 f = context.createPattern(fill.image, repeat);
@@ -127,12 +127,16 @@ Kinetic.Shape.prototype = {
                 context.fill();
                 context.restore();
             }
-            // gradient fill
-            else if(s.x !== undefined && s.y !== undefined && e.x !== undefined && e.y !== undefined) {
+            // linear gradient
+            else if(s.radius === undefined && e.radius === undefined) {
                 var context = this.getContext();
                 var grd = context.createLinearGradient(s.x, s.y, e.x, e.y);
-                grd.addColorStop(0, s.color);
-                grd.addColorStop(1, e.color);
+                var colorStops = fill.colorStops;
+
+                // build color stops
+                for(var n = 0; n < colorStops.length; n += 2) {
+                    grd.addColorStop(colorStops[n], colorStops[n + 1]);
+                }
                 f = grd;
                 context.fillStyle = f;
                 context.fill();
@@ -140,9 +144,13 @@ Kinetic.Shape.prototype = {
             // radial gradient
             else if(s.radius !== undefined && e.radius !== undefined) {
                 var context = this.getContext();
-                var grd = context.createRadialGradient(s.x, s.y, s.radius, s.x, s.y, e.radius);
-                grd.addColorStop(0, s.color);
-                grd.addColorStop(1, e.color);
+                var grd = context.createRadialGradient(s.x, s.y, s.radius, e.x, e.y, e.radius);
+                var colorStops = fill.colorStops;
+
+                // build color stops
+                for(var n = 0; n < colorStops.length; n += 2) {
+                    grd.addColorStop(colorStops[n], colorStops[n + 1]);
+                }
                 f = grd;
                 context.fillStyle = f;
                 context.fill();
