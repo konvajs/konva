@@ -25,8 +25,9 @@ Kinetic.Shape = function(config) {
         lineJoin: undefined,
         detectionType: 'path',
         shadow: {
-            blur: 5,
-            alpha: 1
+            blur: 10,
+            alpha: 1,
+            offset: [0, 0]
         }
     });
 
@@ -81,31 +82,12 @@ Kinetic.Shape.prototype = {
      */
     applyStyles: function() {
         var context = this.getContext();
-        var aa = this.getAbsoluteAlpha();
-
         /*
          * if fill is defined, apply shadow to
          * fill only and not the stroke
          */
         if(!!this.attrs.fill) {
-            var sa = this.attrs.shadow.alpha;
-
-            context.save();
-
-            if(sa === 1) {
-                this.applyShadow();
-                this.fill();
-            }
-            else {
-                context.save();
-                context.globalAlpha = sa * aa;
-                this.applyShadow();
-                this.fill();
-                context.restore();
-                this.fill();
-            }
-
-            context.restore();
+            this.applyShadow(this.fill);
             this.stroke();
         }
         /*
@@ -113,18 +95,7 @@ Kinetic.Shape.prototype = {
          * to the stroke
          */
         else {
-            if(sa === 1) {
-                this.applyShadow();
-                this.stroke();
-            }
-            else {
-                context.save();
-                context.globalAlpha = sa * aa;
-                this.applyShadow();
-                this.stroke();
-                context.restore();
-                this.stroke();
-            }
+            this.applyShadow(this.stroke);
         }
     },
     /**
@@ -196,8 +167,33 @@ Kinetic.Shape.prototype = {
     /**
      * apply shadow based on shadow color, blur,
      * and offset properties
+     * @param {Function} draw function.  Will typically be this.fill(), this.stroke(),
+     *  this.fillText(), or this.strokeText()
      */
-    applyShadow: function() {
+    applyShadow: function(drawFunc) {
+        var context = this.getContext();
+        var s = this.attrs.shadow;
+        var aa = this.getAbsoluteAlpha();
+        var sa = this.attrs.shadow.alpha;
+
+        context.save();
+
+        if(sa === 1) {
+            this._applyShadow();
+            drawFunc.call(this);
+        }
+        else {
+            context.save();
+            context.globalAlpha = sa * aa;
+            this._applyShadow();
+            drawFunc.call(this);
+            context.restore();
+            drawFunc.call(this);
+        }
+
+        context.restore();
+    },
+    _applyShadow: function() {
         var context = this.getContext();
         var s = this.attrs.shadow;
 

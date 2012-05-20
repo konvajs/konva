@@ -40,7 +40,7 @@ Test.prototype.tests = {
         stage.add(layer);
         layer.add(group);
         layer.draw();
-        
+
         console.log(circle);
     },
     'STAGE - add shape with linear gradient fill': function(containerId) {
@@ -143,23 +143,22 @@ Test.prototype.tests = {
                 y: 0.5
             }
         });
-       
 
         group.add(circle);
         layer.add(group);
         stage.add(layer);
 
-		/*
-        circle.transitionTo({
-        	duration: 1,
-        	fill: {
-        		start: {
-        			x: 20
-        		}
-        	}
-        });
-        */
-        
+        /*
+         circle.transitionTo({
+         duration: 1,
+         fill: {
+         start: {
+         x: 20
+         }
+         }
+         });
+         */
+
     },
     'STAGE - add shape with alpha': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -360,36 +359,36 @@ Test.prototype.tests = {
         //test(stage.toJSON() === expectedJson, "problem with serialization");
     },
     /*
-    'STAGE - load stage with custom shape using json': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+     'STAGE - load stage with custom shape using json': function(containerId) {
+     var stage = new Kinetic.Stage({
+     container: containerId,
+     width: 578,
+     height: 200
+     });
 
-        var drawTriangle = function() {
-            var context = this.getContext();
-            context.beginPath();
-            context.moveTo(200, 50);
-            context.lineTo(420, 80);
-            context.quadraticCurveTo(300, 100, 260, 170);
-            context.closePath();
-            this.applyStyles();
-        };
-        //var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
-        //stage.load(json);
+     var drawTriangle = function() {
+     var context = this.getContext();
+     context.beginPath();
+     context.moveTo(200, 50);
+     context.lineTo(420, 80);
+     context.quadraticCurveTo(300, 100, 260, 170);
+     context.closePath();
+     this.applyStyles();
+     };
+     //var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
+     //stage.load(json);
 
-        var customShape = stage.get('#myTriangle')[0];
+     var customShape = stage.get('#myTriangle')[0];
 
-        customShape.setDrawFunc(drawTriangle);
+     customShape.setDrawFunc(drawTriangle);
 
-        stage.draw();
+     stage.draw();
 
-        //console.log(stage.toJSON());
+     //console.log(stage.toJSON());
 
-        //test(stage.toJSON() === json, "serialized stage is incorrect");
-    },
-    */
+     //test(stage.toJSON() === json, "serialized stage is incorrect");
+     },
+     */
     'STAGE - set stage size': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1030,23 +1029,23 @@ Test.prototype.tests = {
             test(darth.getCenterOffset().y === 30, 'center offset y should be 30');
 
             var crop = darth.getCrop();
-            
+
             test(crop.x === 20, 'crop x should be 20');
             test(crop.y === 20, 'crop y should be 20');
             test(crop.width === 200, 'crop width should be 200');
             test(crop.height === 250, 'crop height should be 250');
-            
+
             /*
-            darth.transitionTo({
-            	crop: {
+             darth.transitionTo({
+             crop: {
 
-            		width: 100,
-            		height: 125
+             width: 100,
+             height: 125
 
-            	},
-            	duration: 1
-            });
-            */
+             },
+             duration: 1
+             });
+             */
         };
         imageObj.src = '../darth-vader.jpg';
     },
@@ -1194,29 +1193,29 @@ Test.prototype.tests = {
         imageObj.src = '../darth-vader.jpg';
     },
     /*
-    'STAGE - load stage with an image': function(containerId) {
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            var stage = new Kinetic.Stage({
-                container: containerId,
-                width: 578,
-                height: 200
-            });
+     'STAGE - load stage with an image': function(containerId) {
+     var imageObj = new Image();
+     imageObj.onload = function() {
+     var stage = new Kinetic.Stage({
+     container: containerId,
+     width: 578,
+     height: 200
+     });
 
-            var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"crop":{"x":0,"y":0},"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}';
+     var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"crop":{"x":0,"y":0},"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}';
 
-            //stage.load(json);
+     //stage.load(json);
 
-            var image = stage.get('#darth')[0];
+     var image = stage.get('#darth')[0];
 
-            image.setImage(imageObj);
+     image.setImage(imageObj);
 
-            stage.draw();
+     stage.draw();
 
-        };
-        imageObj.src = '../darth-vader.jpg';
-    },
-    */
+     };
+     imageObj.src = '../darth-vader.jpg';
+     },
+     */
     'SHAPES - add polygon': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1303,9 +1302,9 @@ Test.prototype.tests = {
         });
 
         line.setPoints([1, 2, 3, 4]);
-        
+
         test(line.getPoints()[0].x === 1, 'first point x should be 1');
-        
+
         line.setPoints([73, 160, 340, 23]);
         test(line.getPoints()[0].x === 73, 'first point x should be 73');
     },
@@ -1342,9 +1341,9 @@ Test.prototype.tests = {
             draggable: true,
             dashArray: [30, 10, 0, 10, 10, 20],
             shadow: {
-            	color: '#aaa',
-            	blur: 10,
-            	offset: [20 , 20]
+                color: '#aaa',
+                blur: 10,
+                offset: [20, 20]
             }
         });
 
@@ -1376,7 +1375,7 @@ Test.prototype.tests = {
             strokeWidth: 5,
             name: 'foobar',
             centerOffset: {
-            	x: 0,
+                x: 0,
                 y: -50
             }
         });
@@ -1470,7 +1469,7 @@ Test.prototype.tests = {
             strokeWidth: 5,
             name: 'foobar',
             centerOffset: {
-            	x: 0,
+                x: 0,
                 y: -70
             },
             scale: {
@@ -1490,14 +1489,14 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
-		var rect = new Kinetic.Rect({
-        	x: 250,
-        	y: 75,
-        	width: 100,
-        	height: 100,
-        	fill: 'red'
+        var rect = new Kinetic.Rect({
+            x: 250,
+            y: 75,
+            width: 100,
+            height: 100,
+            fill: 'red'
         });
-        
+
         var star = new Kinetic.Star({
             x: 200,
             y: 100,
@@ -1509,17 +1508,17 @@ Test.prototype.tests = {
             strokeWidth: 5,
             lineJoin: "round",
             shadow: {
-            	color: 'black',
-            	blur: 10,
-            	offset: [20, 20],
-            	alpha: 0.5
+                color: 'black',
+                blur: 10,
+                offset: [20, 20],
+                alpha: 0.5
             },
             draggable: true
         });
 
-		layer.add(rect);
+        layer.add(rect);
         layer.add(star);
-       
+
         stage.add(layer);
 
         test(star.getLineJoin() === 'round', 'lineJoin property should be round');
@@ -1617,7 +1616,7 @@ Test.prototype.tests = {
         test(rect.getCenterOffset().y === 20, 'center offset y should be 20');
 
         rect.setCenterOffset(40, 40);
-        
+
         test(rect.getCenterOffset().x === 40, 'center offset x should be 40');
         test(rect.getCenterOffset().y === 40, 'center offset y should be 40');
 
@@ -1969,7 +1968,13 @@ Test.prototype.tests = {
             //draggable: true,
             align: 'center',
             verticalAlign: 'middle',
-            width: 200
+            width: 200,
+            shadow: {
+                color: 'black',
+                blur: 10,
+                offset: [10, 10],
+                alpha: 0.2
+            }
         });
 
         layer.add(text);
@@ -2021,10 +2026,16 @@ Test.prototype.tests = {
             fontSize: 60,
             fontFamily: 'Calibri',
             fontStyle: 'normal',
-            textFill: 'green',
+            textStroke: 'green',
             fontStyle: 'italic',
             align: 'center',
-            verticalAlign: 'middle'
+            verticalAlign: 'middle',
+            shadow: {
+                color: 'black',
+                blur: 2,
+                offset: [5, 5],
+                alpha: 1
+            }
         });
 
         // test text width before adding it to stage
