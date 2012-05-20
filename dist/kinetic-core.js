@@ -2315,7 +2315,6 @@ Kinetic.Layer = function(config) {
     this.lastDrawTime = 0;
     this.beforeDrawFunc = undefined;
     this.afterDrawFunc = undefined;
-    this.drawFunc = undefined;
 
     this.canvas = document.createElement('canvas');
     this.context = this.canvas.getContext('2d');
@@ -2338,11 +2337,11 @@ Kinetic.Layer.prototype = {
         var date = new Date();
         var time = date.getTime();
         var timeDiff = time - this.lastDrawTime;
-		var tt = 1000 / throttle;
+        var tt = 1000 / throttle;
 
         if(timeDiff >= tt) {
             this._draw();
-            
+
             if(this.drawTimeout !== undefined) {
                 clearTimeout(this.drawTimeout);
                 this.drawTimeout = undefined;
@@ -2354,12 +2353,12 @@ Kinetic.Layer.prototype = {
          */
         else if(this.drawTimeout === undefined) {
             var that = this;
-			/*
-			 * wait 17ms before trying again (60fps)
-			 */
+            /*
+             * wait 17ms before trying again (60fps)
+             */
             this.drawTimeout = setTimeout(function() {
                 that.draw();
-            }, 17);  
+            }, 17);
         }
     },
     /**
@@ -2429,29 +2428,29 @@ Kinetic.Layer.prototype = {
      * private draw children
      */
     _draw: function() {
-    	var date = new Date();
+        var date = new Date();
         var time = date.getTime();
-    	this.lastDrawTime = time;
-    	
+        this.lastDrawTime = time;
+
         // before draw  handler
         if(this.beforeDrawFunc !== undefined) {
-            this.beforeDrawFunc();
+            this.beforeDrawFunc.call(this);
         }
 
         this.clear();
         if(this.attrs.visible) {
-        	// draw custom func
-        	if (this.drawFunc !== undefined) {
-        		this.drawFunc();	
-        	}
-        	
-        	// draw children
+            // draw custom func
+            if(this.attrs.drawFunc !== undefined) {
+                this.attrs.drawFunc.call(this);
+            }
+
+            // draw children
             this._drawChildren();
         }
 
         // after draw  handler
         if(this.afterDrawFunc !== undefined) {
-            this.afterDrawFunc();
+            this.afterDrawFunc.call(this);
         }
     }
 };
