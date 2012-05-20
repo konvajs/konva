@@ -1685,6 +1685,13 @@ Kinetic.Stage.prototype = {
         // draw layer and append canvas to container
         layer.draw();
         this.content.appendChild(layer.canvas);
+        
+        /*
+         * set layer last draw time to zero
+         * so that throttling doesn't take into account
+         * the layer draws associated with adding a node
+         */
+        layer.lastDrawTime = 0;
     },
     /**
      * get mouse position for desktop apps
