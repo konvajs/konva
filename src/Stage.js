@@ -182,7 +182,18 @@ Kinetic.Stage.prototype = {
 
         function addNode(node) {
             var obj = {};
-            obj.attrs = node.attrs;
+            
+            var cleanAttrs = node.attrs;
+            
+            // remove function, image, and DOM attrs
+            for (var key in cleanAttrs) {
+            	var val = cleanAttrs[key];
+            	if (go._isFunction(val) || go._isElement(val)) {
+            		cleanAttrs[key] = undefined;
+            	}
+            }  
+            
+            obj.attrs = cleanAttrs;
 
             obj.nodeType = node.nodeType;
             obj.shapeType = node.shapeType;

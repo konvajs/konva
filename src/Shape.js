@@ -27,7 +27,10 @@ Kinetic.Shape = function(config) {
         shadow: {
             blur: 10,
             alpha: 1,
-            offset: [0, 0]
+            offset: {
+            	x: 0,
+            	y: 0
+            }
         }
     });
 
