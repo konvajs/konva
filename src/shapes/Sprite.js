@@ -14,7 +14,7 @@ Kinetic.Sprite = function(config) {
     });
 
     config.drawFunc = function() {
-        if(this.image !== undefined) {
+        if(this.attrs.image !== undefined) {
             var context = this.getContext();
             var anim = this.attrs.animation;
             var index = this.attrs.index;
@@ -23,7 +23,7 @@ Kinetic.Sprite = function(config) {
             context.beginPath();
             context.rect(0, 0, f.width, f.height);
             context.closePath();
-            context.drawImage(this.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
+            context.drawImage(this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
         }
     };
     // call super constructor
