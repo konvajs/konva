@@ -1011,43 +1011,43 @@ Test.prototype.tests = {
             test(circle.getFill().repeat === 'no-repeat', 'repeat option should be no-repeat');
             test(circle.getFill().offset.x === -200, 'fill offset x should be -200');
             test(circle.getFill().offset.y === -70, 'fill offset y should be -70');
-            
+
             /*
              * test offset setting
              */
             circle.setFill({
-            	offset: [1, 2]
+                offset: [1, 2]
             });
             test(circle.getFill().offset.x === 1, 'fill offset x should be 1');
             test(circle.getFill().offset.y === 2, 'fill offset y should be 2');
-            
+
             circle.setFill({
-            	offset: {
-            		x: 3,
-            		y: 4
-            	}
+                offset: {
+                    x: 3,
+                    y: 4
+                }
             });
             test(circle.getFill().offset.x === 3, 'fill offset x should be 3');
             test(circle.getFill().offset.y === 4, 'fill offset y should be 4');
-            
+
             circle.setFill({
-            	offset: {
-            		x: 5
-            	}
+                offset: {
+                    x: 5
+                }
             });
             test(circle.getFill().offset.x === 5, 'fill offset x should be 5');
             test(circle.getFill().offset.y === 4, 'fill offset y should be 4');
-            
+
             circle.setFill({
-            	offset: {
-            		y: 6
-            	}
+                offset: {
+                    y: 6
+                }
             });
             test(circle.getFill().offset.x === 5, 'fill offset x should be 5');
             test(circle.getFill().offset.y === 6, 'fill offset y should be 6');
-            
+
             circle.setFill({
-            	offset: [-200, -70]
+                offset: [-200, -70]
             });
         };
         imageObj.src = '../darth-vader.jpg';
@@ -1218,24 +1218,82 @@ Test.prototype.tests = {
             test(darth.getCenterOffset().y === 30, 'center offset y should be 30');
             test(Kinetic.GlobalObject._isElement(darth.getImage()), 'darth image should be an element');
 
-            var crop = darth.getCrop();
-
+            var crop = null;
+            crop = darth.getCrop();
             test(crop.x === 20, 'crop x should be 20');
             test(crop.y === 20, 'crop y should be 20');
             test(crop.width === 200, 'crop width should be 200');
             test(crop.height === 250, 'crop height should be 250');
 
             /*
-             darth.transitionTo({
-             crop: {
-
-             width: 100,
-             height: 125
-
-             },
-             duration: 1
-             });
+             * test cropping setter
              */
+
+            darth.setCrop(0, 1, 2, 3);
+            crop = darth.getCrop();
+            test(crop.x === 0, 'crop x should be 0');
+            test(crop.y === 1, 'crop y should be 1');
+            test(crop.width === 2, 'crop width should be2');
+            test(crop.height === 3, 'crop height should be 3');
+
+            darth.setCrop([4, 5, 6, 7]);
+            crop = darth.getCrop();
+            test(crop.x === 4, 'crop x should be 4');
+            test(crop.y === 5, 'crop y should be 5');
+            test(crop.width === 6, 'crop width should be 6');
+            test(crop.height === 7, 'crop height should be 7');
+
+            darth.setCrop({
+                x: 8,
+                y: 9,
+                width: 10,
+                height: 11
+            });
+            crop = darth.getCrop();
+            test(crop.x === 8, 'crop x should be 8');
+            test(crop.y === 9, 'crop y should be 9');
+            test(crop.width === 10, 'crop width should be 10');
+            test(crop.height === 11, 'crop height should be 11');
+
+            /*
+             * test partial setter
+             */
+            darth.setCrop({
+                x: 12
+            });
+            crop = darth.getCrop();
+            test(crop.x === 12, 'crop x should be 12');
+            test(crop.y === 9, 'crop y should be 9');
+            test(crop.width === 10, 'crop width should be 10');
+            test(crop.height === 11, 'crop height should be 11');
+
+            darth.setCrop({
+                y: 13
+            });
+            crop = darth.getCrop();
+            test(crop.x === 12, 'crop x should be 12');
+            test(crop.y === 13, 'crop y should be 13');
+            test(crop.width === 10, 'crop width should be 10');
+            test(crop.height === 11, 'crop height should be 11');
+
+            darth.setCrop({
+                width: 14
+            });
+            crop = darth.getCrop();
+            test(crop.x === 12, 'crop x should be 12');
+            test(crop.y === 13, 'crop y should be 13');
+            test(crop.width === 14, 'crop width should be 14');
+            test(crop.height === 11, 'crop height should be 11');
+
+            darth.setCrop({
+                height: 15
+            });
+            crop = darth.getCrop();
+            test(crop.x === 12, 'crop x should be 12');
+            test(crop.y === 13, 'crop y should be 13');
+            test(crop.width === 14, 'crop width should be 14');
+            test(crop.height === 15, 'crop height should be 15');
+
         };
         imageObj.src = '../darth-vader.jpg';
     },
@@ -1439,8 +1497,16 @@ Test.prototype.tests = {
         });
 
         line.setPoints([1, 2, 3, 4]);
-
         test(line.getPoints()[0].x === 1, 'first point x should be 1');
+
+        line.setPoints([{
+            x: 5,
+            y: 6
+        }, {
+            x: 7,
+            y: 8
+        }]);
+        test(line.getPoints()[0].x === 5, 'first point x should be 5');
 
         line.setPoints([73, 160, 340, 23]);
         test(line.getPoints()[0].x === 73, 'first point x should be 73');
@@ -2226,22 +2292,6 @@ Test.prototype.tests = {
 
         layer.draw();
     },
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     'NODE - test setting shadow offset': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -2256,46 +2306,46 @@ Test.prototype.tests = {
             height: 50,
             fill: 'red',
             shadow: {
-            	color: 'blue',
-            	blur: 12
+                color: 'blue',
+                blur: 12
             }
         });
-        
+
         layer.add(rect);
         stage.add(layer);
-        
+
         rect.setShadow({
-        	offset: [1, 2]
+            offset: [1, 2]
         });
         test(rect.getShadow().offset.x === 1, 'shadow offset x should be 1');
         test(rect.getShadow().offset.y === 2, 'shadow offset y should be 2');
         // make sure we still have the other properties
         test(rect.getShadow().color === 'blue', 'shadow color should still be blue');
         test(rect.getShadow().blur === 12, 'shadow blur should still be 12');
-        
+
         rect.setShadow({
-        	offset: {
-        		x: 3,
-        		y: 4
-        	}
+            offset: {
+                x: 3,
+                y: 4
+            }
         });
         test(rect.getShadow().offset.x === 3, 'shadow offset x should be 3');
         test(rect.getShadow().offset.y === 4, 'shadow offset y should be 4');
-        
+
         // test partial setting
-		rect.setShadow({
-        	offset: {
-        		x: 5
-        	}
+        rect.setShadow({
+            offset: {
+                x: 5
+            }
         });
         test(rect.getShadow().offset.x === 5, 'shadow offset x should be 5');
         test(rect.getShadow().offset.y === 4, 'shadow offset y should be 4');
-        
+
         // test partial setting
-		rect.setShadow({
-        	offset: {
-        		y: 6
-        	}
+        rect.setShadow({
+            offset: {
+                y: 6
+            }
         });
         test(rect.getShadow().offset.x === 5, 'shadow offset x should be 5');
         test(rect.getShadow().offset.y === 6, 'shadow offset y should be 6');
@@ -2314,27 +2364,34 @@ Test.prototype.tests = {
             height: 50,
             fill: 'red'
         });
-        
+
         layer.add(rect);
         stage.add(layer);
-        
+
         rect.setCenterOffset(1, 2);
         test(rect.getCenterOffset().x === 1, 'center offset x should be 1');
         test(rect.getCenterOffset().y === 2, 'center offset y should be 2');
-        
+
         rect.setCenterOffset([3, 4]);
         test(rect.getCenterOffset().x === 3, 'center offset x should be 3');
         test(rect.getCenterOffset().y === 4, 'center offset y should be 4');
-        
-        rect.setCenterOffset({x: 5, y: 6});
+
+        rect.setCenterOffset({
+            x: 5,
+            y: 6
+        });
         test(rect.getCenterOffset().x === 5, 'center offset x should be 5');
         test(rect.getCenterOffset().y === 6, 'center offset y should be 6');
-        
-        rect.setCenterOffset({x: 7});
+
+        rect.setCenterOffset({
+            x: 7
+        });
         test(rect.getCenterOffset().x === 7, 'center offset x should be 7');
         test(rect.getCenterOffset().y === 6, 'center offset y should be 6');
-        
-        rect.setCenterOffset({y: 8});
+
+        rect.setCenterOffset({
+            y: 8
+        });
         test(rect.getCenterOffset().x === 7, 'center offset x should be 7');
         test(rect.getCenterOffset().y === 8, 'center offset y should be 8');
 
@@ -2426,12 +2483,16 @@ Test.prototype.tests = {
         });
         test(rect.getScale().x === 9, 'rect scale x should be 9');
         test(rect.getScale().y === 10, 'rect scale x should be 10');
-        
-        rect.setScale({x: 11});
+
+        rect.setScale({
+            x: 11
+        });
         test(rect.getScale().x === 11, 'rect scale x should be 11');
         test(rect.getScale().y === 10, 'rect scale x should be 10');
-        
-        rect.setScale({y: 12});
+
+        rect.setScale({
+            y: 12
+        });
         test(rect.getScale().x === 11, 'rect scale x should be 11');
         test(rect.getScale().y === 12, 'rect scale x should be 12');
 

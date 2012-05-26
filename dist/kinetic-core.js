@@ -205,19 +205,9 @@ Kinetic.GlobalObject = {
                 else if(this._isObject(val)) {
                     return val;
                 }
-                /*
-                 * if arg is an array of one element which is not
-                 * a number, an array, or an object, return default
-                 */
-                else {
-                    return {
-                        x: 0,
-                        y: 0
-                    };
-                }
             }
             // if arg is an array of two or more elements
-            else {
+            else if(arg.length >= 2) {
                 return {
                     x: arg[0],
                     y: arg[1]
@@ -228,70 +218,94 @@ Kinetic.GlobalObject = {
         else if(this._isObject(arg)) {
             return arg;
         }
-        // if arg is not a number, array, or object, return default
-        else {
-            return {
-                x: 0,
-                y: 0
-            };
-        }
+
+        // default
+        return {
+            x: 0,
+            y: 0
+        };
     },
     /*
-     * The argument can be array of integers, an object, an array of one element
-     * which is an array of two integers, an array of one element
-     * which is an array of four integers, or an array of one element
-     * of an object
+     * The argument can be:
+     * - an integer (will be applied to both width and height)
+     * - an array of one integer (will be applied to both width and height)
+     * - an array of two integers (contains width and height)
+     * - an array of four integers (contains x, y, width, and height)
+     * - an object with width and height properties
+     * - an array of one element which is an array of integers
+     * - an array of one element of an object
      */
     _getSize: function(arg) {
-        var go = Kinetic.GlobalObject;
-
-        if(arg === undefined) {
+        if(this._isNumber(arg)) {
             return {
-                width: 0,
-                height: 0
+                width: arg,
+                height: arg
             };
         }
-
-        if(go._isArray(arg)) {
+        else if(this._isArray(arg)) {
+            // if arg is an array of one element
             if(arg.length === 1) {
                 var val = arg[0];
-
-                if(go._isArray(val)) {
-                    if(val.length === 2) {
-                        return {
-                            width: val[0],
-                            height: val[1]
-                        };
-                    }
-                    // should be an array of 4 elements
-                    else {
+                // if arg is an array of one element which is a number
+                if(this._isNumber(val)) {
+                    return {
+                        width: val,
+                        height: val
+                    };
+                }
+                // if arg is an array of one element which is an array
+                else if(this._isArray(val)) {
+                    /*
+                     * if arg is an array of one element which is an
+                     * array of four elements
+                     */
+                    if(val.length >= 4) {
                         return {
                             width: val[2],
                             height: val[3]
                         };
                     }
+                    /*
+                     * if arg is an array of one element which is an
+                     * array of two elements
+                     */
+                    else if(val.length >= 2) {
+                        return {
+                            width: val[0],
+                            height: val[1]
+                        };
+                    }
                 }
-                else {
+                // if arg is an array of one element which is an object
+                else if(this._isObject(val)) {
                     return val;
                 }
             }
-            else if(arg.length === 2) {
-                return {
-                    width: arg[0],
-                    height: arg[1]
-                };
-            }
-            // array length should be 4
-            else {
+            // if arg is an array of four elements
+            else if(arg.length >= 4) {
                 return {
                     width: arg[2],
                     height: arg[3]
                 };
             }
+            // if arg is an array of two elements
+            else if(arg.length >= 2) {
+                return {
+                    width: arg[0],
+                    height: arg[1]
+                };
+            }
         }
-        else {
+        // if arg is an object return the object
+        else if(this._isObject(arg)) {
             return arg;
         }
+
+        // default
+        return {
+            width: 0,
+            height: 0
+        };
     },
     /*
      * arg will be an array of numbers or
@@ -327,7 +341,7 @@ Kinetic.GlobalObject = {
      * set attr
      */
     _setAttr: function(obj, attr, val) {
-        if(val !== undefined) {  	
+        if(val !== undefined) {
             obj[attr] = val;
         }
     }
@@ -536,7 +550,7 @@ Kinetic.Node.prototype = {
                                 break;
                             /*
                              * includes:
-                             * - patttern offset
+                             * - fill pattern offset
                              * - shadow offset
                              */
                             case 'offset':
@@ -556,10 +570,10 @@ Kinetic.Node.prototype = {
                                 var pos = go._getXY(val);
                                 var size = go._getSize(val);
 
-                                obj[key].x = pos.x;
-                                obj[key].y = pos.y;
-                                obj[key].width = size.width;
-                                obj[key].height = size.height;
+                                go._setAttr(obj[key], 'x', pos.x);
+                                go._setAttr(obj[key], 'y', pos.y);
+                                go._setAttr(obj[key], 'width', size.width);
+                                go._setAttr(obj[key], 'height', size.height);
                                 break;
                             default:
                                 obj[key] = c[key];
@@ -3035,12 +3049,9 @@ Kinetic.Rect.prototype = {
     },
     /**
      * set width and height
-     * @param {Number} width
-     * @param {Number} height
      */
-    setSize: function(width, height) {
-        this.attrs.width = width;
-        this.attrs.height = height;
+    setSize: function() {
+        this.setAttrs(arguments);
     },
     /**
      * return rect size
@@ -3155,7 +3166,7 @@ Kinetic.Image = function(config) {
             this.applyStyles();
 
             // if cropping
-            if(cropWidth !== undefined && cropHeight !== undefined) {	
+            if(cropWidth !== undefined && cropHeight !== undefined) {
                 context.drawImage(this.attrs.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height);
             }
             // no cropping
@@ -3212,12 +3223,9 @@ Kinetic.Image.prototype = {
     },
     /**
      * set width and height
-     * @param {Number} width
-     * @param {Number} height
      */
-    setSize: function(width, height) {
-        this.attrs.width = width;
-        this.attrs.height = height;
+    setSize: function() {
+        this.setAttrs(arguments);
     },
     /**
      * return image size
@@ -3236,16 +3244,11 @@ Kinetic.Image.prototype = {
     },
     /**
      * set cropping
-     * @param {Object} crop
-     * @config {Number} [x] crop x
-     * @config {Number} [y] crop y
-     * @config {Number} [width] crop width
-     * @config {Number} [height] crop height
      */
-    setCrop: function(config) {
-        var c = {};
-        c.crop = config;
-        this.setAttrs(c);
+    setCrop: function() {
+        this.setAttrs({
+            crop: arguments
+        });
     }
 };
 // extend Shape
@@ -3397,12 +3400,12 @@ Kinetic.Polygon.prototype = {
     /**
      * set points array
      * @param {Array} can be an array of point objects or an array
-     *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] == [1,2,3,4]
+     *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
      */
     setPoints: function(points) {
-        var c = {};
-        c.points = points;
-        this.setAttrs(c);
+        this.setAttrs({
+            points: points
+        });
     },
     /**
      * get points array
@@ -3930,12 +3933,12 @@ Kinetic.Line.prototype = {
     /**
      * set points array
      * @param {Array} can be an array of point objects or an array
-     *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] == [1,2,3,4]
+     *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
      */
     setPoints: function(points) {
-        var c = {};
-        c.points = points;
-        this.setAttrs(c);
+        this.setAttrs({
+            points: points
+        });
     },
     /**
      * get points array

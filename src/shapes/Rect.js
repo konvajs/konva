@@ -73,12 +73,9 @@ Kinetic.Rect.prototype = {
     },
     /**
      * set width and height
-     * @param {Number} width
-     * @param {Number} height
      */
-    setSize: function(width, height) {
-        this.attrs.width = width;
-        this.attrs.height = height;
+    setSize: function() {
+        this.setAttrs(arguments);
     },
     /**
      * return rect size

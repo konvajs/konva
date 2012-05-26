@@ -194,7 +194,7 @@ Kinetic.Node.prototype = {
                                 break;
                             /*
                              * includes:
-                             * - patttern offset
+                             * - fill pattern offset
                              * - shadow offset
                              */
                             case 'offset':
@@ -214,10 +214,10 @@ Kinetic.Node.prototype = {
                                 var pos = go._getXY(val);
                                 var size = go._getSize(val);
 
-                                obj[key].x = pos.x;
-                                obj[key].y = pos.y;
-                                obj[key].width = size.width;
-                                obj[key].height = size.height;
+                                go._setAttr(obj[key], 'x', pos.x);
+                                go._setAttr(obj[key], 'y', pos.y);
+                                go._setAttr(obj[key], 'width', size.width);
+                                go._setAttr(obj[key], 'height', size.height);
                                 break;
                             default:
                                 obj[key] = c[key];

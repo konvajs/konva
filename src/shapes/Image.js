@@ -35,7 +35,7 @@ Kinetic.Image = function(config) {
             this.applyStyles();
 
             // if cropping
-            if(cropWidth !== undefined && cropHeight !== undefined) {	
+            if(cropWidth !== undefined && cropHeight !== undefined) {
                 context.drawImage(this.attrs.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height);
             }
             // no cropping
@@ -92,12 +92,9 @@ Kinetic.Image.prototype = {
     },
     /**
      * set width and height
-     * @param {Number} width
-     * @param {Number} height
      */
-    setSize: function(width, height) {
-        this.attrs.width = width;
-        this.attrs.height = height;
+    setSize: function() {
+        this.setAttrs(arguments);
     },
     /**
      * return image size
@@ -116,16 +113,11 @@ Kinetic.Image.prototype = {
     },
     /**
      * set cropping
-     * @param {Object} crop
-     * @config {Number} [x] crop x
-     * @config {Number} [y] crop y
-     * @config {Number} [width] crop width
-     * @config {Number} [height] crop height
      */
-    setCrop: function(config) {
-        var c = {};
-        c.crop = config;
-        this.setAttrs(c);
+    setCrop: function() {
+        this.setAttrs({
+            crop: arguments
+        });
     }
 };
 // extend Shape

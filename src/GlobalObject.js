@@ -177,19 +177,9 @@ Kinetic.GlobalObject = {
                 else if(this._isObject(val)) {
                     return val;
                 }
-                /*
-                 * if arg is an array of one element which is not
-                 * a number, an array, or an object, return default
-                 */
-                else {
-                    return {
-                        x: 0,
-                        y: 0
-                    };
-                }
             }
             // if arg is an array of two or more elements
-            else {
+            else if(arg.length >= 2) {
                 return {
                     x: arg[0],
                     y: arg[1]
@@ -200,70 +190,94 @@ Kinetic.GlobalObject = {
         else if(this._isObject(arg)) {
             return arg;
         }
-        // if arg is not a number, array, or object, return default
-        else {
-            return {
-                x: 0,
-                y: 0
-            };
-        }
+
+        // default
+        return {
+            x: 0,
+            y: 0
+        };
     },
     /*
-     * The argument can be array of integers, an object, an array of one element
-     * which is an array of two integers, an array of one element
-     * which is an array of four integers, or an array of one element
-     * of an object
+     * The argument can be:
+     * - an integer (will be applied to both width and height)
+     * - an array of one integer (will be applied to both width and height)
+     * - an array of two integers (contains width and height)
+     * - an array of four integers (contains x, y, width, and height)
+     * - an object with width and height properties
+     * - an array of one element which is an array of integers
+     * - an array of one element of an object
      */
     _getSize: function(arg) {
-        var go = Kinetic.GlobalObject;
-
-        if(arg === undefined) {
+        if(this._isNumber(arg)) {
             return {
-                width: 0,
-                height: 0
+                width: arg,
+                height: arg
             };
         }
-
-        if(go._isArray(arg)) {
+        else if(this._isArray(arg)) {
+            // if arg is an array of one element
             if(arg.length === 1) {
                 var val = arg[0];
-
-                if(go._isArray(val)) {
-                    if(val.length === 2) {
-                        return {
-                            width: val[0],
-                            height: val[1]
-                        };
-                    }
-                    // should be an array of 4 elements
-                    else {
+                // if arg is an array of one element which is a number
+                if(this._isNumber(val)) {
+                    return {
+                        width: val,
+                        height: val
+                    };
+                }
+                // if arg is an array of one element which is an array
+                else if(this._isArray(val)) {
+                    /*
+                     * if arg is an array of one element which is an
+                     * array of four elements
+                     */
+                    if(val.length >= 4) {
                         return {
                             width: val[2],
                             height: val[3]
                         };
                     }
+                    /*
+                     * if arg is an array of one element which is an
+                     * array of two elements
+                     */
+                    else if(val.length >= 2) {
+                        return {
+                            width: val[0],
+                            height: val[1]
+                        };
+                    }
                 }
-                else {
+                // if arg is an array of one element which is an object
+                else if(this._isObject(val)) {
                     return val;
                 }
             }
-            else if(arg.length === 2) {
-                return {
-                    width: arg[0],
-                    height: arg[1]
-                };
-            }
-            // array length should be 4
-            else {
+            // if arg is an array of four elements
+            else if(arg.length >= 4) {
                 return {
                     width: arg[2],
                     height: arg[3]
                 };
             }
+            // if arg is an array of two elements
+            else if(arg.length >= 2) {
+                return {
+                    width: arg[0],
+                    height: arg[1]
+                };
+            }
         }
-        else {
+        // if arg is an object return the object
+        else if(this._isObject(arg)) {
             return arg;
         }
+
+        // default
+        return {
+            width: 0,
+            height: 0
+        };
     },
     /*
      * arg will be an array of numbers or
@@ -299,7 +313,7 @@ Kinetic.GlobalObject = {
      * set attr
      */
     _setAttr: function(obj, attr, val) {
-        if(val !== undefined) {  	
+        if(val !== undefined) {
             obj[attr] = val;
         }
     }
