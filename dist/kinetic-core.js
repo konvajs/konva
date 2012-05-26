@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: May 25 2012
+ * Date: May 26 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -322,6 +322,14 @@ Kinetic.GlobalObject = {
 
             return arr;
         }
+    },
+    /*
+     * set attr
+     */
+    _setAttr: function(obj, attr, val) {
+        if(val !== undefined) {  	
+            obj[attr] = val;
+        }
     }
 };
 
@@ -485,6 +493,11 @@ Kinetic.Node.prototype = {
                 for(var key in c) {
                     var val = c[key];
 
+                    // if obj doesn't have the val property, then create it
+                    if(obj[key] === undefined) {
+                        obj[key] = {};
+                    }
+
                     /*
                      * if property is an object, then add an empty object
                      * to the node and then traverse
@@ -517,13 +530,24 @@ Kinetic.Node.prototype = {
                              * config objects
                              */
                             case 'centerOffset':
-                                obj[key] = go._getXY(val);
+                                var pos = go._getXY(val);
+                                go._setAttr(obj[key], 'x', pos.x);
+                                go._setAttr(obj[key], 'y', pos.y);
                                 break;
+                            /*
+                             * includes:
+                             * - patttern offset
+                             * - shadow offset
+                             */
                             case 'offset':
-                                obj[key] = go._getXY(val);
+                                var pos = go._getXY(val);
+                                go._setAttr(obj[key], 'x', pos.x);
+                                go._setAttr(obj[key], 'y', pos.y);
                                 break;
                             case 'scale':
-                                obj[key] = go._getXY(val);
+                                var pos = go._getXY(val);
+                                go._setAttr(obj[key], 'x', pos.x);
+                                go._setAttr(obj[key], 'y', pos.y);
                                 break;
                             case 'points':
                                 obj[key] = go._getPoints(val);
@@ -956,9 +980,9 @@ Kinetic.Node.prototype = {
      * @param {Number} y
      */
     setCenterOffset: function() {
-        var pos = Kinetic.GlobalObject._getXY(arguments);
-        this.attrs.centerOffset.x = pos.x;
-        this.attrs.centerOffset.y = pos.y;
+        this.setAttrs({
+            centerOffset: arguments
+        });
     },
     /**
      * get center offset
@@ -2577,8 +2601,8 @@ Kinetic.Shape = function(config) {
             blur: 10,
             alpha: 1,
             offset: {
-            	x: 0,
-            	y: 0
+                x: 0,
+                y: 0
             }
         }
     });
@@ -2674,7 +2698,11 @@ Kinetic.Shape.prototype = {
                 f = context.createPattern(fill.image, repeat);
 
                 context.save();
-                context.translate(fill.offset.x, fill.offset.y);
+
+                if(fill.offset !== undefined) {
+                    context.translate(fill.offset.x, fill.offset.y);
+                }
+
                 context.fillStyle = f;
                 context.fill();
                 context.restore();
@@ -2769,8 +2797,10 @@ Kinetic.Shape.prototype = {
      *  radial gradient object, or pattern object
      * @param {String|Object} fill
      */
-    setFill: function(fill) {
-        this.attrs.fill = fill;
+    setFill: function(config) {
+        this.setAttrs({
+            fill: config
+        });
     },
     /**
      * get fill
@@ -2823,7 +2853,9 @@ Kinetic.Shape.prototype = {
      * @param {Object} config
      */
     setShadow: function(config) {
-        this.attrs.shadow = config;
+        this.setAttrs({
+            shadow: config
+        });
     },
     /**
      * get shadow object

@@ -28,8 +28,8 @@ Kinetic.Shape = function(config) {
             blur: 10,
             alpha: 1,
             offset: {
-            	x: 0,
-            	y: 0
+                x: 0,
+                y: 0
             }
         }
     });
@@ -125,7 +125,11 @@ Kinetic.Shape.prototype = {
                 f = context.createPattern(fill.image, repeat);
 
                 context.save();
-                context.translate(fill.offset.x, fill.offset.y);
+
+                if(fill.offset !== undefined) {
+                    context.translate(fill.offset.x, fill.offset.y);
+                }
+
                 context.fillStyle = f;
                 context.fill();
                 context.restore();
@@ -220,8 +224,10 @@ Kinetic.Shape.prototype = {
      *  radial gradient object, or pattern object
      * @param {String|Object} fill
      */
-    setFill: function(fill) {
-        this.attrs.fill = fill;
+    setFill: function(config) {
+        this.setAttrs({
+            fill: config
+        });
     },
     /**
      * get fill
@@ -274,7 +280,9 @@ Kinetic.Shape.prototype = {
      * @param {Object} config
      */
     setShadow: function(config) {
-        this.attrs.shadow = config;
+        this.setAttrs({
+            shadow: config
+        });
     },
     /**
      * get shadow object

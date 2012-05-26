@@ -1,7 +1,13 @@
+var numTests = 0;
+var testCounter = null;
+
 function test(condition, message) {
     if(!condition) {
         throw new Error(message);
     }
+    numTests++;
+    
+    testCounter.innerHTML = numTests;
 }
 function log(message) {
     console.log("LOG: " + message);
@@ -12,6 +18,10 @@ function log(message) {
 function Test() {
     this.testOnly = '';
     this.counter = 0;
+    
+    testCounter = document.createElement('div');
+    testCounter.id = 'testCounter';
+    document.getElementsByTagName('body')[0].appendChild(testCounter);
 }
 /**
  * Test methods

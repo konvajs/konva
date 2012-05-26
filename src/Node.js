@@ -151,6 +151,11 @@ Kinetic.Node.prototype = {
                 for(var key in c) {
                     var val = c[key];
 
+                    // if obj doesn't have the val property, then create it
+                    if(obj[key] === undefined) {
+                        obj[key] = {};
+                    }
+
                     /*
                      * if property is an object, then add an empty object
                      * to the node and then traverse
@@ -183,13 +188,24 @@ Kinetic.Node.prototype = {
                              * config objects
                              */
                             case 'centerOffset':
-                                obj[key] = go._getXY(val);
+                                var pos = go._getXY(val);
+                                go._setAttr(obj[key], 'x', pos.x);
+                                go._setAttr(obj[key], 'y', pos.y);
                                 break;
+                            /*
+                             * includes:
+                             * - patttern offset
+                             * - shadow offset
+                             */
                             case 'offset':
-                                obj[key] = go._getXY(val);
+                                var pos = go._getXY(val);
+                                go._setAttr(obj[key], 'x', pos.x);
+                                go._setAttr(obj[key], 'y', pos.y);
                                 break;
                             case 'scale':
-                                obj[key] = go._getXY(val);
+                                var pos = go._getXY(val);
+                                go._setAttr(obj[key], 'x', pos.x);
+                                go._setAttr(obj[key], 'y', pos.y);
                                 break;
                             case 'points':
                                 obj[key] = go._getPoints(val);
@@ -622,9 +638,9 @@ Kinetic.Node.prototype = {
      * @param {Number} y
      */
     setCenterOffset: function() {
-        var pos = Kinetic.GlobalObject._getXY(arguments);
-        this.attrs.centerOffset.x = pos.x;
-        this.attrs.centerOffset.y = pos.y;
+        this.setAttrs({
+            centerOffset: arguments
+        });
     },
     /**
      * get center offset

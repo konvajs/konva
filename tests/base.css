@@ -25,3 +25,14 @@ p {
 	width: 578px;
 	height: 200px;
 }
+
+#testCounter {
+	position: fixed;
+	right: 0px;
+	top: 0px;
+	background-color: black;
+	padding: 10px;
+	border-radius: 3px;
+	color: #aaa;
+	font-size: 2em;
+}
