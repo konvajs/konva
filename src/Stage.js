@@ -307,6 +307,8 @@ Kinetic.Stage.prototype = {
         catch(e) {
         }
         this._remove(layer);
+        
+        return this;
     },
     /**
      * add layer to stage
@@ -327,6 +329,8 @@ Kinetic.Stage.prototype = {
          * the layer draws associated with adding a node
          */
         layer.lastDrawTime = 0;
+        
+        return this;
     },
     /**
      * get mouse position for desktop apps

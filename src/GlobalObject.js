@@ -135,34 +135,60 @@ Kinetic.GlobalObject = {
     _isObject: function(obj) {
         return obj === Object(obj);
     },
+    _isNumber: function(obj) {
+        return toString.call(obj) == '[object Number]';
+    },
     /*
-     * The argument can be array of integers, an object, an array of one element
-     * which is an array of integers, or an array of one element of an object
+     * The argument can be:
+     * - an integer (will be applied to both x and y)
+     * - an array of one integer (will be applied to both x and y)
+     * - an array of two integers (contains x and y)
+     * - an array of four integers (contains x, y, width, and height)
+     * - an object with x and y properties
+     * - an array of one element which is an array of integers
+     * - an array of one element of an object
      */
     _getXY: function(arg) {
-    	
-        var go = Kinetic.GlobalObject;
-
-        if(arg === undefined) {
+        if(this._isNumber(arg)) {
             return {
-                x: 0,
-                y: 0
+                x: arg,
+                y: arg
             };
         }
-        if(go._isArray(arg)) {
+        else if(this._isArray(arg)) {
+            // if arg is an array of one element
             if(arg.length === 1) {
                 var val = arg[0];
-
-                if(go._isArray(val)) {
+                // if arg is an array of one element which is a number
+                if(this._isNumber(val)) {
+                    return {
+                        x: val,
+                        y: val
+                    };
+                }
+                // if arg is an array of one element which is an array
+                else if(this._isArray(val)) {
                     return {
                         x: val[0],
                         y: val[1]
                     };
                 }
-                else {
+                // if arg is an array of one element which is an object
+                else if(this._isObject(val)) {
                     return val;
                 }
+                /*
+                 * if arg is an array of one element which is not
+                 * a number, an array, or an object, return default
+                 */
+                else {
+                    return {
+                        x: 0,
+                        y: 0
+                    };
+                }
             }
+            // if arg is an array of two or more elements
             else {
                 return {
                     x: arg[0],
@@ -170,8 +196,16 @@ Kinetic.GlobalObject = {
                 };
             }
         }
-        else {
+        // if arg is an object return the object
+        else if(this._isObject(arg)) {
             return arg;
+        }
+        // if arg is not a number, array, or object, return default
+        else {
+            return {
+                x: 0,
+                y: 0
+            };
         }
     },
     /*

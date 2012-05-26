@@ -168,8 +168,7 @@ Kinetic.Node.prototype = {
                         // handle special keys
                         switch (key) {
                             /*
-                             * config properties that require a method to
-                             * be set
+                             * config properties that require a method
                              */
                             case 'draggable':
                                 that.draggable(c[key]);
@@ -285,20 +284,13 @@ Kinetic.Node.prototype = {
         return level;
     },
     /**
-     * set node scale.  If only one parameter is passed in,
-     * then both scaleX and scaleY are set with that parameter
-     * @param {Number} scaleX
-     * @param {Number} scaleY
+     * set node scale.
+     * @param arg
      */
-    setScale: function(scaleX, scaleY) {
-        if(scaleY !== undefined) {
-            this.attrs.scale.x = scaleX;
-            this.attrs.scale.y = scaleY;
-        }
-        else {
-            this.attrs.scale.x = scaleX;
-            this.attrs.scale.y = scaleX;
-        }
+    setScale: function() {
+        this.setAttrs({
+            scale: arguments
+        });
     },
     /**
      * get scale
@@ -312,8 +304,7 @@ Kinetic.Node.prototype = {
      */
     setPosition: function() {
         var pos = Kinetic.GlobalObject._getXY(arguments);
-        this.attrs.x = pos.x;
-        this.attrs.y = pos.y;
+        this.setAttrs(pos);
     },
     /**
      * set node x position
@@ -396,15 +387,6 @@ Kinetic.Node.prototype = {
             y: 1
         };
 
-        /*
-        this.attrs.centerOffset = {
-        x: 0,
-        y: 0
-        };
-        */
-
-        //this.move(-1 * this.attrs.centerOffset.x, -1 * this.attrs.centerOffset.y);
-
         // unravel transform
         var it = this.getAbsoluteTransform();
         it.invert();
@@ -416,15 +398,12 @@ Kinetic.Node.prototype = {
 
         this.setPosition(pos.x, pos.y);
 
-        //this.move(-1* this.attrs.centerOffset.x, -1* this.attrs.centerOffset.y);
-
         // restore rotation and scale
         this.rotate(rot);
         this.attrs.scale = {
             x: scale.x,
             y: scale.y
         };
-
     },
     /**
      * move node by an amount

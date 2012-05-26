@@ -119,6 +119,7 @@ Kinetic.Layer.prototype = {
      */
     add: function(child) {
         this._add(child);
+        return this;
     },
     /**
      * remove a child from the layer
@@ -126,6 +127,7 @@ Kinetic.Layer.prototype = {
      */
     remove: function(child) {
         this._remove(child);
+        return this;
     },
     /**
      * private draw children

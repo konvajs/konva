@@ -449,6 +449,59 @@ Test.prototype.tests = {
         stage.add(layer);
 
     },
+    'STAGE - test getShapesInPoint': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var fooLayer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+
+        var blue = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'blue',
+            name: 'blue'
+        });
+
+        var red = new Kinetic.Rect({
+            x: 250,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'red'
+        });
+
+        group.add(red);
+        layer.add(blue);
+        layer.add(group);
+        stage.add(layer);
+        stage.add(fooLayer);
+
+        test(stage.getIntersections({
+            x: 201,
+            y: 101
+        }).length === 1, 'should be 1 shape ');
+
+        test(stage.getIntersections(201, 101).length === 1, 'should be 1 shape ');
+
+        test(stage.getIntersections(201, 101)[0].getName() === 'blue', 'shape name should be blue');
+
+        test(stage.getIntersections({
+            x: 251,
+            y: 101
+        }).length === 2, 'should be 2 shapes ');
+
+        test(stage.getIntersections({
+            x: 350,
+            y: 150
+        }).length === 1, 'should be 1 shape ');
+
+    },
     'STAGE - scale stage after add layer': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -603,6 +656,30 @@ Test.prototype.tests = {
         test(stage.names.myRect[0] === undefined, 'rect still in hash');
 
     },
+    'STAGE - set shape and layer alpha to 0.5': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        circle.setAlpha(0.5);
+        layer.setAlpha(0.5);
+        layer.add(circle);
+        stage.add(layer);
+
+        test(circle.getAbsoluteAlpha() === 0.25, 'abs alpha should be 0.25');
+        test(layer.getAbsoluteAlpha() === 0.5, 'abs alpha should be 0.5');
+    },
     'STAGE - remove shape without adding its parent to stage': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -750,6 +827,61 @@ Test.prototype.tests = {
         stage.draw();
 
     },
+    'STAGE - serialize stage with an image': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 200,
+                y: 60,
+                image: imageObj,
+                centerOffset: {
+                    x: 50,
+                    y: imageObj.height / 2
+                },
+                id: 'darth'
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+            var json = stage.toJSON();
+            test(json === '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"crop":{"x":0,"y":0},"detectionType":"path","shadow":{"blur":10,"alpha":1,"offset":{"x":0,"y":0}},"visible":true,"listening":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}', 'problem serializing stage with image');
+        };
+        imageObj.src = '../darth-vader.jpg';
+    },
+    'STAGE - load stage with an image': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+
+            var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"crop":{"x":0,"y":0},"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}';
+            stage.load(json);
+            var image = stage.get('#darth')[0];
+            image.setImage(imageObj);
+            stage.draw();
+        };
+        imageObj.src = '../darth-vader.jpg';
+    },
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     ////////////////////////////////////////////////////////////////////////
     //  LAYERS tests
     ////////////////////////////////////////////////////////////////////////
@@ -858,6 +990,24 @@ Test.prototype.tests = {
 
         test(layer.children.length === 0, 'layer should have 0 children');
     },
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     ////////////////////////////////////////////////////////////////////////
     //  GROUPS tests
     ////////////////////////////////////////////////////////////////////////
@@ -934,10 +1084,25 @@ Test.prototype.tests = {
         blueGroup2.add(blueCircle2);
         blueLayer.add(blueGroup2);
         blueLayer.draw();
-
         blueGroup2.setPosition(100, 0);
         blueLayer.draw();
     },
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     ////////////////////////////////////////////////////////////////////////
     //  SHAPES tests
     ////////////////////////////////////////////////////////////////////////
@@ -1055,6 +1220,7 @@ Test.prototype.tests = {
             test(darth.getHeight() === 100, 'height should be 100');
             test(darth.getCenterOffset().x === 50, 'center offset x should be 50');
             test(darth.getCenterOffset().y === 30, 'center offset y should be 30');
+            test(Kinetic.GlobalObject._isElement(darth.getImage()), 'darth image should be an element');
 
             var crop = darth.getCrop();
 
@@ -1190,51 +1356,6 @@ Test.prototype.tests = {
              */
         };
         imageObj.src = '../scorpion-sprite.png';
-    },
-    'STAGE - serialize stage with an image': function(containerId) {
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            var stage = new Kinetic.Stage({
-                container: containerId,
-                width: 578,
-                height: 200
-            });
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
-                x: 200,
-                y: 60,
-                image: imageObj,
-                centerOffset: {
-                    x: 50,
-                    y: imageObj.height / 2
-                },
-                id: 'darth'
-            });
-
-            layer.add(darth);
-            stage.add(layer);
-
-            var json = stage.toJSON();
-            test(json === '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"crop":{"x":0,"y":0},"detectionType":"path","shadow":{"blur":10,"alpha":1,"offset":{"x":0,"y":0}},"visible":true,"listening":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}', 'problem serializing stage with image');
-        };
-        imageObj.src = '../darth-vader.jpg';
-    },
-    'STAGE - load stage with an image': function(containerId) {
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            var stage = new Kinetic.Stage({
-                container: containerId,
-                width: 578,
-                height: 200
-            });
-
-            var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"crop":{"x":0,"y":0},"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}';
-            stage.load(json);
-            var image = stage.get('#darth')[0];
-            image.setImage(imageObj);
-            stage.draw();
-        };
-        imageObj.src = '../darth-vader.jpg';
     },
     'SHAPES - add polygon': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1610,6 +1731,47 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
     },
+    'SHAPES - scale shape by half': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        circle.setScale(0.5, 1);
+        layer.add(circle);
+        stage.add(layer);
+    },
+    'SHAPES - scale shape by half then back to 1': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        circle.setScale(0.5, 1);
+        circle.setScale(1, 1);
+        layer.add(circle);
+        stage.add(layer);
+    },
     'SHAPES - set center offset after instantiation': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1859,6 +2021,22 @@ Test.prototype.tests = {
             y: 151
         }) === false, 'intersects with point in shape');
     },
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     'CONTAINER - node type selector': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1910,60 +2088,12 @@ Test.prototype.tests = {
         test(group.get('Group').length === 0, 'group should have 0 groups');
 
     },
-    'STAGE - test getShapesInPoint': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var fooLayer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-
-        var blue = new Kinetic.Rect({
-            x: 200,
-            y: 100,
-            width: 100,
-            height: 50,
-            fill: 'blue',
-            name: 'blue'
-        });
-
-        var red = new Kinetic.Rect({
-            x: 250,
-            y: 100,
-            width: 100,
-            height: 50,
-            fill: 'red'
-        });
-
-        group.add(red);
-        layer.add(blue);
-        layer.add(group);
-        stage.add(layer);
-        stage.add(fooLayer);
-
-        test(stage.getIntersections({
-            x: 201,
-            y: 101
-        }).length === 1, 'should be 1 shape ');
-
-        test(stage.getIntersections(201, 101).length === 1, 'should be 1 shape ');
-
-        test(stage.getIntersections(201, 101)[0].getName() === 'blue', 'shape name should be blue');
-
-        test(stage.getIntersections({
-            x: 251,
-            y: 101
-        }).length === 2, 'should be 2 shapes ');
-
-        test(stage.getIntersections({
-            x: 350,
-            y: 150
-        }).length === 1, 'should be 1 shape ');
-
-    },
-    'Text - add text': function(containerId) {
+    
+    
+    
+    
+    
+    'SHAPES - add text': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2031,7 +2161,7 @@ Test.prototype.tests = {
         test(text.getTextStrokeWidth() === 10, 'test stroke width should be 10');
 
     },
-    'Text - get metrics': function(containerId) {
+    'SHAPES - get text metrics': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2120,6 +2250,229 @@ Test.prototype.tests = {
         //test(layer.getChild('myCircle') === undefined, 'shape should be null');
 
         layer.draw();
+    },
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+     'NODE - test setPosition': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 0,
+            y: 0,
+            width: 100,
+            height: 50,
+            fill: 'red'
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+		rect.setPosition(1, 2);
+		test(rect.getPosition().x ===1, 'rect x should be 1');
+		test(rect.getPosition().y === 2, 'rect y should be 2');
+		
+		rect.setPosition([3, 4]);
+		test(rect.getPosition().x ===3, 'rect x should be 3');
+		test(rect.getPosition().y === 4, 'rect y should be 4');
+		
+		rect.setPosition({x: 5, y:6});
+		test(rect.getPosition().x ===5, 'rect x should be 5');
+		test(rect.getPosition().y === 6, 'rect y should be 6');
+		
+		rect.setPosition({x: 7});
+		test(rect.getPosition().x ===7, 'rect x should be 7');
+		test(rect.getPosition().y === 6, 'rect y should be 6');
+		
+		rect.setPosition({y: 8});
+		test(rect.getPosition().x ===7, 'rect x should be 7');
+		test(rect.getPosition().y === 8, 'rect y should be 8');
+    },   
+    'NODE - test setScale': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 20,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+		rect.setScale(2, 3);
+		test(rect.getScale().x === 2, 'rect scale x should be 2');
+		test(rect.getScale().y=== 3, 'rect scale x should be 3');
+		
+		rect.setScale(4);
+		test(rect.getScale().x === 4, 'rect scale x should be 4');
+		test(rect.getScale().y=== 4, 'rect scale x should be 4');
+		
+		rect.setScale([5, 6]);
+		test(rect.getScale().x === 5, 'rect scale x should be 5');
+		test(rect.getScale().y=== 6, 'rect scale x should be 6');
+		
+		rect.setScale([7, 8, 999, 999]);
+		test(rect.getScale().x === 7, 'rect scale x should be 7');
+		test(rect.getScale().y=== 8, 'rect scale x should be 8');
+		
+		rect.setScale({x: 9, y:10});
+		test(rect.getScale().x === 9, 'rect scale x should be 9');
+		test(rect.getScale().y=== 10, 'rect scale x should be 10');
+    
+    },
+    'NODE - test config scale': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect1 = new Kinetic.Rect({
+            x: 200,
+            y: 20,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            scale: {
+            	x: 2,
+            	y: 3
+            }
+        });
+        
+        var rect2 = new Kinetic.Rect({
+            x: 200,
+            y: 20,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            scale: 2
+        });
+
+
+		var rect3 = new Kinetic.Rect({
+            x: 200,
+            y: 20,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            scale: [2, 3]
+        });
+        
+        var rect4 = new Kinetic.Rect({
+            x: 200,
+            y: 20,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            scale: {x : 2}
+        });
+        
+        var rect5 = new Kinetic.Rect({
+            x: 200,
+            y: 20,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            scale: {y : 2}
+        });
+        
+        layer.add(rect1).add(rect2).add(rect3).add(rect4).add(rect5); 
+        stage.add(layer);
+        
+        test(rect1.getScale().x === 2, 'rect1 scale x should be 2');
+        test(rect1.getScale().y === 3, 'rect1 scale y should be 3');
+        
+        test(rect2.getScale().x === 2, 'rect2 scale x should be 2');
+        test(rect2.getScale().y === 2, 'rect2 scale y should be 2');
+        
+        test(rect3.getScale().x === 2, 'rect3 scale x should be 2');
+        test(rect3.getScale().y === 3, 'rect3 scale y should be 3');
+        
+        test(rect4.getScale().x === 2, 'rect4 scale x should be 2');
+        test(rect4.getScale().y === 1, 'rect4 scale y should be 1');
+        
+        test(rect5.getScale().x === 1, 'rect5 scale x should be 1');
+        test(rect5.getScale().y === 2, 'rect5 scale y should be 2');
+    },
+    'NODE - test config position': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect1 = new Kinetic.Rect({
+            x: 1,
+            y: 2,
+            width: 100,
+            height: 50,
+            fill: 'red'
+        });
+        
+        var rect2 = new Kinetic.Rect({
+            x: 3,
+            width: 100,
+            height: 50,
+            fill: 'red'
+        });
+
+		var rect3 = new Kinetic.Rect({
+            y: 4,
+            width: 100,
+            height: 50,
+            fill: 'red'
+        });
+        
+        var rect4 = new Kinetic.Rect({
+            width: 100,
+            height: 50,
+            fill: 'red'
+        });
+        
+        layer.add(rect1).add(rect2).add(rect3).add(rect4); 
+        stage.add(layer);
+        
+        test(rect1.getPosition().x === 1, 'rect1 x should be 1');
+        test(rect1.getPosition().y === 2, 'rect1 y should be 2');
+        
+        test(rect2.getPosition().x === 3, 'rect2 x should be 3');
+        test(rect2.getPosition().y === 0, 'rect2 y should be 0');
+        
+        test(rect3.getPosition().x === 0, 'rect3 x should be 0');
+        test(rect3.getPosition().y === 4, 'rect3 y should be 4');
+        
+        test(rect4.getPosition().x === 0, 'rect4 x should be 0');
+        test(rect4.getPosition().y === 0, 'rect4 y should be 0');
     },
     'NODE - test getPosition and getAbsolutePosition for shape inside transformed stage': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -2455,6 +2808,19 @@ Test.prototype.tests = {
         layer.add(circle);
         layer.draw();
     },
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     'TRANSFORMS - move shape, group, and layer, and then get absolute position': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -2609,71 +2975,16 @@ Test.prototype.tests = {
 
         test(circle.getAbsoluteAlpha() === 1, 'abs alpha should be 1');
     },
-    'STAGE - set shape and layer alpha to 0.5': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4
-        });
 
-        circle.setAlpha(0.5);
-        layer.setAlpha(0.5);
-        layer.add(circle);
-        stage.add(layer);
 
-        test(circle.getAbsoluteAlpha() === 0.25, 'abs alpha should be 0.25');
-        test(layer.getAbsoluteAlpha() === 0.5, 'abs alpha should be 0.5');
-    },
-    'SHAPES - scale shape by half': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-
-        circle.setScale(0.5, 1);
-        layer.add(circle);
-        stage.add(layer);
-    },
-    'SHAPES - scale shape by half then back to 1': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-
-        circle.setScale(0.5, 1);
-        circle.setScale(1, 1);
-        layer.add(circle);
-        stage.add(layer);
-    },
+    
+    
+    
+    
+    
+    
+    
+    
     ////////////////////////////////////////////////////////////////////////
     //  LAYERING tests
     ////////////////////////////////////////////////////////////////////////

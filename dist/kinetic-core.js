@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: May 20 2012
+ * Date: May 25 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -163,34 +163,60 @@ Kinetic.GlobalObject = {
     _isObject: function(obj) {
         return obj === Object(obj);
     },
+    _isNumber: function(obj) {
+        return toString.call(obj) == '[object Number]';
+    },
     /*
-     * The argument can be array of integers, an object, an array of one element
-     * which is an array of integers, or an array of one element of an object
+     * The argument can be:
+     * - an integer (will be applied to both x and y)
+     * - an array of one integer (will be applied to both x and y)
+     * - an array of two integers (contains x and y)
+     * - an array of four integers (contains x, y, width, and height)
+     * - an object with x and y properties
+     * - an array of one element which is an array of integers
+     * - an array of one element of an object
      */
     _getXY: function(arg) {
-    	
-        var go = Kinetic.GlobalObject;
-
-        if(arg === undefined) {
+        if(this._isNumber(arg)) {
             return {
-                x: 0,
-                y: 0
+                x: arg,
+                y: arg
             };
         }
-        if(go._isArray(arg)) {
+        else if(this._isArray(arg)) {
+            // if arg is an array of one element
             if(arg.length === 1) {
                 var val = arg[0];
-
-                if(go._isArray(val)) {
+                // if arg is an array of one element which is a number
+                if(this._isNumber(val)) {
+                    return {
+                        x: val,
+                        y: val
+                    };
+                }
+                // if arg is an array of one element which is an array
+                else if(this._isArray(val)) {
                     return {
                         x: val[0],
                         y: val[1]
                     };
                 }
-                else {
+                // if arg is an array of one element which is an object
+                else if(this._isObject(val)) {
                     return val;
                 }
+                /*
+                 * if arg is an array of one element which is not
+                 * a number, an array, or an object, return default
+                 */
+                else {
+                    return {
+                        x: 0,
+                        y: 0
+                    };
+                }
             }
+            // if arg is an array of two or more elements
             else {
                 return {
                     x: arg[0],
@@ -198,8 +224,16 @@ Kinetic.GlobalObject = {
                 };
             }
         }
-        else {
+        // if arg is an object return the object
+        else if(this._isObject(arg)) {
             return arg;
+        }
+        // if arg is not a number, array, or object, return default
+        else {
+            return {
+                x: 0,
+                y: 0
+            };
         }
     },
     /*
@@ -468,8 +502,7 @@ Kinetic.Node.prototype = {
                         // handle special keys
                         switch (key) {
                             /*
-                             * config properties that require a method to
-                             * be set
+                             * config properties that require a method
                              */
                             case 'draggable':
                                 that.draggable(c[key]);
@@ -585,20 +618,13 @@ Kinetic.Node.prototype = {
         return level;
     },
     /**
-     * set node scale.  If only one parameter is passed in,
-     * then both scaleX and scaleY are set with that parameter
-     * @param {Number} scaleX
-     * @param {Number} scaleY
+     * set node scale.
+     * @param arg
      */
-    setScale: function(scaleX, scaleY) {
-        if(scaleY !== undefined) {
-            this.attrs.scale.x = scaleX;
-            this.attrs.scale.y = scaleY;
-        }
-        else {
-            this.attrs.scale.x = scaleX;
-            this.attrs.scale.y = scaleX;
-        }
+    setScale: function() {
+        this.setAttrs({
+            scale: arguments
+        });
     },
     /**
      * get scale
@@ -612,8 +638,7 @@ Kinetic.Node.prototype = {
      */
     setPosition: function() {
         var pos = Kinetic.GlobalObject._getXY(arguments);
-        this.attrs.x = pos.x;
-        this.attrs.y = pos.y;
+        this.setAttrs(pos);
     },
     /**
      * set node x position
@@ -696,15 +721,6 @@ Kinetic.Node.prototype = {
             y: 1
         };
 
-        /*
-        this.attrs.centerOffset = {
-        x: 0,
-        y: 0
-        };
-        */
-
-        //this.move(-1 * this.attrs.centerOffset.x, -1 * this.attrs.centerOffset.y);
-
         // unravel transform
         var it = this.getAbsoluteTransform();
         it.invert();
@@ -716,15 +732,12 @@ Kinetic.Node.prototype = {
 
         this.setPosition(pos.x, pos.y);
 
-        //this.move(-1* this.attrs.centerOffset.x, -1* this.attrs.centerOffset.y);
-
         // restore rotation and scale
         this.rotate(rot);
         this.attrs.scale = {
             x: scale.x,
             y: scale.y
         };
-
     },
     /**
      * move node by an amount
@@ -1683,6 +1696,8 @@ Kinetic.Stage.prototype = {
         catch(e) {
         }
         this._remove(layer);
+        
+        return this;
     },
     /**
      * add layer to stage
@@ -1703,6 +1718,8 @@ Kinetic.Stage.prototype = {
          * the layer draws associated with adding a node
          */
         layer.lastDrawTime = 0;
+        
+        return this;
     },
     /**
      * get mouse position for desktop apps
@@ -2434,6 +2451,7 @@ Kinetic.Layer.prototype = {
      */
     add: function(child) {
         this._add(child);
+        return this;
     },
     /**
      * remove a child from the layer
@@ -2441,6 +2459,7 @@ Kinetic.Layer.prototype = {
      */
     remove: function(child) {
         this._remove(child);
+        return this;
     },
     /**
      * private draw children
@@ -2504,6 +2523,7 @@ Kinetic.Group.prototype = {
      */
     add: function(child) {
         this._add(child);
+        return this;
     },
     /**
      * remove a child node from the group
@@ -2511,6 +2531,7 @@ Kinetic.Group.prototype = {
      */
     remove: function(child) {
         this._remove(child);
+        return this;
     },
     /**
      * draw children
@@ -2801,7 +2822,7 @@ Kinetic.Shape.prototype = {
      * set shadow object
      * @param {Object} config
      */
-    setShadowColor: function(config) {
+    setShadow: function(config) {
         this.attrs.shadow = config;
     },
     /**

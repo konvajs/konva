@@ -273,7 +273,7 @@ Kinetic.Shape.prototype = {
      * set shadow object
      * @param {Object} config
      */
-    setShadowColor: function(config) {
+    setShadow: function(config) {
         this.attrs.shadow = config;
     },
     /**

@@ -26,6 +26,7 @@ Kinetic.Group.prototype = {
      */
     add: function(child) {
         this._add(child);
+        return this;
     },
     /**
      * remove a child node from the group
@@ -33,6 +34,7 @@ Kinetic.Group.prototype = {
      */
     remove: function(child) {
         this._remove(child);
+        return this;
     },
     /**
      * draw children
