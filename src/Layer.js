@@ -113,23 +113,6 @@ Kinetic.Layer.prototype = {
         return this.context;
     },
     /**
-     * add a node to the layer.  New nodes are always
-     * placed at the top.
-     * @param {Node} node
-     */
-    add: function(child) {
-        this._add(child);
-        return this;
-    },
-    /**
-     * remove a child from the layer
-     * @param {Node} child
-     */
-    remove: function(child) {
-        this._remove(child);
-        return this;
-    },
-    /**
      * private draw children
      */
     _draw: function() {

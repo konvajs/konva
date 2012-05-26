@@ -28,10 +28,46 @@ Kinetic.Container.prototype = {
         }
     },
     /**
+     * add node to container
+     * @param {Node} child
+     */
+    add: function(child) {
+        child._id = Kinetic.GlobalObject.idCounter++;
+        child.index = this.children.length;
+        child.parent = this;
+
+        this.children.push(child);
+
+        var stage = child.getStage();
+        if(stage === undefined) {
+            var go = Kinetic.GlobalObject;
+            go.tempNodes.push(child);
+        }
+        else {
+            stage._addId(child);
+            stage._addName(child);
+
+            /*
+             * pull in other nodes that are now linked
+             * to a stage
+             */
+            var go = Kinetic.GlobalObject;
+            go._pullNodes(stage);
+        }
+
+        // do extra stuff if needed
+        if(this._add !== undefined) {
+            this._add(child);
+        }
+
+        // chainable
+        return this;
+    },
+    /**
      * remove child from container
      * @param {Node} child
-     */ 
-    _remove: function(child) {
+     */
+    remove: function(child) {
         if(child.index !== undefined && this.children[child.index]._id == child._id) {
             var stage = this.getStage();
             if(stage !== undefined) {
@@ -52,6 +88,14 @@ Kinetic.Container.prototype = {
             this._setChildrenIndices();
             child = undefined;
         }
+
+        // do extra stuff if needed
+        if(this._remove !== undefined) {
+            this._remove(child);
+        }
+
+        // chainable
+        return this;
     },
     /**
      * return an array of nodes that match the selector.  Use '#' for id selections
@@ -143,34 +187,6 @@ Kinetic.Container.prototype = {
             else {
                 child._draw();
             }
-        }
-    },
-    /**
-     * add node to container
-     * @param {Node} child
-     */
-    _add: function(child) {
-        child._id = Kinetic.GlobalObject.idCounter++;
-        child.index = this.children.length;
-        child.parent = this;
-
-        this.children.push(child);
-
-        var stage = child.getStage();
-        if(stage === undefined) {
-            var go = Kinetic.GlobalObject;
-            go.tempNodes.push(child);
-        }
-        else {
-            stage._addId(child);
-            stage._addName(child);
-
-            /*
-             * pull in other nodes that are now linked
-             * to a stage
-             */
-            var go = Kinetic.GlobalObject;
-            go._pullNodes(stage);
         }
     },
     /**

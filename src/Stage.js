@@ -293,46 +293,6 @@ Kinetic.Stage.prototype = {
         this.draw();
     },
     /**
-     * remove layer from stage
-     * @param {Layer} layer
-     */
-    remove: function(layer) {
-        /*
-         * remove canvas DOM from the document if
-         * it exists
-         */
-        try {
-            this.content.removeChild(layer.canvas);
-        }
-        catch(e) {
-        }
-        this._remove(layer);
-        
-        return this;
-    },
-    /**
-     * add layer to stage
-     * @param {Layer} layer
-     */
-    add: function(layer) {
-        layer.canvas.width = this.attrs.width;
-        layer.canvas.height = this.attrs.height;
-        this._add(layer);
-
-        // draw layer and append canvas to container
-        layer.draw();
-        this.content.appendChild(layer.canvas);
-        
-        /*
-         * set layer last draw time to zero
-         * so that throttling doesn't take into account
-         * the layer draws associated with adding a node
-         */
-        layer.lastDrawTime = 0;
-        
-        return this;
-    },
-    /**
      * get mouse position for desktop apps
      * @param {Event} evt
      */
@@ -407,6 +367,40 @@ Kinetic.Stage.prototype = {
      */
     getDOM: function() {
         return this.content;
+    },
+    /**
+     * remove layer from stage
+     * @param {Layer} layer
+     */
+    _remove: function(layer) {
+        /*
+         * remove canvas DOM from the document if
+         * it exists
+         */
+        try {
+            this.content.removeChild(layer.canvas);
+        }
+        catch(e) {
+        }
+    },
+    /**
+     * add layer to stage
+     * @param {Layer} layer
+     */
+    _add: function(layer) {
+        layer.canvas.width = this.attrs.width;
+        layer.canvas.height = this.attrs.height;
+
+        // draw layer and append canvas to container
+        layer.draw();
+        this.content.appendChild(layer.canvas);
+        
+        /*
+         * set layer last draw time to zero
+         * so that throttling doesn't take into account
+         * the layer draws associated with adding a node
+         */
+        layer.lastDrawTime = 0;
     },
     /**
      * detect event

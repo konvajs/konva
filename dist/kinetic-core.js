@@ -1251,10 +1251,46 @@ Kinetic.Container.prototype = {
         }
     },
     /**
+     * add node to container
+     * @param {Node} child
+     */
+    add: function(child) {
+        child._id = Kinetic.GlobalObject.idCounter++;
+        child.index = this.children.length;
+        child.parent = this;
+
+        this.children.push(child);
+
+        var stage = child.getStage();
+        if(stage === undefined) {
+            var go = Kinetic.GlobalObject;
+            go.tempNodes.push(child);
+        }
+        else {
+            stage._addId(child);
+            stage._addName(child);
+
+            /*
+             * pull in other nodes that are now linked
+             * to a stage
+             */
+            var go = Kinetic.GlobalObject;
+            go._pullNodes(stage);
+        }
+
+        // do extra stuff if needed
+        if(this._add !== undefined) {
+            this._add(child);
+        }
+
+        // chainable
+        return this;
+    },
+    /**
      * remove child from container
      * @param {Node} child
-     */ 
-    _remove: function(child) {
+     */
+    remove: function(child) {
         if(child.index !== undefined && this.children[child.index]._id == child._id) {
             var stage = this.getStage();
             if(stage !== undefined) {
@@ -1275,6 +1311,14 @@ Kinetic.Container.prototype = {
             this._setChildrenIndices();
             child = undefined;
         }
+
+        // do extra stuff if needed
+        if(this._remove !== undefined) {
+            this._remove(child);
+        }
+
+        // chainable
+        return this;
     },
     /**
      * return an array of nodes that match the selector.  Use '#' for id selections
@@ -1366,34 +1410,6 @@ Kinetic.Container.prototype = {
             else {
                 child._draw();
             }
-        }
-    },
-    /**
-     * add node to container
-     * @param {Node} child
-     */
-    _add: function(child) {
-        child._id = Kinetic.GlobalObject.idCounter++;
-        child.index = this.children.length;
-        child.parent = this;
-
-        this.children.push(child);
-
-        var stage = child.getStage();
-        if(stage === undefined) {
-            var go = Kinetic.GlobalObject;
-            go.tempNodes.push(child);
-        }
-        else {
-            stage._addId(child);
-            stage._addName(child);
-
-            /*
-             * pull in other nodes that are now linked
-             * to a stage
-             */
-            var go = Kinetic.GlobalObject;
-            go._pullNodes(stage);
         }
     },
     /**
@@ -1720,46 +1736,6 @@ Kinetic.Stage.prototype = {
         this.draw();
     },
     /**
-     * remove layer from stage
-     * @param {Layer} layer
-     */
-    remove: function(layer) {
-        /*
-         * remove canvas DOM from the document if
-         * it exists
-         */
-        try {
-            this.content.removeChild(layer.canvas);
-        }
-        catch(e) {
-        }
-        this._remove(layer);
-        
-        return this;
-    },
-    /**
-     * add layer to stage
-     * @param {Layer} layer
-     */
-    add: function(layer) {
-        layer.canvas.width = this.attrs.width;
-        layer.canvas.height = this.attrs.height;
-        this._add(layer);
-
-        // draw layer and append canvas to container
-        layer.draw();
-        this.content.appendChild(layer.canvas);
-        
-        /*
-         * set layer last draw time to zero
-         * so that throttling doesn't take into account
-         * the layer draws associated with adding a node
-         */
-        layer.lastDrawTime = 0;
-        
-        return this;
-    },
-    /**
      * get mouse position for desktop apps
      * @param {Event} evt
      */
@@ -1834,6 +1810,40 @@ Kinetic.Stage.prototype = {
      */
     getDOM: function() {
         return this.content;
+    },
+    /**
+     * remove layer from stage
+     * @param {Layer} layer
+     */
+    _remove: function(layer) {
+        /*
+         * remove canvas DOM from the document if
+         * it exists
+         */
+        try {
+            this.content.removeChild(layer.canvas);
+        }
+        catch(e) {
+        }
+    },
+    /**
+     * add layer to stage
+     * @param {Layer} layer
+     */
+    _add: function(layer) {
+        layer.canvas.width = this.attrs.width;
+        layer.canvas.height = this.attrs.height;
+
+        // draw layer and append canvas to container
+        layer.draw();
+        this.content.appendChild(layer.canvas);
+        
+        /*
+         * set layer last draw time to zero
+         * so that throttling doesn't take into account
+         * the layer draws associated with adding a node
+         */
+        layer.lastDrawTime = 0;
     },
     /**
      * detect event
@@ -2483,23 +2493,6 @@ Kinetic.Layer.prototype = {
         return this.context;
     },
     /**
-     * add a node to the layer.  New nodes are always
-     * placed at the top.
-     * @param {Node} node
-     */
-    add: function(child) {
-        this._add(child);
-        return this;
-    },
-    /**
-     * remove a child from the layer
-     * @param {Node} child
-     */
-    remove: function(child) {
-        this._remove(child);
-        return this;
-    },
-    /**
      * private draw children
      */
     _draw: function() {
@@ -2555,22 +2548,6 @@ Kinetic.Group = function(config) {
  * Group methods
  */
 Kinetic.Group.prototype = {
-    /**
-     * add node to group
-     * @param {Node} child
-     */
-    add: function(child) {
-        this._add(child);
-        return this;
-    },
-    /**
-     * remove a child node from the group
-     * @param {Node} child
-     */
-    remove: function(child) {
-        this._remove(child);
-        return this;
-    },
     /**
      * draw children
      */
