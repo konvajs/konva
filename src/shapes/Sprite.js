@@ -23,7 +23,8 @@ Kinetic.Sprite = function(config) {
             context.beginPath();
             context.rect(0, 0, f.width, f.height);
             context.closePath();
-            context.drawImage(this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
+            
+            this.drawImage(this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
         }
     };
     // call super constructor

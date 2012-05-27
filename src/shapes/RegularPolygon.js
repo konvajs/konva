@@ -25,7 +25,8 @@ Kinetic.RegularPolygon = function(config) {
             context.lineTo(x, y);
         }
         context.closePath();
-        this.applyStyles();
+        this.fill();
+        this.stroke();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);

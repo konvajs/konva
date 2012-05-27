@@ -289,7 +289,8 @@ Test.prototype.tests = {
             context.lineTo(420, 80);
             context.quadraticCurveTo(300, 100, 260, 170);
             context.closePath();
-            this.applyStyles();
+            this.fill();
+            this.stroke();
         };
         var triangle = new Kinetic.Shape({
             drawFunc: drawTriangle,
@@ -321,7 +322,8 @@ Test.prototype.tests = {
             context.lineTo(420, 80);
             context.quadraticCurveTo(300, 100, 260, 170);
             context.closePath();
-            this.applyStyles();
+            this.fill();
+            this.stroke();
         };
         var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"detectionType":"path","shadow":{"blur":10,"alpha":1,"offset":{"x":0,"y":0}},"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
         stage.load(json);
@@ -1426,7 +1428,13 @@ Test.prototype.tests = {
                 index: 0,
                 //frameRate: Math.random() * 6 + 6,
                 frameRate: 10,
-                draggable: true
+                draggable: true,
+                shadow: {
+                    color: 'black',
+                    blur: 3,
+                    offset: [10, 10],
+                    alpha: 0.3
+                }
             });
 
             layer.add(sprite);
@@ -1906,6 +1914,34 @@ Test.prototype.tests = {
         test(rect.getCenterOffset().y === 40, 'center offset y should be 40');
 
     },
+    'SHAPE - apply shadow to transparent image': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            var darth = new Kinetic.Image({
+                x: 200,
+                y: 40,
+                image: imageObj,
+                draggable: true,
+                shadow: {
+                    color: 'black',
+                    blur: 10,
+                    offset: [20, 20],
+                    alpha: 0.2
+                }
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+        };
+        imageObj.src = '../lion.png';
+    },
     'SHAPE - custom shape with fill, stroke, and strokeWidth': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1921,7 +1957,8 @@ Test.prototype.tests = {
                 context.lineTo(100, 0);
                 context.lineTo(100, 100);
                 context.closePath();
-                this.applyStyles();
+                this.fill();
+                this.stroke();
             },
             x: 200,
             y: 100,
@@ -1948,7 +1985,8 @@ Test.prototype.tests = {
                 context.lineTo(100, 0);
                 context.lineTo(100, 100);
                 context.closePath();
-                this.applyStyles();
+                this.fill();
+                this.stroke();
             },
             x: 200,
             y: 100,
@@ -1964,7 +2002,8 @@ Test.prototype.tests = {
             context.lineTo(200, 0);
             context.lineTo(200, 100);
             context.closePath();
-            this.applyStyles();
+            this.fill();
+            this.stroke();
         });
 
         layer.add(shape);
@@ -2197,13 +2236,12 @@ Test.prototype.tests = {
             textStroke: '#333',
             padding: 10,
             fontStyle: 'normal',
-            //draggable: true,
             align: 'center',
             verticalAlign: 'middle',
             width: 200,
             shadow: {
                 color: 'black',
-                blur: 10,
+                blur: 1,
                 offset: [10, 10],
                 alpha: 0.2
             }

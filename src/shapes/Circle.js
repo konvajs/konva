@@ -20,7 +20,8 @@ Kinetic.Circle = function(config) {
         context.beginPath();
         context.arc(0, 0, this.attrs.radius, 0, Math.PI * 2, true);
         context.closePath();
-        this.applyStyles();
+        this.fill();
+        this.stroke();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);

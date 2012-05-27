@@ -30,7 +30,6 @@ Kinetic.Text = function(config) {
         var p = this.attrs.padding;
         var x = 0;
         var y = 0;
-        var appliedShadow = false;
         var that = this;
 
         switch (this.attrs.align) {
@@ -57,10 +56,8 @@ Kinetic.Text = function(config) {
         context.rect(x, y, textWidth + p * 2, textHeight + p * 2);
         context.closePath();
 
-        if(this.attrs.fill !== undefined || this.attrs.stroke !== undefined) {
-            this.applyStyles(this.fill);
-            appliedShadow = true;
-        }
+        this.fill();
+        this.stroke();
 
         context.restore();
 
@@ -77,46 +74,9 @@ Kinetic.Text = function(config) {
         }
 
         // draw text
-        var s = this.attrs.shadow;
-
-        if(this.attrs.textFill !== undefined) {
-            context.save();
-            context.fillStyle = this.attrs.textFill;
-            if(s !== undefined && !appliedShadow) {
-                this.applyShadow(function() {
-                    context.fillText(that.attrs.text, tx, ty);
-                });
-                appliedShadow = true;
-            }
-            else {
-                context.fillText(this.attrs.text, tx, ty);
-            }
-
-            context.restore();
-        }
-
-        if(this.attrs.textStroke !== undefined || this.attrs.textStrokeWidth !== undefined) {
-            // defaults
-            if(this.attrs.textStroke === undefined) {
-                this.attrs.textStroke = 'black';
-            }
-            else if(this.attrs.textStrokeWidth === undefined) {
-                this.attrs.textStrokeWidth = 2;
-            }
-            context.lineWidth = this.attrs.textStrokeWidth;
-            context.strokeStyle = this.attrs.textStroke;
-            
-            
-            if(s !== undefined && !appliedShadow) {
-                this.applyShadow(function() {
-                    context.strokeText(that.attrs.text, tx, ty);
-                });
-                appliedShadow = true;
-            }
-            else {
-                context.strokeText(this.attrs.text, tx, ty);
-            }    
-        }
+        this.fillText(this.attrs.text, tx, ty);
+		this.strokeText(this.attrs.text, tx, ty);
+		
         context.restore();
     };
     // call super constructor

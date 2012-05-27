@@ -32,15 +32,16 @@ Kinetic.Image = function(config) {
             context.beginPath();
             context.rect(0, 0, width, height);
             context.closePath();
-            this.applyStyles();
+            this.fill();
+            this.stroke();
 
             // if cropping
             if(cropWidth !== undefined && cropHeight !== undefined) {
-                context.drawImage(this.attrs.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height);
+                this.drawImage(this.attrs.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height);
             }
             // no cropping
             else {
-                context.drawImage(this.attrs.image, 0, 0, width, height);
+                this.drawImage(this.attrs.image, 0, 0, width, height);
             }
         }
     };
