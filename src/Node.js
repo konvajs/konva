@@ -157,10 +157,10 @@ Kinetic.Node.prototype = {
                     }
 
                     /*
-                     * if property is an object, then add an empty object
+                     * if property is a pure object (no methods), then add an empty object
                      * to the node and then traverse
                      */
-                    if(go._isObject(val) && !go._isArray(val) && !go._isElement(val)) {
+                    if(go._isObject(val) && !go._isArray(val) && !go._isElement(val) && !go._hasMethods(val)) {
                         if(obj[key] === undefined) {
                             obj[key] = {};
                         }

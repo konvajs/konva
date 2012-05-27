@@ -120,7 +120,7 @@ Kinetic.GlobalObject = {
         }
     },
     /*
-     * utilities
+     * cherry-picked and modified utilities from underscore.js
      */
     _isElement: function(obj) {
         return !!(obj && obj.nodeType == 1);
@@ -137,6 +137,14 @@ Kinetic.GlobalObject = {
     },
     _isNumber: function(obj) {
         return toString.call(obj) == '[object Number]';
+    },
+    _hasMethods: function(obj) {
+        var names = [];
+        for(var key in obj) {
+            if(this._isFunction(obj[key]))
+                names.push(key);
+        }
+        return names.length > 0;
     },
     /*
      * The argument can be:

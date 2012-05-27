@@ -1167,6 +1167,47 @@ Test.prototype.tests = {
         });
         //stage.start();
     },
+    'SHAPE - add shape with custom attr pointing to self': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            centerOffset: {
+                x: 0,
+                y: 0
+            },
+            scale: {
+                x: 2,
+                y: 2
+            }
+        });
+        layer.add(circle);
+        stage.add(layer);
+
+        /*
+         * add custom attr that points to self.  The setAttrs method should
+         * not inifinitely recurse causing a stack overflow
+         */
+        circle.setAttrs({
+            self: circle
+        });
+
+        /*
+         * serialize the stage.  The json should succeed because objects that have
+         * methods, such as self, are not serialized, and will therefore avoid
+         * circular json errors.
+         */
+        var json = stage.toJSON();
+    },
     'SHAPE - set fill after instantiation': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

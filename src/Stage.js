@@ -182,17 +182,17 @@ Kinetic.Stage.prototype = {
 
         function addNode(node) {
             var obj = {};
-            
+
             var cleanAttrs = node.attrs;
-            
-            // remove function, image, and DOM attrs
-            for (var key in cleanAttrs) {
-            	var val = cleanAttrs[key];
-            	if (go._isFunction(val) || go._isElement(val)) {
-            		cleanAttrs[key] = undefined;
-            	}
-            }  
-            
+
+            // remove function, image, DOM, and objects with methods
+            for(var key in cleanAttrs) {
+                var val = cleanAttrs[key];
+                if(go._isFunction(val) || go._isElement(val) || go._hasMethods(val)) {
+                    cleanAttrs[key] = undefined;
+                }
+            }
+
             obj.attrs = cleanAttrs;
 
             obj.nodeType = node.nodeType;
@@ -394,7 +394,7 @@ Kinetic.Stage.prototype = {
         // draw layer and append canvas to container
         layer.draw();
         this.content.appendChild(layer.canvas);
-        
+
         /*
          * set layer last draw time to zero
          * so that throttling doesn't take into account

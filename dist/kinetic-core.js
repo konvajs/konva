@@ -148,7 +148,7 @@ Kinetic.GlobalObject = {
         }
     },
     /*
-     * utilities
+     * cherry-picked and modified utilities from underscore.js
      */
     _isElement: function(obj) {
         return !!(obj && obj.nodeType == 1);
@@ -165,6 +165,14 @@ Kinetic.GlobalObject = {
     },
     _isNumber: function(obj) {
         return toString.call(obj) == '[object Number]';
+    },
+    _hasMethods: function(obj) {
+        var names = [];
+        for(var key in obj) {
+            if(this._isFunction(obj[key]))
+                names.push(key);
+        }
+        return names.length > 0;
     },
     /*
      * The argument can be:
@@ -513,10 +521,10 @@ Kinetic.Node.prototype = {
                     }
 
                     /*
-                     * if property is an object, then add an empty object
+                     * if property is a pure object (no methods), then add an empty object
                      * to the node and then traverse
                      */
-                    if(go._isObject(val) && !go._isArray(val) && !go._isElement(val)) {
+                    if(go._isObject(val) && !go._isArray(val) && !go._isElement(val) && !go._hasMethods(val)) {
                         if(obj[key] === undefined) {
                             obj[key] = {};
                         }
@@ -1625,17 +1633,17 @@ Kinetic.Stage.prototype = {
 
         function addNode(node) {
             var obj = {};
-            
+
             var cleanAttrs = node.attrs;
-            
-            // remove function, image, and DOM attrs
-            for (var key in cleanAttrs) {
-            	var val = cleanAttrs[key];
-            	if (go._isFunction(val) || go._isElement(val)) {
-            		cleanAttrs[key] = undefined;
-            	}
-            }  
-            
+
+            // remove function, image, DOM, and objects with methods
+            for(var key in cleanAttrs) {
+                var val = cleanAttrs[key];
+                if(go._isFunction(val) || go._isElement(val) || go._hasMethods(val)) {
+                    cleanAttrs[key] = undefined;
+                }
+            }
+
             obj.attrs = cleanAttrs;
 
             obj.nodeType = node.nodeType;
@@ -1837,7 +1845,7 @@ Kinetic.Stage.prototype = {
         // draw layer and append canvas to container
         layer.draw();
         this.content.appendChild(layer.canvas);
-        
+
         /*
          * set layer last draw time to zero
          * so that throttling doesn't take into account
