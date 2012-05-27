@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: May 26 2012
+ * Date: May 27 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -45,7 +45,6 @@ Kinetic.GlobalObject = {
     animations: [],
     animIdCounter: 0,
     animRunning: false,
-    dragTimeInterval: 0,
     maxDragTimeInterval: 20,
     frame: {
         time: 0,
@@ -927,7 +926,7 @@ Kinetic.Node.prototype = {
     draggable: function(isDraggable) {
         if(this.attrs.draggable !== isDraggable) {
             if(isDraggable) {
-                this._initDrag();
+                this._listenDrag();
             }
             else {
                 this._dragCleanup();
@@ -1156,25 +1155,26 @@ Kinetic.Node.prototype = {
 
         return m;
     },
-    /**
-     * initialize drag and drop
-     */
-    _initDrag: function() {
+    _listenDrag: function() {
         this._dragCleanup();
         var go = Kinetic.GlobalObject;
         var that = this;
         this.on('mousedown.initdrag touchstart.initdrag', function(evt) {
-            var stage = that.getStage();
-            var pos = stage.getUserPosition();
-
-            if(pos) {
-                var m = that.getTransform().getTranslation();
-                var am = that.getAbsoluteTransform().getTranslation();
-                go.drag.node = that;
-                go.drag.offset.x = pos.x - that.getAbsoluteTransform().getTranslation().x;
-                go.drag.offset.y = pos.y - that.getAbsoluteTransform().getTranslation().y;
-            }
+			that._initDrag();
         });
+    },
+    _initDrag: function() {
+    	var go = Kinetic.GlobalObject;
+        var stage = this.getStage();
+        var pos = stage.getUserPosition();
+
+        if(pos) {
+            var m = this.getTransform().getTranslation();
+            var am = this.getAbsoluteTransform().getTranslation();
+            go.drag.node = this;
+            go.drag.offset.x = pos.x - this.getAbsoluteTransform().getTranslation().x;
+            go.drag.offset.y = pos.y - this.getAbsoluteTransform().getTranslation().y;
+        }
     },
     /**
      * remove drag and drop event listener
@@ -1224,7 +1224,7 @@ Kinetic.Node.prototype = {
         var mouseoutParent = mouseoutNode ? mouseoutNode.parent : undefined;
 
         // simulate event bubbling
-        if(!evt.cancelBubble && node.parent.nodeType !== 'Stage') {
+        if(!evt.cancelBubble && node.parent && node.parent.nodeType !== 'Stage') {
             this._handleEvent(node.parent, mouseoverParent, mouseoutParent, eventType, evt);
         }
     }
@@ -1413,11 +1413,13 @@ Kinetic.Container.prototype = {
         var children = this.children;
         for(var n = 0; n < children.length; n++) {
             var child = children[n];
-            if(child.nodeType === 'Shape' && child.isVisible() && stage.isVisible()) {
-                child._draw(child.getLayer());
+            if(child.nodeType === 'Shape') {
+                if(child.isVisible() && stage.isVisible()) {
+                    child._draw(child.getLayer());
+                }
             }
             else {
-                child._draw();
+                child.draw();
             }
         }
     },
@@ -1673,7 +1675,7 @@ Kinetic.Stage.prototype = {
 
         // defaults
         this._setStageDefaultProperties();
-		this.setAttrs(this.defaultNodeAttrs);
+        this.setAttrs(this.defaultNodeAttrs);
     },
     /**
      * load stage with JSON string.  De-serializtion does not generate custom
@@ -2046,11 +2048,20 @@ Kinetic.Stage.prototype = {
      * to the container
      */
     _listen: function() {
+        var go = Kinetic.GlobalObject;
         var that = this;
 
         // desktop events
         this.content.addEventListener('mousedown', function(evt) {
             that.mouseDown = true;
+
+            /*
+             * init stage drag and drop
+             */
+            if(that.attrs.draggable) {
+                that._initDrag();
+            }
+
             that._handleStageEvent(evt);
         }, false);
 
@@ -2064,7 +2075,6 @@ Kinetic.Stage.prototype = {
             that.mouseUp = true;
             that.mouseDown = false;
             that._handleStageEvent(evt);
-
             that.clickStart = false;
         }, false);
 
@@ -2085,6 +2095,14 @@ Kinetic.Stage.prototype = {
         this.content.addEventListener('touchstart', function(evt) {
             evt.preventDefault();
             that.touchStart = true;
+            
+            /*
+             * init stage drag and drop
+             */
+            if(that.attrs.draggable) {
+                that._initDrag();
+            }
+            
             that._handleStageEvent(evt);
         }, false);
 
@@ -2191,61 +2209,64 @@ Kinetic.Stage.prototype = {
             var go = Kinetic.GlobalObject;
             var node = go.drag.node;
             if(node) {
-                var date = new Date();
-                var time = date.getTime();
+                var pos = that.getUserPosition();
+                var dc = node.attrs.dragConstraint;
+                var db = node.attrs.dragBounds;
+                var lastNodePos = {
+                    x: node.attrs.x,
+                    y: node.attrs.y
+                };
 
-                if(time - go.drag.lastDrawTime > go.dragTimeInterval) {
-                    go.drag.lastDrawTime = time;
+                // default
+                var newNodePos = {
+                    x: pos.x - go.drag.offset.x,
+                    y: pos.y - go.drag.offset.y
+                };
 
-                    var pos = that.getUserPosition();
-                    var dc = node.attrs.dragConstraint;
-                    var db = node.attrs.dragBounds;
-                    var lastNodePos = {
-                        x: node.attrs.x,
-                        y: node.attrs.y
-                    };
-
-                    // default
-                    var newNodePos = {
-                        x: pos.x - go.drag.offset.x,
-                        y: pos.y - go.drag.offset.y
-                    };
-
-                    // bounds overrides
-                    if(db.left !== undefined && newNodePos.x < db.left) {
-                        newNodePos.x = db.left;
-                    }
-                    if(db.right !== undefined && newNodePos.x > db.right) {
-                        newNodePos.x = db.right;
-                    }
-                    if(db.top !== undefined && newNodePos.y < db.top) {
-                        newNodePos.y = db.top;
-                    }
-                    if(db.bottom !== undefined && newNodePos.y > db.bottom) {
-                        newNodePos.y = db.bottom;
-                    }
-
-                    node.setAbsolutePosition(newNodePos);
-
-                    // constraint overrides
-                    if(dc === 'horizontal') {
-                        node.attrs.y = lastNodePos.y;
-                    }
-                    else if(dc === 'vertical') {
-                        node.attrs.x = lastNodePos.x;
-                    }
-
-                    go.drag.node.getLayer().draw();
-
-                    if(!go.drag.moving) {
-                        go.drag.moving = true;
-                        // execute dragstart events if defined
-                        go.drag.node._handleEvents('ondragstart', evt);
-                    }
-
-                    // execute user defined ondragmove if defined
-                    go.drag.node._handleEvents('ondragmove', evt);
+                // bounds overrides
+                if(db.left !== undefined && newNodePos.x < db.left) {
+                    newNodePos.x = db.left;
                 }
+                if(db.right !== undefined && newNodePos.x > db.right) {
+                    newNodePos.x = db.right;
+                }
+                if(db.top !== undefined && newNodePos.y < db.top) {
+                    newNodePos.y = db.top;
+                }
+                if(db.bottom !== undefined && newNodePos.y > db.bottom) {
+                    newNodePos.y = db.bottom;
+                }
+
+                node.setAbsolutePosition(newNodePos);
+
+                // constraint overrides
+                if(dc === 'horizontal') {
+                    node.attrs.y = lastNodePos.y;
+                }
+                else if(dc === 'vertical') {
+                    node.attrs.x = lastNodePos.x;
+                }
+
+                /*
+                 * if dragging and dropping the stage,
+                 * draw all of the layers
+                 */
+                if(go.drag.node.nodeType === 'Stage') {
+                    go.drag.node.draw();
+                }
+
+                else {
+                    go.drag.node.getLayer().draw();
+                }
+
+                if(!go.drag.moving) {
+                    go.drag.moving = true;
+                    // execute dragstart events if defined
+                    go.drag.node._handleEvents('ondragstart', evt);
+                }
+
+                // execute user defined ondragmove if defined
+                go.drag.node._handleEvents('ondragmove', evt);
             }
         }, false);
 
@@ -2532,14 +2553,11 @@ Kinetic.Group = function(config) {
     Kinetic.Container.apply(this, []);
     Kinetic.Node.apply(this, [config]);
 };
-/*
+/* 
  * Group methods
  */
 Kinetic.Group.prototype = {
-    /**
-     * draw children
-     */
-    _draw: function() {
+    draw: function() {
         if(this.attrs.visible) {
             this._drawChildren();
         }

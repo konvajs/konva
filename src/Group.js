@@ -16,14 +16,11 @@ Kinetic.Group = function(config) {
     Kinetic.Container.apply(this, []);
     Kinetic.Node.apply(this, [config]);
 };
-/*
+/* 
  * Group methods
  */
 Kinetic.Group.prototype = {
-    /**
-     * draw children
-     */
-    _draw: function() {
+    draw: function() {
         if(this.attrs.visible) {
             this._drawChildren();
         }

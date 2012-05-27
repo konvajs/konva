@@ -181,11 +181,13 @@ Kinetic.Container.prototype = {
         var children = this.children;
         for(var n = 0; n < children.length; n++) {
             var child = children[n];
-            if(child.nodeType === 'Shape' && child.isVisible() && stage.isVisible()) {
-                child._draw(child.getLayer());
+            if(child.nodeType === 'Shape') {
+                if(child.isVisible() && stage.isVisible()) {
+                    child._draw(child.getLayer());
+                }
             }
             else {
-                child._draw();
+                child.draw();
             }
         }
     },

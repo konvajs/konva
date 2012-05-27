@@ -221,7 +221,7 @@ Kinetic.Stage.prototype = {
 
         // defaults
         this._setStageDefaultProperties();
-		this.setAttrs(this.defaultNodeAttrs);
+        this.setAttrs(this.defaultNodeAttrs);
     },
     /**
      * load stage with JSON string.  De-serializtion does not generate custom
@@ -594,11 +594,20 @@ Kinetic.Stage.prototype = {
      * to the container
      */
     _listen: function() {
+        var go = Kinetic.GlobalObject;
         var that = this;
 
         // desktop events
         this.content.addEventListener('mousedown', function(evt) {
             that.mouseDown = true;
+
+            /*
+             * init stage drag and drop
+             */
+            if(that.attrs.draggable) {
+                that._initDrag();
+            }
+
             that._handleStageEvent(evt);
         }, false);
 
@@ -612,7 +621,6 @@ Kinetic.Stage.prototype = {
             that.mouseUp = true;
             that.mouseDown = false;
             that._handleStageEvent(evt);
-
             that.clickStart = false;
         }, false);
 
@@ -633,6 +641,14 @@ Kinetic.Stage.prototype = {
         this.content.addEventListener('touchstart', function(evt) {
             evt.preventDefault();
             that.touchStart = true;
+            
+            /*
+             * init stage drag and drop
+             */
+            if(that.attrs.draggable) {
+                that._initDrag();
+            }
+            
             that._handleStageEvent(evt);
         }, false);
 
@@ -739,61 +755,64 @@ Kinetic.Stage.prototype = {
             var go = Kinetic.GlobalObject;
             var node = go.drag.node;
             if(node) {
-                var date = new Date();
-                var time = date.getTime();
+                var pos = that.getUserPosition();
+                var dc = node.attrs.dragConstraint;
+                var db = node.attrs.dragBounds;
+                var lastNodePos = {
+                    x: node.attrs.x,
+                    y: node.attrs.y
+                };
 
-                if(time - go.drag.lastDrawTime > go.dragTimeInterval) {
-                    go.drag.lastDrawTime = time;
+                // default
+                var newNodePos = {
+                    x: pos.x - go.drag.offset.x,
+                    y: pos.y - go.drag.offset.y
+                };
 
-                    var pos = that.getUserPosition();
-                    var dc = node.attrs.dragConstraint;
-                    var db = node.attrs.dragBounds;
-                    var lastNodePos = {
-                        x: node.attrs.x,
-                        y: node.attrs.y
-                    };
-
-                    // default
-                    var newNodePos = {
-                        x: pos.x - go.drag.offset.x,
-                        y: pos.y - go.drag.offset.y
-                    };
-
-                    // bounds overrides
-                    if(db.left !== undefined && newNodePos.x < db.left) {
-                        newNodePos.x = db.left;
-                    }
-                    if(db.right !== undefined && newNodePos.x > db.right) {
-                        newNodePos.x = db.right;
-                    }
-                    if(db.top !== undefined && newNodePos.y < db.top) {
-                        newNodePos.y = db.top;
-                    }
-                    if(db.bottom !== undefined && newNodePos.y > db.bottom) {
-                        newNodePos.y = db.bottom;
-                    }
-
-                    node.setAbsolutePosition(newNodePos);
-
-                    // constraint overrides
-                    if(dc === 'horizontal') {
-                        node.attrs.y = lastNodePos.y;
-                    }
-                    else if(dc === 'vertical') {
-                        node.attrs.x = lastNodePos.x;
-                    }
-
-                    go.drag.node.getLayer().draw();
-
-                    if(!go.drag.moving) {
-                        go.drag.moving = true;
-                        // execute dragstart events if defined
-                        go.drag.node._handleEvents('ondragstart', evt);
-                    }
-
-                    // execute user defined ondragmove if defined
-                    go.drag.node._handleEvents('ondragmove', evt);
+                // bounds overrides
+                if(db.left !== undefined && newNodePos.x < db.left) {
+                    newNodePos.x = db.left;
                 }
+                if(db.right !== undefined && newNodePos.x > db.right) {
+                    newNodePos.x = db.right;
+                }
+                if(db.top !== undefined && newNodePos.y < db.top) {
+                    newNodePos.y = db.top;
+                }
+                if(db.bottom !== undefined && newNodePos.y > db.bottom) {
+                    newNodePos.y = db.bottom;
+                }
+
+                node.setAbsolutePosition(newNodePos);
+
+                // constraint overrides
+                if(dc === 'horizontal') {
+                    node.attrs.y = lastNodePos.y;
+                }
+                else if(dc === 'vertical') {
+                    node.attrs.x = lastNodePos.x;
+                }
+
+                /*
+                 * if dragging and dropping the stage,
+                 * draw all of the layers
+                 */
+                if(go.drag.node.nodeType === 'Stage') {
+                    go.drag.node.draw();
+                }
+
+                else {
+                    go.drag.node.getLayer().draw();
+                }
+
+                if(!go.drag.moving) {
+                    go.drag.moving = true;
+                    // execute dragstart events if defined
+                    go.drag.node._handleEvents('ondragstart', evt);
+                }
+
+                // execute user defined ondragmove if defined
+                go.drag.node._handleEvents('ondragmove', evt);
             }
         }, false);
 

@@ -563,7 +563,7 @@ Kinetic.Node.prototype = {
     draggable: function(isDraggable) {
         if(this.attrs.draggable !== isDraggable) {
             if(isDraggable) {
-                this._initDrag();
+                this._listenDrag();
             }
             else {
                 this._dragCleanup();
@@ -792,25 +792,26 @@ Kinetic.Node.prototype = {
 
         return m;
     },
-    /**
-     * initialize drag and drop
-     */
-    _initDrag: function() {
+    _listenDrag: function() {
         this._dragCleanup();
         var go = Kinetic.GlobalObject;
         var that = this;
         this.on('mousedown.initdrag touchstart.initdrag', function(evt) {
-            var stage = that.getStage();
-            var pos = stage.getUserPosition();
-
-            if(pos) {
-                var m = that.getTransform().getTranslation();
-                var am = that.getAbsoluteTransform().getTranslation();
-                go.drag.node = that;
-                go.drag.offset.x = pos.x - that.getAbsoluteTransform().getTranslation().x;
-                go.drag.offset.y = pos.y - that.getAbsoluteTransform().getTranslation().y;
-            }
+			that._initDrag();
         });
+    },
+    _initDrag: function() {
+    	var go = Kinetic.GlobalObject;
+        var stage = this.getStage();
+        var pos = stage.getUserPosition();
+
+        if(pos) {
+            var m = this.getTransform().getTranslation();
+            var am = this.getAbsoluteTransform().getTranslation();
+            go.drag.node = this;
+            go.drag.offset.x = pos.x - this.getAbsoluteTransform().getTranslation().x;
+            go.drag.offset.y = pos.y - this.getAbsoluteTransform().getTranslation().y;
+        }
     },
     /**
      * remove drag and drop event listener
@@ -860,7 +861,7 @@ Kinetic.Node.prototype = {
         var mouseoutParent = mouseoutNode ? mouseoutNode.parent : undefined;
 
         // simulate event bubbling
-        if(!evt.cancelBubble && node.parent.nodeType !== 'Stage') {
+        if(!evt.cancelBubble && node.parent && node.parent.nodeType !== 'Stage') {
             this._handleEvent(node.parent, mouseoverParent, mouseoutParent, eventType, evt);
         }
     }

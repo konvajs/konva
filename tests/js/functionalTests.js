@@ -1361,6 +1361,58 @@ Test.prototype.tests = {
         layer.add(circle);
         stage.add(layer);
     },
+    'DRAG AND DROP - drag and drop stage': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            draggable: true,
+            dragConstraint: 'horizontal',
+            /*
+            dragBounds: {
+            	left: 100
+            }
+            */
+        });
+        var layer = new Kinetic.Layer({
+        	/*
+        	draggable: true,
+        	dragBounds: {
+            	left: 100
+            }
+            */
+        });
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4,
+            //draggable: true,
+            /*
+        	dragBounds: {
+            	left: 100
+            }
+            */
+        });
+        
+        //stage.draggable(false);
+        //layer.draggable(false);
+        
+        stage.on('dragstart', function() {
+        	console.log('dragstart');
+        });
+        stage.on('dragmove', function() {
+        	//console.log('dragmove');
+        });
+        stage.on('dragend', function() {
+        	console.log('dragend');
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+    },
     'DRAG AND DROP - draggable true false': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1859,7 +1911,6 @@ Test.prototype.tests = {
         stage.add(layer);
 
         stage.hide();
-
         stage.draw();
     },
     'STAGE - hide layer': function(containerId) {
