@@ -373,7 +373,7 @@ window.requestAnimFrame = (function(callback) {
  * @param {Object} config
  */
 Kinetic.Node = function(config) {
-    this.setDefaultAttrs({
+    this.defaultNodeAttrs = {
         visible: true,
         listening: true,
         name: undefined,
@@ -392,8 +392,9 @@ Kinetic.Node = function(config) {
         dragConstraint: 'none',
         dragBounds: {},
         draggable: false
-    });
+    };
 
+    this.setDefaultAttrs(this.defaultNodeAttrs);
     this.eventListeners = {};
     this.setAttrs(config);
 };
@@ -1485,7 +1486,7 @@ Kinetic.Stage = function(config) {
     this.content = document.createElement('div');
     this.dblClickWindow = 400;
 
-    this._setDefaults();
+    this._setStageDefaultProperties();
 
     // set stage id
     this._id = Kinetic.GlobalObject.idCounter++;
@@ -1670,30 +1671,9 @@ Kinetic.Stage.prototype = {
         // remove children
         this.removeChildren();
 
-        // reset stage defaults
-        this._setDefaults();
-
-        // reset node attrs
-        this.setAttrs({
-            visible: true,
-            listening: true,
-            name: undefined,
-            alpha: 1,
-            x: 0,
-            y: 0,
-            scale: {
-                x: 1,
-                y: 1
-            },
-            rotation: 0,
-            centerOffset: {
-                x: 0,
-                y: 0
-            },
-            dragConstraint: 'none',
-            dragBounds: {},
-            draggable: false
-        });
+        // defaults
+        this._setStageDefaultProperties();
+		this.setAttrs(this.defaultNodeAttrs);
     },
     /**
      * load stage with JSON string.  De-serializtion does not generate custom
@@ -2359,7 +2339,7 @@ Kinetic.Stage.prototype = {
     /**
      * set defaults
      */
-    _setDefaults: function() {
+    _setStageDefaultProperties: function() {
         this.clickStart = false;
         this.targetShape = undefined;
         this.targetFound = false;

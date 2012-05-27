@@ -9,7 +9,7 @@
  * @param {Object} config
  */
 Kinetic.Node = function(config) {
-    this.setDefaultAttrs({
+    this.defaultNodeAttrs = {
         visible: true,
         listening: true,
         name: undefined,
@@ -28,8 +28,9 @@ Kinetic.Node = function(config) {
         dragConstraint: 'none',
         dragBounds: {},
         draggable: false
-    });
+    };
 
+    this.setDefaultAttrs(this.defaultNodeAttrs);
     this.eventListeners = {};
     this.setAttrs(config);
 };
