@@ -1173,38 +1173,39 @@ Test.prototype.tests = {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 1024,
-            height: 480
+            height: 480,
+            throttle: 80,
+            scale: 0.5,
+            x: 50,
+            y: 10
         });
-        var layer = new Kinetic.Layer();
+        var mapLayer = new Kinetic.Layer();
 
-        for(var key in worldMap) {
-            var c = worldMap[key];
-            // induce scope
-            ( function() {
-                var path = new Kinetic.Path({
-                    commands: c,
-                    fill: '#ccc',
-                    stroke: '#999',
-                    strokeWidth: 1
-                });
+        for(var key in worldMap.shapes) {
+            var c = worldMap.shapes[key];
 
-                path.on('mouseover', function() {
-                    //console.log(1)
-                    //path.setFill('red');
-                    //layer.draw();
-                });
+            var path = new Kinetic.Path({
+                commands: c,
+                fill: '#ccc',
+                stroke: '#999',
+                strokeWidth: 1
+            });
 
-                path.on('mouseout', function() {
-                    //path.setFill('#ccc');
-                    //layer.draw();
-                });
+            path.on('mouseover', function() {
+                //console.log(1)
+                this.setFill('red');
+                mapLayer.draw();
+            });
 
-                layer.add(path);
+            path.on('mouseout', function() {
+                this.setFill('#ccc');
+                mapLayer.draw();
+            });
 
-            }());
-
-            stage.add(layer);
+            mapLayer.add(path);
         }
+        
+        stage.add(mapLayer);
 
     },
     'SHAPE - add shape with custom attr pointing to self': function(containerId) {

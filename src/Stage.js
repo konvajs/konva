@@ -14,10 +14,12 @@
 Kinetic.Stage = function(config) {
     this.setDefaultAttrs({
         width: 400,
-        height: 200
+        height: 200,
+        throttle: 80
     });
 
     this.nodeType = 'Stage';
+    this.lastEventTime = 0;
 
     /*
      * if container is a string, assume it's an id for
@@ -549,11 +551,26 @@ Kinetic.Stage.prototype = {
 
         return false;
     },
+    _handleStageEvent: function(evt) {
+        var throttle = this.attrs.throttle;
+        var date = new Date();
+        var time = date.getTime();
+        var timeDiff = time - this.lastEventTime;
+        var tt = 1000 / throttle;
+
+        if(timeDiff >= tt) {
+            this._handleStageEventContinue(evt);
+        }
+    },
     /**
      * handle incoming event
      * @param {Event} evt
      */
-    _handleStageEvent: function(evt) {
+    _handleStageEventContinue: function(evt) {
+        var date = new Date();
+        var time = date.getTime();
+        this.lastEventTime = time;
+
         var go = Kinetic.GlobalObject;
         if(!evt) {
             evt = window.event;
@@ -623,10 +640,11 @@ Kinetic.Stage.prototype = {
             that._handleStageEvent(evt);
             that.clickStart = false;
         }, false);
-
-        this.content.addEventListener('mouseover', function(evt) {
-            that._handleStageEvent(evt);
-        }, false);
+        /*
+         this.content.addEventListener('mouseover', function(evt) {
+         that._handleStageEvent(evt);
+         }, false);
+         */
 
         this.content.addEventListener('mouseout', function(evt) {
             // if there's a current target shape, run mouseout handlers
@@ -641,14 +659,14 @@ Kinetic.Stage.prototype = {
         this.content.addEventListener('touchstart', function(evt) {
             evt.preventDefault();
             that.touchStart = true;
-            
+
             /*
              * init stage drag and drop
              */
             if(that.attrs.draggable) {
                 that._initDrag();
             }
-            
+
             that._handleStageEvent(evt);
         }, false);
 

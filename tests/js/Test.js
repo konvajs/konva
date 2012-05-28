@@ -16,7 +16,7 @@ function log(message) {
  * Test constructor
  */
 function Test() {
-    this.testOnly = 'SHAPE - add path';
+    this.testOnly = '';
     this.counter = 0;
     
     testCounter = document.createElement('div');
