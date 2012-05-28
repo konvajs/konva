@@ -1169,6 +1169,44 @@ Test.prototype.tests = {
         });
         //stage.start();
     },
+    'SHAPE - add path': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 1024,
+            height: 480
+        });
+        var layer = new Kinetic.Layer();
+
+        for(var key in worldMap) {
+            var c = worldMap[key];
+            // induce scope
+            ( function() {
+                var path = new Kinetic.Path({
+                    commands: c,
+                    fill: '#ccc',
+                    stroke: '#999',
+                    strokeWidth: 1
+                });
+
+                path.on('mouseover', function() {
+                    //console.log(1)
+                    //path.setFill('red');
+                    //layer.draw();
+                });
+
+                path.on('mouseout', function() {
+                    //path.setFill('#ccc');
+                    //layer.draw();
+                });
+
+                layer.add(path);
+
+            }());
+
+            stage.add(layer);
+        }
+
+    },
     'SHAPE - add shape with custom attr pointing to self': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
