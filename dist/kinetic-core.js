@@ -4107,24 +4107,29 @@ Kinetic.Path = function(config) {
                     context.moveTo(p[0], p[1]);
                     break;
                 case 'z':
-                context.closePath();
+                    context.closePath();
                     break;
             }
         }
-        
         this.fill();
         this.stroke();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
 
-    this.setCommandsArray();
+    this.commandsArray = this.getCommandsArray();
 };
 /*
  * Path methods
  */
 Kinetic.Path.prototype = {
-    setCommandsArray: function() {
+    /**
+     * get parsed commands array from the commands
+     *  string.  V, v, H, h, and l commands are converted to
+     *  L commands for the purpose of high performance Path
+     *  rendering
+     */
+    getCommandsArray: function() {
         var c = this.attrs.commands;
         // command chars
         var cc = ['M', 'l', 'L', 'v', 'V', 'h', 'H', 'z'];
@@ -4156,7 +4161,7 @@ Kinetic.Path.prototype = {
                 points: points
             });
         }
-        // convert l, h, and v to L
+        // convert l, H, h, V, and v to L
         var cpx = 0;
         var cpy = 0;
         for(var n = 0; n < ca.length; n++) {
@@ -4191,13 +4196,29 @@ Kinetic.Path.prototype = {
             }
 
             // reassign command
-            if(c !== 'L' && c !== 'M') {
+            if(c == 'l' || c == 'V' || c == 'v' || c == 'H' || c == 'h') {
                 ca[n].command = 'L';
                 ca[n].points[0] = cpx;
                 ca[n].points[1] = cpy;
             }
         }
-        this.commandsArray = ca;
+        return ca;
+    },
+    /**
+     * get SVG path commands string
+     */
+    getCommands: function() {
+        return this.attrs.commands;
+    },
+    /**
+     * set SVG path commands string.  This method
+     *  also automatically parses the commands string
+     *  into a commands array.  Currently supported SVG commands:
+     *  M, L, l, H, h, V, v, z
+     */
+    setCommands: function(commands) {
+        this.attrs.commands = commands;
+        this.commandsArray = this.getCommandsArray();
     }
 };
 
