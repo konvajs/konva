@@ -73,17 +73,20 @@ Kinetic.Path.prototype = {
 		//C (x1 y1 x2 y2 x y)+ Absolute Bezier curve
 		//q (x1 y1 x y)+       Relative Quadratic Bezier
 		//Q (x1 y1 x y)+       Absolute Quadratic Bezier
-		
 		//t (x y)+	Shorthand/Smooth Relative Quadratic Bezier
 		//T (x y)+	Shorthand/Smooth Absolute Quadratic Bezier
+		//s (x2 y2 x y)+	   Shorthand/Smooth Relative Bezier curve
+		//S (x2 y2 x y)+	   Shorthand/Smooth Absolute Bezier curve
 		
-		// Note: SVG s,S,t,T,a,A not implemented here
+		// Note: SVG a,A not implemented here
+		//a (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+ 	Relative Elliptical Arc
+		//A (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+  Absolute Elliptical Arc
 	
 	
         // command string
         var cs = this.attrs.commands;
         // command chars
-        var cc = ['m', 'M', 'l', 'L', 'v', 'V', 'h', 'H', 'z', 'Z', 'c', 'C', 'q', 'Q', 't', 'T'];
+        var cc = ['m', 'M', 'l', 'L', 'v', 'V', 'h', 'H', 'z', 'Z', 'c', 'C', 'q', 'Q', 't', 'T', 's', 'S'];
         // convert white spaces to commas
         cs = cs.replace(new RegExp(' ', 'g'), ',');
         // create pipes so that we can split the commands
@@ -185,7 +188,33 @@ Kinetic.Path.prototype = {
 						cpy += p.shift();
 						cmd = 'C'
 						points.push(cpx, cpy);	
-						break;						
+						break;			
+					case 'S':
+						var ctlPtx = cpx, ctlPty = cpy;						
+						var prevCmd = ca[ca.length-1];
+						if (prevCmd.command === 'C') {
+							ctlPtx = cpx + (cpx - prevCmd.points[2]);
+							ctlPty = cpy + (cpy - prevCmd.points[3]);
+						}
+						points.push(ctlPtx, ctlPty, p.shift(), p.shift())
+						cpx = p.shift();
+						cpy = p.shift();
+						cmd = 'C';
+						points.push(cpx, cpy);
+						break;		
+					case 's':
+						var ctlPtx = cpx, ctlPty = cpy;						
+						var prevCmd = ca[ca.length-1];
+						if (prevCmd.command === 'C') {
+							ctlPtx = cpx + (cpx - prevCmd.points[2]);
+							ctlPty = cpy + (cpy - prevCmd.points[3]);
+						}
+						points.push(ctlPtx, ctlPty, cpx + p.shift(), cpy + p.shift())
+						cpx += p.shift();
+						cpy += p.shift();
+						cmd = 'C';
+						points.push(cpx, cpy);
+						break;		
 					case 'Q':
 						points.push(p.shift(), p.shift());
 						cpx = p.shift();
@@ -222,7 +251,8 @@ Kinetic.Path.prototype = {
 						cpy += p.shift();
 						cmd = 'Q';
 						points.push(ctlPtx, ctlPty, cpx, cpy);
-						break;						
+						break;		
+				
 				}
 
 				ca.push({
@@ -235,8 +265,7 @@ Kinetic.Path.prototype = {
 			if (c === 'z' || c === 'Z')
 				ca.push( {command: 'z', points: [] });
         }			
-		
-		
+			
         return ca;
     },
     /**
@@ -249,7 +278,7 @@ Kinetic.Path.prototype = {
      * set SVG path commands string.  This method
      *  also automatically parses the commands string
      *  into a commands array.  Currently supported SVG commands:
-     *  M, L, l, H, h, V, v, z
+     *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, Z, z
      * @param {String} SVG path command string
      */
     setCommands: function(commands) {

@@ -1413,6 +1413,80 @@ Test.prototype.tests = {
         stage.add(layer);
 
     },	
+    'SHAPE - Cubic Bezier Curve test from SVG w3c spec': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 1024,
+            height: 480,
+            throttle: 80,
+            scale: 0.5,
+            x: 50,
+            y: 10
+        });
+        var layer = new Kinetic.Layer();
+
+		var c = "M100,200 C100,100 250,100 250,200 S400,300 400,200";
+		
+		var path = new Kinetic.Path({
+			commands: c,
+			stroke: 'red',
+			strokeWidth: 5,
+		});
+
+		layer.add(path);
+		
+		layer.add(new Kinetic.Circle({
+			x: 100,
+			y: 200,
+			radius: 10,
+			stroke: '#888'
+		}));
+
+		layer.add(new Kinetic.Circle({
+			x: 250,
+			y: 200,
+			radius: 10,
+			stroke: '#888'
+		}));		
+
+		layer.add(new Kinetic.Circle({
+			x: 400,
+			y: 200,
+			radius: 10,
+			stroke: '#888'
+		}));	
+		
+		layer.add(new Kinetic.Circle({
+			x: 100,
+			y: 100,
+			radius: 10,
+			fill: '#888'
+		}));	
+		
+		layer.add(new Kinetic.Circle({
+			x: 250,
+			y: 100,
+			radius: 10,
+			fill: '#888'
+		}));
+		
+		layer.add(new Kinetic.Circle({
+			x: 400,
+			y: 300,
+			radius: 10,
+			fill: '#888'
+		}));
+		
+		layer.add(new Kinetic.Circle({
+			x: 250,
+			y: 300,
+			radius: 10,
+			stroke: 'blue'
+		}));
+		
+        stage.add(layer);
+
+    },	
     'SHAPE - add shape with custom attr pointing to self': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
