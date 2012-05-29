@@ -135,7 +135,7 @@ Kinetic.GlobalObject = {
         return obj === Object(obj);
     },
     _isNumber: function(obj) {
-        return toString.call(obj) == '[object Number]';
+        return Object.prototype.toString.call(obj) == '[object Number]';
     },
     _hasMethods: function(obj) {
         var names = [];

@@ -163,7 +163,7 @@ Kinetic.GlobalObject = {
         return obj === Object(obj);
     },
     _isNumber: function(obj) {
-        return toString.call(obj) == '[object Number]';
+        return Object.prototype.toString.call(obj) == '[object Number]';
     },
     _hasMethods: function(obj) {
         var names = [];
@@ -3128,7 +3128,8 @@ Kinetic.Rect.prototype = {
      * set width and height
      */
     setSize: function() {
-        this.setAttrs(arguments);
+        var size = Kinetic.GlobalObject._getSize(arguments);
+        this.setAttrs(size);
     },
     /**
      * return rect size
@@ -3304,7 +3305,8 @@ Kinetic.Image.prototype = {
      * set width and height
      */
     setSize: function() {
-        this.setAttrs(arguments);
+        var size = Kinetic.GlobalObject._getSize(arguments);
+        this.setAttrs(size);
     },
     /**
      * return image size
@@ -3965,7 +3967,7 @@ Kinetic.Line = function(config) {
         if(!!this.attrs.lineCap) {
             context.lineCap = this.attrs.lineCap;
         }
-        this.fill();
+
         this.stroke();
     };
     // call super constructor
@@ -4093,8 +4095,6 @@ Kinetic.Path = function(config) {
         var context = this.getContext();
         var ca = this.commandsArray;
         // context position
-        var cpx = 0;
-        var cpy = 0;
         context.beginPath();
         for(var n = 0; n < ca.length; n++) {
             var c = ca[n].command;
@@ -4134,8 +4134,9 @@ Kinetic.Path.prototype = {
         var cs = this.attrs.commands;
         // command chars
         var cc = ['M', 'l', 'L', 'v', 'V', 'h', 'H', 'z'];
-        // remove white spaces
-        cs = cs.replace(new RegExp(' ', 'g'), '');
+        // convert white spaces to commas
+        cs = cs.replace(new RegExp(' ', 'g'), ',');
+        // create pipes so that we can split the commands
         for(var n = 0; n < cc.length; n++) {
             cs = cs.replace(new RegExp(cc[n], 'g'), '|' + cc[n]);
         }

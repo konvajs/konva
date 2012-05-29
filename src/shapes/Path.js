@@ -16,8 +16,6 @@ Kinetic.Path = function(config) {
         var context = this.getContext();
         var ca = this.commandsArray;
         // context position
-        var cpx = 0;
-        var cpy = 0;
         context.beginPath();
         for(var n = 0; n < ca.length; n++) {
             var c = ca[n].command;
@@ -57,8 +55,9 @@ Kinetic.Path.prototype = {
         var cs = this.attrs.commands;
         // command chars
         var cc = ['M', 'l', 'L', 'v', 'V', 'h', 'H', 'z'];
-        // remove white spaces
-        cs = cs.replace(new RegExp(' ', 'g'), '');
+        // convert white spaces to commas
+        cs = cs.replace(new RegExp(' ', 'g'), ',');
+        // create pipes so that we can split the commands
         for(var n = 0; n < cc.length; n++) {
             cs = cs.replace(new RegExp(cc[n], 'g'), '|' + cc[n]);
         }

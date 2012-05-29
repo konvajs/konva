@@ -41,7 +41,7 @@ Kinetic.Line = function(config) {
         if(!!this.attrs.lineCap) {
             context.lineCap = this.attrs.lineCap;
         }
-        this.fill();
+
         this.stroke();
     };
     // call super constructor

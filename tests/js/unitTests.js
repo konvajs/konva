@@ -440,6 +440,9 @@ Test.prototype.tests = {
         stage.add(layer);
 
         stage.setScale(0.5);
+        
+        test(stage.getScale().x === 0.5, 'stage scale x should be 0.5');
+        test(stage.getScale().y === 0.5, 'stage scale y should be 0.5');
 
         stage.draw();
     },
@@ -460,6 +463,10 @@ Test.prototype.tests = {
         });
 
         stage.setScale(0.5);
+        
+        test(stage.getScale().x === 0.5, 'stage scale x should be 0.5');
+        test(stage.getScale().y === 0.5, 'stage scale y should be 0.5');
+        
         layer.add(circle);
         stage.add(layer);
     },
