@@ -74,13 +74,16 @@ Kinetic.Path.prototype = {
 		//q (x1 y1 x y)+       Relative Quadratic Bezier
 		//Q (x1 y1 x y)+       Absolute Quadratic Bezier
 		
+		//t (x y)+	Shorthand/Smooth Relative Quadratic Bezier
+		//T (x y)+	Shorthand/Smooth Absolute Quadratic Bezier
+		
 		// Note: SVG s,S,t,T,a,A not implemented here
 	
 	
         // command string
         var cs = this.attrs.commands;
         // command chars
-        var cc = ['m', 'M', 'l', 'L', 'v', 'V', 'h', 'H', 'z', 'Z', 'c', 'C', 'q', 'Q'];
+        var cc = ['m', 'M', 'l', 'L', 'v', 'V', 'h', 'H', 'z', 'Z', 'c', 'C', 'q', 'Q', 't', 'T'];
         // convert white spaces to commas
         cs = cs.replace(new RegExp(' ', 'g'), ',');
         // create pipes so that we can split the commands
@@ -196,6 +199,30 @@ Kinetic.Path.prototype = {
 						cmd = 'Q'
 						points.push(cpx, cpy);	
 						break;
+					case 'T':
+						var ctlPtx = cpx, ctlPty = cpy;						
+						var prevCmd = ca[ca.length-1];
+						if (prevCmd.command === 'Q') {
+							ctlPtx = cpx + (cpx - prevCmd.points[0]);
+							ctlPty = cpy + (cpy - prevCmd.points[1]);
+						}
+						cpx = p.shift();
+						cpy = p.shift();
+						cmd = 'Q';
+						points.push(ctlPtx, ctlPty, cpx, cpy);
+						break;
+					case 't':
+						var ctlPtx = cpx, ctlPty = cpy;						
+						var prevCmd = ca[ca.length-1];
+						if (prevCmd.command === 'Q') {
+							ctlPtx = cpx + (cpx - prevCmd.points[0]);
+							ctlPty = cpy + (cpy - prevCmd.points[1]);
+						}
+						cpx += p.shift();
+						cpy += p.shift();
+						cmd = 'Q';
+						points.push(ctlPtx, ctlPty, cpx, cpy);
+						break;						
 				}
 
 				ca.push({

@@ -1347,6 +1347,72 @@ Test.prototype.tests = {
         stage.add(layer);
 
     },	
+    'SHAPE - Quadradic Curve test from SVG w3c spec': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 1024,
+            height: 480,
+            throttle: 80,
+            scale: 0.25,
+            x: 50,
+            y: 10
+        });
+        var layer = new Kinetic.Layer();
+
+		var c = "M200,300 Q400,50 600,300 T1000,300";
+		
+		var path = new Kinetic.Path({
+			commands: c,
+			stroke: 'red',
+			strokeWidth: 5,
+		});
+
+		layer.add(path);
+		
+		layer.add(new Kinetic.Circle({
+			x: 200,
+			y: 300,
+			radius: 10,
+			fill: 'black'
+		}));
+
+		layer.add(new Kinetic.Circle({
+			x: 600,
+			y: 300,
+			radius: 10,
+			fill: 'black'
+		}));		
+
+		layer.add(new Kinetic.Circle({
+			x: 1000,
+			y: 300,
+			radius: 10,
+			fill: 'black'
+		}));	
+		
+		layer.add(new Kinetic.Circle({
+			x: 400,
+			y: 50,
+			radius: 10,
+			fill: '#888'
+		}));	
+		
+		layer.add(new Kinetic.Circle({
+			x: 800,
+			y: 550,
+			radius: 10,
+			fill: '#888'
+		}));
+		
+		layer.add(new Kinetic.Path({
+		commands: "M200,300 L400,50L600,300L800,550L1000,300",
+			stroke: "#888",
+			strokeWidth: 2
+		}));
+		
+        stage.add(layer);
+
+    },	
     'SHAPE - add shape with custom attr pointing to self': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
