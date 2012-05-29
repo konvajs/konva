@@ -1227,6 +1227,50 @@ Test.prototype.tests = {
         path.setCommands('M200,100h100v50z');
 
     },
+	'SHAPE - moveTo with implied lineTos and trailing comma': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 1024,
+            height: 480,
+            scale: 0.5,
+            x: 50,
+            y: 10
+        });
+        var layer = new Kinetic.Layer();
+
+        var path = new Kinetic.Path({
+            commands: 'm200,100,100,0,0,50,z',
+            fill: '#fcc',
+            stroke: '#333',
+            strokeWidth: 2,
+            shadow: {
+                color: 'maroon',
+                blur: 2,
+                offset: [10, 10],
+                alpha: 0.5
+            },
+            draggable: true
+        });
+
+        path.on('mouseover', function() {
+            this.setFill('red');
+            layer.draw();
+        });
+
+        path.on('mouseout', function() {
+            this.setFill('#ccc');
+            layer.draw();
+        });
+
+        layer.add(path);
+
+        stage.add(layer);
+
+        test(path.getCommands() === 'm200,100,100,0,0,50,z', 'commands are incorrect');
+        test(path.getCommandsArray().length === 4, 'commands array should have 4 elements');
+		
+		test(path.getCommandsArray()[1].command === 'L', 'second command should be an implied lineTo');
+    },
     'SHAPE - add map path': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

@@ -26,7 +26,11 @@ Kinetic.Path = function(config) {
                     break;
                 case 'M':
                     context.moveTo(p[0], p[1]);
+					c = 'L'; // Subsequent points are treated as lineTo
                     break;
+				//case 'C':
+				//	context.bezierCurveTo(p[0], p[1], p[2], p[3], path[i].p.x, path[i].p.y);
+					
                 case 'z':
                     context.closePath();
                     break;
@@ -51,10 +55,29 @@ Kinetic.Path.prototype = {
      *  rendering
      */
     getCommandsArray: function() {
+
+		// Path Data Segment must begin with a moveTo
+		//m (x y)+  Relative moveTo (subsequent points are treated as lineTo)
+		//M (x y)+  Absolute moveTo (subsequent points are treated as lineTo)
+		//l (x y)+  Relative lineTo
+		//L (x y)+  Absolute LineTo
+		//h (x)+    Relative horizontal lineTo
+		//H (x)+    Absolute horizontal lineTo
+		//v (y)+    Relative vertical lineTo
+		//V (y)+    Absolute vertical lineTo
+		//z (closepath)
+		//Z (closepath)
+		//c (x1 y1 x2 y2 x y)+ Relative Bezier curve
+		//C (x1 y1 x2 y2 x y)+ Absolute Bezier curve
+		//q (x1 y1 x y)+       Relative Quadratic Bezier
+		//Q (x1 y1 x y)+       Absolute Quadratic Bezier
+		// Note: SVG s,S,t,T,a,A not implemented here
+	
+	
         // command string
         var cs = this.attrs.commands;
         // command chars
-        var cc = ['M', 'l', 'L', 'v', 'V', 'h', 'H', 'z'];
+        var cc = ['m', 'M', 'l', 'L', 'v', 'V', 'h', 'H', 'z', 'Z'];
         // convert white spaces to commas
         cs = cs.replace(new RegExp(' ', 'g'), ',');
         // create pipes so that we can split the commands
@@ -83,44 +106,68 @@ Kinetic.Path.prototype = {
             for(var i = 0; i < p.length; i++) {
                 p[i] = parseFloat(p[i]);
             }
-            // convert l, H, h, V, and v to L
-            switch(c) {
-                case 'M':
-                    cpx = p[0];
-                    cpy = p[1];
-                    break;
-                case 'l':
-                    cpx += p[0];
-                    cpy += p[1];
-                    break;
-                case 'L':
-                    cpx = p[0];
-                    cpy = p[1];
-                    break;
-                case 'h':
-                    cpx += p[0];
-                    break;
-                case 'H':
-                    cpx = p[0];
-                    break;
-                case 'v':
-                    cpy += p[0];
-                    break;
-                case 'V':
-                    cpy = p[0];
-                    break;
-            }
-            // reassign command
-            if(c == 'l' || c == 'V' || c == 'v' || c == 'H' || c == 'h') {
-                c = 'L';
-                p[0] = cpx;
-                p[1] = cpy;
-            }
-            ca.push({
-                command: c,
-                points: p
-            });
-        }
+			
+			while (p.length > 0)
+			{
+				if (isNaN(p[0])) // case for a trailing comma before next command
+					break;
+					
+				var cmd = undefined;
+				
+				// convert l, H, h, V, and v to L
+				switch(c) {
+					case 'm':
+						cmd = 'M';
+						cpx += p.shift();
+						cpy += p.shift();
+						c = 'l'; // subsequent points are treated as relative lineTo
+						break;
+					case 'M':
+						cmd = 'M';
+						cpx = p.shift();
+						cpy = p.shift();
+						c = 'L'; // subsequent points are treated as absolute lineTo
+						break;
+					case 'l':
+						cmd = 'L';
+						cpx += p.shift();
+						cpy += p.shift();
+						break;
+					case 'L':
+						cmd = 'L';
+						cpx = p.shift();
+						cpy = p.shift();
+						break;
+					case 'h':
+						cmd = 'L';
+						cpx += p.shift();
+						break;
+					case 'H':
+						cmd = 'L';
+						cpx = p.shift();
+						break;
+					case 'v':
+						cmd = 'L';
+						cpy += p.shift();
+						break;
+					case 'V':
+						cmd = 'L';
+						cpy = p.shift();
+						break;
+				}
+
+				ca.push({
+					command: cmd || c,
+					points: [cpx, cpy] // Need to add additional points if curves, etc.
+				});
+
+			}
+			
+			if (c === 'z' || c === 'Z')
+				ca.push( {command: 'z', points: [] });
+        }			
+		
+		
         return ca;
     },
     /**
