@@ -1227,7 +1227,7 @@ Test.prototype.tests = {
         path.setCommands('M200,100h100v50z');
 
     },
-	'SHAPE - moveTo with implied lineTos and trailing comma': function(containerId) {
+    'SHAPE - moveTo with implied lineTos and trailing comma': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 1024,
@@ -1268,8 +1268,8 @@ Test.prototype.tests = {
 
         test(path.getCommands() === 'm200,100,100,0,0,50,z', 'commands are incorrect');
         test(path.getCommandsArray().length === 4, 'commands array should have 4 elements');
-		
-		test(path.getCommandsArray()[1].command === 'L', 'second command should be an implied lineTo');
+        
+        test(path.getCommandsArray()[1].command === 'L', 'second command should be an implied lineTo');
     },
     'SHAPE - add map path': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1291,17 +1291,12 @@ Test.prototype.tests = {
                 fill: '#ccc',
                 stroke: '#999',
                 strokeWidth: 1,
-                /*
-                 shadow: {
-                 color: 'black',
-                 blur: 2,
-                 offset: [10, 10]
-                 }
-                 */
             });
-
+			
+			if (key === 'US')
+				test(path.getCommandsArray()[0].command === 'M', 'first command should be a moveTo');
+			
             path.on('mouseover', function() {
-                //console.log(1)
                 this.setFill('red');
                 mapLayer.draw();
             });
@@ -1317,6 +1312,41 @@ Test.prototype.tests = {
         stage.add(mapLayer);
 
     },
+    'SHAPE - curved arrow path': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 1024,
+            height: 480,
+            throttle: 80,
+            scale: 1.5,
+            x: 50,
+            y: 10
+        });
+        var layer = new Kinetic.Layer();
+
+		var c = "M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-17.185,4.352-22.33c7.451-5.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.821,23.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z";
+
+		var path = new Kinetic.Path({
+			commands: c,
+			fill: '#ccc',
+			stroke: '#999',
+			strokeWidth: 1,
+		});
+
+		path.on('mouseover', function() {
+			this.setFill('red');
+			layer.draw();
+		});
+
+		path.on('mouseout', function() {
+			this.setFill('#ccc');
+			layer.draw();
+		});
+
+		layer.add(path);
+        stage.add(layer);
+
+    },	
     'SHAPE - add shape with custom attr pointing to self': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

@@ -26,11 +26,13 @@ Kinetic.Path = function(config) {
                     break;
                 case 'M':
                     context.moveTo(p[0], p[1]);
-					c = 'L'; // Subsequent points are treated as lineTo
                     break;
-				//case 'C':
-				//	context.bezierCurveTo(p[0], p[1], p[2], p[3], path[i].p.x, path[i].p.y);
-					
+				case 'C':
+					context.bezierCurveTo(p[0], p[1], p[2], p[3], p[4], p[5]);
+					break;
+				case 'Q':
+					context.quadraticCurveTo(p[0], p[1], p[2], p[3]);
+					break;
                 case 'z':
                     context.closePath();
                     break;
@@ -71,13 +73,14 @@ Kinetic.Path.prototype = {
 		//C (x1 y1 x2 y2 x y)+ Absolute Bezier curve
 		//q (x1 y1 x y)+       Relative Quadratic Bezier
 		//Q (x1 y1 x y)+       Absolute Quadratic Bezier
+		
 		// Note: SVG s,S,t,T,a,A not implemented here
 	
 	
         // command string
         var cs = this.attrs.commands;
         // command chars
-        var cc = ['m', 'M', 'l', 'L', 'v', 'V', 'h', 'H', 'z', 'Z'];
+        var cc = ['m', 'M', 'l', 'L', 'v', 'V', 'h', 'H', 'z', 'Z', 'c', 'C', 'q', 'Q'];
         // convert white spaces to commas
         cs = cs.replace(new RegExp(' ', 'g'), ',');
         // create pipes so that we can split the commands
@@ -113,52 +116,91 @@ Kinetic.Path.prototype = {
 					break;
 					
 				var cmd = undefined;
+				var points = [];
 				
 				// convert l, H, h, V, and v to L
 				switch(c) {
-					case 'm':
-						cmd = 'M';
+				
+					// Note: Keep the lineTo's above the moveTo's in this switch
+					case 'l':
 						cpx += p.shift();
 						cpy += p.shift();
+						cmd = 'L';
+						points.push(cpx, cpy);
+						break;
+					case 'L':
+						cpx = p.shift();
+						cpy = p.shift();
+						points.push(cpx, cpy);
+						break;		
+						
+					// Note: lineTo handlers need to be above this point
+					case 'm':
+						cpx += p.shift();
+						cpy += p.shift();
+						cmd = 'M';						
+						points.push(cpx, cpy);
 						c = 'l'; // subsequent points are treated as relative lineTo
 						break;
 					case 'M':
-						cmd = 'M';
 						cpx = p.shift();
 						cpy = p.shift();
+						cmd = 'M';
+						points.push(cpx, cpy);
 						c = 'L'; // subsequent points are treated as absolute lineTo
 						break;
-					case 'l':
-						cmd = 'L';
-						cpx += p.shift();
-						cpy += p.shift();
-						break;
-					case 'L':
-						cmd = 'L';
-						cpx = p.shift();
-						cpy = p.shift();
-						break;
+
 					case 'h':
-						cmd = 'L';
 						cpx += p.shift();
+						cmd = 'L';
+						points.push(cpx, cpy);
 						break;
 					case 'H':
-						cmd = 'L';
 						cpx = p.shift();
+						cmd = 'L';
+						points.push(cpx, cpy);
 						break;
 					case 'v':
-						cmd = 'L';
 						cpy += p.shift();
+						cmd = 'L';
+						points.push(cpx, cpy);
 						break;
 					case 'V':
-						cmd = 'L';
 						cpy = p.shift();
+						cmd = 'L';
+						points.push(cpx, cpy);
+						break;
+					case 'C':
+						points.push(p.shift(), p.shift(), p.shift(), p.shift());
+						cpx = p.shift();
+						cpy = p.shift();
+						points.push(cpx, cpy);
+						break;
+					case 'c':
+						points.push(cpx + p.shift(), cpy + p.shift(), cpx + p.shift(), cpy + p.shift());
+						cpx += p.shift();
+						cpy += p.shift();
+						cmd = 'C'
+						points.push(cpx, cpy);	
+						break;						
+					case 'Q':
+						points.push(p.shift(), p.shift());
+						cpx = p.shift();
+						cpy = p.shift();
+						points.push(cpx, cpy);
+						break;
+					case 'q':
+						points.push(cpx + p.shift(), cpy + p.shift());
+						cpx += p.shift();
+						cpy += p.shift();
+						cmd = 'Q'
+						points.push(cpx, cpy);	
 						break;
 				}
 
 				ca.push({
 					command: cmd || c,
-					points: [cpx, cpy] // Need to add additional points if curves, etc.
+					points: points 
 				});
 
 			}
