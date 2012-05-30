@@ -1227,6 +1227,50 @@ Test.prototype.tests = {
         path.setCommands('M200,100h100v50z');
 
     },
+    'SHAPE - moveTo with implied lineTos and trailing comma': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 1024,
+            height: 480,
+            scale: 0.5,
+            x: 50,
+            y: 10
+        });
+        var layer = new Kinetic.Layer();
+
+        var path = new Kinetic.Path({
+            commands: 'm200,100,100,0,0,50,z',
+            fill: '#fcc',
+            stroke: '#333',
+            strokeWidth: 2,
+            shadow: {
+                color: 'maroon',
+                blur: 2,
+                offset: [10, 10],
+                alpha: 0.5
+            },
+            draggable: true
+        });
+
+        path.on('mouseover', function() {
+            this.setFill('red');
+            layer.draw();
+        });
+
+        path.on('mouseout', function() {
+            this.setFill('#ccc');
+            layer.draw();
+        });
+
+        layer.add(path);
+
+        stage.add(layer);
+
+        test(path.getCommands() === 'm200,100,100,0,0,50,z', 'commands are incorrect');
+        test(path.getCommandsArray().length === 4, 'commands array should have 4 elements');
+        
+        test(path.getCommandsArray()[1].command === 'L', 'second command should be an implied lineTo');
+    },
     'SHAPE - add map path': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1247,17 +1291,12 @@ Test.prototype.tests = {
                 fill: '#ccc',
                 stroke: '#999',
                 strokeWidth: 1,
-                /*
-                 shadow: {
-                 color: 'black',
-                 blur: 2,
-                 offset: [10, 10]
-                 }
-                 */
             });
-
+			
+			if (key === 'US')
+				test(path.getCommandsArray()[0].command === 'M', 'first command should be a moveTo');
+			
             path.on('mouseover', function() {
-                //console.log(1)
                 this.setFill('red');
                 mapLayer.draw();
             });
@@ -1273,6 +1312,181 @@ Test.prototype.tests = {
         stage.add(mapLayer);
 
     },
+    'SHAPE - curved arrow path': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 1024,
+            height: 480,
+            throttle: 80,
+            scale: 1.5,
+            x: 50,
+            y: 10
+        });
+        var layer = new Kinetic.Layer();
+
+		var c = "M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-17.185,4.352-22.33c7.451-5.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.821,23.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z";
+
+		var path = new Kinetic.Path({
+			commands: c,
+			fill: '#ccc',
+			stroke: '#999',
+			strokeWidth: 1,
+		});
+
+		path.on('mouseover', function() {
+			this.setFill('red');
+			layer.draw();
+		});
+
+		path.on('mouseout', function() {
+			this.setFill('#ccc');
+			layer.draw();
+		});
+
+		layer.add(path);
+        stage.add(layer);
+
+    },	
+    'SHAPE - Quadradic Curve test from SVG w3c spec': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 1024,
+            height: 480,
+            throttle: 80,
+            scale: 0.25,
+            x: 50,
+            y: 10
+        });
+        var layer = new Kinetic.Layer();
+
+		var c = "M200,300 Q400,50 600,300 T1000,300";
+		
+		var path = new Kinetic.Path({
+			commands: c,
+			stroke: 'red',
+			strokeWidth: 5,
+		});
+
+		layer.add(path);
+		
+		layer.add(new Kinetic.Circle({
+			x: 200,
+			y: 300,
+			radius: 10,
+			fill: 'black'
+		}));
+
+		layer.add(new Kinetic.Circle({
+			x: 600,
+			y: 300,
+			radius: 10,
+			fill: 'black'
+		}));		
+
+		layer.add(new Kinetic.Circle({
+			x: 1000,
+			y: 300,
+			radius: 10,
+			fill: 'black'
+		}));	
+		
+		layer.add(new Kinetic.Circle({
+			x: 400,
+			y: 50,
+			radius: 10,
+			fill: '#888'
+		}));	
+		
+		layer.add(new Kinetic.Circle({
+			x: 800,
+			y: 550,
+			radius: 10,
+			fill: '#888'
+		}));
+		
+		layer.add(new Kinetic.Path({
+		commands: "M200,300 L400,50L600,300L800,550L1000,300",
+			stroke: "#888",
+			strokeWidth: 2
+		}));
+		
+        stage.add(layer);
+
+    },	
+    'SHAPE - Cubic Bezier Curve test from SVG w3c spec': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 1024,
+            height: 480,
+            throttle: 80,
+            scale: 0.5,
+            x: 50,
+            y: 10
+        });
+        var layer = new Kinetic.Layer();
+
+		var c = "M100,200 C100,100 250,100 250,200 S400,300 400,200";
+		
+		var path = new Kinetic.Path({
+			commands: c,
+			stroke: 'red',
+			strokeWidth: 5,
+		});
+
+		layer.add(path);
+		
+		layer.add(new Kinetic.Circle({
+			x: 100,
+			y: 200,
+			radius: 10,
+			stroke: '#888'
+		}));
+
+		layer.add(new Kinetic.Circle({
+			x: 250,
+			y: 200,
+			radius: 10,
+			stroke: '#888'
+		}));		
+
+		layer.add(new Kinetic.Circle({
+			x: 400,
+			y: 200,
+			radius: 10,
+			stroke: '#888'
+		}));	
+		
+		layer.add(new Kinetic.Circle({
+			x: 100,
+			y: 100,
+			radius: 10,
+			fill: '#888'
+		}));	
+		
+		layer.add(new Kinetic.Circle({
+			x: 250,
+			y: 100,
+			radius: 10,
+			fill: '#888'
+		}));
+		
+		layer.add(new Kinetic.Circle({
+			x: 400,
+			y: 300,
+			radius: 10,
+			fill: '#888'
+		}));
+		
+		layer.add(new Kinetic.Circle({
+			x: 250,
+			y: 300,
+			radius: 10,
+			stroke: 'blue'
+		}));
+		
+        stage.add(layer);
+
+    },	
     'SHAPE - add shape with custom attr pointing to self': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
