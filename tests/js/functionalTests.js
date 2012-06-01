@@ -487,7 +487,7 @@ Test.prototype.tests = {
         layer.add(redBox);
         stage.add(layer);
     },
-    'EVENTS - mousedown mouseup mouseover mouseout click dblclick / touchstart touchend dbltap': function(containerId) {
+    'EVENTS - mousedown mouseup mouseover mouseout mousemove click dblclick / touchstart touchend touchmove tap dbltap': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -500,8 +500,7 @@ Test.prototype.tests = {
             radius: 70,
             fill: 'red',
             stroke: 'black',
-            strokeWidth: 4,
-            draggable: true
+            strokeWidth: 4
         });
 
         circle.on('mousedown', function() {
@@ -512,20 +511,16 @@ Test.prototype.tests = {
             log('mouseup');
         });
 
-        circle.on('touchstart', function() {
-            log('touchstart');
-        });
-
-        circle.on('touchend', function() {
-            log('touchend');
-        });
-
         circle.on('mouseover', function() {
             log('mouseover');
         });
 
         circle.on('mouseout', function() {
             log('mouseout');
+        });
+
+        circle.on('mousemove', function() {
+            log('mousemove');
         });
 
         circle.on('click', function() {
@@ -535,13 +530,31 @@ Test.prototype.tests = {
         circle.on('dblclick', function() {
             log('dblclick');
         });
+        /*
+         * mobile
+         */
+        circle.on('touchstart', function() {
+            log('touchstart');
+        });
+
+        circle.on('touchend', function() {
+            log('touchend');
+        });
+
+        circle.on('touchmove', function() {
+            log('touchmove');
+        });
+
+        circle.on('tap', function(evt) {
+            log('tap');
+        });
 
         circle.on('dbltap', function() {
             log('dbltap');
         });
 
         layer.add(circle);
-        stage.add(layer);
+        stage.add(layer);  
     },
     'EVENTS - modify fill stroke and stroke width on hover with circle': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1234,7 +1247,7 @@ Test.prototype.tests = {
             if(trans) {
                 trans.stop();
             }
-            
+
             star.setAttrs({
                 shadow: {
                     offset: {
@@ -1369,18 +1382,18 @@ Test.prototype.tests = {
             draggable: true,
             dragConstraint: 'horizontal',
             /*
-            dragBounds: {
-            	left: 100
-            }
-            */
+             dragBounds: {
+             left: 100
+             }
+             */
         });
         var layer = new Kinetic.Layer({
-        	/*
-        	draggable: true,
-        	dragBounds: {
-            	left: 100
-            }
-            */
+            /*
+             draggable: true,
+             dragBounds: {
+             left: 100
+             }
+             */
         });
         var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
@@ -1391,23 +1404,23 @@ Test.prototype.tests = {
             strokeWidth: 4,
             //draggable: true,
             /*
-        	dragBounds: {
-            	left: 100
-            }
-            */
+             dragBounds: {
+             left: 100
+             }
+             */
         });
-        
+
         //stage.draggable(false);
         //layer.draggable(false);
-        
+
         stage.on('dragstart', function() {
-        	console.log('dragstart');
+            console.log('dragstart');
         });
         stage.on('dragmove', function() {
-        	//console.log('dragmove');
+            //console.log('dragmove');
         });
         stage.on('dragend', function() {
-        	console.log('dragend');
+            console.log('dragend');
         });
 
         layer.add(circle);

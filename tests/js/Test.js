@@ -16,6 +16,7 @@ function log(message) {
  * Test constructor
  */
 function Test() {
+    //this.testOnly = 'EVENTS - mousedown mouseup mouseover mouseout mousemove click dblclick / touchstart touchend touchmove tap dbltap';
     this.testOnly = '';
     this.counter = 0;
     

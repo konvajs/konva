@@ -432,29 +432,35 @@ Kinetic.Stage.prototype = {
             }
 
             // handle touchstart
-            else if(this.touchStart) {
+            if(!isDragging && this.touchStart) {
                 this.touchStart = false;
+                this.tapStart = true;
                 shape._handleEvents('touchstart', evt);
-
-                if(el.ondbltap && shape.inDoubleClickWindow) {
-                    var events = el.ondbltap;
-                    for(var i = 0; i < events.length; i++) {
-                        events[i].handler.apply(shape, [evt]);
-                    }
-                }
-
-                shape.inDoubleClickWindow = true;
-
-                setTimeout(function() {
-                    shape.inDoubleClickWindow = false;
-                }, this.dblClickWindow);
                 return true;
             }
-
-            // handle touchend
+            // handle touchend & tap
             else if(this.touchEnd) {
                 this.touchEnd = false;
                 shape._handleEvents('touchend', evt);
+
+                // detect if tap or double tap occurred
+                if(this.tapStart) {
+                    /*
+                     * if dragging and dropping, don't fire tap or dbltap
+                     * event
+                     */
+                    if((!go.drag.moving) || !go.drag.node) {
+                        shape._handleEvents('ontap', evt);
+
+                        if(shape.inDoubleClickWindow) {
+                            shape._handleEvents('ondbltap', evt);
+                        }
+                        shape.inDoubleClickWindow = true;
+                        setTimeout(function() {
+                            shape.inDoubleClickWindow = false;
+                        }, this.dblClickWindow);
+                    }
+                }
                 return true;
             }
 
@@ -482,11 +488,16 @@ Kinetic.Stage.prototype = {
             }
 
             // handle mousemove and touchmove
-            else if(!isDragging) {
+            else if(!isDragging && this.mouseMove) {
                 shape._handleEvents('onmousemove', evt);
+                return true;
+            }
+            
+			else if(!isDragging && this.touchMove) {
                 shape._handleEvents('touchmove', evt);
                 return true;
             }
+
         }
         // handle mouseout condition
         else if(!isDragging && this.targetShape && this.targetShape._id === shape._id) {
@@ -606,6 +617,8 @@ Kinetic.Stage.prototype = {
         // desktop events
         this.content.addEventListener('mousedown', function(evt) {
             that.mouseDown = true;
+            that.mouseUp = false;
+            that.mouseMove = false;
 
             /*
              * init stage drag and drop
@@ -618,9 +631,9 @@ Kinetic.Stage.prototype = {
         }, false);
 
         this.content.addEventListener('mousemove', function(evt) {
-        	/*
-        	 * throttle mousemove
-        	 */
+            /*
+             * throttle mousemove
+             */
             var throttle = that.attrs.throttle;
             var date = new Date();
             var time = date.getTime();
@@ -628,15 +641,17 @@ Kinetic.Stage.prototype = {
             var tt = 1000 / throttle;
 
             if(timeDiff >= tt) {
-                that.mouseUp = false;
                 that.mouseDown = false;
+                that.mouseUp = false;
+                that.mouseMove = true;
                 that._handleStageEvent(evt);
             }
         }, false);
 
         this.content.addEventListener('mouseup', function(evt) {
-            that.mouseUp = true;
             that.mouseDown = false;
+            that.mouseUp = true;
+            that.mouseMove = false;
             that._handleStageEvent(evt);
             that.clickStart = false;
         }, false);
@@ -658,6 +673,8 @@ Kinetic.Stage.prototype = {
         this.content.addEventListener('touchstart', function(evt) {
             evt.preventDefault();
             that.touchStart = true;
+            that.touchEnd = false;
+            that.touchMove = false;
 
             /*
              * init stage drag and drop
@@ -670,9 +687,9 @@ Kinetic.Stage.prototype = {
         }, false);
 
         this.content.addEventListener('touchmove', function(evt) {
-        	/*
-        	 * throttle touchmove
-        	 */
+            /*
+             * throttle touchmove
+             */
             var throttle = that.attrs.throttle;
             var date = new Date();
             var time = date.getTime();
@@ -681,14 +698,19 @@ Kinetic.Stage.prototype = {
 
             if(timeDiff >= tt) {
                 evt.preventDefault();
+                that.touchStart = false;
+                that.touchEnd = false;
+                that.touchMove = true;
                 that._handleStageEvent(evt);
             }
         }, false);
 
         this.content.addEventListener('touchend', function(evt) {
-            evt.preventDefault();
+            that.touchStart = false;
             that.touchEnd = true;
+            that.touchMove = false;
             that._handleStageEvent(evt);
+            that.tapStart = false;
         }, false);
     },
     /**
@@ -935,7 +957,6 @@ Kinetic.Stage.prototype = {
      * set defaults
      */
     _setStageDefaultProperties: function() {
-        this.clickStart = false;
         this.targetShape = undefined;
         this.targetFound = false;
         this.mouseoverShape = undefined;
@@ -945,11 +966,15 @@ Kinetic.Stage.prototype = {
         this.mousePos = undefined;
         this.mouseDown = false;
         this.mouseUp = false;
+        this.mouseMove = false;
+        this.clickStart = false;
 
         // mobile flags
         this.touchPos = undefined;
         this.touchStart = false;
         this.touchEnd = false;
+        this.touchMove = false;
+        this.tapStart = false;
 
         this.ids = {};
         this.names = {};
