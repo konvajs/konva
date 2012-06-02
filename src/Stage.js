@@ -493,7 +493,7 @@ Kinetic.Stage.prototype = {
                 return true;
             }
             
-			else if(!isDragging && this.touchMove) {
+else if(!isDragging && this.touchMove) {
                 shape._handleEvents('touchmove', evt);
                 return true;
             }
@@ -937,6 +937,9 @@ Kinetic.Stage.prototype = {
                     if(no._id === node._id) {
                         nodes.splice(n, 1);
                     }
+                }
+                if(nodes.length === 0) {
+                    this.names[node.attrs.name] = undefined;
                 }
             }
         }

@@ -581,7 +581,7 @@ Test.prototype.tests = {
         parent.remove(nodes[0]);
 
         test(stage.ids.myCircle === undefined, 'circle still in hash');
-        test(stage.names.myRect[0] === undefined, 'rect still in hash');
+        test(stage.names.myRect === undefined, 'rect still in hash');
 
     },
     'STAGE - set shape and layer alpha to 0.5': function(containerId) {

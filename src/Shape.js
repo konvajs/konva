@@ -264,20 +264,27 @@ Kinetic.Shape.prototype = {
             context.lineJoin = this.attrs.lineJoin;
         }
     },
+    /**
+     * apply shadow.  return true if shadow was applied
+     * and false if it was not
+     */
     _applyShadow: function() {
         var context = this.getContext();
         var s = this.attrs.shadow;
-        var aa = this.getAbsoluteAlpha();
-        var sa = this.attrs.shadow.alpha;
 
-        if(s.color !== undefined) {
-            context.globalAlpha = sa * aa;
-            context.shadowColor = s.color;
-            context.shadowBlur = s.blur;
-            context.shadowOffsetX = s.offset.x;
-            context.shadowOffsetY = s.offset.y;
-            this.appliedShadow = true;
-            return true;
+        if(s !== undefined) {
+            var aa = this.getAbsoluteAlpha();
+            var sa = this.attrs.shadow.alpha;
+
+            if(sa !== undefined && s.color !== undefined) {
+                context.globalAlpha = sa * aa;
+                context.shadowColor = s.color;
+                context.shadowBlur = s.blur;
+                context.shadowOffsetX = s.offset.x;
+                context.shadowOffsetY = s.offset.y;
+                this.appliedShadow = true;
+                return true;
+            }
         }
 
         return false;
