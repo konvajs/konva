@@ -16,7 +16,8 @@ Kinetic.Text = function(config) {
         verticalAlign: 'top',
         padding: 0,
         fontStyle: 'normal',
-        width: 'auto'
+        width: 'auto',
+        detectionType: 'pixel'
     });
 
     this.shapeType = "Text";
@@ -75,8 +76,8 @@ Kinetic.Text = function(config) {
 
         // draw text
         this.fillText(this.attrs.text, tx, ty);
-		this.strokeText(this.attrs.text, tx, ty);
-		
+        this.strokeText(this.attrs.text, tx, ty);
+
         context.restore();
     };
     // call super constructor

@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jun 01 2012
+ * Date: Jun 02 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -420,7 +420,8 @@ Kinetic.Node.prototype = {
          */
         for(var n = 0; n < types.length; n++) {
             var type = types[n];
-            var event = (type.indexOf('touch') === -1) ? 'on' + type : type;
+            //var event = (type.indexOf('touch') === -1) ? 'on' + type : type;
+            var event = type;
             var parts = event.split('.');
             var baseEvent = parts[0];
             var name = parts.length > 1 ? parts[1] : '';
@@ -448,7 +449,8 @@ Kinetic.Node.prototype = {
 
         for(var n = 0; n < types.length; n++) {
             var type = types[n];
-            var event = (type.indexOf('touch') === -1) ? 'on' + type : type;
+            //var event = (type.indexOf('touch') === -1) ? 'on' + type : type;
+            var event = type;
             var parts = event.split('.');
             var baseEvent = parts[0];
 
@@ -997,6 +999,22 @@ Kinetic.Node.prototype = {
         return this.attrs.name;
     },
     /**
+     * get id
+     */
+    getId: function() {
+        return this.attrs.id;
+    },
+    /**
+     * simulate event
+     * @param {String} eventType
+     */
+    simulate: function(eventType) {
+        var el = this.eventListeners[eventType];
+        for(var n = 0; n < el.length; n++) {
+            el[n].handler.call(this);
+        }
+    },
+    /**
      * set center offset
      * @param {Number} x
      * @param {Number} y
@@ -1160,11 +1178,11 @@ Kinetic.Node.prototype = {
         var go = Kinetic.GlobalObject;
         var that = this;
         this.on('mousedown.initdrag touchstart.initdrag', function(evt) {
-			that._initDrag();
+            that._initDrag();
         });
     },
     _initDrag: function() {
-    	var go = Kinetic.GlobalObject;
+        var go = Kinetic.GlobalObject;
         var stage = this.getStage();
         var pos = stage.getUserPosition();
 
@@ -1206,10 +1224,10 @@ Kinetic.Node.prototype = {
          * determine if event handler should be skipped by comparing
          * parent nodes
          */
-        if(eventType === 'onmouseover' && mouseoutNode && mouseoutNode._id === node._id) {
+        if(eventType === 'mouseover' && mouseoutNode && mouseoutNode._id === node._id) {
             okayToRun = false;
         }
-        else if(eventType === 'onmouseout' && mouseoverNode && mouseoverNode._id === node._id) {
+        else if(eventType === 'mouseout' && mouseoverNode && mouseoverNode._id === node._id) {
             okayToRun = false;
         }
 
@@ -1862,13 +1880,13 @@ Kinetic.Stage.prototype = {
             if(!isDragging && this.mouseDown) {
                 this.mouseDown = false;
                 this.clickStart = true;
-                shape._handleEvents('onmousedown', evt);
+                shape._handleEvents('mousedown', evt);
                 return true;
             }
             // handle onmouseup & onclick
             else if(this.mouseUp) {
                 this.mouseUp = false;
-                shape._handleEvents('onmouseup', evt);
+                shape._handleEvents('mouseup', evt);
 
                 // detect if click or double click occurred
                 if(this.clickStart) {
@@ -1877,10 +1895,10 @@ Kinetic.Stage.prototype = {
                      * event
                      */
                     if((!go.drag.moving) || !go.drag.node) {
-                        shape._handleEvents('onclick', evt);
+                        shape._handleEvents('click', evt);
 
                         if(shape.inDoubleClickWindow) {
-                            shape._handleEvents('ondblclick', evt);
+                            shape._handleEvents('dblclick', evt);
                         }
                         shape.inDoubleClickWindow = true;
                         setTimeout(function() {
@@ -1910,10 +1928,10 @@ Kinetic.Stage.prototype = {
                      * event
                      */
                     if((!go.drag.moving) || !go.drag.node) {
-                        shape._handleEvents('ontap', evt);
+                        shape._handleEvents('tap', evt);
 
                         if(shape.inDoubleClickWindow) {
-                            shape._handleEvents('ondbltap', evt);
+                            shape._handleEvents('dbltap', evt);
                         }
                         shape.inDoubleClickWindow = true;
                         setTimeout(function() {
@@ -1938,18 +1956,18 @@ Kinetic.Stage.prototype = {
                  */
                 if(this.mouseoutShape) {
                     this.mouseoverShape = shape;
-                    this.mouseoutShape._handleEvents('onmouseout', evt);
+                    this.mouseoutShape._handleEvents('mouseout', evt);
                     this.mouseoverShape = undefined;
                 }
 
-                shape._handleEvents('onmouseover', evt);
+                shape._handleEvents('mouseover', evt);
                 this._setTarget(shape);
                 return true;
             }
 
             // handle mousemove and touchmove
             else if(!isDragging && this.mouseMove) {
-                shape._handleEvents('onmousemove', evt);
+                shape._handleEvents('mousemove', evt);
                 return true;
             }
             
@@ -2062,7 +2080,7 @@ Kinetic.Stage.prototype = {
          * then run the onmouseout event handlers
          */
         if(!shapeDetected && this.mouseoutShape) {
-            this.mouseoutShape._handleEvents('onmouseout', evt);
+            this.mouseoutShape._handleEvents('mouseout', evt);
             this.mouseoutShape = undefined;
         }
     },
@@ -2124,7 +2142,7 @@ Kinetic.Stage.prototype = {
             // if there's a current target shape, run mouseout handlers
             var targetShape = that.targetShape;
             if(targetShape) {
-                targetShape._handleEvents('onmouseout', evt);
+                targetShape._handleEvents('mouseout', evt);
                 that.targetShape = undefined;
             }
             that.mousePos = undefined;
@@ -2250,7 +2268,7 @@ Kinetic.Stage.prototype = {
         if(go.drag.node) {
             if(go.drag.moving) {
                 go.drag.moving = false;
-                go.drag.node._handleEvents('ondragend', evt);
+                go.drag.node._handleEvents('dragend', evt);
             }
         }
         go.drag.node = undefined;
@@ -2318,11 +2336,11 @@ Kinetic.Stage.prototype = {
                 if(!go.drag.moving) {
                     go.drag.moving = true;
                     // execute dragstart events if defined
-                    go.drag.node._handleEvents('ondragstart', evt);
+                    go.drag.node._handleEvents('dragstart', evt);
                 }
 
                 // execute user defined ondragmove if defined
-                go.drag.node._handleEvents('ondragmove', evt);
+                go.drag.node._handleEvents('dragmove', evt);
             }
         }, false);
 
@@ -3701,7 +3719,8 @@ Kinetic.Text = function(config) {
         verticalAlign: 'top',
         padding: 0,
         fontStyle: 'normal',
-        width: 'auto'
+        width: 'auto',
+        detectionType: 'pixel'
     });
 
     this.shapeType = "Text";
@@ -3760,8 +3779,8 @@ Kinetic.Text = function(config) {
 
         // draw text
         this.fillText(this.attrs.text, tx, ty);
-		this.strokeText(this.attrs.text, tx, ty);
-		
+        this.strokeText(this.attrs.text, tx, ty);
+
         context.restore();
     };
     // call super constructor

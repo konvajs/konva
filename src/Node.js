@@ -57,7 +57,8 @@ Kinetic.Node.prototype = {
          */
         for(var n = 0; n < types.length; n++) {
             var type = types[n];
-            var event = (type.indexOf('touch') === -1) ? 'on' + type : type;
+            //var event = (type.indexOf('touch') === -1) ? 'on' + type : type;
+            var event = type;
             var parts = event.split('.');
             var baseEvent = parts[0];
             var name = parts.length > 1 ? parts[1] : '';
@@ -85,7 +86,8 @@ Kinetic.Node.prototype = {
 
         for(var n = 0; n < types.length; n++) {
             var type = types[n];
-            var event = (type.indexOf('touch') === -1) ? 'on' + type : type;
+            //var event = (type.indexOf('touch') === -1) ? 'on' + type : type;
+            var event = type;
             var parts = event.split('.');
             var baseEvent = parts[0];
 
@@ -634,6 +636,22 @@ Kinetic.Node.prototype = {
         return this.attrs.name;
     },
     /**
+     * get id
+     */
+    getId: function() {
+        return this.attrs.id;
+    },
+    /**
+     * simulate event
+     * @param {String} eventType
+     */
+    simulate: function(eventType) {
+        var el = this.eventListeners[eventType];
+        for(var n = 0; n < el.length; n++) {
+            el[n].handler.call(this);
+        }
+    },
+    /**
      * set center offset
      * @param {Number} x
      * @param {Number} y
@@ -797,11 +815,11 @@ Kinetic.Node.prototype = {
         var go = Kinetic.GlobalObject;
         var that = this;
         this.on('mousedown.initdrag touchstart.initdrag', function(evt) {
-			that._initDrag();
+            that._initDrag();
         });
     },
     _initDrag: function() {
-    	var go = Kinetic.GlobalObject;
+        var go = Kinetic.GlobalObject;
         var stage = this.getStage();
         var pos = stage.getUserPosition();
 
@@ -843,10 +861,10 @@ Kinetic.Node.prototype = {
          * determine if event handler should be skipped by comparing
          * parent nodes
          */
-        if(eventType === 'onmouseover' && mouseoutNode && mouseoutNode._id === node._id) {
+        if(eventType === 'mouseover' && mouseoutNode && mouseoutNode._id === node._id) {
             okayToRun = false;
         }
-        else if(eventType === 'onmouseout' && mouseoverNode && mouseoverNode._id === node._id) {
+        else if(eventType === 'mouseout' && mouseoverNode && mouseoverNode._id === node._id) {
             okayToRun = false;
         }
 

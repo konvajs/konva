@@ -108,6 +108,7 @@ Test.prototype.tests = {
         layer.add(group);
         stage.add(layer);
 
+        test(circle.getName() === 'myCircle', 'circle name should be myCircle');
     },
     'STAGE - add shape with alpha': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -304,6 +305,8 @@ Test.prototype.tests = {
         layer.add(group);
         group.add(triangle);
         layer.draw();
+
+        test(triangle.getId() === 'myTriangle', 'triangle id should be myTriangle');
 
         var expectedJson = '{"attrs":{"width":578,"height":200,"throttle":80,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"detectionType":"path","shadow":{"blur":10,"alpha":1,"offset":{"x":0,"y":0}},"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
         test(stage.toJSON() === expectedJson, "problem serializing stage with custom shape");
@@ -667,9 +670,9 @@ Test.prototype.tests = {
 
         stage.remove(layer);
 
-		test(stage.children.length === 0, 'stage should have 0 children');
+        test(stage.children.length === 0, 'stage should have 0 children');
         test(stage.get('.myLayer')[0] === undefined, 'layer should not exist');
-        test(stage.get('.myCircle')[0] === undefined, 'circle should not exist'); 
+        test(stage.get('.myCircle')[0] === undefined, 'circle should not exist');
     },
     'STAGE - remove layer with no shapes': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -680,7 +683,7 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         stage.add(layer);
         stage.remove(layer);
-        
+
         test(stage.children.length === 0, 'stage should have 0 children');
     },
     'STAGE - remove shape multiple times': function(containerId) {
@@ -2634,11 +2637,16 @@ Test.prototype.tests = {
             }
         });
 
+        text.on('mouseover', function() {
+            console.log('mouseover text');
+        });
         // test text width before adding it to stage
         test(text.getTextWidth() > 0, 'text width should have a value');
 
         layer.add(text);
         stage.add(layer);
+
+        text.saveData();
 
         test(text.getTextSize().width > 0, 'text width should have a value');
         test(text.getTextSize().height > 0, 'text height should have a value');
@@ -3341,6 +3349,37 @@ Test.prototype.tests = {
         });
         //stage.start();
 
+    },
+    'NODE - simulate event': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle'
+        });
+
+        stage.add(layer);
+        layer.add(circle);
+        layer.draw();
+
+        var foo = '';
+
+        circle.on('click', function() {
+            foo = 'bar';
+        });
+
+        circle.simulate('click');
+
+        test(foo === 'bar', 'foo should equal bar');
     },
     'STAGE - add layer then shape': function(containerId) {
         var stage = new Kinetic.Stage({
