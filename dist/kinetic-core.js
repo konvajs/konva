@@ -1300,7 +1300,7 @@ Kinetic.Container.prototype = {
      * @param {Node} child
      */
     remove: function(child) {
-        if(child.index !== undefined && this.children[child.index]._id == child._id) {
+        if(child && child.index !== undefined && this.children[child.index]._id == child._id) {
             var stage = this.getStage();
             if(stage !== undefined) {
                 stage._removeId(child);
@@ -1312,18 +1312,24 @@ Kinetic.Container.prototype = {
                 var node = go.tempNodes[n];
                 if(node._id === child._id) {
                     go.tempNodes.splice(n, 1);
-                    n = go.tempNodes.length;
+                    break;
                 }
             }
 
             this.children.splice(child.index, 1);
             this._setChildrenIndices();
-            child = undefined;
-        }
 
-        // do extra stuff if needed
-        if(this._remove !== undefined) {
-            this._remove(child);
+            // remove children
+            if(child.children) {
+                for(var n = 0; n < child.children.length; n++) {
+                    child.remove(child.children[n]);
+                }
+            }
+
+            // do extra stuff if needed
+            if(this._remove !== undefined) {
+                this._remove(child);
+            }
         }
 
         // chainable
