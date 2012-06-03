@@ -1388,7 +1388,7 @@ Test.prototype.tests = {
             width: 578,
             height: 200,
             draggable: true,
-            dragConstraint: 'horizontal',
+            //dragConstraint: 'horizontal',
             /*
              dragBounds: {
              left: 100
@@ -1421,6 +1421,7 @@ Test.prototype.tests = {
         //stage.draggable(false);
         //layer.draggable(false);
 
+		/*
         stage.on('dragstart', function() {
             console.log('dragstart');
         });
@@ -1430,6 +1431,7 @@ Test.prototype.tests = {
         stage.on('dragend', function() {
             console.log('dragend');
         });
+        */
 
         layer.add(circle);
         stage.add(layer);

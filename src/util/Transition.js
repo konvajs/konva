@@ -34,7 +34,6 @@ Kinetic.Transition = function(node, config) {
     addTween(config, node.attrs);
 
     var finishedTweens = 0;
-    var that = this;
     for(var n = 0; n < this.tweens.length; n++) {
         var tween = this.tweens[n];
         tween.onFinished = function() {
@@ -236,8 +235,9 @@ Kinetic.Tween.prototype = {
     continueTo: function(finish, duration) {
         this.begin = this._pos;
         this.setFinish(finish);
-        if(this._duration != undefined)
+        if(this._duration !== undefined) {
             this.setDuration(duration);
+        }
         this.start();
     },
     resume: function() {
@@ -427,5 +427,5 @@ Kinetic.Tweens = {
     },
     'linear': function(t, b, c, d) {
         return c * t / d + b;
-    },
+    }
 };

@@ -41,7 +41,7 @@ Kinetic.Node.prototype = {
     /**
      * bind events to the node.  KineticJS supports mouseover, mousemove,
      * mouseout, mousedown, mouseup, click, dblclick, touchstart, touchmove,
-     * touchend, dbltap, dragstart, dragmove, and dragend.  Pass in a string
+     * touchend, tap, dbltap, dragstart, dragmove, and dragend.  Pass in a string
      * of event types delimmited by a space to bind multiple events at once
      * such as 'mousedown mouseup mousemove'. include a namespace to bind an
      * event by name such as 'click.foobar'.
@@ -827,7 +827,7 @@ Kinetic.Node.prototype = {
         var go = Kinetic.GlobalObject;
         var stage = this.getStage();
         var pos = stage.getUserPosition();
-
+        
         if(pos) {
             var m = this.getTransform().getTranslation();
             var am = this.getAbsoluteTransform().getTranslation();

@@ -404,7 +404,7 @@ Kinetic.Node.prototype = {
     /**
      * bind events to the node.  KineticJS supports mouseover, mousemove,
      * mouseout, mousedown, mouseup, click, dblclick, touchstart, touchmove,
-     * touchend, dbltap, dragstart, dragmove, and dragend.  Pass in a string
+     * touchend, tap, dbltap, dragstart, dragmove, and dragend.  Pass in a string
      * of event types delimmited by a space to bind multiple events at once
      * such as 'mousedown mouseup mousemove'. include a namespace to bind an
      * event by name such as 'click.foobar'.
@@ -1190,7 +1190,7 @@ Kinetic.Node.prototype = {
         var go = Kinetic.GlobalObject;
         var stage = this.getStage();
         var pos = stage.getUserPosition();
-
+        
         if(pos) {
             var m = this.getTransform().getTranslation();
             var am = this.getAbsoluteTransform().getTranslation();
@@ -2107,15 +2107,13 @@ else if(!isDragging && this.touchMove) {
             that.mouseDown = true;
             that.mouseUp = false;
             that.mouseMove = false;
-
+            that._handleStageEvent(evt);
             /*
              * init stage drag and drop
              */
             if(that.attrs.draggable) {
                 that._initDrag();
             }
-
-            that._handleStageEvent(evt);
         }, false);
 
         this.content.addEventListener('mousemove', function(evt) {
@@ -2163,15 +2161,13 @@ else if(!isDragging && this.touchMove) {
             that.touchStart = true;
             that.touchEnd = false;
             that.touchMove = false;
-
+            that._handleStageEvent(evt);
             /*
              * init stage drag and drop
              */
             if(that.attrs.draggable) {
                 that._initDrag();
             }
-
-            that._handleStageEvent(evt);
         }, false);
 
         this.content.addEventListener('touchmove', function(evt) {
@@ -4596,7 +4592,6 @@ Kinetic.Transition = function(node, config) {
     addTween(config, node.attrs);
 
     var finishedTweens = 0;
-    var that = this;
     for(var n = 0; n < this.tweens.length; n++) {
         var tween = this.tweens[n];
         tween.onFinished = function() {
@@ -4798,8 +4793,9 @@ Kinetic.Tween.prototype = {
     continueTo: function(finish, duration) {
         this.begin = this._pos;
         this.setFinish(finish);
-        if(this._duration != undefined)
+        if(this._duration !== undefined) {
             this.setDuration(duration);
+        }
         this.start();
     },
     resume: function() {
@@ -4989,6 +4985,6 @@ Kinetic.Tweens = {
     },
     'linear': function(t, b, c, d) {
         return c * t / d + b;
-    },
+    }
 };
 

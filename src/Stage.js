@@ -624,15 +624,13 @@ else if(!isDragging && this.touchMove) {
             that.mouseDown = true;
             that.mouseUp = false;
             that.mouseMove = false;
-
+            that._handleStageEvent(evt);
             /*
              * init stage drag and drop
              */
             if(that.attrs.draggable) {
                 that._initDrag();
             }
-
-            that._handleStageEvent(evt);
         }, false);
 
         this.content.addEventListener('mousemove', function(evt) {
@@ -680,15 +678,13 @@ else if(!isDragging && this.touchMove) {
             that.touchStart = true;
             that.touchEnd = false;
             that.touchMove = false;
-
+            that._handleStageEvent(evt);
             /*
              * init stage drag and drop
              */
             if(that.attrs.draggable) {
                 that._initDrag();
             }
-
-            that._handleStageEvent(evt);
         }, false);
 
         this.content.addEventListener('touchmove', function(evt) {
