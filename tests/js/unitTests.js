@@ -18,6 +18,54 @@ Test.prototype.tests = {
             height: 200
         });
     },
+    'STAGE - test setSize': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle'
+        });
+        
+        test(stage.getSize().width === 578 && stage.getSize().height === 200, 'stage size should be 1 x 2');
+        stage.setSize(1, 2);
+        test(stage.getSize().width === 1 && stage.getSize().height === 2, 'stage size should be 1 x 2');
+        stage.setSize(3);
+        test(stage.getSize().width === 3 && stage.getSize().height === 3, 'stage size should be 3 x 3');
+        stage.setSize({
+        	width: 4,
+        	height: 5
+        });
+        test(stage.getSize().width === 4 && stage.getSize().height === 5, 'stage size should be 4 x 5');
+        stage.setSize({
+        	width: 6
+        });
+        test(stage.getSize().width === 6 && stage.getSize().height === 5, 'stage size should be 6 x 5');
+        stage.setSize({
+        	height: 7
+        });
+        test(stage.getSize().width === 6 && stage.getSize().height === 7, 'stage size should be 6 x 7');
+        stage.setSize([8, 9]);
+        test(stage.getSize().width === 8 && stage.getSize().height === 9, 'stage size should be 8 x 9');
+        stage.setSize([1, 1, 10, 11]);
+        test(stage.getSize().width === 10 && stage.getSize().height === 11, 'stage size should be 10 x 11');
+        
+        // test integer conversion
+        stage.setSize(300.2, 200.2);
+        test(stage.getSize().width === 300 && stage.getSize().height === 200, 'stage size should be 300 x 200');
+
+        layer.add(circle);
+        stage.add(layer);
+    },
     'STAGE - add shape then stage then layer': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

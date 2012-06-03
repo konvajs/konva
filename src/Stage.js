@@ -91,17 +91,22 @@ Kinetic.Stage.prototype = {
     },
     /**
      * set stage size
-     * @param {int} width
-     * @param {int} height
      */
-    setSize: function(width, height) {
+    setSize: function() {
         // set stage dimensions
-        this.attrs.width = width;
-        this.attrs.height = height;
+        var size = Kinetic.GlobalObject._getSize(arguments);
+        this.setAttrs(size);
+
+        // convert to integers
+        this.attrs.width = Math.round(this.attrs.width);
+        this.attrs.height = Math.round(this.attrs.height);
+
+        var width = this.attrs.width;
+        var height = this.attrs.height;
 
         // set content dimensions
-        this.content.style.width = this.attrs.width + 'px';
-        this.content.style.height = this.attrs.height + 'px';
+        this.content.style.width = width + 'px';
+        this.content.style.height = height + 'px';
 
         // set buffer layer and path layer sizes
         this.bufferLayer.getCanvas().width = width;

@@ -734,8 +734,7 @@ Test.prototype.tests = {
         });
 
         layer.add(star);
-        stage.add(layer);
-
+        stage.add(layer); 
         star.saveData();
     },
     'EVENTS - drag events click': function(containerId) {
