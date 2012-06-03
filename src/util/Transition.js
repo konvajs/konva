@@ -6,8 +6,10 @@
 */
 
 /**
- * Transition constructor.  KineticJS transitions contain
- * multiple Tweens
+ * Transition constructor used by KineticJS.  The transitionTo() Node method
+ *  returns a reference to the transition object which you can use
+ *  to stop, resume, or restart the transition
+ * @constructor
  */
 Kinetic.Transition = function(node, config) {
     this.node = node;
@@ -21,17 +23,16 @@ Kinetic.Transition = function(node, config) {
             if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
                 // if val is an object then traverse
                 if(Kinetic.GlobalObject._isObject(c[key])) {
-                   addTween(c[key], attrs[key]); 
+                    addTween(c[key], attrs[key]);
                 }
                 else {
-                    that.add(that._getTween(attrs, key, c[key]));
+                    that._add(that._getTween(attrs, key, c[key]));
                 }
             }
         }
     }
-    
     addTween(config, node.attrs);
-    
+
     var finishedTweens = 0;
     var that = this;
     for(var n = 0; n < this.tweens.length; n++) {
@@ -49,26 +50,11 @@ Kinetic.Transition = function(node, config) {
  */
 Kinetic.Transition.prototype = {
     /**
-     * add tween to tweens array
-     * @param {Kinetic.Tween} tween
-     */
-    add: function(tween) {
-        this.tweens.push(tween);
-    },
-    /**
      * start transition
      */
     start: function() {
         for(var n = 0; n < this.tweens.length; n++) {
             this.tweens[n].start();
-        }
-    },
-    /**
-     * onEnterFrame
-     */
-    onEnterFrame: function() {
-        for(var n = 0; n < this.tweens.length; n++) {
-            this.tweens[n].onEnterFrame();
         }
     },
     /**
@@ -86,6 +72,14 @@ Kinetic.Transition.prototype = {
         for(var n = 0; n < this.tweens.length; n++) {
             this.tweens[n].resume();
         }
+    },
+    _onEnterFrame: function() {
+        for(var n = 0; n < this.tweens.length; n++) {
+            this.tweens[n].onEnterFrame();
+        }
+    },
+    _add: function(tween) {
+        this.tweens.push(tween);
     },
     _getTween: function(key, prop, val) {
         var config = this.config;

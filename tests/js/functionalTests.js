@@ -1365,13 +1365,22 @@ Test.prototype.tests = {
             radius: 70,
             fill: 'red',
             stroke: 'black',
-            strokeWidth: 4
+            strokeWidth: 4,
+            //detectionType: 'pixel'
         });
 
         circle.draggable(true);
+        
+        /*
+        circle.on('dragend', function() {
+        	circle.saveData();
+        });
+        */
 
         layer.add(circle);
         stage.add(layer);
+        
+        //circle.saveData();
     },
     'DRAG AND DROP - drag and drop stage': function(containerId) {
         var stage = new Kinetic.Stage({

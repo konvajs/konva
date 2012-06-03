@@ -706,7 +706,7 @@ Kinetic.Node.prototype = {
         var trans = new Kinetic.Transition(this, config);
         var anim = {
             func: function() {
-                trans.onEnterFrame();
+                trans._onEnterFrame();
             },
             node: node
         };
