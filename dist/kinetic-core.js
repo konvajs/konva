@@ -596,9 +596,14 @@ Kinetic.Node.prototype = {
         }
     },
     /**
-     * determine if shape is visible or not
+     * determine if shape is visible or not.  Shape is visible only
+     * if it's visible and all of its ancestors are visible.  If one ancestor
+     * is invisible, this means that the shape is also invisible
      */
     isVisible: function() {
+        if(this.getParent() && !this.getParent().isVisible()) {
+            return false;
+        }
         return this.attrs.visible;
     },
     /**
@@ -1875,7 +1880,7 @@ Kinetic.Stage.prototype = {
             this.targetFound = true;
         }
 
-        if(shape.attrs.visible && pos !== undefined && shape.intersects(pos)) {
+        if(shape.isVisible() && pos !== undefined && shape.intersects(pos)) {
             // handle onmousedown
             if(!isDragging && this.mouseDown) {
                 this.mouseDown = false;
@@ -2067,7 +2072,7 @@ else if(!isDragging && this.touchMove) {
         var shapeDetected = false;
         for(var n = this.children.length - 1; n >= 0; n--) {
             var layer = this.children[n];
-            if(layer.attrs.visible && n >= 0 && layer.attrs.listening) {
+            if(layer.isVisible() && n >= 0 && layer.attrs.listening) {
                 if(this._traverseChildren(layer, evt)) {
                     n = -1;
                     shapeDetected = true;
@@ -2595,7 +2600,7 @@ Kinetic.Layer.prototype = {
         }
 
         this.clear();
-        if(this.attrs.visible) {
+        if(this.isVisible()) {
             // draw custom func
             if(this.attrs.drawFunc !== undefined) {
                 this.attrs.drawFunc.call(this);

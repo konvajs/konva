@@ -813,7 +813,7 @@ Test.prototype.tests = {
     //  LAYERS tests
     ////////////////////////////////////////////////////////////////////////
 
-    'LAYERS - add layer': function(containerId) {
+    'LAYER - add layer': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -822,7 +822,53 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         stage.add(layer);
     },
-    'LAYERS - beforeDraw and afterDraw': function(containerId) {
+    'LAYER - hide layer': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+
+        var layer1 = new Kinetic.Layer();
+        var layer2 = new Kinetic.Layer();
+
+        var circle1 = new Kinetic.Circle({
+            x: 100,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+        var circle2 = new Kinetic.Circle({
+            x: 150,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        circle1.on('mousemove', function() {
+            console.log('mousemove circle1');
+        });
+
+        circle2.on('mousemove', function() {
+            console.log('mousemove circle2');
+        });
+
+        layer1.add(circle1);
+        layer2.add(circle2);
+        stage.add(layer1).add(layer2);
+
+        test(layer2.isVisible(), 'layer2 should be visible');
+
+        layer2.hide();
+        layer2.draw();
+
+        test(!layer2.isVisible(), 'layer2 should be invisible');
+    },
+    'LAYER - beforeDraw and afterDraw': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -857,7 +903,7 @@ Test.prototype.tests = {
 
         layer.draw();
     },
-    'LAYERS - throttling': function(containerId) {
+    'LAYER - throttling': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -872,7 +918,7 @@ Test.prototype.tests = {
         layer.setThrottle(13);
         test(layer.getThrottle() === 13, 'throttle should be 13');
     },
-    'LAYERS - add layer': function(containerId) {
+    'LAYER - add layer': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -881,7 +927,7 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         stage.add(layer);
     },
-    'LAYERS - remove all children from layer': function(containerId) {
+    'LAYER - remove all children from layer': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -921,7 +967,7 @@ Test.prototype.tests = {
     //  GROUPS tests
     ////////////////////////////////////////////////////////////////////////
 
-    'GROUPS - add group': function(containerId) {
+    'GROUP - add group': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -943,7 +989,55 @@ Test.prototype.tests = {
         layer.add(group);
         stage.add(layer);
     },
-    'GROUPS - create two groups, move first group': function(containerId) {
+    'GROUP - hide group': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+
+        var circle1 = new Kinetic.Circle({
+            x: 100,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+        var circle2 = new Kinetic.Circle({
+            x: 150,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        circle1.on('mousemove', function() {
+            console.log('mousemove circle1');
+        });
+
+        circle2.on('mousemove', function() {
+            console.log('mousemove circle2');
+        });
+
+        group.add(circle2);
+        layer.add(circle1).add(group);
+        stage.add(layer);
+
+        test(group.isVisible(), 'group should be visible');
+        test(circle2.isVisible(), 'circle2 should be visible');
+
+        group.hide();
+        layer.draw();
+
+        test(!group.isVisible(), 'group should be invisible');
+        test(!circle2.isVisible(), 'circle2 should be invisible');
+    },
+    'GROUP - create two groups, move first group': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -3375,6 +3469,10 @@ Test.prototype.tests = {
 
         circle.on('click', function() {
             foo = 'bar';
+
+            var evt = window.event;
+            var rightClick = evt.which ? evt.which == 3 : evt.button == 2;
+            console.log(rightClick);
         });
 
         circle.simulate('click');

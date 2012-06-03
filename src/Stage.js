@@ -397,7 +397,7 @@ Kinetic.Stage.prototype = {
             this.targetFound = true;
         }
 
-        if(shape.attrs.visible && pos !== undefined && shape.intersects(pos)) {
+        if(shape.isVisible() && pos !== undefined && shape.intersects(pos)) {
             // handle onmousedown
             if(!isDragging && this.mouseDown) {
                 this.mouseDown = false;
@@ -589,7 +589,7 @@ else if(!isDragging && this.touchMove) {
         var shapeDetected = false;
         for(var n = this.children.length - 1; n >= 0; n--) {
             var layer = this.children[n];
-            if(layer.attrs.visible && n >= 0 && layer.attrs.listening) {
+            if(layer.isVisible() && n >= 0 && layer.attrs.listening) {
                 if(this._traverseChildren(layer, evt)) {
                     n = -1;
                     shapeDetected = true;

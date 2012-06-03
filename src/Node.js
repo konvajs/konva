@@ -233,9 +233,14 @@ Kinetic.Node.prototype = {
         }
     },
     /**
-     * determine if shape is visible or not
+     * determine if shape is visible or not.  Shape is visible only
+     * if it's visible and all of its ancestors are visible.  If one ancestor
+     * is invisible, this means that the shape is also invisible
      */
     isVisible: function() {
+        if(this.getParent() && !this.getParent().isVisible()) {
+            return false;
+        }
         return this.attrs.visible;
     },
     /**

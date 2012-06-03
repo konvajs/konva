@@ -126,7 +126,7 @@ Kinetic.Layer.prototype = {
         }
 
         this.clear();
-        if(this.attrs.visible) {
+        if(this.isVisible()) {
             // draw custom func
             if(this.attrs.drawFunc !== undefined) {
                 this.attrs.drawFunc.call(this);
