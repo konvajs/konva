@@ -35,21 +35,21 @@ Kinetic.Path = function(config) {
                     context.quadraticCurveTo(p[0], p[1], p[2], p[3]);
                     break;
                 case 'A':
-					var cx = p[0], cy = p[1], rx = p[2], ry = p[3], theta = p[4], dTheta = p[5], psi = p[6], fs = p[7];
-					
-					var r = (rx > ry) ? rx : ry;
-					var scaleX = (rx > ry) ? 1 : rx / ry;
-					var scaleY = (rx > ry) ? ry / rx : 1;
+                    var cx = p[0], cy = p[1], rx = p[2], ry = p[3], theta = p[4], dTheta = p[5], psi = p[6], fs = p[7];
+                    
+                    var r = (rx > ry) ? rx : ry;
+                    var scaleX = (rx > ry) ? 1 : rx / ry;
+                    var scaleY = (rx > ry) ? ry / rx : 1;
 
-					context.translate(cx, cy);
-					context.rotate(psi);
-					context.scale(scaleX, scaleY);
-					context.arc(0, 0, r, theta, theta + dTheta, 1 - fs);
-					context.scale(1 / scaleX, 1 / scaleY);
-					context.rotate(-psi);
-					context.translate(-cx, -cy);
-							
-                    break;					
+                    context.translate(cx, cy);
+                    context.rotate(psi);
+                    context.scale(scaleX, scaleY);
+                    context.arc(0, 0, r, theta, theta + dTheta, 1 - fs);
+                    context.scale(1 / scaleX, 1 / scaleY);
+                    context.rotate(-psi);
+                    context.translate(-cx, -cy);
+                            
+                    break;                    
                 case 'z':
                     context.closePath();
                     break;
@@ -90,11 +90,11 @@ Kinetic.Path.prototype = {
         //C (x1 y1 x2 y2 x y)+ Absolute Bezier curve
         //q (x1 y1 x y)+       Relative Quadratic Bezier
         //Q (x1 y1 x y)+       Absolute Quadratic Bezier
-        //t (x y)+	Shorthand/Smooth Relative Quadratic Bezier
-        //T (x y)+	Shorthand/Smooth Absolute Quadratic Bezier
-        //s (x2 y2 x y)+	   Shorthand/Smooth Relative Bezier curve
-        //S (x2 y2 x y)+	   Shorthand/Smooth Absolute Bezier curve
-        //a (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+ 	Relative Elliptical Arc
+        //t (x y)+    Shorthand/Smooth Relative Quadratic Bezier
+        //T (x y)+    Shorthand/Smooth Absolute Quadratic Bezier
+        //s (x2 y2 x y)+       Shorthand/Smooth Relative Bezier curve
+        //S (x2 y2 x y)+       Shorthand/Smooth Absolute Bezier curve
+        //a (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+     Relative Elliptical Arc
         //A (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+  Absolute Elliptical Arc
 
         // command string
@@ -320,48 +320,48 @@ Kinetic.Path.prototype = {
     },
     _convertEndpointToCenterParameterization: function(x1, y1, x2, y2, fa, fs, rx, ry, psiDeg) {
     
-		// Derived from: http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
-		
-		var psi = psiDeg * (Math.PI / 180.0);
+        // Derived from: http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
+        
+        var psi = psiDeg * (Math.PI / 180.0);
 
-		var xp = Math.cos(psi) * (x1 - x2) / 2.0 + Math.sin(psi) * (y1 - y2) / 2.0;
-		var yp = -1 * Math.sin(psi) * (x1 - x2) / 2.0 + Math.cos(psi) * (y1 - y2) / 2.0;
+        var xp = Math.cos(psi) * (x1 - x2) / 2.0 + Math.sin(psi) * (y1 - y2) / 2.0;
+        var yp = -1 * Math.sin(psi) * (x1 - x2) / 2.0 + Math.cos(psi) * (y1 - y2) / 2.0;
 
-		var lambda = (xp*xp) / (rx*rx) + (yp*yp) / (ry*ry);
-		
-		if (lambda > 1) {
-			rx *= Math.sqrt(lambda);
-			ry *= Math.sqrt(lambda);
-		}
-		
-		var f = Math.sqrt((((rx*rx) * (ry*ry)) - ((rx*rx) * (yp*yp)) - ((ry*ry) * (xp*xp))) / ((rx*rx) * (yp*yp) + (ry*ry) * (xp*xp)));
-		
-		if (fa == fs) f *= -1;
-		if (isNaN(f)) f = 0;
-		
-		var cxp = f * rx * yp / ry;
-		var	cyp = f * -ry * xp / rx;
-	
-		var cx = (x1 + x2) / 2.0 + Math.cos(psi) * cxp - Math.sin(psi) * cyp;
-		var	cy = (y1 + y2) / 2.0 + Math.sin(psi) * cxp + Math.cos(psi) * cyp;
-		
-		var vMag = function(v) { return Math.sqrt(v[0]*v[0] + v[1]*v[1]); }
-		var vRatio = function(u, v) { return (u[0]*v[0] + u[1]*v[1]) / (vMag(u) * vMag(v)) }
-		var vAngle = function(u, v) { return (u[0]*v[1] < u[1]*v[0] ? -1 : 1) * Math.acos(vRatio(u,v)); }
-		
-		var theta = vAngle([1,0], [(xp - cxp) / rx, (yp - cyp) / ry]);
+        var lambda = (xp*xp) / (rx*rx) + (yp*yp) / (ry*ry);
+        
+        if (lambda > 1) {
+            rx *= Math.sqrt(lambda);
+            ry *= Math.sqrt(lambda);
+        }
+        
+        var f = Math.sqrt((((rx*rx) * (ry*ry)) - ((rx*rx) * (yp*yp)) - ((ry*ry) * (xp*xp))) / ((rx*rx) * (yp*yp) + (ry*ry) * (xp*xp)));
+        
+        if (fa == fs) f *= -1;
+        if (isNaN(f)) f = 0;
+        
+        var cxp = f * rx * yp / ry;
+        var cyp = f * -ry * xp / rx;
+    
+        var cx = (x1 + x2) / 2.0 + Math.cos(psi) * cxp - Math.sin(psi) * cyp;
+        var cy = (y1 + y2) / 2.0 + Math.sin(psi) * cxp + Math.cos(psi) * cyp;
+        
+        var vMag = function(v) { return Math.sqrt(v[0]*v[0] + v[1]*v[1]); }
+        var vRatio = function(u, v) { return (u[0]*v[0] + u[1]*v[1]) / (vMag(u) * vMag(v)) }
+        var vAngle = function(u, v) { return (u[0]*v[1] < u[1]*v[0] ? -1 : 1) * Math.acos(vRatio(u,v)); }
+        
+        var theta = vAngle([1,0], [(xp - cxp) / rx, (yp - cyp) / ry]);
 
-		var u = [(xp - cxp) / rx, (yp - cyp) / ry];
-		var v = [(-1 * xp - cxp) / rx, (-1 * yp - cyp) / ry];
-		var dTheta = vAngle(u, v);
-		
-		if (vRatio(u,v) <= -1) dTheta = Math.PI;
-		if (vRatio(u,v) >= 1) dTheta = 0;
+        var u = [(xp - cxp) / rx, (yp - cyp) / ry];
+        var v = [(-1 * xp - cxp) / rx, (-1 * yp - cyp) / ry];
+        var dTheta = vAngle(u, v);
+        
+        if (vRatio(u,v) <= -1) dTheta = Math.PI;
+        if (vRatio(u,v) >= 1) dTheta = 0;
 
-		if (fs == 0 && dTheta > 0) dTheta = dTheta - 2 * Math.PI;
-		if (fs == 1 && dTheta < 0) dTheta = dTheta + 2 * Math.PI;
-	
-		return [cx, cy, rx, ry, theta, dTheta, psi, fs];       
+        if (fs == 0 && dTheta > 0) dTheta = dTheta - 2 * Math.PI;
+        if (fs == 1 && dTheta < 0) dTheta = dTheta + 2 * Math.PI;
+    
+        return [cx, cy, rx, ry, theta, dTheta, psi, fs];       
     }
 };
 

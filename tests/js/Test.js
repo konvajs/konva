@@ -17,7 +17,7 @@ function log(message) {
  */
 function Test() {
     //this.testOnly = 'EVENTS - mousedown mouseup mouseover mouseout mousemove click dblclick / touchstart touchend touchmove tap dbltap';
-    this.testOnly = 'DRAG AND DROP - drag and drop stage';
+    //this.testOnly = 'DRAG AND DROP - drag and drop stage';
     this.counter = 0;
     
     testCounter = document.createElement('div');
