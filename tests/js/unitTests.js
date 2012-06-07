@@ -42,16 +42,16 @@ Test.prototype.tests = {
         stage.setSize(3);
         test(stage.getSize().width === 3 && stage.getSize().height === 3, 'stage size should be 3 x 3');
         stage.setSize({
-        	width: 4,
-        	height: 5
+            width: 4,
+            height: 5
         });
         test(stage.getSize().width === 4 && stage.getSize().height === 5, 'stage size should be 4 x 5');
         stage.setSize({
-        	width: 6
+            width: 6
         });
         test(stage.getSize().width === 6 && stage.getSize().height === 5, 'stage size should be 6 x 5');
         stage.setSize({
-        	height: 7
+            height: 7
         });
         test(stage.getSize().width === 6 && stage.getSize().height === 7, 'stage size should be 6 x 7');
         stage.setSize([8, 9]);
@@ -1640,6 +1640,64 @@ Test.prototype.tests = {
         stage.add(layer);
 
     },
+    'SHAPE - arc': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 1024,
+            height: 480,
+            throttle: 80,
+            scale: 0.5,
+            x: 50,
+            y: 10
+        });
+        var layer = new Kinetic.Layer();
+
+        var c = "M100,350 l 50,-25 a25,25 -30 0,1 50,-25 l 50,-25 a25,50 -30 0,1 50,-25 l 50,-25 a25,75 -30 0,1 50,-25 l 50,-25 a25,100 -30 0,1 50,-25 l 50,-25";
+
+        var path = new Kinetic.Path({
+            data: c,
+            fill: 'none',
+            stroke: '#999',
+            strokeWidth: 1,
+        });
+
+        path.on('mouseover', function() {
+            this.setFill('red');
+            layer.draw();
+        });
+
+        path.on('mouseout', function() {
+            this.setFill('none');
+            layer.draw();
+        });
+
+        layer.add(path);
+        stage.add(layer);
+
+    },    
+    'SHAPE - Tiger (RAWR!)': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 1024,
+            height: 480, 
+            scale: 0.25,
+            x: 50,
+            y: 50
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+        
+        for (var i=0; i < tiger.length; i++)
+        {
+            var path = new Kinetic.Path(tiger[i]);
+            group.add(path);
+        }
+        
+        group.draggable(true);
+        layer.add(group);
+        stage.add(layer);
+
+    },    
     'SHAPE - add shape with custom attr pointing to self': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
