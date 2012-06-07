@@ -2,9 +2,8 @@
 //  SVG Path
 ///////////////////////////////////////////////////////////////////////
 /**
- * Path constructor.  This shape was inspired by Jason Follas's
- *  SVG Path plugin.  Jason also helped build the parser and the
- *  drawing function.
+ * Path constructor. 
+ * @author Jason Follas
  * @constructor
  * @augments Kinetic.Shape
  * @param {Object} config
