@@ -1352,7 +1352,7 @@ Test.prototype.tests = {
         stage.add(layer);
 
     },
-    'DRAG AND DROP - draggable true': function(containerId) {
+    'DRAG AND DROP - two draggable shapes': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1371,13 +1371,24 @@ Test.prototype.tests = {
 
         circle.draggable(true);
         
+        var circle2 = new Kinetic.Circle({
+            x: 350,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true
+            //detectionType: 'pixel'
+        });
+        
         /*
         circle.on('dragend', function() {
         	circle.saveData();
         });
         */
 
-        layer.add(circle);
+        layer.add(circle).add(circle2);
         stage.add(layer);
         
         //circle.saveData();

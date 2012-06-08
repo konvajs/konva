@@ -827,7 +827,7 @@ Kinetic.Node.prototype = {
         var go = Kinetic.GlobalObject;
         var stage = this.getStage();
         var pos = stage.getUserPosition();
-        
+
         if(pos) {
             var m = this.getTransform().getTranslation();
             var am = this.getAbsoluteTransform().getTranslation();
@@ -844,39 +844,34 @@ Kinetic.Node.prototype = {
         this.off('touchstart.initdrag');
     },
     /**
-     * handle node events
-     * @param {String} eventType
-     * @param {Event} evt
+     * handle node event
      */
-    _handleEvents: function(eventType, evt) {
+    _handleEvent: function(eventType, evt) {
         if(this.nodeType === 'Shape') {
             evt.shape = this;
         }
+
         var stage = this.getStage();
-        this._handleEvent(this, stage.mouseoverShape, stage.mouseoutShape, eventType, evt);
-    },
-    /**
-     * handle node event
-     */
-    _handleEvent: function(node, mouseoverNode, mouseoutNode, eventType, evt) {
-        var el = node.eventListeners;
+        var mouseoverNode = stage.mouseoverShape;
+        var mouseoutNode = stage.mouseoutShape;
+        var el = this.eventListeners;
         var okayToRun = true;
 
         /*
          * determine if event handler should be skipped by comparing
          * parent nodes
          */
-        if(eventType === 'mouseover' && mouseoutNode && mouseoutNode._id === node._id) {
+        if(eventType === 'mouseover' && mouseoutNode && mouseoutNode._id === this._id) {
             okayToRun = false;
         }
-        else if(eventType === 'mouseout' && mouseoverNode && mouseoverNode._id === node._id) {
+        else if(eventType === 'mouseout' && mouseoverNode && mouseoverNode._id === this._id) {
             okayToRun = false;
         }
 
         if(el[eventType] && okayToRun) {
             var events = el[eventType];
             for(var i = 0; i < events.length; i++) {
-                events[i].handler.apply(node, [evt]);
+                events[i].handler.apply(this, [evt]);
             }
         }
 
@@ -884,8 +879,8 @@ Kinetic.Node.prototype = {
         var mouseoutParent = mouseoutNode ? mouseoutNode.parent : undefined;
 
         // simulate event bubbling
-        if(!evt.cancelBubble && node.parent && node.parent.nodeType !== 'Stage') {
-            this._handleEvent(node.parent, mouseoverParent, mouseoutParent, eventType, evt);
+        if(!evt.cancelBubble && this.parent && this.parent.nodeType !== 'Stage') {
+            this._handleEvent.call(this.parent, eventType, evt);
         }
     }
 };
