@@ -1800,7 +1800,6 @@ Test.prototype.tests = {
             /*
              * test cropping setter
              */
-
             darth.setCrop(0, 1, 2, 3);
             crop = darth.getCrop();
             test(crop.x === 0, 'crop x should be 0');
@@ -2923,15 +2922,15 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
 
-        var widthChangeTriggered = false;
+        var triggered = false;
 
         rect.on('widthChange', function() {
-            widthChangeTriggered = true;
+        	triggered = true;
         });
 
-        rect.setSize(200);
-
-        test(widthChangeTriggered, 'changing rect size should have triggered on attr change');
+        rect.setSize(210);
+        
+        test(triggered, 'width change event not triggered');
     },
     'NODE - test setting shadow offset': function(containerId) {
         var stage = new Kinetic.Stage({

@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jun 08 2012
+ * Date: Jun 09 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -535,12 +535,15 @@ Kinetic.Node.prototype = {
                              */
                             case 'draggable':
                                 that.draggable(c[key]);
+                                that._fireChangeEvent(key);
                                 break;
                             case 'listening':
                                 that.listen(c[key]);
+                                that._fireChangeEvent(key);
                                 break;
                             case 'rotationDeg':
                                 that._setAttr(obj, 'rotation', c[key] * Math.PI / 180);
+                                that._fireChangeEvent('rotation');
                                 break;
                             /*
                              * config objects
@@ -549,6 +552,7 @@ Kinetic.Node.prototype = {
                                 var pos = go._getXY(val);
                                 that._setAttr(obj[key], 'x', pos.x);
                                 that._setAttr(obj[key], 'y', pos.y);
+                                that._fireChangeEvent(key);
                                 break;
                             /*
                              * includes:
@@ -559,26 +563,30 @@ Kinetic.Node.prototype = {
                                 var pos = go._getXY(val);
                                 that._setAttr(obj[key], 'x', pos.x);
                                 that._setAttr(obj[key], 'y', pos.y);
+                                that._fireChangeEvent(key);
                                 break;
                             case 'scale':
                                 var pos = go._getXY(val);
                                 that._setAttr(obj[key], 'x', pos.x);
                                 that._setAttr(obj[key], 'y', pos.y);
+                                that._fireChangeEvent(key);
                                 break;
                             case 'points':
                                 that._setAttr(obj, key, go._getPoints(val));
+                                that._fireChangeEvent(key);
                                 break;
                             case 'crop':
                                 var pos = go._getXY(val);
                                 var size = go._getSize(val);
-
                                 that._setAttr(obj[key], 'x', pos.x);
                                 that._setAttr(obj[key], 'y', pos.y);
                                 that._setAttr(obj[key], 'width', size.width);
                                 that._setAttr(obj[key], 'height', size.height);
+                                that._fireChangeEvent(key);
                                 break;
                             default:
                                 that._setAttr(obj, key, c[key]);
+                                that._fireChangeEvent(key);
                                 break;
                         }
                     }
@@ -1167,12 +1175,14 @@ Kinetic.Node.prototype = {
 
         return m;
     },
+    _fireChangeEvent: function(attr) {
+        if(this.getStage() !== undefined) {
+            this._handleEvent(attr + 'Change', {});
+        }
+    },
     _setAttr: function(obj, attr, val) {
         if(val !== undefined) {
             obj[attr] = val;
-            if(this.getStage() !== undefined) {
-                this._handleEvent(attr + 'Change', {});
-            }
         }
     },
     _listenDrag: function() {
