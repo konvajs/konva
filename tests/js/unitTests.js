@@ -59,10 +59,6 @@ Test.prototype.tests = {
         stage.setSize([1, 1, 10, 11]);
         test(stage.getSize().width === 10 && stage.getSize().height === 11, 'stage size should be 10 x 11');
 
-        // test integer conversion
-        stage.setSize(300.2, 200.2);
-        test(stage.getSize().width === 300 && stage.getSize().height === 200, 'stage size should be 300 x 200');
-
         layer.add(circle);
         stage.add(layer);
     },

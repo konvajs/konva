@@ -1499,9 +1499,6 @@ Kinetic.Stage = function(config) {
         throttle: 80
     });
 
-    this.nodeType = 'Stage';
-    this.lastEventTime = 0;
-
     /*
      * if container is a string, assume it's an id for
      * a DOM element
@@ -1514,14 +1511,8 @@ Kinetic.Stage = function(config) {
     Kinetic.Container.apply(this, []);
     Kinetic.Node.apply(this, [config]);
 
-    this.content = document.createElement('div');
-    this.dblClickWindow = 400;
-
     this._setStageDefaultProperties();
-
-    // set stage id
     this._id = Kinetic.GlobalObject.idCounter++;
-
     this._buildDOM();
     this._listen();
     this._prepareDrag();
@@ -1577,12 +1568,6 @@ Kinetic.Stage.prototype = {
         // set stage dimensions
         var size = Kinetic.GlobalObject._getSize(arguments);
         this.setAttrs(size);
-
-        // convert to integers
-        this.attrs.width = Math.round(this.attrs.width);
-        this.attrs.height = Math.round(this.attrs.height);
-
-        this._resizeDOM();
     },
     /**
      * return stage size
@@ -2102,24 +2087,23 @@ else if(!isDragging && this.touchMove) {
         var go = Kinetic.GlobalObject;
         var that = this;
 
-        // desktop events
+        /*
+         * desktop events
+         */
         this.content.addEventListener('mousedown', function(evt) {
             that.mouseDown = true;
             that.mouseUp = false;
             that.mouseMove = false;
             that._handleStageEvent(evt);
-            /*
-             * init stage drag and drop
-             */
+
+            //init stage drag and drop
             if(that.attrs.draggable) {
                 that._initDrag();
             }
         }, false);
 
         this.content.addEventListener('mousemove', function(evt) {
-            /*
-             * throttle mousemove
-             */
+            //throttle mousemove
             var throttle = that.attrs.throttle;
             var date = new Date();
             var time = date.getTime();
@@ -2153,7 +2137,9 @@ else if(!isDragging && this.touchMove) {
             }
             that.mousePos = undefined;
         }, false);
-        // mobile events
+        /*
+         * mobile events
+         */
         this.content.addEventListener('touchstart', function(evt) {
             evt.preventDefault();
             that.touchStart = true;
@@ -2169,9 +2155,7 @@ else if(!isDragging && this.touchMove) {
         }, false);
 
         this.content.addEventListener('touchmove', function(evt) {
-            /*
-             * throttle touchmove
-             */
+            //throttle touchmove
             var throttle = that.attrs.throttle;
             var date = new Date();
             var time = date.getTime();
@@ -2192,6 +2176,16 @@ else if(!isDragging && this.touchMove) {
             that._handleStageEvent(evt);
             that.tapStart = false;
         }, false);
+        /*
+         * change events
+         */
+        this.on('widthChange.kinetic_reserved', function() {
+            this._resizeDOM();
+        });
+
+        this.on('heightChange.kinetic_reserved', function() {
+            this._resizeDOM();
+        });
     },
     /**
      * set mouse positon for desktop apps
@@ -2356,6 +2350,7 @@ else if(!isDragging && this.touchMove) {
      */
     _buildDOM: function() {
         // content
+        this.content = document.createElement('div');
         this.content.style.position = 'relative';
         this.content.style.display = 'inline-block';
         this.content.className = 'kineticjs-content';
@@ -2389,6 +2384,7 @@ else if(!isDragging && this.touchMove) {
         this.content.appendChild(this.pathLayer.canvas);
 
         this.setSize(this.attrs.width, this.attrs.height);
+        this._resizeDOM();
     },
     _addId: function(node) {
         if(node.attrs.id !== undefined) {
@@ -2441,6 +2437,9 @@ else if(!isDragging && this.touchMove) {
      * set defaults
      */
     _setStageDefaultProperties: function() {
+        this.nodeType = 'Stage';
+        this.lastEventTime = 0;
+        this.dblClickWindow = 400;
         this.targetShape = undefined;
         this.targetFound = false;
         this.mouseoverShape = undefined;
