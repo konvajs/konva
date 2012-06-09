@@ -185,15 +185,15 @@ Kinetic.Node.prototype = {
                                 that.listen(c[key]);
                                 break;
                             case 'rotationDeg':
-                                obj.rotation = c[key] * Math.PI / 180;
+                                that._setAttr(obj, 'rotation', c[key] * Math.PI / 180);
                                 break;
                             /*
                              * config objects
                              */
                             case 'centerOffset':
                                 var pos = go._getXY(val);
-                                go._setAttr(obj[key], 'x', pos.x);
-                                go._setAttr(obj[key], 'y', pos.y);
+                                that._setAttr(obj[key], 'x', pos.x);
+                                that._setAttr(obj[key], 'y', pos.y);
                                 break;
                             /*
                              * includes:
@@ -202,28 +202,28 @@ Kinetic.Node.prototype = {
                              */
                             case 'offset':
                                 var pos = go._getXY(val);
-                                go._setAttr(obj[key], 'x', pos.x);
-                                go._setAttr(obj[key], 'y', pos.y);
+                                that._setAttr(obj[key], 'x', pos.x);
+                                that._setAttr(obj[key], 'y', pos.y);
                                 break;
                             case 'scale':
                                 var pos = go._getXY(val);
-                                go._setAttr(obj[key], 'x', pos.x);
-                                go._setAttr(obj[key], 'y', pos.y);
+                                that._setAttr(obj[key], 'x', pos.x);
+                                that._setAttr(obj[key], 'y', pos.y);
                                 break;
                             case 'points':
-                                obj[key] = go._getPoints(val);
+                                that._setAttr(obj, key, go._getPoints(val));
                                 break;
                             case 'crop':
                                 var pos = go._getXY(val);
                                 var size = go._getSize(val);
 
-                                go._setAttr(obj[key], 'x', pos.x);
-                                go._setAttr(obj[key], 'y', pos.y);
-                                go._setAttr(obj[key], 'width', size.width);
-                                go._setAttr(obj[key], 'height', size.height);
+                                that._setAttr(obj[key], 'x', pos.x);
+                                that._setAttr(obj[key], 'y', pos.y);
+                                that._setAttr(obj[key], 'width', size.width);
+                                that._setAttr(obj[key], 'height', size.height);
                                 break;
                             default:
-                                obj[key] = c[key];
+                                that._setAttr(obj, key, c[key]);
                                 break;
                         }
                     }
@@ -811,6 +811,14 @@ Kinetic.Node.prototype = {
         }
 
         return m;
+    },
+    _setAttr: function(obj, attr, val) {
+        if(val !== undefined) {
+            obj[attr] = val;
+            if(this.getStage() !== undefined) {
+                this._handleEvent(attr + 'Change', {});
+            }
+        }
     },
     _listenDrag: function() {
         this._dragCleanup();

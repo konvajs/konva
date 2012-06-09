@@ -35,7 +35,7 @@ Test.prototype.tests = {
             strokeWidth: 4,
             name: 'myCircle'
         });
-        
+
         test(stage.getSize().width === 578 && stage.getSize().height === 200, 'stage size should be 1 x 2');
         stage.setSize(1, 2);
         test(stage.getSize().width === 1 && stage.getSize().height === 2, 'stage size should be 1 x 2');
@@ -58,7 +58,7 @@ Test.prototype.tests = {
         test(stage.getSize().width === 8 && stage.getSize().height === 9, 'stage size should be 8 x 9');
         stage.setSize([1, 1, 10, 11]);
         test(stage.getSize().width === 10 && stage.getSize().height === 11, 'stage size should be 10 x 11');
-        
+
         // test integer conversion
         stage.setSize(300.2, 200.2);
         test(stage.getSize().width === 300 && stage.getSize().height === 200, 'stage size should be 300 x 200');
@@ -402,21 +402,22 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        test(stage.getSize().width === 578, 'stage height should be 578');
-        test(stage.getSize().height === 200, 'stage width should be 200');
-        test(stage.getDOM().style.width === '578px', 'content height should be 578px');
-        test(stage.getDOM().style.height === '200px', 'content width should be 200px');
-
-        stage.setSize(300, 150);
-
-        test(stage.getSize().width === 300, 'stage height should be 300');
-        test(stage.getSize().height === 150, 'stage width should be 150');
-        test(stage.getDOM().style.width === '300px', 'content height should be 300px');
-        test(stage.getDOM().style.height === '150px', 'content width should be 150px');
+        test(stage.getSize().width === 578, 'stage width should be 578');
+        test(stage.getSize().height === 200, 'stage height should be 200');
+        test(stage.getDOM().style.width === '578px', 'content width should be 578px');
+        test(stage.getDOM().style.height === '200px', 'content height should be 200px');
 
         layer.add(circle);
         stage.add(layer);
 
+        stage.setSize(333, 155);
+
+        test(stage.getSize().width === 333, 'stage width should be 333');
+        test(stage.getSize().height === 155, 'stage height should be 155');
+        test(stage.getDOM().style.width === '333px', 'content width should be 333');
+        test(stage.getDOM().style.height === '155px', 'content height should be 155px');
+        test(layer.getCanvas().width === 333, 'layer canvas width should be 333');
+        test(layer.getCanvas().height === 155, 'layer canvas width should be 155');
     },
     'STAGE - test getShapesInPoint': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1674,30 +1675,29 @@ Test.prototype.tests = {
         layer.add(path);
         stage.add(layer);
 
-    },    
+    },
     'SHAPE - Tiger (RAWR!)': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 1024,
-            height: 480, 
+            height: 480,
             scale: 0.25,
             x: 50,
             y: 50
         });
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
-        
-        for (var i=0; i < tiger.length; i++)
-        {
+
+        for(var i = 0; i < tiger.length; i++) {
             var path = new Kinetic.Path(tiger[i]);
             group.add(path);
         }
-        
+
         group.draggable(true);
         layer.add(group);
         stage.add(layer);
 
-    },    
+    },
     'SHAPE - add shape with custom attr pointing to self': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -2905,6 +2905,34 @@ Test.prototype.tests = {
 
         layer.draw();
     },
+    'NODE - test on attr change': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 50,
+            y: 50,
+            width: 200,
+            height: 50,
+            fill: 'blue'
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        var widthChangeTriggered = false;
+
+        rect.on('widthChange', function() {
+            widthChangeTriggered = true;
+        });
+
+        rect.setSize(200);
+
+        test(widthChangeTriggered, 'changing rect size should have triggered on attr change');
+    },
     'NODE - test setting shadow offset': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -3576,11 +3604,11 @@ Test.prototype.tests = {
         circle.on('click', function() {
             foo = 'bar';
 
-			/*
-            var evt = window.event;
-            var rightClick = evt.which ? evt.which == 3 : evt.button == 2;
-            console.log(rightClick);
-            */
+            /*
+             var evt = window.event;
+             var rightClick = evt.which ? evt.which == 3 : evt.button == 2;
+             console.log(rightClick);
+             */
         });
 
         circle.simulate('click');
@@ -3613,9 +3641,9 @@ Test.prototype.tests = {
         circle.on('click', function() {
             clicks.push('circle');
         });
-        
+
         layer.on('click', function() {
-        	clicks.push('layer');
+            clicks.push('layer');
         });
 
         circle.simulate('click');

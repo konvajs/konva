@@ -343,14 +343,6 @@ Kinetic.GlobalObject = {
 
             return arr;
         }
-    },
-    /*
-     * set attr
-     */
-    _setAttr: function(obj, attr, val) {
-        if(val !== undefined) {
-            obj[attr] = val;
-        }
     }
 };
 
@@ -548,15 +540,15 @@ Kinetic.Node.prototype = {
                                 that.listen(c[key]);
                                 break;
                             case 'rotationDeg':
-                                obj.rotation = c[key] * Math.PI / 180;
+                                that._setAttr(obj, 'rotation', c[key] * Math.PI / 180);
                                 break;
                             /*
                              * config objects
                              */
                             case 'centerOffset':
                                 var pos = go._getXY(val);
-                                go._setAttr(obj[key], 'x', pos.x);
-                                go._setAttr(obj[key], 'y', pos.y);
+                                that._setAttr(obj[key], 'x', pos.x);
+                                that._setAttr(obj[key], 'y', pos.y);
                                 break;
                             /*
                              * includes:
@@ -565,28 +557,28 @@ Kinetic.Node.prototype = {
                              */
                             case 'offset':
                                 var pos = go._getXY(val);
-                                go._setAttr(obj[key], 'x', pos.x);
-                                go._setAttr(obj[key], 'y', pos.y);
+                                that._setAttr(obj[key], 'x', pos.x);
+                                that._setAttr(obj[key], 'y', pos.y);
                                 break;
                             case 'scale':
                                 var pos = go._getXY(val);
-                                go._setAttr(obj[key], 'x', pos.x);
-                                go._setAttr(obj[key], 'y', pos.y);
+                                that._setAttr(obj[key], 'x', pos.x);
+                                that._setAttr(obj[key], 'y', pos.y);
                                 break;
                             case 'points':
-                                obj[key] = go._getPoints(val);
+                                that._setAttr(obj, key, go._getPoints(val));
                                 break;
                             case 'crop':
                                 var pos = go._getXY(val);
                                 var size = go._getSize(val);
 
-                                go._setAttr(obj[key], 'x', pos.x);
-                                go._setAttr(obj[key], 'y', pos.y);
-                                go._setAttr(obj[key], 'width', size.width);
-                                go._setAttr(obj[key], 'height', size.height);
+                                that._setAttr(obj[key], 'x', pos.x);
+                                that._setAttr(obj[key], 'y', pos.y);
+                                that._setAttr(obj[key], 'width', size.width);
+                                that._setAttr(obj[key], 'height', size.height);
                                 break;
                             default:
-                                obj[key] = c[key];
+                                that._setAttr(obj, key, c[key]);
                                 break;
                         }
                     }
@@ -1175,6 +1167,14 @@ Kinetic.Node.prototype = {
 
         return m;
     },
+    _setAttr: function(obj, attr, val) {
+        if(val !== undefined) {
+            obj[attr] = val;
+            if(this.getStage() !== undefined) {
+                this._handleEvent(attr + 'Change', {});
+            }
+        }
+    },
     _listenDrag: function() {
         this._dragCleanup();
         var go = Kinetic.GlobalObject;
@@ -1576,27 +1576,7 @@ Kinetic.Stage.prototype = {
         this.attrs.width = Math.round(this.attrs.width);
         this.attrs.height = Math.round(this.attrs.height);
 
-        var width = this.attrs.width;
-        var height = this.attrs.height;
-
-        // set content dimensions
-        this.content.style.width = width + 'px';
-        this.content.style.height = height + 'px';
-
-        // set buffer layer and path layer sizes
-        this.bufferLayer.getCanvas().width = width;
-        this.bufferLayer.getCanvas().height = height;
-        this.pathLayer.getCanvas().width = width;
-        this.pathLayer.getCanvas().height = height;
-
-        // set user defined layer dimensions
-        var layers = this.children;
-        for(var n = 0; n < layers.length; n++) {
-            var layer = layers[n];
-            layer.getCanvas().width = width;
-            layer.getCanvas().height = height;
-            layer.draw();
-        }
+        this._resizeDOM();
     },
     /**
      * return stage size
@@ -1828,6 +1808,29 @@ Kinetic.Stage.prototype = {
      */
     getDOM: function() {
         return this.content;
+    },
+    _resizeDOM: function() {
+        var width = this.attrs.width;
+        var height = this.attrs.height;
+
+        // set content dimensions
+        this.content.style.width = width + 'px';
+        this.content.style.height = height + 'px';
+
+        // set buffer layer and path layer sizes
+        this.bufferLayer.getCanvas().width = width;
+        this.bufferLayer.getCanvas().height = height;
+        this.pathLayer.getCanvas().width = width;
+        this.pathLayer.getCanvas().height = height;
+
+        // set user defined layer dimensions
+        var layers = this.children;
+        for(var n = 0; n < layers.length; n++) {
+            var layer = layers[n];
+            layer.getCanvas().width = width;
+            layer.getCanvas().height = height;
+            layer.draw();
+        }
     },
     /**
      * remove layer from stage
@@ -2168,7 +2171,7 @@ else if(!isDragging && this.touchMove) {
             var time = date.getTime();
             var timeDiff = time - that.lastEventTime;
             var tt = 1000 / throttle;
- 
+
             if(timeDiff >= tt) {
                 evt.preventDefault();
                 that.touchMove = true;
@@ -2275,7 +2278,7 @@ else if(!isDragging && this.touchMove) {
         this._onContent('mousemove touchmove', function(evt) {
             var go = Kinetic.GlobalObject;
             var node = go.drag.node;
-            
+
             if(node) {
                 var pos = that.getUserPosition();
                 var dc = node.attrs.dragConstraint;

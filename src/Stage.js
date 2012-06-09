@@ -101,27 +101,7 @@ Kinetic.Stage.prototype = {
         this.attrs.width = Math.round(this.attrs.width);
         this.attrs.height = Math.round(this.attrs.height);
 
-        var width = this.attrs.width;
-        var height = this.attrs.height;
-
-        // set content dimensions
-        this.content.style.width = width + 'px';
-        this.content.style.height = height + 'px';
-
-        // set buffer layer and path layer sizes
-        this.bufferLayer.getCanvas().width = width;
-        this.bufferLayer.getCanvas().height = height;
-        this.pathLayer.getCanvas().width = width;
-        this.pathLayer.getCanvas().height = height;
-
-        // set user defined layer dimensions
-        var layers = this.children;
-        for(var n = 0; n < layers.length; n++) {
-            var layer = layers[n];
-            layer.getCanvas().width = width;
-            layer.getCanvas().height = height;
-            layer.draw();
-        }
+        this._resizeDOM();
     },
     /**
      * return stage size
@@ -353,6 +333,29 @@ Kinetic.Stage.prototype = {
      */
     getDOM: function() {
         return this.content;
+    },
+    _resizeDOM: function() {
+        var width = this.attrs.width;
+        var height = this.attrs.height;
+
+        // set content dimensions
+        this.content.style.width = width + 'px';
+        this.content.style.height = height + 'px';
+
+        // set buffer layer and path layer sizes
+        this.bufferLayer.getCanvas().width = width;
+        this.bufferLayer.getCanvas().height = height;
+        this.pathLayer.getCanvas().width = width;
+        this.pathLayer.getCanvas().height = height;
+
+        // set user defined layer dimensions
+        var layers = this.children;
+        for(var n = 0; n < layers.length; n++) {
+            var layer = layers[n];
+            layer.getCanvas().width = width;
+            layer.getCanvas().height = height;
+            layer.draw();
+        }
     },
     /**
      * remove layer from stage
@@ -693,7 +696,7 @@ else if(!isDragging && this.touchMove) {
             var time = date.getTime();
             var timeDiff = time - that.lastEventTime;
             var tt = 1000 / throttle;
- 
+
             if(timeDiff >= tt) {
                 evt.preventDefault();
                 that.touchMove = true;
@@ -800,7 +803,7 @@ else if(!isDragging && this.touchMove) {
         this._onContent('mousemove touchmove', function(evt) {
             var go = Kinetic.GlobalObject;
             var node = go.drag.node;
-            
+
             if(node) {
                 var pos = that.getUserPosition();
                 var dc = node.attrs.dragConstraint;

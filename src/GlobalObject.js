@@ -315,14 +315,6 @@ Kinetic.GlobalObject = {
 
             return arr;
         }
-    },
-    /*
-     * set attr
-     */
-    _setAttr: function(obj, attr, val) {
-        if(val !== undefined) {
-            obj[attr] = val;
-        }
     }
 };
 
