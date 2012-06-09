@@ -376,7 +376,7 @@ Kinetic.Node = function(config) {
             y: 1
         },
         rotation: 0,
-        centerOffset: {
+        offset: {
             x: 0,
             y: 0
         },
@@ -388,6 +388,8 @@ Kinetic.Node = function(config) {
     this.setDefaultAttrs(this.defaultNodeAttrs);
     this.eventListeners = {};
 
+    this.setAttrs(config);
+
     // bind events
     this.on('draggableChange.kinetic_reserved', function() {
         if(this.attrs.draggable) {
@@ -397,8 +399,12 @@ Kinetic.Node = function(config) {
             this._dragCleanup();
         }
     });
-
-    this.setAttrs(config);
+    /*
+     * simulate draggable change event
+     * to init drag and drop logic from the
+     * above event binder
+     */
+    this.simulate('draggableChange');
 };
 /*
  * Node methods
@@ -517,7 +523,8 @@ Kinetic.Node.prototype = {
 
         // set properties from config
         if(config !== undefined) {
-            function setAttrs(obj, c) {
+
+            function setAttrs(obj, c, level) {
                 for(var key in c) {
                     var val = c[key];
 
@@ -534,7 +541,7 @@ Kinetic.Node.prototype = {
                         if(obj[key] === undefined) {
                             obj[key] = {};
                         }
-                        setAttrs(obj[key], val);
+                        setAttrs(obj[key], val, level + 1);
                     }
                     /*
                      * add all other object types to attrs object
@@ -547,13 +554,9 @@ Kinetic.Node.prototype = {
                                 // override key for change event
                                 key = 'rotation';
                                 break;
-                            case 'centerOffset':
-                                var pos = go._getXY(val);
-                                that._setAttr(obj[key], 'x', pos.x);
-                                that._setAttr(obj[key], 'y', pos.y);
-                                break;
                             /*
                              * includes:
+                             * - node offset
                              * - fill pattern offset
                              * - shadow offset
                              */
@@ -583,11 +586,17 @@ Kinetic.Node.prototype = {
                                 break;
                         }
 
-                        that._fireChangeEvent(key);
+                        /*
+                         * only fire change event for root
+                         * level attrs
+                         */
+                        if(level === 0) {
+                            that._fireChangeEvent(key);
+                        }
                     }
                 }
             }
-            setAttrs(this.attrs, config);
+            setAttrs(this.attrs, config, 0);
         }
     },
     /**
@@ -768,9 +777,9 @@ Kinetic.Node.prototype = {
             x: this.attrs.scale.x,
             y: this.attrs.scale.y
         };
-        var centerOffset = {
-            x: this.attrs.centerOffset.x,
-            y: this.attrs.centerOffset.y
+        var offset = {
+            x: this.attrs.offset.x,
+            y: this.attrs.offset.y
         };
 
         this.attrs.rotation = 0;
@@ -1045,25 +1054,25 @@ Kinetic.Node.prototype = {
         this._handleEvent(eventType, {});
     },
     /**
-     * set center offset
+     * set offset
      * @param {Number} x
      * @param {Number} y
      */
-    setCenterOffset: function() {
+    setOffset: function() {
         this.setAttrs({
-            centerOffset: arguments
+            offset: arguments
         });
     },
     /**
      * get center offset
      */
-    getCenterOffset: function() {
-        return this.attrs.centerOffset;
+    getOffset: function() {
+        return this.attrs.offset;
     },
     /**
      * transition node to another state.  Any property that can accept a real
      *  number can be transitioned, including x, y, rotation, alpha, strokeWidth,
-     *  radius, scale.x, scale.y, centerOffset.x, centerOffset.y, etc.
+     *  radius, scale.x, scale.y, offset.x, offset.y, etc.
      * @param {Object} config
      * @config {Number} [duration] duration that the transition runs in seconds
      * @config {String} [easing] easing function.  can be linear, ease-in, ease-out, ease-in-out,
@@ -1548,13 +1557,24 @@ Kinetic.Stage = function(config) {
     this._setStageDefaultProperties();
     this._id = Kinetic.GlobalObject.idCounter++;
     this._buildDOM();
-    this._bindEvents();
+    this._bindContentEvents();
     this._prepareDrag();
 
+    //change events
+    this.on('widthChange.kinetic_reserved', function() {
+        this._resizeDOM();
+    });
+
+    this.on('heightChange.kinetic_reserved', function() {
+        this._resizeDOM();
+    });
+    
     var go = Kinetic.GlobalObject;
     go.stages.push(this);
     this._addId(this);
     this._addName(this);
+    
+    
 };
 /*
  * Stage methods
@@ -2117,7 +2137,7 @@ else if(!isDragging && this.touchMove) {
      * begin listening for events by adding event handlers
      * to the container
      */
-    _bindEvents: function() {
+    _bindContentEvents: function() {
         var go = Kinetic.GlobalObject;
         var that = this;
 
@@ -2210,16 +2230,6 @@ else if(!isDragging && this.touchMove) {
             that._handleStageEvent(evt);
             that.tapStart = false;
         }, false);
-        /*
-         * change events
-         */
-        this.on('widthChange.kinetic_reserved', function() {
-            this._resizeDOM();
-        });
-
-        this.on('heightChange.kinetic_reserved', function() {
-            this._resizeDOM();
-        });
     },
     /**
      * set mouse positon for desktop apps
@@ -2418,6 +2428,7 @@ else if(!isDragging && this.touchMove) {
         this.content.appendChild(this.pathLayer.canvas);
 
         this.setSize(this.attrs.width, this.attrs.height);
+        this._resizeDOM();
     },
     _addId: function(node) {
         if(node.attrs.id !== undefined) {
@@ -3115,8 +3126,8 @@ Kinetic.Shape.prototype = {
                 var t = node.getTransform();
 
                 // center offset
-                if(node.attrs.centerOffset.x !== 0 || node.attrs.centerOffset.y !== 0) {
-                    t.translate(-1 * node.attrs.centerOffset.x, -1 * node.attrs.centerOffset.y);
+                if(node.attrs.offset.x !== 0 || node.attrs.offset.y !== 0) {
+                    t.translate(-1 * node.attrs.offset.x, -1 * node.attrs.offset.y);
                 }
 
                 var m = t.getMatrix();

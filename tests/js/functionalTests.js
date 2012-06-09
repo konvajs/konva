@@ -236,7 +236,7 @@ Test.prototype.tests = {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            centerOffset: {
+            offset: {
                 x: 50,
                 y: 25
             }
@@ -281,7 +281,7 @@ Test.prototype.tests = {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            centerOffset: {
+            offset: {
                 x: 50,
                 y: 25
             }
@@ -328,7 +328,7 @@ Test.prototype.tests = {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            centerOffset: {
+            offset: {
                 x: 50,
                 y: 25
             }
@@ -375,7 +375,7 @@ Test.prototype.tests = {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            centerOffset: {
+            offset: {
                 x: 50,
                 y: 25
             }
@@ -444,7 +444,7 @@ Test.prototype.tests = {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            centerOffset: {
+            offset: {
                 x: 50,
                 y: 25
             }
@@ -458,7 +458,7 @@ Test.prototype.tests = {
             fill: 'blue',
             stroke: 'black',
             strokeWidth: 4,
-            centerOffset: {
+            offset: {
                 x: 50,
                 y: 25
             }
@@ -472,7 +472,7 @@ Test.prototype.tests = {
             fill: 'red',
             stroke: 'black',
             strokeWidth: 4,
-            centerOffset: {
+            offset: {
                 x: 50,
                 y: 25
             }
@@ -1254,7 +1254,7 @@ Test.prototype.tests = {
                         y: 15
                     }
                 },
-                centerOffset: {
+                offset: {
                     x: 10,
                     y: 10
                 }
@@ -1271,7 +1271,7 @@ Test.prototype.tests = {
                         y: 5
                     }
                 },
-                centerOffset: {
+                offset: {
                     x: 0,
                     y: 0
                 }
@@ -1898,7 +1898,7 @@ Test.prototype.tests = {
                 x: 2,
                 y: 1
             },
-            centerOffset: {
+            offset: {
                 x: 50,
                 y: 25
             }

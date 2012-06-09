@@ -430,8 +430,8 @@ Kinetic.Shape.prototype = {
                 var t = node.getTransform();
 
                 // center offset
-                if(node.attrs.centerOffset.x !== 0 || node.attrs.centerOffset.y !== 0) {
-                    t.translate(-1 * node.attrs.centerOffset.x, -1 * node.attrs.centerOffset.y);
+                if(node.attrs.offset.x !== 0 || node.attrs.offset.y !== 0) {
+                    t.translate(-1 * node.attrs.offset.x, -1 * node.attrs.offset.y);
                 }
 
                 var m = t.getMatrix();

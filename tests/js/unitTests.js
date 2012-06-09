@@ -237,7 +237,7 @@ Test.prototype.tests = {
         group.add(circle);
         layer.draw();
 
-        var expectedJson = '{"attrs":{"width":578,"height":200,"throttle":80,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"detectionType":"path","shadow":{"blur":10,"alpha":1,"offset":{"x":0,"y":0}},"visible":true,"listen":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
+        var expectedJson = '{"attrs":{"width":578,"height":200,"throttle":80,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"detectionType":"path","shadow":{"blur":10,"alpha":1,"offset":{"x":0,"y":0}},"visible":true,"listen":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
         test(stage.toJSON() === expectedJson, 'problem with serialization');
     },
     'STAGE - reset stage': function(containerId) {
@@ -322,7 +322,7 @@ Test.prototype.tests = {
             height: 200
         });
 
-        var json = '{"attrs":{"width":578,"height":200,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"detectionType":"path","shadow":{"blur":10,"alpha":1,"offset":{"x":0,"y":0}},"visible":true,"listen":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
+        var json = '{"attrs":{"width":578,"height":200,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"detectionType":"path","shadow":{"blur":10,"alpha":1,"offset":{"x":0,"y":0}},"visible":true,"listen":true,"name":"myCircle","alpha":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
         stage.load(json);
 
         test(stage.toJSON() === json, "problem loading stage with json");
@@ -361,7 +361,7 @@ Test.prototype.tests = {
 
         test(triangle.getId() === 'myTriangle', 'triangle id should be myTriangle');
 
-        var expectedJson = '{"attrs":{"width":578,"height":200,"throttle":80,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"detectionType":"path","shadow":{"blur":10,"alpha":1,"offset":{"x":0,"y":0}},"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
+        var expectedJson = '{"attrs":{"width":578,"height":200,"throttle":80,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"detectionType":"path","shadow":{"blur":10,"alpha":1,"offset":{"x":0,"y":0}},"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
         test(stage.toJSON() === expectedJson, "problem serializing stage with custom shape");
     },
     'STAGE - load stage with custom shape using json': function(containerId) {
@@ -381,7 +381,7 @@ Test.prototype.tests = {
             this.fill();
             this.stroke();
         };
-        var json = '{"attrs":{"width":578,"height":200,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"detectionType":"path","shadow":{"blur":10,"alpha":1,"offset":{"x":0,"y":0}},"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
+        var json = '{"attrs":{"width":578,"height":200,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"detectionType":"path","shadow":{"blur":10,"alpha":1,"offset":{"x":0,"y":0}},"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
         stage.load(json);
 
         var customShape = stage.get('#myTriangle')[0];
@@ -797,7 +797,7 @@ Test.prototype.tests = {
                 x: 200,
                 y: 60,
                 image: imageObj,
-                centerOffset: {
+                offset: {
                     x: 50,
                     y: imageObj.height / 2
                 },
@@ -809,7 +809,7 @@ Test.prototype.tests = {
 
             var json = stage.toJSON();
 
-            test(json === '{"attrs":{"width":578,"height":200,"throttle":80,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"crop":{"x":0,"y":0},"detectionType":"path","shadow":{"blur":10,"alpha":1,"offset":{"x":0,"y":0}},"visible":true,"listen":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}');
+            test(json === '{"attrs":{"width":578,"height":200,"throttle":80,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"crop":{"x":0,"y":0},"detectionType":"path","shadow":{"blur":10,"alpha":1,"offset":{"x":0,"y":0}},"visible":true,"listen":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}');
         };
         imageObj.src = '../darth-vader.jpg';
     },
@@ -822,7 +822,7 @@ Test.prototype.tests = {
                 height: 200
             });
 
-            var json = '{"attrs":{"width":578,"height":200,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"crop":{"x":0,"y":0},"detectionType":"path","visible":true,"listen":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"centerOffset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}';
+            var json = '{"attrs":{"width":578,"height":200,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"crop":{"x":0,"y":0},"detectionType":"path","visible":true,"listen":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}';
             stage.load(json);
             var image = stage.get('#darth')[0];
             image.setImage(imageObj);
@@ -1254,7 +1254,7 @@ Test.prototype.tests = {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            centerOffset: {
+            offset: {
                 x: 50
             },
             scale: [2, 2],
@@ -1285,7 +1285,7 @@ Test.prototype.tests = {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            centerOffset: {
+            offset: {
                 x: 0,
                 y: 0
             },
@@ -1684,7 +1684,7 @@ Test.prototype.tests = {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            centerOffset: {
+            offset: {
                 x: 0,
                 y: 0
             },
@@ -1747,7 +1747,7 @@ Test.prototype.tests = {
                 image: imageObj,
                 width: 100,
                 height: 100,
-                centerOffset: [50, 30],
+                offset: [50, 30],
                 crop: [20, 20, 200, 250]
             });
 
@@ -1758,8 +1758,8 @@ Test.prototype.tests = {
             test(darth.getY() === 60, 'y should be 60');
             test(darth.getWidth() === 100, 'width should be 100');
             test(darth.getHeight() === 100, 'height should be 100');
-            test(darth.getCenterOffset().x === 50, 'center offset x should be 50');
-            test(darth.getCenterOffset().y === 30, 'center offset y should be 30');
+            test(darth.getOffset().x === 50, 'center offset x should be 50');
+            test(darth.getOffset().y === 30, 'center offset y should be 30');
             test(Kinetic.GlobalObject._isElement(darth.getImage()), 'darth image should be an element');
 
             var crop = null;
@@ -2126,7 +2126,7 @@ Test.prototype.tests = {
             stroke: 'blue',
             strokeWidth: 5,
             name: 'foobar',
-            centerOffset: {
+            offset: {
                 x: 0,
                 y: -50
             }
@@ -2220,7 +2220,7 @@ Test.prototype.tests = {
             stroke: 'blue',
             strokeWidth: 5,
             name: 'foobar',
-            centerOffset: {
+            offset: {
                 x: 0,
                 y: -70
             },
@@ -2396,7 +2396,7 @@ Test.prototype.tests = {
             width: 100,
             height: 50,
             stroke: 'blue',
-            centerOffset: {
+            offset: {
                 x: 20,
                 y: 20
             }
@@ -2405,13 +2405,13 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
 
-        test(rect.getCenterOffset().x === 20, 'center offset x should be 20');
-        test(rect.getCenterOffset().y === 20, 'center offset y should be 20');
+        test(rect.getOffset().x === 20, 'center offset x should be 20');
+        test(rect.getOffset().y === 20, 'center offset y should be 20');
 
-        rect.setCenterOffset(40, 40);
+        rect.setOffset(40, 40);
 
-        test(rect.getCenterOffset().x === 40, 'center offset x should be 40');
-        test(rect.getCenterOffset().y === 40, 'center offset y should be 40');
+        test(rect.getOffset().x === 40, 'center offset x should be 40');
+        test(rect.getOffset().y === 40, 'center offset y should be 40');
 
     },
     'SHAPE - apply shadow to transparent image': function(containerId) {
@@ -2911,6 +2911,52 @@ Test.prototype.tests = {
         rect2.listen(true);
         test(rect2.isListening() === true, 'rect2 should be listening');
     },
+    'NODE - test offset attr change': function(containerId) {
+        /*
+         * the premise of this test to make sure that only
+         * root level attributes trigger an attr change event.
+         * for this test, we have two offset properties.  one
+         * is in the root level, and the other is inside the shadow
+         * object
+         */
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 50,
+            y: 50,
+            width: 200,
+            height: 50,
+            fill: 'blue',
+            offset: [10, 10],
+            shadow: {
+                color: 'black',
+                offset: [20, 20]
+            }
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        var offsetChange = false;
+        var shadowOffsetChange = false;
+
+        rect.on('offsetChange', function() {
+            offsetChange = true;
+        });
+
+        rect.setOffset(1, 2);
+
+        rect.setShadow({
+            offset: [3, 4]
+        });
+
+        test(offsetChange, 'offsetChange should have been triggered with setOffset()');
+        test(!shadowOffsetChange, 'offsetChange should not have been triggered with setShadow()');
+    },
     'NODE - test on attr change': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -2997,7 +3043,7 @@ Test.prototype.tests = {
         test(rect.getShadow().offset.x === 5, 'shadow offset x should be 5');
         test(rect.getShadow().offset.y === 6, 'shadow offset y should be 6');
     },
-    'NODE - test setCenterOffset': function(containerId) {
+    'NODE - test setOffset': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -3015,32 +3061,32 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
 
-        rect.setCenterOffset(1, 2);
-        test(rect.getCenterOffset().x === 1, 'center offset x should be 1');
-        test(rect.getCenterOffset().y === 2, 'center offset y should be 2');
+        rect.setOffset(1, 2);
+        test(rect.getOffset().x === 1, 'center offset x should be 1');
+        test(rect.getOffset().y === 2, 'center offset y should be 2');
 
-        rect.setCenterOffset([3, 4]);
-        test(rect.getCenterOffset().x === 3, 'center offset x should be 3');
-        test(rect.getCenterOffset().y === 4, 'center offset y should be 4');
+        rect.setOffset([3, 4]);
+        test(rect.getOffset().x === 3, 'center offset x should be 3');
+        test(rect.getOffset().y === 4, 'center offset y should be 4');
 
-        rect.setCenterOffset({
+        rect.setOffset({
             x: 5,
             y: 6
         });
-        test(rect.getCenterOffset().x === 5, 'center offset x should be 5');
-        test(rect.getCenterOffset().y === 6, 'center offset y should be 6');
+        test(rect.getOffset().x === 5, 'center offset x should be 5');
+        test(rect.getOffset().y === 6, 'center offset y should be 6');
 
-        rect.setCenterOffset({
+        rect.setOffset({
             x: 7
         });
-        test(rect.getCenterOffset().x === 7, 'center offset x should be 7');
-        test(rect.getCenterOffset().y === 6, 'center offset y should be 6');
+        test(rect.getOffset().x === 7, 'center offset x should be 7');
+        test(rect.getOffset().y === 6, 'center offset y should be 6');
 
-        rect.setCenterOffset({
+        rect.setOffset({
             y: 8
         });
-        test(rect.getCenterOffset().x === 7, 'center offset x should be 7');
-        test(rect.getCenterOffset().y === 8, 'center offset y should be 8');
+        test(rect.getOffset().x === 7, 'center offset x should be 7');
+        test(rect.getOffset().y === 8, 'center offset y should be 8');
 
     },
     'NODE - test setPosition and move': function(containerId) {
@@ -3573,7 +3619,7 @@ Test.prototype.tests = {
                 x: 2,
                 y: 1
             },
-            centerOffset: {
+            offset: {
                 x: 50,
                 y: 25
             }

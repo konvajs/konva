@@ -33,13 +33,24 @@ Kinetic.Stage = function(config) {
     this._setStageDefaultProperties();
     this._id = Kinetic.GlobalObject.idCounter++;
     this._buildDOM();
-    this._bindEvents();
+    this._bindContentEvents();
     this._prepareDrag();
 
+    //change events
+    this.on('widthChange.kinetic_reserved', function() {
+        this._resizeDOM();
+    });
+
+    this.on('heightChange.kinetic_reserved', function() {
+        this._resizeDOM();
+    });
+    
     var go = Kinetic.GlobalObject;
     go.stages.push(this);
     this._addId(this);
     this._addName(this);
+    
+    
 };
 /*
  * Stage methods
@@ -602,7 +613,7 @@ else if(!isDragging && this.touchMove) {
      * begin listening for events by adding event handlers
      * to the container
      */
-    _bindEvents: function() {
+    _bindContentEvents: function() {
         var go = Kinetic.GlobalObject;
         var that = this;
 
@@ -695,16 +706,6 @@ else if(!isDragging && this.touchMove) {
             that._handleStageEvent(evt);
             that.tapStart = false;
         }, false);
-        /*
-         * change events
-         */
-        this.on('widthChange.kinetic_reserved', function() {
-            this._resizeDOM();
-        });
-
-        this.on('heightChange.kinetic_reserved', function() {
-            this._resizeDOM();
-        });
     },
     /**
      * set mouse positon for desktop apps
@@ -903,6 +904,7 @@ else if(!isDragging && this.touchMove) {
         this.content.appendChild(this.pathLayer.canvas);
 
         this.setSize(this.attrs.width, this.attrs.height);
+        this._resizeDOM();
     },
     _addId: function(node) {
         if(node.attrs.id !== undefined) {
