@@ -2925,11 +2925,11 @@ Test.prototype.tests = {
         var triggered = false;
 
         rect.on('widthChange', function() {
-        	triggered = true;
+            triggered = true;
         });
 
         rect.setSize(210);
-        
+
         test(triggered, 'width change event not triggered');
     },
     'NODE - test setting shadow offset': function(containerId) {
@@ -3613,6 +3613,64 @@ Test.prototype.tests = {
         circle.simulate('click');
 
         test(foo === 'bar', 'foo should equal bar');
+    },
+    'EVENTS - add remove event': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle'
+        });
+
+		/*
+		 * test regular on and off
+		 */
+        test(circle.eventListeners['click'] === undefined, 'circle should have no click listeners');
+        
+        circle.on('click', function() {	
+        });
+        test(circle.eventListeners['click'].length === 1, 'circle should have 1 click listener');
+        
+        circle.on('click', function() {	
+        });
+        test(circle.eventListeners['click'].length === 2, 'circle should have 2 click listeners');
+        
+        circle.off('click');
+        test(circle.eventListeners['click'] === undefined, 'circle should have no click listeners');
+        
+        /*
+         * test name spacing
+         */
+        circle.on('click.foo', function() {	
+        });
+        test(circle.eventListeners['click'].length === 1, 'circle should have 1 click listener');
+        
+        circle.on('click.foo', function() {	
+        });
+        test(circle.eventListeners['click'].length === 2, 'circle should have 2 click listeners');
+        circle.on('click.bar', function() {	
+        });
+        test(circle.eventListeners['click'].length === 3, 'circle should have 3 click listeners');
+        
+        
+        circle.off('click.foo');
+        test(circle.eventListeners['click'].length === 1, 'circle should have 1 click listener');
+        
+        circle.off('click.bar');
+        test(circle.eventListeners['click'] === undefined, 'circle should have no click listeners');
+
+        stage.add(layer);
+        layer.add(circle);
+        layer.draw();
     },
     'NODE - simulate event bubble': function(containerId) {
         var stage = new Kinetic.Stage({

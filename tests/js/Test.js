@@ -6,7 +6,7 @@ function test(condition, message) {
         throw new Error(message);
     }
     numTests++;
-    
+
     testCounter.innerHTML = numTests;
 }
 function log(message) {
@@ -16,10 +16,7 @@ function log(message) {
  * Test constructor
  */
 function Test() {
-    //this.testOnly = 'EVENTS - mousedown mouseup mouseover mouseout mousemove click dblclick / touchstart touchend touchmove tap dbltap';
-    this.testOnly = '';
     this.counter = 0;
-    
     testCounter = document.createElement('div');
     testCounter.id = 'testCounter';
     document.getElementsByTagName('body')[0].appendChild(testCounter);
@@ -47,8 +44,22 @@ Test.prototype = {
     run: function() {
         var tests = this.tests;
 
+        var testOnlySpecial = false;
+
+		/*
+		 * if a test key has a star in front of it, then
+		 * only run special tests.  This lets us easily run 
+		 * specific tests without running all of them
+		 */
         for(var key in tests) {
-            if(!this.testOnly || (this.testOnly && this.testOnly == key)) {
+            if(key.charAt(0) === '*') {
+                testOnlySpecial = true;
+                break;
+            }
+        }
+
+        for(var key in tests) {
+            if(!testOnlySpecial || key.charAt(0) === '*') {
                 var obj = this.addTestContainer(key);
                 this.counter++;
                 console.log(this.counter + ") " + key);

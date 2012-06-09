@@ -939,7 +939,7 @@ else if(!isDragging && this.touchMove) {
                     }
                 }
                 if(nodes.length === 0) {
-                    this.names[node.attrs.name] = undefined;
+                    delete this.names[node.attrs.name];
                 }
             }
         }

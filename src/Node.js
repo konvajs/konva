@@ -98,14 +98,15 @@ Kinetic.Node.prototype = {
                     if(this.eventListeners[baseEvent][i].name === name) {
                         this.eventListeners[baseEvent].splice(i, 1);
                         if(this.eventListeners[baseEvent].length === 0) {
-                            this.eventListeners[baseEvent] = undefined;
+                            delete this.eventListeners[baseEvent];
+                            break;
                         }
-                        break;
+                        i--;
                     }
                 }
             }
             else {
-                this.eventListeners[baseEvent] = undefined;
+                delete this.eventListeners[baseEvent];
             }
         }
     },
@@ -180,15 +181,14 @@ Kinetic.Node.prototype = {
                              */
                             case 'draggable':
                                 that.draggable(c[key]);
-                                that._fireChangeEvent(key);
                                 break;
                             case 'listening':
                                 that.listen(c[key]);
-                                that._fireChangeEvent(key);
                                 break;
                             case 'rotationDeg':
                                 that._setAttr(obj, 'rotation', c[key] * Math.PI / 180);
-                                that._fireChangeEvent('rotation');
+                                // override key for change event
+                                key = 'rotation';
                                 break;
                             /*
                              * config objects
@@ -197,7 +197,6 @@ Kinetic.Node.prototype = {
                                 var pos = go._getXY(val);
                                 that._setAttr(obj[key], 'x', pos.x);
                                 that._setAttr(obj[key], 'y', pos.y);
-                                that._fireChangeEvent(key);
                                 break;
                             /*
                              * includes:
@@ -208,17 +207,14 @@ Kinetic.Node.prototype = {
                                 var pos = go._getXY(val);
                                 that._setAttr(obj[key], 'x', pos.x);
                                 that._setAttr(obj[key], 'y', pos.y);
-                                that._fireChangeEvent(key);
                                 break;
                             case 'scale':
                                 var pos = go._getXY(val);
                                 that._setAttr(obj[key], 'x', pos.x);
                                 that._setAttr(obj[key], 'y', pos.y);
-                                that._fireChangeEvent(key);
                                 break;
                             case 'points':
                                 that._setAttr(obj, key, go._getPoints(val));
-                                that._fireChangeEvent(key);
                                 break;
                             case 'crop':
                                 var pos = go._getXY(val);
@@ -227,13 +223,13 @@ Kinetic.Node.prototype = {
                                 that._setAttr(obj[key], 'y', pos.y);
                                 that._setAttr(obj[key], 'width', size.width);
                                 that._setAttr(obj[key], 'height', size.height);
-                                that._fireChangeEvent(key);
                                 break;
                             default:
                                 that._setAttr(obj, key, c[key]);
-                                that._fireChangeEvent(key);
                                 break;
                         }
+
+                        that._fireChangeEvent(key);
                     }
                 }
             }
