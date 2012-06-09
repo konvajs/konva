@@ -1014,10 +1014,7 @@ Kinetic.Node.prototype = {
      * @param {String} eventType
      */
     simulate: function(eventType) {
-        var el = this.eventListeners[eventType];
-        for(var n = 0; n < el.length; n++) {
-            el[n].handler.call(this);
-        }
+        this._handleEvent(eventType, {});
     },
     /**
      * set center offset

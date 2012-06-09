@@ -3576,14 +3576,52 @@ Test.prototype.tests = {
         circle.on('click', function() {
             foo = 'bar';
 
+			/*
             var evt = window.event;
             var rightClick = evt.which ? evt.which == 3 : evt.button == 2;
             console.log(rightClick);
+            */
         });
 
         circle.simulate('click');
 
         test(foo === 'bar', 'foo should equal bar');
+    },
+    'NODE - simulate event bubble': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle'
+        });
+
+        stage.add(layer);
+        layer.add(circle);
+        layer.draw();
+
+        var clicks = [];
+
+        circle.on('click', function() {
+            clicks.push('circle');
+        });
+        
+        layer.on('click', function() {
+        	clicks.push('layer');
+        });
+
+        circle.simulate('click');
+
+        test(clicks[0] === 'circle', 'circle event should be fired first');
+        test(clicks[1] === 'layer', 'layer event should be fired second');
     },
     'STAGE - add layer then shape': function(containerId) {
         var stage = new Kinetic.Stage({
