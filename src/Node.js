@@ -11,7 +11,7 @@
 Kinetic.Node = function(config) {
     this.defaultNodeAttrs = {
         visible: true,
-        listening: true,
+        listen: true,
         name: undefined,
         alpha: 1,
         x: 0,
@@ -32,6 +32,17 @@ Kinetic.Node = function(config) {
 
     this.setDefaultAttrs(this.defaultNodeAttrs);
     this.eventListeners = {};
+
+    // bind events
+    this.on('draggableChange.kinetic_reserved', function() {
+        if(this.attrs.draggable) {
+            this._listenDrag();
+        }
+        else {
+            this._dragCleanup();
+        }
+    });
+
     this.setAttrs(config);
 };
 /*
@@ -176,23 +187,11 @@ Kinetic.Node.prototype = {
                     else {
                         // handle special keys
                         switch (key) {
-                            /*
-                             * config properties that require a method
-                             */
-                            case 'draggable':
-                                that.draggable(c[key]);
-                                break;
-                            case 'listening':
-                                that.listen(c[key]);
-                                break;
                             case 'rotationDeg':
                                 that._setAttr(obj, 'rotation', c[key] * Math.PI / 180);
                                 // override key for change event
                                 key = 'rotation';
                                 break;
-                            /*
-                             * config objects
-                             */
                             case 'centerOffset':
                                 var pos = go._getXY(val);
                                 that._setAttr(obj[key], 'x', pos.x);
@@ -251,13 +250,17 @@ Kinetic.Node.prototype = {
      * show node
      */
     show: function() {
-        this.attrs.visible = true;
+        this.setAttrs({
+            visible: true
+        });
     },
     /**
      * hide node
      */
     hide: function() {
-        this.attrs.visible = false;
+        this.setAttrs({
+            visible: false
+        });
     },
     /**
      * get zIndex
@@ -339,14 +342,18 @@ Kinetic.Node.prototype = {
      * @param {Number} x
      */
     setX: function(x) {
-        this.attrs.x = x;
+        this.setAttrs({
+            x: x
+        });
     },
     /**
      * set node y position
      * @param {Number} y
      */
     setY: function(y) {
-        this.attrs.y = y;
+        this.setAttrs({
+            y: y
+        });
     },
     /**
      * get node x position
@@ -365,7 +372,9 @@ Kinetic.Node.prototype = {
      * @param {String} type can be "path" or "pixel"
      */
     setDetectionType: function(type) {
-        this.attrs.detectionType = type;
+        this.setAttrs({
+            detectionType: type
+        });
     },
     /**
      * get detection type
@@ -435,26 +444,41 @@ Kinetic.Node.prototype = {
     },
     /**
      * move node by an amount
-     * @param {Number} x
-     * @param {Number} y
      */
-    move: function(x, y) {
-        this.attrs.x += x;
-        this.attrs.y += y;
+    move: function() {
+        var pos = Kinetic.GlobalObject._getXY(arguments);
+
+        var x = this.getX();
+        var y = this.getY();
+
+        if(pos.x !== undefined) {
+            x += pos.x;
+        }
+
+        if(pos.y !== undefined) {
+            y += pos.y;
+        }
+
+        this.setAttrs({
+            x: x,
+            y: y
+        });
     },
     /**
      * set node rotation in radians
      * @param {Number} theta
      */
     setRotation: function(theta) {
-        this.attrs.rotation = theta;
+        this.setAttrs({
+            rotation: theta
+        });
     },
     /**
      * set node rotation in degrees
      * @param {Number} deg
      */
     setRotationDeg: function(deg) {
-        this.attrs.rotation = (deg * Math.PI / 180);
+        this.setRotation(deg * Math.PI / 180);
     },
     /**
      * get rotation in radians
@@ -473,21 +497,33 @@ Kinetic.Node.prototype = {
      * @param {Number} theta
      */
     rotate: function(theta) {
-        this.attrs.rotation += theta;
+        this.setAttrs({
+            rotation: this.getRotation() + theta
+        });
     },
     /**
      * rotate node by an amount in degrees
      * @param {Number} deg
      */
     rotateDeg: function(deg) {
-        this.attrs.rotation += (deg * Math.PI / 180);
+        this.setAttrs({
+            rotation: this.getRotation() + (deg * Math.PI / 180)
+        });
     },
     /**
      * listen or don't listen to events
-     * @param {Boolean} listening
+     * @param {Boolean} listen
      */
-    listen: function(listening) {
-        this.attrs.listening = listening;
+    listen: function(listen) {
+        this.setAttrs({
+            listen: listen
+        });
+    },
+    /**
+     * is listening or not
+     */
+    isListening: function() {
+        return this.attrs.listen;
     },
     /**
      * move node to top
@@ -544,7 +580,9 @@ Kinetic.Node.prototype = {
      * @param {Object} alpha
      */
     setAlpha: function(alpha) {
-        this.attrs.alpha = alpha;
+        this.setAttrs({
+            alpha: alpha
+        });
     },
     /**
      * get alpha.  Alpha values range from 0 to 1.
@@ -569,18 +607,12 @@ Kinetic.Node.prototype = {
     },
     /**
      * enable or disable drag and drop
-     * @param {Boolean} isDraggable
+     * @param {Boolean} draggable
      */
-    draggable: function(isDraggable) {
-        if(this.attrs.draggable !== isDraggable) {
-            if(isDraggable) {
-                this._listenDrag();
-            }
-            else {
-                this._dragCleanup();
-            }
-            this.attrs.draggable = isDraggable;
-        }
+    draggable: function(draggable) {
+        this.setAttrs({
+            draggable: draggable
+        });
     },
     /**
      * determine if node is currently in drag and drop mode
@@ -746,7 +778,9 @@ Kinetic.Node.prototype = {
      * @param {String} constraint
      */
     setDragConstraint: function(constraint) {
-        this.attrs.dragConstraint = constraint;
+        this.setAttrs({
+            dragConstraint: constraint
+        });
     },
     /**
      * get drag constraint
@@ -763,7 +797,9 @@ Kinetic.Node.prototype = {
      * @config {Number} [bottom] bottom bounds position
      */
     setDragBounds: function(bounds) {
-        this.attrs.dragBounds = bounds;
+        this.setAttrs({
+            dragBounds: bounds
+        });
     },
     /**
      * get drag bounds
@@ -817,9 +853,7 @@ Kinetic.Node.prototype = {
         return m;
     },
     _fireChangeEvent: function(attr) {
-        if(this.getStage() !== undefined) {
-            this._handleEvent(attr + 'Change', {});
-        }
+        this._handleEvent(attr + 'Change', {});
     },
     _setAttr: function(obj, attr, val) {
         if(val !== undefined) {
@@ -863,8 +897,8 @@ Kinetic.Node.prototype = {
         }
 
         var stage = this.getStage();
-        var mouseoverNode = stage.mouseoverShape;
-        var mouseoutNode = stage.mouseoutShape;
+        var mouseoverNode = stage ? stage.mouseoverShape : null;
+        var mouseoutNode = stage ? stage.mouseoutShape : null;
         var el = this.eventListeners;
         var okayToRun = true;
 

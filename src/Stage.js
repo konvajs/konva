@@ -33,7 +33,7 @@ Kinetic.Stage = function(config) {
     this._setStageDefaultProperties();
     this._id = Kinetic.GlobalObject.idCounter++;
     this._buildDOM();
-    this._listen();
+    this._bindEvents();
     this._prepareDrag();
 
     var go = Kinetic.GlobalObject;
@@ -537,7 +537,7 @@ else if(!isDragging && this.touchMove) {
         // propapgate backwards through children
         for(var i = children.length - 1; i >= 0; i--) {
             var child = children[i];
-            if(child.attrs.listening) {
+            if(child.attrs.listen) {
                 if(child.nodeType === 'Shape') {
                     var exit = this._detectEvent(child, evt);
                     if(exit) {
@@ -581,7 +581,7 @@ else if(!isDragging && this.touchMove) {
         var shapeDetected = false;
         for(var n = this.children.length - 1; n >= 0; n--) {
             var layer = this.children[n];
-            if(layer.isVisible() && n >= 0 && layer.attrs.listening) {
+            if(layer.isVisible() && n >= 0 && layer.attrs.listen) {
                 if(this._traverseChildren(layer, evt)) {
                     shapeDetected = true;
                     break;
@@ -602,7 +602,7 @@ else if(!isDragging && this.touchMove) {
      * begin listening for events by adding event handlers
      * to the container
      */
-    _listen: function() {
+    _bindEvents: function() {
         var go = Kinetic.GlobalObject;
         var that = this;
 
@@ -903,7 +903,6 @@ else if(!isDragging && this.touchMove) {
         this.content.appendChild(this.pathLayer.canvas);
 
         this.setSize(this.attrs.width, this.attrs.height);
-        this._resizeDOM();
     },
     _addId: function(node) {
         if(node.attrs.id !== undefined) {
