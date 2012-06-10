@@ -31,41 +31,26 @@ Kinetic.RegularPolygon = function(config) {
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
 };
-/*
- * RegularPolygon methods
- */
-Kinetic.RegularPolygon.prototype = {
-    /**
-     * set radius
-     * @param {Number} radius
-     */
-    setRadius: function(radius) {
-        this.setAttrs({
-            radius: radius
-        });
-    },
-    /**
-     * get radius
-     */
-    getRadius: function() {
-        return this.attrs.radius;
-    },
-    /**
-     * set number of sides
-     * @param {int} sides
-     */
-    setSides: function(sides) {
-        this.setAttrs({
-            sides: sides
-        });
-    },
-    /**
-     * get number of sides
-     */
-    getSides: function() {
-        return this.attrs.sides;
-    }
-};
-
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.RegularPolygon, Kinetic.Shape);
+
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Rect, ['radius', 'sides']);
+Kinetic.GlobalObject.addGetters(Kinetic.Rect, ['radius', 'sides']);
+
+/**
+ * set radius
+ * @param {Number} radius
+ */
+
+/**
+ * set number of sides
+ * @param {int} sides
+ */
+/**
+ * get radius
+ */
+
+/**
+ * get number of sides
+ */

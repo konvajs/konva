@@ -26,26 +26,17 @@ Kinetic.Circle = function(config) {
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
 };
-/*
- * Circle methods
- */
-Kinetic.Circle.prototype = {
-    /**
-     * set radius
-     * @param {Number} radius
-     */
-    setRadius: function(radius) {
-        this.setAttrs({
-            radius: radius
-        });
-    },
-    /**
-     * get radius
-     */
-    getRadius: function() {
-        return this.attrs.radius;
-    }
-};
-
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Circle, Kinetic.Shape);
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Circle, ['radius']);
+Kinetic.GlobalObject.addGetters(Kinetic.Circle, ['radius']);
+
+/**
+ * set radius
+ * @param {Number} radius
+ */
+
+/**
+ * get radius
+ */

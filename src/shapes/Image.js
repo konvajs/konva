@@ -53,51 +53,6 @@ Kinetic.Image = function(config) {
  */
 Kinetic.Image.prototype = {
     /**
-     * set image
-     * @param {ImageObject} image
-     */
-    setImage: function(image) {
-        this.setAttrs({
-            image: image
-        });
-    },
-    /**
-     * get image
-     */
-    getImage: function() {
-        return this.attrs.image;
-    },
-    /**
-     * set width
-     * @param {Number} width
-     */
-    setWidth: function(width) {
-        this.setAttrs({
-            width: width
-        });
-    },
-    /**
-     * get width
-     */
-    getWidth: function() {
-        return this.attrs.width;
-    },
-    /**
-     * set height
-     * @param {Number} height
-     */
-    setHeight: function(height) {
-        this.setAttrs({
-            height: height
-        });
-    },
-    /**
-     * get height
-     */
-    getHeight: function() {
-        return this.attrs.height;
-    },
-    /**
      * set width and height
      */
     setSize: function() {
@@ -114,13 +69,7 @@ Kinetic.Image.prototype = {
         };
     },
     /**
-     * return cropping
-     */
-    getCrop: function() {
-        return this.attrs.crop;
-    },
-    /**
-     * set cropping
+     * set crop
      */
     setCrop: function() {
         this.setAttrs({
@@ -130,3 +79,37 @@ Kinetic.Image.prototype = {
 };
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Image, Kinetic.Shape);
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Image, ['height', 'width', 'image']);
+Kinetic.GlobalObject.addGetters(Kinetic.Image, ['crop', 'height', 'width', 'image']);
+
+/**
+ * set width
+ * @param {Number} width
+ */
+
+/**
+ * set height
+ * @param {Number} height
+ */
+
+/**
+ * set image
+ * @param {ImageObject} image
+ */
+
+/**
+ * get crop
+ */
+
+/**
+ * get width
+ */
+
+/**
+ * get height
+ */
+
+/**
+ * get image
+ */

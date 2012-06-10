@@ -67,6 +67,18 @@ Kinetic.GlobalObject = {
             }
         }
     },
+    addSetters: function(constructor, arr) {
+        for(var n = 0; n < arr.length; n++) {
+            var attr = arr[n];
+            this._addSetter(constructor, attr);
+        }
+    },
+    addGetters: function(constructor, arr) {
+        for(var n = 0; n < arr.length; n++) {
+            var attr = arr[n];
+            this._addGetter(constructor, attr);
+        }
+    },
     _pullNodes: function(stage) {
         var tempNodes = this.tempNodes;
         for(var n = 0; n < tempNodes.length; n++) {
@@ -343,6 +355,22 @@ Kinetic.GlobalObject = {
 
             return arr;
         }
+    },
+    _addSetter: function(constructor, attr) {
+        var that = this;
+        var method = 'set' + attr.charAt(0).toUpperCase() + attr.slice(1);
+        constructor.prototype[method] = function(arg) {
+            var obj = {};
+            obj[attr] = arg;
+            this.setAttrs(obj);
+        };
+    },
+    _addGetter: function(constructor, attr) {
+        var that = this;
+        var method = 'get' + attr.charAt(0).toUpperCase() + attr.slice(1);
+        constructor.prototype[method] = function(arg) {
+            return this.attrs[attr];
+        };
     }
 };
 
@@ -688,63 +716,12 @@ Kinetic.Node.prototype = {
         });
     },
     /**
-     * get scale
-     */
-    getScale: function() {
-        return this.attrs.scale;
-    },
-    /**
      * set node position
      * @param {Object} point
      */
     setPosition: function() {
         var pos = Kinetic.GlobalObject._getXY(arguments);
         this.setAttrs(pos);
-    },
-    /**
-     * set node x position
-     * @param {Number} x
-     */
-    setX: function(x) {
-        this.setAttrs({
-            x: x
-        });
-    },
-    /**
-     * set node y position
-     * @param {Number} y
-     */
-    setY: function(y) {
-        this.setAttrs({
-            y: y
-        });
-    },
-    /**
-     * get node x position
-     */
-    getX: function() {
-        return this.attrs.x;
-    },
-    /**
-     * get node y position
-     */
-    getY: function() {
-        return this.attrs.y;
-    },
-    /**
-     * set detection type
-     * @param {String} type can be "path" or "pixel"
-     */
-    setDetectionType: function(type) {
-        this.setAttrs({
-            detectionType: type
-        });
-    },
-    /**
-     * get detection type
-     */
-    getDetectionType: function() {
-        return this.attrs.detectionType;
     },
     /**
      * get node position relative to container
@@ -829,26 +806,11 @@ Kinetic.Node.prototype = {
         });
     },
     /**
-     * set node rotation in radians
-     * @param {Number} theta
-     */
-    setRotation: function(theta) {
-        this.setAttrs({
-            rotation: theta
-        });
-    },
-    /**
      * set node rotation in degrees
      * @param {Number} deg
      */
     setRotationDeg: function(deg) {
         this.setRotation(deg * Math.PI / 180);
-    },
-    /**
-     * get rotation in radians
-     */
-    getRotation: function() {
-        return this.attrs.rotation;
     },
     /**
      * get rotation in degrees
@@ -938,25 +900,6 @@ Kinetic.Node.prototype = {
         this.parent._setChildrenIndices();
     },
     /**
-     * set alpha.  Alpha values range from 0 to 1.
-     * A node with an alpha of 0 is fully transparent, and a node
-     * with an alpha of 1 is fully opaque
-     * @param {Object} alpha
-     */
-    setAlpha: function(alpha) {
-        this.setAttrs({
-            alpha: alpha
-        });
-    },
-    /**
-     * get alpha.  Alpha values range from 0 to 1.
-     * A node with an alpha of 0 is fully transparent, and a node
-     * with an alpha of 1 is fully opaque
-     */
-    getAlpha: function() {
-        return this.attrs.alpha;
-    },
-    /**
      * get absolute alpha
      */
     getAbsoluteAlpha: function() {
@@ -1035,18 +978,6 @@ Kinetic.Node.prototype = {
         }
     },
     /**
-     * get name
-     */
-    getName: function() {
-        return this.attrs.name;
-    },
-    /**
-     * get id
-     */
-    getId: function() {
-        return this.attrs.id;
-    },
-    /**
      * simulate event
      * @param {String} eventType
      */
@@ -1062,12 +993,6 @@ Kinetic.Node.prototype = {
         this.setAttrs({
             offset: arguments
         });
-    },
-    /**
-     * get center offset
-     */
-    getOffset: function() {
-        return this.attrs.offset;
     },
     /**
      * transition node to another state.  Any property that can accept a real
@@ -1136,40 +1061,6 @@ Kinetic.Node.prototype = {
         go._handleAnimation();
 
         return trans;
-    },
-    /**
-     * set drag constraint
-     * @param {String} constraint
-     */
-    setDragConstraint: function(constraint) {
-        this.setAttrs({
-            dragConstraint: constraint
-        });
-    },
-    /**
-     * get drag constraint
-     */
-    getDragConstraint: function() {
-        return this.attrs.dragConstraint;
-    },
-    /**
-     * set drag bounds
-     * @param {Object} bounds
-     * @config {Number} [left] left bounds position
-     * @config {Number} [top] top bounds position
-     * @config {Number} [right] right bounds position
-     * @config {Number} [bottom] bottom bounds position
-     */
-    setDragBounds: function(bounds) {
-        this.setAttrs({
-            dragBounds: bounds
-        });
-    },
-    /**
-     * get drag bounds
-     */
-    getDragBounds: function() {
-        return this.attrs.dragBounds;
     },
     /**
      * get transform of the node while taking into
@@ -1294,6 +1185,96 @@ Kinetic.Node.prototype = {
     }
 };
 
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Node, ['x', 'y', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'dragConstraint', 'dragBounds']);
+Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'dragConstraint', 'dragBounds']);
+
+/**
+ * set node x position
+ * @param {Number} x
+ */
+
+/**
+ * set node y position
+ * @param {Number} y
+ */
+
+/**
+ * set detection type
+ * @param {String} type can be "path" or "pixel"
+ */
+
+/**
+ * set node rotation in radians
+ * @param {Number} theta
+ */
+
+/**
+ * set alpha.  Alpha values range from 0 to 1.
+ * A node with an alpha of 0 is fully transparent, and a node
+ * with an alpha of 1 is fully opaque
+ * @param {Object} alpha
+ */
+
+/**
+ * set drag constraint
+ * @param {String} constraint
+ */
+
+/**
+ * set drag bounds
+ * @param {Object} bounds
+ * @config {Number} [left] left bounds position
+ * @config {Number} [top] top bounds position
+ * @config {Number} [right] right bounds position
+ * @config {Number} [bottom] bottom bounds position
+ */
+
+/**
+ * get scale
+ */
+
+/**
+ * get node x position
+ */
+
+/**
+ * get node y position
+ */
+
+/**
+ * get detection type
+ */
+
+/**
+ * get rotation in radians
+ */
+
+/**
+ * get alpha.  Alpha values range from 0 to 1.
+ * A node with an alpha of 0 is fully transparent, and a node
+ * with an alpha of 1 is fully opaque
+ */
+
+/**
+ * get name
+ */
+
+/**
+ * get id
+ */
+
+/**
+ * get center offset
+ */
+
+/**
+ * get drag constraint
+ */
+
+/**
+ * get drag bounds
+ */
 ///////////////////////////////////////////////////////////////////////
 //  Container
 ///////////////////////////////////////////////////////////////////////
@@ -1568,13 +1549,11 @@ Kinetic.Stage = function(config) {
     this.on('heightChange.kinetic_reserved', function() {
         this._resizeDOM();
     });
-    
     var go = Kinetic.GlobalObject;
     go.stages.push(this);
     this._addId(this);
     this._addName(this);
-    
-    
+
 };
 /*
  * Stage methods
@@ -1816,18 +1795,6 @@ Kinetic.Stage.prototype = {
      */
     getStage: function() {
         return this;
-    },
-    /**
-     * get width
-     */
-    getWidth: function() {
-        return this.attrs.width;
-    },
-    /**
-     * get height
-     */
-    getHeight: function() {
-        return this.attrs.height;
     },
     /**
      * get shapes that intersect a point
@@ -2513,6 +2480,39 @@ else if(!isDragging && this.touchMove) {
 Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Container);
 Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Node);
 
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Stage, ['width', 'height', 'throttle']);
+Kinetic.GlobalObject.addGetters(Kinetic.Stage, ['width', 'height', 'throttle']);
+
+/**
+ * get width
+ */
+
+/**
+ * get height
+ */
+
+/**
+ * get throttle
+ */
+
+/**
+ * set width
+ * @param {Number} width
+ */
+
+/**
+ * set height
+ * @param {Number} height
+ */
+
+/**
+ * set throttle.  Increasing the throttle will increase
+ *  the number of mousemove and touchmove event detections,
+ *  and decreasing the throttle will decrease the number
+ *  of mousemove and touchmove events which improves performance
+ * @param {Number} throttle
+ */
 ///////////////////////////////////////////////////////////////////////
 //  Layer
 ///////////////////////////////////////////////////////////////////////
@@ -2986,92 +2986,6 @@ Kinetic.Shape.prototype = {
         return false;
     },
     /**
-     * set fill which can be a color, linear gradient object,
-     *  radial gradient object, or pattern object
-     * @param {String|Object} fill
-     */
-    setFill: function(fill) {
-        this.setAttrs({
-            fill: fill
-        });
-    },
-    /**
-     * get fill
-     */
-    getFill: function() {
-        return this.attrs.fill;
-    },
-    /**
-     * set stroke color
-     * @param {String} stroke
-     */
-    setStroke: function(stroke) {
-        this.setAttrs({
-            stroke: stroke
-        });
-    },
-    /**
-     * get stroke color
-     */
-    getStroke: function() {
-        return this.attrs.stroke;
-    },
-    /**
-     * set line join
-     * @param {String} lineJoin.  Can be miter, round, or bevel.  The
-     *  default is miter
-     */
-    setLineJoin: function(lineJoin) {
-        this.setAttrs({
-            lineJoin: lineJoin
-        });
-    },
-    /**
-     * get line join
-     */
-    getLineJoin: function() {
-        return this.attrs.lineJoin;
-    },
-    /**
-     * set stroke width
-     * @param {Number} strokeWidth
-     */
-    setStrokeWidth: function(strokeWidth) {
-        this.setAttrs({
-            strokeWidth: strokeWidth
-        });
-    },
-    /**
-     * get stroke width
-     */
-    getStrokeWidth: function() {
-        return this.attrs.strokeWidth;
-    },
-    /**
-     * set shadow object
-     * @param {Object} config
-     */
-    setShadow: function(config) {
-        this.setAttrs({
-            shadow: config
-        });
-    },
-    /**
-     * get shadow object
-     */
-    getShadow: function() {
-        return this.attrs.shadow;
-    },
-    /**
-     * set draw function
-     * @param {Function} func drawing function
-     */
-    setDrawFunc: function(func) {
-        this.setAttrs({
-            drawFunc: func
-        });
-    },
-    /**
      * save shape data when using pixel detection.
      */
     saveData: function() {
@@ -3161,7 +3075,61 @@ Kinetic.Shape.prototype = {
 };
 // extend Node
 Kinetic.GlobalObject.extend(Kinetic.Shape, Kinetic.Node);
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
+Kinetic.GlobalObject.addGetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
 
+/**
+ * set fill which can be a color, linear gradient object,
+ *  radial gradient object, or pattern object
+ * @param {String|Object} fill
+ */
+
+/**
+ * set stroke color
+ * @param {String} stroke
+ */
+
+/**
+ * set line join
+ * @param {String} lineJoin.  Can be miter, round, or bevel.  The
+ *  default is miter
+ */
+
+/**
+ * set stroke width
+ * @param {Number} strokeWidth
+ */
+
+/**
+ * set shadow object
+ * @param {Object} config
+ */
+
+/**
+ * set draw function
+ * @param {Function} drawFunc drawing function
+ */
+
+/**
+ * get fill
+ */
+
+/**
+ * get stroke color
+ */
+
+/**
+ * get line join
+ */
+
+/**
+ * get stroke width
+ */
+
+/**
+ * get shadow object
+ */
 ///////////////////////////////////////////////////////////////////////
 //  Rect
 ///////////////////////////////////////////////////////////////////////
@@ -3212,36 +3180,6 @@ Kinetic.Rect = function(config) {
  */
 Kinetic.Rect.prototype = {
     /**
-     * set width
-     * @param {Number} width
-     */
-    setWidth: function(width) {
-        this.setAttrs({
-            width: width
-        });
-    },
-    /**
-     * get width
-     */
-    getWidth: function() {
-        return this.attrs.width;
-    },
-    /**
-     * set height
-     * @param {Number} height
-     */
-    setHeight: function(height) {
-        this.setAttrs({
-            height: height
-        });
-    },
-    /**
-     * get height
-     */
-    getHeight: function() {
-        return this.attrs.height;
-    },
-    /**
      * set width and height
      */
     setSize: function() {
@@ -3256,27 +3194,42 @@ Kinetic.Rect.prototype = {
             width: this.attrs.width,
             height: this.attrs.height
         };
-    },
-    /**
-     * set corner radius
-     * @param {Number} radius
-     */
-    setCornerRadius: function(radius) {
-        this.setAttrs({
-            cornerRadius: radius
-        });
-    },
-    /**
-     * get corner radius
-     */
-    getCornerRadius: function() {
-        return this.attrs.cornerRadius;
     }
 };
 
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Rect, Kinetic.Shape);
 
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Rect, ['width', 'height', 'cornerRadius']);
+Kinetic.GlobalObject.addGetters(Kinetic.Rect, ['width', 'height', 'cornerRadius']);
+
+/**
+ * set width
+ * @param {Number} width
+ */
+
+/**
+ * set height
+ * @param {Number} height
+ */
+
+/**
+ * set corner radius
+ * @param {Number} radius
+ */
+
+/**
+ * get width
+ */
+
+/**
+ * get height
+ */
+
+/**
+ * get corner radius
+ */
 ///////////////////////////////////////////////////////////////////////
 //  Circle
 ///////////////////////////////////////////////////////////////////////
@@ -3305,30 +3258,20 @@ Kinetic.Circle = function(config) {
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
 };
-/*
- * Circle methods
- */
-Kinetic.Circle.prototype = {
-    /**
-     * set radius
-     * @param {Number} radius
-     */
-    setRadius: function(radius) {
-        this.setAttrs({
-            radius: radius
-        });
-    },
-    /**
-     * get radius
-     */
-    getRadius: function() {
-        return this.attrs.radius;
-    }
-};
-
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Circle, Kinetic.Shape);
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Circle, ['radius']);
+Kinetic.GlobalObject.addGetters(Kinetic.Circle, ['radius']);
 
+/**
+ * set radius
+ * @param {Number} radius
+ */
+
+/**
+ * get radius
+ */
 ///////////////////////////////////////////////////////////////////////
 //  Image
 ///////////////////////////////////////////////////////////////////////
@@ -3384,51 +3327,6 @@ Kinetic.Image = function(config) {
  */
 Kinetic.Image.prototype = {
     /**
-     * set image
-     * @param {ImageObject} image
-     */
-    setImage: function(image) {
-        this.setAttrs({
-            image: image
-        });
-    },
-    /**
-     * get image
-     */
-    getImage: function() {
-        return this.attrs.image;
-    },
-    /**
-     * set width
-     * @param {Number} width
-     */
-    setWidth: function(width) {
-        this.setAttrs({
-            width: width
-        });
-    },
-    /**
-     * get width
-     */
-    getWidth: function() {
-        return this.attrs.width;
-    },
-    /**
-     * set height
-     * @param {Number} height
-     */
-    setHeight: function(height) {
-        this.setAttrs({
-            height: height
-        });
-    },
-    /**
-     * get height
-     */
-    getHeight: function() {
-        return this.attrs.height;
-    },
-    /**
      * set width and height
      */
     setSize: function() {
@@ -3445,13 +3343,7 @@ Kinetic.Image.prototype = {
         };
     },
     /**
-     * return cropping
-     */
-    getCrop: function() {
-        return this.attrs.crop;
-    },
-    /**
-     * set cropping
+     * set crop
      */
     setCrop: function() {
         this.setAttrs({
@@ -3461,7 +3353,40 @@ Kinetic.Image.prototype = {
 };
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Image, Kinetic.Shape);
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Image, ['height', 'width', 'image']);
+Kinetic.GlobalObject.addGetters(Kinetic.Image, ['crop', 'height', 'width', 'image']);
 
+/**
+ * set width
+ * @param {Number} width
+ */
+
+/**
+ * set height
+ * @param {Number} height
+ */
+
+/**
+ * set image
+ * @param {ImageObject} image
+ */
+
+/**
+ * get crop
+ */
+
+/**
+ * get width
+ */
+
+/**
+ * get height
+ */
+
+/**
+ * get image
+ */
 ///////////////////////////////////////////////////////////////////////
 //  Sprite
 ///////////////////////////////////////////////////////////////////////
@@ -3527,45 +3452,6 @@ Kinetic.Sprite.prototype = {
         this.afterFrameIndex = index;
         this.afterFrameFunc = func;
     },
-    /**
-     * set animation key
-     * @param {String} anim animation key
-     */
-    setAnimation: function(anim) {
-        this.setAttrs({
-            animation: anim
-        });
-    },
-    /**
-     * set animations obect
-     * @param {Object} animations
-     */
-    setAnimations: function(animations) {
-        this.setAttrs({
-            animations: animations
-        });
-    },
-    /**
-     * get animations object
-     */
-    getAnimations: function() {
-        return this.attrs.animations;
-    },
-    /**
-     * get animation key
-     */
-    getAnimation: function() {
-        return this.attrs.animation;
-    },
-    /**
-     * set animation frame index
-     * @param {Integer} index frame index
-     */
-    setIndex: function(index) {
-        this.setAttrs({
-            index: index
-        });
-    },
     _updateIndex: function() {
         var i = this.attrs.index;
         var a = this.attrs.animation;
@@ -3580,6 +3466,36 @@ Kinetic.Sprite.prototype = {
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Sprite, Kinetic.Shape);
 
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Sprite, ['animation', 'animations', 'index']);
+Kinetic.GlobalObject.addGetters(Kinetic.Sprite, ['animation', 'animations', 'index']);
+
+/**
+ * set animation key
+ * @param {String} anim animation key
+ */
+
+/**
+ * set animations obect
+ * @param {Object} animations
+ */
+
+/**
+ * set animation frame index
+ * @param {Integer} index frame index
+ */
+
+/**
+ * get animation key
+ */
+
+/**
+ * get animations object
+ */
+
+/**
+ * get animation frame index
+ */
 ///////////////////////////////////////////////////////////////////////
 //  Polygon
 ///////////////////////////////////////////////////////////////////////
@@ -3622,18 +3538,18 @@ Kinetic.Polygon.prototype = {
         this.setAttrs({
             points: points
         });
-    },
-    /**
-     * get points array
-     */
-    getPoints: function() {
-        return this.attrs.points;
     }
 };
 
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Polygon, Kinetic.Shape);
 
+// add setters and getters
+Kinetic.GlobalObject.addGetters(Kinetic.Polygon, ['points']);
+
+/**
+ * get points array
+ */
 ///////////////////////////////////////////////////////////////////////
 //  RegularPolygon
 ///////////////////////////////////////////////////////////////////////
@@ -3667,45 +3583,29 @@ Kinetic.RegularPolygon = function(config) {
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
 };
-/*
- * RegularPolygon methods
- */
-Kinetic.RegularPolygon.prototype = {
-    /**
-     * set radius
-     * @param {Number} radius
-     */
-    setRadius: function(radius) {
-        this.setAttrs({
-            radius: radius
-        });
-    },
-    /**
-     * get radius
-     */
-    getRadius: function() {
-        return this.attrs.radius;
-    },
-    /**
-     * set number of sides
-     * @param {int} sides
-     */
-    setSides: function(sides) {
-        this.setAttrs({
-            sides: sides
-        });
-    },
-    /**
-     * get number of sides
-     */
-    getSides: function() {
-        return this.attrs.sides;
-    }
-};
-
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.RegularPolygon, Kinetic.Shape);
 
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Rect, ['radius', 'sides']);
+Kinetic.GlobalObject.addGetters(Kinetic.Rect, ['radius', 'sides']);
+
+/**
+ * set radius
+ * @param {Number} radius
+ */
+
+/**
+ * set number of sides
+ * @param {int} sides
+ */
+/**
+ * get radius
+ */
+
+/**
+ * get number of sides
+ */
 ///////////////////////////////////////////////////////////////////////
 //  Star
 ///////////////////////////////////////////////////////////////////////
@@ -3742,59 +3642,39 @@ Kinetic.Star = function(config) {
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
 };
-/*
- * Star methods
- */
-Kinetic.Star.prototype = {
-    /**
-     * set number of points
-     * @param {Integer} points
-     */
-    setNumPoints: function(numPoints) {
-        this.setAttrs({
-            numPoints: numPoints
-        });
-    },
-    /**
-     * get number of points
-     */
-    getNumPoints: function() {
-        return this.attrs.numPoints;
-    },
-    /**
-     * set outer radius
-     * @param {Number} radius
-     */
-    setOuterRadius: function(radius) {
-        this.setAttrs({
-            outerRadius: radius
-        });
-    },
-    /**
-     * get outer radius
-     */
-    getOuterRadius: function() {
-        return this.attrs.outerRadius;
-    },
-    /**
-     * set inner radius
-     * @param {Number} radius
-     */
-    setInnerRadius: function(radius) {
-        this.setAttrs({
-            innerRadius: radius
-        });
-    },
-    /**
-     * get inner radius
-     */
-    getInnerRadius: function() {
-        return this.attrs.innerRadius;
-    }
-};
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Star, Kinetic.Shape);
 
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Star, ['numPoints', 'innerRadius', 'outerRadius']);
+Kinetic.GlobalObject.addGetters(Kinetic.Star, ['numPoints', 'innerRadius', 'outerRadius']);
+
+/**
+ * set number of points
+ * @param {Integer} points
+ */
+
+/**
+ * set outer radius
+ * @param {Number} radius
+ */
+
+/**
+ * set inner radius
+ * @param {Number} radius
+ */
+
+/**
+ * get number of points
+ */
+
+/**
+ * get outer radius
+ */
+
+/**
+ * get inner radius
+ */
 ///////////////////////////////////////////////////////////////////////
 //  Text
 ///////////////////////////////////////////////////////////////////////
@@ -3885,156 +3765,6 @@ Kinetic.Text = function(config) {
  */
 Kinetic.Text.prototype = {
     /**
-     * set font family
-     * @param {String} fontFamily
-     */
-    setFontFamily: function(fontFamily) {
-        this.setAttrs({
-            fontFamily: fontFamily
-        });
-    },
-    /**
-     * get font family
-     */
-    getFontFamily: function() {
-        return this.attrs.fontFamily;
-    },
-    /**
-     * set font size
-     * @param {int} fontSize
-     */
-    setFontSize: function(fontSize) {
-        this.setAttrs({
-            fontSize: fontSize
-        });
-    },
-    /**
-     * get font size
-     */
-    getFontSize: function() {
-        return this.attrs.fontSize;
-    },
-    /**
-     * set font style.  Can be "normal", "italic", or "bold".  "normal" is the default.
-     * @param {String} fontStyle
-     */
-    setFontStyle: function(fontStyle) {
-        this.setAttrs({
-            fontStyle: fontStyle
-        });
-    },
-    /**
-     * get font style
-     */
-    getFontStyle: function() {
-        return this.attrs.fontStyle;
-    },
-    /**
-     * set text fill color
-     * @param {String} textFill
-     */
-    setTextFill: function(textFill) {
-        this.setAttrs({
-            textFill: textFill
-        });
-    },
-    /**
-     * get text fill color
-     */
-    getTextFill: function() {
-        return this.attrs.textFill;
-    },
-    /**
-     * set text stroke color
-     * @param {String} textStroke
-     */
-    setTextStroke: function(textStroke) {
-        this.setAttrs({
-            textStroke: textStroke
-        });
-    },
-    /**
-     * get text stroke color
-     */
-    getTextStroke: function() {
-        return this.attrs.textStroke;
-    },
-    /**
-     * set text stroke width
-     * @param {int} textStrokeWidth
-     */
-    setTextStrokeWidth: function(textStrokeWidth) {
-        this.setAttrs({
-            textStrokeWidth: textStrokeWidth
-        });
-    },
-    /**
-     * get text stroke width
-     */
-    getTextStrokeWidth: function() {
-        return this.attrs.textStrokeWidth;
-    },
-    /**
-     * set padding
-     * @param {int} padding
-     */
-    setPadding: function(padding) {
-        this.setAttrs({
-            padding: padding
-        });
-    },
-    /**
-     * get padding
-     */
-    getPadding: function() {
-        return this.attrs.padding;
-    },
-    /**
-     * set horizontal align of text
-     * @param {String} align align can be 'left', 'center', or 'right'
-     */
-    setAlign: function(align) {
-        this.setAttrs({
-            align: align
-        });
-    },
-    /**
-     * get horizontal align
-     */
-    getAlign: function() {
-        return this.attrs.align;
-    },
-    /**
-     * set vertical align of text
-     * @param {String} verticalAlign verticalAlign can be "top", "middle", or "bottom"
-     */
-    setVerticalAlign: function(verticalAlign) {
-        this.setAttrs({
-            verticalAlign: verticalAlign
-        });
-    },
-    /**
-     * get vertical align
-     */
-    getVerticalAlign: function() {
-        return this.attrs.verticalAlign;
-    },
-    /**
-     * set text
-     * @param {String} text
-     */
-    setText: function(text) {
-        this.setAttrs({
-            text: text
-        });
-    },
-    /**
-     * get text
-     */
-    getText: function() {
-        return this.attrs.text;
-    },
-    /**
      * get text width in pixels
      */
     getTextWidth: function() {
@@ -4070,26 +3800,113 @@ Kinetic.Text.prototype = {
             width: metrics.width,
             height: parseInt(this.attrs.fontSize, 10)
         };
-    },
-    /**
-     * get width in pixels
-     */
-    getWidth: function() {
-        return this.attrs.width;
-    },
-    /**
-     * set width
-     * @param {Number} width
-     */
-    setWidth: function(width) {
-        this.setAttrs({
-            width: width
-        });
     }
 };
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Text, Kinetic.Shape);
 
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'verticalAlign', 'text', 'width']);
+Kinetic.GlobalObject.addGetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'verticalAlign', 'text', 'width']);
+
+/**
+ * set font family
+ * @param {String} fontFamily
+ */
+
+/**
+ * set font size
+ * @param {int} fontSize
+ */
+
+/**
+ * set font style.  Can be "normal", "italic", or "bold".  "normal" is the default.
+ * @param {String} fontStyle
+ */
+
+/**
+ * set text fill color
+ * @param {String} textFill
+ */
+
+/**
+ * set text stroke color
+ * @param {String} textStroke
+ */
+
+/**
+ * set text stroke width
+ * @param {int} textStrokeWidth
+ */
+
+/**
+ * set padding
+ * @param {int} padding
+ */
+
+/**
+ * set horizontal align of text
+ * @param {String} align align can be 'left', 'center', or 'right'
+ */
+
+/**
+ * set vertical align of text
+ * @param {String} verticalAlign verticalAlign can be "top", "middle", or "bottom"
+ */
+
+/**
+ * set text
+ * @param {String} text
+ */
+
+/**
+ * set width
+ * @param {Number} width
+ */
+
+/**
+ * get font family
+ */
+
+/**
+ * get font size
+ */
+
+/**
+ * get font style
+ */
+
+/**
+ * get text fill color
+ */
+
+/**
+ * get text stroke color
+ */
+
+/**
+ * get text stroke width
+ */
+
+/**
+ * get padding
+ */
+
+/**
+ * get horizontal align
+ */
+
+/**
+ * get vertical align
+ */
+
+/**
+ * get text
+ */
+
+/**
+ * get width in pixels
+ */
 ///////////////////////////////////////////////////////////////////////
 //  Line
 ///////////////////////////////////////////////////////////////////////
@@ -4154,48 +3971,6 @@ Kinetic.Line.prototype = {
         });
     },
     /**
-     * get points array
-     */
-    getPoints: function() {
-        return this.attrs.points;
-    },
-    /**
-     * set line cap.  Can be butt, round, or square
-     * @param {String} lineCap
-     */
-    setLineCap: function(lineCap) {
-        this.setAttrs({
-            lineCap: lineCap
-        });
-    },
-    /**
-     * get line cap
-     */
-    getLineCap: function() {
-        return this.attrs.lineCap;
-    },
-    /**
-     * set dash array.
-     * @param {Array} dashArray
-     *  examples:<br>
-     *  [10, 5] dashes are 10px long and 5 pixels apart
-     *  [10, 20, 0, 20] if using a round lineCap, the line will
-     *  be made up of alternating dashed lines that are 10px long
-     *  and 20px apart, and dots that have a radius of 5 and are 20px
-     *  apart
-     */
-    setDashArray: function(dashArray) {
-        this.setAttrs({
-            dashArray: dashArray
-        });
-    },
-    /**
-     * get dash array
-     */
-    getDashArray: function() {
-        return this.attrs.dashArray;
-    },
-    /**
      * draw dashed line.  Written by Phrogz
      */
     _dashedLine: function(x, y, x2, y2, dashArray) {
@@ -4240,13 +4015,43 @@ Kinetic.Line.prototype = {
             draw = !draw;
         }
 
-        context.moveTo(x2, y2)
+        context.moveTo(x2, y2);
     }
 };
 
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Line, Kinetic.Shape);
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Line, ['dashArray', 'lineCap']);
+Kinetic.GlobalObject.addGetters(Kinetic.Line, ['dashArray', 'lineCap', 'points']);
 
+/**
+ * set dash array.
+ * @param {Array} dashArray
+ *  examples:<br>
+ *  [10, 5] dashes are 10px long and 5 pixels apart
+ *  [10, 20, 0, 20] if using a round lineCap, the line will
+ *  be made up of alternating dashed lines that are 10px long
+ *  and 20px apart, and dots that have a radius of 5 and are 20px
+ *  apart
+ */
+
+/**
+ * set line cap.  Can be butt, round, or square
+ * @param {String} lineCap
+ */
+
+/**
+ * get dash array
+ */
+
+/**
+ * get line cap
+ */
+
+/**
+ * get points array
+ */
 ///////////////////////////////////////////////////////////////////////
 //  SVG Path
 ///////////////////////////////////////////////////////////////////////
@@ -4260,6 +4065,7 @@ Kinetic.GlobalObject.extend(Kinetic.Line, Kinetic.Shape);
 Kinetic.Path = function(config) {
     this.shapeType = "Path";
     this.dataArray = [];
+    var that = this;
 
     config.drawFunc = function() {
         var context = this.getContext();
@@ -4310,6 +4116,10 @@ Kinetic.Path = function(config) {
     Kinetic.Shape.apply(this, [config]);
 
     this.dataArray = this.getDataArray();
+
+    this.on('dataArrayChange', function() {
+        that.dataArray = that.getDataArray();
+    });
 };
 /*
  * Path methods
@@ -4545,25 +4355,6 @@ Kinetic.Path.prototype = {
 
         return ca;
     },
-    /**
-     * get SVG path data string
-     */
-    getData: function() {
-        return this.attrs.data;
-    },
-    /**
-     * set SVG path data string.  This method
-     *  also automatically parses the data string
-     *  into a data array.  Currently supported SVG data:
-     *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
-     * @param {String} SVG path command string
-     */
-    setData: function(data) {
-        this.setAttrs({
-            data: data
-        });
-        this.dataArray = this.getDataArray();
-    },
     _convertEndpointToCenterParameterization: function(x1, y1, x2, y2, fa, fs, rx, ry, psiDeg) {
 
         // Derived from: http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
@@ -4625,6 +4416,21 @@ Kinetic.Path.prototype = {
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Path, Kinetic.Shape);
 
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Path, ['data']);
+Kinetic.GlobalObject.addGetters(Kinetic.Path, ['data']);
+
+/**
+ * set SVG path data string.  This method
+ *  also automatically parses the data string
+ *  into a data array.  Currently supported SVG data:
+ *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
+ * @param {String} SVG path command string
+ */
+
+/**
+ * get SVG path data string
+ */
 /*
 * Last updated November 2011
 * By Simon Sarris

@@ -48,36 +48,6 @@ Kinetic.Rect = function(config) {
  */
 Kinetic.Rect.prototype = {
     /**
-     * set width
-     * @param {Number} width
-     */
-    setWidth: function(width) {
-        this.setAttrs({
-            width: width
-        });
-    },
-    /**
-     * get width
-     */
-    getWidth: function() {
-        return this.attrs.width;
-    },
-    /**
-     * set height
-     * @param {Number} height
-     */
-    setHeight: function(height) {
-        this.setAttrs({
-            height: height
-        });
-    },
-    /**
-     * get height
-     */
-    getHeight: function() {
-        return this.attrs.height;
-    },
-    /**
      * set width and height
      */
     setSize: function() {
@@ -92,23 +62,39 @@ Kinetic.Rect.prototype = {
             width: this.attrs.width,
             height: this.attrs.height
         };
-    },
-    /**
-     * set corner radius
-     * @param {Number} radius
-     */
-    setCornerRadius: function(radius) {
-        this.setAttrs({
-            cornerRadius: radius
-        });
-    },
-    /**
-     * get corner radius
-     */
-    getCornerRadius: function() {
-        return this.attrs.cornerRadius;
     }
 };
 
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Rect, Kinetic.Shape);
+
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Rect, ['width', 'height', 'cornerRadius']);
+Kinetic.GlobalObject.addGetters(Kinetic.Rect, ['width', 'height', 'cornerRadius']);
+
+/**
+ * set width
+ * @param {Number} width
+ */
+
+/**
+ * set height
+ * @param {Number} height
+ */
+
+/**
+ * set corner radius
+ * @param {Number} radius
+ */
+
+/**
+ * get width
+ */
+
+/**
+ * get height
+ */
+
+/**
+ * get corner radius
+ */

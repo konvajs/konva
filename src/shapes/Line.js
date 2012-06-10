@@ -62,48 +62,6 @@ Kinetic.Line.prototype = {
         });
     },
     /**
-     * get points array
-     */
-    getPoints: function() {
-        return this.attrs.points;
-    },
-    /**
-     * set line cap.  Can be butt, round, or square
-     * @param {String} lineCap
-     */
-    setLineCap: function(lineCap) {
-        this.setAttrs({
-            lineCap: lineCap
-        });
-    },
-    /**
-     * get line cap
-     */
-    getLineCap: function() {
-        return this.attrs.lineCap;
-    },
-    /**
-     * set dash array.
-     * @param {Array} dashArray
-     *  examples:<br>
-     *  [10, 5] dashes are 10px long and 5 pixels apart
-     *  [10, 20, 0, 20] if using a round lineCap, the line will
-     *  be made up of alternating dashed lines that are 10px long
-     *  and 20px apart, and dots that have a radius of 5 and are 20px
-     *  apart
-     */
-    setDashArray: function(dashArray) {
-        this.setAttrs({
-            dashArray: dashArray
-        });
-    },
-    /**
-     * get dash array
-     */
-    getDashArray: function() {
-        return this.attrs.dashArray;
-    },
-    /**
      * draw dashed line.  Written by Phrogz
      */
     _dashedLine: function(x, y, x2, y2, dashArray) {
@@ -148,9 +106,40 @@ Kinetic.Line.prototype = {
             draw = !draw;
         }
 
-        context.moveTo(x2, y2)
+        context.moveTo(x2, y2);
     }
 };
 
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Line, Kinetic.Shape);
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Line, ['dashArray', 'lineCap']);
+Kinetic.GlobalObject.addGetters(Kinetic.Line, ['dashArray', 'lineCap', 'points']);
+
+/**
+ * set dash array.
+ * @param {Array} dashArray
+ *  examples:<br>
+ *  [10, 5] dashes are 10px long and 5 pixels apart
+ *  [10, 20, 0, 20] if using a round lineCap, the line will
+ *  be made up of alternating dashed lines that are 10px long
+ *  and 20px apart, and dots that have a radius of 5 and are 20px
+ *  apart
+ */
+
+/**
+ * set line cap.  Can be butt, round, or square
+ * @param {String} lineCap
+ */
+
+/**
+ * get dash array
+ */
+
+/**
+ * get line cap
+ */
+
+/**
+ * get points array
+ */

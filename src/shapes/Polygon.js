@@ -40,14 +40,15 @@ Kinetic.Polygon.prototype = {
         this.setAttrs({
             points: points
         });
-    },
-    /**
-     * get points array
-     */
-    getPoints: function() {
-        return this.attrs.points;
     }
 };
 
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Polygon, Kinetic.Shape);
+
+// add setters and getters
+Kinetic.GlobalObject.addGetters(Kinetic.Polygon, ['points']);
+
+/**
+ * get points array
+ */

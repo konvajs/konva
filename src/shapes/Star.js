@@ -34,55 +34,36 @@ Kinetic.Star = function(config) {
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
 };
-/*
- * Star methods
- */
-Kinetic.Star.prototype = {
-    /**
-     * set number of points
-     * @param {Integer} points
-     */
-    setNumPoints: function(numPoints) {
-        this.setAttrs({
-            numPoints: numPoints
-        });
-    },
-    /**
-     * get number of points
-     */
-    getNumPoints: function() {
-        return this.attrs.numPoints;
-    },
-    /**
-     * set outer radius
-     * @param {Number} radius
-     */
-    setOuterRadius: function(radius) {
-        this.setAttrs({
-            outerRadius: radius
-        });
-    },
-    /**
-     * get outer radius
-     */
-    getOuterRadius: function() {
-        return this.attrs.outerRadius;
-    },
-    /**
-     * set inner radius
-     * @param {Number} radius
-     */
-    setInnerRadius: function(radius) {
-        this.setAttrs({
-            innerRadius: radius
-        });
-    },
-    /**
-     * get inner radius
-     */
-    getInnerRadius: function() {
-        return this.attrs.innerRadius;
-    }
-};
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Star, Kinetic.Shape);
+
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Star, ['numPoints', 'innerRadius', 'outerRadius']);
+Kinetic.GlobalObject.addGetters(Kinetic.Star, ['numPoints', 'innerRadius', 'outerRadius']);
+
+/**
+ * set number of points
+ * @param {Integer} points
+ */
+
+/**
+ * set outer radius
+ * @param {Number} radius
+ */
+
+/**
+ * set inner radius
+ * @param {Number} radius
+ */
+
+/**
+ * get number of points
+ */
+
+/**
+ * get outer radius
+ */
+
+/**
+ * get inner radius
+ */

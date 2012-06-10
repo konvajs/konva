@@ -333,63 +333,12 @@ Kinetic.Node.prototype = {
         });
     },
     /**
-     * get scale
-     */
-    getScale: function() {
-        return this.attrs.scale;
-    },
-    /**
      * set node position
      * @param {Object} point
      */
     setPosition: function() {
         var pos = Kinetic.GlobalObject._getXY(arguments);
         this.setAttrs(pos);
-    },
-    /**
-     * set node x position
-     * @param {Number} x
-     */
-    setX: function(x) {
-        this.setAttrs({
-            x: x
-        });
-    },
-    /**
-     * set node y position
-     * @param {Number} y
-     */
-    setY: function(y) {
-        this.setAttrs({
-            y: y
-        });
-    },
-    /**
-     * get node x position
-     */
-    getX: function() {
-        return this.attrs.x;
-    },
-    /**
-     * get node y position
-     */
-    getY: function() {
-        return this.attrs.y;
-    },
-    /**
-     * set detection type
-     * @param {String} type can be "path" or "pixel"
-     */
-    setDetectionType: function(type) {
-        this.setAttrs({
-            detectionType: type
-        });
-    },
-    /**
-     * get detection type
-     */
-    getDetectionType: function() {
-        return this.attrs.detectionType;
     },
     /**
      * get node position relative to container
@@ -474,26 +423,11 @@ Kinetic.Node.prototype = {
         });
     },
     /**
-     * set node rotation in radians
-     * @param {Number} theta
-     */
-    setRotation: function(theta) {
-        this.setAttrs({
-            rotation: theta
-        });
-    },
-    /**
      * set node rotation in degrees
      * @param {Number} deg
      */
     setRotationDeg: function(deg) {
         this.setRotation(deg * Math.PI / 180);
-    },
-    /**
-     * get rotation in radians
-     */
-    getRotation: function() {
-        return this.attrs.rotation;
     },
     /**
      * get rotation in degrees
@@ -583,25 +517,6 @@ Kinetic.Node.prototype = {
         this.parent._setChildrenIndices();
     },
     /**
-     * set alpha.  Alpha values range from 0 to 1.
-     * A node with an alpha of 0 is fully transparent, and a node
-     * with an alpha of 1 is fully opaque
-     * @param {Object} alpha
-     */
-    setAlpha: function(alpha) {
-        this.setAttrs({
-            alpha: alpha
-        });
-    },
-    /**
-     * get alpha.  Alpha values range from 0 to 1.
-     * A node with an alpha of 0 is fully transparent, and a node
-     * with an alpha of 1 is fully opaque
-     */
-    getAlpha: function() {
-        return this.attrs.alpha;
-    },
-    /**
      * get absolute alpha
      */
     getAbsoluteAlpha: function() {
@@ -680,18 +595,6 @@ Kinetic.Node.prototype = {
         }
     },
     /**
-     * get name
-     */
-    getName: function() {
-        return this.attrs.name;
-    },
-    /**
-     * get id
-     */
-    getId: function() {
-        return this.attrs.id;
-    },
-    /**
      * simulate event
      * @param {String} eventType
      */
@@ -707,12 +610,6 @@ Kinetic.Node.prototype = {
         this.setAttrs({
             offset: arguments
         });
-    },
-    /**
-     * get center offset
-     */
-    getOffset: function() {
-        return this.attrs.offset;
     },
     /**
      * transition node to another state.  Any property that can accept a real
@@ -781,40 +678,6 @@ Kinetic.Node.prototype = {
         go._handleAnimation();
 
         return trans;
-    },
-    /**
-     * set drag constraint
-     * @param {String} constraint
-     */
-    setDragConstraint: function(constraint) {
-        this.setAttrs({
-            dragConstraint: constraint
-        });
-    },
-    /**
-     * get drag constraint
-     */
-    getDragConstraint: function() {
-        return this.attrs.dragConstraint;
-    },
-    /**
-     * set drag bounds
-     * @param {Object} bounds
-     * @config {Number} [left] left bounds position
-     * @config {Number} [top] top bounds position
-     * @config {Number} [right] right bounds position
-     * @config {Number} [bottom] bottom bounds position
-     */
-    setDragBounds: function(bounds) {
-        this.setAttrs({
-            dragBounds: bounds
-        });
-    },
-    /**
-     * get drag bounds
-     */
-    getDragBounds: function() {
-        return this.attrs.dragBounds;
     },
     /**
      * get transform of the node while taking into
@@ -938,3 +801,94 @@ Kinetic.Node.prototype = {
         }
     }
 };
+
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Node, ['x', 'y', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'dragConstraint', 'dragBounds']);
+Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'dragConstraint', 'dragBounds']);
+
+/**
+ * set node x position
+ * @param {Number} x
+ */
+
+/**
+ * set node y position
+ * @param {Number} y
+ */
+
+/**
+ * set detection type
+ * @param {String} type can be "path" or "pixel"
+ */
+
+/**
+ * set node rotation in radians
+ * @param {Number} theta
+ */
+
+/**
+ * set alpha.  Alpha values range from 0 to 1.
+ * A node with an alpha of 0 is fully transparent, and a node
+ * with an alpha of 1 is fully opaque
+ * @param {Object} alpha
+ */
+
+/**
+ * set drag constraint
+ * @param {String} constraint
+ */
+
+/**
+ * set drag bounds
+ * @param {Object} bounds
+ * @config {Number} [left] left bounds position
+ * @config {Number} [top] top bounds position
+ * @config {Number} [right] right bounds position
+ * @config {Number} [bottom] bottom bounds position
+ */
+
+/**
+ * get scale
+ */
+
+/**
+ * get node x position
+ */
+
+/**
+ * get node y position
+ */
+
+/**
+ * get detection type
+ */
+
+/**
+ * get rotation in radians
+ */
+
+/**
+ * get alpha.  Alpha values range from 0 to 1.
+ * A node with an alpha of 0 is fully transparent, and a node
+ * with an alpha of 1 is fully opaque
+ */
+
+/**
+ * get name
+ */
+
+/**
+ * get id
+ */
+
+/**
+ * get center offset
+ */
+
+/**
+ * get drag constraint
+ */
+
+/**
+ * get drag bounds
+ */

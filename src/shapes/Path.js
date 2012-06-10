@@ -11,6 +11,7 @@
 Kinetic.Path = function(config) {
     this.shapeType = "Path";
     this.dataArray = [];
+    var that = this;
 
     config.drawFunc = function() {
         var context = this.getContext();
@@ -61,6 +62,10 @@ Kinetic.Path = function(config) {
     Kinetic.Shape.apply(this, [config]);
 
     this.dataArray = this.getDataArray();
+
+    this.on('dataArrayChange', function() {
+        that.dataArray = that.getDataArray();
+    });
 };
 /*
  * Path methods
@@ -296,25 +301,6 @@ Kinetic.Path.prototype = {
 
         return ca;
     },
-    /**
-     * get SVG path data string
-     */
-    getData: function() {
-        return this.attrs.data;
-    },
-    /**
-     * set SVG path data string.  This method
-     *  also automatically parses the data string
-     *  into a data array.  Currently supported SVG data:
-     *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
-     * @param {String} SVG path command string
-     */
-    setData: function(data) {
-        this.setAttrs({
-            data: data
-        });
-        this.dataArray = this.getDataArray();
-    },
     _convertEndpointToCenterParameterization: function(x1, y1, x2, y2, fa, fs, rx, ry, psiDeg) {
 
         // Derived from: http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
@@ -375,3 +361,19 @@ Kinetic.Path.prototype = {
 
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Path, Kinetic.Shape);
+
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Path, ['data']);
+Kinetic.GlobalObject.addGetters(Kinetic.Path, ['data']);
+
+/**
+ * set SVG path data string.  This method
+ *  also automatically parses the data string
+ *  into a data array.  Currently supported SVG data:
+ *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
+ * @param {String} SVG path command string
+ */
+
+/**
+ * get SVG path data string
+ */

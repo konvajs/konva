@@ -63,45 +63,6 @@ Kinetic.Sprite.prototype = {
         this.afterFrameIndex = index;
         this.afterFrameFunc = func;
     },
-    /**
-     * set animation key
-     * @param {String} anim animation key
-     */
-    setAnimation: function(anim) {
-        this.setAttrs({
-            animation: anim
-        });
-    },
-    /**
-     * set animations obect
-     * @param {Object} animations
-     */
-    setAnimations: function(animations) {
-        this.setAttrs({
-            animations: animations
-        });
-    },
-    /**
-     * get animations object
-     */
-    getAnimations: function() {
-        return this.attrs.animations;
-    },
-    /**
-     * get animation key
-     */
-    getAnimation: function() {
-        return this.attrs.animation;
-    },
-    /**
-     * set animation frame index
-     * @param {Integer} index frame index
-     */
-    setIndex: function(index) {
-        this.setAttrs({
-            index: index
-        });
-    },
     _updateIndex: function() {
         var i = this.attrs.index;
         var a = this.attrs.animation;
@@ -115,3 +76,34 @@ Kinetic.Sprite.prototype = {
 };
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Sprite, Kinetic.Shape);
+
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Sprite, ['animation', 'animations', 'index']);
+Kinetic.GlobalObject.addGetters(Kinetic.Sprite, ['animation', 'animations', 'index']);
+
+/**
+ * set animation key
+ * @param {String} anim animation key
+ */
+
+/**
+ * set animations obect
+ * @param {Object} animations
+ */
+
+/**
+ * set animation frame index
+ * @param {Integer} index frame index
+ */
+
+/**
+ * get animation key
+ */
+
+/**
+ * get animations object
+ */
+
+/**
+ * get animation frame index
+ */

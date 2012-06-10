@@ -290,92 +290,6 @@ Kinetic.Shape.prototype = {
         return false;
     },
     /**
-     * set fill which can be a color, linear gradient object,
-     *  radial gradient object, or pattern object
-     * @param {String|Object} fill
-     */
-    setFill: function(fill) {
-        this.setAttrs({
-            fill: fill
-        });
-    },
-    /**
-     * get fill
-     */
-    getFill: function() {
-        return this.attrs.fill;
-    },
-    /**
-     * set stroke color
-     * @param {String} stroke
-     */
-    setStroke: function(stroke) {
-        this.setAttrs({
-            stroke: stroke
-        });
-    },
-    /**
-     * get stroke color
-     */
-    getStroke: function() {
-        return this.attrs.stroke;
-    },
-    /**
-     * set line join
-     * @param {String} lineJoin.  Can be miter, round, or bevel.  The
-     *  default is miter
-     */
-    setLineJoin: function(lineJoin) {
-        this.setAttrs({
-            lineJoin: lineJoin
-        });
-    },
-    /**
-     * get line join
-     */
-    getLineJoin: function() {
-        return this.attrs.lineJoin;
-    },
-    /**
-     * set stroke width
-     * @param {Number} strokeWidth
-     */
-    setStrokeWidth: function(strokeWidth) {
-        this.setAttrs({
-            strokeWidth: strokeWidth
-        });
-    },
-    /**
-     * get stroke width
-     */
-    getStrokeWidth: function() {
-        return this.attrs.strokeWidth;
-    },
-    /**
-     * set shadow object
-     * @param {Object} config
-     */
-    setShadow: function(config) {
-        this.setAttrs({
-            shadow: config
-        });
-    },
-    /**
-     * get shadow object
-     */
-    getShadow: function() {
-        return this.attrs.shadow;
-    },
-    /**
-     * set draw function
-     * @param {Function} func drawing function
-     */
-    setDrawFunc: function(func) {
-        this.setAttrs({
-            drawFunc: func
-        });
-    },
-    /**
      * save shape data when using pixel detection.
      */
     saveData: function() {
@@ -465,3 +379,58 @@ Kinetic.Shape.prototype = {
 };
 // extend Node
 Kinetic.GlobalObject.extend(Kinetic.Shape, Kinetic.Node);
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
+Kinetic.GlobalObject.addGetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
+
+/**
+ * set fill which can be a color, linear gradient object,
+ *  radial gradient object, or pattern object
+ * @param {String|Object} fill
+ */
+
+/**
+ * set stroke color
+ * @param {String} stroke
+ */
+
+/**
+ * set line join
+ * @param {String} lineJoin.  Can be miter, round, or bevel.  The
+ *  default is miter
+ */
+
+/**
+ * set stroke width
+ * @param {Number} strokeWidth
+ */
+
+/**
+ * set shadow object
+ * @param {Object} config
+ */
+
+/**
+ * set draw function
+ * @param {Function} drawFunc drawing function
+ */
+
+/**
+ * get fill
+ */
+
+/**
+ * get stroke color
+ */
+
+/**
+ * get line join
+ */
+
+/**
+ * get stroke width
+ */
+
+/**
+ * get shadow object
+ */

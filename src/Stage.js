@@ -44,13 +44,11 @@ Kinetic.Stage = function(config) {
     this.on('heightChange.kinetic_reserved', function() {
         this._resizeDOM();
     });
-    
     var go = Kinetic.GlobalObject;
     go.stages.push(this);
     this._addId(this);
     this._addName(this);
-    
-    
+
 };
 /*
  * Stage methods
@@ -292,18 +290,6 @@ Kinetic.Stage.prototype = {
      */
     getStage: function() {
         return this;
-    },
-    /**
-     * get width
-     */
-    getWidth: function() {
-        return this.attrs.width;
-    },
-    /**
-     * get height
-     */
-    getHeight: function() {
-        return this.attrs.height;
     },
     /**
      * get shapes that intersect a point
@@ -988,3 +974,37 @@ else if(!isDragging && this.touchMove) {
 // Extend Container and Node
 Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Container);
 Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Node);
+
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Stage, ['width', 'height', 'throttle']);
+Kinetic.GlobalObject.addGetters(Kinetic.Stage, ['width', 'height', 'throttle']);
+
+/**
+ * get width
+ */
+
+/**
+ * get height
+ */
+
+/**
+ * get throttle
+ */
+
+/**
+ * set width
+ * @param {Number} width
+ */
+
+/**
+ * set height
+ * @param {Number} height
+ */
+
+/**
+ * set throttle.  Increasing the throttle will increase
+ *  the number of mousemove and touchmove event detections,
+ *  and decreasing the throttle will decrease the number
+ *  of mousemove and touchmove events which improves performance
+ * @param {Number} throttle
+ */

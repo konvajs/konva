@@ -39,6 +39,18 @@ Kinetic.GlobalObject = {
             }
         }
     },
+    addSetters: function(constructor, arr) {
+        for(var n = 0; n < arr.length; n++) {
+            var attr = arr[n];
+            this._addSetter(constructor, attr);
+        }
+    },
+    addGetters: function(constructor, arr) {
+        for(var n = 0; n < arr.length; n++) {
+            var attr = arr[n];
+            this._addGetter(constructor, attr);
+        }
+    },
     _pullNodes: function(stage) {
         var tempNodes = this.tempNodes;
         for(var n = 0; n < tempNodes.length; n++) {
@@ -315,6 +327,22 @@ Kinetic.GlobalObject = {
 
             return arr;
         }
+    },
+    _addSetter: function(constructor, attr) {
+        var that = this;
+        var method = 'set' + attr.charAt(0).toUpperCase() + attr.slice(1);
+        constructor.prototype[method] = function(arg) {
+            var obj = {};
+            obj[attr] = arg;
+            this.setAttrs(obj);
+        };
+    },
+    _addGetter: function(constructor, attr) {
+        var that = this;
+        var method = 'get' + attr.charAt(0).toUpperCase() + attr.slice(1);
+        constructor.prototype[method] = function(arg) {
+            return this.attrs[attr];
+        };
     }
 };
 
