@@ -27,7 +27,7 @@ Kinetic.Star = function(config) {
             context.lineTo(x, y);
         }
         context.closePath();
-        
+
         this.fill();
         this.stroke();
     };
@@ -43,7 +43,9 @@ Kinetic.Star.prototype = {
      * @param {Integer} points
      */
     setNumPoints: function(numPoints) {
-        this.attrs.numPoints = numPoints;
+        this.setAttrs({
+            numPoints: numPoints
+        });
     },
     /**
      * get number of points
@@ -56,7 +58,9 @@ Kinetic.Star.prototype = {
      * @param {Number} radius
      */
     setOuterRadius: function(radius) {
-        this.attrs.outerRadius = radius;
+        this.setAttrs({
+            outerRadius: radius
+        });
     },
     /**
      * get outer radius
@@ -69,7 +73,9 @@ Kinetic.Star.prototype = {
      * @param {Number} radius
      */
     setInnerRadius: function(radius) {
-        this.attrs.innerRadius = radius;
+        this.setAttrs({
+            innerRadius: radius
+        });
     },
     /**
      * get inner radius

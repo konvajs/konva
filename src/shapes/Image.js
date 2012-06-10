@@ -57,7 +57,9 @@ Kinetic.Image.prototype = {
      * @param {ImageObject} image
      */
     setImage: function(image) {
-        this.attrs.image = image;
+        this.setAttrs({
+            image: image
+        });
     },
     /**
      * get image
@@ -70,7 +72,9 @@ Kinetic.Image.prototype = {
      * @param {Number} width
      */
     setWidth: function(width) {
-        this.attrs.width = width;
+        this.setAttrs({
+            width: width
+        });
     },
     /**
      * get width
@@ -83,7 +87,9 @@ Kinetic.Image.prototype = {
      * @param {Number} height
      */
     setHeight: function(height) {
-        this.attrs.height = height;
+        this.setAttrs({
+            height: height
+        });
     },
     /**
      * get height

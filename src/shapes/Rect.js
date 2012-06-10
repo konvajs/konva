@@ -36,7 +36,7 @@ Kinetic.Rect = function(config) {
             context.arc(this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI, Math.PI * 3 / 2, false);
         }
         context.closePath();
-        
+
         this.fill();
         this.stroke();
     };
@@ -52,7 +52,9 @@ Kinetic.Rect.prototype = {
      * @param {Number} width
      */
     setWidth: function(width) {
-        this.attrs.width = width;
+        this.setAttrs({
+            width: width
+        });
     },
     /**
      * get width
@@ -65,7 +67,9 @@ Kinetic.Rect.prototype = {
      * @param {Number} height
      */
     setHeight: function(height) {
-        this.attrs.height = height;
+        this.setAttrs({
+            height: height
+        });
     },
     /**
      * get height
@@ -94,14 +98,16 @@ Kinetic.Rect.prototype = {
      * @param {Number} radius
      */
     setCornerRadius: function(radius) {
-        this.attrs.cornerRadius = radius;
+        this.setAttrs({
+            cornerRadius: radius
+        });
     },
     /**
      * get corner radius
      */
     getCornerRadius: function() {
         return this.attrs.cornerRadius;
-    },
+    }
 };
 
 // extend Shape

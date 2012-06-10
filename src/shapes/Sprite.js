@@ -23,7 +23,7 @@ Kinetic.Sprite = function(config) {
             context.beginPath();
             context.rect(0, 0, f.width, f.height);
             context.closePath();
-            
+
             this.drawImage(this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
         }
     };
@@ -68,14 +68,18 @@ Kinetic.Sprite.prototype = {
      * @param {String} anim animation key
      */
     setAnimation: function(anim) {
-        this.attrs.animation = anim;
+        this.setAttrs({
+            animation: anim
+        });
     },
     /**
      * set animations obect
      * @param {Object} animations
      */
     setAnimations: function(animations) {
-        this.attrs.animations = animations;
+        this.setAttrs({
+            animations: animations
+        });
     },
     /**
      * get animations object
@@ -94,7 +98,9 @@ Kinetic.Sprite.prototype = {
      * @param {Integer} index frame index
      */
     setIndex: function(index) {
-        this.attrs.index = index;
+        this.setAttrs({
+            index: index
+        });
     },
     _updateIndex: function() {
         var i = this.attrs.index;

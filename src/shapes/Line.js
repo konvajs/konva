@@ -72,7 +72,9 @@ Kinetic.Line.prototype = {
      * @param {String} lineCap
      */
     setLineCap: function(lineCap) {
-        this.attrs.lineCap = lineCap;
+        this.setAttrs({
+            lineCap: lineCap
+        });
     },
     /**
      * get line cap
@@ -91,7 +93,9 @@ Kinetic.Line.prototype = {
      *  apart
      */
     setDashArray: function(dashArray) {
-        this.attrs.dashArray = dashArray;
+        this.setAttrs({
+            dashArray: dashArray
+        });
     },
     /**
      * get dash array

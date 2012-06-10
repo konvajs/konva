@@ -35,7 +35,9 @@ Kinetic.Circle.prototype = {
      * @param {Number} radius
      */
     setRadius: function(radius) {
-        this.attrs.radius = radius;
+        this.setAttrs({
+            radius: radius
+        });
     },
     /**
      * get radius

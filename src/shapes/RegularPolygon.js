@@ -40,7 +40,9 @@ Kinetic.RegularPolygon.prototype = {
      * @param {Number} radius
      */
     setRadius: function(radius) {
-        this.attrs.radius = radius;
+        this.setAttrs({
+            radius: radius
+        });
     },
     /**
      * get radius
@@ -53,7 +55,9 @@ Kinetic.RegularPolygon.prototype = {
      * @param {int} sides
      */
     setSides: function(sides) {
-        this.attrs.sides = sides;
+        this.setAttrs({
+            sides: sides
+        });
     },
     /**
      * get number of sides

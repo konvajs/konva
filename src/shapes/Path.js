@@ -2,7 +2,7 @@
 //  SVG Path
 ///////////////////////////////////////////////////////////////////////
 /**
- * Path constructor. 
+ * Path constructor.
  * @author Jason Follas
  * @constructor
  * @augments Kinetic.Shape
@@ -35,7 +35,7 @@ Kinetic.Path = function(config) {
                     break;
                 case 'A':
                     var cx = p[0], cy = p[1], rx = p[2], ry = p[3], theta = p[4], dTheta = p[5], psi = p[6], fs = p[7];
-                    
+
                     var r = (rx > ry) ? rx : ry;
                     var scaleX = (rx > ry) ? 1 : rx / ry;
                     var scaleY = (rx > ry) ? ry / rx : 1;
@@ -47,8 +47,8 @@ Kinetic.Path = function(config) {
                     context.scale(1 / scaleX, 1 / scaleY);
                     context.rotate(-psi);
                     context.translate(-cx, -cy);
-                            
-                    break;                    
+
+                    break;
                 case 'z':
                     context.closePath();
                     break;
@@ -268,17 +268,13 @@ Kinetic.Path.prototype = {
                         break;
                     case 'A':
                         var rx = p.shift(), ry = p.shift(), psi = p.shift(), fa = p.shift(), fs = p.shift();
-                        var x1 = cpx, y1 = cpy;
-                        cpx = p.shift(), cpy = p.shift();
-                        
+                        var x1 = cpx, y1 = cpy; cpx = p.shift(), cpy = p.shift();
                         cmd = 'A';
                         points = this._convertEndpointToCenterParameterization(x1, y1, cpx, cpy, fa, fs, rx, ry, psi);
                         break;
                     case 'a':
                         var rx = p.shift(), ry = p.shift(), psi = p.shift(), fa = p.shift(), fs = p.shift();
-                        var x1 = cpx, y1 = cpy;
-                        cpx += p.shift(), cpy += p.shift();
-                        
+                        var x1 = cpx, y1 = cpy; cpx += p.shift(), cpy += p.shift();
                         cmd = 'A';
                         points = this._convertEndpointToCenterParameterization(x1, y1, cpx, cpy, fa, fs, rx, ry, psi);
                         break;
@@ -314,53 +310,66 @@ Kinetic.Path.prototype = {
      * @param {String} SVG path command string
      */
     setData: function(data) {
-        this.attrs.data = data;
+        this.setAttrs({
+            data: data
+        });
         this.dataArray = this.getDataArray();
     },
     _convertEndpointToCenterParameterization: function(x1, y1, x2, y2, fa, fs, rx, ry, psiDeg) {
-    
+
         // Derived from: http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
-        
+
         var psi = psiDeg * (Math.PI / 180.0);
 
         var xp = Math.cos(psi) * (x1 - x2) / 2.0 + Math.sin(psi) * (y1 - y2) / 2.0;
         var yp = -1 * Math.sin(psi) * (x1 - x2) / 2.0 + Math.cos(psi) * (y1 - y2) / 2.0;
 
-        var lambda = (xp*xp) / (rx*rx) + (yp*yp) / (ry*ry);
-        
-        if (lambda > 1) {
+        var lambda = (xp * xp) / (rx * rx) + (yp * yp) / (ry * ry);
+
+        if(lambda > 1) {
             rx *= Math.sqrt(lambda);
             ry *= Math.sqrt(lambda);
         }
-        
-        var f = Math.sqrt((((rx*rx) * (ry*ry)) - ((rx*rx) * (yp*yp)) - ((ry*ry) * (xp*xp))) / ((rx*rx) * (yp*yp) + (ry*ry) * (xp*xp)));
-        
-        if (fa == fs) f *= -1;
-        if (isNaN(f)) f = 0;
-        
+
+        var f = Math.sqrt((((rx * rx) * (ry * ry)) - ((rx * rx) * (yp * yp)) - ((ry * ry) * (xp * xp))) / ((rx * rx) * (yp * yp) + (ry * ry) * (xp * xp)));
+
+        if(fa == fs)
+            f *= -1;
+        if(isNaN(f))
+            f = 0;
+
         var cxp = f * rx * yp / ry;
         var cyp = f * -ry * xp / rx;
-    
+
         var cx = (x1 + x2) / 2.0 + Math.cos(psi) * cxp - Math.sin(psi) * cyp;
         var cy = (y1 + y2) / 2.0 + Math.sin(psi) * cxp + Math.cos(psi) * cyp;
-        
-        var vMag = function(v) { return Math.sqrt(v[0]*v[0] + v[1]*v[1]); }
-        var vRatio = function(u, v) { return (u[0]*v[0] + u[1]*v[1]) / (vMag(u) * vMag(v)) }
-        var vAngle = function(u, v) { return (u[0]*v[1] < u[1]*v[0] ? -1 : 1) * Math.acos(vRatio(u,v)); }
-        
-        var theta = vAngle([1,0], [(xp - cxp) / rx, (yp - cyp) / ry]);
+
+        var vMag = function(v) {
+            return Math.sqrt(v[0] * v[0] + v[1] * v[1]);
+        }
+        var vRatio = function(u, v) {
+            return (u[0] * v[0] + u[1] * v[1]) / (vMag(u) * vMag(v))
+        }
+        var vAngle = function(u, v) {
+            return (u[0] * v[1] < u[1] * v[0] ? -1 : 1) * Math.acos(vRatio(u, v));
+        }
+        var theta = vAngle([1, 0], [(xp - cxp) / rx, (yp - cyp) / ry]);
 
         var u = [(xp - cxp) / rx, (yp - cyp) / ry];
         var v = [(-1 * xp - cxp) / rx, (-1 * yp - cyp) / ry];
         var dTheta = vAngle(u, v);
-        
-        if (vRatio(u,v) <= -1) dTheta = Math.PI;
-        if (vRatio(u,v) >= 1) dTheta = 0;
 
-        if (fs == 0 && dTheta > 0) dTheta = dTheta - 2 * Math.PI;
-        if (fs == 1 && dTheta < 0) dTheta = dTheta + 2 * Math.PI;
-    
-        return [cx, cy, rx, ry, theta, dTheta, psi, fs];       
+        if(vRatio(u, v) <= -1)
+            dTheta = Math.PI;
+        if(vRatio(u, v) >= 1)
+            dTheta = 0;
+
+        if(fs == 0 && dTheta > 0)
+            dTheta = dTheta - 2 * Math.PI;
+        if(fs == 1 && dTheta < 0)
+            dTheta = dTheta + 2 * Math.PI;
+
+        return [cx, cy, rx, ry, theta, dTheta, psi, fs];
     }
 };
 

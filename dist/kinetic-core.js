@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jun 09 2012
+ * Date: Jun 10 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -2990,9 +2990,9 @@ Kinetic.Shape.prototype = {
      *  radial gradient object, or pattern object
      * @param {String|Object} fill
      */
-    setFill: function(config) {
+    setFill: function(fill) {
         this.setAttrs({
-            fill: config
+            fill: fill
         });
     },
     /**
@@ -3006,7 +3006,9 @@ Kinetic.Shape.prototype = {
      * @param {String} stroke
      */
     setStroke: function(stroke) {
-        this.attrs.stroke = stroke;
+        this.setAttrs({
+            stroke: stroke
+        });
     },
     /**
      * get stroke color
@@ -3020,7 +3022,9 @@ Kinetic.Shape.prototype = {
      *  default is miter
      */
     setLineJoin: function(lineJoin) {
-        this.attrs.lineJoin = lineJoin;
+        this.setAttrs({
+            lineJoin: lineJoin
+        });
     },
     /**
      * get line join
@@ -3033,7 +3037,9 @@ Kinetic.Shape.prototype = {
      * @param {Number} strokeWidth
      */
     setStrokeWidth: function(strokeWidth) {
-        this.attrs.strokeWidth = strokeWidth;
+        this.setAttrs({
+            strokeWidth: strokeWidth
+        });
     },
     /**
      * get stroke width
@@ -3061,7 +3067,9 @@ Kinetic.Shape.prototype = {
      * @param {Function} func drawing function
      */
     setDrawFunc: function(func) {
-        this.attrs.drawFunc = func;
+        this.setAttrs({
+            drawFunc: func
+        });
     },
     /**
      * save shape data when using pixel detection.
@@ -3192,7 +3200,7 @@ Kinetic.Rect = function(config) {
             context.arc(this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI, Math.PI * 3 / 2, false);
         }
         context.closePath();
-        
+
         this.fill();
         this.stroke();
     };
@@ -3208,7 +3216,9 @@ Kinetic.Rect.prototype = {
      * @param {Number} width
      */
     setWidth: function(width) {
-        this.attrs.width = width;
+        this.setAttrs({
+            width: width
+        });
     },
     /**
      * get width
@@ -3221,7 +3231,9 @@ Kinetic.Rect.prototype = {
      * @param {Number} height
      */
     setHeight: function(height) {
-        this.attrs.height = height;
+        this.setAttrs({
+            height: height
+        });
     },
     /**
      * get height
@@ -3250,14 +3262,16 @@ Kinetic.Rect.prototype = {
      * @param {Number} radius
      */
     setCornerRadius: function(radius) {
-        this.attrs.cornerRadius = radius;
+        this.setAttrs({
+            cornerRadius: radius
+        });
     },
     /**
      * get corner radius
      */
     getCornerRadius: function() {
         return this.attrs.cornerRadius;
-    },
+    }
 };
 
 // extend Shape
@@ -3300,7 +3314,9 @@ Kinetic.Circle.prototype = {
      * @param {Number} radius
      */
     setRadius: function(radius) {
-        this.attrs.radius = radius;
+        this.setAttrs({
+            radius: radius
+        });
     },
     /**
      * get radius
@@ -3372,7 +3388,9 @@ Kinetic.Image.prototype = {
      * @param {ImageObject} image
      */
     setImage: function(image) {
-        this.attrs.image = image;
+        this.setAttrs({
+            image: image
+        });
     },
     /**
      * get image
@@ -3385,7 +3403,9 @@ Kinetic.Image.prototype = {
      * @param {Number} width
      */
     setWidth: function(width) {
-        this.attrs.width = width;
+        this.setAttrs({
+            width: width
+        });
     },
     /**
      * get width
@@ -3398,7 +3418,9 @@ Kinetic.Image.prototype = {
      * @param {Number} height
      */
     setHeight: function(height) {
-        this.attrs.height = height;
+        this.setAttrs({
+            height: height
+        });
     },
     /**
      * get height
@@ -3465,7 +3487,7 @@ Kinetic.Sprite = function(config) {
             context.beginPath();
             context.rect(0, 0, f.width, f.height);
             context.closePath();
-            
+
             this.drawImage(this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
         }
     };
@@ -3510,14 +3532,18 @@ Kinetic.Sprite.prototype = {
      * @param {String} anim animation key
      */
     setAnimation: function(anim) {
-        this.attrs.animation = anim;
+        this.setAttrs({
+            animation: anim
+        });
     },
     /**
      * set animations obect
      * @param {Object} animations
      */
     setAnimations: function(animations) {
-        this.attrs.animations = animations;
+        this.setAttrs({
+            animations: animations
+        });
     },
     /**
      * get animations object
@@ -3536,7 +3562,9 @@ Kinetic.Sprite.prototype = {
      * @param {Integer} index frame index
      */
     setIndex: function(index) {
-        this.attrs.index = index;
+        this.setAttrs({
+            index: index
+        });
     },
     _updateIndex: function() {
         var i = this.attrs.index;
@@ -3648,7 +3676,9 @@ Kinetic.RegularPolygon.prototype = {
      * @param {Number} radius
      */
     setRadius: function(radius) {
-        this.attrs.radius = radius;
+        this.setAttrs({
+            radius: radius
+        });
     },
     /**
      * get radius
@@ -3661,7 +3691,9 @@ Kinetic.RegularPolygon.prototype = {
      * @param {int} sides
      */
     setSides: function(sides) {
-        this.attrs.sides = sides;
+        this.setAttrs({
+            sides: sides
+        });
     },
     /**
      * get number of sides
@@ -3703,7 +3735,7 @@ Kinetic.Star = function(config) {
             context.lineTo(x, y);
         }
         context.closePath();
-        
+
         this.fill();
         this.stroke();
     };
@@ -3719,7 +3751,9 @@ Kinetic.Star.prototype = {
      * @param {Integer} points
      */
     setNumPoints: function(numPoints) {
-        this.attrs.numPoints = numPoints;
+        this.setAttrs({
+            numPoints: numPoints
+        });
     },
     /**
      * get number of points
@@ -3732,7 +3766,9 @@ Kinetic.Star.prototype = {
      * @param {Number} radius
      */
     setOuterRadius: function(radius) {
-        this.attrs.outerRadius = radius;
+        this.setAttrs({
+            outerRadius: radius
+        });
     },
     /**
      * get outer radius
@@ -3745,7 +3781,9 @@ Kinetic.Star.prototype = {
      * @param {Number} radius
      */
     setInnerRadius: function(radius) {
-        this.attrs.innerRadius = radius;
+        this.setAttrs({
+            innerRadius: radius
+        });
     },
     /**
      * get inner radius
@@ -3851,7 +3889,9 @@ Kinetic.Text.prototype = {
      * @param {String} fontFamily
      */
     setFontFamily: function(fontFamily) {
-        this.attrs.fontFamily = fontFamily;
+        this.setAttrs({
+            fontFamily: fontFamily
+        });
     },
     /**
      * get font family
@@ -3864,7 +3904,9 @@ Kinetic.Text.prototype = {
      * @param {int} fontSize
      */
     setFontSize: function(fontSize) {
-        this.attrs.fontSize = fontSize;
+        this.setAttrs({
+            fontSize: fontSize
+        });
     },
     /**
      * get font size
@@ -3877,7 +3919,9 @@ Kinetic.Text.prototype = {
      * @param {String} fontStyle
      */
     setFontStyle: function(fontStyle) {
-        this.attrs.fontStyle = fontStyle;
+        this.setAttrs({
+            fontStyle: fontStyle
+        });
     },
     /**
      * get font style
@@ -3890,7 +3934,9 @@ Kinetic.Text.prototype = {
      * @param {String} textFill
      */
     setTextFill: function(textFill) {
-        this.attrs.textFill = textFill;
+        this.setAttrs({
+            textFill: textFill
+        });
     },
     /**
      * get text fill color
@@ -3903,7 +3949,9 @@ Kinetic.Text.prototype = {
      * @param {String} textStroke
      */
     setTextStroke: function(textStroke) {
-        this.attrs.textStroke = textStroke;
+        this.setAttrs({
+            textStroke: textStroke
+        });
     },
     /**
      * get text stroke color
@@ -3916,7 +3964,9 @@ Kinetic.Text.prototype = {
      * @param {int} textStrokeWidth
      */
     setTextStrokeWidth: function(textStrokeWidth) {
-        this.attrs.textStrokeWidth = textStrokeWidth;
+        this.setAttrs({
+            textStrokeWidth: textStrokeWidth
+        });
     },
     /**
      * get text stroke width
@@ -3929,7 +3979,9 @@ Kinetic.Text.prototype = {
      * @param {int} padding
      */
     setPadding: function(padding) {
-        this.attrs.padding = padding;
+        this.setAttrs({
+            padding: padding
+        });
     },
     /**
      * get padding
@@ -3942,7 +3994,9 @@ Kinetic.Text.prototype = {
      * @param {String} align align can be 'left', 'center', or 'right'
      */
     setAlign: function(align) {
-        this.attrs.align = align;
+        this.setAttrs({
+            align: align
+        });
     },
     /**
      * get horizontal align
@@ -3955,7 +4009,9 @@ Kinetic.Text.prototype = {
      * @param {String} verticalAlign verticalAlign can be "top", "middle", or "bottom"
      */
     setVerticalAlign: function(verticalAlign) {
-        this.attrs.verticalAlign = verticalAlign;
+        this.setAttrs({
+            verticalAlign: verticalAlign
+        });
     },
     /**
      * get vertical align
@@ -3968,7 +4024,9 @@ Kinetic.Text.prototype = {
      * @param {String} text
      */
     setText: function(text) {
-        this.attrs.text = text;
+        this.setAttrs({
+            text: text
+        });
     },
     /**
      * get text
@@ -4024,7 +4082,9 @@ Kinetic.Text.prototype = {
      * @param {Number} width
      */
     setWidth: function(width) {
-        this.attrs.width = width;
+        this.setAttrs({
+            width: width
+        });
     }
 };
 // extend Shape
@@ -4104,7 +4164,9 @@ Kinetic.Line.prototype = {
      * @param {String} lineCap
      */
     setLineCap: function(lineCap) {
-        this.attrs.lineCap = lineCap;
+        this.setAttrs({
+            lineCap: lineCap
+        });
     },
     /**
      * get line cap
@@ -4123,7 +4185,9 @@ Kinetic.Line.prototype = {
      *  apart
      */
     setDashArray: function(dashArray) {
-        this.attrs.dashArray = dashArray;
+        this.setAttrs({
+            dashArray: dashArray
+        });
     },
     /**
      * get dash array
@@ -4187,7 +4251,7 @@ Kinetic.GlobalObject.extend(Kinetic.Line, Kinetic.Shape);
 //  SVG Path
 ///////////////////////////////////////////////////////////////////////
 /**
- * Path constructor. 
+ * Path constructor.
  * @author Jason Follas
  * @constructor
  * @augments Kinetic.Shape
@@ -4220,7 +4284,7 @@ Kinetic.Path = function(config) {
                     break;
                 case 'A':
                     var cx = p[0], cy = p[1], rx = p[2], ry = p[3], theta = p[4], dTheta = p[5], psi = p[6], fs = p[7];
-                    
+
                     var r = (rx > ry) ? rx : ry;
                     var scaleX = (rx > ry) ? 1 : rx / ry;
                     var scaleY = (rx > ry) ? ry / rx : 1;
@@ -4232,8 +4296,8 @@ Kinetic.Path = function(config) {
                     context.scale(1 / scaleX, 1 / scaleY);
                     context.rotate(-psi);
                     context.translate(-cx, -cy);
-                            
-                    break;                    
+
+                    break;
                 case 'z':
                     context.closePath();
                     break;
@@ -4453,17 +4517,13 @@ Kinetic.Path.prototype = {
                         break;
                     case 'A':
                         var rx = p.shift(), ry = p.shift(), psi = p.shift(), fa = p.shift(), fs = p.shift();
-                        var x1 = cpx, y1 = cpy;
-                        cpx = p.shift(), cpy = p.shift();
-                        
+                        var x1 = cpx, y1 = cpy; cpx = p.shift(), cpy = p.shift();
                         cmd = 'A';
                         points = this._convertEndpointToCenterParameterization(x1, y1, cpx, cpy, fa, fs, rx, ry, psi);
                         break;
                     case 'a':
                         var rx = p.shift(), ry = p.shift(), psi = p.shift(), fa = p.shift(), fs = p.shift();
-                        var x1 = cpx, y1 = cpy;
-                        cpx += p.shift(), cpy += p.shift();
-                        
+                        var x1 = cpx, y1 = cpy; cpx += p.shift(), cpy += p.shift();
                         cmd = 'A';
                         points = this._convertEndpointToCenterParameterization(x1, y1, cpx, cpy, fa, fs, rx, ry, psi);
                         break;
@@ -4499,53 +4559,66 @@ Kinetic.Path.prototype = {
      * @param {String} SVG path command string
      */
     setData: function(data) {
-        this.attrs.data = data;
+        this.setAttrs({
+            data: data
+        });
         this.dataArray = this.getDataArray();
     },
     _convertEndpointToCenterParameterization: function(x1, y1, x2, y2, fa, fs, rx, ry, psiDeg) {
-    
+
         // Derived from: http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
-        
+
         var psi = psiDeg * (Math.PI / 180.0);
 
         var xp = Math.cos(psi) * (x1 - x2) / 2.0 + Math.sin(psi) * (y1 - y2) / 2.0;
         var yp = -1 * Math.sin(psi) * (x1 - x2) / 2.0 + Math.cos(psi) * (y1 - y2) / 2.0;
 
-        var lambda = (xp*xp) / (rx*rx) + (yp*yp) / (ry*ry);
-        
-        if (lambda > 1) {
+        var lambda = (xp * xp) / (rx * rx) + (yp * yp) / (ry * ry);
+
+        if(lambda > 1) {
             rx *= Math.sqrt(lambda);
             ry *= Math.sqrt(lambda);
         }
-        
-        var f = Math.sqrt((((rx*rx) * (ry*ry)) - ((rx*rx) * (yp*yp)) - ((ry*ry) * (xp*xp))) / ((rx*rx) * (yp*yp) + (ry*ry) * (xp*xp)));
-        
-        if (fa == fs) f *= -1;
-        if (isNaN(f)) f = 0;
-        
+
+        var f = Math.sqrt((((rx * rx) * (ry * ry)) - ((rx * rx) * (yp * yp)) - ((ry * ry) * (xp * xp))) / ((rx * rx) * (yp * yp) + (ry * ry) * (xp * xp)));
+
+        if(fa == fs)
+            f *= -1;
+        if(isNaN(f))
+            f = 0;
+
         var cxp = f * rx * yp / ry;
         var cyp = f * -ry * xp / rx;
-    
+
         var cx = (x1 + x2) / 2.0 + Math.cos(psi) * cxp - Math.sin(psi) * cyp;
         var cy = (y1 + y2) / 2.0 + Math.sin(psi) * cxp + Math.cos(psi) * cyp;
-        
-        var vMag = function(v) { return Math.sqrt(v[0]*v[0] + v[1]*v[1]); }
-        var vRatio = function(u, v) { return (u[0]*v[0] + u[1]*v[1]) / (vMag(u) * vMag(v)) }
-        var vAngle = function(u, v) { return (u[0]*v[1] < u[1]*v[0] ? -1 : 1) * Math.acos(vRatio(u,v)); }
-        
-        var theta = vAngle([1,0], [(xp - cxp) / rx, (yp - cyp) / ry]);
+
+        var vMag = function(v) {
+            return Math.sqrt(v[0] * v[0] + v[1] * v[1]);
+        }
+        var vRatio = function(u, v) {
+            return (u[0] * v[0] + u[1] * v[1]) / (vMag(u) * vMag(v))
+        }
+        var vAngle = function(u, v) {
+            return (u[0] * v[1] < u[1] * v[0] ? -1 : 1) * Math.acos(vRatio(u, v));
+        }
+        var theta = vAngle([1, 0], [(xp - cxp) / rx, (yp - cyp) / ry]);
 
         var u = [(xp - cxp) / rx, (yp - cyp) / ry];
         var v = [(-1 * xp - cxp) / rx, (-1 * yp - cyp) / ry];
         var dTheta = vAngle(u, v);
-        
-        if (vRatio(u,v) <= -1) dTheta = Math.PI;
-        if (vRatio(u,v) >= 1) dTheta = 0;
 
-        if (fs == 0 && dTheta > 0) dTheta = dTheta - 2 * Math.PI;
-        if (fs == 1 && dTheta < 0) dTheta = dTheta + 2 * Math.PI;
-    
-        return [cx, cy, rx, ry, theta, dTheta, psi, fs];       
+        if(vRatio(u, v) <= -1)
+            dTheta = Math.PI;
+        if(vRatio(u, v) >= 1)
+            dTheta = 0;
+
+        if(fs == 0 && dTheta > 0)
+            dTheta = dTheta - 2 * Math.PI;
+        if(fs == 1 && dTheta < 0)
+            dTheta = dTheta + 2 * Math.PI;
+
+        return [cx, cy, rx, ry, theta, dTheta, psi, fs];
     }
 };
 

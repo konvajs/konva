@@ -294,9 +294,9 @@ Kinetic.Shape.prototype = {
      *  radial gradient object, or pattern object
      * @param {String|Object} fill
      */
-    setFill: function(config) {
+    setFill: function(fill) {
         this.setAttrs({
-            fill: config
+            fill: fill
         });
     },
     /**
@@ -310,7 +310,9 @@ Kinetic.Shape.prototype = {
      * @param {String} stroke
      */
     setStroke: function(stroke) {
-        this.attrs.stroke = stroke;
+        this.setAttrs({
+            stroke: stroke
+        });
     },
     /**
      * get stroke color
@@ -324,7 +326,9 @@ Kinetic.Shape.prototype = {
      *  default is miter
      */
     setLineJoin: function(lineJoin) {
-        this.attrs.lineJoin = lineJoin;
+        this.setAttrs({
+            lineJoin: lineJoin
+        });
     },
     /**
      * get line join
@@ -337,7 +341,9 @@ Kinetic.Shape.prototype = {
      * @param {Number} strokeWidth
      */
     setStrokeWidth: function(strokeWidth) {
-        this.attrs.strokeWidth = strokeWidth;
+        this.setAttrs({
+            strokeWidth: strokeWidth
+        });
     },
     /**
      * get stroke width
@@ -365,7 +371,9 @@ Kinetic.Shape.prototype = {
      * @param {Function} func drawing function
      */
     setDrawFunc: function(func) {
-        this.attrs.drawFunc = func;
+        this.setAttrs({
+            drawFunc: func
+        });
     },
     /**
      * save shape data when using pixel detection.

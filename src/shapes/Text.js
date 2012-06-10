@@ -92,7 +92,9 @@ Kinetic.Text.prototype = {
      * @param {String} fontFamily
      */
     setFontFamily: function(fontFamily) {
-        this.attrs.fontFamily = fontFamily;
+        this.setAttrs({
+            fontFamily: fontFamily
+        });
     },
     /**
      * get font family
@@ -105,7 +107,9 @@ Kinetic.Text.prototype = {
      * @param {int} fontSize
      */
     setFontSize: function(fontSize) {
-        this.attrs.fontSize = fontSize;
+        this.setAttrs({
+            fontSize: fontSize
+        });
     },
     /**
      * get font size
@@ -118,7 +122,9 @@ Kinetic.Text.prototype = {
      * @param {String} fontStyle
      */
     setFontStyle: function(fontStyle) {
-        this.attrs.fontStyle = fontStyle;
+        this.setAttrs({
+            fontStyle: fontStyle
+        });
     },
     /**
      * get font style
@@ -131,7 +137,9 @@ Kinetic.Text.prototype = {
      * @param {String} textFill
      */
     setTextFill: function(textFill) {
-        this.attrs.textFill = textFill;
+        this.setAttrs({
+            textFill: textFill
+        });
     },
     /**
      * get text fill color
@@ -144,7 +152,9 @@ Kinetic.Text.prototype = {
      * @param {String} textStroke
      */
     setTextStroke: function(textStroke) {
-        this.attrs.textStroke = textStroke;
+        this.setAttrs({
+            textStroke: textStroke
+        });
     },
     /**
      * get text stroke color
@@ -157,7 +167,9 @@ Kinetic.Text.prototype = {
      * @param {int} textStrokeWidth
      */
     setTextStrokeWidth: function(textStrokeWidth) {
-        this.attrs.textStrokeWidth = textStrokeWidth;
+        this.setAttrs({
+            textStrokeWidth: textStrokeWidth
+        });
     },
     /**
      * get text stroke width
@@ -170,7 +182,9 @@ Kinetic.Text.prototype = {
      * @param {int} padding
      */
     setPadding: function(padding) {
-        this.attrs.padding = padding;
+        this.setAttrs({
+            padding: padding
+        });
     },
     /**
      * get padding
@@ -183,7 +197,9 @@ Kinetic.Text.prototype = {
      * @param {String} align align can be 'left', 'center', or 'right'
      */
     setAlign: function(align) {
-        this.attrs.align = align;
+        this.setAttrs({
+            align: align
+        });
     },
     /**
      * get horizontal align
@@ -196,7 +212,9 @@ Kinetic.Text.prototype = {
      * @param {String} verticalAlign verticalAlign can be "top", "middle", or "bottom"
      */
     setVerticalAlign: function(verticalAlign) {
-        this.attrs.verticalAlign = verticalAlign;
+        this.setAttrs({
+            verticalAlign: verticalAlign
+        });
     },
     /**
      * get vertical align
@@ -209,7 +227,9 @@ Kinetic.Text.prototype = {
      * @param {String} text
      */
     setText: function(text) {
-        this.attrs.text = text;
+        this.setAttrs({
+            text: text
+        });
     },
     /**
      * get text
@@ -265,7 +285,9 @@ Kinetic.Text.prototype = {
      * @param {Number} width
      */
     setWidth: function(width) {
-        this.attrs.width = width;
+        this.setAttrs({
+            width: width
+        });
     }
 };
 // extend Shape
