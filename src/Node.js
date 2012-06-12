@@ -183,9 +183,16 @@ Kinetic.Node.prototype = {
                      * to the node and then traverse
                      */
                     if(go._isObject(val) && !go._isArray(val) && !go._isElement(val) && !go._hasMethods(val)) {
-                        if(obj[key] === undefined) {
+                        /*
+                         * since some properties can be strings or objects, e.g.
+                         * fill, we need to first check that obj is an object
+                         * before setting properties.  If it's not an object,
+                         * overwrite obj with an object literal
+                         */
+                        if(!Kinetic.GlobalObject._isObject(obj[key])) {
                             obj[key] = {};
                         }
+
                         setAttrs(obj[key], val, level + 1);
                     }
                     /*

@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jun 10 2012
+ * Date: Jun 12 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -172,7 +172,8 @@ Kinetic.GlobalObject = {
         //return Object.prototype.toString.call(obj) == '[object Array]';
     },
     _isObject: function(obj) {
-        return obj === Object(obj);
+        return ( typeof obj == 'object');
+        //return obj === Object(obj);
     },
     _isNumber: function(obj) {
         return Object.prototype.toString.call(obj) == '[object Number]';
@@ -566,9 +567,16 @@ Kinetic.Node.prototype = {
                      * to the node and then traverse
                      */
                     if(go._isObject(val) && !go._isArray(val) && !go._isElement(val) && !go._hasMethods(val)) {
-                        if(obj[key] === undefined) {
+                        /*
+                         * since some properties can be strings or objects, e.g.
+                         * fill, we need to first check that obj is an object
+                         * before setting properties.  If it's not an object,
+                         * overwrite obj with an object literal
+                         */
+                        if(!Kinetic.GlobalObject._isObject(obj[key])) {
                             obj[key] = {};
                         }
+
                         setAttrs(obj[key], val, level + 1);
                     }
                     /*
@@ -2800,6 +2808,7 @@ Kinetic.Shape.prototype = {
         context.save();
 
         var fill = this.attrs.fill;
+        
         if(!!fill) {
             if(!this.appliedShadow) {
                 appliedShadow = this._applyShadow();

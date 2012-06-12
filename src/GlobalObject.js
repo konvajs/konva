@@ -144,7 +144,8 @@ Kinetic.GlobalObject = {
         //return Object.prototype.toString.call(obj) == '[object Array]';
     },
     _isObject: function(obj) {
-        return obj === Object(obj);
+        return ( typeof obj == 'object');
+        //return obj === Object(obj);
     },
     _isNumber: function(obj) {
         return Object.prototype.toString.call(obj) == '[object Number]';

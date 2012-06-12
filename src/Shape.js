@@ -104,6 +104,7 @@ Kinetic.Shape.prototype = {
         context.save();
 
         var fill = this.attrs.fill;
+        
         if(!!fill) {
             if(!this.appliedShadow) {
                 appliedShadow = this._applyShadow();
