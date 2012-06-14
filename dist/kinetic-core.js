@@ -3659,27 +3659,20 @@ Kinetic.Polygon = function(config) {
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
 };
-/*
- * Polygon methods
- */
-Kinetic.Polygon.prototype = {
-    /**
-     * set points array
-     * @param {Array} points can be an array of point objects or an array
-     *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
-     */
-    setPoints: function(points) {
-        this.setAttrs({
-            points: points
-        });
-    }
-};
-
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Polygon, Kinetic.Shape);
 
 // add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Polygon, ['points']);
 Kinetic.GlobalObject.addGetters(Kinetic.Polygon, ['points']);
+
+/**
+ * set points array
+ * @name setPoints
+ * @methodOf Kinetic.Polygon.prototype
+ * @param {Array} points can be an array of point objects or an array
+ *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
+ */
 
 /**
  * get points array
