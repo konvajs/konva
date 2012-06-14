@@ -815,21 +815,29 @@ Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType
 
 /**
  * set node x position
+ * @name setX
+ * @methodOf Kinetic.Node.prototype
  * @param {Number} x
  */
 
 /**
  * set node y position
+ * @name setY
+ * @methodOf Kinetic.Node.prototype
  * @param {Number} y
  */
 
 /**
  * set detection type
+ * @name setDetectionType
+ * @methodOf Kinetic.Node.prototype
  * @param {String} type can be "path" or "pixel"
  */
 
 /**
  * set node rotation in radians
+ * @name setRotation
+ * @methodOf Kinetic.Node.prototype
  * @param {Number} theta
  */
 
@@ -837,16 +845,22 @@ Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType
  * set alpha.  Alpha values range from 0 to 1.
  * A node with an alpha of 0 is fully transparent, and a node
  * with an alpha of 1 is fully opaque
+ * @name setAlpha
+ * @methodOf Kinetic.Node.prototype
  * @param {Object} alpha
  */
 
 /**
  * set drag constraint
+ * @name setDragConstraint
+ * @methodOf Kinetic.Node.prototype
  * @param {String} constraint
  */
 
 /**
  * set drag bounds
+ * @name setDragBounds
+ * @methodOf Kinetic.Node.prototype
  * @param {Object} bounds
  * @config {Number} [left] left bounds position
  * @config {Number} [top] top bounds position
@@ -856,46 +870,68 @@ Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType
 
 /**
  * get scale
+ * @name getScale
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get node x position
+ * @name getX
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get node y position
+ * @name getY
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get detection type
+ * @name getDetectionType
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get rotation in radians
+ * @name getRotation
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get alpha.  Alpha values range from 0 to 1.
  * A node with an alpha of 0 is fully transparent, and a node
  * with an alpha of 1 is fully opaque
+ * @name getAlpha
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get name
+ * @name getName
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get id
+ * @name getId
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
- * get center offset
+ * get offset
+ * @name getOffset
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get drag constraint
+ * @name getDragConstraint
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get drag bounds
+ * @name getDragBounds
+ * @methodOf Kinetic.Node.prototype
  */

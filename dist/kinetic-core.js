@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jun 12 2012
+ * Date: Jun 14 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1199,21 +1199,29 @@ Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType
 
 /**
  * set node x position
+ * @name setX
+ * @methodOf Kinetic.Node.prototype
  * @param {Number} x
  */
 
 /**
  * set node y position
+ * @name setY
+ * @methodOf Kinetic.Node.prototype
  * @param {Number} y
  */
 
 /**
  * set detection type
+ * @name setDetectionType
+ * @methodOf Kinetic.Node.prototype
  * @param {String} type can be "path" or "pixel"
  */
 
 /**
  * set node rotation in radians
+ * @name setRotation
+ * @methodOf Kinetic.Node.prototype
  * @param {Number} theta
  */
 
@@ -1221,16 +1229,22 @@ Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType
  * set alpha.  Alpha values range from 0 to 1.
  * A node with an alpha of 0 is fully transparent, and a node
  * with an alpha of 1 is fully opaque
+ * @name setAlpha
+ * @methodOf Kinetic.Node.prototype
  * @param {Object} alpha
  */
 
 /**
  * set drag constraint
+ * @name setDragConstraint
+ * @methodOf Kinetic.Node.prototype
  * @param {String} constraint
  */
 
 /**
  * set drag bounds
+ * @name setDragBounds
+ * @methodOf Kinetic.Node.prototype
  * @param {Object} bounds
  * @config {Number} [left] left bounds position
  * @config {Number} [top] top bounds position
@@ -1240,48 +1254,70 @@ Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType
 
 /**
  * get scale
+ * @name getScale
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get node x position
+ * @name getX
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get node y position
+ * @name getY
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get detection type
+ * @name getDetectionType
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get rotation in radians
+ * @name getRotation
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get alpha.  Alpha values range from 0 to 1.
  * A node with an alpha of 0 is fully transparent, and a node
  * with an alpha of 1 is fully opaque
+ * @name getAlpha
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get name
+ * @name getName
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get id
+ * @name getId
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
- * get center offset
+ * get offset
+ * @name getOffset
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get drag constraint
+ * @name getDragConstraint
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
  * get drag bounds
+ * @name getDragBounds
+ * @methodOf Kinetic.Node.prototype
  */
 ///////////////////////////////////////////////////////////////////////
 //  Container
@@ -2494,23 +2530,33 @@ Kinetic.GlobalObject.addGetters(Kinetic.Stage, ['width', 'height', 'throttle']);
 
 /**
  * get width
+ * @name getWidth
+ * @methodOf Kinetic.Stage.prototype
  */
 
 /**
  * get height
+ * @name getHeight
+ * @methodOf Kinetic.Stage.prototype
  */
 
 /**
  * get throttle
+ * @name getThrottle
+ * @methodOf Kinetic.Stage.prototype
  */
 
 /**
  * set width
+ * @name setWidth
+ * @methodOf Kinetic.Stage.prototype
  * @param {Number} width
  */
 
 /**
  * set height
+ * @name setHeight
+ * @methodOf Kinetic.Stage.prototype
  * @param {Number} height
  */
 
@@ -2519,6 +2565,8 @@ Kinetic.GlobalObject.addGetters(Kinetic.Stage, ['width', 'height', 'throttle']);
  *  the number of mousemove and touchmove event detections,
  *  and decreasing the throttle will decrease the number
  *  of mousemove and touchmove events which improves performance
+ * @name setThrottle
+ * @methodOf Kinetic.Stage.prototype
  * @param {Number} throttle
  */
 ///////////////////////////////////////////////////////////////////////
@@ -2808,7 +2856,7 @@ Kinetic.Shape.prototype = {
         context.save();
 
         var fill = this.attrs.fill;
-        
+
         if(!!fill) {
             if(!this.appliedShadow) {
                 appliedShadow = this._applyShadow();
@@ -2881,6 +2929,9 @@ Kinetic.Shape.prototype = {
     },
     /**
      * helper method to fill text and appy shadows if needed
+     * @param {String} text
+     * @param {Number} x
+     * @param {Number} y
      */
     fillText: function(text, x, y) {
         var appliedShadow = false;
@@ -2902,6 +2953,9 @@ Kinetic.Shape.prototype = {
     /**
      * helper method to stroke text and apply shadows
      * if needed
+     * @param {String} text
+     * @param {Number} x
+     * @param {Number} y
      */
     strokeText: function(text, x, y) {
         var appliedShadow = false;
@@ -3084,6 +3138,7 @@ Kinetic.Shape.prototype = {
 };
 // extend Node
 Kinetic.GlobalObject.extend(Kinetic.Shape, Kinetic.Node);
+
 // add setters and getters
 Kinetic.GlobalObject.addSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
 Kinetic.GlobalObject.addGetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
@@ -3091,53 +3146,81 @@ Kinetic.GlobalObject.addGetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 's
 /**
  * set fill which can be a color, linear gradient object,
  *  radial gradient object, or pattern object
+ * @name setFill
+ * @methodOf Kinetic.Shape.prototype
  * @param {String|Object} fill
  */
 
 /**
  * set stroke color
+ * @name setStroke
+ * @methodOf Kinetic.Shape.prototype
  * @param {String} stroke
  */
 
 /**
  * set line join
+ * @name setLineJoin
+ * @methodOf Kinetic.Shape.prototype
  * @param {String} lineJoin.  Can be miter, round, or bevel.  The
  *  default is miter
  */
 
 /**
  * set stroke width
+ * @name setStrokeWidth
+ * @methodOf Kinetic.Shape.prototype
  * @param {Number} strokeWidth
  */
 
 /**
  * set shadow object
+ * @name setShadow
+ * @methodOf Kinetic.Shape.prototype
  * @param {Object} config
  */
 
 /**
  * set draw function
+ * @name setDrawFunc
+ * @methodOf Kinetic.Shape.prototype
  * @param {Function} drawFunc drawing function
  */
 
 /**
  * get fill
+ * @name getFill
+ * @methodOf Kinetic.Shape.prototype
  */
 
 /**
  * get stroke color
+ * @name getStrokeColor
+ * @methodOf Kinetic.Shape.prototype
  */
 
 /**
  * get line join
+ * @name getLineJoin
+ * @methodOf Kinetic.Shape.prototype
  */
 
 /**
  * get stroke width
+ * @name getStrokeWidth
+ * @methodOf Kinetic.Shape.prototype
  */
 
 /**
  * get shadow object
+ * @name getShadow
+ * @methodOf Kinetic.Shape.prototype
+ */
+
+/**
+ * get draw function
+ * @name getDrawFunc
+ * @methodOf Kinetic.Shape.prototype
  */
 ///////////////////////////////////////////////////////////////////////
 //  Rect
@@ -3215,29 +3298,41 @@ Kinetic.GlobalObject.addGetters(Kinetic.Rect, ['width', 'height', 'cornerRadius'
 
 /**
  * set width
+ * @name setWidth
+ * @methodOf Kinetic.Rect.prototype
  * @param {Number} width
  */
 
 /**
  * set height
+ * @name setHeight
+ * @methodOf Kinetic.Rect.prototype
  * @param {Number} height
  */
 
 /**
  * set corner radius
+ * @name setCornerRadius
+ * @methodOf Kinetic.Rect.prototype
  * @param {Number} radius
  */
 
 /**
  * get width
+ * @name getWidth
+ * @methodOf Kinetic.Rect.prototype
  */
 
 /**
  * get height
+ * @name getHeight
+ * @methodOf Kinetic.Rect.prototype
  */
 
 /**
  * get corner radius
+ * @name getCornerRadius
+ * @methodOf Kinetic.Rect.prototype
  */
 ///////////////////////////////////////////////////////////////////////
 //  Circle
@@ -3275,11 +3370,15 @@ Kinetic.GlobalObject.addGetters(Kinetic.Circle, ['radius']);
 
 /**
  * set radius
+ * @name setRadius
+ * @methodOf Kinetic.Circle.prototype
  * @param {Number} radius
  */
 
 /**
  * get radius
+ * @name getRadius
+ * @methodOf Kinetic.Circle.prototype
  */
 ///////////////////////////////////////////////////////////////////////
 //  Image
@@ -3368,33 +3467,47 @@ Kinetic.GlobalObject.addGetters(Kinetic.Image, ['crop', 'height', 'width', 'imag
 
 /**
  * set width
+ * @name setWidth
+ * @methodOf Kinetic.Image.prototype
  * @param {Number} width
  */
 
 /**
  * set height
+ * @name setHeight
+ * @methodOf Kinetic.Image.prototype
  * @param {Number} height
  */
 
 /**
  * set image
+ * @name setImage
+ * @methodOf Kinetic.Image.prototype
  * @param {ImageObject} image
  */
 
 /**
  * get crop
+ * @name getCrop
+ * @methodOf Kinetic.Image.prototype
  */
 
 /**
  * get width
+ * @name getWidth
+ * @methodOf Kinetic.Image.prototype
  */
 
 /**
  * get height
+ * @name getHeight
+ * @methodOf Kinetic.Image.prototype
  */
 
 /**
  * get image
+ * @name getImage
+ * @methodOf Kinetic.Image.prototype
  */
 ///////////////////////////////////////////////////////////////////////
 //  Sprite
@@ -3481,29 +3594,41 @@ Kinetic.GlobalObject.addGetters(Kinetic.Sprite, ['animation', 'animations', 'ind
 
 /**
  * set animation key
+ * @name setAnimation
+ * @methodOf Kinetic.Sprite.prototype
  * @param {String} anim animation key
  */
 
 /**
  * set animations obect
+ * @name setAnimations
+ * @methodOf Kinetic.Sprite.prototype
  * @param {Object} animations
  */
 
 /**
  * set animation frame index
+ * @name setIndex
+ * @methodOf Kinetic.Sprite.prototype
  * @param {Integer} index frame index
  */
 
 /**
  * get animation key
+ * @name getAnimation
+ * @methodOf Kinetic.Sprite.prototype
  */
 
 /**
  * get animations object
+ * @name getAnimations
+ * @methodOf Kinetic.Sprite.prototype
  */
 
 /**
  * get animation frame index
+ * @name getIndex
+ * @methodOf Kinetic.Sprite.prototype
  */
 ///////////////////////////////////////////////////////////////////////
 //  Polygon
@@ -3540,7 +3665,7 @@ Kinetic.Polygon = function(config) {
 Kinetic.Polygon.prototype = {
     /**
      * set points array
-     * @param {Array} can be an array of point objects or an array
+     * @param {Array} points can be an array of point objects or an array
      *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
      */
     setPoints: function(points) {
@@ -3558,6 +3683,8 @@ Kinetic.GlobalObject.addGetters(Kinetic.Polygon, ['points']);
 
 /**
  * get points array
+ * @name getPoints
+ * @methodOf Kinetic.Polygon.prototype
  */
 ///////////////////////////////////////////////////////////////////////
 //  RegularPolygon
@@ -3601,19 +3728,27 @@ Kinetic.GlobalObject.addGetters(Kinetic.Rect, ['radius', 'sides']);
 
 /**
  * set radius
+ * @name setRadius
+ * @methodOf Kinetic.RegularPolygon.prototype
  * @param {Number} radius
  */
 
 /**
  * set number of sides
+ * @name setSides
+ * @methodOf Kinetic.RegularPolygon.prototype
  * @param {int} sides
  */
 /**
  * get radius
+ * @name getRadius
+ * @methodOf Kinetic.RegularPolygon.prototype
  */
 
 /**
  * get number of sides
+ * @name getSides
+ * @methodOf Kinetic.RegularPolygon.prototype
  */
 ///////////////////////////////////////////////////////////////////////
 //  Star
@@ -3660,29 +3795,41 @@ Kinetic.GlobalObject.addGetters(Kinetic.Star, ['numPoints', 'innerRadius', 'oute
 
 /**
  * set number of points
+ * @name setNumPoints
+ * @methodOf Kinetic.Star.prototype
  * @param {Integer} points
  */
 
 /**
  * set outer radius
+ * @name setOuterRadius
+ * @methodOf Kinetic.Star.prototype
  * @param {Number} radius
  */
 
 /**
  * set inner radius
+ * @name setInnerRadius
+ * @methodOf Kinetic.Star.prototype
  * @param {Number} radius
  */
 
 /**
  * get number of points
+ * @name getNumPoints
+ * @methodOf Kinetic.Star.prototype
  */
 
 /**
  * get outer radius
+ * @name getOuterRadius
+ * @methodOf Kinetic.Star.prototype
  */
 
 /**
  * get inner radius
+ * @name getInnerRadius
+ * @methodOf Kinetic.Star.prototype
  */
 ///////////////////////////////////////////////////////////////////////
 //  Text
@@ -3820,101 +3967,145 @@ Kinetic.GlobalObject.addGetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontSt
 
 /**
  * set font family
+ * @name setFontFamily
+ * @methodOf Kinetic.Text.prototype
  * @param {String} fontFamily
  */
 
 /**
  * set font size
+ * @name setFontSize
+ * @methodOf Kinetic.Text.prototype
  * @param {int} fontSize
  */
 
 /**
  * set font style.  Can be "normal", "italic", or "bold".  "normal" is the default.
+ * @name setFontStyle
+ * @methodOf Kinetic.Text.prototype
  * @param {String} fontStyle
  */
 
 /**
  * set text fill color
+ * @name setFontFill
+ * @methodOf Kinetic.Text.prototype
  * @param {String} textFill
  */
 
 /**
  * set text stroke color
+ * @name setFontStroke
+ * @methodOf Kinetic.Text.prototype
  * @param {String} textStroke
  */
 
 /**
  * set text stroke width
+ * @name setTextStrokeWidth
+ * @methodOf Kinetic.Text.prototype
  * @param {int} textStrokeWidth
  */
 
 /**
  * set padding
+ * @name setPadding
+ * @methodOf Kinetic.Text.prototype
  * @param {int} padding
  */
 
 /**
  * set horizontal align of text
+ * @name setAlign
+ * @methodOf Kinetic.Text.prototype
  * @param {String} align align can be 'left', 'center', or 'right'
  */
 
 /**
  * set vertical align of text
+ * @name setVerticalAlign
+ * @methodOf Kinetic.Text.prototype
  * @param {String} verticalAlign verticalAlign can be "top", "middle", or "bottom"
  */
 
 /**
  * set text
+ * @name setText
+ * @methodOf Kinetic.Text.prototype
  * @param {String} text
  */
 
 /**
  * set width
+ * @name setWidth
+ * @methodOf Kinetic.Text.prototype
  * @param {Number} width
  */
 
 /**
  * get font family
+ * @name getFontFamily
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get font size
+ * @name getFontSize
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get font style
+ * @name getFontStyle
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get text fill color
+ * @name getTextFill
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get text stroke color
+ * @name getTextStroke
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get text stroke width
+ * @name getTextStrokeWidth
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get padding
+ * @name getPadding
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get horizontal align
+ * @name getAlign
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get vertical align
+ * @name getVerticalAlign
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get text
+ * @name getText
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
- * get width in pixels
+ * get total width including padding and borders
+ * @name getWidth
+ * @methodOf Kinetic.Text.prototype
  */
 ///////////////////////////////////////////////////////////////////////
 //  Line
@@ -4036,6 +4227,8 @@ Kinetic.GlobalObject.addGetters(Kinetic.Line, ['dashArray', 'lineCap', 'points']
 
 /**
  * set dash array.
+ * @name setDashArray
+ * @methodOf Kinetic.Line.prototype
  * @param {Array} dashArray
  *  examples:<br>
  *  [10, 5] dashes are 10px long and 5 pixels apart
@@ -4047,19 +4240,27 @@ Kinetic.GlobalObject.addGetters(Kinetic.Line, ['dashArray', 'lineCap', 'points']
 
 /**
  * set line cap.  Can be butt, round, or square
+ * @name setLineCap
+ * @methodOf Kinetic.Line.prototype
  * @param {String} lineCap
  */
 
 /**
  * get dash array
+ * @name getDashArray
+ * @methodOf Kinetic.Line.prototype
  */
 
 /**
  * get line cap
+ * @name getLineCap
+ * @methodOf Kinetic.Line.prototype
  */
 
 /**
  * get points array
+ * @name getPoints
+ * @methodOf Kinetic.Line.prototype
  */
 ///////////////////////////////////////////////////////////////////////
 //  SVG Path
@@ -4336,13 +4537,15 @@ Kinetic.Path.prototype = {
                         break;
                     case 'A':
                         var rx = p.shift(), ry = p.shift(), psi = p.shift(), fa = p.shift(), fs = p.shift();
-                        var x1 = cpx, y1 = cpy; cpx = p.shift(), cpy = p.shift();
+                        var x1 = cpx, y1 = cpy;
+                        cpx = p.shift(), cpy = p.shift();
                         cmd = 'A';
                         points = this._convertEndpointToCenterParameterization(x1, y1, cpx, cpy, fa, fs, rx, ry, psi);
                         break;
                     case 'a':
                         var rx = p.shift(), ry = p.shift(), psi = p.shift(), fa = p.shift(), fs = p.shift();
-                        var x1 = cpx, y1 = cpy; cpx += p.shift(), cpy += p.shift();
+                        var x1 = cpx, y1 = cpy;
+                        cpx += p.shift(), cpy += p.shift();
                         cmd = 'A';
                         points = this._convertEndpointToCenterParameterization(x1, y1, cpx, cpy, fa, fs, rx, ry, psi);
                         break;
@@ -4434,11 +4637,15 @@ Kinetic.GlobalObject.addGetters(Kinetic.Path, ['data']);
  *  also automatically parses the data string
  *  into a data array.  Currently supported SVG data:
  *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
+ * @name setData
+ * @methodOf Kinetic.Path.prototype
  * @param {String} SVG path command string
  */
 
 /**
  * get SVG path data string
+ * @name getData
+ * @methodOf Kinetic.Path.prototype
  */
 /*
 * Last updated November 2011

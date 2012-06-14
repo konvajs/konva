@@ -134,99 +134,143 @@ Kinetic.GlobalObject.addGetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontSt
 
 /**
  * set font family
+ * @name setFontFamily
+ * @methodOf Kinetic.Text.prototype
  * @param {String} fontFamily
  */
 
 /**
  * set font size
+ * @name setFontSize
+ * @methodOf Kinetic.Text.prototype
  * @param {int} fontSize
  */
 
 /**
  * set font style.  Can be "normal", "italic", or "bold".  "normal" is the default.
+ * @name setFontStyle
+ * @methodOf Kinetic.Text.prototype
  * @param {String} fontStyle
  */
 
 /**
  * set text fill color
+ * @name setFontFill
+ * @methodOf Kinetic.Text.prototype
  * @param {String} textFill
  */
 
 /**
  * set text stroke color
+ * @name setFontStroke
+ * @methodOf Kinetic.Text.prototype
  * @param {String} textStroke
  */
 
 /**
  * set text stroke width
+ * @name setTextStrokeWidth
+ * @methodOf Kinetic.Text.prototype
  * @param {int} textStrokeWidth
  */
 
 /**
  * set padding
+ * @name setPadding
+ * @methodOf Kinetic.Text.prototype
  * @param {int} padding
  */
 
 /**
  * set horizontal align of text
+ * @name setAlign
+ * @methodOf Kinetic.Text.prototype
  * @param {String} align align can be 'left', 'center', or 'right'
  */
 
 /**
  * set vertical align of text
+ * @name setVerticalAlign
+ * @methodOf Kinetic.Text.prototype
  * @param {String} verticalAlign verticalAlign can be "top", "middle", or "bottom"
  */
 
 /**
  * set text
+ * @name setText
+ * @methodOf Kinetic.Text.prototype
  * @param {String} text
  */
 
 /**
  * set width
+ * @name setWidth
+ * @methodOf Kinetic.Text.prototype
  * @param {Number} width
  */
 
 /**
  * get font family
+ * @name getFontFamily
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get font size
+ * @name getFontSize
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get font style
+ * @name getFontStyle
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get text fill color
+ * @name getTextFill
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get text stroke color
+ * @name getTextStroke
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get text stroke width
+ * @name getTextStrokeWidth
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get padding
+ * @name getPadding
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get horizontal align
+ * @name getAlign
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get vertical align
+ * @name getVerticalAlign
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
  * get text
+ * @name getText
+ * @methodOf Kinetic.Text.prototype
  */
 
 /**
- * get width in pixels
+ * get total width including padding and borders
+ * @name getWidth
+ * @methodOf Kinetic.Text.prototype
  */

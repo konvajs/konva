@@ -40,17 +40,25 @@ Kinetic.GlobalObject.addGetters(Kinetic.Rect, ['radius', 'sides']);
 
 /**
  * set radius
+ * @name setRadius
+ * @methodOf Kinetic.RegularPolygon.prototype
  * @param {Number} radius
  */
 
 /**
  * set number of sides
+ * @name setSides
+ * @methodOf Kinetic.RegularPolygon.prototype
  * @param {int} sides
  */
 /**
  * get radius
+ * @name getRadius
+ * @methodOf Kinetic.RegularPolygon.prototype
  */
 
 /**
  * get number of sides
+ * @name getSides
+ * @methodOf Kinetic.RegularPolygon.prototype
  */

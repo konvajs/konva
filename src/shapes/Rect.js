@@ -74,27 +74,39 @@ Kinetic.GlobalObject.addGetters(Kinetic.Rect, ['width', 'height', 'cornerRadius'
 
 /**
  * set width
+ * @name setWidth
+ * @methodOf Kinetic.Rect.prototype
  * @param {Number} width
  */
 
 /**
  * set height
+ * @name setHeight
+ * @methodOf Kinetic.Rect.prototype
  * @param {Number} height
  */
 
 /**
  * set corner radius
+ * @name setCornerRadius
+ * @methodOf Kinetic.Rect.prototype
  * @param {Number} radius
  */
 
 /**
  * get width
+ * @name getWidth
+ * @methodOf Kinetic.Rect.prototype
  */
 
 /**
  * get height
+ * @name getHeight
+ * @methodOf Kinetic.Rect.prototype
  */
 
 /**
  * get corner radius
+ * @name getCornerRadius
+ * @methodOf Kinetic.Rect.prototype
  */

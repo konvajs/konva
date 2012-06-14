@@ -118,6 +118,8 @@ Kinetic.GlobalObject.addGetters(Kinetic.Line, ['dashArray', 'lineCap', 'points']
 
 /**
  * set dash array.
+ * @name setDashArray
+ * @methodOf Kinetic.Line.prototype
  * @param {Array} dashArray
  *  examples:<br>
  *  [10, 5] dashes are 10px long and 5 pixels apart
@@ -129,17 +131,25 @@ Kinetic.GlobalObject.addGetters(Kinetic.Line, ['dashArray', 'lineCap', 'points']
 
 /**
  * set line cap.  Can be butt, round, or square
+ * @name setLineCap
+ * @methodOf Kinetic.Line.prototype
  * @param {String} lineCap
  */
 
 /**
  * get dash array
+ * @name getDashArray
+ * @methodOf Kinetic.Line.prototype
  */
 
 /**
  * get line cap
+ * @name getLineCap
+ * @methodOf Kinetic.Line.prototype
  */
 
 /**
  * get points array
+ * @name getPoints
+ * @methodOf Kinetic.Line.prototype
  */

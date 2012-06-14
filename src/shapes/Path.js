@@ -273,13 +273,15 @@ Kinetic.Path.prototype = {
                         break;
                     case 'A':
                         var rx = p.shift(), ry = p.shift(), psi = p.shift(), fa = p.shift(), fs = p.shift();
-                        var x1 = cpx, y1 = cpy; cpx = p.shift(), cpy = p.shift();
+                        var x1 = cpx, y1 = cpy;
+                        cpx = p.shift(), cpy = p.shift();
                         cmd = 'A';
                         points = this._convertEndpointToCenterParameterization(x1, y1, cpx, cpy, fa, fs, rx, ry, psi);
                         break;
                     case 'a':
                         var rx = p.shift(), ry = p.shift(), psi = p.shift(), fa = p.shift(), fs = p.shift();
-                        var x1 = cpx, y1 = cpy; cpx += p.shift(), cpy += p.shift();
+                        var x1 = cpx, y1 = cpy;
+                        cpx += p.shift(), cpy += p.shift();
                         cmd = 'A';
                         points = this._convertEndpointToCenterParameterization(x1, y1, cpx, cpy, fa, fs, rx, ry, psi);
                         break;
@@ -371,9 +373,13 @@ Kinetic.GlobalObject.addGetters(Kinetic.Path, ['data']);
  *  also automatically parses the data string
  *  into a data array.  Currently supported SVG data:
  *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
+ * @name setData
+ * @methodOf Kinetic.Path.prototype
  * @param {String} SVG path command string
  */
 
 /**
  * get SVG path data string
+ * @name getData
+ * @methodOf Kinetic.Path.prototype
  */

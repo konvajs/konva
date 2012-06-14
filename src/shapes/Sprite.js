@@ -83,27 +83,39 @@ Kinetic.GlobalObject.addGetters(Kinetic.Sprite, ['animation', 'animations', 'ind
 
 /**
  * set animation key
+ * @name setAnimation
+ * @methodOf Kinetic.Sprite.prototype
  * @param {String} anim animation key
  */
 
 /**
  * set animations obect
+ * @name setAnimations
+ * @methodOf Kinetic.Sprite.prototype
  * @param {Object} animations
  */
 
 /**
  * set animation frame index
+ * @name setIndex
+ * @methodOf Kinetic.Sprite.prototype
  * @param {Integer} index frame index
  */
 
 /**
  * get animation key
+ * @name getAnimation
+ * @methodOf Kinetic.Sprite.prototype
  */
 
 /**
  * get animations object
+ * @name getAnimations
+ * @methodOf Kinetic.Sprite.prototype
  */
 
 /**
  * get animation frame index
+ * @name getIndex
+ * @methodOf Kinetic.Sprite.prototype
  */

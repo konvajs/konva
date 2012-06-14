@@ -104,7 +104,7 @@ Kinetic.Shape.prototype = {
         context.save();
 
         var fill = this.attrs.fill;
-        
+
         if(!!fill) {
             if(!this.appliedShadow) {
                 appliedShadow = this._applyShadow();
@@ -177,6 +177,9 @@ Kinetic.Shape.prototype = {
     },
     /**
      * helper method to fill text and appy shadows if needed
+     * @param {String} text
+     * @param {Number} x
+     * @param {Number} y
      */
     fillText: function(text, x, y) {
         var appliedShadow = false;
@@ -198,6 +201,9 @@ Kinetic.Shape.prototype = {
     /**
      * helper method to stroke text and apply shadows
      * if needed
+     * @param {String} text
+     * @param {Number} x
+     * @param {Number} y
      */
     strokeText: function(text, x, y) {
         var appliedShadow = false;
@@ -380,6 +386,7 @@ Kinetic.Shape.prototype = {
 };
 // extend Node
 Kinetic.GlobalObject.extend(Kinetic.Shape, Kinetic.Node);
+
 // add setters and getters
 Kinetic.GlobalObject.addSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
 Kinetic.GlobalObject.addGetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
@@ -387,51 +394,79 @@ Kinetic.GlobalObject.addGetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 's
 /**
  * set fill which can be a color, linear gradient object,
  *  radial gradient object, or pattern object
+ * @name setFill
+ * @methodOf Kinetic.Shape.prototype
  * @param {String|Object} fill
  */
 
 /**
  * set stroke color
+ * @name setStroke
+ * @methodOf Kinetic.Shape.prototype
  * @param {String} stroke
  */
 
 /**
  * set line join
+ * @name setLineJoin
+ * @methodOf Kinetic.Shape.prototype
  * @param {String} lineJoin.  Can be miter, round, or bevel.  The
  *  default is miter
  */
 
 /**
  * set stroke width
+ * @name setStrokeWidth
+ * @methodOf Kinetic.Shape.prototype
  * @param {Number} strokeWidth
  */
 
 /**
  * set shadow object
+ * @name setShadow
+ * @methodOf Kinetic.Shape.prototype
  * @param {Object} config
  */
 
 /**
  * set draw function
+ * @name setDrawFunc
+ * @methodOf Kinetic.Shape.prototype
  * @param {Function} drawFunc drawing function
  */
 
 /**
  * get fill
+ * @name getFill
+ * @methodOf Kinetic.Shape.prototype
  */
 
 /**
  * get stroke color
+ * @name getStrokeColor
+ * @methodOf Kinetic.Shape.prototype
  */
 
 /**
  * get line join
+ * @name getLineJoin
+ * @methodOf Kinetic.Shape.prototype
  */
 
 /**
  * get stroke width
+ * @name getStrokeWidth
+ * @methodOf Kinetic.Shape.prototype
  */
 
 /**
  * get shadow object
+ * @name getShadow
+ * @methodOf Kinetic.Shape.prototype
+ */
+
+/**
+ * get draw function
+ * @name getDrawFunc
+ * @methodOf Kinetic.Shape.prototype
  */

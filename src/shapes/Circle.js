@@ -34,9 +34,13 @@ Kinetic.GlobalObject.addGetters(Kinetic.Circle, ['radius']);
 
 /**
  * set radius
+ * @name setRadius
+ * @methodOf Kinetic.Circle.prototype
  * @param {Number} radius
  */
 
 /**
  * get radius
+ * @name getRadius
+ * @methodOf Kinetic.Circle.prototype
  */

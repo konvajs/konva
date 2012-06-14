@@ -85,31 +85,45 @@ Kinetic.GlobalObject.addGetters(Kinetic.Image, ['crop', 'height', 'width', 'imag
 
 /**
  * set width
+ * @name setWidth
+ * @methodOf Kinetic.Image.prototype
  * @param {Number} width
  */
 
 /**
  * set height
+ * @name setHeight
+ * @methodOf Kinetic.Image.prototype
  * @param {Number} height
  */
 
 /**
  * set image
+ * @name setImage
+ * @methodOf Kinetic.Image.prototype
  * @param {ImageObject} image
  */
 
 /**
  * get crop
+ * @name getCrop
+ * @methodOf Kinetic.Image.prototype
  */
 
 /**
  * get width
+ * @name getWidth
+ * @methodOf Kinetic.Image.prototype
  */
 
 /**
  * get height
+ * @name getHeight
+ * @methodOf Kinetic.Image.prototype
  */
 
 /**
  * get image
+ * @name getImage
+ * @methodOf Kinetic.Image.prototype
  */

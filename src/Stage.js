@@ -981,23 +981,33 @@ Kinetic.GlobalObject.addGetters(Kinetic.Stage, ['width', 'height', 'throttle']);
 
 /**
  * get width
+ * @name getWidth
+ * @methodOf Kinetic.Stage.prototype
  */
 
 /**
  * get height
+ * @name getHeight
+ * @methodOf Kinetic.Stage.prototype
  */
 
 /**
  * get throttle
+ * @name getThrottle
+ * @methodOf Kinetic.Stage.prototype
  */
 
 /**
  * set width
+ * @name setWidth
+ * @methodOf Kinetic.Stage.prototype
  * @param {Number} width
  */
 
 /**
  * set height
+ * @name setHeight
+ * @methodOf Kinetic.Stage.prototype
  * @param {Number} height
  */
 
@@ -1006,5 +1016,7 @@ Kinetic.GlobalObject.addGetters(Kinetic.Stage, ['width', 'height', 'throttle']);
  *  the number of mousemove and touchmove event detections,
  *  and decreasing the throttle will decrease the number
  *  of mousemove and touchmove events which improves performance
+ * @name setThrottle
+ * @methodOf Kinetic.Stage.prototype
  * @param {Number} throttle
  */
