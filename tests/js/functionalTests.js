@@ -1310,6 +1310,7 @@ Test.prototype.tests = {
         //log('not dragging yet after draggable, isDragging: ' + circle.isDragging());
         test(circle.isDragging() === false, 'isDragging() should be false');
 
+		/*
         circle.on('dragstart', function() {
             log('dragstart, isDragging: ' + this.isDragging());
             test(circle.isDragging() === true, 'isDragging() should be true');
@@ -1324,6 +1325,7 @@ Test.prototype.tests = {
             log('dragend, isDragging: ' + this.isDragging());
             test(circle.isDragging() === false, 'isDragging() should be false');
         });
+        */
 
         layer.add(circle);
         stage.add(layer);

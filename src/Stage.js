@@ -422,7 +422,7 @@ Kinetic.Stage.prototype = {
             }
 
             // handle touchstart
-            if(!isDragging && this.touchStart) {
+            if(!isDragging && this.touchStart && !this.touchMove) {
                 this.touchStart = false;
                 this.tapStart = true;
                 shape._handleEvent('touchstart', evt);
@@ -627,7 +627,8 @@ else if(!isDragging && this.touchMove) {
             var tt = 1000 / throttle;
 
             if(timeDiff >= tt) {
-                that.mouseMove = true;
+                that.mouseDown = false;
+                that.mouseUp = false;
                 that._handleStageEvent(evt);
             }
         }, false);
@@ -679,9 +680,19 @@ else if(!isDragging && this.touchMove) {
             var tt = 1000 / throttle;
 
             if(timeDiff >= tt) {
-                evt.preventDefault();
-                that.touchMove = true;
-                that._handleStageEvent(evt);
+                /*
+                 * need a setTimeout here because iOS
+                 * sometimes triggers touchStart and touchMove
+                 * simultaenously which causes eventd detection issues.
+                 * The timeout ensures that touchstart events
+                 * are handled first followed by touchmove
+                 */
+                setTimeout(function() {
+                    evt.preventDefault();
+                    that.touchEnd = false;
+                    that.touchMove = true;
+                    that._handleStageEvent(evt);
+                }, 5);
             }
         }, false);
 
