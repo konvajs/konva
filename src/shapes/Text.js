@@ -155,7 +155,7 @@ Kinetic.GlobalObject.addGetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontSt
 
 /**
  * set text fill color
- * @name setFontFill
+ * @name setTextFill
  * @methodOf Kinetic.Text.prototype
  * @param {String} textFill
  */

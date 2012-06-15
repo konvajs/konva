@@ -2152,106 +2152,107 @@ else if(!isDragging && this.touchMove) {
         var go = Kinetic.GlobalObject;
         var that = this;
 
+        var events = ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'touchstart', 'touchmove', 'touchend'];
+
+        for(var n = 0; n < events.length; n++) {
+            var pubEvent = events[n];
+            // induce scope
+            ( function() {
+            	var event = pubEvent;
+                that.content.addEventListener(event, function(evt) {
+                    that['_on' + event](evt);
+                }, false);
+            }());
+        }
+    },
+    _onmouseover: function(evt) {
+        this._handleStageEvent(evt);
+    },
+    _onmouseout: function(evt) {
+        // if there's a current target shape, run mouseout handlers
+        var targetShape = this.targetShape;
+        if(targetShape) {
+            targetShape._handleEvent('mouseout', evt);
+            this.targetShape = undefined;
+        }
+        this.mousePos = undefined;
+    },
+    _onmousemove: function(evt) {
+        //throttle mousemove
+        var throttle = this.attrs.throttle;
+        var date = new Date();
+        var time = date.getTime();
+        var timeDiff = time - this.lastEventTime;
+        var tt = 1000 / throttle;
+
+        if(timeDiff >= tt) {
+            this.mouseDown = false;
+            this.mouseUp = false;
+            this._handleStageEvent(evt);
+        }
+    },
+    _onmousedown: function(evt) {
+        this.mouseDown = true;
+        this.mouseUp = false;
+        this.mouseMove = false;
+        this._handleStageEvent(evt);
+
+        //init stage drag and drop
+        if(this.attrs.draggable) {
+            this._initDrag();
+        }
+    },
+    _onmouseup: function(evt) {
+        this.mouseDown = false;
+        this.mouseUp = true;
+        this.mouseMove = false;
+        this._handleStageEvent(evt);
+        this.clickStart = false;
+    },
+    _ontouchstart: function(evt) {
+        evt.preventDefault();
+        this.touchStart = true;
+        this.touchEnd = false;
+        this.touchMove = false;
+        this._handleStageEvent(evt);
         /*
-         * desktop events
+         * init stage drag and drop
          */
-        this.content.addEventListener('mousedown', function(evt) {
-            that.mouseDown = true;
-            that.mouseUp = false;
-            that.mouseMove = false;
-            that._handleStageEvent(evt);
+        if(this.attrs.draggable) {
+            this._initDrag();
+        }
+    },
+    _ontouchend: function(evt) {
+        this.touchStart = false;
+        this.touchEnd = true;
+        this.touchMove = false;
+        this._handleStageEvent(evt);
+        this.tapStart = false;
+    },
+    _ontouchmove: function(evt) {
+        //throttle touchmove
+        var that = this;
+        var throttle = this.attrs.throttle;
+        var date = new Date();
+        var time = date.getTime();
+        var timeDiff = time - this.lastEventTime;
+        var tt = 1000 / throttle;
 
-            //init stage drag and drop
-            if(that.attrs.draggable) {
-                that._initDrag();
-            }
-        }, false);
-
-        this.content.addEventListener('mousemove', function(evt) {
-            //throttle mousemove
-            var throttle = that.attrs.throttle;
-            var date = new Date();
-            var time = date.getTime();
-            var timeDiff = time - that.lastEventTime;
-            var tt = 1000 / throttle;
-
-            if(timeDiff >= tt) {
-                that.mouseDown = false;
-                that.mouseUp = false;
-                that._handleStageEvent(evt);
-            }
-        }, false);
-
-        this.content.addEventListener('mouseup', function(evt) {
-            that.mouseDown = false;
-            that.mouseUp = true;
-            that.mouseMove = false;
-            that._handleStageEvent(evt);
-            that.clickStart = false;
-        }, false);
-
-        this.content.addEventListener('mouseover', function(evt) {
-            that._handleStageEvent(evt);
-        }, false);
-
-        this.content.addEventListener('mouseout', function(evt) {
-            // if there's a current target shape, run mouseout handlers
-            var targetShape = that.targetShape;
-            if(targetShape) {
-                targetShape._handleEvent('mouseout', evt);
-                that.targetShape = undefined;
-            }
-            that.mousePos = undefined;
-        }, false);
-        /*
-         * mobile events
-         */
-        this.content.addEventListener('touchstart', function(evt) {
-            evt.preventDefault();
-            that.touchStart = true;
-            that.touchEnd = false;
-            that.touchMove = false;
-            that._handleStageEvent(evt);
+        if(timeDiff >= tt) {
             /*
-             * init stage drag and drop
+             * need a setTimeout here because iOS
+             * sometimes triggers touchStart and touchMove
+             * simultaenously which causes event detection issues.
+             * The timeout ensures that touchstart events
+             * are handled first followed by touchmove
              */
-            if(that.attrs.draggable) {
-                that._initDrag();
-            }
-        }, false);
-
-        this.content.addEventListener('touchmove', function(evt) {
-            //throttle touchmove
-            var throttle = that.attrs.throttle;
-            var date = new Date();
-            var time = date.getTime();
-            var timeDiff = time - that.lastEventTime;
-            var tt = 1000 / throttle;
-
-            if(timeDiff >= tt) {
-                /*
-                 * need a setTimeout here because iOS
-                 * sometimes triggers touchStart and touchMove
-                 * simultaenously which causes eventd detection issues.
-                 * The timeout ensures that touchstart events
-                 * are handled first followed by touchmove
-                 */
-                setTimeout(function() {
-                    evt.preventDefault();
-                    that.touchEnd = false;
-                    that.touchMove = true;
-                    that._handleStageEvent(evt);
-                }, 5);
-            }
-        }, false);
-
-        this.content.addEventListener('touchend', function(evt) {
-            that.touchStart = false;
-            that.touchEnd = true;
-            that.touchMove = false;
-            that._handleStageEvent(evt);
-            that.tapStart = false;
-        }, false);
+            setTimeout(function() {
+                evt.preventDefault();
+                that.touchEnd = false;
+                that.touchMove = true;
+                that._handleStageEvent(evt);
+            }, 5);
+        }
     },
     /**
      * set mouse positon for desktop apps
@@ -3992,7 +3993,7 @@ Kinetic.GlobalObject.addGetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontSt
 
 /**
  * set text fill color
- * @name setFontFill
+ * @name setTextFill
  * @methodOf Kinetic.Text.prototype
  * @param {String} textFill
  */
