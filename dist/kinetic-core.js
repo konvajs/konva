@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jun 14 2012
+ * Date: Jun 15 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1583,7 +1583,6 @@ Kinetic.Stage = function(config) {
     this._id = Kinetic.GlobalObject.idCounter++;
     this._buildDOM();
     this._bindContentEvents();
-    this._prepareDrag();
 
     //change events
     this.on('widthChange.kinetic_reserved', function() {
@@ -1971,7 +1970,7 @@ Kinetic.Stage.prototype = {
             }
 
             // handle touchstart
-            if(!isDragging && this.touchStart && !this.touchMove) {
+            else if(!isDragging && this.touchStart && !this.touchMove) {
                 this.touchStart = false;
                 this.tapStart = true;
                 shape._handleEvent('touchstart', evt);
@@ -2027,7 +2026,8 @@ Kinetic.Stage.prototype = {
             }
 
             // handle mousemove and touchmove
-            else if(!isDragging && this.mouseMove) {
+            
+else if(!isDragging && this.mouseMove) {
                 shape._handleEvent('mousemove', evt);
                 return true;
             }
@@ -2158,17 +2158,17 @@ else if(!isDragging && this.touchMove) {
             var pubEvent = events[n];
             // induce scope
             ( function() {
-            	var event = pubEvent;
+                var event = pubEvent;
                 that.content.addEventListener(event, function(evt) {
-                    that['_on' + event](evt);
+                    that['_' + event](evt);
                 }, false);
             }());
         }
     },
-    _onmouseover: function(evt) {
+    _mouseover: function(evt) {
         this._handleStageEvent(evt);
     },
-    _onmouseout: function(evt) {
+    _mouseout: function(evt) {
         // if there's a current target shape, run mouseout handlers
         var targetShape = this.targetShape;
         if(targetShape) {
@@ -2176,8 +2176,11 @@ else if(!isDragging && this.touchMove) {
             this.targetShape = undefined;
         }
         this.mousePos = undefined;
+        
+        // end drag and drop
+        this._endDrag(evt);
     },
-    _onmousemove: function(evt) {
+    _mousemove: function(evt) {
         //throttle mousemove
         var throttle = this.attrs.throttle;
         var date = new Date();
@@ -2190,8 +2193,11 @@ else if(!isDragging && this.touchMove) {
             this.mouseUp = false;
             this._handleStageEvent(evt);
         }
+
+        // start drag and drop
+        this._startDrag(evt);
     },
-    _onmousedown: function(evt) {
+    _mousedown: function(evt) {
         this.mouseDown = true;
         this.mouseUp = false;
         this.mouseMove = false;
@@ -2202,14 +2208,17 @@ else if(!isDragging && this.touchMove) {
             this._initDrag();
         }
     },
-    _onmouseup: function(evt) {
+    _mouseup: function(evt) {
         this.mouseDown = false;
         this.mouseUp = true;
         this.mouseMove = false;
         this._handleStageEvent(evt);
         this.clickStart = false;
+        
+        // end drag and drop
+        this._endDrag(evt);
     },
-    _ontouchstart: function(evt) {
+    _touchstart: function(evt) {
         evt.preventDefault();
         this.touchStart = true;
         this.touchEnd = false;
@@ -2222,14 +2231,17 @@ else if(!isDragging && this.touchMove) {
             this._initDrag();
         }
     },
-    _ontouchend: function(evt) {
+    _touchend: function(evt) {
         this.touchStart = false;
         this.touchEnd = true;
         this.touchMove = false;
         this._handleStageEvent(evt);
         this.tapStart = false;
+        
+        // end drag and drop
+        this._endDrag(evt);
     },
-    _ontouchmove: function(evt) {
+    _touchmove: function(evt) {
         //throttle touchmove
         var that = this;
         var throttle = this.attrs.throttle;
@@ -2253,6 +2265,9 @@ else if(!isDragging && this.touchMove) {
                 that._handleStageEvent(evt);
             }, 5);
         }
+
+        // start drag and drop
+        this._startDrag(evt);
     },
     /**
      * set mouse positon for desktop apps
@@ -2337,80 +2352,73 @@ else if(!isDragging && this.touchMove) {
         go.drag.node = undefined;
     },
     /**
-     * prepare drag and drop
+     * start drag and drop
      */
-    _prepareDrag: function() {
+    _startDrag: function(evt) {
         var that = this;
+        var go = Kinetic.GlobalObject;
+        var node = go.drag.node;
 
-        this._onContent('mousemove touchmove', function(evt) {
-            var go = Kinetic.GlobalObject;
-            var node = go.drag.node;
+        if(node) {
+            var pos = that.getUserPosition();
+            var dc = node.attrs.dragConstraint;
+            var db = node.attrs.dragBounds;
+            var lastNodePos = {
+                x: node.attrs.x,
+                y: node.attrs.y
+            };
 
-            if(node) {
-                var pos = that.getUserPosition();
-                var dc = node.attrs.dragConstraint;
-                var db = node.attrs.dragBounds;
-                var lastNodePos = {
-                    x: node.attrs.x,
-                    y: node.attrs.y
-                };
+            // default
+            var newNodePos = {
+                x: pos.x - go.drag.offset.x,
+                y: pos.y - go.drag.offset.y
+            };
 
-                // default
-                var newNodePos = {
-                    x: pos.x - go.drag.offset.x,
-                    y: pos.y - go.drag.offset.y
-                };
-
-                // bounds overrides
-                if(db.left !== undefined && newNodePos.x < db.left) {
-                    newNodePos.x = db.left;
-                }
-                if(db.right !== undefined && newNodePos.x > db.right) {
-                    newNodePos.x = db.right;
-                }
-                if(db.top !== undefined && newNodePos.y < db.top) {
-                    newNodePos.y = db.top;
-                }
-                if(db.bottom !== undefined && newNodePos.y > db.bottom) {
-                    newNodePos.y = db.bottom;
-                }
-
-                node.setAbsolutePosition(newNodePos);
-
-                // constraint overrides
-                if(dc === 'horizontal') {
-                    node.attrs.y = lastNodePos.y;
-                }
-                else if(dc === 'vertical') {
-                    node.attrs.x = lastNodePos.x;
-                }
-
-                /*
-                 * if dragging and dropping the stage,
-                 * draw all of the layers
-                 */
-                if(go.drag.node.nodeType === 'Stage') {
-                    go.drag.node.draw();
-                }
-
-                else {
-                    go.drag.node.getLayer().draw();
-                }
-
-                if(!go.drag.moving) {
-                    go.drag.moving = true;
-                    // execute dragstart events if defined
-                    go.drag.node._handleEvent('dragstart', evt);
-                }
-
-                // execute user defined ondragmove if defined
-                go.drag.node._handleEvent('dragmove', evt);
+            // bounds overrides
+            if(db.left !== undefined && newNodePos.x < db.left) {
+                newNodePos.x = db.left;
             }
-        }, false);
+            if(db.right !== undefined && newNodePos.x > db.right) {
+                newNodePos.x = db.right;
+            }
+            if(db.top !== undefined && newNodePos.y < db.top) {
+                newNodePos.y = db.top;
+            }
+            if(db.bottom !== undefined && newNodePos.y > db.bottom) {
+                newNodePos.y = db.bottom;
+            }
 
-        this._onContent('mouseup touchend mouseout', function(evt) {
-            that._endDrag(evt);
-        });
+            node.setAbsolutePosition(newNodePos);
+
+            // constraint overrides
+            if(dc === 'horizontal') {
+                node.attrs.y = lastNodePos.y;
+            }
+            else if(dc === 'vertical') {
+                node.attrs.x = lastNodePos.x;
+            }
+
+            /*
+             * if dragging and dropping the stage,
+             * draw all of the layers
+             */
+            if(go.drag.node.nodeType === 'Stage') {
+                go.drag.node.draw();
+            }
+
+            else {
+                go.drag.node.getLayer().draw();
+            }
+
+            if(!go.drag.moving) {
+                go.drag.moving = true;
+                // execute dragstart events if defined
+                go.drag.node._handleEvent('dragstart', evt);
+            }
+
+            // execute user defined ondragmove if defined
+            go.drag.node._handleEvent('dragmove', evt);
+        }
     },
     /**
      * build dom
