@@ -1,9 +1,14 @@
 var numTests = 0;
 var testCounter = null;
 
-function test(condition, message) {
+function test(condition, message, dataUrlTest) {
     if(!condition) {
-        throw new Error(message);
+        if(dataUrlTest) {
+            console.warn(message + ' (NOTE: use Google Chrome for data url comparisons)');
+        }
+        else {
+            throw new Error(message);
+        }
     }
     numTests++;
 
@@ -46,11 +51,11 @@ Test.prototype = {
 
         var testOnlySpecial = false;
 
-		/*
-		 * if a test key has a star in front of it, then
-		 * only run special tests.  This lets us easily run 
-		 * specific tests without running all of them
-		 */
+        /*
+         * if a test key has a star in front of it, then
+         * only run special tests.  This lets us easily run
+         * specific tests without running all of them
+         */
         for(var key in tests) {
             if(key.charAt(0) === '*') {
                 testOnlySpecial = true;

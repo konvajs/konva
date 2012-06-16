@@ -4377,22 +4377,127 @@ Test.prototype.tests = {
         centerX = 300;
 
         var go = Kinetic.GlobalObject;
-        test(go.animations.length === 0, 'should be no animations running');
-        test(stage.animRunning === false, 'animRunning should be false');
 
         rect.transitionTo({
             x: 300,
             duration: 1,
             callback: function() {
                 test(rect.getX() === 300, 'rect x is not 300');
-
-                test(go.animations.length === 0, 'should be no animations running');
-                test(stage.animRunning === false, 'animRunning should be false');
-
                 stage.start();
+            }
+        });
+    },
+    'TRANSITION - stop and resume transition': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 100,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
 
-                test(go.animations.length === 1, 'should be no animations running');
-                test(stage.animRunning === true, 'animRunning should be false');
+        layer.add(rect);
+        stage.add(layer);
+
+        var transFinished = false;
+
+        var trans = rect.transitionTo({
+            duration: 1,
+            x: 400,
+            y: 30,
+            rotation: Math.PI * 2,
+            easing: 'bounce-ease-out',
+            callback: function() {
+                transFinished = true;
+            }
+        });
+
+        setTimeout(function() {
+            trans.stop();
+            test(!transFinished, 'transition should not have finished yet');
+        }, 500);
+        setTimeout(function() {
+            trans.resume();
+            test(!transFinished, 'transition should not have finished yet');
+        }, 1000);
+        setTimeout(function() {
+            test(transFinished, 'transition should be finished by now');
+        }, 2000);
+    },
+    'TRANSITION - transition stage': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 100,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        var trans = stage.transitionTo({
+            duration: 1,
+            x: 400,
+            y: 30,
+            rotation: Math.PI * 2,
+            easing: 'bounce-ease-out',
+            callback: function() {
+                test(stage.getX() === 400, 'stage x should be 400');
+                test(stage.getY() === 30, 'stage y should be 30');
+                test(stage.getRotation() == Math.PI * 2, 'stage rotation should be Math.PI * 2');
+            }
+        });
+    },
+    'TRANSITION - overwrite active transition with new transition': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 100,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        rect.transitionTo({
+            x: 400,
+            y: 30,
+            duration: 500
+        });
+
+        rect.transitionTo({
+            rotation: Math.PI * 2,
+            duration: 1,
+            callback: function() {
+                test(rect.getX() === 100, 'rect x should be 100');
+                test(rect.getY() === 100, 'rect y should be 100');
+                test(rect.getRotation() == Math.PI * 2, 'rect x should be Math.PI * 2');
             }
         });
     }
