@@ -217,6 +217,21 @@ Kinetic.Node.prototype = {
                                 that._setAttr(obj[key], 'x', pos.x);
                                 that._setAttr(obj[key], 'y', pos.y);
                                 break;
+                            case 'radius':
+                                /*
+                                 * root attr radius should be an object
+                                 * while all other radius attrs should be
+                                 * a number
+                                 */
+                                if(level > 0) {
+                                    that._setAttr(obj, key, val);
+                                }
+                                else {
+                                    var pos = go._getXY(val);
+                                    that._setAttr(obj[key], 'x', pos.x);
+                                    that._setAttr(obj[key], 'y', pos.y);
+                                }
+                                break;
                             case 'scale':
                                 var pos = go._getXY(val);
                                 that._setAttr(obj[key], 'x', pos.x);
@@ -234,7 +249,7 @@ Kinetic.Node.prototype = {
                                 that._setAttr(obj[key], 'height', size.height);
                                 break;
                             default:
-                                that._setAttr(obj, key, c[key]);
+                                that._setAttr(obj, key, val);
                                 break;
                         }
 

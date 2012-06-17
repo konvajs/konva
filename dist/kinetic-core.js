@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jun 16 2012
+ * Date: Jun 17 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -601,6 +601,21 @@ Kinetic.Node.prototype = {
                                 that._setAttr(obj[key], 'x', pos.x);
                                 that._setAttr(obj[key], 'y', pos.y);
                                 break;
+                            case 'radius':
+                                /*
+                                 * root attr radius should be an object
+                                 * while all other radius attrs should be
+                                 * a number
+                                 */
+                                if(level > 0) {
+                                    that._setAttr(obj, key, val);
+                                }
+                                else {
+                                    var pos = go._getXY(val);
+                                    that._setAttr(obj[key], 'x', pos.x);
+                                    that._setAttr(obj[key], 'y', pos.y);
+                                }
+                                break;
                             case 'scale':
                                 var pos = go._getXY(val);
                                 that._setAttr(obj[key], 'x', pos.x);
@@ -618,7 +633,7 @@ Kinetic.Node.prototype = {
                                 that._setAttr(obj[key], 'height', size.height);
                                 break;
                             default:
-                                that._setAttr(obj, key, c[key]);
+                                that._setAttr(obj, key, val);
                                 break;
                         }
 
@@ -3093,6 +3108,10 @@ Kinetic.Shape.prototype = {
     },
     /**
      * determines if point is in the shape
+     * @param {Object|Array} point point can be an object containing
+     *  an x and y property, or it can be an array with two elements
+     *  in which the first element is the x component and the second
+     *  element is the y component
      */
     intersects: function() {
         var pos = Kinetic.GlobalObject._getXY(arguments);
@@ -3355,26 +3374,35 @@ Kinetic.GlobalObject.addGetters(Kinetic.Rect, ['width', 'height', 'cornerRadius'
  * @methodOf Kinetic.Rect.prototype
  */
 ///////////////////////////////////////////////////////////////////////
-//  Circle
+//  Ellipse
 ///////////////////////////////////////////////////////////////////////
 /**
- * Circle constructor
+ * Ellipse constructor
  * @constructor
  * @augments Kinetic.Shape
  * @param {Object} config
  */
-Kinetic.Circle = function(config) {
+Kinetic.Ellipse = function(config) {
     this.setDefaultAttrs({
-        radius: 0
+        radius: {
+            x: 0,
+            y: 0
+        }
     });
 
-    this.shapeType = "Circle";
+    this.shapeType = "Ellipse";
 
     config.drawFunc = function() {
         var canvas = this.getCanvas();
         var context = this.getContext();
+        var r = this.getRadius();
         context.beginPath();
-        context.arc(0, 0, this.attrs.radius, 0, Math.PI * 2, true);
+        context.save();
+        if(r.x !== r.y) {
+            context.scale(1, r.y / r.x);
+        }
+        context.arc(0, 0, r.x, 0, Math.PI * 2, true);
+        context.restore();
         context.closePath();
         this.fill();
         this.stroke();
@@ -3382,23 +3410,34 @@ Kinetic.Circle = function(config) {
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
 };
-// extend Shape
-Kinetic.GlobalObject.extend(Kinetic.Circle, Kinetic.Shape);
-// add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Circle, ['radius']);
-Kinetic.GlobalObject.addGetters(Kinetic.Circle, ['radius']);
 
-/**
- * set radius
- * @name setRadius
- * @methodOf Kinetic.Circle.prototype
- * @param {Number} radius
- */
+Kinetic.Ellipse.prototype = {
+    /**
+     * set radius
+     * @param {Number|Object|Array} radius
+     *  radius can be a number, in which the ellipse becomes a circle,
+     *  it can be an object with an x and y component, or it
+     *  can be an array in which the first element is the x component
+     *  and the second element is the y component.  The x component
+     *  defines the horizontal radius and the y component
+     *  defines the vertical radius
+     */
+    setRadius: function() {
+        this.setAttrs({
+            radius: arguments
+        });
+    }
+};
+// extend Shape
+Kinetic.GlobalObject.extend(Kinetic.Ellipse, Kinetic.Shape);
+
+// add setters and getters
+Kinetic.GlobalObject.addGetters(Kinetic.Ellipse, ['radius']);
 
 /**
  * get radius
  * @name getRadius
- * @methodOf Kinetic.Circle.prototype
+ * @methodOf Kinetic.Ellipse.prototype
  */
 ///////////////////////////////////////////////////////////////////////
 //  Image

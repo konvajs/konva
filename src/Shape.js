@@ -321,6 +321,10 @@ Kinetic.Shape.prototype = {
     },
     /**
      * determines if point is in the shape
+     * @param {Object|Array} point point can be an object containing
+     *  an x and y property, or it can be an array with two elements
+     *  in which the first element is the x component and the second
+     *  element is the y component
      */
     intersects: function() {
         var pos = Kinetic.GlobalObject._getXY(arguments);

@@ -8,7 +8,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var Ellipse = new Kinetic.Ellipse({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -17,28 +17,28 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        circle.draggable(true);
+        Ellipse.draggable(true);
 
-        layer.add(circle);
+        layer.add(Ellipse);
         stage.add(layer);
 
         var dragStart = false;
         var dragMove = false;
         var dragEnd = false;
 
-        circle.on('dragstart', function() {
+        Ellipse.on('dragstart', function() {
             dragStart = true;
         });
 
-        circle.on('dragstart', function() {
+        Ellipse.on('dragstart', function() {
             dragStart = true;
         });
 
-        circle.on('dragmove', function() {
+        Ellipse.on('dragmove', function() {
             dragMove = true;
         });
 
-        circle.on('dragend', function() {
+        Ellipse.on('dragend', function() {
             dragEnd = true;
         });
 
@@ -82,15 +82,15 @@ Test.prototype.tests = {
             }, 100);
         });
     },
-    'EVENTS - modify fill stroke and stroke width on hover with circle': function(containerId) {
-        var urls = dataUrls['EVENTS - modify fill stroke and stroke width on hover with circle'];
+    'EVENTS - modify fill stroke and stroke width on hover with Ellipse': function(containerId) {
+        var urls = dataUrls['EVENTS - modify fill stroke and stroke width on hover with Ellipse'];
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var Ellipse = new Kinetic.Ellipse({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -99,21 +99,21 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        circle.on('mouseover', function() {
+        Ellipse.on('mouseover', function() {
             this.setFill('yellow');
             this.setStroke('purple');
             this.setStrokeWidth(20);
             layer.draw();
         });
 
-        circle.on('mouseout', function() {
+        Ellipse.on('mouseout', function() {
             this.setFill('red');
             this.setStroke('black');
             this.setStrokeWidth(4);
             layer.draw();
         });
 
-        layer.add(circle);
+        layer.add(Ellipse);
         stage.add(layer);
 
         stage.toDataURL(function(startDataUrl) {
