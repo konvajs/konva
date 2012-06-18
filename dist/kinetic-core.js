@@ -2914,6 +2914,9 @@ Kinetic.Shape.prototype = {
 
                 context.save();
 
+                if(fill.scale !== undefined) {
+                    context.scale(fill.scale.x, fill.scale.y);
+                }
                 if(fill.offset !== undefined) {
                     context.translate(fill.offset.x, fill.offset.y);
                 }

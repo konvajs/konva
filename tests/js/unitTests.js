@@ -1130,7 +1130,8 @@ Test.prototype.tests = {
                 fill: {
                     image: imageObj,
                     repeat: 'no-repeat',
-                    offset: [-200, -70]
+                    offset: [-200, -70],
+                    scale: 0.7
                 },
                 stroke: 'black',
                 strokeWidth: 4,
