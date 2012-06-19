@@ -1282,6 +1282,24 @@ Test.prototype.tests = {
         layer.add(Ellipse);
         stage.add(layer);
     },
+    'SHAPE - add circle using Circle': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+        layer.add(circle);
+        stage.add(layer);
+    },
     'SHAPE - add ellipse': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

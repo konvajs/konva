@@ -36,6 +36,9 @@ Kinetic.Ellipse = function(config) {
     Kinetic.Shape.apply(this, [config]);
 };
 
+// Circle backwards compatibility
+Kinetic.Circle = Kinetic.Ellipse;
+
 Kinetic.Ellipse.prototype = {
     /**
      * set radius
