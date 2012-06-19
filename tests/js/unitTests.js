@@ -2948,19 +2948,19 @@ Test.prototype.tests = {
             width: 200,
             height: 50,
             fill: 'red',
-            listen: false
+            listening: false
         });
 
         layer.add(rect).add(rect2);
         stage.add(layer);
 
-        test(rect.isListening() === true, 'rect should be listening');
-        rect.listen(false);
-        test(rect.isListening() === false, 'rect should not be listening');
+        test(rect.getListening() === true, 'rect should be listening');
+        rect.setListening(false);
+        test(rect.getListening() === false, 'rect should not be listening');
 
-        test(rect2.isListening() === false, 'rect2 should not be listening');
-        rect2.listen(true);
-        test(rect2.isListening() === true, 'rect2 should be listening');
+        test(rect2.getListening() === false, 'rect2 should not be listening');
+        rect2.setListening(true);
+        test(rect2.getListening() === true, 'rect2 should be listening');
     },
     'NODE - test offset attr change': function(containerId) {
         /*
@@ -4533,7 +4533,7 @@ Test.prototype.tests = {
         });
 
         circle.setDraggable(true);
-       	test(circle.getDraggable(), 'draggable should be true');
+        test(circle.getDraggable(), 'draggable should be true');
         circle.setDraggable(true);
         test(circle.getDraggable(), 'draggable should be true');
         circle.setDraggable(false);

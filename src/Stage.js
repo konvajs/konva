@@ -531,7 +531,7 @@ else if(!isDragging && this.mouseMove) {
         // propapgate backwards through children
         for(var i = children.length - 1; i >= 0; i--) {
             var child = children[i];
-            if(child.attrs.listen) {
+            if(child.getListening()) {
                 if(child.nodeType === 'Shape') {
                     var exit = this._detectEvent(child, evt);
                     if(exit) {
@@ -575,7 +575,7 @@ else if(!isDragging && this.mouseMove) {
         var shapeDetected = false;
         for(var n = this.children.length - 1; n >= 0; n--) {
             var layer = this.children[n];
-            if(layer.isVisible() && n >= 0 && layer.attrs.listen) {
+            if(layer.isVisible() && n >= 0 && layer.getListening()) {
                 if(this._traverseChildren(layer, evt)) {
                     shapeDetected = true;
                     break;

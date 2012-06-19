@@ -395,7 +395,7 @@ window.requestAnimFrame = (function(callback) {
 Kinetic.Node = function(config) {
     this.defaultNodeAttrs = {
         visible: true,
-        listen: true,
+        listening: true,
         name: undefined,
         alpha: 1,
         x: 0,
@@ -860,21 +860,6 @@ Kinetic.Node.prototype = {
         });
     },
     /**
-     * listen or don't listen to events
-     * @param {Boolean} listen
-     */
-    listen: function(listen) {
-        this.setAttrs({
-            listen: listen
-        });
-    },
-    /**
-     * is listening or not
-     */
-    isListening: function() {
-        return this.attrs.listen;
-    },
-    /**
      * move node to top
      */
     moveToTop: function() {
@@ -1200,8 +1185,8 @@ Kinetic.Node.prototype = {
 };
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Node, ['x', 'y', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'draggable', 'dragConstraint', 'dragBounds']);
-Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'draggable', 'offset', 'dragConstraint', 'dragBounds']);
+Kinetic.GlobalObject.addSetters(Kinetic.Node, ['x', 'y', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
+Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'draggable', 'offset', 'dragConstraint', 'dragBounds', 'listening']);
 
 /**
  * set node x position
@@ -1263,6 +1248,13 @@ Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType
  * @config {Number} [top] top bounds position
  * @config {Number} [right] right bounds position
  * @config {Number} [bottom] bottom bounds position
+ */
+
+/**
+ * listen or don't listen to events
+ * @name setListening
+ * @methodOf Kinetic.Node.prototype
+ * @param {Boolean} listening
  */
 
 /**
@@ -1336,6 +1328,12 @@ Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType
 /**
  * get drag bounds
  * @name getDragBounds
+ * @methodOf Kinetic.Node.prototype
+ */
+
+/**
+ * determine if listening to events or not
+ * @name getListening
  * @methodOf Kinetic.Node.prototype
  */
 ///////////////////////////////////////////////////////////////////////
@@ -2099,7 +2097,7 @@ else if(!isDragging && this.mouseMove) {
         // propapgate backwards through children
         for(var i = children.length - 1; i >= 0; i--) {
             var child = children[i];
-            if(child.attrs.listen) {
+            if(child.getListening()) {
                 if(child.nodeType === 'Shape') {
                     var exit = this._detectEvent(child, evt);
                     if(exit) {
@@ -2143,7 +2141,7 @@ else if(!isDragging && this.mouseMove) {
         var shapeDetected = false;
         for(var n = this.children.length - 1; n >= 0; n--) {
             var layer = this.children[n];
-            if(layer.isVisible() && n >= 0 && layer.attrs.listen) {
+            if(layer.isVisible() && n >= 0 && layer.getListening()) {
                 if(this._traverseChildren(layer, evt)) {
                     shapeDetected = true;
                     break;
