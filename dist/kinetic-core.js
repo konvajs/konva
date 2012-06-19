@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jun 17 2012
+ * Date: Jun 18 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1945,6 +1945,7 @@ Kinetic.Stage.prototype = {
         var go = Kinetic.GlobalObject;
         var pos = this.getUserPosition();
         var el = shape.eventListeners;
+        var that = this;
 
         if(this.targetShape && shape._id === this.targetShape._id) {
             this.targetFound = true;
@@ -1972,12 +1973,12 @@ Kinetic.Stage.prototype = {
                     if((!go.drag.moving) || !go.drag.node) {
                         shape._handleEvent('click', evt);
 
-                        if(shape.inDoubleClickWindow) {
+                        if(this.inDoubleClickWindow) {
                             shape._handleEvent('dblclick', evt);
                         }
-                        shape.inDoubleClickWindow = true;
+                        this.inDoubleClickWindow = true;
                         setTimeout(function() {
-                            shape.inDoubleClickWindow = false;
+                            that.inDoubleClickWindow = false;
                         }, this.dblClickWindow);
                     }
                 }
@@ -2005,23 +2006,25 @@ Kinetic.Stage.prototype = {
                     if((!go.drag.moving) || !go.drag.node) {
                         shape._handleEvent('tap', evt);
 
-                        if(shape.inDoubleClickWindow) {
+                        if(this.inDoubleClickWindow) {
                             shape._handleEvent('dbltap', evt);
                         }
-                        shape.inDoubleClickWindow = true;
+                        this.inDoubleClickWindow = true;
                         setTimeout(function() {
-                            shape.inDoubleClickWindow = false;
+                            that.inDoubleClickWindow = false;
                         }, this.dblClickWindow);
                     }
                 }
                 return true;
             }
-
+            else if(!isDragging && this.touchMove) {
+                shape._handleEvent('touchmove', evt);
+                return true;
+            }
             /*
             * NOTE: these event handlers require target shape
             * handling
             */
-
             // handle onmouseover
             else if(!isDragging && this._isNewTarget(shape, evt)) {
                 /*
@@ -2039,16 +2042,10 @@ Kinetic.Stage.prototype = {
                 this._setTarget(shape);
                 return true;
             }
-
             // handle mousemove and touchmove
             
 else if(!isDragging && this.mouseMove) {
                 shape._handleEvent('mousemove', evt);
-                return true;
-            }
-            
-else if(!isDragging && this.touchMove) {
-                shape._handleEvent('touchmove', evt);
                 return true;
             }
 
@@ -2191,7 +2188,7 @@ else if(!isDragging && this.touchMove) {
             this.targetShape = undefined;
         }
         this.mousePos = undefined;
-        
+
         // end drag and drop
         this._endDrag(evt);
     },
@@ -2203,9 +2200,10 @@ else if(!isDragging && this.touchMove) {
         var timeDiff = time - this.lastEventTime;
         var tt = 1000 / throttle;
 
-        if(timeDiff >= tt) {
+        if(timeDiff >= tt || throttle > 200) {
             this.mouseDown = false;
             this.mouseUp = false;
+            this.mouseMove = true;
             this._handleStageEvent(evt);
         }
 
@@ -2229,7 +2227,7 @@ else if(!isDragging && this.touchMove) {
         this.mouseMove = false;
         this._handleStageEvent(evt);
         this.clickStart = false;
-        
+
         // end drag and drop
         this._endDrag(evt);
     },
@@ -2252,7 +2250,7 @@ else if(!isDragging && this.touchMove) {
         this.touchMove = false;
         this._handleStageEvent(evt);
         this.tapStart = false;
-        
+
         // end drag and drop
         this._endDrag(evt);
     },
@@ -2265,20 +2263,11 @@ else if(!isDragging && this.touchMove) {
         var timeDiff = time - this.lastEventTime;
         var tt = 1000 / throttle;
 
-        if(timeDiff >= tt) {
-            /*
-             * need a setTimeout here because iOS
-             * sometimes triggers touchStart and touchMove
-             * simultaenously which causes event detection issues.
-             * The timeout ensures that touchstart events
-             * are handled first followed by touchmove
-             */
-            setTimeout(function() {
-                evt.preventDefault();
-                that.touchEnd = false;
-                that.touchMove = true;
-                that._handleStageEvent(evt);
-            }, 5);
+        if(timeDiff >= tt || throttle > 200) {
+            evt.preventDefault();
+            that.touchEnd = false;
+            that.touchMove = true;
+            that._handleStageEvent(evt);
         }
 
         // start drag and drop
@@ -2648,7 +2637,7 @@ Kinetic.Layer.prototype = {
         var timeDiff = time - this.lastDrawTime;
         var tt = 1000 / throttle;
 
-        if(timeDiff >= tt) {
+        if(timeDiff >= tt || throttle > 200) {
             this._draw();
 
             if(this.drawTimeout !== undefined) {

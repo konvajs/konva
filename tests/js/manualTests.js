@@ -1,4 +1,73 @@
 Test.prototype.tests = {
+    'EVENTS - mousedown mouseup mouseover mouseout mousemove click dblclick / touchstart touchend touchmove tap dbltap': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Ellipse({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        circle.on('mousedown', function() {
+            log('mousedown');
+        });
+
+        circle.on('mouseup', function() {
+            log('mouseup');
+        });
+
+        circle.on('mouseover', function() {
+            log('mouseover');
+        });
+
+        circle.on('mouseout', function() {
+            log('mouseout');
+        });
+
+        circle.on('mousemove', function() {
+            log('mousemove');
+        });
+
+        circle.on('click', function() {
+            log('click');
+        });
+
+        circle.on('dblclick', function() {
+            log('dblclick');
+        });
+        /*
+         * mobile
+         */
+        circle.on('touchstart', function() {
+            log('touchstart');
+        });
+
+        circle.on('touchend', function() {
+            log('touchend');
+        });
+
+        circle.on('touchmove', function() {
+            log('touchmove');
+        });
+
+        circle.on('tap', function(evt) {
+            log('tap');
+        });
+
+        circle.on('dbltap', function() {
+            log('dbltap');
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+    },
     'TRANSITION - transition position and rotation': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -174,75 +243,6 @@ Test.prototype.tests = {
         layer.add(greenBox);
         layer.add(blueBox);
         layer.add(redBox);
-        stage.add(layer);
-    },
-    'EVENTS - mousedown mouseup mouseover mouseout mousemove click dblclick / touchstart touchend touchmove tap dbltap': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var Ellipse = new Kinetic.Ellipse({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-
-        Ellipse.on('mousedown', function() {
-            log('mousedown');
-        });
-
-        Ellipse.on('mouseup', function() {
-            log('mouseup');
-        });
-
-        Ellipse.on('mouseover', function() {
-            log('mouseover');
-        });
-
-        Ellipse.on('mouseout', function() {
-            log('mouseout');
-        });
-
-        Ellipse.on('mousemove', function() {
-            log('mousemove');
-        });
-
-        Ellipse.on('click', function() {
-            log('click');
-        });
-
-        Ellipse.on('dblclick', function() {
-            log('dblclick');
-        });
-        /*
-         * mobile
-         */
-        Ellipse.on('touchstart', function() {
-            log('touchstart');
-        });
-
-        Ellipse.on('touchend', function() {
-            log('touchend');
-        });
-
-        Ellipse.on('touchmove', function() {
-            log('touchmove');
-        });
-
-        Ellipse.on('tap', function(evt) {
-            log('tap');
-        });
-
-        Ellipse.on('dbltap', function() {
-            log('dbltap');
-        });
-
-        layer.add(Ellipse);
         stage.add(layer);
     },
     'EVENTS - modify fill stroke and stroke width on hover with star': function(containerId) {

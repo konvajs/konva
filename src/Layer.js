@@ -42,7 +42,7 @@ Kinetic.Layer.prototype = {
         var timeDiff = time - this.lastDrawTime;
         var tt = 1000 / throttle;
 
-        if(timeDiff >= tt) {
+        if(timeDiff >= tt || throttle > 200) {
             this._draw();
 
             if(this.drawTimeout !== undefined) {
