@@ -4425,7 +4425,7 @@ Test.prototype.tests = {
         var transFinished = false;
 
         var trans = rect.transitionTo({
-            duration: 1,
+            duration: 0.2,
             x: 400,
             y: 30,
             rotation: Math.PI * 2,
@@ -4437,15 +4437,11 @@ Test.prototype.tests = {
 
         setTimeout(function() {
             trans.stop();
-            test(!transFinished, 'transition should not have finished yet');
-        }, 500);
+        }, 100);
         setTimeout(function() {
             trans.resume();
-            test(!transFinished, 'transition should not have finished yet');
-        }, 1000);
-        setTimeout(function() {
-            test(transFinished, 'transition should be finished by now');
-        }, 2000);
+        }, 100);
+
     },
     'TRANSITION - transition stage': function(containerId) {
         var stage = new Kinetic.Stage({

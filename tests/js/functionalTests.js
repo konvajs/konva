@@ -461,5 +461,83 @@ Test.prototype.tests = {
         test(touchend, '12) touchend should be true');
         test(tap, '12) tap should be true');
         test(dbltap, '12) dbltap should be true');
+    },
+    'EVENTS - test group mousedown events': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+
+        var redCircle = new Kinetic.Ellipse({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 80,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            name: 'red'
+        });
+
+        var greenCircle = new Kinetic.Ellipse({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 40,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black',
+            name: 'green'
+        });
+
+        group.add(redCircle);
+        group.add(greenCircle);
+
+        layer.add(group);
+        stage.add(layer);
+
+        var groupMousedowns = 0;
+        var greenCircleMousedowns = 0;
+
+        group.on('mousedown', function() {
+            groupMousedowns++;
+        });
+
+        greenCircle.on('mousedown', function() {
+            greenCircleMousedowns++;
+        });
+
+        stage._mousedown({
+            clientX: 285,
+            clientY: 100
+        });
+
+        test(groupMousedowns === 1, 'groupMousedowns should be 1');
+        test(greenCircleMousedowns === 1, 'greenCircleMousedowns should be 1');
+
+        stage._mousedown({
+            clientX: 332,
+            clientY: 139
+        });
+
+        test(groupMousedowns === 2, 'groupMousedowns should be 2');
+        test(greenCircleMousedowns === 1, 'greenCircleMousedowns should be 1');
+
+        stage._mousedown({
+            clientX: 285,
+            clientY: 92
+        });
+
+        test(groupMousedowns === 3, 'groupMousedowns should be 3');
+        test(greenCircleMousedowns === 2, 'greenCircleMousedowns should be 2');
+
+        stage._mousedown({
+            clientX: 221,
+            clientY: 146
+        });
+
+        test(groupMousedowns === 4, 'groupMousedowns should be 4');
+        test(greenCircleMousedowns === 2, 'greenCircleMousedowns should be 2');
     }
 };
