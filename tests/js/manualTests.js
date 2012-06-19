@@ -314,46 +314,6 @@ Test.prototype.tests = {
         };
         imageObj.src = '../darth-vader.jpg';
     },
-    /*
-     * WARNING: this functional test will only pass if it's hosted on
-     * a webserver due to cross domain security issues
-     */
-    'EVENTS - image pixel detection': function(containerId) {
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            var stage = new Kinetic.Stage({
-                container: containerId,
-                width: 578,
-                height: 200
-            });
-            var layer = new Kinetic.Layer();
-            var darth = new Kinetic.Image({
-                x: 200,
-                y: 40,
-                image: imageObj,
-                detectionType: 'pixel',
-                draggable: true
-            });
-
-            darth.on('mouseover', function() {
-                log('mouseover');
-            });
-
-            darth.on('mouseout', function() {
-                log('mouseout');
-            });
-
-            darth.on('dragend', function() {
-                this.saveData();
-            });
-
-            layer.add(darth);
-            stage.add(layer);
-
-            //darth.save();
-        };
-        imageObj.src = '../lion.png';
-    },
     'EVENTS - star pixel detection': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -409,7 +369,7 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        Ellipse.draggable(true);
+        Ellipse.setDraggable(true);
 
         Ellipse.on('dragstart', function() {
             log('dragstart');
@@ -819,45 +779,6 @@ Test.prototype.tests = {
         layer.add(redEllipse);
         stage.add(layer);
     },
-    'DRAG AND DROP - custom draw func and drag and drop layer': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer({
-            drawFunc: function() {
-                var context = this.getContext();
-                context.beginPath();
-                context.moveTo(200, 50);
-                context.lineTo(420, 80);
-                context.quadraticCurveTo(300, 100, 260, 170);
-                context.closePath();
-                context.fillStyle = 'blue';
-                context.fill();
-            },
-            draggable: true
-        });
-
-        var Ellipse = new Kinetic.Ellipse({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'red'
-        });
-
-        var Ellipse2 = new Kinetic.Ellipse({
-            x: 400,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'green'
-        });
-
-        layer.add(Ellipse);
-        layer.add(Ellipse2);
-
-        stage.add(layer);
-    },
     'DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -938,30 +859,6 @@ Test.prototype.tests = {
          stage.start();
          */
     },
-    'DRAG AND DROP - multiple drag and drop sets with draggable() (Ellipse should not be draggable)': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var Ellipse = new Kinetic.Ellipse({
-            x: 380,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            strokeWidth: 4,
-            fill: 'red',
-            stroke: 'black'
-        });
-
-        Ellipse.draggable(true);
-        Ellipse.draggable(true);
-        Ellipse.draggable(false);
-
-        layer.add(Ellipse);
-        stage.add(layer);
-
-    },
     'DRAG AND DROP - two draggable shapes': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -979,7 +876,7 @@ Test.prototype.tests = {
             //detectionType: 'pixel'
         });
 
-        Ellipse.draggable(true);
+        Ellipse.setDraggable(true);
 
         var Ellipse2 = new Kinetic.Ellipse({
             x: 350,
@@ -1039,8 +936,8 @@ Test.prototype.tests = {
              */
         });
 
-        //stage.draggable(false);
-        //layer.draggable(false);
+        //stage.setDraggable(false);
+        //layer.setDraggable(false);
 
         /*
          stage.on('dragstart', function() {
@@ -1073,12 +970,12 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        Ellipse.draggable(true);
+        Ellipse.setDraggable(true);
 
         layer.add(Ellipse);
         stage.add(layer);
 
-        Ellipse.draggable(false);
+        Ellipse.setDraggable(false);
     },
     'DRAG AND DROP - scale and rotate stage after add layer then drag and drop shape': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1128,7 +1025,7 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        Ellipse.draggable(true);
+        Ellipse.setDraggable(true);
 
         stage.setScale(0.5);
         layer.add(Ellipse);
@@ -1150,7 +1047,7 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        Ellipse.draggable(true);
+        Ellipse.setDraggable(true);
 
         layer.add(Ellipse);
         stage.add(layer);
@@ -1175,7 +1072,7 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        Ellipse.draggable(true);
+        Ellipse.setDraggable(true);
 
         stage.setScale(1.5);
 
@@ -1207,7 +1104,7 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        Ellipse1.draggable(true);
+        Ellipse1.setDraggable(true);
 
         Ellipse2.on('mouseover', function() {
             log('mouseover green Ellipse');

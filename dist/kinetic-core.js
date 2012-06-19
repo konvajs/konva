@@ -936,15 +936,6 @@ Kinetic.Node.prototype = {
         return absAlpha;
     },
     /**
-     * enable or disable drag and drop
-     * @param {Boolean} draggable
-     */
-    draggable: function(draggable) {
-        this.setAttrs({
-            draggable: draggable
-        });
-    },
-    /**
      * determine if node is currently in drag and drop mode
      */
     isDragging: function() {
@@ -1209,8 +1200,8 @@ Kinetic.Node.prototype = {
 };
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Node, ['x', 'y', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'dragConstraint', 'dragBounds']);
-Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'dragConstraint', 'dragBounds']);
+Kinetic.GlobalObject.addSetters(Kinetic.Node, ['x', 'y', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'draggable', 'dragConstraint', 'dragBounds']);
+Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'draggable', 'offset', 'dragConstraint', 'dragBounds']);
 
 /**
  * set node x position
@@ -1247,6 +1238,13 @@ Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType
  * @name setAlpha
  * @methodOf Kinetic.Node.prototype
  * @param {Object} alpha
+ */
+
+/**
+ * set draggable
+ * @name setDraggable
+ * @methodOf Kinetic.Node.prototype
+ * @param {String} draggable
  */
 
 /**
@@ -1320,6 +1318,12 @@ Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType
 /**
  * get offset
  * @name getOffset
+ * @methodOf Kinetic.Node.prototype
+ */
+
+/**
+ * get draggable
+ * @name getDraggable
  * @methodOf Kinetic.Node.prototype
  */
 

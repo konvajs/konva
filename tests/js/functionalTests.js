@@ -18,7 +18,7 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        circle.draggable(true);
+        circle.setDraggable(true);
 
         layer.add(circle);
         stage.add(layer);
@@ -26,10 +26,6 @@ Test.prototype.tests = {
         var dragStart = false;
         var dragMove = false;
         var dragEnd = false;
-
-        circle.on('dragstart', function() {
-            dragStart = true;
-        });
 
         circle.on('dragstart', function() {
             dragStart = true;
@@ -74,6 +70,73 @@ Test.prototype.tests = {
             test(dragStart, 'dragstart event was not triggered');
             test(dragMove, 'dragmove event was not triggered');
             test(dragEnd, 'dragend event was not triggered');
+
+            stage.toDataURL(function(endDataUrl) {
+                test(urls[1] === endDataUrl, 'end data url is incorrect');
+            });
+        });
+    },
+    'DRAG AND DROP - drag and drop layer': function(containerId) {
+        var urls = dataUrls['DRAG AND DROP - drag and drop layer'];
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            throttle: 999
+        });
+        var layer = new Kinetic.Layer({
+            drawFunc: function() {
+                var context = this.getContext();
+                context.beginPath();
+                context.moveTo(200, 50);
+                context.lineTo(420, 80);
+                context.quadraticCurveTo(300, 100, 260, 170);
+                context.closePath();
+                context.fillStyle = 'blue';
+                context.fill();
+            },
+            draggable: true
+        });
+
+        var circle1 = new Kinetic.Ellipse({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'red'
+        });
+
+        var circle2 = new Kinetic.Ellipse({
+            x: 400,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green'
+        });
+
+        layer.add(circle1);
+        layer.add(circle2);
+
+        stage.add(layer);
+
+        stage.toDataURL(function(startDataUrl) {
+            test(urls[0] === startDataUrl, 'start data url is incorrect');
+
+            /*
+             * simulate drag and drop
+             */
+            stage._mousedown({
+                clientX: 399,
+                clientY: 96
+            });
+
+            stage._mousemove({
+                clientX: 210,
+                clientY: 109
+            });
+
+            stage._mouseup({
+                clientX: 210,
+                clientY: 109
+            });
 
             stage.toDataURL(function(endDataUrl) {
                 test(urls[1] === endDataUrl, 'end data url is incorrect');
