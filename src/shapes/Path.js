@@ -63,7 +63,8 @@ Kinetic.Path = function(config) {
 
     this.dataArray = this.getDataArray();
 
-    this.on('dataArrayChange', function() {
+    this.on('dataChange', function() {
+        console.log('changed')
         that.dataArray = that.getDataArray();
     });
 };
@@ -103,6 +104,11 @@ Kinetic.Path.prototype = {
 
         // command string
         var cs = this.attrs.data;
+
+        // return early if data is not defined
+        if(!this.attrs.data) {
+            return [];
+        }
         // command chars
         var cc = ['m', 'M', 'l', 'L', 'v', 'V', 'h', 'H', 'z', 'Z', 'c', 'C', 'q', 'Q', 't', 'T', 's', 'S', 'a', 'A'];
         // convert white spaces to commas

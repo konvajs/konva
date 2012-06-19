@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jun 18 2012
+ * Date: Jun 19 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -4376,7 +4376,8 @@ Kinetic.Path = function(config) {
 
     this.dataArray = this.getDataArray();
 
-    this.on('dataArrayChange', function() {
+    this.on('dataChange', function() {
+        console.log('changed')
         that.dataArray = that.getDataArray();
     });
 };
@@ -4416,6 +4417,11 @@ Kinetic.Path.prototype = {
 
         // command string
         var cs = this.attrs.data;
+
+        // return early if data is not defined
+        if(!this.attrs.data) {
+            return [];
+        }
         // command chars
         var cc = ['m', 'M', 'l', 'L', 'v', 'V', 'h', 'H', 'z', 'Z', 'c', 'C', 'q', 'Q', 't', 'T', 's', 'S', 'a', 'A'];
         // convert white spaces to commas
