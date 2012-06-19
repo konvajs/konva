@@ -5,7 +5,8 @@ Test.prototype.tests = {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
-            height: 200
+            height: 200,
+            throttle: 999
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Ellipse({
@@ -56,30 +57,27 @@ Test.prototype.tests = {
             test(!dragMove, 'dragmove event should not have been triggered');
             test(!dragEnd, 'dragend event should not have been triggered');
 
-            setTimeout(function() {
-                stage._mousemove({
-                    clientX: 100,
-                    clientY: 98
-                });
+            stage._mousemove({
+                clientX: 100,
+                clientY: 98
+            });
 
-                test(dragStart, 'dragstart event was not triggered');
-                test(dragMove, 'dragmove event was not triggered');
-                test(!dragEnd, 'dragend event should not have been triggered');
-            }, 50);
-            setTimeout(function() {
-                stage._mouseup({
-                    clientX: 100,
-                    clientY: 98
-                });
+            test(dragStart, 'dragstart event was not triggered');
+            test(dragMove, 'dragmove event was not triggered');
+            test(!dragEnd, 'dragend event should not have been triggered');
 
-                test(dragStart, 'dragstart event was not triggered');
-                test(dragMove, 'dragmove event was not triggered');
-                test(dragEnd, 'dragend event was not triggered');
+            stage._mouseup({
+                clientX: 100,
+                clientY: 98
+            });
 
-                stage.toDataURL(function(endDataUrl) {
-                    //test(urls[1] === endDataUrl, 'end data url is incorrect');
-                });
-            }, 100);
+            test(dragStart, 'dragstart event was not triggered');
+            test(dragMove, 'dragmove event was not triggered');
+            test(dragEnd, 'dragend event was not triggered');
+
+            stage.toDataURL(function(endDataUrl) {
+                test(urls[1] === endDataUrl, 'end data url is incorrect');
+            });
         });
     },
     'EVENTS - modify fill stroke and stroke width on hover with circle': function(containerId) {
@@ -117,7 +115,7 @@ Test.prototype.tests = {
         stage.add(layer);
 
         stage.toDataURL(function(startDataUrl) {
-            //test(startDataUrl === urls[0], 'start data url is incorrect');
+            test(startDataUrl === urls[0], 'start data url is incorrect');
 
             stage._mousemove({
                 clientX: 377,
@@ -125,7 +123,7 @@ Test.prototype.tests = {
             });
 
             stage.toDataURL(function(endDataUrl) {
-                //test(urls[1] === endDataUrl, 'end data url is incorrect');
+                test(urls[1] === endDataUrl, 'end data url is incorrect');
             });
         });
     },
