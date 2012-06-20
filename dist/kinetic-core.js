@@ -420,12 +420,24 @@ Kinetic.Node = function(config) {
     this.setAttrs(config);
 
     // bind events
-    this.on('draggableChange.kinetic_reserved', function() {
+    this.on('draggableChange.kinetic', function() {
         if(this.attrs.draggable) {
             this._listenDrag();
         }
         else {
+            // remove event listeners
             this._dragCleanup();
+
+            /*
+             * force drag and drop to end
+             * if this node is currently in
+             * drag and drop mode
+             */
+            var stage = this.getStage();
+            var go = Kinetic.GlobalObject;
+            if(stage && go.drag.node && go.drag.node._id === this._id) {
+                stage._endDrag();
+            }
         }
     });
     /*
@@ -1118,7 +1130,7 @@ Kinetic.Node.prototype = {
         this._dragCleanup();
         var go = Kinetic.GlobalObject;
         var that = this;
-        this.on('mousedown.initdrag touchstart.initdrag', function(evt) {
+        this.on('mousedown.kinetic_initdrag touchstart.kinetic_initdrag', function(evt) {
             that._initDrag();
         });
     },
@@ -1139,8 +1151,8 @@ Kinetic.Node.prototype = {
      * remove drag and drop event listener
      */
     _dragCleanup: function() {
-        this.off('mousedown.initdrag');
-        this.off('touchstart.initdrag');
+        this.off('mousedown.kinetic_initdrag');
+        this.off('touchstart.kinetic_initdrag');
     },
     /**
      * handle node event
@@ -1602,11 +1614,11 @@ Kinetic.Stage = function(config) {
     this._bindContentEvents();
 
     //change events
-    this.on('widthChange.kinetic_reserved', function() {
+    this.on('widthChange.kinetic', function() {
         this._resizeDOM();
     });
 
-    this.on('heightChange.kinetic_reserved', function() {
+    this.on('heightChange.kinetic', function() {
         this._resizeDOM();
     });
     var go = Kinetic.GlobalObject;
@@ -2350,6 +2362,7 @@ else if(!isDragging && this.mouseMove) {
     _endDrag: function(evt) {
         var go = Kinetic.GlobalObject;
         if(go.drag.node) {
+            // handle dragend
             if(go.drag.moving) {
                 go.drag.moving = false;
                 go.drag.node._handleEvent('dragend', evt);

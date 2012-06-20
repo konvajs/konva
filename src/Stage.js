@@ -36,11 +36,11 @@ Kinetic.Stage = function(config) {
     this._bindContentEvents();
 
     //change events
-    this.on('widthChange.kinetic_reserved', function() {
+    this.on('widthChange.kinetic', function() {
         this._resizeDOM();
     });
 
-    this.on('heightChange.kinetic_reserved', function() {
+    this.on('heightChange.kinetic', function() {
         this._resizeDOM();
     });
     var go = Kinetic.GlobalObject;
@@ -784,6 +784,7 @@ else if(!isDragging && this.mouseMove) {
     _endDrag: function(evt) {
         var go = Kinetic.GlobalObject;
         if(go.drag.node) {
+            // handle dragend
             if(go.drag.moving) {
                 go.drag.moving = false;
                 go.drag.node._handleEvent('dragend', evt);

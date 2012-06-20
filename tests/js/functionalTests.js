@@ -76,6 +76,68 @@ Test.prototype.tests = {
             });
         });
     },
+    'DRAG AND DROP - cancel drag and drop by setting draggable to false': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            throttle: 999
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Ellipse({
+            x: 380,
+            y: 100,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            draggable: true
+        });
+
+        var dragStart = false;
+        var dragMove = false;
+        var dragEnd = false;
+
+        circle.on('dragstart', function() {
+            dragStart = true;
+        });
+
+        circle.on('dragmove', function() {
+            dragMove = true;
+        });
+
+        circle.on('dragend', function() {
+            dragEnd = true;
+        });
+
+        circle.on('mousedown', function() {
+            circle.setDraggable(false);
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        /*
+         * simulate drag and drop
+         */
+        stage._mousedown({
+            clientX: 380,
+            clientY: 100
+        });
+
+        stage._mousemove({
+            clientX: 100,
+            clientY: 100
+        });
+
+        stage._mouseup({
+            clientX: 100,
+            clientY: 100
+        });
+
+        test(circle.getPosition().x === 380, 'circle x should be 380');
+        test(circle.getPosition().y === 100, 'circle y should be 100');
+    },
     'DRAG AND DROP - drag and drop layer': function(containerId) {
         var urls = dataUrls['DRAG AND DROP - drag and drop layer'];
         var stage = new Kinetic.Stage({
