@@ -34,8 +34,14 @@ Kinetic.Ellipse = function(config) {
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
-};
 
+    this._convertRadius();
+
+    var that = this;
+    this.on('radiusChange', function() {
+        that._convertRadius();
+    });
+};
 // Circle backwards compatibility
 Kinetic.Circle = Kinetic.Ellipse;
 
@@ -52,9 +58,24 @@ Kinetic.Ellipse.prototype = {
      */
     setRadius: function() {
         this.setAttrs({
-            radius: arguments
+            radius: Array.prototype.slice.call(arguments)
         });
-    }
+    },
+    /**
+     * converts numeric radius into an object
+     */
+    _convertRadius: function() {
+        var go = Kinetic.GlobalObject;
+        var radius = this.getRadius();
+        // if radius is already an object then return
+        if(go._isObject(radius)) {
+            return false;
+        }
+        var pos = go._getXY(radius);
+        this.setAttrs({
+        	radius: pos
+        });
+    } 
 };
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Ellipse, Kinetic.Shape);

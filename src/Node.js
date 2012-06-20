@@ -229,21 +229,6 @@ Kinetic.Node.prototype = {
                                 that._setAttr(obj[key], 'x', pos.x);
                                 that._setAttr(obj[key], 'y', pos.y);
                                 break;
-                            case 'radius':
-                                /*
-                                 * root attr radius should be an object
-                                 * while all other radius attrs should be
-                                 * a number
-                                 */
-                                if(level > 0) {
-                                    that._setAttr(obj, key, val);
-                                }
-                                else {
-                                    var pos = go._getXY(val);
-                                    that._setAttr(obj[key], 'x', pos.x);
-                                    that._setAttr(obj[key], 'y', pos.y);
-                                }
-                                break;
                             case 'scale':
                                 var pos = go._getXY(val);
                                 that._setAttr(obj[key], 'x', pos.x);
@@ -363,7 +348,7 @@ Kinetic.Node.prototype = {
      */
     setScale: function() {
         this.setAttrs({
-            scale: arguments
+            scale: Array.prototype.slice.call(arguments)
         });
     },
     /**
@@ -371,7 +356,7 @@ Kinetic.Node.prototype = {
      * @param {Object} point
      */
     setPosition: function() {
-        var pos = Kinetic.GlobalObject._getXY(arguments);
+        var pos = Kinetic.GlobalObject._getXY(Array.prototype.slice.call(arguments));
         this.setAttrs(pos);
     },
     /**
@@ -395,7 +380,7 @@ Kinetic.Node.prototype = {
      *  y property
      */
     setAbsolutePosition: function() {
-        var pos = Kinetic.GlobalObject._getXY(arguments);
+        var pos = Kinetic.GlobalObject._getXY(Array.prototype.slice.call(arguments));
         /*
          * save rotation and scale and
          * then remove them from the transform
@@ -438,7 +423,7 @@ Kinetic.Node.prototype = {
      * move node by an amount
      */
     move: function() {
-        var pos = Kinetic.GlobalObject._getXY(arguments);
+        var pos = Kinetic.GlobalObject._getXY(Array.prototype.slice.call(arguments));
 
         var x = this.getX();
         var y = this.getY();
@@ -618,7 +603,7 @@ Kinetic.Node.prototype = {
      */
     setOffset: function() {
         this.setAttrs({
-            offset: arguments
+            offset: Array.prototype.slice.call(arguments)
         });
     },
     /**

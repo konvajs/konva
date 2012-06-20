@@ -140,12 +140,10 @@ Kinetic.GlobalObject = {
         return !!(obj && obj.constructor && obj.call && obj.apply);
     },
     _isArray: function(obj) {
-        return obj.length !== undefined;
-        //return Object.prototype.toString.call(obj) == '[object Array]';
+        return Object.prototype.toString.call(obj) == '[object Array]';
     },
     _isObject: function(obj) {
-        return ( typeof obj == 'object');
-        //return obj === Object(obj);
+        return (obj !== undefined && obj.constructor == Object);
     },
     _isNumber: function(obj) {
         return Object.prototype.toString.call(obj) == '[object Number]';

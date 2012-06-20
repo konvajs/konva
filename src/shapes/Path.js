@@ -64,7 +64,6 @@ Kinetic.Path = function(config) {
     this.dataArray = this.getDataArray();
 
     this.on('dataChange', function() {
-        console.log('changed')
         that.dataArray = that.getDataArray();
     });
 };

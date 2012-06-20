@@ -242,7 +242,7 @@ Kinetic.Shape.prototype = {
         var appliedShadow = false;
         var context = this.getContext();
         context.save();
-        var a = arguments;
+        var a = Array.prototype.slice.call(arguments);
 
         if(a.length === 5 || a.length === 9) {
             if(!this.appliedShadow) {
@@ -261,7 +261,7 @@ Kinetic.Shape.prototype = {
         context.restore();
 
         if(appliedShadow) {
-            this.drawImage.apply(this, arguments);
+            this.drawImage.apply(this, a);
         }
     },
     /**
@@ -330,7 +330,7 @@ Kinetic.Shape.prototype = {
      *  element is the y component
      */
     intersects: function() {
-        var pos = Kinetic.GlobalObject._getXY(arguments);
+        var pos = Kinetic.GlobalObject._getXY(Array.prototype.slice.call(arguments));
         var stage = this.getStage();
 
         if(this.attrs.detectionType === 'path') {

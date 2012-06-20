@@ -93,7 +93,7 @@ Kinetic.Stage.prototype = {
      */
     setSize: function() {
         // set stage dimensions
-        var size = Kinetic.GlobalObject._getSize(arguments);
+        var size = Kinetic.GlobalObject._getSize(Array.prototype.slice.call(arguments));
         this.setAttrs(size);
     },
     /**
@@ -295,7 +295,7 @@ Kinetic.Stage.prototype = {
      * @param {Object} point
      */
     getIntersections: function() {
-        var pos = Kinetic.GlobalObject._getXY(arguments);
+        var pos = Kinetic.GlobalObject._getXY(Array.prototype.slice.call(arguments));
         var arr = [];
         var shapes = this.get('Shape');
 

@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jun 19 2012
+ * Date: Jun 20 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -168,12 +168,10 @@ Kinetic.GlobalObject = {
         return !!(obj && obj.constructor && obj.call && obj.apply);
     },
     _isArray: function(obj) {
-        return obj.length !== undefined;
-        //return Object.prototype.toString.call(obj) == '[object Array]';
+        return Object.prototype.toString.call(obj) == '[object Array]';
     },
     _isObject: function(obj) {
-        return ( typeof obj == 'object');
-        //return obj === Object(obj);
+        return (obj !== undefined && obj.constructor == Object);
     },
     _isNumber: function(obj) {
         return Object.prototype.toString.call(obj) == '[object Number]';
@@ -613,21 +611,6 @@ Kinetic.Node.prototype = {
                                 that._setAttr(obj[key], 'x', pos.x);
                                 that._setAttr(obj[key], 'y', pos.y);
                                 break;
-                            case 'radius':
-                                /*
-                                 * root attr radius should be an object
-                                 * while all other radius attrs should be
-                                 * a number
-                                 */
-                                if(level > 0) {
-                                    that._setAttr(obj, key, val);
-                                }
-                                else {
-                                    var pos = go._getXY(val);
-                                    that._setAttr(obj[key], 'x', pos.x);
-                                    that._setAttr(obj[key], 'y', pos.y);
-                                }
-                                break;
                             case 'scale':
                                 var pos = go._getXY(val);
                                 that._setAttr(obj[key], 'x', pos.x);
@@ -747,7 +730,7 @@ Kinetic.Node.prototype = {
      */
     setScale: function() {
         this.setAttrs({
-            scale: arguments
+            scale: Array.prototype.slice.call(arguments)
         });
     },
     /**
@@ -755,7 +738,7 @@ Kinetic.Node.prototype = {
      * @param {Object} point
      */
     setPosition: function() {
-        var pos = Kinetic.GlobalObject._getXY(arguments);
+        var pos = Kinetic.GlobalObject._getXY(Array.prototype.slice.call(arguments));
         this.setAttrs(pos);
     },
     /**
@@ -779,7 +762,7 @@ Kinetic.Node.prototype = {
      *  y property
      */
     setAbsolutePosition: function() {
-        var pos = Kinetic.GlobalObject._getXY(arguments);
+        var pos = Kinetic.GlobalObject._getXY(Array.prototype.slice.call(arguments));
         /*
          * save rotation and scale and
          * then remove them from the transform
@@ -822,7 +805,7 @@ Kinetic.Node.prototype = {
      * move node by an amount
      */
     move: function() {
-        var pos = Kinetic.GlobalObject._getXY(arguments);
+        var pos = Kinetic.GlobalObject._getXY(Array.prototype.slice.call(arguments));
 
         var x = this.getX();
         var y = this.getY();
@@ -1002,7 +985,7 @@ Kinetic.Node.prototype = {
      */
     setOffset: function() {
         this.setAttrs({
-            offset: arguments
+            offset: Array.prototype.slice.call(arguments)
         });
     },
     /**
@@ -1671,7 +1654,7 @@ Kinetic.Stage.prototype = {
      */
     setSize: function() {
         // set stage dimensions
-        var size = Kinetic.GlobalObject._getSize(arguments);
+        var size = Kinetic.GlobalObject._getSize(Array.prototype.slice.call(arguments));
         this.setAttrs(size);
     },
     /**
@@ -1873,7 +1856,7 @@ Kinetic.Stage.prototype = {
      * @param {Object} point
      */
     getIntersections: function() {
-        var pos = Kinetic.GlobalObject._getXY(arguments);
+        var pos = Kinetic.GlobalObject._getXY(Array.prototype.slice.call(arguments));
         var arr = [];
         var shapes = this.get('Shape');
 
@@ -3033,7 +3016,7 @@ Kinetic.Shape.prototype = {
         var appliedShadow = false;
         var context = this.getContext();
         context.save();
-        var a = arguments;
+        var a = Array.prototype.slice.call(arguments);
 
         if(a.length === 5 || a.length === 9) {
             if(!this.appliedShadow) {
@@ -3052,7 +3035,7 @@ Kinetic.Shape.prototype = {
         context.restore();
 
         if(appliedShadow) {
-            this.drawImage.apply(this, arguments);
+            this.drawImage.apply(this, a);
         }
     },
     /**
@@ -3121,7 +3104,7 @@ Kinetic.Shape.prototype = {
      *  element is the y component
      */
     intersects: function() {
-        var pos = Kinetic.GlobalObject._getXY(arguments);
+        var pos = Kinetic.GlobalObject._getXY(Array.prototype.slice.call(arguments));
         var stage = this.getStage();
 
         if(this.attrs.detectionType === 'path') {
@@ -3321,7 +3304,7 @@ Kinetic.Rect.prototype = {
      * set width and height
      */
     setSize: function() {
-        var size = Kinetic.GlobalObject._getSize(arguments);
+        var size = Kinetic.GlobalObject._getSize(Array.prototype.slice.call(arguments));
         this.setAttrs(size);
     },
     /**
@@ -3416,8 +3399,14 @@ Kinetic.Ellipse = function(config) {
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
-};
 
+    this._convertRadius();
+
+    var that = this;
+    this.on('radiusChange', function() {
+        that._convertRadius();
+    });
+};
 // Circle backwards compatibility
 Kinetic.Circle = Kinetic.Ellipse;
 
@@ -3434,9 +3423,24 @@ Kinetic.Ellipse.prototype = {
      */
     setRadius: function() {
         this.setAttrs({
-            radius: arguments
+            radius: Array.prototype.slice.call(arguments)
         });
-    }
+    },
+    /**
+     * converts numeric radius into an object
+     */
+    _convertRadius: function() {
+        var go = Kinetic.GlobalObject;
+        var radius = this.getRadius();
+        // if radius is already an object then return
+        if(go._isObject(radius)) {
+            return false;
+        }
+        var pos = go._getXY(radius);
+        this.setAttrs({
+        	radius: pos
+        });
+    } 
 };
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Ellipse, Kinetic.Shape);
@@ -3507,7 +3511,7 @@ Kinetic.Image.prototype = {
      * set width and height
      */
     setSize: function() {
-        var size = Kinetic.GlobalObject._getSize(arguments);
+        var size = Kinetic.GlobalObject._getSize(Array.prototype.slice.call(arguments));
         this.setAttrs(size);
     },
     /**
@@ -3524,7 +3528,7 @@ Kinetic.Image.prototype = {
      */
     setCrop: function() {
         this.setAttrs({
-            crop: arguments
+            crop: Array.prototype.slice.call(arguments)
         });
     }
 };
@@ -3609,6 +3613,12 @@ Kinetic.Sprite = function(config) {
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
+
+    var that = this;
+    this.on('animationChange', function() {
+        // reset index when animation changes
+        that.setIndex(0);
+    });
 };
 /*
  * Sprite methods
@@ -4390,7 +4400,6 @@ Kinetic.Path = function(config) {
     this.dataArray = this.getDataArray();
 
     this.on('dataChange', function() {
-        console.log('changed')
         that.dataArray = that.getDataArray();
     });
 };

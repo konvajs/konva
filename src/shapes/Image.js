@@ -56,7 +56,7 @@ Kinetic.Image.prototype = {
      * set width and height
      */
     setSize: function() {
-        var size = Kinetic.GlobalObject._getSize(arguments);
+        var size = Kinetic.GlobalObject._getSize(Array.prototype.slice.call(arguments));
         this.setAttrs(size);
     },
     /**
@@ -73,7 +73,7 @@ Kinetic.Image.prototype = {
      */
     setCrop: function() {
         this.setAttrs({
-            crop: arguments
+            crop: Array.prototype.slice.call(arguments)
         });
     }
 };

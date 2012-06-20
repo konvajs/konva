@@ -29,6 +29,12 @@ Kinetic.Sprite = function(config) {
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
+
+    var that = this;
+    this.on('animationChange', function() {
+        // reset index when animation changes
+        that.setIndex(0);
+    });
 };
 /*
  * Sprite methods

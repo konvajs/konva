@@ -36,7 +36,7 @@ Test.prototype.tests = {
             name: 'myCircle'
         });
 
-        test(stage.getSize().width === 578 && stage.getSize().height === 200, 'stage size should be 1 x 2');
+        test(stage.getSize().width === 578 && stage.getSize().height === 200, 'stage size should be 578 x 200');
         stage.setSize(1, 2);
         test(stage.getSize().width === 1 && stage.getSize().height === 2, 'stage size should be 1 x 2');
         stage.setSize(3);
