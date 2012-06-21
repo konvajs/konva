@@ -159,7 +159,7 @@ Kinetic.GlobalObject = {
         }
     },
     /*
-     * cherry-picked and modified utilities from underscore.js
+     * cherry-picked utilities from underscore.js
      */
     _isElement: function(obj) {
         return !!(obj && obj.nodeType == 1);
@@ -171,6 +171,7 @@ Kinetic.GlobalObject = {
         return Object.prototype.toString.call(obj) == '[object Array]';
     },
     _isObject: function(obj) {
+        //return obj === Object(obj);
         return (obj !== undefined && obj.constructor == Object);
     },
     _isNumber: function(obj) {

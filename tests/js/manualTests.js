@@ -390,7 +390,7 @@ Test.prototype.tests = {
         layer.add(Ellipse);
         stage.add(layer);
     },
-    '*EVENTS - move mouse from shape to another shape in same layer': function(containerId) {
+    'EVENTS - move mouse from shape to another shape in same layer': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
