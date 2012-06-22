@@ -1725,17 +1725,15 @@ Kinetic.Stage.prototype = {
         function addNode(node) {
             var obj = {};
 
-            var cleanAttrs = node.attrs;
+            obj.attrs = {};
 
-            // remove function, image, DOM, and objects with methods
-            for(var key in cleanAttrs) {
-                var val = cleanAttrs[key];
-                if(go._isFunction(val) || go._isElement(val) || go._hasMethods(val)) {
-                    cleanAttrs[key] = undefined;
+            // serialize only attributes that are not function, image, DOM, or objects with methods
+            for(var key in node.attrs) {
+                var val = node.attrs[key];
+                if(!go._isFunction(val) && !go._isElement(val) && !go._hasMethods(val)) {
+                    obj.attrs[key] = val;
                 }
             }
-
-            obj.attrs = cleanAttrs;
 
             obj.nodeType = node.nodeType;
             obj.shapeType = node.shapeType;
