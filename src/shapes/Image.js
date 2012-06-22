@@ -19,9 +19,9 @@ Kinetic.Image = function(config) {
 
     this.shapeType = "Image";
     config.drawFunc = function() {
-        if(this.attrs.image !== undefined) {
-            var width = this.attrs.width !== undefined ? this.attrs.width : this.attrs.image.width;
-            var height = this.attrs.height !== undefined ? this.attrs.height : this.attrs.image.height;
+        if(!!this.attrs.image) {
+            var width = !!this.attrs.width ? this.attrs.width : this.attrs.image.width;
+            var height = !!this.attrs.height ? this.attrs.height : this.attrs.image.height;
             var cropX = this.attrs.crop.x;
             var cropY = this.attrs.crop.y;
             var cropWidth = this.attrs.crop.width;
@@ -36,7 +36,7 @@ Kinetic.Image = function(config) {
             this.stroke();
 
             // if cropping
-            if(cropWidth !== undefined && cropHeight !== undefined) {
+            if(!!cropWidth && !!cropHeight) {
                 this.drawImage(this.attrs.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height);
             }
             // no cropping

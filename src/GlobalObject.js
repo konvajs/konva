@@ -144,11 +144,14 @@ Kinetic.GlobalObject = {
     },
     _isObject: function(obj) {
         //return obj === Object(obj);
-        return (obj !== undefined && obj.constructor == Object);
+        return (!!obj && obj.constructor == Object);
     },
     _isNumber: function(obj) {
         return Object.prototype.toString.call(obj) == '[object Number]';
     },
+    /*
+     * other utils
+     */
     _hasMethods: function(obj) {
         var names = [];
         for(var key in obj) {

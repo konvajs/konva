@@ -180,7 +180,6 @@ Kinetic.Node.prototype = {
 
         // set properties from config
         if(config !== undefined) {
-
             function setAttrs(obj, c, level) {
                 for(var key in c) {
                     var val = c[key];

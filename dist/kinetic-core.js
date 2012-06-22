@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jun 21 2012
+ * Date: Jun 22 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -172,11 +172,14 @@ Kinetic.GlobalObject = {
     },
     _isObject: function(obj) {
         //return obj === Object(obj);
-        return (obj !== undefined && obj.constructor == Object);
+        return (!!obj && obj.constructor == Object);
     },
     _isNumber: function(obj) {
         return Object.prototype.toString.call(obj) == '[object Number]';
     },
+    /*
+     * other utils
+     */
     _hasMethods: function(obj) {
         var names = [];
         for(var key in obj) {
@@ -563,7 +566,6 @@ Kinetic.Node.prototype = {
 
         // set properties from config
         if(config !== undefined) {
-
             function setAttrs(obj, c, level) {
                 for(var key in c) {
                     var val = c[key];
@@ -2792,10 +2794,6 @@ Kinetic.GlobalObject.extend(Kinetic.Group, Kinetic.Node);
  */
 Kinetic.Shape = function(config) {
     this.setDefaultAttrs({
-        fill: undefined,
-        stroke: undefined,
-        strokeWidth: undefined,
-        lineJoin: undefined,
         detectionType: 'path',
         shadow: {
             blur: 10,
@@ -2844,6 +2842,7 @@ Kinetic.Shape.prototype = {
      * shadows if needed
      */
     stroke: function() {
+        var go = Kinetic.GlobalObject;
         var appliedShadow = false;
         var context = this.getContext();
         context.save();
@@ -2894,16 +2893,16 @@ Kinetic.Shape.prototype = {
                 context.fill();
             }
             // pattern
-            else if(fill.image !== undefined) {
-                var repeat = fill.repeat === undefined ? 'repeat' : fill.repeat;
+            else if(!!fill.image) {
+                var repeat = !fill.repeat ? 'repeat' : fill.repeat;
                 f = context.createPattern(fill.image, repeat);
 
                 context.save();
 
-                if(fill.scale !== undefined) {
+                if(!!fill.scale) {
                     context.scale(fill.scale.x, fill.scale.y);
                 }
-                if(fill.offset !== undefined) {
+                if(!!fill.offset) {
                     context.translate(fill.offset.x, fill.offset.y);
                 }
 
@@ -2912,7 +2911,7 @@ Kinetic.Shape.prototype = {
                 context.restore();
             }
             // linear gradient
-            else if(s.radius === undefined && e.radius === undefined) {
+            else if(!s.radius && !e.radius) {
                 var context = this.getContext();
                 var grd = context.createLinearGradient(s.x, s.y, e.x, e.y);
                 var colorStops = fill.colorStops;
@@ -2926,7 +2925,7 @@ Kinetic.Shape.prototype = {
                 context.fill();
             }
             // radial gradient
-            else if(s.radius !== undefined && e.radius !== undefined) {
+            else if(!!s.radius && !!e.radius) {
                 var context = this.getContext();
                 var grd = context.createRadialGradient(s.x, s.y, s.radius, e.x, e.y, e.radius);
                 var colorStops = fill.colorStops;
@@ -2961,7 +2960,7 @@ Kinetic.Shape.prototype = {
         var appliedShadow = false;
         var context = this.getContext();
         context.save();
-        if(this.attrs.textFill !== undefined) {
+        if(!!this.attrs.textFill) {
             if(!this.appliedShadow) {
                 appliedShadow = this._applyShadow();
             }
@@ -2985,16 +2984,16 @@ Kinetic.Shape.prototype = {
         var appliedShadow = false;
         var context = this.getContext();
         context.save();
-        if(this.attrs.textStroke !== undefined || this.attrs.textStrokeWidth !== undefined) {
+        if(!!this.attrs.textStroke || !!this.attrs.textStrokeWidth) {
             if(!this.appliedShadow) {
                 appliedShadow = this._applyShadow();
             }
 
             // defaults
-            if(this.attrs.textStroke === undefined) {
+            if(!!this.attrs.textStroke) {
                 this.attrs.textStroke = 'black';
             }
-            else if(this.attrs.textStrokeWidth === undefined) {
+            else if(!!this.attrs.textStrokeWidth && this.attrs.textStrokeWidth !== 0) {
                 this.attrs.textStrokeWidth = 2;
             }
             context.lineWidth = this.attrs.textStrokeWidth;
@@ -3043,7 +3042,7 @@ Kinetic.Shape.prototype = {
      */
     applyLineJoin: function() {
         var context = this.getContext();
-        if(this.attrs.lineJoin !== undefined) {
+        if(!!this.attrs.lineJoin) {
             context.lineJoin = this.attrs.lineJoin;
         }
     },
@@ -3055,11 +3054,11 @@ Kinetic.Shape.prototype = {
         var context = this.getContext();
         var s = this.attrs.shadow;
 
-        if(s !== undefined) {
+        if(!!s) {
             var aa = this.getAbsoluteAlpha();
             var sa = this.attrs.shadow.alpha;
 
-            if(sa !== undefined && s.color !== undefined) {
+            if(!!sa && !!s.color) {
                 context.globalAlpha = sa * aa;
                 context.shadowColor = s.color;
                 context.shadowBlur = s.blur;
@@ -3117,11 +3116,11 @@ Kinetic.Shape.prototype = {
         else {
             var w = stage.attrs.width;
             var alpha = this.data[((w * pos.y) + pos.x) * 4 + 3];
-            return (alpha !== undefined && alpha !== 0);
+            return (!!alpha);
         }
     },
     _draw: function(layer) {
-        if(layer !== undefined && this.attrs.drawFunc !== undefined) {
+        if(!!layer && !!this.attrs.drawFunc) {
             var stage = layer.getStage();
             var context = layer.getContext();
             var family = [];
@@ -3473,9 +3472,9 @@ Kinetic.Image = function(config) {
 
     this.shapeType = "Image";
     config.drawFunc = function() {
-        if(this.attrs.image !== undefined) {
-            var width = this.attrs.width !== undefined ? this.attrs.width : this.attrs.image.width;
-            var height = this.attrs.height !== undefined ? this.attrs.height : this.attrs.image.height;
+        if(!!this.attrs.image) {
+            var width = !!this.attrs.width ? this.attrs.width : this.attrs.image.width;
+            var height = !!this.attrs.height ? this.attrs.height : this.attrs.image.height;
             var cropX = this.attrs.crop.x;
             var cropY = this.attrs.crop.y;
             var cropWidth = this.attrs.crop.width;
@@ -3490,7 +3489,7 @@ Kinetic.Image = function(config) {
             this.stroke();
 
             // if cropping
-            if(cropWidth !== undefined && cropHeight !== undefined) {
+            if(!!cropWidth && !!cropHeight) {
                 this.drawImage(this.attrs.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height);
             }
             // no cropping
@@ -3597,7 +3596,7 @@ Kinetic.Sprite = function(config) {
     });
 
     config.drawFunc = function() {
-        if(this.attrs.image !== undefined) {
+        if(!!this.attrs.image) {
             var context = this.getContext();
             var anim = this.attrs.animation;
             var index = this.attrs.index;

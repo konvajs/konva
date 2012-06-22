@@ -14,7 +14,7 @@ Kinetic.Sprite = function(config) {
     });
 
     config.drawFunc = function() {
-        if(this.attrs.image !== undefined) {
+        if(!!this.attrs.image) {
             var context = this.getContext();
             var anim = this.attrs.animation;
             var index = this.attrs.index;

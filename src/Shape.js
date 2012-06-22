@@ -19,10 +19,6 @@
  */
 Kinetic.Shape = function(config) {
     this.setDefaultAttrs({
-        fill: undefined,
-        stroke: undefined,
-        strokeWidth: undefined,
-        lineJoin: undefined,
         detectionType: 'path',
         shadow: {
             blur: 10,
@@ -71,6 +67,7 @@ Kinetic.Shape.prototype = {
      * shadows if needed
      */
     stroke: function() {
+        var go = Kinetic.GlobalObject;
         var appliedShadow = false;
         var context = this.getContext();
         context.save();
@@ -121,16 +118,16 @@ Kinetic.Shape.prototype = {
                 context.fill();
             }
             // pattern
-            else if(fill.image !== undefined) {
-                var repeat = fill.repeat === undefined ? 'repeat' : fill.repeat;
+            else if(!!fill.image) {
+                var repeat = !fill.repeat ? 'repeat' : fill.repeat;
                 f = context.createPattern(fill.image, repeat);
 
                 context.save();
 
-                if(fill.scale !== undefined) {
+                if(!!fill.scale) {
                     context.scale(fill.scale.x, fill.scale.y);
                 }
-                if(fill.offset !== undefined) {
+                if(!!fill.offset) {
                     context.translate(fill.offset.x, fill.offset.y);
                 }
 
@@ -139,7 +136,7 @@ Kinetic.Shape.prototype = {
                 context.restore();
             }
             // linear gradient
-            else if(s.radius === undefined && e.radius === undefined) {
+            else if(!s.radius && !e.radius) {
                 var context = this.getContext();
                 var grd = context.createLinearGradient(s.x, s.y, e.x, e.y);
                 var colorStops = fill.colorStops;
@@ -153,7 +150,7 @@ Kinetic.Shape.prototype = {
                 context.fill();
             }
             // radial gradient
-            else if(s.radius !== undefined && e.radius !== undefined) {
+            else if(!!s.radius && !!e.radius) {
                 var context = this.getContext();
                 var grd = context.createRadialGradient(s.x, s.y, s.radius, e.x, e.y, e.radius);
                 var colorStops = fill.colorStops;
@@ -188,7 +185,7 @@ Kinetic.Shape.prototype = {
         var appliedShadow = false;
         var context = this.getContext();
         context.save();
-        if(this.attrs.textFill !== undefined) {
+        if(!!this.attrs.textFill) {
             if(!this.appliedShadow) {
                 appliedShadow = this._applyShadow();
             }
@@ -212,16 +209,16 @@ Kinetic.Shape.prototype = {
         var appliedShadow = false;
         var context = this.getContext();
         context.save();
-        if(this.attrs.textStroke !== undefined || this.attrs.textStrokeWidth !== undefined) {
+        if(!!this.attrs.textStroke || !!this.attrs.textStrokeWidth) {
             if(!this.appliedShadow) {
                 appliedShadow = this._applyShadow();
             }
 
             // defaults
-            if(this.attrs.textStroke === undefined) {
+            if(!!this.attrs.textStroke) {
                 this.attrs.textStroke = 'black';
             }
-            else if(this.attrs.textStrokeWidth === undefined) {
+            else if(!!this.attrs.textStrokeWidth && this.attrs.textStrokeWidth !== 0) {
                 this.attrs.textStrokeWidth = 2;
             }
             context.lineWidth = this.attrs.textStrokeWidth;
@@ -270,7 +267,7 @@ Kinetic.Shape.prototype = {
      */
     applyLineJoin: function() {
         var context = this.getContext();
-        if(this.attrs.lineJoin !== undefined) {
+        if(!!this.attrs.lineJoin) {
             context.lineJoin = this.attrs.lineJoin;
         }
     },
@@ -282,11 +279,11 @@ Kinetic.Shape.prototype = {
         var context = this.getContext();
         var s = this.attrs.shadow;
 
-        if(s !== undefined) {
+        if(!!s) {
             var aa = this.getAbsoluteAlpha();
             var sa = this.attrs.shadow.alpha;
 
-            if(sa !== undefined && s.color !== undefined) {
+            if(!!sa && !!s.color) {
                 context.globalAlpha = sa * aa;
                 context.shadowColor = s.color;
                 context.shadowBlur = s.blur;
@@ -344,11 +341,11 @@ Kinetic.Shape.prototype = {
         else {
             var w = stage.attrs.width;
             var alpha = this.data[((w * pos.y) + pos.x) * 4 + 3];
-            return (alpha !== undefined && alpha !== 0);
+            return (!!alpha);
         }
     },
     _draw: function(layer) {
-        if(layer !== undefined && this.attrs.drawFunc !== undefined) {
+        if(!!layer && !!this.attrs.drawFunc) {
             var stage = layer.getStage();
             var context = layer.getContext();
             var family = [];

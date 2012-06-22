@@ -304,7 +304,7 @@ Test.prototype.tests = {
             });
 
             darth.on('mouseout', function() {
-                this.setStroke(undefined);
+                this.setStroke(null);
                 this.setStrokeWidth(0);
                 layer.draw();
             });
