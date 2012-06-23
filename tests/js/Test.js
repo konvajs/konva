@@ -1,14 +1,22 @@
 var numTests = 0;
 var testCounter = null;
 
-function test(condition, message, dataUrlTest) {
+function warn(condition, message) {
+    test(condition, message, true);
+}
+function test(condition, message, warn) {
     if(!condition) {
-        if(dataUrlTest) {
+        if(warn) {
+            testCounter.style.backgroundColor = 'orange';
+            testCounter.style.color = 'black';
             console.warn(message + ' (NOTE: use Google Chrome for data url comparisons)');
         }
         else {
+            testCounter.style.backgroundColor = 'red';
+            testCounter.style.color = 'black';
             throw new Error(message);
         }
+
     }
     numTests++;
 

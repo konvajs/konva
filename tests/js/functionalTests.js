@@ -40,7 +40,7 @@ Test.prototype.tests = {
         });
 
         stage.toDataURL(function(startDataUrl) {
-            test(urls[0] === startDataUrl, 'start data url is incorrect', true);
+            warn(urls[0] === startDataUrl, 'start data url is incorrect');
             /*
              * simulate drag and drop
              */
@@ -72,7 +72,7 @@ Test.prototype.tests = {
             test(dragEnd, 'dragend event was not triggered');
 
             stage.toDataURL(function(endDataUrl) {
-                test(urls[1] === endDataUrl, 'end data url is incorrect');
+                warn(urls[1] === endDataUrl, 'end data url is incorrect');
             });
         });
     },
@@ -180,7 +180,7 @@ Test.prototype.tests = {
         stage.add(layer);
 
         stage.toDataURL(function(startDataUrl) {
-            test(urls[0] === startDataUrl, 'start data url is incorrect');
+            warn(urls[0] === startDataUrl, 'start data url is incorrect');
 
             /*
              * simulate drag and drop
@@ -201,7 +201,7 @@ Test.prototype.tests = {
             });
 
             stage.toDataURL(function(endDataUrl) {
-                test(urls[1] === endDataUrl, 'end data url is incorrect');
+                warn(urls[1] === endDataUrl, 'end data url is incorrect');
             });
         });
     },
@@ -240,7 +240,7 @@ Test.prototype.tests = {
         stage.add(layer);
 
         stage.toDataURL(function(startDataUrl) {
-            test(startDataUrl === urls[0], 'start data url is incorrect');
+            warn(startDataUrl === urls[0], 'start data url is incorrect');
 
             stage._mousemove({
                 clientX: 377,
@@ -248,7 +248,7 @@ Test.prototype.tests = {
             });
 
             stage.toDataURL(function(endDataUrl) {
-                test(urls[1] === endDataUrl, 'end data url is incorrect');
+                warn(urls[1] === endDataUrl, 'end data url is incorrect');
             });
         });
     },

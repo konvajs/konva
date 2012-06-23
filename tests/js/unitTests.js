@@ -362,7 +362,7 @@ Test.prototype.tests = {
         layer.draw();
 
         stage.toDataURL(function(startDataUrl) {
-            test(startDataUrl === urls[0], 'start data url is incorrect');
+            warn(startDataUrl === urls[0], 'start data url is incorrect');
 
             test(triangle.getId() === 'myTriangle', 'triangle id should be myTriangle');
 
@@ -378,7 +378,7 @@ Test.prototype.tests = {
             layer.draw();
 
             stage.toDataURL(function(endDataUrl) {
-                test(endDataUrl === urls[0], 'end data url is incorrect');
+                warn(endDataUrl === urls[0], 'end data url is incorrect');
             });
         });
     },
@@ -939,6 +939,41 @@ Test.prototype.tests = {
         });
 
         layer.draw();
+    },
+    'LAYER - set clearBeforeDraw to false': function(containerId) {
+        var urls = dataUrls['LAYER - set clearBeforeDraw to false'];
+
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+
+        var layer = new Kinetic.Layer({
+            clearBeforeDraw: false,
+            throttle: 999
+        });
+
+        var circle = new Kinetic.Ellipse({
+            x: 100,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        for(var n = 0; n < 20; n++) {
+            circle.move(10, 0);
+            layer.draw();
+        }
+
+        stage.toDataURL(function(dataUrl) {
+            warn(urls[0] === dataUrl, 'data url is incorrect');
+        });
     },
     'LAYER - throttling': function(containerId) {
         var stage = new Kinetic.Stage({

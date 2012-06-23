@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jun 22 2012
+ * Date: Jun 23 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -2603,7 +2603,8 @@ Kinetic.GlobalObject.addGetters(Kinetic.Stage, ['width', 'height', 'throttle']);
  */
 Kinetic.Layer = function(config) {
     this.setDefaultAttrs({
-        throttle: 80
+        throttle: 80,
+        clearBeforeDraw: true
     });
 
     this.nodeType = 'Layer';
@@ -2717,7 +2718,10 @@ Kinetic.Layer.prototype = {
             this.beforeDrawFunc.call(this);
         }
 
-        this.clear();
+        if(this.attrs.clearBeforeDraw) {
+            this.clear();
+        }
+
         if(this.isVisible()) {
             // draw custom func
             if(this.attrs.drawFunc !== undefined) {
@@ -2737,6 +2741,25 @@ Kinetic.Layer.prototype = {
 // Extend Container and Node
 Kinetic.GlobalObject.extend(Kinetic.Layer, Kinetic.Container);
 Kinetic.GlobalObject.extend(Kinetic.Layer, Kinetic.Node);
+
+// add setters and getters
+Kinetic.GlobalObject.addSetters(Kinetic.Layer, ['clearBeforeDraw']);
+Kinetic.GlobalObject.addGetters(Kinetic.Layer, ['clearBeforeDraw']);
+
+/**
+ * set flag which determines if the layer is cleared or not
+ *  before drawing
+ * @name setClearBeforeDraw
+ * @methodOf Kinetic.Layer.prototype
+ * @param {Boolean} clearBeforeDraw
+ */
+
+/**
+ * get flag which determines if the layer is cleared or not
+ *  before drawing
+ * @name getClearBeforeDraw
+ * @methodOf Kinetic.Layer.prototype
+ */
 
 ///////////////////////////////////////////////////////////////////////
 //  Group
