@@ -576,16 +576,14 @@ Kinetic.Node.prototype = {
      * get stage associated to node
      */
     getStage: function() {
-        if(this.nodeType === 'Stage') {
+        if(this.nodeType !== 'Stage' && this.getParent()) {
+            return this.getParent().getStage();
+        }
+        else if(this.nodeType === 'Stage') {
             return this;
         }
         else {
-            if(this.getParent() === undefined) {
-                return undefined;
-            }
-            else {
-                return this.getParent().getStage();
-            }
+            return undefined;
         }
     },
     /**

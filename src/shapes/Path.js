@@ -56,7 +56,9 @@ Kinetic.Path = function(config) {
             }
         }
         this.fill();
+        //console.profile();
         this.stroke();
+        //console.profileEnd();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);

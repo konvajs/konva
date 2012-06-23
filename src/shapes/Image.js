@@ -12,8 +12,6 @@ Kinetic.Image = function(config) {
         crop: {
             x: 0,
             y: 0,
-            width: undefined,
-            height: undefined
         }
     });
 

@@ -962,16 +962,14 @@ Kinetic.Node.prototype = {
      * get stage associated to node
      */
     getStage: function() {
-        if(this.nodeType === 'Stage') {
+        if(this.nodeType !== 'Stage' && this.getParent()) {
+            return this.getParent().getStage();
+        }
+        else if(this.nodeType === 'Stage') {
             return this;
         }
         else {
-            if(this.getParent() === undefined) {
-                return undefined;
-            }
-            else {
-                return this.getParent().getStage();
-            }
+            return undefined;
         }
     },
     /**
@@ -2794,15 +2792,7 @@ Kinetic.GlobalObject.extend(Kinetic.Group, Kinetic.Node);
  */
 Kinetic.Shape = function(config) {
     this.setDefaultAttrs({
-        detectionType: 'path',
-        shadow: {
-            blur: 10,
-            alpha: 1,
-            offset: {
-                x: 0,
-                y: 0
-            }
-        }
+        detectionType: 'path'
     });
 
     this.data = [];
@@ -2824,12 +2814,7 @@ Kinetic.Shape.prototype = {
      * .getContext() returns the context of the invisible path layer.
      */
     getContext: function() {
-        if(this.tempLayer === undefined) {
-            return null;
-        }
-        else {
-            return this.tempLayer.getContext();
-        }
+        return this.tempLayer.getContext();
     },
     /**
      * get shape temp layer canvas
@@ -2845,22 +2830,21 @@ Kinetic.Shape.prototype = {
         var go = Kinetic.GlobalObject;
         var appliedShadow = false;
         var context = this.getContext();
-        context.save();
 
-        if(!!this.attrs.stroke || !!this.attrs.strokeWidth) {
-            if(!this.appliedShadow) {
+        if(this.attrs.stroke || this.attrs.strokeWidth) {
+            context.save();
+            if(this.attrs.shadow && !this.appliedShadow) {
                 appliedShadow = this._applyShadow();
             }
 
-            var stroke = !!this.attrs.stroke ? this.attrs.stroke : 'black';
-            var strokeWidth = !!this.attrs.strokeWidth ? this.attrs.strokeWidth : 2;
+            var stroke = this.attrs.stroke ? this.attrs.stroke : 'black';
+            var strokeWidth = this.attrs.strokeWidth ? this.attrs.strokeWidth : 2;
 
             context.lineWidth = strokeWidth;
             context.strokeStyle = stroke;
             context.stroke();
+            context.restore();
         }
-
-        context.restore();
 
         if(appliedShadow) {
             this.stroke();
@@ -2877,8 +2861,8 @@ Kinetic.Shape.prototype = {
 
         var fill = this.attrs.fill;
 
-        if(!!fill) {
-            if(!this.appliedShadow) {
+        if(fill) {
+            if(this.attrs.shadow && !this.appliedShadow) {
                 appliedShadow = this._applyShadow();
             }
 
@@ -2893,16 +2877,16 @@ Kinetic.Shape.prototype = {
                 context.fill();
             }
             // pattern
-            else if(!!fill.image) {
+            else if(fill.image) {
                 var repeat = !fill.repeat ? 'repeat' : fill.repeat;
                 f = context.createPattern(fill.image, repeat);
 
                 context.save();
 
-                if(!!fill.scale) {
+                if(fill.scale) {
                     context.scale(fill.scale.x, fill.scale.y);
                 }
-                if(!!fill.offset) {
+                if(fill.offset) {
                     context.translate(fill.offset.x, fill.offset.y);
                 }
 
@@ -2925,7 +2909,7 @@ Kinetic.Shape.prototype = {
                 context.fill();
             }
             // radial gradient
-            else if(!!s.radius && !!e.radius) {
+            else if(s.radius && e.radius) {
                 var context = this.getContext();
                 var grd = context.createRadialGradient(s.x, s.y, s.radius, e.x, e.y, e.radius);
                 var colorStops = fill.colorStops;
@@ -2960,8 +2944,8 @@ Kinetic.Shape.prototype = {
         var appliedShadow = false;
         var context = this.getContext();
         context.save();
-        if(!!this.attrs.textFill) {
-            if(!this.appliedShadow) {
+        if(this.attrs.textFill) {
+            if(this.attrs.shadow && !this.appliedShadow) {
                 appliedShadow = this._applyShadow();
             }
             context.fillStyle = this.attrs.textFill;
@@ -2984,16 +2968,16 @@ Kinetic.Shape.prototype = {
         var appliedShadow = false;
         var context = this.getContext();
         context.save();
-        if(!!this.attrs.textStroke || !!this.attrs.textStrokeWidth) {
-            if(!this.appliedShadow) {
+        if(this.attrs.textStroke || this.attrs.textStrokeWidth) {
+            if(this.attrs.shadow && !this.appliedShadow) {
                 appliedShadow = this._applyShadow();
             }
 
             // defaults
-            if(!!this.attrs.textStroke) {
+            if(this.attrs.textStroke) {
                 this.attrs.textStroke = 'black';
             }
-            else if(!!this.attrs.textStrokeWidth && this.attrs.textStrokeWidth !== 0) {
+            else if(this.attrs.textStrokeWidth && this.attrs.textStrokeWidth !== 0) {
                 this.attrs.textStrokeWidth = 2;
             }
             context.lineWidth = this.attrs.textStrokeWidth;
@@ -3017,7 +3001,7 @@ Kinetic.Shape.prototype = {
         var a = Array.prototype.slice.call(arguments);
 
         if(a.length === 5 || a.length === 9) {
-            if(!this.appliedShadow) {
+            if(this.attrs.shadow && !this.appliedShadow) {
                 appliedShadow = this._applyShadow();
             }
             switch(a.length) {
@@ -3042,7 +3026,7 @@ Kinetic.Shape.prototype = {
      */
     applyLineJoin: function() {
         var context = this.getContext();
-        if(!!this.attrs.lineJoin) {
+        if(this.attrs.lineJoin) {
             context.lineJoin = this.attrs.lineJoin;
         }
     },
@@ -3054,11 +3038,11 @@ Kinetic.Shape.prototype = {
         var context = this.getContext();
         var s = this.attrs.shadow;
 
-        if(!!s) {
+        if(s) {
             var aa = this.getAbsoluteAlpha();
             var sa = this.attrs.shadow.alpha;
 
-            if(!!sa && !!s.color) {
+            if(sa && s.color) {
                 context.globalAlpha = sa * aa;
                 context.shadowColor = s.color;
                 context.shadowBlur = s.blur;
@@ -3120,7 +3104,7 @@ Kinetic.Shape.prototype = {
         }
     },
     _draw: function(layer) {
-        if(!!layer && !!this.attrs.drawFunc) {
+        if(layer && this.attrs.drawFunc) {
             var stage = layer.getStage();
             var context = layer.getContext();
             var family = [];
@@ -3162,6 +3146,7 @@ Kinetic.Shape.prototype = {
             context.restore();
         }
     }
+    
 };
 // extend Node
 Kinetic.GlobalObject.extend(Kinetic.Shape, Kinetic.Node);
@@ -3465,8 +3450,6 @@ Kinetic.Image = function(config) {
         crop: {
             x: 0,
             y: 0,
-            width: undefined,
-            height: undefined
         }
     });
 
@@ -4006,17 +3989,8 @@ Kinetic.Text.prototype = {
      * get text size in pixels
      */
     getTextSize: function() {
-        var context = this.getContext();
-
-        /**
-         * if the text hasn't been added a layer yet there
-         * will be no associated context.  Will have to create
-         * a dummy context
-         */
-        if(!context) {
-            var dummyCanvas = document.createElement('canvas');
-            context = dummyCanvas.getContext('2d');
-        }
+        var dummyCanvas = document.createElement('canvas');
+        var context = dummyCanvas.getContext('2d');
 
         context.save();
         context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'pt ' + this.attrs.fontFamily;
@@ -4390,7 +4364,9 @@ Kinetic.Path = function(config) {
             }
         }
         this.fill();
+        //console.profile();
         this.stroke();
+        //console.profileEnd();
     };
     // call super constructor
     Kinetic.Shape.apply(this, [config]);
