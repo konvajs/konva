@@ -264,20 +264,25 @@ Kinetic.Shape.prototype = {
     _applyShadow: function() {
         var context = this.getContext();
         var s = this.attrs.shadow;
-
         if(s) {
             var aa = this.getAbsoluteAlpha();
-            var sa = this.attrs.shadow.alpha;
+            // defaults
+            var color = s.color ? s.color : 'black';
+            var blur = s.blur ? s.blur : 5;
+            var offset = s.offset ? s.offset : {
+                x: 0,
+                y: 0
+            };
 
-            if(sa && s.color) {
-                context.globalAlpha = sa * aa;
-                context.shadowColor = s.color;
-                context.shadowBlur = s.blur;
-                context.shadowOffsetX = s.offset.x;
-                context.shadowOffsetY = s.offset.y;
-                this.appliedShadow = true;
-                return true;
+            if(s.alpha) {
+                context.globalAlpha = s.alpha * aa;
             }
+            context.shadowColor = color;
+            context.shadowBlur = blur;
+            context.shadowOffsetX = offset.x;
+            context.shadowOffsetY = offset.y;
+            this.appliedShadow = true;
+            return true;
         }
 
         return false;
@@ -360,10 +365,11 @@ Kinetic.Shape.prototype = {
             this.tempLayer = layer;
 
             /*
-             * pre styles include alpha, linejoin, and line cap
+             * pre styles include alpha, linejoin
              */
-            if(this.getAbsoluteAlpha() !== 1) {
-                context.globalAlpha = this.getAbsoluteAlpha();
+            var absAlpha = this.getAbsoluteAlpha();
+            if(absAlpha !== 1) {
+                context.globalAlpha = absAlpha;
             }
             this.applyLineJoin();
 
@@ -373,7 +379,6 @@ Kinetic.Shape.prototype = {
             context.restore();
         }
     }
-    
 };
 // extend Node
 Kinetic.GlobalObject.extend(Kinetic.Shape, Kinetic.Node);
