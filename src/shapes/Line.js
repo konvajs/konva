@@ -52,16 +52,6 @@ Kinetic.Line = function(config) {
  */
 Kinetic.Line.prototype = {
     /**
-     * set points array
-     * @param {Array} can be an array of point objects or an array
-     *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
-     */
-    setPoints: function(points) {
-        this.setAttrs({
-            points: points
-        });
-    },
-    /**
      * draw dashed line.  Written by Phrogz
      */
     _dashedLine: function(x, y, x2, y2, dashArray) {
@@ -113,8 +103,7 @@ Kinetic.Line.prototype = {
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Line, Kinetic.Shape);
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Line, ['dashArray', 'lineCap']);
-Kinetic.GlobalObject.addGetters(Kinetic.Line, ['dashArray', 'lineCap', 'points']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Line, ['dashArray', 'lineCap', 'points']);
 
 /**
  * set dash array.
@@ -134,6 +123,14 @@ Kinetic.GlobalObject.addGetters(Kinetic.Line, ['dashArray', 'lineCap', 'points']
  * @name setLineCap
  * @methodOf Kinetic.Line.prototype
  * @param {String} lineCap
+ */
+
+/**
+ * set points array
+ * @name setPoints
+ * @methodOf Kinetic.Line.prototype
+ * @param {Array} can be an array of point objects or an array
+ *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
  */
 
 /**

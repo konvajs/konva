@@ -79,6 +79,10 @@ Kinetic.GlobalObject = {
             this._addGetter(constructor, attr);
         }
     },
+    addSettersGetters: function(constructor, arr) {
+        this.addSetters(constructor, arr);
+        this.addGetters(constructor, arr);
+    },
     _pullNodes: function(stage) {
         var tempNodes = this.tempNodes;
         for(var n = 0; n < tempNodes.length; n++) {
@@ -362,7 +366,14 @@ Kinetic.GlobalObject = {
     _addSetter: function(constructor, attr) {
         var that = this;
         var method = 'set' + attr.charAt(0).toUpperCase() + attr.slice(1);
-        constructor.prototype[method] = function(arg) {
+        constructor.prototype[method] = function() {
+            var arg;
+            if(arguments.length == 1) {
+                arg = arguments[0];
+            }
+            else {
+                arg = Array.prototype.slice.call(arguments);
+            }
             var obj = {};
             obj[attr] = arg;
             this.setAttrs(obj);
@@ -728,15 +739,6 @@ Kinetic.Node.prototype = {
         return level;
     },
     /**
-     * set node scale.
-     * @param arg
-     */
-    setScale: function() {
-        this.setAttrs({
-            scale: Array.prototype.slice.call(arguments)
-        });
-    },
-    /**
      * set node position
      * @param {Object} point
      */
@@ -825,13 +827,6 @@ Kinetic.Node.prototype = {
             x: x,
             y: y
         });
-    },
-    /**
-     * set node rotation in degrees
-     * @param {Number} deg
-     */
-    setRotationDeg: function(deg) {
-        this.setRotation(deg * Math.PI / 180);
     },
     /**
      * get rotation in degrees
@@ -978,16 +973,6 @@ Kinetic.Node.prototype = {
      */
     simulate: function(eventType) {
         this._handleEvent(eventType, {});
-    },
-    /**
-     * set offset
-     * @param {Number} x
-     * @param {Number} y
-     */
-    setOffset: function() {
-        this.setAttrs({
-            offset: Array.prototype.slice.call(arguments)
-        });
     },
     /**
      * transition node to another state.  Any property that can accept a real
@@ -1181,8 +1166,8 @@ Kinetic.Node.prototype = {
 };
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Node, ['x', 'y', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
-Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'draggable', 'offset', 'dragConstraint', 'dragBounds', 'listening']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
+Kinetic.GlobalObject.addSetters(Kinetic.Node, ['rotationDeg']);
 
 /**
  * set node x position
@@ -1251,6 +1236,28 @@ Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType
  * @name setListening
  * @methodOf Kinetic.Node.prototype
  * @param {Boolean} listening
+ */
+
+/**
+ * set node rotation in degrees
+ * @name setRotationDeg
+ * @methodOf Kinetic.Node.prototype
+ * @param {Number} deg
+ */
+
+/**
+ * set offset
+ * @name setOffset
+ * @methodOf Kinetic.Node.prototype
+ * @param {Number} x
+ * @param {Number} y
+ */
+
+/**
+ * set node scale.
+ * @name setScale
+ * @param {Number|Array|Object|List} scale
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**
@@ -2546,8 +2553,7 @@ Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Container);
 Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Node);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Stage, ['width', 'height', 'throttle']);
-Kinetic.GlobalObject.addGetters(Kinetic.Stage, ['width', 'height', 'throttle']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Stage, ['width', 'height', 'throttle']);
 
 /**
  * get width
@@ -2743,8 +2749,7 @@ Kinetic.GlobalObject.extend(Kinetic.Layer, Kinetic.Container);
 Kinetic.GlobalObject.extend(Kinetic.Layer, Kinetic.Node);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Layer, ['clearBeforeDraw']);
-Kinetic.GlobalObject.addGetters(Kinetic.Layer, ['clearBeforeDraw']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Layer, ['clearBeforeDraw']);
 
 /**
  * set flag which determines if the layer is cleared or not
@@ -2997,10 +3002,10 @@ Kinetic.Shape.prototype = {
             }
 
             // defaults
-            if(this.attrs.textStroke) {
+            if(!this.attrs.textStroke) {
                 this.attrs.textStroke = 'black';
             }
-            else if(this.attrs.textStrokeWidth && this.attrs.textStrokeWidth !== 0) {
+            else if(!this.attrs.textStrokeWidth && this.attrs.textStrokeWidth !== 0) {
                 this.attrs.textStrokeWidth = 2;
             }
             context.lineWidth = this.attrs.textStrokeWidth;
@@ -3180,8 +3185,7 @@ Kinetic.Shape.prototype = {
 Kinetic.GlobalObject.extend(Kinetic.Shape, Kinetic.Node);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
-Kinetic.GlobalObject.addGetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
 
 /**
  * set fill which can be a color, linear gradient object,
@@ -3333,8 +3337,7 @@ Kinetic.Rect.prototype = {
 Kinetic.GlobalObject.extend(Kinetic.Rect, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Rect, ['width', 'height', 'cornerRadius']);
-Kinetic.GlobalObject.addGetters(Kinetic.Rect, ['width', 'height', 'cornerRadius']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Rect, ['width', 'height', 'cornerRadius']);
 
 /**
  * set width
@@ -3423,21 +3426,6 @@ Kinetic.Circle = Kinetic.Ellipse;
 
 Kinetic.Ellipse.prototype = {
     /**
-     * set radius
-     * @param {Number|Object|Array} radius
-     *  radius can be a number, in which the ellipse becomes a circle,
-     *  it can be an object with an x and y component, or it
-     *  can be an array in which the first element is the x component
-     *  and the second element is the y component.  The x component
-     *  defines the horizontal radius and the y component
-     *  defines the vertical radius
-     */
-    setRadius: function() {
-        this.setAttrs({
-            radius: Array.prototype.slice.call(arguments)
-        });
-    },
-    /**
      * converts numeric radius into an object
      */
     _convertRadius: function() {
@@ -3449,15 +3437,26 @@ Kinetic.Ellipse.prototype = {
         }
         var pos = go._getXY(radius);
         this.setAttrs({
-        	radius: pos
+            radius: pos
         });
-    } 
+    }
 };
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Ellipse, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.GlobalObject.addGetters(Kinetic.Ellipse, ['radius']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Ellipse, ['radius']);
+
+/**
+ * set radius
+ * @param {Number|Object|Array} radius
+ *  radius can be a number, in which the ellipse becomes a circle,
+ *  it can be an object with an x and y component, or it
+ *  can be an array in which the first element is the x component
+ *  and the second element is the y component.  The x component
+ *  defines the horizontal radius and the y component
+ *  defines the vertical radius
+ */
 
 /**
  * get radius
@@ -3531,21 +3530,12 @@ Kinetic.Image.prototype = {
             width: this.attrs.width,
             height: this.attrs.height
         };
-    },
-    /**
-     * set crop
-     */
-    setCrop: function() {
-        this.setAttrs({
-            crop: Array.prototype.slice.call(arguments)
-        });
     }
 };
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Image, Kinetic.Shape);
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Image, ['height', 'width', 'image']);
-Kinetic.GlobalObject.addGetters(Kinetic.Image, ['crop', 'height', 'width', 'image']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Image, ['height', 'width', 'image', 'crop']);
 
 /**
  * set width
@@ -3566,6 +3556,13 @@ Kinetic.GlobalObject.addGetters(Kinetic.Image, ['crop', 'height', 'width', 'imag
  * @name setImage
  * @methodOf Kinetic.Image.prototype
  * @param {ImageObject} image
+ */
+
+/**
+ * set crop
+ * @name setCrop
+ * @methodOf Kinetic.Image.prototype
+ * @param {Object} config
  */
 
 /**
@@ -3677,8 +3674,7 @@ Kinetic.Sprite.prototype = {
 Kinetic.GlobalObject.extend(Kinetic.Sprite, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Sprite, ['animation', 'animations', 'index']);
-Kinetic.GlobalObject.addGetters(Kinetic.Sprite, ['animation', 'animations', 'index']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Sprite, ['animation', 'animations', 'index']);
 
 /**
  * set animation key
@@ -3751,8 +3747,7 @@ Kinetic.Polygon = function(config) {
 Kinetic.GlobalObject.extend(Kinetic.Polygon, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Polygon, ['points']);
-Kinetic.GlobalObject.addGetters(Kinetic.Polygon, ['points']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Polygon, ['points']);
 
 /**
  * set points array
@@ -3804,8 +3799,7 @@ Kinetic.RegularPolygon = function(config) {
 Kinetic.GlobalObject.extend(Kinetic.RegularPolygon, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Rect, ['radius', 'sides']);
-Kinetic.GlobalObject.addGetters(Kinetic.Rect, ['radius', 'sides']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Rect, ['radius', 'sides']);
 
 /**
  * set radius
@@ -3871,8 +3865,7 @@ Kinetic.Star = function(config) {
 Kinetic.GlobalObject.extend(Kinetic.Star, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Star, ['numPoints', 'innerRadius', 'outerRadius']);
-Kinetic.GlobalObject.addGetters(Kinetic.Star, ['numPoints', 'innerRadius', 'outerRadius']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Star, ['numPoints', 'innerRadius', 'outerRadius']);
 
 /**
  * set number of points
@@ -4034,8 +4027,7 @@ Kinetic.Text.prototype = {
 Kinetic.GlobalObject.extend(Kinetic.Text, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'verticalAlign', 'text', 'width']);
-Kinetic.GlobalObject.addGetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'verticalAlign', 'text', 'width']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'verticalAlign', 'text', 'width']);
 
 /**
  * set font family
@@ -4233,16 +4225,6 @@ Kinetic.Line = function(config) {
  */
 Kinetic.Line.prototype = {
     /**
-     * set points array
-     * @param {Array} can be an array of point objects or an array
-     *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
-     */
-    setPoints: function(points) {
-        this.setAttrs({
-            points: points
-        });
-    },
-    /**
      * draw dashed line.  Written by Phrogz
      */
     _dashedLine: function(x, y, x2, y2, dashArray) {
@@ -4294,8 +4276,7 @@ Kinetic.Line.prototype = {
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Line, Kinetic.Shape);
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Line, ['dashArray', 'lineCap']);
-Kinetic.GlobalObject.addGetters(Kinetic.Line, ['dashArray', 'lineCap', 'points']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Line, ['dashArray', 'lineCap', 'points']);
 
 /**
  * set dash array.
@@ -4315,6 +4296,14 @@ Kinetic.GlobalObject.addGetters(Kinetic.Line, ['dashArray', 'lineCap', 'points']
  * @name setLineCap
  * @methodOf Kinetic.Line.prototype
  * @param {String} lineCap
+ */
+
+/**
+ * set points array
+ * @name setPoints
+ * @methodOf Kinetic.Line.prototype
+ * @param {Array} can be an array of point objects or an array
+ *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
  */
 
 /**
@@ -4708,8 +4697,7 @@ Kinetic.Path.prototype = {
 Kinetic.GlobalObject.extend(Kinetic.Path, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Path, ['data']);
-Kinetic.GlobalObject.addGetters(Kinetic.Path, ['data']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Path, ['data']);
 
 /**
  * set SVG path data string.  This method

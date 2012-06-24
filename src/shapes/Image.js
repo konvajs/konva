@@ -65,21 +65,12 @@ Kinetic.Image.prototype = {
             width: this.attrs.width,
             height: this.attrs.height
         };
-    },
-    /**
-     * set crop
-     */
-    setCrop: function() {
-        this.setAttrs({
-            crop: Array.prototype.slice.call(arguments)
-        });
     }
 };
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Image, Kinetic.Shape);
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Image, ['height', 'width', 'image']);
-Kinetic.GlobalObject.addGetters(Kinetic.Image, ['crop', 'height', 'width', 'image']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Image, ['height', 'width', 'image', 'crop']);
 
 /**
  * set width
@@ -100,6 +91,13 @@ Kinetic.GlobalObject.addGetters(Kinetic.Image, ['crop', 'height', 'width', 'imag
  * @name setImage
  * @methodOf Kinetic.Image.prototype
  * @param {ImageObject} image
+ */
+
+/**
+ * set crop
+ * @name setCrop
+ * @methodOf Kinetic.Image.prototype
+ * @param {Object} config
  */
 
 /**

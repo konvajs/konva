@@ -84,8 +84,7 @@ Kinetic.Sprite.prototype = {
 Kinetic.GlobalObject.extend(Kinetic.Sprite, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Sprite, ['animation', 'animations', 'index']);
-Kinetic.GlobalObject.addGetters(Kinetic.Sprite, ['animation', 'animations', 'index']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Sprite, ['animation', 'animations', 'index']);
 
 /**
  * set animation key

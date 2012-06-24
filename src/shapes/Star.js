@@ -38,8 +38,7 @@ Kinetic.Star = function(config) {
 Kinetic.GlobalObject.extend(Kinetic.Star, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Star, ['numPoints', 'innerRadius', 'outerRadius']);
-Kinetic.GlobalObject.addGetters(Kinetic.Star, ['numPoints', 'innerRadius', 'outerRadius']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Star, ['numPoints', 'innerRadius', 'outerRadius']);
 
 /**
  * set number of points

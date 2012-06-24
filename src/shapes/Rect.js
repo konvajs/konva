@@ -69,8 +69,7 @@ Kinetic.Rect.prototype = {
 Kinetic.GlobalObject.extend(Kinetic.Rect, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Rect, ['width', 'height', 'cornerRadius']);
-Kinetic.GlobalObject.addGetters(Kinetic.Rect, ['width', 'height', 'cornerRadius']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Rect, ['width', 'height', 'cornerRadius']);
 
 /**
  * set width

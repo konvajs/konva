@@ -201,10 +201,10 @@ Kinetic.Shape.prototype = {
             }
 
             // defaults
-            if(this.attrs.textStroke) {
+            if(!this.attrs.textStroke) {
                 this.attrs.textStroke = 'black';
             }
-            else if(this.attrs.textStrokeWidth && this.attrs.textStrokeWidth !== 0) {
+            else if(!this.attrs.textStrokeWidth && this.attrs.textStrokeWidth !== 0) {
                 this.attrs.textStrokeWidth = 2;
             }
             context.lineWidth = this.attrs.textStrokeWidth;
@@ -384,8 +384,7 @@ Kinetic.Shape.prototype = {
 Kinetic.GlobalObject.extend(Kinetic.Shape, Kinetic.Node);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
-Kinetic.GlobalObject.addGetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
 
 /**
  * set fill which can be a color, linear gradient object,

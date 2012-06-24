@@ -151,8 +151,7 @@ Kinetic.GlobalObject.extend(Kinetic.Layer, Kinetic.Container);
 Kinetic.GlobalObject.extend(Kinetic.Layer, Kinetic.Node);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Layer, ['clearBeforeDraw']);
-Kinetic.GlobalObject.addGetters(Kinetic.Layer, ['clearBeforeDraw']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Layer, ['clearBeforeDraw']);
 
 /**
  * set flag which determines if the layer is cleared or not

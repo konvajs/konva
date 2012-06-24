@@ -984,8 +984,7 @@ Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Container);
 Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Node);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Stage, ['width', 'height', 'throttle']);
-Kinetic.GlobalObject.addGetters(Kinetic.Stage, ['width', 'height', 'throttle']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Stage, ['width', 'height', 'throttle']);
 
 /**
  * get width

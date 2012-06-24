@@ -372,8 +372,7 @@ Kinetic.Path.prototype = {
 Kinetic.GlobalObject.extend(Kinetic.Path, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Path, ['data']);
-Kinetic.GlobalObject.addGetters(Kinetic.Path, ['data']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Path, ['data']);
 
 /**
  * set SVG path data string.  This method

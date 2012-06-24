@@ -51,6 +51,10 @@ Kinetic.GlobalObject = {
             this._addGetter(constructor, attr);
         }
     },
+    addSettersGetters: function(constructor, arr) {
+        this.addSetters(constructor, arr);
+        this.addGetters(constructor, arr);
+    },
     _pullNodes: function(stage) {
         var tempNodes = this.tempNodes;
         for(var n = 0; n < tempNodes.length; n++) {
@@ -334,7 +338,14 @@ Kinetic.GlobalObject = {
     _addSetter: function(constructor, attr) {
         var that = this;
         var method = 'set' + attr.charAt(0).toUpperCase() + attr.slice(1);
-        constructor.prototype[method] = function(arg) {
+        constructor.prototype[method] = function() {
+            var arg;
+            if(arguments.length == 1) {
+                arg = arguments[0];
+            }
+            else {
+                arg = Array.prototype.slice.call(arguments);
+            }
             var obj = {};
             obj[attr] = arg;
             this.setAttrs(obj);

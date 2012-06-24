@@ -342,15 +342,6 @@ Kinetic.Node.prototype = {
         return level;
     },
     /**
-     * set node scale.
-     * @param arg
-     */
-    setScale: function() {
-        this.setAttrs({
-            scale: Array.prototype.slice.call(arguments)
-        });
-    },
-    /**
      * set node position
      * @param {Object} point
      */
@@ -439,13 +430,6 @@ Kinetic.Node.prototype = {
             x: x,
             y: y
         });
-    },
-    /**
-     * set node rotation in degrees
-     * @param {Number} deg
-     */
-    setRotationDeg: function(deg) {
-        this.setRotation(deg * Math.PI / 180);
     },
     /**
      * get rotation in degrees
@@ -592,16 +576,6 @@ Kinetic.Node.prototype = {
      */
     simulate: function(eventType) {
         this._handleEvent(eventType, {});
-    },
-    /**
-     * set offset
-     * @param {Number} x
-     * @param {Number} y
-     */
-    setOffset: function() {
-        this.setAttrs({
-            offset: Array.prototype.slice.call(arguments)
-        });
     },
     /**
      * transition node to another state.  Any property that can accept a real
@@ -795,8 +769,8 @@ Kinetic.Node.prototype = {
 };
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Node, ['x', 'y', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
-Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'draggable', 'offset', 'dragConstraint', 'dragBounds', 'listening']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
+Kinetic.GlobalObject.addSetters(Kinetic.Node, ['rotationDeg']);
 
 /**
  * set node x position
@@ -865,6 +839,28 @@ Kinetic.GlobalObject.addGetters(Kinetic.Node, ['scale', 'x', 'y', 'detectionType
  * @name setListening
  * @methodOf Kinetic.Node.prototype
  * @param {Boolean} listening
+ */
+
+/**
+ * set node rotation in degrees
+ * @name setRotationDeg
+ * @methodOf Kinetic.Node.prototype
+ * @param {Number} deg
+ */
+
+/**
+ * set offset
+ * @name setOffset
+ * @methodOf Kinetic.Node.prototype
+ * @param {Number} x
+ * @param {Number} y
+ */
+
+/**
+ * set node scale.
+ * @name setScale
+ * @param {Number|Array|Object|List} scale
+ * @methodOf Kinetic.Node.prototype
  */
 
 /**

@@ -47,21 +47,6 @@ Kinetic.Circle = Kinetic.Ellipse;
 
 Kinetic.Ellipse.prototype = {
     /**
-     * set radius
-     * @param {Number|Object|Array} radius
-     *  radius can be a number, in which the ellipse becomes a circle,
-     *  it can be an object with an x and y component, or it
-     *  can be an array in which the first element is the x component
-     *  and the second element is the y component.  The x component
-     *  defines the horizontal radius and the y component
-     *  defines the vertical radius
-     */
-    setRadius: function() {
-        this.setAttrs({
-            radius: Array.prototype.slice.call(arguments)
-        });
-    },
-    /**
      * converts numeric radius into an object
      */
     _convertRadius: function() {
@@ -73,15 +58,26 @@ Kinetic.Ellipse.prototype = {
         }
         var pos = go._getXY(radius);
         this.setAttrs({
-        	radius: pos
+            radius: pos
         });
-    } 
+    }
 };
 // extend Shape
 Kinetic.GlobalObject.extend(Kinetic.Ellipse, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.GlobalObject.addGetters(Kinetic.Ellipse, ['radius']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Ellipse, ['radius']);
+
+/**
+ * set radius
+ * @param {Number|Object|Array} radius
+ *  radius can be a number, in which the ellipse becomes a circle,
+ *  it can be an object with an x and y component, or it
+ *  can be an array in which the first element is the x component
+ *  and the second element is the y component.  The x component
+ *  defines the horizontal radius and the y component
+ *  defines the vertical radius
+ */
 
 /**
  * get radius

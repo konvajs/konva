@@ -31,8 +31,7 @@ Kinetic.Polygon = function(config) {
 Kinetic.GlobalObject.extend(Kinetic.Polygon, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Polygon, ['points']);
-Kinetic.GlobalObject.addGetters(Kinetic.Polygon, ['points']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Polygon, ['points']);
 
 /**
  * set points array

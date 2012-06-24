@@ -35,8 +35,7 @@ Kinetic.RegularPolygon = function(config) {
 Kinetic.GlobalObject.extend(Kinetic.RegularPolygon, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.GlobalObject.addSetters(Kinetic.Rect, ['radius', 'sides']);
-Kinetic.GlobalObject.addGetters(Kinetic.Rect, ['radius', 'sides']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Rect, ['radius', 'sides']);
 
 /**
  * set radius
