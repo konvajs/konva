@@ -136,7 +136,7 @@ Kinetic.Shape.prototype = {
                 context.fill();
             }
             // radial gradient
-            else if(s.radius && e.radius) {
+            else if((s.radius || s.radius === 0) && (e.radius || e.radius === 0)) {
                 var context = this.getContext();
                 var grd = context.createRadialGradient(s.x, s.y, s.radius, e.x, e.y, e.radius);
                 var colorStops = fill.colorStops;

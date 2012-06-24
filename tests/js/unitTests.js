@@ -1808,7 +1808,9 @@ Test.prototype.tests = {
                 width: 578,
                 height: 200
             });
-            var layer = new Kinetic.Layer();
+            var layer = new Kinetic.Layer({
+            	throttle: 999
+            });
             darth = new Kinetic.Image({
                 x: 200,
                 y: 60,
@@ -1822,6 +1824,12 @@ Test.prototype.tests = {
 
             layer.add(darth);
             stage.add(layer);
+            
+            darth.setHeight(200);
+            layer.draw();
+            
+            darth.setHeight(100);
+            layer.draw();
 
             test(darth.getX() === 200, 'x should be 200');
             test(darth.getY() === 60, 'y should be 60');

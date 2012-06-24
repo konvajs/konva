@@ -2937,7 +2937,7 @@ Kinetic.Shape.prototype = {
                 context.fill();
             }
             // radial gradient
-            else if(s.radius && e.radius) {
+            else if((s.radius || s.radius === 0) && (e.radius || e.radius === 0)) {
                 var context = this.getContext();
                 var grd = context.createRadialGradient(s.x, s.y, s.radius, e.x, e.y, e.radius);
                 var colorStops = fill.colorStops;
@@ -3479,18 +3479,10 @@ Kinetic.Image = function(config) {
     Kinetic.Rect.apply(this, [config]);
 
     // update attrs when one of the following changes
-    this.on('widthChange', function() {
-        this._setAttrs();
-    });
-    this.on('heightChange', function() {
-        this._setAttrs();
-    });
-    this.on('imageChange', function() {
-        this._setAttrs();
-    });
-    this.on('cropChange', function() {
-        this._setAttrs();
-    });
+    this.on('widthChange', this._setAttrs);
+    this.on('heightChange', this._setAttrs);
+    this.on('imageChange', this._setAttrs);
+    this.on('cropChange', this._setAttrs);
 
     this._setAttrs();
 };

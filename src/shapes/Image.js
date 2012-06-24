@@ -14,18 +14,10 @@ Kinetic.Image = function(config) {
     Kinetic.Rect.apply(this, [config]);
 
     // update attrs when one of the following changes
-    this.on('widthChange', function() {
-        this._setAttrs();
-    });
-    this.on('heightChange', function() {
-        this._setAttrs();
-    });
-    this.on('imageChange', function() {
-        this._setAttrs();
-    });
-    this.on('cropChange', function() {
-        this._setAttrs();
-    });
+    this.on('widthChange', this._setAttrs);
+    this.on('heightChange', this._setAttrs);
+    this.on('imageChange', this._setAttrs);
+    this.on('cropChange', this._setAttrs);
 
     this._setAttrs();
 };
