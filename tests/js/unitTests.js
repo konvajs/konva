@@ -1816,7 +1816,8 @@ Test.prototype.tests = {
                 width: 100,
                 height: 100,
                 offset: [50, 30],
-                crop: [20, 20, 200, 250]
+                crop: [135, 7, 167, 134],
+                cornerRadius: 20
             });
 
             layer.add(darth);
@@ -1832,10 +1833,10 @@ Test.prototype.tests = {
 
             var crop = null;
             crop = darth.getCrop();
-            test(crop.x === 20, 'crop x should be 20');
-            test(crop.y === 20, 'crop y should be 20');
-            test(crop.width === 200, 'crop width should be 200');
-            test(crop.height === 250, 'crop height should be 250');
+            test(crop.x === 135, 'crop x should be 135');
+            test(crop.y === 7, 'crop y should be 7');
+            test(crop.width === 167, 'crop width should be 167');
+            test(crop.height === 134, 'crop height should be134');
 
             /*
              * test cropping setter
@@ -1867,7 +1868,7 @@ Test.prototype.tests = {
             test(crop.height === 11, 'crop height should be 11');
 
             /*
-             * test partial setter
+             * test crop partial setter
              */
             darth.setCrop({
                 x: 12

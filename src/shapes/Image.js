@@ -4,87 +4,69 @@
 /**
  * Image constructor
  * @constructor
- * @augments Kinetic.Shape
+ * @augments Kinetic.Rect
  * @param {Object} config
  */
 Kinetic.Image = function(config) {
-    this.setDefaultAttrs({
-        crop: {
-            x: 0,
-            y: 0,
-        }
+    this.shapeType = "Image";
+
+    // call super constructor
+    Kinetic.Rect.apply(this, [config]);
+
+    // update attrs when one of the following changes
+    this.on('widthChange', function() {
+        this._setAttrs();
+    });
+    this.on('heightChange', function() {
+        this._setAttrs();
+    });
+    this.on('imageChange', function() {
+        this._setAttrs();
+    });
+    this.on('cropChange', function() {
+        this._setAttrs();
     });
 
-    this.shapeType = "Image";
-    config.drawFunc = function() {
-        if(!!this.attrs.image) {
-            var width = !!this.attrs.width ? this.attrs.width : this.attrs.image.width;
-            var height = !!this.attrs.height ? this.attrs.height : this.attrs.image.height;
-            var cropX = this.attrs.crop.x;
-            var cropY = this.attrs.crop.y;
-            var cropWidth = this.attrs.crop.width;
-            var cropHeight = this.attrs.crop.height;
-            var canvas = this.getCanvas();
-            var context = this.getContext();
-
-            context.beginPath();
-            context.rect(0, 0, width, height);
-            context.closePath();
-            this.fill();
-            this.stroke();
-
-            // if cropping
-            if(!!cropWidth && !!cropHeight) {
-                this.drawImage(this.attrs.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height);
-            }
-            // no cropping
-            else {
-                this.drawImage(this.attrs.image, 0, 0, width, height);
-            }
-        }
-    };
-    // call super constructor
-    Kinetic.Shape.apply(this, [config]);
+    this._setAttrs();
 };
-/*
- * Image methods
- */
+
 Kinetic.Image.prototype = {
-    /**
-     * set width and height
-     */
-    setSize: function() {
-        var size = Kinetic.GlobalObject._getSize(Array.prototype.slice.call(arguments));
-        this.setAttrs(size);
-    },
-    /**
-     * return image size
-     */
-    getSize: function() {
-        return {
-            width: this.attrs.width,
-            height: this.attrs.height
-        };
+    _setAttrs: function() {
+        var a = this.attrs;
+        if(a.image) {
+            if(!a.width) {
+                a.width = a.image.width;
+            }
+            if(!a.height) {
+                a.height = a.image.height;
+            }
+
+            var scale;
+            var offset;
+
+            if(a.crop) {
+                scale = [a.width / a.crop.width, a.height / a.crop.height];
+                offset = [-1 * a.crop.x, -7];
+            }
+            else {
+                scale = [a.width / a.image.width, a.height / a.image.height];
+            }
+
+            this.setFill({
+                image: a.image,
+                repeat: 'no-repeat',
+                scale: scale,
+                offset: offset
+            });
+        }
     }
 };
-// extend Shape
-Kinetic.GlobalObject.extend(Kinetic.Image, Kinetic.Shape);
+
+// extend Rect
+Kinetic.GlobalObject.extend(Kinetic.Image, Kinetic.Rect);
+
 // add setters and getters
-Kinetic.GlobalObject.addSettersGetters(Kinetic.Image, ['height', 'width', 'image', 'crop']);
-
-/**
- * set width
- * @name setWidth
- * @methodOf Kinetic.Image.prototype
- * @param {Number} width
- */
-
-/**
- * set height
- * @name setHeight
- * @methodOf Kinetic.Image.prototype
- * @param {Number} height
- */
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Image, ['image', 'crop']);
 
 /**
  * set image
@@ -103,18 +85,6 @@ Kinetic.GlobalObject.addSettersGetters(Kinetic.Image, ['height', 'width', 'image
 /**
  * get crop
  * @name getCrop
- * @methodOf Kinetic.Image.prototype
- */
-
-/**
- * get width
- * @name getWidth
- * @methodOf Kinetic.Image.prototype
- */
-
-/**
- * get height
- * @name getHeight
  * @methodOf Kinetic.Image.prototype
  */
 
