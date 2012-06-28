@@ -86,7 +86,6 @@ Kinetic.Node.prototype = {
          */
         for(var n = 0; n < types.length; n++) {
             var type = types[n];
-            //var event = (type.indexOf('touch') === -1) ? 'on' + type : type;
             var event = type;
             var parts = event.split('.');
             var baseEvent = parts[0];
@@ -173,8 +172,11 @@ Kinetic.Node.prototype = {
     /**
      * set attrs
      * @param {Object} config
+     * @param {Boolean} skipPublish set the second argument to true
+     *  to skip publication of the attr change event in case you want
+     *  to silently update an attribute
      */
-    setAttrs: function(config) {
+    setAttrs: function(config, skipPublish) {
         var go = Kinetic.GlobalObject;
         var that = this;
 
@@ -185,7 +187,7 @@ Kinetic.Node.prototype = {
                     var val = c[key];
 
                     // if obj doesn't have the val property, then create it
-                    if(obj[key] === undefined) {
+                    if(obj[key] === undefined && val !== undefined) {
                         obj[key] = {};
                     }
 
@@ -253,7 +255,7 @@ Kinetic.Node.prototype = {
                          * only fire change event for root
                          * level attrs
                          */
-                        if(level === 0) {
+                        if(level === 0 && !skipPublish) {
                             that._fireChangeEvent(key);
                         }
                     }
@@ -695,6 +697,9 @@ Kinetic.Node.prototype = {
     },
     _setAttr: function(obj, attr, val) {
         if(val !== undefined) {
+            if(obj === undefined) {
+                obj = {};
+            }
             obj[attr] = val;
         }
     },

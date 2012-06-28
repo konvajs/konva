@@ -1809,7 +1809,7 @@ Test.prototype.tests = {
                 height: 200
             });
             var layer = new Kinetic.Layer({
-            	throttle: 999
+                throttle: 999
             });
             darth = new Kinetic.Image({
                 x: 200,
@@ -1824,10 +1824,10 @@ Test.prototype.tests = {
 
             layer.add(darth);
             stage.add(layer);
-            
+
             darth.setHeight(200);
             layer.draw();
-            
+
             darth.setHeight(100);
             layer.draw();
 
@@ -2827,7 +2827,7 @@ Test.prototype.tests = {
         test(group.get('Group').length === 0, 'group should have 0 groups');
 
     },
-    'SHAPE - add text': function(containerId) {
+    'SHAPE - text getters and setters': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2838,60 +2838,105 @@ Test.prototype.tests = {
         var text = new Kinetic.Text({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
-            stroke: 'green',
+            stroke: '#555',
             strokeWidth: 5,
             fill: '#ddd',
             text: 'Hello World!',
-            fontSize: 60,
+            fontSize: 50,
             fontFamily: 'Calibri',
             fontStyle: 'normal',
             textFill: '#888',
             textStroke: '#333',
-            padding: 10,
-            fontStyle: 'normal',
-            align: 'center',
-            verticalAlign: 'middle',
-            width: 200,
+            align: 'right',
+            verticalAlign: 'bottom',
+            width: 400,
+            height: 100,
+            padding: 40,
             shadow: {
                 color: 'black',
                 blur: 1,
                 offset: [10, 10],
                 alpha: 0.2
-            }
+            },
+            cornerRadius: 10,
+            draggable: true,
+            detectionType: 'path'
         });
 
+        // center text box
+        text.setOffset(text.getBoxWidth() / 2, text.getBoxHeight() / 2);
+
         layer.add(text);
+        stage.add(layer);
 
         /*
          * test getters and setters
          */
-        text.setText('Bye World!');
-        test(text.getText() === 'Bye World!', 'text should be Bye World!');
-        test(text.getPadding() === 10, 'padding should be 10');
+
+        test(text.getX() === stage.getWidth() / 2, 'text box x should be in center of stage');
+        test(text.getY() === stage.getHeight() / 2, 'text box y should be in center of stage');
+        test(text.getStroke() === '#555', 'text box stroke should be #555');
+        test(text.getStrokeWidth() === 5, 'text box stroke width should be 5');
+        test(text.getFill() === '#ddd', 'text box fill should be #ddd');
+        test(text.getText() === 'Hello World!', 'text should be Hello World!');
+        test(text.getFontSize() == 50, 'font size should 50');
+        test(text.getFontFamily() == 'Calibri', 'font family should be Calibri');
         test(text.getFontStyle() == 'normal', 'font style should be normal');
-        text.setPadding(20);
-        test(text.getPadding() === 20, 'padding should be 20');
-        test(text.getWidth() === 200, 'width should be 200');
+        test(text.getTextFill() == '#888', 'text fill should be #888');
+        test(text.getTextStroke() == '#333', 'text fill should be #333');
+        test(text.getAlign() === 'right', 'text should be aligned right');
+        test(text.getVerticalAlign() === 'bottom', 'text should be vertically aligned at the bottom');
+        test(text.getWidth() === 400, 'width should be 400');
+        test(text.getHeight() === 100, 'height should be 100');
+        test(text.getPadding() === 40, 'padding should be 40');
+        test(text.getShadow().color === 'black', 'text box shadow color should be black');
+        test(text.getCornerRadius() === 10, 'text box corner radius should be 10');
+        test(text.getDraggable() === true, 'text should be draggable');
+        test(text.getDetectionType() === 'path', 'text detection type should be path');
 
-        stage.add(layer);
-
+        text.setX(1);
+        text.setY(2);
+        text.setStroke('orange');
+        text.setStrokeWidth(20);
+        text.setFill('red');
+        text.setText('bye world!');
+        text.setFontSize(10);
         text.setFontFamily('Arial');
-        text.setFontSize(30);
-        text.setFontStyle('italic');
-        text.setAlign('right');
+        text.setFontStyle('bold');
+        text.setTextFill('green');
+        text.setTextStroke('yellow');
+        text.setAlign('left');
         text.setVerticalAlign('top');
-        text.setTextFill('blue');
-        text.setTextStroke('red');
-        text.setTextStrokeWidth(10);
+        text.setWidth(300);
+        text.setHeight(75);
+        text.setPadding(20);
+        text.setShadow({
+            color: 'green'
+        });
+        text.setCornerRadius(20);
+        text.setDraggable(false);
+        text.setDetectionType('pixel');
 
-        test(text.getFontFamily() === 'Arial', 'font family should be Arial');
-        test(text.getFontSize() === 30, 'text size should be 30');
-        test(text.getFontStyle() == 'italic', 'font style should be italic');
-        test(text.getAlign() === 'right', 'text align should be right');
-        test(text.getVerticalAlign() === 'top', 'vertical align should be top');
-        test(text.getTextFill() === 'blue', 'text fill should be blue');
-        test(text.getTextStroke() === 'red', 'text stroke should be red');
-        test(text.getTextStrokeWidth() === 10, 'test stroke width should be 10');
+        test(text.getX() === 1, 'text box x should be 1');
+        test(text.getY() === 2, 'text box y should be 2');
+        test(text.getStroke() === 'orange', 'text box stroke should be orange');
+        test(text.getStrokeWidth() === 20, 'text box stroke width should be 20');
+        test(text.getFill() === 'red', 'text box fill should be red');
+        test(text.getText() === 'bye world!', 'text should be bye world!');
+        test(text.getFontSize() == 10, 'font size should 10');
+        test(text.getFontFamily() == 'Arial', 'font family should be Arial');
+        test(text.getFontStyle() == 'bold', 'font style should be bold');
+        test(text.getTextFill() == 'green', 'text fill should be green');
+        test(text.getTextStroke() == 'yellow', 'text fill should be yellow');
+        test(text.getAlign() === 'left', 'text should be aligned left');
+        test(text.getVerticalAlign() === 'top', 'text should be vertically aligned at the top');
+        test(text.getWidth() === 300, 'width should be 300');
+        test(text.getHeight() === 75, 'height should be 75');
+        test(text.getPadding() === 20, 'padding should be 20');
+        test(text.getShadow().color === 'green', 'text box shadow color should be green');
+        test(text.getCornerRadius() === 20, 'text box corner radius should be 20');
+        test(text.getDraggable() === false, 'text draggable should be false');
+        test(text.getDetectionType() === 'pixel', 'text detection type should be pixel');
 
     },
     'SHAPE - get text metrics': function(containerId) {
@@ -2921,15 +2966,10 @@ Test.prototype.tests = {
             }
         });
 
-        text.on('mouseover', function() {
-            console.log('mouseover text');
-        });
         // test text width before adding it to stage
         test(text.getTextWidth() > 0, 'text width should have a value');
         layer.add(text);
         stage.add(layer);
-
-        text.saveData();
 
         test(text.getTextSize().width > 0, 'text width should have a value');
         test(text.getTextSize().height > 0, 'text height should have a value');

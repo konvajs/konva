@@ -164,10 +164,8 @@ Kinetic.Shape.prototype = {
     /**
      * helper method to fill text and appy shadows if needed
      * @param {String} text
-     * @param {Number} x
-     * @param {Number} y
      */
-    fillText: function(text, x, y) {
+    fillText: function(text) {
         var appliedShadow = false;
         var context = this.getContext();
         context.save();
@@ -176,12 +174,12 @@ Kinetic.Shape.prototype = {
                 appliedShadow = this._applyShadow();
             }
             context.fillStyle = this.attrs.textFill;
-            context.fillText(text, x, y);
+            context.fillText(text, 0, 0);
         }
         context.restore();
 
         if(appliedShadow) {
-            this.fillText(text, x, y);
+            this.fillText(text, 0, 0);
         }
     },
     /**
@@ -191,7 +189,7 @@ Kinetic.Shape.prototype = {
      * @param {Number} x
      * @param {Number} y
      */
-    strokeText: function(text, x, y) {
+    strokeText: function(text) {
         var appliedShadow = false;
         var context = this.getContext();
         context.save();
@@ -209,12 +207,12 @@ Kinetic.Shape.prototype = {
             }
             context.lineWidth = this.attrs.textStrokeWidth;
             context.strokeStyle = this.attrs.textStroke;
-            context.strokeText(text, x, y);
+            context.strokeText(text, 0, 0);
         }
         context.restore();
 
         if(appliedShadow) {
-            this.strokeText(text, x, y);
+            this.strokeText(text, 0, 0);
         }
     },
     /**

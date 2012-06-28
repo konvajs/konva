@@ -38,7 +38,7 @@ Kinetic.Image.prototype = {
 
             if(a.crop) {
                 scale = [a.width / a.crop.width, a.height / a.crop.height];
-                offset = [-1 * a.crop.x, -7];
+                offset = [-1 * a.crop.x, -1 * a.crop.y];
             }
             else {
                 scale = [a.width / a.image.width, a.height / a.image.height];

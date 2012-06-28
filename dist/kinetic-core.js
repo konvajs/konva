@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jun 24 2012
+ * Date: Jun 27 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -483,7 +483,6 @@ Kinetic.Node.prototype = {
          */
         for(var n = 0; n < types.length; n++) {
             var type = types[n];
-            //var event = (type.indexOf('touch') === -1) ? 'on' + type : type;
             var event = type;
             var parts = event.split('.');
             var baseEvent = parts[0];
@@ -570,8 +569,11 @@ Kinetic.Node.prototype = {
     /**
      * set attrs
      * @param {Object} config
+     * @param {Boolean} skipPublish set the second argument to true
+     *  to skip publication of the attr change event in case you want
+     *  to silently update an attribute
      */
-    setAttrs: function(config) {
+    setAttrs: function(config, skipPublish) {
         var go = Kinetic.GlobalObject;
         var that = this;
 
@@ -582,7 +584,7 @@ Kinetic.Node.prototype = {
                     var val = c[key];
 
                     // if obj doesn't have the val property, then create it
-                    if(obj[key] === undefined) {
+                    if(obj[key] === undefined && val !== undefined) {
                         obj[key] = {};
                     }
 
@@ -650,7 +652,7 @@ Kinetic.Node.prototype = {
                          * only fire change event for root
                          * level attrs
                          */
-                        if(level === 0) {
+                        if(level === 0 && !skipPublish) {
                             that._fireChangeEvent(key);
                         }
                     }
@@ -1092,6 +1094,9 @@ Kinetic.Node.prototype = {
     },
     _setAttr: function(obj, attr, val) {
         if(val !== undefined) {
+            if(obj === undefined) {
+                obj = {};
+            }
             obj[attr] = val;
         }
     },
@@ -2965,10 +2970,8 @@ Kinetic.Shape.prototype = {
     /**
      * helper method to fill text and appy shadows if needed
      * @param {String} text
-     * @param {Number} x
-     * @param {Number} y
      */
-    fillText: function(text, x, y) {
+    fillText: function(text) {
         var appliedShadow = false;
         var context = this.getContext();
         context.save();
@@ -2977,12 +2980,12 @@ Kinetic.Shape.prototype = {
                 appliedShadow = this._applyShadow();
             }
             context.fillStyle = this.attrs.textFill;
-            context.fillText(text, x, y);
+            context.fillText(text, 0, 0);
         }
         context.restore();
 
         if(appliedShadow) {
-            this.fillText(text, x, y);
+            this.fillText(text, 0, 0);
         }
     },
     /**
@@ -2992,7 +2995,7 @@ Kinetic.Shape.prototype = {
      * @param {Number} x
      * @param {Number} y
      */
-    strokeText: function(text, x, y) {
+    strokeText: function(text) {
         var appliedShadow = false;
         var context = this.getContext();
         context.save();
@@ -3010,12 +3013,12 @@ Kinetic.Shape.prototype = {
             }
             context.lineWidth = this.attrs.textStrokeWidth;
             context.strokeStyle = this.attrs.textStroke;
-            context.strokeText(text, x, y);
+            context.strokeText(text, 0, 0);
         }
         context.restore();
 
         if(appliedShadow) {
-            this.strokeText(text, x, y);
+            this.strokeText(text, 0, 0);
         }
     },
     /**
@@ -3503,7 +3506,7 @@ Kinetic.Image.prototype = {
 
             if(a.crop) {
                 scale = [a.width / a.crop.width, a.height / a.crop.height];
-                offset = [-1 * a.crop.x, -7];
+                offset = [-1 * a.crop.x, -1 * a.crop.y];
             }
             else {
                 scale = [a.width / a.image.width, a.height / a.image.height];
@@ -3873,7 +3876,7 @@ Kinetic.GlobalObject.addSettersGetters(Kinetic.Star, ['numPoints', 'innerRadius'
 /**
  * Text constructor
  * @constructor
- * @augments Kinetic.Shape
+ * @augments Kinetic.Group
  * @param {Object} config
  */
 Kinetic.Text = function(config) {
@@ -3883,74 +3886,87 @@ Kinetic.Text = function(config) {
         fontSize: 12,
         align: 'left',
         verticalAlign: 'top',
-        padding: 0,
         fontStyle: 'normal',
+        padding: 0,
         width: 'auto',
-        detectionType: 'pixel'
+        height: 'auto',
+        detectionType: 'path',
+        cornerRadius: 0
     });
 
     this.shapeType = "Text";
+    this.boxShape = new Kinetic.Rect({});
 
-    config.drawFunc = function() {
-        var context = this.getContext();
-        context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'pt ' + this.attrs.fontFamily;
-        context.textBaseline = 'middle';
-        var textHeight = this.getTextHeight();
-        var textWidth = this.attrs.width === 'auto' ? this.getTextWidth() : this.attrs.width;
-        var p = this.attrs.padding;
-        var x = 0;
-        var y = 0;
-        var that = this;
+    var that = this;
 
-        switch (this.attrs.align) {
-            case 'center':
-                x = textWidth / -2 - p;
-                break;
-            case 'right':
-                x = -1 * textWidth - p;
-                break;
-        }
+    this.textShape = new Kinetic.Shape({
+        drawFunc: function() {
+            var context = this.getContext();
 
-        switch (this.attrs.verticalAlign) {
-            case 'middle':
-                y = textHeight / -2 - p;
-                break;
-            case 'bottom':
-                y = -1 * textHeight - p;
-                break;
-        }
+            // sync appliedShadow flag with boxShape
+            this.appliedShadow = that.boxShape.appliedShadow;
 
-        // draw path
-        context.save();
-        context.beginPath();
-        context.rect(x, y, textWidth + p * 2, textHeight + p * 2);
-        context.closePath();
+            context.font = that.attrs.fontStyle + ' ' + that.attrs.fontSize + 'pt ' + that.attrs.fontFamily;
+            context.textBaseline = 'middle';
+            context.textAlign = 'left';
+            context.save();
 
-        this.fill();
-        this.stroke();
+            var p = that.attrs.padding;
 
-        context.restore();
-
-        var tx = p + x;
-        var ty = textHeight / 2 + p + y;
-
-        // clipping region for max width
-        context.save();
-        if(this.attrs.width !== 'auto') {
             context.beginPath();
-            context.rect(x, y, textWidth + p, textHeight + p * 2);
+            context.rect(p / 2, p / 2, that.getBoxWidth() - p, that.getBoxHeight() - p);
             context.closePath();
-            context.clip();
+
+            if(that.attrs.width !== 'auto' && (that.getTextWidth() > that.getBoxWidth() - p || that.getTextHeight() > that.getBoxHeight() - p)) {
+                context.clip();
+            }
+
+            // horizontal align
+            if(that.attrs.align === 'left') {
+                context.translate(p / 2, 0);
+            }
+            else if(that.attrs.align === 'center') {
+                context.translate((that.getBoxWidth() - that.getTextWidth()) / 2, 0);
+            }
+            // right
+            else {
+                context.translate(that.getBoxWidth() - that.getTextWidth() - p / 2, 0);
+            }
+
+            // vertical align
+            if(that.attrs.verticalAlign === 'top') {
+                context.translate(0, (p + that.getTextHeight()) / 2);
+            }
+            else if(that.attrs.verticalAlign === 'middle') {
+                context.translate(0, that.getBoxHeight() / 2);
+            }
+            // bottom
+            else {
+                context.translate(0, that.getBoxHeight() - (p + that.getTextHeight()) / 2);
+            }
+
+            this.fillText(that.attrs.text);
+            this.strokeText(that.attrs.text);
+            context.restore();
         }
+    });
 
-        // draw text
-        this.fillText(this.attrs.text, tx, ty);
-        this.strokeText(this.attrs.text, tx, ty);
-
-        context.restore();
-    };
     // call super constructor
-    Kinetic.Shape.apply(this, [config]);
+    Kinetic.Group.apply(this, [config]);
+
+    // add shapes to group
+    this.add(this.boxShape);
+    this.add(this.textShape);
+
+    // bind events to sync attrs
+    var attrs = ['width', 'height', 'cornerRadius', 'stroke', 'strokeWidth', 'fill', 'shadow', 'detectionType', 'textFill', 'textStroke', 'textStrokeWidth'];
+
+    for(var n = 0; n < attrs.length; n++) {
+        var attr = attrs[n];
+        this.on(attr + 'Change', this._syncAttrs);
+    }
+
+    this._syncAttrs();
 };
 /*
  * Text methods
@@ -3983,13 +3999,48 @@ Kinetic.Text.prototype = {
             width: metrics.width,
             height: parseInt(this.attrs.fontSize, 10)
         };
+    },
+    /**
+     * get box width
+     */
+    getBoxWidth: function() {
+        return (this.attrs.width === 'auto' ? this.getTextWidth() : this.attrs.width) + this.attrs.padding;
+    },
+    /**
+     * get box height
+     */
+    getBoxHeight: function() {
+        return (this.attrs.height === 'auto' ? this.getTextHeight() : this.attrs.height) + this.attrs.padding;
+    },
+    _syncAttrs: function() {
+        this.boxShape.setAttrs({
+            width: this.getBoxWidth(),
+            height: this.getBoxHeight(),
+            cornerRadius: this.attrs.cornerRadius,
+            stroke: this.attrs.stroke,
+            strokeWidth: this.attrs.strokeWidth,
+            fill: this.attrs.fill,
+            shadow: this.attrs.shadow,
+            detectionType: this.attrs.detectionType
+        }, true);
+        /*
+         * sync attrs accessed by fillText and strokeText
+         * in Shape class, and also the detectionType
+         */
+        this.textShape.setAttrs({
+            textFill: this.attrs.textFill,
+            textStroke: this.attrs.textStroke,
+            textStrokeWidth: this.attrs.textStrokeWidth,
+            shadow: this.attrs.shadow,
+            detectionType: this.attrs.detectionType
+        }, true);
     }
 };
 // extend Shape
-Kinetic.GlobalObject.extend(Kinetic.Text, Kinetic.Shape);
+Kinetic.GlobalObject.extend(Kinetic.Text, Kinetic.Group);
 
 // add setters and getters
-Kinetic.GlobalObject.addSettersGetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'verticalAlign', 'text', 'width']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'verticalAlign', 'text', 'width', 'height', 'cornerRadius', 'fill', 'stroke', 'strokeWidth', 'shadow']);
 
 /**
  * set font family
@@ -4062,10 +4113,24 @@ Kinetic.GlobalObject.addSettersGetters(Kinetic.Text, ['fontFamily', 'fontSize', 
  */
 
 /**
- * set width
+ * set width of text box
  * @name setWidth
  * @methodOf Kinetic.Text.prototype
  * @param {Number} width
+ */
+
+/**
+ * set height of text box
+ * @name setHeight
+ * @methodOf Kinetic.Text.prototype
+ * @param {Number} height
+ */
+
+/**
+ * set shadow of text or textbox
+ * @name setShadow
+ * @methodOf Kinetic.Text.prototype
+ * @param {Object} config
  */
 
 /**
@@ -4129,8 +4194,20 @@ Kinetic.GlobalObject.addSettersGetters(Kinetic.Text, ['fontFamily', 'fontSize', 
  */
 
 /**
- * get total width including padding and borders
+ * get width of text box
  * @name getWidth
+ * @methodOf Kinetic.Text.prototype
+ */
+
+/**
+ * get height of text box
+ * @name getHeight
+ * @methodOf Kinetic.Text.prototype
+ */
+
+/**
+ * get shadow of text or textbox
+ * @name getShadow
  * @methodOf Kinetic.Text.prototype
  */
 ///////////////////////////////////////////////////////////////////////
