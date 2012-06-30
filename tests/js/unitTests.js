@@ -2848,7 +2848,6 @@ Test.prototype.tests = {
             textFill: '#888',
             textStroke: '#333',
             align: 'right',
-            verticalAlign: 'bottom',
             width: 400,
             height: 100,
             padding: 40,
@@ -2885,7 +2884,6 @@ Test.prototype.tests = {
         test(text.getTextFill() == '#888', 'text fill should be #888');
         test(text.getTextStroke() == '#333', 'text fill should be #333');
         test(text.getAlign() === 'right', 'text should be aligned right');
-        test(text.getVerticalAlign() === 'bottom', 'text should be vertically aligned at the bottom');
         test(text.getWidth() === 400, 'width should be 400');
         test(text.getHeight() === 100, 'height should be 100');
         test(text.getPadding() === 40, 'padding should be 40');
@@ -2906,7 +2904,6 @@ Test.prototype.tests = {
         text.setTextFill('green');
         text.setTextStroke('yellow');
         text.setAlign('left');
-        text.setVerticalAlign('top');
         text.setWidth(300);
         text.setHeight(75);
         text.setPadding(20);
@@ -2929,7 +2926,6 @@ Test.prototype.tests = {
         test(text.getTextFill() == 'green', 'text fill should be green');
         test(text.getTextStroke() == 'yellow', 'text fill should be yellow');
         test(text.getAlign() === 'left', 'text should be aligned left');
-        test(text.getVerticalAlign() === 'top', 'text should be vertically aligned at the top');
         test(text.getWidth() === 300, 'width should be 300');
         test(text.getHeight() === 75, 'height should be 75');
         test(text.getPadding() === 20, 'padding should be 20');
@@ -2939,7 +2935,7 @@ Test.prototype.tests = {
         test(text.getDetectionType() === 'pixel', 'text detection type should be pixel');
 
     },
-    'SHAPE - get text metrics': function(containerId) {
+    'SHAPE - text multi line': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2950,31 +2946,32 @@ Test.prototype.tests = {
         var text = new Kinetic.Text({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
-            text: 'Hello World!',
-            fontSize: 60,
+            stroke: '#555',
+            strokeWidth: 5,
+            fill: '#ddd',
+            text: 'All the world \'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.',
+            fontSize: 16,
             fontFamily: 'Calibri',
             fontStyle: 'normal',
-            textStroke: 'green',
-            fontStyle: 'italic',
-            align: 'center',
-            verticalAlign: 'middle',
+            textFill: '#555',
+            width: 385,
+            padding: 20,
             shadow: {
                 color: 'black',
-                blur: 2,
-                offset: [5, 5],
-                alpha: 1
-            }
+                blur: 1,
+                offset: [10, 10],
+                alpha: 0.2
+            },
+            cornerRadius: 10,
+            draggable: true,
+            detectionType: 'path'
         });
 
-        // test text width before adding it to stage
-        test(text.getTextWidth() > 0, 'text width should have a value');
+        // center text box
+        text.setOffset(text.getBoxWidth() / 2, text.getBoxHeight() / 2);
+
         layer.add(text);
         stage.add(layer);
-
-        test(text.getTextSize().width > 0, 'text width should have a value');
-        test(text.getTextSize().height > 0, 'text height should have a value');
-        test(text.getTextWidth() > 0, 'text width should have a value');
-        test(text.getTextHeight() > 0, 'text height should have a value');
 
     },
     'SHAPE - get shape name': function(containerId) {

@@ -172,11 +172,8 @@ Kinetic.Node.prototype = {
     /**
      * set attrs
      * @param {Object} config
-     * @param {Boolean} skipPublish set the second argument to true
-     *  to skip publication of the attr change event in case you want
-     *  to silently update an attribute
      */
-    setAttrs: function(config, skipPublish) {
+    setAttrs: function(config) {
         var go = Kinetic.GlobalObject;
         var that = this;
 
@@ -255,7 +252,7 @@ Kinetic.Node.prototype = {
                          * only fire change event for root
                          * level attrs
                          */
-                        if(level === 0 && !skipPublish) {
+                        if(level === 0) {
                             that._fireChangeEvent(key);
                         }
                     }

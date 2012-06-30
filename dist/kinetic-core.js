@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jun 27 2012
+ * Date: Jun 30 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -569,11 +569,8 @@ Kinetic.Node.prototype = {
     /**
      * set attrs
      * @param {Object} config
-     * @param {Boolean} skipPublish set the second argument to true
-     *  to skip publication of the attr change event in case you want
-     *  to silently update an attribute
      */
-    setAttrs: function(config, skipPublish) {
+    setAttrs: function(config) {
         var go = Kinetic.GlobalObject;
         var that = this;
 
@@ -652,7 +649,7 @@ Kinetic.Node.prototype = {
                          * only fire change event for root
                          * level attrs
                          */
-                        if(level === 0 && !skipPublish) {
+                        if(level === 0) {
                             that._fireChangeEvent(key);
                         }
                     }
@@ -3891,9 +3888,11 @@ Kinetic.Text = function(config) {
         width: 'auto',
         height: 'auto',
         detectionType: 'path',
-        cornerRadius: 0
+        cornerRadius: 0,
+        lineHeight: 1.2
     });
 
+    this.dummyCanvas = document.createElement('canvas');
     this.shapeType = "Text";
     this.boxShape = new Kinetic.Rect({});
 
@@ -3913,40 +3912,24 @@ Kinetic.Text = function(config) {
 
             var p = that.attrs.padding;
 
-            context.beginPath();
-            context.rect(p / 2, p / 2, that.getBoxWidth() - p, that.getBoxHeight() - p);
-            context.closePath();
-
-            if(that.attrs.width !== 'auto' && (that.getTextWidth() > that.getBoxWidth() - p || that.getTextHeight() > that.getBoxHeight() - p)) {
-                context.clip();
-            }
+            var lineHeightPx = that.attrs.lineHeight * that.getTextHeight();
 
             // horizontal align
-            if(that.attrs.align === 'left') {
-                context.translate(p / 2, 0);
-            }
-            else if(that.attrs.align === 'center') {
-                context.translate((that.getBoxWidth() - that.getTextWidth()) / 2, 0);
-            }
-            // right
-            else {
-                context.translate(that.getBoxWidth() - that.getTextWidth() - p / 2, 0);
-            }
+            context.translate(p, 0);
 
             // vertical align
-            if(that.attrs.verticalAlign === 'top') {
-                context.translate(0, (p + that.getTextHeight()) / 2);
-            }
-            else if(that.attrs.verticalAlign === 'middle') {
-                context.translate(0, that.getBoxHeight() / 2);
-            }
-            // bottom
-            else {
-                context.translate(0, that.getBoxHeight() - (p + that.getTextHeight()) / 2);
+            context.translate(0, p + that.getTextHeight() / 2);
+
+            // draw text lines
+            var textArr = that.textArr;
+            for(var n = 0; n < textArr.length; n++) {
+                var text = textArr[n];
+                this.fillText(text);
+                this.strokeText(text);
+
+                context.translate(0, lineHeightPx);
             }
 
-            this.fillText(that.attrs.text);
-            this.strokeText(that.attrs.text);
             context.restore();
         }
     });
@@ -3958,14 +3941,19 @@ Kinetic.Text = function(config) {
     this.add(this.boxShape);
     this.add(this.textShape);
 
-    // bind events to sync attrs
+    // sync attrs
     var attrs = ['width', 'height', 'cornerRadius', 'stroke', 'strokeWidth', 'fill', 'shadow', 'detectionType', 'textFill', 'textStroke', 'textStrokeWidth'];
-
+    var that = this;
     for(var n = 0; n < attrs.length; n++) {
         var attr = attrs[n];
-        this.on(attr + 'Change', this._syncAttrs);
+        this.on(attr + 'Change', function(evt) {
+            if(!evt.shape) {
+                that._syncAttrs();
+            }
+        });
     }
 
+    that._setTextData();
     this._syncAttrs();
 };
 /*
@@ -3976,41 +3964,61 @@ Kinetic.Text.prototype = {
      * get text width in pixels
      */
     getTextWidth: function() {
-        return this.getTextSize().width;
+        return this.textWidth;
     },
     /**
      * get text height in pixels
      */
     getTextHeight: function() {
-        return this.getTextSize().height;
+        return this.textHeight;
     },
     /**
-     * get text size in pixels
+     * get box width
      */
-    getTextSize: function() {
-        var dummyCanvas = document.createElement('canvas');
+    getBoxWidth: function() {
+        return this.attrs.width === 'auto' ? this.getTextWidth() + this.attrs.padding * 2 : this.attrs.width;
+    },
+    /**
+     * get box height
+     */
+    getBoxHeight: function() {
+        return this.attrs.height === 'auto' ? (this.getTextHeight() * this.textArr.length * this.attrs.lineHeight) + this.attrs.padding * 2 : this.attrs.height;
+    },
+    _getTextSize: function(text) {
+        var dummyCanvas = this.dummyCanvas;
         var context = dummyCanvas.getContext('2d');
 
         context.save();
         context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'pt ' + this.attrs.fontFamily;
-        var metrics = context.measureText(this.attrs.text);
+        var metrics = context.measureText(text);
         context.restore();
         return {
             width: metrics.width,
             height: parseInt(this.attrs.fontSize, 10)
         };
     },
-    /**
-     * get box width
-     */
-    getBoxWidth: function() {
-        return (this.attrs.width === 'auto' ? this.getTextWidth() : this.attrs.width) + this.attrs.padding;
-    },
-    /**
-     * get box height
-     */
-    getBoxHeight: function() {
-        return (this.attrs.height === 'auto' ? this.getTextHeight() : this.attrs.height) + this.attrs.padding;
+    _setTextData: function() {
+        var charArr = this.attrs.text.split('');
+        var arr = [];
+        var lastWord = '';
+        this.textArr = [];
+        this.textWidth = 0;
+        this.textHeight = 0;
+        while(charArr.length > 0) {
+            var line = lastWord;
+            while(charArr[0] !== undefined && (this.attrs.width === 'auto' || this._getTextSize(line + charArr[0]).width < this.attrs.width - this.attrs.padding)) {
+                lastWord = charArr[0] === ' ' || charArr[0] === '-' ? '' : lastWord + charArr[0];
+                line += charArr.splice(0, 1);
+            }
+            if(charArr.length > 0 && charArr[0] !== ' ' && charArr[0] !== '-') {
+                line = line.substring(0, line.lastIndexOf(lastWord));
+            }
+
+            this.textWidth = Math.max(this.textWidth, this._getTextSize(line).width);
+            arr.push(line);
+        }
+        this.textHeight = this._getTextSize(arr[0]).height;
+        this.textArr = arr;
     },
     _syncAttrs: function() {
         this.boxShape.setAttrs({
@@ -4040,7 +4048,7 @@ Kinetic.Text.prototype = {
 Kinetic.GlobalObject.extend(Kinetic.Text, Kinetic.Group);
 
 // add setters and getters
-Kinetic.GlobalObject.addSettersGetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'verticalAlign', 'text', 'width', 'height', 'cornerRadius', 'fill', 'stroke', 'strokeWidth', 'shadow']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'lineHeight', 'text', 'width', 'height', 'cornerRadius', 'fill', 'stroke', 'strokeWidth', 'shadow']);
 
 /**
  * set font family
@@ -4099,10 +4107,10 @@ Kinetic.GlobalObject.addSettersGetters(Kinetic.Text, ['fontFamily', 'fontSize', 
  */
 
 /**
- * set vertical align of text
- * @name setVerticalAlign
+ * set line height
+ * @name setLineHeight
  * @methodOf Kinetic.Text.prototype
- * @param {String} verticalAlign verticalAlign can be "top", "middle", or "bottom"
+ * @param {Number} lineHeight default is 1.2
  */
 
 /**
@@ -4182,8 +4190,8 @@ Kinetic.GlobalObject.addSettersGetters(Kinetic.Text, ['fontFamily', 'fontSize', 
  */
 
 /**
- * get vertical align
- * @name getVerticalAlign
+ * get line height
+ * @name getLineHeight
  * @methodOf Kinetic.Text.prototype
  */
 
