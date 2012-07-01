@@ -3994,7 +3994,7 @@ Kinetic.Text.prototype = {
      * get box width
      */
     getBoxWidth: function() {
-        return this.attrs.width === 'auto' ? this.getTextWidboxWidths.padding * 2 : this.attrs.width;
+        return this.attrs.width === 'auto' ? this.getTextWidth() + this.attrs.padding * 2 : this.attrs.width;
     },
     /**
      * get box height
