@@ -3469,61 +3469,80 @@ Kinetic.GlobalObject.addSettersGetters(Kinetic.Ellipse, ['radius']);
 /**
  * Image constructor
  * @constructor
- * @augments Kinetic.Rect
+ * @augments Kinetic.Shape
  * @param {Object} config
  */
 Kinetic.Image = function(config) {
     this.shapeType = "Image";
+    config.drawFunc = function() {
+        if(!!this.attrs.image) {
+            var width = !!this.attrs.width ? this.attrs.width : this.attrs.image.width;
+            var height = !!this.attrs.height ? this.attrs.height : this.attrs.image.height;
+            var canvas = this.getCanvas();
+            var context = this.getContext();
 
-    // call super constructor
-    Kinetic.Rect.apply(this, [config]);
+            context.beginPath();
+            context.rect(0, 0, width, height);
+            context.closePath();
+            this.fill();
+            this.stroke();
 
-    // update attrs when one of the following changes
-    this.on('widthChange', this._setAttrs);
-    this.on('heightChange', this._setAttrs);
-    this.on('imageChange', this._setAttrs);
-    this.on('cropChange', this._setAttrs);
-
-    this._setAttrs();
-};
-
-Kinetic.Image.prototype = {
-    _setAttrs: function() {
-        var a = this.attrs;
-        if(a.image) {
-            if(!a.width) {
-                a.width = a.image.width;
+            // if cropping
+            if(this.attrs.crop && this.attrs.crop.width && this.attrs.crop.height) {
+                var cropX = this.attrs.crop.x ? this.attrs.crop.x : 0;
+                var cropY = this.attrs.crop.y ? this.attrs.crop.y : 0;
+                var cropWidth = this.attrs.crop.width;
+                var cropHeight = this.attrs.crop.height;
+                this.drawImage(this.attrs.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height);
             }
-            if(!a.height) {
-                a.height = a.image.height;
-            }
-
-            var scale;
-            var offset;
-
-            if(a.crop) {
-                scale = [a.width / a.crop.width, a.height / a.crop.height];
-                offset = [-1 * a.crop.x, -1 * a.crop.y];
-            }
+            // no cropping
             else {
-                scale = [a.width / a.image.width, a.height / a.image.height];
+                this.drawImage(this.attrs.image, 0, 0, width, height);
             }
-
-            this.setFill({
-                image: a.image,
-                repeat: 'no-repeat',
-                scale: scale,
-                offset: offset
-            });
         }
+    };
+    // call super constructor
+    Kinetic.Shape.apply(this, [config]);
+};
+/*
+ * Image methods
+ */
+Kinetic.Image.prototype = {
+    /**
+     * set width and height
+     */
+    setSize: function() {
+        var size = Kinetic.GlobalObject._getSize(Array.prototype.slice.call(arguments));
+        this.setAttrs(size);
+    },
+    /**
+     * return image size
+     */
+    getSize: function() {
+        return {
+            width: this.attrs.width,
+            height: this.attrs.height
+        };
     }
 };
-
-// extend Rect
-Kinetic.GlobalObject.extend(Kinetic.Image, Kinetic.Rect);
-
+// extend Shape
+Kinetic.GlobalObject.extend(Kinetic.Image, Kinetic.Shape);
 // add setters and getters
-Kinetic.GlobalObject.addSettersGetters(Kinetic.Image, ['image', 'crop']);
+Kinetic.GlobalObject.addSettersGetters(Kinetic.Image, ['height', 'width', 'image', 'crop']);
+
+/**
+ * set width
+ * @name setWidth
+ * @methodOf Kinetic.Image.prototype
+ * @param {Number} width
+ */
+
+/**
+ * set height
+ * @name setHeight
+ * @methodOf Kinetic.Image.prototype
+ * @param {Number} height
+ */
 
 /**
  * set image
@@ -3542,6 +3561,18 @@ Kinetic.GlobalObject.addSettersGetters(Kinetic.Image, ['image', 'crop']);
 /**
  * get crop
  * @name getCrop
+ * @methodOf Kinetic.Image.prototype
+ */
+
+/**
+ * get width
+ * @name getWidth
+ * @methodOf Kinetic.Image.prototype
+ */
+
+/**
+ * get height
+ * @name getHeight
  * @methodOf Kinetic.Image.prototype
  */
 
