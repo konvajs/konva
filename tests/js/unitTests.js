@@ -3127,33 +3127,52 @@ Test.prototype.tests = {
             height: 50,
             fill: 'blue',
             shadow: {
-            	offset: [10, 10]
+                offset: [10, 10]
             }
         });
 
+        var circle = new Kinetic.Ellipse({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: [70, 35],
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(circle);
         layer.add(rect);
         stage.add(layer);
 
-        var widthChanged = false;
-        var shadowChanged = false;
+        var widthChanged = 0;
+        var shadowChanged = 0;
+        var radiusChanged = 0;
 
         rect.on('widthChange', function() {
-            widthChanged = true;
+            widthChanged++;
         });
-        
+
         rect.on('shadowChange', function() {
-            shadowChanged = true;
+            shadowChanged++;
         });
+
+        circle.on('radiusChange', function() {
+            radiusChanged++;
+        });
+
+        circle.setRadius(70, 20);
 
         rect.setSize(210);
         rect.setShadow({
-        	offset: {
-        		x: 20
-        	}
+            offset: {
+                x: 20
+            }
         });
 
-        test(widthChanged, 'width change event was not fired');
-        test(shadowChanged, 'shadow change event not fired');
+        test(widthChanged === 1, 'width change event was not fired correctly');
+        test(shadowChanged === 1, 'shadow change event not fired correctly');
+        test(radiusChanged === 1, 'radius change event was not fired correctly');
+
     },
     'NODE - test setting shadow offset': function(containerId) {
         var stage = new Kinetic.Stage({

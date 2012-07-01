@@ -56,10 +56,12 @@ Kinetic.Ellipse.prototype = {
         if(go._isObject(radius)) {
             return false;
         }
-        var pos = go._getXY(radius);
-        this.setAttrs({
-            radius: pos
-        });
+
+        /*
+         * directly set radius attr to avoid
+         * duplicate attr change event
+         */
+        this.attrs.radius = go._getXY(radius);
     }
 };
 // extend Shape
