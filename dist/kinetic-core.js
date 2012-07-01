@@ -3895,41 +3895,43 @@ Kinetic.Text = function(config) {
     this.dummyCanvas = document.createElement('canvas');
     this.shapeType = "Text";
     this.boxShape = new Kinetic.Rect({});
-
     var that = this;
 
     this.textShape = new Kinetic.Shape({
         drawFunc: function() {
             var context = this.getContext();
+            var p = that.attrs.padding;
+            var lineHeightPx = that.attrs.lineHeight * that.getTextHeight();
+            var textArr = that.textArr;
 
             // sync appliedShadow flag with boxShape
             this.appliedShadow = that.boxShape.appliedShadow;
-
             context.font = that.attrs.fontStyle + ' ' + that.attrs.fontSize + 'pt ' + that.attrs.fontFamily;
             context.textBaseline = 'middle';
             context.textAlign = 'left';
             context.save();
-
-            var p = that.attrs.padding;
-
-            var lineHeightPx = that.attrs.lineHeight * that.getTextHeight();
-
-            // horizontal align
             context.translate(p, 0);
-
-            // vertical align
             context.translate(0, p + that.getTextHeight() / 2);
 
             // draw text lines
-            var textArr = that.textArr;
             for(var n = 0; n < textArr.length; n++) {
                 var text = textArr[n];
+
+                // horizontal alignment
+                context.save();
+                if(that.attrs.align === 'right') {
+                    context.translate(that.getBoxWidth() - that._getTextSize(text).width - p * 2, 0);
+                }
+                else if(that.attrs.align === 'center') {
+                    context.translate((that.getBoxWidth() - that._getTextSize(text).width - p * 2) / 2, 0);
+                }
+
                 this.fillText(text);
                 this.strokeText(text);
+                context.restore();
 
                 context.translate(0, lineHeightPx);
             }
-
             context.restore();
         }
     });
@@ -3941,7 +3943,7 @@ Kinetic.Text = function(config) {
     this.add(this.boxShape);
     this.add(this.textShape);
 
-    // sync attrs
+    // sync attr event bindings
     var attrs = ['width', 'height', 'cornerRadius', 'stroke', 'strokeWidth', 'fill', 'shadow', 'detectionType', 'textFill', 'textStroke', 'textStrokeWidth'];
     var that = this;
     for(var n = 0; n < attrs.length; n++) {

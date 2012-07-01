@@ -2848,9 +2848,10 @@ Test.prototype.tests = {
             textFill: '#888',
             textStroke: '#333',
             align: 'right',
+            lineHeight: 1.2,
             width: 400,
             height: 100,
-            padding: 40,
+            padding: 10,
             shadow: {
                 color: 'black',
                 blur: 1,
@@ -2884,13 +2885,19 @@ Test.prototype.tests = {
         test(text.getTextFill() == '#888', 'text fill should be #888');
         test(text.getTextStroke() == '#333', 'text fill should be #333');
         test(text.getAlign() === 'right', 'text should be aligned right');
+        test(text.getLineHeight() === 1.2, 'line height should be 1.2');
         test(text.getWidth() === 400, 'width should be 400');
         test(text.getHeight() === 100, 'height should be 100');
-        test(text.getPadding() === 40, 'padding should be 40');
+        test(text.getPadding() === 10, 'padding should be 10');
         test(text.getShadow().color === 'black', 'text box shadow color should be black');
         test(text.getCornerRadius() === 10, 'text box corner radius should be 10');
         test(text.getDraggable() === true, 'text should be draggable');
         test(text.getDetectionType() === 'path', 'text detection type should be path');
+
+        test(text.getBoxWidth() === 400, 'box width should be 400');
+        test(text.getBoxHeight() === 100, 'box height should be 100');
+        test(text.getTextWidth() > 0, 'text width should be greater than 0');
+        test(text.getTextHeight() > 0, 'text height should be greater than 0');
 
         text.setX(1);
         text.setY(2);
@@ -2935,7 +2942,7 @@ Test.prototype.tests = {
         test(text.getDetectionType() === 'pixel', 'text detection type should be pixel');
 
     },
-    '*SHAPE - text multi line': function(containerId) {
+    'SHAPE - text multi line': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2956,6 +2963,7 @@ Test.prototype.tests = {
             textFill: '#555',
             width: 380,
             padding: 20,
+            align: 'center',
             shadow: {
                 color: 'black',
                 blur: 1,
