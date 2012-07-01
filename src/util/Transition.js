@@ -18,20 +18,22 @@ Kinetic.Transition = function(node, config) {
     var that = this;
 
     // add tween for each property
-    function addTween(c, attrs) {
+    function addTween(c, attrs, obj, rootObj) {
         for(var key in c) {
             if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
                 // if val is an object then traverse
                 if(Kinetic.GlobalObject._isObject(c[key])) {
-                    addTween(c[key], attrs[key]);
+                    obj[key] = {};
+                    addTween(c[key], attrs[key], obj[key], rootObj);
                 }
                 else {
-                    that._add(that._getTween(attrs, key, c[key]));
+                    that._add(that._getTween(attrs, key, c[key], obj, rootObj));
                 }
             }
         }
     }
-    addTween(config, node.attrs);
+    var obj = {};
+    addTween(config, node.attrs, obj, obj);
 
     var finishedTweens = 0;
     for(var n = 0; n < this.tweens.length; n++) {
@@ -80,7 +82,7 @@ Kinetic.Transition.prototype = {
     _add: function(tween) {
         this.tweens.push(tween);
     },
-    _getTween: function(key, prop, val) {
+    _getTween: function(attrs, prop, val, obj, rootObj) {
         var config = this.config;
         var node = this.node;
         var easing = config.easing;
@@ -89,8 +91,9 @@ Kinetic.Transition.prototype = {
         }
 
         var tween = new Kinetic.Tween(node, function(i) {
-            key[prop] = i;
-        }, Kinetic.Tweens[easing], key[prop], val, config.duration);
+            obj[prop] = i;
+            node.setAttrs(rootObj);
+        }, Kinetic.Tweens[easing], attrs[prop], val, config.duration);
 
         return tween;
     }
@@ -165,10 +168,7 @@ Kinetic.Tween.prototype = {
     },
     setPosition: function(p) {
         this.prevPos = this._pos;
-        //var a = this.suffixe != '' ? this.suffixe : '';
         this.propFunc(p);
-        //+ a;
-        //this.obj(Math.round(p));
         this._pos = p;
         this.broadcastMessage('onChanged', {
             target: this,

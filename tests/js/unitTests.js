@@ -3125,21 +3125,35 @@ Test.prototype.tests = {
             y: 50,
             width: 200,
             height: 50,
-            fill: 'blue'
+            fill: 'blue',
+            shadow: {
+            	offset: [10, 10]
+            }
         });
 
         layer.add(rect);
         stage.add(layer);
 
-        var triggered = false;
+        var widthChanged = false;
+        var shadowChanged = false;
 
         rect.on('widthChange', function() {
-            triggered = true;
+            widthChanged = true;
+        });
+        
+        rect.on('shadowChange', function() {
+            shadowChanged = true;
         });
 
         rect.setSize(210);
+        rect.setShadow({
+        	offset: {
+        		x: 20
+        	}
+        });
 
-        test(triggered, 'width change event not triggered');
+        test(widthChanged, 'width change event was not fired');
+        test(shadowChanged, 'shadow change event not fired');
     },
     'NODE - test setting shadow offset': function(containerId) {
         var stage = new Kinetic.Stage({

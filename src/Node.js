@@ -176,7 +176,6 @@ Kinetic.Node.prototype = {
     setAttrs: function(config) {
         var go = Kinetic.GlobalObject;
         var that = this;
-
         // set properties from config
         if(config !== undefined) {
             function setAttrs(obj, c, level) {
@@ -247,14 +246,13 @@ Kinetic.Node.prototype = {
                                 that._setAttr(obj, key, val);
                                 break;
                         }
-
-                        /*
-                         * only fire change event for root
-                         * level attrs
-                         */
-                        if(level === 0) {
-                            that._fireChangeEvent(key);
-                        }
+                    }
+                    /*
+                     * only fire change event for root
+                     * level attrs
+                     */
+                    if(level === 0) {
+                        that._fireChangeEvent(key);
                     }
                 }
             }

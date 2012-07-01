@@ -82,7 +82,15 @@ Test.prototype.tests = {
             height: 50,
             fill: 'green',
             stroke: 'black',
-            strokeWidth: 4
+            strokeWidth: 4,
+            shadow: {
+                color: 'black',
+                offset: {
+                    x: 10,
+                    y: 10
+                },
+                alpha: 0.5
+            }
         });
 
         layer.add(rect);
@@ -90,6 +98,11 @@ Test.prototype.tests = {
 
         rect.transitionTo({
             duration: 2,
+            shadow: {
+                offset: {
+                    x: 80
+                }
+            },
             x: 400,
             y: 30,
             rotation: Math.PI * 2,
