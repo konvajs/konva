@@ -79,6 +79,7 @@ Kinetic.Text = function(config) {
         var attr = attrs[n];
         this.on(attr + 'Change', function(evt) {
             if(!evt.shape) {
+                that._setTextData();
                 that._syncAttrs();
             }
         });
@@ -128,29 +129,49 @@ Kinetic.Text.prototype = {
             height: parseInt(this.attrs.fontSize, 10)
         };
     },
+    /**
+     * set text data.  wrap logic and width and height setting occurs
+     * here
+     */
     _setTextData: function() {
         var charArr = this.attrs.text.split('');
         var arr = [];
         var lastWord = '';
+        var row = 0;
         this.textArr = [];
         this.textWidth = 0;
-        this.textHeight = 0;
-        while(charArr.length > 0) {
+        this.textHeight = this._getTextSize(arr[0]).height;
+        var lineHeightPx = this.attrs.lineHeight * this.textHeight;
+        var addedToLine = true;
+        while(charArr.length > 0 && addedToLine && (this.attrs.height === 'auto' || lineHeightPx * (row + 1) < this.attrs.height - this.attrs.padding * 2)) {
+            addedToLine = false;
             var line = lastWord;
-            while(charArr[0] !== undefined && (this.attrs.width === 'auto' || this._getTextSize(line + charArr[0]).width < this.attrs.width - this.attrs.padding)) {
+            lastWord = '';
+            while(charArr[0] !== undefined && (this.attrs.width === 'auto' || this._getTextSize(line + charArr[0]).width < this.attrs.width - this.attrs.padding * 2)) {
                 lastWord = charArr[0] === ' ' || charArr[0] === '-' ? '' : lastWord + charArr[0];
                 line += charArr.splice(0, 1);
+                addedToLine = true;
             }
-            if(charArr.length > 0 && charArr[0] !== ' ' && charArr[0] !== '-') {
+
+            // remove last word from line
+            if(charArr.length > 0) {
                 line = line.substring(0, line.lastIndexOf(lastWord));
             }
 
             this.textWidth = Math.max(this.textWidth, this._getTextSize(line).width);
-            arr.push(line);
+
+            if(line.length > 0) {
+                arr.push(line);
+            }
+            row++;
         }
-        this.textHeight = this._getTextSize(arr[0]).height;
+
         this.textArr = arr;
     },
+    /**
+     * sync attrs.  whenever special attrs of the text shape are updated,
+     * this method is called to sync the Rect and Shape attrs
+     */
     _syncAttrs: function() {
         this.boxShape.setAttrs({
             width: this.getBoxWidth(),

@@ -2935,7 +2935,7 @@ Test.prototype.tests = {
         test(text.getDetectionType() === 'pixel', 'text detection type should be pixel');
 
     },
-    'SHAPE - text multi line': function(containerId) {
+    '*SHAPE - text multi line': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2949,12 +2949,12 @@ Test.prototype.tests = {
             stroke: '#555',
             strokeWidth: 5,
             fill: '#ddd',
-            text: 'All the world \'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.',
+            text: 'All the world\'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.',
             fontSize: 16,
             fontFamily: 'Calibri',
             fontStyle: 'normal',
             textFill: '#555',
-            width: 385,
+            width: 380,
             padding: 20,
             shadow: {
                 color: 'black',
@@ -2972,7 +2972,6 @@ Test.prototype.tests = {
 
         layer.add(text);
         stage.add(layer);
-
     },
     'SHAPE - get shape name': function(containerId) {
         var stage = new Kinetic.Stage({
