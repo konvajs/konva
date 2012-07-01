@@ -3873,7 +3873,7 @@ Kinetic.GlobalObject.addSettersGetters(Kinetic.Star, ['numPoints', 'innerRadius'
 /**
  * Text constructor
  * @constructor
- * @augments Kinetic.Group
+ * @augments Kinetic.Shape
  * @param {Object} config
  */
 Kinetic.Text = function(config) {
@@ -3894,70 +3894,85 @@ Kinetic.Text = function(config) {
 
     this.dummyCanvas = document.createElement('canvas');
     this.shapeType = "Text";
-    this.boxShape = new Kinetic.Rect({});
-    var that = this;
 
-    this.textShape = new Kinetic.Shape({
-        drawFunc: function() {
-            var context = this.getContext();
-            var p = that.attrs.padding;
-            var lineHeightPx = that.attrs.lineHeight * that.getTextHeight();
-            var textArr = that.textArr;
+    config.drawFunc = function() {
+        var context = this.getContext();
+        /*
+         * draw rect
+         */
+        context.beginPath();
+        var boxWidth = this.getBoxWidth();
+        var boxHeight = this.getBoxHeight();
 
-            // sync appliedShadow flag with boxShape
-            this.appliedShadow = that.boxShape.appliedShadow;
-            context.font = that.attrs.fontStyle + ' ' + that.attrs.fontSize + 'pt ' + that.attrs.fontFamily;
-            context.textBaseline = 'middle';
-            context.textAlign = 'left';
-            context.save();
-            context.translate(p, 0);
-            context.translate(0, p + that.getTextHeight() / 2);
-
-            // draw text lines
-            for(var n = 0; n < textArr.length; n++) {
-                var text = textArr[n];
-
-                // horizontal alignment
-                context.save();
-                if(that.attrs.align === 'right') {
-                    context.translate(that.getBoxWidth() - that._getTextSize(text).width - p * 2, 0);
-                }
-                else if(that.attrs.align === 'center') {
-                    context.translate((that.getBoxWidth() - that._getTextSize(text).width - p * 2) / 2, 0);
-                }
-
-                this.fillText(text);
-                this.strokeText(text);
-                context.restore();
-
-                context.translate(0, lineHeightPx);
-            }
-            context.restore();
+        if(this.attrs.cornerRadius === 0) {
+            // simple rect - don't bother doing all that complicated maths stuff.
+            context.rect(0, 0, boxWidth, boxHeight);
         }
-    });
+        else {
+            // arcTo would be nicer, but browser support is patchy (Opera)
+            context.moveTo(this.attrs.cornerRadius, 0);
+            context.lineTo(boxWidth - this.attrs.cornerRadius, 0);
+            context.arc(boxWidth - this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI * 3 / 2, 0, false);
+            context.lineTo(boxWidth, boxHeight - this.attrs.cornerRadius);
+            context.arc(boxWidth - this.attrs.cornerRadius, boxHeight - this.attrs.cornerRadius, this.attrs.cornerRadius, 0, Math.PI / 2, false);
+            context.lineTo(this.attrs.cornerRadius, boxHeight);
+            context.arc(this.attrs.cornerRadius, boxHeight - this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI / 2, Math.PI, false);
+            context.lineTo(0, this.attrs.cornerRadius);
+            context.arc(this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI, Math.PI * 3 / 2, false);
+        }
+        context.closePath();
 
+        this.fill();
+        this.stroke();
+        /*
+         * draw text
+         */
+        var p = this.attrs.padding;
+        var lineHeightPx = this.attrs.lineHeight * this.getTextHeight();
+        var textArr = this.textArr;
+
+        context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'pt ' + this.attrs.fontFamily;
+        context.textBaseline = 'middle';
+        context.textAlign = 'left';
+        context.save();
+        context.translate(p, 0);
+        context.translate(0, p + this.getTextHeight() / 2);
+
+        // draw text lines
+        for(var n = 0; n < textArr.length; n++) {
+            var text = textArr[n];
+
+            // horizontal alignment
+            context.save();
+            if(this.attrs.align === 'right') {
+                context.translate(this.getBoxWidth() - this._getTextSize(text).width - p * 2, 0);
+            }
+            else if(this.attrs.align === 'center') {
+                context.translate((this.getBoxWidth() - this._getTextSize(text).width - p * 2) / 2, 0);
+            }
+
+            this.fillText(text);
+            this.strokeText(text);
+            context.restore();
+
+            context.translate(0, lineHeightPx);
+        }
+        context.restore();
+    };
     // call super constructor
-    Kinetic.Group.apply(this, [config]);
+    Kinetic.Shape.apply(this, [config]);
 
-    // add shapes to group
-    this.add(this.boxShape);
-    this.add(this.textShape);
-
-    // sync attr event bindings
-    var attrs = ['width', 'height', 'cornerRadius', 'stroke', 'strokeWidth', 'fill', 'shadow', 'detectionType', 'textFill', 'textStroke', 'textStrokeWidth'];
+    // update text data for certain attr changes
+    var attrs = ['width', 'height', 'text', 'textStroke', 'textStrokeWidth'];
     var that = this;
     for(var n = 0; n < attrs.length; n++) {
         var attr = attrs[n];
         this.on(attr + 'Change', function(evt) {
-            if(!evt.shape) {
-                that._setTextData();
-                that._syncAttrs();
-            }
+            that._setTextData();
         });
     }
 
     that._setTextData();
-    this._syncAttrs();
 };
 /*
  * Text methods
@@ -3979,7 +3994,7 @@ Kinetic.Text.prototype = {
      * get box width
      */
     getBoxWidth: function() {
-        return this.attrs.width === 'auto' ? this.getTextWidth() + this.attrs.padding * 2 : this.attrs.width;
+        return this.attrs.width === 'auto' ? this.getTextWidboxWidths.padding * 2 : this.attrs.width;
     },
     /**
      * get box height
@@ -4038,37 +4053,10 @@ Kinetic.Text.prototype = {
         }
 
         this.textArr = arr;
-    },
-    /**
-     * sync attrs.  whenever special attrs of the text shape are updated,
-     * this method is called to sync the Rect and Shape attrs
-     */
-    _syncAttrs: function() {
-        this.boxShape.setAttrs({
-            width: this.getBoxWidth(),
-            height: this.getBoxHeight(),
-            cornerRadius: this.attrs.cornerRadius,
-            stroke: this.attrs.stroke,
-            strokeWidth: this.attrs.strokeWidth,
-            fill: this.attrs.fill,
-            shadow: this.attrs.shadow,
-            detectionType: this.attrs.detectionType
-        }, true);
-        /*
-         * sync attrs accessed by fillText and strokeText
-         * in Shape class, and also the detectionType
-         */
-        this.textShape.setAttrs({
-            textFill: this.attrs.textFill,
-            textStroke: this.attrs.textStroke,
-            textStrokeWidth: this.attrs.textStrokeWidth,
-            shadow: this.attrs.shadow,
-            detectionType: this.attrs.detectionType
-        }, true);
     }
 };
 // extend Shape
-Kinetic.GlobalObject.extend(Kinetic.Text, Kinetic.Group);
+Kinetic.GlobalObject.extend(Kinetic.Text, Kinetic.Shape);
 
 // add setters and getters
 Kinetic.GlobalObject.addSettersGetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'lineHeight', 'text', 'width', 'height', 'cornerRadius', 'fill', 'stroke', 'strokeWidth', 'shadow']);
