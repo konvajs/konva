@@ -94,13 +94,11 @@ Kinetic.Text = function(config) {
     Kinetic.Shape.apply(this, [config]);
 
     // update text data for certain attr changes
-    var attrs = ['width', 'height', 'text', 'textStroke', 'textStrokeWidth'];
+    var attrs = ['width', 'height', 'padding', 'text', 'textStroke', 'textStrokeWidth'];
     var that = this;
     for(var n = 0; n < attrs.length; n++) {
         var attr = attrs[n];
-        this.on(attr + 'Change', function(evt) {
-            that._setTextData();
-        });
+        this.on(attr + 'Change', that._setTextData);
     }
 
     that._setTextData();
