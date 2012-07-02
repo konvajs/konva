@@ -155,7 +155,7 @@ Kinetic.Text.prototype = {
         var row = 0;
         this.textArr = [];
         this.textWidth = 0;
-        this.textHeight = this._getTextSize(arr[0]).height;
+        this.textHeight = this._getTextSize(this.attrs.text).height;
         var lineHeightPx = this.attrs.lineHeight * this.textHeight;
         var addedToLine = true;
         while(charArr.length > 0 && addedToLine && (this.attrs.height === 'auto' || lineHeightPx * (row + 1) < this.attrs.height - this.attrs.padding * 2)) {
