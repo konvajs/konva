@@ -477,10 +477,11 @@ Kinetic.Stage.prototype = {
                 return true;
             }
             // handle mousemove and touchmove
-            
-else if(!isDragging && this.mouseMove) {
-                shape._handleEvent('mousemove', evt);
-                return true;
+            else {
+                if(!isDragging && this.mouseMove) {
+                    shape._handleEvent('mousemove', evt);
+                    return true;
+                }
             }
 
         }
