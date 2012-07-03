@@ -1,72 +1,69 @@
 ///////////////////////////////////////////////////////////////////////
 //  Node
 ///////////////////////////////////////////////////////////////////////
-/**
- * Node constructor.&nbsp; Nodes are entities that can be transformed, layered,
- * and have events bound to them.  They are the building blocks of a KineticJS
- * application
- * @constructor
- * @param {Object} config
- */
-Kinetic.Node = function(config) {
-    this.defaultNodeAttrs = {
-        visible: true,
-        listening: true,
-        name: undefined,
-        alpha: 1,
-        x: 0,
-        y: 0,
-        scale: {
-            x: 1,
-            y: 1
-        },
-        rotation: 0,
-        offset: {
-            x: 0,
-            y: 0
-        },
-        dragConstraint: 'none',
-        dragBounds: {},
-        draggable: false
-    };
-
-    this.setDefaultAttrs(this.defaultNodeAttrs);
-    this.eventListeners = {};
-
-    this.setAttrs(config);
-
-    // bind events
-    this.on('draggableChange.kinetic', function() {
-        if(this.attrs.draggable) {
-            this._listenDrag();
-        }
-        else {
-            // remove event listeners
-            this._dragCleanup();
-
-            /*
-             * force drag and drop to end
-             * if this node is currently in
-             * drag and drop mode
-             */
-            var stage = this.getStage();
-            var go = Kinetic.GlobalObject;
-            if(stage && go.drag.node && go.drag.node._id === this._id) {
-                stage._endDrag();
-            }
-        }
-    });
-    /*
-     * simulate draggable change event
-     * to init drag and drop logic from the
-     * above event binder
+Kinetic.Node = Kinetic.Class.extend({
+    /**
+     * Node constructor.&nbsp; Nodes are entities that can be transformed, layered,
+     * and have events bound to them.  They are the building blocks of a KineticJS
+     * application
+     * @constructor
+     * @param {Object} config
      */
-    this.simulate('draggableChange');
-};
-/*
- * Node methods
- */
-Kinetic.Node.prototype = {
+    init: function(config) {
+        this.defaultNodeAttrs = {
+            visible: true,
+            listening: true,
+            name: undefined,
+            alpha: 1,
+            x: 0,
+            y: 0,
+            scale: {
+                x: 1,
+                y: 1
+            },
+            rotation: 0,
+            offset: {
+                x: 0,
+                y: 0
+            },
+            dragConstraint: 'none',
+            dragBounds: {},
+            draggable: false
+        };
+
+        this.setDefaultAttrs(this.defaultNodeAttrs);
+        this.eventListeners = {};
+
+        this.setAttrs(config);
+
+        // bind events
+        this.on('draggableChange.kinetic', function() {
+            if(this.attrs.draggable) {
+                this._listenDrag();
+            }
+            else {
+                // remove event listeners
+                this._dragCleanup();
+
+                /*
+                 * force drag and drop to end
+                 * if this node is currently in
+                 * drag and drop mode
+                 */
+                var stage = this.getStage();
+                var go = Kinetic.GlobalObject;
+                if(stage && go.drag.node && go.drag.node._id === this._id) {
+                    stage._endDrag();
+                }
+            }
+        });
+        /*
+         * simulate draggable change event
+         * to init drag and drop logic from the
+         * above event binder
+         */
+        this.simulate('draggableChange');
+    },
     /**
      * bind events to the node.  KineticJS supports mouseover, mousemove,
      * mouseout, mousedown, mouseup, click, dblclick, touchstart, touchmove,
@@ -766,11 +763,51 @@ Kinetic.Node.prototype = {
             this._handleEvent.call(this.parent, eventType, evt);
         }
     }
-};
+});
 
-// add setters and getters
-Kinetic.GlobalObject.addSettersGetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
-Kinetic.GlobalObject.addSetters(Kinetic.Node, ['rotationDeg']);
+// add getter and setter methods
+Kinetic.Node.addSetters = function(constructor, arr) {
+    for(var n = 0; n < arr.length; n++) {
+        var attr = arr[n];
+        this._addSetter(constructor, attr);
+    }
+};
+Kinetic.Node.addGetters = function(constructor, arr) {
+    for(var n = 0; n < arr.length; n++) {
+        var attr = arr[n];
+        this._addGetter(constructor, attr);
+    }
+};
+Kinetic.Node.addGettersSetters = function(constructor, arr) {
+    this.addSetters(constructor, arr);
+    this.addGetters(constructor, arr);
+};
+Kinetic.Node._addSetter = function(constructor, attr) {
+    var that = this;
+    var method = 'set' + attr.charAt(0).toUpperCase() + attr.slice(1);
+    constructor.prototype[method] = function() {
+        var arg;
+        if(arguments.length == 1) {
+            arg = arguments[0];
+        }
+        else {
+            arg = Array.prototype.slice.call(arguments);
+        }
+        var obj = {};
+        obj[attr] = arg;
+        this.setAttrs(obj);
+    };
+};
+Kinetic.Node._addGetter = function(constructor, attr) {
+    var that = this;
+    var method = 'get' + attr.charAt(0).toUpperCase() + attr.slice(1);
+    constructor.prototype[method] = function(arg) {
+        return this.attrs[attr];
+    };
+};
+// add getters setters
+Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
+Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 
 /**
  * set node x position

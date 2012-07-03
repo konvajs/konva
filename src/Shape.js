@@ -1,38 +1,35 @@
 ///////////////////////////////////////////////////////////////////////
 //  Shape
 ///////////////////////////////////////////////////////////////////////
-/**
- * Shape constructor.  Shapes are used to objectify drawing bits of a KineticJS
- * application
- * @constructor
- * @augments Kinetic.Node
- * @param {Object} config
- * @config {String|Object} [fill] can be a string color, a linear gradient object, a radial
- *  gradient object, or a pattern object.
- * @config {String} [stroke] stroke color
- * @config {Number} [strokeWidth] stroke width
- * @config {String} [lineJoin] line join can be "miter", "round", or "bevel".  The default
- *  is "miter"
- * @config {Object} [shadow] shadow object
- * @config {String} [detectionType] shape detection type.  Can be "path" or "pixel".
- *  The default is "path" because it performs better
- */
-Kinetic.Shape = function(config) {
-    this.setDefaultAttrs({
-        detectionType: 'path'
-    });
+Kinetic.Shape = Kinetic.Node.extend({
+    /**
+     * Shape constructor.  Shapes are used to objectify drawing bits of a KineticJS
+     * application
+     * @constructor
+     * @augments Kinetic.Node
+     * @param {Object} config
+     * @config {String|Object} [fill] can be a string color, a linear gradient object, a radial
+     *  gradient object, or a pattern object.
+     * @config {String} [stroke] stroke color
+     * @config {Number} [strokeWidth] stroke width
+     * @config {String} [lineJoin] line join can be "miter", "round", or "bevel".  The default
+     *  is "miter"
+     * @config {Object} [shadow] shadow object
+     * @config {String} [detectionType] shape detection type.  Can be "path" or "pixel".
+     *  The default is "path" because it performs better
+     */
+    init: function(config) {
+        this.setDefaultAttrs({
+            detectionType: 'path'
+        });
 
-    this.data = [];
-    this.nodeType = 'Shape';
-    this.appliedShadow = false;
+        this.data = [];
+        this.nodeType = 'Shape';
+        this.appliedShadow = false;
 
-    // call super constructor
-    Kinetic.Node.apply(this, [config]);
-};
-/*
- * Shape methods
- */
-Kinetic.Shape.prototype = {
+        // call super constructor
+        this._super(config);
+    },
     /**
      * get layer context where the shape is being drawn.  When
      * the shape is being rendered, .getContext() returns the context of the
@@ -377,12 +374,10 @@ Kinetic.Shape.prototype = {
             context.restore();
         }
     }
-};
-// extend Node
-Kinetic.GlobalObject.extend(Kinetic.Shape, Kinetic.Node);
+});
 
-// add setters and getters
-Kinetic.GlobalObject.addSettersGetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
+// add getters and setters
+Kinetic.Node.addGettersSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
 
 /**
  * set fill which can be a color, linear gradient object,

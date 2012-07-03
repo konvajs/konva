@@ -1,78 +1,75 @@
 ///////////////////////////////////////////////////////////////////////
 //  SVG Path
 ///////////////////////////////////////////////////////////////////////
-/**
- * Path constructor.
- * @author Jason Follas
- * @constructor
- * @augments Kinetic.Shape
- * @param {Object} config
- */
-Kinetic.Path = function(config) {
-    this.shapeType = "Path";
-    this.dataArray = [];
-    var that = this;
+Kinetic.Path = Kinetic.Shape.extend({
+    /**
+     * Path constructor.
+     * @author Jason Follas
+     * @constructor
+     * @augments Kinetic.Shape
+     * @param {Object} config
+     */
+    init: function(config) {
+        this.shapeType = "Path";
+        this.dataArray = [];
+        var that = this;
 
-    config.drawFunc = function() {
-        var context = this.getContext();
-        var ca = this.dataArray;
-        // context position
-        context.beginPath();
-        for(var n = 0; n < ca.length; n++) {
-            var c = ca[n].command;
-            var p = ca[n].points;
-            switch(c) {
-                case 'L':
-                    context.lineTo(p[0], p[1]);
-                    break;
-                case 'M':
-                    context.moveTo(p[0], p[1]);
-                    break;
-                case 'C':
-                    context.bezierCurveTo(p[0], p[1], p[2], p[3], p[4], p[5]);
-                    break;
-                case 'Q':
-                    context.quadraticCurveTo(p[0], p[1], p[2], p[3]);
-                    break;
-                case 'A':
-                    var cx = p[0], cy = p[1], rx = p[2], ry = p[3], theta = p[4], dTheta = p[5], psi = p[6], fs = p[7];
+        config.drawFunc = function() {
+            var context = this.getContext();
+            var ca = this.dataArray;
+            // context position
+            context.beginPath();
+            for(var n = 0; n < ca.length; n++) {
+                var c = ca[n].command;
+                var p = ca[n].points;
+                switch(c) {
+                    case 'L':
+                        context.lineTo(p[0], p[1]);
+                        break;
+                    case 'M':
+                        context.moveTo(p[0], p[1]);
+                        break;
+                    case 'C':
+                        context.bezierCurveTo(p[0], p[1], p[2], p[3], p[4], p[5]);
+                        break;
+                    case 'Q':
+                        context.quadraticCurveTo(p[0], p[1], p[2], p[3]);
+                        break;
+                    case 'A':
+                        var cx = p[0], cy = p[1], rx = p[2], ry = p[3], theta = p[4], dTheta = p[5], psi = p[6], fs = p[7];
 
-                    var r = (rx > ry) ? rx : ry;
-                    var scaleX = (rx > ry) ? 1 : rx / ry;
-                    var scaleY = (rx > ry) ? ry / rx : 1;
+                        var r = (rx > ry) ? rx : ry;
+                        var scaleX = (rx > ry) ? 1 : rx / ry;
+                        var scaleY = (rx > ry) ? ry / rx : 1;
 
-                    context.translate(cx, cy);
-                    context.rotate(psi);
-                    context.scale(scaleX, scaleY);
-                    context.arc(0, 0, r, theta, theta + dTheta, 1 - fs);
-                    context.scale(1 / scaleX, 1 / scaleY);
-                    context.rotate(-psi);
-                    context.translate(-cx, -cy);
+                        context.translate(cx, cy);
+                        context.rotate(psi);
+                        context.scale(scaleX, scaleY);
+                        context.arc(0, 0, r, theta, theta + dTheta, 1 - fs);
+                        context.scale(1 / scaleX, 1 / scaleY);
+                        context.rotate(-psi);
+                        context.translate(-cx, -cy);
 
-                    break;
-                case 'z':
-                    context.closePath();
-                    break;
+                        break;
+                    case 'z':
+                        context.closePath();
+                        break;
+                }
             }
-        }
-        this.fill();
-        //console.profile();
-        this.stroke();
-        //console.profileEnd();
-    };
-    // call super constructor
-    Kinetic.Shape.apply(this, [config]);
+            this.fill();
+            //console.profile();
+            this.stroke();
+            //console.profileEnd();
+        };
+        // call super constructor
+        this._super(config);
 
-    this.dataArray = this.getDataArray();
+        this.dataArray = this.getDataArray();
 
-    this.on('dataChange', function() {
-        that.dataArray = that.getDataArray();
-    });
-};
-/*
- * Path methods
- */
-Kinetic.Path.prototype = {
+        this.on('dataChange', function() {
+            that.dataArray = that.getDataArray();
+        });
+    },
     /**
      * get parsed data array from the data
      *  string.  V, v, H, h, and l data are converted to
@@ -366,13 +363,10 @@ Kinetic.Path.prototype = {
 
         return [cx, cy, rx, ry, theta, dTheta, psi, fs];
     }
-};
+});
 
-// extend Shape
-Kinetic.GlobalObject.extend(Kinetic.Path, Kinetic.Shape);
-
-// add setters and getters
-Kinetic.GlobalObject.addSettersGetters(Kinetic.Path, ['data']);
+// add getters setters
+Kinetic.Node.addGettersSetters(Kinetic.Path, ['data']);
 
 /**
  * set SVG path data string.  This method

@@ -32,29 +32,6 @@ Kinetic.GlobalObject = {
         },
         lastDrawTime: 0
     },
-    extend: function(obj1, obj2) {
-        for(var key in obj2.prototype) {
-            if(obj2.prototype.hasOwnProperty(key) && obj1.prototype[key] === undefined) {
-                obj1.prototype[key] = obj2.prototype[key];
-            }
-        }
-    },
-    addSetters: function(constructor, arr) {
-        for(var n = 0; n < arr.length; n++) {
-            var attr = arr[n];
-            this._addSetter(constructor, attr);
-        }
-    },
-    addGetters: function(constructor, arr) {
-        for(var n = 0; n < arr.length; n++) {
-            var attr = arr[n];
-            this._addGetter(constructor, attr);
-        }
-    },
-    addSettersGetters: function(constructor, arr) {
-        this.addSetters(constructor, arr);
-        this.addGetters(constructor, arr);
-    },
     _pullNodes: function(stage) {
         var tempNodes = this.tempNodes;
         for(var n = 0; n < tempNodes.length; n++) {
@@ -334,29 +311,6 @@ Kinetic.GlobalObject = {
 
             return arr;
         }
-    },
-    _addSetter: function(constructor, attr) {
-        var that = this;
-        var method = 'set' + attr.charAt(0).toUpperCase() + attr.slice(1);
-        constructor.prototype[method] = function() {
-            var arg;
-            if(arguments.length == 1) {
-                arg = arguments[0];
-            }
-            else {
-                arg = Array.prototype.slice.call(arguments);
-            }
-            var obj = {};
-            obj[attr] = arg;
-            this.setAttrs(obj);
-        };
-    },
-    _addGetter: function(constructor, attr) {
-        var that = this;
-        var method = 'get' + attr.charAt(0).toUpperCase() + attr.slice(1);
-        constructor.prototype[method] = function(arg) {
-            return this.attrs[attr];
-        };
     }
 };
 

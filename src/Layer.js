@@ -1,37 +1,33 @@
 ///////////////////////////////////////////////////////////////////////
 //  Layer
 ///////////////////////////////////////////////////////////////////////
-/**
- * Layer constructor.  Layers are tied to their own canvas element and are used
- * to contain groups or shapes
- * @constructor
- * @augments Kinetic.Container
- * @augments Kinetic.Node
- * @param {Object} config
- */
-Kinetic.Layer = function(config) {
-    this.setDefaultAttrs({
-        throttle: 80,
-        clearBeforeDraw: true
-    });
+Kinetic.Layer = Kinetic.Container.extend({
+    /**
+     * Layer constructor.  Layers are tied to their own canvas element and are used
+     * to contain groups or shapes
+     * @constructor
+     * @augments Kinetic.Container
+     * @augments Kinetic.Node
+     * @param {Object} config
+     */
+    init: function(config) {
+        this.setDefaultAttrs({
+            throttle: 80,
+            clearBeforeDraw: true
+        });
 
-    this.nodeType = 'Layer';
-    this.lastDrawTime = 0;
-    this.beforeDrawFunc = undefined;
-    this.afterDrawFunc = undefined;
+        this.nodeType = 'Layer';
+        this.lastDrawTime = 0;
+        this.beforeDrawFunc = undefined;
+        this.afterDrawFunc = undefined;
 
-    this.canvas = document.createElement('canvas');
-    this.context = this.canvas.getContext('2d');
-    this.canvas.style.position = 'absolute';
+        this.canvas = document.createElement('canvas');
+        this.context = this.canvas.getContext('2d');
+        this.canvas.style.position = 'absolute';
 
-    // call super constructors
-    Kinetic.Container.apply(this, []);
-    Kinetic.Node.apply(this, [config]);
-};
-/*
- * Layer methods
- */
-Kinetic.Layer.prototype = {
+        // call super constructor
+        this._super(config);
+    },
     /**
      * draw children nodes.  this includes any groups
      *  or shapes
@@ -145,13 +141,10 @@ Kinetic.Layer.prototype = {
             this.afterDrawFunc.call(this);
         }
     }
-};
-// Extend Container and Node
-Kinetic.GlobalObject.extend(Kinetic.Layer, Kinetic.Container);
-Kinetic.GlobalObject.extend(Kinetic.Layer, Kinetic.Node);
+});
 
-// add setters and getters
-Kinetic.GlobalObject.addSettersGetters(Kinetic.Layer, ['clearBeforeDraw']);
+// add getters and setters
+Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw']);
 
 /**
  * set flag which determines if the layer is cleared or not

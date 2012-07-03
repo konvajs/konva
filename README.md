@@ -1,7 +1,7 @@
 #Building the KineticJS library
 To build the library, you need to have Ruby and Rubygems installed. After that, install the dependencies by running `bundle install`.
 
-To build a development version of the library, run `thor build:dev VERSION`, where VERSION is a string that can be anything you like. For example, using `thor build:dev core` will produce `kinetic-core.js`. To build a minified version of the library, run `thor build:prod VERSION`. If you want to add a release date other than the current day, use `-d="DATE"` (e.g. `-d="Mar 07 2012`).  
+To build a development version of the library, run `thor build:dev VERSION`, where VERSION is a string that can be anything you like. For example, using `thor build:dev core` will produce `kinetic-core.js`. To build a minified version of the library, run `thor build:prod VERSION`. If you want to add a release date other than the current day, use `-d="DATE"` (e.g. `-d="Mar 07 2012"`).  
 
 If you add a file in the src directory, be sure to add the filename to the filename array in the Thorfile.
 

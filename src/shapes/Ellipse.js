@@ -1,51 +1,48 @@
 ///////////////////////////////////////////////////////////////////////
 //  Ellipse
 ///////////////////////////////////////////////////////////////////////
-/**
- * Ellipse constructor
- * @constructor
- * @augments Kinetic.Shape
- * @param {Object} config
- */
-Kinetic.Ellipse = function(config) {
-    this.setDefaultAttrs({
-        radius: {
-            x: 0,
-            y: 0
-        }
-    });
+Kinetic.Ellipse = Kinetic.Shape.extend({
+    /**
+     * Ellipse constructor
+     * @constructor
+     * @augments Kinetic.Shape
+     * @param {Object} config
+     */
+    init: function(config) {
+        this.setDefaultAttrs({
+            radius: {
+                x: 0,
+                y: 0
+            }
+        });
 
-    this.shapeType = "Ellipse";
+        this.shapeType = "Ellipse";
 
-    config.drawFunc = function() {
-        var canvas = this.getCanvas();
-        var context = this.getContext();
-        var r = this.getRadius();
-        context.beginPath();
-        context.save();
-        if(r.x !== r.y) {
-            context.scale(1, r.y / r.x);
-        }
-        context.arc(0, 0, r.x, 0, Math.PI * 2, true);
-        context.restore();
-        context.closePath();
-        this.fill();
-        this.stroke();
-    };
-    // call super constructor
-    Kinetic.Shape.apply(this, [config]);
+        config.drawFunc = function() {
+            var canvas = this.getCanvas();
+            var context = this.getContext();
+            var r = this.getRadius();
+            context.beginPath();
+            context.save();
+            if(r.x !== r.y) {
+                context.scale(1, r.y / r.x);
+            }
+            context.arc(0, 0, r.x, 0, Math.PI * 2, true);
+            context.restore();
+            context.closePath();
+            this.fill();
+            this.stroke();
+        };
+        // call super constructor
+        this._super(config);
 
-    this._convertRadius();
+        this._convertRadius();
 
-    var that = this;
-    this.on('radiusChange', function() {
-        that._convertRadius();
-    });
-};
-// Circle backwards compatibility
-Kinetic.Circle = Kinetic.Ellipse;
-
-Kinetic.Ellipse.prototype = {
+        var that = this;
+        this.on('radiusChange', function() {
+            that._convertRadius();
+        });
+    },
     /**
      * converts numeric radius into an object
      */
@@ -63,12 +60,13 @@ Kinetic.Ellipse.prototype = {
          */
         this.attrs.radius = go._getXY(radius);
     }
-};
-// extend Shape
-Kinetic.GlobalObject.extend(Kinetic.Ellipse, Kinetic.Shape);
+});
 
-// add setters and getters
-Kinetic.GlobalObject.addSettersGetters(Kinetic.Ellipse, ['radius']);
+// Circle backwards compatibility
+Kinetic.Circle = Kinetic.Ellipse;
+
+// add getters setters
+Kinetic.Node.addGettersSetters(Kinetic.Ellipse, ['radius']);
 
 /**
  * set radius

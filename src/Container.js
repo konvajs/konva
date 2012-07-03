@@ -1,18 +1,15 @@
 ///////////////////////////////////////////////////////////////////////
 //  Container
 ///////////////////////////////////////////////////////////////////////
-
-/**
- * Container constructor.&nbsp; Containers are used to contain nodes or other containers
- * @constructor
- */
-Kinetic.Container = function() {
-    this.children = [];
-};
-/*
- * Container methods
- */
-Kinetic.Container.prototype = {
+Kinetic.Container = Kinetic.Node.extend({
+    /**
+     * Container constructor.&nbsp; Containers are used to contain nodes or other containers
+     * @constructor
+     */
+    init: function(config) {
+        this.children = [];
+        this._super(config);
+    },
     /**
      * get children
      */
@@ -224,4 +221,4 @@ Kinetic.Container.prototype = {
             }
         }
     }
-};
+});

@@ -1,45 +1,42 @@
 ///////////////////////////////////////////////////////////////////////
 //  Sprite
 ///////////////////////////////////////////////////////////////////////
-/**
- * Sprite constructor
- * @constructor
- * @augments Kinetic.Shape
- * @param {Object} config
- */
-Kinetic.Sprite = function(config) {
-    this.setDefaultAttrs({
-        index: 0,
-        frameRate: 17
-    });
+Kinetic.Sprite = Kinetic.Shape.extend({
+    /**
+     * Sprite constructor
+     * @constructor
+     * @augments Kinetic.Shape
+     * @param {Object} config
+     */
+    init: function(config) {
+        this.setDefaultAttrs({
+            index: 0,
+            frameRate: 17
+        });
 
-    config.drawFunc = function() {
-        if(!!this.attrs.image) {
-            var context = this.getContext();
-            var anim = this.attrs.animation;
-            var index = this.attrs.index;
-            var f = this.attrs.animations[anim][index];
+        config.drawFunc = function() {
+            if(!!this.attrs.image) {
+                var context = this.getContext();
+                var anim = this.attrs.animation;
+                var index = this.attrs.index;
+                var f = this.attrs.animations[anim][index];
 
-            context.beginPath();
-            context.rect(0, 0, f.width, f.height);
-            context.closePath();
+                context.beginPath();
+                context.rect(0, 0, f.width, f.height);
+                context.closePath();
 
-            this.drawImage(this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
-        }
-    };
-    // call super constructor
-    Kinetic.Shape.apply(this, [config]);
+                this.drawImage(this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
+            }
+        };
+        // call super constructor
+        this._super(config);
 
-    var that = this;
-    this.on('animationChange', function() {
-        // reset index when animation changes
-        that.setIndex(0);
-    });
-};
-/*
- * Sprite methods
- */
-Kinetic.Sprite.prototype = {
+        var that = this;
+        this.on('animationChange', function() {
+            // reset index when animation changes
+            that.setIndex(0);
+        });
+    },
     /**
      * start sprite animation
      */
@@ -79,12 +76,10 @@ Kinetic.Sprite.prototype = {
             this.attrs.index = 0;
         }
     }
-};
-// extend Shape
-Kinetic.GlobalObject.extend(Kinetic.Sprite, Kinetic.Shape);
+});
 
-// add setters and getters
-Kinetic.GlobalObject.addSettersGetters(Kinetic.Sprite, ['animation', 'animations', 'index']);
+// add getters setters
+Kinetic.Node.addGettersSetters(Kinetic.Sprite, ['animation', 'animations', 'index']);
 
 /**
  * set animation key

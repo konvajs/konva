@@ -1,58 +1,53 @@
 ///////////////////////////////////////////////////////////////////////
 //  Stage
 ///////////////////////////////////////////////////////////////////////
-/**
- * Stage constructor.  A stage is used to contain multiple layers and handle
- * animations
- * @constructor
- * @augments Kinetic.Container
- * @augments Kinetic.Node
- * @param {String|DomElement} cont Container id or DOM element
- * @param {int} width
- * @param {int} height
- */
-Kinetic.Stage = function(config) {
-    this.setDefaultAttrs({
-        width: 400,
-        height: 200,
-        throttle: 80
-    });
-
-    /*
-     * if container is a string, assume it's an id for
-     * a DOM element
+Kinetic.Stage = Kinetic.Container.extend({
+    /**
+     * Stage constructor.  A stage is used to contain multiple layers and handle
+     * animations
+     * @constructor
+     * @augments Kinetic.Container
+     * @augments Kinetic.Node
+     * @param {String|DomElement} cont Container id or DOM element
+     * @param {int} width
+     * @param {int} height
      */
-    if( typeof config.container === 'string') {
-        config.container = document.getElementById(config.container);
-    }
+    init: function(config) {
+        this.setDefaultAttrs({
+            width: 400,
+            height: 200,
+            throttle: 80
+        });
 
-    // call super constructors
-    Kinetic.Container.apply(this, []);
-    Kinetic.Node.apply(this, [config]);
+        /*
+         * if container is a string, assume it's an id for
+         * a DOM element
+         */
+        if( typeof config.container === 'string') {
+            config.container = document.getElementById(config.container);
+        }
 
-    this._setStageDefaultProperties();
-    this._id = Kinetic.GlobalObject.idCounter++;
-    this._buildDOM();
-    this._bindContentEvents();
+        // call super constructor
+        this._super(config);
 
-    //change events
-    this.on('widthChange.kinetic', function() {
-        this._resizeDOM();
-    });
+        this._setStageDefaultProperties();
+        this._id = Kinetic.GlobalObject.idCounter++;
+        this._buildDOM();
+        this._bindContentEvents();
 
-    this.on('heightChange.kinetic', function() {
-        this._resizeDOM();
-    });
-    var go = Kinetic.GlobalObject;
-    go.stages.push(this);
-    this._addId(this);
-    this._addName(this);
+        //change events
+        this.on('widthChange.kinetic', function() {
+            this._resizeDOM();
+        });
 
-};
-/*
- * Stage methods
- */
-Kinetic.Stage.prototype = {
+        this.on('heightChange.kinetic', function() {
+            this._resizeDOM();
+        });
+        var go = Kinetic.GlobalObject;
+        go.stages.push(this);
+        this._addId(this);
+        this._addName(this);
+    },
     /**
      * sets onFrameFunc for animation
      * @param {function} func
@@ -979,13 +974,10 @@ Kinetic.Stage.prototype = {
         this.anim = undefined;
         this.animRunning = false;
     }
-};
-// Extend Container and Node
-Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Container);
-Kinetic.GlobalObject.extend(Kinetic.Stage, Kinetic.Node);
+});
 
-// add setters and getters
-Kinetic.GlobalObject.addSettersGetters(Kinetic.Stage, ['width', 'height', 'throttle']);
+// add getters and setters
+Kinetic.Node.addGettersSetters(Kinetic.Stage, ['width', 'height', 'throttle']);
 
 /**
  * get width

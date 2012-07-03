@@ -1,56 +1,53 @@
 ///////////////////////////////////////////////////////////////////////
 //  Line
 ///////////////////////////////////////////////////////////////////////
-/**
- * Line constructor.&nbsp; Lines are defined by an array of points
- * @constructor
- * @augments Kinetic.Shape
- * @param {Object} config
- */
-Kinetic.Line = function(config) {
-    this.setDefaultAttrs({
-        points: [],
-        lineCap: 'butt',
-        dashArray: [],
-        detectionType: 'pixel'
-    });
+Kinetic.Line = Kinetic.Shape.extend({
+    /**
+     * Line constructor.&nbsp; Lines are defined by an array of points
+     * @constructor
+     * @augments Kinetic.Shape
+     * @param {Object} config
+     */
+    init: function(config) {
+        this.setDefaultAttrs({
+            points: [],
+            lineCap: 'butt',
+            dashArray: [],
+            detectionType: 'pixel'
+        });
 
-    this.shapeType = "Line";
-    config.drawFunc = function() {
-        var context = this.getContext();
-        var lastPos = {};
-        context.beginPath();
+        this.shapeType = "Line";
+        config.drawFunc = function() {
+            var context = this.getContext();
+            var lastPos = {};
+            context.beginPath();
 
-        context.moveTo(this.attrs.points[0].x, this.attrs.points[0].y);
+            context.moveTo(this.attrs.points[0].x, this.attrs.points[0].y);
 
-        for(var n = 1; n < this.attrs.points.length; n++) {
-            var x = this.attrs.points[n].x;
-            var y = this.attrs.points[n].y;
-            if(this.attrs.dashArray.length > 0) {
-                // draw dashed line
-                var lastX = this.attrs.points[n - 1].x;
-                var lastY = this.attrs.points[n - 1].y;
-                this._dashedLine(lastX, lastY, x, y, this.attrs.dashArray);
+            for(var n = 1; n < this.attrs.points.length; n++) {
+                var x = this.attrs.points[n].x;
+                var y = this.attrs.points[n].y;
+                if(this.attrs.dashArray.length > 0) {
+                    // draw dashed line
+                    var lastX = this.attrs.points[n - 1].x;
+                    var lastY = this.attrs.points[n - 1].y;
+                    this._dashedLine(lastX, lastY, x, y, this.attrs.dashArray);
+                }
+                else {
+                    // draw normal line
+                    context.lineTo(x, y);
+                }
             }
-            else {
-                // draw normal line
-                context.lineTo(x, y);
+
+            if(!!this.attrs.lineCap) {
+                context.lineCap = this.attrs.lineCap;
             }
-        }
 
-        if(!!this.attrs.lineCap) {
-            context.lineCap = this.attrs.lineCap;
-        }
-
-        this.stroke();
-    };
-    // call super constructor
-    Kinetic.Shape.apply(this, [config]);
-};
-/*
- * Line methods
- */
-Kinetic.Line.prototype = {
+            this.stroke();
+        };
+        // call super constructor
+        this._super(config);
+    },
     /**
      * draw dashed line.  Written by Phrogz
      */
@@ -98,12 +95,10 @@ Kinetic.Line.prototype = {
 
         context.moveTo(x2, y2);
     }
-};
+});
 
-// extend Shape
-Kinetic.GlobalObject.extend(Kinetic.Line, Kinetic.Shape);
-// add setters and getters
-Kinetic.GlobalObject.addSettersGetters(Kinetic.Line, ['dashArray', 'lineCap', 'points']);
+// add getters setters
+Kinetic.Node.addGettersSetters(Kinetic.Line, ['dashArray', 'lineCap', 'points']);
 
 /**
  * set dash array.
