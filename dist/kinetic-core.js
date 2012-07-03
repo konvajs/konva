@@ -673,7 +673,7 @@ Kinetic.Node = Kinetic.Class.extend({
      * is invisible, this means that the shape is also invisible
      */
     isVisible: function() {
-        if(this.getParent() && !this.getParent().isVisible()) {
+        if(this.attrs.visible && this.getParent() && !this.getParent().isVisible()) {
             return false;
         }
         return this.attrs.visible;
