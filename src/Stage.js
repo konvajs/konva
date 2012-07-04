@@ -53,7 +53,6 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @param {function} func
      */
     onFrame: function(func) {
-        var go = Kinetic.Global;
         this.anim = {
             func: func
         };
@@ -63,9 +62,9 @@ Kinetic.Stage = Kinetic.Container.extend({
      */
     start: function() {
         if(!this.animRunning) {
-            var go = Kinetic.Global;
-            go._addAnimation(this.anim);
-            go._handleAnimation();
+            var a = Kinetic.Animation;
+            a._addAnimation(this.anim);
+            a._handleAnimation();
             this.animRunning = true;
         }
     },
@@ -73,8 +72,7 @@ Kinetic.Stage = Kinetic.Container.extend({
      * stop animation
      */
     stop: function() {
-        var go = Kinetic.Global;
-        go._removeAnimation(this.anim);
+        Kinetic.Animation._removeAnimation(this.anim);
         this.animRunning = false;
     },
     /**

@@ -27,33 +27,20 @@
  */
 
 ///////////////////////////////////////////////////////////////////////
-//  Global Object
+//  Global
 ///////////////////////////////////////////////////////////////////////
 /**
  * Kinetic Namespace
  * @namespace
  */
 var Kinetic = {};
-/**
- * Kinetic Global
- * @property {Object} Global
- */
 Kinetic.Global = {
     stages: [],
     idCounter: 0,
     tempNodes: [],
-    animations: [],
-    animIdCounter: 0,
-    animRunning: false,
     maxDragTimeInterval: 20,
-    frame: {
-        time: 0,
-        timeDiff: 0,
-        lastTime: 0
-    },
     drag: {
         moving: false,
-        node: undefined,
         offset: {
             x: 0,
             y: 0
@@ -71,83 +58,12 @@ Kinetic.Global = {
                 n -= 1;
             }
         }
-    },
-    /*
-     * animation support
-     */
-    _addAnimation: function(anim) {
-        anim.id = this.animIdCounter++;
-        this.animations.push(anim);
-    },
-    _removeAnimation: function(anim) {
-        var id = anim.id;
-        var animations = this.animations;
-        for(var n = 0; n < animations.length; n++) {
-            if(animations[n].id === id) {
-                this.animations.splice(n, 1);
-                return false;
-            }
-        }
-    },
-    _runFrames: function() {
-        var nodes = {};
-        for(var n = 0; n < this.animations.length; n++) {
-            var anim = this.animations[n];
-            if(anim.node && anim.node._id !== undefined) {
-                nodes[anim.node._id] = anim.node;
-            }
-            anim.func(this.frame);
-        }
-
-        for(var key in nodes) {
-            nodes[key].draw();
-        }
-    },
-    _updateFrameObject: function() {
-        var date = new Date();
-        var time = date.getTime();
-        if(this.frame.lastTime === 0) {
-            this.frame.lastTime = time;
-        }
-        else {
-            this.frame.timeDiff = time - this.frame.lastTime;
-            this.frame.lastTime = time;
-            this.frame.time += this.frame.timeDiff;
-        }
-    },
-    _animationLoop: function() {
-        if(this.animations.length > 0) {
-            this._updateFrameObject();
-            this._runFrames();
-            var that = this;
-            requestAnimFrame(function() {
-                that._animationLoop();
-            });
-        }
-        else {
-            this.animRunning = false;
-            this.frame.lastTime = 0;
-        }
-    },
-    _handleAnimation: function() {
-        var that = this;
-        if(!this.animRunning) {
-            this.animRunning = true;
-            that._animationLoop();
-        }
-        else {
-            this.frame.lastTime = 0;
-        }
     }
 };
 
-window.requestAnimFrame = (function(callback) {
-    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
-    function(callback) {
-        window.setTimeout(callback, 1000 / 60);
-    };
-})();
-
+///////////////////////////////////////////////////////////////////////
+//  Type
+///////////////////////////////////////////////////////////////////////
 /*
  * utilities that determine data type and transform
  * one type into another
@@ -355,6 +271,9 @@ Kinetic.Type = {
     }
 };
 
+///////////////////////////////////////////////////////////////////////
+//  Class
+///////////////////////////////////////////////////////////////////////
 /* Simple JavaScript Inheritance
 * By John Resig http://ejohn.org/
 * MIT Licensed.
@@ -415,6 +334,90 @@ Kinetic.Type = {
         return Class;
     };
 })();
+///////////////////////////////////////////////////////////////////////
+//  Animation
+///////////////////////////////////////////////////////////////////////
+Kinetic.Animation = {
+    animations: [],
+    animIdCounter: 0,
+    animRunning: false,
+    frame: {
+        time: 0,
+        timeDiff: 0,
+        lastTime: 0
+    },
+    _addAnimation: function(anim) {
+        anim.id = this.animIdCounter++;
+        this.animations.push(anim);
+    },
+    _removeAnimation: function(anim) {
+        var id = anim.id;
+        var animations = this.animations;
+        for(var n = 0; n < animations.length; n++) {
+            if(animations[n].id === id) {
+                this.animations.splice(n, 1);
+                return false;
+            }
+        }
+    },
+    _runFrames: function() {
+        var nodes = {};
+        for(var n = 0; n < this.animations.length; n++) {
+            var anim = this.animations[n];
+            if(anim.node && anim.node._id !== undefined) {
+                nodes[anim.node._id] = anim.node;
+            }
+            anim.func(this.frame);
+        }
+
+        for(var key in nodes) {
+            nodes[key].draw();
+        }
+    },
+    _updateFrameObject: function() {
+        var date = new Date();
+        var time = date.getTime();
+        if(this.frame.lastTime === 0) {
+            this.frame.lastTime = time;
+        }
+        else {
+            this.frame.timeDiff = time - this.frame.lastTime;
+            this.frame.lastTime = time;
+            this.frame.time += this.frame.timeDiff;
+        }
+    },
+    _animationLoop: function() {
+        if(this.animations.length > 0) {
+            this._updateFrameObject();
+            this._runFrames();
+            var that = this;
+            requestAnimFrame(function() {
+                that._animationLoop();
+            });
+        }
+        else {
+            this.animRunning = false;
+            this.frame.lastTime = 0;
+        }
+    },
+    _handleAnimation: function() {
+        var that = this;
+        if(!this.animRunning) {
+            this.animRunning = true;
+            that._animationLoop();
+        }
+        else {
+            this.frame.lastTime = 0;
+        }
+    }
+};
+requestAnimFrame = (function(callback) {
+    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+    function(callback) {
+        window.setTimeout(callback, 1000 / 60);
+    };
+})();
+
 ///////////////////////////////////////////////////////////////////////
 //  Node
 ///////////////////////////////////////////////////////////////////////
@@ -1003,14 +1006,14 @@ Kinetic.Node = Kinetic.Class.extend({
      *  transition completes
      */
     transitionTo: function(config) {
-        var go = Kinetic.Global;
+        var a = Kinetic.Animation;
 
         /*
          * clear transition if one is currently running for this
          * node
          */
         if(this.transAnim !== undefined) {
-            go._removeAnimation(this.transAnim);
+            a._removeAnimation(this.transAnim);
             this.transAnim = undefined;
         }
 
@@ -1034,12 +1037,12 @@ Kinetic.Node = Kinetic.Class.extend({
          * adding the animation with the addAnimation
          * method auto generates an id
          */
-        go._addAnimation(anim);
+        a._addAnimation(anim);
 
         // subscribe to onFinished for first tween
         trans.onFinished = function() {
             // remove animation
-            go._removeAnimation(anim);
+            a._removeAnimation(anim);
             that.transAnim = undefined;
 
             // callback
@@ -1052,7 +1055,7 @@ Kinetic.Node = Kinetic.Class.extend({
         // auto start
         trans.start();
 
-        go._handleAnimation();
+        a._handleAnimation();
 
         return trans;
     },
@@ -1676,7 +1679,6 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @param {function} func
      */
     onFrame: function(func) {
-        var go = Kinetic.Global;
         this.anim = {
             func: func
         };
@@ -1686,9 +1688,9 @@ Kinetic.Stage = Kinetic.Container.extend({
      */
     start: function() {
         if(!this.animRunning) {
-            var go = Kinetic.Global;
-            go._addAnimation(this.anim);
-            go._handleAnimation();
+            var a = Kinetic.Animation;
+            a._addAnimation(this.anim);
+            a._handleAnimation();
             this.animRunning = true;
         }
     },
@@ -1696,8 +1698,7 @@ Kinetic.Stage = Kinetic.Container.extend({
      * stop animation
      */
     stop: function() {
-        var go = Kinetic.Global;
-        go._removeAnimation(this.anim);
+        Kinetic.Animation._removeAnimation(this.anim);
         this.animRunning = false;
     },
     /**
@@ -4792,6 +4793,9 @@ Kinetic.Node.addGettersSetters(Kinetic.Path, ['data']);
  * @name getData
  * @methodOf Kinetic.Path.prototype
  */
+///////////////////////////////////////////////////////////////////////
+//  Transform
+///////////////////////////////////////////////////////////////////////
 /*
 * Last updated November 2011
 * By Simon Sarris
@@ -4909,6 +4913,9 @@ Kinetic.Transform.prototype = {
     }
 };
 
+///////////////////////////////////////////////////////////////////////
+//  Transition
+///////////////////////////////////////////////////////////////////////
 /**
  * Transition constructor.  The transitionTo() Node method
  *  returns a reference to the transition object which you can use
@@ -5003,6 +5010,9 @@ Kinetic.Transition.prototype = {
     }
 };
 
+///////////////////////////////////////////////////////////////////////
+//  Tween
+///////////////////////////////////////////////////////////////////////
 /*
 * The Tween class was ported from an Adobe Flash Tween library
 * to JavaScript by Xaric.  In the context of KineticJS, a Tween is

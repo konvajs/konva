@@ -667,7 +667,7 @@ Test.prototype.tests = {
             id: 'myCircle'
         });
 
-        var go = Kinetic.GlobalObject;
+        var go = Kinetic.Global;
 
         test(go.tempNodes.length === 0, 'shouldn\'t be nodes in the tempNdoes array');
 
@@ -4470,29 +4470,29 @@ Test.prototype.tests = {
             rect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
             layer.draw();
         });
-        var go = Kinetic.GlobalObject;
+        var a = Kinetic.Animation;
 
-        test(go.animations.length === 0, 'should be no animations running');
+        test(a.animations.length === 0, 'should be no animations running');
         test(stage.animRunning === false, 'animRunning should be false');
 
         stage.start();
 
-        test(go.animations.length === 1, 'should be 1 animation running');
+        test(a.animations.length === 1, 'should be 1 animation running');
         test(stage.animRunning === true, 'animRunning should be true');
 
         stage.start();
 
-        test(go.animations.length === 1, 'should be 1 animation running');
+        test(a.animations.length === 1, 'should be 1 animation running');
         test(stage.animRunning === true, 'animRunning should be true');
 
         stage.stop();
 
-        test(go.animations.length === 0, 'should be no animations running');
+        test(a.animations.length === 0, 'should be no animations running');
         test(stage.animRunning === false, 'animRunning should be false');
 
         stage.stop();
 
-        test(go.animations.length === 0, 'should be no animations running');
+        test(a.animations.length === 0, 'should be no animations running');
         test(stage.animRunning === false, 'animRunning should be false');
     },
     ////////////////////////////////////////////////////////////////////////
@@ -4532,7 +4532,7 @@ Test.prototype.tests = {
         stage.stop();
         centerX = 300;
 
-        var go = Kinetic.GlobalObject;
+        var go = Kinetic.Global;
 
         rect.transitionTo({
             x: 300,
