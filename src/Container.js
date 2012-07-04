@@ -29,7 +29,7 @@ Kinetic.Container = Kinetic.Node.extend({
      * @param {Node} child
      */
     add: function(child) {
-        child._id = Kinetic.GlobalObject.idCounter++;
+        child._id = Kinetic.Global.idCounter++;
         child.index = this.children.length;
         child.parent = this;
 
@@ -37,7 +37,7 @@ Kinetic.Container = Kinetic.Node.extend({
 
         var stage = child.getStage();
         if(stage === undefined) {
-            var go = Kinetic.GlobalObject;
+            var go = Kinetic.Global;
             go.tempNodes.push(child);
         }
         else {
@@ -48,7 +48,7 @@ Kinetic.Container = Kinetic.Node.extend({
              * pull in other nodes that are now linked
              * to a stage
              */
-            var go = Kinetic.GlobalObject;
+            var go = Kinetic.Global;
             go._pullNodes(stage);
         }
 
@@ -72,7 +72,7 @@ Kinetic.Container = Kinetic.Node.extend({
                 stage._removeName(child);
             }
 
-            var go = Kinetic.GlobalObject;
+            var go = Kinetic.Global;
             for(var n = 0; n < go.tempNodes.length; n++) {
                 var node = go.tempNodes[n];
                 if(node._id === child._id) {

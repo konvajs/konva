@@ -48,7 +48,7 @@ Kinetic.Rect = Kinetic.Shape.extend({
      * set width and height
      */
     setSize: function() {
-        var size = Kinetic.GlobalObject._getSize(Array.prototype.slice.call(arguments));
+        var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
         this.setAttrs(size);
     },
     /**

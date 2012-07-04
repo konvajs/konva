@@ -47,10 +47,10 @@ Kinetic.Ellipse = Kinetic.Shape.extend({
      * converts numeric radius into an object
      */
     _convertRadius: function() {
-        var go = Kinetic.GlobalObject;
+        var type = Kinetic.Type;
         var radius = this.getRadius();
         // if radius is already an object then return
-        if(go._isObject(radius)) {
+        if(type._isObject(radius)) {
             return false;
         }
 
@@ -58,7 +58,7 @@ Kinetic.Ellipse = Kinetic.Shape.extend({
          * directly set radius attr to avoid
          * duplicate attr change event
          */
-        this.attrs.radius = go._getXY(radius);
+        this.attrs.radius = type._getXY(radius);
     }
 });
 

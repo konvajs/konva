@@ -15,7 +15,7 @@ Kinetic.Transition = function(node, config) {
         for(var key in c) {
             if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
                 // if val is an object then traverse
-                if(Kinetic.GlobalObject._isObject(c[key])) {
+                if(Kinetic.Type._isObject(c[key])) {
                     obj[key] = {};
                     addTween(c[key], attrs[key], obj[key], rootObj);
                 }

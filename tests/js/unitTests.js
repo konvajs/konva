@@ -1840,7 +1840,7 @@ Test.prototype.tests = {
             test(darth.getHeight() === 100, 'height should be 100');
             test(darth.getOffset().x === 50, 'center offset x should be 50');
             test(darth.getOffset().y === 30, 'center offset y should be 30');
-            test(Kinetic.GlobalObject._isElement(darth.getImage()), 'darth image should be an element');
+            test(Kinetic.Type._isElement(darth.getImage()), 'darth image should be an element');
 
             var crop = null;
             crop = darth.getCrop();

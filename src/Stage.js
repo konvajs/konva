@@ -31,7 +31,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._super(config);
 
         this._setStageDefaultProperties();
-        this._id = Kinetic.GlobalObject.idCounter++;
+        this._id = Kinetic.Global.idCounter++;
         this._buildDOM();
         this._bindContentEvents();
 
@@ -43,7 +43,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         this.on('heightChange.kinetic', function() {
             this._resizeDOM();
         });
-        var go = Kinetic.GlobalObject;
+        var go = Kinetic.Global;
         go.stages.push(this);
         this._addId(this);
         this._addName(this);
@@ -53,7 +53,7 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @param {function} func
      */
     onFrame: function(func) {
-        var go = Kinetic.GlobalObject;
+        var go = Kinetic.Global;
         this.anim = {
             func: func
         };
@@ -63,7 +63,7 @@ Kinetic.Stage = Kinetic.Container.extend({
      */
     start: function() {
         if(!this.animRunning) {
-            var go = Kinetic.GlobalObject;
+            var go = Kinetic.Global;
             go._addAnimation(this.anim);
             go._handleAnimation();
             this.animRunning = true;
@@ -73,7 +73,7 @@ Kinetic.Stage = Kinetic.Container.extend({
      * stop animation
      */
     stop: function() {
-        var go = Kinetic.GlobalObject;
+        var go = Kinetic.Global;
         go._removeAnimation(this.anim);
         this.animRunning = false;
     },
@@ -88,7 +88,7 @@ Kinetic.Stage = Kinetic.Container.extend({
      */
     setSize: function() {
         // set stage dimensions
-        var size = Kinetic.GlobalObject._getSize(Array.prototype.slice.call(arguments));
+        var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
         this.setAttrs(size);
     },
     /**
@@ -153,7 +153,7 @@ Kinetic.Stage = Kinetic.Container.extend({
      * serialize stage and children as a JSON object
      */
     toJSON: function() {
-        var go = Kinetic.GlobalObject;
+        var type = Kinetic.Type;
 
         function addNode(node) {
             var obj = {};
@@ -163,7 +163,7 @@ Kinetic.Stage = Kinetic.Container.extend({
             // serialize only attributes that are not function, image, DOM, or objects with methods
             for(var key in node.attrs) {
                 var val = node.attrs[key];
-                if(!go._isFunction(val) && !go._isElement(val) && !go._hasMethods(val)) {
+                if(!type._isFunction(val) && !type._isElement(val) && !type._hasMethods(val)) {
                     obj.attrs[key] = val;
                 }
             }
@@ -288,7 +288,7 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @param {Object} point
      */
     getIntersections: function() {
-        var pos = Kinetic.GlobalObject._getXY(Array.prototype.slice.call(arguments));
+        var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
         var arr = [];
         var shapes = this.get('Shape');
 
@@ -370,8 +370,8 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @param {Shape} shape
      */
     _detectEvent: function(shape, evt) {
-        var isDragging = Kinetic.GlobalObject.drag.moving;
-        var go = Kinetic.GlobalObject;
+        var isDragging = Kinetic.Global.drag.moving;
+        var go = Kinetic.Global;
         var pos = this.getUserPosition();
         var el = shape.eventListeners;
         var that = this;
@@ -552,7 +552,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         var time = date.getTime();
         this.lastEventTime = time;
 
-        var go = Kinetic.GlobalObject;
+        var go = Kinetic.Global;
         if(!evt) {
             evt = window.event;
         }
@@ -591,7 +591,7 @@ Kinetic.Stage = Kinetic.Container.extend({
      * to the container
      */
     _bindContentEvents: function() {
-        var go = Kinetic.GlobalObject;
+        var go = Kinetic.Global;
         var that = this;
 
         var events = ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'touchstart', 'touchmove', 'touchend'];
@@ -776,7 +776,7 @@ Kinetic.Stage = Kinetic.Container.extend({
      * end drag and drop
      */
     _endDrag: function(evt) {
-        var go = Kinetic.GlobalObject;
+        var go = Kinetic.Global;
         if(go.drag.node) {
             // handle dragend
             if(go.drag.moving) {
@@ -791,7 +791,7 @@ Kinetic.Stage = Kinetic.Container.extend({
      */
     _startDrag: function(evt) {
         var that = this;
-        var go = Kinetic.GlobalObject;
+        var go = Kinetic.Global;
         var node = go.drag.node;
 
         if(node) {

@@ -51,7 +51,7 @@ Kinetic.Shape = Kinetic.Node.extend({
      * shadows if needed
      */
     stroke: function() {
-        var go = Kinetic.GlobalObject;
+        var go = Kinetic.Global;
         var appliedShadow = false;
         var context = this.getContext();
 
@@ -313,7 +313,7 @@ Kinetic.Shape = Kinetic.Node.extend({
      *  element is the y component
      */
     intersects: function() {
-        var pos = Kinetic.GlobalObject._getXY(Array.prototype.slice.call(arguments));
+        var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
         var stage = this.getStage();
 
         if(this.attrs.detectionType === 'path') {
