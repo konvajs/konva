@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jul 03 2012
+ * Date: Jul 04 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -3801,7 +3801,7 @@ Kinetic.RegularPolygon = Kinetic.Shape.extend({
 });
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Rect, ['radius', 'sides']);
+Kinetic.Node.addGettersSetters(Kinetic.RegularPolygon, ['radius', 'sides']);
 
 /**
  * set radius
