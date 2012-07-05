@@ -85,10 +85,8 @@ Kinetic.Container = Kinetic.Node.extend({
             this._setChildrenIndices();
 
             // remove children
-            if(child.children) {
-                for(var n = 0; n < child.children.length; n++) {
-                    child.remove(child.children[n]);
-                }
+            while(child.children && child.children.length > 0) {
+                child.remove(child.children[0]);
             }
 
             // do extra stuff if needed
