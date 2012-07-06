@@ -62,19 +62,6 @@ Kinetic.Layer = Kinetic.Container.extend({
         }
     },
     /**
-     * set throttle
-     * @param {Number} throttle in ms
-     */
-    setThrottle: function(throttle) {
-        this.attrs.throttle = throttle;
-    },
-    /**
-     * get throttle
-     */
-    getThrottle: function() {
-        return this.attrs.throttle;
-    },
-    /**
      * set before draw function handler
      */
     beforeDraw: function(func) {
@@ -144,7 +131,7 @@ Kinetic.Layer = Kinetic.Container.extend({
 });
 
 // add getters and setters
-Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw']);
+Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw', 'throttle']);
 
 /**
  * set flag which determines if the layer is cleared or not
@@ -155,8 +142,21 @@ Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw']);
  */
 
 /**
+ * set throttle
+ * @name setThrottle
+ * @methodOf Kinetic.Layer.prototype
+ * @param {Number} throttle
+ */
+
+/**
  * get flag which determines if the layer is cleared or not
  *  before drawing
  * @name getClearBeforeDraw
+ * @methodOf Kinetic.Layer.prototype
+ */
+
+/**
+ * get throttle
+ * @name getThrottle
  * @methodOf Kinetic.Layer.prototype
  */

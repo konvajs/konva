@@ -257,7 +257,7 @@ Test.prototype.tests = {
             container: containerId,
             width: 578,
             height: 200,
-            throttle: 9999
+            throttle: 999
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Ellipse({
@@ -302,7 +302,7 @@ Test.prototype.tests = {
 
         circle.on('mouseout', function() {
             mouseout = true;
-            //log('mousedown');
+            //log('mouseout');
         });
 
         circle.on('mousemove', function() {
@@ -435,7 +435,11 @@ Test.prototype.tests = {
         test(!mouseout, '6) mouseout should be false');
 
         // move mouse outside of circle to trigger mouseout
-        stage._mouseout({
+        stage._mousemove({
+            clientX: 0,
+            clientY: 100
+        });
+        stage._mousemove({
             clientX: 0,
             clientY: 100
         });
@@ -447,10 +451,10 @@ Test.prototype.tests = {
         test(click, '7) click should be true');
         test(dblclick, '7) dblclick should be true');
         test(mouseout, '7) mouseout should be true');
+
         /*
         * mobile tests
         */
-
         // reset inDoubleClickWindow
         stage.inDoubleClickWindow = false;
 
@@ -601,5 +605,151 @@ Test.prototype.tests = {
 
         test(groupMousedowns === 4, 'groupMousedowns should be 4');
         test(greenCircleMousedowns === 2, 'greenCircleMousedowns should be 2');
+    },
+    'EVENTS - group mouseover events': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            throttle: 9999
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group({
+            name: 'group'
+        });
+
+        var redMouseovers = 0;
+        var redMouseouts = 0;
+        var greenMouseovers = 0;
+        var greenMouseouts = 0;
+        var groupMouseovers = 0;
+        var groupMouseouts = 0;
+
+        var redEllipse = new Kinetic.Ellipse({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 80,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            name: 'red'
+        });
+
+        var greenEllipse = new Kinetic.Ellipse({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 40,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black',
+            name: 'green'
+        });
+
+        group.on('mouseover', function() {
+            groupMouseovers++;
+            //onsole.log('over')
+        });
+
+        group.on('mouseout', function() {
+            groupMouseouts++;
+            //console.log('out')
+        });
+
+        redEllipse.on('mouseover', function() {
+            redMouseovers++;
+            //console.log('over')
+        });
+
+        redEllipse.on('mouseout', function() {
+            redMouseouts++;
+            //console.log('out')
+        });
+
+        greenEllipse.on('mouseover', function() {
+            greenMouseovers++;
+        });
+
+        greenEllipse.on('mouseout', function() {
+            greenMouseouts++;
+        });
+
+        group.add(redEllipse);
+        group.add(greenEllipse);
+
+        layer.add(group);
+        stage.add(layer);
+
+        // move mouse outside of circles
+        stage._mousemove({
+            clientX: 177,
+            clientY: 146
+        });
+
+        test(redMouseovers === 0, 'redMouseovers should be 0');
+        test(redMouseouts === 0, 'redMouseouts should be 0');
+        test(greenMouseovers === 0, 'greenMouseovers should be 0');
+        test(greenMouseouts === 0, 'greenMouseouts should be 0');
+        test(groupMouseovers === 0, 'groupMouseovers should be 0');
+        test(groupMouseouts === 0, 'groupMouseouts should be 0');
+
+        // move mouse inside of red circle
+        stage._mousemove({
+            clientX: 236,
+            clientY: 145
+        });
+
+        test(redMouseovers === 1, 'redMouseovers should be 1');
+        test(redMouseouts === 0, 'redMouseouts should be 0');
+        test(greenMouseovers === 0, 'greenMouseovers should be 0');
+        test(greenMouseouts === 0, 'greenMouseouts should be 0');
+        test(groupMouseovers === 1, 'groupMouseovers should be 1');
+        test(groupMouseouts === 0, 'groupMouseouts should be 0');
+
+        // move mouse inside of green circle
+        stage._mousemove({
+            clientX: 284,
+            clientY: 118
+        });
+
+        test(redMouseovers === 1, 'redMouseovers should be 1');
+        test(redMouseouts === 1, 'redMouseouts should be 1');
+        test(greenMouseovers === 1, 'greenMouseovers should be 1');
+        test(greenMouseouts === 0, 'greenMouseouts should be 0');
+        test(groupMouseovers === 1, 'groupMouseovers should be 1');
+        test(groupMouseouts === 0, 'groupMouseouts should be 0');
+
+        // move mouse back to red circle
+
+        stage._mousemove({
+            clientX: 345,
+            clientY: 105
+        });
+        stage._mousemove({
+            clientX: 345,
+            clientY: 105
+        });
+
+        test(redMouseovers === 2, 'redMouseovers should be 2');
+        test(redMouseouts === 1, 'redMouseouts should be 1');
+        test(greenMouseovers === 1, 'greenMouseovers should be 1');
+        test(greenMouseouts === 1, 'greenMouseouts should be 1');
+        test(groupMouseovers === 1, 'groupMouseovers should be 1');
+        test(groupMouseouts === 0, 'groupMouseouts should be 0');
+
+        // move mouse outside of circles
+        stage._mousemove({
+            clientX: 177,
+            clientY: 146
+        });
+        stage._mousemove({
+            clientX: 177,
+            clientY: 146
+        });
+        test(redMouseovers === 2, 'redMouseovers should be 2');
+        test(redMouseouts === 2, 'redMouseouts should be 2');
+        test(greenMouseovers === 1, 'greenMouseovers should be 1');
+        test(greenMouseouts === 1, 'greenMouseouts should be 1');
+        test(groupMouseovers === 1, 'groupMouseovers should be 1');
+        test(groupMouseouts === 1, 'groupMouseouts should be 1');
     }
 };

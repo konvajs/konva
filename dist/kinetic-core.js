@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jul 04 2012
+ * Date: Jul 06 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1152,8 +1152,8 @@ Kinetic.Node = Kinetic.Class.extend({
         }
 
         var stage = this.getStage();
-        var mouseoverNode = stage ? stage.mouseoverShape : null;
-        var mouseoutNode = stage ? stage.mouseoutShape : null;
+        var mover = stage ? stage.mouseoverShape : null;
+        var mout = stage ? stage.mouseoutShape : null;
         var el = this.eventListeners;
         var okayToRun = true;
 
@@ -1161,26 +1161,30 @@ Kinetic.Node = Kinetic.Class.extend({
          * determine if event handler should be skipped by comparing
          * parent nodes
          */
-        if(eventType === 'mouseover' && mouseoutNode && mouseoutNode._id === this._id) {
+        if(eventType === 'mouseover' && mout && mout._id === this._id) {
             okayToRun = false;
         }
-        else if(eventType === 'mouseout' && mouseoverNode && mouseoverNode._id === this._id) {
+        else if(eventType === 'mouseout' && mover && mover._id === this._id) {
             okayToRun = false;
         }
 
-        if(el[eventType] && okayToRun) {
-            var events = el[eventType];
-            for(var i = 0; i < events.length; i++) {
-                events[i].handler.apply(this, [evt]);
+        if(okayToRun) {
+            if(el[eventType]) {
+                var events = el[eventType];
+                for(var i = 0; i < events.length; i++) {
+                    events[i].handler.apply(this, [evt]);
+                }
             }
-        }
 
-        var mouseoverParent = mouseoverNode ? mouseoverNode.parent : undefined;
-        var mouseoutParent = mouseoutNode ? mouseoutNode.parent : undefined;
+            if(stage && mover && mout) {
+                stage.mouseoverShape = mover.parent;
+                stage.mouseoutShape = mout.parent;
+            }
 
-        // simulate event bubbling
-        if(!evt.cancelBubble && this.parent && this.parent.nodeType !== 'Stage') {
-            this._handleEvent.call(this.parent, eventType, evt);
+            // simulate event bubbling
+            if(!evt.cancelBubble && this.parent) {
+                this._handleEvent.call(this.parent, eventType, evt);
+            }
         }
     }
 });
@@ -2706,19 +2710,6 @@ Kinetic.Layer = Kinetic.Container.extend({
         }
     },
     /**
-     * set throttle
-     * @param {Number} throttle in ms
-     */
-    setThrottle: function(throttle) {
-        this.attrs.throttle = throttle;
-    },
-    /**
-     * get throttle
-     */
-    getThrottle: function() {
-        return this.attrs.throttle;
-    },
-    /**
      * set before draw function handler
      */
     beforeDraw: function(func) {
@@ -2788,7 +2779,7 @@ Kinetic.Layer = Kinetic.Container.extend({
 });
 
 // add getters and setters
-Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw']);
+Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw', 'throttle']);
 
 /**
  * set flag which determines if the layer is cleared or not
@@ -2799,9 +2790,22 @@ Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw']);
  */
 
 /**
+ * set throttle
+ * @name setThrottle
+ * @methodOf Kinetic.Layer.prototype
+ * @param {Number} throttle
+ */
+
+/**
  * get flag which determines if the layer is cleared or not
  *  before drawing
  * @name getClearBeforeDraw
+ * @methodOf Kinetic.Layer.prototype
+ */
+
+/**
+ * get throttle
+ * @name getThrottle
  * @methodOf Kinetic.Layer.prototype
  */
 ///////////////////////////////////////////////////////////////////////
