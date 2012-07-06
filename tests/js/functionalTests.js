@@ -751,5 +751,72 @@ Test.prototype.tests = {
         test(greenMouseouts === 1, 'greenMouseouts should be 1');
         test(groupMouseovers === 1, 'groupMouseovers should be 1');
         test(groupMouseouts === 1, 'groupMouseouts should be 1');
+    },
+    'EVENTS - test event bubbling': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            throttle: 999
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Ellipse({
+            x: 380,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black'
+        });
+
+        var group1 = new Kinetic.Group();
+        var group2 = new Kinetic.Group();
+
+        /*
+         *   stage
+         *     |
+         *   layer
+         *     |
+         *  group2
+         *     |
+         *  group1
+         *     |
+         *  circle
+         */
+
+        group1.add(circle);
+        group2.add(group1);
+        layer.add(group2);
+        stage.add(layer);
+
+        // events array
+        var e = [];
+
+        circle.on('click', function() {
+            e.push('circle');
+        });
+        group1.on('click', function() {
+            e.push('group1');
+        });
+        group2.on('click', function() {
+            e.push('group2');
+        });
+        layer.on('click', function() {
+            e.push('layer');
+        });
+        stage.on('click', function() {
+            e.push('stage');
+        });
+        // click on circle
+        stage._mousedown({
+            clientX: 374,
+            clientY: 114
+        });
+        stage._mouseup({
+            clientX: 374,
+            clientY: 114
+        });
+
+        test(e.toString() === 'circle,group1,group2,layer,stage', 'problem with event bubbling');
     }
 };
