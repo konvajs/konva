@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jul 06 2012
+ * Date: Jul 07 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -35,6 +35,7 @@
  */
 var Kinetic = {};
 Kinetic.Global = {
+    BUBBLE_WHITELIST: ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'click', 'dblclick', 'touchstart', 'touchmove', 'touchend', 'tap', 'dbltap', 'dragstart', 'dragmove', 'dragend'],
     stages: [],
     idCounter: 0,
     tempNodes: [],
@@ -1182,7 +1183,7 @@ Kinetic.Node = Kinetic.Class.extend({
             }
 
             // simulate event bubbling
-            if(!evt.cancelBubble && this.parent) {
+            if(Kinetic.Global.BUBBLE_WHITELIST.indexOf(eventType) >= 0 && !evt.cancelBubble && this.parent) {
                 this._handleEvent.call(this.parent, eventType, evt);
             }
         }

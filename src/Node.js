@@ -762,7 +762,7 @@ Kinetic.Node = Kinetic.Class.extend({
             }
 
             // simulate event bubbling
-            if(!evt.cancelBubble && this.parent) {
+            if(Kinetic.Global.BUBBLE_WHITELIST.indexOf(eventType) >= 0 && !evt.cancelBubble && this.parent) {
                 this._handleEvent.call(this.parent, eventType, evt);
             }
         }
