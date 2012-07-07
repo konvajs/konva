@@ -282,24 +282,6 @@ Kinetic.Stage = Kinetic.Container.extend({
         return this;
     },
     /**
-     * get shapes that intersect a point
-     * @param {Object} point
-     */
-    getIntersections: function() {
-        var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
-        var arr = [];
-        var shapes = this.get('Shape');
-
-        for(var n = 0; n < shapes.length; n++) {
-            var shape = shapes[n];
-            if(shape.intersects(pos)) {
-                arr.push(shape);
-            }
-        }
-
-        return arr;
-    },
-    /**
      * get stage DOM node, which is a div element
      * with the class name "kineticjs-content"
      */

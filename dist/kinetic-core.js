@@ -1559,6 +1559,24 @@ Kinetic.Container = Kinetic.Node.extend({
         return false;
     },
     /**
+     * get shapes that intersect a point
+     * @param {Object} point
+     */
+    getIntersections: function() {
+        var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
+        var arr = [];
+        var shapes = this.get('Shape');
+
+        for(var n = 0; n < shapes.length; n++) {
+            var shape = shapes[n];
+            if(shape.isVisible() && shape.intersects(pos)) {
+                arr.push(shape);
+            }
+        }
+
+        return arr;
+    },
+    /**
      * get all shapes inside container
      */
     _getNodes: function(sel) {
@@ -1908,24 +1926,6 @@ Kinetic.Stage = Kinetic.Container.extend({
      */
     getStage: function() {
         return this;
-    },
-    /**
-     * get shapes that intersect a point
-     * @param {Object} point
-     */
-    getIntersections: function() {
-        var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
-        var arr = [];
-        var shapes = this.get('Shape');
-
-        for(var n = 0; n < shapes.length; n++) {
-            var shape = shapes[n];
-            if(shape.intersects(pos)) {
-                arr.push(shape);
-            }
-        }
-
-        return arr;
     },
     /**
      * get stage DOM node, which is a div element
