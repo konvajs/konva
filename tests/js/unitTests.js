@@ -3142,6 +3142,74 @@ Test.prototype.tests = {
         test(offsetChange, 'offsetChange should have been triggered with setOffset()');
         test(!shadowOffsetChange, 'offsetChange should not have been triggered with setShadow()');
     },
+    'NODE - clone a shape': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 50,
+            y: 50,
+            width: 200,
+            height: 50,
+            fill: 'blue',
+            offset: [10, 10],
+            shadow: {
+                color: 'black',
+                offset: [20, 20]
+            },
+            draggable: true,
+            name: 'myRect'
+        });
+
+        var clicks = [];
+
+        rect.on('click', function() {
+            clicks.push(this.getName());
+        });
+        var clone = rect.clone({
+            x: 300,
+            fill: 'red',
+            name: 'rectClone'
+        });
+
+        test(clone.getX() === 300, 'clone x should be 300');
+        test(clone.getY() === 50, 'clone y should be 50');
+        test(clone.getWidth() === 200, 'clone width should be 200');
+        test(clone.getHeight() === 50, 'clone height should be 50');
+        test(clone.getFill() === 'red', 'clone fill should be red');
+
+        test(rect.getShadow().color === 'black', 'rect shadow color should be black');
+        test(clone.getShadow().color === 'black', 'clone shadow color should be black');
+
+        clone.setShadow({
+            color: 'green'
+        });
+
+        /*
+         * Make sure that when we change a clone object attr that the rect object
+         * attr isn't updated by reference
+         */
+
+        test(rect.getShadow().color === 'black', 'rect shadow color should be black');
+        test(clone.getShadow().color === 'green', 'clone shadow color should be green');
+
+        layer.add(rect);
+        layer.add(clone);
+        stage.add(layer);
+
+        // make sure private ids are different
+        test(rect._id !== clone._id, 'rect and clone ids should be different');
+
+		// test user event binding cloning
+        test(clicks.length === 0, 'no clicks should have been triggered yet');
+        rect.simulate('click');
+        test(clicks.toString() === 'myRect', 'only myRect should have been clicked on');
+        clone.simulate('click');
+        test(clicks.toString() === 'myRect,rectClone', 'click order should be myRect followed by rectClone');
+    },
     'NODE - test on attr change': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

@@ -99,7 +99,7 @@ Kinetic.Text = Kinetic.Shape.extend({
         var that = this;
         for(var n = 0; n < attrs.length; n++) {
             var attr = attrs[n];
-            this.on(attr + 'Change', that._setTextData);
+            this.on(attr + 'Change.kinetic', that._setTextData);
         }
 
         that._setTextData();

@@ -57,9 +57,7 @@ Kinetic.Path = Kinetic.Shape.extend({
                 }
             }
             this.fill();
-            //console.profile();
             this.stroke();
-            //console.profileEnd();
         };
         // call super constructor
         this._super(config);

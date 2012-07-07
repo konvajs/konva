@@ -39,7 +39,7 @@ Kinetic.Ellipse = Kinetic.Shape.extend({
         this._convertRadius();
 
         var that = this;
-        this.on('radiusChange', function() {
+        this.on('radiusChange.kinetic', function() {
             that._convertRadius();
         });
     },

@@ -32,7 +32,7 @@ Kinetic.Sprite = Kinetic.Shape.extend({
         this._super(config);
 
         var that = this;
-        this.on('animationChange', function() {
+        this.on('animationChange.kinetic', function() {
             // reset index when animation changes
             that.setIndex(0);
         });
