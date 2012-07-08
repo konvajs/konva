@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jul 07 2012
+ * Date: Jul 08 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -4134,36 +4134,63 @@ Kinetic.Text = Kinetic.Shape.extend({
     _setTextData: function() {
         var charArr = this.attrs.text.split('');
         var arr = [];
-        var lastWord = '';
         var row = 0;
-        this.textArr = [];
+        var addLine = true;
         this.textWidth = 0;
         this.textHeight = this._getTextSize(this.attrs.text).height;
         var lineHeightPx = this.attrs.lineHeight * this.textHeight;
-        var addedToLine = true;
-        while(charArr.length > 0 && addedToLine && (this.attrs.height === 'auto' || lineHeightPx * (row + 1) < this.attrs.height - this.attrs.padding * 2)) {
-            addedToLine = false;
-            var line = lastWord;
-            lastWord = '';
-            while(charArr[0] !== undefined && (this.attrs.width === 'auto' || this._getTextSize(line + charArr[0]).width < this.attrs.width - this.attrs.padding * 2)) {
-                lastWord = charArr[0] === ' ' || charArr[0] === '-' ? '' : lastWord + charArr[0];
-                line += charArr.splice(0, 1);
-                addedToLine = true;
-            }
+        while(charArr.length > 0 && addLine && (this.attrs.height === 'auto' || lineHeightPx * (row + 1) < this.attrs.height - this.attrs.padding * 2)) {
+            var index = 0;
+            var line = undefined;
+            addLine = false;
 
-            // remove last word from line
-            if(charArr.length > 0) {
-                line = line.substring(0, line.lastIndexOf(lastWord));
-            }
+            while(index < charArr.length) {
+                if(charArr.indexOf('\n') === index) {
+                    // remove newline char
+                    charArr.splice(index, 1);
+                    line = charArr.splice(0, index).join('');
+                    break;
+                }
 
+                // if line exceeds inner box width
+                var lineArr = charArr.slice(0, index);
+                if(this.attrs.width !== 'auto' && this._getTextSize(lineArr.join('')).width > this.attrs.width - this.attrs.padding * 2) {
+                    /*
+                     * if a single character is too large to fit inside
+                     * the text box width, then break out of the loop
+                     * and stop processing
+                     */
+                    if(index == 0) {
+                        break;
+                    }
+                    var lastSpace = lineArr.lastIndexOf(' ');
+                    var lastDash = lineArr.lastIndexOf('-');
+                    var wrapIndex = Math.max(lastSpace, lastDash);
+                    if(wrapIndex >= 0) {
+                        line = charArr.splice(0, 1 + wrapIndex).join('');
+                        break;
+                    }
+                    /*
+                     * if not able to word wrap based on space or dash,
+                     * go ahead and wrap in the middle of a word if needed
+                     */
+                    line = charArr.splice(0, index).join('');
+                    break;
+                }
+                index++;
+
+                // if the end is reached
+                if(index === charArr.length) {
+                    line = charArr.splice(0, index).join('');
+                }
+            }
             this.textWidth = Math.max(this.textWidth, this._getTextSize(line).width);
-
-            if(line.length > 0) {
+            if(line !== undefined) {
                 arr.push(line);
+                addLine = true;
             }
             row++;
         }
-
         this.textArr = arr;
     }
 });

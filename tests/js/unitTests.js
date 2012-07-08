@@ -2977,17 +2977,20 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
 
         var text = new Kinetic.Text({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
+            x: 10,
+            y: 10,
             stroke: '#555',
             strokeWidth: 5,
             fill: '#ddd',
-            text: 'All the world\'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.',
+            text: 'HEADING\n\nAll the world\'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.',
+            //text: 'HEADING\n\nThis is a really cool paragraph. \n And this is a footer.',
             fontSize: 16,
             fontFamily: 'Calibri',
             fontStyle: 'normal',
             textFill: '#555',
+            //width: 20,
             width: 380,
+            //width: 200,
             padding: 20,
             align: 'center',
             shadow: {
@@ -3002,10 +3005,17 @@ Test.prototype.tests = {
         });
 
         // center text box
-        text.setOffset(text.getBoxWidth() / 2, text.getBoxHeight() / 2);
+        //text.setOffset(text.getBoxWidth() / 2, text.getBoxHeight() / 2);
 
         layer.add(text);
         stage.add(layer);
+        
+        /*
+        text.transitionTo({
+        	width: 500,
+        	duration: 10
+        });
+        */  
     },
     'SHAPE - get shape name': function(containerId) {
         var stage = new Kinetic.Stage({
