@@ -591,9 +591,9 @@ Kinetic.Node = Kinetic.Class.extend({
          * clear transition if one is currently running for this
          * node
          */
-        if(this.transAnim !== undefined) {
+        if(this.transAnim) {
             a._removeAnimation(this.transAnim);
-            this.transAnim = undefined;
+            this.transAnim = null;
         }
 
         /*
@@ -622,7 +622,7 @@ Kinetic.Node = Kinetic.Class.extend({
         trans.onFinished = function() {
             // remove animation
             a._removeAnimation(anim);
-            that.transAnim = undefined;
+            that.transAnim = null;
 
             // callback
             if(config.callback !== undefined) {

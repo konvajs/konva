@@ -2068,13 +2068,13 @@ Test.prototype.tests = {
                 animation: 'standing',
                 animations: anims,
                 index: 0,
-                //frameRate: Math.random() * 6 + 6,
+                frameRate: Math.random() * 6 + 6,
                 frameRate: 10,
                 draggable: true,
                 shadow: {
                     color: 'black',
                     blur: 3,
-                    offset: [10, 10],
+                    offset: [3, 1],
                     alpha: 0.3
                 }
             });
@@ -2086,19 +2086,16 @@ Test.prototype.tests = {
             stage.add(layer);
 
             // kick once
-            /*
-             setTimeout(function() {
-             sprite.setIndex(0);
-             sprite.setAnimation('kicking');
+            setTimeout(function() {
+                sprite.setAnimation('kicking');
 
-             sprite.afterFrame(0, function() {
-             sprite.setAnimation('standing');
-             });
-             }, 2000);
-             setTimeout(function() {
-             //sprite.start();
-             }, 3000);
-             */
+                sprite.afterFrame(0, function() {
+                    sprite.setAnimation('standing');
+                });
+            }, 2000);
+            setTimeout(function() {
+                sprite.stop();
+            }, 3000);
         };
         imageObj.src = '../scorpion-sprite.png';
     },
@@ -3203,7 +3200,7 @@ Test.prototype.tests = {
         // make sure private ids are different
         test(rect._id !== clone._id, 'rect and clone ids should be different');
 
-		// test user event binding cloning
+        // test user event binding cloning
         test(clicks.length === 0, 'no clicks should have been triggered yet');
         rect.simulate('click');
         test(clicks.toString() === 'myRect', 'only myRect should have been clicked on');
@@ -4535,6 +4532,11 @@ Test.prototype.tests = {
     //  ANIMATION tests
     ////////////////////////////////////////////////////////////////////////
 
+    /*
+     * WARNING: make sure that this is the first unit test that uses
+     * animation because it's accessing the global animation object which could
+     * be modified by other unit tests
+     */
     'ANIMATION - test start and stop': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

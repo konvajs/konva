@@ -363,12 +363,22 @@ Kinetic.Animation = {
     },
     _runFrames: function() {
         var nodes = {};
+        /*
+         * loop through all animations and execute animation
+         *  function.  if the animation object has specified node,
+         *  we can add the node to the nodes hash to eliminate
+         *  drawing the same node multiple times.  The node property
+         *  can be the stage itself or a layer
+         */
         for(var n = 0; n < this.animations.length; n++) {
             var anim = this.animations[n];
             if(anim.node && anim.node._id !== undefined) {
                 nodes[anim.node._id] = anim.node;
             }
-            anim.func(this.frame);
+            // if animation object has a function, execute it
+            if(anim.func) {
+                anim.func(this.frame);
+            }
         }
 
         for(var key in nodes) {
@@ -1012,9 +1022,9 @@ Kinetic.Node = Kinetic.Class.extend({
          * clear transition if one is currently running for this
          * node
          */
-        if(this.transAnim !== undefined) {
+        if(this.transAnim) {
             a._removeAnimation(this.transAnim);
-            this.transAnim = undefined;
+            this.transAnim = null;
         }
 
         /*
@@ -1043,7 +1053,7 @@ Kinetic.Node = Kinetic.Class.extend({
         trans.onFinished = function() {
             // remove animation
             a._removeAnimation(anim);
-            that.transAnim = undefined;
+            that.transAnim = null;
 
             // callback
             if(config.callback !== undefined) {
@@ -3677,18 +3687,48 @@ Kinetic.Sprite = Kinetic.Shape.extend({
     start: function() {
         var that = this;
         var layer = this.getLayer();
+        var ka = Kinetic.Animation;
+
+        // if sprite already has an animation, remove it
+        if(this.anim) {
+            ka._removeAnimation(this.anim);
+            this.anim = null;
+        }
+
+        /*
+         * animation object has no executable function because
+         *  the updates are done with a fixed FPS with the setInterval
+         *  below.  The anim object only needs the layer reference for
+         *  redraw
+         */
+        this.anim = {
+            node: layer
+        };
+
+        /*
+         * adding the animation with the addAnimation
+         * method auto generates an id
+         */
+        ka._addAnimation(this.anim);
+
         this.interval = setInterval(function() {
             that._updateIndex();
-            layer.draw();
             if(that.afterFrameFunc && that.attrs.index === that.afterFrameIndex) {
                 that.afterFrameFunc();
             }
-        }, 1000 / this.attrs.frameRate)
+        }, 1000 / this.attrs.frameRate);
+
+        ka._handleAnimation();
     },
     /**
      * stop sprite animation
      */
     stop: function() {
+        var ka = Kinetic.Animation;
+        if(this.anim) {
+            ka._removeAnimation(this.anim);
+            this.anim = null;
+        }
         clearInterval(this.interval);
     },
     /**

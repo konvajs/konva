@@ -26,12 +26,22 @@ Kinetic.Animation = {
     },
     _runFrames: function() {
         var nodes = {};
+        /*
+         * loop through all animations and execute animation
+         *  function.  if the animation object has specified node,
+         *  we can add the node to the nodes hash to eliminate
+         *  drawing the same node multiple times.  The node property
+         *  can be the stage itself or a layer
+         */
         for(var n = 0; n < this.animations.length; n++) {
             var anim = this.animations[n];
             if(anim.node && anim.node._id !== undefined) {
                 nodes[anim.node._id] = anim.node;
             }
-            anim.func(this.frame);
+            // if animation object has a function, execute it
+            if(anim.func) {
+                anim.func(this.frame);
+            }
         }
 
         for(var key in nodes) {
