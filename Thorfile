@@ -6,7 +6,7 @@ class Build < Thor
     "license.js", "src/Global.js", "src/util/Type.js", "src/util/Class.js", "src/Animation.js", "src/Node.js", "src/Container.js", "src/Stage.js",
     "src/Layer.js", "src/Group.js", "src/Shape.js", "src/shapes/Rect.js", "src/shapes/Ellipse.js", "src/shapes/Image.js",
     "src/shapes/Sprite.js", "src/shapes/Polygon.js", "src/shapes/RegularPolygon.js", "src/shapes/Star.js", "src/shapes/Text.js",
-    "src/shapes/Line.js", "src/shapes/Path.js", "src/util/Transform.js", "src/Transition.js", "src/util/Tween.js"
+    "src/shapes/Line.js", "src/shapes/Path.js", "src/shapes/TextPath.js", "src/util/Transform.js", "src/Transition.js", "src/util/Tween.js"
   ]
   
   desc "dev", "Concatenate all the js files into /dist/kinetic-VERSION.js."

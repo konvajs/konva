@@ -14,51 +14,54 @@ Kinetic.Path = Kinetic.Shape.extend({
         this.dataArray = [];
         var that = this;
 
-        config.drawFunc = function() {
-            var context = this.getContext();
-            var ca = this.dataArray;
-            // context position
-            context.beginPath();
-            for(var n = 0; n < ca.length; n++) {
-                var c = ca[n].command;
-                var p = ca[n].points;
-                switch(c) {
-                    case 'L':
-                        context.lineTo(p[0], p[1]);
-                        break;
-                    case 'M':
-                        context.moveTo(p[0], p[1]);
-                        break;
-                    case 'C':
-                        context.bezierCurveTo(p[0], p[1], p[2], p[3], p[4], p[5]);
-                        break;
-                    case 'Q':
-                        context.quadraticCurveTo(p[0], p[1], p[2], p[3]);
-                        break;
-                    case 'A':
-                        var cx = p[0], cy = p[1], rx = p[2], ry = p[3], theta = p[4], dTheta = p[5], psi = p[6], fs = p[7];
+        if (config.drawFunc == null) {
+            config.drawFunc = function() {
+                var context = this.getContext();
+                var ca = this.dataArray;
+                // context position
+                context.beginPath();
+                for(var n = 0; n < ca.length; n++) {
+                    var c = ca[n].command;
+                    var p = ca[n].points;
+                    switch(c) {
+                        case 'L':
+                            context.lineTo(p[0], p[1]);
+                            break;
+                        case 'M':
+                            context.moveTo(p[0], p[1]);
+                            break;
+                        case 'C':
+                            context.bezierCurveTo(p[0], p[1], p[2], p[3], p[4], p[5]);
+                            break;
+                        case 'Q':
+                            context.quadraticCurveTo(p[0], p[1], p[2], p[3]);
+                            break;
+                        case 'A':
+                            var cx = p[0], cy = p[1], rx = p[2], ry = p[3], theta = p[4], dTheta = p[5], psi = p[6], fs = p[7];
 
-                        var r = (rx > ry) ? rx : ry;
-                        var scaleX = (rx > ry) ? 1 : rx / ry;
-                        var scaleY = (rx > ry) ? ry / rx : 1;
+                            var r = (rx > ry) ? rx : ry;
+                            var scaleX = (rx > ry) ? 1 : rx / ry;
+                            var scaleY = (rx > ry) ? ry / rx : 1;
 
-                        context.translate(cx, cy);
-                        context.rotate(psi);
-                        context.scale(scaleX, scaleY);
-                        context.arc(0, 0, r, theta, theta + dTheta, 1 - fs);
-                        context.scale(1 / scaleX, 1 / scaleY);
-                        context.rotate(-psi);
-                        context.translate(-cx, -cy);
+                            context.translate(cx, cy);
+                            context.rotate(psi);
+                            context.scale(scaleX, scaleY);
+                            context.arc(0, 0, r, theta, theta + dTheta, 1 - fs);
+                            context.scale(1 / scaleX, 1 / scaleY);
+                            context.rotate(-psi);
+                            context.translate(-cx, -cy);
 
-                        break;
-                    case 'z':
-                        context.closePath();
-                        break;
+                            break;
+                        case 'z':
+                            context.closePath();
+                            break;
+                    }
                 }
-            }
-            this.fill();
-            this.stroke();
-        };
+                this.fill();
+                this.stroke();
+            };
+        }
+        
         // call super constructor
         this._super(config);
 
@@ -142,7 +145,8 @@ Kinetic.Path = Kinetic.Shape.extend({
 
                 var cmd = undefined;
                 var points = [];
-
+                var startX = cpx, startY = cpy;
+                
                 // convert l, H, h, V, and v to L
                 switch(c) {
 
@@ -291,7 +295,9 @@ Kinetic.Path = Kinetic.Shape.extend({
 
                 ca.push({
                     command: cmd || c,
-                    points: points
+                    points: points,
+                    start: {x: startX, y: startY},
+                    pathLength: this._calcLength(startX, startY, cmd || c, points)
                 });
 
             }
@@ -299,7 +305,9 @@ Kinetic.Path = Kinetic.Shape.extend({
             if(c === 'z' || c === 'Z')
                 ca.push({
                     command: 'z',
-                    points: []
+                    points: [],
+                    start: undefined,
+                    pathLength: 0
                 });
         }
 
@@ -360,6 +368,148 @@ Kinetic.Path = Kinetic.Shape.extend({
             dTheta = dTheta + 2 * Math.PI;
 
         return [cx, cy, rx, ry, theta, dTheta, psi, fs];
+    },
+    _calcLength: function(x, y, cmd, points) {
+        switch (cmd) {
+            case 'L':
+                return this._getLineLength(x, y, points[0], points[1]);
+            case 'C':
+                // Approximates by breaking curve into 100 line segments
+                var len = 0.0;
+                var p1 = this._getPointOnCubicBezier(0, x, y, points[0], points[1], points[2], points[3], points[4], points[5]);
+                
+                for (t=0.01; t <= 1; t += 0.01)
+                {
+                    var p2 = this._getPointOnCubicBezier(t, x, y, points[0], points[1], points[2], points[3], points[4], points[5]);
+                    len += this._getLineLength(p1.x, p1.y, p2.x, p2.y);
+                    p1 = p2;
+                }
+                return len;
+            case 'Q':
+                // Approximates by breaking curve into 100 line segments
+                var len = 0.0;
+                var p1 = this._getPointOnQuadraticBezier(0, x, y, points[0], points[1], points[2], points[3]);
+                
+                for (t=0.01; t <= 1; t += 0.01)
+                {
+                    var p2 = this._getPointOnQuadraticBezier(t, x, y, points[0], points[1], points[2], points[3]);
+                    len += this._getLineLength(p1.x, p1.y, p2.x, p2.y);
+                    p1 = p2;
+                }
+                return len;
+            case 'A':
+                // Approximates by breaking curve into line segments
+                var len = 0.0;                
+                var start = points[4]; // 4 = theta
+                var dTheta = points[5];// 5 = dTheta
+                var end = points[4] + dTheta; 
+
+                var inc = Math.PI / 180.0; // 1 degree resolution
+                if (Math.abs(start - end) < inc)
+                    inc = Math.abs(start - end);
+
+                // Note: for purpose of calculating arc length, not going to worry about rotating X-axis by angle psi
+                
+                var p1 = this._getPointOnEllipticalArc(points[0], points[1], points[2], points[3], start, 0); 
+                
+                if (dTheta < 0) // clockwise
+                {
+                    for (t=start - inc; t > end; t -= inc)
+                    {
+                        var p2 = this._getPointOnEllipticalArc(points[0], points[1], points[2], points[3], t, 0)
+                        len += this._getLineLength(p1.x, p1.y, p2.x, p2.y);
+                        p1 = p2
+                    }
+                }
+                else // counter-clockwise
+                {
+                    for (t=start + inc; t < end; t += inc)
+                    {
+                        var p2 = this._getPointOnEllipticalArc(points[0], points[1], points[2], points[3], t, 0)
+                        len += this._getLineLength(p1.x, p1.y, p2.x, p2.y);
+                        p1 = p2
+                    }
+                }
+
+                var p2 = this._getPointOnEllipticalArc(points[0], points[1], points[2], points[3], end, 0)
+                len += this._getLineLength(p1.x, p1.y, p2.x, p2.y);
+                
+                return len;
+        }
+        
+        return 0;
+    },
+    _getLineLength: function(x1, y1, x2, y2) {
+
+        return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+    },
+    _getPointOnLine: function(dist, P1x, P1y, P2x, P2y, fromX, fromY) {
+
+        if (fromX === undefined)
+            fromX = P1x;
+            
+        if (fromY === undefined)
+            fromY = P1y;
+            
+        
+        var m = (P2y - P1y) / ((P2x - P1x) + .00000001);
+        var b = -1 * m * P1x + P1y;
+        var run = Math.sqrt(dist * dist / (1 + m * m));
+        var rise = m * run;
+            
+        if ((fromY - P1y) / ((fromX - P1x) + .00000001) === m)
+        {
+            return {x: fromX + run, y: fromY + rise};
+        }
+        else
+        {
+            var ix, iy;
+   
+            var len = this._getLineLength(P1x, P1y, P2x, P2y)
+            if (len < 0.00000001)
+                return undefined;
+   
+            var u = (((fromX - P1x) * (P2x - P1x)) + ((fromY - P1y) * (P2y - P1y)))
+            u = u / (len * len)
+            
+            ix = P1x + u * (P2x - P1x)
+            iy = P1y + u * (P2y - P1y)
+            
+            var pRise = this._getLineLength(fromX, fromY, ix, iy);
+            var pRun = Math.sqrt(dist * dist - pRise * pRise); 
+            
+            run = Math.sqrt(pRun * pRun / (1 + m * m));
+            rise = m * run;
+            
+            return {x: ix + run, y: iy + rise};
+            
+        }
+    },
+    _getPointOnCubicBezier: function(pct, P1x, P1y, P2x, P2y, P3x, P3y, P4x, P4y) {
+        function CB1(t) { return t * t * t }
+        function CB2(t) { return 3 * t * t * (1 - t) }
+        function CB3(t) { return 3 * t * (1 - t) * (1 - t) }
+        function CB4(t) { return (1 - t) * (1 - t) * (1 - t) }
+
+        var x = P4x * CB1(pct) + P3x * CB2(pct) + P2x * CB3(pct) + P1x * CB4(pct);
+        var y = P4y * CB1(pct) + P3y * CB2(pct) + P2y * CB3(pct) + P1y * CB4(pct);
+          
+        return {x: x, y: y};
+    },
+    _getPointOnQuadraticBezier: function(pct, P1x, P1y, P2x, P2y, P3x, P3y) {
+        function QB1(t) { return t * t }
+        function QB2(t) { return 2 * t * (1 - t) }
+        function QB3(t) { return (1 - t) * (1 - t) }
+        
+        var x = P3x * QB1(pct) + P2x * QB2(pct) + P1x * QB3(pct);
+        var y = P3y * QB1(pct) + P2y * QB2(pct) + P1y * QB3(pct);
+          
+        return {x: x, y: y};
+    },
+    _getPointOnEllipticalArc: function(cx, cy, rx, ry, theta, psi) {
+        var cosPsi = Math.cos(psi), sinPsi = Math.sin(psi);
+        var pt = {x: rx * Math.cos(theta), y: ry * Math.sin(theta)}; 
+        return {x: cx + (pt.x * cosPsi - pt.y * sinPsi), y: cy + (pt.x * sinPsi + pt.y * cosPsi)};
     }
 });
 
