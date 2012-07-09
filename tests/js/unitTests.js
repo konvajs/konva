@@ -1395,7 +1395,7 @@ Test.prototype.tests = {
             radius: [70, 35],
             fill: 'green',
             stroke: 'black',
-            strokeWidth: 4
+            strokeWidth: 8
         });
         layer.add(circle);
         stage.add(layer);

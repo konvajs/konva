@@ -2574,7 +2574,7 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     _removeId: function(node) {
         if(node.attrs.id !== undefined) {
-            this.ids[node.attrs.id] = undefined;
+            delete this.ids[node.attrs.id];
         }
     },
     _addName: function(node) {
@@ -3712,8 +3712,9 @@ Kinetic.Sprite = Kinetic.Shape.extend({
         ka._addAnimation(this.anim);
 
         this.interval = setInterval(function() {
+        	var index = that.attrs.index;
             that._updateIndex();
-            if(that.afterFrameFunc && that.attrs.index === that.afterFrameIndex) {
+            if(that.afterFrameFunc && index === that.afterFrameIndex) {
                 that.afterFrameFunc();
             }
         }, 1000 / this.attrs.frameRate);

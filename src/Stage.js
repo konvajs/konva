@@ -883,7 +883,7 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     _removeId: function(node) {
         if(node.attrs.id !== undefined) {
-            this.ids[node.attrs.id] = undefined;
+            delete this.ids[node.attrs.id];
         }
     },
     _addName: function(node) {
