@@ -17,9 +17,7 @@
 * class.
 */
 
-/**
- * Matrix object
- */
+
 Kinetic.Transform = function() {
     this.m = [1, 0, 0, 1, 0, 0];
 }

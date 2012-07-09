@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////
 //  Ellipse
 ///////////////////////////////////////////////////////////////////////
+/**
+ * Ellipse constructor
+ * @constructor
+ * @augments Kinetic.Shape
+ * @param {Object} config
+ */
 Kinetic.Ellipse = Kinetic.Shape.extend({
-    /**
-     * Ellipse constructor
-     * @constructor
-     * @augments Kinetic.Shape
-     * @param {Object} config
-     */
     init: function(config) {
         this.setDefaultAttrs({
             radius: {
@@ -70,6 +70,8 @@ Kinetic.Node.addGettersSetters(Kinetic.Ellipse, ['radius']);
 
 /**
  * set radius
+ * @name setRadius
+ * @methodOf Kinetic.Ellipse.prototype
  * @param {Number|Object|Array} radius
  *  radius can be a number, in which the ellipse becomes a circle,
  *  it can be an object with an x and y component, or it

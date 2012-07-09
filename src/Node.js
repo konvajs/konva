@@ -1,14 +1,14 @@
 ///////////////////////////////////////////////////////////////////////
 //  Node
 ///////////////////////////////////////////////////////////////////////
+/**
+ * Node constructor.&nbsp; Nodes are entities that can be transformed, layered,
+ * and have events bound to them.  They are the building blocks of a KineticJS
+ * application
+ * @constructor
+ * @param {Object} config
+ */
 Kinetic.Node = Kinetic.Class.extend({
-    /**
-     * Node constructor.&nbsp; Nodes are entities that can be transformed, layered,
-     * and have events bound to them.  They are the building blocks of a KineticJS
-     * application
-     * @constructor
-     * @param {Object} config
-     */
     init: function(config) {
         this.defaultNodeAttrs = {
             visible: true,
@@ -70,6 +70,8 @@ Kinetic.Node = Kinetic.Class.extend({
      * of event types delimmited by a space to bind multiple events at once
      * such as 'mousedown mouseup mousemove'. include a namespace to bind an
      * event by name such as 'click.foobar'.
+     * @name on
+     * @methodOf Kinetic.Node.prototype
      * @param {String} typesStr
      * @param {Function} handler
      */
@@ -103,6 +105,8 @@ Kinetic.Node = Kinetic.Class.extend({
      * bindings at once such as 'mousedown mouseup mousemove'.
      * include a namespace to remove an event binding by name
      * such as 'click.foobar'.
+     * @name off
+     * @methodOf Kinetic.Node.prototype
      * @param {String} typesStr
      */
     off: function(typesStr) {
@@ -136,12 +140,16 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * get attrs
+     * @name getAttrs
+     * @methodOf Kinetic.Node.prototype
      */
     getAttrs: function() {
         return this.attrs;
     },
     /**
      * set default attrs
+     * @name setDefaultAttrs
+     * @methodOf Kinetic.Node.prototype
      * @param {Object} confic
      */
     setDefaultAttrs: function(config) {
@@ -167,6 +175,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * set attrs
+     * @name setAttrs
+     * @methodOf Kinetic.Node.prototype
      * @param {Object} config
      */
     setAttrs: function(config) {
@@ -259,6 +269,8 @@ Kinetic.Node = Kinetic.Class.extend({
      * determine if shape is visible or not.  Shape is visible only
      * if it's visible and all of its ancestors are visible.  If one ancestor
      * is invisible, this means that the shape is also invisible
+     * @name isVisible
+     * @methodOf Kinetic.Node.prototype
      */
     isVisible: function() {
         if(this.attrs.visible && this.getParent() && !this.getParent().isVisible()) {
@@ -268,6 +280,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * show node
+     * @name show
+     * @methodOf Kinetic.Node.prototype
      */
     show: function() {
         this.setAttrs({
@@ -276,6 +290,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * hide node
+     * @name hide
+     * @methodOf Kinetic.Node.prototype
      */
     hide: function() {
         this.setAttrs({
@@ -284,6 +300,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * get zIndex
+     * @name getZIndex
+     * @methodOf Kinetic.Node.prototype
      */
     getZIndex: function() {
         return this.index;
@@ -291,6 +309,8 @@ Kinetic.Node = Kinetic.Class.extend({
     /**
      * get absolute z-index by taking into account
      * all parent and sibling indices
+     * @name getAbsoluteZIndex
+     * @methodOf Kinetic.Node.prototype
      */
     getAbsoluteZIndex: function() {
         var level = this.getLevel();
@@ -324,6 +344,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * get node level in node tree
+     * @name getLevel
+     * @methodOf Kinetic.Node.prototype
      */
     getLevel: function() {
         var level = 0;
@@ -336,6 +358,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * set node position
+     * @name setPosition
+     * @methodOf Kinetic.Node.prototype
      * @param {Object} point
      */
     setPosition: function() {
@@ -344,6 +368,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * get node position relative to container
+     * @name getPosition
+     * @methodOf Kinetic.Node.prototype
      */
     getPosition: function() {
         return {
@@ -353,12 +379,16 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * get absolute position relative to stage
+     * @name getAbsolutePosition
+     * @methodOf Kinetic.Node.prototype
      */
     getAbsolutePosition: function() {
         return this.getAbsoluteTransform().getTranslation();
     },
     /**
      * set absolute position relative to stage
+     * @name setAbsolutePosition
+     * @methodOf Kinetic.Node.prototype
      * @param {Object} pos object containing an x and
      *  y property
      */
@@ -404,6 +434,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * move node by an amount
+     * @name move
+     * @methodOf Kinetic.Node.prototype
      */
     move: function() {
         var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
@@ -426,12 +458,16 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * get rotation in degrees
+     * @name getRotationDeg
+     * @methodOf Kinetic.Node.prototype
      */
     getRotationDeg: function() {
         return this.attrs.rotation * 180 / Math.PI;
     },
     /**
      * rotate node by an amount in radians
+     * @name rotate
+     * @methodOf Kinetic.Node.prototype
      * @param {Number} theta
      */
     rotate: function(theta) {
@@ -441,6 +477,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * rotate node by an amount in degrees
+     * @name rotateDeg
+     * @methodOf Kinetic.Node.prototype
      * @param {Number} deg
      */
     rotateDeg: function(deg) {
@@ -450,6 +488,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * move node to top
+     * @name moveToTop
+     * @methodOf Kinetic.Node.prototype
      */
     moveToTop: function() {
         var index = this.index;
@@ -459,6 +499,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * move node up
+     * @name moveUp
+     * @methodOf Kinetic.Node.prototype
      */
     moveUp: function() {
         var index = this.index;
@@ -468,6 +510,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * move node down
+     * @name moveDown
+     * @methodOf Kinetic.Node.prototype
      */
     moveDown: function() {
         var index = this.index;
@@ -479,6 +523,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * move node to bottom
+     * @name moveToBottom
+     * @methodOf Kinetic.Node.prototype
      */
     moveToBottom: function() {
         var index = this.index;
@@ -488,6 +534,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * set zIndex
+     * @name setZIndex
+     * @methodOf Kinetic.Node.prototype
      * @param {int} zIndex
      */
     setZIndex: function(zIndex) {
@@ -498,6 +546,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * get absolute alpha
+     * @name getAbsoluteAlpha
+     * @methodOf Kinetic.Node.prototype
      */
     getAbsoluteAlpha: function() {
         var absAlpha = 1;
@@ -511,6 +561,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * determine if node is currently in drag and drop mode
+     * @name isDragging
+     * @methodOf Kinetic.Node.prototype
      */
     isDragging: function() {
         var go = Kinetic.Global;
@@ -518,6 +570,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * move node to another container
+     * @name moveTo
+     * @methodOf Kinetic.Node.prototype
      * @param {Container} newContainer
      */
     moveTo: function(newContainer) {
@@ -534,12 +588,16 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * get parent container
+     * @name getParent
+     * @methodOf Kinetic.Node.prototype
      */
     getParent: function() {
         return this.parent;
     },
     /**
-     * get layer associated to node
+     * get layer that contains the node
+     * @name getLayer
+     * @methodOf Kinetic.Node.prototype
      */
     getLayer: function() {
         if(this.nodeType === 'Layer') {
@@ -550,7 +608,9 @@ Kinetic.Node = Kinetic.Class.extend({
         }
     },
     /**
-     * get stage associated to node
+     * get stage that contains the node
+     * @name getStage
+     * @methodOf Kinetic.Node.prototype
      */
     getStage: function() {
         if(this.nodeType !== 'Stage' && this.getParent()) {
@@ -565,6 +625,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * simulate event
+     * @name simulate
+     * @methodOf Kinetic.Node.prototype
      * @param {String} eventType
      */
     simulate: function(eventType) {
@@ -574,6 +636,8 @@ Kinetic.Node = Kinetic.Class.extend({
      * transition node to another state.  Any property that can accept a real
      *  number can be transitioned, including x, y, rotation, alpha, strokeWidth,
      *  radius, scale.x, scale.y, offset.x, offset.y, etc.
+     * @name transitionTo
+     * @methodOf Kinetic.Node.prototype
      * @param {Object} config
      * @config {Number} [duration] duration that the transition runs in seconds
      * @config {String} [easing] easing function.  can be linear, ease-in, ease-out, ease-in-out,
@@ -641,6 +705,8 @@ Kinetic.Node = Kinetic.Class.extend({
     /**
      * get transform of the node while taking into
      * account the transforms of its parents
+     * @name getAbsoluteTransform
+     * @methodOf Kinetic.Node.prototype
      */
     getAbsoluteTransform: function() {
         // absolute transform
@@ -667,6 +733,8 @@ Kinetic.Node = Kinetic.Class.extend({
     /**
      * get transform of the node while not taking
      * into account the transforms of its parents
+     * @name getTransform
+     * @methodOf Kinetic.Node.prototype
      */
     getTransform: function() {
         var m = new Kinetic.Transform();
@@ -685,6 +753,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * clone node
+     * @name clone
+     * @methodOf Kinetic.Node.prototype
      * @param {Object} config used to override cloned
      *  attrs
      */

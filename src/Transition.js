@@ -48,6 +48,8 @@ Kinetic.Transition = function(node, config) {
 Kinetic.Transition.prototype = {
     /**
      * start transition
+     * @name start
+     * @methodOf Kinetic.Transition.prototype
      */
     start: function() {
         for(var n = 0; n < this.tweens.length; n++) {
@@ -56,6 +58,8 @@ Kinetic.Transition.prototype = {
     },
     /**
      * stop transition
+     * @name stop
+     * @methodOf Kinetic.Transition.prototype
      */
     stop: function() {
         for(var n = 0; n < this.tweens.length; n++) {
@@ -64,6 +68,8 @@ Kinetic.Transition.prototype = {
     },
     /**
      * resume transition
+     * @name resume
+     * @methodOf Kinetic.Transition.prototype
      */
     resume: function() {
         for(var n = 0; n < this.tweens.length; n++) {

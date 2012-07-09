@@ -7,9 +7,6 @@
 * an animation of a single Node property.  A Transition is a set of
 * multiple tweens
 */
-/**
- * Tween constructor
- */
 Kinetic.Tween = function(obj, propFunc, func, begin, finish, duration) {
     this._listeners = [];
     this.addListener(this);

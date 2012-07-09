@@ -1,23 +1,23 @@
 ///////////////////////////////////////////////////////////////////////
 //  Shape
 ///////////////////////////////////////////////////////////////////////
+/**
+ * Shape constructor.  Shapes are used to objectify drawing bits of a KineticJS
+ * application
+ * @constructor
+ * @augments Kinetic.Node
+ * @param {Object} config
+ * @config {String|Object} [fill] can be a string color, a linear gradient object, a radial
+ *  gradient object, or a pattern object.
+ * @config {String} [stroke] stroke color
+ * @config {Number} [strokeWidth] stroke width
+ * @config {String} [lineJoin] line join can be "miter", "round", or "bevel".  The default
+ *  is "miter"
+ * @config {Object} [shadow] shadow object
+ * @config {String} [detectionType] shape detection type.  Can be "path" or "pixel".
+ *  The default is "path" because it performs better
+ */
 Kinetic.Shape = Kinetic.Node.extend({
-    /**
-     * Shape constructor.  Shapes are used to objectify drawing bits of a KineticJS
-     * application
-     * @constructor
-     * @augments Kinetic.Node
-     * @param {Object} config
-     * @config {String|Object} [fill] can be a string color, a linear gradient object, a radial
-     *  gradient object, or a pattern object.
-     * @config {String} [stroke] stroke color
-     * @config {Number} [strokeWidth] stroke width
-     * @config {String} [lineJoin] line join can be "miter", "round", or "bevel".  The default
-     *  is "miter"
-     * @config {Object} [shadow] shadow object
-     * @config {String} [detectionType] shape detection type.  Can be "path" or "pixel".
-     *  The default is "path" because it performs better
-     */
     init: function(config) {
         this.setDefaultAttrs({
             detectionType: 'path'
@@ -36,12 +36,16 @@ Kinetic.Shape = Kinetic.Node.extend({
      * user created layer that contains the shape.  When the event detection
      * engine is determining whether or not an event has occured on that shape,
      * .getContext() returns the context of the invisible path layer.
+     * @name getContext
+     * @methodOf Kinetic.Shape.prototype
      */
     getContext: function() {
         return this.tempLayer.getContext();
     },
     /**
      * get shape temp layer canvas
+     * @name getCanvas
+     * @methodOf Kinetic.Shape.prototype
      */
     getCanvas: function() {
         return this.tempLayer.getCanvas();
@@ -49,6 +53,8 @@ Kinetic.Shape = Kinetic.Node.extend({
     /**
      * helper method to stroke the shape and apply
      * shadows if needed
+     * @name stroke
+     * @methodOf Kinetic.Shape.prototype
      */
     stroke: function() {
         var go = Kinetic.Global;
@@ -77,6 +83,8 @@ Kinetic.Shape = Kinetic.Node.extend({
     /**
      * helper method to fill the shape with a color, linear gradient,
      * radial gradient, or pattern, and also apply shadows if needed
+     * @name fill
+     * @methodOf Kinetic.Shape.prototype
      * */
     fill: function() {
         var appliedShadow = false;
@@ -161,6 +169,8 @@ Kinetic.Shape = Kinetic.Node.extend({
     /**
      * helper method to fill text and appy shadows if needed
      * @param {String} text
+     * @name fillText
+     * @methodOf Kinetic.Shape.prototype
      */
     fillText: function(text) {
         var appliedShadow = false;
@@ -182,9 +192,9 @@ Kinetic.Shape = Kinetic.Node.extend({
     /**
      * helper method to stroke text and apply shadows
      * if needed
+     * @name strokeText
+     * @methodOf Kinetic.Shape.prototype
      * @param {String} text
-     * @param {Number} x
-     * @param {Number} y
      */
     strokeText: function(text) {
         var appliedShadow = false;
@@ -215,6 +225,8 @@ Kinetic.Shape = Kinetic.Node.extend({
     /**
      * helper method to draw an image and apply
      * a shadow if neede
+     * @name drawImage
+     * @methodOf Kinetic.Shape.prototype
      */
     drawImage: function() {
         var appliedShadow = false;
@@ -245,6 +257,8 @@ Kinetic.Shape = Kinetic.Node.extend({
     /**
      * helper method to set the line join of a shape
      * based on the lineJoin property
+     * @name applyLineJoin
+     * @methodOf Kinetic.Shape.prototype
      */
     applyLineJoin: function() {
         var context = this.getContext();

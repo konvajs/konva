@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////
 //  Line
 ///////////////////////////////////////////////////////////////////////
+/**
+ * Line constructor.&nbsp; Lines are defined by an array of points
+ * @constructor
+ * @augments Kinetic.Shape
+ * @param {Object} config
+ */
 Kinetic.Line = Kinetic.Shape.extend({
-    /**
-     * Line constructor.&nbsp; Lines are defined by an array of points
-     * @constructor
-     * @augments Kinetic.Shape
-     * @param {Object} config
-     */
     init: function(config) {
         this.setDefaultAttrs({
             points: [],

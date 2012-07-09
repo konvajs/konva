@@ -1,14 +1,14 @@
 ///////////////////////////////////////////////////////////////////////
 //  SVG Path
 ///////////////////////////////////////////////////////////////////////
+/**
+ * Path constructor.
+ * @author Jason Follas
+ * @constructor
+ * @augments Kinetic.Shape
+ * @param {Object} config
+ */
 Kinetic.Path = Kinetic.Shape.extend({
-    /**
-     * Path constructor.
-     * @author Jason Follas
-     * @constructor
-     * @augments Kinetic.Shape
-     * @param {Object} config
-     */
     init: function(config) {
         this.shapeType = "Path";
         this.dataArray = [];
@@ -62,10 +62,10 @@ Kinetic.Path = Kinetic.Shape.extend({
         // call super constructor
         this._super(config);
 
-        this.dataArray = this.getDataArray();
+        this.dataArray = this._getDataArray();
 
         this.on('dataChange', function() {
-            that.dataArray = that.getDataArray();
+            that.dataArray = that._getDataArray();
         });
     },
     /**
@@ -74,7 +74,7 @@ Kinetic.Path = Kinetic.Shape.extend({
      *  L data for the purpose of high performance Path
      *  rendering
      */
-    getDataArray: function() {
+    _getDataArray: function() {
 
         // Path Data Segment must begin with a moveTo
         //m (x y)+  Relative moveTo (subsequent points are treated as lineTo)

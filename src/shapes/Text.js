@@ -105,28 +105,36 @@ Kinetic.Text = Kinetic.Shape.extend({
         that._setTextData();
     },
     /**
-     * get text width in pixels
-     */
-    getTextWidth: function() {
-        return this.textWidth;
-    },
-    /**
-     * get text height in pixels
-     */
-    getTextHeight: function() {
-        return this.textHeight;
-    },
-    /**
      * get box width
+     * @name getBoxWidth
+     * @methodOf Kinetic.Text.prototype
      */
     getBoxWidth: function() {
         return this.attrs.width === 'auto' ? this.getTextWidth() + this.attrs.padding * 2 : this.attrs.width;
     },
     /**
      * get box height
+     * @name getBoxHeight
+     * @methodOf Kinetic.Text.prototype
      */
     getBoxHeight: function() {
         return this.attrs.height === 'auto' ? (this.getTextHeight() * this.textArr.length * this.attrs.lineHeight) + this.attrs.padding * 2 : this.attrs.height;
+    },
+    /**
+     * get text width in pixels
+     * @name getTextWidth
+     * @methodOf Kinetic.Text.prototype
+     */
+    getTextWidth: function() {
+        return this.textWidth;
+    },
+    /**
+     * get text height in pixels
+     * @name getTextHeight
+     * @methodOf Kinetic.Text.prototype
+     */
+    getTextHeight: function() {
+        return this.textHeight;
     },
     _getTextSize: function(text) {
         var dummyCanvas = this.dummyCanvas;

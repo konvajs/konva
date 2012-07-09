@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////
 //  Sprite
 ///////////////////////////////////////////////////////////////////////
+/**
+ * Sprite constructor
+ * @constructor
+ * @augments Kinetic.Shape
+ * @param {Object} config
+ */
 Kinetic.Sprite = Kinetic.Shape.extend({
-    /**
-     * Sprite constructor
-     * @constructor
-     * @augments Kinetic.Shape
-     * @param {Object} config
-     */
     init: function(config) {
         this.setDefaultAttrs({
             index: 0,
@@ -39,6 +39,8 @@ Kinetic.Sprite = Kinetic.Shape.extend({
     },
     /**
      * start sprite animation
+     * @name start
+     * @methodOf Kinetic.Sprite.prototype
      */
     start: function() {
         var that = this;
@@ -68,7 +70,7 @@ Kinetic.Sprite = Kinetic.Shape.extend({
         ka._addAnimation(this.anim);
 
         this.interval = setInterval(function() {
-        	var index = that.attrs.index;
+            var index = that.attrs.index;
             that._updateIndex();
             if(that.afterFrameFunc && index === that.afterFrameIndex) {
                 that.afterFrameFunc();
@@ -79,6 +81,8 @@ Kinetic.Sprite = Kinetic.Shape.extend({
     },
     /**
      * stop sprite animation
+     * @name stop
+     * @methodOf Kinetic.Sprite.prototype
      */
     stop: function() {
         var ka = Kinetic.Animation;
@@ -90,6 +94,8 @@ Kinetic.Sprite = Kinetic.Shape.extend({
     },
     /**
      * set after frame event handler
+     * @name afterFrame
+     * @methodOf Kinetic.Sprite.prototype
      * @param {Integer} index frame index
      * @param {Function} func function to be executed after frame has been drawn
      */

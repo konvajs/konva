@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////
 //  Star
 ///////////////////////////////////////////////////////////////////////
+/**
+ * Star constructor
+ * @constructor
+ * @augments Kinetic.Shape
+ * @param {Object} config
+ */
 Kinetic.Star = Kinetic.Shape.extend({
-    /**
-     * Star constructor
-     * @constructor
-     * @augments Kinetic.Shape
-     * @param {Object} config
-     */
     init: function(config) {
         this.setDefaultAttrs({
             numPoints: 0,

@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////
 //  RegularPolygon
 ///////////////////////////////////////////////////////////////////////
+/**
+ * RegularPolygon constructor.&nbsp; Examples include triangles, squares, pentagons, hexagons, etc.
+ * @constructor
+ * @augments Kinetic.Shape
+ * @param {Object} config
+ */
 Kinetic.RegularPolygon = Kinetic.Shape.extend({
-    /**
-     * RegularPolygon constructor.&nbsp; Examples include triangles, squares, pentagons, hexagons, etc.
-     * @constructor
-     * @augments Kinetic.Shape
-     * @param {Object} config
-     */
     init: function(config) {
         this.setDefaultAttrs({
             radius: 0,

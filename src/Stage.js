@@ -1,17 +1,17 @@
 ///////////////////////////////////////////////////////////////////////
 //  Stage
 ///////////////////////////////////////////////////////////////////////
+/**
+ * Stage constructor.  A stage is used to contain multiple layers and handle
+ * animations
+ * @constructor
+ * @augments Kinetic.Container
+ * @augments Kinetic.Node
+ * @param {String|DomElement} cont Container id or DOM element
+ * @param {int} width
+ * @param {int} height
+ */
 Kinetic.Stage = Kinetic.Container.extend({
-    /**
-     * Stage constructor.  A stage is used to contain multiple layers and handle
-     * animations
-     * @constructor
-     * @augments Kinetic.Container
-     * @augments Kinetic.Node
-     * @param {String|DomElement} cont Container id or DOM element
-     * @param {int} width
-     * @param {int} height
-     */
     init: function(config) {
         this.setDefaultAttrs({
             width: 400,
@@ -50,6 +50,8 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     /**
      * sets onFrameFunc for animation
+     * @name onFrame
+     * @methodOf Kinetic.Stage.prototype
      * @param {function} func
      */
     onFrame: function(func) {
@@ -59,6 +61,8 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     /**
      * start animation
+     * @name start
+     * @methodOf Kinetic.Stage.prototype
      */
     start: function() {
         if(!this.animRunning) {
@@ -70,6 +74,8 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     /**
      * stop animation
+     * @name stop
+     * @methodOf Kinetic.Stage.prototype
      */
     stop: function() {
         Kinetic.Animation._removeAnimation(this.anim);
@@ -77,12 +83,16 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     /**
      * draw children
+     * @name draw
+     * @methodOf Kinetic.Stage.prototype
      */
     draw: function() {
         this._drawChildren();
     },
     /**
      * set stage size
+     * @name setSize
+     * @methodOf Kinetic.Stage.prototype
      */
     setSize: function() {
         // set stage dimensions
@@ -91,6 +101,8 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     /**
      * return stage size
+     * @name getSize
+     * @methodOf Kinetic.Stage.prototype
      */
     getSize: function() {
         return {
@@ -100,6 +112,8 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     /**
      * clear all layers
+     * @name clear
+     * @methodOf Kinetic.Stage.prototype
      */
     clear: function() {
         var layers = this.children;
@@ -111,6 +125,8 @@ Kinetic.Stage = Kinetic.Container.extend({
      * Creates a composite data URL and passes it to a callback. If MIME type is not
      * specified, then "image/png" will result. For "image/jpeg", specify a quality
      * level as quality (range 0.0 - 1.0)
+     * @name toDataURL
+     * @methodOf Kinetic.Stage.prototype
      * @param {function} callback
      * @param {String} mimeType (optional)
      * @param {Number} quality (optional)
@@ -149,6 +165,8 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     /**
      * serialize stage and children as a JSON object
+     * @name toJSON
+     * @methodOf Kinetic.Stage.prototype
      */
     toJSON: function() {
         var type = Kinetic.Type;
@@ -185,6 +203,8 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     /**
      * reset stage to default state
+     * @name reset
+     * @methodOf Kinetic.Stage.prototype
      */
     reset: function() {
         // remove children
@@ -201,6 +221,8 @@ Kinetic.Stage = Kinetic.Container.extend({
      *  event handlers (it probably does), then you need to select the appropriate
      *  shapes after loading the stage and set these properties via on(), setDrawFunc(),
      *  and setImage()
+     * @name load
+     * @methodOf Kinetic.Stage.prototype
      * @param {String} JSON string
      */
     load: function(json) {
@@ -244,6 +266,8 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     /**
      * get mouse position for desktop apps
+     * @name getMousePosition
+     * @methodOf Kinetic.Stage.prototype
      * @param {Event} evt
      */
     getMousePosition: function(evt) {
@@ -251,6 +275,8 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     /**
      * get touch position for mobile apps
+     * @name getTouchPosition
+     * @methodOf Kinetic.Stage.prototype
      * @param {Event} evt
      */
     getTouchPosition: function(evt) {
@@ -258,6 +284,8 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     /**
      * get user position (mouse position or touch position)
+     * @name getUserPosition
+     * @methodOf Kinetic.Stage.prototype
      * @param {Event} evt
      */
     getUserPosition: function(evt) {
@@ -265,18 +293,16 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     /**
      * get container DOM element
+     * @name getContainer
+     * @methodOf Kinetic.Stage.prototype
      */
     getContainer: function() {
         return this.attrs.container;
     },
     /**
-     * get content DOM element
-     */
-    getContent: function() {
-        return this.content;
-    },
-    /**
      * get stage
+     * @name getStage
+     * @methodOf Kinetic.Stage.prototype
      */
     getStage: function() {
         return this;
@@ -284,6 +310,8 @@ Kinetic.Stage = Kinetic.Container.extend({
     /**
      * get stage DOM node, which is a div element
      * with the class name "kineticjs-content"
+     * @name getDOM
+     * @methodOf Kinetic.Stage.prototype
      */
     getDOM: function() {
         return this.content;

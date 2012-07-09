@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////
 //  Polygon
 ///////////////////////////////////////////////////////////////////////
+/**
+ * Polygon constructor.&nbsp; Polygons are defined by an array of points
+ * @constructor
+ * @augments Kinetic.Shape
+ * @param {Object} config
+ */
 Kinetic.Polygon = Kinetic.Shape.extend({
-    /**
-     * Polygon constructor.&nbsp; Polygons are defined by an array of points
-     * @constructor
-     * @augments Kinetic.Shape
-     * @param {Object} config
-     */
     init: function(config) {
         this.setDefaultAttrs({
             points: []

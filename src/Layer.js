@@ -1,15 +1,14 @@
 ///////////////////////////////////////////////////////////////////////
 //  Layer
 ///////////////////////////////////////////////////////////////////////
+/**
+ * Layer constructor.  Layers are tied to their own canvas element and are used
+ * to contain groups or shapes
+ * @constructor
+ * @augments Kinetic.Container
+ * @param {Object} config
+ */
 Kinetic.Layer = Kinetic.Container.extend({
-    /**
-     * Layer constructor.  Layers are tied to their own canvas element and are used
-     * to contain groups or shapes
-     * @constructor
-     * @augments Kinetic.Container
-     * @augments Kinetic.Node
-     * @param {Object} config
-     */
     init: function(config) {
         this.setDefaultAttrs({
             throttle: 80,
@@ -31,6 +30,8 @@ Kinetic.Layer = Kinetic.Container.extend({
     /**
      * draw children nodes.  this includes any groups
      *  or shapes
+     * @name draw
+     * @methodOf Kinetic.Layer.prototype
      */
     draw: function() {
         var throttle = this.attrs.throttle;
@@ -63,12 +64,16 @@ Kinetic.Layer = Kinetic.Container.extend({
     },
     /**
      * set before draw function handler
+     * @name beforeDraw
+     * @methodOf Kinetic.Layer.prototype
      */
     beforeDraw: function(func) {
         this.beforeDrawFunc = func;
     },
     /**
      * set after draw function handler
+     * @name afterDraw
+     * @methodOf Kinetic.Layer.prototype
      */
     afterDraw: function(func) {
         this.afterDrawFunc = func;
@@ -78,6 +83,8 @@ Kinetic.Layer = Kinetic.Container.extend({
      *  a layer does not remove its children.  The nodes within
      *  the layer will be redrawn whenever the .draw() method
      *  is used again.
+     * @name clear
+     * @methodOf Kinetic.Layer.prototype
      */
     clear: function() {
         var context = this.getContext();
@@ -86,12 +93,16 @@ Kinetic.Layer = Kinetic.Container.extend({
     },
     /**
      * get layer canvas
+     * @name getCanvas
+     * @methodOf Kinetic.Layer.prototype
      */
     getCanvas: function() {
         return this.canvas;
     },
     /**
      * get layer context
+     * @name getContext
+     * @methodOf Kinetic.Layer.prototype
      */
     getContext: function() {
         return this.context;

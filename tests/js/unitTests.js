@@ -1440,12 +1440,12 @@ Test.prototype.tests = {
         stage.add(layer);
 
         test(path.getData() === 'M200,100h100v50z', 'data are incorrect');
-        test(path.getDataArray().length === 4, 'data array should have 4 elements');
+        test(path._getDataArray().length === 4, 'data array should have 4 elements');
 
         path.setData('M200');
 
         test(path.getData() === 'M200', 'data are incorrect');
-        test(path.getDataArray().length === 1, 'data array should have 1 element');
+        test(path._getDataArray().length === 1, 'data array should have 1 element');
 
         path.setData('M200,100h100v50z');
 
@@ -1490,9 +1490,9 @@ Test.prototype.tests = {
         stage.add(layer);
 
         test(path.getData() === 'm200,100,100,0,0,50,z', 'data are incorrect');
-        test(path.getDataArray().length === 4, 'data array should have 4 elements');
+        test(path._getDataArray().length === 4, 'data array should have 4 elements');
 
-        test(path.getDataArray()[1].command === 'L', 'second command should be an implied lineTo');
+        test(path._getDataArray()[1].command === 'L', 'second command should be an implied lineTo');
     },
     'SHAPE - add map path': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1517,7 +1517,7 @@ Test.prototype.tests = {
             });
 
             if(key === 'US')
-                test(path.getDataArray()[0].command === 'M', 'first command should be a moveTo');
+                test(path._getDataArray()[0].command === 'M', 'first command should be a moveTo');
 
             path.on('mouseover', function() {
                 this.setFill('red');
@@ -3009,13 +3009,13 @@ Test.prototype.tests = {
 
         layer.add(text);
         stage.add(layer);
-        
+
         /*
-        text.transitionTo({
-        	width: 500,
-        	duration: 10
-        });
-        */  
+         text.transitionTo({
+         width: 500,
+         duration: 10
+         });
+         */
     },
     'SHAPE - get shape name': function(containerId) {
         var stage = new Kinetic.Stage({

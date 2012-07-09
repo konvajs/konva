@@ -1,23 +1,29 @@
 ///////////////////////////////////////////////////////////////////////
 //  Container
 ///////////////////////////////////////////////////////////////////////
+/**
+ * Container constructor.&nbsp; Containers are used to contain nodes or other containers
+ * @constructor
+ * @augments Kinetic.Node
+ * @param {Object} config
+ */
 Kinetic.Container = Kinetic.Node.extend({
-    /**
-     * Container constructor.&nbsp; Containers are used to contain nodes or other containers
-     * @constructor
-     */
     init: function(config) {
         this.children = [];
         this._super(config);
     },
     /**
      * get children
+     * @name getChildren
+     * @methodOf Kinetic.Container.prototype
      */
     getChildren: function() {
         return this.children;
     },
     /**
      * remove all children
+     * @name removeChildren
+     * @methodOf Kinetic.Container.prototype
      */
     removeChildren: function() {
         while(this.children.length > 0) {
@@ -26,6 +32,8 @@ Kinetic.Container = Kinetic.Node.extend({
     },
     /**
      * add node to container
+     * @name add
+     * @methodOf Kinetic.Container.prototype
      * @param {Node} child
      */
     add: function(child) {
@@ -62,6 +70,8 @@ Kinetic.Container = Kinetic.Node.extend({
     },
     /**
      * remove child from container
+     * @name remove
+     * @methodOf Kinetic.Container.prototype
      * @param {Node} child
      */
     remove: function(child) {
@@ -104,6 +114,8 @@ Kinetic.Container = Kinetic.Node.extend({
      * ex:
      * var node = stage.get('#foo'); // selects node with id foo
      * var nodes = layer.get('.bar'); // selects nodes with name bar inside layer
+     * @name get
+     * @methodOf Kinetic.Container.prototype
      * @param {String} selector
      */
     get: function(selector) {
@@ -136,6 +148,8 @@ Kinetic.Container = Kinetic.Node.extend({
     /**
      * determine if node is an ancestor
      * of descendant
+     * @name isAncestorOf
+     * @methodOf Kinetic.Container.prototype
      * @param {Kinetic.Node} node
      */
     isAncestorOf: function(node) {
@@ -155,6 +169,8 @@ Kinetic.Container = Kinetic.Node.extend({
     },
     /**
      * get shapes that intersect a point
+     * @name getIntersections
+     * @methodOf Kinetic.Container.prototype
      * @param {Object} point
      */
     getIntersections: function() {

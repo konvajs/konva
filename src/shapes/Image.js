@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////
 //  Image
 ///////////////////////////////////////////////////////////////////////
+/**
+ * Image constructor
+ * @constructor
+ * @augments Kinetic.Shape
+ * @param {Object} config
+ */
 Kinetic.Image = Kinetic.Shape.extend({
-    /**
-     * Image constructor
-     * @constructor
-     * @augments Kinetic.Shape
-     * @param {Object} config
-     */
     init: function(config) {
         this.shapeType = "Image";
         config.drawFunc = function() {
@@ -42,6 +42,8 @@ Kinetic.Image = Kinetic.Shape.extend({
     },
     /**
      * set width and height
+     * @name setSize
+     * @methodOf Kinetic.Image.prototype
      */
     setSize: function() {
         var size = Kinetic.GlobalObject._getSize(Array.prototype.slice.call(arguments));
@@ -49,6 +51,8 @@ Kinetic.Image = Kinetic.Shape.extend({
     },
     /**
      * return image size
+     * @name getSize
+     * @methodOf Kinetic.Image.prototype
      */
     getSize: function() {
         return {

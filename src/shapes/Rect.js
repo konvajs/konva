@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////
 //  Rect
 ///////////////////////////////////////////////////////////////////////
+/**
+ * Rect constructor
+ * @constructor
+ * @augments Kinetic.Shape
+ * @param {Object} config
+ */
 Kinetic.Rect = Kinetic.Shape.extend({
-    /**
-     * Rect constructor
-     * @constructor
-     * @augments Kinetic.Shape
-     * @param {Object} config
-     */
     init: function(config) {
         this.setDefaultAttrs({
             width: 0,
@@ -46,6 +46,8 @@ Kinetic.Rect = Kinetic.Shape.extend({
     },
     /**
      * set width and height
+     * @name setSize
+     * @methodOf Kinetic.Rect.prototype
      */
     setSize: function() {
         var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
@@ -53,6 +55,8 @@ Kinetic.Rect = Kinetic.Shape.extend({
     },
     /**
      * return rect size
+     * @name getSize
+     * @methodOf Kinetic.Rect.prototype
      */
     getSize: function() {
         return {
