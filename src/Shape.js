@@ -362,11 +362,6 @@ Kinetic.Shape = Kinetic.Node.extend({
                 var node = family[n];
                 var t = node.getTransform();
 
-                // center offset
-                if(node.attrs.offset.x !== 0 || node.attrs.offset.y !== 0) {
-                    t.translate(-1 * node.attrs.offset.x, -1 * node.attrs.offset.y);
-                }
-
                 var m = t.getMatrix();
                 context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }
