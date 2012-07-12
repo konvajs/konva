@@ -5239,7 +5239,7 @@ Test.prototype.tests = {
         layer.add(textpath);
         stage.add(layer);
     },
-	'*PATH - Borneo Map (with scientific notation': function(containerId) {
+	'PATH - Borneo Map (with scientific notation': function(containerId) {
 	
         var stage = new Kinetic.Stage({
             container: containerId,
