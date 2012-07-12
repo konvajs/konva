@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jul 08 2012
+ * Date: Jul 11 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -281,8 +281,7 @@ Kinetic.Type = {
 */
 // Inspired by base2 and Prototype
 (function() {
-    var initializing = false, fnTest = /xyz/.test(function() { xyz;
-    }) ? /\b_super\b/ : /.*/;
+    var initializing = false;
     // The base Class implementation (does nothing)
     Kinetic.Class = function() {
     };
@@ -299,7 +298,7 @@ Kinetic.Type = {
         // Copy the properties over onto the new prototype
         for(var name in prop) {
             // Check if we're overwriting an existing function
-            prototype[name] = typeof prop[name] == "function" && typeof _super[name] == "function" && fnTest.test(prop[name]) ? (function(name, fn) {
+            prototype[name] = typeof prop[name] == "function" && typeof _super[name] == "function" ? (function(name, fn) {
                 return function() {
                     var tmp = this._super;
 
@@ -1783,7 +1782,6 @@ Kinetic.Container = Kinetic.Node.extend({
  * animations
  * @constructor
  * @augments Kinetic.Container
- * @augments Kinetic.Node
  * @param {String|DomElement} cont Container id or DOM element
  * @param {int} width
  * @param {int} height
