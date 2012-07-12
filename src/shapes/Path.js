@@ -130,6 +130,7 @@ Kinetic.Path = Kinetic.Shape.extend({
             str = str.replace(new RegExp(',-', 'g'), '-');
             // add commas so that it's easy to split
             str = str.replace(new RegExp('-', 'g'), ',-');
+			str = str.replace(new RegExp('e,-', 'g'), 'e-');
             var p = str.split(',');
             if(p.length > 0 && p[0] === '') {
                 p.shift();
