@@ -37,24 +37,7 @@ Kinetic.Node = Kinetic.Class.extend({
 
         // bind events
         this.on('draggableChange.kinetic', function() {
-            if(this.attrs.draggable) {
-                this._listenDrag();
-            }
-            else {
-                // remove event listeners
-                this._dragCleanup();
-
-                /*
-                 * force drag and drop to end
-                 * if this node is currently in
-                 * drag and drop mode
-                 */
-                var stage = this.getStage();
-                var go = Kinetic.Global;
-                if(stage && go.drag.node && go.drag.node._id === this._id) {
-                    stage._endDrag();
-                }
-            }
+            this._onDraggableChange();
         });
         var that = this;
         this.on('idChange.kinetic', function(evt) {
@@ -71,12 +54,8 @@ Kinetic.Node = Kinetic.Class.extend({
                 stage._addName(that);
             }
         });
-        /*
-         * simulate draggable change event
-         * to init drag and drop logic from the
-         * above event binder
-         */
-        this.simulate('draggableChange');
+
+        this._onDraggableChange();
     },
     /**
      * bind events to the node.  KineticJS supports mouseover, mousemove,
@@ -204,6 +183,14 @@ Kinetic.Node = Kinetic.Class.extend({
                     var val = c[key];
                     var oldVal = obj[key];
 
+                    /*
+                     * only fire change event for root
+                     * level attrs
+                     */
+                    if(level === 0) {
+                        that._fireBeforeChangeEvent(key, oldVal, val);
+                    }
+
                     // if obj doesn't have the val property, then create it
                     if(obj[key] === undefined && val !== undefined) {
                         obj[key] = {};
@@ -263,6 +250,10 @@ Kinetic.Node = Kinetic.Class.extend({
                                 that._setAttr(obj[key], 'y', pos.y);
                                 that._setAttr(obj[key], 'width', size.width);
                                 that._setAttr(obj[key], 'height', size.height);
+                                break;
+                            case 'image':
+                                var img = type._getImage(val);
+                                that._setAttr(obj, key, img);
                                 break;
                             default:
                                 that._setAttr(obj, key, val);
@@ -808,6 +799,46 @@ Kinetic.Node = Kinetic.Class.extend({
         node.setAttrs(obj);
         return node;
     },
+    /**
+     * save image data
+     */
+    saveImageData: function() {
+        var stage = this.getStage();
+        var w = stage.attrs.width;
+        var h = stage.attrs.height;
+
+        var bufferLayer = stage.bufferLayer;
+        var bufferLayerContext = bufferLayer.getContext();
+
+        bufferLayer.clear();
+        this._draw(bufferLayer);
+
+        var imageData = bufferLayerContext.getImageData(0, 0, w, h);
+        this.imageData = imageData;
+    },
+    /**
+     * clear image data
+     */
+    clearImageData: function() {
+        delete this.imageData;
+    },
+    /**
+     * get image data
+     */
+    getImageData: function() {
+        return this.imageData;
+    },
+    _setImageData: function(imageData) {
+        if(imageData && imageData.data) {
+            this.imageData = imageData;
+        }
+    },
+    _fireBeforeChangeEvent: function(attr, oldVal, newVal) {
+        this._handleEvent('before' + attr.toUpperCase() + 'Change', {
+            oldVal: oldVal,
+            newVal: newVal
+        });
+    },
     _fireChangeEvent: function(attr, oldVal, newVal) {
         this._handleEvent(attr + 'Change', {
             oldVal: oldVal,
@@ -841,6 +872,26 @@ Kinetic.Node = Kinetic.Class.extend({
             go.drag.node = this;
             go.drag.offset.x = pos.x - this.getAbsoluteTransform().getTranslation().x;
             go.drag.offset.y = pos.y - this.getAbsoluteTransform().getTranslation().y;
+        }
+    },
+    _onDraggableChange: function() {
+        if(this.attrs.draggable) {
+            this._listenDrag();
+        }
+        else {
+            // remove event listeners
+            this._dragCleanup();
+
+            /*
+             * force drag and drop to end
+             * if this node is currently in
+             * drag and drop mode
+             */
+            var stage = this.getStage();
+            var go = Kinetic.Global;
+            if(stage && go.drag.node && go.drag.node._id === this._id) {
+                stage._endDrag();
+            }
         }
     },
     /**

@@ -1988,6 +1988,50 @@ Test.prototype.tests = {
         };
         imageObj.src = '../darth-vader.jpg';
     },
+    'SHAPE - add image with image data': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+
+        var circle = new Kinetic.Ellipse({
+            x: 100,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        var circle2 = new Kinetic.Ellipse({
+            x: 150,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'yellow',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        group.add(circle);
+        group.add(circle2);
+        layer.add(group);
+        stage.add(layer);
+
+        group.saveImageData();
+        
+        var image = new Kinetic.Image({
+            image: group.getImageData(),
+            x: 200,
+            y: 0,
+            draggable: true
+        });
+        
+        layer.add(image);
+        layer.draw(); 
+    },
     'SHAPE - set image fill to color then image': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
@@ -2220,10 +2264,10 @@ Test.prototype.tests = {
         layer.add(line);
         stage.add(layer);
 
-        line.saveData();
+        line.saveImageData();
 
         line.on('dragend', function() {
-            line.saveData();
+            line.saveImageData();
         });
 
         line.setPoints([1, 2, 3, 4]);
@@ -2752,8 +2796,7 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
     },
-    'SHAPE - test pixel detection setter and getter': function(containerId) {
-
+    'NODE - test pixel detection setter and getter': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2785,13 +2828,13 @@ Test.prototype.tests = {
         });
 
         star.on('dragend', function() {
-            this.saveData();
+            this.saveImageData();
         });
 
         layer.add(star);
         stage.add(layer);
 
-        star.saveData();
+        star.saveImageData();
 
         test(star.getDetectionType() === 'pixel', 'detection type should be pixel');
         star.setDetectionType('path');

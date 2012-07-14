@@ -23,7 +23,6 @@ Kinetic.Shape = Kinetic.Node.extend({
             detectionType: 'path'
         });
 
-        this.data = [];
         this.nodeType = 'Shape';
         this.appliedShadow = false;
 
@@ -297,29 +296,6 @@ Kinetic.Shape = Kinetic.Node.extend({
         return false;
     },
     /**
-     * save shape data when using pixel detection.
-     */
-    saveData: function() {
-        var stage = this.getStage();
-        var w = stage.attrs.width;
-        var h = stage.attrs.height;
-
-        var bufferLayer = stage.bufferLayer;
-        var bufferLayerContext = bufferLayer.getContext();
-
-        bufferLayer.clear();
-        this._draw(bufferLayer);
-
-        var imageData = bufferLayerContext.getImageData(0, 0, w, h);
-        this.data = imageData.data;
-    },
-    /**
-     * clear shape data
-     */
-    clearData: function() {
-        this.data = [];
-    },
-    /**
      * determines if point is in the shape
      * @param {Object|Array} point point can be an object containing
      *  an x and y property, or it can be an array with two elements
@@ -340,7 +316,7 @@ Kinetic.Shape = Kinetic.Node.extend({
         }
         else {
             var w = stage.attrs.width;
-            var alpha = this.data[((w * pos.y) + pos.x) * 4 + 3];
+            var alpha = this.imageData.data[((w * pos.y) + pos.x) * 4 + 3];
             return (!!alpha);
         }
     },
@@ -386,7 +362,7 @@ Kinetic.Shape = Kinetic.Node.extend({
 });
 
 // add getters and setters
-Kinetic.Node.addGettersSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
+Kinetic.Node.addGettersSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc', 'filter']);
 
 /**
  * set fill which can be a color, linear gradient object,

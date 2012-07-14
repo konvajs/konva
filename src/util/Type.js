@@ -205,5 +205,30 @@ Kinetic.Type = {
 
             return arr;
         }
+    },
+    /*
+     * arg can be an image object or image data
+     */
+    _getImage: function(arg) {
+        // if arg is already an image object, just return it
+        if(this._isElement(arg)) {
+            return arg;
+        }
+
+        //if arg is image data, then convert it
+        if(arg.data) {
+            var canvas = document.createElement('canvas');
+            canvas.width = arg.width;
+            canvas.height = arg.height;
+            var context = canvas.getContext('2d');
+            context.putImageData(arg, 0, 0);
+            var dataUrl = canvas.toDataURL();
+			var imageObj = new Image();
+			imageObj.src = dataUrl;
+			return imageObj;
+        }
+
+        // default
+        return null;
     }
 };

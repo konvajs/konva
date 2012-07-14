@@ -33,7 +33,7 @@ Kinetic.Layer = Kinetic.Container.extend({
      * @name draw
      * @methodOf Kinetic.Layer.prototype
      */
-    draw: function() {
+    draw: function(layer) {
         var throttle = this.attrs.throttle;
         var date = new Date();
         var time = date.getTime();
@@ -41,7 +41,7 @@ Kinetic.Layer = Kinetic.Container.extend({
         var tt = 1000 / throttle;
 
         if(timeDiff >= tt || throttle > 200) {
-            this._draw();
+            this._draw(layer);
 
             if(this.drawTimeout !== undefined) {
                 clearTimeout(this.drawTimeout);
@@ -58,7 +58,7 @@ Kinetic.Layer = Kinetic.Container.extend({
              * wait 17ms before trying again (60fps)
              */
             this.drawTimeout = setTimeout(function() {
-                that.draw();
+                that.draw(layer);
             }, 17);
         }
     },
@@ -110,7 +110,7 @@ Kinetic.Layer = Kinetic.Container.extend({
     /**
      * private draw children
      */
-    _draw: function() {
+    _draw: function(layer) {
         var date = new Date();
         var time = date.getTime();
         this.lastDrawTime = time;
@@ -131,7 +131,7 @@ Kinetic.Layer = Kinetic.Container.extend({
             }
 
             // draw children
-            this._drawChildren();
+            this._drawChildren(layer);
         }
 
         // after draw  handler

@@ -359,12 +359,12 @@ Test.prototype.tests = {
         });
 
         star.on('dragend', function() {
-            this.saveData();
+            this.saveImageData();
         });
 
         layer.add(star);
         stage.add(layer);
-        star.saveData();
+        star.saveImageData();
     },
     'EVENTS - drag events click': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -821,14 +821,14 @@ Test.prototype.tests = {
 
         /*
          Ellipse.on('dragend', function() {
-         Ellipse.saveData();
+         Ellipse.savePixels();
          });
          */
 
         layer.add(Ellipse).add(Ellipse2);
         stage.add(layer);
 
-        //Ellipse.saveData();
+        //Ellipse.savePixels();
     },
     'DRAG AND DROP - drag and drop stage': function(containerId) {
         var stage = new Kinetic.Stage({

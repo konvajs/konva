@@ -6,6 +6,10 @@
  * @constructor
  * @augments Kinetic.Shape
  * @param {Object} config
+ * @param {ImageObject} config.image
+ * @param {Number} [config.width]
+ * @param {Number} [config.height]
+ * @param {Object} [config.crop]
  */
 Kinetic.Image = Kinetic.Shape.extend({
     init: function(config) {
@@ -39,6 +43,20 @@ Kinetic.Image = Kinetic.Shape.extend({
         };
         // call super constructor
         this._super(config);
+
+        /*
+         * if image property is ever changed, check and see
+         * if it was set to image data, and if it was, go ahead
+         * and save it
+         */
+        this.on('beforeImageChange.kinetic', function(evt) {
+            this._setImageData(evt.newVal);
+        });
+        /*
+         * if image property was set with image data,
+         * go ahead and save it
+         */
+        this._setImageData(config.image);
     },
     /**
      * set width and height

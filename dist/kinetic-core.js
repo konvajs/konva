@@ -34,6 +34,7 @@
  * @namespace
  */
 var Kinetic = {};
+Kinetic.Filters = {};
 Kinetic.Global = {
     BUBBLE_WHITELIST: ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'click', 'dblclick', 'touchstart', 'touchmove', 'touchend', 'tap', 'dbltap', 'dragstart', 'dragmove', 'dragend'],
     stages: [],
@@ -269,6 +270,31 @@ Kinetic.Type = {
 
             return arr;
         }
+    },
+    /*
+     * arg can be an image object or image data
+     */
+    _getImage: function(arg) {
+        // if arg is already an image object, just return it
+        if(this._isElement(arg)) {
+            return arg;
+        }
+
+        //if arg is image data, then convert it
+        if(arg.data) {
+            var canvas = document.createElement('canvas');
+            canvas.width = arg.width;
+            canvas.height = arg.height;
+            var context = canvas.getContext('2d');
+            context.putImageData(arg, 0, 0);
+            var dataUrl = canvas.toDataURL();
+			var imageObj = new Image();
+			imageObj.src = dataUrl;
+			return imageObj;
+        }
+
+        // default
+        return null;
     }
 };
 
@@ -467,24 +493,7 @@ Kinetic.Node = Kinetic.Class.extend({
 
         // bind events
         this.on('draggableChange.kinetic', function() {
-            if(this.attrs.draggable) {
-                this._listenDrag();
-            }
-            else {
-                // remove event listeners
-                this._dragCleanup();
-
-                /*
-                 * force drag and drop to end
-                 * if this node is currently in
-                 * drag and drop mode
-                 */
-                var stage = this.getStage();
-                var go = Kinetic.Global;
-                if(stage && go.drag.node && go.drag.node._id === this._id) {
-                    stage._endDrag();
-                }
-            }
+            this._onDraggableChange();
         });
         var that = this;
         this.on('idChange.kinetic', function(evt) {
@@ -501,12 +510,8 @@ Kinetic.Node = Kinetic.Class.extend({
                 stage._addName(that);
             }
         });
-        /*
-         * simulate draggable change event
-         * to init drag and drop logic from the
-         * above event binder
-         */
-        this.simulate('draggableChange');
+
+        this._onDraggableChange();
     },
     /**
      * bind events to the node.  KineticJS supports mouseover, mousemove,
@@ -634,6 +639,14 @@ Kinetic.Node = Kinetic.Class.extend({
                     var val = c[key];
                     var oldVal = obj[key];
 
+                    /*
+                     * only fire change event for root
+                     * level attrs
+                     */
+                    if(level === 0) {
+                        that._fireBeforeChangeEvent(key, oldVal, val);
+                    }
+
                     // if obj doesn't have the val property, then create it
                     if(obj[key] === undefined && val !== undefined) {
                         obj[key] = {};
@@ -693,6 +706,10 @@ Kinetic.Node = Kinetic.Class.extend({
                                 that._setAttr(obj[key], 'y', pos.y);
                                 that._setAttr(obj[key], 'width', size.width);
                                 that._setAttr(obj[key], 'height', size.height);
+                                break;
+                            case 'image':
+                                var img = type._getImage(val);
+                                that._setAttr(obj, key, img);
                                 break;
                             default:
                                 that._setAttr(obj, key, val);
@@ -1238,6 +1255,46 @@ Kinetic.Node = Kinetic.Class.extend({
         node.setAttrs(obj);
         return node;
     },
+    /**
+     * save image data
+     */
+    saveImageData: function() {
+        var stage = this.getStage();
+        var w = stage.attrs.width;
+        var h = stage.attrs.height;
+
+        var bufferLayer = stage.bufferLayer;
+        var bufferLayerContext = bufferLayer.getContext();
+
+        bufferLayer.clear();
+        this._draw(bufferLayer);
+
+        var imageData = bufferLayerContext.getImageData(0, 0, w, h);
+        this.imageData = imageData;
+    },
+    /**
+     * clear image data
+     */
+    clearImageData: function() {
+        delete this.imageData;
+    },
+    /**
+     * get image data
+     */
+    getImageData: function() {
+        return this.imageData;
+    },
+    _setImageData: function(imageData) {
+        if(imageData && imageData.data) {
+            this.imageData = imageData;
+        }
+    },
+    _fireBeforeChangeEvent: function(attr, oldVal, newVal) {
+        this._handleEvent('before' + attr.toUpperCase() + 'Change', {
+            oldVal: oldVal,
+            newVal: newVal
+        });
+    },
     _fireChangeEvent: function(attr, oldVal, newVal) {
         this._handleEvent(attr + 'Change', {
             oldVal: oldVal,
@@ -1271,6 +1328,26 @@ Kinetic.Node = Kinetic.Class.extend({
             go.drag.node = this;
             go.drag.offset.x = pos.x - this.getAbsoluteTransform().getTranslation().x;
             go.drag.offset.y = pos.y - this.getAbsoluteTransform().getTranslation().y;
+        }
+    },
+    _onDraggableChange: function() {
+        if(this.attrs.draggable) {
+            this._listenDrag();
+        }
+        else {
+            // remove event listeners
+            this._dragCleanup();
+
+            /*
+             * force drag and drop to end
+             * if this node is currently in
+             * drag and drop mode
+             */
+            var stage = this.getStage();
+            var go = Kinetic.Global;
+            if(stage && go.drag.node && go.drag.node._id === this._id) {
+                stage._endDrag();
+            }
         }
     },
     /**
@@ -1752,18 +1829,18 @@ Kinetic.Container = Kinetic.Node.extend({
     /**
      * draw children
      */
-    _drawChildren: function() {
+    _drawChildren: function(layer) {
         var stage = this.getStage();
         var children = this.children;
         for(var n = 0; n < children.length; n++) {
             var child = children[n];
             if(child.nodeType === 'Shape') {
                 if(child.isVisible() && stage.isVisible()) {
-                    child._draw(child.getLayer());
+                    child._draw(layer ? layer : child.getLayer());
                 }
             }
             else {
-                child.draw();
+                child.draw(layer);
             }
         }
     },
@@ -1883,8 +1960,8 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @name draw
      * @methodOf Kinetic.Stage.prototype
      */
-    draw: function() {
-        this._drawChildren();
+    draw: function(layer) {
+        this._draw(layer);
     },
     /**
      * set stage size
@@ -2778,6 +2855,9 @@ Kinetic.Stage = Kinetic.Container.extend({
         this.names = {};
         this.anim = undefined;
         this.animRunning = false;
+    },
+    _draw: function(layer) {
+        this._drawChildren(layer);
     }
 });
 
@@ -2860,7 +2940,7 @@ Kinetic.Layer = Kinetic.Container.extend({
      * @name draw
      * @methodOf Kinetic.Layer.prototype
      */
-    draw: function() {
+    draw: function(layer) {
         var throttle = this.attrs.throttle;
         var date = new Date();
         var time = date.getTime();
@@ -2868,7 +2948,7 @@ Kinetic.Layer = Kinetic.Container.extend({
         var tt = 1000 / throttle;
 
         if(timeDiff >= tt || throttle > 200) {
-            this._draw();
+            this._draw(layer);
 
             if(this.drawTimeout !== undefined) {
                 clearTimeout(this.drawTimeout);
@@ -2885,7 +2965,7 @@ Kinetic.Layer = Kinetic.Container.extend({
              * wait 17ms before trying again (60fps)
              */
             this.drawTimeout = setTimeout(function() {
-                that.draw();
+                that.draw(layer);
             }, 17);
         }
     },
@@ -2937,7 +3017,7 @@ Kinetic.Layer = Kinetic.Container.extend({
     /**
      * private draw children
      */
-    _draw: function() {
+    _draw: function(layer) {
         var date = new Date();
         var time = date.getTime();
         this.lastDrawTime = time;
@@ -2958,7 +3038,7 @@ Kinetic.Layer = Kinetic.Container.extend({
             }
 
             // draw children
-            this._drawChildren();
+            this._drawChildren(layer);
         }
 
         // after draw  handler
@@ -3014,9 +3094,12 @@ Kinetic.Group = Kinetic.Container.extend({
         // call super constructor
         this._super(config);
     },
-    draw: function() {
+    draw: function(layer) {
+        this._draw(layer);
+    },
+    _draw: function(layer) {
         if(this.attrs.visible) {
-            this._drawChildren();
+            this._drawChildren(layer);
         }
     }
 });
@@ -3046,7 +3129,6 @@ Kinetic.Shape = Kinetic.Node.extend({
             detectionType: 'path'
         });
 
-        this.data = [];
         this.nodeType = 'Shape';
         this.appliedShadow = false;
 
@@ -3320,29 +3402,6 @@ Kinetic.Shape = Kinetic.Node.extend({
         return false;
     },
     /**
-     * save shape data when using pixel detection.
-     */
-    saveData: function() {
-        var stage = this.getStage();
-        var w = stage.attrs.width;
-        var h = stage.attrs.height;
-
-        var bufferLayer = stage.bufferLayer;
-        var bufferLayerContext = bufferLayer.getContext();
-
-        bufferLayer.clear();
-        this._draw(bufferLayer);
-
-        var imageData = bufferLayerContext.getImageData(0, 0, w, h);
-        this.data = imageData.data;
-    },
-    /**
-     * clear shape data
-     */
-    clearData: function() {
-        this.data = [];
-    },
-    /**
      * determines if point is in the shape
      * @param {Object|Array} point point can be an object containing
      *  an x and y property, or it can be an array with two elements
@@ -3363,7 +3422,7 @@ Kinetic.Shape = Kinetic.Node.extend({
         }
         else {
             var w = stage.attrs.width;
-            var alpha = this.data[((w * pos.y) + pos.x) * 4 + 3];
+            var alpha = this.imageData.data[((w * pos.y) + pos.x) * 4 + 3];
             return (!!alpha);
         }
     },
@@ -3409,7 +3468,7 @@ Kinetic.Shape = Kinetic.Node.extend({
 });
 
 // add getters and setters
-Kinetic.Node.addGettersSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc']);
+Kinetic.Node.addGettersSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc', 'filter']);
 
 /**
  * set fill which can be a color, linear gradient object,
@@ -3695,6 +3754,10 @@ Kinetic.Node.addGettersSetters(Kinetic.Ellipse, ['radius']);
  * @constructor
  * @augments Kinetic.Shape
  * @param {Object} config
+ * @param {ImageObject} config.image
+ * @param {Number} [config.width]
+ * @param {Number} [config.height]
+ * @param {Object} [config.crop]
  */
 Kinetic.Image = Kinetic.Shape.extend({
     init: function(config) {
@@ -3728,6 +3791,20 @@ Kinetic.Image = Kinetic.Shape.extend({
         };
         // call super constructor
         this._super(config);
+
+        /*
+         * if image property is ever changed, check and see
+         * if it was set to image data, and if it was, go ahead
+         * and save it
+         */
+        this.on('beforeImageChange.kinetic', function(evt) {
+            this._setImageData(evt.newVal);
+        });
+        /*
+         * if image property was set with image data,
+         * go ahead and save it
+         */
+        this._setImageData(config.image);
     },
     /**
      * set width and height
