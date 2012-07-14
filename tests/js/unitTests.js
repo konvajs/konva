@@ -3252,8 +3252,10 @@ Test.prototype.tests = {
         var shadowChanged = 0;
         var radiusChanged = 0;
 
-        rect.on('widthChange', function() {
+        rect.on('widthChange', function(evt) {
             widthChanged++;
+            test(evt.oldVal === 200, 'old width should be 200');
+            test(evt.newVal === 210, 'new width should be 210');
         });
 
         rect.on('shadowChange', function() {
@@ -3655,7 +3657,7 @@ Test.prototype.tests = {
     },
     'NODE - test getPosition and getAbsolutePosition for transformed parent with center offset': function(containerId) {
         var side = 100;
-        var diagonal = Math.sqrt(side*side*2);
+        var diagonal = Math.sqrt(side * side * 2);
 
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -3672,9 +3674,9 @@ Test.prototype.tests = {
             name: 'groupName',
             id: 'groupId',
             rotationDeg: 45,
-            offset: [side/2, side/2],
-            x: diagonal/2,
-            y: diagonal/2
+            offset: [side / 2, side / 2],
+            x: diagonal / 2,
+            y: diagonal / 2
         });
         var rect = new Kinetic.Rect({
             x: 0,
@@ -3703,7 +3705,7 @@ Test.prototype.tests = {
         stage.add(layer);
 
         test(Math.round(marker.getAbsolutePosition().x) === Math.round(diagonal), 'marker absolute position x should be about ' + Math.round(diagonal) + ' but is about ' + Math.round(marker.getAbsolutePosition().x));
-        test(Math.round(marker.getAbsolutePosition().y) === Math.round(diagonal/2), 'marker absolute position y should be about ' + Math.round(diagonal/2) + ' but is about ' + Math.round(marker.getAbsolutePosition().y));
+        test(Math.round(marker.getAbsolutePosition().y) === Math.round(diagonal / 2), 'marker absolute position y should be about ' + Math.round(diagonal / 2) + ' but is about ' + Math.round(marker.getAbsolutePosition().y));
     },
     'NODE - test get() selector by adding shape, then group, then layer': function(containerId) {
         var stage = new Kinetic.Stage({

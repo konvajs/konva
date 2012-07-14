@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jul 11 2012
+ * Date: Jul 13 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -617,6 +617,7 @@ Kinetic.Node = Kinetic.Class.extend({
             function setAttrs(obj, c, level) {
                 for(var key in c) {
                     var val = c[key];
+                    var oldVal = obj[key];
 
                     // if obj doesn't have the val property, then create it
                     if(obj[key] === undefined && val !== undefined) {
@@ -688,7 +689,7 @@ Kinetic.Node = Kinetic.Class.extend({
                      * level attrs
                      */
                     if(level === 0) {
-                        that._fireChangeEvent(key);
+                        that._fireChangeEvent(key, oldVal, val);
                     }
                 }
             }
@@ -1178,6 +1179,10 @@ Kinetic.Node = Kinetic.Class.extend({
         if(this.attrs.scale.x !== 1 || this.attrs.scale.y !== 1) {
             m.scale(this.attrs.scale.x, this.attrs.scale.y);
         }
+        // center offset
+        if(this.attrs.offset.x !== 0 || this.attrs.offset.y !== 0) {
+            m.translate(-1 * this.attrs.offset.x, -1 * this.attrs.offset.y);
+        }
 
         return m;
     },
@@ -1218,8 +1223,11 @@ Kinetic.Node = Kinetic.Class.extend({
         node.setAttrs(obj);
         return node;
     },
-    _fireChangeEvent: function(attr) {
-        this._handleEvent(attr + 'Change', {});
+    _fireChangeEvent: function(attr, oldVal, newVal) {
+        this._handleEvent(attr + 'Change', {
+            oldVal: oldVal,
+            newVal: newVal
+        });
     },
     _setAttr: function(obj, attr, val) {
         if(val !== undefined) {
@@ -3362,11 +3370,6 @@ Kinetic.Shape = Kinetic.Node.extend({
             for(var n = 0; n < family.length; n++) {
                 var node = family[n];
                 var t = node.getTransform();
-
-                // center offset
-                if(node.attrs.offset.x !== 0 || node.attrs.offset.y !== 0) {
-                    t.translate(-1 * node.attrs.offset.x, -1 * node.attrs.offset.y);
-                }
 
                 var m = t.getMatrix();
                 context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
