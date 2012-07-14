@@ -908,9 +908,9 @@ Kinetic.Stage = Kinetic.Container.extend({
             this.ids[node.attrs.id] = node;
         }
     },
-    _removeId: function(node) {
-        if(node.attrs.id !== undefined) {
-            delete this.ids[node.attrs.id];
+    _removeId: function(id) {
+        if(id !== undefined) {
+            delete this.ids[id];
         }
     },
     _addName: function(node) {
@@ -922,18 +922,18 @@ Kinetic.Stage = Kinetic.Container.extend({
             this.names[name].push(node);
         }
     },
-    _removeName: function(node) {
-        if(node.attrs.name !== undefined) {
-            var nodes = this.names[node.attrs.name];
+    _removeName: function(name, _id) {
+        if(name !== undefined) {
+            var nodes = this.names[name];
             if(nodes !== undefined) {
                 for(var n = 0; n < nodes.length; n++) {
                     var no = nodes[n];
-                    if(no._id === node._id) {
+                    if(no._id === _id) {
                         nodes.splice(n, 1);
                     }
                 }
                 if(nodes.length === 0) {
-                    delete this.names[node.attrs.name];
+                    delete this.names[name];
                 }
             }
         }

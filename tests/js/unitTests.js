@@ -650,7 +650,49 @@ Test.prototype.tests = {
 
         test(stage.ids.myCircle === undefined, 'circle still in hash');
         test(stage.names.myRect === undefined, 'rect still in hash');
+    },
+    'STAGE - test ids and names hashes': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Ellipse({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            id: 'myCircle'
+        });
 
+        var rect = new Kinetic.Rect({
+            x: 300,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'purple',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myRect'
+        });
+
+        layer.add(circle);
+        layer.add(rect);
+        stage.add(layer);
+
+        test(stage.ids['myCircle'].getId() === 'myCircle', 'circle id not in ids hash');
+        test(stage.names['myRect'][0].getName() === 'myRect', 'rect name not in names hash');
+
+        circle.setId('newCircleId');
+        test(stage.ids['newCircleId'].getId() === 'newCircleId', 'circle not in ids hash');
+        test(stage.ids['myCircle'] === undefined, 'old circle id key is still in ids hash');
+
+        rect.setName('newRectName');
+        test(stage.names['newRectName'][0].getName() === 'newRectName', 'new rect name not in names hash');
+        test(stage.names['myRect'] === undefined, 'old rect name is still in names hash');
     },
     'STAGE - set shape and layer alpha to 0.5': function(containerId) {
         var stage = new Kinetic.Stage({

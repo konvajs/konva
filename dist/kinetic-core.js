@@ -486,6 +486,21 @@ Kinetic.Node = Kinetic.Class.extend({
                 }
             }
         });
+        var that = this;
+        this.on('idChange.kinetic', function(evt) {
+            var stage = that.getStage();
+            if(stage) {
+                stage._removeId(evt.oldVal);
+                stage._addId(that);
+            }
+        });
+        this.on('nameChange.kinetic', function(evt) {
+            var stage = that.getStage();
+            if(stage) {
+                stage._removeName(evt.oldVal, that._id);
+                stage._addName(that);
+            }
+        });
         /*
          * simulate draggable change event
          * to init drag and drop logic from the
@@ -1332,7 +1347,6 @@ Kinetic.Node._addSetter = function(constructor, attr) {
     var that = this;
     var method = 'set' + attr.charAt(0).toUpperCase() + attr.slice(1);
     constructor.prototype[method] = function() {
-        var arg;
         if(arguments.length == 1) {
             arg = arguments[0];
         }
@@ -1605,8 +1619,8 @@ Kinetic.Container = Kinetic.Node.extend({
         if(child && child.index !== undefined && this.children[child.index]._id == child._id) {
             var stage = this.getStage();
             if(stage !== undefined) {
-                stage._removeId(child);
-                stage._removeName(child);
+                stage._removeId(child.getId());
+                stage._removeName(child.getName(), child._id);
             }
 
             var go = Kinetic.Global;
@@ -2692,9 +2706,9 @@ Kinetic.Stage = Kinetic.Container.extend({
             this.ids[node.attrs.id] = node;
         }
     },
-    _removeId: function(node) {
-        if(node.attrs.id !== undefined) {
-            delete this.ids[node.attrs.id];
+    _removeId: function(id) {
+        if(id !== undefined) {
+            delete this.ids[id];
         }
     },
     _addName: function(node) {
@@ -2706,18 +2720,18 @@ Kinetic.Stage = Kinetic.Container.extend({
             this.names[name].push(node);
         }
     },
-    _removeName: function(node) {
-        if(node.attrs.name !== undefined) {
-            var nodes = this.names[node.attrs.name];
+    _removeName: function(name, _id) {
+        if(name !== undefined) {
+            var nodes = this.names[name];
             if(nodes !== undefined) {
                 for(var n = 0; n < nodes.length; n++) {
                     var no = nodes[n];
-                    if(no._id === node._id) {
+                    if(no._id === _id) {
                         nodes.splice(n, 1);
                     }
                 }
                 if(nodes.length === 0) {
-                    delete this.names[node.attrs.name];
+                    delete this.names[name];
                 }
             }
         }

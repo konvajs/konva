@@ -78,8 +78,8 @@ Kinetic.Container = Kinetic.Node.extend({
         if(child && child.index !== undefined && this.children[child.index]._id == child._id) {
             var stage = this.getStage();
             if(stage !== undefined) {
-                stage._removeId(child);
-                stage._removeName(child);
+                stage._removeId(child.getId());
+                stage._removeName(child.getName(), child._id);
             }
 
             var go = Kinetic.Global;

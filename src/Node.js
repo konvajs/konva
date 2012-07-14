@@ -56,6 +56,21 @@ Kinetic.Node = Kinetic.Class.extend({
                 }
             }
         });
+        var that = this;
+        this.on('idChange.kinetic', function(evt) {
+            var stage = that.getStage();
+            if(stage) {
+                stage._removeId(evt.oldVal);
+                stage._addId(that);
+            }
+        });
+        this.on('nameChange.kinetic', function(evt) {
+            var stage = that.getStage();
+            if(stage) {
+                stage._removeName(evt.oldVal, that._id);
+                stage._addName(that);
+            }
+        });
         /*
          * simulate draggable change event
          * to init drag and drop logic from the
@@ -902,7 +917,6 @@ Kinetic.Node._addSetter = function(constructor, attr) {
     var that = this;
     var method = 'set' + attr.charAt(0).toUpperCase() + attr.slice(1);
     constructor.prototype[method] = function() {
-        var arg;
         if(arguments.length == 1) {
             arg = arguments[0];
         }
