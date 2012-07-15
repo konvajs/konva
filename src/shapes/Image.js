@@ -6,7 +6,7 @@
  * @constructor
  * @augments Kinetic.Shape
  * @param {Object} config
- * @param {ImageObject} config.image
+ * @param {ImageObject|String|ImageData} config.image can be an image object, a data url string, or an image data object
  * @param {Number} [config.width]
  * @param {Number} [config.height]
  * @param {Object} [config.crop]

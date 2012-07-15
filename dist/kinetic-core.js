@@ -3473,6 +3473,7 @@ Kinetic.Shape = Kinetic.Node.extend({
         var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
         var stage = this.getStage();
 
+        // path detection
         if(this.attrs.detectionType === 'path') {
             var pathLayer = stage.pathLayer;
             var pathLayerContext = pathLayer.getContext();
@@ -3481,11 +3482,16 @@ Kinetic.Shape = Kinetic.Node.extend({
 
             return pathLayerContext.isPointInPath(pos.x, pos.y);
         }
-        else {
+
+        // pixel detection
+        if(this.imageData) {
             var w = stage.attrs.width;
             var alpha = this.imageData.data[((w * pos.y) + pos.x) * 4 + 3];
-            return (!!alpha);
+            return (alpha);
         }
+
+        // default
+        return false;
     },
     _draw: function(layer) {
         if(layer && this.attrs.drawFunc) {
@@ -3815,7 +3821,7 @@ Kinetic.Node.addGettersSetters(Kinetic.Ellipse, ['radius']);
  * @constructor
  * @augments Kinetic.Shape
  * @param {Object} config
- * @param {ImageObject} config.image
+ * @param {ImageObject|String|ImageData} config.image can be an image object, a data url string, or an image data object
  * @param {Number} [config.width]
  * @param {Number} [config.height]
  * @param {Object} [config.crop]
