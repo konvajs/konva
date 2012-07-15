@@ -2032,6 +2032,52 @@ Test.prototype.tests = {
 
         layer.add(image);
         layer.draw();
+
+        test(Kinetic.Type._isElement(image.getImage()), 'image property should have been converted to an image element');
+    },
+    'SHAPE - add image with data url': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+
+        var circle = new Kinetic.Ellipse({
+            x: 100,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        var circle2 = new Kinetic.Ellipse({
+            x: 150,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'yellow',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        group.add(circle);
+        group.add(circle2);
+        layer.add(group);
+        stage.add(layer);
+
+        var image = new Kinetic.Image({
+            image: layer.toDataURL(),
+            x: 200,
+            y: 0,
+            draggable: true
+        });
+
+        layer.add(image);
+        layer.draw();
+
+        test(Kinetic.Type._isElement(image.getImage()), 'image property should have been converted to an image element');
     },
     'SHAPE - set image fill to color then image': function(containerId) {
         var imageObj = new Image();
