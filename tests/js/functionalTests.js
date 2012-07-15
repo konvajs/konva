@@ -206,9 +206,12 @@ Test.prototype.tests = {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
-            height: 200
+            height: 200,
+            throttle: 999
         });
-        var layer = new Kinetic.Layer();
+        var layer = new Kinetic.Layer({
+            throttle: 999
+        });
         var circle = new Kinetic.Ellipse({
             x: 380,
             y: stage.getHeight() / 2,
@@ -222,6 +225,7 @@ Test.prototype.tests = {
             this.setFill('yellow');
             this.setStroke('purple');
             this.setStrokeWidth(20);
+            //console.log('mouseover')
             layer.draw();
         });
 
@@ -229,22 +233,33 @@ Test.prototype.tests = {
             this.setFill('red');
             this.setStroke('black');
             this.setStrokeWidth(4);
+            //console.log('mouseout')
             layer.draw();
         });
 
         layer.add(circle);
         stage.add(layer);
 
-        var startDataUrl = stage.toDataURL();
-        warn(startDataUrl === urls[0], 'start data url is incorrect');
+        warn(stage.toDataURL() === urls[0], 'start data url is incorrect');
 
         stage._mousemove({
             clientX: 377,
             clientY: 101
         });
 
-        var endDataUrl = stage.toDataURL();
-        warn(urls[1] === endDataUrl, 'end data url is incorrect');
+        warn(stage.toDataURL() === urls[1], 'mid data url is incorrect');
+        
+        // move mouse back out of circle
+        stage._mousemove({
+            clientX: 157,
+            clientY: 138
+        });
+        stage._mousemove({
+            clientX: 157,
+            clientY: 138
+        });
+        
+        warn(stage.toDataURL() === urls[0], 'end data url is incorrect');
     },
     'EVENTS - path detection mousedown mouseup mouseover mouseout mousemove click dblclick / touchstart touchend touchmove tap dbltap': function(containerId) {
         var stage = new Kinetic.Stage({

@@ -2232,7 +2232,7 @@ Test.prototype.tests = {
         };
         imageObj.src = '../scorpion-sprite.png';
     },
-    '*Node - shape caching': function(containerId) {
+    'Node - shape caching': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
