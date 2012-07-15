@@ -223,9 +223,9 @@ Kinetic.Type = {
             var context = canvas.getContext('2d');
             context.putImageData(arg, 0, 0);
             var dataUrl = canvas.toDataURL();
-			var imageObj = new Image();
-			imageObj.src = dataUrl;
-			return imageObj;
+            var imageObj = new Image();
+            imageObj.src = dataUrl;
+            return imageObj;
         }
 
         // default

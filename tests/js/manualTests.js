@@ -1468,14 +1468,7 @@ Test.prototype.tests = {
         });
 
         Ellipse.on('click', function() {
-            stage.toDataURL(function(dataUrl) {
-                /*
-                 * here you can do anything you like with the data url.
-                 * In this tutorial we'll just open the url with the browser
-                 * so that you can see the result as an image
-                 */
-                window.open(dataUrl);
-            });
+            window.open(stage.toDataURL());
         });
 
         layer.add(Ellipse);
@@ -1499,14 +1492,7 @@ Test.prototype.tests = {
         });
 
         Ellipse.on('click', function() {
-            stage.toDataURL(function(dataUrl) {
-                /*
-                 * here you can do anything you like with the data url.
-                 * In this tutorial we'll just open the url with the browser
-                 * so that you can see the result as an image
-                 */
-                window.open(dataUrl);
-            }, 'image/jpeg', 0);
+        	window.open(stage.toDataURL('image/jpeg', 0));
         });
 
         layer.add(Ellipse);
@@ -1530,14 +1516,7 @@ Test.prototype.tests = {
         });
 
         Ellipse.on('click', function() {
-            stage.toDataURL(function(dataUrl) {
-                /*
-                 * here you can do anything you like with the data url.
-                 * In this tutorial we'll just open the url with the browser
-                 * so that you can see the result as an image
-                 */
-                window.open(dataUrl);
-            }, 'image/jpeg', 1);
+        	window.open(stage.toDataURL('image/jpeg', 1));
         });
 
         layer.add(Ellipse);

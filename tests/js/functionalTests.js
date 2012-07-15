@@ -38,43 +38,40 @@ Test.prototype.tests = {
         circle.on('dragend', function() {
             dragEnd = true;
         });
-
-        stage.toDataURL(function(startDataUrl) {
-            warn(urls[0] === startDataUrl, 'start data url is incorrect');
-            /*
-             * simulate drag and drop
-             */
-            stage._mousedown({
-                clientX: 380,
-                clientY: 98
-            });
-
-            test(!dragStart, 'dragstart event should not have been triggered');
-            test(!dragMove, 'dragmove event should not have been triggered');
-            test(!dragEnd, 'dragend event should not have been triggered');
-
-            stage._mousemove({
-                clientX: 100,
-                clientY: 98
-            });
-
-            test(dragStart, 'dragstart event was not triggered');
-            test(dragMove, 'dragmove event was not triggered');
-            test(!dragEnd, 'dragend event should not have been triggered');
-
-            stage._mouseup({
-                clientX: 100,
-                clientY: 98
-            });
-
-            test(dragStart, 'dragstart event was not triggered');
-            test(dragMove, 'dragmove event was not triggered');
-            test(dragEnd, 'dragend event was not triggered');
-
-            stage.toDataURL(function(endDataUrl) {
-                warn(urls[1] === endDataUrl, 'end data url is incorrect');
-            });
+        startDataUrl = stage.toDataURL();
+        warn(urls[0] === startDataUrl, 'start data url is incorrect');
+        /*
+         * simulate drag and drop
+         */
+        stage._mousedown({
+            clientX: 380,
+            clientY: 98
         });
+
+        test(!dragStart, 'dragstart event should not have been triggered');
+        test(!dragMove, 'dragmove event should not have been triggered');
+        test(!dragEnd, 'dragend event should not have been triggered');
+
+        stage._mousemove({
+            clientX: 100,
+            clientY: 98
+        });
+
+        test(dragStart, 'dragstart event was not triggered');
+        test(dragMove, 'dragmove event was not triggered');
+        test(!dragEnd, 'dragend event should not have been triggered');
+
+        stage._mouseup({
+            clientX: 100,
+            clientY: 98
+        });
+
+        test(dragStart, 'dragstart event was not triggered');
+        test(dragMove, 'dragmove event was not triggered');
+        test(dragEnd, 'dragend event was not triggered');
+
+        var endDataUrl = stage.toDataURL();
+        warn(urls[1] === endDataUrl, 'end data url is incorrect');
     },
     'DRAG AND DROP - cancel drag and drop by setting draggable to false': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -179,31 +176,30 @@ Test.prototype.tests = {
 
         stage.add(layer);
 
-        stage.toDataURL(function(startDataUrl) {
-            warn(urls[0] === startDataUrl, 'start data url is incorrect');
+        var startDataUrl = stage.toDataURL();
+        warn(urls[0] === startDataUrl, 'start data url is incorrect');
 
-            /*
-             * simulate drag and drop
-             */
-            stage._mousedown({
-                clientX: 399,
-                clientY: 96
-            });
-
-            stage._mousemove({
-                clientX: 210,
-                clientY: 109
-            });
-
-            stage._mouseup({
-                clientX: 210,
-                clientY: 109
-            });
-
-            stage.toDataURL(function(endDataUrl) {
-                warn(urls[1] === endDataUrl, 'end data url is incorrect');
-            });
+        /*
+         * simulate drag and drop
+         */
+        stage._mousedown({
+            clientX: 399,
+            clientY: 96
         });
+
+        stage._mousemove({
+            clientX: 210,
+            clientY: 109
+        });
+
+        stage._mouseup({
+            clientX: 210,
+            clientY: 109
+        });
+
+        var endDataUrl = stage.toDataURL()
+        warn(urls[1] === endDataUrl, 'end data url is incorrect');
+
     },
     'EVENTS - modify fill stroke and stroke width on hover with circle': function(containerId) {
         var urls = dataUrls['EVENTS - modify fill stroke and stroke width on hover with circle'];
@@ -239,18 +235,16 @@ Test.prototype.tests = {
         layer.add(circle);
         stage.add(layer);
 
-        stage.toDataURL(function(startDataUrl) {
-            warn(startDataUrl === urls[0], 'start data url is incorrect');
+        var startDataUrl = stage.toDataURL();
+        warn(startDataUrl === urls[0], 'start data url is incorrect');
 
-            stage._mousemove({
-                clientX: 377,
-                clientY: 101
-            });
-
-            stage.toDataURL(function(endDataUrl) {
-                warn(urls[1] === endDataUrl, 'end data url is incorrect');
-            });
+        stage._mousemove({
+            clientX: 377,
+            clientY: 101
         });
+
+        var endDataUrl = stage.toDataURL();
+        warn(urls[1] === endDataUrl, 'end data url is incorrect');
     },
     'EVENTS - path detection mousedown mouseup mouseover mouseout mousemove click dblclick / touchstart touchend touchmove tap dbltap': function(containerId) {
         var stage = new Kinetic.Stage({

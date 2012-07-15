@@ -358,31 +358,28 @@ Test.prototype.tests = {
             id: 'myTriangle'
         });
 
-        stage.add(layer);
-        layer.add(group);
         group.add(triangle);
+        layer.add(group);
+        stage.add(layer);
+
+        var startDataUrl = stage.toDataURL();
+
+        warn(startDataUrl === urls[0], 'start data url is incorrect');
+        test(triangle.getId() === 'myTriangle', 'triangle id should be myTriangle');
+
+        //console.log(stage.toJSON())
+        var expectedJson = '{"attrs":{"width":578,"height":200,"throttle":80,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"clearBeforeDraw":true,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
+        test(stage.toJSON() === expectedJson, "problem serializing stage with custom shape");
+
+        /*
+         * test redrawing layer after serialization
+         * drawing should be the same
+         */
         layer.draw();
 
-        stage.toDataURL(function(startDataUrl) {
-            warn(startDataUrl === urls[0], 'start data url is incorrect');
+        var endDataUrl = stage.toDataURL();
+        warn(endDataUrl === urls[0], 'end data url is incorrect');
 
-            test(triangle.getId() === 'myTriangle', 'triangle id should be myTriangle');
-
-            //console.log(stage.toJSON())
-
-            var expectedJson = '{"attrs":{"width":578,"height":200,"throttle":80,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"clearBeforeDraw":true,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Group","children":[{"attrs":{"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
-            test(stage.toJSON() === expectedJson, "problem serializing stage with custom shape");
-
-            /*
-             * test redrawing layer after serialization
-             * drawing should be the same
-             */
-            layer.draw();
-
-            stage.toDataURL(function(endDataUrl) {
-                warn(endDataUrl === urls[0], 'end data url is incorrect');
-            });
-        });
     },
     'STAGE - load stage with custom shape using json': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1011,7 +1008,7 @@ Test.prototype.tests = {
 
         layer.draw();
     },
-    'LAYER - set clearBeforeDraw to false': function(containerId) {
+    'LAYER - set clearBeforeDraw to false, and test toDataURL for stage, layer, group, and shape': function(containerId) {
         var urls = dataUrls['LAYER - set clearBeforeDraw to false'];
 
         var stage = new Kinetic.Stage({
@@ -1025,6 +1022,8 @@ Test.prototype.tests = {
             throttle: 999
         });
 
+        var group = new Kinetic.Group();
+
         var circle = new Kinetic.Ellipse({
             x: 100,
             y: stage.getHeight() / 2,
@@ -1034,7 +1033,8 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        layer.add(circle);
+        group.add(circle);
+        layer.add(group);
         stage.add(layer);
 
         for(var n = 0; n < 20; n++) {
@@ -1042,9 +1042,10 @@ Test.prototype.tests = {
             layer.draw();
         }
 
-        stage.toDataURL(function(dataUrl) {
-            warn(urls[0] === dataUrl, 'data url is incorrect');
-        });
+        warn(urls[0] === stage.toDataURL(), 'stage data url is incorrect');
+        warn(urls[0] === layer.toDataURL(), 'layer data url is incorrect');
+        warn(urls[1] === group.toDataURL(), 'group data url is incorrect');
+        warn(urls[1] === circle.toDataURL(), 'shape data url is incorrect');
     },
     'LAYER - throttling': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -2021,16 +2022,16 @@ Test.prototype.tests = {
         stage.add(layer);
 
         group.saveImageData();
-        
+
         var image = new Kinetic.Image({
             image: group.getImageData(),
             x: 200,
             y: 0,
             draggable: true
         });
-        
+
         layer.add(image);
-        layer.draw(); 
+        layer.draw();
     },
     'SHAPE - set image fill to color then image': function(containerId) {
         var imageObj = new Image();

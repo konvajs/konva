@@ -288,9 +288,9 @@ Kinetic.Type = {
             var context = canvas.getContext('2d');
             context.putImageData(arg, 0, 0);
             var dataUrl = canvas.toDataURL();
-			var imageObj = new Image();
-			imageObj.src = dataUrl;
-			return imageObj;
+            var imageObj = new Image();
+            imageObj.src = dataUrl;
+            return imageObj;
         }
 
         // default
@@ -1284,6 +1284,31 @@ Kinetic.Node = Kinetic.Class.extend({
     getImageData: function() {
         return this.imageData;
     },
+    /**
+     * Creates a composite data URL. If MIME type is not
+     * specified, then "image/png" will result. For "image/jpeg", specify a quality
+     * level as quality (range 0.0 - 1.0)
+     * @name toDataURL
+     * @methodOf Kinetic.Stage.prototype
+     * @param {String} [mimeType]
+     * @param {Number} [quality]
+     */
+    toDataURL: function(mimeType, quality) {
+        var bufferLayer = this.getStage().bufferLayer;
+        var bufferCanvas = bufferLayer.getCanvas();
+        var bufferContext = bufferLayer.getContext();
+        bufferLayer.clear();
+        this._draw(bufferLayer);
+
+        try {
+            // If this call fails (due to browser bug, like in Firefox 3.6),
+            // then revert to previous no-parameter image/png behavior
+            return bufferLayer.getCanvas().toDataURL(mimeType, quality);
+        }
+        catch(e) {
+            return bufferLayer.getCanvas().toDataURL();
+        }
+    },
     _setImageData: function(imageData) {
         if(imageData && imageData.data) {
             this.imageData = imageData;
@@ -1836,7 +1861,7 @@ Kinetic.Container = Kinetic.Node.extend({
             var child = children[n];
             if(child.nodeType === 'Shape') {
                 if(child.isVisible() && stage.isVisible()) {
-                    child._draw(layer ? layer : child.getLayer());
+                    child._draw( layer ? layer : child.getLayer());
                 }
             }
             else {
@@ -1996,48 +2021,6 @@ Kinetic.Stage = Kinetic.Container.extend({
         }
     },
     /**
-     * Creates a composite data URL and passes it to a callback. If MIME type is not
-     * specified, then "image/png" will result. For "image/jpeg", specify a quality
-     * level as quality (range 0.0 - 1.0)
-     * @name toDataURL
-     * @methodOf Kinetic.Stage.prototype
-     * @param {function} callback
-     * @param {String} mimeType (optional)
-     * @param {Number} quality (optional)
-     */
-    toDataURL: function(callback, mimeType, quality) {
-        var bufferLayer = this.bufferLayer;
-        var bufferContext = bufferLayer.getContext();
-        var layers = this.children;
-        var that = this;
-
-        function addLayer(n) {
-            var dataURL = layers[n].getCanvas().toDataURL();
-            var imageObj = new Image();
-            imageObj.onload = function() {
-                bufferContext.drawImage(this, 0, 0);
-                n++;
-                if(n < layers.length) {
-                    addLayer(n);
-                }
-                else {
-                    try {
-                        // If this call fails (due to browser bug, like in Firefox 3.6),
-                        // then revert to previous no-parameter image/png behavior
-                        callback(bufferLayer.getCanvas().toDataURL(mimeType, quality));
-                    }
-                    catch(exception) {
-                        callback(bufferLayer.getCanvas().toDataURL());
-                    }
-                }
-            };
-            imageObj.src = dataURL;
-        }
-
-        bufferLayer.clear();
-        addLayer(0);
-    },
-    /**
      * serialize stage and children as a JSON object
      * @name toJSON
      * @methodOf Kinetic.Stage.prototype
@@ -2189,6 +2172,51 @@ Kinetic.Stage = Kinetic.Container.extend({
      */
     getDOM: function() {
         return this.content;
+    },
+    /**
+     * Creates a composite data URL. If MIME type is not
+     * specified, then "image/png" will result. For "image/jpeg", specify a quality
+     * level as quality (range 0.0 - 1.0).  Note that this method works
+     * differently from toDataURL() for other nodes because it generates an absolute dataURL
+     * based on what's draw onto the canvases for each layer, rather than drawing
+     * the current state of each node
+     * @name toDataURL
+     * @methodOf Kinetic.Stage.prototype
+     * @param {String} [mimeType]
+     * @param {Number} [quality]
+     */
+    toDataURL: function(mimeType, quality) {
+        var bufferLayer = this.bufferLayer;
+        var bufferCanvas = bufferLayer.getCanvas();
+        var bufferContext = bufferLayer.getContext();
+        var layers = this.children;
+        bufferLayer.clear();
+        
+        for(var n = 0; n < layers.length; n++) {
+            var layer = layers[n];
+            var layerUrl;
+            try {
+                // If this call fails (due to browser bug, like in Firefox 3.6),
+                // then revert to previous no-parameter image/png behavior
+                layerUrl = layer.getCanvas().toDataURL(mimeType, quality);
+            }
+            catch(e) {
+                layerUrl = layer.getCanvas().toDataURL();
+            }
+
+            var imageObj = new Image();
+            imageObj.src = layerUrl;
+            bufferContext.drawImage(imageObj, 0, 0);
+        }
+
+        try {
+            // If this call fails (due to browser bug, like in Firefox 3.6),
+            // then revert to previous no-parameter image/png behavior
+            return bufferLayer.getCanvas().toDataURL(mimeType, quality);
+        }
+        catch(e) {
+            return bufferLayer.getCanvas().toDataURL();
+        }
     },
     _resizeDOM: function() {
         var width = this.attrs.width;
@@ -3015,6 +3043,28 @@ Kinetic.Layer = Kinetic.Container.extend({
         return this.context;
     },
     /**
+     * Creates a composite data URL. If MIME type is not
+     * specified, then "image/png" will result. For "image/jpeg", specify a quality
+     * level as quality (range 0.0 - 1.0).  Note that this method works
+     * differently from toDataURL() for other nodes because it generates an absolute dataURL
+     * based on what's draw on the layer, rather than drawing
+     * the current state of each child node
+     * @name toDataURL
+     * @methodOf Kinetic.Stage.prototype
+     * @param {String} [mimeType]
+     * @param {Number} [quality]
+     */
+    toDataURL: function(mimeType, quality) {
+        try {
+            // If this call fails (due to browser bug, like in Firefox 3.6),
+            // then revert to previous no-parameter image/png behavior
+            return this.getCanvas().toDataURL(mimeType, quality);
+        }
+        catch(e) {
+            return this.getCanvas().toDataURL();
+        }
+    },
+    /**
      * private draw children
      */
     _draw: function(layer) {
@@ -3028,7 +3078,8 @@ Kinetic.Layer = Kinetic.Container.extend({
         }
 
         if(this.attrs.clearBeforeDraw) {
-            this.clear();
+            var clearLayer = layer ? layer : this;
+            clearLayer.clear();
         }
 
         if(this.isVisible()) {

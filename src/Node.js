@@ -828,6 +828,31 @@ Kinetic.Node = Kinetic.Class.extend({
     getImageData: function() {
         return this.imageData;
     },
+    /**
+     * Creates a composite data URL. If MIME type is not
+     * specified, then "image/png" will result. For "image/jpeg", specify a quality
+     * level as quality (range 0.0 - 1.0)
+     * @name toDataURL
+     * @methodOf Kinetic.Stage.prototype
+     * @param {String} [mimeType]
+     * @param {Number} [quality]
+     */
+    toDataURL: function(mimeType, quality) {
+        var bufferLayer = this.getStage().bufferLayer;
+        var bufferCanvas = bufferLayer.getCanvas();
+        var bufferContext = bufferLayer.getContext();
+        bufferLayer.clear();
+        this._draw(bufferLayer);
+
+        try {
+            // If this call fails (due to browser bug, like in Firefox 3.6),
+            // then revert to previous no-parameter image/png behavior
+            return bufferLayer.getCanvas().toDataURL(mimeType, quality);
+        }
+        catch(e) {
+            return bufferLayer.getCanvas().toDataURL();
+        }
+    },
     _setImageData: function(imageData) {
         if(imageData && imageData.data) {
             this.imageData = imageData;
