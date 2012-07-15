@@ -2232,6 +2232,51 @@ Test.prototype.tests = {
         };
         imageObj.src = '../scorpion-sprite.png';
     },
+    '*Node - shape caching': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+
+        var points = [{
+            x: 73,
+            y: 192
+        }, {
+            x: 73,
+            y: 160
+        }, {
+            x: 340,
+            y: 23
+        }, {
+            x: 500,
+            y: 109
+        }, {
+            x: 499,
+            y: 139
+        }, {
+            x: 342,
+            y: 93
+        }];
+
+        var poly = new Kinetic.Polygon({
+            points: points,
+            fill: 'green',
+            stroke: 'blue',
+            strokeWidth: 5
+        });
+
+        group.add(poly);
+        layer.add(group);
+        stage.add(layer);
+
+        test(Kinetic.Type._isElement(poly.toImage()), 'shape toImage() should be an image object');
+        test(Kinetic.Type._isElement(group.toImage()), 'group toImage() should be an image object');
+        test(Kinetic.Type._isElement(layer.toImage()), 'layer toImage() should be an image object');
+        test(Kinetic.Type._isElement(stage.toImage()), 'stage toImage() should be an image object');
+    },
     'SHAPE - add polygon': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

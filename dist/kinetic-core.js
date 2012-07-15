@@ -1319,6 +1319,12 @@ Kinetic.Node = Kinetic.Class.extend({
             return bufferLayer.getCanvas().toDataURL();
         }
     },
+    /**
+     * to image
+     */
+    toImage: function() {
+        return Kinetic.Type._getImage(this.toDataURL());
+    },
     _setImageData: function(imageData) {
         if(imageData && imageData.data) {
             this.imageData = imageData;
