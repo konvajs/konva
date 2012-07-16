@@ -1468,7 +1468,7 @@ Test.prototype.tests = {
         });
 
         Ellipse.on('click', function() {
-            window.open(stage.toDataURL());
+            window.open(layer.toDataURL());
         });
 
         layer.add(Ellipse);
@@ -1492,7 +1492,7 @@ Test.prototype.tests = {
         });
 
         Ellipse.on('click', function() {
-        	window.open(stage.toDataURL('image/jpeg', 0));
+            window.open(layer.toDataURL('image/jpeg', 0));
         });
 
         layer.add(Ellipse);
@@ -1516,7 +1516,7 @@ Test.prototype.tests = {
         });
 
         Ellipse.on('click', function() {
-        	window.open(stage.toDataURL('image/jpeg', 1));
+            window.open(layer.toDataURL('image/jpeg', 1));
         });
 
         layer.add(Ellipse);

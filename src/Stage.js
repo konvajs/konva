@@ -274,25 +274,37 @@ Kinetic.Stage = Kinetic.Container.extend({
         return this.content;
     },
     /**
-     * Creates a composite data URL. If MIME type is not
-     * specified, then "image/png" will result. For "image/jpeg", specify a quality
-     * level as quality (range 0.0 - 1.0).  Note that this method works
-     * differently from toDataURL() for other nodes because it generates an absolute dataURL
-     * based on what's draw onto the canvases for each layer, rather than drawing
-     * the current state of each node
+     * Creates a composite data URL and requires a callback because the stage
+     *  toDataURL method is asynchronous. If MIME type is not
+     *  specified, then "image/png" will result. For "image/jpeg", specify a quality
+     *  level as quality (range 0.0 - 1.0).  Note that this method works
+     *  differently from toDataURL() for other nodes because it generates an absolute dataURL
+     *  based on what's draw onto the canvases for each layer, rather than drawing
+     *  the current state of each node
      * @name toDataURL
      * @methodOf Kinetic.Stage.prototype
+     * @param {Function} callback
      * @param {String} [mimeType]
      * @param {Number} [quality]
      */
-    toDataURL: function(mimeType, quality) {
-        var bufferLayer = this.bufferLayer;
-        var bufferCanvas = bufferLayer.getCanvas();
-        var bufferContext = bufferLayer.getContext();
+    toDataURL: function(callback, mimeType, quality) {
+        /*
+         * we need to create a temp layer rather than using
+         * the bufferLayer because the stage toDataURL method
+         * is asynchronous, which means that other parts of the
+         * code base could be updating or clearing the bufferLayer
+         * while the stage toDataURL method is processing
+         */
+        var tempLayer = new Kinetic.Layer();
+        tempLayer.getCanvas().width = this.attrs.width;
+        tempLayer.getCanvas().height = this.attrs.height;
+        tempLayer.parent = this;
+        var tempCanvas = tempLayer.getCanvas();
+        var tempContext = tempLayer.getContext();
+
         var layers = this.children;
-        bufferLayer.clear();
-        
-        for(var n = 0; n < layers.length; n++) {
+
+        function drawLayer(n) {
             var layer = layers[n];
             var layerUrl;
             try {
@@ -305,18 +317,40 @@ Kinetic.Stage = Kinetic.Container.extend({
             }
 
             var imageObj = new Image();
-            imageObj.src = layerUrl;
-            bufferContext.drawImage(imageObj, 0, 0);
-        }
+            imageObj.onload = function() {
+                tempContext.drawImage(imageObj, 0, 0);
 
-        try {
-            // If this call fails (due to browser bug, like in Firefox 3.6),
-            // then revert to previous no-parameter image/png behavior
-            return bufferLayer.getCanvas().toDataURL(mimeType, quality);
+                if(n < layers.length - 1) {
+                    drawLayer(n + 1);
+                }
+                else {
+                    try {
+                        // If this call fails (due to browser bug, like in Firefox 3.6),
+                        // then revert to previous no-parameter image/png behavior
+                        callback(tempLayer.getCanvas().toDataURL(mimeType, quality));
+                    }
+                    catch(e) {
+                        callback(tempLayer.getCanvas().toDataURL());
+                    }
+                }
+            };
+            imageObj.src = layerUrl;
         }
-        catch(e) {
-            return bufferLayer.getCanvas().toDataURL();
-        }
+        drawLayer(0);
+    },
+    /**
+     * converts stage into an image.  Since the stage toImage() method
+     *  is asynchronous, a callback function is required
+     * @name toImage
+     * @methodOf Kinetic.Stage.prototype
+     * @param {Function} callback
+     */
+    toImage: function(callback) {
+        this.toDataURL(function(dataUrl) {
+            Kinetic.Type._getImage(dataUrl, function(img) {
+                callback(img);
+            });
+        });
     },
     _resizeDOM: function() {
         var width = this.attrs.width;

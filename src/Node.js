@@ -251,10 +251,6 @@ Kinetic.Node = Kinetic.Class.extend({
                                 that._setAttr(obj[key], 'width', size.width);
                                 that._setAttr(obj[key], 'height', size.height);
                                 break;
-                            case 'image':
-                                var img = type._getImage(val);
-                                that._setAttr(obj, key, img);
-                                break;
                             default:
                                 that._setAttr(obj, key, val);
                                 break;
@@ -854,10 +850,15 @@ Kinetic.Node = Kinetic.Class.extend({
         }
     },
     /**
-     * to image
+     * converts node into an image.  Since the toImage
+     *  method is asynchronous, a callback is required
+     * @name toImage
+     * @methodOf Kinetic.Stage.prototype
      */
-    toImage: function() {
-        return Kinetic.Type._getImage(this.toDataURL());
+    toImage: function(callback) {
+        Kinetic.Type._getImage(this.toDataURL(), function(img) {
+            callback(img);
+        });
     },
     _setImageData: function(imageData) {
         if(imageData && imageData.data) {

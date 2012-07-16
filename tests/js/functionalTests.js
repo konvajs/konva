@@ -38,7 +38,7 @@ Test.prototype.tests = {
         circle.on('dragend', function() {
             dragEnd = true;
         });
-        startDataUrl = stage.toDataURL();
+        startDataUrl = layer.toDataURL();
         warn(urls[0] === startDataUrl, 'start data url is incorrect');
         /*
          * simulate drag and drop
@@ -70,7 +70,7 @@ Test.prototype.tests = {
         test(dragMove, 'dragmove event was not triggered');
         test(dragEnd, 'dragend event was not triggered');
 
-        var endDataUrl = stage.toDataURL();
+        var endDataUrl = layer.toDataURL();
         warn(urls[1] === endDataUrl, 'end data url is incorrect');
     },
     'DRAG AND DROP - cancel drag and drop by setting draggable to false': function(containerId) {
@@ -176,7 +176,7 @@ Test.prototype.tests = {
 
         stage.add(layer);
 
-        var startDataUrl = stage.toDataURL();
+        var startDataUrl = layer.toDataURL();
         warn(urls[0] === startDataUrl, 'start data url is incorrect');
 
         /*
@@ -197,7 +197,7 @@ Test.prototype.tests = {
             clientY: 109
         });
 
-        var endDataUrl = stage.toDataURL()
+        var endDataUrl = layer.toDataURL()
         warn(urls[1] === endDataUrl, 'end data url is incorrect');
 
     },
@@ -240,14 +240,15 @@ Test.prototype.tests = {
         layer.add(circle);
         stage.add(layer);
 
-        warn(stage.toDataURL() === urls[0], 'start data url is incorrect');
+        warn(layer.toDataURL() === urls[0], 'start data url is incorrect');
 
         stage._mousemove({
             clientX: 377,
             clientY: 101
         });
 
-        warn(stage.toDataURL() === urls[1], 'mid data url is incorrect');
+		console.log(layer.toDataURL())
+        warn(layer.toDataURL() === urls[1], 'mid data url is incorrect');
         
         // move mouse back out of circle
         stage._mousemove({
@@ -259,7 +260,7 @@ Test.prototype.tests = {
             clientY: 138
         });
         
-        warn(stage.toDataURL() === urls[0], 'end data url is incorrect');
+        warn(layer.toDataURL() === urls[0], 'end data url is incorrect');
     },
     'EVENTS - path detection mousedown mouseup mouseover mouseout mousemove click dblclick / touchstart touchend touchmove tap dbltap': function(containerId) {
         var stage = new Kinetic.Stage({

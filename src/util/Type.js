@@ -212,21 +212,28 @@ Kinetic.Type = {
     /*
      * arg can be an image object or image data
      */
-    _getImage: function(arg) {
-        // if arg is already an image object, just return it
-        if(this._isElement(arg)) {
-            return arg;
+    _getImage: function(arg, callback) {
+        // if arg is null or undefined
+        if(!arg) {
+            callback(null);
+        }
+
+        // if arg is already an image object
+        else if(this._isElement(arg)) {
+            callback(arg);
         }
 
         // if arg is a string, then it's a data url
-        if(this._isString(arg)) {
+        else if(this._isString(arg)) {
             var imageObj = new Image();
+            imageObj.onload = function() {
+                callback(imageObj);
+            }
             imageObj.src = arg;
-            return imageObj;
         }
 
         //if arg is an object that contains the data property, it's an image object
-        if(arg.data) {
+        else if(arg.data) {
             var canvas = document.createElement('canvas');
             canvas.width = arg.width;
             canvas.height = arg.height;
@@ -234,11 +241,14 @@ Kinetic.Type = {
             context.putImageData(arg, 0, 0);
             var dataUrl = canvas.toDataURL();
             var imageObj = new Image();
+            imageObj.onload = function() {
+                callback(imageObj);
+            }
             imageObj.src = dataUrl;
-            return imageObj;
         }
 
-        // default
-        return null;
+        else {
+            callback(null);
+        }
     }
 };

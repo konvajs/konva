@@ -1,5 +1,5 @@
 Test.prototype.tests = {
-    'PERFORMANCE - draw rect vs image from image data': function(containerId) {
+    'DRAWING - draw rect vs image from image data': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -34,7 +34,7 @@ Test.prototype.tests = {
         endTimer('draw 10,000 images with image object from image data');
 
     },
-    'PERFORMANCE - draw rect vs image from data url': function(containerId) {
+    'DRAWING - draw rect vs image from data url': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -57,7 +57,7 @@ Test.prototype.tests = {
         endTimer('draw 10,000 rects with canvas API');
 
         startTimer();
-        var url = canvas.toDataURL();
+        var url = layer.toDataURL();
         endTimer('create data url');
 
         var imageObj = new Image();
@@ -71,7 +71,7 @@ Test.prototype.tests = {
         }
         endTimer('draw 10,000 images with image object from data url');
     },
-    '*ANIMATION - draw 1,000 stars': function(containerId) {
+    'DRAWING - draw 1,000 stars': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -99,15 +99,13 @@ Test.prototype.tests = {
 
         endTimer('draw 1,000 stars');
     },
-    '*ANIMATION - draw 1,000 cached stars': function(containerId) {
+    'DRAWING - draw 1,000 cached stars': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
             height: 200
         });
         var layer = new Kinetic.Layer();
-
-        startTimer();
 
         var star = new Kinetic.Star({
             innerRadius: 20,
@@ -123,21 +121,23 @@ Test.prototype.tests = {
         layer.add(star);
         stage.add(layer);
 
-        var img = star.toImage();
+		console.log('call toImage')
+        star.toImage(function(img) {
+            startTimer();
+            for(var n = 0; n < 1000; n++) {
+                var image = new Kinetic.Image({
+                    image: img,
+                    x: Math.random() * stage.getWidth(),
+                    y: Math.random() * stage.getHeight(),
+                    offset: 70
+                });
 
-        for(var n = 0; n < 1000; n++) {
-            var image = new Kinetic.Image({
-                image: img,
-                x: Math.random() * stage.getWidth(),
-                y: Math.random() * stage.getHeight(),
-                offset: 70
-            });
+                layer.add(image);
+            }
 
-            layer.add(image);
-        }
+            layer.draw();
 
-        layer.draw();
-
-        endTimer('draw 1,000 stars');
+            endTimer('draw 1,000 cached stars');
+        });
     }
 };

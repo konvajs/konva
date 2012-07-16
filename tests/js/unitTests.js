@@ -362,7 +362,7 @@ Test.prototype.tests = {
         layer.add(group);
         stage.add(layer);
 
-        var startDataUrl = stage.toDataURL();
+        var startDataUrl = layer.toDataURL();
 
         warn(startDataUrl === urls[0], 'start data url is incorrect');
         test(triangle.getId() === 'myTriangle', 'triangle id should be myTriangle');
@@ -377,7 +377,7 @@ Test.prototype.tests = {
          */
         layer.draw();
 
-        var endDataUrl = stage.toDataURL();
+        var endDataUrl = layer.toDataURL();
         warn(endDataUrl === urls[0], 'end data url is incorrect');
 
     },
@@ -1042,7 +1042,9 @@ Test.prototype.tests = {
             layer.draw();
         }
 
-        warn(urls[0] === stage.toDataURL(), 'stage data url is incorrect');
+        stage.toDataURL(function(dataUrl) {
+            warn(urls[0] === dataUrl, 'stage data url is incorrect');
+        })
         warn(urls[0] === layer.toDataURL(), 'layer data url is incorrect');
         warn(urls[1] === group.toDataURL(), 'group data url is incorrect');
         warn(urls[1] === circle.toDataURL(), 'shape data url is incorrect');
@@ -1989,96 +1991,6 @@ Test.prototype.tests = {
         };
         imageObj.src = '../darth-vader.jpg';
     },
-    'SHAPE - add image with image data': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-
-        var circle = new Kinetic.Ellipse({
-            x: 100,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-
-        var circle2 = new Kinetic.Ellipse({
-            x: 150,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'yellow',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-
-        group.add(circle);
-        group.add(circle2);
-        layer.add(group);
-        stage.add(layer);
-
-        group.saveImageData();
-
-        var image = new Kinetic.Image({
-            image: group.getImageData(),
-            x: 200,
-            y: 0,
-            draggable: true
-        });
-
-        layer.add(image);
-        layer.draw();
-
-        test(Kinetic.Type._isElement(image.getImage()), 'image property should have been converted to an image element');
-    },
-    'SHAPE - add image with data url': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-
-        var circle = new Kinetic.Ellipse({
-            x: 100,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-
-        var circle2 = new Kinetic.Ellipse({
-            x: 150,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'yellow',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-
-        group.add(circle);
-        group.add(circle2);
-        layer.add(group);
-        stage.add(layer);
-
-        var image = new Kinetic.Image({
-            image: layer.toDataURL(),
-            x: 200,
-            y: 0,
-            draggable: true
-        });
-
-        layer.add(image);
-        layer.draw();
-
-        test(Kinetic.Type._isElement(image.getImage()), 'image property should have been converted to an image element');
-    },
     'SHAPE - set image fill to color then image': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
@@ -2272,10 +2184,18 @@ Test.prototype.tests = {
         layer.add(group);
         stage.add(layer);
 
-        test(Kinetic.Type._isElement(poly.toImage()), 'shape toImage() should be an image object');
-        test(Kinetic.Type._isElement(group.toImage()), 'group toImage() should be an image object');
-        test(Kinetic.Type._isElement(layer.toImage()), 'layer toImage() should be an image object');
-        test(Kinetic.Type._isElement(stage.toImage()), 'stage toImage() should be an image object');
+        poly.toImage(function(imageObj) {
+            test(Kinetic.Type._isElement(imageObj), 'shape toImage() should be an image object');
+        });
+        group.toImage(function(imageObj) {
+            test(Kinetic.Type._isElement(imageObj), 'group toImage() should be an image object');
+        });
+        layer.toImage(function(imageObj) {
+            test(Kinetic.Type._isElement(imageObj), 'layer toImage() should be an image object');
+        });
+        stage.toImage(function(imageObj) {
+            test(Kinetic.Type._isElement(imageObj), 'stage toImage() should be an image object');
+        });
     },
     'SHAPE - add polygon': function(containerId) {
         var stage = new Kinetic.Stage({
