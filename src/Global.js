@@ -21,6 +21,11 @@ Kinetic.Global = {
         },
         lastDrawTime: 0
     },
+    warn: function(str) {
+        if(console && console.warn) {
+            console.warn('Kinetic warning: ' + str);
+        }
+    },
     _pullNodes: function(stage) {
         var tempNodes = this.tempNodes;
         for(var n = 0; n < tempNodes.length; n++) {

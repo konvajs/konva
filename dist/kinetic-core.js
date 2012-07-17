@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jul 15 2012
+ * Date: Jul 17 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -48,6 +48,11 @@ Kinetic.Global = {
             y: 0
         },
         lastDrawTime: 0
+    },
+    warn: function(str) {
+        if(console && console.warn) {
+            console.warn('Kinetic warning: ' + str);
+        }
     },
     _pullNodes: function(stage) {
         var tempNodes = this.tempNodes;
@@ -1273,29 +1278,38 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * save image data
+     * @name saveImageData
+     * @methodOf Kinetic.Node.prototype
      */
     saveImageData: function() {
-        var stage = this.getStage();
-        var w = stage.attrs.width;
-        var h = stage.attrs.height;
+        try {
+            var stage = this.getStage();
+            var bufferLayer = stage.bufferLayer;
+            var bufferLayerContext = bufferLayer.getContext();
+            var width = stage.getWidth();
+            var height = stage.getHeight();
 
-        var bufferLayer = stage.bufferLayer;
-        var bufferLayerContext = bufferLayer.getContext();
-
-        bufferLayer.clear();
-        this._draw(bufferLayer);
-
-        var imageData = bufferLayerContext.getImageData(0, 0, w, h);
-        this.imageData = imageData;
+            bufferLayer.clear();
+            this._draw(bufferLayer);
+            var imageData = bufferLayerContext.getImageData(0, 0, width, height);
+            this.imageData = imageData;
+        }
+        catch(e) {
+            Kinetic.Global.warn('Image data could not saved because canvas is dirty.');
+        }
     },
     /**
      * clear image data
+     * @name clearImageData
+     * @methodOf Kinetic.Node.prototype
      */
     clearImageData: function() {
         delete this.imageData;
     },
     /**
      * get image data
+     * @name getImageData
+     * @methodOf Kinetic.Node.prototype
      */
     getImageData: function() {
         return this.imageData;
@@ -3872,7 +3886,7 @@ Kinetic.Node.addGettersSetters(Kinetic.Ellipse, ['radius']);
  * @constructor
  * @augments Kinetic.Shape
  * @param {Object} config
- * @param {ImageObject|String|ImageData} config.image can be an image object, a data url string, or an image data object
+ * @param {ImageObject} config.image
  * @param {Number} [config.width]
  * @param {Number} [config.height]
  * @param {Object} [config.crop]
@@ -3882,8 +3896,8 @@ Kinetic.Image = Kinetic.Shape.extend({
         this.shapeType = "Image";
         config.drawFunc = function() {
             if(!!this.attrs.image) {
-                var width = !!this.attrs.width ? this.attrs.width : this.attrs.image.width;
-                var height = !!this.attrs.height ? this.attrs.height : this.attrs.image.height;
+                var width = this.getWidth();
+                var height = this.getHeight();
                 var canvas = this.getCanvas();
                 var context = this.getContext();
 
@@ -3909,6 +3923,11 @@ Kinetic.Image = Kinetic.Shape.extend({
         };
         // call super constructor
         this._super(config);
+
+        var that = this;
+        this.on('filterChange', function() {
+            that._applyFilter();
+        });
     },
     /**
      * set width and height
@@ -3929,11 +3948,94 @@ Kinetic.Image = Kinetic.Shape.extend({
             width: this.attrs.width,
             height: this.attrs.height
         };
+    },
+    /**
+     * get width
+     * @name getWidth
+     * @methodOf Kinetic.Image.prototype
+     */
+    getWidth: function() {
+        if(this.attrs.width) {
+            return this.attrs.width;
+        }
+        if(this.attrs.image) {
+            return this.attrs.image.width;
+        }
+        return 0;
+    },
+    /**
+     * get height
+     * @name getHeight
+     * @methodOf Kinetic.Image.prototype
+     */
+    getHeight: function() {
+        if(this.attrs.height) {
+            return this.attrs.height;
+        }
+        if(this.attrs.image) {
+            return this.attrs.image.height;
+        }
+        return 0;
+    },
+    /**
+     * apply filter
+     * @name applyFilter
+     * @methodOf Kinetic.Image.prototype
+     * @param {Object} config
+     * @param {Function} config.filter filter function
+     * @param {Function} [config.callback] callback function to be called once
+     *  filter has been applied
+     */
+    applyFilter: function(config) {
+        try {
+            // save transformation state
+            var x = this.getX();
+            var y = this.getY();
+            var rotation = this.getRotation();
+            var scaleX = this.getScale().x;
+            var scaleY = this.getScale().y;
+            var offsetX = this.getOffset().x;
+            var offsetY = this.getOffset().y;
+
+            // reset transformation state
+            this.attrs.x = 0;
+            this.attrs.y = 0;
+            this.attrs.rotation = 0;
+            this.attrs.scale.x = 1;
+            this.attrs.scale.y = 1;
+            this.attrs.offset.x = 0;
+            this.attrs.offset.y = 0;
+
+            this.saveImageData();
+
+            // restore transformation state
+            this.attrs.x = x;
+            this.attrs.y = y;
+            this.attrs.rotation = rotation;
+            this.attrs.scale.x = scaleX;
+            this.attrs.scale.y = scaleY;
+            this.attrs.offset.x = offsetX;
+            this.attrs.offset.y = offsetY;
+
+            config.filter.call(this, config);
+            var that = this;
+            Kinetic.Type._getImage(this.getImageData(), function(imageObj) {
+                that.setImage(imageObj);
+
+                if(config.callback) {
+                    config.callback();
+                }
+            });
+        }
+        catch(e) {
+            Kinetic.Global.warn('Unable to apply filter.');
+        }
     }
 });
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Image, ['height', 'width', 'image', 'crop']);
+Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'crop', 'filter']);
+Kinetic.Node.addSetters(Kinetic.Image, ['width', 'height']);
 
 /**
  * set width
@@ -3964,26 +4066,27 @@ Kinetic.Node.addGettersSetters(Kinetic.Image, ['height', 'width', 'image', 'crop
  */
 
 /**
+ * set filter
+ * @name setFilter
+ * @methodOf Kinetic.Image.prototype
+ * @param {Object} config
+ */
+
+/**
  * get crop
  * @name getCrop
  * @methodOf Kinetic.Image.prototype
  */
 
 /**
- * get width
- * @name getWidth
- * @methodOf Kinetic.Image.prototype
- */
-
-/**
- * get height
- * @name getHeight
- * @methodOf Kinetic.Image.prototype
- */
-
-/**
  * get image
  * @name getImage
+ * @methodOf Kinetic.Image.prototype
+ */
+
+/**
+ * get filter
+ * @name getFilter
  * @methodOf Kinetic.Image.prototype
  */
 ///////////////////////////////////////////////////////////////////////
@@ -5809,6 +5912,20 @@ Kinetic.Tweens = {
     },
     'linear': function(t, b, c, d) {
         return c * t / d + b;
+    }
+};
+
+Kinetic.Filters.Grayscale = function() {
+    var data = this.imageData.data;
+    for(var i = 0; i < data.length; i += 4) {
+        var brightness = 0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2];
+        // red
+        data[i] = brightness;
+        // green
+        data[i + 1] = brightness;
+        // blue
+        data[i + 2] = brightness;
+        // i+3 is alpha (the fourth element)
     }
 };
 

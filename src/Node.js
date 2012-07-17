@@ -797,29 +797,38 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * save image data
+     * @name saveImageData
+     * @methodOf Kinetic.Node.prototype
      */
     saveImageData: function() {
-        var stage = this.getStage();
-        var w = stage.attrs.width;
-        var h = stage.attrs.height;
+        try {
+            var stage = this.getStage();
+            var bufferLayer = stage.bufferLayer;
+            var bufferLayerContext = bufferLayer.getContext();
+            var width = stage.getWidth();
+            var height = stage.getHeight();
 
-        var bufferLayer = stage.bufferLayer;
-        var bufferLayerContext = bufferLayer.getContext();
-
-        bufferLayer.clear();
-        this._draw(bufferLayer);
-
-        var imageData = bufferLayerContext.getImageData(0, 0, w, h);
-        this.imageData = imageData;
+            bufferLayer.clear();
+            this._draw(bufferLayer);
+            var imageData = bufferLayerContext.getImageData(0, 0, width, height);
+            this.imageData = imageData;
+        }
+        catch(e) {
+            Kinetic.Global.warn('Image data could not saved because canvas is dirty.');
+        }
     },
     /**
      * clear image data
+     * @name clearImageData
+     * @methodOf Kinetic.Node.prototype
      */
     clearImageData: function() {
         delete this.imageData;
     },
     /**
      * get image data
+     * @name getImageData
+     * @methodOf Kinetic.Node.prototype
      */
     getImageData: function() {
         return this.imageData;

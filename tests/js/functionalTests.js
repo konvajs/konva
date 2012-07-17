@@ -247,7 +247,6 @@ Test.prototype.tests = {
             clientY: 101
         });
 
-		console.log(layer.toDataURL())
         warn(layer.toDataURL() === urls[1], 'mid data url is incorrect');
         
         // move mouse back out of circle
