@@ -18,9 +18,7 @@ Kinetic.Ellipse = Kinetic.Shape.extend({
 
         this.shapeType = "Ellipse";
 
-        config.drawFunc = function() {
-            var canvas = this.getCanvas();
-            var context = this.getContext();
+        config.drawFunc = function(context) {
             var r = this.getRadius();
             context.beginPath();
             context.save();
@@ -30,8 +28,8 @@ Kinetic.Ellipse = Kinetic.Shape.extend({
             context.arc(0, 0, r.x, 0, Math.PI * 2, true);
             context.restore();
             context.closePath();
-            this.fill();
-            this.stroke();
+            this.fill(context);
+            this.stroke(context);
         };
         // call super constructor
         this._super(config);

@@ -25,7 +25,7 @@ Test.prototype.tests = {
         var imageData = context.getImageData(7, 7, 106, 106);
         endTimer('create image data');
 
-        layer.clear();
+        layer.canvas.clear();
 
         startTimer();
         for(var n = 0; n < 10000; n++) {
@@ -62,7 +62,7 @@ Test.prototype.tests = {
 
         var imageObj = new Image();
         imageObj.onload = function() {
-            layer.clear();
+            layer.canvas.clear();
 
             startTimer();
             for(var n = 0; n < 10000; n++) {

@@ -27,8 +27,7 @@ Kinetic.Text = Kinetic.Shape.extend({
         this.dummyCanvas = document.createElement('canvas');
         this.shapeType = "Text";
 
-        config.drawFunc = function() {
-            var context = this.getContext();
+        config.drawFunc = function(context) {
             /*
              * draw rect
              */
@@ -54,8 +53,8 @@ Kinetic.Text = Kinetic.Shape.extend({
             }
             context.closePath();
 
-            this.fill();
-            this.stroke();
+            this.fill(context);
+            this.stroke(context);
             /*
              * draw text
              */
@@ -83,8 +82,8 @@ Kinetic.Text = Kinetic.Shape.extend({
                     context.translate((this.getBoxWidth() - this._getTextSize(text).width - p * 2) / 2, 0);
                 }
 
-                this.fillText(text);
-                this.strokeText(text);
+                this.fillText(context, text);
+                this.strokeText(context, text);
                 context.restore();
 
                 context.translate(0, lineHeightPx);

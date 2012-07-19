@@ -68,8 +68,8 @@ Test.prototype.tests = {
         test(stage.getSize().height === 155, 'stage height should be 155');
         test(stage.getDOM().style.width === '333px', 'content width should be 333');
         test(stage.getDOM().style.height === '155px', 'content height should be 155px');
-        test(layer.getCanvas().width === 333, 'layer canvas width should be 333');
-        test(layer.getCanvas().height === 155, 'layer canvas width should be 155');
+        test(layer.getCanvas().element.width === 333, 'layer canvas element width should be 333');
+        test(layer.getCanvas().element.height === 155, 'layer canvas element width should be 155');
     },
     'STAGE - add shape then stage then layer': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -340,15 +340,14 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
 
-        var drawTriangle = function() {
-            var context = this.getContext();
+        var drawTriangle = function(context) {
             context.beginPath();
             context.moveTo(200, 50);
             context.lineTo(420, 80);
             context.quadraticCurveTo(300, 100, 260, 170);
             context.closePath();
-            this.fill();
-            this.stroke();
+            this.fill(context);
+            this.stroke(context);
         };
         var triangle = new Kinetic.Shape({
             drawFunc: drawTriangle,
@@ -388,15 +387,14 @@ Test.prototype.tests = {
             height: 200
         });
 
-        var drawTriangle = function() {
-            var context = this.getContext();
+        var drawTriangle = function(context) {
             context.beginPath();
             context.moveTo(200, 50);
             context.lineTo(420, 80);
             context.quadraticCurveTo(300, 100, 260, 170);
             context.closePath();
-            this.fill();
-            this.stroke();
+            this.fill(context);
+            this.stroke(context);
         };
         var json = '{"attrs":{"width":578,"height":200,"visible":true,"listen":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"clearBeforeDraw":true,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"listen":true},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"listen":true},"nodeType":"Group","children":[{"attrs":{"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"fill":"#00D2FF","stroke":"black","strokeWidth":4,"shadow":{"blur":10,"alpha":1,"offset":{"x":0,"y":0}},"listen":true,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
         stage.load(json);
@@ -2167,7 +2165,7 @@ Test.prototype.tests = {
             setTimeout(function() {
                 sprite.setAnimation('kicking');
 
-                sprite.afterFrame(0, function() {
+                sprite.afterFrame(5, function() {
                     sprite.setAnimation('standing');
                 });
             }, 2000);
@@ -2720,15 +2718,14 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var shape = new Kinetic.Shape({
-            drawFunc: function() {
-                var context = this.getContext();
+            drawFunc: function(context) {
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(100, 0);
                 context.lineTo(100, 100);
                 context.closePath();
-                this.fill();
-                this.stroke();
+                this.fill(context);
+                this.stroke(context);
             },
             x: 200,
             y: 100,
@@ -2748,15 +2745,14 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var shape = new Kinetic.Shape({
-            drawFunc: function() {
-                var context = this.getContext();
+            drawFunc: function(context) {
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(100, 0);
                 context.lineTo(100, 100);
                 context.closePath();
-                this.fill();
-                this.stroke();
+                this.fill(context);
+                this.stroke(context);
             },
             x: 200,
             y: 100,
@@ -2765,15 +2761,14 @@ Test.prototype.tests = {
             strokeWidth: 5
         });
 
-        shape.setDrawFunc(function() {
-            var context = this.getContext();
+        shape.setDrawFunc(function(context) {
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(200, 0);
             context.lineTo(200, 100);
             context.closePath();
-            this.fill();
-            this.stroke();
+            this.fill(context);
+            this.stroke(context);
         });
 
         layer.add(shape);
@@ -4024,6 +4019,8 @@ Test.prototype.tests = {
 
         test(stage.get('.layerName')[0].attrs.id === 'layerId', 'problem with layer name selector');
         test(stage.get('#layerId')[0].attrs.id === 'layerId', 'problem with layer id selector');
+        
+        layer.draw();
     },
     'NODE - test drag and drop properties and methods': function(containerId) {
         var stage = new Kinetic.Stage({

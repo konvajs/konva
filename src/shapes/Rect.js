@@ -17,8 +17,7 @@ Kinetic.Rect = Kinetic.Shape.extend({
 
         this.shapeType = "Rect";
 
-        config.drawFunc = function() {
-            var context = this.getContext();
+        config.drawFunc = function(context) {
             context.beginPath();
             if(this.attrs.cornerRadius === 0) {
                 // simple rect - don't bother doing all that complicated maths stuff.
@@ -38,8 +37,8 @@ Kinetic.Rect = Kinetic.Shape.extend({
             }
             context.closePath();
 
-            this.fill();
-            this.stroke();
+            this.fill(context);
+            this.stroke(context);
         };
         // call super constructor
         this._super(config);

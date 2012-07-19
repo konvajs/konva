@@ -386,7 +386,10 @@ Kinetic.Node = Kinetic.Class.extend({
      * @methodOf Kinetic.Node.prototype
      */
     getAbsolutePosition: function() {
-        return this.getAbsoluteTransform().getTranslation();
+        var trans = this.getAbsoluteTransform();
+        var o = this.getOffset();
+        trans.translate(o.x, o.y);
+        return trans.getTranslation();
     },
     /**
      * set absolute position relative to stage
@@ -416,9 +419,16 @@ Kinetic.Node = Kinetic.Class.extend({
             x: 1,
             y: 1
         };
+        this.attrs.offset = {
+            x: 0,
+            y: 0
+        };
+
+        var o = this.getOffset();
 
         // unravel transform
         var it = this.getAbsoluteTransform();
+
         it.invert();
         it.translate(pos.x, pos.y);
         pos = {
@@ -433,6 +443,10 @@ Kinetic.Node = Kinetic.Class.extend({
         this.attrs.scale = {
             x: scale.x,
             y: scale.y
+        };
+        this.attrs.offset = {
+            x: offset.x,
+            y: offset.y
         };
     },
     /**
@@ -727,7 +741,6 @@ Kinetic.Node = Kinetic.Class.extend({
         for(var n = 0; n < family.length; n++) {
             var node = family[n];
             var m = node.getTransform();
-
             am.multiply(m);
         }
 
@@ -803,14 +816,14 @@ Kinetic.Node = Kinetic.Class.extend({
     saveImageData: function() {
         try {
             var stage = this.getStage();
-            var bufferLayer = stage.bufferLayer;
-            var bufferLayerContext = bufferLayer.getContext();
+            var bufferCanvas = stage.bufferCanvas;
+            var bufferContext = bufferCanvas.getContext();
             var width = stage.getWidth();
             var height = stage.getHeight();
 
-            bufferLayer.clear();
-            this._draw(bufferLayer);
-            var imageData = bufferLayerContext.getImageData(0, 0, width, height);
+            bufferCanvas.clear();
+            this._draw(bufferCanvas);
+            var imageData = bufferContext.getImageData(0, 0, width, height);
             this.imageData = imageData;
         }
         catch(e) {
@@ -838,24 +851,23 @@ Kinetic.Node = Kinetic.Class.extend({
      * specified, then "image/png" will result. For "image/jpeg", specify a quality
      * level as quality (range 0.0 - 1.0)
      * @name toDataURL
-     * @methodOf Kinetic.Stage.prototype
+     * @methodOf Kinetic.Node.prototype
      * @param {String} [mimeType]
      * @param {Number} [quality]
      */
     toDataURL: function(mimeType, quality) {
-        var bufferLayer = this.getStage().bufferLayer;
-        var bufferCanvas = bufferLayer.getCanvas();
-        var bufferContext = bufferLayer.getContext();
-        bufferLayer.clear();
-        this._draw(bufferLayer);
+        var bufferCanvas = this.getStage().bufferCanvas;
+        var bufferContext = bufferCanvas.getContext();
+        bufferCanvas.clear();
+        this._draw(bufferCanvas);
 
         try {
             // If this call fails (due to browser bug, like in Firefox 3.6),
             // then revert to previous no-parameter image/png behavior
-            return bufferLayer.getCanvas().toDataURL(mimeType, quality);
+            return bufferCanvas.element.toDataURL(mimeType, quality);
         }
         catch(e) {
-            return bufferLayer.getCanvas().toDataURL();
+            return bufferCanvas.element.toDataURL();
         }
     },
     /**
@@ -910,9 +922,10 @@ Kinetic.Node = Kinetic.Class.extend({
         if(pos) {
             var m = this.getTransform().getTranslation();
             var am = this.getAbsoluteTransform().getTranslation();
+            var ap = this.getAbsolutePosition();
             go.drag.node = this;
-            go.drag.offset.x = pos.x - this.getAbsoluteTransform().getTranslation().x;
-            go.drag.offset.y = pos.y - this.getAbsoluteTransform().getTranslation().y;
+            go.drag.offset.x = pos.x - ap.x;
+            go.drag.offset.y = pos.y - ap.y;
         }
     },
     _onDraggableChange: function() {

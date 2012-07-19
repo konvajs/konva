@@ -30,24 +30,20 @@ Kinetic.Shape = Kinetic.Node.extend({
         this._super(config);
     },
     /**
-     * get layer context where the shape is being drawn.  When
-     * the shape is being rendered, .getContext() returns the context of the
-     * user created layer that contains the shape.  When the event detection
-     * engine is determining whether or not an event has occured on that shape,
-     * .getContext() returns the context of the invisible path layer.
+     * get canvas context tied to the layer
      * @name getContext
      * @methodOf Kinetic.Shape.prototype
      */
     getContext: function() {
-        return this.tempLayer.getContext();
+        return this.getLayer().getContext();
     },
     /**
-     * get shape temp layer canvas
+     * get canvas tied to the layer
      * @name getCanvas
      * @methodOf Kinetic.Shape.prototype
      */
     getCanvas: function() {
-        return this.tempLayer.getCanvas();
+        return this.getLayer().getCanvas();
     },
     /**
      * helper method to stroke the shape and apply
@@ -55,15 +51,14 @@ Kinetic.Shape = Kinetic.Node.extend({
      * @name stroke
      * @methodOf Kinetic.Shape.prototype
      */
-    stroke: function() {
+    stroke: function(context) {
         var go = Kinetic.Global;
         var appliedShadow = false;
-        var context = this.getContext();
 
         if(this.attrs.stroke || this.attrs.strokeWidth) {
             context.save();
             if(this.attrs.shadow && !this.appliedShadow) {
-                appliedShadow = this._applyShadow();
+                appliedShadow = this._applyShadow(context);
             }
 
             var stroke = this.attrs.stroke ? this.attrs.stroke : 'black';
@@ -71,12 +66,12 @@ Kinetic.Shape = Kinetic.Node.extend({
 
             context.lineWidth = strokeWidth;
             context.strokeStyle = stroke;
-            context.stroke();
+            context.stroke(context);
             context.restore();
         }
 
         if(appliedShadow) {
-            this.stroke();
+            this.stroke(context);
         }
     },
     /**
@@ -85,16 +80,15 @@ Kinetic.Shape = Kinetic.Node.extend({
      * @name fill
      * @methodOf Kinetic.Shape.prototype
      * */
-    fill: function() {
+    fill: function(context) {
         var appliedShadow = false;
-        var context = this.getContext();
         context.save();
 
         var fill = this.attrs.fill;
 
         if(fill) {
             if(this.attrs.shadow && !this.appliedShadow) {
-                appliedShadow = this._applyShadow();
+                appliedShadow = this._applyShadow(context);
             }
 
             var s = fill.start;
@@ -105,7 +99,7 @@ Kinetic.Shape = Kinetic.Node.extend({
             if( typeof fill == 'string') {
                 f = this.attrs.fill;
                 context.fillStyle = f;
-                context.fill();
+                context.fill(context);
             }
             // pattern
             else if(fill.image) {
@@ -122,12 +116,11 @@ Kinetic.Shape = Kinetic.Node.extend({
                 }
 
                 context.fillStyle = f;
-                context.fill();
+                context.fill(context);
                 context.restore();
             }
             // linear gradient
             else if(!s.radius && !e.radius) {
-                var context = this.getContext();
                 var grd = context.createLinearGradient(s.x, s.y, e.x, e.y);
                 var colorStops = fill.colorStops;
 
@@ -137,11 +130,10 @@ Kinetic.Shape = Kinetic.Node.extend({
                 }
                 f = grd;
                 context.fillStyle = f;
-                context.fill();
+                context.fill(context);
             }
             // radial gradient
             else if((s.radius || s.radius === 0) && (e.radius || e.radius === 0)) {
-                var context = this.getContext();
                 var grd = context.createRadialGradient(s.x, s.y, s.radius, e.x, e.y, e.radius);
                 var colorStops = fill.colorStops;
 
@@ -151,18 +143,18 @@ Kinetic.Shape = Kinetic.Node.extend({
                 }
                 f = grd;
                 context.fillStyle = f;
-                context.fill();
+                context.fill(context);
             }
             else {
                 f = 'black';
                 context.fillStyle = f;
-                context.fill();
+                context.fill(context);
             }
         }
         context.restore();
 
         if(appliedShadow) {
-            this.fill();
+            this.fill(context);
         }
     },
     /**
@@ -171,13 +163,12 @@ Kinetic.Shape = Kinetic.Node.extend({
      * @name fillText
      * @methodOf Kinetic.Shape.prototype
      */
-    fillText: function(text) {
+    fillText: function(context, text) {
         var appliedShadow = false;
-        var context = this.getContext();
         context.save();
         if(this.attrs.textFill) {
             if(this.attrs.shadow && !this.appliedShadow) {
-                appliedShadow = this._applyShadow();
+                appliedShadow = this._applyShadow(context);
             }
             context.fillStyle = this.attrs.textFill;
             context.fillText(text, 0, 0);
@@ -185,7 +176,7 @@ Kinetic.Shape = Kinetic.Node.extend({
         context.restore();
 
         if(appliedShadow) {
-            this.fillText(text, 0, 0);
+            this.fillText(context, text, 0, 0);
         }
     },
     /**
@@ -195,13 +186,12 @@ Kinetic.Shape = Kinetic.Node.extend({
      * @methodOf Kinetic.Shape.prototype
      * @param {String} text
      */
-    strokeText: function(text) {
+    strokeText: function(context, text) {
         var appliedShadow = false;
-        var context = this.getContext();
         context.save();
         if(this.attrs.textStroke || this.attrs.textStrokeWidth) {
             if(this.attrs.shadow && !this.appliedShadow) {
-                appliedShadow = this._applyShadow();
+                appliedShadow = this._applyShadow(context);
             }
 
             // defaults
@@ -213,12 +203,12 @@ Kinetic.Shape = Kinetic.Node.extend({
             }
             context.lineWidth = this.attrs.textStrokeWidth;
             context.strokeStyle = this.attrs.textStroke;
-            context.strokeText(text, 0, 0);
+            context.strokeText(context, text, 0, 0);
         }
         context.restore();
 
         if(appliedShadow) {
-            this.strokeText(text, 0, 0);
+            this.strokeText(context, text, 0, 0);
         }
     },
     /**
@@ -229,21 +219,20 @@ Kinetic.Shape = Kinetic.Node.extend({
      */
     drawImage: function() {
         var appliedShadow = false;
-        var context = this.getContext();
+        var context = arguments[0];
         context.save();
         var a = Array.prototype.slice.call(arguments);
 
-        if(a.length === 5 || a.length === 9) {
+        if(a.length === 6 || a.length === 10) {
             if(this.attrs.shadow && !this.appliedShadow) {
-                appliedShadow = this._applyShadow();
+                appliedShadow = this._applyShadow(context);
             }
-            switch(a.length) {
-                case 5:
-                    context.drawImage(a[0], a[1], a[2], a[3], a[4]);
-                    break;
-                case 9:
-                    context.drawImage(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8]);
-                    break;
+            
+            if(a.length === 6) {
+                context.drawImage(a[1], a[2], a[3], a[4], a[5]);
+            }
+            else {
+                context.drawImage(a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9]);
             }
         }
 
@@ -259,8 +248,7 @@ Kinetic.Shape = Kinetic.Node.extend({
      * @name applyLineJoin
      * @methodOf Kinetic.Shape.prototype
      */
-    applyLineJoin: function() {
-        var context = this.getContext();
+    applyLineJoin: function(context) {
         if(this.attrs.lineJoin) {
             context.lineJoin = this.attrs.lineJoin;
         }
@@ -269,8 +257,7 @@ Kinetic.Shape = Kinetic.Node.extend({
      * apply shadow.  return true if shadow was applied
      * and false if it was not
      */
-    _applyShadow: function() {
-        var context = this.getContext();
+    _applyShadow: function(context) {
         var s = this.attrs.shadow;
         if(s) {
             var aa = this.getAbsoluteAlpha();
@@ -308,12 +295,12 @@ Kinetic.Shape = Kinetic.Node.extend({
 
         // path detection
         if(this.attrs.detectionType === 'path') {
-            var pathLayer = stage.pathLayer;
-            var pathLayerContext = pathLayer.getContext();
+            var pathCanvas = stage.pathCanvas;
+            var pathCanvasContext = pathCanvas.getContext();
 
-            this._draw(pathLayer);
+            this._draw(pathCanvas);
 
-            return pathLayerContext.isPointInPath(pos.x, pos.y);
+            return pathCanvasContext.isPointInPath(pos.x, pos.y);
         }
 
         // pixel detection
@@ -326,10 +313,10 @@ Kinetic.Shape = Kinetic.Node.extend({
         // default
         return false;
     },
-    _draw: function(layer) {
-        if(layer && this.attrs.drawFunc) {
-            var stage = layer.getStage();
-            var context = layer.getContext();
+    _draw: function(canvas) {
+        if(this.attrs.drawFunc) {
+            var stage = this.getStage();
+            var context = canvas.getContext();
             var family = [];
             var parent = this.parent;
 
@@ -348,8 +335,6 @@ Kinetic.Shape = Kinetic.Node.extend({
                 context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }
 
-            this.tempLayer = layer;
-
             /*
              * pre styles include alpha, linejoin
              */
@@ -357,11 +342,11 @@ Kinetic.Shape = Kinetic.Node.extend({
             if(absAlpha !== 1) {
                 context.globalAlpha = absAlpha;
             }
-            this.applyLineJoin();
+            this.applyLineJoin(context);
 
             // draw the shape
             this.appliedShadow = false;
-            this.attrs.drawFunc.call(this);
+            this.attrs.drawFunc.call(this, canvas.getContext());
             context.restore();
         }
     }

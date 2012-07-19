@@ -17,8 +17,7 @@ Kinetic.Line = Kinetic.Shape.extend({
         });
 
         this.shapeType = "Line";
-        config.drawFunc = function() {
-            var context = this.getContext();
+        config.drawFunc = function(context) {
             var lastPos = {};
             context.beginPath();
 
@@ -31,7 +30,7 @@ Kinetic.Line = Kinetic.Shape.extend({
                     // draw dashed line
                     var lastX = this.attrs.points[n - 1].x;
                     var lastY = this.attrs.points[n - 1].y;
-                    this._dashedLine(lastX, lastY, x, y, this.attrs.dashArray);
+                    this._dashedLine(context, lastX, lastY, x, y, this.attrs.dashArray);
                 }
                 else {
                     // draw normal line
@@ -43,7 +42,7 @@ Kinetic.Line = Kinetic.Shape.extend({
                 context.lineCap = this.attrs.lineCap;
             }
 
-            this.stroke();
+            this.stroke(context);
         };
         // call super constructor
         this._super(config);
@@ -51,8 +50,7 @@ Kinetic.Line = Kinetic.Shape.extend({
     /**
      * draw dashed line.  Written by Phrogz
      */
-    _dashedLine: function(x, y, x2, y2, dashArray) {
-        var context = this.getContext();
+    _dashedLine: function(context, x, y, x2, y2, dashArray) {
         var dashCount = dashArray.length;
 
         var dx = (x2 - x), dy = (y2 - y);

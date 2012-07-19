@@ -15,8 +15,7 @@ Kinetic.RegularPolygon = Kinetic.Shape.extend({
         });
 
         this.shapeType = "RegularPolygon";
-        config.drawFunc = function() {
-            var context = this.getContext();
+        config.drawFunc = function(context) {
             context.beginPath();
             context.moveTo(0, 0 - this.attrs.radius);
 
@@ -26,8 +25,8 @@ Kinetic.RegularPolygon = Kinetic.Shape.extend({
                 context.lineTo(x, y);
             }
             context.closePath();
-            this.fill();
-            this.stroke();
+            this.fill(context);
+            this.stroke(context);
         };
         // call super constructor
         this._super(config);

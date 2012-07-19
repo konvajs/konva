@@ -14,12 +14,12 @@ Kinetic.Group = Kinetic.Container.extend({
         // call super constructor
         this._super(config);
     },
-    draw: function(layer) {
-        this._draw(layer);
+    draw: function(canvas) {
+        this._draw(canvas);
     },
-    _draw: function(layer) {
+    _draw: function(canvas) {
         if(this.attrs.visible) {
-            this._drawChildren(layer);
+            this._drawChildren(canvas);
         }
     }
 });

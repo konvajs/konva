@@ -14,8 +14,7 @@ Kinetic.Path = Kinetic.Shape.extend({
         this.dataArray = [];
         var that = this;
 
-        config.drawFunc = function() {
-            var context = this.getContext();
+        config.drawFunc = function(context) {
             var ca = this.dataArray;
             // context position
             context.beginPath();
@@ -56,8 +55,8 @@ Kinetic.Path = Kinetic.Shape.extend({
                         break;
                 }
             }
-            this.fill();
-            this.stroke();
+            this.fill(context);
+            this.stroke(context);
         };
         // call super constructor
         this._super(config);

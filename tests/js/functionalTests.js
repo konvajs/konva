@@ -152,7 +152,7 @@ Test.prototype.tests = {
                 context.quadraticCurveTo(300, 100, 260, 170);
                 context.closePath();
                 context.fillStyle = 'blue';
-                context.fill();
+                context.fill(context);
             },
             draggable: true
         });

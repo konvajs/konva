@@ -16,8 +16,7 @@ Kinetic.Star = Kinetic.Shape.extend({
         });
 
         this.shapeType = "Star";
-        config.drawFunc = function() {
-            var context = this.getContext();
+        config.drawFunc = function(context) {
             context.beginPath();
             context.moveTo(0, 0 - this.attrs.outerRadius);
 
@@ -29,8 +28,8 @@ Kinetic.Star = Kinetic.Shape.extend({
             }
             context.closePath();
 
-            this.fill();
-            this.stroke();
+            this.fill(context);
+            this.stroke(context);
         };
         // call super constructor
         this._super(config);

@@ -14,9 +14,8 @@ Kinetic.Sprite = Kinetic.Shape.extend({
             frameRate: 17
         });
 
-        config.drawFunc = function() {
+        config.drawFunc = function(context) {
             if(!!this.attrs.image) {
-                var context = this.getContext();
                 var anim = this.attrs.animation;
                 var index = this.attrs.index;
                 var f = this.attrs.animations[anim][index];
@@ -25,7 +24,7 @@ Kinetic.Sprite = Kinetic.Shape.extend({
                 context.rect(0, 0, f.width, f.height);
                 context.closePath();
 
-                this.drawImage(this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
+                this.drawImage(context, this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
             }
         };
         // call super constructor
