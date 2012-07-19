@@ -765,10 +765,7 @@ Kinetic.Stage = Kinetic.Container.extend({
      * get container position
      */
     _getContentPosition: function() {
-        var
-            rect = this.content.getBoundingClientRect(),
-            root = document.documentElement
-        ;
+        var rect = this.content.getBoundingClientRect(), root = document.documentElement;
         return {
             top: rect.top + root.scrollTop,
             left: rect.left + root.scrollLeft
