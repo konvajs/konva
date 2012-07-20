@@ -2004,7 +2004,8 @@ Test.prototype.tests = {
                 x: 10,
                 y: 10,
                 image: imageObj,
-                draggable: true
+                draggable: true,
+                stroke: 'blue'
             });
 
             layer.add(darth);

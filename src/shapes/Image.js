@@ -106,34 +106,9 @@ Kinetic.Image = Kinetic.Shape.extend({
      */
     applyFilter: function(config) {
         try {
-            // save transformation state
-            var x = this.getX();
-            var y = this.getY();
-            var rotation = this.getRotation();
-            var scaleX = this.getScale().x;
-            var scaleY = this.getScale().y;
-            var offsetX = this.getOffset().x;
-            var offsetY = this.getOffset().y;
-
-            // reset transformation state
-            this.attrs.x = 0;
-            this.attrs.y = 0;
-            this.attrs.rotation = 0;
-            this.attrs.scale.x = 1;
-            this.attrs.scale.y = 1;
-            this.attrs.offset.x = 0;
-            this.attrs.offset.y = 0;
-
-            this.saveImageData();
-
-            // restore transformation state
-            this.attrs.x = x;
-            this.attrs.y = y;
-            this.attrs.rotation = rotation;
-            this.attrs.scale.x = scaleX;
-            this.attrs.scale.y = scaleY;
-            this.attrs.offset.x = offsetX;
-            this.attrs.offset.y = offsetY;
+            var trans = this._clearTransform();
+            this.saveImageData(this.getWidth(), this.getHeight());
+            this._setTransform(trans);
 
             config.filter.call(this, config);
             var that = this;

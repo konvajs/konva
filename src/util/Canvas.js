@@ -60,6 +60,22 @@ Kinetic.Canvas.prototype = {
         this.element.height = height;
     },
     /**
+     * get width
+     * @name getWidth
+     * @methodOf Kinetic.Canvas.prototype
+     */
+    getWidth: function() {
+        return this.element.width;
+    },
+    /**
+     * get height
+     * @name getHeight
+     * @methodOf Kinetic.Canvas.prototype
+     */
+    getHeight: function() {
+        return this.element.height;
+    },
+    /**
      * set size
      * @name setSize
      * @methodOf Kinetic.Canvas.prototype

@@ -400,31 +400,12 @@ Kinetic.Node = Kinetic.Class.extend({
      */
     setAbsolutePosition: function() {
         var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
-        /*
-         * save rotation and scale and
-         * then remove them from the transform
-         */
-        var rot = this.attrs.rotation;
-        var scale = {
-            x: this.attrs.scale.x,
-            y: this.attrs.scale.y
-        };
-        var offset = {
-            x: this.attrs.offset.x,
-            y: this.attrs.offset.y
-        };
-
-        this.attrs.rotation = 0;
-        this.attrs.scale = {
-            x: 1,
-            y: 1
-        };
-        this.attrs.offset = {
-            x: 0,
-            y: 0
-        };
-
-        var o = this.getOffset();
+        var trans = this._clearTransform();
+        // don't clear translation
+        this.attrs.x = trans.x;
+        this.attrs.y = trans.y;
+        delete trans.x;
+        delete trans.y;
 
         // unravel transform
         var it = this.getAbsoluteTransform();
@@ -437,17 +418,7 @@ Kinetic.Node = Kinetic.Class.extend({
         };
 
         this.setPosition(pos.x, pos.y);
-
-        // restore rotation and scale
-        this.rotate(rot);
-        this.attrs.scale = {
-            x: scale.x,
-            y: scale.y
-        };
-        this.attrs.offset = {
-            x: offset.x,
-            y: offset.y
-        };
+        this._setTransform(trans);
     },
     /**
      * move node by an amount
@@ -813,17 +784,21 @@ Kinetic.Node = Kinetic.Class.extend({
      * @name saveImageData
      * @methodOf Kinetic.Node.prototype
      */
-    saveImageData: function() {
+    saveImageData: function(width, height) {
         try {
-            var stage = this.getStage();
-            var bufferCanvas = stage.bufferCanvas;
-            var bufferContext = bufferCanvas.getContext();
-            var width = stage.getWidth();
-            var height = stage.getHeight();
+            var canvas;
+            if(width && height) {
+                canvas = new Kinetic.Canvas(width, height);
+            }
+            else {
+                var stage = this.getStage();
+                canvas = stage.bufferCanvas;
+            }
 
-            bufferCanvas.clear();
-            this._draw(bufferCanvas);
-            var imageData = bufferContext.getImageData(0, 0, width, height);
+            var context = canvas.getContext();
+            canvas.clear();
+            this._draw(canvas);
+            var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
             this.imageData = imageData;
         }
         catch(e) {
@@ -880,6 +855,40 @@ Kinetic.Node = Kinetic.Class.extend({
         Kinetic.Type._getImage(this.toDataURL(), function(img) {
             callback(img);
         });
+    },
+    _clearTransform: function() {
+        var trans = {
+            x: this.attrs.x,
+            y: this.attrs.y,
+            rotation: this.attrs.rotation,
+            scale: {
+                x: this.attrs.scale.x,
+                y: this.attrs.scale.y
+            },
+            offset: {
+                x: this.attrs.offset.x,
+                y: this.attrs.offset.y
+            }
+        };
+
+        this.attrs.x = 0;
+        this.attrs.y = 0;
+        this.attrs.rotation = 0;
+        this.attrs.scale = {
+            x: 1,
+            y: 1
+        };
+        this.attrs.offset = {
+            x: 0,
+            y: 0
+        };
+
+        return trans;
+    },
+    _setTransform: function(trans) {
+        for(var key in trans) {
+            this.attrs[key] = trans[key];
+        }
     },
     _setImageData: function(imageData) {
         if(imageData && imageData.data) {
