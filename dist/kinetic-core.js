@@ -1433,25 +1433,34 @@ Kinetic.Node = Kinetic.Class.extend({
      * level as quality (range 0.0 - 1.0)
      * @name toDataURL
      * @methodOf Kinetic.Node.prototype
-     * @param {String} [mimeType]
-     * @param {Number} [quality]
+     * @param {Object} config
      */
-    toDataURL: function(mimeType, quality) {
-        var bufferCanvas = this.getStage().bufferCanvas;
-        var bufferContext = bufferCanvas.getContext();
-        bufferCanvas.clear();
-        this._draw(bufferCanvas);
-        return bufferCanvas.toDataURL(mimeType, quality);
+    toDataURL: function(config) {
+    	var mimeType = config && config.mimeType ? config.mimeType : null;
+        var quality = config && config.quality ? config.quality : null;
+        var canvas;
+        if(config && config.width && config.height) {
+            canvas = new Kinetic.Canvas(config.width, config.height);
+        }
+        else {
+            canvas = this.getStage().bufferCanvas;
+        }
+
+        var context = canvas.getContext();
+        canvas.clear();
+        this._draw(canvas);
+        return canvas.toDataURL(mimeType, quality);
     },
     /**
      * converts node into an image.  Since the toImage
      *  method is asynchronous, a callback is required
      * @name toImage
      * @methodOf Kinetic.Stage.prototype
+     * @param {Object} config
      */
-    toImage: function(callback) {
-        Kinetic.Type._getImage(this.toDataURL(), function(img) {
-            callback(img);
+    toImage: function(config) {
+        Kinetic.Type._getImage(this.toDataURL(config), function(img) {
+            config.callback(img);
         });
     },
     _clearTransform: function() {
@@ -2344,17 +2353,19 @@ Kinetic.Stage = Kinetic.Container.extend({
      *  the current state of each node
      * @name toDataURL
      * @methodOf Kinetic.Stage.prototype
-     * @param {Function} callback
-     * @param {String} [mimeType]
-     * @param {Number} [quality]
+     * @param {Object} config
      */
-    toDataURL: function(callback, mimeType, quality) {
+    toDataURL: function(config) {
+    	var mimeType = config && config.mimeType ? config.mimeType : null;
+        var quality = config && config.quality ? config.quality : null;
         /*
          * need to create a canvas element rather than using the buffer canvas
          * because this method is asynchonous which means that other parts of the
          * code could modify the buffer canvas before it's finished
          */
-        var canvas = new Kinetic.Canvas(this.attrs.width, this.attrs.height);
+        var width = config && config.width ? config.width : this.attrs.width;
+        var height = config && config.height ? config.height : this.attrs.height;
+        var canvas = new Kinetic.Canvas(width, height);
         var context = canvas.getContext();
         var layers = this.children;
 
@@ -2369,7 +2380,7 @@ Kinetic.Stage = Kinetic.Container.extend({
                     drawLayer(n + 1);
                 }
                 else {
-                    callback(canvas.toDataURL(mimeType, quality));
+                    config.callback(canvas.toDataURL(mimeType, quality));
                 }
             };
             imageObj.src = layerUrl;
@@ -2381,13 +2392,15 @@ Kinetic.Stage = Kinetic.Container.extend({
      *  is asynchronous, a callback function is required
      * @name toImage
      * @methodOf Kinetic.Stage.prototype
-     * @param {Function} callback
+     * @param {Object} config
      */
-    toImage: function(callback) {
-        this.toDataURL(function(dataUrl) {
-            Kinetic.Type._getImage(dataUrl, function(img) {
-                callback(img);
-            });
+    toImage: function(config) {
+        this.toDataURL({
+            callback: function(dataUrl) {
+                Kinetic.Type._getImage(dataUrl, function(img) {
+                    config.callback(img);
+                });
+            }
         });
     },
     _resizeDOM: function() {
@@ -3157,11 +3170,20 @@ Kinetic.Layer = Kinetic.Container.extend({
      * the current state of each child node
      * @name toDataURL
      * @methodOf Kinetic.Layer.prototype
-     * @param {String} [mimeType]
-     * @param {Number} [quality]
+     * @param {Object} config
      */
-    toDataURL: function(mimeType, quality) {
-        return this.getCanvas().toDataURL(mimeType, quality);
+    toDataURL: function(config) {
+        var canvas;
+        var mimeType = config && config.mimeType ? config.mimeType : null;
+        var quality = config && config.quality ? config.quality : null;
+
+        if(config && config.width && config.height) {
+            canvas = new Kinetic.Canvas(config.width, config.height);
+        }
+        else {
+            canvas = this.getCanvas();
+        }
+        return canvas.toDataURL(mimeType, quality);
     },
     /**
      * private draw children

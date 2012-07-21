@@ -1040,9 +1040,11 @@ Test.prototype.tests = {
             layer.draw();
         }
 
-        stage.toDataURL(function(dataUrl) {
-            warn(urls[0] === dataUrl, 'stage data url is incorrect');
-        })
+        stage.toDataURL({
+            callback: function(dataUrl) {
+                warn(urls[0] === dataUrl, 'stage data url is incorrect');
+            }
+        });
         warn(urls[0] === layer.toDataURL(), 'layer data url is incorrect');
         warn(urls[1] === group.toDataURL(), 'group data url is incorrect');
         warn(urls[1] === circle.toDataURL(), 'shape data url is incorrect');
@@ -1990,7 +1992,7 @@ Test.prototype.tests = {
         imageObj.src = '../assets/darth-vader.jpg';
     },
     'SHAPE - filter image': function(containerId) {
-    	var urls = dataUrls['SHAPE - filter image'];
+        var urls = dataUrls['SHAPE - filter image'];
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = new Kinetic.Stage({
@@ -2227,7 +2229,8 @@ Test.prototype.tests = {
         };
         imageObj.src = '../assets/scorpion-sprite.png';
     },
-    'Node - shape caching': function(containerId) {
+    'Node - node caching': function(containerId) {
+        var urls = dataUrls['Node - node caching'];
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2238,7 +2241,7 @@ Test.prototype.tests = {
 
         var points = [{
             x: 73,
-            y: 192
+            y: 250
         }, {
             x: 73,
             y: 160
@@ -2260,24 +2263,50 @@ Test.prototype.tests = {
             points: points,
             fill: 'green',
             stroke: 'blue',
-            strokeWidth: 5
+            strokeWidth: 5,
+            draggable: true
         });
 
         group.add(poly);
         layer.add(group);
         stage.add(layer);
 
-        poly.toImage(function(imageObj) {
-            test(Kinetic.Type._isElement(imageObj), 'shape toImage() should be an image object');
+        poly.toImage({
+            width: 500,
+            height: 300,
+            callback: function(imageObj) {
+                test(Kinetic.Type._isElement(imageObj), 'shape toImage() should be an image object');
+
+                var cachedShape = new Kinetic.Image({
+                    image: imageObj,
+                    draggable: true,
+                    stroke: 'red',
+                    strokeWidth: 5,
+                    x: 50,
+                    y: -120
+                });
+
+                layer.add(cachedShape);
+                layer.draw();
+
+                warn(urls[0] === layer.toDataURL(), 'layer data url is incorrect');
+            }
         });
-        group.toImage(function(imageObj) {
-            test(Kinetic.Type._isElement(imageObj), 'group toImage() should be an image object');
+
+        group.toImage({
+            callback: function(imageObj) {
+                test(Kinetic.Type._isElement(imageObj), 'group toImage() should be an image object');
+            }
         });
-        layer.toImage(function(imageObj) {
-            test(Kinetic.Type._isElement(imageObj), 'layer toImage() should be an image object');
+        layer.toImage({
+            callback: function(imageObj) {
+                test(Kinetic.Type._isElement(imageObj), 'layer toImage() should be an image object');
+            }
         });
-        stage.toImage(function(imageObj) {
-            test(Kinetic.Type._isElement(imageObj), 'stage toImage() should be an image object');
+        stage.toImage({
+            callback: function(imageObj) {
+                test(Kinetic.Type._isElement(imageObj), 'stage toImage() should be an image object');
+            }
         });
     },
     'SHAPE - add polygon': function(containerId) {

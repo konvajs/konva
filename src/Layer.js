@@ -102,11 +102,20 @@ Kinetic.Layer = Kinetic.Container.extend({
      * the current state of each child node
      * @name toDataURL
      * @methodOf Kinetic.Layer.prototype
-     * @param {String} [mimeType]
-     * @param {Number} [quality]
+     * @param {Object} config
      */
-    toDataURL: function(mimeType, quality) {
-        return this.getCanvas().toDataURL(mimeType, quality);
+    toDataURL: function(config) {
+        var canvas;
+        var mimeType = config && config.mimeType ? config.mimeType : null;
+        var quality = config && config.quality ? config.quality : null;
+
+        if(config && config.width && config.height) {
+            canvas = new Kinetic.Canvas(config.width, config.height);
+        }
+        else {
+            canvas = this.getCanvas();
+        }
+        return canvas.toDataURL(mimeType, quality);
     },
     /**
      * private draw children

@@ -124,22 +124,24 @@ Test.prototype.tests = {
         stage.add(layer);
 
         console.log('call toImage')
-        star.toImage(function(img) {
-            startTimer();
-            for(var n = 0; n < 1000; n++) {
-                var image = new Kinetic.Image({
-                    image: img,
-                    x: Math.random() * stage.getWidth(),
-                    y: Math.random() * stage.getHeight(),
-                    offset: 70
-                });
+        star.toImage({
+            callback: function(img) {
+                startTimer();
+                for(var n = 0; n < 1000; n++) {
+                    var image = new Kinetic.Image({
+                        image: img,
+                        x: Math.random() * stage.getWidth(),
+                        y: Math.random() * stage.getHeight(),
+                        offset: 70
+                    });
 
-                layer.add(image);
+                    layer.add(image);
+                }
+
+                layer.draw();
+
+                endTimer('draw 1,000 cached stars');
             }
-
-            layer.draw();
-
-            endTimer('draw 1,000 cached stars');
         });
     }
 };
