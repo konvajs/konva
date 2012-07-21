@@ -325,7 +325,7 @@ Test.prototype.tests = {
             layer.add(darth);
             stage.add(layer);
         };
-        imageObj.src = '../darth-vader.jpg';
+        imageObj.src = '../assets/darth-vader.jpg';
     },
     'EVENTS - star pixel detection': function(containerId) {
         var stage = new Kinetic.Stage({

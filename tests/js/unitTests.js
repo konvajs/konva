@@ -893,7 +893,7 @@ Test.prototype.tests = {
             var expectedJson = '{"attrs":{"width":578,"height":200,"throttle":80,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"throttle":80,"clearBeforeDraw":true,"visible":true,"listening":true,"alpha":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"detectionType":"path","visible":true,"listening":true,"alpha":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}';
             test(stage.toJSON() === expectedJson, 'problem with serializing stage with image');
         };
-        imageObj.src = '../darth-vader.jpg';
+        imageObj.src = '../assets/darth-vader.jpg';
     },
     'STAGE - load stage with an image': function(containerId) {
         var imageObj = new Image();
@@ -910,7 +910,7 @@ Test.prototype.tests = {
             image.setImage(imageObj);
             stage.draw();
         };
-        imageObj.src = '../darth-vader.jpg';
+        imageObj.src = '../assets/darth-vader.jpg';
     },
     ////////////////////////////////////////////////////////////////////////
     //  LAYERS tests
@@ -1310,7 +1310,7 @@ Test.prototype.tests = {
                 offset: [-200, -70]
             });
         };
-        imageObj.src = '../darth-vader.jpg';
+        imageObj.src = '../assets/darth-vader.jpg';
 
     },
     'SHAPE - add circle with radial gradient fill': function(containerId) {
@@ -1987,9 +1987,10 @@ Test.prototype.tests = {
             test(crop.height === 15, 'crop height should be 15');
 
         };
-        imageObj.src = '../darth-vader.jpg';
+        imageObj.src = '../assets/darth-vader.jpg';
     },
     'SHAPE - filter image': function(containerId) {
+    	var urls = dataUrls['SHAPE - filter image'];
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = new Kinetic.Stage({
@@ -2005,7 +2006,7 @@ Test.prototype.tests = {
                 y: 10,
                 image: imageObj,
                 draggable: true,
-                stroke: 'blue'
+                stroke: 'red'
             });
 
             layer.add(darth);
@@ -2018,10 +2019,60 @@ Test.prototype.tests = {
                 filter: Kinetic.Filters.Grayscale,
                 callback: function() {
                     layer.draw();
+                    warn(layer.toDataURL() === urls[0], 'data url is incorrect');
                 }
             });
         };
-        imageObj.src = '../darth-vader.jpg';
+        imageObj.src = '../assets/darth-vader.jpg';
+    },
+    'SHAPE - filter transformed image': function(containerId) {
+        var urls = dataUrls['SHAPE - filter transformed image'];
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer({
+                throttle: 999
+            });
+            darth = new Kinetic.Image({
+                x: 50,
+                y: 50,
+                //width: 438,
+                //height: 300,
+                image: imageObj,
+                draggable: true,
+                stroke: 'red',
+                strokeWidth: 5,
+                rotationDeg: 10,
+                scale: 0.3
+            });
+
+            darth.setOffset(darth.getWidth() / 2, darth.getHeight() / 2);
+
+            layer.add(darth);
+            stage.add(layer);
+
+            test(darth.getWidth() === 438, 'image width should be 438');
+            test(darth.getHeight() === 300, 'image height should be 300');
+
+            stage.onFrame(function() {
+                darth.rotate(0.1);
+                layer.draw();
+            });
+
+            darth.applyFilter({
+                filter: Kinetic.Filters.Grayscale,
+                callback: function() {
+                    //stage.start();
+                    layer.draw();
+                    warn(layer.toDataURL() === urls[0], 'data url is incorrect');
+                }
+            });
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
     },
     'SHAPE - set image fill to color then image': function(containerId) {
         var imageObj = new Image();
@@ -2057,7 +2108,7 @@ Test.prototype.tests = {
 
             layer.draw();
         };
-        imageObj.src = '../darth-vader.jpg';
+        imageObj.src = '../assets/darth-vader.jpg';
     },
     'SHAPE - add sprite': function(containerId) {
         var imageObj = new Image();
@@ -2174,7 +2225,7 @@ Test.prototype.tests = {
                 sprite.stop();
             }, 3000);
         };
-        imageObj.src = '../scorpion-sprite.png';
+        imageObj.src = '../assets/scorpion-sprite.png';
     },
     'Node - shape caching': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -2709,7 +2760,7 @@ Test.prototype.tests = {
             stage.add(layer);
 
         };
-        imageObj.src = '../lion.png';
+        imageObj.src = '../assets/lion.png';
     },
     'SHAPE - custom shape with fill, stroke, and strokeWidth': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -4020,7 +4071,7 @@ Test.prototype.tests = {
 
         test(stage.get('.layerName')[0].attrs.id === 'layerId', 'problem with layer name selector');
         test(stage.get('#layerId')[0].attrs.id === 'layerId', 'problem with layer id selector');
-        
+
         layer.draw();
     },
     'NODE - test drag and drop properties and methods': function(containerId) {

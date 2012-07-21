@@ -21,7 +21,7 @@ function test(condition, message, warn) {
         if(warn) {
             testCounter.style.backgroundColor = 'orange';
             testCounter.style.color = 'black';
-            console.warn(message + ' (NOTE: use Google Chrome for data url comparisons)');
+            console.warn(message + ' (NOTE: use Google Chrome for data url comparisons, run on web server for caching and filtering)');
         }
         else {
             testCounter.style.backgroundColor = 'red';

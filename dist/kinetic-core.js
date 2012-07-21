@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jul 19 2012
+ * Date: Jul 21 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -433,6 +433,19 @@ Kinetic.Canvas.prototype = {
         };
         context.strokeText = function() {
         };
+    },
+    /**
+     * toDataURL
+     */
+    toDataURL: function(mimeType, quality) {
+        try {
+            // If this call fails (due to browser bug, like in Firefox 3.6),
+            // then revert to previous no-parameter image/png behavior
+            return this.element.toDataURL(mimeType, quality);
+        }
+        catch(e) {
+            return this.element.toDataURL();
+        }
     }
 };
 
@@ -1329,7 +1342,6 @@ Kinetic.Node = Kinetic.Class.extend({
         if(this.attrs.scale.x !== 1 || this.attrs.scale.y !== 1) {
             m.scale(this.attrs.scale.x, this.attrs.scale.y);
         }
-        // center offset
         if(this.attrs.offset.x !== 0 || this.attrs.offset.y !== 0) {
             m.translate(-1 * this.attrs.offset.x, -1 * this.attrs.offset.y);
         }
@@ -1429,15 +1441,7 @@ Kinetic.Node = Kinetic.Class.extend({
         var bufferContext = bufferCanvas.getContext();
         bufferCanvas.clear();
         this._draw(bufferCanvas);
-
-        try {
-            // If this call fails (due to browser bug, like in Firefox 3.6),
-            // then revert to previous no-parameter image/png behavior
-            return bufferCanvas.element.toDataURL(mimeType, quality);
-        }
-        catch(e) {
-            return bufferCanvas.element.toDataURL();
-        }
+        return bufferCanvas.toDataURL(mimeType, quality);
     },
     /**
      * converts node into an image.  Since the toImage
@@ -2345,22 +2349,18 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @param {Number} [quality]
      */
     toDataURL: function(callback, mimeType, quality) {
+        /*
+         * need to create a canvas element rather than using the buffer canvas
+         * because this method is asynchonous which means that other parts of the
+         * code could modify the buffer canvas before it's finished
+         */
         var canvas = new Kinetic.Canvas(this.attrs.width, this.attrs.height);
         var context = canvas.getContext();
         var layers = this.children;
 
         function drawLayer(n) {
             var layer = layers[n];
-            var canvasUrl;
-            try {
-                // If this call fails (due to browser bug, like in Firefox 3.6),
-                // then revert to previous no-parameter image/png behavior
-                canvasUrl = canvas.getElement().toDataURL(mimeType, quality);
-            }
-            catch(e) {
-                canvasUrl = canvas.getElement().toDataURL();
-            }
-
+            var layerUrl = layer.getCanvas().toDataURL(mimeType, quality);
             var imageObj = new Image();
             imageObj.onload = function() {
                 context.drawImage(imageObj, 0, 0);
@@ -2369,17 +2369,10 @@ Kinetic.Stage = Kinetic.Container.extend({
                     drawLayer(n + 1);
                 }
                 else {
-                    try {
-                        // If this call fails (due to browser bug, like in Firefox 3.6),
-                        // then revert to previous no-parameter image/png behavior
-                        callback(canvas.getElement().toDataURL(mimeType, quality));
-                    }
-                    catch(e) {
-                        callback(canvas.getElement().toDataURL());
-                    }
+                    callback(canvas.toDataURL(mimeType, quality));
                 }
             };
-            imageObj.src = canvasUrl;
+            imageObj.src = layerUrl;
         }
         drawLayer(0);
     },
@@ -3168,14 +3161,7 @@ Kinetic.Layer = Kinetic.Container.extend({
      * @param {Number} [quality]
      */
     toDataURL: function(mimeType, quality) {
-        try {
-            // If this call fails (due to browser bug, like in Firefox 3.6),
-            // then revert to previous no-parameter image/png behavior
-            return this.getCanvas().element.toDataURL(mimeType, quality);
-        }
-        catch(e) {
-            return this.getCanvas().element.toDataURL();
-        }
+        return this.getCanvas().toDataURL(mimeType, quality);
     },
     /**
      * private draw children
@@ -3607,11 +3593,10 @@ Kinetic.Shape = Kinetic.Node.extend({
             for(var n = 0; n < family.length; n++) {
                 var node = family[n];
                 var t = node.getTransform();
-
                 var m = t.getMatrix();
                 context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }
-
+            
             /*
              * pre styles include alpha, linejoin
              */
@@ -5353,21 +5338,20 @@ Kinetic.Node.addGettersSetters(Kinetic.Path, ['data']);
 //  Transform
 ///////////////////////////////////////////////////////////////////////
 /*
-* Last updated November 2011
-* By Simon Sarris
-* www.simonsarris.com
-* sarris@acm.org
-*
-* Free to use and distribute at will
-* So long as you are nice to people, etc
-*/
+ * Last updated November 2011
+ * By Simon Sarris
+ * www.simonsarris.com
+ * sarris@acm.org
+ *
+ * Free to use and distribute at will
+ * So long as you are nice to people, etc
+ */
 
 /*
-* The usage of this class was inspired by some of the work done by a forked
-* project, KineticJS-Ext by Wappworks, which is based on Simon's Transform
-* class.
-*/
-
+ * The usage of this class was inspired by some of the work done by a forked
+ * project, KineticJS-Ext by Wappworks, which is based on Simon's Transform
+ * class.
+ */
 
 Kinetic.Transform = function() {
     this.m = [1, 0, 0, 1, 0, 0];

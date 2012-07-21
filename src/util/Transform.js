@@ -2,21 +2,20 @@
 //  Transform
 ///////////////////////////////////////////////////////////////////////
 /*
-* Last updated November 2011
-* By Simon Sarris
-* www.simonsarris.com
-* sarris@acm.org
-*
-* Free to use and distribute at will
-* So long as you are nice to people, etc
-*/
+ * Last updated November 2011
+ * By Simon Sarris
+ * www.simonsarris.com
+ * sarris@acm.org
+ *
+ * Free to use and distribute at will
+ * So long as you are nice to people, etc
+ */
 
 /*
-* The usage of this class was inspired by some of the work done by a forked
-* project, KineticJS-Ext by Wappworks, which is based on Simon's Transform
-* class.
-*/
-
+ * The usage of this class was inspired by some of the work done by a forked
+ * project, KineticJS-Ext by Wappworks, which is based on Simon's Transform
+ * class.
+ */
 
 Kinetic.Transform = function() {
     this.m = [1, 0, 0, 1, 0, 0];

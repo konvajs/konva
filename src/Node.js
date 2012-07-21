@@ -735,7 +735,6 @@ Kinetic.Node = Kinetic.Class.extend({
         if(this.attrs.scale.x !== 1 || this.attrs.scale.y !== 1) {
             m.scale(this.attrs.scale.x, this.attrs.scale.y);
         }
-        // center offset
         if(this.attrs.offset.x !== 0 || this.attrs.offset.y !== 0) {
             m.translate(-1 * this.attrs.offset.x, -1 * this.attrs.offset.y);
         }
@@ -835,15 +834,7 @@ Kinetic.Node = Kinetic.Class.extend({
         var bufferContext = bufferCanvas.getContext();
         bufferCanvas.clear();
         this._draw(bufferCanvas);
-
-        try {
-            // If this call fails (due to browser bug, like in Firefox 3.6),
-            // then revert to previous no-parameter image/png behavior
-            return bufferCanvas.element.toDataURL(mimeType, quality);
-        }
-        catch(e) {
-            return bufferCanvas.element.toDataURL();
-        }
+        return bufferCanvas.toDataURL(mimeType, quality);
     },
     /**
      * converts node into an image.  Since the toImage

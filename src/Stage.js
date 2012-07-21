@@ -288,22 +288,18 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @param {Number} [quality]
      */
     toDataURL: function(callback, mimeType, quality) {
+        /*
+         * need to create a canvas element rather than using the buffer canvas
+         * because this method is asynchonous which means that other parts of the
+         * code could modify the buffer canvas before it's finished
+         */
         var canvas = new Kinetic.Canvas(this.attrs.width, this.attrs.height);
         var context = canvas.getContext();
         var layers = this.children;
 
         function drawLayer(n) {
             var layer = layers[n];
-            var canvasUrl;
-            try {
-                // If this call fails (due to browser bug, like in Firefox 3.6),
-                // then revert to previous no-parameter image/png behavior
-                canvasUrl = canvas.getElement().toDataURL(mimeType, quality);
-            }
-            catch(e) {
-                canvasUrl = canvas.getElement().toDataURL();
-            }
-
+            var layerUrl = layer.getCanvas().toDataURL(mimeType, quality);
             var imageObj = new Image();
             imageObj.onload = function() {
                 context.drawImage(imageObj, 0, 0);
@@ -312,17 +308,10 @@ Kinetic.Stage = Kinetic.Container.extend({
                     drawLayer(n + 1);
                 }
                 else {
-                    try {
-                        // If this call fails (due to browser bug, like in Firefox 3.6),
-                        // then revert to previous no-parameter image/png behavior
-                        callback(canvas.getElement().toDataURL(mimeType, quality));
-                    }
-                    catch(e) {
-                        callback(canvas.getElement().toDataURL());
-                    }
+                    callback(canvas.toDataURL(mimeType, quality));
                 }
             };
-            imageObj.src = canvasUrl;
+            imageObj.src = layerUrl;
         }
         drawLayer(0);
     },
