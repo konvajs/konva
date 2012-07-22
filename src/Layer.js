@@ -94,6 +94,14 @@ Kinetic.Layer = Kinetic.Container.extend({
         return this.canvas.context;
     },
     /**
+     * clear canvas tied to the layer
+     * @name clear
+     * @methodOf Kinetic.Layer.prototype
+     */
+    clear: function() {
+        this.getCanvas().clear();
+    },
+    /**
      * Creates a composite data URL. If MIME type is not
      * specified, then "image/png" will result. For "image/jpeg", specify a quality
      * level as quality (range 0.0 - 1.0).  Note that this method works

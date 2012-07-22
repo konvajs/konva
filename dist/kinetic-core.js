@@ -1342,7 +1342,7 @@ Kinetic.Node = Kinetic.Class.extend({
         if(this.attrs.scale.x !== 1 || this.attrs.scale.y !== 1) {
             m.scale(this.attrs.scale.x, this.attrs.scale.y);
         }
-        if(this.attrs.offset.x !== 0 || this.attrs.offset.y !== 0) {
+        if(this.attrs.offset && (this.attrs.offset.x !== 0 || this.attrs.offset.y !== 0)) {
             m.translate(-1 * this.attrs.offset.x, -1 * this.attrs.offset.y);
         }
 
@@ -3162,6 +3162,14 @@ Kinetic.Layer = Kinetic.Container.extend({
         return this.canvas.context;
     },
     /**
+     * clear canvas tied to the layer
+     * @name clear
+     * @methodOf Kinetic.Layer.prototype
+     */
+    clear: function() {
+        this.getCanvas().clear();
+    },
+    /**
      * Creates a composite data URL. If MIME type is not
      * specified, then "image/png" will result. For "image/jpeg", specify a quality
      * level as quality (range 0.0 - 1.0).  Note that this method works
@@ -3367,11 +3375,9 @@ Kinetic.Shape = Kinetic.Node.extend({
      * */
     fill: function(context) {
         var appliedShadow = false;
-        context.save();
-
         var fill = this.attrs.fill;
-
         if(fill) {
+            context.save();
             if(this.attrs.shadow && !this.appliedShadow) {
                 appliedShadow = this._applyShadow(context);
             }
@@ -3435,8 +3441,8 @@ Kinetic.Shape = Kinetic.Node.extend({
                 context.fillStyle = f;
                 context.fill(context);
             }
+            context.restore();
         }
-        context.restore();
 
         if(appliedShadow) {
             this.fill(context);
@@ -3450,18 +3456,17 @@ Kinetic.Shape = Kinetic.Node.extend({
      */
     fillText: function(context, text) {
         var appliedShadow = false;
-        context.save();
         if(this.attrs.textFill) {
+            context.save();
             if(this.attrs.shadow && !this.appliedShadow) {
                 appliedShadow = this._applyShadow(context);
             }
             context.fillStyle = this.attrs.textFill;
             context.fillText(text, 0, 0);
+            context.restore();
         }
-        context.restore();
-
         if(appliedShadow) {
-            this.fillText(context, text, 0, 0);
+            this.fillText(contex, text, 0, 0);
         }
     },
     /**
@@ -3473,24 +3478,20 @@ Kinetic.Shape = Kinetic.Node.extend({
      */
     strokeText: function(context, text) {
         var appliedShadow = false;
-        context.save();
+
         if(this.attrs.textStroke || this.attrs.textStrokeWidth) {
+            context.save();
             if(this.attrs.shadow && !this.appliedShadow) {
                 appliedShadow = this._applyShadow(context);
             }
-
             // defaults
-            if(!this.attrs.textStroke) {
-                this.attrs.textStroke = 'black';
-            }
-            else if(!this.attrs.textStrokeWidth && this.attrs.textStrokeWidth !== 0) {
-                this.attrs.textStrokeWidth = 2;
-            }
-            context.lineWidth = this.attrs.textStrokeWidth;
-            context.strokeStyle = this.attrs.textStroke;
-            context.strokeText(context, text, 0, 0);
+            var textStroke = this.attrs.textStroke ? this.attrs.textStroke : 'black';
+            var textStrokeWidth = this.attrs.textStrokeWidth ? this.attrs.textStrokeWidth : 2;
+            context.lineWidth = textStrokeWidth;
+            context.strokeStyle = textStroke;
+            context.strokeText(text, 0, 0);
+            context.restore();
         }
-        context.restore();
 
         if(appliedShadow) {
             this.strokeText(context, text, 0, 0);
@@ -3512,7 +3513,7 @@ Kinetic.Shape = Kinetic.Node.extend({
             if(this.attrs.shadow && !this.appliedShadow) {
                 appliedShadow = this._applyShadow(context);
             }
-            
+
             if(a.length === 6) {
                 context.drawImage(a[1], a[2], a[3], a[4], a[5]);
             }
@@ -3618,7 +3619,7 @@ Kinetic.Shape = Kinetic.Node.extend({
                 var m = t.getMatrix();
                 context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }
-            
+
             /*
              * pre styles include alpha, linejoin
              */

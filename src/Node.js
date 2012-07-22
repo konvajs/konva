@@ -735,7 +735,7 @@ Kinetic.Node = Kinetic.Class.extend({
         if(this.attrs.scale.x !== 1 || this.attrs.scale.y !== 1) {
             m.scale(this.attrs.scale.x, this.attrs.scale.y);
         }
-        if(this.attrs.offset.x !== 0 || this.attrs.offset.y !== 0) {
+        if(this.attrs.offset && (this.attrs.offset.x !== 0 || this.attrs.offset.y !== 0)) {
             m.translate(-1 * this.attrs.offset.x, -1 * this.attrs.offset.y);
         }
 
