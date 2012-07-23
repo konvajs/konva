@@ -1148,8 +1148,8 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  */
 
 /**
- * set offset
- * @name setOffset a node's offset defines the positition and rotation point
+ * set offset.  A node's offset defines the positition and rotation point
+ * @name setOffset 
  * @methodOf Kinetic.Node.prototype
  * @param {Number} x
  * @param {Number} y

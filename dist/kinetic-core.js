@@ -1755,8 +1755,8 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  */
 
 /**
- * set offset
- * @name setOffset a node's offset defines the positition and rotation point
+ * set offset.  A node's offset defines the positition and rotation point
+ * @name setOffset 
  * @methodOf Kinetic.Node.prototype
  * @param {Number} x
  * @param {Number} y
@@ -2374,7 +2374,7 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @name toDataURL
      * @methodOf Kinetic.Stage.prototype
      * @param {Object} config
-     * @param {Function} callback since the stage toDataURL() method is asynchronous,
+     * @param {Function} config.callback since the stage toDataURL() method is asynchronous,
      *  the data url string will be passed into the callback
      * @param {String} [config.mimeType] mime type.  can be "image/png" or "image/jpeg".
      *  "image/png" is the default
