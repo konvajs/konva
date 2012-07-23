@@ -399,7 +399,7 @@ Kinetic.Node.addGettersSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'st
 
 /**
  * get stroke color
- * @name getStrokeColor
+ * @name getStroke
  * @methodOf Kinetic.Shape.prototype
  */
 
