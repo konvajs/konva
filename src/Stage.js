@@ -92,6 +92,8 @@ Kinetic.Stage = Kinetic.Container.extend({
      * set stage size
      * @name setSize
      * @methodOf Kinetic.Stage.prototype
+     * @param {Number} width
+     * @param {Number} height
      */
     setSize: function() {
         // set stage dimensions
@@ -99,7 +101,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         this.setAttrs(size);
     },
     /**
-     * return stage size
+     * get stage size
      * @name getSize
      * @methodOf Kinetic.Stage.prototype
      */
@@ -121,7 +123,8 @@ Kinetic.Stage = Kinetic.Container.extend({
         }
     },
     /**
-     * serialize stage and children as a JSON object
+     * serialize stage and children as a JSON object and return
+     *  the result as a json string
      * @name toJSON
      * @methodOf Kinetic.Stage.prototype
      */
@@ -266,7 +269,7 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     /**
      * get stage DOM node, which is a div element
-     * with the class name "kineticjs-content"
+     *  with the class name "kineticjs-content"
      * @name getDOM
      * @methodOf Kinetic.Stage.prototype
      */
@@ -284,9 +287,18 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @name toDataURL
      * @methodOf Kinetic.Stage.prototype
      * @param {Object} config
+     * @param {Function} callback since the stage toDataURL() method is asynchronous,
+     *  the data url string will be passed into the callback
+     * @param {String} [config.mimeType] mime type.  can be "image/png" or "image/jpeg".
+     *  "image/png" is the default
+     * @param {Number} [config.width] data url image width
+     * @param {Number} [config.height] data url image height
+     * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
+     *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
+     *  is very high quality
      */
     toDataURL: function(config) {
-    	var mimeType = config && config.mimeType ? config.mimeType : null;
+        var mimeType = config && config.mimeType ? config.mimeType : null;
         var quality = config && config.quality ? config.quality : null;
         /*
          * need to create a canvas element rather than using the buffer canvas
@@ -323,6 +335,15 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @name toImage
      * @methodOf Kinetic.Stage.prototype
      * @param {Object} config
+     * @param {Function} callback since the toImage() method is asynchonrous, the
+     *  resulting image object is passed into the callback function
+     * @param {String} [config.mimeType] mime type.  can be "image/png" or "image/jpeg".
+     *  "image/png" is the default
+     * @param {Number} [config.width] data url image width
+     * @param {Number} [config.height] data url image height
+     * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
+     *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
+     *  is very high quality
      */
     toImage: function(config) {
         this.toDataURL({
@@ -968,7 +989,7 @@ Kinetic.Node.addGettersSetters(Kinetic.Stage, ['width', 'height', 'throttle']);
  */
 
 /**
- * get throttle
+ * get event throttle for event detections per second.
  * @name getThrottle
  * @methodOf Kinetic.Stage.prototype
  */
@@ -988,11 +1009,14 @@ Kinetic.Node.addGettersSetters(Kinetic.Stage, ['width', 'height', 'throttle']);
  */
 
 /**
- * set throttle.  Increasing the throttle will increase
+ * set throttle for event detections per second.  Increasing the throttle will increase
  *  the number of mousemove and touchmove event detections,
  *  and decreasing the throttle will decrease the number
- *  of mousemove and touchmove events which improves performance
+ *  of mousemove and touchmove events which improves performance.  The event
+ *  throttling is defaulted to 80 event detections per second
  * @name setThrottle
  * @methodOf Kinetic.Stage.prototype
  * @param {Number} throttle
+ * @example
+ * <a href="http://www.html5canvastutorials.com/kineticjs/html5-canvas-load-stage-with-json-string-with-kineticjs/">simple load example</a>
  */

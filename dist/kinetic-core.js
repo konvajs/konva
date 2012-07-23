@@ -666,11 +666,11 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * bind events to the node.  KineticJS supports mouseover, mousemove,
-     * mouseout, mousedown, mouseup, click, dblclick, touchstart, touchmove,
-     * touchend, tap, dbltap, dragstart, dragmove, and dragend.  Pass in a string
-     * of event types delimmited by a space to bind multiple events at once
-     * such as 'mousedown mouseup mousemove'. include a namespace to bind an
-     * event by name such as 'click.foobar'.
+     *  mouseout, mousedown, mouseup, click, dblclick, touchstart, touchmove,
+     *  touchend, tap, dbltap, dragstart, dragmove, and dragend.  Pass in a string
+     *  of event types delimmited by a space to bind multiple events at once
+     *  such as 'mousedown mouseup mousemove'. include a namespace to bind an
+     *  event by name such as 'click.foobar'.
      * @name on
      * @methodOf Kinetic.Node.prototype
      * @param {String} typesStr
@@ -702,10 +702,10 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * remove event bindings from the node.  Pass in a string of
-     * event types delimmited by a space to remove multiple event
-     * bindings at once such as 'mousedown mouseup mousemove'.
-     * include a namespace to remove an event binding by name
-     * such as 'click.foobar'.
+     *  event types delimmited by a space to remove multiple event
+     *  bindings at once such as 'mousedown mouseup mousemove'.
+     *  include a namespace to remove an event binding by name
+     *  such as 'click.foobar'.
      * @name off
      * @methodOf Kinetic.Node.prototype
      * @param {String} typesStr
@@ -748,7 +748,8 @@ Kinetic.Node = Kinetic.Class.extend({
         return this.attrs;
     },
     /**
-     * set default attrs
+     * set default attrs.  This method should only be used if
+     *  you're creating a custom node
      * @name setDefaultAttrs
      * @methodOf Kinetic.Node.prototype
      * @param {Object} confic
@@ -877,8 +878,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * determine if shape is visible or not.  Shape is visible only
-     * if it's visible and all of its ancestors are visible.  If one ancestor
-     * is invisible, this means that the shape is also invisible
+     *  if it's visible and all of its ancestors are visible.  If an ancestor
+     *  is invisible, this means that the shape is also invisible
      * @name isVisible
      * @methodOf Kinetic.Node.prototype
      */
@@ -899,7 +900,7 @@ Kinetic.Node = Kinetic.Class.extend({
         });
     },
     /**
-     * hide node
+     * hide node.  Hidden nodes are no longer detectable
      * @name hide
      * @methodOf Kinetic.Node.prototype
      */
@@ -917,8 +918,8 @@ Kinetic.Node = Kinetic.Class.extend({
         return this.index;
     },
     /**
-     * get absolute z-index by taking into account
-     * all parent and sibling indices
+     * get absolute z-index which takes into account sibling
+     *  and parent indices
      * @name getAbsoluteZIndex
      * @methodOf Kinetic.Node.prototype
      */
@@ -970,7 +971,8 @@ Kinetic.Node = Kinetic.Class.extend({
      * set node position
      * @name setPosition
      * @methodOf Kinetic.Node.prototype
-     * @param {Object} point
+     * @param {Number} x
+     * @param {Number} y
      */
     setPosition: function() {
         var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
@@ -988,7 +990,7 @@ Kinetic.Node = Kinetic.Class.extend({
         };
     },
     /**
-     * get absolute position relative to stage
+     * get absolute position
      * @name getAbsolutePosition
      * @methodOf Kinetic.Node.prototype
      */
@@ -999,7 +1001,7 @@ Kinetic.Node = Kinetic.Class.extend({
         return trans.getTranslation();
     },
     /**
-     * set absolute position relative to stage
+     * set absolute position
      * @name setAbsolutePosition
      * @methodOf Kinetic.Node.prototype
      * @param {Object} pos object containing an x and
@@ -1031,6 +1033,8 @@ Kinetic.Node = Kinetic.Class.extend({
      * move node by an amount
      * @name move
      * @methodOf Kinetic.Node.prototype
+     * @param {Number} x
+     * @param {Number} y
      */
     move: function() {
         var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
@@ -1082,7 +1086,7 @@ Kinetic.Node = Kinetic.Class.extend({
         });
     },
     /**
-     * move node to top
+     * move node to the top of its siblings
      * @name moveToTop
      * @methodOf Kinetic.Node.prototype
      */
@@ -1117,7 +1121,7 @@ Kinetic.Node = Kinetic.Class.extend({
         }
     },
     /**
-     * move node to bottom
+     * move node to the bottom of its siblings
      * @name moveToBottom
      * @methodOf Kinetic.Node.prototype
      */
@@ -1131,7 +1135,7 @@ Kinetic.Node = Kinetic.Class.extend({
      * set zIndex
      * @name setZIndex
      * @methodOf Kinetic.Node.prototype
-     * @param {int} zIndex
+     * @param {Integer} zIndex
      */
     setZIndex: function(zIndex) {
         var index = this.index;
@@ -1234,7 +1238,7 @@ Kinetic.Node = Kinetic.Class.extend({
      * @name transitionTo
      * @methodOf Kinetic.Node.prototype
      * @param {Object} config
-     * @config {Number} [duration] duration that the transition runs in seconds
+     * @config {Number} duration duration that the transition runs in seconds
      * @config {String} [easing] easing function.  can be linear, ease-in, ease-out, ease-in-out,
      *  back-ease-in, back-ease-out, back-ease-in-out, elastic-ease-in, elastic-ease-out,
      *  elastic-ease-in-out, bounce-ease-out, bounce-ease-in, bounce-ease-in-out,
@@ -1298,8 +1302,8 @@ Kinetic.Node = Kinetic.Class.extend({
         return trans;
     },
     /**
-     * get transform of the node while taking into
-     * account the transforms of its parents
+     * get absolute transform of the node which takes into
+     *  account its parent transforms
      * @name getAbsoluteTransform
      * @methodOf Kinetic.Node.prototype
      */
@@ -1325,8 +1329,7 @@ Kinetic.Node = Kinetic.Class.extend({
         return am;
     },
     /**
-     * get transform of the node while not taking
-     * into account the transforms of its parents
+     * get transform of the node
      * @name getTransform
      * @methodOf Kinetic.Node.prototype
      */
@@ -1352,8 +1355,7 @@ Kinetic.Node = Kinetic.Class.extend({
      * clone node
      * @name clone
      * @methodOf Kinetic.Node.prototype
-     * @param {Object} config used to override cloned
-     *  attrs
+     * @param {Object} attrs override attrs
      */
     clone: function(obj) {
         // instantiate new node
@@ -1434,9 +1436,16 @@ Kinetic.Node = Kinetic.Class.extend({
      * @name toDataURL
      * @methodOf Kinetic.Node.prototype
      * @param {Object} config
+     * @param {String} [config.mimeType] mime type.  can be "image/png" or "image/jpeg".
+     *  "image/png" is the default
+     * @param {Number} [config.width] data url image width
+     * @param {Number} [config.height] data url image height
+     * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
+     *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
+     *  is very high quality
      */
     toDataURL: function(config) {
-    	var mimeType = config && config.mimeType ? config.mimeType : null;
+        var mimeType = config && config.mimeType ? config.mimeType : null;
         var quality = config && config.quality ? config.quality : null;
         var canvas;
         if(config && config.width && config.height) {
@@ -1457,6 +1466,15 @@ Kinetic.Node = Kinetic.Class.extend({
      * @name toImage
      * @methodOf Kinetic.Stage.prototype
      * @param {Object} config
+     * @param {Function} callback since the toImage() method is asynchonrous, the
+     *  resulting image object is passed into the callback function
+     * @param {String} [config.mimeType] mime type.  can be "image/png" or "image/jpeg".
+     *  "image/png" is the default
+     * @param {Number} [config.width] data url image width
+     * @param {Number} [config.height] data url image height
+     * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
+     *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
+     *  is very high quality
      */
     toImage: function(config) {
         Kinetic.Type._getImage(this.toDataURL(config), function(img) {
@@ -1678,7 +1696,7 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  * set detection type
  * @name setDetectionType
  * @methodOf Kinetic.Node.prototype
- * @param {String} type can be "path" or "pixel"
+ * @param {String} type can be path or pixel
  */
 
 /**
@@ -1690,8 +1708,8 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 
 /**
  * set alpha.  Alpha values range from 0 to 1.
- * A node with an alpha of 0 is fully transparent, and a node
- * with an alpha of 1 is fully opaque
+ *  A node with an alpha of 0 is fully transparent, and a node
+ *  with an alpha of 1 is fully opaque
  * @name setAlpha
  * @methodOf Kinetic.Node.prototype
  * @param {Object} alpha
@@ -1705,14 +1723,14 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  */
 
 /**
- * set drag constraint
+ * set drag constraint.
  * @name setDragConstraint
  * @methodOf Kinetic.Node.prototype
- * @param {String} constraint
+ * @param {String} constraint can be vertical, horizontal, or none
  */
 
 /**
- * set drag bounds
+ * set drag bounds.
  * @name setDragBounds
  * @methodOf Kinetic.Node.prototype
  * @param {Object} bounds
@@ -1738,7 +1756,7 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 
 /**
  * set offset
- * @name setOffset
+ * @name setOffset a node's offset defines the positition and rotation point
  * @methodOf Kinetic.Node.prototype
  * @param {Number} x
  * @param {Number} y
@@ -1747,7 +1765,8 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 /**
  * set node scale.
  * @name setScale
- * @param {Number|Array|Object|List} scale
+ * @param {Number} x
+ * @param {Number} y
  * @methodOf Kinetic.Node.prototype
  */
 
@@ -1770,7 +1789,7 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  */
 
 /**
- * get detection type
+ * get detection type.  Can be path or pixel
  * @name getDetectionType
  * @methodOf Kinetic.Node.prototype
  */
@@ -1782,9 +1801,7 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  */
 
 /**
- * get alpha.  Alpha values range from 0 to 1.
- * A node with an alpha of 0 is fully transparent, and a node
- * with an alpha of 1 is fully opaque
+ * get alpha.
  * @name getAlpha
  * @methodOf Kinetic.Node.prototype
  */
@@ -2162,6 +2179,8 @@ Kinetic.Stage = Kinetic.Container.extend({
      * set stage size
      * @name setSize
      * @methodOf Kinetic.Stage.prototype
+     * @param {Number} width
+     * @param {Number} height
      */
     setSize: function() {
         // set stage dimensions
@@ -2169,7 +2188,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         this.setAttrs(size);
     },
     /**
-     * return stage size
+     * get stage size
      * @name getSize
      * @methodOf Kinetic.Stage.prototype
      */
@@ -2191,7 +2210,8 @@ Kinetic.Stage = Kinetic.Container.extend({
         }
     },
     /**
-     * serialize stage and children as a JSON object
+     * serialize stage and children as a JSON object and return
+     *  the result as a json string
      * @name toJSON
      * @methodOf Kinetic.Stage.prototype
      */
@@ -2336,7 +2356,7 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     /**
      * get stage DOM node, which is a div element
-     * with the class name "kineticjs-content"
+     *  with the class name "kineticjs-content"
      * @name getDOM
      * @methodOf Kinetic.Stage.prototype
      */
@@ -2354,9 +2374,18 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @name toDataURL
      * @methodOf Kinetic.Stage.prototype
      * @param {Object} config
+     * @param {Function} callback since the stage toDataURL() method is asynchronous,
+     *  the data url string will be passed into the callback
+     * @param {String} [config.mimeType] mime type.  can be "image/png" or "image/jpeg".
+     *  "image/png" is the default
+     * @param {Number} [config.width] data url image width
+     * @param {Number} [config.height] data url image height
+     * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
+     *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
+     *  is very high quality
      */
     toDataURL: function(config) {
-    	var mimeType = config && config.mimeType ? config.mimeType : null;
+        var mimeType = config && config.mimeType ? config.mimeType : null;
         var quality = config && config.quality ? config.quality : null;
         /*
          * need to create a canvas element rather than using the buffer canvas
@@ -2393,6 +2422,15 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @name toImage
      * @methodOf Kinetic.Stage.prototype
      * @param {Object} config
+     * @param {Function} callback since the toImage() method is asynchonrous, the
+     *  resulting image object is passed into the callback function
+     * @param {String} [config.mimeType] mime type.  can be "image/png" or "image/jpeg".
+     *  "image/png" is the default
+     * @param {Number} [config.width] data url image width
+     * @param {Number} [config.height] data url image height
+     * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
+     *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
+     *  is very high quality
      */
     toImage: function(config) {
         this.toDataURL({
@@ -3038,7 +3076,7 @@ Kinetic.Node.addGettersSetters(Kinetic.Stage, ['width', 'height', 'throttle']);
  */
 
 /**
- * get throttle
+ * get event throttle for event detections per second.
  * @name getThrottle
  * @methodOf Kinetic.Stage.prototype
  */
@@ -3058,13 +3096,16 @@ Kinetic.Node.addGettersSetters(Kinetic.Stage, ['width', 'height', 'throttle']);
  */
 
 /**
- * set throttle.  Increasing the throttle will increase
+ * set throttle for event detections per second.  Increasing the throttle will increase
  *  the number of mousemove and touchmove event detections,
  *  and decreasing the throttle will decrease the number
- *  of mousemove and touchmove events which improves performance
+ *  of mousemove and touchmove events which improves performance.  The event
+ *  throttling is defaulted to 80 event detections per second
  * @name setThrottle
  * @methodOf Kinetic.Stage.prototype
  * @param {Number} throttle
+ * @example
+ * <a href="http://www.html5canvastutorials.com/kineticjs/html5-canvas-load-stage-with-json-string-with-kineticjs/">simple load example</a>
  */
 ///////////////////////////////////////////////////////////////////////
 //  Layer
@@ -3179,6 +3220,13 @@ Kinetic.Layer = Kinetic.Container.extend({
      * @name toDataURL
      * @methodOf Kinetic.Layer.prototype
      * @param {Object} config
+     * @param {String} [config.mimeType] mime type.  can be "image/png" or "image/jpeg".
+     *  "image/png" is the default
+     * @param {Number} [config.width] data url image width
+     * @param {Number} [config.height] data url image height
+     * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
+     *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
+     *  is very high quality
      */
     toDataURL: function(config) {
         var canvas;
@@ -3692,7 +3740,7 @@ Kinetic.Node.addGettersSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'st
 
 /**
  * get stroke color
- * @name getStrokeColor
+ * @name getStroke
  * @methodOf Kinetic.Shape.prototype
  */
 

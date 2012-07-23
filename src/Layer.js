@@ -111,6 +111,13 @@ Kinetic.Layer = Kinetic.Container.extend({
      * @name toDataURL
      * @methodOf Kinetic.Layer.prototype
      * @param {Object} config
+     * @param {String} [config.mimeType] mime type.  can be "image/png" or "image/jpeg".
+     *  "image/png" is the default
+     * @param {Number} [config.width] data url image width
+     * @param {Number} [config.height] data url image height
+     * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
+     *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
+     *  is very high quality
      */
     toDataURL: function(config) {
         var canvas;
