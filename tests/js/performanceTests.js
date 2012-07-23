@@ -91,7 +91,13 @@ Test.prototype.tests = {
                 strokeWidth: 5,
                 numPoints: 5,
                 x: Math.random() * stage.getWidth(),
-                y: Math.random() * stage.getHeight()
+                y: Math.random() * stage.getHeight(),
+                shadow: {
+                    offset: 5,
+                    color: 'black',
+                    blur: 5,
+                    alpha: 0.5
+                }
             });
 
             layer.add(star);
@@ -117,13 +123,18 @@ Test.prototype.tests = {
             strokeWidth: 5,
             numPoints: 5,
             x: 70,
-            y: 70
+            y: 70,
+            shadow: {
+                offset: 5,
+                color: 'black',
+                blur: 5,
+                alpha: 0.5
+            }
         });
 
         layer.add(star);
         stage.add(layer);
 
-        console.log('call toImage')
         star.toImage({
             callback: function(img) {
                 startTimer();

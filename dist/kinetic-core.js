@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jul 21 2012
+ * Date: Jul 22 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -3956,11 +3956,6 @@ Kinetic.Image = Kinetic.Shape.extend({
         };
         // call super constructor
         this._super(config);
-
-        var that = this;
-        this.on('filterChange', function() {
-            that._applyFilter();
-        });
     },
     /**
      * set width and height
@@ -3968,7 +3963,7 @@ Kinetic.Image = Kinetic.Shape.extend({
      * @methodOf Kinetic.Image.prototype
      */
     setSize: function() {
-        var size = Kinetic.GlobalObject._getSize(Array.prototype.slice.call(arguments));
+        var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
         this.setAttrs(size);
     },
     /**

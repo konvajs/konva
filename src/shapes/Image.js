@@ -41,11 +41,6 @@ Kinetic.Image = Kinetic.Shape.extend({
         };
         // call super constructor
         this._super(config);
-
-        var that = this;
-        this.on('filterChange', function() {
-            that._applyFilter();
-        });
     },
     /**
      * set width and height
@@ -53,7 +48,7 @@ Kinetic.Image = Kinetic.Shape.extend({
      * @methodOf Kinetic.Image.prototype
      */
     setSize: function() {
-        var size = Kinetic.GlobalObject._getSize(Array.prototype.slice.call(arguments));
+        var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
         this.setAttrs(size);
     },
     /**
