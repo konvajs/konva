@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jul 22 2012
+ * Date: Jul 23 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -614,6 +614,29 @@ requestAnimFrame = (function(callback) {
  * application
  * @constructor
  * @param {Object} config
+ * @param {Number} [config.x]
+ * @param {Number} [config.y]
+ * @param {Boolean} [config.visible]
+ * @param {Boolean} [config.listening] whether or not the node is listening for events
+ * @param {String} [config.id] unique id
+ * @param {String} [config.name] non-unique name
+ * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Object} [config.scale]
+ * @param {Number} [config.scale.x]
+ * @param {Number} [config.scale.y]
+ * @param {Number} [config.rotation] rotation in radians
+ * @param {Number} [config.rotationDeg] rotation in degrees
+ * @param {Object} [config.offset] offsets default position point and rotation point
+ * @param {Number} [config.offset.x]
+ * @param {Number} [config.offset.y]
+ * @param {Boolean} [config.draggable]
+ * @param {String} [config.dragConstraint] can be vertical, horizontal, or none.  The default
+ *  is none
+ * @param {Object} [config.dragBounds]
+ * @param {Number} [config.dragBounds.top]
+ * @param {Number} [config.dragBounds.right]
+ * @param {Number} [config.dragBounds.bottom]
+ * @param {Number} [config.dragBounds.left]
  */
 Kinetic.Node = Kinetic.Class.extend({
     init: function(config) {
@@ -1756,7 +1779,7 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 
 /**
  * set offset.  A node's offset defines the positition and rotation point
- * @name setOffset 
+ * @name setOffset
  * @methodOf Kinetic.Node.prototype
  * @param {Number} x
  * @param {Number} y
@@ -1855,6 +1878,29 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  * @constructor
  * @augments Kinetic.Node
  * @param {Object} config
+ * @param {Number} [config.x]
+ * @param {Number} [config.y]
+ * @param {Boolean} [config.visible]
+ * @param {Boolean} [config.listening] whether or not the node is listening for events
+ * @param {String} [config.id] unique id
+ * @param {String} [config.name] non-unique name
+ * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Object} [config.scale]
+ * @param {Number} [config.scale.x]
+ * @param {Number} [config.scale.y]
+ * @param {Number} [config.rotation] rotation in radians
+ * @param {Number} [config.rotationDeg] rotation in degrees
+ * @param {Object} [config.offset] offsets default position point and rotation point
+ * @param {Number} [config.offset.x]
+ * @param {Number} [config.offset.y]
+ * @param {Boolean} [config.draggable]
+ * @param {String} [config.dragConstraint] can be vertical, horizontal, or none.  The default
+ *  is none
+ * @param {Object} [config.dragBounds]
+ * @param {Number} [config.dragBounds.top]
+ * @param {Number} [config.dragBounds.right]
+ * @param {Number} [config.dragBounds.bottom]
+ * @param {Number} [config.dragBounds.left]
  */
 Kinetic.Container = Kinetic.Node.extend({
     init: function(config) {
@@ -2093,9 +2139,33 @@ Kinetic.Container = Kinetic.Node.extend({
  * animations
  * @constructor
  * @augments Kinetic.Container
- * @param {String|DomElement} cont Container id or DOM element
- * @param {int} width
- * @param {int} height
+ * @param {Object} config
+ * @param {String|DomElement} config.container Container id or DOM element
+ * @param {Number} config.width
+ * @param {Number} config.height
+ * @param {Number} [config.x]
+ * @param {Number} [config.y]
+ * @param {Boolean} [config.visible]
+ * @param {Boolean} [config.listening] whether or not the node is listening for events
+ * @param {String} [config.id] unique id
+ * @param {String} [config.name] non-unique name
+ * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Object} [config.scale]
+ * @param {Number} [config.scale.x]
+ * @param {Number} [config.scale.y]
+ * @param {Number} [config.rotation] rotation in radians
+ * @param {Number} [config.rotationDeg] rotation in degrees
+ * @param {Object} [config.offset] offsets default position point and rotation point
+ * @param {Number} [config.offset.x]
+ * @param {Number} [config.offset.y]
+ * @param {Boolean} [config.draggable]
+ * @param {String} [config.dragConstraint] can be vertical, horizontal, or none.  The default
+ *  is none
+ * @param {Object} [config.dragBounds]
+ * @param {Number} [config.dragBounds.top]
+ * @param {Number} [config.dragBounds.right]
+ * @param {Number} [config.dragBounds.bottom]
+ * @param {Number} [config.dragBounds.left]
  */
 Kinetic.Stage = Kinetic.Container.extend({
     init: function(config) {
@@ -3116,6 +3186,33 @@ Kinetic.Node.addGettersSetters(Kinetic.Stage, ['width', 'height', 'throttle']);
  * @constructor
  * @augments Kinetic.Container
  * @param {Object} config
+ * @param {Number} [config.throttle] draw throttle in draws per second.  Default is 80 draws
+ *  per second
+ * @param {Boolean} [config.clearBeforeDraw] set this property to true if you'd like to disable
+ *  canvas clearing before each new layer draw
+ * @param {Number} [config.x]
+ * @param {Number} [config.y]
+ * @param {Boolean} [config.visible]
+ * @param {Boolean} [config.listening] whether or not the node is listening for events
+ * @param {String} [config.id] unique id
+ * @param {String} [config.name] non-unique name
+ * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Object} [config.scale]
+ * @param {Number} [config.scale.x]
+ * @param {Number} [config.scale.y]
+ * @param {Number} [config.rotation] rotation in radians
+ * @param {Number} [config.rotationDeg] rotation in degrees
+ * @param {Object} [config.offset] offsets default position point and rotation point
+ * @param {Number} [config.offset.x]
+ * @param {Number} [config.offset.y]
+ * @param {Boolean} [config.draggable]
+ * @param {String} [config.dragConstraint] can be vertical, horizontal, or none.  The default
+ *  is none
+ * @param {Object} [config.dragBounds]
+ * @param {Number} [config.dragBounds.top]
+ * @param {Number} [config.dragBounds.right]
+ * @param {Number} [config.dragBounds.bottom]
+ * @param {Number} [config.dragBounds.left]
  */
 Kinetic.Layer = Kinetic.Container.extend({
     init: function(config) {
@@ -3171,17 +3268,19 @@ Kinetic.Layer = Kinetic.Container.extend({
         }
     },
     /**
-     * set before draw function handler
+     * set before draw handler
      * @name beforeDraw
      * @methodOf Kinetic.Layer.prototype
+     * @param {Function} handler
      */
     beforeDraw: function(func) {
         this.beforeDrawFunc = func;
     },
     /**
-     * set after draw function handler
+     * set after draw handler
      * @name afterDraw
      * @methodOf Kinetic.Layer.prototype
+     * @param {Function} handler
      */
     afterDraw: function(func) {
         this.afterDrawFunc = func;
@@ -3212,11 +3311,11 @@ Kinetic.Layer = Kinetic.Container.extend({
     },
     /**
      * Creates a composite data URL. If MIME type is not
-     * specified, then "image/png" will result. For "image/jpeg", specify a quality
-     * level as quality (range 0.0 - 1.0).  Note that this method works
-     * differently from toDataURL() for other nodes because it generates an absolute dataURL
-     * based on what's draw on the layer, rather than drawing
-     * the current state of each child node
+     *  specified, then "image/png" will result. For "image/jpeg", specify a quality
+     *  level as quality (range 0.0 - 1.0).  Note that this method works
+     *  differently from toDataURL() for other nodes because it generates an absolute dataURL
+     *  based on what's draw on the layer, rather than drawing
+     *  the current state of each child node
      * @name toDataURL
      * @methodOf Kinetic.Layer.prototype
      * @param {Object} config
@@ -3295,10 +3394,14 @@ Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw', 'throttle']);
  */
 
 /**
- * set throttle
+ * set layer draw throttle
  * @name setThrottle
  * @methodOf Kinetic.Layer.prototype
- * @param {Number} throttle
+ * @param {Number} throttle layer draws per second.  Increasing the throttle
+ *  will increase the number of layer draws per second if the layer is
+ *  rapidly being drawn.  Decreasing the throttle will decrease the number
+ *  of layer draws and improve performance.  Throttle is defaulted to 80 draws
+ *  per second
  */
 
 /**
@@ -3321,6 +3424,29 @@ Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw', 'throttle']);
  * @constructor
  * @augments Kinetic.Container
  * @param {Object} config
+ * @param {Number} [config.x]
+ * @param {Number} [config.y]
+ * @param {Boolean} [config.visible]
+ * @param {Boolean} [config.listening] whether or not the node is listening for events
+ * @param {String} [config.id] unique id
+ * @param {String} [config.name] non-unique name
+ * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Object} [config.scale]
+ * @param {Number} [config.scale.x]
+ * @param {Number} [config.scale.y]
+ * @param {Number} [config.rotation] rotation in radians
+ * @param {Number} [config.rotationDeg] rotation in degrees
+ * @param {Object} [config.offset] offsets default position point and rotation point
+ * @param {Number} [config.offset.x]
+ * @param {Number} [config.offset.y]
+ * @param {Boolean} [config.draggable]
+ * @param {String} [config.dragConstraint] can be vertical, horizontal, or none.  The default
+ *  is none
+ * @param {Object} [config.dragBounds]
+ * @param {Number} [config.dragBounds.top]
+ * @param {Number} [config.dragBounds.right]
+ * @param {Number} [config.dragBounds.bottom]
+ * @param {Number} [config.dragBounds.left]
  */
 Kinetic.Group = Kinetic.Container.extend({
     init: function(config) {
@@ -3343,20 +3469,57 @@ Kinetic.Group = Kinetic.Container.extend({
 //  Shape
 ///////////////////////////////////////////////////////////////////////
 /**
- * Shape constructor.  Shapes are used to objectify drawing bits of a KineticJS
- * application
+ * Shape constructor.  Shapes are primitive objects that turn small drawings into
+ *  objects, such as rectangles, circles, text, lines, etc.
  * @constructor
  * @augments Kinetic.Node
  * @param {Object} config
- * @config {String|Object} [fill] can be a string color, a linear gradient object, a radial
+ * @config {String|Object} [config.fill] can be a string color, a linear gradient object, a radial
  *  gradient object, or a pattern object.
- * @config {String} [stroke] stroke color
- * @config {Number} [strokeWidth] stroke width
- * @config {String} [lineJoin] line join can be "miter", "round", or "bevel".  The default
- *  is "miter"
- * @config {Object} [shadow] shadow object
- * @config {String} [detectionType] shape detection type.  Can be "path" or "pixel".
- *  The default is "path" because it performs better
+ * @config {Image} [config.fill.image] image object if filling the shape with a pattern
+ * @config {Object} [config.fill.offset] pattern offset if filling the shape with a pattern
+ * @config {Number} [config.fill.offset.x]
+ * @config {Number} [config.fill.offset.y]
+ * @config {Object} [config.fill.start] start point if using a linear gradient or
+ *  radial gradient fill
+ * @config {Number} [config.fill.start.x]
+ * @config {Number} [config.fill.start.y]
+ * @config {Number} [config.fill.start.radius] start radius if using a radial gradient fill
+ * @config {Object} [config.fill.end] end point if using a linear gradient or
+ *  radial gradient fill
+ * @config {Number} [config.fill.end.x]
+ * @config {Number} [config.fill.end.y]
+ * @config {Number} [config.fill.end.radius] end radius if using a radial gradient fill
+ * @config {String} [config.stroke] stroke color
+ * @config {Number} [config.strokeWidth] stroke width
+ * @config {String} [config.lineJoin] line join can be miter, round, or bevel.  The default
+ *  is miter
+ * @config {Object} [config.shadow] shadow object
+ * @config {String} [config.detectionType] shape detection type.  Can be path or pixel.
+ *  The default is path because it performs better
+ * @param {Number} [config.x]
+ * @param {Number} [config.y]
+ * @param {Boolean} [config.visible]
+ * @param {Boolean} [config.listening] whether or not the node is listening for events
+ * @param {String} [config.id] unique id
+ * @param {String} [config.name] non-unique name
+ * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Object} [config.scale]
+ * @param {Number} [config.scale.x]
+ * @param {Number} [config.scale.y]
+ * @param {Number} [config.rotation] rotation in radians
+ * @param {Number} [config.rotationDeg] rotation in degrees
+ * @param {Object} [config.offset] offsets default position point and rotation point
+ * @param {Number} [config.offset.x]
+ * @param {Number} [config.offset.y]
+ * @param {Boolean} [config.draggable]
+ * @param {String} [config.dragConstraint] can be vertical, horizontal, or none.  The default
+ *  is none
+ * @param {Object} [config.dragBounds]
+ * @param {Number} [config.dragBounds.top]
+ * @param {Number} [config.dragBounds.right]
+ * @param {Number} [config.dragBounds.bottom]
+ * @param {Number} [config.dragBounds.left]
  */
 Kinetic.Shape = Kinetic.Node.extend({
     init: function(config) {

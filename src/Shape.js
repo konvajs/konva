@@ -2,20 +2,57 @@
 //  Shape
 ///////////////////////////////////////////////////////////////////////
 /**
- * Shape constructor.  Shapes are used to objectify drawing bits of a KineticJS
- * application
+ * Shape constructor.  Shapes are primitive objects that turn small drawings into
+ *  objects, such as rectangles, circles, text, lines, etc.
  * @constructor
  * @augments Kinetic.Node
  * @param {Object} config
- * @config {String|Object} [fill] can be a string color, a linear gradient object, a radial
+ * @config {String|Object} [config.fill] can be a string color, a linear gradient object, a radial
  *  gradient object, or a pattern object.
- * @config {String} [stroke] stroke color
- * @config {Number} [strokeWidth] stroke width
- * @config {String} [lineJoin] line join can be "miter", "round", or "bevel".  The default
- *  is "miter"
- * @config {Object} [shadow] shadow object
- * @config {String} [detectionType] shape detection type.  Can be "path" or "pixel".
- *  The default is "path" because it performs better
+ * @config {Image} [config.fill.image] image object if filling the shape with a pattern
+ * @config {Object} [config.fill.offset] pattern offset if filling the shape with a pattern
+ * @config {Number} [config.fill.offset.x]
+ * @config {Number} [config.fill.offset.y]
+ * @config {Object} [config.fill.start] start point if using a linear gradient or
+ *  radial gradient fill
+ * @config {Number} [config.fill.start.x]
+ * @config {Number} [config.fill.start.y]
+ * @config {Number} [config.fill.start.radius] start radius if using a radial gradient fill
+ * @config {Object} [config.fill.end] end point if using a linear gradient or
+ *  radial gradient fill
+ * @config {Number} [config.fill.end.x]
+ * @config {Number} [config.fill.end.y]
+ * @config {Number} [config.fill.end.radius] end radius if using a radial gradient fill
+ * @config {String} [config.stroke] stroke color
+ * @config {Number} [config.strokeWidth] stroke width
+ * @config {String} [config.lineJoin] line join can be miter, round, or bevel.  The default
+ *  is miter
+ * @config {Object} [config.shadow] shadow object
+ * @config {String} [config.detectionType] shape detection type.  Can be path or pixel.
+ *  The default is path because it performs better
+ * @param {Number} [config.x]
+ * @param {Number} [config.y]
+ * @param {Boolean} [config.visible]
+ * @param {Boolean} [config.listening] whether or not the node is listening for events
+ * @param {String} [config.id] unique id
+ * @param {String} [config.name] non-unique name
+ * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Object} [config.scale]
+ * @param {Number} [config.scale.x]
+ * @param {Number} [config.scale.y]
+ * @param {Number} [config.rotation] rotation in radians
+ * @param {Number} [config.rotationDeg] rotation in degrees
+ * @param {Object} [config.offset] offsets default position point and rotation point
+ * @param {Number} [config.offset.x]
+ * @param {Number} [config.offset.y]
+ * @param {Boolean} [config.draggable]
+ * @param {String} [config.dragConstraint] can be vertical, horizontal, or none.  The default
+ *  is none
+ * @param {Object} [config.dragBounds]
+ * @param {Number} [config.dragBounds.top]
+ * @param {Number} [config.dragBounds.right]
+ * @param {Number} [config.dragBounds.bottom]
+ * @param {Number} [config.dragBounds.left]
  */
 Kinetic.Shape = Kinetic.Node.extend({
     init: function(config) {

@@ -7,6 +7,33 @@
  * @constructor
  * @augments Kinetic.Container
  * @param {Object} config
+ * @param {Number} [config.throttle] draw throttle in draws per second.  Default is 80 draws
+ *  per second
+ * @param {Boolean} [config.clearBeforeDraw] set this property to true if you'd like to disable
+ *  canvas clearing before each new layer draw
+ * @param {Number} [config.x]
+ * @param {Number} [config.y]
+ * @param {Boolean} [config.visible]
+ * @param {Boolean} [config.listening] whether or not the node is listening for events
+ * @param {String} [config.id] unique id
+ * @param {String} [config.name] non-unique name
+ * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Object} [config.scale]
+ * @param {Number} [config.scale.x]
+ * @param {Number} [config.scale.y]
+ * @param {Number} [config.rotation] rotation in radians
+ * @param {Number} [config.rotationDeg] rotation in degrees
+ * @param {Object} [config.offset] offsets default position point and rotation point
+ * @param {Number} [config.offset.x]
+ * @param {Number} [config.offset.y]
+ * @param {Boolean} [config.draggable]
+ * @param {String} [config.dragConstraint] can be vertical, horizontal, or none.  The default
+ *  is none
+ * @param {Object} [config.dragBounds]
+ * @param {Number} [config.dragBounds.top]
+ * @param {Number} [config.dragBounds.right]
+ * @param {Number} [config.dragBounds.bottom]
+ * @param {Number} [config.dragBounds.left]
  */
 Kinetic.Layer = Kinetic.Container.extend({
     init: function(config) {
@@ -62,17 +89,19 @@ Kinetic.Layer = Kinetic.Container.extend({
         }
     },
     /**
-     * set before draw function handler
+     * set before draw handler
      * @name beforeDraw
      * @methodOf Kinetic.Layer.prototype
+     * @param {Function} handler
      */
     beforeDraw: function(func) {
         this.beforeDrawFunc = func;
     },
     /**
-     * set after draw function handler
+     * set after draw handler
      * @name afterDraw
      * @methodOf Kinetic.Layer.prototype
+     * @param {Function} handler
      */
     afterDraw: function(func) {
         this.afterDrawFunc = func;
@@ -103,11 +132,11 @@ Kinetic.Layer = Kinetic.Container.extend({
     },
     /**
      * Creates a composite data URL. If MIME type is not
-     * specified, then "image/png" will result. For "image/jpeg", specify a quality
-     * level as quality (range 0.0 - 1.0).  Note that this method works
-     * differently from toDataURL() for other nodes because it generates an absolute dataURL
-     * based on what's draw on the layer, rather than drawing
-     * the current state of each child node
+     *  specified, then "image/png" will result. For "image/jpeg", specify a quality
+     *  level as quality (range 0.0 - 1.0).  Note that this method works
+     *  differently from toDataURL() for other nodes because it generates an absolute dataURL
+     *  based on what's draw on the layer, rather than drawing
+     *  the current state of each child node
      * @name toDataURL
      * @methodOf Kinetic.Layer.prototype
      * @param {Object} config
@@ -186,10 +215,14 @@ Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw', 'throttle']);
  */
 
 /**
- * set throttle
+ * set layer draw throttle
  * @name setThrottle
  * @methodOf Kinetic.Layer.prototype
- * @param {Number} throttle
+ * @param {Number} throttle layer draws per second.  Increasing the throttle
+ *  will increase the number of layer draws per second if the layer is
+ *  rapidly being drawn.  Decreasing the throttle will decrease the number
+ *  of layer draws and improve performance.  Throttle is defaulted to 80 draws
+ *  per second
  */
 
 /**
