@@ -3469,8 +3469,8 @@ Kinetic.Group = Kinetic.Container.extend({
 //  Shape
 ///////////////////////////////////////////////////////////////////////
 /**
- * Shape constructor.  Shapes are primitive objects that turn small drawings into
- *  objects, such as rectangles, circles, text, lines, etc.
+ * Shape constructor.  Shapes are primitive objects such as rectangles, 
+ *  circles, text, lines, etc.
  * @constructor
  * @augments Kinetic.Node
  * @param {Object} config
