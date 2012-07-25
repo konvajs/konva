@@ -2,7 +2,7 @@
 //  Shape
 ///////////////////////////////////////////////////////////////////////
 /**
- * Shape constructor.  Shapes are primitive objects such as rectangles, 
+ * Shape constructor.  Shapes are primitive objects such as rectangles,
  *  circles, text, lines, etc.
  * @constructor
  * @augments Kinetic.Node
@@ -28,6 +28,13 @@
  * @config {String} [config.lineJoin] line join can be miter, round, or bevel.  The default
  *  is miter
  * @config {Object} [config.shadow] shadow object
+ * @config {String} [config.shadow.color]
+ * @config {Number} [config.shadow.blur]
+ * @config {Obect} [config.shadow.blur.offset]
+ * @config {Number} [config.shadow.blur.offset.x]
+ * @config {Number} [config.shadow.blur.offset.y]
+ * @config {Number} [config.shadow.alpha] shadow alpha.  Can be any real number
+ *  between 0 and 1
  * @config {String} [config.detectionType] shape detection type.  Can be path or pixel.
  *  The default is path because it performs better
  * @param {Number} [config.x]
@@ -210,7 +217,7 @@ Kinetic.Shape = Kinetic.Node.extend({
             context.restore();
         }
         if(appliedShadow) {
-            this.fillText(contex, text, 0, 0);
+            this.fillText(context, text, 0, 0);
         }
     },
     /**

@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jul 23 2012
+ * Date: Jul 24 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -3469,7 +3469,7 @@ Kinetic.Group = Kinetic.Container.extend({
 //  Shape
 ///////////////////////////////////////////////////////////////////////
 /**
- * Shape constructor.  Shapes are primitive objects such as rectangles, 
+ * Shape constructor.  Shapes are primitive objects such as rectangles,
  *  circles, text, lines, etc.
  * @constructor
  * @augments Kinetic.Node
@@ -3495,6 +3495,13 @@ Kinetic.Group = Kinetic.Container.extend({
  * @config {String} [config.lineJoin] line join can be miter, round, or bevel.  The default
  *  is miter
  * @config {Object} [config.shadow] shadow object
+ * @config {String} [config.shadow.color]
+ * @config {Number} [config.shadow.blur]
+ * @config {Obect} [config.shadow.blur.offset]
+ * @config {Number} [config.shadow.blur.offset.x]
+ * @config {Number} [config.shadow.blur.offset.y]
+ * @config {Number} [config.shadow.alpha] shadow alpha.  Can be any real number
+ *  between 0 and 1
  * @config {String} [config.detectionType] shape detection type.  Can be path or pixel.
  *  The default is path because it performs better
  * @param {Number} [config.x]
@@ -3677,7 +3684,7 @@ Kinetic.Shape = Kinetic.Node.extend({
             context.restore();
         }
         if(appliedShadow) {
-            this.fillText(contex, text, 0, 0);
+            this.fillText(context, text, 0, 0);
         }
     },
     /**
