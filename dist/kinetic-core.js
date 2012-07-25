@@ -69,6 +69,123 @@ Kinetic.Global = {
 };
 
 ///////////////////////////////////////////////////////////////////////
+//  Transition
+///////////////////////////////////////////////////////////////////////
+/**
+ * Transition constructor.  The transitionTo() Node method
+ *  returns a reference to the transition object which you can use
+ *  to stop, resume, or restart the transition
+ * @constructor
+ */
+Kinetic.Transition = function(node, config) {
+    this.node = node;
+    this.config = config;
+    this.tweens = [];
+    var that = this;
+
+    // add tween for each property
+    function addTween(c, attrs, obj, rootObj) {
+        for(var key in c) {
+            if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
+                // if val is an object then traverse
+                if(Kinetic.Type._isObject(c[key])) {
+                    obj[key] = {};
+                    addTween(c[key], attrs[key], obj[key], rootObj);
+                }
+                else {
+                    that._add(that._getTween(attrs, key, c[key], obj, rootObj));
+                }
+            }
+        }
+    }
+    var obj = {};
+    addTween(config, node.attrs, obj, obj);
+
+    var finishedTweens = 0;
+    for(var n = 0; n < this.tweens.length; n++) {
+        var tween = this.tweens[n];
+        tween.onFinished = function() {
+            finishedTweens++;
+            if(finishedTweens >= that.tweens.length) {
+                that.onFinished();
+            }
+        };
+    }
+};
+/*
+ * Transition methods
+ */
+Kinetic.Transition.prototype = {
+    /**
+     * start transition
+     * @name start
+     * @methodOf Kinetic.Transition.prototype
+     */
+    start: function() {
+        for(var n = 0; n < this.tweens.length; n++) {
+            this.tweens[n].start();
+        }
+    },
+    /**
+     * stop transition
+     * @name stop
+     * @methodOf Kinetic.Transition.prototype
+     */
+    stop: function() {
+        for(var n = 0; n < this.tweens.length; n++) {
+            this.tweens[n].stop();
+        }
+    },
+    /**
+     * resume transition
+     * @name resume
+     * @methodOf Kinetic.Transition.prototype
+     */
+    resume: function() {
+        for(var n = 0; n < this.tweens.length; n++) {
+            this.tweens[n].resume();
+        }
+    },
+    _onEnterFrame: function() {
+        for(var n = 0; n < this.tweens.length; n++) {
+            this.tweens[n].onEnterFrame();
+        }
+    },
+    _add: function(tween) {
+        this.tweens.push(tween);
+    },
+    _getTween: function(attrs, prop, val, obj, rootObj) {
+        var config = this.config;
+        var node = this.node;
+        var easing = config.easing;
+        if(easing === undefined) {
+            easing = 'linear';
+        }
+
+        var tween = new Kinetic.Tween(node, function(i) {
+            obj[prop] = i;
+            node.setAttrs(rootObj);
+        }, Kinetic.Tweens[easing], attrs[prop], val, config.duration);
+
+        return tween;
+    }
+};
+
+Kinetic.Filters.Grayscale = function() {
+    var data = this.imageData.data;
+    for(var i = 0; i < data.length; i += 4) {
+        var brightness = 0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2];
+        // red
+        data[i] = brightness;
+        // green
+        data[i + 1] = brightness;
+        // blue
+        data[i + 2] = brightness;
+        // i+3 is alpha (the fourth element)
+    }
+};
+
+///////////////////////////////////////////////////////////////////////
 //  Type
 ///////////////////////////////////////////////////////////////////////
 /*
@@ -511,6 +628,460 @@ Kinetic.Canvas.prototype = {
         return Class;
     };
 })();
+///////////////////////////////////////////////////////////////////////
+//  Tween
+///////////////////////////////////////////////////////////////////////
+/*
+* The Tween class was ported from an Adobe Flash Tween library
+* to JavaScript by Xaric.  In the context of KineticJS, a Tween is
+* an animation of a single Node property.  A Transition is a set of
+* multiple tweens
+*/
+Kinetic.Tween = function(obj, propFunc, func, begin, finish, duration) {
+    this._listeners = [];
+    this.addListener(this);
+    this.obj = obj;
+    this.propFunc = propFunc;
+    this.begin = begin;
+    this._pos = begin;
+    this.setDuration(duration);
+    this.isPlaying = false;
+    this._change = 0;
+    this.prevTime = 0;
+    this.prevPos = 0;
+    this.looping = false;
+    this._time = 0;
+    this._position = 0;
+    this._startTime = 0;
+    this._finish = 0;
+    this.name = '';
+    this.func = func;
+    this.setFinish(finish);
+};
+/*
+ * Tween methods
+ */
+Kinetic.Tween.prototype = {
+    setTime: function(t) {
+        this.prevTime = this._time;
+        if(t > this.getDuration()) {
+            if(this.looping) {
+                this.rewind(t - this._duration);
+                this.update();
+                this.broadcastMessage('onLooped', {
+                    target: this,
+                    type: 'onLooped'
+                });
+            }
+            else {
+                this._time = this._duration;
+                this.update();
+                this.stop();
+                this.broadcastMessage('onFinished', {
+                    target: this,
+                    type: 'onFinished'
+                });
+            }
+        }
+        else if(t < 0) {
+            this.rewind();
+            this.update();
+        }
+        else {
+            this._time = t;
+            this.update();
+        }
+    },
+    getTime: function() {
+        return this._time;
+    },
+    setDuration: function(d) {
+        this._duration = (d === null || d <= 0) ? 100000 : d;
+    },
+    getDuration: function() {
+        return this._duration;
+    },
+    setPosition: function(p) {
+        this.prevPos = this._pos;
+        this.propFunc(p);
+        this._pos = p;
+        this.broadcastMessage('onChanged', {
+            target: this,
+            type: 'onChanged'
+        });
+    },
+    getPosition: function(t) {
+        if(t === undefined) {
+            t = this._time;
+        }
+        return this.func(t, this.begin, this._change, this._duration);
+    },
+    setFinish: function(f) {
+        this._change = f - this.begin;
+    },
+    getFinish: function() {
+        return this.begin + this._change;
+    },
+    start: function() {
+        this.rewind();
+        this.startEnterFrame();
+        this.broadcastMessage('onStarted', {
+            target: this,
+            type: 'onStarted'
+        });
+    },
+    rewind: function(t) {
+        this.stop();
+        this._time = (t === undefined) ? 0 : t;
+        this.fixTime();
+        this.update();
+    },
+    fforward: function() {
+        this._time = this._duration;
+        this.fixTime();
+        this.update();
+    },
+    update: function() {
+        this.setPosition(this.getPosition(this._time));
+    },
+    startEnterFrame: function() {
+        this.stopEnterFrame();
+        this.isPlaying = true;
+        this.onEnterFrame();
+    },
+    onEnterFrame: function() {
+        if(this.isPlaying) {
+            this.nextFrame();
+        }
+    },
+    nextFrame: function() {
+        this.setTime((this.getTimer() - this._startTime) / 1000);
+    },
+    stop: function() {
+        this.stopEnterFrame();
+        this.broadcastMessage('onStopped', {
+            target: this,
+            type: 'onStopped'
+        });
+    },
+    stopEnterFrame: function() {
+        this.isPlaying = false;
+    },
+    continueTo: function(finish, duration) {
+        this.begin = this._pos;
+        this.setFinish(finish);
+        if(this._duration !== undefined) {
+            this.setDuration(duration);
+        }
+        this.start();
+    },
+    resume: function() {
+        this.fixTime();
+        this.startEnterFrame();
+        this.broadcastMessage('onResumed', {
+            target: this,
+            type: 'onResumed'
+        });
+    },
+    yoyo: function() {
+        this.continueTo(this.begin, this._time);
+    },
+    addListener: function(o) {
+        this.removeListener(o);
+        return this._listeners.push(o);
+    },
+    removeListener: function(o) {
+        var a = this._listeners;
+        var i = a.length;
+        while(i--) {
+            if(a[i] == o) {
+                a.splice(i, 1);
+                return true;
+            }
+        }
+        return false;
+    },
+    broadcastMessage: function() {
+        var arr = [];
+        for(var i = 0; i < arguments.length; i++) {
+            arr.push(arguments[i]);
+        }
+        var e = arr.shift();
+        var a = this._listeners;
+        var l = a.length;
+        for(var i = 0; i < l; i++) {
+            if(a[i][e]) {
+                a[i][e].apply(a[i], arr);
+            }
+        }
+    },
+    fixTime: function() {
+        this._startTime = this.getTimer() - this._time * 1000;
+    },
+    getTimer: function() {
+        return new Date().getTime() - this._time;
+    }
+};
+
+Kinetic.Tweens = {
+    'back-ease-in': function(t, b, c, d, a, p) {
+        var s = 1.70158;
+        return c * (t /= d) * t * ((s + 1) * t - s) + b;
+    },
+    'back-ease-out': function(t, b, c, d, a, p) {
+        var s = 1.70158;
+        return c * (( t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
+    },
+    'back-ease-in-out': function(t, b, c, d, a, p) {
+        var s = 1.70158;
+        if((t /= d / 2) < 1) {
+            return c / 2 * (t * t * (((s *= (1.525)) + 1) * t - s)) + b;
+        }
+        return c / 2 * ((t -= 2) * t * (((s *= (1.525)) + 1) * t + s) + 2) + b;
+    },
+    'elastic-ease-in': function(t, b, c, d, a, p) {
+        // added s = 0
+        var s = 0;
+        if(t === 0) {
+            return b;
+        }
+        if((t /= d) == 1) {
+            return b + c;
+        }
+        if(!p) {
+            p = d * 0.3;
+        }
+        if(!a || a < Math.abs(c)) {
+            a = c;
+            s = p / 4;
+        }
+        else {
+            s = p / (2 * Math.PI) * Math.asin(c / a);
+        }
+        return -(a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
+    },
+    'elastic-ease-out': function(t, b, c, d, a, p) {
+        // added s = 0
+        var s = 0;
+        if(t === 0) {
+            return b;
+        }
+        if((t /= d) == 1) {
+            return b + c;
+        }
+        if(!p) {
+            p = d * 0.3;
+        }
+        if(!a || a < Math.abs(c)) {
+            a = c;
+            s = p / 4;
+        }
+        else {
+            s = p / (2 * Math.PI) * Math.asin(c / a);
+        }
+        return (a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b);
+    },
+    'elastic-ease-in-out': function(t, b, c, d, a, p) {
+        // added s = 0
+        var s = 0;
+        if(t === 0) {
+            return b;
+        }
+        if((t /= d / 2) == 2) {
+            return b + c;
+        }
+        if(!p) {
+            p = d * (0.3 * 1.5);
+        }
+        if(!a || a < Math.abs(c)) {
+            a = c;
+            s = p / 4;
+        }
+        else {
+            s = p / (2 * Math.PI) * Math.asin(c / a);
+        }
+        if(t < 1) {
+            return -0.5 * (a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
+        }
+        return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * 0.5 + c + b;
+    },
+    'bounce-ease-out': function(t, b, c, d) {
+        if((t /= d) < (1 / 2.75)) {
+            return c * (7.5625 * t * t) + b;
+        }
+        else if(t < (2 / 2.75)) {
+            return c * (7.5625 * (t -= (1.5 / 2.75)) * t + 0.75) + b;
+        }
+        else if(t < (2.5 / 2.75)) {
+            return c * (7.5625 * (t -= (2.25 / 2.75)) * t + 0.9375) + b;
+        }
+        else {
+            return c * (7.5625 * (t -= (2.625 / 2.75)) * t + 0.984375) + b;
+        }
+    },
+    'bounce-ease-in': function(t, b, c, d) {
+        return c - Kinetic.Tweens['bounce-ease-out'](d - t, 0, c, d) + b;
+    },
+    'bounce-ease-in-out': function(t, b, c, d) {
+        if(t < d / 2) {
+            return Kinetic.Tweens['bounce-ease-in'](t * 2, 0, c, d) * 0.5 + b;
+        }
+        else {
+            return Kinetic.Tweens['bounce-ease-out'](t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b;
+        }
+    },
+    // duplicate
+    /*
+     strongEaseInOut: function(t, b, c, d) {
+     return c * (t /= d) * t * t * t * t + b;
+     },
+     */
+    'ease-in': function(t, b, c, d) {
+        return c * (t /= d) * t + b;
+    },
+    'ease-out': function(t, b, c, d) {
+        return -c * (t /= d) * (t - 2) + b;
+    },
+    'ease-in-out': function(t, b, c, d) {
+        if((t /= d / 2) < 1) {
+            return c / 2 * t * t + b;
+        }
+        return -c / 2 * ((--t) * (t - 2) - 1) + b;
+    },
+    'strong-ease-in': function(t, b, c, d) {
+        return c * (t /= d) * t * t * t * t + b;
+    },
+    'strong-ease-out': function(t, b, c, d) {
+        return c * (( t = t / d - 1) * t * t * t * t + 1) + b;
+    },
+    'strong-ease-in-out': function(t, b, c, d) {
+        if((t /= d / 2) < 1) {
+            return c / 2 * t * t * t * t * t + b;
+        }
+        return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
+    },
+    'linear': function(t, b, c, d) {
+        return c * t / d + b;
+    }
+};
+
+///////////////////////////////////////////////////////////////////////
+//  Transform
+///////////////////////////////////////////////////////////////////////
+/*
+ * Last updated November 2011
+ * By Simon Sarris
+ * www.simonsarris.com
+ * sarris@acm.org
+ *
+ * Free to use and distribute at will
+ * So long as you are nice to people, etc
+ */
+
+/*
+ * The usage of this class was inspired by some of the work done by a forked
+ * project, KineticJS-Ext by Wappworks, which is based on Simon's Transform
+ * class.
+ */
+
+Kinetic.Transform = function() {
+    this.m = [1, 0, 0, 1, 0, 0];
+}
+
+Kinetic.Transform.prototype = {
+    /**
+     * Apply translation
+     * @param {Number} x
+     * @param {Number} y
+     */
+    translate: function(x, y) {
+        this.m[4] += this.m[0] * x + this.m[2] * y;
+        this.m[5] += this.m[1] * x + this.m[3] * y;
+    },
+    /**
+     * Apply scale
+     * @param {Number} sx
+     * @param {Number} sy
+     */
+    scale: function(sx, sy) {
+        this.m[0] *= sx;
+        this.m[1] *= sx;
+        this.m[2] *= sy;
+        this.m[3] *= sy;
+    },
+    /**
+     * Apply rotation
+     * @param {Number} rad  Angle in radians
+     */
+    rotate: function(rad) {
+        var c = Math.cos(rad);
+        var s = Math.sin(rad);
+        var m11 = this.m[0] * c + this.m[2] * s;
+        var m12 = this.m[1] * c + this.m[3] * s;
+        var m21 = this.m[0] * -s + this.m[2] * c;
+        var m22 = this.m[1] * -s + this.m[3] * c;
+        this.m[0] = m11;
+        this.m[1] = m12;
+        this.m[2] = m21;
+        this.m[3] = m22;
+    },
+    /**
+     * Returns the translation
+     * @returns {Object} 2D point(x, y)
+     */
+    getTranslation: function() {
+        return {
+            x: this.m[4],
+            y: this.m[5]
+        };
+    },
+    /**
+     * Transform multiplication
+     * @param {Kinetic.Transform} matrix
+     */
+    multiply: function(matrix) {
+        var m11 = this.m[0] * matrix.m[0] + this.m[2] * matrix.m[1];
+        var m12 = this.m[1] * matrix.m[0] + this.m[3] * matrix.m[1];
+
+        var m21 = this.m[0] * matrix.m[2] + this.m[2] * matrix.m[3];
+        var m22 = this.m[1] * matrix.m[2] + this.m[3] * matrix.m[3];
+
+        var dx = this.m[0] * matrix.m[4] + this.m[2] * matrix.m[5] + this.m[4];
+        var dy = this.m[1] * matrix.m[4] + this.m[3] * matrix.m[5] + this.m[5];
+
+        this.m[0] = m11;
+        this.m[1] = m12;
+        this.m[2] = m21;
+        this.m[3] = m22;
+        this.m[4] = dx;
+        this.m[5] = dy;
+    },
+    /**
+     * Invert the matrix
+     */
+    invert: function() {
+        var d = 1 / (this.m[0] * this.m[3] - this.m[1] * this.m[2]);
+        var m0 = this.m[3] * d;
+        var m1 = -this.m[1] * d;
+        var m2 = -this.m[2] * d;
+        var m3 = this.m[0] * d;
+        var m4 = d * (this.m[2] * this.m[5] - this.m[3] * this.m[4]);
+        var m5 = d * (this.m[1] * this.m[4] - this.m[0] * this.m[5]);
+        this.m[0] = m0;
+        this.m[1] = m1;
+        this.m[2] = m2;
+        this.m[3] = m3;
+        this.m[4] = m4;
+        this.m[5] = m5;
+    },
+    /**
+     * return matrix
+     */
+    getMatrix: function() {
+        return this.m;
+    }
+};
+
 ///////////////////////////////////////////////////////////////////////
 //  Animation
 ///////////////////////////////////////////////////////////////////////
@@ -4311,163 +4882,6 @@ Kinetic.Node.addSetters(Kinetic.Image, ['width', 'height']);
  * @methodOf Kinetic.Image.prototype
  */
 ///////////////////////////////////////////////////////////////////////
-//  Sprite
-///////////////////////////////////////////////////////////////////////
-/**
- * Sprite constructor
- * @constructor
- * @augments Kinetic.Shape
- * @param {Object} config
- */
-Kinetic.Sprite = Kinetic.Shape.extend({
-    init: function(config) {
-        this.setDefaultAttrs({
-            index: 0,
-            frameRate: 17
-        });
-
-        config.drawFunc = function(context) {
-            if(!!this.attrs.image) {
-                var anim = this.attrs.animation;
-                var index = this.attrs.index;
-                var f = this.attrs.animations[anim][index];
-
-                context.beginPath();
-                context.rect(0, 0, f.width, f.height);
-                context.closePath();
-
-                this.drawImage(context, this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
-            }
-        };
-        // call super constructor
-        this._super(config);
-
-        var that = this;
-        this.on('animationChange.kinetic', function() {
-            // reset index when animation changes
-            that.setIndex(0);
-        });
-    },
-    /**
-     * start sprite animation
-     * @name start
-     * @methodOf Kinetic.Sprite.prototype
-     */
-    start: function() {
-        var that = this;
-        var layer = this.getLayer();
-        var ka = Kinetic.Animation;
-
-        // if sprite already has an animation, remove it
-        if(this.anim) {
-            ka._removeAnimation(this.anim);
-            this.anim = null;
-        }
-
-        /*
-         * animation object has no executable function because
-         *  the updates are done with a fixed FPS with the setInterval
-         *  below.  The anim object only needs the layer reference for
-         *  redraw
-         */
-        this.anim = {
-            node: layer
-        };
-
-        /*
-         * adding the animation with the addAnimation
-         * method auto generates an id
-         */
-        ka._addAnimation(this.anim);
-
-        this.interval = setInterval(function() {
-            var index = that.attrs.index;
-            that._updateIndex();
-            if(that.afterFrameFunc && index === that.afterFrameIndex) {
-                that.afterFrameFunc();
-            }
-        }, 1000 / this.attrs.frameRate);
-
-        ka._handleAnimation();
-    },
-    /**
-     * stop sprite animation
-     * @name stop
-     * @methodOf Kinetic.Sprite.prototype
-     */
-    stop: function() {
-        var ka = Kinetic.Animation;
-        if(this.anim) {
-            ka._removeAnimation(this.anim);
-            this.anim = null;
-        }
-        clearInterval(this.interval);
-    },
-    /**
-     * set after frame event handler
-     * @name afterFrame
-     * @methodOf Kinetic.Sprite.prototype
-     * @param {Integer} index frame index
-     * @param {Function} func function to be executed after frame has been drawn
-     */
-    afterFrame: function(index, func) {
-        this.afterFrameIndex = index;
-        this.afterFrameFunc = func;
-    },
-    _updateIndex: function() {
-        var i = this.attrs.index;
-        var a = this.attrs.animation;
-        if(i < this.attrs.animations[a].length - 1) {
-            this.attrs.index++;
-        }
-        else {
-            this.attrs.index = 0;
-        }
-    }
-});
-
-// add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Sprite, ['animation', 'animations', 'index']);
-
-/**
- * set animation key
- * @name setAnimation
- * @methodOf Kinetic.Sprite.prototype
- * @param {String} anim animation key
- */
-
-/**
- * set animations obect
- * @name setAnimations
- * @methodOf Kinetic.Sprite.prototype
- * @param {Object} animations
- */
-
-/**
- * set animation frame index
- * @name setIndex
- * @methodOf Kinetic.Sprite.prototype
- * @param {Integer} index frame index
- */
-
-/**
- * get animation key
- * @name getAnimation
- * @methodOf Kinetic.Sprite.prototype
- */
-
-/**
- * get animations object
- * @name getAnimations
- * @methodOf Kinetic.Sprite.prototype
- */
-
-/**
- * get animation frame index
- * @name getIndex
- * @methodOf Kinetic.Sprite.prototype
- */
-///////////////////////////////////////////////////////////////////////
 //  Polygon
 ///////////////////////////////////////////////////////////////////////
 /**
@@ -4513,147 +4927,6 @@ Kinetic.Node.addGettersSetters(Kinetic.Polygon, ['points']);
  * get points array
  * @name getPoints
  * @methodOf Kinetic.Polygon.prototype
- */
-///////////////////////////////////////////////////////////////////////
-//  RegularPolygon
-///////////////////////////////////////////////////////////////////////
-/**
- * RegularPolygon constructor.&nbsp; Examples include triangles, squares, pentagons, hexagons, etc.
- * @constructor
- * @augments Kinetic.Shape
- * @param {Object} config
- */
-Kinetic.RegularPolygon = Kinetic.Shape.extend({
-    init: function(config) {
-        this.setDefaultAttrs({
-            radius: 0,
-            sides: 0
-        });
-
-        this.shapeType = "RegularPolygon";
-        config.drawFunc = function(context) {
-            context.beginPath();
-            context.moveTo(0, 0 - this.attrs.radius);
-
-            for(var n = 1; n < this.attrs.sides; n++) {
-                var x = this.attrs.radius * Math.sin(n * 2 * Math.PI / this.attrs.sides);
-                var y = -1 * this.attrs.radius * Math.cos(n * 2 * Math.PI / this.attrs.sides);
-                context.lineTo(x, y);
-            }
-            context.closePath();
-            this.fill(context);
-            this.stroke(context);
-        };
-        // call super constructor
-        this._super(config);
-    }
-});
-
-// add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.RegularPolygon, ['radius', 'sides']);
-
-/**
- * set radius
- * @name setRadius
- * @methodOf Kinetic.RegularPolygon.prototype
- * @param {Number} radius
- */
-
-/**
- * set number of sides
- * @name setSides
- * @methodOf Kinetic.RegularPolygon.prototype
- * @param {int} sides
- */
-/**
- * get radius
- * @name getRadius
- * @methodOf Kinetic.RegularPolygon.prototype
- */
-
-/**
- * get number of sides
- * @name getSides
- * @methodOf Kinetic.RegularPolygon.prototype
- */
-///////////////////////////////////////////////////////////////////////
-//  Star
-///////////////////////////////////////////////////////////////////////
-/**
- * Star constructor
- * @constructor
- * @augments Kinetic.Shape
- * @param {Object} config
- */
-Kinetic.Star = Kinetic.Shape.extend({
-    init: function(config) {
-        this.setDefaultAttrs({
-            numPoints: 0,
-            innerRadius: 0,
-            outerRadius: 0
-        });
-
-        this.shapeType = "Star";
-        config.drawFunc = function(context) {
-            context.beginPath();
-            context.moveTo(0, 0 - this.attrs.outerRadius);
-
-            for(var n = 1; n < this.attrs.numPoints * 2; n++) {
-                var radius = n % 2 === 0 ? this.attrs.outerRadius : this.attrs.innerRadius;
-                var x = radius * Math.sin(n * Math.PI / this.attrs.numPoints);
-                var y = -1 * radius * Math.cos(n * Math.PI / this.attrs.numPoints);
-                context.lineTo(x, y);
-            }
-            context.closePath();
-
-            this.fill(context);
-            this.stroke(context);
-        };
-        // call super constructor
-        this._super(config);
-    }
-});
-
-// add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Star, ['numPoints', 'innerRadius', 'outerRadius']);
-
-/**
- * set number of points
- * @name setNumPoints
- * @methodOf Kinetic.Star.prototype
- * @param {Integer} points
- */
-
-/**
- * set outer radius
- * @name setOuterRadius
- * @methodOf Kinetic.Star.prototype
- * @param {Number} radius
- */
-
-/**
- * set inner radius
- * @name setInnerRadius
- * @methodOf Kinetic.Star.prototype
- * @param {Number} radius
- */
-
-/**
- * get number of points
- * @name getNumPoints
- * @methodOf Kinetic.Star.prototype
- */
-
-/**
- * get outer radius
- * @name getOuterRadius
- * @methodOf Kinetic.Star.prototype
- */
-
-/**
- * get inner radius
- * @name getInnerRadius
- * @methodOf Kinetic.Star.prototype
  */
 ///////////////////////////////////////////////////////////////////////
 //  Text
@@ -5188,956 +5461,3 @@ Kinetic.Node.addGettersSetters(Kinetic.Line, ['dashArray', 'lineCap', 'points'])
  * @name getPoints
  * @methodOf Kinetic.Line.prototype
  */
-///////////////////////////////////////////////////////////////////////
-//  SVG Path
-///////////////////////////////////////////////////////////////////////
-/**
- * Path constructor.
- * @author Jason Follas
- * @constructor
- * @augments Kinetic.Shape
- * @param {Object} config
- */
-Kinetic.Path = Kinetic.Shape.extend({
-    init: function(config) {
-        this.shapeType = "Path";
-        this.dataArray = [];
-        var that = this;
-
-        config.drawFunc = function(context) {
-            var ca = this.dataArray;
-            // context position
-            context.beginPath();
-            for(var n = 0; n < ca.length; n++) {
-                var c = ca[n].command;
-                var p = ca[n].points;
-                switch(c) {
-                    case 'L':
-                        context.lineTo(p[0], p[1]);
-                        break;
-                    case 'M':
-                        context.moveTo(p[0], p[1]);
-                        break;
-                    case 'C':
-                        context.bezierCurveTo(p[0], p[1], p[2], p[3], p[4], p[5]);
-                        break;
-                    case 'Q':
-                        context.quadraticCurveTo(p[0], p[1], p[2], p[3]);
-                        break;
-                    case 'A':
-                        var cx = p[0], cy = p[1], rx = p[2], ry = p[3], theta = p[4], dTheta = p[5], psi = p[6], fs = p[7];
-
-                        var r = (rx > ry) ? rx : ry;
-                        var scaleX = (rx > ry) ? 1 : rx / ry;
-                        var scaleY = (rx > ry) ? ry / rx : 1;
-
-                        context.translate(cx, cy);
-                        context.rotate(psi);
-                        context.scale(scaleX, scaleY);
-                        context.arc(0, 0, r, theta, theta + dTheta, 1 - fs);
-                        context.scale(1 / scaleX, 1 / scaleY);
-                        context.rotate(-psi);
-                        context.translate(-cx, -cy);
-
-                        break;
-                    case 'z':
-                        context.closePath();
-                        break;
-                }
-            }
-            this.fill(context);
-            this.stroke(context);
-        };
-        // call super constructor
-        this._super(config);
-
-        this.dataArray = this._getDataArray();
-
-        this.on('dataChange', function() {
-            that.dataArray = that._getDataArray();
-        });
-    },
-    /**
-     * get parsed data array from the data
-     *  string.  V, v, H, h, and l data are converted to
-     *  L data for the purpose of high performance Path
-     *  rendering
-     */
-    _getDataArray: function() {
-
-        // Path Data Segment must begin with a moveTo
-        //m (x y)+  Relative moveTo (subsequent points are treated as lineTo)
-        //M (x y)+  Absolute moveTo (subsequent points are treated as lineTo)
-        //l (x y)+  Relative lineTo
-        //L (x y)+  Absolute LineTo
-        //h (x)+    Relative horizontal lineTo
-        //H (x)+    Absolute horizontal lineTo
-        //v (y)+    Relative vertical lineTo
-        //V (y)+    Absolute vertical lineTo
-        //z (closepath)
-        //Z (closepath)
-        //c (x1 y1 x2 y2 x y)+ Relative Bezier curve
-        //C (x1 y1 x2 y2 x y)+ Absolute Bezier curve
-        //q (x1 y1 x y)+       Relative Quadratic Bezier
-        //Q (x1 y1 x y)+       Absolute Quadratic Bezier
-        //t (x y)+    Shorthand/Smooth Relative Quadratic Bezier
-        //T (x y)+    Shorthand/Smooth Absolute Quadratic Bezier
-        //s (x2 y2 x y)+       Shorthand/Smooth Relative Bezier curve
-        //S (x2 y2 x y)+       Shorthand/Smooth Absolute Bezier curve
-        //a (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+     Relative Elliptical Arc
-        //A (rx ry x-axis-rotation large-arc-flag sweep-flag x y)+  Absolute Elliptical Arc
-
-        // command string
-        var cs = this.attrs.data;
-
-        // return early if data is not defined
-        if(!this.attrs.data) {
-            return [];
-        }
-        // command chars
-        var cc = ['m', 'M', 'l', 'L', 'v', 'V', 'h', 'H', 'z', 'Z', 'c', 'C', 'q', 'Q', 't', 'T', 's', 'S', 'a', 'A'];
-        // convert white spaces to commas
-        cs = cs.replace(new RegExp(' ', 'g'), ',');
-        // create pipes so that we can split the data
-        for(var n = 0; n < cc.length; n++) {
-            cs = cs.replace(new RegExp(cc[n], 'g'), '|' + cc[n]);
-        }
-        // create array
-        var arr = cs.split('|');
-        var ca = [];
-        // init context point
-        var cpx = 0;
-        var cpy = 0;
-        for(var n = 1; n < arr.length; n++) {
-            var str = arr[n];
-            var c = str.charAt(0);
-            str = str.slice(1);
-            // remove ,- for consistency
-            str = str.replace(new RegExp(',-', 'g'), '-');
-            // add commas so that it's easy to split
-            str = str.replace(new RegExp('-', 'g'), ',-');
-            var p = str.split(',');
-            if(p.length > 0 && p[0] === '') {
-                p.shift();
-            }
-            // convert strings to floats
-            for(var i = 0; i < p.length; i++) {
-                p[i] = parseFloat(p[i]);
-            }
-
-            while(p.length > 0) {
-                if(isNaN(p[0]))// case for a trailing comma before next command
-                    break;
-
-                var cmd = undefined;
-                var points = [];
-
-                // convert l, H, h, V, and v to L
-                switch(c) {
-
-                    // Note: Keep the lineTo's above the moveTo's in this switch
-                    case 'l':
-                        cpx += p.shift();
-                        cpy += p.shift();
-                        cmd = 'L';
-                        points.push(cpx, cpy);
-                        break;
-                    case 'L':
-                        cpx = p.shift();
-                        cpy = p.shift();
-                        points.push(cpx, cpy);
-                        break;
-
-                    // Note: lineTo handlers need to be above this point
-                    case 'm':
-                        cpx += p.shift();
-                        cpy += p.shift();
-                        cmd = 'M';
-                        points.push(cpx, cpy);
-                        c = 'l';
-                        // subsequent points are treated as relative lineTo
-                        break;
-                    case 'M':
-                        cpx = p.shift();
-                        cpy = p.shift();
-                        cmd = 'M';
-                        points.push(cpx, cpy);
-                        c = 'L';
-                        // subsequent points are treated as absolute lineTo
-                        break;
-
-                    case 'h':
-                        cpx += p.shift();
-                        cmd = 'L';
-                        points.push(cpx, cpy);
-                        break;
-                    case 'H':
-                        cpx = p.shift();
-                        cmd = 'L';
-                        points.push(cpx, cpy);
-                        break;
-                    case 'v':
-                        cpy += p.shift();
-                        cmd = 'L';
-                        points.push(cpx, cpy);
-                        break;
-                    case 'V':
-                        cpy = p.shift();
-                        cmd = 'L';
-                        points.push(cpx, cpy);
-                        break;
-                    case 'C':
-                        points.push(p.shift(), p.shift(), p.shift(), p.shift());
-                        cpx = p.shift();
-                        cpy = p.shift();
-                        points.push(cpx, cpy);
-                        break;
-                    case 'c':
-                        points.push(cpx + p.shift(), cpy + p.shift(), cpx + p.shift(), cpy + p.shift());
-                        cpx += p.shift();
-                        cpy += p.shift();
-                        cmd = 'C'
-                        points.push(cpx, cpy);
-                        break;
-                    case 'S':
-                        var ctlPtx = cpx, ctlPty = cpy;
-                        var prevCmd = ca[ca.length - 1];
-                        if(prevCmd.command === 'C') {
-                            ctlPtx = cpx + (cpx - prevCmd.points[2]);
-                            ctlPty = cpy + (cpy - prevCmd.points[3]);
-                        }
-                        points.push(ctlPtx, ctlPty, p.shift(), p.shift())
-                        cpx = p.shift();
-                        cpy = p.shift();
-                        cmd = 'C';
-                        points.push(cpx, cpy);
-                        break;
-                    case 's':
-                        var ctlPtx = cpx, ctlPty = cpy;
-                        var prevCmd = ca[ca.length - 1];
-                        if(prevCmd.command === 'C') {
-                            ctlPtx = cpx + (cpx - prevCmd.points[2]);
-                            ctlPty = cpy + (cpy - prevCmd.points[3]);
-                        }
-                        points.push(ctlPtx, ctlPty, cpx + p.shift(), cpy + p.shift())
-                        cpx += p.shift();
-                        cpy += p.shift();
-                        cmd = 'C';
-                        points.push(cpx, cpy);
-                        break;
-                    case 'Q':
-                        points.push(p.shift(), p.shift());
-                        cpx = p.shift();
-                        cpy = p.shift();
-                        points.push(cpx, cpy);
-                        break;
-                    case 'q':
-                        points.push(cpx + p.shift(), cpy + p.shift());
-                        cpx += p.shift();
-                        cpy += p.shift();
-                        cmd = 'Q'
-                        points.push(cpx, cpy);
-                        break;
-                    case 'T':
-                        var ctlPtx = cpx, ctlPty = cpy;
-                        var prevCmd = ca[ca.length - 1];
-                        if(prevCmd.command === 'Q') {
-                            ctlPtx = cpx + (cpx - prevCmd.points[0]);
-                            ctlPty = cpy + (cpy - prevCmd.points[1]);
-                        }
-                        cpx = p.shift();
-                        cpy = p.shift();
-                        cmd = 'Q';
-                        points.push(ctlPtx, ctlPty, cpx, cpy);
-                        break;
-                    case 't':
-                        var ctlPtx = cpx, ctlPty = cpy;
-                        var prevCmd = ca[ca.length - 1];
-                        if(prevCmd.command === 'Q') {
-                            ctlPtx = cpx + (cpx - prevCmd.points[0]);
-                            ctlPty = cpy + (cpy - prevCmd.points[1]);
-                        }
-                        cpx += p.shift();
-                        cpy += p.shift();
-                        cmd = 'Q';
-                        points.push(ctlPtx, ctlPty, cpx, cpy);
-                        break;
-                    case 'A':
-                        var rx = p.shift(), ry = p.shift(), psi = p.shift(), fa = p.shift(), fs = p.shift();
-                        var x1 = cpx, y1 = cpy;
-                        cpx = p.shift(), cpy = p.shift();
-                        cmd = 'A';
-                        points = this._convertEndpointToCenterParameterization(x1, y1, cpx, cpy, fa, fs, rx, ry, psi);
-                        break;
-                    case 'a':
-                        var rx = p.shift(), ry = p.shift(), psi = p.shift(), fa = p.shift(), fs = p.shift();
-                        var x1 = cpx, y1 = cpy;
-                        cpx += p.shift(), cpy += p.shift();
-                        cmd = 'A';
-                        points = this._convertEndpointToCenterParameterization(x1, y1, cpx, cpy, fa, fs, rx, ry, psi);
-                        break;
-                }
-
-                ca.push({
-                    command: cmd || c,
-                    points: points
-                });
-
-            }
-
-            if(c === 'z' || c === 'Z')
-                ca.push({
-                    command: 'z',
-                    points: []
-                });
-        }
-
-        return ca;
-    },
-    _convertEndpointToCenterParameterization: function(x1, y1, x2, y2, fa, fs, rx, ry, psiDeg) {
-
-        // Derived from: http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
-
-        var psi = psiDeg * (Math.PI / 180.0);
-
-        var xp = Math.cos(psi) * (x1 - x2) / 2.0 + Math.sin(psi) * (y1 - y2) / 2.0;
-        var yp = -1 * Math.sin(psi) * (x1 - x2) / 2.0 + Math.cos(psi) * (y1 - y2) / 2.0;
-
-        var lambda = (xp * xp) / (rx * rx) + (yp * yp) / (ry * ry);
-
-        if(lambda > 1) {
-            rx *= Math.sqrt(lambda);
-            ry *= Math.sqrt(lambda);
-        }
-
-        var f = Math.sqrt((((rx * rx) * (ry * ry)) - ((rx * rx) * (yp * yp)) - ((ry * ry) * (xp * xp))) / ((rx * rx) * (yp * yp) + (ry * ry) * (xp * xp)));
-
-        if(fa == fs)
-            f *= -1;
-        if(isNaN(f))
-            f = 0;
-
-        var cxp = f * rx * yp / ry;
-        var cyp = f * -ry * xp / rx;
-
-        var cx = (x1 + x2) / 2.0 + Math.cos(psi) * cxp - Math.sin(psi) * cyp;
-        var cy = (y1 + y2) / 2.0 + Math.sin(psi) * cxp + Math.cos(psi) * cyp;
-
-        var vMag = function(v) {
-            return Math.sqrt(v[0] * v[0] + v[1] * v[1]);
-        }
-        var vRatio = function(u, v) {
-            return (u[0] * v[0] + u[1] * v[1]) / (vMag(u) * vMag(v))
-        }
-        var vAngle = function(u, v) {
-            return (u[0] * v[1] < u[1] * v[0] ? -1 : 1) * Math.acos(vRatio(u, v));
-        }
-        var theta = vAngle([1, 0], [(xp - cxp) / rx, (yp - cyp) / ry]);
-
-        var u = [(xp - cxp) / rx, (yp - cyp) / ry];
-        var v = [(-1 * xp - cxp) / rx, (-1 * yp - cyp) / ry];
-        var dTheta = vAngle(u, v);
-
-        if(vRatio(u, v) <= -1)
-            dTheta = Math.PI;
-        if(vRatio(u, v) >= 1)
-            dTheta = 0;
-
-        if(fs == 0 && dTheta > 0)
-            dTheta = dTheta - 2 * Math.PI;
-        if(fs == 1 && dTheta < 0)
-            dTheta = dTheta + 2 * Math.PI;
-
-        return [cx, cy, rx, ry, theta, dTheta, psi, fs];
-    }
-});
-
-// add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Path, ['data']);
-
-/**
- * set SVG path data string.  This method
- *  also automatically parses the data string
- *  into a data array.  Currently supported SVG data:
- *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
- * @name setData
- * @methodOf Kinetic.Path.prototype
- * @param {String} SVG path command string
- */
-
-/**
- * get SVG path data string
- * @name getData
- * @methodOf Kinetic.Path.prototype
- */
-///////////////////////////////////////////////////////////////////////
-//  Transform
-///////////////////////////////////////////////////////////////////////
-/*
- * Last updated November 2011
- * By Simon Sarris
- * www.simonsarris.com
- * sarris@acm.org
- *
- * Free to use and distribute at will
- * So long as you are nice to people, etc
- */
-
-/*
- * The usage of this class was inspired by some of the work done by a forked
- * project, KineticJS-Ext by Wappworks, which is based on Simon's Transform
- * class.
- */
-
-Kinetic.Transform = function() {
-    this.m = [1, 0, 0, 1, 0, 0];
-}
-
-Kinetic.Transform.prototype = {
-    /**
-     * Apply translation
-     * @param {Number} x
-     * @param {Number} y
-     */
-    translate: function(x, y) {
-        this.m[4] += this.m[0] * x + this.m[2] * y;
-        this.m[5] += this.m[1] * x + this.m[3] * y;
-    },
-    /**
-     * Apply scale
-     * @param {Number} sx
-     * @param {Number} sy
-     */
-    scale: function(sx, sy) {
-        this.m[0] *= sx;
-        this.m[1] *= sx;
-        this.m[2] *= sy;
-        this.m[3] *= sy;
-    },
-    /**
-     * Apply rotation
-     * @param {Number} rad  Angle in radians
-     */
-    rotate: function(rad) {
-        var c = Math.cos(rad);
-        var s = Math.sin(rad);
-        var m11 = this.m[0] * c + this.m[2] * s;
-        var m12 = this.m[1] * c + this.m[3] * s;
-        var m21 = this.m[0] * -s + this.m[2] * c;
-        var m22 = this.m[1] * -s + this.m[3] * c;
-        this.m[0] = m11;
-        this.m[1] = m12;
-        this.m[2] = m21;
-        this.m[3] = m22;
-    },
-    /**
-     * Returns the translation
-     * @returns {Object} 2D point(x, y)
-     */
-    getTranslation: function() {
-        return {
-            x: this.m[4],
-            y: this.m[5]
-        };
-    },
-    /**
-     * Transform multiplication
-     * @param {Kinetic.Transform} matrix
-     */
-    multiply: function(matrix) {
-        var m11 = this.m[0] * matrix.m[0] + this.m[2] * matrix.m[1];
-        var m12 = this.m[1] * matrix.m[0] + this.m[3] * matrix.m[1];
-
-        var m21 = this.m[0] * matrix.m[2] + this.m[2] * matrix.m[3];
-        var m22 = this.m[1] * matrix.m[2] + this.m[3] * matrix.m[3];
-
-        var dx = this.m[0] * matrix.m[4] + this.m[2] * matrix.m[5] + this.m[4];
-        var dy = this.m[1] * matrix.m[4] + this.m[3] * matrix.m[5] + this.m[5];
-
-        this.m[0] = m11;
-        this.m[1] = m12;
-        this.m[2] = m21;
-        this.m[3] = m22;
-        this.m[4] = dx;
-        this.m[5] = dy;
-    },
-    /**
-     * Invert the matrix
-     */
-    invert: function() {
-        var d = 1 / (this.m[0] * this.m[3] - this.m[1] * this.m[2]);
-        var m0 = this.m[3] * d;
-        var m1 = -this.m[1] * d;
-        var m2 = -this.m[2] * d;
-        var m3 = this.m[0] * d;
-        var m4 = d * (this.m[2] * this.m[5] - this.m[3] * this.m[4]);
-        var m5 = d * (this.m[1] * this.m[4] - this.m[0] * this.m[5]);
-        this.m[0] = m0;
-        this.m[1] = m1;
-        this.m[2] = m2;
-        this.m[3] = m3;
-        this.m[4] = m4;
-        this.m[5] = m5;
-    },
-    /**
-     * return matrix
-     */
-    getMatrix: function() {
-        return this.m;
-    }
-};
-
-///////////////////////////////////////////////////////////////////////
-//  Transition
-///////////////////////////////////////////////////////////////////////
-/**
- * Transition constructor.  The transitionTo() Node method
- *  returns a reference to the transition object which you can use
- *  to stop, resume, or restart the transition
- * @constructor
- */
-Kinetic.Transition = function(node, config) {
-    this.node = node;
-    this.config = config;
-    this.tweens = [];
-    var that = this;
-
-    // add tween for each property
-    function addTween(c, attrs, obj, rootObj) {
-        for(var key in c) {
-            if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
-                // if val is an object then traverse
-                if(Kinetic.Type._isObject(c[key])) {
-                    obj[key] = {};
-                    addTween(c[key], attrs[key], obj[key], rootObj);
-                }
-                else {
-                    that._add(that._getTween(attrs, key, c[key], obj, rootObj));
-                }
-            }
-        }
-    }
-    var obj = {};
-    addTween(config, node.attrs, obj, obj);
-
-    var finishedTweens = 0;
-    for(var n = 0; n < this.tweens.length; n++) {
-        var tween = this.tweens[n];
-        tween.onFinished = function() {
-            finishedTweens++;
-            if(finishedTweens >= that.tweens.length) {
-                that.onFinished();
-            }
-        };
-    }
-};
-/*
- * Transition methods
- */
-Kinetic.Transition.prototype = {
-    /**
-     * start transition
-     * @name start
-     * @methodOf Kinetic.Transition.prototype
-     */
-    start: function() {
-        for(var n = 0; n < this.tweens.length; n++) {
-            this.tweens[n].start();
-        }
-    },
-    /**
-     * stop transition
-     * @name stop
-     * @methodOf Kinetic.Transition.prototype
-     */
-    stop: function() {
-        for(var n = 0; n < this.tweens.length; n++) {
-            this.tweens[n].stop();
-        }
-    },
-    /**
-     * resume transition
-     * @name resume
-     * @methodOf Kinetic.Transition.prototype
-     */
-    resume: function() {
-        for(var n = 0; n < this.tweens.length; n++) {
-            this.tweens[n].resume();
-        }
-    },
-    _onEnterFrame: function() {
-        for(var n = 0; n < this.tweens.length; n++) {
-            this.tweens[n].onEnterFrame();
-        }
-    },
-    _add: function(tween) {
-        this.tweens.push(tween);
-    },
-    _getTween: function(attrs, prop, val, obj, rootObj) {
-        var config = this.config;
-        var node = this.node;
-        var easing = config.easing;
-        if(easing === undefined) {
-            easing = 'linear';
-        }
-
-        var tween = new Kinetic.Tween(node, function(i) {
-            obj[prop] = i;
-            node.setAttrs(rootObj);
-        }, Kinetic.Tweens[easing], attrs[prop], val, config.duration);
-
-        return tween;
-    }
-};
-
-///////////////////////////////////////////////////////////////////////
-//  Tween
-///////////////////////////////////////////////////////////////////////
-/*
-* The Tween class was ported from an Adobe Flash Tween library
-* to JavaScript by Xaric.  In the context of KineticJS, a Tween is
-* an animation of a single Node property.  A Transition is a set of
-* multiple tweens
-*/
-Kinetic.Tween = function(obj, propFunc, func, begin, finish, duration) {
-    this._listeners = [];
-    this.addListener(this);
-    this.obj = obj;
-    this.propFunc = propFunc;
-    this.begin = begin;
-    this._pos = begin;
-    this.setDuration(duration);
-    this.isPlaying = false;
-    this._change = 0;
-    this.prevTime = 0;
-    this.prevPos = 0;
-    this.looping = false;
-    this._time = 0;
-    this._position = 0;
-    this._startTime = 0;
-    this._finish = 0;
-    this.name = '';
-    this.func = func;
-    this.setFinish(finish);
-};
-/*
- * Tween methods
- */
-Kinetic.Tween.prototype = {
-    setTime: function(t) {
-        this.prevTime = this._time;
-        if(t > this.getDuration()) {
-            if(this.looping) {
-                this.rewind(t - this._duration);
-                this.update();
-                this.broadcastMessage('onLooped', {
-                    target: this,
-                    type: 'onLooped'
-                });
-            }
-            else {
-                this._time = this._duration;
-                this.update();
-                this.stop();
-                this.broadcastMessage('onFinished', {
-                    target: this,
-                    type: 'onFinished'
-                });
-            }
-        }
-        else if(t < 0) {
-            this.rewind();
-            this.update();
-        }
-        else {
-            this._time = t;
-            this.update();
-        }
-    },
-    getTime: function() {
-        return this._time;
-    },
-    setDuration: function(d) {
-        this._duration = (d === null || d <= 0) ? 100000 : d;
-    },
-    getDuration: function() {
-        return this._duration;
-    },
-    setPosition: function(p) {
-        this.prevPos = this._pos;
-        this.propFunc(p);
-        this._pos = p;
-        this.broadcastMessage('onChanged', {
-            target: this,
-            type: 'onChanged'
-        });
-    },
-    getPosition: function(t) {
-        if(t === undefined) {
-            t = this._time;
-        }
-        return this.func(t, this.begin, this._change, this._duration);
-    },
-    setFinish: function(f) {
-        this._change = f - this.begin;
-    },
-    getFinish: function() {
-        return this.begin + this._change;
-    },
-    start: function() {
-        this.rewind();
-        this.startEnterFrame();
-        this.broadcastMessage('onStarted', {
-            target: this,
-            type: 'onStarted'
-        });
-    },
-    rewind: function(t) {
-        this.stop();
-        this._time = (t === undefined) ? 0 : t;
-        this.fixTime();
-        this.update();
-    },
-    fforward: function() {
-        this._time = this._duration;
-        this.fixTime();
-        this.update();
-    },
-    update: function() {
-        this.setPosition(this.getPosition(this._time));
-    },
-    startEnterFrame: function() {
-        this.stopEnterFrame();
-        this.isPlaying = true;
-        this.onEnterFrame();
-    },
-    onEnterFrame: function() {
-        if(this.isPlaying) {
-            this.nextFrame();
-        }
-    },
-    nextFrame: function() {
-        this.setTime((this.getTimer() - this._startTime) / 1000);
-    },
-    stop: function() {
-        this.stopEnterFrame();
-        this.broadcastMessage('onStopped', {
-            target: this,
-            type: 'onStopped'
-        });
-    },
-    stopEnterFrame: function() {
-        this.isPlaying = false;
-    },
-    continueTo: function(finish, duration) {
-        this.begin = this._pos;
-        this.setFinish(finish);
-        if(this._duration !== undefined) {
-            this.setDuration(duration);
-        }
-        this.start();
-    },
-    resume: function() {
-        this.fixTime();
-        this.startEnterFrame();
-        this.broadcastMessage('onResumed', {
-            target: this,
-            type: 'onResumed'
-        });
-    },
-    yoyo: function() {
-        this.continueTo(this.begin, this._time);
-    },
-    addListener: function(o) {
-        this.removeListener(o);
-        return this._listeners.push(o);
-    },
-    removeListener: function(o) {
-        var a = this._listeners;
-        var i = a.length;
-        while(i--) {
-            if(a[i] == o) {
-                a.splice(i, 1);
-                return true;
-            }
-        }
-        return false;
-    },
-    broadcastMessage: function() {
-        var arr = [];
-        for(var i = 0; i < arguments.length; i++) {
-            arr.push(arguments[i]);
-        }
-        var e = arr.shift();
-        var a = this._listeners;
-        var l = a.length;
-        for(var i = 0; i < l; i++) {
-            if(a[i][e]) {
-                a[i][e].apply(a[i], arr);
-            }
-        }
-    },
-    fixTime: function() {
-        this._startTime = this.getTimer() - this._time * 1000;
-    },
-    getTimer: function() {
-        return new Date().getTime() - this._time;
-    }
-};
-
-Kinetic.Tweens = {
-    'back-ease-in': function(t, b, c, d, a, p) {
-        var s = 1.70158;
-        return c * (t /= d) * t * ((s + 1) * t - s) + b;
-    },
-    'back-ease-out': function(t, b, c, d, a, p) {
-        var s = 1.70158;
-        return c * (( t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
-    },
-    'back-ease-in-out': function(t, b, c, d, a, p) {
-        var s = 1.70158;
-        if((t /= d / 2) < 1) {
-            return c / 2 * (t * t * (((s *= (1.525)) + 1) * t - s)) + b;
-        }
-        return c / 2 * ((t -= 2) * t * (((s *= (1.525)) + 1) * t + s) + 2) + b;
-    },
-    'elastic-ease-in': function(t, b, c, d, a, p) {
-        // added s = 0
-        var s = 0;
-        if(t === 0) {
-            return b;
-        }
-        if((t /= d) == 1) {
-            return b + c;
-        }
-        if(!p) {
-            p = d * 0.3;
-        }
-        if(!a || a < Math.abs(c)) {
-            a = c;
-            s = p / 4;
-        }
-        else {
-            s = p / (2 * Math.PI) * Math.asin(c / a);
-        }
-        return -(a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
-    },
-    'elastic-ease-out': function(t, b, c, d, a, p) {
-        // added s = 0
-        var s = 0;
-        if(t === 0) {
-            return b;
-        }
-        if((t /= d) == 1) {
-            return b + c;
-        }
-        if(!p) {
-            p = d * 0.3;
-        }
-        if(!a || a < Math.abs(c)) {
-            a = c;
-            s = p / 4;
-        }
-        else {
-            s = p / (2 * Math.PI) * Math.asin(c / a);
-        }
-        return (a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b);
-    },
-    'elastic-ease-in-out': function(t, b, c, d, a, p) {
-        // added s = 0
-        var s = 0;
-        if(t === 0) {
-            return b;
-        }
-        if((t /= d / 2) == 2) {
-            return b + c;
-        }
-        if(!p) {
-            p = d * (0.3 * 1.5);
-        }
-        if(!a || a < Math.abs(c)) {
-            a = c;
-            s = p / 4;
-        }
-        else {
-            s = p / (2 * Math.PI) * Math.asin(c / a);
-        }
-        if(t < 1) {
-            return -0.5 * (a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
-        }
-        return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * 0.5 + c + b;
-    },
-    'bounce-ease-out': function(t, b, c, d) {
-        if((t /= d) < (1 / 2.75)) {
-            return c * (7.5625 * t * t) + b;
-        }
-        else if(t < (2 / 2.75)) {
-            return c * (7.5625 * (t -= (1.5 / 2.75)) * t + 0.75) + b;
-        }
-        else if(t < (2.5 / 2.75)) {
-            return c * (7.5625 * (t -= (2.25 / 2.75)) * t + 0.9375) + b;
-        }
-        else {
-            return c * (7.5625 * (t -= (2.625 / 2.75)) * t + 0.984375) + b;
-        }
-    },
-    'bounce-ease-in': function(t, b, c, d) {
-        return c - Kinetic.Tweens['bounce-ease-out'](d - t, 0, c, d) + b;
-    },
-    'bounce-ease-in-out': function(t, b, c, d) {
-        if(t < d / 2) {
-            return Kinetic.Tweens['bounce-ease-in'](t * 2, 0, c, d) * 0.5 + b;
-        }
-        else {
-            return Kinetic.Tweens['bounce-ease-out'](t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b;
-        }
-    },
-    // duplicate
-    /*
-     strongEaseInOut: function(t, b, c, d) {
-     return c * (t /= d) * t * t * t * t + b;
-     },
-     */
-    'ease-in': function(t, b, c, d) {
-        return c * (t /= d) * t + b;
-    },
-    'ease-out': function(t, b, c, d) {
-        return -c * (t /= d) * (t - 2) + b;
-    },
-    'ease-in-out': function(t, b, c, d) {
-        if((t /= d / 2) < 1) {
-            return c / 2 * t * t + b;
-        }
-        return -c / 2 * ((--t) * (t - 2) - 1) + b;
-    },
-    'strong-ease-in': function(t, b, c, d) {
-        return c * (t /= d) * t * t * t * t + b;
-    },
-    'strong-ease-out': function(t, b, c, d) {
-        return c * (( t = t / d - 1) * t * t * t * t + 1) + b;
-    },
-    'strong-ease-in-out': function(t, b, c, d) {
-        if((t /= d / 2) < 1) {
-            return c / 2 * t * t * t * t * t + b;
-        }
-        return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
-    },
-    'linear': function(t, b, c, d) {
-        return c * t / d + b;
-    }
-};
-
-Kinetic.Filters.Grayscale = function() {
-    var data = this.imageData.data;
-    for(var i = 0; i < data.length; i += 4) {
-        var brightness = 0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2];
-        // red
-        data[i] = brightness;
-        // green
-        data[i + 1] = brightness;
-        // blue
-        data[i + 2] = brightness;
-        // i+3 is alpha (the fourth element)
-    }
-};
-
