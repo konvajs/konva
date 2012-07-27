@@ -30,6 +30,10 @@
  * @param {Number} [config.dragBounds.right]
  * @param {Number} [config.dragBounds.bottom]
  * @param {Number} [config.dragBounds.left]
+ * @param {Number} [config.dragThrottle] drag and drop throttling in draws per second.  The
+ *  default is 80 draws per second.  Increasing the dragThrottle will increase the number of
+ *  draws and may result in slow drag performance in some browsers.  Reducing the dragThrottle
+ *  will improve drag performance but may make the drag motion jumpy
  */
 Kinetic.Node = Kinetic.Class.extend({
     init: function(config) {
@@ -51,11 +55,13 @@ Kinetic.Node = Kinetic.Class.extend({
             },
             dragConstraint: 'none',
             dragBounds: {},
-            draggable: false
+            draggable: false,
+            dragThrottle: 80
         };
 
         this.setDefaultAttrs(this.defaultNodeAttrs);
         this.eventListeners = {};
+        this.lastDragTime = 0;
         this.setAttrs(config);
 
         // bind events
@@ -1091,7 +1097,7 @@ Kinetic.Node._addGetter = function(constructor, attr) {
     };
 };
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
+Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening', 'dragThrottle']);
 Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 
 /**
@@ -1129,6 +1135,13 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  * @name setAlpha
  * @methodOf Kinetic.Node.prototype
  * @param {Object} alpha
+ */
+
+/**
+ * set drag throttle
+ * @name setDragThrottle
+ * @methodOf Kinetic.Node.prototype
+ * @param {Number} dragThrottle
  */
 
 /**
@@ -1219,6 +1232,12 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 /**
  * get alpha.
  * @name getAlpha
+ * @methodOf Kinetic.Node.prototype
+ */
+
+/**
+ * get drag throttle.
+ * @name getDragThrottle
  * @methodOf Kinetic.Node.prototype
  */
 

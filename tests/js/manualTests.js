@@ -327,7 +327,7 @@ Test.prototype.tests = {
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
-    '*EVENTS - star pixel detection': function(containerId) {
+    'EVENTS - star pixel detection': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,

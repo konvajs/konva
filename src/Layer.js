@@ -7,8 +7,6 @@
  * @constructor
  * @augments Kinetic.Container
  * @param {Object} config
- * @param {Number} [config.throttle] draw throttle in draws per second.  Default is 80 draws
- *  per second
  * @param {Boolean} [config.clearBeforeDraw] set this property to true if you'd like to disable
  *  canvas clearing before each new layer draw
  * @param {Number} [config.x]
@@ -38,7 +36,6 @@
 Kinetic.Layer = Kinetic.Container.extend({
     init: function(config) {
         this.setDefaultAttrs({
-            throttle: 80,
             clearBeforeDraw: true
         });
 
@@ -60,32 +57,7 @@ Kinetic.Layer = Kinetic.Container.extend({
      * @methodOf Kinetic.Layer.prototype
      */
     draw: function(canvas) {
-        var throttle = this.attrs.throttle;
-        var time = new Date().getTime();
-        var timeDiff = time - this.lastDrawTime;
-        var tt = 1000 / throttle;
-
-        if(timeDiff >= tt || throttle > 200) {
-            this._draw(canvas);
-
-            if(this.drawTimeout !== undefined) {
-                clearTimeout(this.drawTimeout);
-                this.drawTimeout = undefined;
-            }
-        }
-        /*
-         * if we cannot draw the layer due to throttling,
-         * try to redraw the layer in the near future
-         */
-        else if(this.drawTimeout === undefined) {
-            var that = this;
-            /*
-             * wait 17ms before trying again (60fps)
-             */
-            this.drawTimeout = setTimeout(function() {
-                that.draw(canvas);
-            }, 17);
-        }
+        this._draw(canvas);
     },
     /**
      * set before draw handler
@@ -202,7 +174,7 @@ Kinetic.Layer = Kinetic.Container.extend({
 });
 
 // add getters and setters
-Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw', 'throttle']);
+Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw']);
 
 /**
  * set flag which determines if the layer is cleared or not
@@ -213,25 +185,8 @@ Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw', 'throttle']);
  */
 
 /**
- * set layer draw throttle
- * @name setThrottle
- * @methodOf Kinetic.Layer.prototype
- * @param {Number} throttle layer draws per second.  Increasing the throttle
- *  will increase the number of layer draws per second if the layer is
- *  rapidly being drawn.  Decreasing the throttle will decrease the number
- *  of layer draws and improve performance.  Throttle is defaulted to 80 draws
- *  per second
- */
-
-/**
  * get flag which determines if the layer is cleared or not
  *  before drawing
  * @name getClearBeforeDraw
- * @methodOf Kinetic.Layer.prototype
- */
-
-/**
- * get throttle
- * @name getThrottle
  * @methodOf Kinetic.Layer.prototype
  */

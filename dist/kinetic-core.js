@@ -1202,6 +1202,10 @@ requestAnimFrame = (function(callback) {
  * @param {Number} [config.dragBounds.right]
  * @param {Number} [config.dragBounds.bottom]
  * @param {Number} [config.dragBounds.left]
+ * @param {Number} [config.dragThrottle] drag and drop throttling in draws per second.  The
+ *  default is 80 draws per second.  Increasing the dragThrottle will increase the number of
+ *  draws and may result in slow drag performance in some browsers.  Reducing the dragThrottle
+ *  will improve drag performance but may make the drag motion jumpy
  */
 Kinetic.Node = Kinetic.Class.extend({
     init: function(config) {
@@ -1223,11 +1227,13 @@ Kinetic.Node = Kinetic.Class.extend({
             },
             dragConstraint: 'none',
             dragBounds: {},
-            draggable: false
+            draggable: false,
+            dragThrottle: 80
         };
 
         this.setDefaultAttrs(this.defaultNodeAttrs);
         this.eventListeners = {};
+        this.lastDragTime = 0;
         this.setAttrs(config);
 
         // bind events
@@ -2263,7 +2269,7 @@ Kinetic.Node._addGetter = function(constructor, attr) {
     };
 };
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
+Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening', 'dragThrottle']);
 Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 
 /**
@@ -2301,6 +2307,13 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  * @name setAlpha
  * @methodOf Kinetic.Node.prototype
  * @param {Object} alpha
+ */
+
+/**
+ * set drag throttle
+ * @name setDragThrottle
+ * @methodOf Kinetic.Node.prototype
+ * @param {Number} dragThrottle
  */
 
 /**
@@ -2391,6 +2404,12 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 /**
  * get alpha.
  * @name getAlpha
+ * @methodOf Kinetic.Node.prototype
+ */
+
+/**
+ * get drag throttle.
+ * @name getDragThrottle
  * @methodOf Kinetic.Node.prototype
  */
 
@@ -2736,8 +2755,7 @@ Kinetic.Stage = Kinetic.Container.extend({
     init: function(config) {
         this.setDefaultAttrs({
             width: 400,
-            height: 200,
-            throttle: 80
+            height: 200
         });
 
         /*
@@ -3383,19 +3401,10 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._endDrag(evt);
     },
     _mousemove: function(evt) {
-        //throttle mousemove
-        var throttle = this.attrs.throttle;
-        var time = new Date().getTime();
-        var timeDiff = time - this.lastEventTime;
-        var tt = 1000 / throttle;
-        
-        if(timeDiff >= tt || throttle > 200) {
-            this.mouseDown = false;
-            this.mouseUp = false;
-            this.mouseMove = true;
-            this._handleStageEvent(evt);
-            this.lastEventTime = new Date().getTime();
-        }
+        this.mouseDown = false;
+        this.mouseUp = false;
+        this.mouseMove = true;
+        this._handleStageEvent(evt);
 
         // start drag and drop
         this._startDrag(evt);
@@ -3445,20 +3454,10 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._endDrag(evt);
     },
     _touchmove: function(evt) {
-        //throttle touchmove
-        var that = this;
-        var throttle = this.attrs.throttle;
-        var time = new Date().getTime();
-        var timeDiff = time - this.lastEventTime;
-        var tt = 1000 / throttle;
-
-        if(timeDiff >= tt || throttle > 200) {
-            evt.preventDefault();
-            that.touchEnd = false;
-            that.touchMove = true;
-            that._handleStageEvent(evt);
-            this.lastEventTime = new Date().getTime();
-        }
+        evt.preventDefault();
+        that.touchEnd = false;
+        that.touchMove = true;
+        that._handleStageEvent(evt);
 
         // start drag and drop
         this._startDrag(evt);
@@ -3526,64 +3525,72 @@ Kinetic.Stage = Kinetic.Container.extend({
         var node = go.drag.node;
 
         if(node) {
-            var pos = that.getUserPosition();
-            var dc = node.attrs.dragConstraint;
-            var db = node.attrs.dragBounds;
-            var lastNodePos = {
-                x: node.attrs.x,
-                y: node.attrs.y
-            };
+            var dragThrottle = node.attrs.dragThrottle;
+            var time = new Date().getTime();
+            var timeDiff = time - node.lastDragTime;
+            var tt = 1000 / dragThrottle;
+            if((timeDiff >= tt || dragThrottle > 200)) {
+                var pos = that.getUserPosition();
+                var dc = node.attrs.dragConstraint;
+                var db = node.attrs.dragBounds;
+                var lastNodePos = {
+                    x: node.attrs.x,
+                    y: node.attrs.y
+                };
 
-            // default
-            var newNodePos = {
-                x: pos.x - go.drag.offset.x,
-                y: pos.y - go.drag.offset.y
-            };
+                // default
+                var newNodePos = {
+                    x: pos.x - go.drag.offset.x,
+                    y: pos.y - go.drag.offset.y
+                };
 
-            // bounds overrides
-            if(db.left !== undefined && newNodePos.x < db.left) {
-                newNodePos.x = db.left;
-            }
-            if(db.right !== undefined && newNodePos.x > db.right) {
-                newNodePos.x = db.right;
-            }
-            if(db.top !== undefined && newNodePos.y < db.top) {
-                newNodePos.y = db.top;
-            }
-            if(db.bottom !== undefined && newNodePos.y > db.bottom) {
-                newNodePos.y = db.bottom;
-            }
+                // bounds overrides
+                if(db.left !== undefined && newNodePos.x < db.left) {
+                    newNodePos.x = db.left;
+                }
+                if(db.right !== undefined && newNodePos.x > db.right) {
+                    newNodePos.x = db.right;
+                }
+                if(db.top !== undefined && newNodePos.y < db.top) {
+                    newNodePos.y = db.top;
+                }
+                if(db.bottom !== undefined && newNodePos.y > db.bottom) {
+                    newNodePos.y = db.bottom;
+                }
 
-            node.setAbsolutePosition(newNodePos);
+                node.setAbsolutePosition(newNodePos);
 
-            // constraint overrides
-            if(dc === 'horizontal') {
-                node.attrs.y = lastNodePos.y;
-            }
-            else if(dc === 'vertical') {
-                node.attrs.x = lastNodePos.x;
-            }
+                // constraint overrides
+                if(dc === 'horizontal') {
+                    node.attrs.y = lastNodePos.y;
+                }
+                else if(dc === 'vertical') {
+                    node.attrs.x = lastNodePos.x;
+                }
 
-            /*
-             * if dragging and dropping the stage,
-             * draw all of the layers
-             */
-            if(go.drag.node.nodeType === 'Stage') {
-                go.drag.node.draw();
-            }
+                /*
+                 * if dragging and dropping the stage,
+                 * draw all of the layers
+                 */
+                if(go.drag.node.nodeType === 'Stage') {
+                    go.drag.node.draw();
+                }
 
-            else {
-                go.drag.node.getLayer().draw();
-            }
+                else {
+                    go.drag.node.getLayer().draw();
+                }
 
-            if(!go.drag.moving) {
-                go.drag.moving = true;
-                // execute dragstart events if defined
-                go.drag.node._handleEvent('dragstart', evt);
-            }
+                if(!go.drag.moving) {
+                    go.drag.moving = true;
+                    // execute dragstart events if defined
+                    go.drag.node._handleEvent('dragstart', evt);
+                }
 
-            // execute user defined ondragmove if defined
-            go.drag.node._handleEvent('dragmove', evt);
+                // execute user defined ondragmove if defined
+                go.drag.node._handleEvent('dragmove', evt);
+
+                node.lastDragTime = new Date().getTime();
+            }
         }
     },
     /**
@@ -3660,7 +3667,6 @@ Kinetic.Stage = Kinetic.Container.extend({
      */
     _setStageDefaultProperties: function() {
         this.nodeType = 'Stage';
-        this.lastEventTime = 0;
         this.dblClickWindow = 400;
         this.targetShape = undefined;
         this.targetFound = false;
@@ -3692,7 +3698,7 @@ Kinetic.Stage = Kinetic.Container.extend({
 });
 
 // add getters and setters
-Kinetic.Node.addGettersSetters(Kinetic.Stage, ['width', 'height', 'throttle']);
+Kinetic.Node.addGettersSetters(Kinetic.Stage, ['width', 'height']);
 
 /**
  * get width
@@ -3703,12 +3709,6 @@ Kinetic.Node.addGettersSetters(Kinetic.Stage, ['width', 'height', 'throttle']);
 /**
  * get height
  * @name getHeight
- * @methodOf Kinetic.Stage.prototype
- */
-
-/**
- * get event throttle for event detections per second.
- * @name getThrottle
  * @methodOf Kinetic.Stage.prototype
  */
 
@@ -3725,19 +3725,6 @@ Kinetic.Node.addGettersSetters(Kinetic.Stage, ['width', 'height', 'throttle']);
  * @methodOf Kinetic.Stage.prototype
  * @param {Number} height
  */
-
-/**
- * set throttle for event detections per second.  Increasing the throttle will increase
- *  the number of mousemove and touchmove event detections,
- *  and decreasing the throttle will decrease the number
- *  of mousemove and touchmove events which improves performance.  The event
- *  throttling is defaulted to 80 event detections per second
- * @name setThrottle
- * @methodOf Kinetic.Stage.prototype
- * @param {Number} throttle
- * @example
- * <a href="http://www.html5canvastutorials.com/kineticjs/html5-canvas-load-stage-with-json-string-with-kineticjs/">simple load example</a>
- */
 ///////////////////////////////////////////////////////////////////////
 //  Layer
 ///////////////////////////////////////////////////////////////////////
@@ -3747,8 +3734,6 @@ Kinetic.Node.addGettersSetters(Kinetic.Stage, ['width', 'height', 'throttle']);
  * @constructor
  * @augments Kinetic.Container
  * @param {Object} config
- * @param {Number} [config.throttle] draw throttle in draws per second.  Default is 80 draws
- *  per second
  * @param {Boolean} [config.clearBeforeDraw] set this property to true if you'd like to disable
  *  canvas clearing before each new layer draw
  * @param {Number} [config.x]
@@ -3778,7 +3763,6 @@ Kinetic.Node.addGettersSetters(Kinetic.Stage, ['width', 'height', 'throttle']);
 Kinetic.Layer = Kinetic.Container.extend({
     init: function(config) {
         this.setDefaultAttrs({
-            throttle: 80,
             clearBeforeDraw: true
         });
 
@@ -3800,32 +3784,7 @@ Kinetic.Layer = Kinetic.Container.extend({
      * @methodOf Kinetic.Layer.prototype
      */
     draw: function(canvas) {
-        var throttle = this.attrs.throttle;
-        var time = new Date().getTime();
-        var timeDiff = time - this.lastDrawTime;
-        var tt = 1000 / throttle;
-
-        if(timeDiff >= tt || throttle > 200) {
-            this._draw(canvas);
-
-            if(this.drawTimeout !== undefined) {
-                clearTimeout(this.drawTimeout);
-                this.drawTimeout = undefined;
-            }
-        }
-        /*
-         * if we cannot draw the layer due to throttling,
-         * try to redraw the layer in the near future
-         */
-        else if(this.drawTimeout === undefined) {
-            var that = this;
-            /*
-             * wait 17ms before trying again (60fps)
-             */
-            this.drawTimeout = setTimeout(function() {
-                that.draw(canvas);
-            }, 17);
-        }
+        this._draw(canvas);
     },
     /**
      * set before draw handler
@@ -3942,7 +3901,7 @@ Kinetic.Layer = Kinetic.Container.extend({
 });
 
 // add getters and setters
-Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw', 'throttle']);
+Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw']);
 
 /**
  * set flag which determines if the layer is cleared or not
@@ -3953,26 +3912,9 @@ Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw', 'throttle']);
  */
 
 /**
- * set layer draw throttle
- * @name setThrottle
- * @methodOf Kinetic.Layer.prototype
- * @param {Number} throttle layer draws per second.  Increasing the throttle
- *  will increase the number of layer draws per second if the layer is
- *  rapidly being drawn.  Decreasing the throttle will decrease the number
- *  of layer draws and improve performance.  Throttle is defaulted to 80 draws
- *  per second
- */
-
-/**
  * get flag which determines if the layer is cleared or not
  *  before drawing
  * @name getClearBeforeDraw
- * @methodOf Kinetic.Layer.prototype
- */
-
-/**
- * get throttle
- * @name getThrottle
  * @methodOf Kinetic.Layer.prototype
  */
 ///////////////////////////////////////////////////////////////////////
