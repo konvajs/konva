@@ -65,9 +65,9 @@ Kinetic.Container = Kinetic.Node.extend({
         child.parent = this;
 
         this.children.push(child);
-
         var stage = child.getStage();
-        if(stage === undefined) {
+
+        if(!stage) {
             var go = Kinetic.Global;
             go.tempNodes.push(child);
         }

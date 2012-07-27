@@ -8,7 +8,7 @@ Kinetic.Animation = {
     frame: {
         time: 0,
         timeDiff: 0,
-        lastTime: 0
+        lastTime: new Date().getTime()
     },
     _addAnimation: function(anim) {
         anim.id = this.animIdCounter++;
@@ -49,16 +49,10 @@ Kinetic.Animation = {
         }
     },
     _updateFrameObject: function() {
-        var date = new Date();
-        var time = date.getTime();
-        if(this.frame.lastTime === 0) {
-            this.frame.lastTime = time;
-        }
-        else {
-            this.frame.timeDiff = time - this.frame.lastTime;
-            this.frame.lastTime = time;
-            this.frame.time += this.frame.timeDiff;
-        }
+        var time = new Date().getTime();
+        this.frame.timeDiff = time - this.frame.lastTime;
+        this.frame.lastTime = time;
+        this.frame.time += this.frame.timeDiff;
     },
     _animationLoop: function() {
         if(this.animations.length > 0) {

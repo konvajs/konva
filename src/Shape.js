@@ -99,20 +99,15 @@ Kinetic.Shape = Kinetic.Node.extend({
         var go = Kinetic.Global;
         var appliedShadow = false;
 
-        if(this.attrs.stroke || this.attrs.strokeWidth) {
-            context.save();
-            if(this.attrs.shadow && !this.appliedShadow) {
-                appliedShadow = this._applyShadow(context);
-            }
-
-            var stroke = this.attrs.stroke ? this.attrs.stroke : 'black';
-            var strokeWidth = this.attrs.strokeWidth ? this.attrs.strokeWidth : 2;
-
-            context.lineWidth = strokeWidth;
-            context.strokeStyle = stroke;
-            context.stroke(context);
-            context.restore();
+        context.save();
+        if(this.attrs.shadow && !this.appliedShadow) {
+            appliedShadow = this._applyShadow(context);
         }
+
+        context.lineWidth = this.attrs.strokeWidth;
+        context.strokeStyle = this.attrs.stroke;
+        context.stroke(context);
+        context.restore();
 
         if(appliedShadow) {
             this.stroke(context);
@@ -138,18 +133,13 @@ Kinetic.Shape = Kinetic.Node.extend({
             var f = null;
 
             // color fill
-            if( typeof fill == 'string') {
-                f = this.attrs.fill;
-                context.fillStyle = f;
+            if(Kinetic.Type._isString(fill)) {
+                context.fillStyle = fill;
                 context.fill(context);
             }
             // pattern
             else if(fill.image) {
                 var repeat = !fill.repeat ? 'repeat' : fill.repeat;
-                f = context.createPattern(fill.image, repeat);
-
-                context.save();
-
                 if(fill.scale) {
                     context.scale(fill.scale.x, fill.scale.y);
                 }
@@ -157,9 +147,8 @@ Kinetic.Shape = Kinetic.Node.extend({
                     context.translate(fill.offset.x, fill.offset.y);
                 }
 
-                context.fillStyle = f;
+                context.fillStyle = context.createPattern(fill.image, repeat);
                 context.fill(context);
-                context.restore();
             }
             // linear gradient
             else if(!s.radius && !e.radius) {
@@ -170,8 +159,7 @@ Kinetic.Shape = Kinetic.Node.extend({
                 for(var n = 0; n < colorStops.length; n += 2) {
                     grd.addColorStop(colorStops[n], colorStops[n + 1]);
                 }
-                f = grd;
-                context.fillStyle = f;
+                context.fillStyle = grd;
                 context.fill(context);
             }
             // radial gradient
@@ -183,13 +171,11 @@ Kinetic.Shape = Kinetic.Node.extend({
                 for(var n = 0; n < colorStops.length; n += 2) {
                     grd.addColorStop(colorStops[n], colorStops[n + 1]);
                 }
-                f = grd;
-                context.fillStyle = f;
+                context.fillStyle = grd;
                 context.fill(context);
             }
             else {
-                f = 'black';
-                context.fillStyle = f;
+                context.fillStyle = 'black';
                 context.fill(context);
             }
             context.restore();

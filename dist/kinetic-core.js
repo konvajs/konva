@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jul 24 2012
+ * Date: Jul 26 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1092,7 +1092,7 @@ Kinetic.Animation = {
     frame: {
         time: 0,
         timeDiff: 0,
-        lastTime: 0
+        lastTime: new Date().getTime()
     },
     _addAnimation: function(anim) {
         anim.id = this.animIdCounter++;
@@ -1133,16 +1133,10 @@ Kinetic.Animation = {
         }
     },
     _updateFrameObject: function() {
-        var date = new Date();
-        var time = date.getTime();
-        if(this.frame.lastTime === 0) {
-            this.frame.lastTime = time;
-        }
-        else {
-            this.frame.timeDiff = time - this.frame.lastTime;
-            this.frame.lastTime = time;
-            this.frame.time += this.frame.timeDiff;
-        }
+        var time = new Date().getTime();
+        this.frame.timeDiff = time - this.frame.lastTime;
+        this.frame.lastTime = time;
+        this.frame.time += this.frame.timeDiff;
     },
     _animationLoop: function() {
         if(this.animations.length > 0) {
@@ -2508,9 +2502,9 @@ Kinetic.Container = Kinetic.Node.extend({
         child.parent = this;
 
         this.children.push(child);
-
         var stage = child.getStage();
-        if(stage === undefined) {
+
+        if(!stage) {
             var go = Kinetic.Global;
             go.tempNodes.push(child);
         }
@@ -3318,10 +3312,6 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @param {Event} evt
      */
     _handleStageEvent: function(evt) {
-        var date = new Date();
-        var time = date.getTime();
-        this.lastEventTime = time;
-
         var go = Kinetic.Global;
         if(!evt) {
             evt = window.event;
@@ -3395,16 +3385,16 @@ Kinetic.Stage = Kinetic.Container.extend({
     _mousemove: function(evt) {
         //throttle mousemove
         var throttle = this.attrs.throttle;
-        var date = new Date();
-        var time = date.getTime();
+        var time = new Date().getTime();
         var timeDiff = time - this.lastEventTime;
         var tt = 1000 / throttle;
-
+        
         if(timeDiff >= tt || throttle > 200) {
             this.mouseDown = false;
             this.mouseUp = false;
             this.mouseMove = true;
             this._handleStageEvent(evt);
+            this.lastEventTime = new Date().getTime();
         }
 
         // start drag and drop
@@ -3458,8 +3448,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         //throttle touchmove
         var that = this;
         var throttle = this.attrs.throttle;
-        var date = new Date();
-        var time = date.getTime();
+        var time = new Date().getTime();
         var timeDiff = time - this.lastEventTime;
         var tt = 1000 / throttle;
 
@@ -3468,6 +3457,7 @@ Kinetic.Stage = Kinetic.Container.extend({
             that.touchEnd = false;
             that.touchMove = true;
             that._handleStageEvent(evt);
+            this.lastEventTime = new Date().getTime();
         }
 
         // start drag and drop
@@ -3811,8 +3801,7 @@ Kinetic.Layer = Kinetic.Container.extend({
      */
     draw: function(canvas) {
         var throttle = this.attrs.throttle;
-        var date = new Date();
-        var time = date.getTime();
+        var time = new Date().getTime();
         var timeDiff = time - this.lastDrawTime;
         var tt = 1000 / throttle;
 
@@ -3923,8 +3912,7 @@ Kinetic.Layer = Kinetic.Container.extend({
             canvas = this.getCanvas();
         }
 
-        var date = new Date();
-        var time = date.getTime();
+        var time = new Date().getTime();
         this.lastDrawTime = time;
 
         // before draw  handler
@@ -4137,20 +4125,15 @@ Kinetic.Shape = Kinetic.Node.extend({
         var go = Kinetic.Global;
         var appliedShadow = false;
 
-        if(this.attrs.stroke || this.attrs.strokeWidth) {
-            context.save();
-            if(this.attrs.shadow && !this.appliedShadow) {
-                appliedShadow = this._applyShadow(context);
-            }
-
-            var stroke = this.attrs.stroke ? this.attrs.stroke : 'black';
-            var strokeWidth = this.attrs.strokeWidth ? this.attrs.strokeWidth : 2;
-
-            context.lineWidth = strokeWidth;
-            context.strokeStyle = stroke;
-            context.stroke(context);
-            context.restore();
+        context.save();
+        if(this.attrs.shadow && !this.appliedShadow) {
+            appliedShadow = this._applyShadow(context);
         }
+
+        context.lineWidth = this.attrs.strokeWidth;
+        context.strokeStyle = this.attrs.stroke;
+        context.stroke(context);
+        context.restore();
 
         if(appliedShadow) {
             this.stroke(context);
@@ -4176,18 +4159,13 @@ Kinetic.Shape = Kinetic.Node.extend({
             var f = null;
 
             // color fill
-            if( typeof fill == 'string') {
-                f = this.attrs.fill;
-                context.fillStyle = f;
+            if(Kinetic.Type._isString(fill)) {
+                context.fillStyle = fill;
                 context.fill(context);
             }
             // pattern
             else if(fill.image) {
                 var repeat = !fill.repeat ? 'repeat' : fill.repeat;
-                f = context.createPattern(fill.image, repeat);
-
-                context.save();
-
                 if(fill.scale) {
                     context.scale(fill.scale.x, fill.scale.y);
                 }
@@ -4195,9 +4173,8 @@ Kinetic.Shape = Kinetic.Node.extend({
                     context.translate(fill.offset.x, fill.offset.y);
                 }
 
-                context.fillStyle = f;
+                context.fillStyle = context.createPattern(fill.image, repeat);
                 context.fill(context);
-                context.restore();
             }
             // linear gradient
             else if(!s.radius && !e.radius) {
@@ -4208,8 +4185,7 @@ Kinetic.Shape = Kinetic.Node.extend({
                 for(var n = 0; n < colorStops.length; n += 2) {
                     grd.addColorStop(colorStops[n], colorStops[n + 1]);
                 }
-                f = grd;
-                context.fillStyle = f;
+                context.fillStyle = grd;
                 context.fill(context);
             }
             // radial gradient
@@ -4221,13 +4197,11 @@ Kinetic.Shape = Kinetic.Node.extend({
                 for(var n = 0; n < colorStops.length; n += 2) {
                     grd.addColorStop(colorStops[n], colorStops[n + 1]);
                 }
-                f = grd;
-                context.fillStyle = f;
+                context.fillStyle = grd;
                 context.fill(context);
             }
             else {
-                f = 'black';
-                context.fillStyle = f;
+                context.fillStyle = 'black';
                 context.fill(context);
             }
             context.restore();
@@ -4524,34 +4498,33 @@ Kinetic.Rect = Kinetic.Shape.extend({
             height: 0,
             cornerRadius: 0
         });
-
         this.shapeType = "Rect";
-
-        config.drawFunc = function(context) {
-            context.beginPath();
-            if(this.attrs.cornerRadius === 0) {
-                // simple rect - don't bother doing all that complicated maths stuff.
-                context.rect(0, 0, this.attrs.width, this.attrs.height);
-            }
-            else {
-                // arcTo would be nicer, but browser support is patchy (Opera)
-                context.moveTo(this.attrs.cornerRadius, 0);
-                context.lineTo(this.attrs.width - this.attrs.cornerRadius, 0);
-                context.arc(this.attrs.width - this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI * 3 / 2, 0, false);
-                context.lineTo(this.attrs.width, this.attrs.height - this.attrs.cornerRadius);
-                context.arc(this.attrs.width - this.attrs.cornerRadius, this.attrs.height - this.attrs.cornerRadius, this.attrs.cornerRadius, 0, Math.PI / 2, false);
-                context.lineTo(this.attrs.cornerRadius, this.attrs.height);
-                context.arc(this.attrs.cornerRadius, this.attrs.height - this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI / 2, Math.PI, false);
-                context.lineTo(0, this.attrs.cornerRadius);
-                context.arc(this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI, Math.PI * 3 / 2, false);
-            }
-            context.closePath();
-
-            this.fill(context);
-            this.stroke(context);
-        };
+        config.drawFunc = this.drawFunc;
         // call super constructor
         this._super(config);
+    },
+    drawFunc: function(context) {
+        context.beginPath();
+        if(this.attrs.cornerRadius === 0) {
+            // simple rect - don't bother doing all that complicated maths stuff.
+            context.rect(0, 0, this.attrs.width, this.attrs.height);
+        }
+        else {
+            // arcTo would be nicer, but browser support is patchy (Opera)
+            context.moveTo(this.attrs.cornerRadius, 0);
+            context.lineTo(this.attrs.width - this.attrs.cornerRadius, 0);
+            context.arc(this.attrs.width - this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI * 3 / 2, 0, false);
+            context.lineTo(this.attrs.width, this.attrs.height - this.attrs.cornerRadius);
+            context.arc(this.attrs.width - this.attrs.cornerRadius, this.attrs.height - this.attrs.cornerRadius, this.attrs.cornerRadius, 0, Math.PI / 2, false);
+            context.lineTo(this.attrs.cornerRadius, this.attrs.height);
+            context.arc(this.attrs.cornerRadius, this.attrs.height - this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI / 2, Math.PI, false);
+            context.lineTo(0, this.attrs.cornerRadius);
+            context.arc(this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI, Math.PI * 3 / 2, false);
+        }
+        context.closePath();
+
+        this.fill(context);
+        this.stroke(context);
     },
     /**
      * set width and height
@@ -5460,4 +5433,161 @@ Kinetic.Node.addGettersSetters(Kinetic.Line, ['dashArray', 'lineCap', 'points'])
  * get points array
  * @name getPoints
  * @methodOf Kinetic.Line.prototype
+ */
+///////////////////////////////////////////////////////////////////////
+//  Sprite
+///////////////////////////////////////////////////////////////////////
+/**
+ * Sprite constructor
+ * @constructor
+ * @augments Kinetic.Shape
+ * @param {Object} config
+ */
+Kinetic.Sprite = Kinetic.Shape.extend({
+    init: function(config) {
+        this.setDefaultAttrs({
+            index: 0,
+            frameRate: 17
+        });
+
+        config.drawFunc = function(context) {
+            if(!!this.attrs.image) {
+                var anim = this.attrs.animation;
+                var index = this.attrs.index;
+                var f = this.attrs.animations[anim][index];
+
+                context.beginPath();
+                context.rect(0, 0, f.width, f.height);
+                context.closePath();
+
+                this.drawImage(context, this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
+            }
+        };
+        // call super constructor
+        this._super(config);
+
+        var that = this;
+        this.on('animationChange.kinetic', function() {
+            // reset index when animation changes
+            that.setIndex(0);
+        });
+    },
+    /**
+     * start sprite animation
+     * @name start
+     * @methodOf Kinetic.Sprite.prototype
+     */
+    start: function() {
+        var that = this;
+        var layer = this.getLayer();
+        var ka = Kinetic.Animation;
+
+        // if sprite already has an animation, remove it
+        if(this.anim) {
+            ka._removeAnimation(this.anim);
+            this.anim = null;
+        }
+
+        /*
+         * animation object has no executable function because
+         *  the updates are done with a fixed FPS with the setInterval
+         *  below.  The anim object only needs the layer reference for
+         *  redraw
+         */
+        this.anim = {
+            node: layer
+        };
+
+        /*
+         * adding the animation with the addAnimation
+         * method auto generates an id
+         */
+        ka._addAnimation(this.anim);
+
+        this.interval = setInterval(function() {
+            var index = that.attrs.index;
+            that._updateIndex();
+            if(that.afterFrameFunc && index === that.afterFrameIndex) {
+                that.afterFrameFunc();
+            }
+        }, 1000 / this.attrs.frameRate);
+
+        ka._handleAnimation();
+    },
+    /**
+     * stop sprite animation
+     * @name stop
+     * @methodOf Kinetic.Sprite.prototype
+     */
+    stop: function() {
+        var ka = Kinetic.Animation;
+        if(this.anim) {
+            ka._removeAnimation(this.anim);
+            this.anim = null;
+        }
+        clearInterval(this.interval);
+    },
+    /**
+     * set after frame event handler
+     * @name afterFrame
+     * @methodOf Kinetic.Sprite.prototype
+     * @param {Integer} index frame index
+     * @param {Function} func function to be executed after frame has been drawn
+     */
+    afterFrame: function(index, func) {
+        this.afterFrameIndex = index;
+        this.afterFrameFunc = func;
+    },
+    _updateIndex: function() {
+        var i = this.attrs.index;
+        var a = this.attrs.animation;
+        if(i < this.attrs.animations[a].length - 1) {
+            this.attrs.index++;
+        }
+        else {
+            this.attrs.index = 0;
+        }
+    }
+});
+
+// add getters setters
+Kinetic.Node.addGettersSetters(Kinetic.Sprite, ['animation', 'animations', 'index']);
+
+/**
+ * set animation key
+ * @name setAnimation
+ * @methodOf Kinetic.Sprite.prototype
+ * @param {String} anim animation key
+ */
+
+/**
+ * set animations obect
+ * @name setAnimations
+ * @methodOf Kinetic.Sprite.prototype
+ * @param {Object} animations
+ */
+
+/**
+ * set animation frame index
+ * @name setIndex
+ * @methodOf Kinetic.Sprite.prototype
+ * @param {Integer} index frame index
+ */
+
+/**
+ * get animation key
+ * @name getAnimation
+ * @methodOf Kinetic.Sprite.prototype
+ */
+
+/**
+ * get animations object
+ * @name getAnimations
+ * @methodOf Kinetic.Sprite.prototype
+ */
+
+/**
+ * get animation frame index
+ * @name getIndex
+ * @methodOf Kinetic.Sprite.prototype
  */

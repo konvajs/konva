@@ -1,4 +1,69 @@
 Test.prototype.tests = {
+    'DRAWING - draw rect': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        startTimer();
+        console.profile();
+        for(var n = 0; n < 1000; n++) {
+            var rect = new Kinetic.Rect({
+                x: 10,
+                y: 10,
+                width: 100,
+                height: 100,
+                fill: 'yellow',
+                stroke: 'blue'
+            });
+
+            layer.add(rect);
+        }
+        stage.add(layer);
+		
+		console.profileEnd();
+        endTimer('add and draw 1,000 Kinetic rectangles');
+
+    },
+    '*ANIMATION - test animation frame rate': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        var amplitude = 150;
+        var period = 1000;
+        // in ms
+        var centerX = stage.getWidth() / 2 - 100 / 2;
+
+        stage.onFrame(function(frame) {
+            rect.attrs.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
+            layer.draw();
+            //console.log(frame.timeDiff)
+        });
+
+        stage.start();
+        
+        setTimeout(function() {
+        	//stage.stop();
+        }, 1000)
+    },
     'DRAWING - draw rect vs image from image data': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
