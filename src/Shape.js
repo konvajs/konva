@@ -96,21 +96,25 @@ Kinetic.Shape = Kinetic.Node.extend({
      * @methodOf Kinetic.Shape.prototype
      */
     stroke: function(context) {
-        var go = Kinetic.Global;
-        var appliedShadow = false;
+        var strokeWidth = this.getStrokeWidth();
+        var stroke = this.getStroke();
+        if(stroke || strokeWidth) {
+            var go = Kinetic.Global;
+            var appliedShadow = false;
 
-        context.save();
-        if(this.attrs.shadow && !this.appliedShadow) {
-            appliedShadow = this._applyShadow(context);
-        }
+            context.save();
+            if(this.attrs.shadow && !this.appliedShadow) {
+                appliedShadow = this._applyShadow(context);
+            }
 
-        context.lineWidth = this.attrs.strokeWidth;
-        context.strokeStyle = this.attrs.stroke;
-        context.stroke(context);
-        context.restore();
+            context.lineWidth = strokeWidth || 2;
+            context.strokeStyle = stroke || 'black';
+            context.stroke(context);
+            context.restore();
 
-        if(appliedShadow) {
-            this.stroke(context);
+            if(appliedShadow) {
+                this.stroke(context);
+            }
         }
     },
     /**

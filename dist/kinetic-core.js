@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jul 27 2012
+ * Date: Jul 28 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -35,6 +35,7 @@
  */
 var Kinetic = {};
 Kinetic.Filters = {};
+Kinetic.Plugins = {};
 Kinetic.Global = {
     BUBBLE_WHITELIST: ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'click', 'dblclick', 'touchstart', 'touchmove', 'touchend', 'tap', 'dbltap', 'dragstart', 'dragmove', 'dragend'],
     stages: [],
@@ -4064,21 +4065,25 @@ Kinetic.Shape = Kinetic.Node.extend({
      * @methodOf Kinetic.Shape.prototype
      */
     stroke: function(context) {
-        var go = Kinetic.Global;
-        var appliedShadow = false;
+        var strokeWidth = this.getStrokeWidth();
+        var stroke = this.getStroke();
+        if(stroke || strokeWidth) {
+            var go = Kinetic.Global;
+            var appliedShadow = false;
 
-        context.save();
-        if(this.attrs.shadow && !this.appliedShadow) {
-            appliedShadow = this._applyShadow(context);
-        }
+            context.save();
+            if(this.attrs.shadow && !this.appliedShadow) {
+                appliedShadow = this._applyShadow(context);
+            }
 
-        context.lineWidth = this.attrs.strokeWidth;
-        context.strokeStyle = this.attrs.stroke;
-        context.stroke(context);
-        context.restore();
+            context.lineWidth = strokeWidth || 2;
+            context.strokeStyle = stroke || 'black';
+            context.stroke(context);
+            context.restore();
 
-        if(appliedShadow) {
-            this.stroke(context);
+            if(appliedShadow) {
+                this.stroke(context);
+            }
         }
     },
     /**

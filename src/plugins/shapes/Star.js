@@ -7,7 +7,7 @@
  * @augments Kinetic.Shape
  * @param {Object} config
  */
-Kinetic.Star = Kinetic.Shape.extend({
+Kinetic.Plugins.Star = Kinetic.Shape.extend({
     init: function(config) {
         this.setDefaultAttrs({
             numPoints: 0,
@@ -37,7 +37,7 @@ Kinetic.Star = Kinetic.Shape.extend({
 });
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Star, ['numPoints', 'innerRadius', 'outerRadius']);
+Kinetic.Node.addGettersSetters(Kinetic.Plugins.Star, ['numPoints', 'innerRadius', 'outerRadius']);
 
 /**
  * set number of points

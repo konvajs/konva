@@ -27,7 +27,7 @@ Test.prototype.tests = {
         endTimer('add and draw 1,000 Kinetic rectangles');
 
     },
-    '*ANIMATION - test animation frame rate': function(containerId) {
+    'ANIMATION - test animation frame rate': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -148,7 +148,7 @@ Test.prototype.tests = {
 
         startTimer();
         for(var n = 0; n < 1000; n++) {
-            var star = new Kinetic.Star({
+            var star = new Kinetic.Plugins.Star({
                 innerRadius: 20,
                 outerRadius: 50,
                 fill: 'yellow',
@@ -180,7 +180,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
-        var star = new Kinetic.Star({
+        var star = new Kinetic.Plugins.Star({
             innerRadius: 20,
             outerRadius: 50,
             fill: 'yellow',
