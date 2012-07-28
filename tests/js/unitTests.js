@@ -5200,7 +5200,7 @@ Test.prototype.tests = {
 
         layer.add(path);
 
-        var centerParamPoints = path.convertEndpointToCenterParameterization(50, 100, 150, 150, 1, 1, 100, 50, 0);
+        var centerParamPoints = Kinetic.Geometry.convertEndpointToCenterParameterization(50, 100, 150, 150, 1, 1, 100, 50, 0);
 
         var start = centerParamPoints[4];
         // 4 = theta
@@ -5262,7 +5262,7 @@ Test.prototype.tests = {
 
         layer.add(path);
 
-        var centerParamPoints = path.convertEndpointToCenterParameterization(250, 100, 150, 150, 1, 0, 100, 50, 0);
+        var centerParamPoints = Kinetic.Geometry.convertEndpointToCenterParameterization(250, 100, 150, 150, 1, 0, 100, 50, 0);
 
         var start = centerParamPoints[4];
         // 4 = theta
@@ -5324,7 +5324,7 @@ Test.prototype.tests = {
 
         layer.add(path);
 
-        var centerParamPoints = path.convertEndpointToCenterParameterization(250, 100, 150, 150, 1, 0, 100, 50, 30);
+        var centerParamPoints = Kinetic.Geometry.convertEndpointToCenterParameterization(250, 100, 150, 150, 1, 0, 100, 50, 30);
 
         var start = centerParamPoints[4];
         // 4 = theta

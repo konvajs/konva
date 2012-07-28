@@ -26,9 +26,9 @@ Kinetic.Plugins.TextPath = Kinetic.Shape.extend({
         config.drawFunc = this.drawFunc;
         // call super constructor
         this._super(config);
-        this.dataArray = this.parsePathData(this.attrs.data);
+        this.dataArray = Kinetic.Geometry.parsePathData(this.attrs.data);
         this.on('dataChange', function() {
-            that.dataArray = this.parsePathData(this.attrs.data);
+            that.dataArray = Kinetic.Geometry.parsePathData(this.attrs.data);
         });
         // update text data for certain attr changes
         var attrs = ['text', 'textStroke', 'textStrokeWidth'];
@@ -78,9 +78,6 @@ Kinetic.Plugins.TextPath = Kinetic.Shape.extend({
 
         context.restore();
     },
-    parsePathData: Kinetic.Plugins.Path.prototype.parsePathData,
-    calcLength: Kinetic.Plugins.Path.prototype.calcLength,
-    convertEndpointToCenterParameterization: Kinetic.Plugins.Path.prototype.convertEndpointToCenterParameterization,
     /**
      * get text width in pixels
      * @name getTextWidth
