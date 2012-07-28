@@ -42,38 +42,38 @@ Kinetic.Node.addGettersSetters(Kinetic.Plugins.Star, ['numPoints', 'innerRadius'
 /**
  * set number of points
  * @name setNumPoints
- * @methodOf KineticPlugins..Star.prototype
+ * @methodOf Kinetic.Plugins.Star.prototype
  * @param {Integer} points
  */
 
 /**
  * set outer radius
  * @name setOuterRadius
- * @methodOf KineticPlugins..Star.prototype
+ * @methodOf Kinetic.Plugins.Star.prototype
  * @param {Number} radius
  */
 
 /**
  * set inner radius
  * @name setInnerRadius
- * @methodOf KineticPlugins..Star.prototype
+ * @methodOf Kinetic.Plugins.Star.prototype
  * @param {Number} radius
  */
 
 /**
  * get number of points
  * @name getNumPoints
- * @methodOf KineticPlugins..Star.prototype
+ * @methodOf Kinetic.Plugins.Star.prototype
  */
 
 /**
  * get outer radius
  * @name getOuterRadius
- * @methodOf KineticPlugins..Star.prototype
+ * @methodOf Kinetic.Plugins.Star.prototype
  */
 
 /**
  * get inner radius
  * @name getInnerRadius
- * @methodOf KineticPlugins..Star.prototype
+ * @methodOf Kinetic.Plugins.Star.prototype
  */
