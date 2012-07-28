@@ -738,9 +738,9 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     _touchmove: function(evt) {
         evt.preventDefault();
-        that.touchEnd = false;
-        that.touchMove = true;
-        that._handleStageEvent(evt);
+        this.touchEnd = false;
+        this.touchMove = true;
+        this._handleStageEvent(evt);
 
         // start drag and drop
         this._startDrag(evt);

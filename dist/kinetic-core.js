@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jul 26 2012
+ * Date: Jul 27 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -3455,9 +3455,9 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     _touchmove: function(evt) {
         evt.preventDefault();
-        that.touchEnd = false;
-        that.touchMove = true;
-        that._handleStageEvent(evt);
+        this.touchEnd = false;
+        this.touchMove = true;
+        this._handleStageEvent(evt);
 
         // start drag and drop
         this._startDrag(evt);
