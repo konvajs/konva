@@ -39,24 +39,24 @@ Kinetic.Node.addGettersSetters(Kinetic.Plugins.RegularPolygon, ['radius', 'sides
 /**
  * set radius
  * @name setRadius
- * @methodOf Kinetic.RegularPolygon.prototype
+ * @methodOf Kinetic.Plugins.RegularPolygon.prototype
  * @param {Number} radius
  */
 
 /**
  * set number of sides
  * @name setSides
- * @methodOf Kinetic.RegularPolygon.prototype
+ * @methodOf Kinetic.Plugins.RegularPolygon.prototype
  * @param {int} sides
  */
 /**
  * get radius
  * @name getRadius
- * @methodOf Kinetic.RegularPolygon.prototype
+ * @methodOf Kinetic.Plugins.RegularPolygon.prototype
  */
 
 /**
  * get number of sides
  * @name getSides
- * @methodOf Kinetic.RegularPolygon.prototype
+ * @methodOf Kinetic.Plugins.RegularPolygon.prototype
  */
