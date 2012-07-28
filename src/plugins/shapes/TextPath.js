@@ -295,90 +295,90 @@ Kinetic.Node.addGettersSetters(Kinetic.Plugins.TextPath, ['fontFamily', 'fontSiz
 /**
  * set font family
  * @name setFontFamily
- * @methodOf Kinetic.Text.prototype
+ * @methodOf Kinetic.Plugins.TextPath.prototype
  * @param {String} fontFamily
  */
 
 /**
  * set font size
  * @name setFontSize
- * @methodOf Kinetic.Text.prototype
+ * @methodOf Kinetic.Plugins.TextPath.prototype
  * @param {int} fontSize
  */
 
 /**
  * set font style.  Can be "normal", "italic", or "bold".  "normal" is the default.
  * @name setFontStyle
- * @methodOf Kinetic.Text.prototype
+ * @methodOf Kinetic.Plugins.TextPath.prototype
  * @param {String} fontStyle
  */
 
 /**
  * set text fill color
  * @name setTextFill
- * @methodOf Kinetic.Text.prototype
+ * @methodOf Kinetic.Plugins.TextPath.prototype
  * @param {String} textFill
  */
 
 /**
  * set text stroke color
  * @name setFontStroke
- * @methodOf Kinetic.Text.prototype
+ * @methodOf Kinetic.Plugins.TextPath.prototype
  * @param {String} textStroke
  */
 
 /**
  * set text stroke width
  * @name setTextStrokeWidth
- * @methodOf Kinetic.Text.prototype
+ * @methodOf Kinetic.Plugins.TextPath.prototype
  * @param {int} textStrokeWidth
  */
 
 /**
  * set text
  * @name setText
- * @methodOf Kinetic.Text.prototype
+ * @methodOf Kinetic.Plugins.TextPath.prototype
  * @param {String} text
  */
 
 /**
  * get font family
  * @name getFontFamily
- * @methodOf Kinetic.Text.prototype
+ * @methodOf Kinetic.Plugins.TextPath.prototype
  */
 
 /**
  * get font size
  * @name getFontSize
- * @methodOf Kinetic.Text.prototype
+ * @methodOf Kinetic.Plugins.TextPath.prototype
  */
 
 /**
  * get font style
  * @name getFontStyle
- * @methodOf Kinetic.Text.prototype
+ * @methodOf Kinetic.Plugins.TextPath.prototype
  */
 
 /**
  * get text fill color
  * @name getTextFill
- * @methodOf Kinetic.Text.prototype
+ * @methodOf Kinetic.Plugins.TextPath.prototype
  */
 
 /**
  * get text stroke color
  * @name getTextStroke
- * @methodOf Kinetic.Text.prototype
+ * @methodOf Kinetic.Plugins.TextPath.prototype
  */
 
 /**
  * get text stroke width
  * @name getTextStrokeWidth
- * @methodOf Kinetic.Text.prototype
+ * @methodOf Kinetic.Plugins.TextPath.prototype
  */
 
 /**
  * get text
  * @name getText
- * @methodOf Kinetic.Text.prototype
+ * @methodOf Kinetic.Plugins.TextPath.prototype
  */
