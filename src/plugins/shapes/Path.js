@@ -86,12 +86,12 @@ Kinetic.Node.addGettersSetters(Kinetic.Plugins.Path, ['data']);
  *  into a data array.  Currently supported SVG data:
  *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
  * @name setData
- * @methodOf Kinetic.Path.prototype
+ * @methodOf Kinetic.Plugins.Path.prototype
  * @param {String} SVG path command string
  */
 
 /**
  * get SVG path data string
  * @name getData
- * @methodOf Kinetic.Path.prototype
+ * @methodOf Kinetic.Plugins.Path.prototype
 */
