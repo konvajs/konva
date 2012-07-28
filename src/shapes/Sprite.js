@@ -17,7 +17,6 @@ Kinetic.Sprite = Kinetic.Shape.extend({
         config.drawFunc = this.drawFunc;
         // call super constructor
         this._super(config);
-
         var that = this;
         this.on('animationChange.kinetic', function() {
             // reset index when animation changes

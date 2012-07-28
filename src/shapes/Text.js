@@ -38,7 +38,6 @@ Kinetic.Text = Kinetic.Shape.extend({
             var attr = attrs[n];
             this.on(attr + 'Change.kinetic', that._setTextData);
         }
-
         that._setTextData();
     },
     drawFunc: function(context) {

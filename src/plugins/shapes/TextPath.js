@@ -10,7 +10,6 @@
  */
 Kinetic.Plugins.TextPath = Kinetic.Shape.extend({
     init: function(config) {
-
         this.setDefaultAttrs({
             fontFamily: 'Calibri',
             fontSize: 12,
@@ -25,14 +24,11 @@ Kinetic.Plugins.TextPath = Kinetic.Shape.extend({
         var that = this;
 
         config.drawFunc = this.drawFunc;
-
         // call super constructor
         this._super(config);
-
-        this.dataArray = Kinetic.Plugins.PathHelper.parsePathData(this.attrs.data);
-
+        this.dataArray = this.parsePathData(this.attrs.data);
         this.on('dataChange', function() {
-            that.dataArray = Kinetic.Plugins.PathHelper.parsePathData(that.attrs.data);
+            that.dataArray = this.parsePathData(this.attrs.data);
         });
         // update text data for certain attr changes
         var attrs = ['text', 'textStroke', 'textStrokeWidth'];
@@ -40,7 +36,6 @@ Kinetic.Plugins.TextPath = Kinetic.Shape.extend({
             var attr = attrs[n];
             this.on(attr + 'Change', that._setTextData);
         }
-
         that._setTextData();
     },
     drawFunc: function(context) {
@@ -83,6 +78,9 @@ Kinetic.Plugins.TextPath = Kinetic.Shape.extend({
 
         context.restore();
     },
+    parsePathData: Kinetic.Plugins.Path.prototype.parsePathData,
+    calcLength: Kinetic.Plugins.Path.prototype.calcLength,
+    convertEndpointToCenterParameterization: Kinetic.Plugins.Path.prototype.convertEndpointToCenterParameterization,
     /**
      * get text width in pixels
      * @name getTextWidth
@@ -181,8 +179,8 @@ Kinetic.Plugins.TextPath = Kinetic.Shape.extend({
 
                 switch (pathCmd.command) {
                     case 'L':
-                        if(Kinetic.Plugins.PathHelper.getLineLength(p0.x, p0.y, pathCmd.points[0], pathCmd.points[1]) > glyphWidth) {
-                            p1 = Kinetic.Plugins.PathHelper.getPointOnLine(glyphWidth, p0.x, p0.y, pathCmd.points[0], pathCmd.points[1], p0.x, p0.y);
+                        if(Kinetic.Geometry.getLineLength(p0.x, p0.y, pathCmd.points[0], pathCmd.points[1]) > glyphWidth) {
+                            p1 = Kinetic.Geometry.getPointOnLine(glyphWidth, p0.x, p0.y, pathCmd.points[0], pathCmd.points[1], p0.x, p0.y);
                         }
                         else
                             pathCmd = undefined;
@@ -207,7 +205,7 @@ Kinetic.Plugins.TextPath = Kinetic.Shape.extend({
                             currentT = end;
                             needNewSegment = true;
                         }
-                        p1 = Kinetic.Plugins.PathHelper.getPointOnEllipticalArc(pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3], currentT, pathCmd.points[6]);
+                        p1 = Kinetic.Geometry.getPointOnEllipticalArc(pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3], currentT, pathCmd.points[6]);
                         break;
                     case 'C':
                         if(currentT === 0) {
@@ -225,7 +223,7 @@ Kinetic.Plugins.TextPath = Kinetic.Shape.extend({
                             currentT = 1.0;
                             needNewSegment = true;
                         }
-                        p1 = Kinetic.Plugins.PathHelper.getPointOnCubicBezier(currentT, pathCmd.start.x, pathCmd.start.y, pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3], pathCmd.points[4], pathCmd.points[5]);
+                        p1 = Kinetic.Geometry.getPointOnCubicBezier(currentT, pathCmd.start.x, pathCmd.start.y, pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3], pathCmd.points[4], pathCmd.points[5]);
                         break;
                     case 'Q':
                         if(currentT === 0)
@@ -239,13 +237,13 @@ Kinetic.Plugins.TextPath = Kinetic.Shape.extend({
                             currentT = 1.0;
                             needNewSegment = true;
                         }
-                        p1 = Kinetic.Plugins.PathHelper.getPointOnQuadraticBezier(currentT, pathCmd.start.x, pathCmd.start.y, pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3]);
+                        p1 = Kinetic.Geometry.getPointOnQuadraticBezier(currentT, pathCmd.start.x, pathCmd.start.y, pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3]);
                         break;
 
                 }
 
                 if(p1 !== undefined) {
-                    currLen = Kinetic.Plugins.PathHelper.getLineLength(p0.x, p0.y, p1.x, p1.y);
+                    currLen = Kinetic.Geometry.getLineLength(p0.x, p0.y, p1.x, p1.y);
                 }
 
                 if(needNewSegment) {
@@ -262,7 +260,7 @@ Kinetic.Plugins.TextPath = Kinetic.Shape.extend({
             if(p0 === undefined || p1 === undefined)
                 break;
 
-            var width = Kinetic.Plugins.PathHelper.getLineLength(p0.x, p0.y, p1.x, p1.y);
+            var width = Kinetic.Geometry.getLineLength(p0.x, p0.y, p1.x, p1.y);
 
             // Note: Since glyphs are rendered one at a time, any kerning pair data built into the font will not be used.
             // Can foresee having a rough pair table built in that the developer can override as needed.
@@ -270,7 +268,7 @@ Kinetic.Plugins.TextPath = Kinetic.Shape.extend({
             var kern = 0;
             // placeholder for future implementation
 
-            var midpoint = Kinetic.Plugins.PathHelper.getPointOnLine(kern + width / 2.0, p0.x, p0.y, p1.x, p1.y);
+            var midpoint = Kinetic.Geometry.getPointOnLine(kern + width / 2.0, p0.x, p0.y, p1.x, p1.y);
 
             var rotation = Math.atan2((p1.y - p0.y), (p1.x - p0.x));
             this.glyphInfo.push({

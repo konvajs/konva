@@ -21,9 +21,7 @@ Kinetic.Ellipse = Kinetic.Shape.extend({
 
         // call super constructor
         this._super(config);
-
         this._convertRadius();
-
         var that = this;
         this.on('radiusChange.kinetic', function() {
             that._convertRadius();

@@ -22,8 +22,8 @@ Test.prototype.tests = {
             layer.add(rect);
         }
         stage.add(layer);
-		
-		console.profileEnd();
+
+        console.profileEnd();
         endTimer('add and draw 1,000 Kinetic rectangles');
 
     },
@@ -59,9 +59,9 @@ Test.prototype.tests = {
         });
 
         stage.start();
-        
+
         setTimeout(function() {
-        	//stage.stop();
+            //stage.stop();
         }, 1000)
     },
     'DRAWING - draw rect vs image from image data': function(containerId) {
@@ -218,6 +218,54 @@ Test.prototype.tests = {
 
                 endTimer('draw 1,000 cached stars');
             }
+        });
+    },
+    '*PATH - add map path': function(containerId) {
+        startTimer();
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 1024,
+            height: 480,
+            throttle: 80,
+            scale: 0.5,
+            x: 50,
+            y: 10
+        });
+        var mapLayer = new Kinetic.Layer();
+
+        for(var key in worldMap.shapes) {
+            var c = worldMap.shapes[key];
+
+            var path = new Kinetic.Plugins.Path({
+                data: c,
+                fill: '#ccc',
+                stroke: '#999',
+                strokeWidth: 1
+            });
+
+            if(key === 'US')
+                test(path.dataArray[0].command === 'M', 'first command should be a moveTo');
+
+            path.on('mouseover', function() {
+                this.setFill('red');
+                mapLayer.draw();
+            });
+
+            path.on('mouseout', function() {
+                this.setFill('#ccc');
+                mapLayer.draw();
+            });
+
+            mapLayer.add(path);
+        }
+
+        stage.add(mapLayer);
+
+        endTimer('time build and to draw map');
+        
+        mapLayer.beforeDraw(startTimer);
+        mapLayer.afterDraw(function() {
+        	endTimer('redraw layer');
         });
     }
 };
