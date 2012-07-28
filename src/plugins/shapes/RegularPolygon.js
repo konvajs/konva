@@ -7,7 +7,7 @@
  * @augments Kinetic.Shape
  * @param {Object} config
  */
-Kinetic.RegularPolygon = Kinetic.Shape.extend({
+Kinetic.Plugins.RegularPolygon = Kinetic.Shape.extend({
     init: function(config) {
         this.setDefaultAttrs({
             radius: 0,
@@ -34,7 +34,7 @@ Kinetic.RegularPolygon = Kinetic.Shape.extend({
 });
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.RegularPolygon, ['radius', 'sides']);
+Kinetic.Node.addGettersSetters(Kinetic.Plugins.RegularPolygon, ['radius', 'sides']);
 
 /**
  * set radius

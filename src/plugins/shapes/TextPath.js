@@ -5,10 +5,10 @@
  * Path constructor.
  * @author Jason Follas
  * @constructor
- * @augments Kinetic.Path
+ * @augments Kinetic.Shape
  * @param {Object} config
  */
-Kinetic.TextPath = Kinetic.Shape.extend({
+Kinetic.Plugins.TextPath = Kinetic.Shape.extend({
         init : function (config) {
             
             this.setDefaultAttrs({
@@ -23,8 +23,6 @@ Kinetic.TextPath = Kinetic.Shape.extend({
             this.shapeType = "TextPath";
             this.dataArray = [];
             var that = this;
-            
-            this._getDataArray = Kinetic.Path.prototype._getDataArray;
             
             config.drawFunc = function (context) {
                 var charArr = this.charArr;
@@ -70,14 +68,14 @@ Kinetic.TextPath = Kinetic.Shape.extend({
             // call super constructor
             this._super(config);
             
-            this.dataArray = this._getDataArray();
+            this.dataArray = Kinetic.Plugins.PathHelper.parsePathData(this.attrs.data);
             
             this.on('dataChange', function () {
-                that.dataArray = that._getDataArray();
+                that.dataArray = Kinetic.Plugins.PathHelper.parsePathData(that.attrs.data);
             });
             
             // update text data for certain attr changes
-            var attrs = ['padding', 'text', 'textStroke', 'textStrokeWidth'];
+            var attrs = ['text', 'textStroke', 'textStrokeWidth'];
             for (var n = 0; n < attrs.length; n++) {
                 var attr = attrs[n];
                 this.on(attr + 'Change', that._setTextData);
@@ -87,12 +85,16 @@ Kinetic.TextPath = Kinetic.Shape.extend({
         },
         /**
          * get text width in pixels
+         * @name getTextWidth
+         * @methodOf Kinetic.Plugins.TextPath.prototype
          */
         getTextWidth : function () {
             return this.textWidth;
         },
         /**
          * get text height in pixels
+         * @name getTextHeight
+         * @methodOf Kinetic.Plugins.TextPath.prototype
          */
         getTextHeight : function () {
             return this.textHeight;
@@ -175,17 +177,15 @@ Kinetic.TextPath = Kinetic.Shape.extend({
                         }
                     }
                     
-                    if (pathCmd === {}
-                        
-                         || p0 === undefined)
+                    if (pathCmd === {} || p0 === undefined)
                         return undefined;
                     
                     var needNewSegment = false;
                     
                     switch (pathCmd.command) {
                     case 'L':
-                        if (Kinetic.PathHelper.getLineLength(p0.x, p0.y, pathCmd.points[0], pathCmd.points[1]) > glyphWidth) {
-                            p1 = Kinetic.PathHelper.getPointOnLine(glyphWidth, p0.x, p0.y, pathCmd.points[0], pathCmd.points[1], p0.x, p0.y);
+                        if (Kinetic.Plugins.PathHelper.getLineLength(p0.x, p0.y, pathCmd.points[0], pathCmd.points[1]) > glyphWidth) {
+                            p1 = Kinetic.Plugins.PathHelper.getPointOnLine(glyphWidth, p0.x, p0.y, pathCmd.points[0], pathCmd.points[1], p0.x, p0.y);
                         } else
                             pathCmd = undefined;
                         break;
@@ -208,7 +208,7 @@ Kinetic.TextPath = Kinetic.Shape.extend({
                             needNewSegment = true;
                         }
                         
-                        p1 = Kinetic.PathHelper.getPointOnEllipticalArc(pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3], currentT, pathCmd.points[6]);
+                        p1 = Kinetic.Plugins.PathHelper.getPointOnEllipticalArc(pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3], currentT, pathCmd.points[6]);
                         break;
                     case 'C':
                         if (currentT === 0) {
@@ -226,7 +226,7 @@ Kinetic.TextPath = Kinetic.Shape.extend({
                             needNewSegment = true;
                         }
                         
-                        p1 = Kinetic.PathHelper.getPointOnCubicBezier(currentT, pathCmd.start.x, pathCmd.start.y, pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3], pathCmd.points[4], pathCmd.points[5]);
+                        p1 = Kinetic.Plugins.PathHelper.getPointOnCubicBezier(currentT, pathCmd.start.x, pathCmd.start.y, pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3], pathCmd.points[4], pathCmd.points[5]);
                         break;
                     case 'Q':
                         if (currentT === 0)
@@ -241,13 +241,13 @@ Kinetic.TextPath = Kinetic.Shape.extend({
                             needNewSegment = true;
                         }
                         
-                        p1 = Kinetic.PathHelper.getPointOnQuadraticBezier(currentT, pathCmd.start.x, pathCmd.start.y, pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3]);
+                        p1 = Kinetic.Plugins.PathHelper.getPointOnQuadraticBezier(currentT, pathCmd.start.x, pathCmd.start.y, pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3]);
                         break;
                         
                     }
                     
                     if (p1 !== undefined) {
-                        currLen = Kinetic.PathHelper.getLineLength(p0.x, p0.y, p1.x, p1.y);
+                        currLen = Kinetic.Plugins.PathHelper.getLineLength(p0.x, p0.y, p1.x, p1.y);
                     }
                     
                     if (needNewSegment) {
@@ -265,14 +265,14 @@ Kinetic.TextPath = Kinetic.Shape.extend({
                 if (p0 === undefined || p1 === undefined)
                     break;
                 
-                var width = Kinetic.PathHelper.getLineLength(p0.x, p0.y, p1.x, p1.y);
+                var width = Kinetic.Plugins.PathHelper.getLineLength(p0.x, p0.y, p1.x, p1.y);
                 
                 // Note: Since glyphs are rendered one at a time, any kerning pair data built into the font will not be used.
                 // Can foresee having a rough pair table built in that the developer can override as needed.
                 
                 var kern = 0; // placeholder for future implementation
                 
-                var midpoint = Kinetic.PathHelper.getPointOnLine(kern + width / 2.0, p0.x, p0.y, p1.x, p1.y);
+                var midpoint = Kinetic.Plugins.PathHelper.getPointOnLine(kern + width / 2.0, p0.x, p0.y, p1.x, p1.y);
                 
                 var rotation = Math.atan2((p1.y - p0.y), (p1.x - p0.x));
                 this.glyphInfo.push({
@@ -290,4 +290,95 @@ Kinetic.TextPath = Kinetic.Shape.extend({
     });
 
 // add setters and getters
-Kinetic.Node.addGettersSetters(Kinetic.TextPath, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'text']);
+Kinetic.Node.addGettersSetters(Kinetic.Plugins.TextPath, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'text']);
+
+/**
+ * set font family
+ * @name setFontFamily
+ * @methodOf Kinetic.Text.prototype
+ * @param {String} fontFamily
+ */
+
+/**
+ * set font size
+ * @name setFontSize
+ * @methodOf Kinetic.Text.prototype
+ * @param {int} fontSize
+ */
+
+/**
+ * set font style.  Can be "normal", "italic", or "bold".  "normal" is the default.
+ * @name setFontStyle
+ * @methodOf Kinetic.Text.prototype
+ * @param {String} fontStyle
+ */
+
+/**
+ * set text fill color
+ * @name setTextFill
+ * @methodOf Kinetic.Text.prototype
+ * @param {String} textFill
+ */
+
+/**
+ * set text stroke color
+ * @name setFontStroke
+ * @methodOf Kinetic.Text.prototype
+ * @param {String} textStroke
+ */
+
+/**
+ * set text stroke width
+ * @name setTextStrokeWidth
+ * @methodOf Kinetic.Text.prototype
+ * @param {int} textStrokeWidth
+ */
+
+/**
+ * set text
+ * @name setText
+ * @methodOf Kinetic.Text.prototype
+ * @param {String} text
+ */
+
+/**
+ * get font family
+ * @name getFontFamily
+ * @methodOf Kinetic.Text.prototype
+ */
+
+/**
+ * get font size
+ * @name getFontSize
+ * @methodOf Kinetic.Text.prototype
+ */
+
+/**
+ * get font style
+ * @name getFontStyle
+ * @methodOf Kinetic.Text.prototype
+ */
+
+/**
+ * get text fill color
+ * @name getTextFill
+ * @methodOf Kinetic.Text.prototype
+ */
+
+/**
+ * get text stroke color
+ * @name getTextStroke
+ * @methodOf Kinetic.Text.prototype
+ */
+
+/**
+ * get text stroke width
+ * @name getTextStrokeWidth
+ * @methodOf Kinetic.Text.prototype
+ */
+
+/**
+ * get text
+ * @name getText
+ * @methodOf Kinetic.Text.prototype
+ */
