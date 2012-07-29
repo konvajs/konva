@@ -5076,7 +5076,7 @@ Test.prototype.tests = {
             fill: 'black'
         }));
 
-        var p1 = Kinetic.Geometry.getPointOnLine(125, 10, 10, 210, 160);
+        var p1 = Kinetic.Plugins.Path.getPointOnLine(125, 10, 10, 210, 160);
         // should be 1/2 way, or (110,85)
         test(Math.round(p1.x) === 110, 'point X value should be 110');
         test(Math.round(p1.y) === 85, 'point Y value should be 85');
@@ -5116,12 +5116,12 @@ Test.prototype.tests = {
         c = 'M 100 200';
 
         for( t = 0.25; t <= 1; t += 0.25) {
-            var p1 = Kinetic.Geometry.getPointOnCubicBezier(t, 100, 200, 100, 100, 250, 100, 250, 200);
+            var p1 = Kinetic.Plugins.Path.getPointOnCubicBezier(t, 100, 200, 100, 100, 250, 100, 250, 200);
             c += ' ' + p1.x.toString() + ' ' + p1.y.toString();
         }
 
         for( t = 0.25; t <= 1; t += 0.25) {
-            var p1 = Kinetic.Geometry.getPointOnCubicBezier(t, 250, 200, 250, 300, 400, 300, 400, 200);
+            var p1 = Kinetic.Plugins.Path.getPointOnCubicBezier(t, 250, 200, 250, 300, 400, 300, 400, 200);
             c += ' ' + p1.x.toString() + ' ' + p1.y.toString();
         }
 
@@ -5159,12 +5159,12 @@ Test.prototype.tests = {
         c = 'M 200 300';
 
         for( t = 0.333; t <= 1; t += 0.333) {
-            var p1 = Kinetic.Geometry.getPointOnQuadraticBezier(t, 200, 300, 400, 50, 600, 300);
+            var p1 = Kinetic.Plugins.Path.getPointOnQuadraticBezier(t, 200, 300, 400, 50, 600, 300);
             c += ' ' + p1.x.toString() + ' ' + p1.y.toString();
         }
 
         for( t = 0.333; t <= 1; t += 0.333) {
-            var p1 = Kinetic.Geometry.getPointOnQuadraticBezier(t, 600, 300, 800, 550, 1000, 300);
+            var p1 = Kinetic.Plugins.Path.getPointOnQuadraticBezier(t, 600, 300, 800, 550, 1000, 300);
             c += ' ' + p1.x.toString() + ' ' + p1.y.toString();
         }
 
@@ -5200,7 +5200,7 @@ Test.prototype.tests = {
 
         layer.add(path);
 
-        var centerParamPoints = Kinetic.Geometry.convertEndpointToCenterParameterization(50, 100, 150, 150, 1, 1, 100, 50, 0);
+        var centerParamPoints = Kinetic.Plugins.Path.convertEndpointToCenterParameterization(50, 100, 150, 150, 1, 1, 100, 50, 0);
 
         var start = centerParamPoints[4];
         // 4 = theta
@@ -5210,24 +5210,24 @@ Test.prototype.tests = {
         var inc = Math.PI / 6.0;
         // 30 degree resolution
 
-        var p1 = Kinetic.Geometry.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], start, 0);
+        var p1 = Kinetic.Plugins.Path.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], start, 0);
         c = 'M ' + p1.x.toString() + ' ' + p1.y.toString();
 
         if(dTheta < 0)// clockwise
         {
             for( t = start - inc; t > end; t -= inc) {
-                p1 = Kinetic.Geometry.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], t, 0);
+                p1 = Kinetic.Plugins.Path.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], t, 0);
                 c += ' ' + p1.x.toString() + ' ' + p1.y.toString();
             }
         }
         else// counter-clockwise
         {
             for( t = start + inc; t < end; t += inc) {
-                p1 = Kinetic.Geometry.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], t, 0);
+                p1 = Kinetic.Plugins.Path.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], t, 0);
                 c += ' ' + p1.x.toString() + ' ' + p1.y.toString();
             }
         }
-        p1 = Kinetic.Geometry.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], end, 0);
+        p1 = Kinetic.Plugins.Path.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], end, 0);
         c += ' ' + p1.x.toString() + ' ' + p1.y.toString();
 
         var testpath = new Kinetic.Plugins.Path({
@@ -5262,7 +5262,7 @@ Test.prototype.tests = {
 
         layer.add(path);
 
-        var centerParamPoints = Kinetic.Geometry.convertEndpointToCenterParameterization(250, 100, 150, 150, 1, 0, 100, 50, 0);
+        var centerParamPoints = Kinetic.Plugins.Path.convertEndpointToCenterParameterization(250, 100, 150, 150, 1, 0, 100, 50, 0);
 
         var start = centerParamPoints[4];
         // 4 = theta
@@ -5272,24 +5272,24 @@ Test.prototype.tests = {
         var inc = Math.PI / 6.0;
         // 30 degree resolution
 
-        var p1 = Kinetic.Geometry.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], start, 0);
+        var p1 = Kinetic.Plugins.Path.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], start, 0);
         c = 'M ' + p1.x.toString() + ' ' + p1.y.toString();
 
         if(dTheta < 0)// clockwise
         {
             for( t = start - inc; t > end; t -= inc) {
-                p1 = Kinetic.Geometry.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], t, 0);
+                p1 = Kinetic.Plugins.Path.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], t, 0);
                 c += ' ' + p1.x.toString() + ' ' + p1.y.toString();
             }
         }
         else// counter-clockwise
         {
             for( t = start + inc; t < end; t += inc) {
-                p1 = Kinetic.Geometry.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], t, 0);
+                p1 = Kinetic.Plugins.Path.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], t, 0);
                 c += ' ' + p1.x.toString() + ' ' + p1.y.toString();
             }
         }
-        p1 = Kinetic.Geometry.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], end, 0);
+        p1 = Kinetic.Plugins.Path.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], end, 0);
         c += ' ' + p1.x.toString() + ' ' + p1.y.toString();
 
         var testpath = new Kinetic.Plugins.Path({
@@ -5324,7 +5324,7 @@ Test.prototype.tests = {
 
         layer.add(path);
 
-        var centerParamPoints = Kinetic.Geometry.convertEndpointToCenterParameterization(250, 100, 150, 150, 1, 0, 100, 50, 30);
+        var centerParamPoints = Kinetic.Plugins.Path.convertEndpointToCenterParameterization(250, 100, 150, 150, 1, 0, 100, 50, 30);
 
         var start = centerParamPoints[4];
         // 4 = theta
@@ -5336,24 +5336,24 @@ Test.prototype.tests = {
         var psi = centerParamPoints[6];
         // 6 = psi radians
 
-        var p1 = Kinetic.Geometry.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], start, psi);
+        var p1 = Kinetic.Plugins.Path.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], start, psi);
         c = 'M ' + p1.x.toString() + ' ' + p1.y.toString();
 
         if(dTheta < 0)// clockwise
         {
             for( t = start - inc; t > end; t -= inc) {
-                p1 = Kinetic.Geometry.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], t, psi);
+                p1 = Kinetic.Plugins.Path.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], t, psi);
                 c += ' ' + p1.x.toString() + ' ' + p1.y.toString();
             }
         }
         else// counter-clockwise
         {
             for( t = start + inc; t < end; t += inc) {
-                p1 = Kinetic.Geometry.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], t, psi);
+                p1 = Kinetic.Plugins.Path.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], t, psi);
                 c += ' ' + p1.x.toString() + ' ' + p1.y.toString();
             }
         }
-        p1 = Kinetic.Geometry.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], end, psi);
+        p1 = Kinetic.Plugins.Path.getPointOnEllipticalArc(centerParamPoints[0], centerParamPoints[1], centerParamPoints[2], centerParamPoints[3], end, psi);
         c += ' ' + p1.x.toString() + ' ' + p1.y.toString();
 
         var testpath = new Kinetic.Plugins.Path({
