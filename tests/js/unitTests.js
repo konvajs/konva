@@ -749,7 +749,7 @@ Test.prototype.tests = {
         test(go.tempNodes.length === 0, 'shouldn\'t be nodes in the tempNdoes array');
 
     },
-    'STAGE - remove layer with shape': function(containerId) {
+    'CONTAINER - remove layer with shape': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -780,6 +780,8 @@ Test.prototype.tests = {
         test(stage.children.length === 0, 'stage should have 0 children');
         test(stage.get('.myLayer')[0] === undefined, 'layer should not exist');
         test(stage.get('.myCircle')[0] === undefined, 'circle should not exist');
+
+        stage.draw();
     },
     'STAGE - remove layer with no shapes': function(containerId) {
         var stage = new Kinetic.Stage({

@@ -407,7 +407,7 @@ Kinetic.Stage = Kinetic.Container.extend({
          * it exists
          */
         try {
-            this.content.removeChild(layer.canvas);
+            this.content.removeChild(layer.canvas.element);
         }
         catch(e) {
         }
