@@ -1882,12 +1882,12 @@ Kinetic.Node = Kinetic.Class.extend({
             a._removeAnimation(anim);
             that.transAnim = null;
 
+			anim.node.draw();
+			
             // callback
-            if(config.callback !== undefined) {
+            if(config.callback) {
                 config.callback();
-            }
-
-            anim.node.draw();
+            } 
         };
         // auto start
         trans.start();
