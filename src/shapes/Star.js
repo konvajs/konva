@@ -7,7 +7,7 @@
  * @augments Kinetic.Shape
  * @param {Object} config
  */
-Kinetic.Plugins.Star = Kinetic.Shape.extend({
+Kinetic.Star = Kinetic.Shape.extend({
     init: function(config) {
         this.setDefaultAttrs({
             numPoints: 0,
@@ -38,43 +38,43 @@ Kinetic.Plugins.Star = Kinetic.Shape.extend({
 });
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Plugins.Star, ['numPoints', 'innerRadius', 'outerRadius']);
+Kinetic.Node.addGettersSetters(Kinetic.Star, ['numPoints', 'innerRadius', 'outerRadius']);
 
 /**
  * set number of points
  * @name setNumPoints
- * @methodOf Kinetic.Plugins.Star.prototype
+ * @methodOf Kinetic.Star.prototype
  * @param {Integer} points
  */
 
 /**
  * set outer radius
  * @name setOuterRadius
- * @methodOf Kinetic.Plugins.Star.prototype
+ * @methodOf Kinetic.Star.prototype
  * @param {Number} radius
  */
 
 /**
  * set inner radius
  * @name setInnerRadius
- * @methodOf Kinetic.Plugins.Star.prototype
+ * @methodOf Kinetic.Star.prototype
  * @param {Number} radius
  */
 
 /**
  * get number of points
  * @name getNumPoints
- * @methodOf Kinetic.Plugins.Star.prototype
+ * @methodOf Kinetic.Star.prototype
  */
 
 /**
  * get outer radius
  * @name getOuterRadius
- * @methodOf Kinetic.Plugins.Star.prototype
+ * @methodOf Kinetic.Star.prototype
  */
 
 /**
  * get inner radius
  * @name getInnerRadius
- * @methodOf Kinetic.Plugins.Star.prototype
+ * @methodOf Kinetic.Star.prototype
  */

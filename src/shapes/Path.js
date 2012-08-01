@@ -8,7 +8,7 @@
  * @augments Kinetic.Shape
  * @param {Object} config
  */
-Kinetic.Plugins.Path = Kinetic.Shape.extend({
+Kinetic.Path = Kinetic.Shape.extend({
     init: function(config) {
         this.shapeType = "Path";
         this.dataArray = [];
@@ -17,9 +17,9 @@ Kinetic.Plugins.Path = Kinetic.Shape.extend({
         config.drawFunc = this.drawFunc;
         // call super constructor
         this._super(config);
-        this.dataArray = Kinetic.Plugins.Path.parsePathData(this.attrs.data);
+        this.dataArray = Kinetic.Path.parsePathData(this.attrs.data);
         this.on('dataChange', function() {
-            that.dataArray = Kinetic.Plugins.Path.parsePathData(that.attrs.data);
+            that.dataArray = Kinetic.Path.parsePathData(that.attrs.data);
         });
     },
     drawFunc: function(context) {
@@ -72,10 +72,10 @@ Kinetic.Plugins.Path = Kinetic.Shape.extend({
  * Utility methods written by jfollas to
  * handle length and point measurements
  */
-Kinetic.Plugins.Path.getLineLength = function(x1, y1, x2, y2) {
+Kinetic.Path.getLineLength = function(x1, y1, x2, y2) {
     return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
 };
-Kinetic.Plugins.Path.getPointOnLine = function(dist, P1x, P1y, P2x, P2y, fromX, fromY) {
+Kinetic.Path.getPointOnLine = function(dist, P1x, P1y, P2x, P2y, fromX, fromY) {
     if(fromX === undefined) {
         fromX = P1x;
     }
@@ -119,7 +119,7 @@ Kinetic.Plugins.Path.getPointOnLine = function(dist, P1x, P1y, P2x, P2y, fromX, 
     return pt;
 };
 
-Kinetic.Plugins.Path.getPointOnCubicBezier = function(pct, P1x, P1y, P2x, P2y, P3x, P3y, P4x, P4y) {
+Kinetic.Path.getPointOnCubicBezier = function(pct, P1x, P1y, P2x, P2y, P3x, P3y, P4x, P4y) {
     function CB1(t) {
         return t * t * t;
     }
@@ -140,7 +140,7 @@ Kinetic.Plugins.Path.getPointOnCubicBezier = function(pct, P1x, P1y, P2x, P2y, P
         y: y
     };
 };
-Kinetic.Plugins.Path.getPointOnQuadraticBezier = function(pct, P1x, P1y, P2x, P2y, P3x, P3y) {
+Kinetic.Path.getPointOnQuadraticBezier = function(pct, P1x, P1y, P2x, P2y, P3x, P3y) {
     function QB1(t) {
         return t * t;
     }
@@ -158,7 +158,7 @@ Kinetic.Plugins.Path.getPointOnQuadraticBezier = function(pct, P1x, P1y, P2x, P2
         y: y
     };
 };
-Kinetic.Plugins.Path.getPointOnEllipticalArc = function(cx, cy, rx, ry, theta, psi) {
+Kinetic.Path.getPointOnEllipticalArc = function(cx, cy, rx, ry, theta, psi) {
     var cosPsi = Math.cos(psi), sinPsi = Math.sin(psi);
     var pt = {
         x: rx * Math.cos(theta),
@@ -175,7 +175,7 @@ Kinetic.Plugins.Path.getPointOnEllipticalArc = function(cx, cy, rx, ry, theta, p
  *  L data for the purpose of high performance Path
  *  rendering
  */
-Kinetic.Plugins.Path.parsePathData = function(data) {
+Kinetic.Path.parsePathData = function(data) {
     // Path Data Segment must begin with a moveTo
     //m (x y)+  Relative moveTo (subsequent points are treated as lineTo)
     //M (x y)+  Absolute moveTo (subsequent points are treated as lineTo)
@@ -414,9 +414,9 @@ Kinetic.Plugins.Path.parsePathData = function(data) {
 
     return ca;
 };
-Kinetic.Plugins.Path.calcLength = function(x, y, cmd, points) {
+Kinetic.Path.calcLength = function(x, y, cmd, points) {
     var len, p1, p2;
-    var path = Kinetic.Plugins.Path;
+    var path = Kinetic.Path;
 
     switch (cmd) {
         case 'L':
@@ -478,7 +478,7 @@ Kinetic.Plugins.Path.calcLength = function(x, y, cmd, points) {
 
     return 0;
 };
-Kinetic.Plugins.Path.convertEndpointToCenterParameterization = function(x1, y1, x2, y2, fa, fs, rx, ry, psiDeg) {
+Kinetic.Path.convertEndpointToCenterParameterization = function(x1, y1, x2, y2, fa, fs, rx, ry, psiDeg) {
     // Derived from: http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
     var psi = psiDeg * (Math.PI / 180.0);
     var xp = Math.cos(psi) * (x1 - x2) / 2.0 + Math.sin(psi) * (y1 - y2) / 2.0;
@@ -536,7 +536,7 @@ Kinetic.Plugins.Path.convertEndpointToCenterParameterization = function(x1, y1, 
 };
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Plugins.Path, ['data']);
+Kinetic.Node.addGettersSetters(Kinetic.Path, ['data']);
 
 /**
  * set SVG path data string.  This method
@@ -544,12 +544,12 @@ Kinetic.Node.addGettersSetters(Kinetic.Plugins.Path, ['data']);
  *  into a data array.  Currently supported SVG data:
  *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
  * @name setData
- * @methodOf Kinetic.Plugins.Path.prototype
+ * @methodOf Kinetic.Path.prototype
  * @param {String} SVG path command string
  */
 
 /**
  * get SVG path data string
  * @name getData
- * @methodOf Kinetic.Plugins.Path.prototype
+ * @methodOf Kinetic.Path.prototype
  */

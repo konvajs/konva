@@ -266,7 +266,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
-        var star = new Kinetic.Plugins.Star({
+        var star = new Kinetic.Star({
             x: 200,
             y: 100,
             numPoints: 10,
@@ -337,7 +337,7 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer({
             rotationDeg: 20
         });
-        var star = new Kinetic.Plugins.Star({
+        var star = new Kinetic.Star({
             x: 200,
             y: 100,
             numPoints: 10,
@@ -717,7 +717,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
-        var star = new Kinetic.Plugins.Star({
+        var star = new Kinetic.Star({
             x: 200,
             y: 100,
             numPoints: 5,

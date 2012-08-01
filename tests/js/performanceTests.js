@@ -148,7 +148,7 @@ Test.prototype.tests = {
 
         startTimer();
         for(var n = 0; n < 1000; n++) {
-            var star = new Kinetic.Plugins.Star({
+            var star = new Kinetic.Star({
                 innerRadius: 20,
                 outerRadius: 50,
                 fill: 'yellow',
@@ -180,7 +180,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
-        var star = new Kinetic.Plugins.Star({
+        var star = new Kinetic.Star({
             innerRadius: 20,
             outerRadius: 50,
             fill: 'yellow',
@@ -236,7 +236,7 @@ Test.prototype.tests = {
         for(var key in worldMap.shapes) {
             var c = worldMap.shapes[key];
 
-            var path = new Kinetic.Plugins.Path({
+            var path = new Kinetic.Path({
                 data: c,
                 fill: '#ccc',
                 stroke: '#999',
