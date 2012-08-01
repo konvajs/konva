@@ -4883,7 +4883,7 @@ Kinetic.Text = Kinetic.Shape.extend({
         this._super(config);
 
         // update text data for certain attr changes
-        var attrs = ['width', 'height', 'padding', 'text', 'textStroke', 'textStrokeWidth'];
+        var attrs = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'align', 'lineHeight', 'text', 'width', 'height'];
         var that = this;
         for(var n = 0; n < attrs.length; n++) {
             var attr = attrs[n];

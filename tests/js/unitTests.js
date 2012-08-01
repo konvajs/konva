@@ -2847,6 +2847,42 @@ Test.prototype.tests = {
          });
          */
     },
+    'SHAPE - change font size should update text data': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var text = new Kinetic.Text({
+            x: 10,
+            y: 10,
+            fill: '#ddd',
+            text: 'Some awesome text',
+            fontSize: 16,
+            fontFamily: 'Calibri',
+            fontStyle: 'normal',
+            textFill: '#555',
+            align: 'center',
+            padding: 5,
+            draggable: true,
+            detectionType: 'path'
+        });
+
+        var width = text.getBoxWidth();
+        var height = text.getBoxHeight();
+
+        layer.add(text);
+        stage.add(layer);
+
+        text.setFontSize(30);
+        layer.draw();
+
+        test(text.getBoxWidth() > width, 'text box width should have increased.');
+        test(text.getBoxHeight() > height, 'text box height should have increased.');
+
+    },
     'SHAPE - get shape name': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
