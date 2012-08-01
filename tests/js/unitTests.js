@@ -748,7 +748,6 @@ Test.prototype.tests = {
 
         test(go.tempNodes[circle._id] === undefined, 'circle shouldn\'t be in the temp nodes hash');
 
-
     },
     'CONTAINER - remove layer with shape': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -4500,29 +4499,36 @@ Test.prototype.tests = {
             layer.draw();
         });
         var a = Kinetic.Animation;
-
+        
         test(a.animations.length === 0, 'should be no animations running');
         test(stage.animRunning === false, 'animRunning should be false');
 
         stage.start();
-
         test(a.animations.length === 1, 'should be 1 animation running');
+        test(a.animations[0].id === stage.anim.id, 'animation id is incorrect');
+        test(stage.animRunning === true, 'animRunning should be true');
+
+        stage.stop();
+        test(a.animations.length === 0, 'should be no animations running');
+        test(stage.animRunning === false, 'animRunning should be false');
+
+        stage.start();
+        test(a.animations.length === 1, 'should be 1 animation running');
+        test(a.animations[0].id === stage.anim.id, 'animation id is incorrect');
         test(stage.animRunning === true, 'animRunning should be true');
 
         stage.start();
-
         test(a.animations.length === 1, 'should be 1 animation running');
+        test(a.animations[0].id === stage.anim.id, 'animation id is incorrect');
         test(stage.animRunning === true, 'animRunning should be true');
-
+        
         stage.stop();
-
         test(a.animations.length === 0, 'should be no animations running');
         test(stage.animRunning === false, 'animRunning should be false');
 
         stage.stop();
-
         test(a.animations.length === 0, 'should be no animations running');
-        test(stage.animRunning === false, 'animRunning should be false');
+        test(stage.animRunning === false, 'animRunning should be false');  
     },
     ////////////////////////////////////////////////////////////////////////
     //  TRANSITION tests

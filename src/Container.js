@@ -99,7 +99,11 @@ Kinetic.Container = Kinetic.Node.extend({
     remove: function(child) {
         if(child && child.index !== undefined && this.children[child.index]._id == child._id) {
             var stage = this.getStage();
-            if(stage !== undefined) {
+            /*
+             * remove event listeners and references to the node
+             * from the ids and names hashes
+             */
+            if(stage) {
                 stage._removeId(child.getId());
                 stage._removeName(child.getName(), child._id);
             }

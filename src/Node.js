@@ -62,6 +62,7 @@ Kinetic.Node = Kinetic.Class.extend({
         this.setDefaultAttrs(this.defaultNodeAttrs);
         this.eventListeners = {};
         this.lastDragTime = 0;
+        this.transAnim = new Kinetic.Animation();
         this.setAttrs(config);
 
         // bind events
@@ -676,10 +677,7 @@ Kinetic.Node = Kinetic.Class.extend({
          * clear transition if one is currently running for this
          * node
          */
-        if(this.transAnim) {
-            a._removeAnimation(this.transAnim);
-            this.transAnim = null;
-        }
+        a._removeAnimation(this.transAnim);
 
         /*
          * create new transition
@@ -687,40 +685,31 @@ Kinetic.Node = Kinetic.Class.extend({
         var node = this.nodeType === 'Stage' ? this : this.getLayer();
         var that = this;
         var trans = new Kinetic.Transition(this, config);
-        var anim = {
-            func: function() {
-                trans._onEnterFrame();
-            },
-            node: node
+
+        this.transAnim.func = function() {
+            trans._onEnterFrame();
         };
-
-        // store reference to transition animation
-        this.transAnim = anim;
-
+        this.transAnim.node = node;
         /*
          * adding the animation with the addAnimation
          * method auto generates an id
          */
-        a._addAnimation(anim);
+        a._addAnimation(this.transAnim);
 
         // subscribe to onFinished for first tween
         trans.onFinished = function() {
             // remove animation
-            a._removeAnimation(anim);
-            that.transAnim = null;
+            a._removeAnimation(that.transAnim);
+            that.transAnim.node.draw();
 
-			anim.node.draw();
-			
             // callback
             if(config.callback) {
                 config.callback();
-            } 
+            }
         };
         // auto start
         trans.start();
-
         a._handleAnimation();
-
         return trans;
     },
     /**

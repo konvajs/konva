@@ -69,6 +69,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         go.stages.push(this);
         this._addId(this);
         this._addName(this);
+
     },
     /**
      * sets onFrameFunc for animation
@@ -77,9 +78,7 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @param {function} func
      */
     onFrame: function(func) {
-        this.anim = {
-            func: func
-        };
+        this.anim.func = func;
     },
     /**
      * start animation
@@ -972,7 +971,7 @@ Kinetic.Stage = Kinetic.Container.extend({
 
         this.ids = {};
         this.names = {};
-        this.anim = undefined;
+        this.anim = new Kinetic.Animation();
         this.animRunning = false;
     },
     _draw: function(canvas) {

@@ -1091,82 +1091,88 @@ Kinetic.Transform.prototype = {
 ///////////////////////////////////////////////////////////////////////
 //  Animation
 ///////////////////////////////////////////////////////////////////////
-Kinetic.Animation = {
-    animations: [],
-    animIdCounter: 0,
-    animRunning: false,
-    frame: {
-        time: 0,
-        timeDiff: 0,
-        lastTime: new Date().getTime()
-    },
-    _addAnimation: function(anim) {
-        anim.id = this.animIdCounter++;
-        this.animations.push(anim);
-    },
-    _removeAnimation: function(anim) {
-        var id = anim.id;
-        var animations = this.animations;
-        for(var n = 0; n < animations.length; n++) {
-            if(animations[n].id === id) {
-                this.animations.splice(n, 1);
-                return false;
-            }
+Kinetic.Animation = function(config) {
+    if(!config) {
+        config = {};
+    }
+    for(var key in config) {
+        this[key] = config[key];
+    }
+    this.id = Kinetic.Animation.animIdCounter++;
+};
+Kinetic.Animation.animations = [];
+Kinetic.Animation.animIdCounter = 0;
+Kinetic.Animation.animRunning = false;
+Kinetic.Animation.frame = {
+    time: 0,
+    timeDiff: 0,
+    lastTime: new Date().getTime()
+};
+Kinetic.Animation._addAnimation = function(anim) {
+    this.animations.push(anim);
+};
+Kinetic.Animation._removeAnimation = function(anim) {
+    var id = anim.id;
+    var animations = this.animations;
+    for(var n = 0; n < animations.length; n++) {
+        if(animations[n].id === id) {
+            this.animations.splice(n, 1);
+            return false;
         }
-    },
-    _runFrames: function() {
-        var nodes = {};
-        /*
-         * loop through all animations and execute animation
-         *  function.  if the animation object has specified node,
-         *  we can add the node to the nodes hash to eliminate
-         *  drawing the same node multiple times.  The node property
-         *  can be the stage itself or a layer
-         */
-        for(var n = 0; n < this.animations.length; n++) {
-            var anim = this.animations[n];
-            if(anim.node && anim.node._id !== undefined) {
-                nodes[anim.node._id] = anim.node;
-            }
-            // if animation object has a function, execute it
-            if(anim.func) {
-                anim.func(this.frame);
-            }
+    }
+};
+Kinetic.Animation._runFrames = function() {
+    var nodes = {};
+    /*
+     * loop through all animations and execute animation
+     *  function.  if the animation object has specified node,
+     *  we can add the node to the nodes hash to eliminate
+     *  drawing the same node multiple times.  The node property
+     *  can be the stage itself or a layer
+     */
+    for(var n = 0; n < this.animations.length; n++) {
+        var anim = this.animations[n];
+        if(anim.node && anim.node._id !== undefined) {
+            nodes[anim.node._id] = anim.node;
         }
+        // if animation object has a function, execute it
+        if(anim.func) {
+            anim.func(this.frame);
+        }
+    }
 
-        for(var key in nodes) {
-            nodes[key].draw();
-        }
-    },
-    _updateFrameObject: function() {
-        var time = new Date().getTime();
-        this.frame.timeDiff = time - this.frame.lastTime;
-        this.frame.lastTime = time;
-        this.frame.time += this.frame.timeDiff;
-    },
-    _animationLoop: function() {
-        if(this.animations.length > 0) {
-            this._updateFrameObject();
-            this._runFrames();
-            var that = this;
-            requestAnimFrame(function() {
-                that._animationLoop();
-            });
-        }
-        else {
-            this.animRunning = false;
-            this.frame.lastTime = 0;
-        }
-    },
-    _handleAnimation: function() {
+    for(var key in nodes) {
+        nodes[key].draw();
+    }
+};
+Kinetic.Animation._updateFrameObject = function() {
+    var time = new Date().getTime();
+    this.frame.timeDiff = time - this.frame.lastTime;
+    this.frame.lastTime = time;
+    this.frame.time += this.frame.timeDiff;
+};
+Kinetic.Animation._animationLoop = function() {
+    if(this.animations.length > 0) {
+        this._updateFrameObject();
+        this._runFrames();
         var that = this;
-        if(!this.animRunning) {
-            this.animRunning = true;
+        requestAnimFrame(function() {
             that._animationLoop();
-        }
-        else {
-            this.frame.lastTime = 0;
-        }
+        });
+    }
+    else {
+        this.animRunning = false;
+        this.frame.lastTime = 0;
+    }
+};
+Kinetic.Animation._handleAnimation = function() {
+    var that = this;
+    if(!this.animRunning) {
+        this.animRunning = true;
+        that._animationLoop();
+    }
+    else {
+        this.frame.lastTime = 0;
     }
 };
 requestAnimFrame = (function(callback) {
@@ -1240,6 +1246,7 @@ Kinetic.Node = Kinetic.Class.extend({
         this.setDefaultAttrs(this.defaultNodeAttrs);
         this.eventListeners = {};
         this.lastDragTime = 0;
+        this.transAnim = new Kinetic.Animation();
         this.setAttrs(config);
 
         // bind events
@@ -1854,10 +1861,7 @@ Kinetic.Node = Kinetic.Class.extend({
          * clear transition if one is currently running for this
          * node
          */
-        if(this.transAnim) {
-            a._removeAnimation(this.transAnim);
-            this.transAnim = null;
-        }
+        a._removeAnimation(this.transAnim);
 
         /*
          * create new transition
@@ -1865,40 +1869,31 @@ Kinetic.Node = Kinetic.Class.extend({
         var node = this.nodeType === 'Stage' ? this : this.getLayer();
         var that = this;
         var trans = new Kinetic.Transition(this, config);
-        var anim = {
-            func: function() {
-                trans._onEnterFrame();
-            },
-            node: node
+
+        this.transAnim.func = function() {
+            trans._onEnterFrame();
         };
-
-        // store reference to transition animation
-        this.transAnim = anim;
-
+        this.transAnim.node = node;
         /*
          * adding the animation with the addAnimation
          * method auto generates an id
          */
-        a._addAnimation(anim);
+        a._addAnimation(this.transAnim);
 
         // subscribe to onFinished for first tween
         trans.onFinished = function() {
             // remove animation
-            a._removeAnimation(anim);
-            that.transAnim = null;
+            a._removeAnimation(that.transAnim);
+            that.transAnim.node.draw();
 
-			anim.node.draw();
-			
             // callback
             if(config.callback) {
                 config.callback();
-            } 
+            }
         };
         // auto start
         trans.start();
-
         a._handleAnimation();
-
         return trans;
     },
     /**
@@ -2561,7 +2556,11 @@ Kinetic.Container = Kinetic.Node.extend({
     remove: function(child) {
         if(child && child.index !== undefined && this.children[child.index]._id == child._id) {
             var stage = this.getStage();
-            if(stage !== undefined) {
+            /*
+             * remove event listeners and references to the node
+             * from the ids and names hashes
+             */
+            if(stage) {
                 stage._removeId(child.getId());
                 stage._removeName(child.getName(), child._id);
             }
@@ -2783,6 +2782,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         go.stages.push(this);
         this._addId(this);
         this._addName(this);
+
     },
     /**
      * sets onFrameFunc for animation
@@ -2791,9 +2791,7 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @param {function} func
      */
     onFrame: function(func) {
-        this.anim = {
-            func: func
-        };
+        this.anim.func = func;
     },
     /**
      * start animation
@@ -3686,7 +3684,7 @@ Kinetic.Stage = Kinetic.Container.extend({
 
         this.ids = {};
         this.names = {};
-        this.anim = undefined;
+        this.anim = new Kinetic.Animation();
         this.animRunning = false;
     },
     _draw: function(canvas) {
@@ -5396,6 +5394,7 @@ Kinetic.Sprite = Kinetic.Shape.extend({
         config.drawFunc = this.drawFunc;
         // call super constructor
         this._super(config);
+        this.anim = new Kinetic.Animation();
         var that = this;
         this.on('animationChange.kinetic', function() {
             // reset index when animation changes
@@ -5426,10 +5425,7 @@ Kinetic.Sprite = Kinetic.Shape.extend({
         var ka = Kinetic.Animation;
 
         // if sprite already has an animation, remove it
-        if(this.anim) {
-            ka._removeAnimation(this.anim);
-            this.anim = null;
-        }
+        ka._removeAnimation(this.anim);
 
         /*
          * animation object has no executable function because
@@ -5437,9 +5433,7 @@ Kinetic.Sprite = Kinetic.Shape.extend({
          *  below.  The anim object only needs the layer reference for
          *  redraw
          */
-        this.anim = {
-            node: layer
-        };
+        this.anim.node = layer;
 
         /*
          * adding the animation with the addAnimation
@@ -5463,11 +5457,7 @@ Kinetic.Sprite = Kinetic.Shape.extend({
      * @methodOf Kinetic.Sprite.prototype
      */
     stop: function() {
-        var ka = Kinetic.Animation;
-        if(this.anim) {
-            ka._removeAnimation(this.anim);
-            this.anim = null;
-        }
+        Kinetic.Animation._removeAnimation(this.anim);
         clearInterval(this.interval);
     },
     /**

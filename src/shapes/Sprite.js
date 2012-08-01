@@ -17,6 +17,7 @@ Kinetic.Sprite = Kinetic.Shape.extend({
         config.drawFunc = this.drawFunc;
         // call super constructor
         this._super(config);
+        this.anim = new Kinetic.Animation();
         var that = this;
         this.on('animationChange.kinetic', function() {
             // reset index when animation changes
@@ -47,10 +48,7 @@ Kinetic.Sprite = Kinetic.Shape.extend({
         var ka = Kinetic.Animation;
 
         // if sprite already has an animation, remove it
-        if(this.anim) {
-            ka._removeAnimation(this.anim);
-            this.anim = null;
-        }
+        ka._removeAnimation(this.anim);
 
         /*
          * animation object has no executable function because
@@ -58,9 +56,7 @@ Kinetic.Sprite = Kinetic.Shape.extend({
          *  below.  The anim object only needs the layer reference for
          *  redraw
          */
-        this.anim = {
-            node: layer
-        };
+        this.anim.node = layer;
 
         /*
          * adding the animation with the addAnimation
@@ -84,11 +80,7 @@ Kinetic.Sprite = Kinetic.Shape.extend({
      * @methodOf Kinetic.Sprite.prototype
      */
     stop: function() {
-        var ka = Kinetic.Animation;
-        if(this.anim) {
-            ka._removeAnimation(this.anim);
-            this.anim = null;
-        }
+        Kinetic.Animation._removeAnimation(this.anim);
         clearInterval(this.interval);
     },
     /**
