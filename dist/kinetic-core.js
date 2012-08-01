@@ -40,7 +40,7 @@ Kinetic.Global = {
     BUBBLE_WHITELIST: ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'click', 'dblclick', 'touchstart', 'touchmove', 'touchend', 'tap', 'dbltap', 'dragstart', 'dragmove', 'dragend'],
     stages: [],
     idCounter: 0,
-    tempNodes: [],
+    tempNodes: {},
     maxDragTimeInterval: 20,
     drag: {
         moving: false,
@@ -57,15 +57,20 @@ Kinetic.Global = {
     },
     _pullNodes: function(stage) {
         var tempNodes = this.tempNodes;
-        for(var n = 0; n < tempNodes.length; n++) {
-            var node = tempNodes[n];
+        for(var key in tempNodes) {
+            var node = tempNodes[key];
             if(node.getStage() !== undefined && node.getStage()._id === stage._id) {
                 stage._addId(node);
                 stage._addName(node);
-                this.tempNodes.splice(n, 1);
-                n -= 1;
+                this._removeTempNode(node);
             }
         }
+    },
+    _addTempNode: function(node) {
+        this.tempNodes[node._id] = node;
+    },
+    _removeTempNode: function(node) {
+        delete this.tempNodes[node._id];
     }
 };
 
@@ -2525,8 +2530,7 @@ Kinetic.Container = Kinetic.Node.extend({
         var stage = child.getStage();
 
         if(!stage) {
-            var go = Kinetic.Global;
-            go.tempNodes.push(child);
+            Kinetic.Global._addTempNode(child);
         }
         else {
             stage._addId(child);
@@ -2562,15 +2566,7 @@ Kinetic.Container = Kinetic.Node.extend({
                 stage._removeName(child.getName(), child._id);
             }
 
-            var go = Kinetic.Global;
-            for(var n = 0; n < go.tempNodes.length; n++) {
-                var node = go.tempNodes[n];
-                if(node._id === child._id) {
-                    go.tempNodes.splice(n, 1);
-                    break;
-                }
-            }
-
+            Kinetic.Global._removeTempNode(child);
             this.children.splice(child.index, 1);
             this._setChildrenIndices();
 

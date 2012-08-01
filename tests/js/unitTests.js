@@ -734,7 +734,7 @@ Test.prototype.tests = {
 
         var go = Kinetic.Global;
 
-        test(go.tempNodes.length === 0, 'shouldn\'t be nodes in the tempNdoes array');
+        test(go.tempNodes[circle._id] === undefined, 'circle shouldn\'t be in the temp nodes hash');
 
         layer.add(circle);
 
@@ -742,11 +742,12 @@ Test.prototype.tests = {
 
         test(node === undefined, 'node should be undefined');
 
-        test(go.tempNodes.length === 1, 'tempNodes array should have one node');
+        test(go.tempNodes[circle._id].attrs.id === 'myCircle', 'circle should be in temp nodes');
 
         layer.remove(circle);
 
-        test(go.tempNodes.length === 0, 'shouldn\'t be nodes in the tempNdoes array');
+        test(go.tempNodes[circle._id] === undefined, 'circle shouldn\'t be in the temp nodes hash');
+
 
     },
     'CONTAINER - remove layer with shape': function(containerId) {

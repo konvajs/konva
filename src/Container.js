@@ -68,8 +68,7 @@ Kinetic.Container = Kinetic.Node.extend({
         var stage = child.getStage();
 
         if(!stage) {
-            var go = Kinetic.Global;
-            go.tempNodes.push(child);
+            Kinetic.Global._addTempNode(child);
         }
         else {
             stage._addId(child);
@@ -105,15 +104,7 @@ Kinetic.Container = Kinetic.Node.extend({
                 stage._removeName(child.getName(), child._id);
             }
 
-            var go = Kinetic.Global;
-            for(var n = 0; n < go.tempNodes.length; n++) {
-                var node = go.tempNodes[n];
-                if(node._id === child._id) {
-                    go.tempNodes.splice(n, 1);
-                    break;
-                }
-            }
-
+            Kinetic.Global._removeTempNode(child);
             this.children.splice(child.index, 1);
             this._setChildrenIndices();
 

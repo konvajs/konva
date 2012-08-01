@@ -12,7 +12,7 @@ Kinetic.Global = {
     BUBBLE_WHITELIST: ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'click', 'dblclick', 'touchstart', 'touchmove', 'touchend', 'tap', 'dbltap', 'dragstart', 'dragmove', 'dragend'],
     stages: [],
     idCounter: 0,
-    tempNodes: [],
+    tempNodes: {},
     maxDragTimeInterval: 20,
     drag: {
         moving: false,
@@ -29,14 +29,19 @@ Kinetic.Global = {
     },
     _pullNodes: function(stage) {
         var tempNodes = this.tempNodes;
-        for(var n = 0; n < tempNodes.length; n++) {
-            var node = tempNodes[n];
+        for(var key in tempNodes) {
+            var node = tempNodes[key];
             if(node.getStage() !== undefined && node.getStage()._id === stage._id) {
                 stage._addId(node);
                 stage._addName(node);
-                this.tempNodes.splice(n, 1);
-                n -= 1;
+                this._removeTempNode(node);
             }
         }
+    },
+    _addTempNode: function(node) {
+        this.tempNodes[node._id] = node;
+    },
+    _removeTempNode: function(node) {
+        delete this.tempNodes[node._id];
     }
 };
