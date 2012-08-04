@@ -2,8 +2,7 @@
 //  Stage
 ///////////////////////////////////////////////////////////////////////
 /**
- * Stage constructor.  A stage is used to contain multiple layers and handle
- * animations
+ * Stage constructor.  A stage is used to contain multiple layers
  * @constructor
  * @augments Kinetic.Container
  * @param {Object} config
@@ -70,37 +69,6 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._addId(this);
         this._addName(this);
 
-    },
-    /**
-     * sets onFrameFunc for animation
-     * @name onFrame
-     * @methodOf Kinetic.Stage.prototype
-     * @param {function} func
-     */
-    onFrame: function(func) {
-        this.anim.func = func;
-    },
-    /**
-     * start animation
-     * @name start
-     * @methodOf Kinetic.Stage.prototype
-     */
-    start: function() {
-        if(!this.animRunning) {
-            var a = Kinetic.Animation;
-            a._addAnimation(this.anim);
-            a._handleAnimation();
-            this.animRunning = true;
-        }
-    },
-    /**
-     * stop animation
-     * @name stop
-     * @methodOf Kinetic.Stage.prototype
-     */
-    stop: function() {
-        Kinetic.Animation._removeAnimation(this.anim);
-        this.animRunning = false;
     },
     /**
      * draw children
@@ -971,8 +939,6 @@ Kinetic.Stage = Kinetic.Container.extend({
 
         this.ids = {};
         this.names = {};
-        this.anim = new Kinetic.Animation();
-        this.animRunning = false;
     },
     _draw: function(canvas) {
         this._drawChildren(canvas);

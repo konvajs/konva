@@ -1683,11 +1683,6 @@ Test.prototype.tests = {
             test(darth.getWidth() === 438, 'image width should be 438');
             test(darth.getHeight() === 300, 'image height should be 300');
 
-            stage.onFrame(function() {
-                darth.rotate(0.1);
-                layer.draw();
-            });
-
             darth.applyFilter({
                 filter: Kinetic.Filters.Grayscale,
                 callback: function() {
@@ -1970,11 +1965,6 @@ Test.prototype.tests = {
         layer.add(poly);
         stage.add(layer);
 
-        stage.onFrame(function() {
-            poly.rotate(Math.PI / 100);
-            layer.draw();
-        });
-        //stage.start();
     },
     'SHAPE - add line': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -2251,14 +2241,6 @@ Test.prototype.tests = {
         test(star.getLineJoin() === 'bevel', 'lineJoin property should be bevel');
 
         star.setLineJoin('round');
-        /*
-         stage.onFrame(function(frame) {
-         star.rotate(1 * frame.timeDiff / 1000);
-         layer.draw();
-         });
-
-         stage.start();
-         */
     },
     'SHAPE - add stroke rect': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -3842,13 +3824,6 @@ Test.prototype.tests = {
 
         layer.add(circle);
         stage.add(layer);
-
-        stage.onFrame(function(frame) {
-            circle.rotation += 0.1;
-            layer.draw();
-        });
-        //stage.start();
-
     },
     'NODE - simulate event': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -4494,41 +4469,33 @@ Test.prototype.tests = {
         // in ms
         var centerX = stage.getWidth() / 2 - 100 / 2;
 
-        stage.onFrame(function(frame) {
-            rect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
-            layer.draw();
+        var anim = new Kinetic.Animation({
+            func: function(frame) {
+                rect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
+                layer.draw();
+            }
         });
         var a = Kinetic.Animation;
-        
-        test(a.animations.length === 0, 'should be no animations running');
-        test(stage.animRunning === false, 'animRunning should be false');
 
-        stage.start();
+        test(a.animations.length === 0, 'should be no animations running');
+
+        anim.start();
         test(a.animations.length === 1, 'should be 1 animation running');
-        test(a.animations[0].id === stage.anim.id, 'animation id is incorrect');
-        test(stage.animRunning === true, 'animRunning should be true');
 
-        stage.stop();
+        anim.stop();
         test(a.animations.length === 0, 'should be no animations running');
-        test(stage.animRunning === false, 'animRunning should be false');
 
-        stage.start();
+        anim.start();
         test(a.animations.length === 1, 'should be 1 animation running');
-        test(a.animations[0].id === stage.anim.id, 'animation id is incorrect');
-        test(stage.animRunning === true, 'animRunning should be true');
 
-        stage.start();
-        test(a.animations.length === 1, 'should be 1 animation running');
-        test(a.animations[0].id === stage.anim.id, 'animation id is incorrect');
-        test(stage.animRunning === true, 'animRunning should be true');
-        
-        stage.stop();
-        test(a.animations.length === 0, 'should be no animations running');
-        test(stage.animRunning === false, 'animRunning should be false');
+        anim.start();
+        test(a.animations.length === 1, 'should be 1 animation runningg');
 
-        stage.stop();
+        anim.stop();
         test(a.animations.length === 0, 'should be no animations running');
-        test(stage.animRunning === false, 'animRunning should be false');  
+
+        anim.stop();
+        test(a.animations.length === 0, 'should be no animations running');
     },
     ////////////////////////////////////////////////////////////////////////
     //  TRANSITION tests
@@ -4558,13 +4525,15 @@ Test.prototype.tests = {
         var period = 1000;
         var centerX = 0;
 
-        stage.onFrame(function(frame) {
-            rect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
-            layer.draw();
+        var anim = new Kinetic.Animation({
+            func: function(frame) {
+                rect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
+                layer.draw();
+            }
         });
 
-        stage.start();
-        stage.stop();
+        anim.start();
+        anim.stop();
         centerX = 300;
 
         var go = Kinetic.Global;
@@ -4574,7 +4543,7 @@ Test.prototype.tests = {
             duration: 1,
             callback: function() {
                 test(rect.getX() === 300, 'rect x is not 300');
-                stage.start();
+                anim.start();
             }
         });
     },

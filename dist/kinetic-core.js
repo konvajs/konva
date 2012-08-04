@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Jul 31 2012
+ * Date: Aug 04 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1091,6 +1091,14 @@ Kinetic.Transform.prototype = {
 ///////////////////////////////////////////////////////////////////////
 //  Animation
 ///////////////////////////////////////////////////////////////////////
+/**
+ * Stage constructor.  A stage is used to contain multiple layers and handle
+ * animations
+ * @constructor
+ * @augments Kinetic.Container
+ * @param {Object} config
+ * @param {Function} config.func function to be executed on each animation frame
+ */
 Kinetic.Animation = function(config) {
     if(!config) {
         config = {};
@@ -1098,16 +1106,43 @@ Kinetic.Animation = function(config) {
     for(var key in config) {
         this[key] = config[key];
     }
+
+    // add frame object
+    this.frame = {
+        time: 0,
+        timeDiff: 0,
+        lastTime: new Date().getTime()
+    };
+
     this.id = Kinetic.Animation.animIdCounter++;
+};
+/*
+ * Animation methods
+ */
+Kinetic.Animation.prototype = {
+    /**
+     * start animation
+     * @name start
+     * @methodOf Kinetic.Animation.prototype
+     */
+    start: function() {
+        this.stop();
+        this.frame.lastTime = new Date().getTime();
+        Kinetic.Animation._addAnimation(this);
+        Kinetic.Animation._handleAnimation();
+    },
+    /**
+     * stop animation
+     * @name stop
+     * @methodOf Kinetic.Animation.prototype
+     */
+    stop: function() {
+        Kinetic.Animation._removeAnimation(this);
+    }
 };
 Kinetic.Animation.animations = [];
 Kinetic.Animation.animIdCounter = 0;
 Kinetic.Animation.animRunning = false;
-Kinetic.Animation.frame = {
-    time: 0,
-    timeDiff: 0,
-    lastTime: new Date().getTime()
-};
 Kinetic.Animation._addAnimation = function(anim) {
     this.animations.push(anim);
 };
@@ -1121,6 +1156,12 @@ Kinetic.Animation._removeAnimation = function(anim) {
         }
     }
 };
+Kinetic.Animation._updateFrameObject = function(anim) {
+    var time = new Date().getTime();
+    anim.frame.timeDiff = time - anim.frame.lastTime;
+    anim.frame.lastTime = time;
+    anim.frame.time += anim.frame.timeDiff;
+};
 Kinetic.Animation._runFrames = function() {
     var nodes = {};
     /*
@@ -1132,12 +1173,13 @@ Kinetic.Animation._runFrames = function() {
      */
     for(var n = 0; n < this.animations.length; n++) {
         var anim = this.animations[n];
+        this._updateFrameObject(anim);
         if(anim.node && anim.node._id !== undefined) {
             nodes[anim.node._id] = anim.node;
         }
         // if animation object has a function, execute it
         if(anim.func) {
-            anim.func(this.frame);
+            anim.func(anim.frame);
         }
     }
 
@@ -1145,15 +1187,8 @@ Kinetic.Animation._runFrames = function() {
         nodes[key].draw();
     }
 };
-Kinetic.Animation._updateFrameObject = function() {
-    var time = new Date().getTime();
-    this.frame.timeDiff = time - this.frame.lastTime;
-    this.frame.lastTime = time;
-    this.frame.time += this.frame.timeDiff;
-};
 Kinetic.Animation._animationLoop = function() {
     if(this.animations.length > 0) {
-        this._updateFrameObject();
         this._runFrames();
         var that = this;
         requestAnimFrame(function() {
@@ -1162,7 +1197,6 @@ Kinetic.Animation._animationLoop = function() {
     }
     else {
         this.animRunning = false;
-        this.frame.lastTime = 0;
     }
 };
 Kinetic.Animation._handleAnimation = function() {
@@ -1170,9 +1204,6 @@ Kinetic.Animation._handleAnimation = function() {
     if(!this.animRunning) {
         this.animRunning = true;
         that._animationLoop();
-    }
-    else {
-        this.frame.lastTime = 0;
     }
 };
 requestAnimFrame = (function(callback) {
@@ -2715,8 +2746,7 @@ Kinetic.Container = Kinetic.Node.extend({
 //  Stage
 ///////////////////////////////////////////////////////////////////////
 /**
- * Stage constructor.  A stage is used to contain multiple layers and handle
- * animations
+ * Stage constructor.  A stage is used to contain multiple layers
  * @constructor
  * @augments Kinetic.Container
  * @param {Object} config
@@ -2783,37 +2813,6 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._addId(this);
         this._addName(this);
 
-    },
-    /**
-     * sets onFrameFunc for animation
-     * @name onFrame
-     * @methodOf Kinetic.Stage.prototype
-     * @param {function} func
-     */
-    onFrame: function(func) {
-        this.anim.func = func;
-    },
-    /**
-     * start animation
-     * @name start
-     * @methodOf Kinetic.Stage.prototype
-     */
-    start: function() {
-        if(!this.animRunning) {
-            var a = Kinetic.Animation;
-            a._addAnimation(this.anim);
-            a._handleAnimation();
-            this.animRunning = true;
-        }
-    },
-    /**
-     * stop animation
-     * @name stop
-     * @methodOf Kinetic.Stage.prototype
-     */
-    stop: function() {
-        Kinetic.Animation._removeAnimation(this.anim);
-        this.animRunning = false;
     },
     /**
      * draw children
@@ -3684,8 +3683,6 @@ Kinetic.Stage = Kinetic.Container.extend({
 
         this.ids = {};
         this.names = {};
-        this.anim = new Kinetic.Animation();
-        this.animRunning = false;
     },
     _draw: function(canvas) {
         this._drawChildren(canvas);

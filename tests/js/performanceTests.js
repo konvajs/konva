@@ -52,17 +52,23 @@ Test.prototype.tests = {
         // in ms
         var centerX = stage.getWidth() / 2 - 100 / 2;
 
-        stage.onFrame(function(frame) {
-            rect.attrs.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
-            layer.draw();
-            //console.log(frame.timeDiff)
+        var anim = new Kinetic.Animation({
+            func: function(frame) {
+                rect.attrs.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
+                layer.draw();
+                //console.log(frame.timeDiff)
+            }
         });
 
-        stage.start();
+        anim.start();
 
         setTimeout(function() {
-            //stage.stop();
-        }, 1000)
+            anim.stop();
+        }, 2000);
+        
+        setTimeout(function() {
+            anim.start();
+        }, 4000);
     },
     'DRAWING - draw rect vs image from image data': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -220,7 +226,7 @@ Test.prototype.tests = {
             }
         });
     },
-    '*PATH - add map path': function(containerId) {
+    'PATH - add map path': function(containerId) {
         startTimer();
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -262,10 +268,10 @@ Test.prototype.tests = {
         stage.add(mapLayer);
 
         endTimer('time build and to draw map');
-        
+
         mapLayer.beforeDraw(startTimer);
         mapLayer.afterDraw(function() {
-        	endTimer('redraw layer');
+            endTimer('redraw layer');
         });
     }
 };

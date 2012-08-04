@@ -167,15 +167,17 @@ Test.prototype.tests = {
         // in ms
         var centerX = stage.getWidth() / 2 - 100 / 2;
 
-        stage.onFrame(function(frame) {
-            rect.attrs.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
-            layer.draw();
+        var anim = new Kinetic.Animation({
+            func: function(frame) {
+                rect.attrs.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
+                layer.draw();
+            }
         });
 
-        stage.start();
+        anim.start();
 
         setTimeout(function() {
-            stage.stop();
+            anim.stop();
         }, 3000);
     },
     'TRANSITION - ease-in, ease-out, ease-in-out hovers': function(containerId) {
@@ -780,14 +782,6 @@ Test.prototype.tests = {
                 }
             })
         });
-        /*
-         stage.onFrame(function(frame) {
-         star.rotate(1 * frame.timeDiff / 1000);
-         layer.draw();
-         });
-
-         stage.start();
-         */
     },
     'DRAG AND DROP - two draggable shapes': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1345,11 +1339,13 @@ Test.prototype.tests = {
         layer.add(group);
         stage.add(layer);
 
-        stage.onFrame(function() {
-            rect.rotate(0.01);
-            layer.draw();
+        var anim = new Kinetic.Animation({
+            func: function() {
+                rect.rotate(0.01);
+                layer.draw();
+            }
         });
-        stage.start();
+        anim.start();
     },
     'STAGE - hide stage': function(containerId) {
         var stage = new Kinetic.Stage({
