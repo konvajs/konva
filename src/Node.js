@@ -30,10 +30,6 @@
  * @param {Number} [config.dragBounds.right]
  * @param {Number} [config.dragBounds.bottom]
  * @param {Number} [config.dragBounds.left]
- * @param {Number} [config.dragThrottle] drag and drop throttling in draws per second.  The
- *  default is 80 draws per second.  Increasing the dragThrottle will increase the number of
- *  draws and may result in slow drag performance in some browsers.  Reducing the dragThrottle
- *  will improve drag performance but may make the drag motion jumpy
  */
 Kinetic.Node = Kinetic.Class.extend({
     init: function(config) {
@@ -55,13 +51,11 @@ Kinetic.Node = Kinetic.Class.extend({
             },
             dragConstraint: 'none',
             dragBounds: {},
-            draggable: false,
-            dragThrottle: 80
+            draggable: false
         };
 
         this.setDefaultAttrs(this.defaultNodeAttrs);
         this.eventListeners = {};
-        this.lastDragTime = 0;
         this.transAnim = new Kinetic.Animation();
         this.setAttrs(config);
 
@@ -958,6 +952,18 @@ Kinetic.Node = Kinetic.Class.extend({
             go.drag.node = this;
             go.drag.offset.x = pos.x - ap.x;
             go.drag.offset.y = pos.y - ap.y;
+
+            /*
+             * if dragging and dropping the stage,
+             * draw all of the layers
+             */
+            if(this.nodeType === 'Stage') {
+                stage.dragAnim.node = this;
+            }
+            else {
+                stage.dragAnim.node = this.getLayer();
+            }
+            stage.dragAnim.start(); 
         }
     },
     _onDraggableChange: function() {
@@ -1073,7 +1079,7 @@ Kinetic.Node._addGetter = function(constructor, attr) {
     };
 };
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening', 'dragThrottle']);
+Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
 Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 
 /**
@@ -1111,13 +1117,6 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  * @name setAlpha
  * @methodOf Kinetic.Node.prototype
  * @param {Object} alpha
- */
-
-/**
- * set drag throttle
- * @name setDragThrottle
- * @methodOf Kinetic.Node.prototype
- * @param {Number} dragThrottle
  */
 
 /**
@@ -1208,12 +1207,6 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 /**
  * get alpha.
  * @name getAlpha
- * @methodOf Kinetic.Node.prototype
- */
-
-/**
- * get drag throttle.
- * @name getDragThrottle
  * @methodOf Kinetic.Node.prototype
  */
 

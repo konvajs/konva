@@ -1245,10 +1245,6 @@ requestAnimFrame = (function(callback) {
  * @param {Number} [config.dragBounds.right]
  * @param {Number} [config.dragBounds.bottom]
  * @param {Number} [config.dragBounds.left]
- * @param {Number} [config.dragThrottle] drag and drop throttling in draws per second.  The
- *  default is 80 draws per second.  Increasing the dragThrottle will increase the number of
- *  draws and may result in slow drag performance in some browsers.  Reducing the dragThrottle
- *  will improve drag performance but may make the drag motion jumpy
  */
 Kinetic.Node = Kinetic.Class.extend({
     init: function(config) {
@@ -1270,13 +1266,11 @@ Kinetic.Node = Kinetic.Class.extend({
             },
             dragConstraint: 'none',
             dragBounds: {},
-            draggable: false,
-            dragThrottle: 80
+            draggable: false
         };
 
         this.setDefaultAttrs(this.defaultNodeAttrs);
         this.eventListeners = {};
-        this.lastDragTime = 0;
         this.transAnim = new Kinetic.Animation();
         this.setAttrs(config);
 
@@ -2173,6 +2167,18 @@ Kinetic.Node = Kinetic.Class.extend({
             go.drag.node = this;
             go.drag.offset.x = pos.x - ap.x;
             go.drag.offset.y = pos.y - ap.y;
+
+            /*
+             * if dragging and dropping the stage,
+             * draw all of the layers
+             */
+            if(this.nodeType === 'Stage') {
+                stage.dragAnim.node = this;
+            }
+            else {
+                stage.dragAnim.node = this.getLayer();
+            }
+            stage.dragAnim.start(); 
         }
     },
     _onDraggableChange: function() {
@@ -2288,7 +2294,7 @@ Kinetic.Node._addGetter = function(constructor, attr) {
     };
 };
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening', 'dragThrottle']);
+Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
 Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 
 /**
@@ -2326,13 +2332,6 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  * @name setAlpha
  * @methodOf Kinetic.Node.prototype
  * @param {Object} alpha
- */
-
-/**
- * set drag throttle
- * @name setDragThrottle
- * @methodOf Kinetic.Node.prototype
- * @param {Number} dragThrottle
  */
 
 /**
@@ -2423,12 +2422,6 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 /**
  * get alpha.
  * @name getAlpha
- * @methodOf Kinetic.Node.prototype
- */
-
-/**
- * get drag throttle.
- * @name getDragThrottle
  * @methodOf Kinetic.Node.prototype
  */
 
@@ -3488,14 +3481,23 @@ Kinetic.Stage = Kinetic.Container.extend({
      */
     _endDrag: function(evt) {
         var go = Kinetic.Global;
-        if(go.drag.node) {
+        var node = go.drag.node;
+        if(node) {
+        	if (node.nodeType === 'Stage') {
+        		node.draw();
+        	}
+        	else {
+        		node.getLayer().draw();
+        	}
+        	
             // handle dragend
             if(go.drag.moving) {
                 go.drag.moving = false;
-                go.drag.node._handleEvent('dragend', evt);
+                node._handleEvent('dragend', evt);
             }
         }
-        go.drag.node = undefined;
+        go.drag.node = null;
+        this.dragAnim.stop();
     },
     /**
      * start drag and drop
@@ -3506,72 +3508,52 @@ Kinetic.Stage = Kinetic.Container.extend({
         var node = go.drag.node;
 
         if(node) {
-            var dragThrottle = node.attrs.dragThrottle;
-            var time = new Date().getTime();
-            var timeDiff = time - node.lastDragTime;
-            var tt = 1000 / dragThrottle;
-            if((timeDiff >= tt || dragThrottle > 200)) {
-                var pos = that.getUserPosition();
-                var dc = node.attrs.dragConstraint;
-                var db = node.attrs.dragBounds;
-                var lastNodePos = {
-                    x: node.attrs.x,
-                    y: node.attrs.y
-                };
+            var pos = that.getUserPosition();
+            var dc = node.attrs.dragConstraint;
+            var db = node.attrs.dragBounds;
+            var lastNodePos = {
+                x: node.attrs.x,
+                y: node.attrs.y
+            };
 
-                // default
-                var newNodePos = {
-                    x: pos.x - go.drag.offset.x,
-                    y: pos.y - go.drag.offset.y
-                };
+            // default
+            var newNodePos = {
+                x: pos.x - go.drag.offset.x,
+                y: pos.y - go.drag.offset.y
+            };
 
-                // bounds overrides
-                if(db.left !== undefined && newNodePos.x < db.left) {
-                    newNodePos.x = db.left;
-                }
-                if(db.right !== undefined && newNodePos.x > db.right) {
-                    newNodePos.x = db.right;
-                }
-                if(db.top !== undefined && newNodePos.y < db.top) {
-                    newNodePos.y = db.top;
-                }
-                if(db.bottom !== undefined && newNodePos.y > db.bottom) {
-                    newNodePos.y = db.bottom;
-                }
-
-                node.setAbsolutePosition(newNodePos);
-
-                // constraint overrides
-                if(dc === 'horizontal') {
-                    node.attrs.y = lastNodePos.y;
-                }
-                else if(dc === 'vertical') {
-                    node.attrs.x = lastNodePos.x;
-                }
-
-                /*
-                 * if dragging and dropping the stage,
-                 * draw all of the layers
-                 */
-                if(go.drag.node.nodeType === 'Stage') {
-                    go.drag.node.draw();
-                }
-
-                else {
-                    go.drag.node.getLayer().draw();
-                }
-
-                if(!go.drag.moving) {
-                    go.drag.moving = true;
-                    // execute dragstart events if defined
-                    go.drag.node._handleEvent('dragstart', evt);
-                }
-
-                // execute user defined ondragmove if defined
-                go.drag.node._handleEvent('dragmove', evt);
-
-                node.lastDragTime = new Date().getTime();
+            // bounds overrides
+            if(db.left !== undefined && newNodePos.x < db.left) {
+                newNodePos.x = db.left;
             }
+            if(db.right !== undefined && newNodePos.x > db.right) {
+                newNodePos.x = db.right;
+            }
+            if(db.top !== undefined && newNodePos.y < db.top) {
+                newNodePos.y = db.top;
+            }
+            if(db.bottom !== undefined && newNodePos.y > db.bottom) {
+                newNodePos.y = db.bottom;
+            }
+
+            node.setAbsolutePosition(newNodePos);
+
+            // constraint overrides
+            if(dc === 'horizontal') {
+                node.attrs.y = lastNodePos.y;
+            }
+            else if(dc === 'vertical') {
+                node.attrs.x = lastNodePos.x;
+            }
+
+            if(!go.drag.moving) {
+                go.drag.moving = true;
+                // execute dragstart events if defined
+                go.drag.node._handleEvent('dragstart', evt);
+            }
+
+            // execute user defined ondragmove if defined
+            go.drag.node._handleEvent('dragmove', evt);
         }
     },
     /**
@@ -3670,6 +3652,8 @@ Kinetic.Stage = Kinetic.Container.extend({
 
         this.ids = {};
         this.names = {};
+
+        this.dragAnim = new Kinetic.Animation();
     },
     _draw: function(canvas) {
         this._drawChildren(canvas);

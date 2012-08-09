@@ -757,14 +757,23 @@ Kinetic.Stage = Kinetic.Container.extend({
      */
     _endDrag: function(evt) {
         var go = Kinetic.Global;
-        if(go.drag.node) {
+        var node = go.drag.node;
+        if(node) {
+        	if (node.nodeType === 'Stage') {
+        		node.draw();
+        	}
+        	else {
+        		node.getLayer().draw();
+        	}
+        	
             // handle dragend
             if(go.drag.moving) {
                 go.drag.moving = false;
-                go.drag.node._handleEvent('dragend', evt);
+                node._handleEvent('dragend', evt);
             }
         }
-        go.drag.node = undefined;
+        go.drag.node = null;
+        this.dragAnim.stop();
     },
     /**
      * start drag and drop
@@ -775,72 +784,52 @@ Kinetic.Stage = Kinetic.Container.extend({
         var node = go.drag.node;
 
         if(node) {
-            var dragThrottle = node.attrs.dragThrottle;
-            var time = new Date().getTime();
-            var timeDiff = time - node.lastDragTime;
-            var tt = 1000 / dragThrottle;
-            if((timeDiff >= tt || dragThrottle > 200)) {
-                var pos = that.getUserPosition();
-                var dc = node.attrs.dragConstraint;
-                var db = node.attrs.dragBounds;
-                var lastNodePos = {
-                    x: node.attrs.x,
-                    y: node.attrs.y
-                };
+            var pos = that.getUserPosition();
+            var dc = node.attrs.dragConstraint;
+            var db = node.attrs.dragBounds;
+            var lastNodePos = {
+                x: node.attrs.x,
+                y: node.attrs.y
+            };
 
-                // default
-                var newNodePos = {
-                    x: pos.x - go.drag.offset.x,
-                    y: pos.y - go.drag.offset.y
-                };
+            // default
+            var newNodePos = {
+                x: pos.x - go.drag.offset.x,
+                y: pos.y - go.drag.offset.y
+            };
 
-                // bounds overrides
-                if(db.left !== undefined && newNodePos.x < db.left) {
-                    newNodePos.x = db.left;
-                }
-                if(db.right !== undefined && newNodePos.x > db.right) {
-                    newNodePos.x = db.right;
-                }
-                if(db.top !== undefined && newNodePos.y < db.top) {
-                    newNodePos.y = db.top;
-                }
-                if(db.bottom !== undefined && newNodePos.y > db.bottom) {
-                    newNodePos.y = db.bottom;
-                }
-
-                node.setAbsolutePosition(newNodePos);
-
-                // constraint overrides
-                if(dc === 'horizontal') {
-                    node.attrs.y = lastNodePos.y;
-                }
-                else if(dc === 'vertical') {
-                    node.attrs.x = lastNodePos.x;
-                }
-
-                /*
-                 * if dragging and dropping the stage,
-                 * draw all of the layers
-                 */
-                if(go.drag.node.nodeType === 'Stage') {
-                    go.drag.node.draw();
-                }
-
-                else {
-                    go.drag.node.getLayer().draw();
-                }
-
-                if(!go.drag.moving) {
-                    go.drag.moving = true;
-                    // execute dragstart events if defined
-                    go.drag.node._handleEvent('dragstart', evt);
-                }
-
-                // execute user defined ondragmove if defined
-                go.drag.node._handleEvent('dragmove', evt);
-
-                node.lastDragTime = new Date().getTime();
+            // bounds overrides
+            if(db.left !== undefined && newNodePos.x < db.left) {
+                newNodePos.x = db.left;
             }
+            if(db.right !== undefined && newNodePos.x > db.right) {
+                newNodePos.x = db.right;
+            }
+            if(db.top !== undefined && newNodePos.y < db.top) {
+                newNodePos.y = db.top;
+            }
+            if(db.bottom !== undefined && newNodePos.y > db.bottom) {
+                newNodePos.y = db.bottom;
+            }
+
+            node.setAbsolutePosition(newNodePos);
+
+            // constraint overrides
+            if(dc === 'horizontal') {
+                node.attrs.y = lastNodePos.y;
+            }
+            else if(dc === 'vertical') {
+                node.attrs.x = lastNodePos.x;
+            }
+
+            if(!go.drag.moving) {
+                go.drag.moving = true;
+                // execute dragstart events if defined
+                go.drag.node._handleEvent('dragstart', evt);
+            }
+
+            // execute user defined ondragmove if defined
+            go.drag.node._handleEvent('dragmove', evt);
         }
     },
     /**
@@ -939,6 +928,8 @@ Kinetic.Stage = Kinetic.Container.extend({
 
         this.ids = {};
         this.names = {};
+
+        this.dragAnim = new Kinetic.Animation();
     },
     _draw: function(canvas) {
         this._drawChildren(canvas);

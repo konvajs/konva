@@ -783,7 +783,7 @@ Test.prototype.tests = {
             })
         });
     },
-    'DRAG AND DROP - two draggable shapes': function(containerId) {
+    '*DRAG AND DROP - two draggable shapes': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
