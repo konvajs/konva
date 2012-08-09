@@ -671,14 +671,6 @@ Kinetic.Node = Kinetic.Class.extend({
      *  transition completes
      */
     transitionTo: function(config) {
-        var a = Kinetic.Animation;
-
-        /*
-         * clear transition if one is currently running for this
-         * node
-         */
-        a._removeAnimation(this.transAnim);
-
         /*
          * create new transition
          */
@@ -690,16 +682,11 @@ Kinetic.Node = Kinetic.Class.extend({
             trans._onEnterFrame();
         };
         this.transAnim.node = node;
-        /*
-         * adding the animation with the addAnimation
-         * method auto generates an id
-         */
-        a._addAnimation(this.transAnim);
 
         // subscribe to onFinished for first tween
         trans.onFinished = function() {
             // remove animation
-            a._removeAnimation(that.transAnim);
+            that.transAnim.stop();
             that.transAnim.node.draw();
 
             // callback
@@ -709,7 +696,7 @@ Kinetic.Node = Kinetic.Class.extend({
         };
         // auto start
         trans.start();
-        a._handleAnimation();
+        this.transAnim.start();
         return trans;
     },
     /**

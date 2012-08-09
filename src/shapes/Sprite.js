@@ -45,10 +45,6 @@ Kinetic.Sprite = Kinetic.Shape.extend({
     start: function() {
         var that = this;
         var layer = this.getLayer();
-        var ka = Kinetic.Animation;
-
-        // if sprite already has an animation, remove it
-        ka._removeAnimation(this.anim);
 
         /*
          * animation object has no executable function because
@@ -58,12 +54,6 @@ Kinetic.Sprite = Kinetic.Shape.extend({
          */
         this.anim.node = layer;
 
-        /*
-         * adding the animation with the addAnimation
-         * method auto generates an id
-         */
-        ka._addAnimation(this.anim);
-
         this.interval = setInterval(function() {
             var index = that.attrs.index;
             that._updateIndex();
@@ -72,7 +62,7 @@ Kinetic.Sprite = Kinetic.Shape.extend({
             }
         }, 1000 / this.attrs.frameRate);
 
-        ka._handleAnimation();
+        this.anim.start();
     },
     /**
      * stop sprite animation
@@ -80,7 +70,7 @@ Kinetic.Sprite = Kinetic.Shape.extend({
      * @methodOf Kinetic.Sprite.prototype
      */
     stop: function() {
-        Kinetic.Animation._removeAnimation(this.anim);
+        this.anim.stop();
         clearInterval(this.interval);
     },
     /**
