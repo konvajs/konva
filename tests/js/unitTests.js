@@ -5524,5 +5524,36 @@ Test.prototype.tests = {
         });
         layer.add(borneo);
         stage.add(layer);
-    }
+    },
+	'JPEG toDataURL() Not Hiding Lower Layers with Black': function(containerId) {
+           var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+           });
+		   
+		   var layer1 = new Kinetic.Layer();
+		   var layer2 = new Kinetic.Layer();
+		   
+		   layer1.add(new Kinetic.Rect({x:10, y:10, width: 25, height: 15, fill: 'red'}));
+		   layer2.add(new Kinetic.Rect({x:50, y:50, width: 15, height: 25, fill: 'green'}));
+		   
+		   stage.add(layer1);
+		   stage.add(layer2);
+		   
+		   stage.toDataURL({
+				height: 100, 
+				width: 100, 
+				mimeType: 'image/jpeg', 
+				quality: 0.8, 
+				callback: function(url) {
+					var imageObj = new Image();
+					imageObj.onload = function() {
+						layer2.add(new Kinetic.Image({x: 200, y: 10, image: imageObj}));
+						layer2.draw();
+					};
+					imageObj.src = url;
+				}
+		   })
+	}
 };

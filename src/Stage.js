@@ -303,7 +303,7 @@ Kinetic.Stage = Kinetic.Container.extend({
 
         function drawLayer(n) {
             var layer = layers[n];
-            var layerUrl = layer.getCanvas().toDataURL(mimeType, quality);
+            var layerUrl = layer.getCanvas().toDataURL();
             var imageObj = new Image();
             imageObj.onload = function() {
                 context.drawImage(imageObj, 0, 0);
