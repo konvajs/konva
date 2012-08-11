@@ -136,6 +136,7 @@ Kinetic.Layer = Kinetic.Container.extend({
      * private draw children
      */
     _draw: function(canvas) {
+    	var pathCanvas = this.getStage().pathCanvas;
         /*
          * if canvas is not defined, then use the canvas
          * tied to the layer
@@ -154,6 +155,7 @@ Kinetic.Layer = Kinetic.Container.extend({
 
         if(this.attrs.clearBeforeDraw) {
             canvas.clear();
+            pathCanvas.clear();
         }
 
         if(this.isVisible()) {
@@ -162,8 +164,10 @@ Kinetic.Layer = Kinetic.Container.extend({
                 this.attrs.drawFunc.call(this);
             }
 
-            // draw children
+            // draw children on front canvas
             this._drawChildren(canvas);
+            // draw children on back canvas
+            this._drawChildren(pathCanvas);
         }
 
         // after draw  handler

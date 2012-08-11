@@ -13,6 +13,8 @@ Kinetic.Global = {
     stages: [],
     idCounter: 0,
     tempNodes: {},
+    //shapes hash.  rgb keys and shape values
+    shapes: {},
     maxDragTimeInterval: 20,
     drag: {
         moving: false,

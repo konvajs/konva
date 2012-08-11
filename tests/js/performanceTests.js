@@ -90,8 +90,7 @@ Test.prototype.tests = {
 
                 var randX = Math.random() * stage.getWidth();
                 var randY = Math.random() * stage.getHeight();
-                //var randRadius = (Math.random() * 5) + 5
-
+                
                 var circle = new Kinetic.Ellipse({
                     x: randX,
                     y: randY,
@@ -101,21 +100,23 @@ Test.prototype.tests = {
 
                 circle.on("mousemove", function() {
                     // update tooltip
+                    console.log('mouseover')
                     var mousePos = stage.getMousePosition();
-                    tooltip.setPosition(mousePos.x + 5, mousePos.y + 5);
-                    tooltip.setText("node: " + i + ", color: " + color);
-                    tooltip.show();
-                    tooltipLayer.draw();
+                    //tooltip.setPosition(mousePos.x + 5, mousePos.y + 5);
+                    //tooltip.setText("node: " + i + ", color: " + color);
+                    //tooltip.show();
+                    //tooltipLayer.draw();
                 });
 
                 circle.on("mouseout", function() {
-                    tooltip.hide();
-                    tooltipLayer.draw();
+                    //tooltip.hide();
+                    //tooltipLayer.draw();
                 });
 
                 circlesLayer.add(circle);
             }());
         }
+      
         var tooltip = new Kinetic.Text({
             text: "",
             fontFamily: "Calibri",
@@ -128,9 +129,12 @@ Test.prototype.tests = {
         });
 
         tooltipLayer.add(tooltip);
+        
 
         stage.add(circlesLayer);
-        stage.add(tooltipLayer);
+        //stage.add(tooltipLayer);
+        
+        document.body.appendChild(stage.pathCanvas.element)
 
     },
     'DRAWING - draw rect vs image from image data': function(containerId) {

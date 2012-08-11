@@ -63,6 +63,19 @@ Kinetic.Container = Kinetic.Node.extend({
         child._id = Kinetic.Global.idCounter++;
         child.index = this.children.length;
         child.parent = this;
+        
+        // set color key
+        var shapes = Kinetic.Global.shapes;
+        var key;
+        while (true) {
+        	key = Kinetic.Type._getRandomColorKey();
+        	if (key && !(key in shapes)) {
+        		break;
+        	}
+        }
+        
+        child.colorKey = key;
+        shapes[key] = child;
 
         this.children.push(child);
         var stage = child.getStage();

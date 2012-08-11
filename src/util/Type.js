@@ -250,5 +250,14 @@ Kinetic.Type = {
         else {
             callback(null);
         }
+    },
+    _rgbToHex: function(r, g, b) {
+        return ((r << 16) | (g << 8) | b).toString(16);
+    },
+    _getRandomColorKey: function() {
+        var r = Math.round(Math.random() * 255);
+        var g = Math.round(Math.random() * 255);
+        var b = Math.round(Math.random() * 255);
+        return this._rgbToHex(r, g, b);
     }
 };
