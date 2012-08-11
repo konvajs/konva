@@ -373,16 +373,21 @@ Kinetic.Shape = Kinetic.Node.extend({
             // draw the shape
             this.appliedShadow = false;
 
-            if(canvas.name === 'pathCanvas') {
+            if(canvas.name === 'buffer') {
                 var fill = this.attrs.fill;
                 var stroke = this.attrs.stroke;
-                this.attrs.fill = '#' + this.colorKey;
-                this.attrs.stroke = '#' + this.colorKey;
+
+                if(fill) {
+                    this.attrs.fill = '#' + this.colorKey;
+                }
+                if(stroke) {
+                    this.attrs.stroke = '#' + this.colorKey;
+                }
             }
 
             this.attrs.drawFunc.call(this, canvas.getContext());
 
-            if(canvas.name === 'pathCanvas') {
+            if(canvas.name === 'buffer') {
                 this.attrs.fill = fill;
                 this.attrs.stroke = stroke;
             }

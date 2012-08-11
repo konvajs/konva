@@ -68,7 +68,7 @@ Test.prototype.tests = {
         layer.add(circle);
         stage.add(layer);
         
-        //document.body.appendChild(stage.pathCanvas.element)
+        document.body.appendChild(layer.bufferCanvas.element)
     },
     'TRANSITION - transition position and rotation': function(containerId) {
         var stage = new Kinetic.Stage({

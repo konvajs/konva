@@ -352,15 +352,13 @@ Kinetic.Stage = Kinetic.Container.extend({
         this.content.style.width = width + 'px';
         this.content.style.height = height + 'px';
 
-        // set buffer canvas and path canvas sizes
         this.bufferCanvas.setSize(width, height);
-        this.pathCanvas.setSize(width, height);
-
         // set user defined layer dimensions
         var layers = this.children;
         for(var n = 0; n < layers.length; n++) {
             var layer = layers[n];
             layer.getCanvas().setSize(width, height);
+            layer.bufferCanvas.setSize(width, height);
             layer.draw();
         }
     },
@@ -385,17 +383,11 @@ Kinetic.Stage = Kinetic.Container.extend({
      */
     _add: function(layer) {
         layer.canvas.setSize(this.attrs.width, this.attrs.height);
+        layer.bufferCanvas.setSize(this.attrs.width, this.attrs.height);
 
         // draw layer and append canvas to container
         layer.draw();
         this.content.appendChild(layer.canvas.element);
-
-        /*
-         * set layer last draw time to zero
-         * so that throttling doesn't take into account
-         * the layer draws associated with adding a node
-         */
-        layer.lastDrawTime = 0;
     },
     /**
      * detect event
@@ -545,21 +537,34 @@ Kinetic.Stage = Kinetic.Container.extend({
         this.targetFound = false;
 
         var pos = this.getUserPosition();
-        var p = this.pathCanvas.context.getImageData(pos.x, pos.y, 1, 1).data;
-        var colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
-        var shape = Kinetic.Global.shapes[colorKey];
-        var isDragging = Kinetic.Global.drag.moving;
+        var shape;
+        var layers = this.getChildren();
 
-        if(shape) {
-			this._detectEvent(shape, evt);
+        /*
+         * traverse through layers from top to bottom and look
+         * for hit detection
+         */
+
+        for(var n = layers.length - 1; n >= 0; n--) {
+            var layer = layers[n];
+            var p = layer.bufferCanvas.context.getImageData(pos.x, pos.y, 1, 1).data;
+            var colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
+            shape = Kinetic.Global.shapes[colorKey];
+            var isDragging = Kinetic.Global.drag.moving;
+
+            if(shape) {
+                this._detectEvent(shape, evt);
+                break;
+            }
         }
+
         // handle mouseout condition
         /*
-        else if(!isDragging && this.targetShape && this.targetShape._id === shape._id) {
-            this._setTarget(undefined);
-            this.mouseoutShape = shape;
-        }
-        */
+         else if(!isDragging && this.targetShape && this.targetShape._id === shape._id) {
+         this._setTarget(undefined);
+         this.mouseoutShape = shape;
+         }
+         */
 
         /*
          * if no shape was detected and a mouseout shape has been stored,
@@ -803,12 +808,7 @@ Kinetic.Stage = Kinetic.Container.extend({
             width: this.attrs.width,
             height: this.attrs.height
         });
-        this.pathCanvas = new Kinetic.Canvas({
-            width: this.attrs.width,
-            height: this.attrs.height
-        });
-        this.pathCanvas.name = 'pathCanvas';
-        this.pathCanvas.strip();
+
         this._resizeDOM();
     },
     _addId: function(node) {

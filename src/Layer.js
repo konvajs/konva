@@ -40,12 +40,12 @@ Kinetic.Layer = Kinetic.Container.extend({
         });
 
         this.nodeType = 'Layer';
-        this.lastDrawTime = 0;
         this.beforeDrawFunc = undefined;
         this.afterDrawFunc = undefined;
-
         this.canvas = new Kinetic.Canvas();
         this.canvas.getElement().style.position = 'absolute';
+        this.bufferCanvas = new Kinetic.Canvas();
+        this.bufferCanvas.name = 'buffer';
 
         // call super constructor
         this._super(config);
@@ -136,7 +136,6 @@ Kinetic.Layer = Kinetic.Container.extend({
      * private draw children
      */
     _draw: function(canvas) {
-    	var pathCanvas = this.getStage().pathCanvas;
         /*
          * if canvas is not defined, then use the canvas
          * tied to the layer
@@ -145,9 +144,6 @@ Kinetic.Layer = Kinetic.Container.extend({
             canvas = this.getCanvas();
         }
 
-        var time = new Date().getTime();
-        this.lastDrawTime = time;
-
         // before draw  handler
         if(this.beforeDrawFunc !== undefined) {
             this.beforeDrawFunc.call(this);
@@ -155,7 +151,7 @@ Kinetic.Layer = Kinetic.Container.extend({
 
         if(this.attrs.clearBeforeDraw) {
             canvas.clear();
-            pathCanvas.clear();
+            this.bufferCanvas.clear();
         }
 
         if(this.isVisible()) {
@@ -167,7 +163,7 @@ Kinetic.Layer = Kinetic.Container.extend({
             // draw children on front canvas
             this._drawChildren(canvas);
             // draw children on back canvas
-            this._drawChildren(pathCanvas);
+            this._drawChildren(this.bufferCanvas);
         }
 
         // after draw  handler

@@ -94,40 +94,6 @@ Test.prototype.tests = {
         layer.add(group);
         layer.draw();
     },
-    'STAGE - test layer throttle': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-        var circle = new Kinetic.Ellipse({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4,
-            name: 'myCircle'
-        });
-
-        group.add(circle);
-        layer.add(group);
-        stage.add(layer);
-
-        test(layer.lastDrawTime === 0, 'layer last draw time should be 0');
-
-        /*
-         * if throttling isn't working correctly, then the circle will
-         * flash green and then turn red
-         */
-        circle.setFill('red');
-        layer.draw();
-
-        test(layer.lastDrawTime > 0, 'layer last draw time should be greather than 0');
-
-    },
     'STAGE - add shape with linear gradient fill': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

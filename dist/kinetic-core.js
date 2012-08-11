@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Aug 10 2012
+ * Date: Aug 11 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -3086,15 +3086,13 @@ Kinetic.Stage = Kinetic.Container.extend({
         this.content.style.width = width + 'px';
         this.content.style.height = height + 'px';
 
-        // set buffer canvas and path canvas sizes
         this.bufferCanvas.setSize(width, height);
-        this.pathCanvas.setSize(width, height);
-
         // set user defined layer dimensions
         var layers = this.children;
         for(var n = 0; n < layers.length; n++) {
             var layer = layers[n];
             layer.getCanvas().setSize(width, height);
+            layer.bufferCanvas.setSize(width, height);
             layer.draw();
         }
     },
@@ -3119,17 +3117,11 @@ Kinetic.Stage = Kinetic.Container.extend({
      */
     _add: function(layer) {
         layer.canvas.setSize(this.attrs.width, this.attrs.height);
+        layer.bufferCanvas.setSize(this.attrs.width, this.attrs.height);
 
         // draw layer and append canvas to container
         layer.draw();
         this.content.appendChild(layer.canvas.element);
-
-        /*
-         * set layer last draw time to zero
-         * so that throttling doesn't take into account
-         * the layer draws associated with adding a node
-         */
-        layer.lastDrawTime = 0;
     },
     /**
      * detect event
@@ -3279,21 +3271,34 @@ Kinetic.Stage = Kinetic.Container.extend({
         this.targetFound = false;
 
         var pos = this.getUserPosition();
-        var p = this.pathCanvas.context.getImageData(pos.x, pos.y, 1, 1).data;
-        var colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
-        var shape = Kinetic.Global.shapes[colorKey];
-        var isDragging = Kinetic.Global.drag.moving;
+        var shape;
+        var layers = this.getChildren();
 
-        if(shape) {
-			this._detectEvent(shape, evt);
+        /*
+         * traverse through layers from top to bottom and look
+         * for hit detection
+         */
+
+        for(var n = layers.length - 1; n >= 0; n--) {
+            var layer = layers[n];
+            var p = layer.bufferCanvas.context.getImageData(pos.x, pos.y, 1, 1).data;
+            var colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
+            shape = Kinetic.Global.shapes[colorKey];
+            var isDragging = Kinetic.Global.drag.moving;
+
+            if(shape) {
+                this._detectEvent(shape, evt);
+                break;
+            }
         }
+
         // handle mouseout condition
         /*
-        else if(!isDragging && this.targetShape && this.targetShape._id === shape._id) {
-            this._setTarget(undefined);
-            this.mouseoutShape = shape;
-        }
-        */
+         else if(!isDragging && this.targetShape && this.targetShape._id === shape._id) {
+         this._setTarget(undefined);
+         this.mouseoutShape = shape;
+         }
+         */
 
         /*
          * if no shape was detected and a mouseout shape has been stored,
@@ -3537,12 +3542,7 @@ Kinetic.Stage = Kinetic.Container.extend({
             width: this.attrs.width,
             height: this.attrs.height
         });
-        this.pathCanvas = new Kinetic.Canvas({
-            width: this.attrs.width,
-            height: this.attrs.height
-        });
-        this.pathCanvas.name = 'pathCanvas';
-        this.pathCanvas.strip();
+
         this._resizeDOM();
     },
     _addId: function(node) {
@@ -3696,12 +3696,12 @@ Kinetic.Layer = Kinetic.Container.extend({
         });
 
         this.nodeType = 'Layer';
-        this.lastDrawTime = 0;
         this.beforeDrawFunc = undefined;
         this.afterDrawFunc = undefined;
-
         this.canvas = new Kinetic.Canvas();
         this.canvas.getElement().style.position = 'absolute';
+        this.bufferCanvas = new Kinetic.Canvas();
+        this.bufferCanvas.name = 'buffer';
 
         // call super constructor
         this._super(config);
@@ -3792,7 +3792,6 @@ Kinetic.Layer = Kinetic.Container.extend({
      * private draw children
      */
     _draw: function(canvas) {
-    	var pathCanvas = this.getStage().pathCanvas;
         /*
          * if canvas is not defined, then use the canvas
          * tied to the layer
@@ -3801,9 +3800,6 @@ Kinetic.Layer = Kinetic.Container.extend({
             canvas = this.getCanvas();
         }
 
-        var time = new Date().getTime();
-        this.lastDrawTime = time;
-
         // before draw  handler
         if(this.beforeDrawFunc !== undefined) {
             this.beforeDrawFunc.call(this);
@@ -3811,7 +3807,7 @@ Kinetic.Layer = Kinetic.Container.extend({
 
         if(this.attrs.clearBeforeDraw) {
             canvas.clear();
-            pathCanvas.clear();
+            this.bufferCanvas.clear();
         }
 
         if(this.isVisible()) {
@@ -3823,7 +3819,7 @@ Kinetic.Layer = Kinetic.Container.extend({
             // draw children on front canvas
             this._drawChildren(canvas);
             // draw children on back canvas
-            this._drawChildren(pathCanvas);
+            this._drawChildren(this.bufferCanvas);
         }
 
         // after draw  handler
@@ -4274,16 +4270,21 @@ Kinetic.Shape = Kinetic.Node.extend({
             // draw the shape
             this.appliedShadow = false;
 
-            if(canvas.name === 'pathCanvas') {
+            if(canvas.name === 'buffer') {
                 var fill = this.attrs.fill;
                 var stroke = this.attrs.stroke;
-                this.attrs.fill = '#' + this.colorKey;
-                this.attrs.stroke = '#' + this.colorKey;
+
+                if(fill) {
+                    this.attrs.fill = '#' + this.colorKey;
+                }
+                if(stroke) {
+                    this.attrs.stroke = '#' + this.colorKey;
+                }
             }
 
             this.attrs.drawFunc.call(this, canvas.getContext());
 
-            if(canvas.name === 'pathCanvas') {
+            if(canvas.name === 'buffer') {
                 this.attrs.fill = fill;
                 this.attrs.stroke = stroke;
             }
