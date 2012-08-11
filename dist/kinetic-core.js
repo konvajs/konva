@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Aug 08 2012
+ * Date: Aug 10 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -3027,7 +3027,7 @@ Kinetic.Stage = Kinetic.Container.extend({
 
         function drawLayer(n) {
             var layer = layers[n];
-            var layerUrl = layer.getCanvas().toDataURL(mimeType, quality);
+            var layerUrl = layer.getCanvas().toDataURL();
             var imageObj = new Image();
             imageObj.onload = function() {
                 context.drawImage(imageObj, 0, 0);
@@ -3652,8 +3652,9 @@ Kinetic.Stage = Kinetic.Container.extend({
 
         this.ids = {};
         this.names = {};
-
-        this.dragAnim = new Kinetic.Animation();
+        //shapes hash.  rgb keys and shape values
+		this.shapes = {};
+        this.dragAnim = new Kinetic.Animation();   
     },
     _draw: function(canvas) {
         this._drawChildren(canvas);

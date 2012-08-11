@@ -8,7 +8,6 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
 
         startTimer();
-        console.profile();
         for(var n = 0; n < 1000; n++) {
             var rect = new Kinetic.Rect({
                 x: 10,
@@ -23,7 +22,6 @@ Test.prototype.tests = {
         }
         stage.add(layer);
 
-        console.profileEnd();
         endTimer('add and draw 1,000 Kinetic rectangles');
 
     },
@@ -65,10 +63,75 @@ Test.prototype.tests = {
         setTimeout(function() {
             anim.stop();
         }, 2000);
-        
         setTimeout(function() {
             anim.start();
         }, 4000);
+    },
+    '*DRAWING - draw 10,000 small circles with tooltips': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+
+        var circlesLayer = new Kinetic.Layer();
+        var tooltipLayer = new Kinetic.Layer();
+        var colors = ["red", "orange", "yellow", "green", "blue", "cyan", "purple"];
+        var colorIndex = 0;
+
+        for(var n = 0; n < 10000; n++) {
+            // induce scope
+            ( function() {
+                var i = n;
+                var color = colors[colorIndex++];
+                if(colorIndex >= colors.length) {
+                    colorIndex = 0;
+                }
+
+                var randX = Math.random() * stage.getWidth();
+                var randY = Math.random() * stage.getHeight();
+                //var randRadius = (Math.random() * 5) + 5
+
+                var circle = new Kinetic.Ellipse({
+                    x: randX,
+                    y: randY,
+                    radius: 2,
+                    fill: color
+                });
+
+                circle.on("mousemove", function() {
+                    // update tooltip
+                    var mousePos = stage.getMousePosition();
+                    tooltip.setPosition(mousePos.x + 5, mousePos.y + 5);
+                    tooltip.setText("node: " + i + ", color: " + color);
+                    tooltip.show();
+                    tooltipLayer.draw();
+                });
+
+                circle.on("mouseout", function() {
+                    tooltip.hide();
+                    tooltipLayer.draw();
+                });
+
+                circlesLayer.add(circle);
+            }());
+        }
+        var tooltip = new Kinetic.Text({
+            text: "",
+            fontFamily: "Calibri",
+            fontSize: 12,
+            padding: 5,
+            visible: false,
+            fill: "black",
+            alpha: 0.75,
+            textFill: "white"
+        });
+
+        tooltipLayer.add(tooltip);
+
+        stage.add(circlesLayer);
+        stage.add(tooltipLayer);
+
     },
     'DRAWING - draw rect vs image from image data': function(containerId) {
         var stage = new Kinetic.Stage({

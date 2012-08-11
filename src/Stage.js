@@ -928,8 +928,9 @@ Kinetic.Stage = Kinetic.Container.extend({
 
         this.ids = {};
         this.names = {};
-
-        this.dragAnim = new Kinetic.Animation();
+        //shapes hash.  rgb keys and shape values
+		this.shapes = {};
+        this.dragAnim = new Kinetic.Animation();   
     },
     _draw: function(canvas) {
         this._drawChildren(canvas);
