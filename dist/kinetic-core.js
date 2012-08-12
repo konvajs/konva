@@ -3123,30 +3123,111 @@ Kinetic.Stage = Kinetic.Container.extend({
         layer.draw();
         this.content.appendChild(layer.canvas.element);
     },
-    /**
-     * detect event
-     * @param {Shape} shape
-     */
-    _detectEvent: function(shape, evt) {
-        var isDragging = Kinetic.Global.drag.moving;
-        var go = Kinetic.Global;
+    _getIntersectingShape: function() {
         var pos = this.getUserPosition();
-        var el = shape.eventListeners;
-        var that = this;
+        var shape;
+        var layers = this.getChildren();
 
-        if(this.targetShape && shape._id === this.targetShape._id) {
-            this.targetFound = true;
+        /*
+         * traverse through layers from top to bottom and look
+         * for hit detection
+         */
+        for(var n = layers.length - 1; n >= 0; n--) {
+            var layer = layers[n];
+            var p = layer.bufferCanvas.context.getImageData(pos.x, pos.y, 1, 1).data;
+            var colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
+            shape = Kinetic.Global.shapes[colorKey];
+            var isDragging = Kinetic.Global.drag.moving;
+
+            if(shape) {
+                return shape;
+            }
         }
 
-        // handle onmousedown
-        if(!isDragging && this.mouseDown) {
-            this.mouseDown = false;
+        return null;
+    },
+    _setUserPosition: function(evt) {
+        if(!evt) {
+            evt = window.event;
+        }
+        this._setMousePosition(evt);
+        this._setTouchPosition(evt);
+    },
+    /**
+     * begin listening for events by adding event handlers
+     * to the container
+     */
+    _bindContentEvents: function() {
+        var go = Kinetic.Global;
+        var that = this;
+        var events = ['mousedown', 'mousemove', 'mouseup', 'mouseout', 'touchstart', 'touchmove', 'touchend'];
+
+        for(var n = 0; n < events.length; n++) {
+            var pubEvent = events[n];
+            // induce scope
+            ( function() {
+                var event = pubEvent;
+                that.content.addEventListener(event, function(evt) {
+                    that._setUserPosition(evt);
+                    that['_' + event](evt);
+                }, false);
+            }());
+        }
+    },
+    _mouseout: function(evt) {
+        // if there's a current target shape, run mouseout handlers
+        var targetShape = this.targetShape;
+        if(targetShape) {
+            targetShape._handleEvent('mouseout', evt);
+            this.targetShape = null;
+        }
+        this.mousePos = undefined;
+
+        // end drag and drop
+        this._endDrag(evt);
+    },
+    _mousemove: function(evt) {
+        var go = Kinetic.Global;
+        var shape = this._getIntersectingShape();
+        if(shape) {
+            if(!go.drag.moving && (!this.targetShape || this.targetShape._id !== shape._id)) {
+                if(this.targetShape) {
+                    this.targetShape._handleEvent('mouseout', evt);
+                }
+                shape._handleEvent('mouseover', evt);
+                this.targetShape = shape;
+            }
+            shape._handleEvent('mousemove', evt);
+        }
+        /*
+         * if no shape was detected, clear target shape and try
+         * to run mouseout from previous target shape
+         */
+        else if(this.targetShape) {
+            this.targetShape._handleEvent('mouseout', evt);
+            this.targetShape = null;
+        }
+
+        // start drag and drop
+        this._startDrag(evt);
+    },
+    _mousedown: function(evt) {
+        var shape = this._getIntersectingShape();
+        if(shape) {
             this.clickStart = true;
             shape._handleEvent('mousedown', evt);
         }
-        // handle onmouseup & onclick
-        else if(this.mouseUp) {
-            this.mouseUp = false;
+
+        //init stage drag and drop
+        if(this.attrs.draggable) {
+            this._initDrag();
+        }
+    },
+    _mouseup: function(evt) {
+        var go = Kinetic.Global;
+        var shape = this._getIntersectingShape();
+        var that = this;
+        if(shape) {
             shape._handleEvent('mouseup', evt);
 
             // detect if click or double click occurred
@@ -3168,16 +3249,31 @@ Kinetic.Stage = Kinetic.Container.extend({
                 }
             }
         }
+        this.clickStart = false;
 
-        // handle touchstart
-        else if(!isDragging && this.touchStart && !this.touchMove) {
-            this.touchStart = false;
+        // end drag and drop
+        this._endDrag(evt);
+    },
+    _touchstart: function(evt) {
+        evt.preventDefault();
+        var shape = this._getIntersectingShape();
+        if(shape) {
             this.tapStart = true;
             shape._handleEvent('touchstart', evt);
         }
-        // handle touchend & tap
-        else if(this.touchEnd) {
-            this.touchEnd = false;
+
+        /*
+         * init stage drag and drop
+         */
+        if(this.attrs.draggable) {
+            this._initDrag();
+        }
+    },
+    _touchend: function(evt) {
+        var go = Kinetic.Global;
+        var shape = this._getIntersectingShape();
+        var that = this;
+        if(shape) {
             shape._handleEvent('touchend', evt);
 
             // detect if tap or double tap occurred
@@ -3199,200 +3295,7 @@ Kinetic.Stage = Kinetic.Container.extend({
                 }
             }
         }
-        else if(!isDragging && this.touchMove) {
-            shape._handleEvent('touchmove', evt);
-        }
-        /*
-        * NOTE: these event handlers require target shape
-        * handling
-        */
-        // handle onmouseover
-        else if(!isDragging && this._isNewTarget(shape, evt)) {
-            /*
-             * check to see if there are stored mouseout events first.
-             * if there are, run those before running the onmouseover
-             * events
-             */
-            if(this.mouseoutShape) {
-                this.mouseoverShape = shape;
-                this.mouseoutShape._handleEvent('mouseout', evt);
-                this.mouseoverShape = undefined;
-            }
 
-            shape._handleEvent('mouseover', evt);
-            this._setTarget(shape);
-        }
-        // handle mousemove and touchmove
-        else {
-            if(!isDragging && this.mouseMove) {
-                shape._handleEvent('mousemove', evt);
-            }
-        }
-    },
-    /**
-     * set new target
-     */
-    _setTarget: function(shape) {
-        this.targetShape = shape;
-        this.targetFound = true;
-    },
-    /**
-     * check if shape should be a new target
-     */
-    _isNewTarget: function(shape, evt) {
-        if(!this.targetShape || (!this.targetFound && shape._id !== this.targetShape._id)) {
-            /*
-             * check if old target has an onmouseout event listener
-             */
-            if(this.targetShape) {
-                var oldEl = this.targetShape.eventListeners;
-                if(oldEl) {
-                    this.mouseoutShape = this.targetShape;
-                }
-            }
-            return true;
-        }
-        else {
-            return false;
-        }
-    },
-    /**
-     * handle incoming event
-     * @param {Event} evt
-     */
-    _handleStageEvent: function(evt) {
-        var go = Kinetic.Global;
-        if(!evt) {
-            evt = window.event;
-        }
-
-        this._setMousePosition(evt);
-        this._setTouchPosition(evt);
-        this.targetFound = false;
-
-        var pos = this.getUserPosition();
-        var shape;
-        var layers = this.getChildren();
-
-        /*
-         * traverse through layers from top to bottom and look
-         * for hit detection
-         */
-
-        for(var n = layers.length - 1; n >= 0; n--) {
-            var layer = layers[n];
-            var p = layer.bufferCanvas.context.getImageData(pos.x, pos.y, 1, 1).data;
-            var colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
-            shape = Kinetic.Global.shapes[colorKey];
-            var isDragging = Kinetic.Global.drag.moving;
-
-            if(shape) {
-                this._detectEvent(shape, evt);
-                break;
-            }
-        }
-
-        // handle mouseout condition
-        /*
-         else if(!isDragging && this.targetShape && this.targetShape._id === shape._id) {
-         this._setTarget(undefined);
-         this.mouseoutShape = shape;
-         }
-         */
-
-        /*
-         * if no shape was detected and a mouseout shape has been stored,
-         * then run the onmouseout event handlers
-         */
-        if(!shape && this.mouseoutShape) {
-            this.mouseoutShape._handleEvent('mouseout', evt);
-            this.mouseoutShape = undefined;
-        }
-    },
-    /**
-     * begin listening for events by adding event handlers
-     * to the container
-     */
-    _bindContentEvents: function() {
-        var go = Kinetic.Global;
-        var that = this;
-
-        var events = ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'touchstart', 'touchmove', 'touchend'];
-
-        for(var n = 0; n < events.length; n++) {
-            var pubEvent = events[n];
-            // induce scope
-            ( function() {
-                var event = pubEvent;
-                that.content.addEventListener(event, function(evt) {
-                    that['_' + event](evt);
-                }, false);
-            }());
-        }
-    },
-    _mouseover: function(evt) {
-        this._handleStageEvent(evt);
-    },
-    _mouseout: function(evt) {
-        // if there's a current target shape, run mouseout handlers
-        var targetShape = this.targetShape;
-        if(targetShape) {
-            targetShape._handleEvent('mouseout', evt);
-            this.targetShape = undefined;
-        }
-        this.mousePos = undefined;
-
-        // end drag and drop
-        this._endDrag(evt);
-    },
-    _mousemove: function(evt) {
-        this.mouseDown = false;
-        this.mouseUp = false;
-        this.mouseMove = true;
-        this._handleStageEvent(evt);
-
-        // start drag and drop
-        this._startDrag(evt);
-    },
-    _mousedown: function(evt) {
-        this.mouseDown = true;
-        this.mouseUp = false;
-        this.mouseMove = false;
-        this._handleStageEvent(evt);
-
-        //init stage drag and drop
-        if(this.attrs.draggable) {
-            this._initDrag();
-        }
-    },
-    _mouseup: function(evt) {
-        this.mouseDown = false;
-        this.mouseUp = true;
-        this.mouseMove = false;
-        this._handleStageEvent(evt);
-        this.clickStart = false;
-
-        // end drag and drop
-        this._endDrag(evt);
-    },
-    _touchstart: function(evt) {
-        evt.preventDefault();
-        this.touchStart = true;
-        this.touchEnd = false;
-        this.touchMove = false;
-        this._handleStageEvent(evt);
-        /*
-         * init stage drag and drop
-         */
-        if(this.attrs.draggable) {
-            this._initDrag();
-        }
-    },
-    _touchend: function(evt) {
-        this.touchStart = false;
-        this.touchEnd = true;
-        this.touchMove = false;
-        this._handleStageEvent(evt);
         this.tapStart = false;
 
         // end drag and drop
@@ -3400,9 +3303,10 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     _touchmove: function(evt) {
         evt.preventDefault();
-        this.touchEnd = false;
-        this.touchMove = true;
-        this._handleStageEvent(evt);
+        var shape = this._getIntersectingShape();
+        if(shape) {
+            shape._handleEvent('touchmove', evt);
+        }
 
         // start drag and drop
         this._startDrag(evt);
@@ -3598,10 +3502,7 @@ Kinetic.Stage = Kinetic.Container.extend({
     _setStageDefaultProperties: function() {
         this.nodeType = 'Stage';
         this.dblClickWindow = 400;
-        this.targetShape = undefined;
-        this.targetFound = false;
-        this.mouseoverShape = undefined;
-        this.mouseoutShape = undefined;
+        this.targetShape = null;
 
         // desktop flags
         this.mousePos = undefined;
