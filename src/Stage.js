@@ -785,8 +785,9 @@ Kinetic.Stage = Kinetic.Container.extend({
 
         if(node) {
             var pos = that.getUserPosition();
-            var dc = node.attrs.dragConstraint;
             var db = node.attrs.dragBounds;
+			var dbf = node.attrs.dragBoundFunc;
+			var dc = node.attrs.dragConstraint;
             var lastNodePos = {
                 x: node.attrs.x,
                 y: node.attrs.y
@@ -812,15 +813,21 @@ Kinetic.Stage = Kinetic.Container.extend({
                 newNodePos.y = db.bottom;
             }
 
-            node.setAbsolutePosition(newNodePos);
+			if(dbf !== undefined) {
+				// execute dragBoundFunc if defined
+				dbf(newNodePos, evt);
+			}
 
             // constraint overrides
             if(dc === 'horizontal') {
-                node.attrs.y = lastNodePos.y;
+                newNodePos.y = lastNodePos.y;
             }
             else if(dc === 'vertical') {
-                node.attrs.x = lastNodePos.x;
+                newNodePos.x = lastNodePos.x;
             }
+
+
+            node.setAbsolutePosition(newNodePos);
 
             if(!go.drag.moving) {
                 go.drag.moving = true;

@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Aug 10 2012
+ * Date: Aug 13 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -2294,7 +2294,7 @@ Kinetic.Node._addGetter = function(constructor, attr) {
     };
 };
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
+Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'dragBoundFunc', 'listening']);
 Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 
 /**
@@ -3509,8 +3509,9 @@ Kinetic.Stage = Kinetic.Container.extend({
 
         if(node) {
             var pos = that.getUserPosition();
-            var dc = node.attrs.dragConstraint;
             var db = node.attrs.dragBounds;
+			var dbf = node.attrs.dragBoundFunc;
+			var dc = node.attrs.dragConstraint;
             var lastNodePos = {
                 x: node.attrs.x,
                 y: node.attrs.y
@@ -3536,15 +3537,21 @@ Kinetic.Stage = Kinetic.Container.extend({
                 newNodePos.y = db.bottom;
             }
 
-            node.setAbsolutePosition(newNodePos);
+			if(dbf !== undefined) {
+				// execute dragBoundFunc if defined
+				dbf(newNodePos, evt);
+			}
 
             // constraint overrides
             if(dc === 'horizontal') {
-                node.attrs.y = lastNodePos.y;
+                newNodePos.y = lastNodePos.y;
             }
             else if(dc === 'vertical') {
-                node.attrs.x = lastNodePos.x;
+                newNodePos.x = lastNodePos.x;
             }
+
+
+            node.setAbsolutePosition(newNodePos);
 
             if(!go.drag.moving) {
                 go.drag.moving = true;
