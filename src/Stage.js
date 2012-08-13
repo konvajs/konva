@@ -815,7 +815,7 @@ Kinetic.Stage = Kinetic.Container.extend({
 
 			if(dbf !== undefined) {
 				// execute dragBoundFunc if defined
-				dbf(newNodePos, evt);
+				newNodePos = dbf.call(node, newNodePos, evt);
 			}
 
             // constraint overrides

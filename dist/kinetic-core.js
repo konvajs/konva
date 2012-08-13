@@ -1245,6 +1245,7 @@ requestAnimFrame = (function(callback) {
  * @param {Number} [config.dragBounds.right]
  * @param {Number} [config.dragBounds.bottom]
  * @param {Number} [config.dragBounds.left]
+ * @param {Function} [config.dragBoundFunc] dragBoundFunc(pos, evt) should return new position
  */
 Kinetic.Node = Kinetic.Class.extend({
     init: function(config) {
@@ -3539,7 +3540,7 @@ Kinetic.Stage = Kinetic.Container.extend({
 
 			if(dbf !== undefined) {
 				// execute dragBoundFunc if defined
-				dbf(newNodePos, evt);
+				newNodePos = dbf.call(node, newNodePos, evt);
 			}
 
             // constraint overrides
