@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Aug 11 2012
+ * Date: Aug 13 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -38,6 +38,8 @@ Kinetic.Filters = {};
 Kinetic.Plugins = {};
 Kinetic.Global = {
     BUBBLE_WHITELIST: ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'click', 'dblclick', 'touchstart', 'touchmove', 'touchend', 'tap', 'dbltap', 'dragstart', 'dragmove', 'dragend'],
+    BUFFER_WHITELIST: ['fill', 'stroke', 'textFill', 'textStroke'],
+    BUFFER_BLACKLIST: ['shadow'],
     stages: [],
     idCounter: 0,
     tempNodes: {},
@@ -447,7 +449,7 @@ Kinetic.Type = {
         }
     },
     _rgbToHex: function(r, g, b) {
-        return ((r << 16) | (g << 8) | b).toString(16);
+        return ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
     },
     _getRandomColorKey: function() {
         var r = Math.round(Math.random() * 255);
@@ -551,8 +553,6 @@ Kinetic.Canvas.prototype = {
      */
     strip: function() {
         var context = this.context;
-        context.drawImage = function() {
-        };
     },
     /**
      * toDataURL
@@ -1225,7 +1225,7 @@ requestAnimFrame = (function(callback) {
  * @param {Boolean} [config.listening] whether or not the node is listening for events
  * @param {String} [config.id] unique id
  * @param {String} [config.name] non-unique name
- * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
  * @param {Object} [config.scale]
  * @param {Number} [config.scale.x]
  * @param {Number} [config.scale.y]
@@ -1249,7 +1249,7 @@ Kinetic.Node = Kinetic.Class.extend({
             visible: true,
             listening: true,
             name: undefined,
-            alpha: 1,
+            opacity: 1,
             x: 0,
             y: 0,
             scale: {
@@ -1773,19 +1773,19 @@ Kinetic.Node = Kinetic.Class.extend({
         this.parent._setChildrenIndices();
     },
     /**
-     * get absolute alpha
-     * @name getAbsoluteAlpha
+     * get absolute opacity
+     * @name getAbsoluteOpacity
      * @methodOf Kinetic.Node.prototype
      */
-    getAbsoluteAlpha: function() {
-        var absAlpha = 1;
+    getAbsoluteOpacity: function() {
+        var absOpacity = 1;
         var node = this;
         // traverse upwards
         while(node.nodeType !== 'Stage') {
-            absAlpha *= node.attrs.alpha;
+            absOpacity *= node.attrs.opacity;
             node = node.parent;
         }
-        return absAlpha;
+        return absOpacity;
     },
     /**
      * determine if node is currently in drag and drop mode
@@ -1862,7 +1862,7 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * transition node to another state.  Any property that can accept a real
-     *  number can be transitioned, including x, y, rotation, alpha, strokeWidth,
+     *  number can be transitioned, including x, y, rotation, opacity, strokeWidth,
      *  radius, scale.x, scale.y, offset.x, offset.y, etc.
      * @name transitionTo
      * @methodOf Kinetic.Node.prototype
@@ -2291,7 +2291,7 @@ Kinetic.Node._addGetter = function(constructor, attr) {
     };
 };
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
+Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'rotation', 'opacity', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
 Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 
 /**
@@ -2309,13 +2309,6 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  */
 
 /**
- * set detection type
- * @name setDetectionType
- * @methodOf Kinetic.Node.prototype
- * @param {String} type can be path or pixel
- */
-
-/**
  * set node rotation in radians
  * @name setRotation
  * @methodOf Kinetic.Node.prototype
@@ -2323,12 +2316,12 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  */
 
 /**
- * set alpha.  Alpha values range from 0 to 1.
- *  A node with an alpha of 0 is fully transparent, and a node
- *  with an alpha of 1 is fully opaque
- * @name setAlpha
+ * set opacity.  Opacity values range from 0 to 1.
+ *  A node with an opacity of 0 is fully transparent, and a node
+ *  with an opacity of 1 is fully opaque
+ * @name setOpacity
  * @methodOf Kinetic.Node.prototype
- * @param {Object} alpha
+ * @param {Object} opacity
  */
 
 /**
@@ -2405,20 +2398,14 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  */
 
 /**
- * get detection type.  Can be path or pixel
- * @name getDetectionType
- * @methodOf Kinetic.Node.prototype
- */
-
-/**
  * get rotation in radians
  * @name getRotation
  * @methodOf Kinetic.Node.prototype
  */
 
 /**
- * get alpha.
- * @name getAlpha
+ * get opacity.
+ * @name getOpacity
  * @methodOf Kinetic.Node.prototype
  */
 
@@ -2528,19 +2515,21 @@ Kinetic.Container = Kinetic.Node.extend({
         child._id = Kinetic.Global.idCounter++;
         child.index = this.children.length;
         child.parent = this;
-        
+
         // set color key
-        var shapes = Kinetic.Global.shapes;
-        var key;
-        while (true) {
-        	key = Kinetic.Type._getRandomColorKey();
-        	if (key && !(key in shapes)) {
-        		break;
-        	}
+        if(child.nodeType === 'Shape') {
+            var shapes = Kinetic.Global.shapes;
+            var key;
+            while(true) {
+                key = Kinetic.Type._getRandomColorKey();
+                if(key && !( key in shapes)) {
+                    break;
+                }
+            }
+
+            child.colorKey = key;
+            shapes[key] = child;
         }
-        
-        child.colorKey = key;
-        shapes[key] = child;
 
         this.children.push(child);
         var stage = child.getStage();
@@ -2712,13 +2701,15 @@ Kinetic.Container = Kinetic.Node.extend({
         var children = this.children;
         for(var n = 0; n < children.length; n++) {
             var child = children[n];
-            if(child.nodeType === 'Shape') {
-                if(child.isVisible() && stage.isVisible()) {
-                    child._draw(canvas);
+            if(canvas.name !== 'buffer' || child.getListening()) {
+                if(child.nodeType === 'Shape') {
+                    if(child.isVisible()) {
+                        child._draw(canvas);
+                    }
                 }
-            }
-            else {
-                child.draw(canvas);
+                else {
+                    child.draw(canvas);
+                }
             }
         }
     },
@@ -2749,7 +2740,7 @@ Kinetic.Container = Kinetic.Node.extend({
  * @param {Boolean} [config.listening] whether or not the node is listening for events
  * @param {String} [config.id] unique id
  * @param {String} [config.name] non-unique name
- * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
  * @param {Object} [config.scale]
  * @param {Number} [config.scale.x]
  * @param {Number} [config.scale.y]
@@ -3135,12 +3126,14 @@ Kinetic.Stage = Kinetic.Container.extend({
         for(var n = layers.length - 1; n >= 0; n--) {
             var layer = layers[n];
             var p = layer.bufferCanvas.context.getImageData(pos.x, pos.y, 1, 1).data;
-            var colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
-            shape = Kinetic.Global.shapes[colorKey];
-            var isDragging = Kinetic.Global.drag.moving;
+            if(p[3] === 255) {
+                var colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
+                shape = Kinetic.Global.shapes[colorKey];
+                var isDragging = Kinetic.Global.drag.moving;
 
-            if(shape) {
-                return shape;
+                if(shape) {
+                    return shape;
+                }
             }
         }
 
@@ -3572,7 +3565,7 @@ Kinetic.Node.addGettersSetters(Kinetic.Stage, ['width', 'height']);
  * @param {Boolean} [config.listening] whether or not the node is listening for events
  * @param {String} [config.id] unique id
  * @param {String} [config.name] non-unique name
- * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
  * @param {Object} [config.scale]
  * @param {Number} [config.scale.x]
  * @param {Number} [config.scale.y]
@@ -3615,6 +3608,15 @@ Kinetic.Layer = Kinetic.Container.extend({
      */
     draw: function(canvas) {
         this._draw(canvas);
+    },
+    /**
+     * draw children nodes on buffer.  this includes any groups
+     *  or shapes
+     * @name drawBuffer
+     * @methodOf Kinetic.Layer.prototype
+     */
+    drawBuffer: function() {
+        this.draw(this.bufferCanvas);
     },
     /**
      * set before draw handler
@@ -3708,7 +3710,9 @@ Kinetic.Layer = Kinetic.Container.extend({
 
         if(this.attrs.clearBeforeDraw) {
             canvas.clear();
-            this.bufferCanvas.clear();
+            if(canvas.name !== 'buffer') {
+                this.bufferCanvas.clear();
+            }
         }
 
         if(this.isVisible()) {
@@ -3717,10 +3721,18 @@ Kinetic.Layer = Kinetic.Container.extend({
                 this.attrs.drawFunc.call(this);
             }
 
-            // draw children on front canvas
-            this._drawChildren(canvas);
-            // draw children on back canvas
-            this._drawChildren(this.bufferCanvas);
+            if(canvas.name !== 'buffer') {
+                this._drawChildren(canvas);
+                if(this.getListening()) {
+                    this._drawChildren(this.bufferCanvas);
+                }
+            }
+            // buffer canvas
+            else {
+                if(this.getListening()) {
+                    this._drawChildren(canvas);
+                }
+            }
         }
 
         // after draw  handler
@@ -3761,7 +3773,7 @@ Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw']);
  * @param {Boolean} [config.listening] whether or not the node is listening for events
  * @param {String} [config.id] unique id
  * @param {String} [config.name] non-unique name
- * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
  * @param {Object} [config.scale]
  * @param {Number} [config.scale.x]
  * @param {Number} [config.scale.y]
@@ -3831,17 +3843,15 @@ Kinetic.Group = Kinetic.Container.extend({
  * @config {Obect} [config.shadow.blur.offset]
  * @config {Number} [config.shadow.blur.offset.x]
  * @config {Number} [config.shadow.blur.offset.y]
- * @config {Number} [config.shadow.alpha] shadow alpha.  Can be any real number
+ * @config {Number} [config.shadow.opacity] shadow opacity.  Can be any real number
  *  between 0 and 1
- * @config {String} [config.detectionType] shape detection type.  Can be path or pixel.
- *  The default is path because it performs better
  * @param {Number} [config.x]
  * @param {Number} [config.y]
  * @param {Boolean} [config.visible]
  * @param {Boolean} [config.listening] whether or not the node is listening for events
  * @param {String} [config.id] unique id
  * @param {String} [config.name] non-unique name
- * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
  * @param {Object} [config.scale]
  * @param {Number} [config.scale.x]
  * @param {Number} [config.scale.y]
@@ -3861,10 +3871,6 @@ Kinetic.Group = Kinetic.Container.extend({
  */
 Kinetic.Shape = Kinetic.Node.extend({
     init: function(config) {
-        this.setDefaultAttrs({
-            detectionType: 'path'
-        });
-
         this.nodeType = 'Shape';
         this.appliedShadow = false;
 
@@ -4085,7 +4091,7 @@ Kinetic.Shape = Kinetic.Node.extend({
     _applyShadow: function(context) {
         var s = this.attrs.shadow;
         if(s) {
-            var aa = this.getAbsoluteAlpha();
+            var aa = this.getAbsoluteOpacity();
             // defaults
             var color = s.color ? s.color : 'black';
             var blur = s.blur ? s.blur : 5;
@@ -4094,8 +4100,8 @@ Kinetic.Shape = Kinetic.Node.extend({
                 y: 0
             };
 
-            if(s.alpha) {
-                context.globalAlpha = s.alpha * aa;
+            if(s.opacity) {
+                context.globalAlpha = s.opacity * aa;
             }
             context.shadowColor = color;
             context.shadowBlur = blur;
@@ -4118,22 +4124,7 @@ Kinetic.Shape = Kinetic.Node.extend({
         var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
         var stage = this.getStage();
 
-        // path detection
-        if(this.attrs.detectionType === 'path') {
-            var pathCanvas = stage.pathCanvas;
-            var pathCanvasContext = pathCanvas.getContext();
-
-            this._draw(pathCanvas);
-
-            return pathCanvasContext.isPointInPath(pos.x, pos.y);
-        }
-
-        // pixel detection
-        if(this.imageData) {
-            var w = stage.attrs.width;
-            var alpha = this.imageData.data[((w * pos.y) + pos.x) * 4 + 3];
-            return (alpha);
-        }
+        // TODO: need to re-implement
 
         // default
         return false;
@@ -4160,34 +4151,44 @@ Kinetic.Shape = Kinetic.Node.extend({
             }
 
             /*
-             * pre styles include alpha, linejoin
+             * pre styles include opacity, linejoin
              */
-            var absAlpha = this.getAbsoluteAlpha();
-            if(absAlpha !== 1) {
-                context.globalAlpha = absAlpha;
+            var absOpacity = this.getAbsoluteOpacity();
+            if(absOpacity !== 1) {
+                context.globalAlpha = absOpacity;
             }
             this.applyLineJoin(context);
 
             // draw the shape
             this.appliedShadow = false;
 
+            var wl = Kinetic.Global.BUFFER_WHITELIST;
+            var bl = Kinetic.Global.BUFFER_BLACKLIST;
+            var attrs = {};
             if(canvas.name === 'buffer') {
-                var fill = this.attrs.fill;
-                var stroke = this.attrs.stroke;
-
-                if(fill) {
-                    this.attrs.fill = '#' + this.colorKey;
+                for(var n = 0; n < wl.length; n++) {
+                    var key = wl[n];
+                    attrs[key] = this.attrs[key];
+                    if(this.attrs[key]) {
+                        this.attrs[key] = '#' + this.colorKey;
+                    }
                 }
-                if(stroke) {
-                    this.attrs.stroke = '#' + this.colorKey;
+                for(var n = 0; n < bl.length; n++) {
+                    var key = bl[n];
+                    attrs[key] = this.attrs[key];
+                    this.attrs[key] = '';
                 }
+                context.globalAlpha = 1;
             }
 
             this.attrs.drawFunc.call(this, canvas.getContext());
 
             if(canvas.name === 'buffer') {
-                this.attrs.fill = fill;
-                this.attrs.stroke = stroke;
+            	var bothLists = wl.concat(bl);
+                for(var n = 0; n < bothLists.length; n++) {
+                    var key = bothLists[n];
+                    this.attrs[key] = attrs[key];
+                }
             }
 
             context.restore();

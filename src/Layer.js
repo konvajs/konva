@@ -15,7 +15,7 @@
  * @param {Boolean} [config.listening] whether or not the node is listening for events
  * @param {String} [config.id] unique id
  * @param {String} [config.name] non-unique name
- * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
  * @param {Object} [config.scale]
  * @param {Number} [config.scale.x]
  * @param {Number} [config.scale.y]
@@ -58,6 +58,15 @@ Kinetic.Layer = Kinetic.Container.extend({
      */
     draw: function(canvas) {
         this._draw(canvas);
+    },
+    /**
+     * draw children nodes on buffer.  this includes any groups
+     *  or shapes
+     * @name drawBuffer
+     * @methodOf Kinetic.Layer.prototype
+     */
+    drawBuffer: function() {
+        this.draw(this.bufferCanvas);
     },
     /**
      * set before draw handler
@@ -151,7 +160,9 @@ Kinetic.Layer = Kinetic.Container.extend({
 
         if(this.attrs.clearBeforeDraw) {
             canvas.clear();
-            this.bufferCanvas.clear();
+            if(canvas.name !== 'buffer') {
+                this.bufferCanvas.clear();
+            }
         }
 
         if(this.isVisible()) {
@@ -160,10 +171,18 @@ Kinetic.Layer = Kinetic.Container.extend({
                 this.attrs.drawFunc.call(this);
             }
 
-            // draw children on front canvas
-            this._drawChildren(canvas);
-            // draw children on back canvas
-            this._drawChildren(this.bufferCanvas);
+            if(canvas.name !== 'buffer') {
+                this._drawChildren(canvas);
+                if(this.getListening()) {
+                    this._drawChildren(this.bufferCanvas);
+                }
+            }
+            // buffer canvas
+            else {
+                if(this.getListening()) {
+                    this._drawChildren(canvas);
+                }
+            }
         }
 
         // after draw  handler

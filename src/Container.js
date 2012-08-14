@@ -63,19 +63,21 @@ Kinetic.Container = Kinetic.Node.extend({
         child._id = Kinetic.Global.idCounter++;
         child.index = this.children.length;
         child.parent = this;
-        
+
         // set color key
-        var shapes = Kinetic.Global.shapes;
-        var key;
-        while (true) {
-        	key = Kinetic.Type._getRandomColorKey();
-        	if (key && !(key in shapes)) {
-        		break;
-        	}
+        if(child.nodeType === 'Shape') {
+            var shapes = Kinetic.Global.shapes;
+            var key;
+            while(true) {
+                key = Kinetic.Type._getRandomColorKey();
+                if(key && !( key in shapes)) {
+                    break;
+                }
+            }
+
+            child.colorKey = key;
+            shapes[key] = child;
         }
-        
-        child.colorKey = key;
-        shapes[key] = child;
 
         this.children.push(child);
         var stage = child.getStage();
@@ -247,13 +249,15 @@ Kinetic.Container = Kinetic.Node.extend({
         var children = this.children;
         for(var n = 0; n < children.length; n++) {
             var child = children[n];
-            if(child.nodeType === 'Shape') {
-                if(child.isVisible() && stage.isVisible()) {
-                    child._draw(canvas);
+            if(canvas.name !== 'buffer' || child.getListening()) {
+                if(child.nodeType === 'Shape') {
+                    if(child.isVisible()) {
+                        child._draw(canvas);
+                    }
                 }
-            }
-            else {
-                child.draw(canvas);
+                else {
+                    child.draw(canvas);
+                }
             }
         }
     },

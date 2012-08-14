@@ -92,8 +92,6 @@ Kinetic.Canvas.prototype = {
      */
     strip: function() {
         var context = this.context;
-        context.drawImage = function() {
-        };
     },
     /**
      * toDataURL

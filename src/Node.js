@@ -13,7 +13,7 @@
  * @param {Boolean} [config.listening] whether or not the node is listening for events
  * @param {String} [config.id] unique id
  * @param {String} [config.name] non-unique name
- * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
  * @param {Object} [config.scale]
  * @param {Number} [config.scale.x]
  * @param {Number} [config.scale.y]
@@ -37,7 +37,7 @@ Kinetic.Node = Kinetic.Class.extend({
             visible: true,
             listening: true,
             name: undefined,
-            alpha: 1,
+            opacity: 1,
             x: 0,
             y: 0,
             scale: {
@@ -561,19 +561,19 @@ Kinetic.Node = Kinetic.Class.extend({
         this.parent._setChildrenIndices();
     },
     /**
-     * get absolute alpha
-     * @name getAbsoluteAlpha
+     * get absolute opacity
+     * @name getAbsoluteOpacity
      * @methodOf Kinetic.Node.prototype
      */
-    getAbsoluteAlpha: function() {
-        var absAlpha = 1;
+    getAbsoluteOpacity: function() {
+        var absOpacity = 1;
         var node = this;
         // traverse upwards
         while(node.nodeType !== 'Stage') {
-            absAlpha *= node.attrs.alpha;
+            absOpacity *= node.attrs.opacity;
             node = node.parent;
         }
-        return absAlpha;
+        return absOpacity;
     },
     /**
      * determine if node is currently in drag and drop mode
@@ -650,7 +650,7 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * transition node to another state.  Any property that can accept a real
-     *  number can be transitioned, including x, y, rotation, alpha, strokeWidth,
+     *  number can be transitioned, including x, y, rotation, opacity, strokeWidth,
      *  radius, scale.x, scale.y, offset.x, offset.y, etc.
      * @name transitionTo
      * @methodOf Kinetic.Node.prototype
@@ -1079,7 +1079,7 @@ Kinetic.Node._addGetter = function(constructor, attr) {
     };
 };
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
+Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'rotation', 'opacity', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
 Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 
 /**
@@ -1097,13 +1097,6 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  */
 
 /**
- * set detection type
- * @name setDetectionType
- * @methodOf Kinetic.Node.prototype
- * @param {String} type can be path or pixel
- */
-
-/**
  * set node rotation in radians
  * @name setRotation
  * @methodOf Kinetic.Node.prototype
@@ -1111,12 +1104,12 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  */
 
 /**
- * set alpha.  Alpha values range from 0 to 1.
- *  A node with an alpha of 0 is fully transparent, and a node
- *  with an alpha of 1 is fully opaque
- * @name setAlpha
+ * set opacity.  Opacity values range from 0 to 1.
+ *  A node with an opacity of 0 is fully transparent, and a node
+ *  with an opacity of 1 is fully opaque
+ * @name setOpacity
  * @methodOf Kinetic.Node.prototype
- * @param {Object} alpha
+ * @param {Object} opacity
  */
 
 /**
@@ -1193,20 +1186,14 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  */
 
 /**
- * get detection type.  Can be path or pixel
- * @name getDetectionType
- * @methodOf Kinetic.Node.prototype
- */
-
-/**
  * get rotation in radians
  * @name getRotation
  * @methodOf Kinetic.Node.prototype
  */
 
 /**
- * get alpha.
- * @name getAlpha
+ * get opacity.
+ * @name getOpacity
  * @methodOf Kinetic.Node.prototype
  */
 
