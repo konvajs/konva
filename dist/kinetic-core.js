@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Aug 13 2012
+ * Date: Aug 14 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -39,7 +39,7 @@ Kinetic.Plugins = {};
 Kinetic.Global = {
     BUBBLE_WHITELIST: ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'click', 'dblclick', 'touchstart', 'touchmove', 'touchend', 'tap', 'dbltap', 'dragstart', 'dragmove', 'dragend'],
     BUFFER_WHITELIST: ['fill', 'stroke', 'textFill', 'textStroke'],
-    BUFFER_BLACKLIST: ['shadow'],
+    BUFFER_BLACKLIST: ['shadow', 'image'],
     stages: [],
     idCounter: 0,
     tempNodes: {},
@@ -4165,7 +4165,12 @@ Kinetic.Shape = Kinetic.Node.extend({
             var wl = Kinetic.Global.BUFFER_WHITELIST;
             var bl = Kinetic.Global.BUFFER_BLACKLIST;
             var attrs = {};
+
             if(canvas.name === 'buffer') {
+                if('image' in this.attrs) {
+                    this.attrs.fill = '#' + this.colorKey;
+                }
+
                 for(var n = 0; n < wl.length; n++) {
                     var key = wl[n];
                     attrs[key] = this.attrs[key];
@@ -4178,13 +4183,14 @@ Kinetic.Shape = Kinetic.Node.extend({
                     attrs[key] = this.attrs[key];
                     this.attrs[key] = '';
                 }
+
                 context.globalAlpha = 1;
             }
 
             this.attrs.drawFunc.call(this, canvas.getContext());
 
             if(canvas.name === 'buffer') {
-            	var bothLists = wl.concat(bl);
+                var bothLists = wl.concat(bl);
                 for(var n = 0; n < bothLists.length; n++) {
                     var key = bothLists[n];
                     this.attrs[key] = attrs[key];
@@ -4491,16 +4497,17 @@ Kinetic.Image = Kinetic.Shape.extend({
         this._super(config);
     },
     drawFunc: function(context) {
+        var width = this.getWidth();
+        var height = this.getHeight();
+
+        context.beginPath();
+        context.rect(0, 0, width, height);
+        context.closePath();
+        this.fill(context);
+        this.stroke(context);
+        
         if(this.attrs.image) {
-            var width = this.getWidth();
-            var height = this.getHeight();
-
-            context.beginPath();
-            context.rect(0, 0, width, height);
-            context.closePath();
-            this.fill(context);
-            this.stroke(context);
-
+        	context.beginPath();
             // if cropping
             if(this.attrs.crop && this.attrs.crop.width && this.attrs.crop.height) {
                 var cropX = this.attrs.crop.x ? this.attrs.crop.x : 0;

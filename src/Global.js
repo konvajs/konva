@@ -11,7 +11,7 @@ Kinetic.Plugins = {};
 Kinetic.Global = {
     BUBBLE_WHITELIST: ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'click', 'dblclick', 'touchstart', 'touchmove', 'touchend', 'tap', 'dbltap', 'dragstart', 'dragmove', 'dragend'],
     BUFFER_WHITELIST: ['fill', 'stroke', 'textFill', 'textStroke'],
-    BUFFER_BLACKLIST: ['shadow'],
+    BUFFER_BLACKLIST: ['shadow', 'image'],
     stages: [],
     idCounter: 0,
     tempNodes: {},

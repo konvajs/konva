@@ -355,7 +355,12 @@ Kinetic.Shape = Kinetic.Node.extend({
             var wl = Kinetic.Global.BUFFER_WHITELIST;
             var bl = Kinetic.Global.BUFFER_BLACKLIST;
             var attrs = {};
+
             if(canvas.name === 'buffer') {
+                if('image' in this.attrs) {
+                    this.attrs.fill = '#' + this.colorKey;
+                }
+
                 for(var n = 0; n < wl.length; n++) {
                     var key = wl[n];
                     attrs[key] = this.attrs[key];
@@ -368,13 +373,14 @@ Kinetic.Shape = Kinetic.Node.extend({
                     attrs[key] = this.attrs[key];
                     this.attrs[key] = '';
                 }
+
                 context.globalAlpha = 1;
             }
 
             this.attrs.drawFunc.call(this, canvas.getContext());
 
             if(canvas.name === 'buffer') {
-            	var bothLists = wl.concat(bl);
+                var bothLists = wl.concat(bl);
                 for(var n = 0; n < bothLists.length; n++) {
                     var key = bothLists[n];
                     this.attrs[key] = attrs[key];

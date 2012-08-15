@@ -19,16 +19,17 @@ Kinetic.Image = Kinetic.Shape.extend({
         this._super(config);
     },
     drawFunc: function(context) {
+        var width = this.getWidth();
+        var height = this.getHeight();
+
+        context.beginPath();
+        context.rect(0, 0, width, height);
+        context.closePath();
+        this.fill(context);
+        this.stroke(context);
+        
         if(this.attrs.image) {
-            var width = this.getWidth();
-            var height = this.getHeight();
-
-            context.beginPath();
-            context.rect(0, 0, width, height);
-            context.closePath();
-            this.fill(context);
-            this.stroke(context);
-
+        	context.beginPath();
             // if cropping
             if(this.attrs.crop && this.attrs.crop.width && this.attrs.crop.height) {
                 var cropX = this.attrs.crop.x ? this.attrs.crop.x : 0;

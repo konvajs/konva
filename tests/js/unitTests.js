@@ -1463,7 +1463,7 @@ Test.prototype.tests = {
 
         stage.add(layer);
     },
-    'SHAPE - add image': function(containerId) {
+    '*SHAPE - add image': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = new Kinetic.Stage({
@@ -1482,12 +1482,13 @@ Test.prototype.tests = {
                 height: 100,
                 offset: [50, 30],
                 crop: [135, 7, 167, 134],
-                cornerRadius: 20
+                draggable: true
             });
 
             layer.add(darth);
             stage.add(layer);
 
+			/*
             darth.setHeight(200);
             layer.draw();
 
@@ -1509,9 +1510,6 @@ Test.prototype.tests = {
             test(crop.width === 167, 'crop width should be 167');
             test(crop.height === 134, 'crop height should be134');
 
-            /*
-             * test cropping setter
-             */
             darth.setCrop(0, 1, 2, 3);
             crop = darth.getCrop();
             test(crop.x === 0, 'crop x should be 0');
@@ -1538,9 +1536,6 @@ Test.prototype.tests = {
             test(crop.width === 10, 'crop width should be 10');
             test(crop.height === 11, 'crop height should be 11');
 
-            /*
-             * test crop partial setter
-             */
             darth.setCrop({
                 x: 12
             });
@@ -1576,6 +1571,9 @@ Test.prototype.tests = {
             test(crop.y === 13, 'crop y should be 13');
             test(crop.width === 14, 'crop width should be 14');
             test(crop.height === 15, 'crop height should be 15');
+            */
+           
+            document.body.appendChild(layer.bufferCanvas.element)
 
         };
         imageObj.src = '../assets/darth-vader.jpg';
@@ -2631,7 +2629,7 @@ Test.prototype.tests = {
         test(group.get('Group').length === 0, 'group should have 0 groups');
 
     },
-    '*SHAPE - text getters and setters': function(containerId) {
+    'SHAPE - text getters and setters': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2676,7 +2674,6 @@ Test.prototype.tests = {
          * test getters and setters
          */
 
-		/*
         test(text.getX() === stage.getWidth() / 2, 'text box x should be in center of stage');
         test(text.getY() === stage.getHeight() / 2, 'text box y should be in center of stage');
         test(text.getStroke() === '#555', 'text box stroke should be #555');
@@ -2696,7 +2693,6 @@ Test.prototype.tests = {
         test(text.getShadow().color === 'black', 'text box shadow color should be black');
         test(text.getCornerRadius() === 10, 'text box corner radius should be 10');
         test(text.getDraggable() === true, 'text should be draggable');
-        test(text.getDetectionType() === 'path', 'text detection type should be path');
 
         test(text.getBoxWidth() === 400, 'box width should be 400');
         test(text.getBoxHeight() === 100, 'box height should be 100');
@@ -2723,7 +2719,6 @@ Test.prototype.tests = {
         });
         text.setCornerRadius(20);
         text.setDraggable(false);
-        text.setDetectionType('pixel');
 
         test(text.getX() === 1, 'text box x should be 1');
         test(text.getY() === 2, 'text box y should be 2');
@@ -2743,9 +2738,8 @@ Test.prototype.tests = {
         test(text.getShadow().color === 'green', 'text box shadow color should be green');
         test(text.getCornerRadius() === 20, 'text box corner radius should be 20');
         test(text.getDraggable() === false, 'text draggable should be false');
-        test(text.getDetectionType() === 'pixel', 'text detection type should be pixel');
-		*/
-		document.body.appendChild(layer.bufferCanvas.element)
+
+		//document.body.appendChild(layer.bufferCanvas.element)
 		
 		//layer.setListening(false);
 		layer.drawBuffer();
