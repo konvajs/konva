@@ -145,49 +145,39 @@ Kinetic.Layer = Kinetic.Container.extend({
      * private draw children
      */
     _draw: function(canvas) {
-        /*
-         * if canvas is not defined, then use the canvas
-         * tied to the layer
-         */
-        if(!canvas) {
-            canvas = this.getCanvas();
-        }
-
-        // before draw  handler
-        if(this.beforeDrawFunc !== undefined) {
-            this.beforeDrawFunc.call(this);
-        }
-
-        if(this.attrs.clearBeforeDraw) {
-            canvas.clear();
-            if(canvas.name !== 'buffer') {
-                this.bufferCanvas.clear();
-            }
-        }
-
         if(this.isVisible()) {
+            // before draw  handler
+            if(this.beforeDrawFunc !== undefined) {
+                this.beforeDrawFunc.call(this);
+            }
+
+            if(this.attrs.clearBeforeDraw) {
+                if(canvas) {
+                    canvas.clear();
+                }
+                else {
+                    this.getCanvas().clear();
+                    this.bufferCanvas.clear();
+                }
+            }
+
             // draw custom func
             if(this.attrs.drawFunc !== undefined) {
                 this.attrs.drawFunc.call(this);
             }
 
-            if(canvas.name !== 'buffer') {
+            if(canvas) {
                 this._drawChildren(canvas);
-                if(this.getListening()) {
-                    this._drawChildren(this.bufferCanvas);
-                }
             }
-            // buffer canvas
             else {
-                if(this.getListening()) {
-                    this._drawChildren(canvas);
-                }
+				this._drawChildren(this.getCanvas());
+				this._drawChildren(this.bufferCanvas);
             }
-        }
 
-        // after draw  handler
-        if(this.afterDrawFunc !== undefined) {
-            this.afterDrawFunc.call(this);
+            // after draw  handler
+            if(this.afterDrawFunc !== undefined) {
+                this.afterDrawFunc.call(this);
+            }
         }
     }
 });

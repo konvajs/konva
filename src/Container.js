@@ -249,7 +249,7 @@ Kinetic.Container = Kinetic.Node.extend({
         var children = this.children;
         for(var n = 0; n < children.length; n++) {
             var child = children[n];
-            if(canvas.name !== 'buffer' || child.getListening()) {
+            if(child.getListening()) {
                 if(child.nodeType === 'Shape') {
                     if(child.isVisible()) {
                         child._draw(canvas);

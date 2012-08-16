@@ -17,6 +17,13 @@ Kinetic.Image = Kinetic.Shape.extend({
         config.drawFunc = this.drawFunc;
         // call super constructor
         this._super(config);
+
+        var that = this;
+        this.on('imageChange', function(evt) {
+            that._syncSize();
+        });
+
+        this._syncSize();
     },
     drawFunc: function(context) {
         var width = this.getWidth();
@@ -27,9 +34,8 @@ Kinetic.Image = Kinetic.Shape.extend({
         context.closePath();
         this.fill(context);
         this.stroke(context);
-        
+
         if(this.attrs.image) {
-        	context.beginPath();
             // if cropping
             if(this.attrs.crop && this.attrs.crop.width && this.attrs.crop.height) {
                 var cropX = this.attrs.crop.x ? this.attrs.crop.x : 0;
@@ -65,34 +71,6 @@ Kinetic.Image = Kinetic.Shape.extend({
         };
     },
     /**
-     * get width
-     * @name getWidth
-     * @methodOf Kinetic.Image.prototype
-     */
-    getWidth: function() {
-        if(this.attrs.width) {
-            return this.attrs.width;
-        }
-        if(this.attrs.image) {
-            return this.attrs.image.width;
-        }
-        return 0;
-    },
-    /**
-     * get height
-     * @name getHeight
-     * @methodOf Kinetic.Image.prototype
-     */
-    getHeight: function() {
-        if(this.attrs.height) {
-            return this.attrs.height;
-        }
-        if(this.attrs.image) {
-            return this.attrs.image.height;
-        }
-        return 0;
-    },
-    /**
      * apply filter
      * @name applyFilter
      * @methodOf Kinetic.Image.prototype
@@ -120,12 +98,25 @@ Kinetic.Image = Kinetic.Shape.extend({
         catch(e) {
             Kinetic.Global.warn('Unable to apply filter.');
         }
+    },
+    _syncSize: function() {
+        if(this.attrs.image) {
+            if(!this.attrs.width) {
+                this.setAttrs({
+                    width: this.attrs.image.width
+                });
+            }
+            if(!this.attrs.height) {
+                this.setAttrs({
+                    height: this.attrs.image.height
+                });
+            }
+        }
     }
 });
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'crop', 'filter']);
-Kinetic.Node.addSetters(Kinetic.Image, ['width', 'height']);
+Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'crop', 'filter', 'width', 'height']);
 
 /**
  * set width
@@ -177,5 +168,17 @@ Kinetic.Node.addSetters(Kinetic.Image, ['width', 'height']);
 /**
  * get filter
  * @name getFilter
+ * @methodOf Kinetic.Image.prototype
+ */
+
+/**
+ * get width
+ * @name getWidth
+ * @methodOf Kinetic.Image.prototype
+ */
+
+/**
+ * get height
+ * @name getHeight
  * @methodOf Kinetic.Image.prototype
  */

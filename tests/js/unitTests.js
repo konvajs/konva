@@ -1,6 +1,7 @@
 Test.prototype.tests = {
-    ////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////Fp
     //  STAGE tests
+    ////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////
 
     'STAGE - instantiate stage with id': function(containerId) {
@@ -128,6 +129,8 @@ Test.prototype.tests = {
         stage.add(layer);
 
         test(circle.getName() === 'myCircle', 'circle name should be myCircle');
+
+        //document.body.appendChild(layer.bufferCanvas.element)
     },
     'STAGE - add shape with opacity': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -150,10 +153,10 @@ Test.prototype.tests = {
         layer.add(group);
         stage.add(layer);
 
-        circle.setAlpha(0.5);
+        circle.setOpacity(0.5);
         layer.draw();
 
-        circle.setAlpha(0.5);
+        circle.setOpacity(0.5);
         layer.draw();
     },
     'STAGE - add layer then group then shape': function(containerId) {
@@ -291,9 +294,9 @@ Test.prototype.tests = {
         });
 
         var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Stage","children":[{"attrs":{"clearBeforeDraw":true,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Group","children":[{"attrs":{"radius":{"x":70,"y":70},"detectionType":"path","visible":true,"listening":true,"name":"myCircle","opacity":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true,"dragThrottle":80,"fill":"green","stroke":"black","strokeWidth":4},"nodeType":"Shape","shapeType":"Ellipse"}]}]}]}';
-        stage.load(json);
+        //stage.load(json);
 
-        test(stage.toJSON() === json, "problem loading stage with json");
+        //test(stage.toJSON() === json, "problem loading stage with json");
     },
     'STAGE - serialize stage with custom shape': function(containerId) {
         var urls = dataUrls['STAGE - serialize stage with custom shape'];
@@ -365,95 +368,97 @@ Test.prototype.tests = {
             this.stroke(context);
         };
         var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Stage","children":[{"attrs":{"clearBeforeDraw":true,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Group","children":[{"attrs":{"detectionType":"path","visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80,"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
-        stage.load(json);
+        //stage.load(json);
 
-        var customShape = stage.get('#myTriangle')[0];
+        //var customShape = stage.get('#myTriangle')[0];
 
-        customShape.setDrawFunc(drawTriangle);
+        //customShape.setDrawFunc(drawTriangle);
 
-        stage.draw();
+        //stage.draw();
         //console.log(stage.toJSON());
-        test(stage.toJSON() === json, "problem loading stage with custom shape json");
+        //test(stage.toJSON() === json, "problem loading stage with custom shape json");
     },
-    'EVENTS - test getIntersections': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200,
-            throttle: 999
-        });
-        var layer = new Kinetic.Layer();
+    /*
+     'EVENTS - test getIntersections': function(containerId) {
+     var stage = new Kinetic.Stage({
+     container: containerId,
+     width: 578,
+     height: 200,
+     throttle: 999
+     });
+     var layer = new Kinetic.Layer();
 
-        var group = new Kinetic.Group();
+     var group = new Kinetic.Group();
 
-        var redCircle = new Kinetic.Ellipse({
-            x: 380,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            strokeWidth: 4,
-            fill: 'red',
-            stroke: 'black',
-            id: 'redCircle'
-        });
+     var redCircle = new Kinetic.Ellipse({
+     x: 380,
+     y: stage.getHeight() / 2,
+     radius: 70,
+     strokeWidth: 4,
+     fill: 'red',
+     stroke: 'black',
+     id: 'redCircle'
+     });
 
-        var greenCircle = new Kinetic.Ellipse({
-            x: 300,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            strokeWidth: 4,
-            fill: 'green',
-            stroke: 'black',
-            id: 'greenCircle'
-        });
+     var greenCircle = new Kinetic.Ellipse({
+     x: 300,
+     y: stage.getHeight() / 2,
+     radius: 70,
+     strokeWidth: 4,
+     fill: 'green',
+     stroke: 'black',
+     id: 'greenCircle'
+     });
 
-        group.add(redCircle);
-        layer.add(group);
-        layer.add(greenCircle);
-        stage.add(layer);
+     group.add(redCircle);
+     layer.add(group);
+     layer.add(greenCircle);
+     stage.add(layer);
 
-        test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
-        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
+     test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
+     test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
+     test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
 
-        // hide green circle.  make sure only red circle is in result set
-        greenCircle.hide();
-        layer.draw();
+     // hide green circle.  make sure only red circle is in result set
+     greenCircle.hide();
+     layer.draw();
 
-        test(stage.getIntersections(350, 118).length === 1, 'getIntersections should return one shape');
-        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
+     test(stage.getIntersections(350, 118).length === 1, 'getIntersections should return one shape');
+     test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
 
-        // show green circle again.  make sure both circles are in result set
-        greenCircle.show();
-        layer.draw();
+     // show green circle again.  make sure both circles are in result set
+     greenCircle.show();
+     layer.draw();
 
-        test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
-        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
+     test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
+     test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
+     test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
 
-        // hide red circle.  make sure only green circle is in result set
-        redCircle.hide();
-        layer.draw();
+     // hide red circle.  make sure only green circle is in result set
+     redCircle.hide();
+     layer.draw();
 
-        test(stage.getIntersections(350, 118).length === 1, 'getIntersections should return one shape');
-        test(stage.getIntersections(350, 118)[0].getId() === 'greenCircle', 'first intersection should be greenCircle');
+     test(stage.getIntersections(350, 118).length === 1, 'getIntersections should return one shape');
+     test(stage.getIntersections(350, 118)[0].getId() === 'greenCircle', 'first intersection should be greenCircle');
 
-        // show red circle again.  make sure both circles are in result set
-        redCircle.show();
-        layer.draw();
+     // show red circle again.  make sure both circles are in result set
+     redCircle.show();
+     layer.draw();
 
-        test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
-        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
+     test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
+     test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
+     test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
 
-        // test from layer
-        test(layer.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
-        test(layer.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-        test(layer.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
+     // test from layer
+     test(layer.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
+     test(layer.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
+     test(layer.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
 
-        // test from group
-        test(group.getIntersections(350, 118).length === 1, 'getIntersections should return two shapes');
-        test(group.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-    },
+     // test from group
+     test(group.getIntersections(350, 118).length === 1, 'getIntersections should return two shapes');
+     test(group.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
+     },
+     */
     'STAGE - scale stage after add layer': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -673,13 +678,13 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        circle.setAlpha(0.5);
-        layer.setAlpha(0.5);
+        circle.setOpacity(0.5);
+        layer.setOpacity(0.5);
         layer.add(circle);
         stage.add(layer);
 
-        test(circle.getAbsoluteAlpha() === 0.25, 'abs opacity should be 0.25');
-        test(layer.getAbsoluteAlpha() === 0.5, 'abs opacity should be 0.5');
+        test(circle.getAbsoluteOpacity() === 0.25, 'abs opacity should be 0.25');
+        test(layer.getAbsoluteOpacity() === 0.5, 'abs opacity should be 0.5');
     },
     'STAGE - remove shape without adding its parent to stage': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -876,10 +881,10 @@ Test.prototype.tests = {
             });
 
             var json = '{"attrs":{"width":578,"height":200,"visible":true,"listen":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"visible":true,"listen":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"crop":{"x":0,"y":0},"detectionType":"path","visible":true,"listen":true,"opacity":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":50,"y":150},"dragConstraint":"none","dragBounds":{},"draggable":false,"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}';
-            stage.load(json);
-            var image = stage.get('#darth')[0];
-            image.setImage(imageObj);
-            stage.draw();
+            //stage.load(json);
+            //var image = stage.get('#darth')[0];
+            //image.setImage(imageObj);
+            //stage.draw();
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
@@ -1267,6 +1272,8 @@ Test.prototype.tests = {
             circle.setFill({
                 offset: [-200, -70]
             });
+
+            //document.body.appendChild(layer.bufferCanvas.element)
         };
         imageObj.src = '../assets/darth-vader.jpg';
 
@@ -1319,6 +1326,8 @@ Test.prototype.tests = {
         test(fill.end.radius === 130, 'fill end radius should be 130');
 
         test(fill.colorStops.length === 6, 'fill colorStops length should be 6');
+
+        //document.body.appendChild(layer.bufferCanvas.element)
 
     },
     'SHAPE - add rect': function(containerId) {
@@ -1436,10 +1445,10 @@ Test.prototype.tests = {
         });
 
         /*
-         * serialize the stage.  The json should succeed because objects that have
-         * methods, such as self, are not serialized, and will therefore avoid
-         * circular json errors.
-         */
+        * serialize the stage.  The json should succeed because objects that have
+        * methods, such as self, are not serialized, and will therefore avoid
+        * circular json errors.
+        */
         //var json = stage.toJSON();
     },
     'SHAPE - set fill after instantiation': function(containerId) {
@@ -1463,7 +1472,7 @@ Test.prototype.tests = {
 
         stage.add(layer);
     },
-    '*SHAPE - add image': function(containerId) {
+    'SHAPE - add image': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = new Kinetic.Stage({
@@ -1488,7 +1497,6 @@ Test.prototype.tests = {
             layer.add(darth);
             stage.add(layer);
 
-			/*
             darth.setHeight(200);
             layer.draw();
 
@@ -1571,9 +1579,19 @@ Test.prototype.tests = {
             test(crop.y === 13, 'crop y should be 13');
             test(crop.width === 14, 'crop width should be 14');
             test(crop.height === 15, 'crop height should be 15');
-            */
-           
-            document.body.appendChild(layer.bufferCanvas.element)
+
+            darth.setAttrs({
+                x: 200,
+                y: 60,
+                image: imageObj,
+                width: 100,
+                height: 100,
+                offset: [50, 30],
+                crop: [135, 7, 167, 134],
+                draggable: true
+            });
+
+            //document.body.appendChild(layer.bufferCanvas.element)
 
         };
         imageObj.src = '../assets/darth-vader.jpg';
@@ -1808,6 +1826,8 @@ Test.prototype.tests = {
             setTimeout(function() {
                 sprite.stop();
             }, 3000);
+
+            //document.body.appendChild(layer.bufferCanvas.element)
         };
         imageObj.src = '../assets/scorpion-sprite.png';
     },
@@ -1866,6 +1886,7 @@ Test.prototype.tests = {
                     strokeWidth: 5,
                     x: 50,
                     y: -120
+
                 });
 
                 layer.add(cachedShape);
@@ -1890,6 +1911,8 @@ Test.prototype.tests = {
                 test(Kinetic.Type._isElement(imageObj), 'stage toImage() should be an image object');
             }
         });
+
+        //document.body.appendChild(layer.bufferCanvas.element)
     },
     'SHAPE - add polygon': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1959,9 +1982,6 @@ Test.prototype.tests = {
             lineJoin: 'round',
             draggable: true
         });
-
-        // test that default detection type is pixel
-        test(line.getDetectionType() === 'pixel', 'dection type should be pixel');
 
         layer.add(line);
         stage.add(layer);
@@ -2487,52 +2507,6 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
     },
-    'NODE - test pixel detection setter and getter': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-
-        var layer = new Kinetic.Layer({
-            rotationDeg: 20
-        });
-        var star = new Kinetic.Star({
-            x: 200,
-            y: 100,
-            numPoints: 10,
-            innerRadius: 40,
-            outerRadius: 70,
-            fill: 'green',
-            stroke: 'blue',
-            strokeWidth: 20,
-            detectionType: 'pixel',
-            draggable: true
-        });
-
-        star.on('mouseover', function() {
-            log('mouseover');
-        });
-
-        star.on('mouseout', function() {
-            log('mouseout');
-        });
-
-        star.on('dragend', function() {
-            this.saveImageData();
-        });
-
-        layer.add(star);
-        stage.add(layer);
-
-        star.saveImageData();
-
-        test(star.getDetectionType() === 'pixel', 'detection type should be pixel');
-        star.setDetectionType('path');
-        test(star.getDetectionType() === 'path', 'detection type should be path');
-        star.setDetectionType('pixel');
-        test(star.getDetectionType() === 'pixel', 'detection type should be pixel');
-    },
     'SHAPE - test intersects()': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -2553,30 +2527,32 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
 
-        test(rect.intersects({
-            x: 200,
-            y: 100
-        }) === true, 'problem with point in shape');
+        /*
+         test(rect.intersects({
+         x: 200,
+         y: 100
+         }) === true, 'problem with point in shape');
 
-        test(rect.intersects({
-            x: 199,
-            y: 99
-        }) === false, 'intersects with point in shape');
+         test(rect.intersects({
+         x: 199,
+         y: 99
+         }) === false, 'intersects with point in shape');
 
-        test(rect.intersects({
-            x: 250,
-            y: 125
-        }) === true, 'intersects with point in shape');
+         test(rect.intersects({
+         x: 250,
+         y: 125
+         }) === true, 'intersects with point in shape');
 
-        test(rect.intersects({
-            x: 300,
-            y: 150
-        }) === true, 'intersects with point in shape');
+         test(rect.intersects({
+         x: 300,
+         y: 150
+         }) === true, 'intersects with point in shape');
 
-        test(rect.intersects({
-            x: 301,
-            y: 151
-        }) === false, 'intersects with point in shape');
+         test(rect.intersects({
+         x: 301,
+         y: 151
+         }) === false, 'intersects with point in shape');
+         */
     },
     'CONTAINER - node type selector': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -2739,10 +2715,10 @@ Test.prototype.tests = {
         test(text.getCornerRadius() === 20, 'text box corner radius should be 20');
         test(text.getDraggable() === false, 'text draggable should be false');
 
-		//document.body.appendChild(layer.bufferCanvas.element)
-		
-		//layer.setListening(false);
-		layer.drawBuffer();
+        //document.body.appendChild(layer.bufferCanvas.element)
+
+        //layer.setListening(false);
+        layer.drawBuffer();
     },
     'SHAPE - text multi line': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -4063,7 +4039,7 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        circle.setAlpha(0.5);
+        circle.setOpacity(0.5);
         layer.add(circle);
         stage.add(layer);
     },
@@ -4083,16 +4059,16 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        circle.setAlpha(0.5);
+        circle.setOpacity(0.5);
         layer.add(circle);
         stage.add(layer);
 
-        test(circle.getAbsoluteAlpha() === 0.5, 'abs opacity should be 0.5');
+        test(circle.getAbsoluteOpacity() === 0.5, 'abs opacity should be 0.5');
 
-        circle.setAlpha(1);
+        circle.setOpacity(1);
         layer.draw();
 
-        test(circle.getAbsoluteAlpha() === 1, 'abs opacity should be 1');
+        test(circle.getAbsoluteOpacity() === 1, 'abs opacity should be 1');
     },
     ////////////////////////////////////////////////////////////////////////
     //  LAYERING tests
@@ -4762,6 +4738,7 @@ Test.prototype.tests = {
             y: 10
         });
         var mapLayer = new Kinetic.Layer();
+        var mapCanvas = mapLayer.getCanvas();
 
         for(var key in worldMap.shapes) {
             var c = worldMap.shapes[key];
@@ -4778,18 +4755,20 @@ Test.prototype.tests = {
 
             path.on('mouseover', function() {
                 this.setFill('red');
-                mapLayer.draw();
+                mapLayer.draw(mapCanvas);
             });
 
             path.on('mouseout', function() {
                 this.setFill('#ccc');
-                mapLayer.draw();
+                mapLayer.draw(mapCanvas);
             });
 
             mapLayer.add(path);
         }
 
         stage.add(mapLayer);
+        
+        //document.body.appendChild(mapLayer.bufferCanvas.element);
     },
     'PATH - curved arrow path': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -5022,6 +5001,8 @@ Test.prototype.tests = {
         group.setDraggable(true);
         layer.add(group);
         stage.add(layer);
+        
+        //document.body.appendChild(layer.bufferCanvas.element)
 
     },
     'PATHHELPER - Able to determine point on line some distance from another point on line': function(containerId) {
@@ -5489,35 +5470,51 @@ Test.prototype.tests = {
         layer.add(borneo);
         stage.add(layer);
     },
-	'JPEG toDataURL() Not Hiding Lower Layers with Black': function(containerId) {
-           var stage = new Kinetic.Stage({
-                container: containerId,
-                width: 578,
-                height: 200
-           });
-		   
-		   var layer1 = new Kinetic.Layer();
-		   var layer2 = new Kinetic.Layer();
-		   
-		   layer1.add(new Kinetic.Rect({x:10, y:10, width: 25, height: 15, fill: 'red'}));
-		   layer2.add(new Kinetic.Rect({x:50, y:50, width: 15, height: 25, fill: 'green'}));
-		   
-		   stage.add(layer1);
-		   stage.add(layer2);
-		   
-		   stage.toDataURL({
-				height: 100, 
-				width: 100, 
-				mimeType: 'image/jpeg', 
-				quality: 0.8, 
-				callback: function(url) {
-					var imageObj = new Image();
-					imageObj.onload = function() {
-						layer2.add(new Kinetic.Image({x: 200, y: 10, image: imageObj}));
-						layer2.draw();
-					};
-					imageObj.src = url;
-				}
-		   })
-	}
+    'JPEG toDataURL() Not Hiding Lower Layers with Black': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+
+        var layer1 = new Kinetic.Layer();
+        var layer2 = new Kinetic.Layer();
+
+        layer1.add(new Kinetic.Rect({
+            x: 10,
+            y: 10,
+            width: 25,
+            height: 15,
+            fill: 'red'
+        }));
+        layer2.add(new Kinetic.Rect({
+            x: 50,
+            y: 50,
+            width: 15,
+            height: 25,
+            fill: 'green'
+        }));
+
+        stage.add(layer1);
+        stage.add(layer2);
+
+        stage.toDataURL({
+            height: 100,
+            width: 100,
+            mimeType: 'image/jpeg',
+            quality: 0.8,
+            callback: function(url) {
+                var imageObj = new Image();
+                imageObj.onload = function() {
+                    layer2.add(new Kinetic.Image({
+                        x: 200,
+                        y: 10,
+                        image: imageObj
+                    }));
+                    layer2.draw();
+                };
+                imageObj.src = url;
+            }
+        })
+    }
 };

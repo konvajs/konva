@@ -357,10 +357,7 @@ Kinetic.Shape = Kinetic.Node.extend({
             var attrs = {};
 
             if(canvas.name === 'buffer') {
-                if('image' in this.attrs) {
-                    this.attrs.fill = '#' + this.colorKey;
-                }
-
+ 
                 for(var n = 0; n < wl.length; n++) {
                     var key = wl[n];
                     attrs[key] = this.attrs[key];
@@ -368,6 +365,11 @@ Kinetic.Shape = Kinetic.Node.extend({
                         this.attrs[key] = '#' + this.colorKey;
                     }
                 }
+                
+                if('image' in this.attrs) {
+                    this.attrs.fill = '#' + this.colorKey;
+                }
+                
                 for(var n = 0; n < bl.length; n++) {
                     var key = bl[n];
                     attrs[key] = this.attrs[key];

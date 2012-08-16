@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Aug 14 2012
+ * Date: Aug 15 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -2701,7 +2701,7 @@ Kinetic.Container = Kinetic.Node.extend({
         var children = this.children;
         for(var n = 0; n < children.length; n++) {
             var child = children[n];
-            if(canvas.name !== 'buffer' || child.getListening()) {
+            if(child.getListening()) {
                 if(child.nodeType === 'Shape') {
                     if(child.isVisible()) {
                         child._draw(canvas);
@@ -3695,49 +3695,39 @@ Kinetic.Layer = Kinetic.Container.extend({
      * private draw children
      */
     _draw: function(canvas) {
-        /*
-         * if canvas is not defined, then use the canvas
-         * tied to the layer
-         */
-        if(!canvas) {
-            canvas = this.getCanvas();
-        }
-
-        // before draw  handler
-        if(this.beforeDrawFunc !== undefined) {
-            this.beforeDrawFunc.call(this);
-        }
-
-        if(this.attrs.clearBeforeDraw) {
-            canvas.clear();
-            if(canvas.name !== 'buffer') {
-                this.bufferCanvas.clear();
-            }
-        }
-
         if(this.isVisible()) {
+            // before draw  handler
+            if(this.beforeDrawFunc !== undefined) {
+                this.beforeDrawFunc.call(this);
+            }
+
+            if(this.attrs.clearBeforeDraw) {
+                if(canvas) {
+                    canvas.clear();
+                }
+                else {
+                    this.getCanvas().clear();
+                    this.bufferCanvas.clear();
+                }
+            }
+
             // draw custom func
             if(this.attrs.drawFunc !== undefined) {
                 this.attrs.drawFunc.call(this);
             }
 
-            if(canvas.name !== 'buffer') {
+            if(canvas) {
                 this._drawChildren(canvas);
-                if(this.getListening()) {
-                    this._drawChildren(this.bufferCanvas);
-                }
             }
-            // buffer canvas
             else {
-                if(this.getListening()) {
-                    this._drawChildren(canvas);
-                }
+				this._drawChildren(this.getCanvas());
+				this._drawChildren(this.bufferCanvas);
             }
-        }
 
-        // after draw  handler
-        if(this.afterDrawFunc !== undefined) {
-            this.afterDrawFunc.call(this);
+            // after draw  handler
+            if(this.afterDrawFunc !== undefined) {
+                this.afterDrawFunc.call(this);
+            }
         }
     }
 });
@@ -4167,10 +4157,7 @@ Kinetic.Shape = Kinetic.Node.extend({
             var attrs = {};
 
             if(canvas.name === 'buffer') {
-                if('image' in this.attrs) {
-                    this.attrs.fill = '#' + this.colorKey;
-                }
-
+ 
                 for(var n = 0; n < wl.length; n++) {
                     var key = wl[n];
                     attrs[key] = this.attrs[key];
@@ -4178,6 +4165,11 @@ Kinetic.Shape = Kinetic.Node.extend({
                         this.attrs[key] = '#' + this.colorKey;
                     }
                 }
+                
+                if('image' in this.attrs) {
+                    this.attrs.fill = '#' + this.colorKey;
+                }
+                
                 for(var n = 0; n < bl.length; n++) {
                     var key = bl[n];
                     attrs[key] = this.attrs[key];
@@ -4495,6 +4487,13 @@ Kinetic.Image = Kinetic.Shape.extend({
         config.drawFunc = this.drawFunc;
         // call super constructor
         this._super(config);
+
+        var that = this;
+        this.on('imageChange', function(evt) {
+            that._syncSize();
+        });
+
+        this._syncSize();
     },
     drawFunc: function(context) {
         var width = this.getWidth();
@@ -4505,9 +4504,8 @@ Kinetic.Image = Kinetic.Shape.extend({
         context.closePath();
         this.fill(context);
         this.stroke(context);
-        
+
         if(this.attrs.image) {
-        	context.beginPath();
             // if cropping
             if(this.attrs.crop && this.attrs.crop.width && this.attrs.crop.height) {
                 var cropX = this.attrs.crop.x ? this.attrs.crop.x : 0;
@@ -4543,34 +4541,6 @@ Kinetic.Image = Kinetic.Shape.extend({
         };
     },
     /**
-     * get width
-     * @name getWidth
-     * @methodOf Kinetic.Image.prototype
-     */
-    getWidth: function() {
-        if(this.attrs.width) {
-            return this.attrs.width;
-        }
-        if(this.attrs.image) {
-            return this.attrs.image.width;
-        }
-        return 0;
-    },
-    /**
-     * get height
-     * @name getHeight
-     * @methodOf Kinetic.Image.prototype
-     */
-    getHeight: function() {
-        if(this.attrs.height) {
-            return this.attrs.height;
-        }
-        if(this.attrs.image) {
-            return this.attrs.image.height;
-        }
-        return 0;
-    },
-    /**
      * apply filter
      * @name applyFilter
      * @methodOf Kinetic.Image.prototype
@@ -4598,12 +4568,25 @@ Kinetic.Image = Kinetic.Shape.extend({
         catch(e) {
             Kinetic.Global.warn('Unable to apply filter.');
         }
+    },
+    _syncSize: function() {
+        if(this.attrs.image) {
+            if(!this.attrs.width) {
+                this.setAttrs({
+                    width: this.attrs.image.width
+                });
+            }
+            if(!this.attrs.height) {
+                this.setAttrs({
+                    height: this.attrs.image.height
+                });
+            }
+        }
     }
 });
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'crop', 'filter']);
-Kinetic.Node.addSetters(Kinetic.Image, ['width', 'height']);
+Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'crop', 'filter', 'width', 'height']);
 
 /**
  * set width
@@ -4655,6 +4638,18 @@ Kinetic.Node.addSetters(Kinetic.Image, ['width', 'height']);
 /**
  * get filter
  * @name getFilter
+ * @methodOf Kinetic.Image.prototype
+ */
+
+/**
+ * get width
+ * @name getWidth
+ * @methodOf Kinetic.Image.prototype
+ */
+
+/**
+ * get height
+ * @name getHeight
  * @methodOf Kinetic.Image.prototype
  */
 ///////////////////////////////////////////////////////////////////////
@@ -5264,10 +5259,17 @@ Kinetic.Sprite = Kinetic.Shape.extend({
         });
     },
     drawFunc: function(context) {
+        var anim = this.attrs.animation;
+        var index = this.attrs.index;
+        var f = this.attrs.animations[anim][index];
+
+        context.beginPath();
+        context.rect(0, 0, f.width, f.height);
+        context.closePath();
+        this.fill(context);
+        this.stroke(context);
+
         if(this.attrs.image) {
-            var anim = this.attrs.animation;
-            var index = this.attrs.index;
-            var f = this.attrs.animations[anim][index];
 
             context.beginPath();
             context.rect(0, 0, f.width, f.height);
