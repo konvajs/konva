@@ -3636,6 +3636,15 @@ Kinetic.Layer = Kinetic.Container.extend({
         this.draw(this.bufferCanvas);
     },
     /**
+     * draw children nodes on scene.  this includes any groups
+     *  or shapes
+     * @name drawScene
+     * @methodOf Kinetic.Layer.prototype
+     */
+    drawScene: function() {
+        this.draw(this.getCanvas());
+    },
+    /**
      * set before draw handler
      * @name beforeDraw
      * @methodOf Kinetic.Layer.prototype

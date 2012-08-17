@@ -4738,8 +4738,7 @@ Test.prototype.tests = {
             y: 10
         });
         var mapLayer = new Kinetic.Layer();
-        var mapCanvas = mapLayer.getCanvas();
-
+        
         for(var key in worldMap.shapes) {
             var c = worldMap.shapes[key];
 
@@ -4755,12 +4754,12 @@ Test.prototype.tests = {
 
             path.on('mouseover', function() {
                 this.setFill('red');
-                mapLayer.draw(mapCanvas);
+                mapLayer.drawScene();
             });
 
             path.on('mouseout', function() {
                 this.setFill('#ccc');
-                mapLayer.draw(mapCanvas);
+                mapLayer.drawScene();
             });
 
             mapLayer.add(path);
