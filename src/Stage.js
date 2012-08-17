@@ -436,13 +436,13 @@ Kinetic.Stage = Kinetic.Container.extend({
             ( function() {
                 var event = pubEvent;
                 that.content.addEventListener(event, function(evt) {
-                    that._setUserPosition(evt);
                     that['_' + event](evt);
                 }, false);
             }());
         }
     },
     _mouseout: function(evt) {
+        this._setUserPosition(evt);
         // if there's a current target shape, run mouseout handlers
         var targetShape = this.targetShape;
         if(targetShape) {
@@ -455,14 +455,15 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._endDrag(evt);
     },
     _mousemove: function(evt) {
+    	this._setUserPosition(evt);
         var go = Kinetic.Global;
         var shape = this._getIntersectingShape();
         if(shape) {
             if(!go.drag.moving && (!this.targetShape || this.targetShape._id !== shape._id)) {
                 if(this.targetShape) {
-                    this.targetShape._handleEvent('mouseout', evt);
+                    this.targetShape._handleEvent('mouseout', evt, shape);
                 }
-                shape._handleEvent('mouseover', evt);
+                shape._handleEvent('mouseover', evt, this.targetShape);
                 this.targetShape = shape;
             }
             shape._handleEvent('mousemove', evt);
@@ -480,6 +481,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._startDrag(evt);
     },
     _mousedown: function(evt) {
+    	this._setUserPosition(evt);
         var shape = this._getIntersectingShape();
         if(shape) {
             this.clickStart = true;
@@ -492,6 +494,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         }
     },
     _mouseup: function(evt) {
+    	this._setUserPosition(evt);
         var go = Kinetic.Global;
         var shape = this._getIntersectingShape();
         var that = this;
@@ -523,6 +526,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._endDrag(evt);
     },
     _touchstart: function(evt) {
+    	this._setUserPosition(evt);
         evt.preventDefault();
         var shape = this._getIntersectingShape();
         if(shape) {
@@ -538,6 +542,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         }
     },
     _touchend: function(evt) {
+    	this._setUserPosition(evt);
         var go = Kinetic.Global;
         var shape = this._getIntersectingShape();
         var that = this;
@@ -570,6 +575,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._endDrag(evt);
     },
     _touchmove: function(evt) {
+    	this._setUserPosition(evt);
         evt.preventDefault();
         var shape = this._getIntersectingShape();
         if(shape) {

@@ -963,7 +963,7 @@ Kinetic.Node = Kinetic.Class.extend({
             else {
                 stage.dragAnim.node = this.getLayer();
             }
-            stage.dragAnim.start(); 
+            stage.dragAnim.start();
         }
     },
     _onDraggableChange: function() {
@@ -996,25 +996,18 @@ Kinetic.Node = Kinetic.Class.extend({
     /**
      * handle node event
      */
-    _handleEvent: function(eventType, evt) {
+    _handleEvent: function(eventType, evt, compareShape) {
         if(this.nodeType === 'Shape') {
             evt.shape = this;
         }
-
         var stage = this.getStage();
-        var mover = stage ? stage.mouseoverShape : null;
-        var mout = stage ? stage.mouseoutShape : null;
         var el = this.eventListeners;
         var okayToRun = true;
 
-        /*
-         * determine if event handler should be skipped by comparing
-         * parent nodes
-         */
-        if(eventType === 'mouseover' && mout && mout._id === this._id) {
+        if(eventType === 'mouseover' && compareShape && this._id === compareShape._id) {
             okayToRun = false;
         }
-        else if(eventType === 'mouseout' && mover && mover._id === this._id) {
+        else if(eventType === 'mouseout' && compareShape && this._id === compareShape._id) {
             okayToRun = false;
         }
 
@@ -1026,14 +1019,14 @@ Kinetic.Node = Kinetic.Class.extend({
                 }
             }
 
-            if(stage && mover && mout) {
-                stage.mouseoverShape = mover.parent;
-                stage.mouseoutShape = mout.parent;
-            }
-
             // simulate event bubbling
             if(Kinetic.Global.BUBBLE_WHITELIST.indexOf(eventType) >= 0 && !evt.cancelBubble && this.parent) {
-                this._handleEvent.call(this.parent, eventType, evt);
+                if(compareShape && compareShape.parent) {
+                    this._handleEvent.call(this.parent, eventType, evt, compareShape.parent);
+                }
+                else {
+                    this._handleEvent.call(this.parent, eventType, evt);
+                }
             }
         }
     }

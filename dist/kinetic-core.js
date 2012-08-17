@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Aug 15 2012
+ * Date: Aug 16 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -2175,7 +2175,7 @@ Kinetic.Node = Kinetic.Class.extend({
             else {
                 stage.dragAnim.node = this.getLayer();
             }
-            stage.dragAnim.start(); 
+            stage.dragAnim.start();
         }
     },
     _onDraggableChange: function() {
@@ -2208,25 +2208,18 @@ Kinetic.Node = Kinetic.Class.extend({
     /**
      * handle node event
      */
-    _handleEvent: function(eventType, evt) {
+    _handleEvent: function(eventType, evt, compareShape) {
         if(this.nodeType === 'Shape') {
             evt.shape = this;
         }
-
         var stage = this.getStage();
-        var mover = stage ? stage.mouseoverShape : null;
-        var mout = stage ? stage.mouseoutShape : null;
         var el = this.eventListeners;
         var okayToRun = true;
 
-        /*
-         * determine if event handler should be skipped by comparing
-         * parent nodes
-         */
-        if(eventType === 'mouseover' && mout && mout._id === this._id) {
+        if(eventType === 'mouseover' && compareShape && this._id === compareShape._id) {
             okayToRun = false;
         }
-        else if(eventType === 'mouseout' && mover && mover._id === this._id) {
+        else if(eventType === 'mouseout' && compareShape && this._id === compareShape._id) {
             okayToRun = false;
         }
 
@@ -2238,14 +2231,14 @@ Kinetic.Node = Kinetic.Class.extend({
                 }
             }
 
-            if(stage && mover && mout) {
-                stage.mouseoverShape = mover.parent;
-                stage.mouseoutShape = mout.parent;
-            }
-
             // simulate event bubbling
             if(Kinetic.Global.BUBBLE_WHITELIST.indexOf(eventType) >= 0 && !evt.cancelBubble && this.parent) {
-                this._handleEvent.call(this.parent, eventType, evt);
+                if(compareShape && compareShape.parent) {
+                    this._handleEvent.call(this.parent, eventType, evt, compareShape.parent);
+                }
+                else {
+                    this._handleEvent.call(this.parent, eventType, evt);
+                }
             }
         }
     }
@@ -3161,13 +3154,13 @@ Kinetic.Stage = Kinetic.Container.extend({
             ( function() {
                 var event = pubEvent;
                 that.content.addEventListener(event, function(evt) {
-                    that._setUserPosition(evt);
                     that['_' + event](evt);
                 }, false);
             }());
         }
     },
     _mouseout: function(evt) {
+        this._setUserPosition(evt);
         // if there's a current target shape, run mouseout handlers
         var targetShape = this.targetShape;
         if(targetShape) {
@@ -3180,14 +3173,15 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._endDrag(evt);
     },
     _mousemove: function(evt) {
+    	this._setUserPosition(evt);
         var go = Kinetic.Global;
         var shape = this._getIntersectingShape();
         if(shape) {
             if(!go.drag.moving && (!this.targetShape || this.targetShape._id !== shape._id)) {
                 if(this.targetShape) {
-                    this.targetShape._handleEvent('mouseout', evt);
+                    this.targetShape._handleEvent('mouseout', evt, shape);
                 }
-                shape._handleEvent('mouseover', evt);
+                shape._handleEvent('mouseover', evt, this.targetShape);
                 this.targetShape = shape;
             }
             shape._handleEvent('mousemove', evt);
@@ -3205,6 +3199,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._startDrag(evt);
     },
     _mousedown: function(evt) {
+    	this._setUserPosition(evt);
         var shape = this._getIntersectingShape();
         if(shape) {
             this.clickStart = true;
@@ -3217,6 +3212,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         }
     },
     _mouseup: function(evt) {
+    	this._setUserPosition(evt);
         var go = Kinetic.Global;
         var shape = this._getIntersectingShape();
         var that = this;
@@ -3248,6 +3244,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._endDrag(evt);
     },
     _touchstart: function(evt) {
+    	this._setUserPosition(evt);
         evt.preventDefault();
         var shape = this._getIntersectingShape();
         if(shape) {
@@ -3263,6 +3260,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         }
     },
     _touchend: function(evt) {
+    	this._setUserPosition(evt);
         var go = Kinetic.Global;
         var shape = this._getIntersectingShape();
         var that = this;
@@ -3295,6 +3293,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._endDrag(evt);
     },
     _touchmove: function(evt) {
+    	this._setUserPosition(evt);
         evt.preventDefault();
         var shape = this._getIntersectingShape();
         if(shape) {
