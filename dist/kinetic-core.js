@@ -3062,6 +3062,47 @@ Kinetic.Stage = Kinetic.Container.extend({
             }
         });
     },
+    /**
+     * get intersection object that contains shape and pixel data
+     * @name getIntersection
+     * @methodOf Kinetic.Stage.prototype
+     * @param {Object} pos point object
+     */
+    getIntersection: function(pos) {
+        var shape;
+        var layers = this.getChildren();
+
+        /*
+         * traverse through layers from top to bottom and look
+         * for hit detection
+         */
+        for(var n = layers.length - 1; n >= 0; n--) {
+            var layer = layers[n];
+            var p = layer.bufferCanvas.context.getImageData(pos.x, pos.y, 1, 1).data;
+            // this indicates that a buffer pixel may have been found
+            if(p[3] === 255) {
+                var colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
+                shape = Kinetic.Global.shapes[colorKey];
+                var isDragging = Kinetic.Global.drag.moving;
+
+                return {
+                    shape: shape,
+                    pixels: p
+                };
+            }
+            // if no shape mapped to that pixel, return pixel array
+            else if(p[0] > 0 || p[1] > 0 || p[2] > 0 || p[3] > 0) {
+                return {
+                    pixels: p
+                };
+            }
+            else {
+                return null;
+            }
+        }
+
+        return null;
+    },
     _resizeDOM: function() {
         var width = this.attrs.width;
         var height = this.attrs.height;
@@ -3107,31 +3148,6 @@ Kinetic.Stage = Kinetic.Container.extend({
         layer.draw();
         this.content.appendChild(layer.canvas.element);
     },
-    _getIntersectingShape: function() {
-        var pos = this.getUserPosition();
-        var shape;
-        var layers = this.getChildren();
-
-        /*
-         * traverse through layers from top to bottom and look
-         * for hit detection
-         */
-        for(var n = layers.length - 1; n >= 0; n--) {
-            var layer = layers[n];
-            var p = layer.bufferCanvas.context.getImageData(pos.x, pos.y, 1, 1).data;
-            if(p[3] === 255) {
-                var colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
-                shape = Kinetic.Global.shapes[colorKey];
-                var isDragging = Kinetic.Global.drag.moving;
-
-                if(shape) {
-                    return shape;
-                }
-            }
-        }
-
-        return null;
-    },
     _setUserPosition: function(evt) {
         if(!evt) {
             evt = window.event;
@@ -3173,18 +3189,24 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._endDrag(evt);
     },
     _mousemove: function(evt) {
-    	this._setUserPosition(evt);
+        this._setUserPosition(evt);
         var go = Kinetic.Global;
-        var shape = this._getIntersectingShape();
-        if(shape) {
-            if(!go.drag.moving && (!this.targetShape || this.targetShape._id !== shape._id)) {
-                if(this.targetShape) {
-                    this.targetShape._handleEvent('mouseout', evt, shape);
+        var obj = this.getIntersection(this.getUserPosition());
+
+        if(obj) {
+            var shape = obj.shape;
+            if(shape) {
+                if(!go.drag.moving && obj.pixels[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
+                    if(this.targetShape) {
+                        this.targetShape._handleEvent('mouseout', evt, shape);
+                    }
+                    shape._handleEvent('mouseover', evt, this.targetShape);
+                    this.targetShape = shape;
                 }
-                shape._handleEvent('mouseover', evt, this.targetShape);
-                this.targetShape = shape;
+                else {
+                    shape._handleEvent('mousemove', evt);
+                }
             }
-            shape._handleEvent('mousemove', evt);
         }
         /*
          * if no shape was detected, clear target shape and try
@@ -3199,9 +3221,10 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._startDrag(evt);
     },
     _mousedown: function(evt) {
-    	this._setUserPosition(evt);
-        var shape = this._getIntersectingShape();
-        if(shape) {
+        this._setUserPosition(evt);
+        var obj = this.getIntersection(this.getUserPosition());
+        if(obj && obj.shape) {
+            var shape = obj.shape;
             this.clickStart = true;
             shape._handleEvent('mousedown', evt);
         }
@@ -3212,11 +3235,12 @@ Kinetic.Stage = Kinetic.Container.extend({
         }
     },
     _mouseup: function(evt) {
-    	this._setUserPosition(evt);
+        this._setUserPosition(evt);
         var go = Kinetic.Global;
-        var shape = this._getIntersectingShape();
+        var obj = this.getIntersection(this.getUserPosition());
         var that = this;
-        if(shape) {
+        if(obj && obj.shape) {
+            var shape = obj.shape;
             shape._handleEvent('mouseup', evt);
 
             // detect if click or double click occurred
@@ -3244,10 +3268,12 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._endDrag(evt);
     },
     _touchstart: function(evt) {
-    	this._setUserPosition(evt);
+        this._setUserPosition(evt);
         evt.preventDefault();
-        var shape = this._getIntersectingShape();
-        if(shape) {
+        var obj = this.getIntersection(this.getUserPosition());
+
+        if(obj && obj.shape) {
+            var shape = obj.shape;
             this.tapStart = true;
             shape._handleEvent('touchstart', evt);
         }
@@ -3260,11 +3286,12 @@ Kinetic.Stage = Kinetic.Container.extend({
         }
     },
     _touchend: function(evt) {
-    	this._setUserPosition(evt);
+        this._setUserPosition(evt);
         var go = Kinetic.Global;
-        var shape = this._getIntersectingShape();
+        var obj = this.getIntersection(this.getUserPosition());
         var that = this;
-        if(shape) {
+        if(obj && obj.shape) {
+            var shape = obj.shape;
             shape._handleEvent('touchend', evt);
 
             // detect if tap or double tap occurred
@@ -3293,10 +3320,11 @@ Kinetic.Stage = Kinetic.Container.extend({
         this._endDrag(evt);
     },
     _touchmove: function(evt) {
-    	this._setUserPosition(evt);
+        this._setUserPosition(evt);
         evt.preventDefault();
-        var shape = this._getIntersectingShape();
-        if(shape) {
+        var obj = this.getIntersection(this.getUserPosition());
+        if(obj && obj.shape) {
+            var shape = obj.shape;
             shape._handleEvent('touchmove', evt);
         }
 
@@ -3495,19 +3523,9 @@ Kinetic.Stage = Kinetic.Container.extend({
         this.nodeType = 'Stage';
         this.dblClickWindow = 400;
         this.targetShape = null;
-
-        // desktop flags
         this.mousePos = undefined;
-        this.mouseDown = false;
-        this.mouseUp = false;
-        this.mouseMove = false;
         this.clickStart = false;
-
-        // mobile flags
         this.touchPos = undefined;
-        this.touchStart = false;
-        this.touchEnd = false;
-        this.touchMove = false;
         this.tapStart = false;
 
         this.ids = {};

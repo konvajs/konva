@@ -297,37 +297,37 @@ Test.prototype.tests = {
 
         circle.on('mousedown', function() {
             mousedown = true;
-            //log('mousedown');
+            log('mousedown');
         });
 
         circle.on('mouseup', function() {
             mouseup = true;
-            //log('mouseup');
+            log('mouseup');
         });
 
         circle.on('mouseover', function() {
             mouseover = true;
-            //log('mouseover');
+            log('mouseover');
         });
 
         circle.on('mouseout', function() {
             mouseout = true;
-            //log('mouseout');
+            log('mouseout');
         });
 
         circle.on('mousemove', function() {
             mousemove = true;
-            //log('mousemove');
+            log('mousemove');
         });
 
         circle.on('click', function() {
             click = true;
-            //log('click');
+            log('click');
         });
 
         circle.on('dblclick', function() {
             dblclick = true;
-            //log('dblclick');
+            log('dblclick');
         });
         /*
          * mobile
@@ -367,7 +367,7 @@ Test.prototype.tests = {
         });
 
         test(mouseover, '1) mouseover should be true');
-        test(mousemove, '1) mousemove should be true');
+        test(!mousemove, '1) mousemove should be true');
         test(!mousedown, '1) mousedown should be false');
         test(!mouseup, '1) mouseup should be false');
         test(!click, '1) click should be false');
@@ -763,6 +763,10 @@ Test.prototype.tests = {
         test(greenMouseouts === 1, 'greenMouseouts should be 1');
         test(groupMouseovers === 1, 'groupMouseovers should be 1');
         test(groupMouseouts === 1, 'groupMouseouts should be 1');
+        
+        //document.body.appendChild(layer.bufferCanvas.element)
+        
+        layer.bufferCanvas.element.style.marginTop = '220px';
     
     },
     'EVENTS - test event bubbling': function(containerId) {
