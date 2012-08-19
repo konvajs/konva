@@ -254,6 +254,14 @@ Kinetic.Type = {
     _rgbToHex: function(r, g, b) {
         return ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
     },
+    _hexToRgb: function(hex) {
+        var bigint = parseInt(hex, 16);
+        return {
+            r: (bigint >> 16) & 255,
+            g: (bigint >> 8) & 255,
+            b: bigint & 255
+        };
+    },
     _getRandomColorKey: function() {
         var r = Math.round(Math.random() * 255);
         var g = Math.round(Math.random() * 255);

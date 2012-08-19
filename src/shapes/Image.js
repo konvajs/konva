@@ -99,6 +99,50 @@ Kinetic.Image = Kinetic.Shape.extend({
             Kinetic.Global.warn('Unable to apply filter.');
         }
     },
+    /**
+     * create buffer image which enables more accurate hit detection mapping of the image
+     *  by avoiding event detections for transparent pixels
+     * @name createBufferImage
+     * @methodOf Kinetic.Image.prototype
+     * @param {Function} [callback] callback function to be called once
+     *  the buffer image has been created and set
+     */
+    createBufferImage: function(callback) {
+        var canvas = new Kinetic.Canvas(this.attrs.width, this.attrs.height);
+        var context = canvas.getContext();
+        context.drawImage(this.attrs.image, 0, 0);
+        try {
+            var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
+            var data = imageData.data;
+            var rgbColorKey = Kinetic.Type._hexToRgb(this.colorKey);
+            // replace non transparent pixels with color key
+            for(var i = 0, n = data.length; i < n; i += 4) {
+                data[i] = rgbColorKey.r;
+                data[i + 1] = rgbColorKey.g;
+                data[i + 2] = rgbColorKey.b;
+                // i+3 is alpha (the fourth element)
+            }
+
+            var that = this;
+            Kinetic.Type._getImage(imageData, function(imageObj) {
+                that.bufferImage = imageObj;
+                if(callback) {
+                    callback();
+                }
+            });
+        }
+        catch(e) {
+            Kinetic.Global.warn('Unable to create buffer image.');
+        }
+    },
+    /**
+     * clear buffer image
+     * @name clearBufferImage
+     * @methodOf Kinetic.Image.prototype
+     */
+    clearBufferImage: function() {
+        delete this.bufferImage;
+    },
     _syncSize: function() {
         if(this.attrs.image) {
             if(!this.attrs.width) {

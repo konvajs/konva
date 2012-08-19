@@ -1986,12 +1986,6 @@ Test.prototype.tests = {
         layer.add(line);
         stage.add(layer);
 
-        line.saveImageData();
-
-        line.on('dragend', function() {
-            line.saveImageData();
-        });
-
         line.setPoints([1, 2, 3, 4]);
         test(line.getPoints()[0].x === 1, 'first point x should be 1');
 
@@ -2362,7 +2356,7 @@ Test.prototype.tests = {
                 height: 200
             });
             var layer = new Kinetic.Layer();
-            var darth = new Kinetic.Image({
+            var lion = new Kinetic.Image({
                 x: 200,
                 y: 40,
                 image: imageObj,
@@ -2375,11 +2369,14 @@ Test.prototype.tests = {
                 }
             });
 
-            layer.add(darth);
-            stage.add(layer);
+            layer.add(lion);
+            lion.createBufferImage(function() {
+            	stage.add(layer);
+            });
+            //document.body.appendChild(layer.bufferCanvas.element);
 
         };
-        imageObj.src = '../assets/lion.png';
+        imageObj.src = '../assets/lion.png';     
     },
     'SHAPE - custom shape with fill, stroke, and strokeWidth': function(containerId) {
         var stage = new Kinetic.Stage({

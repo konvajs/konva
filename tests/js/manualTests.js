@@ -350,7 +350,6 @@ Test.prototype.tests = {
             fill: 'green',
             stroke: 'blue',
             strokeWidth: 20,
-            detectionType: 'pixel',
             draggable: true
         });
 
@@ -362,13 +361,8 @@ Test.prototype.tests = {
             log('mouseout');
         });
 
-        star.on('dragend', function() {
-            this.saveImageData();
-        });
-
         layer.add(star);
         stage.add(layer);
-        star.saveImageData();
     },
     'EVENTS - drag events click': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -799,7 +793,6 @@ Test.prototype.tests = {
             fill: 'red',
             stroke: 'black',
             strokeWidth: 4,
-            //detectionType: 'pixel'
         });
 
         Ellipse.setDraggable(true);
@@ -812,7 +805,6 @@ Test.prototype.tests = {
             stroke: 'black',
             strokeWidth: 4,
             draggable: true
-            //detectionType: 'pixel'
         });
 
         /*

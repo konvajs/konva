@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Aug 16 2012
+ * Date: Aug 18 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -39,7 +39,7 @@ Kinetic.Plugins = {};
 Kinetic.Global = {
     BUBBLE_WHITELIST: ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'click', 'dblclick', 'touchstart', 'touchmove', 'touchend', 'tap', 'dbltap', 'dragstart', 'dragmove', 'dragend'],
     BUFFER_WHITELIST: ['fill', 'stroke', 'textFill', 'textStroke'],
-    BUFFER_BLACKLIST: ['shadow', 'image'],
+    BUFFER_BLACKLIST: ['shadow'],
     stages: [],
     idCounter: 0,
     tempNodes: {},
@@ -450,6 +450,14 @@ Kinetic.Type = {
     },
     _rgbToHex: function(r, g, b) {
         return ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    },
+    _hexToRgb: function(hex) {
+        var bigint = parseInt(hex, 16);
+        return {
+            r: (bigint >> 16) & 255,
+            g: (bigint >> 8) & 255,
+            b: bigint & 255
+        };
     },
     _getRandomColorKey: function() {
         var r = Math.round(Math.random() * 255);
@@ -1992,48 +2000,6 @@ Kinetic.Node = Kinetic.Class.extend({
         return node;
     },
     /**
-     * save image data
-     * @name saveImageData
-     * @methodOf Kinetic.Node.prototype
-     */
-    saveImageData: function(width, height) {
-        try {
-            var canvas;
-            if(width && height) {
-                canvas = new Kinetic.Canvas(width, height);
-            }
-            else {
-                var stage = this.getStage();
-                canvas = stage.bufferCanvas;
-            }
-
-            var context = canvas.getContext();
-            canvas.clear();
-            this._draw(canvas);
-            var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
-            this.imageData = imageData;
-        }
-        catch(e) {
-            Kinetic.Global.warn('Image data could not saved because canvas is dirty.');
-        }
-    },
-    /**
-     * clear image data
-     * @name clearImageData
-     * @methodOf Kinetic.Node.prototype
-     */
-    clearImageData: function() {
-        delete this.imageData;
-    },
-    /**
-     * get image data
-     * @name getImageData
-     * @methodOf Kinetic.Node.prototype
-     */
-    getImageData: function() {
-        return this.imageData;
-    },
-    /**
      * Creates a composite data URL. If MIME type is not
      * specified, then "image/png" will result. For "image/jpeg", specify a quality
      * level as quality (range 0.0 - 1.0)
@@ -2117,11 +2083,6 @@ Kinetic.Node = Kinetic.Class.extend({
     _setTransform: function(trans) {
         for(var key in trans) {
             this.attrs[key] = trans[key];
-        }
-    },
-    _setImageData: function(imageData) {
-        if(imageData && imageData.data) {
-            this.imageData = imageData;
         }
     },
     _fireBeforeChangeEvent: function(attr, oldVal, newVal) {
@@ -2793,8 +2754,8 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @name draw
      * @methodOf Kinetic.Stage.prototype
      */
-    draw: function(canvas) {
-        this._draw(canvas);
+    draw: function() {
+        this._draw();
     },
     /**
      * set stage size
@@ -3532,8 +3493,8 @@ Kinetic.Stage = Kinetic.Container.extend({
         this.names = {};
         this.dragAnim = new Kinetic.Animation();
     },
-    _draw: function(canvas) {
-        this._drawChildren(canvas);
+    _draw: function() {
+        this._drawChildren();
     }
 });
 
@@ -4183,7 +4144,6 @@ Kinetic.Shape = Kinetic.Node.extend({
             var attrs = {};
 
             if(canvas.name === 'buffer') {
- 
                 for(var n = 0; n < wl.length; n++) {
                     var key = wl[n];
                     attrs[key] = this.attrs[key];
@@ -4191,15 +4151,24 @@ Kinetic.Shape = Kinetic.Node.extend({
                         this.attrs[key] = '#' + this.colorKey;
                     }
                 }
-                
-                if('image' in this.attrs) {
-                    this.attrs.fill = '#' + this.colorKey;
-                }
-                
+
                 for(var n = 0; n < bl.length; n++) {
                     var key = bl[n];
                     attrs[key] = this.attrs[key];
                     this.attrs[key] = '';
+                }
+
+				// image is a special case
+                if('image' in this.attrs) {
+                    attrs.image = this.attrs.image;
+
+                    if(this.bufferImage) {
+                        this.attrs.image = this.bufferImage;
+                    }
+                    else {
+                        this.attrs.image = null;
+                        this.attrs.fill = '#' + this.colorKey;
+                    }
                 }
 
                 context.globalAlpha = 1;
@@ -4213,6 +4182,9 @@ Kinetic.Shape = Kinetic.Node.extend({
                     var key = bothLists[n];
                     this.attrs[key] = attrs[key];
                 }
+                
+                // image is a special case
+                this.attrs.image = attrs.image;
             }
 
             context.restore();
@@ -4594,6 +4566,50 @@ Kinetic.Image = Kinetic.Shape.extend({
         catch(e) {
             Kinetic.Global.warn('Unable to apply filter.');
         }
+    },
+    /**
+     * create buffer image which enables more accurate hit detection mapping of the image
+     *  by avoiding event detections for transparent pixels
+     * @name createBufferImage
+     * @methodOf Kinetic.Image.prototype
+     * @param {Function} [callback] callback function to be called once
+     *  the buffer image has been created and set
+     */
+    createBufferImage: function(callback) {
+        var canvas = new Kinetic.Canvas(this.attrs.width, this.attrs.height);
+        var context = canvas.getContext();
+        context.drawImage(this.attrs.image, 0, 0);
+        try {
+            var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
+            var data = imageData.data;
+            var rgbColorKey = Kinetic.Type._hexToRgb(this.colorKey);
+            // replace non transparent pixels with color key
+            for(var i = 0, n = data.length; i < n; i += 4) {
+                data[i] = rgbColorKey.r;
+                data[i + 1] = rgbColorKey.g;
+                data[i + 2] = rgbColorKey.b;
+                // i+3 is alpha (the fourth element)
+            }
+
+            var that = this;
+            Kinetic.Type._getImage(imageData, function(imageObj) {
+                that.bufferImage = imageObj;
+                if(callback) {
+                    callback();
+                }
+            });
+        }
+        catch(e) {
+            Kinetic.Global.warn('Unable to create buffer image.');
+        }
+    },
+    /**
+     * clear buffer image
+     * @name clearBufferImage
+     * @methodOf Kinetic.Image.prototype
+     */
+    clearBufferImage: function() {
+        delete this.bufferImage;
     },
     _syncSize: function() {
         if(this.attrs.image) {

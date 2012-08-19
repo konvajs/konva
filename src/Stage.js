@@ -75,8 +75,8 @@ Kinetic.Stage = Kinetic.Container.extend({
      * @name draw
      * @methodOf Kinetic.Stage.prototype
      */
-    draw: function(canvas) {
-        this._draw(canvas);
+    draw: function() {
+        this._draw();
     },
     /**
      * set stage size
@@ -814,8 +814,8 @@ Kinetic.Stage = Kinetic.Container.extend({
         this.names = {};
         this.dragAnim = new Kinetic.Animation();
     },
-    _draw: function(canvas) {
-        this._drawChildren(canvas);
+    _draw: function() {
+        this._drawChildren();
     }
 });
 

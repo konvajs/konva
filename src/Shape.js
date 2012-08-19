@@ -357,7 +357,6 @@ Kinetic.Shape = Kinetic.Node.extend({
             var attrs = {};
 
             if(canvas.name === 'buffer') {
- 
                 for(var n = 0; n < wl.length; n++) {
                     var key = wl[n];
                     attrs[key] = this.attrs[key];
@@ -365,15 +364,24 @@ Kinetic.Shape = Kinetic.Node.extend({
                         this.attrs[key] = '#' + this.colorKey;
                     }
                 }
-                
-                if('image' in this.attrs) {
-                    this.attrs.fill = '#' + this.colorKey;
-                }
-                
+
                 for(var n = 0; n < bl.length; n++) {
                     var key = bl[n];
                     attrs[key] = this.attrs[key];
                     this.attrs[key] = '';
+                }
+
+				// image is a special case
+                if('image' in this.attrs) {
+                    attrs.image = this.attrs.image;
+
+                    if(this.bufferImage) {
+                        this.attrs.image = this.bufferImage;
+                    }
+                    else {
+                        this.attrs.image = null;
+                        this.attrs.fill = '#' + this.colorKey;
+                    }
                 }
 
                 context.globalAlpha = 1;
@@ -387,6 +395,9 @@ Kinetic.Shape = Kinetic.Node.extend({
                     var key = bothLists[n];
                     this.attrs[key] = attrs[key];
                 }
+                
+                // image is a special case
+                this.attrs.image = attrs.image;
             }
 
             context.restore();

@@ -780,48 +780,6 @@ Kinetic.Node = Kinetic.Class.extend({
         return node;
     },
     /**
-     * save image data
-     * @name saveImageData
-     * @methodOf Kinetic.Node.prototype
-     */
-    saveImageData: function(width, height) {
-        try {
-            var canvas;
-            if(width && height) {
-                canvas = new Kinetic.Canvas(width, height);
-            }
-            else {
-                var stage = this.getStage();
-                canvas = stage.bufferCanvas;
-            }
-
-            var context = canvas.getContext();
-            canvas.clear();
-            this._draw(canvas);
-            var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
-            this.imageData = imageData;
-        }
-        catch(e) {
-            Kinetic.Global.warn('Image data could not saved because canvas is dirty.');
-        }
-    },
-    /**
-     * clear image data
-     * @name clearImageData
-     * @methodOf Kinetic.Node.prototype
-     */
-    clearImageData: function() {
-        delete this.imageData;
-    },
-    /**
-     * get image data
-     * @name getImageData
-     * @methodOf Kinetic.Node.prototype
-     */
-    getImageData: function() {
-        return this.imageData;
-    },
-    /**
      * Creates a composite data URL. If MIME type is not
      * specified, then "image/png" will result. For "image/jpeg", specify a quality
      * level as quality (range 0.0 - 1.0)
@@ -905,11 +863,6 @@ Kinetic.Node = Kinetic.Class.extend({
     _setTransform: function(trans) {
         for(var key in trans) {
             this.attrs[key] = trans[key];
-        }
-    },
-    _setImageData: function(imageData) {
-        if(imageData && imageData.data) {
-            this.imageData = imageData;
         }
     },
     _fireBeforeChangeEvent: function(attr, oldVal, newVal) {
