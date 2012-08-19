@@ -1610,8 +1610,7 @@ Test.prototype.tests = {
                 x: 10,
                 y: 10,
                 image: imageObj,
-                draggable: true,
-                stroke: 'red'
+                draggable: true
             });
 
             layer.add(darth);
@@ -1649,8 +1648,6 @@ Test.prototype.tests = {
                 //height: 300,
                 image: imageObj,
                 draggable: true,
-                stroke: 'red',
-                strokeWidth: 5,
                 rotationDeg: 10,
                 scale: 0.3
             });

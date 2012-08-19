@@ -80,14 +80,14 @@ Kinetic.Image = Kinetic.Shape.extend({
      *  filter has been applied
      */
     applyFilter: function(config) {
-        try {
-            var trans = this._clearTransform();
-            this.saveImageData(this.getWidth(), this.getHeight());
-            this._setTransform(trans);
-
-            config.filter.call(this, config);
+    	var canvas = new Kinetic.Canvas(this.attrs.width, this.attrs.height);
+        var context = canvas.getContext();
+        context.drawImage(this.attrs.image, 0, 0);
+		try {
+			var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
+            config.filter(imageData, config);
             var that = this;
-            Kinetic.Type._getImage(this.getImageData(), function(imageObj) {
+            Kinetic.Type._getImage(imageData, function(imageObj) {
                 that.setImage(imageObj);
 
                 if(config.callback) {

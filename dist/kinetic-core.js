@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Aug 18 2012
+ * Date: Aug 19 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -181,8 +181,8 @@ Kinetic.Transition.prototype = {
     }
 };
 
-Kinetic.Filters.Grayscale = function() {
-    var data = this.imageData.data;
+Kinetic.Filters.Grayscale = function(imageData) {
+    var data = imageData.data;
     for(var i = 0; i < data.length; i += 4) {
         var brightness = 0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2];
         // red
@@ -4545,14 +4545,14 @@ Kinetic.Image = Kinetic.Shape.extend({
      *  filter has been applied
      */
     applyFilter: function(config) {
-        try {
-            var trans = this._clearTransform();
-            this.saveImageData(this.getWidth(), this.getHeight());
-            this._setTransform(trans);
-
-            config.filter.call(this, config);
+    	var canvas = new Kinetic.Canvas(this.attrs.width, this.attrs.height);
+        var context = canvas.getContext();
+        context.drawImage(this.attrs.image, 0, 0);
+		try {
+			var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
+            config.filter(imageData, config);
             var that = this;
-            Kinetic.Type._getImage(this.getImageData(), function(imageObj) {
+            Kinetic.Type._getImage(imageData, function(imageObj) {
                 that.setImage(imageObj);
 
                 if(config.callback) {
