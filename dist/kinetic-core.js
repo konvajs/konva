@@ -3048,17 +3048,14 @@ Kinetic.Stage = Kinetic.Container.extend({
 
                 return {
                     shape: shape,
-                    pixels: p
+                    pixel: p
                 };
             }
             // if no shape mapped to that pixel, return pixel array
             else if(p[0] > 0 || p[1] > 0 || p[2] > 0 || p[3] > 0) {
                 return {
-                    pixels: p
+                    pixel: p
                 };
-            }
-            else {
-                return null;
             }
         }
 
@@ -3157,7 +3154,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         if(obj) {
             var shape = obj.shape;
             if(shape) {
-                if(!go.drag.moving && obj.pixels[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
+                if(!go.drag.moving && obj.pixel[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
                     if(this.targetShape) {
                         this.targetShape._handleEvent('mouseout', evt, shape);
                     }
@@ -4100,11 +4097,11 @@ Kinetic.Shape = Kinetic.Node.extend({
     intersects: function() {
         var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
         var stage = this.getStage();
-
-        // TODO: need to re-implement
-
-        // default
-        return false;
+        var bufferCanvas = stage.bufferCanvas;
+        bufferCanvas.clear();
+        this._draw(bufferCanvas);
+        var obj = stage.getIntersection(pos);
+        return !!(obj && obj.pixel[3] > 0);
     },
     _draw: function(canvas) {
         if(this.attrs.drawFunc) {
@@ -4158,7 +4155,7 @@ Kinetic.Shape = Kinetic.Node.extend({
                     this.attrs[key] = '';
                 }
 
-				// image is a special case
+                // image is a special case
                 if('image' in this.attrs) {
                     attrs.image = this.attrs.image;
 
@@ -4182,7 +4179,7 @@ Kinetic.Shape = Kinetic.Node.extend({
                     var key = bothLists[n];
                     this.attrs[key] = attrs[key];
                 }
-                
+
                 // image is a special case
                 this.attrs.image = attrs.image;
             }

@@ -369,17 +369,14 @@ Kinetic.Stage = Kinetic.Container.extend({
 
                 return {
                     shape: shape,
-                    pixels: p
+                    pixel: p
                 };
             }
             // if no shape mapped to that pixel, return pixel array
             else if(p[0] > 0 || p[1] > 0 || p[2] > 0 || p[3] > 0) {
                 return {
-                    pixels: p
+                    pixel: p
                 };
-            }
-            else {
-                return null;
             }
         }
 
@@ -478,7 +475,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         if(obj) {
             var shape = obj.shape;
             if(shape) {
-                if(!go.drag.moving && obj.pixels[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
+                if(!go.drag.moving && obj.pixel[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
                     if(this.targetShape) {
                         this.targetShape._handleEvent('mouseout', evt, shape);
                     }

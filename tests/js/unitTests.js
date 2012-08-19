@@ -378,87 +378,85 @@ Test.prototype.tests = {
         //console.log(stage.toJSON());
         //test(stage.toJSON() === json, "problem loading stage with custom shape json");
     },
-    /*
-     'EVENTS - test getIntersections': function(containerId) {
-     var stage = new Kinetic.Stage({
-     container: containerId,
-     width: 578,
-     height: 200,
-     throttle: 999
-     });
-     var layer = new Kinetic.Layer();
+    'EVENTS - test getIntersections': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            throttle: 999
+        });
+        var layer = new Kinetic.Layer();
 
-     var group = new Kinetic.Group();
+        var group = new Kinetic.Group();
 
-     var redCircle = new Kinetic.Ellipse({
-     x: 380,
-     y: stage.getHeight() / 2,
-     radius: 70,
-     strokeWidth: 4,
-     fill: 'red',
-     stroke: 'black',
-     id: 'redCircle'
-     });
+        var redCircle = new Kinetic.Ellipse({
+            x: 380,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            id: 'redCircle'
+        });
 
-     var greenCircle = new Kinetic.Ellipse({
-     x: 300,
-     y: stage.getHeight() / 2,
-     radius: 70,
-     strokeWidth: 4,
-     fill: 'green',
-     stroke: 'black',
-     id: 'greenCircle'
-     });
+        var greenCircle = new Kinetic.Ellipse({
+            x: 300,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black',
+            id: 'greenCircle'
+        });
 
-     group.add(redCircle);
-     layer.add(group);
-     layer.add(greenCircle);
-     stage.add(layer);
+        group.add(redCircle);
+        layer.add(group);
+        layer.add(greenCircle);
+        stage.add(layer);
 
-     test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
-     test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-     test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
+        test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
+        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
+        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
 
-     // hide green circle.  make sure only red circle is in result set
-     greenCircle.hide();
-     layer.draw();
+        // hide green circle.  make sure only red circle is in result set
+        greenCircle.hide();
+        layer.draw();
 
-     test(stage.getIntersections(350, 118).length === 1, 'getIntersections should return one shape');
-     test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
+        test(stage.getIntersections(350, 118).length === 1, 'getIntersections should return one shape');
+        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
 
-     // show green circle again.  make sure both circles are in result set
-     greenCircle.show();
-     layer.draw();
+        // show green circle again.  make sure both circles are in result set
+        greenCircle.show();
+        layer.draw();
 
-     test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
-     test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-     test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
+        test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
+        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
+        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
 
-     // hide red circle.  make sure only green circle is in result set
-     redCircle.hide();
-     layer.draw();
+        // hide red circle.  make sure only green circle is in result set
+        redCircle.hide();
+        layer.draw();
 
-     test(stage.getIntersections(350, 118).length === 1, 'getIntersections should return one shape');
-     test(stage.getIntersections(350, 118)[0].getId() === 'greenCircle', 'first intersection should be greenCircle');
+        test(stage.getIntersections(350, 118).length === 1, 'getIntersections should return one shape');
+        test(stage.getIntersections(350, 118)[0].getId() === 'greenCircle', 'first intersection should be greenCircle');
 
-     // show red circle again.  make sure both circles are in result set
-     redCircle.show();
-     layer.draw();
+        // show red circle again.  make sure both circles are in result set
+        redCircle.show();
+        layer.draw();
 
-     test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
-     test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-     test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
+        test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
+        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
+        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
 
-     // test from layer
-     test(layer.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
-     test(layer.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-     test(layer.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
+        // test from layer
+        test(layer.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
+        test(layer.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
+        test(layer.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
 
-     // test from group
-     test(group.getIntersections(350, 118).length === 1, 'getIntersections should return two shapes');
-     test(group.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-     },
-     */
+        // test from group
+        test(group.getIntersections(350, 118).length === 1, 'getIntersections should return two shapes');
+        test(group.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
+    },
     'STAGE - scale stage after add layer': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1826,7 +1824,6 @@ Test.prototype.tests = {
             setTimeout(function() {
                 sprite.stop();
             }, 3000);
-
             //document.body.appendChild(layer.bufferCanvas.element)
         };
         imageObj.src = '../assets/scorpion-sprite.png';
@@ -2371,12 +2368,12 @@ Test.prototype.tests = {
 
             layer.add(lion);
             lion.createBufferImage(function() {
-            	stage.add(layer);
+                stage.add(layer);
             });
             //document.body.appendChild(layer.bufferCanvas.element);
 
         };
-        imageObj.src = '../assets/lion.png';     
+        imageObj.src = '../assets/lion.png';
     },
     'SHAPE - custom shape with fill, stroke, and strokeWidth': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -2524,32 +2521,31 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
 
-        /*
-         test(rect.intersects({
-         x: 200,
-         y: 100
-         }) === true, 'problem with point in shape');
+        test(rect.intersects({
+            x: 200,
+            y: 100
+        }) === true, '(200,100) should intersect the shape');
 
-         test(rect.intersects({
-         x: 199,
-         y: 99
-         }) === false, 'intersects with point in shape');
+        test(rect.intersects({
+            x: 197,
+            y: 97
+        }) === false, '(197, 97) should not intersect the shape');
 
-         test(rect.intersects({
-         x: 250,
-         y: 125
-         }) === true, 'intersects with point in shape');
+        test(rect.intersects({
+            x: 250,
+            y: 125
+        }) === true, '(250, 125) should intersect the shape');
 
-         test(rect.intersects({
-         x: 300,
-         y: 150
-         }) === true, 'intersects with point in shape');
+        test(rect.intersects({
+            x: 300,
+            y: 150
+        }) === true, '(300, 150) should intersect the shape');
 
-         test(rect.intersects({
-         x: 301,
-         y: 151
-         }) === false, 'intersects with point in shape');
-         */
+        test(rect.intersects({
+            x: 303,
+            y: 153
+        }) === false, '(303, 153) should not intersect the shape');
+
     },
     'CONTAINER - node type selector': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -4735,7 +4731,7 @@ Test.prototype.tests = {
             y: 10
         });
         var mapLayer = new Kinetic.Layer();
-        
+
         for(var key in worldMap.shapes) {
             var c = worldMap.shapes[key];
 
@@ -4763,7 +4759,7 @@ Test.prototype.tests = {
         }
 
         stage.add(mapLayer);
-        
+
         //document.body.appendChild(mapLayer.bufferCanvas.element);
     },
     'PATH - curved arrow path': function(containerId) {
@@ -4997,7 +4993,7 @@ Test.prototype.tests = {
         group.setDraggable(true);
         layer.add(group);
         stage.add(layer);
-        
+
         //document.body.appendChild(layer.bufferCanvas.element)
 
     },

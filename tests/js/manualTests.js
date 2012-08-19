@@ -444,6 +444,11 @@ Test.prototype.tests = {
         layer.add(greenEllipse);
 
         stage.add(layer);
+        
+        //greenEllipse.hide();
+        layer.draw();
+        
+        //document.body.appendChild(layer.bufferCanvas.element);
     },
     'EVENTS - move mouse from shape in one group to shape in another group': function(containerId) {
         var stage = new Kinetic.Stage({
