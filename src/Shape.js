@@ -319,7 +319,7 @@ Kinetic.Shape = Kinetic.Node.extend({
         var obj = stage.getIntersection(pos);
         return !!(obj && obj.pixel[3] > 0);
     },
-    _draw: function(canvas) {
+    _beforeDraw: function(canvas) {
         if(this.attrs.drawFunc) {
             var stage = this.getStage();
             var context = canvas.getContext();

@@ -1278,7 +1278,7 @@ Kinetic.Node = Kinetic.Class.extend({
         this.eventListeners = {};
         this.transAnim = new Kinetic.Animation();
         this.setAttrs(config);
-
+        
         // bind events
         this.on('draggableChange.kinetic', function() {
             this._onDraggableChange();
@@ -2202,7 +2202,27 @@ Kinetic.Node = Kinetic.Class.extend({
                 }
             }
         }
-    }
+    },
+    _draw: function(canvas) {
+        if(this.isVisible() && (!canvas || canvas.name !== 'buffer' || this.getListening())) {
+            if(this._beforeDraw) {
+                this._beforeDraw(canvas);
+            }
+
+            var children = this.children;
+            if(children) {
+                for(var n = 0; n < children.length; n++) {
+                    var child = children[n];
+                    if(child.draw) {
+                        child.draw(canvas);
+                    }
+                    else {
+                        child._draw(canvas);
+                    }
+                }
+            }
+        }
+    },
 });
 
 // add getter and setter methods
@@ -2646,26 +2666,6 @@ Kinetic.Container = Kinetic.Node.extend({
         traverse(this);
 
         return arr;
-    },
-    /**
-     * draw children
-     */
-    _drawChildren: function(canvas) {
-        var stage = this.getStage();
-        var children = this.children;
-        for(var n = 0; n < children.length; n++) {
-            var child = children[n];
-            if(child.getListening()) {
-                if(child.nodeType === 'Shape') {
-                    if(child.isVisible()) {
-                        child._draw(canvas);
-                    }
-                }
-                else {
-                    child.draw(canvas);
-                }
-            }
-        }
     },
     /**
      * set children indices
@@ -3489,9 +3489,6 @@ Kinetic.Stage = Kinetic.Container.extend({
         this.ids = {};
         this.names = {};
         this.dragAnim = new Kinetic.Animation();
-    },
-    _draw: function() {
-        this._drawChildren();
     }
 });
 
@@ -3582,7 +3579,23 @@ Kinetic.Layer = Kinetic.Container.extend({
      * @methodOf Kinetic.Layer.prototype
      */
     draw: function(canvas) {
-        this._draw(canvas);
+        // before draw  handler
+        if(this.beforeDrawFunc !== undefined) {
+            this.beforeDrawFunc.call(this);
+        }
+
+        if(canvas) {
+            this._draw(canvas);
+        }
+        else {
+            this._draw(this.getCanvas());
+            this._draw(this.bufferCanvas);
+        }
+
+        // after draw  handler
+        if(this.afterDrawFunc !== undefined) {
+            this.afterDrawFunc.call(this);
+        }
     },
     /**
      * draw children nodes on buffer.  this includes any groups
@@ -3675,43 +3688,9 @@ Kinetic.Layer = Kinetic.Container.extend({
         }
         return canvas.toDataURL(mimeType, quality);
     },
-    /**
-     * private draw children
-     */
-    _draw: function(canvas) {
-        if(this.isVisible()) {
-            // before draw  handler
-            if(this.beforeDrawFunc !== undefined) {
-                this.beforeDrawFunc.call(this);
-            }
-
-            if(this.attrs.clearBeforeDraw) {
-                if(canvas) {
-                    canvas.clear();
-                }
-                else {
-                    this.getCanvas().clear();
-                    this.bufferCanvas.clear();
-                }
-            }
-
-            // draw custom func
-            if(this.attrs.drawFunc !== undefined) {
-                this.attrs.drawFunc.call(this);
-            }
-
-            if(canvas) {
-                this._drawChildren(canvas);
-            }
-            else {
-				this._drawChildren(this.getCanvas());
-				this._drawChildren(this.bufferCanvas);
-            }
-
-            // after draw  handler
-            if(this.afterDrawFunc !== undefined) {
-                this.afterDrawFunc.call(this);
-            }
+    _beforeDraw: function(canvas) {
+        if(this.attrs.clearBeforeDraw) {
+            canvas.clear();
         }
     }
 });
@@ -3771,14 +3750,6 @@ Kinetic.Group = Kinetic.Container.extend({
 
         // call super constructor
         this._super(config);
-    },
-    draw: function(canvas) {
-        this._draw(canvas);
-    },
-    _draw: function(canvas) {
-        if(this.attrs.visible) {
-            this._drawChildren(canvas);
-        }
     }
 });
 
@@ -4103,7 +4074,7 @@ Kinetic.Shape = Kinetic.Node.extend({
         var obj = stage.getIntersection(pos);
         return !!(obj && obj.pixel[3] > 0);
     },
-    _draw: function(canvas) {
+    _beforeDraw: function(canvas) {
         if(this.attrs.drawFunc) {
             var stage = this.getStage();
             var context = canvas.getContext();

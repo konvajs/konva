@@ -36,13 +36,5 @@ Kinetic.Group = Kinetic.Container.extend({
 
         // call super constructor
         this._super(config);
-    },
-    draw: function(canvas) {
-        this._draw(canvas);
-    },
-    _draw: function(canvas) {
-        if(this.attrs.visible) {
-            this._drawChildren(canvas);
-        }
     }
 });

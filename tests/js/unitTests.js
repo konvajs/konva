@@ -130,7 +130,7 @@ Test.prototype.tests = {
 
         test(circle.getName() === 'myCircle', 'circle name should be myCircle');
 
-        //document.body.appendChild(layer.bufferCanvas.element)
+        document.body.appendChild(layer.bufferCanvas.element)
     },
     'STAGE - add shape with opacity': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -480,7 +480,6 @@ Test.prototype.tests = {
 
         test(stage.getScale().x === 0.5, 'stage scale x should be 0.5');
         test(stage.getScale().y === 0.5, 'stage scale y should be 0.5');
-
         stage.draw();
     },
     'STAGE - scale stage before add shape': function(containerId) {
@@ -1882,11 +1881,17 @@ Test.prototype.tests = {
                     y: -120
 
                 });
-
+                
                 layer.add(cachedShape);
-                layer.draw();
 
-                warn(urls[0] === layer.toDataURL(), 'layer data url is incorrect');
+                cachedShape.createBufferImage(function() {
+                    
+                    layer.draw();
+
+                    warn(urls[0] === layer.toDataURL(), 'layer data url is incorrect');
+                    
+                    document.body.appendChild(layer.bufferCanvas.element)
+                });
             }
         });
 

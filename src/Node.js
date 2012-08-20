@@ -58,7 +58,7 @@ Kinetic.Node = Kinetic.Class.extend({
         this.eventListeners = {};
         this.transAnim = new Kinetic.Animation();
         this.setAttrs(config);
-
+        
         // bind events
         this.on('draggableChange.kinetic', function() {
             this._onDraggableChange();
@@ -982,7 +982,27 @@ Kinetic.Node = Kinetic.Class.extend({
                 }
             }
         }
-    }
+    },
+    _draw: function(canvas) {
+        if(this.isVisible() && (!canvas || canvas.name !== 'buffer' || this.getListening())) {
+            if(this._beforeDraw) {
+                this._beforeDraw(canvas);
+            }
+
+            var children = this.children;
+            if(children) {
+                for(var n = 0; n < children.length; n++) {
+                    var child = children[n];
+                    if(child.draw) {
+                        child.draw(canvas);
+                    }
+                    else {
+                        child._draw(canvas);
+                    }
+                }
+            }
+        }
+    },
 });
 
 // add getter and setter methods

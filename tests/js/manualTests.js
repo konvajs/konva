@@ -363,6 +363,8 @@ Test.prototype.tests = {
 
         layer.add(star);
         stage.add(layer);
+        
+        //document.body.appendChild(layer.bufferCanvas.element)
     },
     'EVENTS - drag events click': function(containerId) {
         var stage = new Kinetic.Stage({

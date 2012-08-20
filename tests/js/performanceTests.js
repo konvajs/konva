@@ -67,7 +67,7 @@ Test.prototype.tests = {
             anim.start();
         }, 4000);
     },
-    '*DRAWING - draw 10,000 small circles with tooltips': function(containerId) {
+    'DRAWING - draw 10,000 small circles with tooltips': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
