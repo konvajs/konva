@@ -456,9 +456,10 @@ Kinetic.Stage = Kinetic.Container.extend({
     },
     _mouseout: function(evt) {
         this._setUserPosition(evt);
+        var go = Kinetic.Global;
         // if there's a current target shape, run mouseout handlers
         var targetShape = this.targetShape;
-        if(targetShape) {
+        if(targetShape && !go.drag.moving) {
             targetShape._handleEvent('mouseout', evt);
             this.targetShape = null;
         }
@@ -491,7 +492,7 @@ Kinetic.Stage = Kinetic.Container.extend({
          * if no shape was detected, clear target shape and try
          * to run mouseout from previous target shape
          */
-        else if(this.targetShape) {
+        else if(this.targetShape && !go.drag.moving) {
             this.targetShape._handleEvent('mouseout', evt);
             this.targetShape = null;
         }
