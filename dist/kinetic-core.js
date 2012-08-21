@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Aug 19 2012
+ * Date: Aug 20 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -2490,21 +2490,6 @@ Kinetic.Container = Kinetic.Node.extend({
         child.index = this.children.length;
         child.parent = this;
 
-        // set color key
-        if(child.nodeType === 'Shape') {
-            var shapes = Kinetic.Global.shapes;
-            var key;
-            while(true) {
-                key = Kinetic.Type._getRandomColorKey();
-                if(key && !( key in shapes)) {
-                    break;
-                }
-            }
-
-            child.colorKey = key;
-            shapes[key] = child;
-        }
-
         this.children.push(child);
         var stage = child.getStage();
 
@@ -3819,6 +3804,18 @@ Kinetic.Shape = Kinetic.Node.extend({
     init: function(config) {
         this.nodeType = 'Shape';
         this.appliedShadow = false;
+
+		// set colorKey
+        var shapes = Kinetic.Global.shapes;
+        var key;
+        while(true) {
+            key = Kinetic.Type._getRandomColorKey();
+            if(key && !( key in shapes)) {
+                break;
+            }
+        }
+        this.colorKey = key;
+        shapes[key] = this;
 
         // call super constructor
         this._super(config);

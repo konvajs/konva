@@ -64,6 +64,18 @@ Kinetic.Shape = Kinetic.Node.extend({
         this.nodeType = 'Shape';
         this.appliedShadow = false;
 
+		// set colorKey
+        var shapes = Kinetic.Global.shapes;
+        var key;
+        while(true) {
+            key = Kinetic.Type._getRandomColorKey();
+            if(key && !( key in shapes)) {
+                break;
+            }
+        }
+        this.colorKey = key;
+        shapes[key] = this;
+
         // call super constructor
         this._super(config);
     },
