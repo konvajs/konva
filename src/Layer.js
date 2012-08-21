@@ -166,7 +166,7 @@ Kinetic.Layer = Kinetic.Container.extend({
         }
         return canvas.toDataURL(mimeType, quality);
     },
-    _beforeDraw: function(canvas) {
+    __draw: function(canvas) {
         if(this.attrs.clearBeforeDraw) {
             canvas.clear();
         }

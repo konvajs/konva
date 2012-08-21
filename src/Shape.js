@@ -331,7 +331,7 @@ Kinetic.Shape = Kinetic.Node.extend({
         var obj = stage.getIntersection(pos);
         return !!(obj && obj.pixel[3] > 0);
     },
-    _beforeDraw: function(canvas) {
+    __draw: function(canvas) {
         if(this.attrs.drawFunc) {
             var stage = this.getStage();
             var context = canvas.getContext();
@@ -372,7 +372,7 @@ Kinetic.Shape = Kinetic.Node.extend({
                 for(var n = 0; n < wl.length; n++) {
                     var key = wl[n];
                     attrs[key] = this.attrs[key];
-                    if(this.attrs[key]) {
+                    if(this.attrs[key] || (key === 'fill' && !this.attrs.stroke)) {
                         this.attrs[key] = '#' + this.colorKey;
                     }
                 }

@@ -985,8 +985,8 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     _draw: function(canvas) {
         if(this.isVisible() && (!canvas || canvas.name !== 'buffer' || this.getListening())) {
-            if(this._beforeDraw) {
-                this._beforeDraw(canvas);
+            if(this.__draw) {
+                this.__draw(canvas);
             }
 
             var children = this.children;
