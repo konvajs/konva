@@ -1802,7 +1802,7 @@ Kinetic.Node = Kinetic.Class.extend({
      */
     isDragging: function() {
         var go = Kinetic.Global;
-        return go.drag.node !== undefined && go.drag.node._id === this._id && go.drag.moving;
+        return go.drag.node && go.drag.node._id === this._id && go.drag.moving;
     },
     /**
      * move node to another container
