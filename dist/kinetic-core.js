@@ -4559,23 +4559,23 @@ Kinetic.Image = Kinetic.Shape.extend({
 
             var that = this;
             Kinetic.Type._getImage(imageData, function(imageObj) {
-                that.bufferImage = imageObj;
+                that.imageBuffer = imageObj;
                 if(callback) {
                     callback();
                 }
             });
         }
         catch(e) {
-            Kinetic.Global.warn('Unable to create buffer image.');
+            Kinetic.Global.warn('Unable to create image buffer.');
         }
     },
     /**
      * clear buffer image
-     * @name clearBufferImage
+     * @name clearImageBuffer
      * @methodOf Kinetic.Image.prototype
      */
-    clearBufferImage: function() {
-        delete this.bufferImage;
+    clearImageBuffer: function() {
+        delete this.imageBuffer;
     },
     _syncSize: function() {
         if(this.attrs.image) {
