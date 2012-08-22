@@ -387,8 +387,8 @@ Kinetic.Shape = Kinetic.Node.extend({
                 if('image' in this.attrs) {
                     attrs.image = this.attrs.image;
 
-                    if(this.bufferImage) {
-                        this.attrs.image = this.bufferImage;
+                    if(this.imageBuffer) {
+                        this.attrs.image = this.imageBuffer;
                     }
                     else {
                         this.attrs.image = null;

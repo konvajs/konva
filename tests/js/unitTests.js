@@ -1884,7 +1884,7 @@ Test.prototype.tests = {
                 
                 layer.add(cachedShape);
 
-                cachedShape.createBufferImage(function() {
+                cachedShape.createImageBuffer(function() {
                     
                     layer.draw();
 
@@ -2369,7 +2369,7 @@ Test.prototype.tests = {
             });
 
             layer.add(lion);
-            lion.createBufferImage(function() {
+            lion.createImageBuffer(function() {
                 stage.add(layer);
             });
             //document.body.appendChild(layer.bufferCanvas.element);
