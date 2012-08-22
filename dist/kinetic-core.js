@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Aug 20 2012
+ * Date: Aug 21 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -3805,7 +3805,7 @@ Kinetic.Shape = Kinetic.Node.extend({
         this.nodeType = 'Shape';
         this.appliedShadow = false;
 
-		// set colorKey
+        // set colorKey
         var shapes = Kinetic.Global.shapes;
         var key;
         while(true) {
@@ -4113,7 +4113,7 @@ Kinetic.Shape = Kinetic.Node.extend({
                 for(var n = 0; n < wl.length; n++) {
                     var key = wl[n];
                     attrs[key] = this.attrs[key];
-                    if(this.attrs[key] || (key === 'fill' && !this.attrs.stroke)) {
+                    if(this.attrs[key] || (key === 'fill' && !this.attrs.stroke && !('image' in this.attrs))) {
                         this.attrs[key] = '#' + this.colorKey;
                     }
                 }

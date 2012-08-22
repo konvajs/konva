@@ -64,7 +64,7 @@ Kinetic.Shape = Kinetic.Node.extend({
         this.nodeType = 'Shape';
         this.appliedShadow = false;
 
-		// set colorKey
+        // set colorKey
         var shapes = Kinetic.Global.shapes;
         var key;
         while(true) {
@@ -372,7 +372,7 @@ Kinetic.Shape = Kinetic.Node.extend({
                 for(var n = 0; n < wl.length; n++) {
                     var key = wl[n];
                     attrs[key] = this.attrs[key];
-                    if(this.attrs[key] || (key === 'fill' && !this.attrs.stroke)) {
+                    if(this.attrs[key] || (key === 'fill' && !this.attrs.stroke && !('image' in this.attrs))) {
                         this.attrs[key] = '#' + this.colorKey;
                     }
                 }
