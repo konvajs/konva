@@ -1,5 +1,5 @@
 Test.prototype.tests = {
-    'DRAWING - draw rect': function(containerId) {
+    '*DRAWING - draw rect': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
