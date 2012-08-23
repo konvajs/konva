@@ -33,17 +33,15 @@
  * @config {Obect} [config.shadow.blur.offset]
  * @config {Number} [config.shadow.blur.offset.x]
  * @config {Number} [config.shadow.blur.offset.y]
- * @config {Number} [config.shadow.alpha] shadow alpha.  Can be any real number
+ * @config {Number} [config.shadow.opacity] shadow opacity.  Can be any real number
  *  between 0 and 1
- * @config {String} [config.detectionType] shape detection type.  Can be path or pixel.
- *  The default is path because it performs better
  * @param {Number} [config.x]
  * @param {Number} [config.y]
  * @param {Boolean} [config.visible]
  * @param {Boolean} [config.listening] whether or not the node is listening for events
  * @param {String} [config.id] unique id
  * @param {String} [config.name] non-unique name
- * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
  * @param {Object} [config.scale]
  * @param {Number} [config.scale.x]
  * @param {Number} [config.scale.y]
@@ -61,17 +59,29 @@
  * @param {Number} [config.dragBounds.bottom]
  * @param {Number} [config.dragBounds.left]
  */
-Kinetic.Shape = Kinetic.Node.extend({
-    init: function(config) {
-        this.setDefaultAttrs({
-            detectionType: 'path'
-        });
+Kinetic.Shape = function(config) {
+    this._initShape(config);
+};
 
+Kinetic.Shape.prototype = {
+    _initShape: function(config) {
         this.nodeType = 'Shape';
         this.appliedShadow = false;
 
+        // set colorKey
+        var shapes = Kinetic.Global.shapes;
+        var key;
+        while(true) {
+            key = Kinetic.Type._getRandomColorKey();
+            if(key && !( key in shapes)) {
+                break;
+            }
+        }
+        this.colorKey = key;
+        shapes[key] = this;
+
         // call super constructor
-        this._super(config);
+        Kinetic.Node.call(this, config);
     },
     /**
      * get canvas context tied to the layer
@@ -287,7 +297,7 @@ Kinetic.Shape = Kinetic.Node.extend({
     _applyShadow: function(context) {
         var s = this.attrs.shadow;
         if(s) {
-            var aa = this.getAbsoluteAlpha();
+            var aa = this.getAbsoluteOpacity();
             // defaults
             var color = s.color ? s.color : 'black';
             var blur = s.blur ? s.blur : 5;
@@ -296,8 +306,8 @@ Kinetic.Shape = Kinetic.Node.extend({
                 y: 0
             };
 
-            if(s.alpha) {
-                context.globalAlpha = s.alpha * aa;
+            if(s.opacity) {
+                context.globalAlpha = s.opacity * aa;
             }
             context.shadowColor = color;
             context.shadowBlur = blur;
@@ -319,28 +329,13 @@ Kinetic.Shape = Kinetic.Node.extend({
     intersects: function() {
         var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
         var stage = this.getStage();
-
-        // path detection
-        if(this.attrs.detectionType === 'path') {
-            var pathCanvas = stage.pathCanvas;
-            var pathCanvasContext = pathCanvas.getContext();
-
-            this._draw(pathCanvas);
-
-            return pathCanvasContext.isPointInPath(pos.x, pos.y);
-        }
-
-        // pixel detection
-        if(this.imageData) {
-            var w = stage.attrs.width;
-            var alpha = this.imageData.data[((w * pos.y) + pos.x) * 4 + 3];
-            return (alpha);
-        }
-
-        // default
-        return false;
+        var bufferCanvas = stage.bufferCanvas;
+        bufferCanvas.clear();
+        this._draw(bufferCanvas);
+        var obj = stage.getIntersection(pos);
+        return !!(obj && obj.pixel[3] > 0);
     },
-    _draw: function(canvas) {
+    __draw: function(canvas) {
         if(this.attrs.drawFunc) {
             var stage = this.getStage();
             var context = canvas.getContext();
@@ -362,21 +357,70 @@ Kinetic.Shape = Kinetic.Node.extend({
             }
 
             /*
-             * pre styles include alpha, linejoin
+             * pre styles include opacity, linejoin
              */
-            var absAlpha = this.getAbsoluteAlpha();
-            if(absAlpha !== 1) {
-                context.globalAlpha = absAlpha;
+            var absOpacity = this.getAbsoluteOpacity();
+            if(absOpacity !== 1) {
+                context.globalAlpha = absOpacity;
             }
             this.applyLineJoin(context);
 
             // draw the shape
             this.appliedShadow = false;
+
+            var wl = Kinetic.Global.BUFFER_WHITELIST;
+            var bl = Kinetic.Global.BUFFER_BLACKLIST;
+            var attrs = {};
+
+            if(canvas.name === 'buffer') {
+                for(var n = 0; n < wl.length; n++) {
+                    var key = wl[n];
+                    attrs[key] = this.attrs[key];
+                    if(this.attrs[key] || (key === 'fill' && !this.attrs.stroke && !('image' in this.attrs))) {
+                        this.attrs[key] = '#' + this.colorKey;
+                    }
+                }
+
+                for(var n = 0; n < bl.length; n++) {
+                    var key = bl[n];
+                    attrs[key] = this.attrs[key];
+                    this.attrs[key] = '';
+                }
+
+                // image is a special case
+                if('image' in this.attrs) {
+                    attrs.image = this.attrs.image;
+
+                    if(this.imageBuffer) {
+                        this.attrs.image = this.imageBuffer;
+                    }
+                    else {
+                        this.attrs.image = null;
+                        this.attrs.fill = '#' + this.colorKey;
+                    }
+                }
+
+                context.globalAlpha = 1;
+            }
+
             this.attrs.drawFunc.call(this, canvas.getContext());
+
+            if(canvas.name === 'buffer') {
+                var bothLists = wl.concat(bl);
+                for(var n = 0; n < bothLists.length; n++) {
+                    var key = bothLists[n];
+                    this.attrs[key] = attrs[key];
+                }
+
+                // image is a special case
+                this.attrs.image = attrs.image;
+            }
+
             context.restore();
         }
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
 
 // add getters and setters
 Kinetic.Node.addGettersSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc', 'filter']);

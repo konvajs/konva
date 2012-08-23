@@ -7,8 +7,12 @@
  * @augments Kinetic.Shape
  * @param {Object} config
  */
-Kinetic.RegularPolygon = Kinetic.Shape.extend({
-    init: function(config) {
+Kinetic.RegularPolygon = function(config) {
+    this._initRegularPolygon(config);
+};
+
+Kinetic.RegularPolygon.prototype = {
+    _initRegularPolygon: function(config) {
         this.setDefaultAttrs({
             radius: 0,
             sides: 0
@@ -17,7 +21,7 @@ Kinetic.RegularPolygon = Kinetic.Shape.extend({
         this.shapeType = "RegularPolygon";
         config.drawFunc = this.drawFunc;
         // call super constructor
-        this._super(config);
+        Kinetic.Shape.call(this, config);
     },
     drawFunc: function(context) {
         context.beginPath();
@@ -32,7 +36,8 @@ Kinetic.RegularPolygon = Kinetic.Shape.extend({
         this.fill(context);
         this.stroke(context);
     }
-});
+};
+Kinetic.Global.extend(Kinetic.RegularPolygon, Kinetic.Shape);
 
 // add getters setters
 Kinetic.Node.addGettersSetters(Kinetic.RegularPolygon, ['radius', 'sides']);

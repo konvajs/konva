@@ -10,9 +10,13 @@ Kinetic.Filters = {};
 Kinetic.Plugins = {};
 Kinetic.Global = {
     BUBBLE_WHITELIST: ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'click', 'dblclick', 'touchstart', 'touchmove', 'touchend', 'tap', 'dbltap', 'dragstart', 'dragmove', 'dragend'],
+    BUFFER_WHITELIST: ['fill', 'stroke', 'textFill', 'textStroke'],
+    BUFFER_BLACKLIST: ['shadow'],
     stages: [],
     idCounter: 0,
     tempNodes: {},
+    //shapes hash.  rgb keys and shape values
+    shapes: {},
     maxDragTimeInterval: 20,
     drag: {
         moving: false,
@@ -25,6 +29,13 @@ Kinetic.Global = {
     warn: function(str) {
         if(console && console.warn) {
             console.warn('Kinetic warning: ' + str);
+        }
+    },
+    extend: function(c1, c2) {
+        for(var key in c2.prototype) {
+            if(!( key in c1.prototype)) {
+                c1.prototype[key] = c2.prototype[key];
+            }
         }
     },
     _pullNodes: function(stage) {

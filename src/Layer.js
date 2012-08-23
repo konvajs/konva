@@ -15,7 +15,7 @@
  * @param {Boolean} [config.listening] whether or not the node is listening for events
  * @param {String} [config.id] unique id
  * @param {String} [config.name] non-unique name
- * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
  * @param {Object} [config.scale]
  * @param {Number} [config.scale.x]
  * @param {Number} [config.scale.y]
@@ -33,22 +33,26 @@
  * @param {Number} [config.dragBounds.bottom]
  * @param {Number} [config.dragBounds.left]
  */
-Kinetic.Layer = Kinetic.Container.extend({
-    init: function(config) {
+Kinetic.Layer = function(config) {
+    this._initLayer(config);
+};
+
+Kinetic.Layer.prototype = {
+    _initLayer: function(config) {
         this.setDefaultAttrs({
             clearBeforeDraw: true
         });
 
         this.nodeType = 'Layer';
-        this.lastDrawTime = 0;
         this.beforeDrawFunc = undefined;
         this.afterDrawFunc = undefined;
-
         this.canvas = new Kinetic.Canvas();
         this.canvas.getElement().style.position = 'absolute';
+        this.bufferCanvas = new Kinetic.Canvas();
+        this.bufferCanvas.name = 'buffer';
 
         // call super constructor
-        this._super(config);
+        Kinetic.Container.call(this, config);
     },
     /**
      * draw children nodes.  this includes any groups
@@ -57,7 +61,41 @@ Kinetic.Layer = Kinetic.Container.extend({
      * @methodOf Kinetic.Layer.prototype
      */
     draw: function(canvas) {
-        this._draw(canvas);
+        // before draw  handler
+        if(this.beforeDrawFunc !== undefined) {
+            this.beforeDrawFunc.call(this);
+        }
+
+        if(canvas) {
+            this._draw(canvas);
+        }
+        else {
+            this._draw(this.getCanvas());
+            this._draw(this.bufferCanvas);
+        }
+
+        // after draw  handler
+        if(this.afterDrawFunc !== undefined) {
+            this.afterDrawFunc.call(this);
+        }
+    },
+    /**
+     * draw children nodes on buffer.  this includes any groups
+     *  or shapes
+     * @name drawBuffer
+     * @methodOf Kinetic.Layer.prototype
+     */
+    drawBuffer: function() {
+        this.draw(this.bufferCanvas);
+    },
+    /**
+     * draw children nodes on scene.  this includes any groups
+     *  or shapes
+     * @name drawScene
+     * @methodOf Kinetic.Layer.prototype
+     */
+    drawScene: function() {
+        this.draw(this.getCanvas());
     },
     /**
      * set before draw handler
@@ -132,46 +170,13 @@ Kinetic.Layer = Kinetic.Container.extend({
         }
         return canvas.toDataURL(mimeType, quality);
     },
-    /**
-     * private draw children
-     */
-    _draw: function(canvas) {
-        /*
-         * if canvas is not defined, then use the canvas
-         * tied to the layer
-         */
-        if(!canvas) {
-            canvas = this.getCanvas();
-        }
-
-        var time = new Date().getTime();
-        this.lastDrawTime = time;
-
-        // before draw  handler
-        if(this.beforeDrawFunc !== undefined) {
-            this.beforeDrawFunc.call(this);
-        }
-
+    __draw: function(canvas) {
         if(this.attrs.clearBeforeDraw) {
             canvas.clear();
         }
-
-        if(this.isVisible()) {
-            // draw custom func
-            if(this.attrs.drawFunc !== undefined) {
-                this.attrs.drawFunc.call(this);
-            }
-
-            // draw children
-            this._drawChildren(canvas);
-        }
-
-        // after draw  handler
-        if(this.afterDrawFunc !== undefined) {
-            this.afterDrawFunc.call(this);
-        }
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Layer, Kinetic.Container);
 
 // add getters and setters
 Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw']);

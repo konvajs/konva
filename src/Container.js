@@ -30,10 +30,14 @@
  * @param {Number} [config.dragBounds.bottom]
  * @param {Number} [config.dragBounds.left]
  */
-Kinetic.Container = Kinetic.Node.extend({
-    init: function(config) {
+Kinetic.Container = function(config) {
+    this._containerInit(config);
+};
+
+Kinetic.Container.prototype = {
+    _containerInit: function(config) {
         this.children = [];
-        this._super(config);
+        Kinetic.Node.call(this, config);
     },
     /**
      * get children
@@ -227,24 +231,6 @@ Kinetic.Container = Kinetic.Node.extend({
         return arr;
     },
     /**
-     * draw children
-     */
-    _drawChildren: function(canvas) {
-        var stage = this.getStage();
-        var children = this.children;
-        for(var n = 0; n < children.length; n++) {
-            var child = children[n];
-            if(child.nodeType === 'Shape') {
-                if(child.isVisible() && stage.isVisible()) {
-                    child._draw(canvas);
-                }
-            }
-            else {
-                child.draw(canvas);
-            }
-        }
-    },
-    /**
      * set children indices
      */
     _setChildrenIndices: function() {
@@ -252,4 +238,5 @@ Kinetic.Container = Kinetic.Node.extend({
             this.children[n].index = n;
         }
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Container, Kinetic.Node);

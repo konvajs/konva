@@ -8,8 +8,12 @@
  * @augments Kinetic.Shape
  * @param {Object} config
  */
-Kinetic.TextPath = Kinetic.Shape.extend({
-    init: function(config) {
+Kinetic.TextPath = function(config) {
+    this._initTextPath(config);
+};
+
+Kinetic.TextPath.prototype = {
+    _initTextPath: function(config) {
         this.setDefaultAttrs({
             fontFamily: 'Calibri',
             fontSize: 12,
@@ -25,7 +29,7 @@ Kinetic.TextPath = Kinetic.Shape.extend({
 
         config.drawFunc = this.drawFunc;
         // call super constructor
-        this._super(config);
+        Kinetic.Shape.call(this, config);
         this.dataArray = Kinetic.Path.parsePathData(this.attrs.data);
         this.on('dataChange', function() {
             that.dataArray = Kinetic.Path.parsePathData(this.attrs.data);
@@ -279,7 +283,8 @@ Kinetic.TextPath = Kinetic.Shape.extend({
             p0 = p1;
         }
     }
-});
+};
+Kinetic.Global.extend(Kinetic.TextPath, Kinetic.Shape);
 
 // add setters and getters
 Kinetic.Node.addGettersSetters(Kinetic.TextPath, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'text']);

@@ -92,22 +92,6 @@ Kinetic.Canvas.prototype = {
      */
     strip: function() {
         var context = this.context;
-        context.stroke = function() {
-        };
-        context.fill = function() {
-        };
-        context.fillRect = function(x, y, width, height) {
-            context.rect(x, y, width, height);
-        };
-        context.strokeRect = function(x, y, width, height) {
-            context.rect(x, y, width, height);
-        };
-        context.drawImage = function() {
-        };
-        context.fillText = function() {
-        };
-        context.strokeText = function() {
-        };
     },
     /**
      * toDataURL

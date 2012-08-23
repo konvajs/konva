@@ -11,24 +11,35 @@
  * @param {Number} [config.height]
  * @param {Object} [config.crop]
  */
-Kinetic.Image = Kinetic.Shape.extend({
-    init: function(config) {
+Kinetic.Image = function(config) {
+    this._initImage(config);
+};
+
+Kinetic.Image.prototype = {
+    _initImage: function(config) {
         this.shapeType = "Image";
         config.drawFunc = this.drawFunc;
         // call super constructor
-        this._super(config);
+        Kinetic.Shape.call(this, config);
+
+        var that = this;
+        this.on('imageChange', function(evt) {
+            that._syncSize();
+        });
+
+        this._syncSize();
     },
     drawFunc: function(context) {
+        var width = this.getWidth();
+        var height = this.getHeight();
+
+        context.beginPath();
+        context.rect(0, 0, width, height);
+        context.closePath();
+        this.fill(context);
+        this.stroke(context);
+
         if(this.attrs.image) {
-            var width = this.getWidth();
-            var height = this.getHeight();
-
-            context.beginPath();
-            context.rect(0, 0, width, height);
-            context.closePath();
-            this.fill(context);
-            this.stroke(context);
-
             // if cropping
             if(this.attrs.crop && this.attrs.crop.width && this.attrs.crop.height) {
                 var cropX = this.attrs.crop.x ? this.attrs.crop.x : 0;
@@ -64,34 +75,6 @@ Kinetic.Image = Kinetic.Shape.extend({
         };
     },
     /**
-     * get width
-     * @name getWidth
-     * @methodOf Kinetic.Image.prototype
-     */
-    getWidth: function() {
-        if(this.attrs.width) {
-            return this.attrs.width;
-        }
-        if(this.attrs.image) {
-            return this.attrs.image.width;
-        }
-        return 0;
-    },
-    /**
-     * get height
-     * @name getHeight
-     * @methodOf Kinetic.Image.prototype
-     */
-    getHeight: function() {
-        if(this.attrs.height) {
-            return this.attrs.height;
-        }
-        if(this.attrs.image) {
-            return this.attrs.image.height;
-        }
-        return 0;
-    },
-    /**
      * apply filter
      * @name applyFilter
      * @methodOf Kinetic.Image.prototype
@@ -101,14 +84,14 @@ Kinetic.Image = Kinetic.Shape.extend({
      *  filter has been applied
      */
     applyFilter: function(config) {
-        try {
-            var trans = this._clearTransform();
-            this.saveImageData(this.getWidth(), this.getHeight());
-            this._setTransform(trans);
-
-            config.filter.call(this, config);
+    	var canvas = new Kinetic.Canvas(this.attrs.image.width, this.attrs.image.height);
+        var context = canvas.getContext();
+        context.drawImage(this.attrs.image, 0, 0);
+		try {
+			var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
+            config.filter(imageData, config);
             var that = this;
-            Kinetic.Type._getImage(this.getImageData(), function(imageObj) {
+            Kinetic.Type._getImage(imageData, function(imageObj) {
                 that.setImage(imageObj);
 
                 if(config.callback) {
@@ -119,12 +102,70 @@ Kinetic.Image = Kinetic.Shape.extend({
         catch(e) {
             Kinetic.Global.warn('Unable to apply filter.');
         }
+    },
+    /**
+     * create image buffer which enables more accurate hit detection mapping of the image
+     *  by avoiding event detections for transparent pixels
+     * @name createImageBuffer
+     * @methodOf Kinetic.Image.prototype
+     * @param {Function} [callback] callback function to be called once
+     *  the buffer image has been created and set
+     */
+    createImageBuffer: function(callback) {
+        var canvas = new Kinetic.Canvas(this.attrs.width, this.attrs.height);
+        var context = canvas.getContext();
+        context.drawImage(this.attrs.image, 0, 0);
+        try {
+            var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
+            var data = imageData.data;
+            var rgbColorKey = Kinetic.Type._hexToRgb(this.colorKey);
+            // replace non transparent pixels with color key
+            for(var i = 0, n = data.length; i < n; i += 4) {
+                data[i] = rgbColorKey.r;
+                data[i + 1] = rgbColorKey.g;
+                data[i + 2] = rgbColorKey.b;
+                // i+3 is alpha (the fourth element)
+            }
+
+            var that = this;
+            Kinetic.Type._getImage(imageData, function(imageObj) {
+                that.imageBuffer = imageObj;
+                if(callback) {
+                    callback();
+                }
+            });
+        }
+        catch(e) {
+            Kinetic.Global.warn('Unable to create image buffer.');
+        }
+    },
+    /**
+     * clear buffer image
+     * @name clearImageBuffer
+     * @methodOf Kinetic.Image.prototype
+     */
+    clearImageBuffer: function() {
+        delete this.imageBuffer;
+    },
+    _syncSize: function() {
+        if(this.attrs.image) {
+            if(!this.attrs.width) {
+                this.setAttrs({
+                    width: this.attrs.image.width
+                });
+            }
+            if(!this.attrs.height) {
+                this.setAttrs({
+                    height: this.attrs.image.height
+                });
+            }
+        }
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Image, Kinetic.Shape);
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'crop', 'filter']);
-Kinetic.Node.addSetters(Kinetic.Image, ['width', 'height']);
+Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'crop', 'filter', 'width', 'height']);
 
 /**
  * set width
@@ -176,5 +217,17 @@ Kinetic.Node.addSetters(Kinetic.Image, ['width', 'height']);
 /**
  * get filter
  * @name getFilter
+ * @methodOf Kinetic.Image.prototype
+ */
+
+/**
+ * get width
+ * @name getWidth
+ * @methodOf Kinetic.Image.prototype
+ */
+
+/**
+ * get height
+ * @name getHeight
  * @methodOf Kinetic.Image.prototype
  */

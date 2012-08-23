@@ -67,6 +67,8 @@ Test.prototype.tests = {
 
         layer.add(circle);
         stage.add(layer);
+        
+        document.body.appendChild(layer.bufferCanvas.element)
     },
     'TRANSITION - transition position and rotation': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -348,7 +350,6 @@ Test.prototype.tests = {
             fill: 'green',
             stroke: 'blue',
             strokeWidth: 20,
-            detectionType: 'pixel',
             draggable: true
         });
 
@@ -360,13 +361,10 @@ Test.prototype.tests = {
             log('mouseout');
         });
 
-        star.on('dragend', function() {
-            this.saveImageData();
-        });
-
         layer.add(star);
         stage.add(layer);
-        star.saveImageData();
+        
+        //document.body.appendChild(layer.bufferCanvas.element)
     },
     'EVENTS - drag events click': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -448,6 +446,11 @@ Test.prototype.tests = {
         layer.add(greenEllipse);
 
         stage.add(layer);
+        
+        //greenEllipse.hide();
+        layer.draw();
+        
+        //document.body.appendChild(layer.bufferCanvas.element);
     },
     'EVENTS - move mouse from shape in one group to shape in another group': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -783,7 +786,7 @@ Test.prototype.tests = {
             })
         });
     },
-    '*DRAG AND DROP - two draggable shapes': function(containerId) {
+    'DRAG AND DROP - two draggable shapes': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -797,7 +800,6 @@ Test.prototype.tests = {
             fill: 'red',
             stroke: 'black',
             strokeWidth: 4,
-            //detectionType: 'pixel'
         });
 
         Ellipse.setDraggable(true);
@@ -810,7 +812,6 @@ Test.prototype.tests = {
             stroke: 'black',
             strokeWidth: 4,
             draggable: true
-            //detectionType: 'pixel'
         });
 
         /*

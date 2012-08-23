@@ -13,7 +13,7 @@
  * @param {Boolean} [config.listening] whether or not the node is listening for events
  * @param {String} [config.id] unique id
  * @param {String} [config.name] non-unique name
- * @param {Number} [config.alpha] determines node opacity.  Can be any number between 0 and 1
+ * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
  * @param {Object} [config.scale]
  * @param {Number} [config.scale.x]
  * @param {Number} [config.scale.y]
@@ -32,13 +32,17 @@
  * @param {Number} [config.dragBounds.left]
  * @param {Function} [config.dragBoundFunc] dragBoundFunc(pos, evt) should return new position
  */
-Kinetic.Node = Kinetic.Class.extend({
-    init: function(config) {
+Kinetic.Node = function(config) {
+	this._nodeInit(config);	
+};
+
+Kinetic.Node.prototype = {
+    _nodeInit: function(config) {
         this.defaultNodeAttrs = {
             visible: true,
             listening: true,
             name: undefined,
-            alpha: 1,
+            opacity: 1,
             x: 0,
             y: 0,
             scale: {
@@ -59,7 +63,7 @@ Kinetic.Node = Kinetic.Class.extend({
         this.eventListeners = {};
         this.transAnim = new Kinetic.Animation();
         this.setAttrs(config);
-
+        
         // bind events
         this.on('draggableChange.kinetic', function() {
             this._onDraggableChange();
@@ -562,19 +566,19 @@ Kinetic.Node = Kinetic.Class.extend({
         this.parent._setChildrenIndices();
     },
     /**
-     * get absolute alpha
-     * @name getAbsoluteAlpha
+     * get absolute opacity
+     * @name getAbsoluteOpacity
      * @methodOf Kinetic.Node.prototype
      */
-    getAbsoluteAlpha: function() {
-        var absAlpha = 1;
+    getAbsoluteOpacity: function() {
+        var absOpacity = 1;
         var node = this;
         // traverse upwards
         while(node.nodeType !== 'Stage') {
-            absAlpha *= node.attrs.alpha;
+            absOpacity *= node.attrs.opacity;
             node = node.parent;
         }
-        return absAlpha;
+        return absOpacity;
     },
     /**
      * determine if node is currently in drag and drop mode
@@ -583,7 +587,7 @@ Kinetic.Node = Kinetic.Class.extend({
      */
     isDragging: function() {
         var go = Kinetic.Global;
-        return go.drag.node !== undefined && go.drag.node._id === this._id && go.drag.moving;
+        return go.drag.node && go.drag.node._id === this._id && go.drag.moving;
     },
     /**
      * move node to another container
@@ -651,7 +655,7 @@ Kinetic.Node = Kinetic.Class.extend({
     },
     /**
      * transition node to another state.  Any property that can accept a real
-     *  number can be transitioned, including x, y, rotation, alpha, strokeWidth,
+     *  number can be transitioned, including x, y, rotation, opacity, strokeWidth,
      *  radius, scale.x, scale.y, offset.x, offset.y, etc.
      * @name transitionTo
      * @methodOf Kinetic.Node.prototype
@@ -781,48 +785,6 @@ Kinetic.Node = Kinetic.Class.extend({
         return node;
     },
     /**
-     * save image data
-     * @name saveImageData
-     * @methodOf Kinetic.Node.prototype
-     */
-    saveImageData: function(width, height) {
-        try {
-            var canvas;
-            if(width && height) {
-                canvas = new Kinetic.Canvas(width, height);
-            }
-            else {
-                var stage = this.getStage();
-                canvas = stage.bufferCanvas;
-            }
-
-            var context = canvas.getContext();
-            canvas.clear();
-            this._draw(canvas);
-            var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
-            this.imageData = imageData;
-        }
-        catch(e) {
-            Kinetic.Global.warn('Image data could not saved because canvas is dirty.');
-        }
-    },
-    /**
-     * clear image data
-     * @name clearImageData
-     * @methodOf Kinetic.Node.prototype
-     */
-    clearImageData: function() {
-        delete this.imageData;
-    },
-    /**
-     * get image data
-     * @name getImageData
-     * @methodOf Kinetic.Node.prototype
-     */
-    getImageData: function() {
-        return this.imageData;
-    },
-    /**
      * Creates a composite data URL. If MIME type is not
      * specified, then "image/png" will result. For "image/jpeg", specify a quality
      * level as quality (range 0.0 - 1.0)
@@ -908,11 +870,6 @@ Kinetic.Node = Kinetic.Class.extend({
             this.attrs[key] = trans[key];
         }
     },
-    _setImageData: function(imageData) {
-        if(imageData && imageData.data) {
-            this.imageData = imageData;
-        }
-    },
     _fireBeforeChangeEvent: function(attr, oldVal, newVal) {
         this._handleEvent('before' + attr.toUpperCase() + 'Change', {
             oldVal: oldVal,
@@ -964,7 +921,7 @@ Kinetic.Node = Kinetic.Class.extend({
             else {
                 stage.dragAnim.node = this.getLayer();
             }
-            stage.dragAnim.start(); 
+            stage.dragAnim.start();
         }
     },
     _onDraggableChange: function() {
@@ -997,25 +954,18 @@ Kinetic.Node = Kinetic.Class.extend({
     /**
      * handle node event
      */
-    _handleEvent: function(eventType, evt) {
+    _handleEvent: function(eventType, evt, compareShape) {
         if(this.nodeType === 'Shape') {
             evt.shape = this;
         }
-
         var stage = this.getStage();
-        var mover = stage ? stage.mouseoverShape : null;
-        var mout = stage ? stage.mouseoutShape : null;
         var el = this.eventListeners;
         var okayToRun = true;
 
-        /*
-         * determine if event handler should be skipped by comparing
-         * parent nodes
-         */
-        if(eventType === 'mouseover' && mout && mout._id === this._id) {
+        if(eventType === 'mouseover' && compareShape && this._id === compareShape._id) {
             okayToRun = false;
         }
-        else if(eventType === 'mouseout' && mover && mover._id === this._id) {
+        else if(eventType === 'mouseout' && compareShape && this._id === compareShape._id) {
             okayToRun = false;
         }
 
@@ -1027,18 +977,38 @@ Kinetic.Node = Kinetic.Class.extend({
                 }
             }
 
-            if(stage && mover && mout) {
-                stage.mouseoverShape = mover.parent;
-                stage.mouseoutShape = mout.parent;
-            }
-
             // simulate event bubbling
             if(Kinetic.Global.BUBBLE_WHITELIST.indexOf(eventType) >= 0 && !evt.cancelBubble && this.parent) {
-                this._handleEvent.call(this.parent, eventType, evt);
+                if(compareShape && compareShape.parent) {
+                    this._handleEvent.call(this.parent, eventType, evt, compareShape.parent);
+                }
+                else {
+                    this._handleEvent.call(this.parent, eventType, evt);
+                }
             }
         }
-    }
-});
+    },
+    _draw: function(canvas) {
+        if(this.isVisible() && (!canvas || canvas.name !== 'buffer' || this.getListening())) {
+            if(this.__draw) {
+                this.__draw(canvas);
+            }
+
+            var children = this.children;
+            if(children) {
+                for(var n = 0; n < children.length; n++) {
+                    var child = children[n];
+                    if(child.draw) {
+                        child.draw(canvas);
+                    }
+                    else {
+                        child._draw(canvas);
+                    }
+                }
+            }
+        }
+    },
+};
 
 // add getter and setter methods
 Kinetic.Node.addSetters = function(constructor, arr) {
@@ -1080,7 +1050,7 @@ Kinetic.Node._addGetter = function(constructor, attr) {
     };
 };
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'detectionType', 'rotation', 'alpha', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'dragBoundFunc', 'listening']);
+Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'rotation', 'opacity', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'dragBoundFunc', 'listening']);
 Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 
 /**
@@ -1098,13 +1068,6 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  */
 
 /**
- * set detection type
- * @name setDetectionType
- * @methodOf Kinetic.Node.prototype
- * @param {String} type can be path or pixel
- */
-
-/**
  * set node rotation in radians
  * @name setRotation
  * @methodOf Kinetic.Node.prototype
@@ -1112,12 +1075,12 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  */
 
 /**
- * set alpha.  Alpha values range from 0 to 1.
- *  A node with an alpha of 0 is fully transparent, and a node
- *  with an alpha of 1 is fully opaque
- * @name setAlpha
+ * set opacity.  Opacity values range from 0 to 1.
+ *  A node with an opacity of 0 is fully transparent, and a node
+ *  with an opacity of 1 is fully opaque
+ * @name setOpacity
  * @methodOf Kinetic.Node.prototype
- * @param {Object} alpha
+ * @param {Object} opacity
  */
 
 /**
@@ -1194,20 +1157,14 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  */
 
 /**
- * get detection type.  Can be path or pixel
- * @name getDetectionType
- * @methodOf Kinetic.Node.prototype
- */
-
-/**
  * get rotation in radians
  * @name getRotation
  * @methodOf Kinetic.Node.prototype
  */
 
 /**
- * get alpha.
- * @name getAlpha
+ * get opacity.
+ * @name getOpacity
  * @methodOf Kinetic.Node.prototype
  */
 
