@@ -59,8 +59,12 @@
  * @param {Number} [config.dragBounds.bottom]
  * @param {Number} [config.dragBounds.left]
  */
-Kinetic.Shape = Kinetic.Node.extend({
-    init: function(config) {
+Kinetic.Shape = function(config) {
+    this._shapeInit(config);
+};
+
+Kinetic.Shape.prototype = {
+    _shapeInit: function(config) {
         this.nodeType = 'Shape';
         this.appliedShadow = false;
 
@@ -77,7 +81,7 @@ Kinetic.Shape = Kinetic.Node.extend({
         shapes[key] = this;
 
         // call super constructor
-        this._super(config);
+        Kinetic.Node.call(this, config);
     },
     /**
      * get canvas context tied to the layer
@@ -415,7 +419,8 @@ Kinetic.Shape = Kinetic.Node.extend({
             context.restore();
         }
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
 
 // add getters and setters
 Kinetic.Node.addGettersSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc', 'filter']);

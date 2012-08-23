@@ -31,8 +31,12 @@
  * @param {Number} [config.dragBounds.bottom]
  * @param {Number} [config.dragBounds.left]
  */
-Kinetic.Node = Kinetic.Class.extend({
-    init: function(config) {
+Kinetic.Node = function(config) {
+	this._nodeInit(config);	
+};
+
+Kinetic.Node.prototype = {
+    _nodeInit: function(config) {
         this.defaultNodeAttrs = {
             visible: true,
             listening: true,
@@ -1003,7 +1007,7 @@ Kinetic.Node = Kinetic.Class.extend({
             }
         }
     },
-});
+};
 
 // add getter and setter methods
 Kinetic.Node.addSetters = function(constructor, arr) {

@@ -33,8 +33,12 @@
  * @param {Number} [config.dragBounds.bottom]
  * @param {Number} [config.dragBounds.left]
  */
-Kinetic.Stage = Kinetic.Container.extend({
-    init: function(config) {
+Kinetic.Stage = function(config) {
+    this._stageInit(config);
+};
+
+Kinetic.Stage.prototype = {
+    _stageInit: function(config) {
         this.setDefaultAttrs({
             width: 400,
             height: 200
@@ -49,7 +53,7 @@ Kinetic.Stage = Kinetic.Container.extend({
         }
 
         // call super constructor
-        this._super(config);
+        Kinetic.Container.call(this, config);
 
         this._setStageDefaultProperties();
         this._id = Kinetic.Global.idCounter++;
@@ -812,7 +816,8 @@ Kinetic.Stage = Kinetic.Container.extend({
         this.names = {};
         this.dragAnim = new Kinetic.Animation();
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Stage, Kinetic.Container);
 
 // add getters and setters
 Kinetic.Node.addGettersSetters(Kinetic.Stage, ['width', 'height']);
