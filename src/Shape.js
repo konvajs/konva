@@ -60,11 +60,11 @@
  * @param {Number} [config.dragBounds.left]
  */
 Kinetic.Shape = function(config) {
-    this._shapeInit(config);
+    this._initShape(config);
 };
 
 Kinetic.Shape.prototype = {
-    _shapeInit: function(config) {
+    _initShape: function(config) {
         this.nodeType = 'Shape';
         this.appliedShadow = false;
 

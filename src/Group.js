@@ -31,11 +31,11 @@
  * @param {Number} [config.dragBounds.left]
  */
 Kinetic.Group = function(config) {
-    this._groupInit(config);
+    this._initGroup(config);
 };
 
 Kinetic.Group.prototype = {
-    _groupInit: function(config) {
+    _initGroup: function(config) {
         this.nodeType = 'Group';
 
         // call super constructor

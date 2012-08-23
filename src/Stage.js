@@ -34,11 +34,11 @@
  * @param {Number} [config.dragBounds.left]
  */
 Kinetic.Stage = function(config) {
-    this._stageInit(config);
+    this._initStage(config);
 };
 
 Kinetic.Stage.prototype = {
-    _stageInit: function(config) {
+    _initStage: function(config) {
         this.setDefaultAttrs({
             width: 400,
             height: 200

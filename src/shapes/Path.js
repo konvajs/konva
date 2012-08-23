@@ -8,15 +8,19 @@
  * @augments Kinetic.Shape
  * @param {Object} config
  */
-Kinetic.Path = Kinetic.Shape.extend({
-    init: function(config) {
+Kinetic.Path = function(config) {
+    this._initPath(config);
+};
+
+Kinetic.Path.prototype = {
+    _initPath: function(config) {
         this.shapeType = "Path";
         this.dataArray = [];
         var that = this;
 
         config.drawFunc = this.drawFunc;
         // call super constructor
-        this._super(config);
+        Kinetic.Shape.call(this, config);
         this.dataArray = Kinetic.Path.parsePathData(this.attrs.data);
         this.on('dataChange', function() {
             that.dataArray = Kinetic.Path.parsePathData(that.attrs.data);
@@ -66,7 +70,8 @@ Kinetic.Path = Kinetic.Shape.extend({
         this.fill(context);
         this.stroke(context);
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Path, Kinetic.Shape);
 
 /*
  * Utility methods written by jfollas to

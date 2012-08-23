@@ -34,11 +34,11 @@
  * @param {Number} [config.dragBounds.left]
  */
 Kinetic.Layer = function(config) {
-    this._layerInit(config);
+    this._initLayer(config);
 };
 
 Kinetic.Layer.prototype = {
-    _layerInit: function(config) {
+    _initLayer: function(config) {
         this.setDefaultAttrs({
             clearBeforeDraw: true
         });

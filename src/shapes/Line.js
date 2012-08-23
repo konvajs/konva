@@ -7,8 +7,12 @@
  * @augments Kinetic.Shape
  * @param {Object} config
  */
-Kinetic.Line = Kinetic.Shape.extend({
-    init: function(config) {
+Kinetic.Line = function(config) {
+    this._initLine(config);
+};
+
+Kinetic.Line.prototype = {
+    _initLine: function(config) {
         this.setDefaultAttrs({
             points: [],
             lineCap: 'butt',
@@ -19,7 +23,7 @@ Kinetic.Line = Kinetic.Shape.extend({
         this.shapeType = "Line";
         config.drawFunc = this.drawFunc;
         // call super constructor
-        this._super(config);
+        Kinetic.Shape.call(this, config);
     },
     drawFunc: function(context) {
         var lastPos = {};
@@ -94,7 +98,8 @@ Kinetic.Line = Kinetic.Shape.extend({
 
         context.moveTo(x2, y2);
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Line, Kinetic.Shape);
 
 // add getters setters
 Kinetic.Node.addGettersSetters(Kinetic.Line, ['dashArray', 'lineCap', 'points']);

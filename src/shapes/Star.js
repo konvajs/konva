@@ -7,8 +7,12 @@
  * @augments Kinetic.Shape
  * @param {Object} config
  */
-Kinetic.Star = Kinetic.Shape.extend({
-    init: function(config) {
+Kinetic.Star = function(config) {
+    this._initStar(config);
+};
+
+Kinetic.Star.prototype = {
+    _initStar: function(config) {
         this.setDefaultAttrs({
             numPoints: 0,
             innerRadius: 0,
@@ -18,7 +22,7 @@ Kinetic.Star = Kinetic.Shape.extend({
         this.shapeType = "Star";
         config.drawFunc = this.drawFunc;
         // call super constructor
-        this._super(config);
+        Kinetic.Shape.call(this, config);
     },
     drawFunc: function(context) {
         context.beginPath();
@@ -35,7 +39,8 @@ Kinetic.Star = Kinetic.Shape.extend({
         this.fill(context);
         this.stroke(context);
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Star, Kinetic.Shape);
 
 // add getters setters
 Kinetic.Node.addGettersSetters(Kinetic.Star, ['numPoints', 'innerRadius', 'outerRadius']);

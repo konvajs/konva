@@ -8,10 +8,10 @@
  * @param {Object} config
  */
 Kinetic.Rect = function(config) {
-    this._rectInit(config);
+    this._initRect(config);
 }
 Kinetic.Rect.prototype = {
-    _rectInit: function(config) {
+    _initRect: function(config) {
         this.setDefaultAttrs({
             width: 0,
             height: 0,

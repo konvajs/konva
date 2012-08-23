@@ -7,8 +7,12 @@
  * @augments Kinetic.Shape
  * @param {Object} config
  */
-Kinetic.Sprite = Kinetic.Shape.extend({
-    init: function(config) {
+Kinetic.Sprite = function(config) {
+    this._initSprite(config);
+};
+
+Kinetic.Sprite.prototype = {
+    _initSprite: function(config) {
         this.setDefaultAttrs({
             index: 0,
             frameRate: 17
@@ -16,7 +20,7 @@ Kinetic.Sprite = Kinetic.Shape.extend({
 
         config.drawFunc = this.drawFunc;
         // call super constructor
-        this._super(config);
+        Kinetic.Shape.call(this, config);
         this.anim = new Kinetic.Animation();
         var that = this;
         this.on('animationChange.kinetic', function() {
@@ -101,7 +105,8 @@ Kinetic.Sprite = Kinetic.Shape.extend({
             this.attrs.index = 0;
         }
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Sprite, Kinetic.Shape);
 
 // add getters setters
 Kinetic.Node.addGettersSetters(Kinetic.Sprite, ['animation', 'animations', 'index']);

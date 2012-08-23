@@ -11,12 +11,16 @@
  * @param {Number} [config.height]
  * @param {Object} [config.crop]
  */
-Kinetic.Image = Kinetic.Shape.extend({
-    init: function(config) {
+Kinetic.Image = function(config) {
+    this._initImage(config);
+};
+
+Kinetic.Image.prototype = {
+    _initImage: function(config) {
         this.shapeType = "Image";
         config.drawFunc = this.drawFunc;
         // call super constructor
-        this._super(config);
+        Kinetic.Shape.call(this, config);
 
         var that = this;
         this.on('imageChange', function(evt) {
@@ -157,7 +161,8 @@ Kinetic.Image = Kinetic.Shape.extend({
             }
         }
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Image, Kinetic.Shape);
 
 // add getters setters
 Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'crop', 'filter', 'width', 'height']);

@@ -7,8 +7,12 @@
  * @augments Kinetic.Shape
  * @param {Object} config
  */
-Kinetic.Ellipse = Kinetic.Shape.extend({
-    init: function(config) {
+Kinetic.Ellipse = function(config) {
+	this._initEllipse(config);	
+};
+
+Kinetic.Ellipse.prototype = {
+    _initEllipse: function(config) {
         this.setDefaultAttrs({
             radius: {
                 x: 0,
@@ -20,7 +24,7 @@ Kinetic.Ellipse = Kinetic.Shape.extend({
         config.drawFunc = this.drawFunc;
 
         // call super constructor
-        this._super(config);
+        Kinetic.Shape.call(this, config);
         this._convertRadius();
         var that = this;
         this.on('radiusChange.kinetic', function() {
@@ -57,7 +61,8 @@ Kinetic.Ellipse = Kinetic.Shape.extend({
          */
         this.attrs.radius = type._getXY(radius);
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Ellipse, Kinetic.Shape);
 
 // Circle backwards compatibility
 Kinetic.Circle = Kinetic.Ellipse;

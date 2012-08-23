@@ -7,8 +7,12 @@
  * @augments Kinetic.Shape
  * @param {Object} config
  */
-Kinetic.Text = Kinetic.Shape.extend({
-    init: function(config) {
+Kinetic.Text = function(config) {
+    this._initText(config);
+};
+
+Kinetic.Text.prototype = {
+    _initText: function(config) {
         this.setDefaultAttrs({
             fontFamily: 'Calibri',
             text: '',
@@ -29,7 +33,7 @@ Kinetic.Text = Kinetic.Shape.extend({
 
         config.drawFunc = this.drawFunc;
         // call super constructor
-        this._super(config);
+        Kinetic.Shape.call(this, config);
 
         // update text data for certain attr changes
         var attrs = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'align', 'lineHeight', 'text', 'width', 'height'];
@@ -212,7 +216,9 @@ Kinetic.Text = Kinetic.Shape.extend({
         }
         this.textArr = arr;
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Text, Kinetic.Shape);
+
 // add getters setters
 Kinetic.Node.addGettersSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'lineHeight', 'text', 'width', 'height', 'cornerRadius', 'fill', 'stroke', 'strokeWidth', 'shadow']);
 
