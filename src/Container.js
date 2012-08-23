@@ -30,10 +30,14 @@
  * @param {Number} [config.dragBounds.bottom]
  * @param {Number} [config.dragBounds.left]
  */
-Kinetic.Container = Kinetic.Node.extend({
-    init: function(config) {
+Kinetic.Container = function(config) {
+    this._containerInit(config);
+};
+
+Kinetic.Container.prototype = {
+    _containerInit: function(config) {
         this.children = [];
-        this._super(config);
+        Kinetic.Node.call(this, config);
     },
     /**
      * get children
@@ -234,4 +238,5 @@ Kinetic.Container = Kinetic.Node.extend({
             this.children[n].index = n;
         }
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Container, Kinetic.Node);

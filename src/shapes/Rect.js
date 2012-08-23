@@ -7,8 +7,11 @@
  * @augments Kinetic.Shape
  * @param {Object} config
  */
-Kinetic.Rect = Kinetic.Shape.extend({
-    init: function(config) {
+Kinetic.Rect = function(config) {
+    this._rectInit(config);
+}
+Kinetic.Rect.prototype = {
+    _rectInit: function(config) {
         this.setDefaultAttrs({
             width: 0,
             height: 0,
@@ -16,8 +19,8 @@ Kinetic.Rect = Kinetic.Shape.extend({
         });
         this.shapeType = "Rect";
         config.drawFunc = this.drawFunc;
-        // call super constructor
-        this._super(config);
+
+        Kinetic.Shape.call(this, config);
     },
     drawFunc: function(context) {
         context.beginPath();
@@ -62,7 +65,8 @@ Kinetic.Rect = Kinetic.Shape.extend({
             height: this.attrs.height
         };
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Rect, Kinetic.Shape);
 
 // add getters setters
 Kinetic.Node.addGettersSetters(Kinetic.Rect, ['width', 'height', 'cornerRadius']);

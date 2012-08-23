@@ -30,11 +30,16 @@
  * @param {Number} [config.dragBounds.bottom]
  * @param {Number} [config.dragBounds.left]
  */
-Kinetic.Group = Kinetic.Container.extend({
-    init: function(config) {
+Kinetic.Group = function(config) {
+    this._groupInit(config);
+};
+
+Kinetic.Group.prototype = {
+    _groupInit: function(config) {
         this.nodeType = 'Group';
 
         // call super constructor
-        this._super(config);
+        Kinetic.Container.call(this, config);
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Group, Kinetic.Container);

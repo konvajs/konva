@@ -31,6 +31,13 @@ Kinetic.Global = {
             console.warn('Kinetic warning: ' + str);
         }
     },
+    extend: function(c1, c2) {
+        for(var key in c2.prototype) {
+            if(!( key in c1.prototype)) {
+                c1.prototype[key] = c2.prototype[key];
+            }
+        }
+    },
     _pullNodes: function(stage) {
         var tempNodes = this.tempNodes;
         for(var key in tempNodes) {

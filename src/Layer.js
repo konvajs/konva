@@ -33,8 +33,12 @@
  * @param {Number} [config.dragBounds.bottom]
  * @param {Number} [config.dragBounds.left]
  */
-Kinetic.Layer = Kinetic.Container.extend({
-    init: function(config) {
+Kinetic.Layer = function(config) {
+    this._layerInit(config);
+};
+
+Kinetic.Layer.prototype = {
+    _layerInit: function(config) {
         this.setDefaultAttrs({
             clearBeforeDraw: true
         });
@@ -48,7 +52,7 @@ Kinetic.Layer = Kinetic.Container.extend({
         this.bufferCanvas.name = 'buffer';
 
         // call super constructor
-        this._super(config);
+        Kinetic.Container.call(this, config);
     },
     /**
      * draw children nodes.  this includes any groups
@@ -171,7 +175,8 @@ Kinetic.Layer = Kinetic.Container.extend({
             canvas.clear();
         }
     }
-});
+};
+Kinetic.Global.extend(Kinetic.Layer, Kinetic.Container);
 
 // add getters and setters
 Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw']);
