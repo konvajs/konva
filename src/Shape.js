@@ -332,7 +332,7 @@ Kinetic.Shape.prototype = {
         var bufferCanvas = stage.bufferCanvas;
         bufferCanvas.clear();
         this._draw(bufferCanvas);
-        var p = bufferCanvas.context.getImageData(pos.x, pos.y, 1, 1).data;
+        var p = bufferCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
         return p[3] > 0;
     },
     __draw: function(canvas) {
