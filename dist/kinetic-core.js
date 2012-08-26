@@ -5391,6 +5391,8 @@ Kinetic.Sprite.prototype = {
             that._updateIndex();
             if(that.afterFrameFunc && index === that.afterFrameIndex) {
                 that.afterFrameFunc();
+                delete that.afterFrameFunc;
+                delete that.afterFrameIndex;
             }
         }, 1000 / this.attrs.frameRate);
 
