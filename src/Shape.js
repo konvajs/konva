@@ -332,8 +332,8 @@ Kinetic.Shape.prototype = {
         var bufferCanvas = stage.bufferCanvas;
         bufferCanvas.clear();
         this._draw(bufferCanvas);
-        var obj = stage.getIntersection(pos);
-        return !!(obj && obj.pixel[3] > 0);
+        var p = bufferCanvas.context.getImageData(pos.x, pos.y, 1, 1).data;
+        return p[3] > 0;
     },
     __draw: function(canvas) {
         if(this.attrs.drawFunc) {

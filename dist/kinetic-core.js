@@ -3037,8 +3037,6 @@ Kinetic.Stage.prototype = {
             if(p[3] === 255) {
                 var colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
                 shape = Kinetic.Global.shapes[colorKey];
-                var isDragging = Kinetic.Global.drag.moving;
-
                 return {
                     shape: shape,
                     pixel: p
@@ -4092,8 +4090,8 @@ Kinetic.Shape.prototype = {
         var bufferCanvas = stage.bufferCanvas;
         bufferCanvas.clear();
         this._draw(bufferCanvas);
-        var obj = stage.getIntersection(pos);
-        return !!(obj && obj.pixel[3] > 0);
+        var p = bufferCanvas.context.getImageData(pos.x, pos.y, 1, 1).data;
+        return p[3] > 0;
     },
     __draw: function(canvas) {
         if(this.attrs.drawFunc) {

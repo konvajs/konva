@@ -369,8 +369,6 @@ Kinetic.Stage.prototype = {
             if(p[3] === 255) {
                 var colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
                 shape = Kinetic.Global.shapes[colorKey];
-                var isDragging = Kinetic.Global.drag.moving;
-
                 return {
                     shape: shape,
                     pixel: p

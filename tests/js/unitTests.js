@@ -387,8 +387,6 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
-        var group = new Kinetic.Group();
-
         var redCircle = new Kinetic.Circle({
             x: 380,
             y: stage.getHeight() / 2,
@@ -409,53 +407,57 @@ Test.prototype.tests = {
             id: 'greenCircle'
         });
 
-        group.add(redCircle);
-        layer.add(group);
+        layer.add(redCircle);
         layer.add(greenCircle);
         stage.add(layer);
+        
+        // test individual shapes
+        test(stage.getIntersections(266, 114).length === 1, '17) getIntersections should return one shape');
+        test(stage.getIntersections(266, 114)[0].getId() === 'greenCircle', '19) first intersection should be greenCircle');
+        
+        test(stage.getIntersections(414, 115).length === 1, '18) getIntersections should return one shape');
+        test(stage.getIntersections(414, 115)[0].getId() === 'redCircle', '20) first intersection should be redCircle');
 
-        test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
-        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
+        test(stage.getIntersections(350, 118).length === 2, '1) getIntersections should return two shapes');
+        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', '2) first intersection should be redCircle');
+        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', '3) second intersection should be greenCircle');
 
         // hide green circle.  make sure only red circle is in result set
         greenCircle.hide();
         layer.draw();
 
-        test(stage.getIntersections(350, 118).length === 1, 'getIntersections should return one shape');
-        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
+        test(stage.getIntersections(350, 118).length === 1, '4) getIntersections should return one shape');
+        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', '5) first intersection should be redCircle');
 
         // show green circle again.  make sure both circles are in result set
         greenCircle.show();
         layer.draw();
 
-        test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
-        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
+        test(stage.getIntersections(350, 118).length === 2, '6) getIntersections should return two shapes');
+        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', '7) first intersection should be redCircle');
+        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', '8) second intersection should be greenCircle');
 
         // hide red circle.  make sure only green circle is in result set
         redCircle.hide();
         layer.draw();
 
-        test(stage.getIntersections(350, 118).length === 1, 'getIntersections should return one shape');
-        test(stage.getIntersections(350, 118)[0].getId() === 'greenCircle', 'first intersection should be greenCircle');
+        test(stage.getIntersections(350, 118).length === 1, '9) getIntersections should return one shape');
+        test(stage.getIntersections(350, 118)[0].getId() === 'greenCircle', '10) first intersection should be greenCircle');
 
         // show red circle again.  make sure both circles are in result set
         redCircle.show();
         layer.draw();
 
-        test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
-        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
+        test(stage.getIntersections(350, 118).length === 2, '11) getIntersections should return two shapes');
+        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', '12) first intersection should be redCircle');
+        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', '13) second intersection should be greenCircle');
 
         // test from layer
-        test(layer.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
-        test(layer.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-        test(layer.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
+        test(layer.getIntersections(350, 118).length === 2, '14) getIntersections should return two shapes');
+        test(layer.getIntersections(350, 118)[0].getId() === 'redCircle', '15) first intersection should be redCircle');
+        test(layer.getIntersections(350, 118)[1].getId() === 'greenCircle', '16) second intersection should be greenCircle');
 
-        // test from group
-        test(group.getIntersections(350, 118).length === 1, 'getIntersections should return two shapes');
-        test(group.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
+        
     },
     'STAGE - scale stage after add layer': function(containerId) {
         var stage = new Kinetic.Stage({
