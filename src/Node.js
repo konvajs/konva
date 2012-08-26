@@ -248,6 +248,16 @@ Kinetic.Node.prototype = {
                     else {
                         // handle special keys
                         switch (key) {
+                            case 'radius':
+                                if(Kinetic.Type._isNumber(val)) {
+                                    that._setAttr(obj, key, val);
+                                }
+                                else {
+                                    var xy = type._getXY(val);
+                                    that._setAttr(obj[key], 'x', xy.x);
+                                    that._setAttr(obj[key], 'y', xy.y);
+                                }
+                                break;
                             case 'rotationDeg':
                                 that._setAttr(obj, 'rotation', c[key] * Math.PI / 180);
                                 // override key for change event

@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Aug 25 2012
+ * Date: Aug 26 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1413,6 +1413,16 @@ Kinetic.Node.prototype = {
                     else {
                         // handle special keys
                         switch (key) {
+                            case 'radius':
+                                if(Kinetic.Type._isNumber(val)) {
+                                    that._setAttr(obj, key, val);
+                                }
+                                else {
+                                    var xy = type._getXY(val);
+                                    that._setAttr(obj[key], 'x', xy.x);
+                                    that._setAttr(obj[key], 'y', xy.y);
+                                }
+                                break;
                             case 'rotationDeg':
                                 that._setAttr(obj, 'rotation', c[key] * Math.PI / 180);
                                 // override key for change event
