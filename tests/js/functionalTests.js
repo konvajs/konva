@@ -9,7 +9,7 @@ Test.prototype.tests = {
             throttle: 999
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -82,7 +82,7 @@ Test.prototype.tests = {
             throttle: 999
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: 380,
             y: 100,
             radius: 70,
@@ -158,14 +158,14 @@ Test.prototype.tests = {
             draggable: true
         });
 
-        var circle1 = new Kinetic.Ellipse({
+        var circle1 = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
             fill: 'red'
         });
 
-        var circle2 = new Kinetic.Ellipse({
+        var circle2 = new Kinetic.Circle({
             x: 400,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -213,7 +213,7 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer({
             throttle: 999
         });
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -270,7 +270,7 @@ Test.prototype.tests = {
             throttle: 999
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -547,7 +547,7 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
 
-        var redCircle = new Kinetic.Ellipse({
+        var redCircle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 80,
@@ -557,7 +557,7 @@ Test.prototype.tests = {
             name: 'red'
         });
 
-        var greenCircle = new Kinetic.Ellipse({
+        var greenCircle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 40,
@@ -635,7 +635,7 @@ Test.prototype.tests = {
         var groupMouseovers = 0;
         var groupMouseouts = 0;
 
-        var redEllipse = new Kinetic.Ellipse({
+        var redCircle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 80,
@@ -645,7 +645,7 @@ Test.prototype.tests = {
             name: 'red'
         });
 
-        var greenEllipse = new Kinetic.Ellipse({
+        var greenCircle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 40,
@@ -665,28 +665,28 @@ Test.prototype.tests = {
             console.log('group out')
         });
 
-        redEllipse.on('mouseover', function() {
+        redCircle.on('mouseover', function() {
             redMouseovers++;
             console.log('red over')
         });
 
-        redEllipse.on('mouseout', function() {
+        redCircle.on('mouseout', function() {
             redMouseouts++;
             console.log('red out')
         });
 
-        greenEllipse.on('mouseover', function() {
+        greenCircle.on('mouseover', function() {
             greenMouseovers++;
             console.log('green over')
         });
 
-        greenEllipse.on('mouseout', function() {
+        greenCircle.on('mouseout', function() {
             greenMouseouts++;
             console.log('green out')
         });
 
-        group.add(redEllipse);
-        group.add(greenEllipse);
+        group.add(redCircle);
+        group.add(greenCircle);
 
         layer.add(group);
         stage.add(layer);
@@ -777,7 +777,7 @@ Test.prototype.tests = {
             throttle: 999
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,

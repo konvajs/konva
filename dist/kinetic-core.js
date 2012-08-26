@@ -4366,6 +4366,56 @@ Kinetic.Node.addGettersSetters(Kinetic.Rect, ['width', 'height', 'cornerRadius']
  * @methodOf Kinetic.Rect.prototype
  */
 ///////////////////////////////////////////////////////////////////////
+//  Circle
+///////////////////////////////////////////////////////////////////////
+/**
+ * Circle constructor
+ * @constructor
+ * @augments Kinetic.Shape
+ * @param {Object} config
+ */
+Kinetic.Circle = function(config) {
+	this._initCircle(config);	
+};
+
+Kinetic.Circle.prototype = {
+    _initCircle: function(config) {
+        this.setDefaultAttrs({
+            radius: 0
+        });
+
+        this.shapeType = "Circle";
+        config.drawFunc = this.drawFunc;
+
+        // call super constructor
+        Kinetic.Shape.call(this, config);
+    },
+    drawFunc: function(context) {
+        context.beginPath();
+        context.arc(0, 0, this.getRadius(), 0, Math.PI * 2, true);
+        context.closePath();
+        this.fill(context);
+        this.stroke(context);
+    }
+};
+Kinetic.Global.extend(Kinetic.Circle, Kinetic.Shape);
+
+// add getters setters
+Kinetic.Node.addGettersSetters(Kinetic.Circle, ['radius']);
+
+/**
+ * set radius
+ * @name setRadius
+ * @methodOf Kinetic.Circle.prototype
+ * @param {Number} radius
+ */
+
+/**
+ * get radius
+ * @name getRadius
+ * @methodOf Kinetic.Circle.prototype
+ */
+///////////////////////////////////////////////////////////////////////
 //  Ellipse
 ///////////////////////////////////////////////////////////////////////
 /**
@@ -4392,11 +4442,6 @@ Kinetic.Ellipse.prototype = {
 
         // call super constructor
         Kinetic.Shape.call(this, config);
-        this._convertRadius();
-        var that = this;
-        this.on('radiusChange.kinetic', function() {
-            that._convertRadius();
-        });
     },
     drawFunc: function(context) {
         var r = this.getRadius();
@@ -4410,29 +4455,9 @@ Kinetic.Ellipse.prototype = {
         context.closePath();
         this.fill(context);
         this.stroke(context);
-    },
-    /**
-     * converts numeric radius into an object
-     */
-    _convertRadius: function() {
-        var type = Kinetic.Type;
-        var radius = this.getRadius();
-        // if radius is already an object then return
-        if(type._isObject(radius)) {
-            return false;
-        }
-
-        /*
-         * directly set radius attr to avoid
-         * duplicate attr change event
-         */
-        this.attrs.radius = type._getXY(radius);
     }
 };
 Kinetic.Global.extend(Kinetic.Ellipse, Kinetic.Shape);
-
-// Circle backwards compatibility
-Kinetic.Circle = Kinetic.Ellipse;
 
 // add getters setters
 Kinetic.Node.addGettersSetters(Kinetic.Ellipse, ['radius']);
@@ -4441,7 +4466,7 @@ Kinetic.Node.addGettersSetters(Kinetic.Ellipse, ['radius']);
  * set radius
  * @name setRadius
  * @methodOf Kinetic.Ellipse.prototype
- * @param {Number|Object|Array} radius
+ * @param {Object|Array} radius
  *  radius can be a number, in which the ellipse becomes a circle,
  *  it can be an object with an x and y component, or it
  *  can be an array in which the first element is the x component
