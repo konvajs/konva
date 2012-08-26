@@ -1,5 +1,5 @@
 Test.prototype.tests = {
-    ////////////////////////////////////////////////////////////////////////Fp
+    ////////////////////////////////////////////////////////////////////////
     //  STAGE tests
     ////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////
@@ -332,7 +332,7 @@ Test.prototype.tests = {
 
         var startDataUrl = layer.toDataURL();
 
-        warn(startDataUrl === urls[0], 'start data url is incorrect');
+        //warn(startDataUrl === urls[0], 'start data url is incorrect');
         test(triangle.getId() === 'myTriangle', 'triangle id should be myTriangle');
 
         //console.log(stage.toJSON())
@@ -348,7 +348,7 @@ Test.prototype.tests = {
         layer.draw();
 
         var endDataUrl = layer.toDataURL();
-        warn(endDataUrl === urls[0], 'end data url is incorrect');
+        //warn(endDataUrl === urls[0], 'end data url is incorrect');
 
     },
     'STAGE - load stage with custom shape using json': function(containerId) {
@@ -980,8 +980,6 @@ Test.prototype.tests = {
         layer.draw();
     },
     'LAYER - set clearBeforeDraw to false, and test toDataURL for stage, layer, group, and shape': function(containerId) {
-        var urls = dataUrls['LAYER - set clearBeforeDraw to false'];
-
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1015,12 +1013,11 @@ Test.prototype.tests = {
 
         stage.toDataURL({
             callback: function(dataUrl) {
-                warn(urls[0] === dataUrl, 'stage data url is incorrect');
+                warn(dataUrls['stacked green circles'] === dataUrl, 'stacked green circles stage data url is incorrect');
             }
         });
-        warn(urls[0] === layer.toDataURL(), 'layer data url is incorrect');
-        warn(urls[1] === group.toDataURL(), 'group data url is incorrect');
-        warn(urls[1] === circle.toDataURL(), 'shape data url is incorrect');
+        warn(dataUrls['stacked green circles'] === layer.toDataURL(), 'stacked green circles layer data url is incorrect');
+
     },
     'LAYER - add layer': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1825,7 +1822,6 @@ Test.prototype.tests = {
         imageObj.src = '../assets/scorpion-sprite.png';
     },
     'Node - node caching': function(containerId) {
-        var urls = dataUrls['Node - node caching'];
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1885,12 +1881,10 @@ Test.prototype.tests = {
                 layer.add(cachedShape);
 
                 cachedShape.createImageBuffer(function() {
-                    
                     layer.draw();
-
-                    warn(urls[0] === layer.toDataURL(), 'layer data url is incorrect');
+                    warn(dataUrls['regular and cahced polygon'] === layer.toDataURL(), 'regular and cached polygon layer data url is incorrect');
                     
-                    document.body.appendChild(layer.bufferCanvas.element)
+                    //document.body.appendChild(layer.bufferCanvas.element)
                 });
             }
         });
@@ -4334,6 +4328,12 @@ Test.prototype.tests = {
         stage.add(greenLayer);
 
         blueLayer.moveToTop();
+        
+        stage.toDataURL({
+        	callback: function(dataUrl) {
+        		warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
+        	}
+        });
     },
     'LAYERING - move green layer below blue layer with moveToBottom': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -4369,6 +4369,92 @@ Test.prototype.tests = {
         stage.add(greenLayer);
 
         greenLayer.moveToBottom();
+        
+        stage.toDataURL({
+        	callback: function(dataUrl) {
+        		warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
+        	}
+        });
+    },
+    'LAYERING - move green layer below blue layer with moveDown': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var blueLayer = new Kinetic.Layer();
+        var greenLayer = new Kinetic.Layer();
+
+        var bluecircle = new Kinetic.Ellipse({
+            x: 200,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'blue',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        var greencircle = new Kinetic.Ellipse({
+            x: 280,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        blueLayer.add(bluecircle);
+        greenLayer.add(greencircle);
+
+        stage.add(blueLayer);
+        stage.add(greenLayer);
+        greenLayer.moveDown();
+        
+        stage.toDataURL({
+        	callback: function(dataUrl) {
+        		warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
+        	}
+        });
+    },
+    'LAYERING - move blue layer above green layer with moveUp': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var blueLayer = new Kinetic.Layer();
+        var greenLayer = new Kinetic.Layer();
+
+        var bluecircle = new Kinetic.Ellipse({
+            x: 200,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'blue',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        var greencircle = new Kinetic.Ellipse({
+            x: 280,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        blueLayer.add(bluecircle);
+        greenLayer.add(greencircle);
+
+        stage.add(blueLayer);
+        stage.add(greenLayer);
+        blueLayer.moveUp();
+        
+        stage.toDataURL({
+        	callback: function(dataUrl) {
+        		warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
+        	}
+        });
     },
     ////////////////////////////////////////////////////////////////////////
     //  ANIMATION tests
