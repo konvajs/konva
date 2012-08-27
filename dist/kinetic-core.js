@@ -3262,8 +3262,8 @@ Kinetic.Stage.prototype = {
      * @param {Event} evt
      */
     _setMousePosition: function(evt) {
-        var mouseX = evt.offsetX || (evt.clientX - this._getContentPosition().left + window.pageXOffset);
-        var mouseY = evt.offsetY || (evt.clientY - this._getContentPosition().top + window.pageYOffset);
+        var mouseX = evt.clientX - this._getContentPosition().left;
+        var mouseY = evt.clientY - this._getContentPosition().top;
         this.mousePos = {
             x: mouseX,
             y: mouseY
@@ -3274,12 +3274,12 @@ Kinetic.Stage.prototype = {
      * @param {Event} evt
      */
     _setTouchPosition: function(evt) {
-        if(evt.touches !== undefined && evt.touches.length === 1) {// Only deal with
+        if(evt.touches !== undefined && evt.touches.length === 1) {
             // one finger
             var touch = evt.touches[0];
             // Get the information for finger #1
-            var touchX = touch.clientX - this._getContentPosition().left + window.pageXOffset;
-            var touchY = touch.clientY - this._getContentPosition().top + window.pageYOffset;
+            var touchX = touch.clientX - this._getContentPosition().left;
+            var touchY = touch.clientY - this._getContentPosition().top;
 
             this.touchPos = {
                 x: touchX,
@@ -3291,10 +3291,10 @@ Kinetic.Stage.prototype = {
      * get container position
      */
     _getContentPosition: function() {
-        var rect = this.content.getBoundingClientRect(), root = document.documentElement;
+        var rect = this.content.getBoundingClientRect();
         return {
-            top: rect.top + root.scrollTop,
-            left: rect.left + root.scrollLeft
+            top: rect.top,
+            left: rect.left
         };
     },
     /**

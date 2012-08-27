@@ -14,7 +14,7 @@ Test.prototype.tests = {
             stroke: 'black',
             strokeWidth: 4
         });
-
+        
         circle.on('mousedown', function() {
             log('mousedown');
         });
@@ -67,8 +67,6 @@ Test.prototype.tests = {
 
         layer.add(circle);
         stage.add(layer);
-        
-        document.body.appendChild(layer.bufferCanvas.element)
     },
     'TRANSITION - transition position and rotation': function(containerId) {
         var stage = new Kinetic.Stage({
