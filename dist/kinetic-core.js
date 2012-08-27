@@ -2538,8 +2538,8 @@ Kinetic.Container.prototype = {
             }
 
             // do extra stuff if needed
-            if(this._remove !== undefined) {
-                this._remove(child);
+            if(child._remove !== undefined) {
+                child._remove();
             }
         }
 
@@ -3062,21 +3062,6 @@ Kinetic.Stage.prototype = {
         }
     },
     /**
-     * remove layer from stage
-     * @param {Layer} layer
-     */
-    _remove: function(layer) {
-        /*
-         * remove canvas DOM from the document if
-         * it exists
-         */
-        try {
-            this.content.removeChild(layer.canvas.element);
-        }
-        catch(e) {
-        }
-    },
-    /**
      * add layer to stage
      * @param {Layer} layer
      */
@@ -3469,6 +3454,10 @@ Kinetic.Stage.prototype = {
         this.touchPos = undefined;
         this.tapStart = false;
 
+        /*
+         * ids and names hash needs to be stored at the stage level to prevent
+         * id and name collisions between multiple stages in the document
+         */
         this.ids = {};
         this.names = {};
         this.dragAnim = new Kinetic.Animation();
@@ -3675,6 +3664,21 @@ Kinetic.Layer.prototype = {
             canvas = this.getCanvas();
         }
         return canvas.toDataURL(mimeType, quality);
+    },
+    /**
+     * remove layer from stage
+     */
+    _remove: function() {
+        /*
+         * remove canvas DOM from the document if
+         * it exists
+         */
+        try {
+            this.getStage().content.removeChild(this.canvas.element);
+        }
+        catch(e) {
+            Kinetic.Global.warn('unable to remove layer scene canvas element from the document');
+        }
     },
     __draw: function(canvas) {
         if(this.attrs.clearBeforeDraw) {
@@ -4083,6 +4087,9 @@ Kinetic.Shape.prototype = {
         this._draw(bufferCanvas);
         var p = bufferCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
         return p[3] > 0;
+    },
+    _remove: function() {
+        delete Kinetic.Global.shapes[this.colorKey];
     },
     __draw: function(canvas) {
         if(this.attrs.drawFunc) {

@@ -403,21 +403,6 @@ Kinetic.Stage.prototype = {
         }
     },
     /**
-     * remove layer from stage
-     * @param {Layer} layer
-     */
-    _remove: function(layer) {
-        /*
-         * remove canvas DOM from the document if
-         * it exists
-         */
-        try {
-            this.content.removeChild(layer.canvas.element);
-        }
-        catch(e) {
-        }
-    },
-    /**
      * add layer to stage
      * @param {Layer} layer
      */
@@ -810,6 +795,10 @@ Kinetic.Stage.prototype = {
         this.touchPos = undefined;
         this.tapStart = false;
 
+        /*
+         * ids and names hash needs to be stored at the stage level to prevent
+         * id and name collisions between multiple stages in the document
+         */
         this.ids = {};
         this.names = {};
         this.dragAnim = new Kinetic.Animation();

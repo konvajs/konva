@@ -170,6 +170,21 @@ Kinetic.Layer.prototype = {
         }
         return canvas.toDataURL(mimeType, quality);
     },
+    /**
+     * remove layer from stage
+     */
+    _remove: function() {
+        /*
+         * remove canvas DOM from the document if
+         * it exists
+         */
+        try {
+            this.getStage().content.removeChild(this.canvas.element);
+        }
+        catch(e) {
+            Kinetic.Global.warn('unable to remove layer scene canvas element from the document');
+        }
+    },
     __draw: function(canvas) {
         if(this.attrs.clearBeforeDraw) {
             canvas.clear();

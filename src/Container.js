@@ -122,8 +122,8 @@ Kinetic.Container.prototype = {
             }
 
             // do extra stuff if needed
-            if(this._remove !== undefined) {
-                this._remove(child);
+            if(child._remove !== undefined) {
+                child._remove();
             }
         }
 

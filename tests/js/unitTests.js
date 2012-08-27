@@ -1,6 +1,6 @@
 Test.prototype.tests = {
     ////////////////////////////////////////////////////////////////////////
-    //  STAGE tests
+    //  STAGE testsf
     ////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////
 
@@ -593,30 +593,32 @@ Test.prototype.tests = {
             strokeWidth: 4,
             name: 'myRect'
         });
-
+        
+        var circleColorKey = circle.colorKey;
+        var rectColorKey = rect.colorKey;
+        
         layer.add(circle);
         layer.add(rect);
         stage.add(layer);
 
-        var node = stage.get('#myCircle')[0];
-        var nodes = stage.get('.myRect');
-
         test(stage.ids.myCircle._id === circle._id, 'circle not in ids hash');
         test(stage.names.myRect[0]._id === rect._id, 'rect not in names hash');
-
-        var node = stage.get('#myCircle')[0];
-        var parent = node.getParent();
-
-        parent.remove(node);
+        test(Kinetic.Global.shapes[circleColorKey]._id === circle._id, 'circle color key should be in shapes hash');
+		test(Kinetic.Global.shapes[rectColorKey]._id === rect._id, 'rect color key should be in shapes hash');
+		
+        layer.remove(circle);
 
         test(stage.ids.myCircle === undefined, 'circle still in hash');
         test(stage.names.myRect[0]._id === rect._id, 'rect not in names hash');
+        test(Kinetic.Global.shapes[circleColorKey] === undefined, 'circle color key should not be in shapes hash');
+		test(Kinetic.Global.shapes[rectColorKey]._id === rect._id, 'rect color key should be in shapes hash');
 
-        var parent = nodes[0].getParent();
-        parent.remove(nodes[0]);
+        layer.remove(rect);
 
         test(stage.ids.myCircle === undefined, 'circle still in hash');
         test(stage.names.myRect === undefined, 'rect still in hash');
+        test(Kinetic.Global.shapes[circleColorKey] === undefined, 'circle color key should not be in shapes hash');
+		test(Kinetic.Global.shapes[rectColorKey] === undefined, 'rect color key should not be in shapes hash');	
     },
     'STAGE - test ids and names hashes': function(containerId) {
         var stage = new Kinetic.Stage({
