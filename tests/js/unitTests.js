@@ -1,7 +1,6 @@
 Test.prototype.tests = {
     ////////////////////////////////////////////////////////////////////////
-    //  STAGE testsf
-    ////////////////////////////////////////////////////////////////////////
+    //  STAGE
     ////////////////////////////////////////////////////////////////////////
 
     'STAGE - instantiate stage with id': function(containerId) {
@@ -410,11 +409,11 @@ Test.prototype.tests = {
         layer.add(redCircle);
         layer.add(greenCircle);
         stage.add(layer);
-        
+
         // test individual shapes
         test(stage.getIntersections(266, 114).length === 1, '17) getIntersections should return one shape');
         test(stage.getIntersections(266, 114)[0].getId() === 'greenCircle', '19) first intersection should be greenCircle');
-        
+
         test(stage.getIntersections(414, 115).length === 1, '18) getIntersections should return one shape');
         test(stage.getIntersections(414, 115)[0].getId() === 'redCircle', '20) first intersection should be redCircle');
 
@@ -457,7 +456,6 @@ Test.prototype.tests = {
         test(layer.getIntersections(350, 118)[0].getId() === 'redCircle', '15) first intersection should be redCircle');
         test(layer.getIntersections(350, 118)[1].getId() === 'greenCircle', '16) second intersection should be greenCircle');
 
-        
     },
     'STAGE - scale stage after add layer': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -593,10 +591,10 @@ Test.prototype.tests = {
             strokeWidth: 4,
             name: 'myRect'
         });
-        
+
         var circleColorKey = circle.colorKey;
         var rectColorKey = rect.colorKey;
-        
+
         layer.add(circle);
         layer.add(rect);
         stage.add(layer);
@@ -604,21 +602,21 @@ Test.prototype.tests = {
         test(stage.ids.myCircle._id === circle._id, 'circle not in ids hash');
         test(stage.names.myRect[0]._id === rect._id, 'rect not in names hash');
         test(Kinetic.Global.shapes[circleColorKey]._id === circle._id, 'circle color key should be in shapes hash');
-		test(Kinetic.Global.shapes[rectColorKey]._id === rect._id, 'rect color key should be in shapes hash');
-		
+        test(Kinetic.Global.shapes[rectColorKey]._id === rect._id, 'rect color key should be in shapes hash');
+
         layer.remove(circle);
 
         test(stage.ids.myCircle === undefined, 'circle still in hash');
         test(stage.names.myRect[0]._id === rect._id, 'rect not in names hash');
         test(Kinetic.Global.shapes[circleColorKey] === undefined, 'circle color key should not be in shapes hash');
-		test(Kinetic.Global.shapes[rectColorKey]._id === rect._id, 'rect color key should be in shapes hash');
+        test(Kinetic.Global.shapes[rectColorKey]._id === rect._id, 'rect color key should be in shapes hash');
 
         layer.remove(rect);
 
         test(stage.ids.myCircle === undefined, 'circle still in hash');
         test(stage.names.myRect === undefined, 'rect still in hash');
         test(Kinetic.Global.shapes[circleColorKey] === undefined, 'circle color key should not be in shapes hash');
-		test(Kinetic.Global.shapes[rectColorKey] === undefined, 'rect color key should not be in shapes hash');	
+        test(Kinetic.Global.shapes[rectColorKey] === undefined, 'rect color key should not be in shapes hash');
     },
     'STAGE - test ids and names hashes': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1863,13 +1861,13 @@ Test.prototype.tests = {
                     y: -120
 
                 });
-                
+
                 layer.add(cachedShape);
 
                 cachedShape.createImageBuffer(function() {
                     layer.draw();
                     warn(dataUrls['regular and cahced polygon'] === layer.toDataURL(), 'regular and cached polygon layer data url is incorrect');
-                    
+
                     //document.body.appendChild(layer.bufferCanvas.element)
                 });
             }
@@ -2743,6 +2741,46 @@ Test.prototype.tests = {
          duration: 10
          });
          */
+    },
+    'SHAPE - text multi line with shadows': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var text = new Kinetic.Text({
+            x: 10,
+            y: 10,
+            //stroke: '#555',
+            //strokeWidth: 5,
+            text: 'HEADING\n\nAll the world\'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.',
+            //text: 'HEADING\n\nThis is a really cool paragraph. \n And this is a footer.',
+            fontSize: 16,
+            fontFamily: 'Calibri',
+            fontStyle: 'normal',
+            textFill: '#555',
+            //width: 20,
+            width: 380,
+            //width: 200,
+            padding: 20,
+            align: 'center',
+            shadow: {
+                color: 'black',
+                blur: 1,
+                offset: [10, 10],
+                opacity: 0.2
+            },
+            cornerRadius: 10,
+            draggable: true,
+            detectionType: 'path'
+        });
+
+        layer.add(text);
+        stage.add(layer);
+
+        warn(layer.toDataURL() === dataUrls['multi line text with shadows'], 'multi line text with shadows data url is incorrect');
     },
     'SHAPE - change font size should update text data': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -4314,11 +4352,11 @@ Test.prototype.tests = {
         stage.add(greenLayer);
 
         blueLayer.moveToTop();
-        
+
         stage.toDataURL({
-        	callback: function(dataUrl) {
-        		warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
-        	}
+            callback: function(dataUrl) {
+                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
+            }
         });
     },
     'LAYERING - move green layer below blue layer with moveToBottom': function(containerId) {
@@ -4355,11 +4393,11 @@ Test.prototype.tests = {
         stage.add(greenLayer);
 
         greenLayer.moveToBottom();
-        
+
         stage.toDataURL({
-        	callback: function(dataUrl) {
-        		warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
-        	}
+            callback: function(dataUrl) {
+                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
+            }
         });
     },
     'LAYERING - move green layer below blue layer with moveDown': function(containerId) {
@@ -4395,11 +4433,11 @@ Test.prototype.tests = {
         stage.add(blueLayer);
         stage.add(greenLayer);
         greenLayer.moveDown();
-        
+
         stage.toDataURL({
-        	callback: function(dataUrl) {
-        		warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
-        	}
+            callback: function(dataUrl) {
+                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
+            }
         });
     },
     'LAYERING - move blue layer above green layer with moveUp': function(containerId) {
@@ -4435,11 +4473,11 @@ Test.prototype.tests = {
         stage.add(blueLayer);
         stage.add(greenLayer);
         blueLayer.moveUp();
-        
+
         stage.toDataURL({
-        	callback: function(dataUrl) {
-        		warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
-        	}
+            callback: function(dataUrl) {
+                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
+            }
         });
     },
     ////////////////////////////////////////////////////////////////////////
