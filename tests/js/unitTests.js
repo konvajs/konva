@@ -3018,6 +3018,115 @@ Test.prototype.tests = {
         clone.simulate('click');
         test(clicks.toString() === 'myRect,rectClone', 'click order should be myRect followed by rectClone');
     },
+    'NODE - clone a group': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group({
+            x: 50,
+            draggable: true,
+            name: 'myGroup'
+        });
+        var rect = new Kinetic.Rect({
+            x: 0,
+            y: 50,
+            width: 200,
+            height: 50,
+            fill: 'red',
+            offset: [10, 10],
+            shadow: {
+                color: 'black',
+                offset: [20, 20]
+            },
+            name: 'myRect',
+            myAttr: 'group rect'
+        });
+        var text = new Kinetic.Text({
+            x: 0,
+            y: 110,
+            text: 'Some awesome text!',
+            fontSize: 14,
+            fontFamily: 'Calibri',
+            textFill: 'blue',
+            shadow: {
+                color: 'red',
+                offset: [20, 20]
+            },
+            name: 'myText'
+        });
+        group.add(rect);
+        group.add(text);
+
+        var clicks = [];
+        var taps = [];
+
+        group.on('click', function() {
+            clicks.push(this.getName());
+        });
+        rect.on('tap', function() {
+            taps.push(this.attrs.myAttr);
+        });
+        var clone = group.clone({
+            x: 300,
+            name: 'groupClone'
+        });
+
+        test(clone.getX() === 300, 'clone x should be 300');
+        test(clone.getY() === 0, 'clone y should be 50');
+        test(clone.getDraggable() === true, 'clone should be draggable');
+        test(clone.getName() === 'groupClone', 'clone name should be groupClone');
+
+        test(group.getChildren().length === 2, 'group should have two children');
+        test(clone.getChildren().length === 2, 'clone should have two children');
+
+        layer.add(group);
+        layer.add(clone);
+        stage.add(layer);
+
+        test(group.get('.myText')[0].getTextFill() === 'blue', 'group text should be blue');
+        test(clone.get('.myText')[0].getTextFill() === 'blue', 'clone text should be blue');
+        clone.get('.myText')[0].setTextFill('black');
+        test(group.get('.myRect')[0].attrs.myAttr === 'group rect', 'group rect should have myAttr: group rect');
+        test(clone.get('.myRect')[0].attrs.myAttr === 'group rect', 'clone rect should have myAttr: group rect');
+        clone.get('.myRect')[0].setAttrs({myAttr: 'clone rect'});
+
+        /*
+         * Make sure that when we change a clone object attr that the rect object
+         * attr isn't updated by reference
+         */
+
+        test(group.get('.myText')[0].getTextFill() === 'blue', 'group text should be blue');
+        test(clone.get('.myText')[0].getTextFill() === 'black', 'clone text should be blue');
+
+        test(group.get('.myRect')[0].attrs.myAttr === 'group rect', 'group rect should have myAttr: group rect');
+        test(clone.get('.myRect')[0].attrs.myAttr === 'clone rect', 'clone rect should have myAttr: clone rect');
+
+        // make sure private ids are different
+        test(group._id !== clone._id, 'rect and clone ids should be different');
+
+        // make sure childrens private ids are different
+        test(group.get('.myRect')[0]._id !== clone.get('.myRect')[0]._id, 'group rect and clone rect ids should be different');
+        test(group.get('.myText')[0]._id !== clone.get('.myText')[0]._id, 'group text and clone text ids should be different');
+
+        // test user event binding cloning
+        test(clicks.length === 0, 'no clicks should have been triggered yet');
+        group.simulate('click');
+        test(clicks.toString() === 'myGroup', 'only myGroup should have been clicked on');
+        clone.simulate('click');
+        test(clicks.toString() === 'myGroup,groupClone', 'click order should be myGroup followed by groupClone');
+
+        // test user event binding cloning on children
+        test(taps.length === 0, 'no taps should have been triggered yet');
+        group.get('.myRect')[0].simulate('tap');
+        test(taps.toString() === 'group rect', 'only group rect should have been tapped on');
+        clone.get('.myRect')[0].simulate('tap');
+        test(taps.toString() === 'group rect,clone rect', 'tap order should be group rect followed by clone rect');
+
+        stage.draw();
+    },
     'NODE - test on attr change': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
