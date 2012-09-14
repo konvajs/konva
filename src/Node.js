@@ -577,8 +577,11 @@ Kinetic.Node.prototype = {
             if(this.nodeType === 'Layer') {
                 var stage = this.getStage();
                 if(stage) {
-                    stage.content.removeChild(this.canvas.element);
-                    stage.content.insertBefore(this.canvas.element, stage.getChildren()[this.index + 1].canvas.element);
+                    var children = stage.getChildren();
+                    if(children.length > 1) {
+                      stage.content.removeChild(this.canvas.element);
+                      stage.content.insertBefore(this.canvas.element, children[this.index + 1].canvas.element);
+                    }
                 }
             }
         }
@@ -597,8 +600,11 @@ Kinetic.Node.prototype = {
         if(this.nodeType === 'Layer') {
             var stage = this.getStage();
             if(stage) {
-                stage.content.removeChild(this.canvas.element);
-                stage.content.insertBefore(this.canvas.element, stage.getChildren()[1].canvas.element);
+                var children = stage.getChildren();
+                if(children.length > 1) {
+                  stage.content.removeChild(this.canvas.element);
+                  stage.content.insertBefore(this.canvas.element, children[1].canvas.element);
+                }
             }
         }
     },
