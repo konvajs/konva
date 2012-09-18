@@ -2610,6 +2610,22 @@ Kinetic.Container.prototype = {
         return false;
     },
     /**
+     * clone node
+     * @name clone
+     * @methodOf Kinetic.Container.prototype
+     * @param {Object} attrs override attrs
+     */
+    clone: function(obj) {
+        // call super method
+        var node = Kinetic.Node.prototype.clone.call(this, obj)
+        
+        // perform deep clone on containers
+        for(var key in this.children) {
+            node.add(this.children[key].clone());
+        }
+        return node;
+    },
+    /**
      * get shapes that intersect a point
      * @name getIntersections
      * @methodOf Kinetic.Container.prototype
