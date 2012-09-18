@@ -140,6 +140,24 @@ Kinetic.Layer.prototype = {
         this.getCanvas().clear();
     },
     /**
+     * show layer
+     * @name show
+     * @methodOf Kinetic.Layer.prototype
+     */
+    show: function() {
+        Kinetic.Node.prototype.show.call(this);
+        this.canvas.element.style.display = 'block';
+    },
+    /**
+     * hide layer.  Hidden layers are no longer detectable
+     * @name hide
+     * @methodOf Kinetic.Layer.prototype
+     */
+    hide: function() {
+        Kinetic.Node.prototype.hide.call(this);
+        this.canvas.element.style.display = 'none';
+    },
+    /**
      * Creates a composite data URL. If MIME type is not
      *  specified, then "image/png" will result. For "image/jpeg", specify a quality
      *  level as quality (range 0.0 - 1.0).  Note that this method works

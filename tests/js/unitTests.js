@@ -942,9 +942,10 @@ Test.prototype.tests = {
         test(layer2.isVisible(), 'layer2 should be visible');
 
         layer2.hide();
-        layer2.draw();
-
         test(!layer2.isVisible(), 'layer2 should be invisible');
+        
+        layer2.show();
+        test(layer2.isVisible(), 'layer2 should be visible');
     },
     'LAYER - beforeDraw and afterDraw': function(containerId) {
         var stage = new Kinetic.Stage({

@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sep 17 2012
+ * Date: Sep 18 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -3653,6 +3653,24 @@ Kinetic.Layer.prototype = {
      */
     clear: function() {
         this.getCanvas().clear();
+    },
+    /**
+     * show layer
+     * @name show
+     * @methodOf Kinetic.Layer.prototype
+     */
+    show: function() {
+        Kinetic.Node.prototype.show.call(this);
+        this.canvas.element.style.display = 'block';
+    },
+    /**
+     * hide layer.  Hidden layers are no longer detectable
+     * @name hide
+     * @methodOf Kinetic.Layer.prototype
+     */
+    hide: function() {
+        Kinetic.Node.prototype.hide.call(this);
+        this.canvas.element.style.display = 'none';
     },
     /**
      * Creates a composite data URL. If MIME type is not
