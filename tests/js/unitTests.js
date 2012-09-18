@@ -4228,6 +4228,41 @@ Test.prototype.tests = {
 
         layer.draw();
     },
+    '*LAYERING - layer layer when only one layer': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var bluecircle = new Kinetic.Circle({
+            x: 200,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'blue',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(bluecircle);
+        stage.add(layer);
+
+		test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+		
+		layer.moveDown();
+		test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+		
+		layer.moveToBottom();
+		test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+		
+		layer.moveUp();
+		test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+		
+		layer.moveToTop();
+		test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+
+    },
     'LAYERING - move blue group on top of green group with moveToTop': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
