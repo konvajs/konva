@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sep 18 2012
+ * Date: Sep 22 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -2263,6 +2263,37 @@ Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'rotation', 'op
 Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 
 /**
+ * Node array constructor.  Node.Array extends
+ *  Array.  This class is used to run node methods on 
+ *  an array of nodes returned from get()
+ * @constructor
+ */
+Kinetic.Node.Array = function() {
+    var args = [].slice.call( arguments ), 
+        length = args.length, i = 0;
+
+    this.length = length;
+    for (; i < length; i++ ) {
+        this[ i ] = args[ i ];
+    }
+    return this;
+}
+Kinetic.Node.Array.prototype = new Array();
+// node methods
+for(var key in Kinetic.Node.prototype) {
+    if(!(key in Kinetic.Node.Array.prototype)) {
+        (function(k) {
+            Kinetic.Node.Array.prototype[k] = function() {
+                for (var n=0; n< this.length; n++) {
+                    Kinetic.Node.prototype[k].apply(this[n], arguments);
+                }
+            }
+        })(key);
+    }
+}
+
+
+/**
  * set node x position
  * @name setX
  * @methodOf Kinetic.Node.prototype
@@ -2418,6 +2449,7 @@ Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
  * @name getListening
  * @methodOf Kinetic.Node.prototype
  */
+
 ///////////////////////////////////////////////////////////////////////
 //  Container
 ///////////////////////////////////////////////////////////////////////
@@ -2577,7 +2609,7 @@ Kinetic.Container.prototype = {
             return false;
         }
 
-        var retArr = [];
+        var retArr = new Kinetic.Node.Array();
         for(var n = 0; n < arr.length; n++) {
             var node = arr[n];
             if(this.isAncestorOf(node)) {

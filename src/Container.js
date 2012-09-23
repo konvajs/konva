@@ -157,7 +157,7 @@ Kinetic.Container.prototype = {
             return false;
         }
 
-        var retArr = [];
+        var retArr = new Kinetic.Node.Array();
         for(var n = 0; n < arr.length; n++) {
             var node = arr[n];
             if(this.isAncestorOf(node)) {

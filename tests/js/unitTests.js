@@ -618,6 +618,53 @@ Test.prototype.tests = {
         test(Kinetic.Global.shapes[circleColorKey] === undefined, 'circle color key should not be in shapes hash');
         test(Kinetic.Global.shapes[rectColorKey] === undefined, 'rect color key should not be in shapes hash');
     },
+    '*SELECTOR - show and hide an array of nodes': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myShape'
+        });
+
+        var rect = new Kinetic.Rect({
+            x: 300,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'purple',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myShape'
+        });
+
+        layer.add(circle);
+        layer.add(rect);
+        stage.add(layer);
+        
+        var shapes = layer.get('.myShape');
+        
+        test(shapes.length === 2, 'shapes array should have 2 elements');
+        
+        shapes.setX(200);
+        layer.draw();
+        
+        for (var n=0; n<shapes.length; n++) {
+            test(shapes[n].getX() === 200, 'shape x should be 200');
+        }
+        
+        shapes.setDraggable(true);
+
+
+    },
     'STAGE - test ids and names hashes': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
