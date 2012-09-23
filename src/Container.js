@@ -229,7 +229,7 @@ Kinetic.Container.prototype = {
      * get all shapes inside container
      */
     _getNodes: function(sel) {
-        var arr = [];
+        var arr = new Kinetic.Collection();
         function traverse(cont) {
             var children = cont.getChildren();
             for(var n = 0; n < children.length; n++) {
