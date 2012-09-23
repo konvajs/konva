@@ -140,6 +140,24 @@ Kinetic.Layer.prototype = {
         this.getCanvas().clear();
     },
     /**
+     * show layer
+     * @name show
+     * @methodOf Kinetic.Layer.prototype
+     */
+    show: function() {
+        Kinetic.Node.prototype.show.call(this);
+        this.canvas.element.style.display = 'block';
+    },
+    /**
+     * hide layer.  Hidden layers are no longer detectable
+     * @name hide
+     * @methodOf Kinetic.Layer.prototype
+     */
+    hide: function() {
+        Kinetic.Node.prototype.hide.call(this);
+        this.canvas.element.style.display = 'none';
+    },
+    /**
      * Creates a composite data URL. If MIME type is not
      *  specified, then "image/png" will result. For "image/jpeg", specify a quality
      *  level as quality (range 0.0 - 1.0).  Note that this method works
@@ -169,6 +187,21 @@ Kinetic.Layer.prototype = {
             canvas = this.getCanvas();
         }
         return canvas.toDataURL(mimeType, quality);
+    },
+    /**
+     * remove layer from stage
+     */
+    _remove: function() {
+        /*
+         * remove canvas DOM from the document if
+         * it exists
+         */
+        try {
+            this.getStage().content.removeChild(this.canvas.element);
+        }
+        catch(e) {
+            Kinetic.Global.warn('unable to remove layer scene canvas element from the document');
+        }
     },
     __draw: function(canvas) {
         if(this.attrs.clearBeforeDraw) {

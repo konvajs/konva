@@ -33,7 +33,7 @@
  * @param {Function} [config.dragBoundFunc] dragBoundFunc(pos, evt) should return new position
  */
 Kinetic.Node = function(config) {
-	this._nodeInit(config);	
+    this._nodeInit(config);
 };
 
 Kinetic.Node.prototype = {
@@ -63,7 +63,7 @@ Kinetic.Node.prototype = {
         this.eventListeners = {};
         this.transAnim = new Kinetic.Animation();
         this.setAttrs(config);
-        
+
         // bind events
         this.on('draggableChange.kinetic', function() {
             this._onDraggableChange();
@@ -249,6 +249,16 @@ Kinetic.Node.prototype = {
                     else {
                         // handle special keys
                         switch (key) {
+                            case 'radius':
+                                if(Kinetic.Type._isNumber(val)) {
+                                    that._setAttr(obj, key, val);
+                                }
+                                else {
+                                    var xy = type._getXY(val);
+                                    that._setAttr(obj[key], 'x', xy.x);
+                                    that._setAttr(obj[key], 'y', xy.y);
+                                }
+                                break;
                             case 'rotationDeg':
                                 that._setAttr(obj, 'rotation', c[key] * Math.PI / 180);
                                 // override key for change event
@@ -517,6 +527,14 @@ Kinetic.Node.prototype = {
         this.parent.children.splice(index, 1);
         this.parent.children.push(this);
         this.parent._setChildrenIndices();
+
+        if(this.nodeType === 'Layer') {
+            var stage = this.getStage();
+            if(stage) {
+                stage.content.removeChild(this.canvas.element);
+                stage.content.appendChild(this.canvas.element);
+            }
+        }
     },
     /**
      * move node up
@@ -525,9 +543,25 @@ Kinetic.Node.prototype = {
      */
     moveUp: function() {
         var index = this.index;
-        this.parent.children.splice(index, 1);
-        this.parent.children.splice(index + 1, 0, this);
-        this.parent._setChildrenIndices();
+        if(index < this.parent.getChildren().length - 1) {
+            this.parent.children.splice(index, 1);
+            this.parent.children.splice(index + 1, 0, this);
+            this.parent._setChildrenIndices();
+
+            if(this.nodeType === 'Layer') {
+                var stage = this.getStage();
+                if(stage) {
+                    stage.content.removeChild(this.canvas.element);
+
+                    if(this.index < stage.getChildren().length - 1) {
+                        stage.content.insertBefore(this.canvas.element, stage.getChildren()[this.index + 1].canvas.element);
+                    }
+                    else {
+                        stage.content.appendChild(this.canvas.element);
+                    }
+                }
+            }
+        }
     },
     /**
      * move node down
@@ -540,6 +574,15 @@ Kinetic.Node.prototype = {
             this.parent.children.splice(index, 1);
             this.parent.children.splice(index - 1, 0, this);
             this.parent._setChildrenIndices();
+
+            if(this.nodeType === 'Layer') {
+                var stage = this.getStage();
+                if(stage) {
+                    var children = stage.getChildren();
+                    stage.content.removeChild(this.canvas.element);
+                    stage.content.insertBefore(this.canvas.element, children[this.index + 1].canvas.element);
+                }
+            }
         }
     },
     /**
@@ -549,9 +592,20 @@ Kinetic.Node.prototype = {
      */
     moveToBottom: function() {
         var index = this.index;
-        this.parent.children.splice(index, 1);
-        this.parent.children.unshift(this);
-        this.parent._setChildrenIndices();
+        if(index > 0) {
+            this.parent.children.splice(index, 1);
+            this.parent.children.unshift(this);
+            this.parent._setChildrenIndices();
+
+            if(this.nodeType === 'Layer') {
+                var stage = this.getStage();
+                if(stage) {
+                    var children = stage.getChildren();
+                    stage.content.removeChild(this.canvas.element);
+                    stage.content.insertBefore(this.canvas.element, children[1].canvas.element);
+                }
+            }
+        }
     },
     /**
      * set zIndex

@@ -122,8 +122,8 @@ Kinetic.Container.prototype = {
             }
 
             // do extra stuff if needed
-            if(this._remove !== undefined) {
-                this._remove(child);
+            if(child._remove !== undefined) {
+                child._remove();
             }
         }
 
@@ -157,7 +157,7 @@ Kinetic.Container.prototype = {
             return false;
         }
 
-        var retArr = [];
+        var retArr = new Kinetic.Collection();
         for(var n = 0; n < arr.length; n++) {
             var node = arr[n];
             if(this.isAncestorOf(node)) {
@@ -188,6 +188,22 @@ Kinetic.Container.prototype = {
         }
 
         return false;
+    },
+    /**
+     * clone node
+     * @name clone
+     * @methodOf Kinetic.Container.prototype
+     * @param {Object} attrs override attrs
+     */
+    clone: function(obj) {
+        // call super method
+        var node = Kinetic.Node.prototype.clone.call(this, obj)
+        
+        // perform deep clone on containers
+        for(var key in this.children) {
+            node.add(this.children[key].clone());
+        }
+        return node;
     },
     /**
      * get shapes that intersect a point

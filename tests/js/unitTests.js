@@ -1,7 +1,6 @@
 Test.prototype.tests = {
-    ////////////////////////////////////////////////////////////////////////Fp
-    //  STAGE tests
     ////////////////////////////////////////////////////////////////////////
+    //  STAGE
     ////////////////////////////////////////////////////////////////////////
 
     'STAGE - instantiate stage with id': function(containerId) {
@@ -27,7 +26,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -80,7 +79,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -103,7 +102,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -142,7 +141,7 @@ Test.prototype.tests = {
             throttle: 9999
         });
         var group = new Kinetic.Group();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -167,7 +166,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -190,7 +189,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -206,7 +205,7 @@ Test.prototype.tests = {
         group.add(circle);
         layer.draw();
 
-        var expectedJson = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Stage","children":[{"attrs":{"clearBeforeDraw":true,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Group","children":[{"attrs":{"radius":{"x":70,"y":70},"detectionType":"path","visible":true,"listening":true,"name":"myCircle","opacity":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true,"dragThrottle":80,"fill":"green","stroke":"black","strokeWidth":4},"nodeType":"Shape","shapeType":"Ellipse"}]}]}]}';
+        var expectedJson = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Stage","children":[{"attrs":{"clearBeforeDraw":true,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Group","children":[{"attrs":{"radius":{"x":70,"y":70},"detectionType":"path","visible":true,"listening":true,"name":"myCircle","opacity":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true,"dragThrottle":80,"fill":"green","stroke":"black","strokeWidth":4},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
 
         //console.log(stage.toJSON())
         //test(stage.toJSON() === expectedJson, 'problem with serialization');
@@ -220,7 +219,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -250,7 +249,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: 100,
             y: 100,
             radius: 70,
@@ -270,7 +269,7 @@ Test.prototype.tests = {
 
         test(attrs.x === 100, 'x attr should be 100');
         test(attrs.y === 100, 'y attr should be 100');
-        test(attrs.radius.x === 70, 'radius attr should be 70');
+        test(attrs.radius === 70, 'radius attr should be 70');
         test(attrs.fill === 'green', 'fill attr should be fill');
         test(attrs.stroke === 'black', 'stroke attr should be stroke');
         test(attrs.strokeWidth === 4, 'strokeWidth attr should be strokeWidth');
@@ -293,7 +292,7 @@ Test.prototype.tests = {
             height: 200
         });
 
-        var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Stage","children":[{"attrs":{"clearBeforeDraw":true,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Group","children":[{"attrs":{"radius":{"x":70,"y":70},"detectionType":"path","visible":true,"listening":true,"name":"myCircle","opacity":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true,"dragThrottle":80,"fill":"green","stroke":"black","strokeWidth":4},"nodeType":"Shape","shapeType":"Ellipse"}]}]}]}';
+        var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Stage","children":[{"attrs":{"clearBeforeDraw":true,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":false,"dragThrottle":80},"nodeType":"Group","children":[{"attrs":{"radius":{"x":70,"y":70},"detectionType":"path","visible":true,"listening":true,"name":"myCircle","opacity":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"dragConstraint":"none","dragBounds":{},"draggable":true,"dragThrottle":80,"fill":"green","stroke":"black","strokeWidth":4},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
         //stage.load(json);
 
         //test(stage.toJSON() === json, "problem loading stage with json");
@@ -332,7 +331,7 @@ Test.prototype.tests = {
 
         var startDataUrl = layer.toDataURL();
 
-        warn(startDataUrl === urls[0], 'start data url is incorrect');
+        //warn(startDataUrl === urls[0], 'start data url is incorrect');
         test(triangle.getId() === 'myTriangle', 'triangle id should be myTriangle');
 
         //console.log(stage.toJSON())
@@ -348,7 +347,7 @@ Test.prototype.tests = {
         layer.draw();
 
         var endDataUrl = layer.toDataURL();
-        warn(endDataUrl === urls[0], 'end data url is incorrect');
+        //warn(endDataUrl === urls[0], 'end data url is incorrect');
 
     },
     'STAGE - load stage with custom shape using json': function(containerId) {
@@ -387,9 +386,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
-        var group = new Kinetic.Group();
-
-        var redCircle = new Kinetic.Ellipse({
+        var redCircle = new Kinetic.Circle({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -399,7 +396,7 @@ Test.prototype.tests = {
             id: 'redCircle'
         });
 
-        var greenCircle = new Kinetic.Ellipse({
+        var greenCircle = new Kinetic.Circle({
             x: 300,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -409,53 +406,56 @@ Test.prototype.tests = {
             id: 'greenCircle'
         });
 
-        group.add(redCircle);
-        layer.add(group);
+        layer.add(redCircle);
         layer.add(greenCircle);
         stage.add(layer);
 
-        test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
-        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
+        // test individual shapes
+        test(stage.getIntersections(266, 114).length === 1, '17) getIntersections should return one shape');
+        test(stage.getIntersections(266, 114)[0].getId() === 'greenCircle', '19) first intersection should be greenCircle');
+
+        test(stage.getIntersections(414, 115).length === 1, '18) getIntersections should return one shape');
+        test(stage.getIntersections(414, 115)[0].getId() === 'redCircle', '20) first intersection should be redCircle');
+
+        test(stage.getIntersections(350, 118).length === 2, '1) getIntersections should return two shapes');
+        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', '2) first intersection should be redCircle');
+        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', '3) second intersection should be greenCircle');
 
         // hide green circle.  make sure only red circle is in result set
         greenCircle.hide();
         layer.draw();
 
-        test(stage.getIntersections(350, 118).length === 1, 'getIntersections should return one shape');
-        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
+        test(stage.getIntersections(350, 118).length === 1, '4) getIntersections should return one shape');
+        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', '5) first intersection should be redCircle');
 
         // show green circle again.  make sure both circles are in result set
         greenCircle.show();
         layer.draw();
 
-        test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
-        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
+        test(stage.getIntersections(350, 118).length === 2, '6) getIntersections should return two shapes');
+        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', '7) first intersection should be redCircle');
+        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', '8) second intersection should be greenCircle');
 
         // hide red circle.  make sure only green circle is in result set
         redCircle.hide();
         layer.draw();
 
-        test(stage.getIntersections(350, 118).length === 1, 'getIntersections should return one shape');
-        test(stage.getIntersections(350, 118)[0].getId() === 'greenCircle', 'first intersection should be greenCircle');
+        test(stage.getIntersections(350, 118).length === 1, '9) getIntersections should return one shape');
+        test(stage.getIntersections(350, 118)[0].getId() === 'greenCircle', '10) first intersection should be greenCircle');
 
         // show red circle again.  make sure both circles are in result set
         redCircle.show();
         layer.draw();
 
-        test(stage.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
-        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
+        test(stage.getIntersections(350, 118).length === 2, '11) getIntersections should return two shapes');
+        test(stage.getIntersections(350, 118)[0].getId() === 'redCircle', '12) first intersection should be redCircle');
+        test(stage.getIntersections(350, 118)[1].getId() === 'greenCircle', '13) second intersection should be greenCircle');
 
         // test from layer
-        test(layer.getIntersections(350, 118).length === 2, 'getIntersections should return two shapes');
-        test(layer.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
-        test(layer.getIntersections(350, 118)[1].getId() === 'greenCircle', 'second intersection should be greenCircle');
+        test(layer.getIntersections(350, 118).length === 2, '14) getIntersections should return two shapes');
+        test(layer.getIntersections(350, 118)[0].getId() === 'redCircle', '15) first intersection should be redCircle');
+        test(layer.getIntersections(350, 118)[1].getId() === 'greenCircle', '16) second intersection should be greenCircle');
 
-        // test from group
-        test(group.getIntersections(350, 118).length === 1, 'getIntersections should return two shapes');
-        test(group.getIntersections(350, 118)[0].getId() === 'redCircle', 'first intersection should be redCircle');
     },
     'STAGE - scale stage after add layer': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -464,7 +464,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -489,7 +489,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -528,7 +528,7 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer({
             id: 'myLayer'
         });
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -555,7 +555,7 @@ Test.prototype.tests = {
 
         var node;
         node = stage.get('#myCircle')[0];
-        test(node.shapeType === 'Ellipse', 'shape type should be Ellipse');
+        test(node.shapeType === 'Circle', 'shape type should be Circle');
         node = layer.get('.myRect')[0];
         test(node.shapeType === 'Rect', 'shape type should be rect');
         node = layer.get('#myLayer')[0];
@@ -571,7 +571,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -592,29 +592,75 @@ Test.prototype.tests = {
             name: 'myRect'
         });
 
+        var circleColorKey = circle.colorKey;
+        var rectColorKey = rect.colorKey;
+
         layer.add(circle);
         layer.add(rect);
         stage.add(layer);
 
-        var node = stage.get('#myCircle')[0];
-        var nodes = stage.get('.myRect');
-
         test(stage.ids.myCircle._id === circle._id, 'circle not in ids hash');
         test(stage.names.myRect[0]._id === rect._id, 'rect not in names hash');
+        test(Kinetic.Global.shapes[circleColorKey]._id === circle._id, 'circle color key should be in shapes hash');
+        test(Kinetic.Global.shapes[rectColorKey]._id === rect._id, 'rect color key should be in shapes hash');
 
-        var node = stage.get('#myCircle')[0];
-        var parent = node.getParent();
-
-        parent.remove(node);
+        layer.remove(circle);
 
         test(stage.ids.myCircle === undefined, 'circle still in hash');
         test(stage.names.myRect[0]._id === rect._id, 'rect not in names hash');
+        test(Kinetic.Global.shapes[circleColorKey] === undefined, 'circle color key should not be in shapes hash');
+        test(Kinetic.Global.shapes[rectColorKey]._id === rect._id, 'rect color key should be in shapes hash');
 
-        var parent = nodes[0].getParent();
-        parent.remove(nodes[0]);
+        layer.remove(rect);
 
         test(stage.ids.myCircle === undefined, 'circle still in hash');
         test(stage.names.myRect === undefined, 'rect still in hash');
+        test(Kinetic.Global.shapes[circleColorKey] === undefined, 'circle color key should not be in shapes hash');
+        test(Kinetic.Global.shapes[rectColorKey] === undefined, 'rect color key should not be in shapes hash');
+    },
+    '*SELECTOR - show and hide an array of nodes': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myShape'
+        });
+
+        var rect = new Kinetic.Rect({
+            x: 300,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'purple',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myShape'
+        });
+
+        layer.add(circle);
+        layer.add(rect);
+        stage.add(layer);
+        
+        var shapes = layer.get('.myShape');
+        
+        test(shapes.length === 2, 'shapes array should have 2 elements');
+        
+        shapes.apply('setX', 200);
+        
+        layer.draw();
+        
+        shapes.each(function(shape) {
+            test(shape.getX() === 200, 'shape x should be 200');
+        });
     },
     'STAGE - test ids and names hashes': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -623,7 +669,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -666,7 +712,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -690,7 +736,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -726,7 +772,7 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer({
             name: 'myLayer'
         });
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -770,7 +816,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var shape1 = new Kinetic.Ellipse({
+        var shape1 = new Kinetic.Circle({
             x: 150,
             y: 100,
             radius: 50,
@@ -778,7 +824,7 @@ Test.prototype.tests = {
             name: 'myCircle'
         });
 
-        var shape2 = new Kinetic.Ellipse({
+        var shape2 = new Kinetic.Circle({
             x: 250,
             y: 100,
             radius: 50,
@@ -809,7 +855,7 @@ Test.prototype.tests = {
         var layer1 = new Kinetic.Layer();
         var layer2 = new Kinetic.Layer();
 
-        var shape1 = new Kinetic.Ellipse({
+        var shape1 = new Kinetic.Circle({
             x: 150,
             y: 100,
             radius: 50,
@@ -817,7 +863,7 @@ Test.prototype.tests = {
             name: 'myCircle'
         });
 
-        var shape2 = new Kinetic.Ellipse({
+        var shape2 = new Kinetic.Circle({
             x: 250,
             y: 100,
             radius: 50,
@@ -908,7 +954,7 @@ Test.prototype.tests = {
         var layer1 = new Kinetic.Layer();
         var layer2 = new Kinetic.Layer();
 
-        var circle1 = new Kinetic.Ellipse({
+        var circle1 = new Kinetic.Circle({
             x: 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -916,7 +962,7 @@ Test.prototype.tests = {
             stroke: 'black',
             strokeWidth: 4
         });
-        var circle2 = new Kinetic.Ellipse({
+        var circle2 = new Kinetic.Circle({
             x: 150,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -940,9 +986,10 @@ Test.prototype.tests = {
         test(layer2.isVisible(), 'layer2 should be visible');
 
         layer2.hide();
-        layer2.draw();
-
         test(!layer2.isVisible(), 'layer2 should be invisible');
+        
+        layer2.show();
+        test(layer2.isVisible(), 'layer2 should be visible');
     },
     'LAYER - beforeDraw and afterDraw': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -953,7 +1000,7 @@ Test.prototype.tests = {
 
         var layer = new Kinetic.Layer();
 
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -980,8 +1027,6 @@ Test.prototype.tests = {
         layer.draw();
     },
     'LAYER - set clearBeforeDraw to false, and test toDataURL for stage, layer, group, and shape': function(containerId) {
-        var urls = dataUrls['LAYER - set clearBeforeDraw to false'];
-
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -995,7 +1040,7 @@ Test.prototype.tests = {
 
         var group = new Kinetic.Group();
 
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1015,12 +1060,11 @@ Test.prototype.tests = {
 
         stage.toDataURL({
             callback: function(dataUrl) {
-                warn(urls[0] === dataUrl, 'stage data url is incorrect');
+                warn(dataUrls['stacked green circles'] === dataUrl, 'stacked green circles stage data url is incorrect');
             }
         });
-        warn(urls[0] === layer.toDataURL(), 'layer data url is incorrect');
-        warn(urls[1] === group.toDataURL(), 'group data url is incorrect');
-        warn(urls[1] === circle.toDataURL(), 'shape data url is incorrect');
+        warn(dataUrls['stacked green circles'] === layer.toDataURL(), 'stacked green circles layer data url is incorrect');
+
     },
     'LAYER - add layer': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1038,7 +1082,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle1 = new Kinetic.Ellipse({
+        var circle1 = new Kinetic.Circle({
             x: 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1047,7 +1091,7 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        var circle2 = new Kinetic.Ellipse({
+        var circle2 = new Kinetic.Circle({
             x: 300,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1080,7 +1124,7 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
 
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1103,7 +1147,7 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
 
-        var circle1 = new Kinetic.Ellipse({
+        var circle1 = new Kinetic.Circle({
             x: 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1111,7 +1155,7 @@ Test.prototype.tests = {
             stroke: 'black',
             strokeWidth: 4
         });
-        var circle2 = new Kinetic.Ellipse({
+        var circle2 = new Kinetic.Circle({
             x: 150,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1152,7 +1196,7 @@ Test.prototype.tests = {
         var greenGroup = new Kinetic.Group();
         var blueGroup = new Kinetic.Group();
 
-        var greencircle = new Kinetic.Ellipse({
+        var greencircle = new Kinetic.Circle({
             x: stage.getWidth() / 2 - 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1162,7 +1206,7 @@ Test.prototype.tests = {
             draggable: true
         });
 
-        var bluecircle = new Kinetic.Ellipse({
+        var bluecircle = new Kinetic.Circle({
             x: stage.getWidth() / 2 + 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1180,7 +1224,7 @@ Test.prototype.tests = {
 
         blueLayer.removeChildren();
         var blueGroup2 = new Kinetic.Group();
-        var bluecircle2 = new Kinetic.Ellipse({
+        var bluecircle2 = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1208,7 +1252,7 @@ Test.prototype.tests = {
             });
             var layer = new Kinetic.Layer();
             var group = new Kinetic.Group();
-            var circle = new Kinetic.Ellipse({
+            var circle = new Kinetic.Circle({
                 x: stage.getWidth() / 2,
                 y: stage.getHeight() / 2,
                 radius: 70,
@@ -1283,7 +1327,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1353,24 +1397,6 @@ Test.prototype.tests = {
         layer.add(rect);
         stage.add(layer);
     },
-    'SHAPE - add circle using Ellipse': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-        layer.add(circle);
-        stage.add(layer);
-    },
     'SHAPE - add circle using Circle': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1414,7 +1440,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        circle = new Kinetic.Ellipse({
+        circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1455,7 +1481,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1679,7 +1705,7 @@ Test.prototype.tests = {
                 height: 200
             });
             var layer = new Kinetic.Layer();
-            var circle = new Kinetic.Ellipse({
+            var circle = new Kinetic.Circle({
                 x: 200,
                 y: 60,
                 radius: 50,
@@ -1825,7 +1851,6 @@ Test.prototype.tests = {
         imageObj.src = '../assets/scorpion-sprite.png';
     },
     'Node - node caching': function(containerId) {
-        var urls = dataUrls['Node - node caching'];
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1881,16 +1906,14 @@ Test.prototype.tests = {
                     y: -120
 
                 });
-                
+
                 layer.add(cachedShape);
 
                 cachedShape.createImageBuffer(function() {
-                    
                     layer.draw();
+                    warn(dataUrls['regular and cahced polygon'] === layer.toDataURL(), 'regular and cached polygon layer data url is incorrect');
 
-                    warn(urls[0] === layer.toDataURL(), 'layer data url is incorrect');
-                    
-                    document.body.appendChild(layer.bufferCanvas.element)
+                    //document.body.appendChild(layer.bufferCanvas.element)
                 });
             }
         });
@@ -2281,7 +2304,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -2301,7 +2324,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -2764,6 +2787,46 @@ Test.prototype.tests = {
          });
          */
     },
+    'SHAPE - text multi line with shadows': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var text = new Kinetic.Text({
+            x: 10,
+            y: 10,
+            //stroke: '#555',
+            //strokeWidth: 5,
+            text: 'HEADING\n\nAll the world\'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.',
+            //text: 'HEADING\n\nThis is a really cool paragraph. \n And this is a footer.',
+            fontSize: 16,
+            fontFamily: 'Calibri',
+            fontStyle: 'normal',
+            textFill: '#555',
+            //width: 20,
+            width: 380,
+            //width: 200,
+            padding: 20,
+            align: 'center',
+            shadow: {
+                color: 'black',
+                blur: 1,
+                offset: [10, 10],
+                opacity: 0.2
+            },
+            cornerRadius: 10,
+            draggable: true,
+            detectionType: 'path'
+        });
+
+        layer.add(text);
+        stage.add(layer);
+
+        warn(layer.toDataURL() === dataUrls['multi line text with shadows'], 'multi line text with shadows data url is incorrect');
+    },
     'SHAPE - change font size should update text data': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -2807,7 +2870,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -2829,7 +2892,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -2999,6 +3062,115 @@ Test.prototype.tests = {
         test(clicks.toString() === 'myRect', 'only myRect should have been clicked on');
         clone.simulate('click');
         test(clicks.toString() === 'myRect,rectClone', 'click order should be myRect followed by rectClone');
+    },
+    'NODE - clone a group': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group({
+            x: 50,
+            draggable: true,
+            name: 'myGroup'
+        });
+        var rect = new Kinetic.Rect({
+            x: 0,
+            y: 50,
+            width: 200,
+            height: 50,
+            fill: 'red',
+            offset: [10, 10],
+            shadow: {
+                color: 'black',
+                offset: [20, 20]
+            },
+            name: 'myRect',
+            myAttr: 'group rect'
+        });
+        var text = new Kinetic.Text({
+            x: 0,
+            y: 110,
+            text: 'Some awesome text!',
+            fontSize: 14,
+            fontFamily: 'Calibri',
+            textFill: 'blue',
+            shadow: {
+                color: 'red',
+                offset: [20, 20]
+            },
+            name: 'myText'
+        });
+        group.add(rect);
+        group.add(text);
+
+        var clicks = [];
+        var taps = [];
+
+        group.on('click', function() {
+            clicks.push(this.getName());
+        });
+        rect.on('tap', function() {
+            taps.push(this.attrs.myAttr);
+        });
+        var clone = group.clone({
+            x: 300,
+            name: 'groupClone'
+        });
+
+        test(clone.getX() === 300, 'clone x should be 300');
+        test(clone.getY() === 0, 'clone y should be 50');
+        test(clone.getDraggable() === true, 'clone should be draggable');
+        test(clone.getName() === 'groupClone', 'clone name should be groupClone');
+
+        test(group.getChildren().length === 2, 'group should have two children');
+        test(clone.getChildren().length === 2, 'clone should have two children');
+
+        layer.add(group);
+        layer.add(clone);
+        stage.add(layer);
+
+        test(group.get('.myText')[0].getTextFill() === 'blue', 'group text should be blue');
+        test(clone.get('.myText')[0].getTextFill() === 'blue', 'clone text should be blue');
+        clone.get('.myText')[0].setTextFill('black');
+        test(group.get('.myRect')[0].attrs.myAttr === 'group rect', 'group rect should have myAttr: group rect');
+        test(clone.get('.myRect')[0].attrs.myAttr === 'group rect', 'clone rect should have myAttr: group rect');
+        clone.get('.myRect')[0].setAttrs({myAttr: 'clone rect'});
+
+        /*
+         * Make sure that when we change a clone object attr that the rect object
+         * attr isn't updated by reference
+         */
+
+        test(group.get('.myText')[0].getTextFill() === 'blue', 'group text should be blue');
+        test(clone.get('.myText')[0].getTextFill() === 'black', 'clone text should be blue');
+
+        test(group.get('.myRect')[0].attrs.myAttr === 'group rect', 'group rect should have myAttr: group rect');
+        test(clone.get('.myRect')[0].attrs.myAttr === 'clone rect', 'clone rect should have myAttr: clone rect');
+
+        // make sure private ids are different
+        test(group._id !== clone._id, 'rect and clone ids should be different');
+
+        // make sure childrens private ids are different
+        test(group.get('.myRect')[0]._id !== clone.get('.myRect')[0]._id, 'group rect and clone rect ids should be different');
+        test(group.get('.myText')[0]._id !== clone.get('.myText')[0]._id, 'group text and clone text ids should be different');
+
+        // test user event binding cloning
+        test(clicks.length === 0, 'no clicks should have been triggered yet');
+        group.simulate('click');
+        test(clicks.toString() === 'myGroup', 'only myGroup should have been clicked on');
+        clone.simulate('click');
+        test(clicks.toString() === 'myGroup,groupClone', 'click order should be myGroup followed by groupClone');
+
+        // test user event binding cloning on children
+        test(taps.length === 0, 'no taps should have been triggered yet');
+        group.get('.myRect')[0].simulate('tap');
+        test(taps.toString() === 'group rect', 'only group rect should have been tapped on');
+        clone.get('.myRect')[0].simulate('tap');
+        test(taps.toString() === 'group rect,clone rect', 'tap order should be group rect followed by clone rect');
+
+        stage.draw();
     },
     'NODE - test on attr change': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -3687,7 +3859,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -3767,7 +3939,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -3804,7 +3976,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -3861,7 +4033,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -3897,7 +4069,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -3920,7 +4092,7 @@ Test.prototype.tests = {
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
 
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -3994,7 +4166,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -4025,7 +4197,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -4045,7 +4217,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -4081,14 +4253,14 @@ Test.prototype.tests = {
         var group3 = new Kinetic.Group();
         var group4 = new Kinetic.Group();
 
-        var shape1 = new Kinetic.Ellipse({
+        var shape1 = new Kinetic.Circle({
             x: 150,
             y: stage.getHeight() / 2,
             radius: 40,
             fill: 'green'
         });
 
-        var shape2 = new Kinetic.Ellipse({
+        var shape2 = new Kinetic.Circle({
             x: 250,
             y: stage.getHeight() / 2,
             radius: 40,
@@ -4138,7 +4310,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
-        var bluecircle = new Kinetic.Ellipse({
+        var bluecircle = new Kinetic.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -4147,7 +4319,7 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        var greencircle = new Kinetic.Ellipse({
+        var greencircle = new Kinetic.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -4178,7 +4350,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
-        var bluecircle = new Kinetic.Ellipse({
+        var bluecircle = new Kinetic.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -4187,7 +4359,7 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        var greencircle = new Kinetic.Ellipse({
+        var greencircle = new Kinetic.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -4210,6 +4382,41 @@ Test.prototype.tests = {
 
         layer.draw();
     },
+    'LAYERING - layer layer when only one layer': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var bluecircle = new Kinetic.Circle({
+            x: 200,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'blue',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(bluecircle);
+        stage.add(layer);
+
+		test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+		
+		layer.moveDown();
+		test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+		
+		layer.moveToBottom();
+		test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+		
+		layer.moveUp();
+		test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+		
+		layer.moveToTop();
+		test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+
+    },
     'LAYERING - move blue group on top of green group with moveToTop': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -4220,7 +4427,7 @@ Test.prototype.tests = {
         var greenGroup = new Kinetic.Group();
         var blueGroup = new Kinetic.Group();
 
-        var bluecircle = new Kinetic.Ellipse({
+        var bluecircle = new Kinetic.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -4229,7 +4436,7 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        var greencircle = new Kinetic.Ellipse({
+        var greencircle = new Kinetic.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -4265,7 +4472,7 @@ Test.prototype.tests = {
         var greenGroup = new Kinetic.Group();
         var blueGroup = new Kinetic.Group();
 
-        var bluecircle = new Kinetic.Ellipse({
+        var bluecircle = new Kinetic.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -4274,7 +4481,7 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        var greencircle = new Kinetic.Ellipse({
+        var greencircle = new Kinetic.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -4309,7 +4516,7 @@ Test.prototype.tests = {
         var blueLayer = new Kinetic.Layer();
         var greenLayer = new Kinetic.Layer();
 
-        var bluecircle = new Kinetic.Ellipse({
+        var bluecircle = new Kinetic.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -4318,7 +4525,7 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        var greencircle = new Kinetic.Ellipse({
+        var greencircle = new Kinetic.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -4334,6 +4541,12 @@ Test.prototype.tests = {
         stage.add(greenLayer);
 
         blueLayer.moveToTop();
+
+        stage.toDataURL({
+            callback: function(dataUrl) {
+                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
+            }
+        });
     },
     'LAYERING - move green layer below blue layer with moveToBottom': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -4344,7 +4557,7 @@ Test.prototype.tests = {
         var blueLayer = new Kinetic.Layer();
         var greenLayer = new Kinetic.Layer();
 
-        var bluecircle = new Kinetic.Ellipse({
+        var bluecircle = new Kinetic.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -4353,7 +4566,7 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        var greencircle = new Kinetic.Ellipse({
+        var greencircle = new Kinetic.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -4369,6 +4582,92 @@ Test.prototype.tests = {
         stage.add(greenLayer);
 
         greenLayer.moveToBottom();
+
+        stage.toDataURL({
+            callback: function(dataUrl) {
+                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
+            }
+        });
+    },
+    'LAYERING - move green layer below blue layer with moveDown': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var blueLayer = new Kinetic.Layer();
+        var greenLayer = new Kinetic.Layer();
+
+        var bluecircle = new Kinetic.Circle({
+            x: 200,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'blue',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        var greencircle = new Kinetic.Circle({
+            x: 280,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        blueLayer.add(bluecircle);
+        greenLayer.add(greencircle);
+
+        stage.add(blueLayer);
+        stage.add(greenLayer);
+        greenLayer.moveDown();
+
+        stage.toDataURL({
+            callback: function(dataUrl) {
+                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
+            }
+        });
+    },
+    'LAYERING - move blue layer above green layer with moveUp': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var blueLayer = new Kinetic.Layer();
+        var greenLayer = new Kinetic.Layer();
+
+        var bluecircle = new Kinetic.Circle({
+            x: 200,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'blue',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        var greencircle = new Kinetic.Circle({
+            x: 280,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        blueLayer.add(bluecircle);
+        greenLayer.add(greencircle);
+
+        stage.add(blueLayer);
+        stage.add(greenLayer);
+        blueLayer.moveUp();
+
+        stage.toDataURL({
+            callback: function(dataUrl) {
+                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
+            }
+        });
     },
     ////////////////////////////////////////////////////////////////////////
     //  ANIMATION tests
@@ -4604,7 +4903,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -4821,35 +5120,35 @@ Test.prototype.tests = {
 
         layer.add(path);
 
-        layer.add(new Kinetic.Ellipse({
+        layer.add(new Kinetic.Circle({
             x: 200,
             y: 300,
             radius: 10,
             fill: 'black'
         }));
 
-        layer.add(new Kinetic.Ellipse({
+        layer.add(new Kinetic.Circle({
             x: 600,
             y: 300,
             radius: 10,
             fill: 'black'
         }));
 
-        layer.add(new Kinetic.Ellipse({
+        layer.add(new Kinetic.Circle({
             x: 1000,
             y: 300,
             radius: 10,
             fill: 'black'
         }));
 
-        layer.add(new Kinetic.Ellipse({
+        layer.add(new Kinetic.Circle({
             x: 400,
             y: 50,
             radius: 10,
             fill: '#888'
         }));
 
-        layer.add(new Kinetic.Ellipse({
+        layer.add(new Kinetic.Circle({
             x: 800,
             y: 550,
             radius: 10,
@@ -4888,49 +5187,49 @@ Test.prototype.tests = {
 
         layer.add(path);
 
-        layer.add(new Kinetic.Ellipse({
+        layer.add(new Kinetic.Circle({
             x: 100,
             y: 200,
             radius: 10,
             stroke: '#888'
         }));
 
-        layer.add(new Kinetic.Ellipse({
+        layer.add(new Kinetic.Circle({
             x: 250,
             y: 200,
             radius: 10,
             stroke: '#888'
         }));
 
-        layer.add(new Kinetic.Ellipse({
+        layer.add(new Kinetic.Circle({
             x: 400,
             y: 200,
             radius: 10,
             stroke: '#888'
         }));
 
-        layer.add(new Kinetic.Ellipse({
+        layer.add(new Kinetic.Circle({
             x: 100,
             y: 100,
             radius: 10,
             fill: '#888'
         }));
 
-        layer.add(new Kinetic.Ellipse({
+        layer.add(new Kinetic.Circle({
             x: 250,
             y: 100,
             radius: 10,
             fill: '#888'
         }));
 
-        layer.add(new Kinetic.Ellipse({
+        layer.add(new Kinetic.Circle({
             x: 400,
             y: 300,
             radius: 10,
             fill: '#888'
         }));
 
-        layer.add(new Kinetic.Ellipse({
+        layer.add(new Kinetic.Circle({
             x: 250,
             y: 300,
             radius: 10,
@@ -5022,7 +5321,7 @@ Test.prototype.tests = {
         path.setData(c);
         layer.add(path);
 
-        layer.add(new Kinetic.Ellipse({
+        layer.add(new Kinetic.Circle({
             x: 10,
             y: 10,
             radius: 10,
@@ -5034,7 +5333,7 @@ Test.prototype.tests = {
         test(Math.round(p1.x) === 110, 'point X value should be 110');
         test(Math.round(p1.y) === 85, 'point Y value should be 85');
 
-        layer.add(new Kinetic.Ellipse({
+        layer.add(new Kinetic.Circle({
             x: p1.x,
             y: p1.y,
             radius: 10,

@@ -85,15 +85,6 @@ Kinetic.Canvas.prototype = {
         this.setHeight(height);
     },
     /**
-     * strip away all functions that draw pixels onto the bitmap
-     * @name strip
-     * @methodOf Kinetic.Canvas.prototype
-     * @param {CanvasContext} context
-     */
-    strip: function() {
-        var context = this.context;
-    },
-    /**
      * toDataURL
      */
     toDataURL: function(mimeType, quality) {

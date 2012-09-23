@@ -6,7 +6,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -14,7 +14,7 @@ Test.prototype.tests = {
             stroke: 'black',
             strokeWidth: 4
         });
-
+        
         circle.on('mousedown', function() {
             log('mousedown');
         });
@@ -67,8 +67,6 @@ Test.prototype.tests = {
 
         layer.add(circle);
         stage.add(layer);
-        
-        document.body.appendChild(layer.bufferCanvas.element)
     },
     'TRANSITION - transition position and rotation': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -373,7 +371,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -382,25 +380,25 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        Ellipse.setDraggable(true);
+        Circle.setDraggable(true);
 
-        Ellipse.on('dragstart', function() {
+        Circle.on('dragstart', function() {
             log('dragstart');
         });
 
-        Ellipse.on('dragmove', function() {
+        Circle.on('dragmove', function() {
             log('dragmove');
         });
 
-        Ellipse.on('dragend', function() {
+        Circle.on('dragend', function() {
             log('dragend');
         });
 
-        Ellipse.on('click', function() {
+        Circle.on('click', function() {
             log('click');
         });
 
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
     },
     'EVENTS - move mouse from shape to another shape in same layer': function(containerId) {
@@ -411,7 +409,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
-        var redEllipse = new Kinetic.Ellipse({
+        var redCircle = new Kinetic.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -420,13 +418,13 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        redEllipse.on('mouseover', function() {
-            log('mouseover red Ellipse');
+        redCircle.on('mouseover', function() {
+            log('mouseover red Circle');
         });
-        redEllipse.on('mouseout', function() {
-            log('mouseout red Ellipse');
+        redCircle.on('mouseout', function() {
+            log('mouseout red Circle');
         });
-        var greenEllipse = new Kinetic.Ellipse({
+        var greenCircle = new Kinetic.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -435,19 +433,19 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        greenEllipse.on('mouseover', function() {
-            log('mouseover green Ellipse');
+        greenCircle.on('mouseover', function() {
+            log('mouseover green Circle');
         });
-        greenEllipse.on('mouseout', function() {
-            log('mouseout green Ellipse');
+        greenCircle.on('mouseout', function() {
+            log('mouseout green Circle');
         });
 
-        layer.add(redEllipse);
-        layer.add(greenEllipse);
+        layer.add(redCircle);
+        layer.add(greenCircle);
 
         stage.add(layer);
         
-        //greenEllipse.hide();
+        //greenCircle.hide();
         layer.draw();
         
         //document.body.appendChild(layer.bufferCanvas.element);
@@ -462,7 +460,7 @@ Test.prototype.tests = {
         var redGroup = new Kinetic.Group();
         var greenGroup = new Kinetic.Group();
 
-        var redEllipse = new Kinetic.Ellipse({
+        var redCircle = new Kinetic.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -471,13 +469,13 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        redEllipse.on('mouseover', function() {
-            log('mouseover red Ellipse');
+        redCircle.on('mouseover', function() {
+            log('mouseover red Circle');
         });
-        redEllipse.on('mouseout', function() {
-            log('mouseout red Ellipse');
+        redCircle.on('mouseout', function() {
+            log('mouseout red Circle');
         });
-        var greenEllipse = new Kinetic.Ellipse({
+        var greenCircle = new Kinetic.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -486,15 +484,15 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        greenEllipse.on('mouseover', function() {
-            log('mouseover green Ellipse');
+        greenCircle.on('mouseover', function() {
+            log('mouseover green Circle');
         });
-        greenEllipse.on('mouseout', function() {
-            log('mouseout green Ellipse');
+        greenCircle.on('mouseout', function() {
+            log('mouseout green Circle');
         });
 
-        redGroup.add(redEllipse);
-        greenGroup.add(greenEllipse);
+        redGroup.add(redCircle);
+        greenGroup.add(greenCircle);
 
         layer.add(redGroup);
         layer.add(greenGroup);
@@ -510,7 +508,7 @@ Test.prototype.tests = {
         var redLayer = new Kinetic.Layer();
         var greenLayer = new Kinetic.Layer();
 
-        var redEllipse = new Kinetic.Ellipse({
+        var redCircle = new Kinetic.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -519,13 +517,13 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        redEllipse.on('mouseover', function() {
-            log('mouseover red Ellipse');
+        redCircle.on('mouseover', function() {
+            log('mouseover red Circle');
         });
-        redEllipse.on('mouseout', function() {
-            log('mouseout red Ellipse');
+        redCircle.on('mouseout', function() {
+            log('mouseout red Circle');
         });
-        var greenEllipse = new Kinetic.Ellipse({
+        var greenCircle = new Kinetic.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -534,15 +532,15 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        greenEllipse.on('mouseover', function() {
-            log('mouseover green Ellipse');
+        greenCircle.on('mouseover', function() {
+            log('mouseover green Circle');
         });
-        greenEllipse.on('mouseout', function() {
-            log('mouseout green Ellipse');
+        greenCircle.on('mouseout', function() {
+            log('mouseout green Circle');
         });
 
-        redLayer.add(redEllipse);
-        greenLayer.add(greenEllipse);
+        redLayer.add(redCircle);
+        greenLayer.add(greenCircle);
 
         stage.add(redLayer);
         stage.add(greenLayer);
@@ -557,7 +555,7 @@ Test.prototype.tests = {
         var redGroup = new Kinetic.Group();
         var greenGroup = new Kinetic.Group();
 
-        var redEllipse = new Kinetic.Ellipse({
+        var redCircle = new Kinetic.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -566,10 +564,10 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        redEllipse.on('mousemove', function() {
-            log('mousemove red Ellipse');
+        redCircle.on('mousemove', function() {
+            log('mousemove red Circle');
         });
-        var greenEllipse = new Kinetic.Ellipse({
+        var greenCircle = new Kinetic.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -578,12 +576,12 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        greenEllipse.on('mousemove', function() {
-            log('mousemove green Ellipse');
+        greenCircle.on('mousemove', function() {
+            log('mousemove green Circle');
         });
 
-        redGroup.add(redEllipse);
-        greenGroup.add(greenEllipse);
+        redGroup.add(redCircle);
+        greenGroup.add(greenCircle);
 
         layer.add(redGroup);
         layer.add(greenGroup);
@@ -603,7 +601,7 @@ Test.prototype.tests = {
             log('mousemove group');
             //console.log(this);
         });
-        var redEllipse = new Kinetic.Ellipse({
+        var redCircle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 80,
@@ -612,7 +610,7 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        var greenEllipse = new Kinetic.Ellipse({
+        var greenCircle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 40,
@@ -621,13 +619,13 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        group.add(redEllipse);
-        group.add(greenEllipse);
+        group.add(redCircle);
+        group.add(greenCircle);
 
         layer.add(group);
         stage.add(layer);
     },
-    'EVENTS - cancel event bubbling (only the red Ellipse should fire click event)': function(containerId) {
+    'EVENTS - cancel event bubbling (only the red Circle should fire click event)': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -644,7 +642,7 @@ Test.prototype.tests = {
             log('click group');
             //console.log(this);
         });
-        var redEllipse = new Kinetic.Ellipse({
+        var redCircle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 80,
@@ -653,12 +651,12 @@ Test.prototype.tests = {
             stroke: 'black'
         });
 
-        redEllipse.on('click', function(evt) {
-            log('click red Ellipse');
+        redCircle.on('click', function(evt) {
+            log('click red Circle');
             evt.cancelBubble = true;
         });
 
-        group.add(redEllipse);
+        group.add(redCircle);
         layer.add(group);
         stage.add(layer);
     },
@@ -675,17 +673,17 @@ Test.prototype.tests = {
             log(evt.shape.getName());
 
         });
-        var redEllipse = new Kinetic.Ellipse({
+        var redCircle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 80,
             strokeWidth: 4,
             fill: 'red',
             stroke: 'black',
-            name: 'Ellipse'
+            name: 'Circle'
         });
 
-        group.add(redEllipse);
+        group.add(redCircle);
         layer.add(group);
         stage.add(layer);
     },
@@ -697,21 +695,21 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
-        var redEllipse = new Kinetic.Ellipse({
+        var redCircle = new Kinetic.Circle({
             x: 550,
             y: stage.getHeight() / 2,
             radius: 80,
             strokeWidth: 4,
             fill: 'red',
             stroke: 'black',
-            name: 'Ellipse'
+            name: 'Circle'
         });
 
-        redEllipse.on('mouseout', function() {
+        redCircle.on('mouseout', function() {
             log('mouseout');
         });
 
-        layer.add(redEllipse);
+        layer.add(redCircle);
         stage.add(layer);
     },
     'DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
@@ -793,7 +791,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -802,9 +800,9 @@ Test.prototype.tests = {
             strokeWidth: 4,
         });
 
-        Ellipse.setDraggable(true);
+        Circle.setDraggable(true);
 
-        var Ellipse2 = new Kinetic.Ellipse({
+        var Circle2 = new Kinetic.Circle({
             x: 350,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -815,15 +813,15 @@ Test.prototype.tests = {
         });
 
         /*
-         Ellipse.on('dragend', function() {
-         Ellipse.savePixels();
+         Circle.on('dragend', function() {
+         Circle.savePixels();
          });
          */
 
-        layer.add(Ellipse).add(Ellipse2);
+        layer.add(Circle).add(Circle2);
         stage.add(layer);
 
-        //Ellipse.savePixels();
+        //Circle.savePixels();
     },
     'DRAG AND DROP - drag and drop stage': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -846,7 +844,7 @@ Test.prototype.tests = {
              }
              */
         });
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -876,7 +874,7 @@ Test.prototype.tests = {
          });
          */
 
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
     },
     'DRAG AND DROP - draggable true false': function(containerId) {
@@ -886,7 +884,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -895,12 +893,12 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        Ellipse.setDraggable(true);
+        Circle.setDraggable(true);
 
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
 
-        Ellipse.setDraggable(false);
+        Circle.setDraggable(false);
     },
     'DRAG AND DROP - scale and rotate stage after add layer then drag and drop shape': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -941,7 +939,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -950,10 +948,10 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        Ellipse.setDraggable(true);
+        Circle.setDraggable(true);
 
         stage.setScale(0.5);
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
     },
     'DRAG AND DROP - set stage scale to 1.5 after add layer then drag and drop shape': function(containerId) {
@@ -963,7 +961,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -972,9 +970,9 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        Ellipse.setDraggable(true);
+        Circle.setDraggable(true);
 
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
 
         stage.setScale(1.5);
@@ -988,7 +986,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -997,21 +995,21 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        Ellipse.setDraggable(true);
+        Circle.setDraggable(true);
 
         stage.setScale(1.5);
 
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
     },
-    'DRAG AND DROP - check that green events are ignored when dragging red Ellipse': function(containerId) {
+    'DRAG AND DROP - check that green events are ignored when dragging red Circle': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var Ellipse1 = new Kinetic.Ellipse({
+        var Circle1 = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1020,7 +1018,7 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        var Ellipse2 = new Kinetic.Ellipse({
+        var Circle2 = new Kinetic.Circle({
             x: stage.getWidth() / 2 + 50,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1029,14 +1027,14 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        Ellipse1.setDraggable(true);
+        Circle1.setDraggable(true);
 
-        Ellipse2.on('mouseover', function() {
-            log('mouseover green Ellipse');
+        Circle2.on('mouseover', function() {
+            log('mouseover green Circle');
         });
 
-        layer.add(Ellipse1);
-        layer.add(Ellipse2);
+        layer.add(Circle1);
+        layer.add(Circle2);
         stage.add(layer);
     },
     'DRAG AND DROP - drag and drop constrianed horiztontally inside positioned group': function(containerId) {
@@ -1050,7 +1048,7 @@ Test.prototype.tests = {
             x: 0,
             y: 10
         });
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1061,7 +1059,7 @@ Test.prototype.tests = {
             dragConstraint: 'horizontal'
         });
 
-        group.add(Ellipse);
+        group.add(Circle);
         layer.add(group);
         stage.add(layer);
     },
@@ -1072,7 +1070,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1083,7 +1081,7 @@ Test.prototype.tests = {
             dragConstraint: 'vertical'
         });
 
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
     },
     'DRAG AND DROP - drag and drop with explicit no constraint': function(containerId) {
@@ -1093,7 +1091,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1104,7 +1102,7 @@ Test.prototype.tests = {
             dragConstraint: 'none'
         });
 
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
     },
     'DRAG AND DROP - drag and drop with left bounds': function(containerId) {
@@ -1114,7 +1112,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1127,7 +1125,7 @@ Test.prototype.tests = {
             }
         });
 
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
     },
     'DRAG AND DROP - drag and drop with right bounds': function(containerId) {
@@ -1137,7 +1135,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1150,7 +1148,7 @@ Test.prototype.tests = {
             }
         });
 
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
     },
     'DRAG AND DROP - drag and drop with top bounds': function(containerId) {
@@ -1160,7 +1158,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1173,7 +1171,7 @@ Test.prototype.tests = {
             }
         });
 
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
     },
     'DRAG AND DROP - drag and drop with bottom bounds': function(containerId) {
@@ -1183,7 +1181,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1196,7 +1194,7 @@ Test.prototype.tests = {
             }
         });
 
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
     },
     'DRAG AND DROP - drag and drop with full rect bounds': function(containerId) {
@@ -1206,7 +1204,7 @@ Test.prototype.tests = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1222,7 +1220,7 @@ Test.prototype.tests = {
             }
         });
 
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
     },
     'DRAG AND DROP - drag and drop shape inside scrollable div': function(containerId) {
@@ -1237,7 +1235,7 @@ Test.prototype.tests = {
         container.style.overflow = 'auto';
 
         var layer = new Kinetic.Layer();
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: 100,
             radius: 50,
@@ -1247,7 +1245,7 @@ Test.prototype.tests = {
             draggable: true
         });
 
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
     },
     'DRAG AND DROP - drag and drop shape inside scaled group': function(containerId) {
@@ -1264,7 +1262,7 @@ Test.prototype.tests = {
             }
         });
 
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: 40,
             y: 40,
             radius: 70,
@@ -1274,7 +1272,7 @@ Test.prototype.tests = {
             draggable: true
         });
 
-        group.add(Ellipse);
+        group.add(Circle);
         layer.add(group);
         stage.add(layer);
     },
@@ -1446,7 +1444,7 @@ Test.prototype.tests = {
 
         stage.draw();
     },
-    'STAGE - save image as png (click on Ellipse to open new window)': function(containerId) {
+    'STAGE - save image as png (click on Circle to open new window)': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1454,7 +1452,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1463,14 +1461,14 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        Ellipse.on('click', function() {
+        Circle.on('click', function() {
             window.open(layer.toDataURL());
         });
 
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
     },
-    'STAGE - save image as low quality jpg (click on Ellipse to open new window)': function(containerId) {
+    'STAGE - save image as low quality jpg (click on Circle to open new window)': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1478,7 +1476,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1487,14 +1485,14 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        Ellipse.on('click', function() {
+        Circle.on('click', function() {
             window.open(layer.toDataURL('image/jpeg', 0));
         });
 
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
     },
-    'STAGE - save image as high quality jpg (click on Ellipse to open new window)': function(containerId) {
+    'STAGE - save image as high quality jpg (click on Circle to open new window)': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1502,7 +1500,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
 
-        var Ellipse = new Kinetic.Ellipse({
+        var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1511,11 +1509,11 @@ Test.prototype.tests = {
             strokeWidth: 4
         });
 
-        Ellipse.on('click', function() {
+        Circle.on('click', function() {
             window.open(layer.toDataURL('image/jpeg', 1));
         });
 
-        layer.add(Ellipse);
+        layer.add(Circle);
         stage.add(layer);
     }
 };
