@@ -654,16 +654,13 @@ Test.prototype.tests = {
         
         test(shapes.length === 2, 'shapes array should have 2 elements');
         
-        shapes.setX(200);
+        shapes.apply('setX', 200);
+        
         layer.draw();
         
-        for (var n=0; n<shapes.length; n++) {
-            test(shapes[n].getX() === 200, 'shape x should be 200');
-        }
-        
-        shapes.setDraggable(true);
-
-
+        shapes.each(function(shape) {
+            test(shape.getX() === 200, 'shape x should be 200');
+        });
     },
     'STAGE - test ids and names hashes': function(containerId) {
         var stage = new Kinetic.Stage({

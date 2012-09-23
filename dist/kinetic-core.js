@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sep 22 2012
+ * Date: Sep 23 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1029,6 +1029,45 @@ Kinetic.Transform.prototype = {
     }
 };
 
+/**
+ * Collection constructor.  Collection extends
+ *  Array.  This class is used in conjunction with get()
+ * @constructor
+ */
+Kinetic.Collection = function() {
+    var args = [].slice.call( arguments ), 
+        length = args.length, i = 0;
+
+    this.length = length;
+    for (; i < length; i++ ) {
+        this[ i ] = args[ i ];
+    }
+    return this;
+}
+Kinetic.Collection.prototype = new Array();
+/**
+ * apply a method to all nodes in the array
+ * @name apply
+ * @methodOf Kinetic.Collection.prototype
+ * @param {String} method
+ * @param val
+ */
+Kinetic.Collection.prototype.apply = function(method, val) {
+	for (var n=0; n<this.length; n++) {
+		this[n][method](val);
+	}
+};
+/**
+ * iterate through node array
+ * @name each
+ * @methodOf Kinetic.Collection.prototype
+ * @param {Function} func
+ */
+Kinetic.Collection.prototype.each = function(func) {
+	for (var n=0; n<this.length; n++) {
+		func(this[n]);
+	}
+};
 ///////////////////////////////////////////////////////////////////////
 //  Animation
 ///////////////////////////////////////////////////////////////////////
@@ -2263,37 +2302,6 @@ Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'rotation', 'op
 Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 
 /**
- * Node array constructor.  Node.Array extends
- *  Array.  This class is used to run node methods on 
- *  an array of nodes returned from get()
- * @constructor
- */
-Kinetic.Node.Array = function() {
-    var args = [].slice.call( arguments ), 
-        length = args.length, i = 0;
-
-    this.length = length;
-    for (; i < length; i++ ) {
-        this[ i ] = args[ i ];
-    }
-    return this;
-}
-Kinetic.Node.Array.prototype = new Array();
-// node methods
-for(var key in Kinetic.Node.prototype) {
-    if(!(key in Kinetic.Node.Array.prototype)) {
-        (function(k) {
-            Kinetic.Node.Array.prototype[k] = function() {
-                for (var n=0; n< this.length; n++) {
-                    Kinetic.Node.prototype[k].apply(this[n], arguments);
-                }
-            }
-        })(key);
-    }
-}
-
-
-/**
  * set node x position
  * @name setX
  * @methodOf Kinetic.Node.prototype
@@ -2609,7 +2617,7 @@ Kinetic.Container.prototype = {
             return false;
         }
 
-        var retArr = new Kinetic.Node.Array();
+        var retArr = new Kinetic.Collection();
         for(var n = 0; n < arr.length; n++) {
             var node = arr[n];
             if(this.isAncestorOf(node)) {
