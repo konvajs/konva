@@ -2984,6 +2984,8 @@ Test.prototype.tests = {
         stage.add(layer);
 
         test(rect.getListening() === true, 'rect should be listening');
+        // test alias
+        test(rect.isListening() === true, 'rect should be listening');
         rect.setListening(false);
         test(rect.getListening() === false, 'rect should not be listening');
 
@@ -3164,6 +3166,8 @@ Test.prototype.tests = {
         test(clone.getX() === 300, 'clone x should be 300');
         test(clone.getY() === 0, 'clone y should be 50');
         test(clone.getDraggable() === true, 'clone should be draggable');
+        // test alias
+        test(clone.isDraggable() === true, 'clone should be draggable');
         test(clone.getName() === 'groupClone', 'clone name should be groupClone');
 
         test(group.getChildren().length === 2, 'group should have two children');

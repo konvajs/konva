@@ -2305,6 +2305,20 @@ Kinetic.Node._addGetter = function(constructor, attr) {
 Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'scale', 'rotation', 'opacity', 'name', 'id', 'offset', 'draggable', 'dragConstraint', 'dragBounds', 'listening']);
 Kinetic.Node.addSetters(Kinetic.Node, ['rotationDeg']);
 
+// mappings
+/**
+ * determine if listening to events or not.  Alias of getListening()
+ * @name isListening
+ * @methodOf Kinetic.Node.prototype
+ */
+Kinetic.Node.prototype.isListening = Kinetic.Node.prototype.getListening;
+/**
+ * get draggable.  Alias of getDraggable()
+ * @name isDraggable
+ * @methodOf Kinetic.Node.prototype
+ */
+Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
+
 /**
  * set node x position
  * @name setX
