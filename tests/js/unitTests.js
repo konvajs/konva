@@ -618,7 +618,7 @@ Test.prototype.tests = {
         test(Kinetic.Global.shapes[circleColorKey] === undefined, 'circle color key should not be in shapes hash');
         test(Kinetic.Global.shapes[rectColorKey] === undefined, 'rect color key should not be in shapes hash');
     },
-    '*SELECTOR - show and hide an array of nodes': function(containerId) {
+    'SELECTOR - set x on an array of nodes': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -658,9 +658,51 @@ Test.prototype.tests = {
         
         layer.draw();
         
-        shapes.each(function(shape) {
-            test(shape.getX() === 200, 'shape x should be 200');
+        shapes.each(function() {
+            test(this.getX() === 200, 'shape x should be 200');
         });
+    },
+    'SELECTOR - add listener to an array of nodes': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myShape'
+        });
+
+        var rect = new Kinetic.Rect({
+            x: 300,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'purple',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myShape'
+        });
+
+        layer.add(circle);
+        layer.add(rect);
+        stage.add(layer);
+        
+        var shapes = layer.get('.myShape');
+        
+        test(shapes.length === 2, 'shapes array should have 2 elements');
+        var a = 0;
+        shapes.apply('on', 'mouseover', function () {a++;});
+        circle.simulate('mouseover');
+        test(a === 1, 'listener should have fired for circle');
+        rect.simulate('mouseover');
+        test(a === 2, 'listener should have fired for rect');
     },
     'STAGE - test ids and names hashes': function(containerId) {
         var stage = new Kinetic.Stage({

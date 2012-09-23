@@ -1052,11 +1052,15 @@ Kinetic.Collection.prototype = new Array();
  * @param {String} method
  * @param val
  */
-Kinetic.Collection.prototype.apply = function(method, val) {
-	for (var n=0; n<this.length; n++) {
-		this[n][method](val);
-	}
-};
+ Kinetic.Collection.prototype.apply = function(method) {
+     args = [].slice.call(arguments);
+     args.shift();
+     for (var n=0; n<this.length; n++) {
+         if(Kinetic.Type._isFunction(this[n][method])) {
+             this[n][method].apply(this[n],args);
+         }
+     }
+ };
 /**
  * iterate through node array
  * @name each
@@ -1065,7 +1069,7 @@ Kinetic.Collection.prototype.apply = function(method, val) {
  */
 Kinetic.Collection.prototype.each = function(func) {
 	for (var n=0; n<this.length; n++) {
-		func(this[n]);
+		func.call(this[n],n,this[n]);
 	}
 };
 ///////////////////////////////////////////////////////////////////////
@@ -2689,7 +2693,7 @@ Kinetic.Container.prototype = {
      * get all shapes inside container
      */
     _getNodes: function(sel) {
-        var arr = [];
+        var arr = new Kinetic.Collection();
         function traverse(cont) {
             var children = cont.getChildren();
             for(var n = 0; n < children.length; n++) {
