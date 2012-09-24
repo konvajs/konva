@@ -1060,7 +1060,7 @@ Kinetic.Node.prototype = {
                 }
             }
         }
-    },
+    }
 };
 
 // add getter and setter methods
