@@ -52,7 +52,14 @@ Kinetic.TextPath.prototype = {
 
         var glyphInfo = this.glyphInfo;
 
+        var appliedShadow = this.appliedShadow;
         for(var i = 0; i < glyphInfo.length; i++) {
+            /*
+             * need to reset appliedShadow flag so that shadows
+             * are appropriately applied to each line of text
+             */
+            this.appliedShadow = appliedShadow;
+            
             context.save();
 
             var p0 = glyphInfo[i].p0;
