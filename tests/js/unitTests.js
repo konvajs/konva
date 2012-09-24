@@ -2774,6 +2774,9 @@ Test.prototype.tests = {
         test(text.getShadow().color === 'green', 'text box shadow color should be green');
         test(text.getCornerRadius() === 20, 'text box corner radius should be 20');
         test(text.getDraggable() === false, 'text draggable should be false');
+        
+        // test set text to integer
+        text.setText(5);
 
         //document.body.appendChild(layer.bufferCanvas.element)
 

@@ -290,6 +290,10 @@ Kinetic.Node.prototype = {
                                 that._setAttr(obj[key], 'width', size.width);
                                 that._setAttr(obj[key], 'height', size.height);
                                 break;
+                            case 'text':     	
+                            	var str = Kinetic.Type._isString(val) ? val : val.toString();
+                            	that._setAttr(obj, key, str);
+                            	break;
                             default:
                                 that._setAttr(obj, key, val);
                                 break;
