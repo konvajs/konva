@@ -2586,10 +2586,6 @@ Kinetic.Container.prototype = {
      * @param {Kinetic.Node} node
      */
     isAncestorOf: function(node) {
-        if(this.nodeType === 'Stage') {
-            return true;
-        }
-
         var parent = node.getParent();
         while(parent) {
             if(parent._id === this._id) {
