@@ -737,12 +737,14 @@ Test.prototype.tests = {
         layer.add(circle);
         layer.add(rect);
         stage.add(layer);
-        
+
         var shapes = layer.get('.myShape');
-        
+
         test(shapes.length === 2, 'shapes array should have 2 elements');
         var a = 0;
-        shapes.apply('on', 'mouseover', function () {a++;});
+        shapes.apply('on', 'mouseover', function() {
+            a++;
+        });
         circle.simulate('mouseover');
         test(a === 1, 'listener should have fired for circle');
         rect.simulate('mouseover');
@@ -1073,7 +1075,7 @@ Test.prototype.tests = {
 
         layer2.hide();
         test(!layer2.isVisible(), 'layer2 should be invisible');
-        
+
         layer2.show();
         test(layer2.isVisible(), 'layer2 should be visible');
     },
@@ -2818,7 +2820,7 @@ Test.prototype.tests = {
         test(text.getShadow().color === 'green', 'text box shadow color should be green');
         test(text.getCornerRadius() === 20, 'text box corner radius should be 20');
         test(text.getDraggable() === false, 'text draggable should be false');
-        
+
         // test set text to integer
         text.setText(5);
 
@@ -3229,7 +3231,9 @@ Test.prototype.tests = {
         clone.get('.myText')[0].setTextFill('black');
         test(group.get('.myRect')[0].attrs.myAttr === 'group rect', 'group rect should have myAttr: group rect');
         test(clone.get('.myRect')[0].attrs.myAttr === 'group rect', 'clone rect should have myAttr: group rect');
-        clone.get('.myRect')[0].setAttrs({myAttr: 'clone rect'});
+        clone.get('.myRect')[0].setAttrs({
+            myAttr: 'clone rect'
+        });
 
         /*
          * Make sure that when we change a clone object attr that the rect object
@@ -3349,8 +3353,7 @@ Test.prototype.tests = {
 
         layer.add(rect);
         stage.add(layer);
-        
-		
+
         rect.setShadow({
             offset: [1, 2]
         });
@@ -3386,7 +3389,7 @@ Test.prototype.tests = {
         });
         test(rect.getShadow().offset.x === 5, 'shadow offset x should be 5');
         test(rect.getShadow().offset.y === 6, 'shadow offset y should be 6');
-        
+
     },
     'NODE - test setOffset': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -4497,19 +4500,19 @@ Test.prototype.tests = {
         layer.add(bluecircle);
         stage.add(layer);
 
-		test(layer.getZIndex() === 0, 'layer should have zindex of 0');
-		
-		layer.moveDown();
-		test(layer.getZIndex() === 0, 'layer should have zindex of 0');
-		
-		layer.moveToBottom();
-		test(layer.getZIndex() === 0, 'layer should have zindex of 0');
-		
-		layer.moveUp();
-		test(layer.getZIndex() === 0, 'layer should have zindex of 0');
-		
-		layer.moveToTop();
-		test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+        test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+
+        layer.moveDown();
+        test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+
+        layer.moveToBottom();
+        test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+
+        layer.moveUp();
+        test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+
+        layer.moveToTop();
+        test(layer.getZIndex() === 0, 'layer should have zindex of 0');
 
     },
     'LAYERING - move blue group on top of green group with moveToTop': function(containerId) {

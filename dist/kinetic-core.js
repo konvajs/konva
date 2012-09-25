@@ -2592,7 +2592,7 @@ Kinetic.Container.prototype = {
         }
         // unrecognized selector
         else {
-            return false;
+            return [];
         }
     },
     _getDescendants: function(arr) {
