@@ -139,23 +139,14 @@ Kinetic.Layer.prototype = {
     clear: function() {
         this.getCanvas().clear();
     },
-    /**
-     * show layer
-     * @name show
-     * @methodOf Kinetic.Layer.prototype
-     */
-    show: function() {
-        Kinetic.Node.prototype.show.call(this);
-        this.canvas.element.style.display = 'block';
-    },
-    /**
-     * hide layer.  Hidden layers are no longer detectable
-     * @name hide
-     * @methodOf Kinetic.Layer.prototype
-     */
-    hide: function() {
-        Kinetic.Node.prototype.hide.call(this);
-        this.canvas.element.style.display = 'none';
+    setVisible: function(visible) {
+        Kinetic.Node.prototype.setVisible.call(this, visible);
+        if(visible) {
+            this.canvas.element.style.display = 'block';
+        }
+        else {
+            this.canvas.element.style.display = 'none';
+        }
     },
     /**
      * Creates a composite data URL. If MIME type is not
@@ -198,8 +189,7 @@ Kinetic.Layer.prototype = {
          */
         try {
             this.getStage().content.removeChild(this.canvas.element);
-        }
-        catch(e) {
+        } catch(e) {
             Kinetic.Global.warn('unable to remove layer scene canvas element from the document');
         }
     },

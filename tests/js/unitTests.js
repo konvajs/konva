@@ -1075,9 +1075,11 @@ Test.prototype.tests = {
 
         layer2.hide();
         test(!layer2.isVisible(), 'layer2 should be invisible');
+        test(layer2.canvas.element.style.display === 'none', 'layer canvas element display should be none');
 
         layer2.show();
         test(layer2.isVisible(), 'layer2 should be visible');
+        test(layer2.canvas.element.style.display === 'block', 'layer canvas element display should be block');
     },
     'LAYER - beforeDraw and afterDraw': function(containerId) {
         var stage = new Kinetic.Stage({
