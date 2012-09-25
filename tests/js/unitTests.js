@@ -3305,7 +3305,8 @@ Test.prototype.tests = {
 
         layer.add(rect);
         stage.add(layer);
-
+        
+		
         rect.setShadow({
             offset: [1, 2]
         });
@@ -3341,6 +3342,7 @@ Test.prototype.tests = {
         });
         test(rect.getShadow().offset.x === 5, 'shadow offset x should be 5');
         test(rect.getShadow().offset.y === 6, 'shadow offset y should be 6');
+        
     },
     'NODE - test setOffset': function(containerId) {
         var stage = new Kinetic.Stage({

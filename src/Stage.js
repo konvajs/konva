@@ -44,14 +44,6 @@ Kinetic.Stage.prototype = {
             height: 200
         });
 
-        /*
-         * if container is a string, assume it's an id for
-         * a DOM element
-         */
-        if( typeof config.container === 'string') {
-            config.container = document.getElementById(config.container);
-        }
-
         // call super constructor
         Kinetic.Container.call(this, config);
 
@@ -60,19 +52,21 @@ Kinetic.Stage.prototype = {
         this._buildDOM();
         this._bindContentEvents();
 
-        //change events
-        this.on('widthChange.kinetic', function() {
-            this._resizeDOM();
-        });
-
-        this.on('heightChange.kinetic', function() {
-            this._resizeDOM();
-        });
         var go = Kinetic.Global;
         go.stages.push(this);
         this._addId(this);
         this._addName(this);
 
+    },
+    setContainer: function(container) {
+    	/*
+         * if container is a string, assume it's an id for
+         * a DOM element
+         */
+        if( typeof container === 'string') {
+            container = document.getElementById(container);
+        }
+        this.setAttr('container', container);
     },
     /**
      * draw children
@@ -92,7 +86,29 @@ Kinetic.Stage.prototype = {
     setSize: function() {
         // set stage dimensions
         var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
-        this.setAttrs(size);
+        this.setWidth(size.width);
+        this.setHeight(size.height);
+    },
+
+	/**
+	 * set height
+	 * @name setHeight
+	 * @methodOf Kinetic.Stage.prototype
+	 * @param {Number} height
+	 */
+    setHeight: function(height) {
+    	this.setAttr('height', height);
+    	this._resizeDOM();
+    },
+	 /**
+	 * set width
+	 * @name setWidth
+	 * @methodOf Kinetic.Stage.prototype
+	 * @param {Number} width
+	 */
+    setWidth: function(width) {
+    	this.setAttr('width', width);
+    	this._resizeDOM();
     },
     /**
      * get stage size
@@ -246,14 +262,6 @@ Kinetic.Stage.prototype = {
         return this.getTouchPosition() || this.getMousePosition();
     },
     /**
-     * get container DOM element
-     * @name getContainer
-     * @methodOf Kinetic.Stage.prototype
-     */
-    getContainer: function() {
-        return this.attrs.container;
-    },
-    /**
      * get stage
      * @name getStage
      * @methodOf Kinetic.Stage.prototype
@@ -385,22 +393,24 @@ Kinetic.Stage.prototype = {
         return null;
     },
     _resizeDOM: function() {
-        var width = this.attrs.width;
-        var height = this.attrs.height;
-
-        // set content dimensions
-        this.content.style.width = width + 'px';
-        this.content.style.height = height + 'px';
-
-        this.bufferCanvas.setSize(width, height);
-        // set user defined layer dimensions
-        var layers = this.children;
-        for(var n = 0; n < layers.length; n++) {
-            var layer = layers[n];
-            layer.getCanvas().setSize(width, height);
-            layer.bufferCanvas.setSize(width, height);
-            layer.draw();
-        }
+    	if (this.content) {
+	        var width = this.attrs.width;
+	        var height = this.attrs.height;
+	
+	        // set content dimensions
+	        this.content.style.width = width + 'px';
+	        this.content.style.height = height + 'px';
+	
+	        this.bufferCanvas.setSize(width, height);
+	        // set user defined layer dimensions
+	        var layers = this.children;
+	        for(var n = 0; n < layers.length; n++) {
+	            var layer = layers[n];
+	            layer.getCanvas().setSize(width, height);
+	            layer.bufferCanvas.setSize(width, height);
+	            layer.draw();
+	        }
+       }
     },
     /**
      * add layer to stage
@@ -807,8 +817,14 @@ Kinetic.Stage.prototype = {
 Kinetic.Global.extend(Kinetic.Stage, Kinetic.Container);
 
 // add getters and setters
-Kinetic.Node.addGettersSetters(Kinetic.Stage, ['width', 'height']);
+Kinetic.Node.addGetters(Kinetic.Stage, ['width', 'height', 'container']);
 
+/**
+ * get container DOM element
+ * @name getContainer
+ * @methodOf Kinetic.Stage.prototype
+ */
+    
 /**
  * get width
  * @name getWidth
@@ -821,16 +837,3 @@ Kinetic.Node.addGettersSetters(Kinetic.Stage, ['width', 'height']);
  * @methodOf Kinetic.Stage.prototype
  */
 
-/**
- * set width
- * @name setWidth
- * @methodOf Kinetic.Stage.prototype
- * @param {Number} width
- */
-
-/**
- * set height
- * @name setHeight
- * @methodOf Kinetic.Stage.prototype
- * @param {Number} height
- */

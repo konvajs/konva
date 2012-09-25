@@ -55,26 +55,6 @@ Kinetic.Image.prototype = {
         }
     },
     /**
-     * set width and height
-     * @name setSize
-     * @methodOf Kinetic.Image.prototype
-     */
-    setSize: function() {
-        var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
-        this.setAttrs(size);
-    },
-    /**
-     * return image size
-     * @name getSize
-     * @methodOf Kinetic.Image.prototype
-     */
-    getSize: function() {
-        return {
-            width: this.attrs.width,
-            height: this.attrs.height
-        };
-    },
-    /**
      * apply filter
      * @name applyFilter
      * @methodOf Kinetic.Image.prototype
@@ -84,11 +64,11 @@ Kinetic.Image.prototype = {
      *  filter has been applied
      */
     applyFilter: function(config) {
-    	var canvas = new Kinetic.Canvas(this.attrs.image.width, this.attrs.image.height);
+        var canvas = new Kinetic.Canvas(this.attrs.image.width, this.attrs.image.height);
         var context = canvas.getContext();
         context.drawImage(this.attrs.image, 0, 0);
-		try {
-			var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
+        try {
+            var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
             config.filter(imageData, config);
             var that = this;
             Kinetic.Type._getImage(imageData, function(imageObj) {
@@ -98,10 +78,26 @@ Kinetic.Image.prototype = {
                     config.callback();
                 }
             });
-        }
-        catch(e) {
+        } catch(e) {
             Kinetic.Global.warn('Unable to apply filter.');
         }
+    },
+    /**
+     * set crop
+     * @name setCrop
+     * @methodOf Kinetic.Image.prototype
+     * @param {Object|Array} config
+     * @param {Number} config.x
+     * @param {Number} config.y
+     * @param {Number} config.width
+     * @param {Number} config.height
+     */
+    setCrop: function() {
+    	var config = [].slice.call(arguments);
+        var pos = Kinetic.Type._getXY(config);
+        var size = Kinetic.Type._getSize(config);
+        var both = Kinetic.Type._merge(pos, size);
+        this.setAttr('crop', Kinetic.Type._merge(both, this.getCrop()));
     },
     /**
      * create image buffer which enables more accurate hit detection mapping of the image
@@ -134,8 +130,7 @@ Kinetic.Image.prototype = {
                     callback();
                 }
             });
-        }
-        catch(e) {
+        } catch(e) {
             Kinetic.Global.warn('Unable to create image buffer.');
         }
     },
@@ -150,14 +145,10 @@ Kinetic.Image.prototype = {
     _syncSize: function() {
         if(this.attrs.image) {
             if(!this.attrs.width) {
-                this.setAttrs({
-                    width: this.attrs.image.width
-                });
+                this.setWidth(this.attrs.image.width);
             }
             if(!this.attrs.height) {
-                this.setAttrs({
-                    height: this.attrs.image.height
-                });
+                this.setHeight(this.attrs.image.height);
             }
         }
     }
@@ -165,7 +156,8 @@ Kinetic.Image.prototype = {
 Kinetic.Global.extend(Kinetic.Image, Kinetic.Shape);
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'crop', 'filter', 'width', 'height']);
+Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'filter', 'width', 'height']);
+Kinetic.Node.addGetters(Kinetic.Image, ['crop']);
 
 /**
  * set width
@@ -186,13 +178,6 @@ Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'crop', 'filter', 'width
  * @name setImage
  * @methodOf Kinetic.Image.prototype
  * @param {ImageObject} image
- */
-
-/**
- * set crop
- * @name setCrop
- * @methodOf Kinetic.Image.prototype
- * @param {Object} config
  */
 
 /**

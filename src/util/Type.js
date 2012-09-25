@@ -2,8 +2,7 @@
 //  Type
 ///////////////////////////////////////////////////////////////////////
 /*
- * utilities that determine data type and transform
- * one type into another
+ * utilities that handle data type detection, conversion, and manipulation
  */
 Kinetic.Type = {
     /*
@@ -246,7 +245,6 @@ Kinetic.Type = {
             }
             imageObj.src = dataUrl;
         }
-
         else {
             callback(null);
         }
@@ -267,5 +265,31 @@ Kinetic.Type = {
         var g = Math.round(Math.random() * 255);
         var b = Math.round(Math.random() * 255);
         return this._rgbToHex(r, g, b);
+    },
+    // o1 takes precedence over o2
+    _merge: function(o1, o2) {
+        var retObj = this._clone(o2);
+        for(var key in o1) {
+            if(this._isObject(o1[key])) {
+                retObj[key] = this._merge(o1[key], retObj[key]);
+            }
+            else {
+                retObj[key] = o1[key];
+            }
+        }
+        return retObj;
+    },
+    // deep clone
+    _clone: function(obj) {
+        var retObj = {};
+        for(var key in obj) {
+            if(this._isObject(obj[key])) {
+                retObj[key] = this._clone(obj[key]);
+            }
+            else {
+                retObj[key] = obj[key];
+            }
+        }
+        return retObj;
     }
 };

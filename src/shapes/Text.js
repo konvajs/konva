@@ -112,6 +112,16 @@ Kinetic.Text.prototype = {
         context.restore();
     },
     /**
+	 * set text
+	 * @name setText
+	 * @methodOf Kinetic.Text.prototype
+	 * @param {String} text
+	 */
+	setText: function(text) {
+		var str = Kinetic.Type._isString(text) ? text : text.toString();
+		this.setAttr('text', str);
+	},
+    /**
      * get box width
      * @name getBoxWidth
      * @methodOf Kinetic.Text.prototype
@@ -226,8 +236,8 @@ Kinetic.Text.prototype = {
 Kinetic.Global.extend(Kinetic.Text, Kinetic.Shape);
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'lineHeight', 'text', 'width', 'height', 'cornerRadius', 'fill', 'stroke', 'strokeWidth', 'shadow']);
-
+Kinetic.Node.addGettersSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'lineHeight', 'width', 'height', 'cornerRadius', 'fill', 'stroke', 'strokeWidth', 'shadow']);
+Kinetic.Node.addGetters(Kinetic.Text, ['text']);
 /**
  * set font family
  * @name setFontFamily
@@ -289,13 +299,6 @@ Kinetic.Node.addGettersSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontSty
  * @name setLineHeight
  * @methodOf Kinetic.Text.prototype
  * @param {Number} lineHeight default is 1.2
- */
-
-/**
- * set text
- * @name setText
- * @methodOf Kinetic.Text.prototype
- * @param {String} text
  */
 
 /**

@@ -291,6 +291,72 @@ Kinetic.Shape.prototype = {
         }
     },
     /**
+     * set shadow object
+     * @name setShadow
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Object} config
+     * @param {String} config.color
+     * @param {Number} config.blur
+     * @param {Array|Object|Number} config.offset
+     * @param {Number} config.opacity
+     */
+    setShadow: function(config) {
+        if(config.offset !== undefined) {
+            config.offset = Kinetic.Type._getXY(config.offset);
+        }
+        this.setAttr('shadow', Kinetic.Type._merge(config, this.getShadow()));
+    },
+    /**
+     * set fill which can be a color, linear gradient object,
+     *  radial gradient object, or pattern object
+     * @name setFill
+     * @methodOf Kinetic.Shape.prototype
+     * @param {String|Object} fill
+     */
+    setFill: function(config) {
+        var fill;
+
+        if(Kinetic.Type._isString(config)) {
+            fill = config;
+        }
+        // if not a string, config should be an object
+        else {
+            if(config.offset !== undefined) {
+                config.offset = Kinetic.Type._getXY(config.offset);
+            }
+
+            var oldFill = this.getFill();
+            if(Kinetic.Type._isObject(oldFill)) {
+                fill = Kinetic.Type._merge(config, oldFill);
+            }
+            else {
+                fill = config;
+            }
+        }
+        this.setAttr('fill', fill);
+    },
+    /**
+     * set width and height
+     * @name setSize
+     * @methodOf Kinetic.Shape.prototype
+     */
+    setSize: function() {
+        var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
+        this.setWidth(size.width);
+        this.setHeight(size.height);
+    },
+    /**
+     * return shape size
+     * @name getSize
+     * @methodOf Kinetic.Shape.prototype
+     */
+    getSize: function() {
+        return {
+            width: this.getWidth(),
+            height: this.getHeight()
+        };
+    },
+    /**
      * apply shadow.  return true if shadow was applied
      * and false if it was not
      */
@@ -426,15 +492,8 @@ Kinetic.Shape.prototype = {
 Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
 
 // add getters and setters
-Kinetic.Node.addGettersSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'strokeWidth', 'shadow', 'drawFunc', 'filter']);
-
-/**
- * set fill which can be a color, linear gradient object,
- *  radial gradient object, or pattern object
- * @name setFill
- * @methodOf Kinetic.Shape.prototype
- * @param {String|Object} fill
- */
+Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'strokeWidth', 'drawFunc', 'filter']);
+Kinetic.Node.addGetters(Kinetic.Shape, ['shadow', 'fill']);
 
 /**
  * set stroke color
@@ -456,13 +515,6 @@ Kinetic.Node.addGettersSetters(Kinetic.Shape, ['fill', 'stroke', 'lineJoin', 'st
  * @name setStrokeWidth
  * @methodOf Kinetic.Shape.prototype
  * @param {Number} strokeWidth
- */
-
-/**
- * set shadow object
- * @name setShadow
- * @methodOf Kinetic.Shape.prototype
- * @param {Object} config
  */
 
 /**

@@ -44,26 +44,6 @@ Kinetic.Rect.prototype = {
 
         this.fill(context);
         this.stroke(context);
-    },
-    /**
-     * set width and height
-     * @name setSize
-     * @methodOf Kinetic.Rect.prototype
-     */
-    setSize: function() {
-        var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
-        this.setAttrs(size);
-    },
-    /**
-     * return rect size
-     * @name getSize
-     * @methodOf Kinetic.Rect.prototype
-     */
-    getSize: function() {
-        return {
-            width: this.attrs.width,
-            height: this.attrs.height
-        };
     }
 };
 Kinetic.Global.extend(Kinetic.Rect, Kinetic.Shape);
