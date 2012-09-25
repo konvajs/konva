@@ -5794,6 +5794,51 @@ Test.prototype.tests = {
         layer.add(textpath);
         stage.add(layer);
     },
+    '*PATH - getPointOnLine for different directions': function() {
+        var origo = {x: 0, y: 0};
+        
+        var p, point;
+        
+        //point up left
+        p = {x:-10, y: -10};
+        point = Kinetic.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
+        test(point.x < 0 && point.y < 0, 'The new point should be up left');
+              
+        //point up right
+        p = {x:10, y: -10};
+        point = Kinetic.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
+        test(point.x > 0 && point.y < 0, 'The new point should be up right');
+
+        //point down right
+        p = {x:10, y: 10};
+        point = Kinetic.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
+        test(point.x > 0 && point.y > 0, 'The new point should be down right');
+
+        //point down left
+        p = {x:-10, y: 10};
+        point = Kinetic.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
+        test(point.x < 0 && point.y > 0, 'The new point should be down left');
+
+        //point left
+        p = {x:-10, y: 0};
+        point = Kinetic.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
+        test(point.x == -10 && point.y == 0, 'The new point should be left');
+
+        //point up
+        p = {x:0, y: -10};
+        point = Kinetic.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
+        test(Math.abs(point.x) < 0.0000001 && point.y == -10, 'The new point should be up');
+
+        //point right
+        p = {x:10, y: 0};
+        point = Kinetic.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
+        test(point.x == 10 && point.y == 0, 'The new point should be right');
+
+        //point down
+        p = {x:0, y: 10};
+        point = Kinetic.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
+        test(Math.abs(point.x) < 0.0000001 && point.y == 10, 'The new point should be down');
+    },
     'PATH - Borneo Map (has scientific notation: -10e-4)': function(containerId) {
 
         var stage = new Kinetic.Stage({
