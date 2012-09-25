@@ -142,22 +142,45 @@ Kinetic.Container.prototype = {
      */
     get: function(selector) {
         var stage = this.getStage();
-        var arr;
-        var key = selector.slice(1);
-        if(selector.charAt(0) === '#') {
-            arr = stage.ids[key] !== undefined ? [stage.ids[key]] : [];
+
+		// Node type selector
+        if(selector === 'Shape' || selector === 'Group' || selector === 'Layer') {
+        	var retArr = new Kinetic.Collection();
+            function traverse(cont) {
+                var children = cont.getChildren();
+                for(var n = 0; n < children.length; n++) {
+                    var child = children[n];
+                    if(child.nodeType === selector) {
+                        retArr.push(child);
+                    }
+                    else if(child.nodeType !== 'Shape') {
+                        traverse(child);
+                    }
+                }
+            }
+
+            traverse(this);
+            return retArr;
         }
+        // ID selector
+        else if(selector.charAt(0) === '#') {
+        	var key = selector.slice(1);
+            var arr = stage.ids[key] !== undefined ? [stage.ids[key]] : [];
+            return this._getDescendants(arr);
+        }
+        // name selector
         else if(selector.charAt(0) === '.') {
-            arr = stage.names[key] !== undefined ? stage.names[key] : [];
+        	var key = selector.slice(1);
+            var arr = stage.names[key] || [];
+			return this._getDescendants(arr);
         }
-        else if(selector === 'Shape' || selector === 'Group' || selector === 'Layer') {
-            return this._getNodes(selector);
-        }
+        // unrecognized selector
         else {
             return false;
         }
-
-        var retArr = new Kinetic.Collection();
+    },
+    _getDescendants: function(arr) {
+    	var retArr = new Kinetic.Collection();
         for(var n = 0; n < arr.length; n++) {
             var node = arr[n];
             if(this.isAncestorOf(node)) {
@@ -165,7 +188,7 @@ Kinetic.Container.prototype = {
             }
         }
 
-        return retArr;
+        return retArr; 	
     },
     /**
      * determine if node is an ancestor
@@ -198,7 +221,7 @@ Kinetic.Container.prototype = {
     clone: function(obj) {
         // call super method
         var node = Kinetic.Node.prototype.clone.call(this, obj)
-        
+
         // perform deep clone on containers
         for(var key in this.children) {
             node.add(this.children[key].clone());
@@ -222,27 +245,6 @@ Kinetic.Container.prototype = {
                 arr.push(shape);
             }
         }
-
-        return arr;
-    },
-    /**
-     * get all shapes inside container
-     */
-    _getNodes: function(sel) {
-        var arr = [];
-        function traverse(cont) {
-            var children = cont.getChildren();
-            for(var n = 0; n < children.length; n++) {
-                var child = children[n];
-                if(child.nodeType === sel) {
-                    arr.push(child);
-                }
-                else if(child.nodeType !== 'Shape') {
-                    traverse(child);
-                }
-            }
-        }
-        traverse(this);
 
         return arr;
     },

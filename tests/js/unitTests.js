@@ -649,17 +649,61 @@ Test.prototype.tests = {
         layer.add(circle);
         layer.add(rect);
         stage.add(layer);
-        
+
         var shapes = layer.get('.myShape');
-        
+
         test(shapes.length === 2, 'shapes array should have 2 elements');
-        
+
         shapes.apply('setX', 200);
-        
+
         layer.draw();
-        
+
         shapes.each(function() {
             test(this.getX() === 200, 'shape x should be 200');
+        });
+    },
+    'SELECTOR - set fill on array by Shape-selector': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myShape'
+        });
+
+        var rect = new Kinetic.Rect({
+            x: 300,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'purple',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myShape'
+        });
+
+        layer.add(circle);
+        layer.add(rect);
+        stage.add(layer);
+
+        var shapes = layer.get('Shape');
+
+        test(shapes.length === 2, 'shapes array should have 2 elements');
+
+        shapes.apply('setFill', 'gray');
+
+        layer.draw();
+
+        shapes.each(function() {
+            test(this.getFill() === 'gray', 'shape x should be 200');
         });
     },
     'SELECTOR - add listener to an array of nodes': function(containerId) {
