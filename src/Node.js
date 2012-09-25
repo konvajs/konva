@@ -436,14 +436,7 @@ Kinetic.Node.prototype = {
         this.parent.children.splice(index, 1);
         this.parent.children.push(this);
         this.parent._setChildrenIndices();
-
-        if(this.nodeType === 'Layer') {
-            var stage = this.getStage();
-            if(stage) {
-                stage.content.removeChild(this.canvas.element);
-                stage.content.appendChild(this.canvas.element);
-            }
-        }
+        return true;
     },
     /**
      * move node up
@@ -456,20 +449,7 @@ Kinetic.Node.prototype = {
             this.parent.children.splice(index, 1);
             this.parent.children.splice(index + 1, 0, this);
             this.parent._setChildrenIndices();
-
-            if(this.nodeType === 'Layer') {
-                var stage = this.getStage();
-                if(stage) {
-                    stage.content.removeChild(this.canvas.element);
-
-                    if(this.index < stage.getChildren().length - 1) {
-                        stage.content.insertBefore(this.canvas.element, stage.getChildren()[this.index + 1].canvas.element);
-                    }
-                    else {
-                        stage.content.appendChild(this.canvas.element);
-                    }
-                }
-            }
+            return true;
         }
     },
     /**
@@ -483,15 +463,7 @@ Kinetic.Node.prototype = {
             this.parent.children.splice(index, 1);
             this.parent.children.splice(index - 1, 0, this);
             this.parent._setChildrenIndices();
-
-            if(this.nodeType === 'Layer') {
-                var stage = this.getStage();
-                if(stage) {
-                    var children = stage.getChildren();
-                    stage.content.removeChild(this.canvas.element);
-                    stage.content.insertBefore(this.canvas.element, children[this.index + 1].canvas.element);
-                }
-            }
+            return true;
         }
     },
     /**
@@ -505,15 +477,7 @@ Kinetic.Node.prototype = {
             this.parent.children.splice(index, 1);
             this.parent.children.unshift(this);
             this.parent._setChildrenIndices();
-
-            if(this.nodeType === 'Layer') {
-                var stage = this.getStage();
-                if(stage) {
-                    var children = stage.getChildren();
-                    stage.content.removeChild(this.canvas.element);
-                    stage.content.insertBefore(this.canvas.element, children[1].canvas.element);
-                }
-            }
+            return true;
         }
     },
     /**
@@ -584,12 +548,7 @@ Kinetic.Node.prototype = {
      * @methodOf Kinetic.Node.prototype
      */
     getLayer: function() {
-        if(this.nodeType === 'Layer') {
-            return this;
-        }
-        else {
-            return this.getParent().getLayer();
-        }
+        return this.getParent().getLayer();
     },
     /**
      * get stage that contains the node
@@ -597,11 +556,8 @@ Kinetic.Node.prototype = {
      * @methodOf Kinetic.Node.prototype
      */
     getStage: function() {
-        if(this.nodeType !== 'Stage' && this.getParent()) {
+        if(this.getParent()) {
             return this.getParent().getStage();
-        }
-        else if(this.nodeType === 'Stage') {
-            return this;
         }
         else {
             return undefined;
