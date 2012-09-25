@@ -1426,19 +1426,19 @@ Kinetic.Node.prototype = {
      * @param {Object} config
      */
     setAttrs: function(config) {
-   		if (config) {
-   			for (var key in config) {
-   				var method = 'set' + key.charAt(0).toUpperCase() + key.slice(1);
-   				// use setter if available
-   				if (Kinetic.Type._isFunction(this[method])) {
-   					this[method](config[key]);
-   				}
-   				// otherwise set directly
-   				else {
-   					this.setAttr(key, config[key]);
-   				}
-   			}
-   		}
+        if(config) {
+            for(var key in config) {
+                var method = 'set' + key.charAt(0).toUpperCase() + key.slice(1);
+                // use setter if available
+                if(Kinetic.Type._isFunction(this[method])) {
+                    this[method](config[key]);
+                }
+                // otherwise set directly
+                else {
+                    this.setAttr(key, config[key]);
+                }
+            }
+        }
     },
     /**
      * determine if shape is visible or not.  Shape is visible only
@@ -1507,6 +1507,7 @@ Kinetic.Node.prototype = {
                 addChildren(nodes);
             }
         }
+
         if(that.nodeType !== 'Stage') {
             addChildren(that.getStage().getChildren());
         }
@@ -1611,7 +1612,7 @@ Kinetic.Node.prototype = {
             y += pos.y;
         }
 
-		this.setPosition(x, y);
+        this.setPosition(x, y);
     },
     /**
      * get rotation in degrees
@@ -1637,7 +1638,7 @@ Kinetic.Node.prototype = {
      * @param {Number} theta
      */
     rotate: function(theta) {
-    	this.setRotation(this.getRotation() + theta);
+        this.setRotation(this.getRotation() + theta);
     },
     /**
      * rotate node by an amount in degrees
@@ -2022,40 +2023,40 @@ Kinetic.Node.prototype = {
         });
     },
     /**
-	 * set offset.  A node's offset defines the position and rotation point
-	 * @name setOffset
-	 * @methodOf Kinetic.Node.prototype
-	 * @param {Number} x
-	 * @param {Number} y
-	 */
+     * set offset.  A node's offset defines the position and rotation point
+     * @name setOffset
+     * @methodOf Kinetic.Node.prototype
+     * @param {Number} x
+     * @param {Number} y
+     */
     setOffset: function() {
-   		var pos = Kinetic.Type._getXY([].slice.call(arguments));
-        if (pos.x === undefined) {
-        	pos.x = this.getOffset().x;
+        var pos = Kinetic.Type._getXY([].slice.call(arguments));
+        if(pos.x === undefined) {
+            pos.x = this.getOffset().x;
         }
-        if (pos.y === undefined) {
-        	pos.y = this.getOffset().y;
+        if(pos.y === undefined) {
+            pos.y = this.getOffset().y;
         }
         this.setAttr('offset', pos);
     },
     /**
-	 * set scale.
-	 * @name setScale
-	 * @param {Number} x
-	 * @param {Number} y
-	 * @methodOf Kinetic.Node.prototype
-	 */
+     * set scale.
+     * @name setScale
+     * @param {Number} x
+     * @param {Number} y
+     * @methodOf Kinetic.Node.prototype
+     */
     setScale: function() {
-    	var pos = Kinetic.Type._getXY([].slice.call(arguments));
-        
-        if (pos.x === undefined) {
-        	pos.x = this.getScale().x;
+        var pos = Kinetic.Type._getXY([].slice.call(arguments));
+
+        if(pos.x === undefined) {
+            pos.x = this.getScale().x;
         }
-        if (pos.y === undefined) {
-        	pos.y = this.getScale().y;
+        if(pos.y === undefined) {
+            pos.y = this.getScale().y;
         }
         this.setAttr('scale', pos);
-        
+
     },
     _clearTransform: function() {
         var trans = {
@@ -2104,12 +2105,12 @@ Kinetic.Node.prototype = {
         });
     },
     setAttr: function(key, val) {
-    	if (val !== undefined) {
-    		var oldVal = this.attrs[key];
-    		this._fireBeforeChangeEvent(key, oldVal, val);
-    		this.attrs[key] = val;
-    		this._fireChangeEvent(key, oldVal, val);
-    	}
+        if(val !== undefined) {
+            var oldVal = this.attrs[key];
+            this._fireBeforeChangeEvent(key, oldVal, val);
+            this.attrs[key] = val;
+            this._fireChangeEvent(key, oldVal, val);
+        }
     },
     _listenDrag: function() {
         this._dragCleanup();
@@ -2280,6 +2281,22 @@ Kinetic.Node.prototype.isListening = Kinetic.Node.prototype.getListening;
  */
 Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
 
+// collection mappings
+(function() {
+    var collectionMappings = ['on', 'off'];
+    for(var n = 0; n < collectionMappings.length; n++) {
+        // induce scope
+        (function(i) {
+            var method = collectionMappings[i];
+            Kinetic.Collection.prototype[method] = function() {
+                var args = [].slice.call(arguments);
+                args.unshift(method);
+                this.apply.apply(this, args);
+            };
+        })(n);
+    }
+})();
+
 /**
  * set node x position
  * @name setX
@@ -2413,7 +2430,6 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  * @name getListening
  * @methodOf Kinetic.Node.prototype
  */
-
 ///////////////////////////////////////////////////////////////////////
 //  Container
 ///////////////////////////////////////////////////////////////////////

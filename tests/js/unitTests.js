@@ -742,7 +742,7 @@ Test.prototype.tests = {
 
         test(shapes.length === 2, 'shapes array should have 2 elements');
         var a = 0;
-        shapes.apply('on', 'mouseover', function() {
+        shapes.on('mouseover', function() {
             a++;
         });
         circle.simulate('mouseover');
