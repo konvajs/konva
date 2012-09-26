@@ -604,14 +604,14 @@ Test.prototype.tests = {
         test(Kinetic.Global.shapes[circleColorKey]._id === circle._id, 'circle color key should be in shapes hash');
         test(Kinetic.Global.shapes[rectColorKey]._id === rect._id, 'rect color key should be in shapes hash');
 
-        layer.remove(circle);
+        circle.remove();
 
         test(stage.ids.myCircle === undefined, 'circle still in hash');
         test(stage.names.myRect[0]._id === rect._id, 'rect not in names hash');
         test(Kinetic.Global.shapes[circleColorKey] === undefined, 'circle color key should not be in shapes hash');
         test(Kinetic.Global.shapes[rectColorKey]._id === rect._id, 'rect color key should be in shapes hash');
 
-        layer.remove(rect);
+        rect.remove();
 
         test(stage.ids.myCircle === undefined, 'circle still in hash');
         test(stage.names.myRect === undefined, 'rect still in hash');
@@ -846,7 +846,7 @@ Test.prototype.tests = {
 
         test(go.tempNodes[circle._id].attrs.id === 'myCircle', 'circle should be in temp nodes');
 
-        layer.remove(circle);
+        circle.remove();
 
         test(go.tempNodes[circle._id] === undefined, 'circle shouldn\'t be in the temp nodes hash');
 
@@ -877,7 +877,7 @@ Test.prototype.tests = {
         test(stage.get('.myLayer')[0] !== undefined, 'layer should exist');
         test(stage.get('.myCircle')[0] !== undefined, 'circle should exist');
 
-        stage.remove(layer);
+        layer.remove();
 
         test(stage.children.length === 0, 'stage should have 0 children');
         test(stage.get('.myLayer')[0] === undefined, 'layer should not exist');
@@ -893,7 +893,7 @@ Test.prototype.tests = {
         });
         var layer = new Kinetic.Layer();
         stage.add(layer);
-        stage.remove(layer);
+        layer.remove();
 
         test(stage.children.length === 0, 'stage should have 0 children');
     },
@@ -926,8 +926,8 @@ Test.prototype.tests = {
 
         test(layer.getChildren().length === 2, 'layer should have two children');
 
-        layer.remove(shape1);
-        layer.remove(shape1);
+        shape1.remove();
+        shape1.remove();
 
         test(layer.getChildren().length === 1, 'layer should have two children');
 
@@ -966,8 +966,8 @@ Test.prototype.tests = {
 
         test(stage.getChildren().length === 2, 'stage should have two children');
 
-        stage.remove(layer1);
-        stage.remove(layer1);
+        layer1.remove();
+        layer1.remove();
 
         test(stage.getChildren().length === 1, 'stage should have one child');
 
@@ -3020,7 +3020,7 @@ Test.prototype.tests = {
 
         test(layer.children.length === 1, 'layer should have 1 children');
 
-        layer.remove(circle);
+        circle.remove();
 
         test(layer.children.length === 0, 'layer should have 0 children');
         //test(layer.getChild('myCircle') === undefined, 'shape should be null');

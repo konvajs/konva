@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sep 25 2012
+ * Date: Sep 26 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1385,6 +1385,40 @@ Kinetic.Node.prototype = {
         }
     },
     /**
+     * remove child from container
+     * @name remove
+     * @methodOf Kinetic.Container.prototype
+     * @param {Node} child
+     */
+    remove: function() {
+    	var parent = this.getParent();
+        if(parent && this.index !== undefined && parent.children[this.index]._id == this._id) {
+            var stage = parent.getStage();
+            /*
+             * remove event listeners and references to the node
+             * from the ids and names hashes
+             */
+            if(stage) {
+                stage._removeId(this.getId());
+                stage._removeName(this.getName(), this._id);
+            }
+
+            Kinetic.Global._removeTempNode(this);
+            parent.children.splice(this.index, 1);
+            parent._setChildrenIndices();
+
+            // remove children
+            while(this.children && this.children.length > 0) {
+                this.children[0].remove();
+            }
+
+            // do extra stuff if needed
+            if(this._remove !== undefined) {
+                this._remove();
+            }
+        }
+    },
+    /**
      * get attrs
      * @name getAttrs
      * @methodOf Kinetic.Node.prototype
@@ -2444,7 +2478,7 @@ Kinetic.Container.prototype = {
      */
     removeChildren: function() {
         while(this.children.length > 0) {
-            this.remove(this.children[0]);
+            this.children[0].remove();
         }
     },
     /**
@@ -2479,42 +2513,6 @@ Kinetic.Container.prototype = {
         // do extra stuff if needed
         if(this._add !== undefined) {
             this._add(child);
-        }
-
-        // chainable
-        return this;
-    },
-    /**
-     * remove child from container
-     * @name remove
-     * @methodOf Kinetic.Container.prototype
-     * @param {Node} child
-     */
-    remove: function(child) {
-        if(child && child.index !== undefined && this.children[child.index]._id == child._id) {
-            var stage = this.getStage();
-            /*
-             * remove event listeners and references to the node
-             * from the ids and names hashes
-             */
-            if(stage) {
-                stage._removeId(child.getId());
-                stage._removeName(child.getName(), child._id);
-            }
-
-            Kinetic.Global._removeTempNode(child);
-            this.children.splice(child.index, 1);
-            this._setChildrenIndices();
-
-            // remove children
-            while(child.children && child.children.length > 0) {
-                child.remove(child.children[0]);
-            }
-
-            // do extra stuff if needed
-            if(child._remove !== undefined) {
-                child._remove();
-            }
         }
 
         // chainable

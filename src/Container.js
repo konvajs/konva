@@ -54,7 +54,7 @@ Kinetic.Container.prototype = {
      */
     removeChildren: function() {
         while(this.children.length > 0) {
-            this.remove(this.children[0]);
+            this.children[0].remove();
         }
     },
     /**
@@ -89,42 +89,6 @@ Kinetic.Container.prototype = {
         // do extra stuff if needed
         if(this._add !== undefined) {
             this._add(child);
-        }
-
-        // chainable
-        return this;
-    },
-    /**
-     * remove child from container
-     * @name remove
-     * @methodOf Kinetic.Container.prototype
-     * @param {Node} child
-     */
-    remove: function(child) {
-        if(child && child.index !== undefined && this.children[child.index]._id == child._id) {
-            var stage = this.getStage();
-            /*
-             * remove event listeners and references to the node
-             * from the ids and names hashes
-             */
-            if(stage) {
-                stage._removeId(child.getId());
-                stage._removeName(child.getName(), child._id);
-            }
-
-            Kinetic.Global._removeTempNode(child);
-            this.children.splice(child.index, 1);
-            this._setChildrenIndices();
-
-            // remove children
-            while(child.children && child.children.length > 0) {
-                child.remove(child.children[0]);
-            }
-
-            // do extra stuff if needed
-            if(child._remove !== undefined) {
-                child._remove();
-            }
         }
 
         // chainable

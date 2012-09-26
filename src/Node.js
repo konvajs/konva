@@ -162,6 +162,40 @@ Kinetic.Node.prototype = {
         }
     },
     /**
+     * remove child from container
+     * @name remove
+     * @methodOf Kinetic.Container.prototype
+     * @param {Node} child
+     */
+    remove: function() {
+    	var parent = this.getParent();
+        if(parent && this.index !== undefined && parent.children[this.index]._id == this._id) {
+            var stage = parent.getStage();
+            /*
+             * remove event listeners and references to the node
+             * from the ids and names hashes
+             */
+            if(stage) {
+                stage._removeId(this.getId());
+                stage._removeName(this.getName(), this._id);
+            }
+
+            Kinetic.Global._removeTempNode(this);
+            parent.children.splice(this.index, 1);
+            parent._setChildrenIndices();
+
+            // remove children
+            while(this.children && this.children.length > 0) {
+                this.children[0].remove();
+            }
+
+            // do extra stuff if needed
+            if(this._remove !== undefined) {
+                this._remove();
+            }
+        }
+    },
+    /**
      * get attrs
      * @name getAttrs
      * @methodOf Kinetic.Node.prototype
