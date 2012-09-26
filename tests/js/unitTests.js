@@ -3995,33 +3995,12 @@ Test.prototype.tests = {
 
         // test defaults
         test(circle.attrs.draggable === false, 'draggable should be false');
-        test(circle.attrs.dragConstraint === 'none', 'drag constraint should be none');
-        test(circle.attrs.dragBounds.left === undefined, 'drag left should be undefined');
-        test(circle.attrs.dragBounds.top === undefined, 'drag top should be undefined');
-        test(circle.attrs.dragBounds.right === undefined, 'drag right should be undefined');
-        test(circle.attrs.dragBounds.bottom === undefined, 'drag bottom should be undefined');
-        test(circle.getDragConstraint() === 'none', 'drag constraint should be none');
-        test(circle.getDragBounds().bottom === undefined, 'drag bottom should be undefined');
 
         //change properties
         circle.setDraggable(true);
-        circle.setDragConstraint('vertical');
-        circle.setDragBounds({
-            left: 50,
-            top: 100,
-            right: 150,
-            bottom: 200
-        });
 
         // test new properties
         test(circle.attrs.draggable === true, 'draggable should be true');
-        test(circle.attrs.dragConstraint === 'vertical', 'drag constraint should be vertical');
-        test(circle.attrs.dragBounds.left === 50, 'drag left should be 50');
-        test(circle.attrs.dragBounds.top === 100, 'drag top should be 100');
-        test(circle.attrs.dragBounds.right === 150, 'drag right should be 150');
-        test(circle.attrs.dragBounds.bottom === 200, 'drag bottom should be 200');
-        test(circle.getDragConstraint() === 'vertical', 'drag constraint should be vertical');
-        test(circle.getDragBounds().bottom === 200, 'drag bottom should be 200');
     },
     'NODE - translate, rotate, scale shape': function(containerId) {
         var stage = new Kinetic.Stage({

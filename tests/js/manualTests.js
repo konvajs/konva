@@ -14,7 +14,7 @@ Test.prototype.tests = {
             stroke: 'black',
             strokeWidth: 4
         });
-        
+
         circle.on('mousedown', function() {
             log('mousedown');
         });
@@ -203,6 +203,7 @@ Test.prototype.tests = {
                 });
             });
         }
+
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -361,7 +362,7 @@ Test.prototype.tests = {
 
         layer.add(star);
         stage.add(layer);
-        
+
         //document.body.appendChild(layer.bufferCanvas.element)
     },
     'EVENTS - drag events click': function(containerId) {
@@ -444,10 +445,10 @@ Test.prototype.tests = {
         layer.add(greenCircle);
 
         stage.add(layer);
-        
+
         //greenCircle.hide();
         layer.draw();
-        
+
         //document.body.appendChild(layer.bufferCanvas.element);
     },
     'EVENTS - move mouse from shape in one group to shape in another group': function(containerId) {
@@ -979,6 +980,90 @@ Test.prototype.tests = {
 
         stage.draw();
     },
+    'DRAG AND DROP - drag bound function': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rectHeight = 50;
+        var rectWidth = 100;
+        var rectY = (stage.getHeight() - rectHeight) / 2;
+
+        var hbox = new Kinetic.Text({
+            x: 380,
+            y: 70,
+            fill: "#00D2FF",
+            strokeWidth: 4,
+            fontSize: 18,
+            fontFamily: "Calibri",
+            text: "shiftKey",
+            textFill: "black",
+            padding: 15,
+            draggable: true,
+            dragBoundFunc: function(pos, evt) {
+                var newPos = pos;
+                if(evt.shiftKey) {
+                    newPos.x = Math.round(pos.x / 20) * 20;
+                    newPos.y = Math.round(pos.y / 20) * 20;
+                }
+                return pos;
+            }
+        });
+
+        var vbox = new Kinetic.Text({
+            x: 70,
+            y: 70,
+            fill: "yellow",
+            strokeWidth: 4,
+            draggable: true,
+            fontSize: 18,
+            fontFamily: "Calibri",
+            text: "diagonal",
+            textFill: "black",
+            padding: 15,
+            draggable: true,
+            dragBoundFunc: function(pos) {
+                p = (pos.y + pos.x) / 2;
+                return {
+                    y: p,
+                    x: p
+                };
+            }
+        });
+
+        var circle = new Kinetic.Circle({
+            x: 280,
+            y: 45,
+            radius: 50,
+            fill: "red",
+            strokeWidth: 4,
+            draggable: true,
+            fontSize: 18,
+            draggable: true,
+            dragBoundFunc: function(pos) {
+                var circle = {
+                    x: 280,
+                    y: 95,
+                    r: 50
+                };
+                var scale = circle.r / Math.sqrt(Math.pow(pos.x - circle.x, 2) + Math.pow(pos.y - circle.y, 2));
+                if(scale < 1)
+                    return {
+                        y: Math.round((pos.y - circle.y) * scale + circle.y),
+                        x: Math.round((pos.x - circle.x) * scale + circle.x)
+                    };
+                else
+                    return pos;
+            }
+        });
+
+        layer.add(hbox);
+        layer.add(vbox);
+        layer.add(circle);
+        stage.add(layer);
+    },
     'DRAG AND DROP - set stage scale to 1.5 before add layer then drag and drop shape': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1037,7 +1122,7 @@ Test.prototype.tests = {
         layer.add(Circle2);
         stage.add(layer);
     },
-    'DRAG AND DROP - drag and drop constrianed horiztontally inside positioned group': function(containerId) {
+    'DRAG AND DROP - drag and drop constrianed horizontally inside positioned group': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1049,60 +1134,20 @@ Test.prototype.tests = {
             y: 10
         });
         var Circle = new Kinetic.Circle({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
+            x: 200,
+            y: 100,
             radius: 70,
             fill: 'red',
             stroke: 'black',
             strokeWidth: 4,
             draggable: true,
-            dragConstraint: 'horizontal'
+            dragBoundFunc: function(pos) {
+            	return {x:pos.x, y:this.getAbsolutePosition().y};
+            }
         });
 
         group.add(Circle);
         layer.add(group);
-        stage.add(layer);
-    },
-    'DRAG AND DROP - drag and drop constrianed vertically': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var Circle = new Kinetic.Circle({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 4,
-            draggable: true,
-            dragConstraint: 'vertical'
-        });
-
-        layer.add(Circle);
-        stage.add(layer);
-    },
-    'DRAG AND DROP - drag and drop with explicit no constraint': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var Circle = new Kinetic.Circle({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 4,
-            draggable: true,
-            dragConstraint: 'none'
-        });
-
-        layer.add(Circle);
         stage.add(layer);
     },
     'DRAG AND DROP - drag and drop with left bounds': function(containerId) {
@@ -1120,109 +1165,16 @@ Test.prototype.tests = {
             stroke: 'black',
             strokeWidth: 4,
             draggable: true,
-            dragBounds: {
-                left: 150
+            dragBoundFunc: function(pos) {
+            	var newX = pos.x > 50 ? pos.x : 50;
+            	return {x: newX, y:this.getY()}
             }
         });
 
         layer.add(Circle);
         stage.add(layer);
     },
-    'DRAG AND DROP - drag and drop with right bounds': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var Circle = new Kinetic.Circle({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 4,
-            draggable: true,
-            dragBounds: {
-                right: 400
-            }
-        });
 
-        layer.add(Circle);
-        stage.add(layer);
-    },
-    'DRAG AND DROP - drag and drop with top bounds': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var Circle = new Kinetic.Circle({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 4,
-            draggable: true,
-            dragBounds: {
-                top: 80
-            }
-        });
-
-        layer.add(Circle);
-        stage.add(layer);
-    },
-    'DRAG AND DROP - drag and drop with bottom bounds': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var Circle = new Kinetic.Circle({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 4,
-            draggable: true,
-            dragBounds: {
-                bottom: 120
-            }
-        });
-
-        layer.add(Circle);
-        stage.add(layer);
-    },
-    'DRAG AND DROP - drag and drop with full rect bounds': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var Circle = new Kinetic.Circle({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 4,
-            draggable: true,
-            dragBounds: {
-                top: 80,
-                bottom: 120,
-                left: 150,
-                right: 578 - 150
-            }
-        });
-
-        layer.add(Circle);
-        stage.add(layer);
-    },
     'DRAG AND DROP - drag and drop shape inside scrollable div': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

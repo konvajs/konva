@@ -1253,6 +1253,7 @@ requestAnimFrame = (function(callback) {
  * @param {Number} [config.dragBounds.right]
  * @param {Number} [config.dragBounds.bottom]
  * @param {Number} [config.dragBounds.left]
+ * @param {Function} [config.dragBoundFunc] dragBoundFunc(pos, evt) should return new position
  */
 Kinetic.Node = function(config) {
     this._nodeInit(config);
@@ -2220,7 +2221,7 @@ Kinetic.Node._addGetter = function(constructor, attr) {
     };
 };
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'rotation', 'opacity', 'name', 'id', 'draggable', 'dragConstraint', 'dragBounds', 'listening', 'visible']);
+Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'rotation', 'opacity', 'name', 'id', 'draggable', 'listening', 'visible', 'dragBoundFunc']);
 Kinetic.Node.addGetters(Kinetic.Node, ['scale', 'offset']);
 
 // mappings
@@ -2386,6 +2387,7 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  * @name getListening
  * @methodOf Kinetic.Node.prototype
  */
+
 ///////////////////////////////////////////////////////////////////////
 //  Container
 ///////////////////////////////////////////////////////////////////////
@@ -2704,7 +2706,7 @@ Kinetic.Stage.prototype = {
 
     },
     setContainer: function(container) {
-    	/*
+        /*
          * if container is a string, assume it's an id for
          * a DOM element
          */
@@ -2734,26 +2736,25 @@ Kinetic.Stage.prototype = {
         this.setWidth(size.width);
         this.setHeight(size.height);
     },
-
-	/**
-	 * set height
-	 * @name setHeight
-	 * @methodOf Kinetic.Stage.prototype
-	 * @param {Number} height
-	 */
+    /**
+     * set height
+     * @name setHeight
+     * @methodOf Kinetic.Stage.prototype
+     * @param {Number} height
+     */
     setHeight: function(height) {
-    	this.setAttr('height', height);
-    	this._resizeDOM();
+        this.setAttr('height', height);
+        this._resizeDOM();
     },
-	 /**
-	 * set width
-	 * @name setWidth
-	 * @methodOf Kinetic.Stage.prototype
-	 * @param {Number} width
-	 */
+    /**
+     * set width
+     * @name setWidth
+     * @methodOf Kinetic.Stage.prototype
+     * @param {Number} width
+     */
     setWidth: function(width) {
-    	this.setAttr('width', width);
-    	this._resizeDOM();
+        this.setAttr('width', width);
+        this._resizeDOM();
     },
     /**
      * get stage size
@@ -2814,6 +2815,7 @@ Kinetic.Stage.prototype = {
 
             return obj;
         }
+
         return JSON.stringify(addNode(this));
     },
     /**
@@ -2871,6 +2873,7 @@ Kinetic.Stage.prototype = {
                 }
             }
         }
+
         var obj = JSON.parse(json);
 
         // copy over stage properties
@@ -2974,6 +2977,7 @@ Kinetic.Stage.prototype = {
             };
             imageObj.src = layerUrl;
         }
+
         drawLayer(0);
     },
     /**
@@ -3038,24 +3042,24 @@ Kinetic.Stage.prototype = {
         return null;
     },
     _resizeDOM: function() {
-    	if (this.content) {
-	        var width = this.attrs.width;
-	        var height = this.attrs.height;
-	
-	        // set content dimensions
-	        this.content.style.width = width + 'px';
-	        this.content.style.height = height + 'px';
-	
-	        this.bufferCanvas.setSize(width, height);
-	        // set user defined layer dimensions
-	        var layers = this.children;
-	        for(var n = 0; n < layers.length; n++) {
-	            var layer = layers[n];
-	            layer.getCanvas().setSize(width, height);
-	            layer.bufferCanvas.setSize(width, height);
-	            layer.draw();
-	        }
-       }
+        if(this.content) {
+            var width = this.attrs.width;
+            var height = this.attrs.height;
+
+            // set content dimensions
+            this.content.style.width = width + 'px';
+            this.content.style.height = height + 'px';
+
+            this.bufferCanvas.setSize(width, height);
+            // set user defined layer dimensions
+            var layers = this.children;
+            for(var n = 0; n < layers.length; n++) {
+                var layer = layers[n];
+                layer.getCanvas().setSize(width, height);
+                layer.bufferCanvas.setSize(width, height);
+                layer.draw();
+            }
+        }
     },
     /**
      * add layer to stage
@@ -3326,42 +3330,18 @@ Kinetic.Stage.prototype = {
 
         if(node) {
             var pos = that.getUserPosition();
-            var dc = node.attrs.dragConstraint;
-            var db = node.attrs.dragBounds;
-            var lastNodePos = {
-                x: node.attrs.x,
-                y: node.attrs.y
-            };
+            var dbf = node.attrs.dragBoundFunc;
 
-            // default
             var newNodePos = {
                 x: pos.x - go.drag.offset.x,
                 y: pos.y - go.drag.offset.y
             };
 
-            // bounds overrides
-            if(db.left !== undefined && newNodePos.x < db.left) {
-                newNodePos.x = db.left;
-            }
-            if(db.right !== undefined && newNodePos.x > db.right) {
-                newNodePos.x = db.right;
-            }
-            if(db.top !== undefined && newNodePos.y < db.top) {
-                newNodePos.y = db.top;
-            }
-            if(db.bottom !== undefined && newNodePos.y > db.bottom) {
-                newNodePos.y = db.bottom;
+            if(dbf !== undefined) {
+                newNodePos = dbf.call(node, newNodePos, evt);
             }
 
             node.setAbsolutePosition(newNodePos);
-
-            // constraint overrides
-            if(dc === 'horizontal') {
-                node.attrs.y = lastNodePos.y;
-            }
-            else if(dc === 'vertical') {
-                node.attrs.x = lastNodePos.x;
-            }
 
             if(!go.drag.moving) {
                 go.drag.moving = true;
@@ -3469,7 +3449,7 @@ Kinetic.Node.addGetters(Kinetic.Stage, ['width', 'height', 'container']);
  * @name getContainer
  * @methodOf Kinetic.Stage.prototype
  */
-    
+
 /**
  * get width
  * @name getWidth
@@ -3481,8 +3461,6 @@ Kinetic.Node.addGetters(Kinetic.Stage, ['width', 'height', 'container']);
  * @name getHeight
  * @methodOf Kinetic.Stage.prototype
  */
-
-
 ///////////////////////////////////////////////////////////////////////
 //  Layer
 ///////////////////////////////////////////////////////////////////////

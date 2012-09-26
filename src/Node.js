@@ -30,6 +30,7 @@
  * @param {Number} [config.dragBounds.right]
  * @param {Number} [config.dragBounds.bottom]
  * @param {Number} [config.dragBounds.left]
+ * @param {Function} [config.dragBoundFunc] dragBoundFunc(pos, evt) should return new position
  */
 Kinetic.Node = function(config) {
     this._nodeInit(config);
@@ -997,7 +998,7 @@ Kinetic.Node._addGetter = function(constructor, attr) {
     };
 };
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'rotation', 'opacity', 'name', 'id', 'draggable', 'dragConstraint', 'dragBounds', 'listening', 'visible']);
+Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'rotation', 'opacity', 'name', 'id', 'draggable', 'listening', 'visible', 'dragBoundFunc']);
 Kinetic.Node.addGetters(Kinetic.Node, ['scale', 'offset']);
 
 // mappings
