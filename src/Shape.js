@@ -422,7 +422,8 @@ Kinetic.Shape.prototype = {
         var p = bufferCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
         return p[3] > 0;
     },
-    _remove: function() {
+    remove: function() {
+    	Kinetic.Node.prototype.remove.call(this);
         delete Kinetic.Global.shapes[this.colorKey];
     },
     __draw: function(canvas) {

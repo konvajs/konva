@@ -229,7 +229,8 @@ Kinetic.Layer.prototype = {
     /**
      * remove layer from stage
      */
-    _remove: function() {
+    remove: function() {
+    	Kinetic.Node.prototype.remove.call(this);
         /*
          * remove canvas DOM from the document if
          * it exists

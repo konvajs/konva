@@ -188,11 +188,6 @@ Kinetic.Node.prototype = {
             while(this.children && this.children.length > 0) {
                 this.children[0].remove();
             }
-
-            // do extra stuff if needed
-            if(this._remove !== undefined) {
-                this._remove();
-            }
         }
     },
     /**

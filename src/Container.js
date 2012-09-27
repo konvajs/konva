@@ -85,12 +85,7 @@ Kinetic.Container.prototype = {
             var go = Kinetic.Global;
             go._pullNodes(stage);
         }
-
-        // do extra stuff if needed
-        if(this._add !== undefined) {
-            this._add(child);
-        }
-
+        
         // chainable
         return this;
     },

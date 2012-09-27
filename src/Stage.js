@@ -418,13 +418,17 @@ Kinetic.Stage.prototype = {
      * add layer to stage
      * @param {Layer} layer
      */
-    _add: function(layer) {
+    add: function(layer) {
+    	Kinetic.Container.prototype.add.call(this, layer);
         layer.canvas.setSize(this.attrs.width, this.attrs.height);
         layer.bufferCanvas.setSize(this.attrs.width, this.attrs.height);
 
         // draw layer and append canvas to container
         layer.draw();
         this.content.appendChild(layer.canvas.element);
+        
+        // chainable
+        return this;
     },
     _setUserPosition: function(evt) {
         if(!evt) {

@@ -1411,11 +1411,6 @@ Kinetic.Node.prototype = {
             while(this.children && this.children.length > 0) {
                 this.children[0].remove();
             }
-
-            // do extra stuff if needed
-            if(this._remove !== undefined) {
-                this._remove();
-            }
         }
     },
     /**
@@ -2509,12 +2504,7 @@ Kinetic.Container.prototype = {
             var go = Kinetic.Global;
             go._pullNodes(stage);
         }
-
-        // do extra stuff if needed
-        if(this._add !== undefined) {
-            this._add(child);
-        }
-
+        
         // chainable
         return this;
     },
@@ -3063,13 +3053,17 @@ Kinetic.Stage.prototype = {
      * add layer to stage
      * @param {Layer} layer
      */
-    _add: function(layer) {
+    add: function(layer) {
+    	Kinetic.Container.prototype.add.call(this, layer);
         layer.canvas.setSize(this.attrs.width, this.attrs.height);
         layer.bufferCanvas.setSize(this.attrs.width, this.attrs.height);
 
         // draw layer and append canvas to container
         layer.draw();
         this.content.appendChild(layer.canvas.element);
+        
+        // chainable
+        return this;
     },
     _setUserPosition: function(evt) {
         if(!evt) {
@@ -3690,7 +3684,8 @@ Kinetic.Layer.prototype = {
     /**
      * remove layer from stage
      */
-    _remove: function() {
+    remove: function() {
+    	Kinetic.Node.prototype.remove.call(this);
         /*
          * remove canvas DOM from the document if
          * it exists
@@ -4196,7 +4191,8 @@ Kinetic.Shape.prototype = {
         var p = bufferCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
         return p[3] > 0;
     },
-    _remove: function() {
+    remove: function() {
+    	Kinetic.Node.prototype.remove.call(this);
         delete Kinetic.Global.shapes[this.colorKey];
     },
     __draw: function(canvas) {
