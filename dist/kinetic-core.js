@@ -1246,13 +1246,6 @@ requestAnimFrame = (function(callback) {
  * @param {Number} [config.offset.x]
  * @param {Number} [config.offset.y]
  * @param {Boolean} [config.draggable]
- * @param {String} [config.dragConstraint] can be vertical, horizontal, or none.  The default
- *  is none
- * @param {Object} [config.dragBounds]
- * @param {Number} [config.dragBounds.top]
- * @param {Number} [config.dragBounds.right]
- * @param {Number} [config.dragBounds.bottom]
- * @param {Number} [config.dragBounds.left]
  * @param {Function} [config.dragBoundFunc] dragBoundFunc(pos, evt) should return new position
  */
 Kinetic.Node = function(config) {
@@ -1277,8 +1270,6 @@ Kinetic.Node.prototype = {
                 x: 0,
                 y: 0
             },
-            dragConstraint: 'none',
-            dragBounds: {},
             draggable: false
         };
 
@@ -2660,13 +2651,7 @@ Kinetic.Global.extend(Kinetic.Container, Kinetic.Node);
  * @param {Number} [config.offset.x]
  * @param {Number} [config.offset.y]
  * @param {Boolean} [config.draggable]
- * @param {String} [config.dragConstraint] can be vertical, horizontal, or none.  The default
- *  is none
- * @param {Object} [config.dragBounds]
- * @param {Number} [config.dragBounds.top]
- * @param {Number} [config.dragBounds.right]
- * @param {Number} [config.dragBounds.bottom]
- * @param {Number} [config.dragBounds.left]
+ * @param {Function} [config.dragBoundFunc] dragBoundFunc(pos, evt) should return new position
  */
 Kinetic.Stage = function(config) {
     this._initStage(config);
@@ -3480,13 +3465,7 @@ Kinetic.Node.addGetters(Kinetic.Stage, ['width', 'height', 'container']);
  * @param {Number} [config.offset.x]
  * @param {Number} [config.offset.y]
  * @param {Boolean} [config.draggable]
- * @param {String} [config.dragConstraint] can be vertical, horizontal, or none.  The default
- *  is none
- * @param {Object} [config.dragBounds]
- * @param {Number} [config.dragBounds.top]
- * @param {Number} [config.dragBounds.right]
- * @param {Number} [config.dragBounds.bottom]
- * @param {Number} [config.dragBounds.left]
+ * @param {Function} [config.dragBoundFunc] dragBoundFunc(pos, evt) should return new position
  */
 Kinetic.Layer = function(config) {
     this._initLayer(config);
@@ -3745,13 +3724,7 @@ Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw']);
  * @param {Number} [config.offset.x]
  * @param {Number} [config.offset.y]
  * @param {Boolean} [config.draggable]
- * @param {String} [config.dragConstraint] can be vertical, horizontal, or none.  The default
- *  is none
- * @param {Object} [config.dragBounds]
- * @param {Number} [config.dragBounds.top]
- * @param {Number} [config.dragBounds.right]
- * @param {Number} [config.dragBounds.bottom]
- * @param {Number} [config.dragBounds.left]
+ * @param {Function} [config.dragBoundFunc] dragBoundFunc(pos, evt) should return new position
  */
 Kinetic.Group = function(config) {
     this._initGroup(config);
@@ -4501,7 +4474,7 @@ Kinetic.Node.addGettersSetters(Kinetic.Circle, ['radius']);
  * @param {Object} config
  */
 Kinetic.Ellipse = function(config) {
-	this._initEllipse(config);	
+    this._initEllipse(config);
 };
 
 Kinetic.Ellipse.prototype = {
@@ -4531,25 +4504,28 @@ Kinetic.Ellipse.prototype = {
         context.closePath();
         this.fill(context);
         this.stroke(context);
+    },
+    /**
+     * set radius
+     * @name setRadius
+     * @methodOf Kinetic.Ellipse.prototype
+     * @param {Object|Array} radius
+     *  radius can be a number, in which the ellipse becomes a circle,
+     *  it can be an object with an x and y component, or it
+     *  can be an array in which the first element is the x component
+     *  and the second element is the y component.  The x component
+     *  defines the horizontal radius and the y component
+     *  defines the vertical radius
+     */
+    setRadius: function() {
+        var pos = Kinetic.Type._getXY([].slice.call(arguments));
+        this.setAttr('radius', Kinetic.Type._merge(pos, this.getRadius()));
     }
 };
 Kinetic.Global.extend(Kinetic.Ellipse, Kinetic.Shape);
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Ellipse, ['radius']);
-
-/**
- * set radius
- * @name setRadius
- * @methodOf Kinetic.Ellipse.prototype
- * @param {Object|Array} radius
- *  radius can be a number, in which the ellipse becomes a circle,
- *  it can be an object with an x and y component, or it
- *  can be an array in which the first element is the x component
- *  and the second element is the y component.  The x component
- *  defines the horizontal radius and the y component
- *  defines the vertical radius
- */
+Kinetic.Node.addGetters(Kinetic.Ellipse, ['radius']);
 
 /**
  * get radius
