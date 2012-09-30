@@ -519,12 +519,9 @@ Kinetic.Node.prototype = {
      * @methodOf Kinetic.Node.prototype
      */
     getAbsoluteOpacity: function() {
-        var absOpacity = 1;
-        var node = this;
-        // traverse upwards
-        while(node.nodeType !== 'Stage') {
-            absOpacity *= node.attrs.opacity;
-            node = node.parent;
+        var absOpacity = this.getOpacity();
+        if (this.getParent()) {
+            absOpacity *= this.getParent().getAbsoluteOpacity();
         }
         return absOpacity;
     },
