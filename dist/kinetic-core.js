@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Oct 02 2012
+ * Date: Oct 03 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -2994,21 +2994,23 @@ Kinetic.Stage.prototype = {
          */
         for(var n = layers.length - 1; n >= 0; n--) {
             var layer = layers[n];
-            var p = layer.bufferCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
-            // this indicates that a buffer pixel may have been found
-            if(p[3] === 255) {
-                var colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
-                shape = Kinetic.Global.shapes[colorKey];
-                return {
-                    shape: shape,
-                    pixel: p
-                };
-            }
-            // if no shape mapped to that pixel, return pixel array
-            else if(p[0] > 0 || p[1] > 0 || p[2] > 0 || p[3] > 0) {
-                return {
-                    pixel: p
-                };
+            if(layer.isVisible() && layer.isListening()) {
+                var p = layer.bufferCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
+                // this indicates that a buffer pixel may have been found
+                if(p[3] === 255) {
+                    var colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
+                    shape = Kinetic.Global.shapes[colorKey];
+                    return {
+                        shape: shape,
+                        pixel: p
+                    };
+                }
+                // if no shape mapped to that pixel, return pixel array
+                else if(p[0] > 0 || p[1] > 0 || p[2] > 0 || p[3] > 0) {
+                    return {
+                        pixel: p
+                    };
+                }
             }
         }
 
@@ -3039,14 +3041,14 @@ Kinetic.Stage.prototype = {
      * @param {Layer} layer
      */
     add: function(layer) {
-    	Kinetic.Container.prototype.add.call(this, layer);
+        Kinetic.Container.prototype.add.call(this, layer);
         layer.canvas.setSize(this.attrs.width, this.attrs.height);
         layer.bufferCanvas.setSize(this.attrs.width, this.attrs.height);
 
         // draw layer and append canvas to container
         layer.draw();
         this.content.appendChild(layer.canvas.element);
-        
+
         // chainable
         return this;
     },
