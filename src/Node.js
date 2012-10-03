@@ -938,10 +938,10 @@ Kinetic.Node.prototype = {
         var el = this.eventListeners;
         var okayToRun = true;
 
-        if(eventType === 'mouseover' && compareShape && this._id === compareShape._id) {
+        if(eventType === 'mouseenter' && compareShape && this._id === compareShape._id) {
             okayToRun = false;
         }
-        else if(eventType === 'mouseout' && compareShape && this._id === compareShape._id) {
+        else if(eventType === 'mouseleave' && compareShape && this._id === compareShape._id) {
             okayToRun = false;
         }
 

@@ -37,7 +37,7 @@ var Kinetic = {};
 Kinetic.Filters = {};
 Kinetic.Plugins = {};
 Kinetic.Global = {
-    BUBBLE_WHITELIST: ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'click', 'dblclick', 'touchstart', 'touchmove', 'touchend', 'tap', 'dbltap', 'dragstart', 'dragmove', 'dragend'],
+    BUBBLE_WHITELIST: ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'mouseenter', 'mouseleave', 'click', 'dblclick', 'touchstart', 'touchmove', 'touchend', 'tap', 'dbltap', 'dragstart', 'dragmove', 'dragend'],
     BUFFER_WHITELIST: ['fill', 'stroke', 'textFill', 'textStroke'],
     BUFFER_BLACKLIST: ['shadow'],
     stages: [],
@@ -2161,10 +2161,10 @@ Kinetic.Node.prototype = {
         var el = this.eventListeners;
         var okayToRun = true;
 
-        if(eventType === 'mouseover' && compareShape && this._id === compareShape._id) {
+        if(eventType === 'mouseenter' && compareShape && this._id === compareShape._id) {
             okayToRun = false;
         }
-        else if(eventType === 'mouseout' && compareShape && this._id === compareShape._id) {
+        else if(eventType === 'mouseleave' && compareShape && this._id === compareShape._id) {
             okayToRun = false;
         }
 
@@ -3086,6 +3086,7 @@ Kinetic.Stage.prototype = {
         var targetShape = this.targetShape;
         if(targetShape && !go.drag.moving) {
             targetShape._handleEvent('mouseout', evt);
+            argetShape._handleEvent('mouseleave', evt);
             this.targetShape = null;
         }
         this.mousePos = undefined;
@@ -3104,8 +3105,10 @@ Kinetic.Stage.prototype = {
                 if(!go.drag.moving && obj.pixel[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
                     if(this.targetShape) {
                         this.targetShape._handleEvent('mouseout', evt, shape);
+                        this.targetShape._handleEvent('mouseleave', evt, shape);
                     }
                     shape._handleEvent('mouseover', evt, this.targetShape);
+                    shape._handleEvent('mouseenter', evt, this.targetShape);
                     this.targetShape = shape;
                 }
                 else {
@@ -3119,6 +3122,7 @@ Kinetic.Stage.prototype = {
          */
         else if(this.targetShape && !go.drag.moving) {
             this.targetShape._handleEvent('mouseout', evt);
+            this.targetShape._handleEvent('mouseleave', evt);
             this.targetShape = null;
         }
 

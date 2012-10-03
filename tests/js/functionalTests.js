@@ -616,7 +616,7 @@ Test.prototype.tests = {
         test(groupMousedowns === 4, 'groupMousedowns should be 4');
         test(greenCircleMousedowns === 2, 'greenCircleMousedowns should be 2');
     },
-    'EVENTS - group mouseover events': function(containerId) {
+    '*EVENTS - group mouseenter events': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -628,12 +628,12 @@ Test.prototype.tests = {
             name: 'group'
         });
 
-        var redMouseovers = 0;
-        var redMouseouts = 0;
-        var greenMouseovers = 0;
-        var greenMouseouts = 0;
-        var groupMouseovers = 0;
-        var groupMouseouts = 0;
+        var redMouseenters = 0;
+        var redMouseleaves = 0;
+        var greenMouseenters = 0;
+        var greenMouseleaves = 0;
+        var groupMouseenters = 0;
+        var groupMouseleaves = 0;
 
         var redCircle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
@@ -655,33 +655,33 @@ Test.prototype.tests = {
             name: 'green'
         });
 
-        group.on('mouseover', function() {
-            groupMouseovers++;
+        group.on('mouseenter', function() {
+            groupMouseenters++;
             console.log('group over')
         });
 
-        group.on('mouseout', function() {
-            groupMouseouts++;
+        group.on('mouseleave', function() {
+            groupMouseleaves++;
             console.log('group out')
         });
 
-        redCircle.on('mouseover', function() {
-            redMouseovers++;
+        redCircle.on('mouseenter', function() {
+            redMouseenters++;
             console.log('red over')
         });
 
-        redCircle.on('mouseout', function() {
-            redMouseouts++;
+        redCircle.on('mouseleave', function() {
+            redMouseleaves++;
             console.log('red out')
         });
 
-        greenCircle.on('mouseover', function() {
-            greenMouseovers++;
+        greenCircle.on('mouseenter', function() {
+            greenMouseenters++;
             console.log('green over')
         });
 
-        greenCircle.on('mouseout', function() {
-            greenMouseouts++;
+        greenCircle.on('mouseleave', function() {
+            greenMouseleaves++;
             console.log('green out')
         });
 
@@ -697,12 +697,12 @@ Test.prototype.tests = {
             clientY: 146
         });
 
-        test(redMouseovers === 0, 'redMouseovers should be 0');
-        test(redMouseouts === 0, 'redMouseouts should be 0');
-        test(greenMouseovers === 0, 'greenMouseovers should be 0');
-        test(greenMouseouts === 0, 'greenMouseouts should be 0');
-        test(groupMouseovers === 0, 'groupMouseovers should be 0');
-        test(groupMouseouts === 0, 'groupMouseouts should be 0');
+        test(redMouseenters === 0, 'redMouseenters should be 0');
+        test(redMouseleaves === 0, 'redMouseleaves should be 0');
+        test(greenMouseenters === 0, 'greenMouseenters should be 0');
+        test(greenMouseleaves === 0, 'greenMouseleaves should be 0');
+        test(groupMouseenters === 0, 'groupMouseenters should be 0');
+        test(groupMouseleaves === 0, 'groupMouseleaves should be 0');
 
         // move mouse inside of red circle
         stage._mousemove({
@@ -710,12 +710,14 @@ Test.prototype.tests = {
             clientY: 145
         });
 
-        test(redMouseovers === 1, 'redMouseovers should be 1');
-        test(redMouseouts === 0, 'redMouseouts should be 0');
-        test(greenMouseovers === 0, 'greenMouseovers should be 0');
-        test(greenMouseouts === 0, 'greenMouseouts should be 0');
-        test(groupMouseovers === 1, 'groupMouseovers should be 1');
-        test(groupMouseouts === 0, 'groupMouseouts should be 0');
+		console.log('groupMouseenters=' + groupMouseenters);
+
+        test(redMouseenters === 1, 'redMouseenters should be 1');
+        test(redMouseleaves === 0, 'redMouseleaves should be 0');
+        test(greenMouseenters === 0, 'greenMouseenters should be 0');
+        test(greenMouseleaves === 0, 'greenMouseleaves should be 0');
+        test(groupMouseenters === 1, 'groupMouseenters should be 1');
+        test(groupMouseleaves === 0, 'groupMouseleaves should be 0');
 
         // move mouse inside of green circle
         stage._mousemove({
@@ -723,12 +725,12 @@ Test.prototype.tests = {
             clientY: 118
         });
 
-        test(redMouseovers === 1, 'redMouseovers should be 1');
-        test(redMouseouts === 1, 'redMouseouts should be 1');
-        test(greenMouseovers === 1, 'greenMouseovers should be 1');
-        test(greenMouseouts === 0, 'greenMouseouts should be 0');
-        test(groupMouseovers === 1, 'groupMouseovers should be 1');
-        test(groupMouseouts === 0, 'groupMouseouts should be 0');
+        test(redMouseenters === 1, 'redMouseenters should be 1');
+        test(redMouseleaves === 1, 'redMouseleaves should be 1');
+        test(greenMouseenters === 1, 'greenMouseenters should be 1');
+        test(greenMouseleaves === 0, 'greenMouseleaves should be 0');
+        test(groupMouseenters === 1, 'groupMouseenters should be 1');
+        test(groupMouseleaves === 0, 'groupMouseleaves should be 0');
 
         // move mouse back to red circle
 
@@ -741,12 +743,12 @@ Test.prototype.tests = {
             clientY: 105
         });
 
-        test(redMouseovers === 2, 'redMouseovers should be 2');
-        test(redMouseouts === 1, 'redMouseouts should be 1');
-        test(greenMouseovers === 1, 'greenMouseovers should be 1');
-        test(greenMouseouts === 1, 'greenMouseouts should be 1');
-        test(groupMouseovers === 1, 'groupMouseovers should be 1');
-        test(groupMouseouts === 0, 'groupMouseouts should be 0');
+        test(redMouseenters === 2, 'redMouseenters should be 2');
+        test(redMouseleaves === 1, 'redMouseleaves should be 1');
+        test(greenMouseenters === 1, 'greenMouseenters should be 1');
+        test(greenMouseleaves === 1, 'greenMouseleaves should be 1');
+        test(groupMouseenters === 1, 'groupMouseenters should be 1');
+        test(groupMouseleaves === 0, 'groupMouseleaves should be 0');
 
         // move mouse outside of circles
         stage._mousemove({
@@ -757,12 +759,12 @@ Test.prototype.tests = {
             clientX: 177,
             clientY: 146
         });
-        test(redMouseovers === 2, 'redMouseovers should be 2');
-        test(redMouseouts === 2, 'redMouseouts should be 2');
-        test(greenMouseovers === 1, 'greenMouseovers should be 1');
-        test(greenMouseouts === 1, 'greenMouseouts should be 1');
-        test(groupMouseovers === 1, 'groupMouseovers should be 1');
-        test(groupMouseouts === 1, 'groupMouseouts should be 1');
+        test(redMouseenters === 2, 'redMouseenters should be 2');
+        test(redMouseleaves === 2, 'redMouseleaves should be 2');
+        test(greenMouseenters === 1, 'greenMouseenters should be 1');
+        test(greenMouseleaves === 1, 'greenMouseleaves should be 1');
+        test(groupMouseenters === 1, 'groupMouseenters should be 1');
+        test(groupMouseleaves === 1, 'groupMouseleaves should be 1');
         
         //document.body.appendChild(layer.bufferCanvas.element)
         
