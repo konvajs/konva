@@ -138,9 +138,11 @@ Kinetic.Layer.prototype = {
         Kinetic.Node.prototype.setVisible.call(this, visible);
         if(visible) {
             this.canvas.element.style.display = 'block';
+            this.bufferCanvas.element.style.display = 'block';
         }
         else {
             this.canvas.element.style.display = 'none';
+            this.bufferCanvas.element.style.display = 'none';
         }
     },
     moveToTop: function() {
