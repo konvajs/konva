@@ -665,11 +665,11 @@ Test.prototype.tests = {
         test(stage.names['myRect'][0].getName() === 'myRect', 'rect name not in names hash');
 
         circle.setId('newCircleId');
-        test(stage.ids['newCircleId'].getId() === 'newCircleId', 'circle not in ids hash');
+        test(stage.ids['newCircleId'] !== undefined, 'circle not in ids hash');
         test(stage.ids['myCircle'] === undefined, 'old circle id key is still in ids hash');
 
         rect.setName('newRectName');
-        test(stage.names['newRectName'][0].getName() === 'newRectName', 'new rect name not in names hash');
+        test(stage.names['newRectName'][0] !== undefined, 'new rect name not in names hash');
         test(stage.names['myRect'] === undefined, 'old rect name is still in names hash');
     },
     'STAGE - set shape and layer opacity to 0.5': function(containerId) {
@@ -3954,6 +3954,25 @@ Test.prototype.tests = {
 
         circle.off('click.bar');
         test(circle.eventListeners['click'] === undefined, 'circle should have no click listeners');
+
+        /*
+         * test remove all events in name space
+         */
+        circle.on('click.foo', function() { });
+        circle.on('click.foo', function() { });
+        circle.on('touch.foo', function() { });
+        circle.on('click.bar', function() { });
+        circle.on('touch.bar', function() { });
+        
+        test(circle.eventListeners['click'].length === 3, 'circle should have 3 click listeners');
+        test(circle.eventListeners['touch'].length === 2, 'circle should have 2 touch listeners');
+        circle.off('.foo');
+        test(circle.eventListeners['click'].length === 1, 'circle should have 1 click listener');
+        test(circle.eventListeners['touch'].length === 1, 'circle should have 2 touch listeners');
+
+        circle.off('.bar');
+        test(circle.eventListeners['click'] === undefined, 'circle should have no click listeners');
+        test(circle.eventListeners['touch'] === undefined, 'circle should have no touch listeners');
 
         stage.add(layer);
         layer.add(circle);

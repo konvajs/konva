@@ -118,7 +118,8 @@ Kinetic.Node.prototype = {
      *  event types delimmited by a space to remove multiple event
      *  bindings at once such as 'mousedown mouseup mousemove'.
      *  include a namespace to remove an event binding by name
-     *  such as 'click.foobar'.
+     *  such as 'click.foobar'. If you only give a name like '.foobar',
+     *  all events in that namespace will be removed.
      * @name off
      * @methodOf Kinetic.Node.prototype
      * @param {String} typesStr
@@ -133,17 +134,14 @@ Kinetic.Node.prototype = {
             var parts = event.split('.');
             var baseEvent = parts[0];
 
-            if(this.eventListeners[baseEvent] && parts.length > 1) {
-                var name = parts[1];
-
-                for(var i = 0; i < this.eventListeners[baseEvent].length; i++) {
-                    if(this.eventListeners[baseEvent][i].name === name) {
-                        this.eventListeners[baseEvent].splice(i, 1);
-                        if(this.eventListeners[baseEvent].length === 0) {
-                            delete this.eventListeners[baseEvent];
-                            break;
-                        }
-                        i--;
+            if(parts.length > 1) {
+                if (baseEvent){
+                    if (this.eventListeners[baseEvent]) {
+                        this._off(baseEvent, parts[1]);
+                    }
+                } else {
+                    for(var type in this.eventListeners) {
+                        this._off(type, parts[1]);
                     }
                 }
             }
@@ -811,6 +809,18 @@ Kinetic.Node.prototype = {
         }
         this.setAttr('scale', pos);
 
+    },
+    _off: function(type, name) {
+        for(var i = 0; i < this.eventListeners[type].length; i++) {
+            if(this.eventListeners[type][i].name === name) {
+                this.eventListeners[type].splice(i, 1);
+                if(this.eventListeners[type].length === 0) {
+                    delete this.eventListeners[type];
+                    break;
+                }
+                i--;
+            }
+        }
     },
     _clearTransform: function() {
         var trans = {
