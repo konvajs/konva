@@ -3086,7 +3086,7 @@ Kinetic.Stage.prototype = {
         var targetShape = this.targetShape;
         if(targetShape && !go.drag.moving) {
             targetShape._handleEvent('mouseout', evt);
-            argetShape._handleEvent('mouseleave', evt);
+            targetShape._handleEvent('mouseleave', evt);
             this.targetShape = null;
         }
         this.mousePos = undefined;
