@@ -139,57 +139,6 @@ Kinetic.Stage.prototype = {
         this.setAttrs(this.defaultNodeAttrs);
     },
     /**
-     * load stage with JSON string.  De-serializtion does not generate custom
-     *  shape drawing functions, images, or event handlers (this would make the
-     * 	serialized object huge).  If your app uses custom shapes, images, and
-     *  event handlers (it probably does), then you need to select the appropriate
-     *  shapes after loading the stage and set these properties via on(), setDrawFunc(),
-     *  and setImage()
-     * @name load
-     * @methodOf Kinetic.Stage.prototype
-     * @param {String} JSON string
-     */
-    load: function(json) {
-        this.reset();
-
-        function loadNode(node, obj) {
-            var children = obj.children;
-            if(children !== undefined) {
-                for(var n = 0; n < children.length; n++) {
-                    var child = children[n];
-                    var type;
-
-                    // determine type
-                    if(child.nodeType === 'Shape') {
-                        // add custom shape
-                        if(child.shapeType === undefined) {
-                            type = 'Shape';
-                        }
-                        // add standard shape
-                        else {
-                            type = child.shapeType;
-                        }
-                    }
-                    else {
-                        type = child.nodeType;
-                    }
-
-                    var no = new Kinetic[type](child.attrs);
-                    node.add(no);
-                    loadNode(no, child);
-                }
-            }
-        }
-
-        var obj = JSON.parse(json);
-
-        // copy over stage properties
-        this.attrs = obj.attrs;
-
-        loadNode(this, obj);
-        this.draw();
-    },
-    /**
      * get mouse position for desktop apps
      * @name getMousePosition
      * @methodOf Kinetic.Stage.prototype

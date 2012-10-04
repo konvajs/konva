@@ -575,7 +575,7 @@ Kinetic.Node.prototype = {
 
         obj.nodeType = this.nodeType;
         obj.shapeType = this.shapeType;
-        
+
         return obj;
     },
     toJSON: function() {
@@ -1054,6 +1054,52 @@ Kinetic.Node._addGetter = function(constructor, attr) {
     constructor.prototype[method] = function(arg) {
         return this.attrs[attr];
     };
+};
+/**
+ * create node with JSON string.  De-serializtion does not generate custom
+ *  shape drawing functions, images, or event handlers (this would make the
+ * 	serialized object huge).  If your app uses custom shapes, images, and
+ *  event handlers (it probably does), then you need to select the appropriate
+ *  shapes after loading the stage and set these properties via on(), setDrawFunc(),
+ *  and setImage()
+ * @name create
+ * @methodOf Kinetic.Node
+ * @param {String} JSON string
+ */
+Kinetic.Node.create = function(json, container) {
+    return this._createNode(JSON.parse(json), container);
+};
+Kinetic.Node._createNode = function(obj, container) {
+    var type;
+
+    // determine type
+    if(obj.nodeType === 'Shape') {
+        // add custom shape
+        if(obj.shapeType === undefined) {
+            type = 'Shape';
+        }
+        // add standard shape
+        else {
+            type = obj.shapeType;
+        }
+    }
+    else {
+        type = obj.nodeType;
+    }
+    
+    // if container was passed in, add it to attrs
+    if (container) {
+    	obj.attrs.container = container;
+    }
+    
+    var no = new Kinetic[type](obj.attrs);
+    if(obj.children) {
+        for(var n = 0; n < obj.children.length; n++) {
+            no.add(this._createNode(obj.children[n]));
+        }
+    }
+
+    return no;
 };
 // add getters setters
 Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'rotation', 'opacity', 'name', 'id', 'draggable', 'listening', 'visible', 'dragBoundFunc']);
