@@ -135,11 +135,12 @@ Kinetic.Node.prototype = {
             var baseEvent = parts[0];
 
             if(parts.length > 1) {
-                if (baseEvent){
-                    if (this.eventListeners[baseEvent]) {
+                if(baseEvent) {
+                    if(this.eventListeners[baseEvent]) {
                         this._off(baseEvent, parts[1]);
                     }
-                } else {
+                }
+                else {
                     for(var type in this.eventListeners) {
                         this._off(type, parts[1]);
                     }
@@ -157,7 +158,7 @@ Kinetic.Node.prototype = {
      * @param {Node} child
      */
     remove: function() {
-    	var parent = this.getParent();
+        var parent = this.getParent();
         if(parent && this.index !== undefined && parent.children[this.index]._id == this._id) {
             var stage = parent.getStage();
             /*
@@ -552,6 +553,33 @@ Kinetic.Node.prototype = {
         this.index = newContainer.children.length - 1;
         this.parent = newContainer;
         newContainer._setChildrenIndices();
+    },
+    /**
+     * convert Node into an object for serialization
+     * @name toObject
+     * @methodOf Kinetic.Node.prototype
+     */
+    toObject: function() {
+        var obj = {};
+        var type = Kinetic.Type;
+
+        obj.attrs = {};
+
+        // serialize only attributes that are not function, image, DOM, or objects with methods
+        for(var key in this.attrs) {
+            var val = this.attrs[key];
+            if(!type._isFunction(val) && !type._isElement(val) && !(type._isObject(val) && type._hasMethods(val))) {
+                obj.attrs[key] = val;
+            }
+        }
+
+        obj.nodeType = this.nodeType;
+        obj.shapeType = this.shapeType;
+        
+        return obj;
+    },
+    toJSON: function() {
+        return JSON.stringify(this.toObject());
     },
     /**
      * get parent container

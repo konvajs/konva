@@ -85,7 +85,7 @@ Kinetic.Container.prototype = {
             var go = Kinetic.Global;
             go._pullNodes(stage);
         }
-        
+
         // chainable
         return this;
     },
@@ -102,9 +102,9 @@ Kinetic.Container.prototype = {
     get: function(selector) {
         var stage = this.getStage();
 
-		// Node type selector
+        // Node type selector
         if(selector === 'Shape' || selector === 'Group' || selector === 'Layer') {
-        	var retArr = new Kinetic.Collection();
+            var retArr = new Kinetic.Collection();
             function traverse(cont) {
                 var children = cont.getChildren();
                 for(var n = 0; n < children.length; n++) {
@@ -123,23 +123,37 @@ Kinetic.Container.prototype = {
         }
         // ID selector
         else if(selector.charAt(0) === '#') {
-        	var key = selector.slice(1);
+            var key = selector.slice(1);
             var arr = stage.ids[key] !== undefined ? [stage.ids[key]] : [];
             return this._getDescendants(arr);
         }
         // name selector
         else if(selector.charAt(0) === '.') {
-        	var key = selector.slice(1);
+            var key = selector.slice(1);
             var arr = stage.names[key] || [];
-			return this._getDescendants(arr);
+            return this._getDescendants(arr);
         }
         // unrecognized selector
         else {
             return [];
         }
     },
+    // extenders
+    toObject: function() {
+        var obj = Kinetic.Node.prototype.toObject.call(this);
+
+        obj.children = [];
+
+        var children = this.getChildren();
+        for(var n = 0; n < children.length; n++) {
+            var child = children[n];
+            obj.children.push(child.toObject());
+        }
+
+        return obj;
+    },
     _getDescendants: function(arr) {
-    	var retArr = new Kinetic.Collection();
+        var retArr = new Kinetic.Collection();
         for(var n = 0; n < arr.length; n++) {
             var node = arr[n];
             if(this.isAncestorOf(node)) {
@@ -147,7 +161,7 @@ Kinetic.Container.prototype = {
             }
         }
 
-        return retArr; 	
+        return retArr;
     },
     /**
      * determine if node is an ancestor

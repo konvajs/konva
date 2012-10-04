@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Oct 04 2012
+ * Date: Oct 03 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1358,11 +1358,12 @@ Kinetic.Node.prototype = {
             var baseEvent = parts[0];
 
             if(parts.length > 1) {
-                if (baseEvent){
-                    if (this.eventListeners[baseEvent]) {
+                if(baseEvent) {
+                    if(this.eventListeners[baseEvent]) {
                         this._off(baseEvent, parts[1]);
                     }
-                } else {
+                }
+                else {
                     for(var type in this.eventListeners) {
                         this._off(type, parts[1]);
                     }
@@ -1380,7 +1381,7 @@ Kinetic.Node.prototype = {
      * @param {Node} child
      */
     remove: function() {
-    	var parent = this.getParent();
+        var parent = this.getParent();
         if(parent && this.index !== undefined && parent.children[this.index]._id == this._id) {
             var stage = parent.getStage();
             /*
@@ -1775,6 +1776,33 @@ Kinetic.Node.prototype = {
         this.index = newContainer.children.length - 1;
         this.parent = newContainer;
         newContainer._setChildrenIndices();
+    },
+    /**
+     * convert Node into an object for serialization
+     * @name toObject
+     * @methodOf Kinetic.Node.prototype
+     */
+    toObject: function() {
+        var obj = {};
+        var type = Kinetic.Type;
+
+        obj.attrs = {};
+
+        // serialize only attributes that are not function, image, DOM, or objects with methods
+        for(var key in this.attrs) {
+            var val = this.attrs[key];
+            if(!type._isFunction(val) && !type._isElement(val) && !(type._isObject(val) && type._hasMethods(val))) {
+                obj.attrs[key] = val;
+            }
+        }
+
+        obj.nodeType = this.nodeType;
+        obj.shapeType = this.shapeType;
+        
+        return obj;
+    },
+    toJSON: function() {
+        return JSON.stringify(this.toObject());
     },
     /**
      * get parent container
@@ -2417,7 +2445,6 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  * @name getListening
  * @methodOf Kinetic.Node.prototype
  */
-
 ///////////////////////////////////////////////////////////////////////
 //  Container
 ///////////////////////////////////////////////////////////////////////
@@ -2505,7 +2532,7 @@ Kinetic.Container.prototype = {
             var go = Kinetic.Global;
             go._pullNodes(stage);
         }
-        
+
         // chainable
         return this;
     },
@@ -2522,9 +2549,9 @@ Kinetic.Container.prototype = {
     get: function(selector) {
         var stage = this.getStage();
 
-		// Node type selector
+        // Node type selector
         if(selector === 'Shape' || selector === 'Group' || selector === 'Layer') {
-        	var retArr = new Kinetic.Collection();
+            var retArr = new Kinetic.Collection();
             function traverse(cont) {
                 var children = cont.getChildren();
                 for(var n = 0; n < children.length; n++) {
@@ -2543,23 +2570,37 @@ Kinetic.Container.prototype = {
         }
         // ID selector
         else if(selector.charAt(0) === '#') {
-        	var key = selector.slice(1);
+            var key = selector.slice(1);
             var arr = stage.ids[key] !== undefined ? [stage.ids[key]] : [];
             return this._getDescendants(arr);
         }
         // name selector
         else if(selector.charAt(0) === '.') {
-        	var key = selector.slice(1);
+            var key = selector.slice(1);
             var arr = stage.names[key] || [];
-			return this._getDescendants(arr);
+            return this._getDescendants(arr);
         }
         // unrecognized selector
         else {
             return [];
         }
     },
+    // extenders
+    toObject: function() {
+        var obj = Kinetic.Node.prototype.toObject.call(this);
+
+        obj.children = [];
+
+        var children = this.getChildren();
+        for(var n = 0; n < children.length; n++) {
+            var child = children[n];
+            obj.children.push(child.toObject());
+        }
+
+        return obj;
+    },
     _getDescendants: function(arr) {
-    	var retArr = new Kinetic.Collection();
+        var retArr = new Kinetic.Collection();
         for(var n = 0; n < arr.length; n++) {
             var node = arr[n];
             if(this.isAncestorOf(node)) {
@@ -2567,7 +2608,7 @@ Kinetic.Container.prototype = {
             }
         }
 
-        return retArr; 	
+        return retArr;
     },
     /**
      * determine if node is an ancestor
@@ -2760,46 +2801,6 @@ Kinetic.Stage.prototype = {
         for(var n = 0; n < layers.length; n++) {
             layers[n].clear();
         }
-    },
-    /**
-     * serialize stage and children as a JSON object and return
-     *  the result as a json string
-     * @name toJSON
-     * @methodOf Kinetic.Stage.prototype
-     */
-    toJSON: function() {
-        var type = Kinetic.Type;
-
-        function addNode(node) {
-            var obj = {};
-
-            obj.attrs = {};
-
-            // serialize only attributes that are not function, image, DOM, or objects with methods
-            for(var key in node.attrs) {
-                var val = node.attrs[key];
-                if(!type._isFunction(val) && !type._isElement(val) && !(type._isObject(val) && type._hasMethods(val))) {
-                    obj.attrs[key] = val;
-                }
-            }
-
-            obj.nodeType = node.nodeType;
-            obj.shapeType = node.shapeType;
-
-            if(node.nodeType !== 'Shape') {
-                obj.children = [];
-
-                var children = node.getChildren();
-                for(var n = 0; n < children.length; n++) {
-                    var child = children[n];
-                    obj.children.push(addNode(child));
-                }
-            }
-
-            return obj;
-        }
-
-        return JSON.stringify(addNode(this));
     },
     /**
      * reset stage to default state

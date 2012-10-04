@@ -126,46 +126,6 @@ Kinetic.Stage.prototype = {
         }
     },
     /**
-     * serialize stage and children as a JSON object and return
-     *  the result as a json string
-     * @name toJSON
-     * @methodOf Kinetic.Stage.prototype
-     */
-    toJSON: function() {
-        var type = Kinetic.Type;
-
-        function addNode(node) {
-            var obj = {};
-
-            obj.attrs = {};
-
-            // serialize only attributes that are not function, image, DOM, or objects with methods
-            for(var key in node.attrs) {
-                var val = node.attrs[key];
-                if(!type._isFunction(val) && !type._isElement(val) && !(type._isObject(val) && type._hasMethods(val))) {
-                    obj.attrs[key] = val;
-                }
-            }
-
-            obj.nodeType = node.nodeType;
-            obj.shapeType = node.shapeType;
-
-            if(node.nodeType !== 'Shape') {
-                obj.children = [];
-
-                var children = node.getChildren();
-                for(var n = 0; n < children.length; n++) {
-                    var child = children[n];
-                    obj.children.push(addNode(child));
-                }
-            }
-
-            return obj;
-        }
-
-        return JSON.stringify(addNode(this));
-    },
-    /**
      * reset stage to default state
      * @name reset
      * @methodOf Kinetic.Stage.prototype
