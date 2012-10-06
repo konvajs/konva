@@ -4309,7 +4309,7 @@ Kinetic.Shape.prototype = {
 Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
 
 // add getters and setters
-Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'strokeWidth', 'drawFunc', 'filter']);
+Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'strokeWidth', 'drawFunc', 'filter', 'cornerRadius']);
 Kinetic.Node.addGetters(Kinetic.Shape, ['shadow', 'fill']);
 
 /**
@@ -4427,7 +4427,7 @@ Kinetic.Rect.prototype = {
 Kinetic.Global.extend(Kinetic.Rect, Kinetic.Shape);
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Rect, ['width', 'height', 'cornerRadius']);
+Kinetic.Node.addGettersSetters(Kinetic.Rect, ['width', 'height']);
 
 /**
  * set width

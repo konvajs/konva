@@ -49,7 +49,7 @@ Kinetic.Rect.prototype = {
 Kinetic.Global.extend(Kinetic.Rect, Kinetic.Shape);
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Rect, ['width', 'height', 'cornerRadius']);
+Kinetic.Node.addGettersSetters(Kinetic.Rect, ['width', 'height']);
 
 /**
  * set width
