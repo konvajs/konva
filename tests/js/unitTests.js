@@ -696,6 +696,32 @@ Test.prototype.tests = {
         test(circle.getAbsoluteOpacity() === 0.25, 'abs opacity should be 0.25');
         test(layer.getAbsoluteOpacity() === 0.5, 'abs opacity should be 0.5');
     },
+    'STAGE - set shape, layer and stage opacity to 0.5': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        circle.setOpacity(0.5);
+        layer.setOpacity(0.5);
+        stage.setOpacity(0.5);
+        layer.add(circle);
+        stage.add(layer);
+
+        test(circle.getAbsoluteOpacity() === 0.125, 'abs opacity should be 0.125');
+        test(layer.getAbsoluteOpacity() === 0.25, 'abs opacity should be 0.25');
+        test(stage.getAbsoluteOpacity() === 0.5, 'abs opacity should be 0.5');
+    },
     'STAGE - remove shape without adding its parent to stage': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Oct 05 2012
+ * Date: Oct 06 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1741,12 +1741,9 @@ Kinetic.Node.prototype = {
      * @methodOf Kinetic.Node.prototype
      */
     getAbsoluteOpacity: function() {
-        var absOpacity = 1;
-        var node = this;
-        // traverse upwards
-        while(node.nodeType !== 'Stage') {
-            absOpacity *= node.attrs.opacity;
-            node = node.parent;
+        var absOpacity = this.getOpacity();
+        if (this.getParent()) {
+            absOpacity *= this.getParent().getAbsoluteOpacity();
         }
         return absOpacity;
     },
@@ -2491,6 +2488,7 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  * @name getListening
  * @methodOf Kinetic.Node.prototype
  */
+
 ///////////////////////////////////////////////////////////////////////
 //  Container
 ///////////////////////////////////////////////////////////////////////
