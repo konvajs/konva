@@ -299,6 +299,12 @@ Kinetic.Stage.prototype = {
 
         return null;
     },
+    _getNodeById: function(key) {
+        return this.ids[key] || null;
+    },
+    _getNodesByName: function(key) {
+        return this.names[key] || [];
+    },
     _resizeDOM: function() {
         if(this.content) {
             var width = this.attrs.width;

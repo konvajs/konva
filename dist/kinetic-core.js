@@ -2058,6 +2058,9 @@ Kinetic.Node.prototype = {
         this.setAttr('scale', pos);
 
     },
+    _get: function(selector) {
+        return this.nodeType === selector ? [this] : [];
+    },
     _off: function(type, name) {
         for(var i = 0; i < this.eventListeners[type].length; i++) {
             if(this.eventListeners[type][i].name === name) {
@@ -2591,43 +2594,46 @@ Kinetic.Container.prototype = {
      * @param {String} selector
      */
     get: function(selector) {
-        var stage = this.getStage();
-
-        // Node type selector
-        if(selector === 'Shape' || selector === 'Group' || selector === 'Layer') {
-            var retArr = new Kinetic.Collection();
-            function traverse(cont) {
-                var children = cont.getChildren();
-                for(var n = 0; n < children.length; n++) {
-                    var child = children[n];
-                    if(child.nodeType === selector) {
-                        retArr.push(child);
-                    }
-                    else if(child.nodeType !== 'Shape') {
-                        traverse(child);
-                    }
-                }
-            }
-
-            traverse(this);
-            return retArr;
-        }
+        var collection = new Kinetic.Collection();
         // ID selector
-        else if(selector.charAt(0) === '#') {
-            var key = selector.slice(1);
-            var arr = stage.ids[key] !== undefined ? [stage.ids[key]] : [];
-            return this._getDescendants(arr);
+        if(selector.charAt(0) === '#') {
+        	var node = this._getNodeById(selector.slice(1));
+        	if (node) collection.push(node);
         }
         // name selector
         else if(selector.charAt(0) === '.') {
-            var key = selector.slice(1);
-            var arr = stage.names[key] || [];
-            return this._getDescendants(arr);
+        	var nodeList = this._getNodesByName(selector.slice(1));
+        	Kinetic.Collection.apply(collection, nodeList);
         }
-        // unrecognized selector
+        // unrecognized selector, pass to children
         else {
-            return [];
+            var retArr = [];
+            var children = this.getChildren();
+            for(var n = 0; n < children.length; n++) {
+                retArr = retArr.concat(children[n]._get(selector));
+            }
+            Kinetic.Collection.apply(collection, retArr);
         }
+        return collection;
+    },
+    _getNodeById: function(key) {
+        var stage = this.getStage();
+        if(stage.ids[key] !== undefined && this.isAncestorOf(stage.ids[key])) {
+            return stage.ids[key];
+        }
+        return null;
+    },
+    _getNodesByName: function(key) {
+        var arr = this.getStage().names[key] || [];
+		return this._getDescendants(arr);
+    },
+    _get: function(selector) {
+        var retArr = Kinetic.Node.prototype._get.call(this, selector);
+        var children = this.getChildren();
+        for(var n = 0; n < children.length; n++) {
+            retArr = retArr.concat(children[n]._get(selector));
+        }
+        return retArr;
     },
     // extenders
     toObject: function() {
@@ -2644,7 +2650,7 @@ Kinetic.Container.prototype = {
         return obj;
     },
     _getDescendants: function(arr) {
-        var retArr = new Kinetic.Collection();
+    	var retArr = [];
         for(var n = 0; n < arr.length; n++) {
             var node = arr[n];
             if(this.isAncestorOf(node)) {
@@ -3019,6 +3025,12 @@ Kinetic.Stage.prototype = {
         }
 
         return null;
+    },
+    _getNodeById: function(key) {
+        return this.ids[key] || null;
+    },
+    _getNodesByName: function(key) {
+        return this.names[key] || [];
     },
     _resizeDOM: function() {
         if(this.content) {
@@ -4161,6 +4173,9 @@ Kinetic.Shape.prototype = {
             width: this.getWidth(),
             height: this.getHeight()
         };
+    },
+    _get: function(selector) {
+        return this.nodeType === selector || this.shapeType === selector ? [this] : [];
     },
     /**
      * apply shadow.  return true if shadow was applied

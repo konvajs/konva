@@ -835,6 +835,9 @@ Kinetic.Node.prototype = {
         this.setAttr('scale', pos);
 
     },
+    _get: function(selector) {
+        return this.nodeType === selector ? [this] : [];
+    },
     _off: function(type, name) {
         for(var i = 0; i < this.eventListeners[type].length; i++) {
             if(this.eventListeners[type][i].name === name) {
