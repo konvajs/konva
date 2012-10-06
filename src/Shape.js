@@ -377,6 +377,9 @@ Kinetic.Shape.prototype = {
             height: this.getHeight()
         };
     },
+    _get: function(selector) {
+        return this.nodeType === selector || this.shapeType === selector ? [this] : [];
+    },
     /**
      * apply shadow.  return true if shadow was applied
      * and false if it was not
