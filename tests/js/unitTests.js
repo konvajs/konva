@@ -1007,6 +1007,8 @@ Test.prototype.tests = {
             circle.move(10, 0);
             layer.draw();
         }
+        
+        //console.log(layer.toDataURL());
 
         stage.toDataURL({
             callback: function(dataUrl) {
@@ -1878,9 +1880,13 @@ Test.prototype.tests = {
                 });
 
                 layer.add(cachedShape);
+                
+                
+                //console.log(layer.toDataURL());
 
                 cachedShape.createImageBuffer(function() {
                     layer.draw();
+                    //console.log(layer.toDataURL());
                     warn(dataUrls['regular and cahced polygon'] === layer.toDataURL(), 'regular and cached polygon layer data url is incorrect');
 
                     //document.body.appendChild(layer.bufferCanvas.element)
@@ -4631,7 +4637,9 @@ Test.prototype.tests = {
             height: 200
         });
         
-        console.log(stage.getStage());
+        test (stage.getStage() !== undefined, 'stage is undefined');
+        
+        //console.log(stage.getStage());
     },
     'LAYERING - move blue layer on top of green layer with setZIndex': function(containerId) {
         var stage = new Kinetic.Stage({
