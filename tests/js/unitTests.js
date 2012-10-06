@@ -2800,6 +2800,8 @@ Test.prototype.tests = {
         layer.add(text);
         stage.add(layer);
 
+		//console.log(layer.toDataURL());
+		
         warn(layer.toDataURL() === dataUrls['multi line text with shadows'], 'multi line text with shadows data url is incorrect');
     },
     'SHAPE - change font size should update text data': function(containerId) {
