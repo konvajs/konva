@@ -2787,7 +2787,7 @@ Test.prototype.tests = {
             padding: 20,
             align: 'center',
             shadow: {
-                color: 'black',
+                color: 'red',
                 blur: 1,
                 offset: [10, 10],
                 opacity: 0.5
@@ -2796,7 +2796,7 @@ Test.prototype.tests = {
             draggable: true,
             detectionType: 'path'
         });
-
+        
         layer.add(text);
         stage.add(layer);
 
