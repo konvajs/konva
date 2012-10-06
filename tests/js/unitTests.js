@@ -4468,6 +4468,51 @@ Test.prototype.tests = {
         
         console.log(stage.getStage());
     },
+    'LAYERING - move blue layer on top of green layer with setZIndex': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var blueLayer = new Kinetic.Layer();
+        var greenLayer = new Kinetic.Layer();
+
+        var bluecircle = new Kinetic.Circle({
+            x: 200,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'blue',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        var greencircle = new Kinetic.Circle({
+            x: 280,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        blueLayer.add(bluecircle);
+        greenLayer.add(greencircle);
+
+        stage.add(blueLayer);
+        stage.add(greenLayer);
+
+        blueLayer.setZIndex(1);
+
+		test(greenLayer.getZIndex() === 0, 'green layer should have z index of 0');
+		test(blueLayer.getZIndex() === 1, 'blue layer should have z index of 1');
+		
+		stage.toDataURL({
+            callback: function(dataUrl) {
+            	//console.log(dataUrl)
+                warn(dataUrls['blue on top of green'] === dataUrl, 'layer setZIndex is not working');
+            }
+        });
+    },
     'LAYERING - move blue layer on top of green layer with moveToTop': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -4546,7 +4591,7 @@ Test.prototype.tests = {
 
         stage.toDataURL({
             callback: function(dataUrl) {
-                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
+                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToBottom is not working');
             }
         });
     },
@@ -4586,7 +4631,7 @@ Test.prototype.tests = {
 
         stage.toDataURL({
             callback: function(dataUrl) {
-                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
+                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveDown is not working');
             }
         });
     },
@@ -4626,7 +4671,7 @@ Test.prototype.tests = {
 
         stage.toDataURL({
             callback: function(dataUrl) {
-                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
+                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveUp is not working');
             }
         });
     },

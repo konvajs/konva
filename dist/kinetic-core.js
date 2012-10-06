@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Oct 03 2012
+ * Date: Oct 05 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -3597,6 +3597,20 @@ Kinetic.Layer.prototype = {
             this.bufferCanvas.element.style.display = 'none';
         }
     },
+    setZIndex: function(index) {
+        Kinetic.Node.prototype.setZIndex.call(this, index);
+        var stage = this.getStage();
+        if(stage) {
+            stage.content.removeChild(this.canvas.element);
+
+            if(index < stage.getChildren().length - 1) {
+                stage.content.insertBefore(this.canvas.element, stage.getChildren()[index + 1].canvas.element);
+            }
+            else {
+                stage.content.appendChild(this.canvas.element);
+            }
+        }
+    },
     moveToTop: function() {
         Kinetic.Node.prototype.moveToTop.call(this);
         var stage = this.getStage();
@@ -3641,7 +3655,7 @@ Kinetic.Layer.prototype = {
         }
     },
     getLayer: function() {
-    	return this;
+        return this;
     },
     /**
      * Creates a composite data URL. If MIME type is not
@@ -3678,7 +3692,7 @@ Kinetic.Layer.prototype = {
      * remove layer from stage
      */
     remove: function() {
-    	Kinetic.Node.prototype.remove.call(this);
+        Kinetic.Node.prototype.remove.call(this);
         /*
          * remove canvas DOM from the document if
          * it exists
