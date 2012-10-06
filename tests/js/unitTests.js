@@ -2020,7 +2020,8 @@ Test.prototype.tests = {
         var line = new Kinetic.Line({
             points: [73, 160, 340, 23, 500, 109, 500, 180],
             stroke: 'blue',
-            strokeWidth: 5,
+            
+            strokeWidth: 10,
             lineCap: 'round',
             lineJoin: 'round',
             draggable: true,
@@ -2029,7 +2030,8 @@ Test.prototype.tests = {
                 color: '#aaa',
                 blur: 10,
                 offset: [20, 20]
-            }
+            },
+            opacity: 0.2
         });
 
         layer.add(line);
@@ -2760,7 +2762,7 @@ Test.prototype.tests = {
          });
          */
     },
-    'SHAPE - text multi line with shadows': function(containerId) {
+    '*SHAPE - text multi line with shadows': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2788,7 +2790,7 @@ Test.prototype.tests = {
                 color: 'black',
                 blur: 1,
                 offset: [10, 10],
-                opacity: 0.2
+                opacity: 0.5
             },
             cornerRadius: 10,
             draggable: true,
@@ -5007,6 +5009,32 @@ Test.prototype.tests = {
         test(path.dataArray.length === 1, 'data array should have 1 element');
 
         path.setData('M200,100h100v50z');
+
+    },
+    'PATH - add path with line cap and line join': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 1024,
+            height: 480,
+            scale: 0.5,
+            x: 50,
+            y: 10
+        });
+        var layer = new Kinetic.Layer();
+
+        var path = new Kinetic.Path({
+            data: 'M200,100h100v50',
+            stroke: '#333',
+            strokeWidth: 20,
+            draggable: true,
+            lineCap: 'round',
+            lineJoin: 'round'
+        });
+
+        layer.add(path);
+
+        stage.add(layer);
+
 
     },
     'PATH - moveTo with implied lineTos and trailing comma': function(containerId) {

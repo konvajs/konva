@@ -46,10 +46,6 @@ Kinetic.Line.prototype = {
             }
         }
 
-        if(!!this.attrs.lineCap) {
-            context.lineCap = this.attrs.lineCap;
-        }
-
         this.stroke(context);
     },
     /**

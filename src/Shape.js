@@ -299,15 +299,32 @@ Kinetic.Shape.prototype = {
             this.drawImage.apply(this, a);
         }
     },
+    applyOpacity: function(context) {
+        var absOpacity = this.getAbsoluteOpacity();
+        if(absOpacity !== 1) {
+            context.globalAlpha = absOpacity;
+        }
+    },
     /**
      * helper method to set the line join of a shape
-     * based on the lineJoin property
-     * @name applyLineJoin
+     * based on the applyLineJoin property
+     * @name lineJoin
      * @methodOf Kinetic.Shape.prototype
      */
     applyLineJoin: function(context) {
         if(this.attrs.lineJoin) {
             context.lineJoin = this.attrs.lineJoin;
+        }
+    },
+    /**
+     * helper method to set the line cap of a path
+     * based on the lineCap property
+     * @name applyLineCap
+     * @methodOf Kinetic.Shape.prototype
+     */
+    applyLineCap: function(context) {
+        if(this.attrs.lineCap) {
+            context.lineCap = this.attrs.lineCap;
         }
     },
     /**
@@ -423,7 +440,7 @@ Kinetic.Shape.prototype = {
         return p[3] > 0;
     },
     remove: function() {
-    	Kinetic.Node.prototype.remove.call(this);
+        Kinetic.Node.prototype.remove.call(this);
         delete Kinetic.Global.shapes[this.colorKey];
     },
     __draw: function(canvas) {
@@ -447,14 +464,9 @@ Kinetic.Shape.prototype = {
                 context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }
 
-            /*
-             * pre styles include opacity, linejoin
-             */
-            var absOpacity = this.getAbsoluteOpacity();
-            if(absOpacity !== 1) {
-                context.globalAlpha = absOpacity;
-            }
+            this.applyOpacity(context);
             this.applyLineJoin(context);
+            this.applyLineCap(context);
 
             // draw the shape
             this.appliedShadow = false;
