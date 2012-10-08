@@ -66,13 +66,6 @@ Kinetic.Node.addGettersSetters(Kinetic.Rect, ['width', 'height']);
  */
 
 /**
- * set corner radius
- * @name setCornerRadius
- * @methodOf Kinetic.Rect.prototype
- * @param {Number} radius
- */
-
-/**
  * get width
  * @name getWidth
  * @methodOf Kinetic.Rect.prototype
@@ -81,11 +74,5 @@ Kinetic.Node.addGettersSetters(Kinetic.Rect, ['width', 'height']);
 /**
  * get height
  * @name getHeight
- * @methodOf Kinetic.Rect.prototype
- */
-
-/**
- * get corner radius
- * @name getCornerRadius
  * @methodOf Kinetic.Rect.prototype
  */

@@ -121,7 +121,7 @@ Kinetic.Node.addGettersSetters(Kinetic.Sprite, ['animation', 'animations', 'inde
  */
 
 /**
- * set animations obect
+ * set animations object
  * @name setAnimations
  * @methodOf Kinetic.Sprite.prototype
  * @param {Object} animations

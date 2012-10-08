@@ -316,13 +316,6 @@ Kinetic.Node.addGetters(Kinetic.Text, ['text']);
  */
 
 /**
- * set shadow of text or textbox
- * @name setShadow
- * @methodOf Kinetic.Text.prototype
- * @param {Object} config
- */
-
-/**
  * get font family
  * @name getFontFamily
  * @methodOf Kinetic.Text.prototype
@@ -391,11 +384,5 @@ Kinetic.Node.addGetters(Kinetic.Text, ['text']);
 /**
  * get height of text box
  * @name getHeight
- * @methodOf Kinetic.Text.prototype
- */
-
-/**
- * get shadow of text or textbox
- * @name getShadow
  * @methodOf Kinetic.Text.prototype
  */

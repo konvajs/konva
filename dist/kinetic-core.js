@@ -2373,28 +2373,24 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  */
 
 /**
+ * set name
+ * @name setName
+ * @methodOf Kinetic.Node.prototype
+ * @param {String} name
+ */
+
+/**
+ * set id
+ * @name setId
+ * @methodOf Kinetic.Node.prototype
+ * @param {String} id
+ */
+
+/**
  * set draggable
  * @name setDraggable
  * @methodOf Kinetic.Node.prototype
  * @param {String} draggable
- */
-
-/**
- * set drag constraint.
- * @name setDragConstraint
- * @methodOf Kinetic.Node.prototype
- * @param {String} constraint can be vertical, horizontal, or none
- */
-
-/**
- * set drag bounds.
- * @name setDragBounds
- * @methodOf Kinetic.Node.prototype
- * @param {Object} bounds
- * @config {Number} [left] left bounds position
- * @config {Number} [top] top bounds position
- * @config {Number} [right] right bounds position
- * @config {Number} [bottom] bottom bounds position
  */
 
 /**
@@ -2405,10 +2401,20 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  */
 
 /**
- * get scale
- * @name getScale
+ * set visible
+ * @name setVisible
  * @methodOf Kinetic.Node.prototype
+ * @param {Boolean} visible
  */
+
+/**
+ * set drag bound function.  This is used to override the default
+ *  drag and drop position
+ * @name setDragBoundFunc
+ * @methodOf Kinetic.Node.prototype
+ * @param {Function} dragBoundFunc
+ */
+
 
 /**
  * get node x position
@@ -2447,6 +2453,12 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  */
 
 /**
+ * get scale
+ * @name getScale
+ * @methodOf Kinetic.Node.prototype
+ */
+
+/**
  * get offset
  * @name getOffset
  * @methodOf Kinetic.Node.prototype
@@ -2459,20 +2471,20 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  */
 
 /**
- * get drag constraint
- * @name getDragConstraint
- * @methodOf Kinetic.Node.prototype
- */
-
-/**
- * get drag bounds
- * @name getDragBounds
- * @methodOf Kinetic.Node.prototype
- */
-
-/**
  * determine if listening to events or not
  * @name getListening
+ * @methodOf Kinetic.Node.prototype
+ */
+
+/**
+ * determine if visible or not
+ * @name getVisible
+ * @methodOf Kinetic.Node.prototype
+ */
+
+/**
+ * get dragBoundFunc
+ * @name getDragBoundFunc
  * @methodOf Kinetic.Node.prototype
  */
 ///////////////////////////////////////////////////////////////////////
@@ -4317,7 +4329,7 @@ Kinetic.Shape.prototype = {
 Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
 
 // add getters and setters
-Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'strokeWidth', 'drawFunc', 'filter', 'cornerRadius']);
+Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'strokeWidth', 'drawFunc', 'cornerRadius']);
 Kinetic.Node.addGetters(Kinetic.Shape, ['shadow', 'fill']);
 
 /**
@@ -4350,9 +4362,10 @@ Kinetic.Node.addGetters(Kinetic.Shape, ['shadow', 'fill']);
  */
 
 /**
- * get fill
- * @name getFill
+ * set corner radius
+ * @name setCornerRadius
  * @methodOf Kinetic.Shape.prototype
+ * @param {Number} corner radius
  */
 
 /**
@@ -4374,14 +4387,26 @@ Kinetic.Node.addGetters(Kinetic.Shape, ['shadow', 'fill']);
  */
 
 /**
- * get shadow object
- * @name getShadow
+ * get corner radius
+ * @name getCornerRadius
  * @methodOf Kinetic.Shape.prototype
  */
 
 /**
  * get draw function
  * @name getDrawFunc
+ * @methodOf Kinetic.Shape.prototype
+ */
+
+/**
+ * get shadow object
+ * @name getShadow
+ * @methodOf Kinetic.Shape.prototype
+ */
+
+/**
+ * get fill
+ * @name getFill
  * @methodOf Kinetic.Shape.prototype
  */
 ///////////////////////////////////////////////////////////////////////
@@ -4452,13 +4477,6 @@ Kinetic.Node.addGettersSetters(Kinetic.Rect, ['width', 'height']);
  */
 
 /**
- * set corner radius
- * @name setCornerRadius
- * @methodOf Kinetic.Rect.prototype
- * @param {Number} radius
- */
-
-/**
  * get width
  * @name getWidth
  * @methodOf Kinetic.Rect.prototype
@@ -4467,12 +4485,6 @@ Kinetic.Node.addGettersSetters(Kinetic.Rect, ['width', 'height']);
 /**
  * get height
  * @name getHeight
- * @methodOf Kinetic.Rect.prototype
- */
-
-/**
- * get corner radius
- * @name getCornerRadius
  * @methodOf Kinetic.Rect.prototype
  */
 ///////////////////////////////////////////////////////////////////////
@@ -4751,7 +4763,7 @@ Kinetic.Image.prototype = {
 Kinetic.Global.extend(Kinetic.Image, Kinetic.Shape);
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'filter', 'width', 'height']);
+Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'width', 'height']);
 Kinetic.Node.addGetters(Kinetic.Image, ['crop']);
 
 /**
@@ -4776,13 +4788,6 @@ Kinetic.Node.addGetters(Kinetic.Image, ['crop']);
  */
 
 /**
- * set filter
- * @name setFilter
- * @methodOf Kinetic.Image.prototype
- * @param {Object} config
- */
-
-/**
  * get crop
  * @name getCrop
  * @methodOf Kinetic.Image.prototype
@@ -4791,12 +4796,6 @@ Kinetic.Node.addGetters(Kinetic.Image, ['crop']);
 /**
  * get image
  * @name getImage
- * @methodOf Kinetic.Image.prototype
- */
-
-/**
- * get filter
- * @name getFilter
  * @methodOf Kinetic.Image.prototype
  */
 
@@ -4844,20 +4843,22 @@ Kinetic.Polygon.prototype = {
         context.closePath();
         this.fill(context);
         this.stroke(context);
+    },
+    /**
+	 * set points array
+	 * @name setPoints
+	 * @methodOf Kinetic.Line.prototype
+	 * @param {Array} can be an array of point objects or an array
+	 *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
+	 */
+    setPoints: function(val) {
+    	this.setAttr('points', Kinetic.Type._getPoints(val));
     }
 };
 Kinetic.Global.extend(Kinetic.Polygon, Kinetic.Shape);
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Polygon, ['points']);
-
-/**
- * set points array
- * @name setPoints
- * @methodOf Kinetic.Polygon.prototype
- * @param {Array} points can be an array of point objects or an array
- *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
- */
+Kinetic.Node.addGetters(Kinetic.Polygon, ['points']);
 
 /**
  * get points array
@@ -5182,13 +5183,6 @@ Kinetic.Node.addGetters(Kinetic.Text, ['text']);
  */
 
 /**
- * set shadow of text or textbox
- * @name setShadow
- * @methodOf Kinetic.Text.prototype
- * @param {Object} config
- */
-
-/**
  * get font family
  * @name getFontFamily
  * @methodOf Kinetic.Text.prototype
@@ -5257,12 +5251,6 @@ Kinetic.Node.addGetters(Kinetic.Text, ['text']);
 /**
  * get height of text box
  * @name getHeight
- * @methodOf Kinetic.Text.prototype
- */
-
-/**
- * get shadow of text or textbox
- * @name getShadow
  * @methodOf Kinetic.Text.prototype
  */
 ///////////////////////////////////////////////////////////////////////
@@ -5538,7 +5526,7 @@ Kinetic.Node.addGettersSetters(Kinetic.Sprite, ['animation', 'animations', 'inde
  */
 
 /**
- * set animations obect
+ * set animations object
  * @name setAnimations
  * @methodOf Kinetic.Sprite.prototype
  * @param {Object} animations
@@ -6390,6 +6378,15 @@ Kinetic.TextPath.prototype = {
     getTextHeight: function() {
         return this.textHeight;
     },
+    /**
+	 * set text
+	 * @name setText
+	 * @methodOf Kinetic.TextPath.prototype
+	 * @param {String} text
+	 */
+	setText: function(text) {
+		Kinetic.Text.prototype.setText.call(this, text);
+	},
     _getTextSize: function(text) {
         var dummyCanvas = this.dummyCanvas;
         var context = dummyCanvas.getContext('2d');
@@ -6579,7 +6576,8 @@ Kinetic.TextPath.prototype = {
 Kinetic.Global.extend(Kinetic.TextPath, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.Node.addGettersSetters(Kinetic.TextPath, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'text']);
+Kinetic.Node.addGettersSetters(Kinetic.TextPath, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth']);
+Kinetic.Node.addGetters(Kinetic.TextPath, ['text']);
 
 /**
  * set font family
@@ -6621,13 +6619,6 @@ Kinetic.Node.addGettersSetters(Kinetic.TextPath, ['fontFamily', 'fontSize', 'fon
  * @name setTextStrokeWidth
  * @methodOf Kinetic.TextPath.prototype
  * @param {int} textStrokeWidth
- */
-
-/**
- * set text
- * @name setText
- * @methodOf Kinetic.TextPath.prototype
- * @param {String} text
  */
 
 /**
