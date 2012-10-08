@@ -2937,7 +2937,7 @@ Kinetic.Stage.prototype = {
 
         function drawLayer(n) {
             var layer = layers[n];
-            var layerUrl = layer.getCanvas().toDataURL();
+            var layerUrl = layer.toDataURL();
             var imageObj = new Image();
             imageObj.onload = function() {
                 context.drawImage(imageObj, 0, 0);
@@ -3693,8 +3693,18 @@ Kinetic.Layer.prototype = {
         var mimeType = config && config.mimeType ? config.mimeType : null;
         var quality = config && config.quality ? config.quality : null;
 
-        if(config && config.width && config.height) {
+        /*
+         * if layer is hidden, return blank canvas
+         * else if width and height are defined, create blank canvas and draw onto it
+         * else return canvas as is
+         */
+        if(!this.isVisible()) {
+            var stage = this.getStage();
+            canvas = new Kinetic.Canvas(stage.getWidth(), stage.getHeight());
+        }
+        else if(config && config.width && config.height) {
             canvas = new Kinetic.Canvas(config.width, config.height);
+            this.draw(canvas);
         }
         else {
             canvas = this.getCanvas();

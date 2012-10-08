@@ -937,17 +937,18 @@ Test.prototype.tests = {
         test(!layer2.isVisible(), 'layer2 should be invisible');
         test(layer2.canvas.element.style.display === 'none', 'layer canvas element display should be none');
 
-		//console.log(layer2.toDataURL());
+		//console.log(layer1.toDataURL());
 		
         stage.toDataURL({
             callback: function(dataUrl) {
                 //console.log(dataUrl);
 
                 layer2.show();
-                //test(layer2.isVisible(), 'layer2 should be visible');
-                //test(layer2.canvas.element.style.display === 'block', 'layer canvas element display should be block');
+                test(layer2.isVisible(), 'layer2 should be visible');
+                test(layer2.canvas.element.style.display === 'block', 'layer canvas element display should be block');
             }
         });
+        
         
     },
     'LAYER - beforeDraw and afterDraw': function(containerId) {
