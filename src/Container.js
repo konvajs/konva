@@ -103,13 +103,14 @@ Kinetic.Container.prototype = {
         var collection = new Kinetic.Collection();
         // ID selector
         if(selector.charAt(0) === '#') {
-        	var node = this._getNodeById(selector.slice(1));
-        	if (node) collection.push(node);
+            var node = this._getNodeById(selector.slice(1));
+            if(node)
+                collection.push(node);
         }
         // name selector
         else if(selector.charAt(0) === '.') {
-        	var nodeList = this._getNodesByName(selector.slice(1));
-        	Kinetic.Collection.apply(collection, nodeList);
+            var nodeList = this._getNodesByName(selector.slice(1));
+            Kinetic.Collection.apply(collection, nodeList);
         }
         // unrecognized selector, pass to children
         else {
@@ -131,7 +132,7 @@ Kinetic.Container.prototype = {
     },
     _getNodesByName: function(key) {
         var arr = this.getStage().names[key] || [];
-		return this._getDescendants(arr);
+        return this._getDescendants(arr);
     },
     _get: function(selector) {
         var retArr = Kinetic.Node.prototype._get.call(this, selector);
@@ -156,7 +157,7 @@ Kinetic.Container.prototype = {
         return obj;
     },
     _getDescendants: function(arr) {
-    	var retArr = [];
+        var retArr = [];
         for(var n = 0; n < arr.length; n++) {
             var node = arr[n];
             if(this.isAncestorOf(node)) {
@@ -226,6 +227,15 @@ Kinetic.Container.prototype = {
     _setChildrenIndices: function() {
         for(var n = 0; n < this.children.length; n++) {
             this.children[n].index = n;
+        }
+    },
+    draw: function(canvas) {
+        if(Kinetic.Node.prototype._shouldDraw.call(this, canvas)) {
+            var children = this.children;
+            var length = children.length;
+            for(var n = 0; n < length; n++) {
+                children[n].draw(canvas);
+            }
         }
     }
 };

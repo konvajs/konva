@@ -438,7 +438,7 @@ Kinetic.Shape.prototype = {
         var stage = this.getStage();
         var bufferCanvas = stage.bufferCanvas;
         bufferCanvas.clear();
-        this._draw(bufferCanvas);
+        this.draw(bufferCanvas);
         var p = bufferCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
         return p[3] > 0;
     },
@@ -446,8 +446,8 @@ Kinetic.Shape.prototype = {
         Kinetic.Node.prototype.remove.call(this);
         delete Kinetic.Global.shapes[this.colorKey];
     },
-    __draw: function(canvas) {
-        if(this.attrs.drawFunc) {
+    draw: function(canvas) {
+        if(this.attrs.drawFunc && Kinetic.Node.prototype._shouldDraw.call(this, canvas)) {
             var stage = this.getStage();
             var context = canvas.getContext();
             var family = [];

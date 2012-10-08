@@ -63,13 +63,11 @@ Kinetic.Stage.prototype = {
         this.setAttr('container', container);
     },
     /**
-     * draw children
+     * draw layers
      * @name draw
      * @methodOf Kinetic.Stage.prototype
      */
-    draw: function() {
-        this._draw();
-    },
+
     /**
      * set stage size
      * @name setSize

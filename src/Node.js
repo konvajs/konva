@@ -519,7 +519,7 @@ Kinetic.Node.prototype = {
      */
     getAbsoluteOpacity: function() {
         var absOpacity = this.getOpacity();
-        if (this.getParent()) {
+        if(this.getParent()) {
             absOpacity *= this.getParent().getAbsoluteOpacity();
         }
         return absOpacity;
@@ -766,16 +766,17 @@ Kinetic.Node.prototype = {
         var mimeType = config && config.mimeType ? config.mimeType : null;
         var quality = config && config.quality ? config.quality : null;
         var canvas;
+
+        //if width and height are defined, create new canvas to draw on, else reuse stage buffer canvas
         if(config && config.width && config.height) {
             canvas = new Kinetic.Canvas(config.width, config.height);
         }
         else {
             canvas = this.getStage().bufferCanvas;
+            canvas.clear();
         }
 
-        var context = canvas.getContext();
-        canvas.clear();
-        this._draw(canvas);
+        this.draw(canvas);
         return canvas.toDataURL(mimeType, quality);
     },
     /**
@@ -1002,25 +1003,8 @@ Kinetic.Node.prototype = {
             }
         }
     },
-    _draw: function(canvas) {
-        if(this.isVisible() && (!canvas || canvas.name !== 'buffer' || this.getListening())) {
-            if(this.__draw) {
-                this.__draw(canvas);
-            }
-
-            var children = this.children;
-            if(children) {
-                for(var n = 0; n < children.length; n++) {
-                    var child = children[n];
-                    if(child.draw) {
-                        child.draw(canvas);
-                    }
-                    else {
-                        child._draw(canvas);
-                    }
-                }
-            }
-        }
+    _shouldDraw: function(canvas) {
+        return (this.isVisible() && (!canvas || canvas.name !== 'buffer' || this.getListening()));
     }
 };
 
@@ -1086,12 +1070,12 @@ Kinetic.Node._createNode = function(obj, container) {
     else {
         type = obj.nodeType;
     }
-    
+
     // if container was passed in, add it to attrs
-    if (container) {
-    	obj.attrs.container = container;
+    if(container) {
+        obj.attrs.container = container;
     }
-    
+
     var no = new Kinetic[type](obj.attrs);
     if(obj.children) {
         for(var n = 0; n < obj.children.length; n++) {

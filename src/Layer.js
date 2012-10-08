@@ -60,12 +60,24 @@ Kinetic.Layer.prototype = {
             this.beforeDrawFunc.call(this);
         }
 
+        var canvases = [];
         if(canvas) {
-            this._draw(canvas);
+            canvases.push(canvas);
         }
         else {
-            this._draw(this.getCanvas());
-            this._draw(this.bufferCanvas);
+            canvases.push(this.getCanvas());
+            canvases.push(this.bufferCanvas);
+        }
+
+        var length = canvases.length;
+        for(var n = 0; n < length; n++) {
+            var canvas = canvases[n];
+            if(Kinetic.Node.prototype._shouldDraw.call(this, canvas)) {
+                if(this.attrs.clearBeforeDraw) {
+                    canvas.clear();
+                }
+                Kinetic.Container.prototype.draw.call(this, canvas);
+            }
         }
 
         // after draw  handler
@@ -210,7 +222,7 @@ Kinetic.Layer.prototype = {
      *  specified, then "image/png" will result. For "image/jpeg", specify a quality
      *  level as quality (range 0.0 - 1.0).  Note that this method works
      *  differently from toDataURL() for other nodes because it generates an absolute dataURL
-     *  based on what's draw on the layer, rather than drawing
+     *  based on what's currently drawn on the layer, rather than drawing
      *  the current state of each child node
      * @name toDataURL
      * @methodOf Kinetic.Layer.prototype
@@ -249,11 +261,6 @@ Kinetic.Layer.prototype = {
             this.getStage().content.removeChild(this.canvas.element);
         } catch(e) {
             Kinetic.Global.warn('unable to remove layer scene canvas element from the document');
-        }
-    },
-    __draw: function(canvas) {
-        if(this.attrs.clearBeforeDraw) {
-            canvas.clear();
         }
     }
 };
