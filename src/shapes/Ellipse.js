@@ -54,6 +54,24 @@ Kinetic.Ellipse.prototype = {
     setRadius: function() {
         var pos = Kinetic.Type._getXY([].slice.call(arguments));
         this.setAttr('radius', Kinetic.Type._merge(pos, this.getRadius()));
+    },
+    getWidth: function() {
+        return this.getRadius().x * 2;
+    },
+    getHeight: function() {
+        return this.getRadius().y * 2;
+    },
+    setWidth: function(width) {
+        Kinetic.Node.prototype.setWidth.call(this, width);
+        this.setRadius({
+            x: width / 2
+        });
+    },
+    setHeight: function(height) {
+        Kinetic.Node.prototype.setHeight.call(this, height);
+        this.setRadius({
+            y: height / 2
+        });
     }
 };
 Kinetic.Global.extend(Kinetic.Ellipse, Kinetic.Shape);

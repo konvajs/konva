@@ -304,7 +304,6 @@ Kinetic.Node.prototype = {
                 addChildren(nodes);
             }
         }
-
         if(that.nodeType !== 'Stage') {
             addChildren(that.getStage().getChildren());
         }
@@ -519,7 +518,7 @@ Kinetic.Node.prototype = {
      */
     getAbsoluteOpacity: function() {
         var absOpacity = this.getOpacity();
-        if (this.getParent()) {
+        if(this.getParent()) {
             absOpacity *= this.getParent().getAbsoluteOpacity();
         }
         return absOpacity;
@@ -835,6 +834,46 @@ Kinetic.Node.prototype = {
         this.setAttr('scale', pos);
 
     },
+    /**
+     * set size
+     * @name setSize
+     * @methodOf Kinetic.Node.prototype
+     * @param {Number} width
+     * @param {Number} height
+     */
+    setSize: function() {
+        // set stage dimensions
+        var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
+        this.setWidth(size.width);
+        this.setHeight(size.height);
+    },
+    /**
+     * get size
+     * @name getSize
+     * @methodOf Kinetic.Node.prototype
+     */
+    getSize: function() {
+        return {
+            width: this.getWidth(),
+            height: this.getHeight()
+        };
+    },
+    /**
+     * get width
+     * @name getWidth
+     * @methodOf Kinetic.Node.prototype
+     */
+    getWidth: function() {
+        return this.attrs.width || 0;
+    },
+    /**
+     * get height
+     * @name getHeight
+     * @methodOf Kinetic.Node.prototype
+     */
+    getHeight: function() {
+        return this.attrs.height || 0;
+    },
     _get: function(selector) {
         return this.nodeType === selector ? [this] : [];
     },
@@ -1086,12 +1125,12 @@ Kinetic.Node._createNode = function(obj, container) {
     else {
         type = obj.nodeType;
     }
-    
+
     // if container was passed in, add it to attrs
-    if (container) {
-    	obj.attrs.container = container;
+    if(container) {
+        obj.attrs.container = container;
     }
-    
+
     var no = new Kinetic[type](obj.attrs);
     if(obj.children) {
         for(var n = 0; n < obj.children.length; n++) {
@@ -1104,6 +1143,7 @@ Kinetic.Node._createNode = function(obj, container) {
 // add getters setters
 Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'rotation', 'opacity', 'name', 'id', 'draggable', 'listening', 'visible', 'dragBoundFunc']);
 Kinetic.Node.addGetters(Kinetic.Node, ['scale', 'offset']);
+Kinetic.Node.addSetters(Kinetic.Node, ['width', 'height']);
 
 // mappings
 /**
@@ -1195,6 +1235,20 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  * @name setListening
  * @methodOf Kinetic.Node.prototype
  * @param {Boolean} listening
+ */
+
+/**
+ * set width
+ * @name setWidth
+ * @methodOf Kinetic.Node.prototype
+ * @param {Number} width
+ */
+
+/**
+ * set height
+ * @name setHeight
+ * @methodOf Kinetic.Node.prototype
+ * @param {Number} height
  */
 
 /**

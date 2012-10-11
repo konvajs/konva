@@ -71,26 +71,13 @@ Kinetic.Stage.prototype = {
         this._draw();
     },
     /**
-     * set stage size
-     * @name setSize
-     * @methodOf Kinetic.Stage.prototype
-     * @param {Number} width
-     * @param {Number} height
-     */
-    setSize: function() {
-        // set stage dimensions
-        var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
-        this.setWidth(size.width);
-        this.setHeight(size.height);
-    },
-    /**
      * set height
      * @name setHeight
      * @methodOf Kinetic.Stage.prototype
      * @param {Number} height
      */
     setHeight: function(height) {
-        this.setAttr('height', height);
+        Kinetic.Node.prototype.setHeight.call(this, height);
         this._resizeDOM();
     },
     /**
@@ -100,19 +87,8 @@ Kinetic.Stage.prototype = {
      * @param {Number} width
      */
     setWidth: function(width) {
-        this.setAttr('width', width);
+        Kinetic.Node.prototype.setWidth.call(this, width);
         this._resizeDOM();
-    },
-    /**
-     * get stage size
-     * @name getSize
-     * @methodOf Kinetic.Stage.prototype
-     */
-    getSize: function() {
-        return {
-            width: this.attrs.width,
-            height: this.attrs.height
-        };
     },
     /**
      * clear all layers
@@ -233,7 +209,6 @@ Kinetic.Stage.prototype = {
             };
             imageObj.src = layerUrl;
         }
-
         drawLayer(0);
     },
     /**
@@ -714,22 +689,10 @@ Kinetic.Stage.prototype = {
 Kinetic.Global.extend(Kinetic.Stage, Kinetic.Container);
 
 // add getters and setters
-Kinetic.Node.addGetters(Kinetic.Stage, ['width', 'height', 'container']);
+Kinetic.Node.addGetters(Kinetic.Stage, ['container']);
 
 /**
  * get container DOM element
  * @name getContainer
- * @methodOf Kinetic.Stage.prototype
- */
-
-/**
- * get width
- * @name getWidth
- * @methodOf Kinetic.Stage.prototype
- */
-
-/**
- * get height
- * @name getHeight
  * @methodOf Kinetic.Stage.prototype
  */

@@ -236,7 +236,7 @@ Kinetic.Text.prototype = {
 Kinetic.Global.extend(Kinetic.Text, Kinetic.Shape);
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'lineHeight', 'width', 'height']);
+Kinetic.Node.addGettersSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'lineHeight']);
 Kinetic.Node.addGetters(Kinetic.Text, ['text']);
 /**
  * set font family
@@ -299,20 +299,6 @@ Kinetic.Node.addGetters(Kinetic.Text, ['text']);
  * @name setLineHeight
  * @methodOf Kinetic.Text.prototype
  * @param {Number} lineHeight default is 1.2
- */
-
-/**
- * set width of text box
- * @name setWidth
- * @methodOf Kinetic.Text.prototype
- * @param {Number} width
- */
-
-/**
- * set height of text box
- * @name setHeight
- * @methodOf Kinetic.Text.prototype
- * @param {Number} height
  */
 
 /**
@@ -379,18 +365,6 @@ Kinetic.Node.addGetters(Kinetic.Text, ['text']);
 /**
  * get text
  * @name getText
- * @methodOf Kinetic.Text.prototype
- */
-
-/**
- * get width of text box
- * @name getWidth
- * @methodOf Kinetic.Text.prototype
- */
-
-/**
- * get height of text box
- * @name getHeight
  * @methodOf Kinetic.Text.prototype
  */
 

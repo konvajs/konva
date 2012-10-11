@@ -8,7 +8,7 @@
  * @param {Object} config
  */
 Kinetic.Circle = function(config) {
-	this._initCircle(config);	
+    this._initCircle(config);
 };
 
 Kinetic.Circle.prototype = {
@@ -29,6 +29,20 @@ Kinetic.Circle.prototype = {
         context.closePath();
         this.fill(context);
         this.stroke(context);
+    },
+    getWidth: function() {
+        return this.getRadius() * 2;
+    },
+    getHeight: function() {
+        return this.getRadius() * 2;
+    },
+    setWidth: function(width) {
+        Kinetic.Node.prototype.setWidth.call(this, width);
+        this.setRadius(width / 2);
+    },
+    setHeight: function(height) {
+        Kinetic.Node.prototype.setHeight.call(this, height);
+        this.setRadius(height / 2);
     }
 };
 Kinetic.Global.extend(Kinetic.Circle, Kinetic.Shape);

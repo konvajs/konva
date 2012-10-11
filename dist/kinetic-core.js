@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Oct 06 2012
+ * Date: Oct 10 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -1527,7 +1527,6 @@ Kinetic.Node.prototype = {
                 addChildren(nodes);
             }
         }
-
         if(that.nodeType !== 'Stage') {
             addChildren(that.getStage().getChildren());
         }
@@ -1742,7 +1741,7 @@ Kinetic.Node.prototype = {
      */
     getAbsoluteOpacity: function() {
         var absOpacity = this.getOpacity();
-        if (this.getParent()) {
+        if(this.getParent()) {
             absOpacity *= this.getParent().getAbsoluteOpacity();
         }
         return absOpacity;
@@ -2058,6 +2057,46 @@ Kinetic.Node.prototype = {
         this.setAttr('scale', pos);
 
     },
+    /**
+     * set size
+     * @name setSize
+     * @methodOf Kinetic.Node.prototype
+     * @param {Number} width
+     * @param {Number} height
+     */
+    setSize: function() {
+        // set stage dimensions
+        var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
+        this.setWidth(size.width);
+        this.setHeight(size.height);
+    },
+    /**
+     * get size
+     * @name getSize
+     * @methodOf Kinetic.Node.prototype
+     */
+    getSize: function() {
+        return {
+            width: this.getWidth(),
+            height: this.getHeight()
+        };
+    },
+    /**
+     * get width
+     * @name getWidth
+     * @methodOf Kinetic.Node.prototype
+     */
+    getWidth: function() {
+        return this.attrs.width || 0;
+    },
+    /**
+     * get height
+     * @name getHeight
+     * @methodOf Kinetic.Node.prototype
+     */
+    getHeight: function() {
+        return this.attrs.height || 0;
+    },
     _get: function(selector) {
         return this.nodeType === selector ? [this] : [];
     },
@@ -2309,12 +2348,12 @@ Kinetic.Node._createNode = function(obj, container) {
     else {
         type = obj.nodeType;
     }
-    
+
     // if container was passed in, add it to attrs
-    if (container) {
-    	obj.attrs.container = container;
+    if(container) {
+        obj.attrs.container = container;
     }
-    
+
     var no = new Kinetic[type](obj.attrs);
     if(obj.children) {
         for(var n = 0; n < obj.children.length; n++) {
@@ -2327,6 +2366,7 @@ Kinetic.Node._createNode = function(obj, container) {
 // add getters setters
 Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'rotation', 'opacity', 'name', 'id', 'draggable', 'listening', 'visible', 'dragBoundFunc']);
 Kinetic.Node.addGetters(Kinetic.Node, ['scale', 'offset']);
+Kinetic.Node.addSetters(Kinetic.Node, ['width', 'height']);
 
 // mappings
 /**
@@ -2421,6 +2461,20 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  */
 
 /**
+ * set width
+ * @name setWidth
+ * @methodOf Kinetic.Node.prototype
+ * @param {Number} width
+ */
+
+/**
+ * set height
+ * @name setHeight
+ * @methodOf Kinetic.Node.prototype
+ * @param {Number} height
+ */
+
+/**
  * get scale
  * @name getScale
  * @methodOf Kinetic.Node.prototype
@@ -2491,7 +2545,6 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  * @name getListening
  * @methodOf Kinetic.Node.prototype
  */
-
 ///////////////////////////////////////////////////////////////////////
 //  Container
 ///////////////////////////////////////////////////////////////////////
@@ -2798,26 +2851,13 @@ Kinetic.Stage.prototype = {
         this._draw();
     },
     /**
-     * set stage size
-     * @name setSize
-     * @methodOf Kinetic.Stage.prototype
-     * @param {Number} width
-     * @param {Number} height
-     */
-    setSize: function() {
-        // set stage dimensions
-        var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
-        this.setWidth(size.width);
-        this.setHeight(size.height);
-    },
-    /**
      * set height
      * @name setHeight
      * @methodOf Kinetic.Stage.prototype
      * @param {Number} height
      */
     setHeight: function(height) {
-        this.setAttr('height', height);
+        Kinetic.Node.prototype.setHeight.call(this, height);
         this._resizeDOM();
     },
     /**
@@ -2827,19 +2867,8 @@ Kinetic.Stage.prototype = {
      * @param {Number} width
      */
     setWidth: function(width) {
-        this.setAttr('width', width);
+        Kinetic.Node.prototype.setWidth.call(this, width);
         this._resizeDOM();
-    },
-    /**
-     * get stage size
-     * @name getSize
-     * @methodOf Kinetic.Stage.prototype
-     */
-    getSize: function() {
-        return {
-            width: this.attrs.width,
-            height: this.attrs.height
-        };
     },
     /**
      * clear all layers
@@ -2960,7 +2989,6 @@ Kinetic.Stage.prototype = {
             };
             imageObj.src = layerUrl;
         }
-
         drawLayer(0);
     },
     /**
@@ -3441,23 +3469,11 @@ Kinetic.Stage.prototype = {
 Kinetic.Global.extend(Kinetic.Stage, Kinetic.Container);
 
 // add getters and setters
-Kinetic.Node.addGetters(Kinetic.Stage, ['width', 'height', 'container']);
+Kinetic.Node.addGetters(Kinetic.Stage, ['container']);
 
 /**
  * get container DOM element
  * @name getContainer
- * @methodOf Kinetic.Stage.prototype
- */
-
-/**
- * get width
- * @name getWidth
- * @methodOf Kinetic.Stage.prototype
- */
-
-/**
- * get height
- * @name getHeight
  * @methodOf Kinetic.Stage.prototype
  */
 ///////////////////////////////////////////////////////////////////////
@@ -4425,48 +4441,6 @@ Kinetic.Rect.prototype = {
     }
 };
 Kinetic.Global.extend(Kinetic.Rect, Kinetic.Shape);
-
-// add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Rect, ['width', 'height']);
-
-/**
- * set width
- * @name setWidth
- * @methodOf Kinetic.Rect.prototype
- * @param {Number} width
- */
-
-/**
- * set height
- * @name setHeight
- * @methodOf Kinetic.Rect.prototype
- * @param {Number} height
- */
-
-/**
- * set corner radius
- * @name setCornerRadius
- * @methodOf Kinetic.Rect.prototype
- * @param {Number} radius
- */
-
-/**
- * get width
- * @name getWidth
- * @methodOf Kinetic.Rect.prototype
- */
-
-/**
- * get height
- * @name getHeight
- * @methodOf Kinetic.Rect.prototype
- */
-
-/**
- * get corner radius
- * @name getCornerRadius
- * @methodOf Kinetic.Rect.prototype
- */
 ///////////////////////////////////////////////////////////////////////
 //  Circle
 ///////////////////////////////////////////////////////////////////////
@@ -4477,7 +4451,7 @@ Kinetic.Node.addGettersSetters(Kinetic.Rect, ['width', 'height']);
  * @param {Object} config
  */
 Kinetic.Circle = function(config) {
-	this._initCircle(config);	
+    this._initCircle(config);
 };
 
 Kinetic.Circle.prototype = {
@@ -4498,6 +4472,20 @@ Kinetic.Circle.prototype = {
         context.closePath();
         this.fill(context);
         this.stroke(context);
+    },
+    getWidth: function() {
+        return this.getRadius() * 2;
+    },
+    getHeight: function() {
+        return this.getRadius() * 2;
+    },
+    setWidth: function(width) {
+        Kinetic.Node.prototype.setWidth.call(this, width);
+        this.setRadius(width / 2);
+    },
+    setHeight: function(height) {
+        Kinetic.Node.prototype.setHeight.call(this, height);
+        this.setRadius(height / 2);
     }
 };
 Kinetic.Global.extend(Kinetic.Circle, Kinetic.Shape);
@@ -4573,6 +4561,24 @@ Kinetic.Ellipse.prototype = {
     setRadius: function() {
         var pos = Kinetic.Type._getXY([].slice.call(arguments));
         this.setAttr('radius', Kinetic.Type._merge(pos, this.getRadius()));
+    },
+    getWidth: function() {
+        return this.getRadius().x * 2;
+    },
+    getHeight: function() {
+        return this.getRadius().y * 2;
+    },
+    setWidth: function(width) {
+        Kinetic.Node.prototype.setWidth.call(this, width);
+        this.setRadius({
+            x: width / 2
+        });
+    },
+    setHeight: function(height) {
+        Kinetic.Node.prototype.setHeight.call(this, height);
+        this.setRadius({
+            y: height / 2
+        });
     }
 };
 Kinetic.Global.extend(Kinetic.Ellipse, Kinetic.Shape);
@@ -4743,22 +4749,8 @@ Kinetic.Image.prototype = {
 Kinetic.Global.extend(Kinetic.Image, Kinetic.Shape);
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'filter', 'width', 'height']);
+Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'filter']);
 Kinetic.Node.addGetters(Kinetic.Image, ['crop']);
-
-/**
- * set width
- * @name setWidth
- * @methodOf Kinetic.Image.prototype
- * @param {Number} width
- */
-
-/**
- * set height
- * @name setHeight
- * @methodOf Kinetic.Image.prototype
- * @param {Number} height
- */
 
 /**
  * set image
@@ -4789,18 +4781,6 @@ Kinetic.Node.addGetters(Kinetic.Image, ['crop']);
 /**
  * get filter
  * @name getFilter
- * @methodOf Kinetic.Image.prototype
- */
-
-/**
- * get width
- * @name getWidth
- * @methodOf Kinetic.Image.prototype
- */
-
-/**
- * get height
- * @name getHeight
  * @methodOf Kinetic.Image.prototype
  */
 ///////////////////////////////////////////////////////////////////////
@@ -5094,7 +5074,7 @@ Kinetic.Text.prototype = {
 Kinetic.Global.extend(Kinetic.Text, Kinetic.Shape);
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'lineHeight', 'width', 'height']);
+Kinetic.Node.addGettersSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'lineHeight']);
 Kinetic.Node.addGetters(Kinetic.Text, ['text']);
 /**
  * set font family
@@ -5157,20 +5137,6 @@ Kinetic.Node.addGetters(Kinetic.Text, ['text']);
  * @name setLineHeight
  * @methodOf Kinetic.Text.prototype
  * @param {Number} lineHeight default is 1.2
- */
-
-/**
- * set width of text box
- * @name setWidth
- * @methodOf Kinetic.Text.prototype
- * @param {Number} width
- */
-
-/**
- * set height of text box
- * @name setHeight
- * @methodOf Kinetic.Text.prototype
- * @param {Number} height
  */
 
 /**
@@ -5237,18 +5203,6 @@ Kinetic.Node.addGetters(Kinetic.Text, ['text']);
 /**
  * get text
  * @name getText
- * @methodOf Kinetic.Text.prototype
- */
-
-/**
- * get width of text box
- * @name getWidth
- * @methodOf Kinetic.Text.prototype
- */
-
-/**
- * get height of text box
- * @name getHeight
  * @methodOf Kinetic.Text.prototype
  */
 

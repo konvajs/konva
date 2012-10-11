@@ -156,22 +156,8 @@ Kinetic.Image.prototype = {
 Kinetic.Global.extend(Kinetic.Image, Kinetic.Shape);
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'filter', 'width', 'height']);
+Kinetic.Node.addGettersSetters(Kinetic.Image, ['image', 'filter']);
 Kinetic.Node.addGetters(Kinetic.Image, ['crop']);
-
-/**
- * set width
- * @name setWidth
- * @methodOf Kinetic.Image.prototype
- * @param {Number} width
- */
-
-/**
- * set height
- * @name setHeight
- * @methodOf Kinetic.Image.prototype
- * @param {Number} height
- */
 
 /**
  * set image
@@ -202,17 +188,5 @@ Kinetic.Node.addGetters(Kinetic.Image, ['crop']);
 /**
  * get filter
  * @name getFilter
- * @methodOf Kinetic.Image.prototype
- */
-
-/**
- * get width
- * @name getWidth
- * @methodOf Kinetic.Image.prototype
- */
-
-/**
- * get height
- * @name getHeight
  * @methodOf Kinetic.Image.prototype
  */
