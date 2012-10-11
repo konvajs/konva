@@ -46,4 +46,5 @@ Kinetic.Rect.prototype = {
         this.stroke(context);
     }
 };
+
 Kinetic.Global.extend(Kinetic.Rect, Kinetic.Shape);

@@ -63,13 +63,11 @@ Kinetic.Stage.prototype = {
         this.setAttr('container', container);
     },
     /**
-     * draw children
+     * draw layers
      * @name draw
      * @methodOf Kinetic.Stage.prototype
      */
-    draw: function() {
-        this._draw();
-    },
+
     /**
      * set height
      * @name setHeight
@@ -195,7 +193,7 @@ Kinetic.Stage.prototype = {
 
         function drawLayer(n) {
             var layer = layers[n];
-            var layerUrl = layer.getCanvas().toDataURL();
+            var layerUrl = layer.toDataURL();
             var imageObj = new Image();
             imageObj.onload = function() {
                 context.drawImage(imageObj, 0, 0);

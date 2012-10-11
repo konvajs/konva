@@ -31,20 +31,22 @@ Kinetic.Polygon.prototype = {
         context.closePath();
         this.fill(context);
         this.stroke(context);
+    },
+    /**
+	 * set points array
+	 * @name setPoints
+	 * @methodOf Kinetic.Line.prototype
+	 * @param {Array} can be an array of point objects or an array
+	 *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
+	 */
+    setPoints: function(val) {
+    	this.setAttr('points', Kinetic.Type._getPoints(val));
     }
 };
 Kinetic.Global.extend(Kinetic.Polygon, Kinetic.Shape);
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Polygon, ['points']);
-
-/**
- * set points array
- * @name setPoints
- * @methodOf Kinetic.Polygon.prototype
- * @param {Array} points can be an array of point objects or an array
- *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
- */
+Kinetic.Node.addGetters(Kinetic.Polygon, ['points']);
 
 /**
  * get points array

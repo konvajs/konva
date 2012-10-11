@@ -765,16 +765,17 @@ Kinetic.Node.prototype = {
         var mimeType = config && config.mimeType ? config.mimeType : null;
         var quality = config && config.quality ? config.quality : null;
         var canvas;
+
+        //if width and height are defined, create new canvas to draw on, else reuse stage buffer canvas
         if(config && config.width && config.height) {
             canvas = new Kinetic.Canvas(config.width, config.height);
         }
         else {
             canvas = this.getStage().bufferCanvas;
+            canvas.clear();
         }
 
-        var context = canvas.getContext();
-        canvas.clear();
-        this._draw(canvas);
+        this.draw(canvas);
         return canvas.toDataURL(mimeType, quality);
     },
     /**
@@ -1041,25 +1042,8 @@ Kinetic.Node.prototype = {
             }
         }
     },
-    _draw: function(canvas) {
-        if(this.isVisible() && (!canvas || canvas.name !== 'buffer' || this.getListening())) {
-            if(this.__draw) {
-                this.__draw(canvas);
-            }
-
-            var children = this.children;
-            if(children) {
-                for(var n = 0; n < children.length; n++) {
-                    var child = children[n];
-                    if(child.draw) {
-                        child.draw(canvas);
-                    }
-                    else {
-                        child._draw(canvas);
-                    }
-                }
-            }
-        }
+    _shouldDraw: function(canvas) {
+        return (this.isVisible() && (!canvas || canvas.name !== 'buffer' || this.getListening()));
     }
 };
 
@@ -1206,28 +1190,24 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  */
 
 /**
+ * set name
+ * @name setName
+ * @methodOf Kinetic.Node.prototype
+ * @param {String} name
+ */
+
+/**
+ * set id
+ * @name setId
+ * @methodOf Kinetic.Node.prototype
+ * @param {String} id
+ */
+
+/**
  * set draggable
  * @name setDraggable
  * @methodOf Kinetic.Node.prototype
  * @param {String} draggable
- */
-
-/**
- * set drag constraint.
- * @name setDragConstraint
- * @methodOf Kinetic.Node.prototype
- * @param {String} constraint can be vertical, horizontal, or none
- */
-
-/**
- * set drag bounds.
- * @name setDragBounds
- * @methodOf Kinetic.Node.prototype
- * @param {Object} bounds
- * @config {Number} [left] left bounds position
- * @config {Number} [top] top bounds position
- * @config {Number} [right] right bounds position
- * @config {Number} [bottom] bottom bounds position
  */
 
 /**
@@ -1238,24 +1218,20 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  */
 
 /**
- * set width
- * @name setWidth
+ * set visible
+ * @name setVisible
  * @methodOf Kinetic.Node.prototype
- * @param {Number} width
+ * @param {Boolean} visible
  */
 
 /**
- * set height
- * @name setHeight
+ * set drag bound function.  This is used to override the default
+ *  drag and drop position
+ * @name setDragBoundFunc
  * @methodOf Kinetic.Node.prototype
- * @param {Number} height
+ * @param {Function} dragBoundFunc
  */
 
-/**
- * get scale
- * @name getScale
- * @methodOf Kinetic.Node.prototype
- */
 
 /**
  * get node x position
@@ -1294,6 +1270,12 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  */
 
 /**
+ * get scale
+ * @name getScale
+ * @methodOf Kinetic.Node.prototype
+ */
+
+/**
  * get offset
  * @name getOffset
  * @methodOf Kinetic.Node.prototype
@@ -1306,19 +1288,19 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  */
 
 /**
- * get drag constraint
- * @name getDragConstraint
- * @methodOf Kinetic.Node.prototype
- */
-
-/**
- * get drag bounds
- * @name getDragBounds
- * @methodOf Kinetic.Node.prototype
- */
-
-/**
  * determine if listening to events or not
  * @name getListening
+ * @methodOf Kinetic.Node.prototype
+ */
+
+/**
+ * determine if visible or not
+ * @name getVisible
+ * @methodOf Kinetic.Node.prototype
+ */
+
+/**
+ * get dragBoundFunc
+ * @name getDragBoundFunc
  * @methodOf Kinetic.Node.prototype
  */

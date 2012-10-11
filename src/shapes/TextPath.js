@@ -105,6 +105,15 @@ Kinetic.TextPath.prototype = {
     getTextHeight: function() {
         return this.textHeight;
     },
+    /**
+	 * set text
+	 * @name setText
+	 * @methodOf Kinetic.TextPath.prototype
+	 * @param {String} text
+	 */
+	setText: function(text) {
+		Kinetic.Text.prototype.setText.call(this, text);
+	},
     _getTextSize: function(text) {
         var dummyCanvas = this.dummyCanvas;
         var context = dummyCanvas.getContext('2d');
@@ -294,7 +303,8 @@ Kinetic.TextPath.prototype = {
 Kinetic.Global.extend(Kinetic.TextPath, Kinetic.Shape);
 
 // add setters and getters
-Kinetic.Node.addGettersSetters(Kinetic.TextPath, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'text']);
+Kinetic.Node.addGettersSetters(Kinetic.TextPath, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth']);
+Kinetic.Node.addGetters(Kinetic.TextPath, ['text']);
 
 /**
  * set font family
@@ -336,13 +346,6 @@ Kinetic.Node.addGettersSetters(Kinetic.TextPath, ['fontFamily', 'fontSize', 'fon
  * @name setTextStrokeWidth
  * @methodOf Kinetic.TextPath.prototype
  * @param {int} textStrokeWidth
- */
-
-/**
- * set text
- * @name setText
- * @methodOf Kinetic.TextPath.prototype
- * @param {String} text
  */
 
 /**

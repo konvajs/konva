@@ -438,7 +438,7 @@ Kinetic.Shape.prototype = {
         var stage = this.getStage();
         var bufferCanvas = stage.bufferCanvas;
         bufferCanvas.clear();
-        this._draw(bufferCanvas);
+        this.draw(bufferCanvas);
         var p = bufferCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
         return p[3] > 0;
     },
@@ -446,8 +446,8 @@ Kinetic.Shape.prototype = {
         Kinetic.Node.prototype.remove.call(this);
         delete Kinetic.Global.shapes[this.colorKey];
     },
-    __draw: function(canvas) {
-        if(this.attrs.drawFunc) {
+    draw: function(canvas) {
+        if(this.attrs.drawFunc && Kinetic.Node.prototype._shouldDraw.call(this, canvas)) {
             var stage = this.getStage();
             var context = canvas.getContext();
             var family = [];
@@ -529,7 +529,7 @@ Kinetic.Shape.prototype = {
 Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
 
 // add getters and setters
-Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'strokeWidth', 'drawFunc', 'filter', 'cornerRadius']);
+Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'strokeWidth', 'drawFunc', 'cornerRadius']);
 Kinetic.Node.addGetters(Kinetic.Shape, ['shadow', 'fill']);
 
 /**
@@ -562,9 +562,10 @@ Kinetic.Node.addGetters(Kinetic.Shape, ['shadow', 'fill']);
  */
 
 /**
- * get fill
- * @name getFill
+ * set corner radius
+ * @name setCornerRadius
  * @methodOf Kinetic.Shape.prototype
+ * @param {Number} corner radius
  */
 
 /**
@@ -586,13 +587,25 @@ Kinetic.Node.addGetters(Kinetic.Shape, ['shadow', 'fill']);
  */
 
 /**
- * get shadow object
- * @name getShadow
+ * get corner radius
+ * @name getCornerRadius
  * @methodOf Kinetic.Shape.prototype
  */
 
 /**
  * get draw function
  * @name getDrawFunc
+ * @methodOf Kinetic.Shape.prototype
+ */
+
+/**
+ * get shadow object
+ * @name getShadow
+ * @methodOf Kinetic.Shape.prototype
+ */
+
+/**
+ * get fill
+ * @name getFill
  * @methodOf Kinetic.Shape.prototype
  */
