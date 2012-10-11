@@ -4372,6 +4372,13 @@ Kinetic.Node.addGetters(Kinetic.Shape, ['shadow', 'fill']);
  */
 
 /**
+ * set line cap.  Can be butt, round, or square
+ * @name setLineCap
+ * @methodOf Kinetic.Shape.prototype
+ * @param {String} lineCap
+ */
+
+/**
  * get stroke color
  * @name getStroke
  * @methodOf Kinetic.Shape.prototype
@@ -4410,6 +4417,12 @@ Kinetic.Node.addGetters(Kinetic.Shape, ['shadow', 'fill']);
 /**
  * get fill
  * @name getFill
+ * @methodOf Kinetic.Shape.prototype
+ */
+
+/**
+ * get line cap
+ * @name getLineCap
  * @methodOf Kinetic.Shape.prototype
  */
 ///////////////////////////////////////////////////////////////////////
@@ -5320,7 +5333,7 @@ Kinetic.Line.prototype = {
 Kinetic.Global.extend(Kinetic.Line, Kinetic.Shape);
 
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Line, ['dashArray', 'lineCap']);
+Kinetic.Node.addGettersSetters(Kinetic.Line, ['dashArray']);
 Kinetic.Node.addGetters(Kinetic.Line, ['points']);
 
 /**
@@ -5337,21 +5350,8 @@ Kinetic.Node.addGetters(Kinetic.Line, ['points']);
  */
 
 /**
- * set line cap.  Can be butt, round, or square
- * @name setLineCap
- * @methodOf Kinetic.Line.prototype
- * @param {String} lineCap
- */
-
-/**
  * get dash array
  * @name getDashArray
- * @methodOf Kinetic.Line.prototype
- */
-
-/**
- * get line cap
- * @name getLineCap
  * @methodOf Kinetic.Line.prototype
  */
 
