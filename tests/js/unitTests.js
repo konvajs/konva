@@ -2781,7 +2781,7 @@ Test.prototype.tests = {
         });
 
         // center text box
-        text.setOffset(text.getBoxWidth() / 2, text.getBoxHeight() / 2);
+        text.setOffset(text.getWidth() / 2, text.getHeight() / 2);
 
         layer.add(text);
         stage.add(layer);
@@ -2810,8 +2810,8 @@ Test.prototype.tests = {
         test(text.getCornerRadius() === 10, 'text box corner radius should be 10');
         test(text.getDraggable() === true, 'text should be draggable');
 
-        test(text.getBoxWidth() === 400, 'box width should be 400');
-        test(text.getBoxHeight() === 100, 'box height should be 100');
+        test(text.getWidth() === 400, 'box width should be 400');
+        test(text.getHeight() === 100, 'box height should be 100');
         test(text.getTextWidth() > 0, 'text width should be greater than 0');
         test(text.getTextHeight() > 0, 'text height should be greater than 0');
 
@@ -3045,8 +3045,8 @@ Test.prototype.tests = {
             detectionType: 'path'
         });
 
-        var width = text.getBoxWidth();
-        var height = text.getBoxHeight();
+        var width = text.getWidth();
+        var height = text.getHeight();
 
         layer.add(text);
         stage.add(layer);
@@ -3054,8 +3054,8 @@ Test.prototype.tests = {
         text.setFontSize(30);
         layer.draw();
 
-        test(text.getBoxWidth() > width, 'text box width should have increased.');
-        test(text.getBoxHeight() > height, 'text box height should have increased.');
+        test(text.getWidth() > width, 'text box width should have increased.');
+        test(text.getHeight() > height, 'text box height should have increased.');
 
     },
     'SHAPE - get shape name': function(containerId) {

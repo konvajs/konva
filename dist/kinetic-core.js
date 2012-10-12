@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Oct 10 2012
+ * Date: Oct 11 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -4910,8 +4910,8 @@ Kinetic.Text.prototype = {
     drawFunc: function(context) {
         // draw rect
         context.beginPath();
-        var boxWidth = this.getBoxWidth();
-        var boxHeight = this.getBoxHeight();
+        var boxWidth = this.getWidth();
+        var boxHeight = this.getHeight();
 
         if(this.attrs.cornerRadius === 0) {
             // simple rect - don't bother doing all that complicated maths stuff.
@@ -4960,10 +4960,10 @@ Kinetic.Text.prototype = {
             // horizontal alignment
             context.save();
             if(this.attrs.align === 'right') {
-                context.translate(this.getBoxWidth() - this._getTextSize(text).width - p * 2, 0);
+                context.translate(this.getWidth() - this._getTextSize(text).width - p * 2, 0);
             }
             else if(this.attrs.align === 'center') {
-                context.translate((this.getBoxWidth() - this._getTextSize(text).width - p * 2) / 2, 0);
+                context.translate((this.getWidth() - this._getTextSize(text).width - p * 2) / 2, 0);
             }
 
             this.fillText(context, text);
@@ -4985,23 +4985,23 @@ Kinetic.Text.prototype = {
 		this.setAttr('text', str);
 	},
     /**
-     * get box width
-     * @name getBoxWidth
+     * get width
+     * @name getWidth
      * @methodOf Kinetic.Text.prototype
      */
-    getBoxWidth: function() {
+    getWidth: function() {
         return this.attrs.width === 'auto' ? this.getTextWidth() + this.attrs.padding * 2 : this.attrs.width;
     },
     /**
-     * get box height
-     * @name getBoxHeight
+     * get height
+     * @name getHeight
      * @methodOf Kinetic.Text.prototype
      */
-    getBoxHeight: function() {
+    getHeight: function() {
         return this.attrs.height === 'auto' ? (this.getTextHeight() * this.textArr.length * this.attrs.lineHeight) + this.attrs.padding * 2 : this.attrs.height;
     },
     /**
-     * get text width in pixels
+     * get text width
      * @name getTextWidth
      * @methodOf Kinetic.Text.prototype
      */
@@ -5009,7 +5009,7 @@ Kinetic.Text.prototype = {
         return this.textWidth;
     },
     /**
-     * get text height in pixels
+     * get text height
      * @name getTextHeight
      * @methodOf Kinetic.Text.prototype
      */
