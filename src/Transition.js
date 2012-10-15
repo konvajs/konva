@@ -1,6 +1,3 @@
-///////////////////////////////////////////////////////////////////////
-//  Transition
-///////////////////////////////////////////////////////////////////////
 /**
  * Transition constructor.  The transitionTo() Node method
  *  returns a reference to the transition object which you can use
@@ -99,4 +96,53 @@ Kinetic.Transition.prototype = {
 
         return tween;
     }
+};
+
+/**
+ * transition node to another state.  Any property that can accept a real
+ *  number can be transitioned, including x, y, rotation, opacity, strokeWidth,
+ *  radius, scale.x, scale.y, offset.x, offset.y, etc.
+ * @name transitionTo
+ * @methodOf Kinetic.Node.prototype
+ * @param {Object} config
+ * @config {Number} duration duration that the transition runs in seconds
+ * @config {String} [easing] easing function.  can be linear, ease-in, ease-out, ease-in-out,
+ *  back-ease-in, back-ease-out, back-ease-in-out, elastic-ease-in, elastic-ease-out,
+ *  elastic-ease-in-out, bounce-ease-out, bounce-ease-in, bounce-ease-in-out,
+ *  strong-ease-in, strong-ease-out, or strong-ease-in-out
+ *  linear is the default
+ * @config {Function} [callback] callback function to be executed when
+ *  transition completes
+ */
+Kinetic.Node.prototype.transitionTo = function(config) {
+    if(!this.transAnim) {
+        this.transAnim = new Kinetic.Animation();
+    }
+    /*
+     * create new transition
+     */
+    var node = this.nodeType === 'Stage' ? this : this.getLayer();
+    var that = this;
+    var trans = new Kinetic.Transition(this, config);
+
+    this.transAnim.func = function() {
+        trans._onEnterFrame();
+    };
+    this.transAnim.node = node;
+
+    // subscribe to onFinished for first tween
+    trans.onFinished = function() {
+        // remove animation
+        that.transAnim.stop();
+        that.transAnim.node.draw();
+
+        // callback
+        if(config.callback) {
+            config.callback();
+        }
+    };
+    // auto start
+    trans.start();
+    this.transAnim.start();
+    return trans;
 };

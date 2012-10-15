@@ -1,6 +1,3 @@
-///////////////////////////////////////////////////////////////////////
-//  Node
-///////////////////////////////////////////////////////////////////////
 /**
  * Node constructor.&nbsp; Nodes are entities that can be transformed, layered,
  * and have events bound to them.  They are the building blocks of a KineticJS
@@ -52,13 +49,9 @@ Kinetic.Node.prototype = {
 
         this.setDefaultAttrs(this.defaultNodeAttrs);
         this.eventListeners = {};
-        this.transAnim = new Kinetic.Animation();
         this.setAttrs(config);
 
         // bind events
-        this.on('draggableChange.kinetic', function() {
-            this._onDraggableChange();
-        });
         var that = this;
         this.on('idChange.kinetic', function(evt) {
             var stage = that.getStage();
@@ -74,8 +67,6 @@ Kinetic.Node.prototype = {
                 stage._addName(that);
             }
         });
-
-        this._onDraggableChange();
     },
     /**
      * bind events to the node.  KineticJS supports mouseover, mousemove,
@@ -524,15 +515,6 @@ Kinetic.Node.prototype = {
         return absOpacity;
     },
     /**
-     * determine if node is currently in drag and drop mode
-     * @name isDragging
-     * @methodOf Kinetic.Node.prototype
-     */
-    isDragging: function() {
-        var go = Kinetic.Global;
-        return go.drag.node && go.drag.node._id === this._id && go.drag.moving;
-    },
-    /**
      * move node to another container
      * @name moveTo
      * @methodOf Kinetic.Node.prototype
@@ -614,51 +596,6 @@ Kinetic.Node.prototype = {
      */
     simulate: function(eventType) {
         this._handleEvent(eventType, {});
-    },
-    /**
-     * transition node to another state.  Any property that can accept a real
-     *  number can be transitioned, including x, y, rotation, opacity, strokeWidth,
-     *  radius, scale.x, scale.y, offset.x, offset.y, etc.
-     * @name transitionTo
-     * @methodOf Kinetic.Node.prototype
-     * @param {Object} config
-     * @config {Number} duration duration that the transition runs in seconds
-     * @config {String} [easing] easing function.  can be linear, ease-in, ease-out, ease-in-out,
-     *  back-ease-in, back-ease-out, back-ease-in-out, elastic-ease-in, elastic-ease-out,
-     *  elastic-ease-in-out, bounce-ease-out, bounce-ease-in, bounce-ease-in-out,
-     *  strong-ease-in, strong-ease-out, or strong-ease-in-out
-     *  linear is the default
-     * @config {Function} [callback] callback function to be executed when
-     *  transition completes
-     */
-    transitionTo: function(config) {
-        /*
-         * create new transition
-         */
-        var node = this.nodeType === 'Stage' ? this : this.getLayer();
-        var that = this;
-        var trans = new Kinetic.Transition(this, config);
-
-        this.transAnim.func = function() {
-            trans._onEnterFrame();
-        };
-        this.transAnim.node = node;
-
-        // subscribe to onFinished for first tween
-        trans.onFinished = function() {
-            // remove animation
-            that.transAnim.stop();
-            that.transAnim.node.draw();
-
-            // callback
-            if(config.callback) {
-                config.callback();
-            }
-        };
-        // auto start
-        trans.start();
-        this.transAnim.start();
-        return trans;
     },
     /**
      * get absolute transform of the node which takes into
@@ -944,67 +881,6 @@ Kinetic.Node.prototype = {
             this._fireChangeEvent(key, oldVal, val);
         }
     },
-    _listenDrag: function() {
-        this._dragCleanup();
-        var go = Kinetic.Global;
-        var that = this;
-        this.on('mousedown.kinetic touchstart.kinetic', function(evt) {
-            that._initDrag();
-        });
-    },
-    _initDrag: function() {
-        var go = Kinetic.Global;
-        var stage = this.getStage();
-        var pos = stage.getUserPosition();
-
-        if(pos) {
-            var m = this.getTransform().getTranslation();
-            var am = this.getAbsoluteTransform().getTranslation();
-            var ap = this.getAbsolutePosition();
-            go.drag.node = this;
-            go.drag.offset.x = pos.x - ap.x;
-            go.drag.offset.y = pos.y - ap.y;
-
-            /*
-             * if dragging and dropping the stage,
-             * draw all of the layers
-             */
-            if(this.nodeType === 'Stage') {
-                stage.dragAnim.node = this;
-            }
-            else {
-                stage.dragAnim.node = this.getLayer();
-            }
-            stage.dragAnim.start();
-        }
-    },
-    _onDraggableChange: function() {
-        if(this.attrs.draggable) {
-            this._listenDrag();
-        }
-        else {
-            // remove event listeners
-            this._dragCleanup();
-
-            /*
-             * force drag and drop to end
-             * if this node is currently in
-             * drag and drop mode
-             */
-            var stage = this.getStage();
-            var go = Kinetic.Global;
-            if(stage && go.drag.node && go.drag.node._id === this._id) {
-                stage._endDrag();
-            }
-        }
-    },
-    /**
-     * remove drag and drop event listener
-     */
-    _dragCleanup: function() {
-        this.off('mousedown.kinetic');
-        this.off('touchstart.kinetic');
-    },
     /**
      * handle node event
      */
@@ -1125,7 +1001,7 @@ Kinetic.Node._createNode = function(obj, container) {
     return no;
 };
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'rotation', 'opacity', 'name', 'id', 'draggable', 'listening', 'visible', 'dragBoundFunc']);
+Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'rotation', 'opacity', 'name', 'id', 'listening', 'visible']);
 Kinetic.Node.addGetters(Kinetic.Node, ['scale', 'offset']);
 Kinetic.Node.addSetters(Kinetic.Node, ['width', 'height']);
 
@@ -1136,12 +1012,6 @@ Kinetic.Node.addSetters(Kinetic.Node, ['width', 'height']);
  * @methodOf Kinetic.Node.prototype
  */
 Kinetic.Node.prototype.isListening = Kinetic.Node.prototype.getListening;
-/**
- * get draggable.  Alias of getDraggable()
- * @name isDraggable
- * @methodOf Kinetic.Node.prototype
- */
-Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
 
 // collection mappings
 (function() {
@@ -1204,13 +1074,6 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  */
 
 /**
- * set draggable
- * @name setDraggable
- * @methodOf Kinetic.Node.prototype
- * @param {String} draggable
- */
-
-/**
  * listen or don't listen to events
  * @name setListening
  * @methodOf Kinetic.Node.prototype
@@ -1223,15 +1086,6 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  * @methodOf Kinetic.Node.prototype
  * @param {Boolean} visible
  */
-
-/**
- * set drag bound function.  This is used to override the default
- *  drag and drop position
- * @name setDragBoundFunc
- * @methodOf Kinetic.Node.prototype
- * @param {Function} dragBoundFunc
- */
-
 
 /**
  * get node x position
@@ -1282,12 +1136,6 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
  */
 
 /**
- * get draggable
- * @name getDraggable
- * @methodOf Kinetic.Node.prototype
- */
-
-/**
  * determine if listening to events or not
  * @name getListening
  * @methodOf Kinetic.Node.prototype
@@ -1296,11 +1144,5 @@ Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
 /**
  * determine if visible or not
  * @name getVisible
- * @methodOf Kinetic.Node.prototype
- */
-
-/**
- * get dragBoundFunc
- * @name getDragBoundFunc
  * @methodOf Kinetic.Node.prototype
  */

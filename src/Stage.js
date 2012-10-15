@@ -1,6 +1,3 @@
-///////////////////////////////////////////////////////////////////////
-//  Stage
-///////////////////////////////////////////////////////////////////////
 /**
  * Stage constructor.  A stage is used to contain multiple layers
  * @constructor
@@ -354,7 +351,7 @@ Kinetic.Stage.prototype = {
         this.mousePos = undefined;
 
         // end drag and drop
-        this._endDrag(evt);
+        go._endDrag(evt);
     },
     _mousemove: function(evt) {
         this._setUserPosition(evt);
@@ -389,7 +386,7 @@ Kinetic.Stage.prototype = {
         }
 
         // start drag and drop
-        this._startDrag(evt);
+        go._startDrag(evt);
     },
     _mousedown: function(evt) {
         this._setUserPosition(evt);
@@ -436,7 +433,7 @@ Kinetic.Stage.prototype = {
         this.clickStart = false;
 
         // end drag and drop
-        this._endDrag(evt);
+        go._endDrag(evt);
     },
     _touchstart: function(evt) {
         this._setUserPosition(evt);
@@ -488,10 +485,11 @@ Kinetic.Stage.prototype = {
         this.tapStart = false;
 
         // end drag and drop
-        this._endDrag(evt);
+        go._endDrag(evt);
     },
     _touchmove: function(evt) {
         this._setUserPosition(evt);
+        var go = Kinetic.Global;
         evt.preventDefault();
         var obj = this.getIntersection(this.getUserPosition());
         if(obj && obj.shape) {
@@ -500,7 +498,7 @@ Kinetic.Stage.prototype = {
         }
 
         // start drag and drop
-        this._startDrag(evt);
+        go._startDrag(evt);
     },
     /**
      * set mouse positon for desktop apps
@@ -541,62 +539,6 @@ Kinetic.Stage.prototype = {
             top: rect.top,
             left: rect.left
         };
-    },
-    /**
-     * end drag and drop
-     */
-    _endDrag: function(evt) {
-        var go = Kinetic.Global;
-        var node = go.drag.node;
-        if(node) {
-            if(node.nodeType === 'Stage') {
-                node.draw();
-            }
-            else {
-                node.getLayer().draw();
-            }
-
-            // handle dragend
-            if(go.drag.moving) {
-                go.drag.moving = false;
-                node._handleEvent('dragend', evt);
-            }
-        }
-        go.drag.node = null;
-        this.dragAnim.stop();
-    },
-    /**
-     * start drag and drop
-     */
-    _startDrag: function(evt) {
-        var that = this;
-        var go = Kinetic.Global;
-        var node = go.drag.node;
-
-        if(node) {
-            var pos = that.getUserPosition();
-            var dbf = node.attrs.dragBoundFunc;
-
-            var newNodePos = {
-                x: pos.x - go.drag.offset.x,
-                y: pos.y - go.drag.offset.y
-            };
-
-            if(dbf !== undefined) {
-                newNodePos = dbf.call(node, newNodePos, evt);
-            }
-
-            node.setAbsolutePosition(newNodePos);
-
-            if(!go.drag.moving) {
-                go.drag.moving = true;
-                // execute dragstart events if defined
-                go.drag.node._handleEvent('dragstart', evt);
-            }
-
-            // execute user defined ondragmove if defined
-            go.drag.node._handleEvent('dragmove', evt);
-        }
     },
     /**
      * build dom
@@ -681,7 +623,6 @@ Kinetic.Stage.prototype = {
          */
         this.ids = {};
         this.names = {};
-        this.dragAnim = new Kinetic.Animation();
     }
 };
 Kinetic.Global.extend(Kinetic.Stage, Kinetic.Container);
