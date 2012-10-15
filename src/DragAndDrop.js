@@ -1,8 +1,44 @@
-Kinetic.Global.dragAnim = new Kinetic.Animation();
+Kinetic.DD = {
+    anim: new Kinetic.Animation(),
+    moving: false,
+    offset: {
+        x: 0,
+        y: 0
+    }
+};
 
-Kinetic.Global._endDrag = function(evt) {
-    var go = Kinetic.Global;
-    var node = go.drag.node;
+Kinetic.DD._startDrag = function(evt) {
+    var dd = Kinetic.DD;
+    var node = dd.node;
+
+    if(node) {
+        var pos = node.getStage().getUserPosition();
+        var dbf = node.attrs.dragBoundFunc;
+
+        var newNodePos = {
+            x: pos.x - dd.offset.x,
+            y: pos.y - dd.offset.y
+        };
+
+        if(dbf !== undefined) {
+            newNodePos = dbf.call(node, newNodePos, evt);
+        }
+
+        node.setAbsolutePosition(newNodePos);
+
+        if(!dd.moving) {
+            dd.moving = true;
+            // execute dragstart events if defined
+            dd.node._handleEvent('dragstart', evt);
+        }
+
+        // execute user defined ondragmove if defined
+        dd.node._handleEvent('dragmove', evt);
+    }
+};
+Kinetic.DD._endDrag = function(evt) {
+    var dd = Kinetic.DD;
+    var node = dd.node;
     if(node) {
         if(node.nodeType === 'Stage') {
             node.draw();
@@ -12,43 +48,13 @@ Kinetic.Global._endDrag = function(evt) {
         }
 
         // handle dragend
-        if(go.drag.moving) {
-            go.drag.moving = false;
+        if(dd.moving) {
+            dd.moving = false;
             node._handleEvent('dragend', evt);
         }
     }
-    go.drag.node = null;
-    go.dragAnim.stop();
-};
-
-Kinetic.Global._startDrag = function(evt) {
-    var go = Kinetic.Global;
-    var node = go.drag.node;
-
-    if(node) {
-        var pos = node.getStage().getUserPosition();
-        var dbf = node.attrs.dragBoundFunc;
-
-        var newNodePos = {
-            x: pos.x - go.drag.offset.x,
-            y: pos.y - go.drag.offset.y
-        };
-
-        if(dbf !== undefined) {
-            newNodePos = dbf.call(node, newNodePos, evt);
-        }
-
-        node.setAbsolutePosition(newNodePos);
-
-        if(!go.drag.moving) {
-            go.drag.moving = true;
-            // execute dragstart events if defined
-            go.drag.node._handleEvent('dragstart', evt);
-        }
-
-        // execute user defined ondragmove if defined
-        go.drag.node._handleEvent('dragmove', evt);
-    }
+    dd.node = null;
+    dd.anim.stop();
 };
 /**
  * set draggable
@@ -74,20 +80,19 @@ Kinetic.Node.prototype.getDraggable = function() {
  * @methodOf Kinetic.Node.prototype
  */
 Kinetic.Node.prototype.isDragging = function() {
-    var go = Kinetic.Global;
-    return go.drag.node && go.drag.node._id === this._id && go.drag.moving;
+    var dd = Kinetic.DD;
+    return dd.node && dd.node._id === this._id && dd.moving;
 };
 
 Kinetic.Node.prototype._listenDrag = function() {
     this._dragCleanup();
-    var go = Kinetic.Global;
     var that = this;
     this.on('mousedown.kinetic touchstart.kinetic', function(evt) {
         that._initDrag();
     });
 };
 Kinetic.Node.prototype._initDrag = function() {
-    var go = Kinetic.Global;
+    var dd = Kinetic.DD;
     var stage = this.getStage();
     var pos = stage.getUserPosition();
 
@@ -95,21 +100,21 @@ Kinetic.Node.prototype._initDrag = function() {
         var m = this.getTransform().getTranslation();
         var am = this.getAbsoluteTransform().getTranslation();
         var ap = this.getAbsolutePosition();
-        go.drag.node = this;
-        go.drag.offset.x = pos.x - ap.x;
-        go.drag.offset.y = pos.y - ap.y;
+        dd.node = this;
+        dd.offset.x = pos.x - ap.x;
+        dd.offset.y = pos.y - ap.y;
 
         /*
          * if dragging and dropping the stage,
          * draw all of the layers
          */
         if(this.nodeType === 'Stage') {
-            go.dragAnim.node = this;
+            dd.anim.node = this;
         }
         else {
-            go.dragAnim.node = this.getLayer();
+            dd.anim.node = this.getLayer();
         }
-        go.dragAnim.start();
+        dd.anim.start();
     }
 };
 Kinetic.Node.prototype._dragChange = function() {
@@ -126,9 +131,9 @@ Kinetic.Node.prototype._dragChange = function() {
          * drag and drop mode
          */
         var stage = this.getStage();
-        var go = Kinetic.Global;
-        if(stage && go.drag.node && go.drag.node._id === this._id) {
-            stage._endDrag();
+        var dd = Kinetic.DD;
+        if(stage && dd.node && dd.node._id === this._id) {
+            dd._endDrag();
         }
     }
 };

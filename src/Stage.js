@@ -340,10 +340,10 @@ Kinetic.Stage.prototype = {
     },
     _mouseout: function(evt) {
         this._setUserPosition(evt);
-        var go = Kinetic.Global;
+        var dd = Kinetic.DD;
         // if there's a current target shape, run mouseout handlers
         var targetShape = this.targetShape;
-        if(targetShape && !go.drag.moving) {
+        if(targetShape && (!dd || !dd.moving)) {
             targetShape._handleEvent('mouseout', evt);
             targetShape._handleEvent('mouseleave', evt);
             this.targetShape = null;
@@ -351,17 +351,19 @@ Kinetic.Stage.prototype = {
         this.mousePos = undefined;
 
         // end drag and drop
-        go._endDrag(evt);
+        if(dd) {
+            dd._endDrag(evt);
+        }
     },
     _mousemove: function(evt) {
         this._setUserPosition(evt);
-        var go = Kinetic.Global;
+        var dd = Kinetic.DD;
         var obj = this.getIntersection(this.getUserPosition());
 
         if(obj) {
             var shape = obj.shape;
             if(shape) {
-                if(!go.drag.moving && obj.pixel[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
+                if((!dd || !dd.moving) && obj.pixel[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
                     if(this.targetShape) {
                         this.targetShape._handleEvent('mouseout', evt, shape);
                         this.targetShape._handleEvent('mouseleave', evt, shape);
@@ -379,14 +381,16 @@ Kinetic.Stage.prototype = {
          * if no shape was detected, clear target shape and try
          * to run mouseout from previous target shape
          */
-        else if(this.targetShape && !go.drag.moving) {
+        else if(this.targetShape && (!dd || !dd.moving)) {
             this.targetShape._handleEvent('mouseout', evt);
             this.targetShape._handleEvent('mouseleave', evt);
             this.targetShape = null;
         }
 
         // start drag and drop
-        go._startDrag(evt);
+        if(dd) {
+            dd._startDrag(evt);
+        }
     },
     _mousedown: function(evt) {
         this._setUserPosition(evt);
@@ -398,13 +402,13 @@ Kinetic.Stage.prototype = {
         }
 
         //init stage drag and drop
-        if(this.attrs.draggable) {
+        if(Kinetic.DD && this.attrs.draggable) {
             this._initDrag();
         }
     },
     _mouseup: function(evt) {
         this._setUserPosition(evt);
-        var go = Kinetic.Global;
+        var dd = Kinetic.DD;
         var obj = this.getIntersection(this.getUserPosition());
         var that = this;
         if(obj && obj.shape) {
@@ -417,7 +421,7 @@ Kinetic.Stage.prototype = {
                  * if dragging and dropping, don't fire click or dbl click
                  * event
                  */
-                if((!go.drag.moving) || !go.drag.node) {
+                if(!dd || !dd.moving || !dd.node) {
                     shape._handleEvent('click', evt);
 
                     if(this.inDoubleClickWindow) {
@@ -433,7 +437,9 @@ Kinetic.Stage.prototype = {
         this.clickStart = false;
 
         // end drag and drop
-        go._endDrag(evt);
+        if(dd) {
+            dd._endDrag(evt);
+        }
     },
     _touchstart: function(evt) {
         this._setUserPosition(evt);
@@ -449,13 +455,13 @@ Kinetic.Stage.prototype = {
         /*
          * init stage drag and drop
          */
-        if(this.attrs.draggable) {
+        if(Kinetic.DD && this.attrs.draggable) {
             this._initDrag();
         }
     },
     _touchend: function(evt) {
         this._setUserPosition(evt);
-        var go = Kinetic.Global;
+        var dd = Kinetic.DD;
         var obj = this.getIntersection(this.getUserPosition());
         var that = this;
         if(obj && obj.shape) {
@@ -468,7 +474,7 @@ Kinetic.Stage.prototype = {
                  * if dragging and dropping, don't fire tap or dbltap
                  * event
                  */
-                if((!go.drag.moving) || !go.drag.node) {
+                if(!dd || !dd.moving || !dd.node) {
                     shape._handleEvent('tap', evt);
 
                     if(this.inDoubleClickWindow) {
@@ -485,11 +491,13 @@ Kinetic.Stage.prototype = {
         this.tapStart = false;
 
         // end drag and drop
-        go._endDrag(evt);
+        if(dd) {
+            dd._endDrag(evt);
+        }
     },
     _touchmove: function(evt) {
         this._setUserPosition(evt);
-        var go = Kinetic.Global;
+        var dd = Kinetic.DD;
         evt.preventDefault();
         var obj = this.getIntersection(this.getUserPosition());
         if(obj && obj.shape) {
@@ -498,7 +506,9 @@ Kinetic.Stage.prototype = {
         }
 
         // start drag and drop
-        go._startDrag(evt);
+        if(dd) {
+            dd._startDrag(evt);
+        }
     },
     /**
      * set mouse positon for desktop apps

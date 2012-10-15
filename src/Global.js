@@ -42,14 +42,6 @@ Kinetic.Global = {
     tempNodes: {},
     //shapes hash.  rgb keys and shape values
     shapes: {},
-    drag: {
-        moving: false,
-        offset: {
-            x: 0,
-            y: 0
-        },
-        lastDrawTime: 0
-    },
     warn: function(str) {
         if(console && console.warn) {
             console.warn('Kinetic warning: ' + str);
