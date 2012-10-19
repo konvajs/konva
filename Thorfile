@@ -22,7 +22,7 @@ class Build < Thor
     
     puts ":: Building full source file /#{file_name}..."
     File.open(file_name, "w") do |file|
-      file.puts concatenate(version)
+      file.puts replace_tokens(concatenate, version)
     end
     
     puts "   -> Done!"
@@ -45,9 +45,9 @@ class Build < Thor
     #build full minfiied prod file
 #=begin
     File.open(file_name, "w") do |file|
-      uglify = Uglifier.compile(concatenate(version))
+      uglify = Uglifier.compile(concatenate())
       uglify.sub!(/\*\/ .+ \*\//xm, "*/")
-      file.puts uglify
+      file.puts replace_tokens(uglify, version)
     end
 #=end
 
@@ -59,8 +59,8 @@ class Build < Thor
       mod[".js"] = ""
       module_filename = "dist/kinetic-#{mod}-#{version}.min.js"
       File.open(module_filename, "w") do |file2|
-        uglify = Uglifier.compile(content, { copyright: false })
-        file2.puts uglify
+        uglify = Uglifier.compile(content, { copyright: mod == "Global" })
+        file2.puts replace_tokens(uglify, version)
       end
     end
 
@@ -69,12 +69,17 @@ class Build < Thor
   
   private
   
-    def concatenate(version)
-      date ||= Time.now.strftime("%b %d %Y")
+    def concatenate()
       content = ""
       FILES.each do |file|
         content << IO.read(File.expand_path(file)) << "\n"
       end
+      
+      return content
+    end
+    
+    def replace_tokens(content, version) 
+      date = Time.now.strftime("%b %d %Y")
       
       # Add the version number
       content.sub!("@version", version)

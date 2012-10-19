@@ -3,7 +3,7 @@
  * http://www.kineticjs.com/
  * Copyright 2012, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Oct 14 2012
+ * Date: Oct 18 2012
  *
  * Copyright (C) 2011 - 2012 by Eric Rowell
  *
@@ -24,11 +24,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- */
-
-/**
- * Kinetic Namespace
- * @namespace
  */
 var Kinetic = {};
 Kinetic.Filters = {};
