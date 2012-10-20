@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+    	<style>
+
+    	</style>
+    </head>
+    <body>
+    	<div id="container"></div>
+        <script src="../../../dist/kinetic-Global-current.min.js"></script>
+        <script src="../../../dist/kinetic-Type-current.min.js"></script>
+        <script src="../../../dist/kinetic-Canvas-current.min.js"></script>
+        <script src="../../../dist/kinetic-Transform-current.min.js"></script>
+        <script src="../../../dist/kinetic-Collection-current.min.js"></script>
+        <script src="../../../dist/kinetic-Node-current.min.js"></script>
+        <script src="../../../dist/kinetic-Container-current.min.js"></script>
+        <script src="../../../dist/kinetic-Stage-current.min.js"></script>
+        <script src="../../../dist/kinetic-Layer-current.min.js"></script>
+        <script src="../../../dist/kinetic-Group-current.min.js"></script>
+        <script src="../../../dist/kinetic-Shape-current.min.js"></script>
+        
+        <script src="../../../dist/kinetic-Circle-current.min.js"></script>
+ 
+        <script src="../../js/Test.js"></script>
+        <script>
+            var stage = new Kinetic.Stage({
+                container: 'container',
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            var circle = new Kinetic.Circle({
+                x: stage.getWidth() / 2,
+                y: 100,
+                radius: 70,
+                fill: 'red',
+                stroke: 'black',
+                strokeWidth: 4
+            });
+
+            layer.add(circle);
+            stage.add(layer);
+
+        </script>
+    </body>
+</html>
