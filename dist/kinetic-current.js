@@ -2412,22 +2412,22 @@ Kinetic.Transition = function(node, config) {
     var that = this;
 
     // add tween for each property
-    function addTween(c, attrs, obj) {
+    function addTween(c, attrs, obj, rootObj) {
         for(var key in c) {
             if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
                 // if val is an object then traverse
                 if(Kinetic.Type._isObject(c[key])) {
                     obj[key] = {};
-                    addTween(c[key], attrs[key], obj[key]);
+                    addTween(c[key], attrs[key], obj[key], rootObj);
                 }
                 else {
-                    that._add(that._getTween(attrs, key, c[key], obj));
+                    that._add(that._getTween(attrs, key, c[key], obj, rootObj));
                 }
             }
         }
     }
     var obj = {};
-    addTween(config, node.attrs, obj);
+    addTween(config, node.attrs, obj, obj);
 
     var finishedTweens = 0;
     for(var n = 0; n < this.tweens.length; n++) {
@@ -2482,7 +2482,7 @@ Kinetic.Transition.prototype = {
     _add: function(tween) {
         this.tweens.push(tween);
     },
-    _getTween: function(attrs, prop, val, obj) {
+    _getTween: function(attrs, prop, val, obj, rootObj) {
         var config = this.config;
         var node = this.node;
         var easing = config.easing;
@@ -2492,7 +2492,7 @@ Kinetic.Transition.prototype = {
 
         var tween = new Kinetic.Tween(node, function(i) {
             obj[prop] = i;
-            node.attrs[prop] = i;
+            node.setAttrs(rootObj);
         }, Kinetic.Tweens[easing], attrs[prop], val, config.duration);
 
         return tween;
@@ -2535,7 +2535,7 @@ Kinetic.Node.prototype.transitionTo = function(config) {
     trans.onFinished = function() {
         // remove animation
         that.transAnim.stop();
-
+        
         // callback
         if(config.callback) {
             config.callback();
