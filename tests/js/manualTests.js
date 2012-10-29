@@ -109,7 +109,7 @@ Test.prototype.tests = {
             easing: 'bounce-ease-out'
         });
     },
-    'TRANSITION - all transition types': function(containerId) {
+    '*TRANSITION - all transition types': function(containerId) {
         document.getElementById(containerId).style.height = '300px';
 
         var stage = new Kinetic.Stage({
