@@ -593,9 +593,10 @@ Kinetic.Node.prototype = {
      * @name simulate
      * @methodOf Kinetic.Node.prototype
      * @param {String} eventType
+     * @param {Object} event attribute
      */
-    simulate: function(eventType) {
-        this._handleEvent(eventType, {});
+    simulate: function(eventType, evt) {
+        this._handleEvent(eventType, evt || {});
     },
     /**
      * get absolute transform of the node which takes into
