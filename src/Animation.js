@@ -14,13 +14,6 @@ Kinetic.Animation = function(config) {
         this[key] = config[key];
     }
 
-    // add frame object
-    this.frame = {
-        time: 0,
-        timeDiff: 0,
-        lastTime: new Date().getTime()
-    };
-
     this.id = Kinetic.Animation.animIdCounter++;
 };
 /*
@@ -34,7 +27,6 @@ Kinetic.Animation.prototype = {
      */
     start: function() {
         this.stop();
-        this.frame.lastTime = new Date().getTime();
         Kinetic.Animation._addAnimation(this);
         Kinetic.Animation._handleAnimation();
     },
@@ -50,6 +42,17 @@ Kinetic.Animation.prototype = {
 Kinetic.Animation.animations = [];
 Kinetic.Animation.animIdCounter = 0;
 Kinetic.Animation.animRunning = false;
+Kinetic.Animation.frame = {
+    time: 0,
+    timeDiff: 0,
+    lastTime: new Date().getTime(),
+    frameRate: 0
+};
+
+Kinetic.Animation.fixedRequestAnimFrame = function(callback) {
+    window.setTimeout(callback, 1000 / 60);
+};
+
 Kinetic.Animation._addAnimation = function(anim) {
     this.animations.push(anim);
 };
@@ -63,13 +66,15 @@ Kinetic.Animation._removeAnimation = function(anim) {
         }
     }
 };
-Kinetic.Animation._updateFrameObject = function(anim) {
+Kinetic.Animation._updateFrameObject = function() {
     var time = new Date().getTime();
-    anim.frame.timeDiff = time - anim.frame.lastTime;
-    anim.frame.lastTime = time;
-    anim.frame.time += anim.frame.timeDiff;
+    this.frame.timeDiff = time - this.frame.lastTime;
+    this.frame.lastTime = time;
+    this.frame.time += this.frame.timeDiff;
+    this.frame.frameRate = 1000 / this.frame.timeDiff;
 };
 Kinetic.Animation._runFrames = function() {
+    this._updateFrameObject();
     var nodes = {};
     /*
      * loop through all animations and execute animation
@@ -80,13 +85,12 @@ Kinetic.Animation._runFrames = function() {
      */
     for(var n = 0; n < this.animations.length; n++) {
         var anim = this.animations[n];
-        this._updateFrameObject(anim);
         if(anim.node && anim.node._id !== undefined) {
             nodes[anim.node._id] = anim.node;
         }
         // if animation object has a function, execute it
         if(anim.func) {
-            anim.func(anim.frame);
+            anim.func(this.frame);
         }
     }
 
@@ -98,7 +102,7 @@ Kinetic.Animation._animationLoop = function() {
     if(this.animations.length > 0) {
         this._runFrames();
         var that = this;
-        requestAnimFrame(function() {
+        Kinetic.Animation.requestAnimFrame(function() {
             that._animationLoop();
         });
     }
@@ -113,9 +117,8 @@ Kinetic.Animation._handleAnimation = function() {
         that._animationLoop();
     }
 };
-requestAnimFrame = (function(callback) {
-    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
-    function(callback) {
-        window.setTimeout(callback, 1000 / 60);
-    };
-})();
+Kinetic.Animation.requestAnimFrame = function(callback) {
+    var raf = Kinetic.DD && Kinetic.DD.moving ? this.fixedRequestAnimFrame : window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || Kinetic.Animation.fixedRequestAnimFrame;
+    
+    raf(callback);
+};

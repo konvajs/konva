@@ -109,7 +109,7 @@ Test.prototype.tests = {
             easing: 'bounce-ease-out'
         });
     },
-    '*TRANSITION - all transition types': function(containerId) {
+    'TRANSITION - all transition types': function(containerId) {
         document.getElementById(containerId).style.height = '300px';
 
         var stage = new Kinetic.Stage({
@@ -713,7 +713,7 @@ Test.prototype.tests = {
         layer.add(redCircle);
         stage.add(layer);
     },
-    'DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
+    '*DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
