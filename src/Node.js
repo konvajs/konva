@@ -720,7 +720,7 @@ Kinetic.Node.prototype = {
      * converts node into an image.  Since the toImage
      *  method is asynchronous, a callback is required
      * @name toImage
-     * @methodOf Kinetic.Stage.prototype
+     * @methodOf Kinetic.Node.prototype
      * @param {Object} config
      * @param {Function} callback since the toImage() method is asynchonrous, the
      *  resulting image object is passed into the callback function
