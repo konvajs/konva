@@ -1580,8 +1580,7 @@ Test.prototype.tests = {
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
-    'SHAPE - filter image': function(containerId) {
-        var urls = dataUrls['SHAPE - filter image'];
+    'Filters - grayscale image': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = new Kinetic.Stage({
@@ -1609,7 +1608,48 @@ Test.prototype.tests = {
                 filter: Kinetic.Filters.Grayscale,
                 callback: function() {
                     layer.draw();
-                    warn(layer.toDataURL() === urls[0], 'data url is incorrect');
+                    var dataUrl = layer.toDataURL();
+                    //console.log(dataUrl);
+                    warn(dataUrl === dataUrls['Filters - grayscale image'], 'problem with Grayscale filter.');
+                }
+            });
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+    },
+    'Filters - adjust image brightness': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer({
+                throttle: 999
+            });
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+            test(darth.getWidth() === 438, 'image width should be 438');
+            test(darth.getHeight() === 300, 'image height should be 300');
+
+            darth.applyFilter({
+                filter: Kinetic.Filters.Brighten,
+                config: {
+                	val: 100
+                },
+                callback: function() {
+                    layer.draw();
+                    var dataUrl = layer.toDataURL();
+                    //console.log(dataUrl);
+                    warn(dataUrl === dataUrls['Filters - adjust image brightness'], 'problem with Brighten filter.');
                 }
             });
         };

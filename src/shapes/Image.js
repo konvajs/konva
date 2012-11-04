@@ -69,7 +69,7 @@ Kinetic.Image.prototype = {
         context.drawImage(this.attrs.image, 0, 0);
         try {
             var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
-            config.filter(imageData, config);
+            config.filter(imageData, config.config);
             var that = this;
             Kinetic.Type._getImage(imageData, function(imageObj) {
                 that.setImage(imageObj);
@@ -79,7 +79,7 @@ Kinetic.Image.prototype = {
                 }
             });
         } catch(e) {
-            Kinetic.Global.warn('Unable to apply filter.');
+            Kinetic.Global.warn('Unable to apply filter. ' + e.message);
         }
     },
     /**
