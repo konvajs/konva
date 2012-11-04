@@ -13,6 +13,5 @@ Kinetic.Filters.Grayscale = function(imageData, config) {
         data[i + 1] = brightness;
         // blue
         data[i + 2] = brightness;
-        // i+3 is alpha (the fourth element)
     }
 };
