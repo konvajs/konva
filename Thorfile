@@ -8,9 +8,16 @@ class Build < Thor
     "src/Animation.js", "src/Node.js", "src/DragAndDrop.js", "src/Transition.js", "src/Container.js", "src/Stage.js", "src/Layer.js", "src/Group.js", "src/Shape.js",
     "src/shapes/Rect.js", "src/shapes/Circle.js", "src/shapes/Ellipse.js", "src/shapes/Image.js", "src/shapes/Polygon.js", "src/shapes/Text.js", "src/shapes/Line.js", "src/shapes/Sprite.js", "src/shapes/Star.js", "src/shapes/RegularPolygon.js", "src/shapes/Path.js", "src/shapes/TextPath.js"       
   ]
-  
+
+  if !File.directory?("dist")
+    puts ":: Creating dist directory..."
+    Dir.mkdir("dist")
+  end
+    
   desc "dev", "Concatenate all the js files into /dist/kinetic-VERSION.js."
   def dev(version)
+
+    
     file_name = "dist/kinetic-#{version}.js"
     
     puts ":: Deleting other development files..."
