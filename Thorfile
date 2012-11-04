@@ -4,7 +4,8 @@ require 'uglifier'
 class Build < Thor  
   # This is the list of files to concatenate. The first file will appear at the top of the final file. All files are relative to the lib directory.
   FILES = [
-    "src/Global.js", "src/filters/Grayscale.js", "src/filters/Brighten.js", "src/util/Type.js", "src/util/Canvas.js", "src/util/Tween.js", "src/util/Transform.js", "src/util/Collection.js",
+    "src/Global.js", "src/util/Type.js", "src/util/Canvas.js", "src/util/Tween.js", "src/util/Transform.js", "src/util/Collection.js",
+    "src/filters/Grayscale.js", "src/filters/Brighten.js", "src/filters/Invert.js", 
     "src/Animation.js", "src/Node.js", "src/DragAndDrop.js", "src/Transition.js", "src/Container.js", "src/Stage.js", "src/Layer.js", "src/Group.js", "src/Shape.js",
     "src/shapes/Rect.js", "src/shapes/Circle.js", "src/shapes/Ellipse.js", "src/shapes/Image.js", "src/shapes/Polygon.js", "src/shapes/Text.js", "src/shapes/Line.js", "src/shapes/Sprite.js", "src/shapes/Star.js", "src/shapes/RegularPolygon.js", "src/shapes/Path.js", "src/shapes/TextPath.js"       
   ]
