@@ -896,7 +896,7 @@ Kinetic.Node.prototype = {
      * handle node event
      */
     _handleEvent: function(eventType, evt, compareShape) {
-        if(this.nodeType === 'Shape') {
+        if(evt && this.nodeType === 'Shape') {
             evt.shape = this;
         }
         var stage = this.getStage();
@@ -916,7 +916,7 @@ Kinetic.Node.prototype = {
             }
 
             // simulate event bubbling
-            if(!evt.cancelBubble && this.parent) {
+            if(evt && !evt.cancelBubble && this.parent) {
                 if(compareShape && compareShape.parent) {
                     this._handleEvent.call(this.parent, eventType, evt, compareShape.parent);
                 }
