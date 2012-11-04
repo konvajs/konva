@@ -37,7 +37,7 @@ Kinetic.Global = {
     //shapes hash.  rgb keys and shape values
     shapes: {},
     warn: function(str) {
-        if(console && console.warn) {
+        if(window.console && console.warn) {
             console.warn('Kinetic warning: ' + str);
         }
     },

@@ -4112,7 +4112,7 @@ Test.prototype.tests = {
         layer.add(circle);
         stage.add(layer);
     },
-    '*NODE - test isListening': function(containerId) {
+    'NODE - test isListening': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
