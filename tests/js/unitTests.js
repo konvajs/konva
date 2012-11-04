@@ -2446,9 +2446,35 @@ Test.prototype.tests = {
             this.fill(context);
             this.stroke(context);
         });
+        
+        var rect = new Kinetic.Rect({
+            x: 10,
+            y: 10,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true
+        });
+        
+        rect.setDrawFunc(function(context) {
+            context.beginPath();
+            context.moveTo(0, 0);
+            context.lineTo(200, 0);
+            context.lineTo(200, 100);
+            context.closePath();
+            this.fill(context);
+            this.stroke(context);
+        });
 
         layer.add(shape);
+        layer.add(rect);
         stage.add(layer);
+        
+        var dataUrl = layer.toDataURL();
+        
+        test(dataUrls['SHAPE - change custom shape draw func'] === dataUrl, 'problem with setDrawFunc');
     },
     'SHAPE - init with position, scale, rotation, then change scale': function(containerId) {
         var stage = new Kinetic.Stage({
