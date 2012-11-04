@@ -616,7 +616,7 @@ Test.prototype.tests = {
         test(groupMousedowns === 4, 'groupMousedowns should be 4');
         test(greenCircleMousedowns === 2, 'greenCircleMousedowns should be 2');
     },
-    '*EVENTS - group mouseenter events': function(containerId) {
+    'EVENTS - group mouseenter events': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,

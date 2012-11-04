@@ -937,8 +937,8 @@ Test.prototype.tests = {
         test(!layer2.isVisible(), 'layer2 should be invisible');
         test(layer2.canvas.element.style.display === 'none', 'layer canvas element display should be none');
 
-		//console.log(layer1.toDataURL());
-		
+        //console.log(layer1.toDataURL());
+
         stage.toDataURL({
             callback: function(dataUrl) {
                 //console.log(dataUrl);
@@ -948,8 +948,7 @@ Test.prototype.tests = {
                 test(layer2.canvas.element.style.display === 'block', 'layer canvas element display should be block');
             }
         });
-        
-        
+
     },
     'LAYER - beforeDraw and afterDraw': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -2863,7 +2862,7 @@ Test.prototype.tests = {
         //layer.setListening(false);
         layer.drawBuffer();
     },
-	'SHAPE - test size setters and getters': function(containerId) {
+    'SHAPE - test size setters and getters': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2877,59 +2876,59 @@ Test.prototype.tests = {
             radius: 50,
             fill: 'red'
         });
-        
+
         var ellipse = new Kinetic.Ellipse({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: {
-            	x: 100,
-            	y: 50
+                x: 100,
+                y: 50
             },
             fill: 'yellow'
         });
 
-		layer.add(ellipse);
-		layer.add(circle);
-		stage.add(layer);
-		
-		// circle tests
-		test(circle.attrs.width === undefined, 'circle.attrs.width should be undefined');
-		test(circle.attrs.height === undefined, 'circle.attrs.height should be undefined');
-		test(circle.getWidth() === 100, 'circle width should be 100');
-		test(circle.getHeight() === 100, 'circle height should be 100');
-		test(circle.getSize().width === 100, 'circle width should be 100');
-		test(circle.getSize().height === 100, 'circle height should be 100');
-		test(circle.getRadius() === 50, 'circle radius should be 50');
-		
-		circle.setWidth(200);
-		
-		test(circle.attrs.width === 200, 'circle.attrs.width should be 200');
-		test(circle.attrs.height === undefined, 'circle.attrs.height should be undefined');
-		test(circle.getWidth() === 200, 'circle width should be 200');
-		test(circle.getHeight() === 200, 'circle height should be 200');
-		test(circle.getSize().width === 200, 'circle width should be 200');
-		test(circle.getSize().height === 200, 'circle height should be 200');
-		test(circle.getRadius() === 100, 'circle radius should be 100');
-		
-		// ellipse tests
-		test(ellipse.attrs.width === undefined, 'ellipse.attrs.width should be undefined');
-		test(ellipse.attrs.height === undefined, 'ellipse.attrs.height should be undefined');
-		test(ellipse.getWidth() === 200, 'ellipse width should be 200');
-		test(ellipse.getHeight() === 100, 'ellipse height should be 100');
-		test(ellipse.getSize().width === 200, 'ellipse width should be 200');
-		test(ellipse.getSize().height === 100, 'ellipse height should be 100');
-		test(ellipse.getRadius().x === 100, 'ellipse radius x should be 100');
-		
-		ellipse.setWidth(400);
-		
-		test(ellipse.attrs.width === 400, 'ellipse.attrs.width should be 400');
-		test(ellipse.attrs.height === undefined, 'ellipse.attrs.height should be undefined');
-		test(ellipse.getWidth() === 400, 'ellipse width should be 400');
-		test(ellipse.getHeight() === 100, 'ellipse height should be 100');
-		test(ellipse.getSize().width === 400, 'ellipse width should be 400');
-		test(ellipse.getSize().height === 100, 'ellipse height should be 100');
-		test(ellipse.getRadius().x === 200, 'ellipse radius x should be 200');
-		
+        layer.add(ellipse);
+        layer.add(circle);
+        stage.add(layer);
+
+        // circle tests
+        test(circle.attrs.width === undefined, 'circle.attrs.width should be undefined');
+        test(circle.attrs.height === undefined, 'circle.attrs.height should be undefined');
+        test(circle.getWidth() === 100, 'circle width should be 100');
+        test(circle.getHeight() === 100, 'circle height should be 100');
+        test(circle.getSize().width === 100, 'circle width should be 100');
+        test(circle.getSize().height === 100, 'circle height should be 100');
+        test(circle.getRadius() === 50, 'circle radius should be 50');
+
+        circle.setWidth(200);
+
+        test(circle.attrs.width === 200, 'circle.attrs.width should be 200');
+        test(circle.attrs.height === undefined, 'circle.attrs.height should be undefined');
+        test(circle.getWidth() === 200, 'circle width should be 200');
+        test(circle.getHeight() === 200, 'circle height should be 200');
+        test(circle.getSize().width === 200, 'circle width should be 200');
+        test(circle.getSize().height === 200, 'circle height should be 200');
+        test(circle.getRadius() === 100, 'circle radius should be 100');
+
+        // ellipse tests
+        test(ellipse.attrs.width === undefined, 'ellipse.attrs.width should be undefined');
+        test(ellipse.attrs.height === undefined, 'ellipse.attrs.height should be undefined');
+        test(ellipse.getWidth() === 200, 'ellipse width should be 200');
+        test(ellipse.getHeight() === 100, 'ellipse height should be 100');
+        test(ellipse.getSize().width === 200, 'ellipse width should be 200');
+        test(ellipse.getSize().height === 100, 'ellipse height should be 100');
+        test(ellipse.getRadius().x === 100, 'ellipse radius x should be 100');
+
+        ellipse.setWidth(400);
+
+        test(ellipse.attrs.width === 400, 'ellipse.attrs.width should be 400');
+        test(ellipse.attrs.height === undefined, 'ellipse.attrs.height should be undefined');
+        test(ellipse.getWidth() === 400, 'ellipse width should be 400');
+        test(ellipse.getHeight() === 100, 'ellipse height should be 100');
+        test(ellipse.getSize().width === 400, 'ellipse width should be 400');
+        test(ellipse.getSize().height === 100, 'ellipse height should be 100');
+        test(ellipse.getRadius().x === 200, 'ellipse radius x should be 200');
+
     },
     'SHAPE - text multi line': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -4113,7 +4112,7 @@ Test.prototype.tests = {
         layer.add(circle);
         stage.add(layer);
     },
-    'NODE - simulate event': function(containerId) {
+    'NODE - test simulate and fire event': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -4134,10 +4133,10 @@ Test.prototype.tests = {
         layer.add(circle);
         layer.draw();
 
-        var foo = '';
+        var clicks = [];
 
         circle.on('click', function() {
-            foo = 'bar';
+            clicks.push('circle');
 
             /*
              var evt = window.event;
@@ -4146,9 +4145,18 @@ Test.prototype.tests = {
              */
         });
 
+        layer.on('click', function() {
+            clicks.push('layer');
+        });
+        // simulated event
         circle.simulate('click');
 
-        test(foo === 'bar', 'foo should equal bar');
+        test(clicks.toString() == 'circle,layer', 'problem with simulate');
+
+        // synthetic event
+        circle.fire('click');
+
+        test(clicks.toString() == 'circle,layer,circle', 'problem with fire');
     },
     'EVENTS - add remove event': function(containerId) {
         var stage = new Kinetic.Stage({

@@ -29,7 +29,6 @@ var Kinetic = {};
 Kinetic.Filters = {};
 Kinetic.Plugins = {};
 Kinetic.Global = {
-    BUBBLE_WHITELIST: ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'mouseenter', 'mouseleave', 'click', 'dblclick', 'touchstart', 'touchmove', 'touchend', 'tap', 'dbltap', 'dragstart', 'dragmove', 'dragend'],
     BUFFER_WHITELIST: ['fill', 'stroke', 'textFill', 'textStroke'],
     BUFFER_BLACKLIST: ['shadow'],
     stages: [],

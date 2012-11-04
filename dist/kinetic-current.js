@@ -29,7 +29,6 @@ var Kinetic = {};
 Kinetic.Filters = {};
 Kinetic.Plugins = {};
 Kinetic.Global = {
-    BUBBLE_WHITELIST: ['mousedown', 'mousemove', 'mouseup', 'mouseover', 'mouseout', 'mouseenter', 'mouseleave', 'click', 'dblclick', 'touchstart', 'touchmove', 'touchend', 'tap', 'dbltap', 'dragstart', 'dragmove', 'dragend'],
     BUFFER_WHITELIST: ['fill', 'stroke', 'textFill', 'textStroke'],
     BUFFER_BLACKLIST: ['shadow'],
     stages: [],
@@ -1680,14 +1679,24 @@ Kinetic.Node.prototype = {
         }
     },
     /**
-     * simulate event
+     * simulate event with event bubbling
      * @name simulate
      * @methodOf Kinetic.Node.prototype
      * @param {String} eventType
-     * @param {Object} event attribute
+     * @param {EventObject} evt event object
      */
     simulate: function(eventType, evt) {
         this._handleEvent(eventType, evt || {});
+    },
+    /**
+     * synthetically fire an event.&nbsp; The event object will not bubble up the Node tree.&nbsp; You can also pass in custom properties
+     * @name fire
+     * @methodOf Kinetic.Node.prototype
+     * @param {String} eventType
+     * @param {Object} obj optional object which can be used to pass parameters
+     */
+    fire: function(eventType, obj) {
+        this._executeHandlers(eventType, obj || {});
     },
     /**
      * get absolute transform of the node which takes into
@@ -1993,14 +2002,11 @@ Kinetic.Node.prototype = {
 
         if(okayToRun) {
             if(el[eventType]) {
-                var events = el[eventType];
-                for(var i = 0; i < events.length; i++) {
-                    events[i].handler.apply(this, [evt]);
-                }
+                this.fire(eventType, evt);
             }
 
             // simulate event bubbling
-            if(Kinetic.Global.BUBBLE_WHITELIST.indexOf(eventType) >= 0 && !evt.cancelBubble && this.parent) {
+            if(!evt.cancelBubble && this.parent) {
                 if(compareShape && compareShape.parent) {
                     this._handleEvent.call(this.parent, eventType, evt, compareShape.parent);
                 }
@@ -2008,6 +2014,12 @@ Kinetic.Node.prototype = {
                     this._handleEvent.call(this.parent, eventType, evt);
                 }
             }
+        }
+    },
+    _executeHandlers: function(eventType, evt) {
+        var events = this.eventListeners[eventType];
+        for(var i = 0; i < events.length; i++) {
+            events[i].handler.apply(this, [evt]);
         }
     },
     _shouldDraw: function(canvas) {
