@@ -4112,6 +4112,44 @@ Test.prototype.tests = {
         layer.add(circle);
         stage.add(layer);
     },
+    '*NODE - test isListening': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 100,
+            y: 100,
+            rotationDeg: 20,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+        
+        test(rect.isListening(), 'rect should be listening');
+        
+        rect.setListening(false);  
+        test(!rect.isListening(), 'rect should not be listening');
+        
+        rect.setListening(true);
+        test(rect.isListening(), 'rect should be listening');
+        
+        layer.setListening(false);
+        test(!rect.isListening(), 'rect should not be listening because layer is not listening');
+        
+        layer.setListening(true);
+        test(rect.isListening(), 'rect should be listening');
+        
+        stage.setListening(false);
+        test(!rect.isListening(), 'rect should not be listening because stage is not listening');
+    },
     'NODE - test simulate and fire event': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -4144,6 +4182,11 @@ Test.prototype.tests = {
              console.log(rightClick);
              */
         });
+        
+        var foo;
+        circle.on('customEvent', function(evt) {
+        	foo = evt.foo;
+        });
 
         layer.on('click', function() {
             clicks.push('layer');
@@ -4157,6 +4200,12 @@ Test.prototype.tests = {
         circle.fire('click');
 
         test(clicks.toString() == 'circle,layer,circle', 'problem with fire');
+        
+        // test custom event
+        circle.fire('customEvent', {foo:'bar'});
+        
+        test(foo === 'bar', 'problem with customEvent param passing');
+        
     },
     'EVENTS - add remove event': function(containerId) {
         var stage = new Kinetic.Stage({

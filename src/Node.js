@@ -229,17 +229,30 @@ Kinetic.Node.prototype = {
         }
     },
     /**
-     * determine if shape is visible or not.  Shape is visible only
+     * determine if node is visible or not.  Node is visible only
      *  if it's visible and all of its ancestors are visible.  If an ancestor
-     *  is invisible, this means that the shape is also invisible
-     * @name isVisible
+     *  is invisible, this means that the node is also invisible
+     * @name getVisible
      * @methodOf Kinetic.Node.prototype
      */
-    isVisible: function() {
-        if(this.attrs.visible && this.getParent() && !this.getParent().isVisible()) {
+    getVisible: function() {
+        if(this.attrs.visible && this.getParent() && !this.getParent().getVisible()) {
             return false;
         }
         return this.attrs.visible;
+    },
+    /**
+     * determine if node is listening or not.  Node is listening only
+     *  if it's listening and all of its ancestors are listening.  If an ancestor
+     *  is not listening, this means that the node is also not listening
+     * @name getVisible
+     * @methodOf Kinetic.Node.prototype
+     */
+    getListening: function() {
+        if(this.attrs.listening && this.getParent() && !this.getParent().getListening()) {
+            return false;
+        }
+        return this.attrs.listening;
     },
     /**
      * show node
@@ -1015,17 +1028,23 @@ Kinetic.Node._createNode = function(obj, container) {
     return no;
 };
 // add getters setters
-Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'rotation', 'opacity', 'name', 'id', 'listening', 'visible']);
+Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'rotation', 'opacity', 'name', 'id']);
 Kinetic.Node.addGetters(Kinetic.Node, ['scale', 'offset']);
-Kinetic.Node.addSetters(Kinetic.Node, ['width', 'height']);
+Kinetic.Node.addSetters(Kinetic.Node, ['width', 'height', 'listening', 'visible']);
 
 // mappings
 /**
- * determine if listening to events or not.  Alias of getListening()
+ * Alias of getListening()
  * @name isListening
  * @methodOf Kinetic.Node.prototype
  */
 Kinetic.Node.prototype.isListening = Kinetic.Node.prototype.getListening;
+/**
+ * Alias of getVisible()
+ * @name isVisible
+ * @methodOf Kinetic.Node.prototype
+ */
+Kinetic.Node.prototype.isVisible = Kinetic.Node.prototype.getVisible;
 
 // collection mappings
 (function() {
@@ -1152,11 +1171,5 @@ Kinetic.Node.prototype.isListening = Kinetic.Node.prototype.getListening;
 /**
  * determine if listening to events or not
  * @name getListening
- * @methodOf Kinetic.Node.prototype
- */
-
-/**
- * determine if visible or not
- * @name getVisible
  * @methodOf Kinetic.Node.prototype
  */
