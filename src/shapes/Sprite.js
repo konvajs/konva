@@ -17,7 +17,7 @@ Kinetic.Sprite.prototype = {
             index: 0,
             frameRate: 17
         });
-
+		this.shapeType = "Sprite";
         config.drawFunc = this.drawFunc;
         // call super constructor
         Kinetic.Shape.call(this, config);

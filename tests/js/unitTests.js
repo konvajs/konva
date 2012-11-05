@@ -1907,6 +1907,110 @@ Test.prototype.tests = {
         };
         imageObj.src = '../assets/scorpion-sprite.png';
     },
+    'SHAPE - clone sprite': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+
+            var anims = {
+                standing: [{
+                    x: 0,
+                    y: 0,
+                    width: 49,
+                    height: 109
+                }, {
+                    x: 52,
+                    y: 0,
+                    width: 49,
+                    height: 109
+                }, {
+                    x: 105,
+                    y: 0,
+                    width: 49,
+                    height: 109
+                }, {
+                    x: 158,
+                    y: 0,
+                    width: 49,
+                    height: 109
+                }, {
+                    x: 210,
+                    y: 0,
+                    width: 49,
+                    height: 109
+                }, {
+                    x: 262,
+                    y: 0,
+                    width: 49,
+                    height: 109
+                }],
+
+                kicking: [{
+                    x: 0,
+                    y: 109,
+                    width: 45,
+                    height: 98
+                }, {
+                    x: 45,
+                    y: 109,
+                    width: 45,
+                    height: 98
+                }, {
+                    x: 95,
+                    y: 109,
+                    width: 63,
+                    height: 98
+                }, {
+                    x: 156,
+                    y: 109,
+                    width: 70,
+                    height: 98
+                }, {
+                    x: 229,
+                    y: 109,
+                    width: 60,
+                    height: 98
+                }, {
+                    x: 287,
+                    y: 109,
+                    width: 41,
+                    height: 98
+                }]
+            };
+
+            //for(var n = 0; n < 50; n++) {
+            sprite = new Kinetic.Sprite({
+                //x: Math.random() * stage.getWidth() - 30,
+                x: 200,
+                //y: Math.random() * stage.getHeight() - 50,
+                y: 50,
+                image: imageObj,
+                animation: 'standing',
+                animations: anims,
+                index: 0,
+                frameRate: Math.random() * 6 + 6,
+                frameRate: 10,
+                draggable: true,
+                shadow: {
+                    color: 'black',
+                    blur: 3,
+                    offset: [3, 1],
+                    opacity: 0.3
+                }
+            });
+
+            var clone = sprite.clone();
+            layer.add(clone);
+            stage.add(layer);
+            clone.start();
+        };
+        imageObj.src = '../assets/scorpion-sprite.png';
+    },
     'Node - node caching': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -3293,7 +3397,28 @@ Test.prototype.tests = {
         test(offsetChange, 'offsetChange should have been triggered with setOffset()');
         test(!shadowOffsetChange, 'offsetChange should not have been triggered with setShadow()');
     },
-    'NODE - clone a shape': function(containerId) {
+    'NODE - simple clone': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        
+        var rect = new Kinetic.Rect({
+        	x:0,
+        	y:0, 
+        	width:100, 
+        	height:100, 
+        	stroke: 'red'
+        });
+
+		var clone = rect.clone({stroke: 'green'});
+     
+        layer.add(clone);
+        stage.add(layer);
+    },
+    'NODE - complex clone': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
