@@ -745,7 +745,7 @@ Kinetic.Node.prototype = {
      * @name toImage
      * @methodOf Kinetic.Node.prototype
      * @param {Object} config
-     * @param {Function} callback since the toImage() method is asynchonrous, the
+     * @param {Function} config.callback since the toImage() method is asynchonrous, the
      *  resulting image object is passed into the callback function
      * @param {String} [config.mimeType] mime type.  can be "image/png" or "image/jpeg".
      *  "image/png" is the default

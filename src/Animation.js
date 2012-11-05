@@ -62,7 +62,7 @@ Kinetic.Animation._removeAnimation = function(anim) {
     for(var n = 0; n < animations.length; n++) {
         if(animations[n].id === id) {
             this.animations.splice(n, 1);
-            return false;
+            break;
         }
     }
 };
