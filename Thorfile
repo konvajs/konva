@@ -67,7 +67,7 @@ class Build < Thor
       mod[".js"] = ""
       module_filename = "dist/kinetic-#{mod}-#{version}.min.js"
       File.open(module_filename, "w") do |file2|
-        uglify = Uglifier.compile(content, { copyright: mod == "Global" })
+        uglify = Uglifier.compile(content, :copyright => mod == "Global")
         file2.puts replace_tokens(uglify, version)
       end
     end
