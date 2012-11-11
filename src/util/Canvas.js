@@ -9,8 +9,8 @@ Kinetic.Canvas = function(width, height) {
     this.context = this.element.getContext('2d');
 
     // set dimensions
-    this.element.width = width;
-    this.element.height = height;
+    this.element.width = width || 0;
+    this.element.height = height || 0;
 };
 
 Kinetic.Canvas.prototype = {

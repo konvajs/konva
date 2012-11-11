@@ -561,10 +561,7 @@ Kinetic.Stage.prototype = {
         this.content.className = 'kineticjs-content';
         this.attrs.container.appendChild(this.content);
 
-        this.bufferCanvas = new Kinetic.Canvas({
-            width: this.attrs.width,
-            height: this.attrs.height
-        });
+        this.bufferCanvas = new Kinetic.Canvas();
 
         this._resizeDOM();
     },
