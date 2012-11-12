@@ -245,7 +245,7 @@ Kinetic.Node.prototype = {
      * determine if node is listening or not.  Node is listening only
      *  if it's listening and all of its ancestors are listening.  If an ancestor
      *  is not listening, this means that the node is also not listening
-     * @name getVisible
+     * @name getListening
      * @methodOf Kinetic.Node.prototype
      */
     getListening: function() {
@@ -1165,11 +1165,5 @@ Kinetic.Node.prototype.isVisible = Kinetic.Node.prototype.getVisible;
 /**
  * get offset
  * @name getOffset
- * @methodOf Kinetic.Node.prototype
- */
-
-/**
- * determine if listening to events or not
- * @name getListening
  * @methodOf Kinetic.Node.prototype
  */

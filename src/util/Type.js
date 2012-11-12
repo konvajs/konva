@@ -222,6 +222,7 @@ Kinetic.Type = {
         // if arg is a string, then it's a data url
         else if(this._isString(arg)) {
             var imageObj = new Image();
+            /** @ignore */
             imageObj.onload = function() {
                 callback(imageObj);
             }
@@ -237,6 +238,7 @@ Kinetic.Type = {
             context.putImageData(arg, 0, 0);
             var dataUrl = canvas.toDataURL();
             var imageObj = new Image();
+            /** @ignore */
             imageObj.onload = function() {
                 callback(imageObj);
             }

@@ -14,6 +14,10 @@
  * class.
  */
 
+/**
+ * Transform constructor
+ * @constructor
+ */
 Kinetic.Transform = function() {
     this.m = [1, 0, 0, 1, 0, 0];
 }

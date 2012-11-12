@@ -1,7 +1,8 @@
 /**
  * Brighten Filter
- * @function Brighten
- * @methodOf Kinetic.Filters
+ * @function 
+ * @memberOf Kinetic.Filters
+ * @param {Object} imageData
  * @param {Object} config
  * @param {Integer} config.val brightness number from -255 to 255.&nbsp; Positive values increase the brightness and negative values decrease the brightness, making the image darker
  */

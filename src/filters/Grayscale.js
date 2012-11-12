@@ -1,7 +1,9 @@
 /**
  * Grayscale Filter
- * @function Grayscale
- * @methodOf Kinetic.Filters
+ * @function
+ * @memberOf Kinetic.Filters
+ * @param {Object} imageData
+ * @param {Object} config
  */
 Kinetic.Filters.Grayscale = function(imageData, config) {
     var data = imageData.data;

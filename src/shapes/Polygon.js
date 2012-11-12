@@ -35,7 +35,7 @@ Kinetic.Polygon.prototype = {
     /**
 	 * set points array
 	 * @name setPoints
-	 * @methodOf Kinetic.Line.prototype
+	 * @methodOf Kinetic.Polygon.prototype
 	 * @param {Array} can be an array of point objects or an array
 	 *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
 	 */

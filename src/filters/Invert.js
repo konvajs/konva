@@ -1,7 +1,9 @@
 /**
  * Invert Filter
- * @function Invert
- * @methodOf Kinetic.Filters
+ * @function
+ * @memberOf Kinetic.Filters
+ * @param {Object} imageData
+ * @param {Object} config
  */
 Kinetic.Filters.Invert = function(imageData, config) {
     var data = imageData.data;
