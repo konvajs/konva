@@ -59,7 +59,7 @@ Kinetic.TextPath.prototype = {
              * are appropriately applied to each line of text
              */
             this.appliedShadow = appliedShadow;
-            
+
             context.save();
 
             var p0 = glyphInfo[i].p0;
@@ -106,14 +106,14 @@ Kinetic.TextPath.prototype = {
         return this.textHeight;
     },
     /**
-	 * set text
-	 * @name setText
-	 * @methodOf Kinetic.TextPath.prototype
-	 * @param {String} text
-	 */
-	setText: function(text) {
-		Kinetic.Text.prototype.setText.call(this, text);
-	},
+     * set text
+     * @name setText
+     * @methodOf Kinetic.TextPath.prototype
+     * @param {String} text
+     */
+    setText: function(text) {
+        Kinetic.Text.prototype.setText.call(this, text);
+    },
     _getTextSize: function(text) {
         var dummyCanvas = this.dummyCanvas;
         var context = dummyCanvas.getContext('2d');
@@ -306,6 +306,13 @@ Kinetic.Global.extend(Kinetic.TextPath, Kinetic.Shape);
 Kinetic.Node.addGettersSetters(Kinetic.TextPath, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth']);
 Kinetic.Node.addGetters(Kinetic.TextPath, ['text']);
 
+// create reference to Text methods
+Kinetic.TextPath.prototype.fillText = Kinetic.Text.prototype.fillText;
+Kinetic.TextPath.prototype._fillTextScene = Kinetic.Text.prototype._fillTextScene;
+Kinetic.TextPath.prototype._fillTextBuffer = Kinetic.Text.prototype._fillTextBuffer;
+Kinetic.TextPath.prototype.strokeText = Kinetic.Text.prototype.strokeText;
+Kinetic.TextPath.prototype._strokeTextScene = Kinetic.Text.prototype._strokeTextScene;
+Kinetic.TextPath.prototype._strokeTextBuffer = Kinetic.Text.prototype._strokeTextBuffer;
 /**
  * set font family
  * @name setFontFamily

@@ -19,6 +19,7 @@ Kinetic.Image.prototype = {
     _initImage: function(config) {
         this.shapeType = "Image";
         config.drawFunc = this.drawFunc;
+        config.drawBufferFunc = this.drawBufferFunc;
         // call super constructor
         Kinetic.Shape.call(this, config);
 
@@ -30,8 +31,7 @@ Kinetic.Image.prototype = {
         this._syncSize();
     },
     drawFunc: function(context) {
-        var width = this.getWidth();
-        var height = this.getHeight();
+        var width = this.getWidth(), height = this.getHeight();
 
         context.beginPath();
         context.rect(0, 0, width, height);
@@ -53,6 +53,15 @@ Kinetic.Image.prototype = {
                 this.drawImage(context, this.attrs.image, 0, 0, width, height);
             }
         }
+    },
+    drawBufferFunc: function(context) {
+        var width = this.getWidth(), height = this.getHeight();
+
+        context.beginPath();
+        context.rect(0, 0, width, height);
+        context.closePath();
+        this.fill(context);
+        this.stroke(context);
     },
     /**
      * apply filter
@@ -78,7 +87,8 @@ Kinetic.Image.prototype = {
                     config.callback();
                 }
             });
-        } catch(e) {
+        }
+        catch(e) {
             Kinetic.Global.warn('Unable to apply filter. ' + e.message);
         }
     },
@@ -93,7 +103,7 @@ Kinetic.Image.prototype = {
      * @param {Number} config.height
      */
     setCrop: function() {
-    	var config = [].slice.call(arguments);
+        var config = [].slice.call(arguments);
         var pos = Kinetic.Type._getXY(config);
         var size = Kinetic.Type._getSize(config);
         var both = Kinetic.Type._merge(pos, size);
@@ -130,7 +140,8 @@ Kinetic.Image.prototype = {
                     callback();
                 }
             });
-        } catch(e) {
+        }
+        catch(e) {
             Kinetic.Global.warn('Unable to create image buffer.');
         }
     },

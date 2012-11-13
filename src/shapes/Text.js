@@ -167,6 +167,91 @@ Kinetic.Text.prototype = {
         };
     },
     /**
+     * helper method to fill text
+     * @param {String} text
+     * @name fillText
+     * @methodOf Kinetic.Text.prototype
+     */
+    fillText: function(context, text) {
+        if(context.type === 'scene') {
+            this._fillTextScene(context, text);
+        }
+        else if(context.type === 'buffer') {
+            this._fillTextBuffer(context, text);
+        }
+    },
+    _fillTextScene: function(context, text) {
+        var appliedShadow = false;
+        if(this.attrs.textFill) {
+            context.save();
+            if(this.attrs.shadow && !this.appliedShadow) {
+                appliedShadow = this._applyShadow(context);
+            }
+            context.fillStyle = this.attrs.textFill;
+            context.fillText(text, 0, 0);
+            context.restore();
+        }
+        if(appliedShadow) {
+            this.fillText(context, text, 0, 0);
+        }
+    },
+    _fillTextBuffer: function(context, text) {
+        if(this.attrs.textFill) {
+            context.save();
+            context.fillStyle = this.colorKey;
+            context.fillText(text, 0, 0);
+            context.restore();
+        }
+    },
+    /**
+     * helper method to stroke text
+     * if needed
+     * @name strokeText
+     * @methodOf Kinetic.Shape.prototype
+     * @param {String} text
+     */
+    strokeText: function(context, text) {
+        if(context.type === 'scene') {
+            this._strokeTextScene(context, text);
+        }
+        else if(context.type === 'buffer') {
+            this._strokeTextBuffer(context, text);
+        }
+    },
+    _strokeTextScene: function(context, text) {
+        var appliedShadow = false;
+
+        if(this.attrs.textStroke || this.attrs.textStrokeWidth) {
+            context.save();
+            if(this.attrs.shadow && !this.appliedShadow) {
+                appliedShadow = this._applyShadow(context);
+            }
+            // defaults
+            var textStroke = this.attrs.textStroke ? this.attrs.textStroke : 'black';
+            var textStrokeWidth = this.attrs.textStrokeWidth ? this.attrs.textStrokeWidth : 2;
+            context.lineWidth = textStrokeWidth;
+            context.strokeStyle = textStroke;
+            context.strokeText(text, 0, 0);
+            context.restore();
+        }
+
+        if(appliedShadow) {
+            this.strokeText(context, text, 0, 0);
+        }
+    },
+    _strokeTextBuffer: function(context, text) {
+        if(this.attrs.textStroke || this.attrs.textStrokeWidth) {
+            context.save();
+            // defaults
+            var textStroke = this.colorKey ? this.colorKey : 'black';
+            var textStrokeWidth = this.attrs.textStrokeWidth ? this.attrs.textStrokeWidth : 2;
+            context.lineWidth = textStrokeWidth;
+            context.strokeStyle = textStroke;
+            context.strokeText(text, 0, 0);
+            context.restore();
+        }
+    },
+    /**
      * set text data.  wrap logic and width and height setting occurs
      * here
      */

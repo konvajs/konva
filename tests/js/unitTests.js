@@ -3067,6 +3067,8 @@ Test.prototype.tests = {
 
         //layer.setListening(false);
         layer.drawBuffer();
+      
+       
     },
     'SHAPE - test size setters and getters': function(containerId) {
         var stage = new Kinetic.Stage({

@@ -39,8 +39,9 @@ Kinetic.Layer.prototype = {
         this.afterDrawFunc = undefined;
         this.canvas = new Kinetic.Canvas();
         this.canvas.getElement().style.position = 'absolute';
+        this.canvas.getContext().type = 'scene';
         this.bufferCanvas = new Kinetic.Canvas();
-        this.bufferCanvas.name = 'buffer';
+        this.bufferCanvas.getContext().type = 'buffer'; 
 
         // call super constructor
         Kinetic.Container.call(this, config);
@@ -266,7 +267,8 @@ Kinetic.Layer.prototype = {
          */
         try {
             this.getStage().content.removeChild(this.canvas.element);
-        } catch(e) {
+        }
+        catch(e) {
             Kinetic.Global.warn('unable to remove layer scene canvas element from the document');
         }
     }

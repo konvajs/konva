@@ -19,6 +19,7 @@ Kinetic.Sprite.prototype = {
         });
 		this.shapeType = "Sprite";
         config.drawFunc = this.drawFunc;
+        config.drawBufferFunc = this.drawBufferFunc;
         // call super constructor
         Kinetic.Shape.call(this, config);
         this.anim = new Kinetic.Animation();
@@ -47,6 +48,17 @@ Kinetic.Sprite.prototype = {
 
             this.drawImage(context, this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
         }
+    },
+    drawBufferFunc: function(context) {
+        var anim = this.attrs.animation;
+        var index = this.attrs.index;
+        var f = this.attrs.animations[anim][index];
+
+        context.beginPath();
+        context.rect(0, 0, f.width, f.height);
+        context.closePath();
+        this.fill(context);
+        this.stroke(context);
     },
     /**
      * start sprite animation

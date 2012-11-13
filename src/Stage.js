@@ -284,6 +284,7 @@ Kinetic.Stage.prototype = {
             this.content.style.width = width + 'px';
             this.content.style.height = height + 'px';
 
+			this.canvas.setSize(width, height);
             this.bufferCanvas.setSize(width, height);
             // set user defined layer dimensions
             var layers = this.children;
@@ -561,7 +562,10 @@ Kinetic.Stage.prototype = {
         this.content.className = 'kineticjs-content';
         this.attrs.container.appendChild(this.content);
 
+        this.canvas = new Kinetic.Canvas();
+        this.canvas.getContext().type = 'scene';
         this.bufferCanvas = new Kinetic.Canvas();
+        this.bufferCanvas.getContext().type = 'buffer';
 
         this._resizeDOM();
     },

@@ -946,7 +946,7 @@ Kinetic.Node.prototype = {
         }
     },
     _shouldDraw: function(canvas) {
-        return (this.isVisible() && (!canvas || canvas.name !== 'buffer' || this.getListening()));
+        return (this.isVisible() && (!canvas || canvas.getContext().type === 'scene' || this.getListening()));
     }
 };
 

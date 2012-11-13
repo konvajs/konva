@@ -327,6 +327,8 @@ Test.prototype.tests = {
 
             layer.add(darth);
             stage.add(layer);
+            
+             //document.body.appendChild(layer.bufferCanvas.element)
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
@@ -713,7 +715,7 @@ Test.prototype.tests = {
         layer.add(redCircle);
         stage.add(layer);
     },
-    '*DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
+    'DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,

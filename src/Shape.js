@@ -97,16 +97,21 @@ Kinetic.Shape.prototype = {
         return this.getLayer().getCanvas();
     },
     /**
-     * helper method to stroke the shape and apply
-     * shadows if needed
+     * helper method to stroke the shape
      * @name stroke
      * @methodOf Kinetic.Shape.prototype
      */
     stroke: function(context) {
-        var strokeWidth = this.getStrokeWidth();
-        var stroke = this.getStroke();
+        if(context.type === 'scene') {
+            this._strokeScene(context);
+        }
+        else if(context.type === 'buffer') {
+            this._strokeBuffer(context);
+        }
+    },
+    _strokeScene: function(context) {
+        var strokeWidth = this.getStrokeWidth(), stroke = this.getStroke();
         if(stroke || strokeWidth) {
-            var go = Kinetic.Global;
             var appliedShadow = false;
 
             context.save();
@@ -122,6 +127,16 @@ Kinetic.Shape.prototype = {
             if(appliedShadow) {
                 this.stroke(context);
             }
+        }
+    },
+    _strokeBuffer: function(context) {
+        var strokeWidth = this.getStrokeWidth(), stroke = this.colorKey;
+        if(stroke || strokeWidth) {
+            context.save();
+            context.lineWidth = strokeWidth || 2;
+            context.strokeStyle = stroke || 'black';
+            context.stroke(context);
+            context.restore();
         }
     },
     _getFillType: function(fill) {
@@ -145,15 +160,20 @@ Kinetic.Shape.prototype = {
         }
     },
     /**
-     * helper method to fill the shape with a color, linear gradient,
-     * radial gradient, or pattern, and also apply shadows if needed
+     * helper method to fill the shape
      * @name fill
      * @methodOf Kinetic.Shape.prototype
      * */
     fill: function(context) {
-        var appliedShadow = false;
-        var fill = this.getFill();
-        var fillType = this._getFillType(fill);
+        if(context.type === 'scene') {
+            this._fillScene(context);
+        }
+        else if(context.type === 'buffer') {
+            this._fillBuffer(context);
+        }
+    },
+    _fillScene: function(context) {
+        var appliedShadow = false, fill = this.getFill(), fillType = this._getFillType(fill);
         if(fill) {
             context.save();
             if(this.attrs.shadow && !this.appliedShadow) {
@@ -216,54 +236,11 @@ Kinetic.Shape.prototype = {
             this.fill(context);
         }
     },
-    /**
-     * helper method to fill text and appy shadows if needed
-     * @param {String} text
-     * @name fillText
-     * @methodOf Kinetic.Shape.prototype
-     */
-    fillText: function(context, text) {
-        var appliedShadow = false;
-        if(this.attrs.textFill) {
-            context.save();
-            if(this.attrs.shadow && !this.appliedShadow) {
-                appliedShadow = this._applyShadow(context);
-            }
-            context.fillStyle = this.attrs.textFill;
-            context.fillText(text, 0, 0);
-            context.restore();
-        }
-        if(appliedShadow) {
-            this.fillText(context, text, 0, 0);
-        }
-    },
-    /**
-     * helper method to stroke text and apply shadows
-     * if needed
-     * @name strokeText
-     * @methodOf Kinetic.Shape.prototype
-     * @param {String} text
-     */
-    strokeText: function(context, text) {
-        var appliedShadow = false;
-
-        if(this.attrs.textStroke || this.attrs.textStrokeWidth) {
-            context.save();
-            if(this.attrs.shadow && !this.appliedShadow) {
-                appliedShadow = this._applyShadow(context);
-            }
-            // defaults
-            var textStroke = this.attrs.textStroke ? this.attrs.textStroke : 'black';
-            var textStrokeWidth = this.attrs.textStrokeWidth ? this.attrs.textStrokeWidth : 2;
-            context.lineWidth = textStrokeWidth;
-            context.strokeStyle = textStroke;
-            context.strokeText(text, 0, 0);
-            context.restore();
-        }
-
-        if(appliedShadow) {
-            this.strokeText(context, text, 0, 0);
-        }
+    _fillBuffer: function(context) {
+        context.save();
+        context.fillStyle = this.colorKey;
+        context.fill(context);
+        context.restore();
     },
     /**
      * helper method to draw an image and apply
@@ -464,61 +441,21 @@ Kinetic.Shape.prototype = {
                 context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }
 
-            this.applyOpacity(context);
+            var type = canvas.getContext().type;
+
+            if(type === 'scene') {
+                this.applyOpacity(context);
+            }
+
             this.applyLineJoin(context);
             this.applyLineCap(context);
 
             // draw the shape
             this.appliedShadow = false;
 
-            var wl = Kinetic.Global.BUFFER_WHITELIST;
-            var bl = Kinetic.Global.BUFFER_BLACKLIST;
-            var attrs = {};
+            var drawFunc = (type === 'buffer' && this.attrs.drawBufferFunc) ? this.attrs.drawBufferFunc : this.attrs.drawFunc;
 
-            if(canvas.name === 'buffer') {
-                for(var n = 0; n < wl.length; n++) {
-                    var key = wl[n];
-                    attrs[key] = this.attrs[key];
-                    if(this.attrs[key] || (key === 'fill' && !this.attrs.stroke && !('image' in this.attrs))) {
-                        this.attrs[key] = '#' + this.colorKey;
-                    }
-                }
-
-                for(var n = 0; n < bl.length; n++) {
-                    var key = bl[n];
-                    attrs[key] = this.attrs[key];
-                    this.attrs[key] = '';
-                }
-
-                // image is a special case
-                if('image' in this.attrs) {
-                    attrs.image = this.attrs.image;
-
-                    if(this.imageBuffer) {
-                        this.attrs.image = this.imageBuffer;
-                    }
-                    else {
-                        this.attrs.image = null;
-                        this.attrs.fill = '#' + this.colorKey;
-                    }
-                }
-
-                context.globalAlpha = 1;
-            }
-
-            this.attrs.drawFunc.call(this, canvas.getContext());
-
-            if(canvas.name === 'buffer') {
-                var bothLists = wl.concat(bl);
-                for(var n = 0; n < bothLists.length; n++) {
-                    var key = bothLists[n];
-                    this.attrs[key] = attrs[key];
-                }
-
-                // image is a special case
-                this.attrs.image = attrs.image;
-            }
-
+            drawFunc.call(this, canvas.getContext());
             context.restore();
         }
     }
