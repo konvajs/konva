@@ -1,6 +1,6 @@
 Kinetic.Shape = (function() {
     // variable cache
-    var ATTRS, TYPE = Kinetic.Type;
+    var TYPE = Kinetic.Type;
 
     /**
      * Shape constructor.  Shapes are primitive objects such as rectangles,
@@ -83,7 +83,6 @@ Kinetic.Shape = (function() {
 
             // call super constructor
             Kinetic.Node.call(this, config);
-            ATTRS = this.attrs;
         },
         /**
          * get canvas context tied to the layer
@@ -120,7 +119,7 @@ Kinetic.Shape = (function() {
                 var appliedShadow = false;
 
                 context.save();
-                if(ATTRS.shadow && !this.appliedShadow) {
+                if(this.attrs.shadow && !this.appliedShadow) {
                     appliedShadow = this._applyShadow(context);
                 }
 
@@ -181,7 +180,7 @@ Kinetic.Shape = (function() {
             var appliedShadow = false, fill = this.getFill(), fillType = this._getFillType(fill);
             if(fill) {
                 context.save();
-                if(ATTRS.shadow && !this.appliedShadow) {
+                if(this.attrs.shadow && !this.appliedShadow) {
                     appliedShadow = this._applyShadow(context);
                 }
 
@@ -260,7 +259,7 @@ Kinetic.Shape = (function() {
             var a = Array.prototype.slice.call(arguments);
 
             if(a.length === 6 || a.length === 10) {
-                if(ATTRS.shadow && !this.appliedShadow) {
+                if(this.attrs.shadow && !this.appliedShadow) {
                     appliedShadow = this._applyShadow(context);
                 }
 
@@ -291,8 +290,8 @@ Kinetic.Shape = (function() {
          * @methodOf Kinetic.Shape.prototype
          */
         applyLineJoin: function(context) {
-            if(ATTRS.lineJoin) {
-                context.lineJoin = ATTRS.lineJoin;
+            if(this.attrs.lineJoin) {
+                context.lineJoin = this.attrs.lineJoin;
             }
         },
         /**
@@ -302,8 +301,8 @@ Kinetic.Shape = (function() {
          * @methodOf Kinetic.Shape.prototype
          */
         applyLineCap: function(context) {
-            if(ATTRS.lineCap) {
-                context.lineCap = ATTRS.lineCap;
+            if(this.attrs.lineCap) {
+                context.lineCap = this.attrs.lineCap;
             }
         },
         /**
@@ -381,7 +380,7 @@ Kinetic.Shape = (function() {
          * and false if it was not
          */
         _applyShadow: function(context) {
-            var s = ATTRS.shadow;
+            var s = this.attrs.shadow;
             if(s) {
                 var aa = this.getAbsoluteOpacity();
                 // defaults
