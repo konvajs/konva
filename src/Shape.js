@@ -288,8 +288,9 @@ Kinetic.Shape = (function() {
          * @methodOf Kinetic.Shape.prototype
          */
         applyLineJoin: function(context) {
-            if(this.attrs.lineJoin) {
-                context.lineJoin = this.attrs.lineJoin;
+        	var lineJoin = this.attrs.lineJoin;
+            if(lineJoin) {
+                context.lineJoin = lineJoin;
             }
         },
         /**
@@ -299,8 +300,9 @@ Kinetic.Shape = (function() {
          * @methodOf Kinetic.Shape.prototype
          */
         applyLineCap: function(context) {
-            if(this.attrs.lineCap) {
-                context.lineCap = this.attrs.lineCap;
+        	var lineCap = this.attrs.lineCap;
+            if(lineCap) {
+                context.lineCap = lineCap;
             }
         },
         /**
@@ -425,7 +427,7 @@ Kinetic.Shape = (function() {
             delete Kinetic.Global.shapes[this.colorKey];
         },
         draw: function(canvas) {
-            var drawFunc = this.attrs.drawFunc, drawBufferFunc = this.attrs.drawBufferFunc;
+            var attrs = this.attrs, drawFunc = attrs.drawFunc, drawBufferFunc = attrs.drawBufferFunc;
 
             if(drawFunc && Kinetic.Node.prototype._shouldDraw.call(this, canvas)) {
                 var stage = this.getStage(), context = canvas.getContext(), family = [], parent = this.parent, type = canvas.getContext().type;

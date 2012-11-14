@@ -238,10 +238,11 @@ Kinetic.Node = (function() {
          * @methodOf Kinetic.Node.prototype
          */
         getVisible: function() {
-            if(this.attrs.visible && this.getParent() && !this.getParent().getVisible()) {
+            var visible = this.attrs.visible, parent = this.getParent();
+            if(visible && parent && !parent.getVisible()) {
                 return false;
             }
-            return this.attrs.visible;
+            return visible;
         },
         /**
          * determine if node is listening or not.  Node is listening only
@@ -251,10 +252,11 @@ Kinetic.Node = (function() {
          * @methodOf Kinetic.Node.prototype
          */
         getListening: function() {
-            if(this.attrs.listening && this.getParent() && !this.getParent().getListening()) {
+            var listening = this.attrs.listening, parent = this.getParent();
+            if(listening && parent && !parent.getListening()) {
                 return false;
             }
-            return this.attrs.listening;
+            return listening;
         },
         /**
          * show node
@@ -349,9 +351,10 @@ Kinetic.Node = (function() {
          * @methodOf Kinetic.Node.prototype
          */
         getPosition: function() {
+            var attrs = this.attrs;
             return {
-                x: this.attrs.x,
-                y: this.attrs.y
+                x: attrs.x,
+                y: attrs.y
             };
         },
         /**
@@ -554,15 +557,14 @@ Kinetic.Node = (function() {
          * @methodOf Kinetic.Node.prototype
          */
         toObject: function() {
-        	var type = Kinetic.Type;
-            var obj = {};
+            var type = Kinetic.Type, obj = {}, attrs = this.attrs;
 
             obj.attrs = {};
 
             // serialize only attributes that are not function, image, DOM, or objects with methods
-            for(var key in this.attrs) {
-                var val = this.attrs[key];
-                if(!type._isFunction(val) && !type._isElement(val) && !(type._isObject(val) && kineticType._hasMethods(val))) {
+            for(var key in attrs) {
+                var val = attrs[key];
+                if(!type._isFunction(val) && !type._isElement(val) && !(type._isObject(val) && type._hasMethods(val))) {
                     obj.attrs[key] = val;
                 }
             }
@@ -658,19 +660,19 @@ Kinetic.Node = (function() {
          * @methodOf Kinetic.Node.prototype
          */
         getTransform: function() {
-            var m = new Kinetic.Transform();
+            var m = new Kinetic.Transform(), attrs = this.attrs, x = attrs.x, y = attrs.y, rotation = attrs.rotation, scale = attrs.scale, scaleX = scale.x, scaleY = scale.y, offset = attrs.offset, offsetX = offset.x, offsetY = offset.y;
 
-            if(this.attrs.x !== 0 || this.attrs.y !== 0) {
-                m.translate(this.attrs.x, this.attrs.y);
+            if(x !== 0 || y !== 0) {
+                m.translate(x, y);
             }
-            if(this.attrs.rotation !== 0) {
-                m.rotate(this.attrs.rotation);
+            if(rotation !== 0) {
+                m.rotate(rotation);
             }
-            if(this.attrs.scale.x !== 1 || this.attrs.scale.y !== 1) {
-                m.scale(this.attrs.scale.x, this.attrs.scale.y);
+            if(scaleX !== 1 || scaleY !== 1) {
+                m.scale(scaleX, scaleY);
             }
-            if(this.attrs.offset && (this.attrs.offset.x !== 0 || this.attrs.offset.y !== 0)) {
-                m.translate(-1 * this.attrs.offset.x, -1 * this.attrs.offset.y);
+            if(offsetX !== 0 || offsetY !== 0) {
+                m.translate(-1 * offsetX, -1 * offsetY);
             }
 
             return m;
@@ -857,17 +859,18 @@ Kinetic.Node = (function() {
             }
         },
         _clearTransform: function() {
+            var attrs = this.attrs, scale = attrs.scale, offset = attrs.offset;
             var trans = {
-                x: this.attrs.x,
-                y: this.attrs.y,
-                rotation: this.attrs.rotation,
+                x: attrs.x,
+                y: attrs.y,
+                rotation: attrs.rotation,
                 scale: {
-                    x: this.attrs.scale.x,
-                    y: this.attrs.scale.y
+                    x: scale.x,
+                    y: scale.y
                 },
                 offset: {
-                    x: this.attrs.offset.x,
-                    y: this.attrs.offset.y
+                    x: offset.x,
+                    y: offset.y
                 }
             };
 
