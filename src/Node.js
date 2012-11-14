@@ -732,7 +732,7 @@ Kinetic.Node.prototype = {
             canvas = new Kinetic.Canvas(config.width, config.height);
         }
         else {
-            canvas = this.getStage().bufferCanvas;
+            canvas = this.getStage().canvas;
             canvas.clear();
         }
 

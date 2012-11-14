@@ -39,9 +39,7 @@ Kinetic.Layer.prototype = {
         this.afterDrawFunc = undefined;
         this.canvas = new Kinetic.Canvas();
         this.canvas.getElement().style.position = 'absolute';
-        this.canvas.getContext().type = 'scene';
-        this.bufferCanvas = new Kinetic.Canvas();
-        this.bufferCanvas.getContext().type = 'buffer'; 
+        this.bufferCanvas = new Kinetic.Canvas(0, 0, true);
 
         // call super constructor
         Kinetic.Container.call(this, config);

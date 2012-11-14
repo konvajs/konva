@@ -563,9 +563,7 @@ Kinetic.Stage.prototype = {
         this.attrs.container.appendChild(this.content);
 
         this.canvas = new Kinetic.Canvas();
-        this.canvas.getContext().type = 'scene';
-        this.bufferCanvas = new Kinetic.Canvas();
-        this.bufferCanvas.getContext().type = 'buffer';
+        this.bufferCanvas = new Kinetic.Canvas(0, 0, true);
 
         this._resizeDOM();
     },

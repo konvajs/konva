@@ -72,8 +72,6 @@ Test.prototype = {
 
 		// loop through modules
         for(var mod in modules) {
-        	console.log('=================== ' + mod + ' TESTS ===================');
-        	
             var tests = modules[mod];
             /*
              * if a test key has a star in front of it, then
@@ -86,6 +84,13 @@ Test.prototype = {
                     break;
                 }
             }
+        };
+        
+		// loop through modules
+        for(var mod in modules) {
+        	console.log('=================== ' + mod + ' TESTS ===================');
+        	
+            var tests = modules[mod];
 
 			// loop through tests
             for(var key in tests) {

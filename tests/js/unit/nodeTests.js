@@ -622,7 +622,7 @@ Test.Modules.NODE = {
             clone.start();
         };
         imageObj.src = '../assets/scorpion-sprite.png';
-    },
+    },  
     'node caching': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -668,6 +668,8 @@ Test.Modules.NODE = {
             width: 500,
             height: 300,
             callback: function(imageObj) {
+            	
+            	//document.body.appendChild(imageObj)
                 test(Kinetic.Type._isElement(imageObj), 'shape toImage() should be an image object');
 
                 var cachedShape = new Kinetic.Image({
@@ -694,6 +696,7 @@ Test.Modules.NODE = {
             }
         });
 
+		/*
         group.toImage({
             callback: function(imageObj) {
                 test(Kinetic.Type._isElement(imageObj), 'group toImage() should be an image object');
@@ -709,6 +712,7 @@ Test.Modules.NODE = {
                 test(Kinetic.Type._isElement(imageObj), 'stage toImage() should be an image object');
             }
         });
+        */
 
         //document.body.appendChild(layer.bufferCanvas.element)
     },
