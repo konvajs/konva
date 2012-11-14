@@ -1,4 +1,4 @@
-Test.prototype.tests = {
+Test.Modules.MANUAL = {
     'EVENTS - mousedown mouseup mouseover mouseout mousemove click dblclick / touchstart touchend touchmove tap dbltap': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

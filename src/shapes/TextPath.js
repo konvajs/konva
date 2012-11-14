@@ -306,7 +306,7 @@ Kinetic.Global.extend(Kinetic.TextPath, Kinetic.Shape);
 Kinetic.Node.addGettersSetters(Kinetic.TextPath, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth']);
 Kinetic.Node.addGetters(Kinetic.TextPath, ['text']);
 
-// create reference to Text methods
+// reference Text methods
 Kinetic.TextPath.prototype.fillText = Kinetic.Text.prototype.fillText;
 Kinetic.TextPath.prototype._fillTextScene = Kinetic.Text.prototype._fillTextScene;
 Kinetic.TextPath.prototype._fillTextBuffer = Kinetic.Text.prototype._fillTextBuffer;

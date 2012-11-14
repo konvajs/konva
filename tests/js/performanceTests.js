@@ -1,4 +1,4 @@
-Test.prototype.tests = {
+Test.Modules.PERFORMANCE = {
     'DRAWING - draw rect': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

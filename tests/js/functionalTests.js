@@ -1,4 +1,4 @@
-Test.prototype.tests = {
+Test.Modules.FUNCTIONAL = {
     'DRAG AND DROP - test dragstart, dragmove, dragend': function(containerId) {
         var urls = dataUrls['DRAG AND DROP - test dragstart, dragmove, dragend'];
 
