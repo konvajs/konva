@@ -17,7 +17,7 @@ Kinetic.Circle.prototype = {
             radius: 0
         });
 
-        this.shapeType = "Circle";
+        this.shapeType = 'Circle';
         config.drawFunc = this.drawFunc;
 
         // call super constructor

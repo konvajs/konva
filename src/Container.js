@@ -61,15 +61,16 @@ Kinetic.Container.prototype = {
      * @param {Node} child
      */
     add: function(child) {
-        child._id = Kinetic.Global.idCounter++;
-        child.index = this.children.length;
-        child.parent = this;
+        var go = Kinetic.Global, children = this.children;
 
-        this.children.push(child);
+        child._id = Kinetic.Global.idCounter++;
+        child.index = children.length;
+        child.parent = this;
+        children.push(child);
         var stage = child.getStage();
 
         if(!stage) {
-            Kinetic.Global._addTempNode(child);
+            go._addTempNode(child);
         }
         else {
             stage._addId(child);
@@ -79,7 +80,6 @@ Kinetic.Container.prototype = {
              * pull in other nodes that are now linked
              * to a stage
              */
-            var go = Kinetic.Global;
             go._pullNodes(stage);
         }
 
@@ -101,8 +101,9 @@ Kinetic.Container.prototype = {
         // ID selector
         if(selector.charAt(0) === '#') {
             var node = this._getNodeById(selector.slice(1));
-            if(node)
+            if(node) {
                 collection.push(node);
+            }
         }
         // name selector
         else if(selector.charAt(0) === '.') {
@@ -113,7 +114,8 @@ Kinetic.Container.prototype = {
         else {
             var retArr = [];
             var children = this.getChildren();
-            for(var n = 0; n < children.length; n++) {
+            var len = children.length;
+            for(var n = 0; n < len; n++) {
                 retArr = retArr.concat(children[n]._get(selector));
             }
             Kinetic.Collection.apply(collection, retArr);
@@ -134,7 +136,8 @@ Kinetic.Container.prototype = {
     _get: function(selector) {
         var retArr = Kinetic.Node.prototype._get.call(this, selector);
         var children = this.getChildren();
-        for(var n = 0; n < children.length; n++) {
+        var len = children.length;
+        for(var n = 0; n < len; n++) {
             retArr = retArr.concat(children[n]._get(selector));
         }
         return retArr;
@@ -146,7 +149,8 @@ Kinetic.Container.prototype = {
         obj.children = [];
 
         var children = this.getChildren();
-        for(var n = 0; n < children.length; n++) {
+        var len = children.length;
+        for(var n = 0; n < len; n++) {
             var child = children[n];
             obj.children.push(child.toObject());
         }
@@ -155,7 +159,8 @@ Kinetic.Container.prototype = {
     },
     _getDescendants: function(arr) {
         var retArr = [];
-        for(var n = 0; n < arr.length; n++) {
+        var len = arr.length;
+        for(var n = 0; n < len; n++) {
             var node = arr[n];
             if(this.isAncestorOf(node)) {
                 retArr.push(node);
@@ -209,7 +214,8 @@ Kinetic.Container.prototype = {
         var arr = [];
         var shapes = this.get('Shape');
 
-        for(var n = 0; n < shapes.length; n++) {
+        var len = shapes.length;
+        for(var n = 0; n < len; n++) {
             var shape = shapes[n];
             if(shape.isVisible() && shape.intersects(pos)) {
                 arr.push(shape);
@@ -222,15 +228,15 @@ Kinetic.Container.prototype = {
      * set children indices
      */
     _setChildrenIndices: function() {
-        for(var n = 0; n < this.children.length; n++) {
-            this.children[n].index = n;
+        var children = this.children, len = children.length;
+        for(var n = 0; n < len; n++) {
+            children[n].index = n;
         }
     },
     draw: function(canvas) {
         if(Kinetic.Node.prototype._shouldDraw.call(this, canvas)) {
-            var children = this.children;
-            var length = children.length;
-            for(var n = 0; n < length; n++) {
+            var children = this.children, len = children.length;
+            for(var n = 0; n < len; n++) {
                 children[n].draw(canvas);
             }
         }
