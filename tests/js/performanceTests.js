@@ -67,7 +67,7 @@ Test.Modules.PERFORMANCE = {
             anim.start();
         }, 4000);
     },
-    'DRAWING - draw 10,000 small circles with tooltips': function(containerId) {
+    '*DRAWING - draw 10,000 small circles with tooltips': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -79,6 +79,7 @@ Test.Modules.PERFORMANCE = {
         var colors = ["red", "orange", "yellow", "green", "blue", "cyan", "purple"];
         var colorIndex = 0;
 
+		startTimer();
         for(var n = 0; n < 10000; n++) {
             // induce scope
             ( function() {
@@ -134,7 +135,9 @@ Test.Modules.PERFORMANCE = {
         stage.add(circlesLayer);
         stage.add(tooltipLayer);
         
-        document.body.appendChild(circlesLayer.bufferCanvas.element)
+        endTimer('drew 10,000 circles');
+        
+        //document.body.appendChild(circlesLayer.bufferCanvas.element)
 
     },
     'DRAWING - draw rect vs image from image data': function(containerId) {

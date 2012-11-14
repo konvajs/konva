@@ -1,7 +1,4 @@
 Kinetic.Shape = (function() {
-    // variable cache
-    var TYPE = Kinetic.Type;
-
     /**
      * Shape constructor.  Shapes are primitive objects such as rectangles,
      *  circles, text, lines, etc.
@@ -73,7 +70,7 @@ Kinetic.Shape = (function() {
             var shapes = Kinetic.Global.shapes;
             var key;
             while(true) {
-                key = TYPE._getRandomColorKey();
+                key = Kinetic.Type._getRandomColorKey();
                 if(key && !( key in shapes)) {
                     break;
                 }
@@ -144,10 +141,11 @@ Kinetic.Shape = (function() {
             }
         },
         _getFillType: function(fill) {
+        	var type = Kinetic.Type;
             if(!fill) {
                 return undefined;
             }
-            else if(TYPE._isString(fill)) {
+            else if(type._isString(fill)) {
                 return 'COLOR';
             }
             else if(fill.image) {
@@ -156,7 +154,7 @@ Kinetic.Shape = (function() {
             else if(fill.start && fill.end && !fill.start.radius && !fill.end.radius) {
                 return 'LINEAR_GRADIENT';
             }
-            else if(fill.start && fill.end && TYPE._isNumber(fill.start.radius) && TYPE._isNumber(fill.end.radius)) {
+            else if(fill.start && fill.end && type._isNumber(fill.start.radius) && type._isNumber(fill.end.radius)) {
                 return 'RADIAL_GRADIENT';
             }
             else {
@@ -316,10 +314,11 @@ Kinetic.Shape = (function() {
          * @param {Number} config.opacity
          */
         setShadow: function(config) {
+        	var type = Kinetic.Type;
             if(config.offset !== undefined) {
-                config.offset = TYPE._getXY(config.offset);
+                config.offset = type._getXY(config.offset);
             }
-            this.setAttr('shadow', TYPE._merge(config, this.getShadow()));
+            this.setAttr('shadow', type._merge(config, this.getShadow()));
         },
         /**
          * set fill which can be a color, linear gradient object,
@@ -329,6 +328,7 @@ Kinetic.Shape = (function() {
          * @param {String|Object} fill
          */
         setFill: function(fill) {
+        	var type = Kinetic.Type;
             var oldFill = this.getFill();
             var fillType = this._getFillType(fill);
             var oldFillType = this._getFillType(oldFill);
@@ -337,7 +337,7 @@ Kinetic.Shape = (function() {
 
             // if fill.offset is defined, normalize the xy value
             if(fill.offset !== undefined) {
-                fill.offset = TYPE._getXY(fill.offset);
+                fill.offset = type._getXY(fill.offset);
             }
 
             /*
@@ -346,7 +346,7 @@ Kinetic.Shape = (function() {
              * overwrite the fill entirely
              */
             if(!newOrOldFillIsColor && changedFillType) {
-                fill = TYPE._merge(fill, oldFill);
+                fill = type._merge(fill, oldFill);
             }
 
             this.setAttr('fill', fill);
@@ -357,7 +357,7 @@ Kinetic.Shape = (function() {
          * @methodOf Kinetic.Shape.prototype
          */
         setSize: function() {
-            var size = TYPE._getSize(Array.prototype.slice.call(arguments));
+            var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
             this.setWidth(size.width);
             this.setHeight(size.height);
         },
@@ -412,7 +412,7 @@ Kinetic.Shape = (function() {
          *  element is the y component
          */
         intersects: function() {
-            var pos = TYPE._getXY(Array.prototype.slice.call(arguments));
+            var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
             var stage = this.getStage();
             var bufferCanvas = stage.bufferCanvas;
             bufferCanvas.clear();

@@ -1,7 +1,4 @@
 Kinetic.Node = (function() {
-    // variable cache
-    var TYPE = Kinetic.Type;
-
     /**
      * Node constructor.&nbsp; Nodes are entities that can be transformed, layered,
      * and have events bound to them.  They are the building blocks of a KineticJS
@@ -223,7 +220,7 @@ Kinetic.Node = (function() {
                 for(var key in config) {
                     var method = 'set' + key.charAt(0).toUpperCase() + key.slice(1);
                     // use setter if available
-                    if(TYPE._isFunction(this[method])) {
+                    if(Kinetic.Type._isFunction(this[method])) {
                         this[method](config[key]);
                     }
                     // otherwise set directly
@@ -342,7 +339,7 @@ Kinetic.Node = (function() {
          * @param {Number} y
          */
         setPosition: function() {
-            var pos = TYPE._getXY([].slice.call(arguments));
+            var pos = Kinetic.Type._getXY([].slice.call(arguments));
             this.setAttr('x', pos.x);
             this.setAttr('y', pos.y);
         },
@@ -376,7 +373,7 @@ Kinetic.Node = (function() {
          *  y property
          */
         setAbsolutePosition: function() {
-            var pos = TYPE._getXY([].slice.call(arguments));
+            var pos = Kinetic.Type._getXY([].slice.call(arguments));
             var trans = this._clearTransform();
             // don't clear translation
             this.attrs.x = trans.x;
@@ -405,8 +402,7 @@ Kinetic.Node = (function() {
          * @param {Number} y
          */
         move: function() {
-            var pos = TYPE._getXY([].slice.call(arguments));
-
+            var pos = Kinetic.Type._getXY([].slice.call(arguments));
             var x = this.getX();
             var y = this.getY();
 
@@ -558,6 +554,7 @@ Kinetic.Node = (function() {
          * @methodOf Kinetic.Node.prototype
          */
         toObject: function() {
+        	var type = Kinetic.Type;
             var obj = {};
 
             obj.attrs = {};
@@ -565,7 +562,7 @@ Kinetic.Node = (function() {
             // serialize only attributes that are not function, image, DOM, or objects with methods
             for(var key in this.attrs) {
                 var val = this.attrs[key];
-                if(!TYPE._isFunction(val) && !TYPE._isElement(val) && !(TYPE._isObject(val) && TYPE._hasMethods(val))) {
+                if(!type._isFunction(val) && !type._isElement(val) && !(type._isObject(val) && kineticType._hasMethods(val))) {
                     obj.attrs[key] = val;
                 }
             }
@@ -764,7 +761,7 @@ Kinetic.Node = (function() {
          *  is very high quality
          */
         toImage: function(config) {
-            TYPE._getImage(this.toDataURL(config), function(img) {
+            Kinetic.Type._getImage(this.toDataURL(config), function(img) {
                 config.callback(img);
             });
         },
@@ -776,7 +773,7 @@ Kinetic.Node = (function() {
          * @param {Number} y
          */
         setOffset: function() {
-            var pos = TYPE._getXY([].slice.call(arguments));
+            var pos = Kinetic.Type._getXY([].slice.call(arguments));
             if(pos.x === undefined) {
                 pos.x = this.getOffset().x;
             }
@@ -793,7 +790,7 @@ Kinetic.Node = (function() {
          * @methodOf Kinetic.Node.prototype
          */
         setScale: function() {
-            var pos = TYPE._getXY([].slice.call(arguments));
+            var pos = Kinetic.Type._getXY([].slice.call(arguments));
 
             if(pos.x === undefined) {
                 pos.x = this.getScale().x;
@@ -813,7 +810,7 @@ Kinetic.Node = (function() {
          */
         setSize: function() {
             // set stage dimensions
-            var size = TYPE._getSize(Array.prototype.slice.call(arguments));
+            var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
             this.setWidth(size.width);
             this.setHeight(size.height);
         },
