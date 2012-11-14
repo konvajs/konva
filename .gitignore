@@ -1,5 +1,7 @@
 jsdoc-toolkit
 dist
+tests/js/unitTests.js
+
 # Numerous always-ignore extensions
 *.diff
 *.err
