@@ -22,7 +22,7 @@ Test.Modules.DD = {
 
         layer.add(circle);
         stage.add(layer);
-        
+
         var top = stage.content.getBoundingClientRect().top;
 
         var dragStart = false;
@@ -43,14 +43,14 @@ Test.Modules.DD = {
         startDataUrl = layer.toDataURL();
         warn(urls[0] === startDataUrl, 'start data url is incorrect');
         /*
-         * simulate drag and drop
-         */
+        * simulate drag and drop
+        */
         //console.log(1)
         stage._mousedown({
             clientX: 380,
             clientY: 98 + top
         });
-		//console.log(2)
+        //console.log(2)
         test(!dragStart, 'dragstart event should not have been triggered');
         test(!dragMove, 'dragmove event should not have been triggered');
         test(!dragEnd, 'dragend event should not have been triggered');
@@ -116,7 +116,7 @@ Test.Modules.DD = {
 
         layer.add(circle);
         stage.add(layer);
-        
+
         var top = stage.content.getBoundingClientRect().top;
 
         /*
@@ -180,7 +180,7 @@ Test.Modules.DD = {
         layer.add(circle2);
 
         stage.add(layer);
-        
+
         var top = stage.content.getBoundingClientRect().top;
 
         var startDataUrl = layer.toDataURL();
@@ -249,7 +249,7 @@ Test.Modules.EVENT = {
 
         layer.add(circle);
         stage.add(layer);
-        
+
         var top = stage.content.getBoundingClientRect().top;
 
         warn(layer.toDataURL() === urls[0], 'start data url is incorrect');
@@ -260,7 +260,7 @@ Test.Modules.EVENT = {
         });
 
         warn(layer.toDataURL() === urls[1], 'mid data url is incorrect');
-        
+
         // move mouse back out of circle
         stage._mousemove({
             clientX: 157,
@@ -270,7 +270,7 @@ Test.Modules.EVENT = {
             clientX: 157,
             clientY: 138 + top
         });
-        
+
         warn(layer.toDataURL() === urls[0], 'end data url is incorrect');
     },
     'mousedown mouseup mouseover mouseout mousemove click dblclick / touchstart touchend touchmove tap dbltap': function(containerId) {
@@ -370,7 +370,7 @@ Test.Modules.EVENT = {
 
         layer.add(circle);
         stage.add(layer);
-        
+
         var top = stage.content.getBoundingClientRect().top;
 
         // move mouse to center of circle to trigger mouseover
@@ -585,7 +585,7 @@ Test.Modules.EVENT = {
 
         layer.add(group);
         stage.add(layer);
-        
+
         var top = stage.content.getBoundingClientRect().top;
 
         var groupMousedowns = 0;
@@ -705,7 +705,7 @@ Test.Modules.EVENT = {
 
         layer.add(group);
         stage.add(layer);
-        
+
         var top = stage.content.getBoundingClientRect().top;
 
         // move mouse outside of circles
@@ -727,7 +727,7 @@ Test.Modules.EVENT = {
             clientY: 145 + top
         });
 
-		//console.log('groupMouseenters=' + groupMouseenters);
+        //console.log('groupMouseenters=' + groupMouseenters);
 
         test(redMouseenters === 1, 'redMouseenters should be 1');
         test(redMouseleaves === 0, 'redMouseleaves should be 0');
@@ -782,11 +782,11 @@ Test.Modules.EVENT = {
         test(greenMouseleaves === 1, 'greenMouseleaves should be 1');
         test(groupMouseenters === 1, 'groupMouseenters should be 1');
         test(groupMouseleaves === 1, 'groupMouseleaves should be 1');
-        
+
         //document.body.appendChild(layer.bufferCanvas.element)
-        
+
         //layer.bufferCanvas.element.style.marginTop = '220px';
-    
+
     },
     'test event bubbling': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -824,7 +824,7 @@ Test.Modules.EVENT = {
         group2.add(group1);
         layer.add(group2);
         stage.add(layer);
-        
+
         var top = stage.content.getBoundingClientRect().top;
 
         // events array
@@ -856,5 +856,121 @@ Test.Modules.EVENT = {
         });
 
         test(e.toString() === 'circle,group1,group2,layer,stage', 'problem with event bubbling');
+    }
+};
+
+Test.Modules['BUFFER FUNCS'] = {
+    'test custom circle buffer function': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            throttle: 999
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: 380,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            drawBufferFunc: function(context) {
+                context.beginPath();
+                context.arc(0, 0, this.getRadius() + 100, 0, Math.PI * 2, true);
+                context.closePath();
+                this.fill(context);
+                this.stroke(context);
+            }
+        });
+
+        circle.setDraggable(true);
+
+        layer.add(circle);
+        stage.add(layer);
+
+        var top = stage.content.getBoundingClientRect().top;
+
+        var mouseovers = 0;
+        var mouseouts = 0;
+
+        circle.on('mouseover', function() {
+            mouseovers++;
+        });
+
+        circle.on('mouseout', function() {
+            mouseouts++;
+        });
+
+		// move mouse far outside circle
+        stage._mousemove({
+            clientX: 113,
+            clientY: 112 + top
+        });
+
+        test(mouseovers === 0, 'mouseovers should be 0');
+        test(mouseouts === 0, 'mouseouts should be 0');
+
+        stage._mousemove({
+            clientX: 286,
+            clientY: 118 + top
+        });
+
+        test(mouseovers === 1, 'mouseovers should be 1');
+        test(mouseouts === 0, 'mouseouts should be 0');
+
+        stage._mousemove({
+            clientX: 113,
+            clientY: 112 + top
+        });
+
+        test(mouseovers === 1, 'mouseovers should be 1');
+        test(mouseouts === 1, 'mouseouts should be 1');
+
+        // set drawBufferFunc with setter
+
+        circle.setDrawBufferFunc(function(context) {
+            context.beginPath();
+            context.arc(0, 0, this.getRadius() - 50, 0, Math.PI * 2, true);
+            context.closePath();
+            this.fill(context);
+            this.stroke(context);
+        });
+        
+        layer.drawBuffer();
+        
+        // move mouse far outside circle
+        stage._mousemove({
+            clientX: 113,
+            clientY: 112 + top
+        });
+        
+        test(mouseovers === 1, 'mouseovers should be 1');
+        test(mouseouts === 1, 'mouseouts should be 1');
+        
+        stage._mousemove({
+            clientX: 286,
+            clientY: 118 + top
+        });
+        
+        test(mouseovers === 1, 'mouseovers should be 1');
+        test(mouseouts === 1, 'mouseouts should be 1');
+        
+        stage._mousemove({
+            clientX: 321,
+            clientY: 112 + top
+        });
+        
+        test(mouseovers === 1, 'mouseovers should be 1');
+        test(mouseouts === 1, 'mouseouts should be 1');
+        
+        // move to center of circle
+        stage._mousemove({
+            clientX: 375,
+            clientY: 112 + top
+        });
+        
+        test(mouseovers === 2, 'mouseovers should be 2');
+        test(mouseouts === 1, 'mouseouts should be 1');
     }
 };
