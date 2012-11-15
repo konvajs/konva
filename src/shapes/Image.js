@@ -19,7 +19,11 @@ Kinetic.Image.prototype = {
     _initImage: function(config) {
         this.shapeType = "Image";
         config.drawFunc = this.drawFunc;
-        config.drawBufferFunc = this.drawBufferFunc;
+
+        if(!config.drawBufferFunc) {
+            config.drawBufferFunc = this.drawBufferFunc;
+        }
+
         // call super constructor
         Kinetic.Shape.call(this, config);
 

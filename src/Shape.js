@@ -69,12 +69,14 @@ Kinetic.Shape = (function() {
             // set colorKey
             var shapes = Kinetic.Global.shapes;
             var key;
+
             while(true) {
                 key = Kinetic.Type._getRandomColorKey();
                 if(key && !( key in shapes)) {
                     break;
                 }
             }
+
             this.colorKey = key;
             shapes[key] = this;
 
@@ -141,7 +143,7 @@ Kinetic.Shape = (function() {
             }
         },
         _getFillType: function(fill) {
-        	var type = Kinetic.Type;
+            var type = Kinetic.Type;
             if(!fill) {
                 return undefined;
             }
@@ -288,7 +290,7 @@ Kinetic.Shape = (function() {
          * @methodOf Kinetic.Shape.prototype
          */
         applyLineJoin: function(context) {
-        	var lineJoin = this.attrs.lineJoin;
+            var lineJoin = this.attrs.lineJoin;
             if(lineJoin) {
                 context.lineJoin = lineJoin;
             }
@@ -300,7 +302,7 @@ Kinetic.Shape = (function() {
          * @methodOf Kinetic.Shape.prototype
          */
         applyLineCap: function(context) {
-        	var lineCap = this.attrs.lineCap;
+            var lineCap = this.attrs.lineCap;
             if(lineCap) {
                 context.lineCap = lineCap;
             }
@@ -316,7 +318,7 @@ Kinetic.Shape = (function() {
          * @param {Number} config.opacity
          */
         setShadow: function(config) {
-        	var type = Kinetic.Type;
+            var type = Kinetic.Type;
             if(config.offset !== undefined) {
                 config.offset = type._getXY(config.offset);
             }
@@ -330,7 +332,7 @@ Kinetic.Shape = (function() {
          * @param {String|Object} fill
          */
         setFill: function(fill) {
-        	var type = Kinetic.Type;
+            var type = Kinetic.Type;
             var oldFill = this.getFill();
             var fillType = this._getFillType(fill);
             var oldFillType = this._getFillType(oldFill);
@@ -463,7 +465,7 @@ Kinetic.Shape = (function() {
     Kinetic.Global.extend(Shape, Kinetic.Node);
 
     // add getters and setters
-    Kinetic.Node.addGettersSetters(Shape, ['stroke', 'lineJoin', 'strokeWidth', 'drawFunc', 'cornerRadius']);
+    Kinetic.Node.addGettersSetters(Shape, ['stroke', 'lineJoin', 'strokeWidth', 'drawFunc', 'drawBufferFunc', 'cornerRadius']);
     Kinetic.Node.addGetters(Shape, ['shadow', 'fill']);
 
     /**
@@ -493,6 +495,13 @@ Kinetic.Shape = (function() {
      * @name setDrawFunc
      * @methodOf Kinetic.Shape.prototype
      * @param {Function} drawFunc drawing function
+     */
+
+    /**
+     * set draw buffer function used for hit detection
+     * @name setDrawBufferFunc
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Function} drawBufferFunc drawing function used for hit detection
      */
 
     /**
@@ -536,6 +545,12 @@ Kinetic.Shape = (function() {
     /**
      * get draw function
      * @name getDrawFunc
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get draw buffer function
+     * @name getDrawBufferFunc
      * @methodOf Kinetic.Shape.prototype
      */
 
