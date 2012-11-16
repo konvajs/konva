@@ -94,7 +94,7 @@ Test.prototype = {
 
 			// loop through tests
             for(var key in tests) {
-                if(key.charAt(0) !== 'x' && (!testOnlySpecial || key.charAt(0) === '*')) {
+                if(key.charAt(0) !== '!' && (!testOnlySpecial || key.charAt(0) === '*')) {
                     var obj = this.addTestContainer(key);
                     this.counter++;
                     console.log(this.counter + ') ' + key);
