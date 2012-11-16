@@ -72,23 +72,24 @@ Kinetic.Image.prototype = {
      * @name applyFilter
      * @methodOf Kinetic.Image.prototype
      * @param {Object} config
-     * @param {Function} config.filter filter function
-     * @param {Function} [config.callback] callback function to be called once
+     * @param {Function} filter filter function
+     * @param {Object} [config] optional config object used to configure filter 
+     * @param {Function} [callback] callback function to be called once
      *  filter has been applied
      */
-    applyFilter: function(config) {
+    applyFilter: function(filter, config, callback) {
         var canvas = new Kinetic.Canvas(this.attrs.image.width, this.attrs.image.height);
         var context = canvas.getContext();
         context.drawImage(this.attrs.image, 0, 0);
         try {
             var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
-            config.filter(imageData, config.config);
+            filter(imageData, config);
             var that = this;
             Kinetic.Type._getImage(imageData, function(imageObj) {
                 that.setImage(imageObj);
 
-                if(config.callback) {
-                    config.callback();
+                if(callback) {
+                    callback();
                 }
             });
         }
