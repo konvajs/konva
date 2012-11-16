@@ -29,12 +29,9 @@ Test.Modules.ANIMATION = {
         // in ms
         var centerX = stage.getWidth() / 2 - 100 / 2;
 
-        var anim = new Kinetic.Animation({
-            func: function(frame) {
-                rect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
-                layer.draw();
-            }
-        });
+        var anim = new Kinetic.Animation(function(frame) {
+            rect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
+        }, layer);
         var a = Kinetic.Animation;
 
         test(a.animations.length === 0, 'should be no animations running');

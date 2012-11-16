@@ -50,13 +50,11 @@ Test.Modules.PERFORMANCE = {
         // in ms
         var centerX = stage.getWidth() / 2 - 100 / 2;
 
-        var anim = new Kinetic.Animation({
-            func: function(frame) {
+        var anim = new Kinetic.Animation(function(frame) {
                 rect.attrs.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
-                layer.draw();
+
                 //console.log(frame.timeDiff)
-            }
-        });
+            }, layer);
 
         anim.start();
 
@@ -67,7 +65,7 @@ Test.Modules.PERFORMANCE = {
             anim.start();
         }, 4000);
     },
-    '*DRAWING - draw 10,000 small circles with tooltips': function(containerId) {
+    'DRAWING - draw 10,000 small circles with tooltips': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,

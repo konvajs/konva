@@ -23,12 +23,9 @@ Test.Modules.TRANSITION = {
         var period = 1000;
         var centerX = 0;
 
-        var anim = new Kinetic.Animation({
-            func: function(frame) {
+        var anim = new Kinetic.Animation(function(frame) {
                 rect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
-                layer.draw();
-            }
-        });
+            }, layer);
 
         anim.start();
         anim.stop();

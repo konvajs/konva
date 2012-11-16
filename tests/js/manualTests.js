@@ -167,12 +167,9 @@ Test.Modules.MANUAL = {
         // in ms
         var centerX = stage.getWidth() / 2 - 100 / 2;
 
-        var anim = new Kinetic.Animation({
-            func: function(frame) {
+        var anim = new Kinetic.Animation(function(frame) {
                 rect.attrs.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
-                layer.draw();
-            }
-        });
+            }, layer);
 
         anim.start();
 
@@ -1292,12 +1289,10 @@ Test.Modules.MANUAL = {
         layer.add(group);
         stage.add(layer);
 
-        var anim = new Kinetic.Animation({
-            func: function() {
+        var anim = new Kinetic.Animation(function() {
                 rect.rotate(0.01);
-                layer.draw();
-            }
-        });
+
+            }, layer);
         anim.start();
     },
     'STAGE - hide stage': function(containerId) {

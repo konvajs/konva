@@ -3,17 +3,13 @@
  * animations
  * @constructor
  * @augments Kinetic.Container
- * @param {Object} config
- * @param {Function} config.func function to be executed on each animation frame
+ * @param {Function} func function executed on each animation frame
+ * @param {Kinetic.Node} [node] node to be redrawn.&nbsp; Specifying a node will improve
+ *  draw performance.&nbsp; This can be a shape, a group, a layer, or the stage.
  */
-Kinetic.Animation = function(config) {
-    if(!config) {
-        config = {};
-    }
-    for(var key in config) {
-        this[key] = config[key];
-    }
-
+Kinetic.Animation = function(func, node) {
+    this.func = func;
+    this.node = node;
     this.id = Kinetic.Animation.animIdCounter++;
 };
 /*
