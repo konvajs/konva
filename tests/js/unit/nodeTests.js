@@ -60,6 +60,52 @@ Test.Modules.NODE = {
         rect2.setListening(true);
         test(rect2.getListening() === true, 'rect2 should be listening');
     },
+    'group to image': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+        var rect = new Kinetic.Rect({
+            x: 50,
+            y: 50,
+            width: 200,
+            height: 50,
+            fill: 'blue'
+        });
+
+        var rect2 = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 200,
+            height: 50,
+            fill: 'red',
+            listening: false
+        });
+
+		group.add(rect).add(rect2);
+        layer.add(group);
+        stage.add(layer);
+
+		group.toImage({
+			callback: function(imageObj) {
+				var img = new Kinetic.Image({
+					image: imageObj,
+					x: 50,
+					y: 50
+				});
+				
+				layer.add(img).draw();
+				
+				var dataUrl = layer.toDataURL();
+				
+				warn(dataUrl === groupToImageDataUrl, 'group to image data url is incorrect');
+			}
+		});
+        
+    },
     'test offset attr change': function(containerId) {
         /*
          * the premise of this test to make sure that only
@@ -696,7 +742,7 @@ Test.Modules.NODE = {
             }
         });
 
-		/*
+		
         group.toImage({
             callback: function(imageObj) {
                 test(Kinetic.Type._isElement(imageObj), 'group toImage() should be an image object');
@@ -712,7 +758,7 @@ Test.Modules.NODE = {
                 test(Kinetic.Type._isElement(imageObj), 'stage toImage() should be an image object');
             }
         });
-        */
+     
 
         //document.body.appendChild(layer.bufferCanvas.element)
     },
