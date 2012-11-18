@@ -712,7 +712,7 @@ Test.Modules.MANUAL = {
         layer.add(redCircle);
         stage.add(layer);
     },
-    'DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
+    '*DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -783,6 +783,8 @@ Test.Modules.MANUAL = {
                 }
             })
         });
+        
+        showBuffer(layer);
     },
     'DRAG AND DROP - two draggable shapes': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -828,54 +830,22 @@ Test.Modules.MANUAL = {
             container: containerId,
             width: 578,
             height: 200,
-            draggable: true,
-            //dragConstraint: 'horizontal',
-            /*
-             dragBounds: {
-             left: 100
-             }
-             */
+            draggable: true
         });
-        var layer = new Kinetic.Layer({
-            /*
-             draggable: true,
-             dragBounds: {
-             left: 100
-             }
-             */
-        });
+        var layer = new Kinetic.Layer();
         var Circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
             fill: 'red',
             stroke: 'black',
-            strokeWidth: 4,
-            //draggable: true,
-            /*
-             dragBounds: {
-             left: 100
-             }
-             */
+            strokeWidth: 4
         });
-
-        //stage.setDraggable(false);
-        //layer.setDraggable(false);
-
-        /*
-         stage.on('dragstart', function() {
-         console.log('dragstart');
-         });
-         stage.on('dragmove', function() {
-         //console.log('dragmove');
-         });
-         stage.on('dragend', function() {
-         console.log('dragend');
-         });
-         */
 
         layer.add(Circle);
         stage.add(layer);
+        
+        showBuffer(layer)
     },
     'DRAG AND DROP - draggable true false': function(containerId) {
         var stage = new Kinetic.Stage({

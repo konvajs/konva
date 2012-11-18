@@ -38,6 +38,11 @@ function test(condition, message, warn) {
 function log(message) {
     console.log('LOG: ' + message);
 }
+
+function showBuffer(layer) {
+	document.body.appendChild(layer.bufferCanvas.element);
+}
+
 function Test() {
     this.counter = 0;
     testCounter = document.createElement('div');

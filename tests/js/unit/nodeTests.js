@@ -60,6 +60,29 @@ Test.Modules.NODE = {
         rect2.setListening(true);
         test(rect2.getListening() === true, 'rect2 should be listening');
     },
+    'listen and don\'t listen with one shape': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 50,
+            y: 50,
+            width: 200,
+            height: 50,
+            fill: 'blue'
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+		rect.setListening(false);
+		layer.drawBuffer();
+
+        showBuffer(layer);
+    },
     'group to image': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

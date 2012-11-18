@@ -28,18 +28,21 @@ Kinetic.DD._startDrag = function(evt) {
 
         if(!dd.moving) {
             dd.moving = true;
+            node.setListening(false);
+
             // execute dragstart events if defined
-            dd.node._handleEvent('dragstart', evt);
+            node._handleEvent('dragstart', evt);
         }
 
         // execute user defined ondragmove if defined
-        dd.node._handleEvent('dragmove', evt);
+        node._handleEvent('dragmove', evt);
     }
 };
 Kinetic.DD._endDrag = function(evt) {
     var dd = Kinetic.DD;
     var node = dd.node;
     if(node) {
+        node.setListening(true);
         if(node.nodeType === 'Stage') {
             node.draw();
         }
