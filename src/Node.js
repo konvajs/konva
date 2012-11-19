@@ -734,16 +734,16 @@ Kinetic.Node = (function() {
             var quality = config && config.quality ? config.quality : null;
             var canvas;
 
-            //if width and height are defined, create new canvas to draw on, else reuse stage buffer canvas
+            //if width and height are defined, create new canvas to draw on, else reuse stage hit canvas
             if(config && config.width && config.height) {
                 canvas = new Kinetic.Canvas(config.width, config.height);
             }
             else {
-                canvas = this.getStage().canvas;
+                canvas = this.getStage().bufferCanvas;
                 canvas.clear();
             }
 
-            this.draw(canvas);
+            this.drawBuffer(canvas);
             return canvas.toDataURL(mimeType, quality);
         },
         /**
@@ -953,9 +953,6 @@ Kinetic.Node = (function() {
             for(var i = 0; i < len; i++) {
                 events[i].handler.apply(this, [evt]);
             }
-        },
-        _shouldDraw: function(canvas) {
-            return (this.isVisible() && (!canvas || canvas.getContext().type === 'scene' || this.getListening()));
         }
     };
 

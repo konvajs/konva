@@ -115,7 +115,7 @@ Test.Modules.Text = {
         //document.body.appendChild(layer.bufferCanvas.element)
 
         //layer.setListening(false);
-        layer.drawBuffer();
+        layer.drawHit();
 
     },
     'test size setters and getters': function(containerId) {

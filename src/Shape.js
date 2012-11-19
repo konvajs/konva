@@ -108,8 +108,8 @@ Kinetic.Shape = (function() {
             if(context.type === 'scene') {
                 this._strokeScene(context);
             }
-            else if(context.type === 'buffer') {
-                this._strokeBuffer(context);
+            else if(context.type === 'hit') {
+                this._strokeHit(context);
             }
         },
         _strokeScene: function(context) {
@@ -132,7 +132,7 @@ Kinetic.Shape = (function() {
                 }
             }
         },
-        _strokeBuffer: function(context) {
+        _strokeHit: function(context) {
             var strokeWidth = this.getStrokeWidth(), stroke = this.colorKey;
             if(stroke || strokeWidth) {
                 context.save();
@@ -172,8 +172,8 @@ Kinetic.Shape = (function() {
             if(context.type === 'scene') {
                 this._fillScene(context);
             }
-            else if(context.type === 'buffer') {
-                this._fillBuffer(context);
+            else if(context.type === 'hit') {
+                this._fillHit(context);
             }
         },
         _fillScene: function(context) {
@@ -240,7 +240,7 @@ Kinetic.Shape = (function() {
                 this.fill(context);
             }
         },
-        _fillBuffer: function(context) {
+        _fillHit: function(context) {
             context.save();
             context.fillStyle = this.colorKey;
             context.fill(context);
@@ -418,21 +418,21 @@ Kinetic.Shape = (function() {
         intersects: function() {
             var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
             var stage = this.getStage();
-            var bufferCanvas = stage.bufferCanvas;
-            bufferCanvas.clear();
-            this.draw(bufferCanvas);
-            var p = bufferCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
+            var hitCanvas = stage.hitCanvas;
+            hitCanvas.clear();
+            this.drawBuffer(hitCanvas);
+            var p = hitCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
             return p[3] > 0;
         },
         remove: function() {
             Kinetic.Node.prototype.remove.call(this);
             delete Kinetic.Global.shapes[this.colorKey];
         },
-        draw: function(canvas) {
-            var attrs = this.attrs, drawFunc = attrs.drawFunc, drawBufferFunc = attrs.drawBufferFunc;
+        drawBuffer: function(canvas) {
+            var attrs = this.attrs, drawFunc = attrs.drawFunc, context = canvas.getContext();
 
-            if(drawFunc && Kinetic.Node.prototype._shouldDraw.call(this, canvas)) {
-                var stage = this.getStage(), context = canvas.getContext(), family = [], parent = this.parent, type = canvas.getContext().type;
+            if(drawFunc && this.isVisible()) {
+                var stage = this.getStage(), family = [], parent = this.parent;
 
                 family.unshift(this);
                 while(parent) {
@@ -447,17 +447,67 @@ Kinetic.Shape = (function() {
                     context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                 }
 
-                if(type === 'scene') {
-                    this.applyOpacity(context);
-                }
-
+                this.applyOpacity(context);
                 this.applyLineJoin(context);
                 this.applyLineCap(context);
                 this.appliedShadow = false;
 
-                var func = (type === 'buffer' && drawBufferFunc) ? drawBufferFunc : drawFunc;
+                drawFunc.call(this, context);
+                context.restore();
+            }
+        },
+        drawScene: function() {
+            var attrs = this.attrs, drawFunc = attrs.drawFunc, context = this.getLayer().getCanvas().getContext();
 
-                func.call(this, canvas.getContext());
+            if(drawFunc && this.isVisible()) {
+                var stage = this.getStage(), family = [], parent = this.parent;
+
+                family.unshift(this);
+                while(parent) {
+                    family.unshift(parent);
+                    parent = parent.parent;
+                }
+
+                context.save();
+                var len = family.length;
+                for(var n = 0; n < len; n++) {
+                    var node = family[n], t = node.getTransform(), m = t.getMatrix();
+                    context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+                }
+
+                this.applyOpacity(context);
+                this.applyLineJoin(context);
+                this.applyLineCap(context);
+                this.appliedShadow = false;
+
+                drawFunc.call(this, context);
+                context.restore();
+            }
+        },
+        drawHit: function() {
+            var attrs = this.attrs, drawFunc = attrs.drawHitFunc || attrs.drawFunc, context = this.getLayer().hitCanvas.getContext();
+            
+            if(drawFunc && this.isVisible() && this.isListening()) {
+                var stage = this.getStage(), family = [], parent = this.parent;
+
+                family.unshift(this);
+                while(parent) {
+                    family.unshift(parent);
+                    parent = parent.parent;
+                }
+
+                context.save();
+                var len = family.length;
+                for(var n = 0; n < len; n++) {
+                    var node = family[n], t = node.getTransform(), m = t.getMatrix();
+                    context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+                }
+
+				// don't draw shadows on hit context
+                this.applyLineJoin(context);
+                this.applyLineCap(context);
+                
+                drawFunc.call(this, context);
                 context.restore();
             }
         }
@@ -465,7 +515,7 @@ Kinetic.Shape = (function() {
     Kinetic.Global.extend(Shape, Kinetic.Node);
 
     // add getters and setters
-    Kinetic.Node.addGettersSetters(Shape, ['stroke', 'lineJoin', 'strokeWidth', 'drawFunc', 'drawBufferFunc', 'cornerRadius']);
+    Kinetic.Node.addGettersSetters(Shape, ['stroke', 'lineJoin', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'cornerRadius']);
     Kinetic.Node.addGetters(Shape, ['shadow', 'fill']);
 
     /**
@@ -498,10 +548,10 @@ Kinetic.Shape = (function() {
      */
 
     /**
-     * set draw buffer function used for hit detection
-     * @name setDrawBufferFunc
+     * set draw hit function used for hit detection
+     * @name setDrawHitFunc
      * @methodOf Kinetic.Shape.prototype
-     * @param {Function} drawBufferFunc drawing function used for hit detection
+     * @param {Function} drawHitFunc drawing function used for hit detection
      */
 
     /**
@@ -549,8 +599,8 @@ Kinetic.Shape = (function() {
      */
 
     /**
-     * get draw buffer function
-     * @name getDrawBufferFunc
+     * get draw hit function
+     * @name getDrawHitFunc
      * @methodOf Kinetic.Shape.prototype
      */
 

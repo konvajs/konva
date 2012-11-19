@@ -39,7 +39,7 @@ Kinetic.Layer.prototype = {
         this.afterDrawFunc = undefined;
         this.canvas = new Kinetic.Canvas();
         this.canvas.getElement().style.position = 'absolute';
-        this.bufferCanvas = new Kinetic.Canvas(0, 0, true);
+        this.hitCanvas = new Kinetic.Canvas(0, 0, true);
 
         // call super constructor
         Kinetic.Container.call(this, config);
@@ -50,31 +50,13 @@ Kinetic.Layer.prototype = {
      * @name draw
      * @methodOf Kinetic.Layer.prototype
      */
-    draw: function(canvas) {
+    draw: function() {
         // before draw  handler
         if(this.beforeDrawFunc !== undefined) {
             this.beforeDrawFunc.call(this);
         }
 
-        var canvases = [];
-        if(canvas) {
-            canvases.push(canvas);
-        }
-        else {
-            canvases.push(this.getCanvas());
-            canvases.push(this.bufferCanvas);
-        }
-
-        var length = canvases.length;
-        for(var n = 0; n < length; n++) {
-            var canvas = canvases[n];
-            if(Kinetic.Node.prototype._shouldDraw.call(this, canvas)) {
-                if(this.attrs.clearBeforeDraw) {
-                    canvas.clear();
-                }
-                Kinetic.Container.prototype.draw.call(this, canvas);
-            }
-        }
+        Kinetic.Container.prototype.draw.call(this);
 
         // after draw  handler
         if(this.afterDrawFunc !== undefined) {
@@ -82,22 +64,27 @@ Kinetic.Layer.prototype = {
         }
     },
     /**
-     * draw children nodes on buffer.  this includes any groups
+     * draw children nodes on hit.  this includes any groups
      *  or shapes
-     * @name drawBuffer
+     * @name drawHit
      * @methodOf Kinetic.Layer.prototype
      */
-    drawBuffer: function() {
-        this.draw(this.bufferCanvas);
+	drawHit: function() {
+        this.hitCanvas.clear();
+        Kinetic.Container.prototype.drawHit.call(this);
     },
     /**
      * draw children nodes on scene.  this includes any groups
      *  or shapes
      * @name drawScene
      * @methodOf Kinetic.Layer.prototype
+     * @param {Kinetic.Canvas} [canvas]
      */
     drawScene: function() {
-        this.draw(this.getCanvas());
+        if(this.attrs.clearBeforeDraw) {
+            this.getCanvas().clear();
+        }
+        Kinetic.Container.prototype.drawScene.call(this);
     },
     /**
      * set before draw handler
@@ -146,11 +133,11 @@ Kinetic.Layer.prototype = {
         Kinetic.Node.prototype.setVisible.call(this, visible);
         if(visible) {
             this.canvas.element.style.display = 'block';
-            this.bufferCanvas.element.style.display = 'block';
+            this.hitCanvas.element.style.display = 'block';
         }
         else {
             this.canvas.element.style.display = 'none';
-            this.bufferCanvas.element.style.display = 'none';
+            this.hitCanvas.element.style.display = 'none';
         }
     },
     setZIndex: function(index) {

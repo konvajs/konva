@@ -106,7 +106,6 @@ Test.Modules.CIRCLE = {
                 offset: [-200, -70]
             });
 
-            //document.body.appendChild(layer.bufferCanvas.element)
         };
         imageObj.src = '../assets/darth-vader.jpg';
 
@@ -160,7 +159,7 @@ Test.Modules.CIRCLE = {
 
         test(fill.colorStops.length === 6, 'fill colorStops length should be 6');
 
-        //document.body.appendChild(layer.bufferCanvas.element)
+      
 
     },
     'add circle': function(containerId) {
@@ -216,7 +215,7 @@ Test.Modules.CIRCLE = {
 
         test(circle.getName() === 'myCircle', 'circle name should be myCircle');
 
-        document.body.appendChild(layer.bufferCanvas.element)
+
     },
     'add circle with opacity': function(containerId) {
         var stage = new Kinetic.Stage({

@@ -79,9 +79,9 @@ Test.Modules.NODE = {
         stage.add(layer);
 
 		rect.setListening(false);
-		layer.drawBuffer();
+		layer.drawHit();
 
-        showBuffer(layer);
+        showHit(layer);
     },
     'group to image': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -317,10 +317,23 @@ Test.Modules.NODE = {
         rect.on('tap', function() {
             taps.push(this.attrs.myAttr);
         });
+        
+        
         var clone = group.clone({
             x: 300,
             name: 'groupClone'
         });
+        
+        
+        showHit(layer);
+
+	
+
+		
+        layer.add(group);
+        layer.add(clone);
+        stage.add(layer);
+
 
         test(clone.getX() === 300, 'clone x should be 300');
         test(clone.getY() === 0, 'clone y should be 50');
@@ -331,11 +344,6 @@ Test.Modules.NODE = {
 
         test(group.getChildren().length === 2, 'group should have two children');
         test(clone.getChildren().length === 2, 'clone should have two children');
-
-        layer.add(group);
-        layer.add(clone);
-        stage.add(layer);
-
         test(group.get('.myText')[0].getTextFill() === 'blue', 'group text should be blue');
         test(clone.get('.myText')[0].getTextFill() === 'blue', 'clone text should be blue');
         clone.get('.myText')[0].setTextFill('black');
@@ -345,10 +353,10 @@ Test.Modules.NODE = {
             myAttr: 'clone rect'
         });
 
-        /*
-         * Make sure that when we change a clone object attr that the rect object
-         * attr isn't updated by reference
-         */
+        
+         // Make sure that when we change a clone object attr that the rect object
+         // attr isn't updated by reference
+         
 
         test(group.get('.myText')[0].getTextFill() === 'blue', 'group text should be blue');
         test(clone.get('.myText')[0].getTextFill() === 'black', 'clone text should be blue');
@@ -377,7 +385,10 @@ Test.Modules.NODE = {
         clone.get('.myRect')[0].simulate('tap');
         test(taps.toString() === 'group rect,clone rect', 'tap order should be group rect followed by clone rect');
 
+
         stage.draw();
+        
+        
     },
     'test on attr change': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -752,20 +763,25 @@ Test.Modules.NODE = {
                 });
 
                 layer.add(cachedShape);
+                layer.draw();
 
                 //console.log(layer.toDataURL());
 
+				
                 cachedShape.createImageBuffer(function() {
                     layer.draw();
                     //console.log(layer.toDataURL());
                     warn(dataUrls['regular and cahced polygon'] === layer.toDataURL(), 'regular and cached polygon layer data url is incorrect');
 
-                    //document.body.appendChild(layer.bufferCanvas.element)
+                    
                 });
+                
             }
+            
+            
         });
 
-		
+		/*
         group.toImage({
             callback: function(imageObj) {
                 test(Kinetic.Type._isElement(imageObj), 'group toImage() should be an image object');
@@ -781,9 +797,9 @@ Test.Modules.NODE = {
                 test(Kinetic.Type._isElement(imageObj), 'stage toImage() should be an image object');
             }
         });
-     
+     	*/
 
-        //document.body.appendChild(layer.bufferCanvas.element)
+        showHit(layer);
     },
     'hide group': function(containerId) {
         var stage = new Kinetic.Stage({

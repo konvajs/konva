@@ -4,7 +4,7 @@
  * @param {Number} width
  * @param {Number} height
  */
-Kinetic.Canvas = function(width, height, isBuffer) {
+Kinetic.Canvas = function(width, height, isHit) {
     this.element = document.createElement('canvas');
     this.context = this.element.getContext('2d');
 
@@ -13,7 +13,7 @@ Kinetic.Canvas = function(width, height, isBuffer) {
     this.element.height = height || 0;
 
     // set type
-    this.context.type = isBuffer ? 'buffer' : 'scene';
+    this.context.type = isHit ? 'hit' : 'scene';
 };
 
 Kinetic.Canvas.prototype = {

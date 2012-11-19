@@ -20,8 +20,8 @@ Kinetic.Sprite.prototype = {
 		this.shapeType = "Sprite";
         config.drawFunc = this.drawFunc;
         
-        if(!config.drawBufferFunc) {
-            config.drawBufferFunc = this.drawBufferFunc;
+        if(!config.drawHitFunc) {
+            config.drawHitFunc = this.drawHitFunc;
         }
         
         // call super constructor
@@ -53,7 +53,7 @@ Kinetic.Sprite.prototype = {
             this.drawImage(context, this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
         }
     },
-    drawBufferFunc: function(context) {
+    drawHitFunc: function(context) {
         var anim = this.attrs.animation;
         var index = this.attrs.index;
         var f = this.attrs.animations[anim][index];

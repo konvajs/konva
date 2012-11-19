@@ -60,8 +60,14 @@ Kinetic.Stage.prototype = {
         this.setAttr('container', container);
     },
     /**
-     * draw layers
+     * draw layer scenes
      * @name draw
+     * @methodOf Kinetic.Stage.prototype
+     */
+
+    /**
+     * draw layer hits
+     * @name drawHit
      * @methodOf Kinetic.Stage.prototype
      */
 
@@ -178,9 +184,9 @@ Kinetic.Stage.prototype = {
         var mimeType = config && config.mimeType ? config.mimeType : null;
         var quality = config && config.quality ? config.quality : null;
         /*
-         * need to create a canvas element rather than using the buffer canvas
+         * need to create a canvas element rather than using the hit canvas
          * because this method is asynchonous which means that other parts of the
-         * code could modify the buffer canvas before it's finished
+         * code could modify the hit canvas before it's finished
          */
         var width = config && config.width ? config.width : this.attrs.width;
         var height = config && config.height ? config.height : this.attrs.height;
@@ -248,8 +254,8 @@ Kinetic.Stage.prototype = {
         for(var n = layers.length - 1; n >= 0; n--) {
             var layer = layers[n];
             if(layer.isVisible() && layer.isListening()) {
-                var p = layer.bufferCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
-                // this indicates that a buffer pixel may have been found
+                var p = layer.hitCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
+                // this indicates that a hit pixel may have been found
                 if(p[3] === 255) {
                     var colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
                     shape = Kinetic.Global.shapes[colorKey];
@@ -284,14 +290,14 @@ Kinetic.Stage.prototype = {
             this.content.style.width = width + 'px';
             this.content.style.height = height + 'px';
 
-			this.canvas.setSize(width, height);
             this.bufferCanvas.setSize(width, height);
+            this.hitCanvas.setSize(width, height);
             // set user defined layer dimensions
             var layers = this.children;
             for(var n = 0; n < layers.length; n++) {
                 var layer = layers[n];
                 layer.getCanvas().setSize(width, height);
-                layer.bufferCanvas.setSize(width, height);
+                layer.hitCanvas.setSize(width, height);
                 layer.draw();
             }
         }
@@ -303,7 +309,7 @@ Kinetic.Stage.prototype = {
     add: function(layer) {
         Kinetic.Container.prototype.add.call(this, layer);
         layer.canvas.setSize(this.attrs.width, this.attrs.height);
-        layer.bufferCanvas.setSize(this.attrs.width, this.attrs.height);
+        layer.hitCanvas.setSize(this.attrs.width, this.attrs.height);
 
         // draw layer and append canvas to container
         layer.draw();
@@ -562,8 +568,8 @@ Kinetic.Stage.prototype = {
         this.content.className = 'kineticjs-content';
         this.attrs.container.appendChild(this.content);
 
-        this.canvas = new Kinetic.Canvas();
-        this.bufferCanvas = new Kinetic.Canvas(0, 0, true);
+        this.bufferCanvas = new Kinetic.Canvas();
+        this.hitCanvas = new Kinetic.Canvas(0, 0, true);
 
         this._resizeDOM();
     },

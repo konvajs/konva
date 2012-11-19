@@ -859,8 +859,8 @@ Test.Modules.EVENT = {
     }
 };
 
-Test.Modules['BUFFER FUNCS'] = {
-    'test custom circle buffer function': function(containerId) {
+Test.Modules['HIT FUNCS'] = {
+    'test custom circle hit function': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -875,7 +875,7 @@ Test.Modules['BUFFER FUNCS'] = {
             strokeWidth: 4,
             fill: 'red',
             stroke: 'black',
-            drawBufferFunc: function(context) {
+            drawHitFunc: function(context) {
                 context.beginPath();
                 context.arc(0, 0, this.getRadius() + 100, 0, Math.PI * 2, true);
                 context.closePath();
@@ -929,7 +929,7 @@ Test.Modules['BUFFER FUNCS'] = {
 
         // set drawBufferFunc with setter
 
-        circle.setDrawBufferFunc(function(context) {
+        circle.setDrawHitFunc(function(context) {
             context.beginPath();
             context.arc(0, 0, this.getRadius() - 50, 0, Math.PI * 2, true);
             context.closePath();
@@ -937,7 +937,7 @@ Test.Modules['BUFFER FUNCS'] = {
             this.stroke(context);
         });
         
-        layer.drawBuffer();
+        layer.drawHit();
         
         // move mouse far outside circle
         stage._mousemove({

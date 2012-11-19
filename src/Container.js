@@ -233,11 +233,34 @@ Kinetic.Container.prototype = {
             children[n].index = n;
         }
     },
-    draw: function(canvas) {
-        if(Kinetic.Node.prototype._shouldDraw.call(this, canvas)) {
+   	/*
+   	 * draw both scene and hit graphs
+   	 */
+    draw: function() {
+        this.drawScene();
+        this.drawHit();
+    },
+    drawScene: function() {
+        if(this.isVisible()) {
             var children = this.children, len = children.length;
             for(var n = 0; n < len; n++) {
-                children[n].draw(canvas);
+                children[n].drawScene();
+            }
+        }
+    },
+    drawHit: function() {
+        if(this.isVisible() && this.isListening()) {
+            var children = this.children, len = children.length;
+            for(var n = 0; n < len; n++) {
+                children[n].drawHit();
+            }
+        }
+    },
+    drawBuffer: function(canvas) {
+        if(this.isVisible()) {
+            var children = this.children, len = children.length;
+            for(var n = 0; n < len; n++) {
+                children[n].drawBuffer(canvas);
             }
         }
     }

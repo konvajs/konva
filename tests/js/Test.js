@@ -39,8 +39,8 @@ function log(message) {
     console.log('LOG: ' + message);
 }
 
-function showBuffer(layer) {
-	document.body.appendChild(layer.bufferCanvas.element);
+function showHit(layer) {
+	document.body.appendChild(layer.hitCanvas.element);
 }
 
 function Test() {

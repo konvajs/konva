@@ -712,7 +712,7 @@ Test.Modules.MANUAL = {
         layer.add(redCircle);
         stage.add(layer);
     },
-    '*DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
+    'DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -784,7 +784,7 @@ Test.Modules.MANUAL = {
             })
         });
         
-        showBuffer(layer);
+        showHit(layer);
     },
     'DRAG AND DROP - two draggable shapes': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -845,7 +845,7 @@ Test.Modules.MANUAL = {
         layer.add(Circle);
         stage.add(layer);
         
-        showBuffer(layer)
+        showHit(layer)
     },
     'DRAG AND DROP - draggable true false': function(containerId) {
         var stage = new Kinetic.Stage({

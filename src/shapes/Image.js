@@ -20,8 +20,8 @@ Kinetic.Image.prototype = {
         this.shapeType = "Image";
         config.drawFunc = this.drawFunc;
 
-        if(!config.drawBufferFunc) {
-            config.drawBufferFunc = this.drawBufferFunc;
+        if(!config.drawHitFunc) {
+            config.drawHitFunc = this.drawHitFunc;
         }
 
         // call super constructor
@@ -58,13 +58,19 @@ Kinetic.Image.prototype = {
             }
         }
     },
-    drawBufferFunc: function(context) {
-        var width = this.getWidth(), height = this.getHeight();
+    drawHitFunc: function(context) {
+        var width = this.getWidth(), height = this.getHeight(), imageBuffer = this.imageBuffer;
 
         context.beginPath();
         context.rect(0, 0, width, height);
         context.closePath();
-        this.fill(context);
+
+        if(imageBuffer) {
+			this.drawImage(context, this.imageBuffer, 0, 0, width, height);
+        }
+        else {
+            this.fill(context);
+        }
         this.stroke(context);
     },
     /**
@@ -73,7 +79,7 @@ Kinetic.Image.prototype = {
      * @methodOf Kinetic.Image.prototype
      * @param {Object} config
      * @param {Function} filter filter function
-     * @param {Object} [config] optional config object used to configure filter 
+     * @param {Object} [config] optional config object used to configure filter
      * @param {Function} [callback] callback function to be called once
      *  filter has been applied
      */
