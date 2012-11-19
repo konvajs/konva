@@ -20,9 +20,10 @@ Kinetic.Star.prototype = {
         });
 
         this.shapeType = "Star";
-        config.drawFunc = this.drawFunc;
+
         // call super constructor
         Kinetic.Shape.call(this, config);
+        this._setDrawFuncs();
     },
     drawFunc: function(context) {
         context.beginPath();

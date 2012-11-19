@@ -18,10 +18,10 @@ Kinetic.Circle.prototype = {
         });
 
         this.shapeType = 'Circle';
-        config.drawFunc = this.drawFunc;
 
         // call super constructor
         Kinetic.Shape.call(this, config);
+        this._setDrawFuncs();
     },
     drawFunc: function(context) {
         context.beginPath();

@@ -18,17 +18,14 @@ Kinetic.Sprite.prototype = {
             frameRate: 17
         });
 		this.shapeType = "Sprite";
-        config.drawFunc = this.drawFunc;
-        
-        if(!config.drawHitFunc) {
-            config.drawHitFunc = this.drawHitFunc;
-        }
         
         // call super constructor
         Kinetic.Shape.call(this, config);
+        this._setDrawFuncs();
+        
         this.anim = new Kinetic.Animation();
         var that = this;
-        this.on('animationChange.kinetic', function() {
+        this.on('animationChange', function() {
             // reset index when animation changes
             that.setIndex(0);
         });

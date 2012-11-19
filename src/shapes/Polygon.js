@@ -18,9 +18,10 @@ Kinetic.Polygon.prototype = {
         });
 
         this.shapeType = "Polygon";
-        config.drawFunc = this.drawFunc;
+
         // call super constructor
         Kinetic.Shape.call(this, config);
+        this._setDrawFuncs();
     },
     drawFunc: function(context) {
         context.beginPath();

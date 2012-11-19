@@ -31,9 +31,9 @@ Kinetic.Text.prototype = {
         this.dummyCanvas = document.createElement('canvas');
         this.shapeType = "Text";
 
-        config.drawFunc = this.drawFunc;
         // call super constructor
         Kinetic.Shape.call(this, config);
+        this._setDrawFuncs();
 
         // update text data for certain attr changes
         var attrs = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'align', 'lineHeight', 'text', 'width', 'height'];

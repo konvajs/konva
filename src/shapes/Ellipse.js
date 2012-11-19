@@ -21,10 +21,10 @@ Kinetic.Ellipse.prototype = {
         });
 
         this.shapeType = "Ellipse";
-        config.drawFunc = this.drawFunc;
 
         // call super constructor
         Kinetic.Shape.call(this, config);
+        this._setDrawFuncs();
     },
     drawFunc: function(context) {
         var r = this.getRadius();

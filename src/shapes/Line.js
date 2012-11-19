@@ -21,9 +21,10 @@ Kinetic.Line.prototype = {
         });
 
         this.shapeType = "Line";
-        config.drawFunc = this.drawFunc;
+
         // call super constructor
         Kinetic.Shape.call(this, config);
+        this._setDrawFuncs();
     },
     drawFunc: function(context) {
         var lastPos = {};

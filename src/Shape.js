@@ -486,7 +486,7 @@ Kinetic.Shape = (function() {
         },
         drawHit: function() {
             var attrs = this.attrs, drawFunc = attrs.drawHitFunc || attrs.drawFunc, context = this.getLayer().hitCanvas.getContext();
-            
+
             if(drawFunc && this.isVisible() && this.isListening()) {
                 var stage = this.getStage(), family = [], parent = this.parent;
 
@@ -503,12 +503,20 @@ Kinetic.Shape = (function() {
                     context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                 }
 
-				// don't draw shadows on hit context
+                // don't draw shadows on hit context
                 this.applyLineJoin(context);
                 this.applyLineCap(context);
-                
+
                 drawFunc.call(this, context);
                 context.restore();
+            }
+        },
+        _setDrawFuncs: function() {
+            if(!this.attrs.drawFunc && this.drawFunc) {
+                this.setDrawFunc(this.drawFunc);
+            }
+            if(!this.attrs.drawHitFunc && this.drawHitFunc) {
+                this.setDrawHitFunc(this.drawHitFunc);
             }
         }
     };

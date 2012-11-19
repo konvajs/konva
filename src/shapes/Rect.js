@@ -18,9 +18,9 @@ Kinetic.Rect.prototype = {
             cornerRadius: 0
         });
         this.shapeType = "Rect";
-        config.drawFunc = this.drawFunc;
 
         Kinetic.Shape.call(this, config);
+        this._setDrawFuncs();
     },
     drawFunc: function(context) {
         context.beginPath();

@@ -27,9 +27,10 @@ Kinetic.TextPath.prototype = {
         this.dataArray = [];
         var that = this;
 
-        config.drawFunc = this.drawFunc;
         // call super constructor
         Kinetic.Shape.call(this, config);
+        this._setDrawFuncs();
+        
         this.dataArray = Kinetic.Path.parsePathData(this.attrs.data);
         this.on('dataChange', function() {
             that.dataArray = Kinetic.Path.parsePathData(this.attrs.data);
