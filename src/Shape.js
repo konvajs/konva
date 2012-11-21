@@ -64,7 +64,6 @@ Kinetic.Shape = (function() {
     Shape.prototype = {
         _initShape: function(config) {
             this.nodeType = 'Shape';
-            this.appliedShadow = false;
 
             // set colorKey
             var shapes = Kinetic.Global.shapes;
@@ -104,36 +103,35 @@ Kinetic.Shape = (function() {
          * @name stroke
          * @methodOf Kinetic.Shape.prototype
          */
-        stroke: function(context) {
+        stroke: function(context, stroke, strokeWidth, shadow) {
             if(context.type === 'scene') {
-                this._strokeScene(context);
+                return this._strokeScene(context, stroke, strokeWidth, shadow);
             }
             else if(context.type === 'hit') {
-                this._strokeHit(context);
+                return this._strokeHit(context, strokeWidth);
             }
+            return false;
         },
-        _strokeScene: function(context) {
-            var strokeWidth = this.getStrokeWidth(), stroke = this.getStroke();
+        _strokeScene: function(context, stroke, strokeWidth, shadow) {
             if(stroke || strokeWidth) {
-                var appliedShadow = false;
-
                 context.save();
-                if(this.attrs.shadow && !this.appliedShadow) {
-                    appliedShadow = this._applyShadow(context);
-                }
-
+                var appliedShadow = this._applyShadow(context, shadow);
                 context.lineWidth = strokeWidth || 2;
                 context.strokeStyle = stroke || 'black';
                 context.stroke(context);
                 context.restore();
 
                 if(appliedShadow) {
-                    this.stroke(context);
+                    if(shadow.opacity) {
+                        this._strokeScene(context, stroke);
+                    }
+                    return true;
                 }
             }
+            return false;
         },
-        _strokeHit: function(context) {
-            var strokeWidth = this.getStrokeWidth(), stroke = this.colorKey;
+        _strokeHit: function(context, strokeWidth) {
+            var stroke = this.colorKey;
             if(stroke || strokeWidth) {
                 context.save();
                 context.lineWidth = strokeWidth || 2;
@@ -141,6 +139,7 @@ Kinetic.Shape = (function() {
                 context.stroke(context);
                 context.restore();
             }
+            return false;
         },
         _getFillType: function(fill) {
             var type = Kinetic.Type;
@@ -164,26 +163,41 @@ Kinetic.Shape = (function() {
             }
         },
         /**
+         * helper method to fill and stroke shape based on fill and stroke properties,
+         * and also automatically handle shadows, line joins, and line caps
+         * @name render
+         * @methodOf Kinetic.Shape.prototype
+         */
+        render: function(context) {
+            this.applyLineJoin(context, this.getLineJoin());
+            this.applyLineCap(context, this.getLineCap());
+            if(context.type === 'scene') {
+                this.applyOpacity(context);
+            }
+
+            var appliedShadow = this.fill(context, this.getFill(), this.getShadow());
+            this.stroke(context, this.getStroke(), this.getStrokeWidth(), appliedShadow ? null : this.getShadow());
+        },
+        /**
          * helper method to fill the shape
          * @name fill
          * @methodOf Kinetic.Shape.prototype
-         * */
-        fill: function(context) {
+         */
+        fill: function(context, fill, shadow) {
             if(context.type === 'scene') {
-                this._fillScene(context);
+                return this._fillScene(context, fill, shadow);
             }
             else if(context.type === 'hit') {
-                this._fillHit(context);
+                return this._fillHit(context);
             }
+            return false;
         },
-        _fillScene: function(context) {
-            var appliedShadow = false, fill = this.getFill(), fillType = this._getFillType(fill);
+        _fillScene: function(context, fill, shadow) {
+            var fillType = this._getFillType(fill);
             if(fill) {
                 context.save();
-                if(this.attrs.shadow && !this.appliedShadow) {
-                    appliedShadow = this._applyShadow(context);
-                }
 
+                var appliedShadow = this._applyShadow(context, shadow);
                 var s = fill.start;
                 var e = fill.end;
 
@@ -233,36 +247,36 @@ Kinetic.Shape = (function() {
                         context.fill(context);
                         break;
                 }
-                context.restore();
-            }
 
-            if(appliedShadow) {
-                this.fill(context);
+                context.restore();
+
+                if(appliedShadow) {
+                    if(shadow.opacity) {
+                        this._fillScene(context, fill);
+                    }
+                    return true;
+                }
             }
+            return false;
         },
         _fillHit: function(context) {
             context.save();
             context.fillStyle = this.colorKey;
             context.fill(context);
             context.restore();
+            return false;
         },
         /**
-         * helper method to draw an image and apply
-         * a shadow if needed
+         * helper method to draw an image
          * @name drawImage
          * @methodOf Kinetic.Shape.prototype
          */
         drawImage: function() {
-            var appliedShadow = false;
             var context = arguments[0];
             context.save();
             var a = Array.prototype.slice.call(arguments);
 
             if(a.length === 6 || a.length === 10) {
-                if(this.attrs.shadow && !this.appliedShadow) {
-                    appliedShadow = this._applyShadow(context);
-                }
-
                 if(a.length === 6) {
                     context.drawImage(a[1], a[2], a[3], a[4], a[5]);
                 }
@@ -272,10 +286,6 @@ Kinetic.Shape = (function() {
             }
 
             context.restore();
-
-            if(appliedShadow) {
-                this.drawImage.apply(this, a);
-            }
         },
         applyOpacity: function(context) {
             var absOpacity = this.getAbsoluteOpacity();
@@ -288,9 +298,10 @@ Kinetic.Shape = (function() {
          * based on the applyLineJoin property
          * @name lineJoin
          * @methodOf Kinetic.Shape.prototype
+         * @param {CanvasContext} context
+         * @param {String} lineJoin
          */
-        applyLineJoin: function(context) {
-            var lineJoin = this.attrs.lineJoin;
+        applyLineJoin: function(context, lineJoin) {
             if(lineJoin) {
                 context.lineJoin = lineJoin;
             }
@@ -300,9 +311,10 @@ Kinetic.Shape = (function() {
          * based on the lineCap property
          * @name applyLineCap
          * @methodOf Kinetic.Shape.prototype
+         * @param {CanvasContext} context
+         * @param {String} lineCap
          */
-        applyLineCap: function(context) {
-            var lineCap = this.attrs.lineCap;
+        applyLineCap: function(context, lineCap) {
             if(lineCap) {
                 context.lineCap = lineCap;
             }
@@ -379,30 +391,24 @@ Kinetic.Shape = (function() {
         _get: function(selector) {
             return this.nodeType === selector || this.shapeType === selector ? [this] : [];
         },
-        /**
-         * apply shadow.  return true if shadow was applied
-         * and false if it was not
-         */
-        _applyShadow: function(context) {
-            var s = this.attrs.shadow;
-            if(s) {
+        _applyShadow: function(context, shadow) {
+            if(shadow) {
                 var aa = this.getAbsoluteOpacity();
                 // defaults
-                var color = s.color ? s.color : 'black';
-                var blur = s.blur ? s.blur : 5;
-                var offset = s.offset ? s.offset : {
+                var color = shadow.color || 'black';
+                var blur = shadow.blur || 5;
+                var offset = shadow.offset || {
                     x: 0,
                     y: 0
                 };
 
-                if(s.opacity) {
-                    context.globalAlpha = s.opacity * aa;
+                if(shadow.opacity) {
+                    context.globalAlpha = shadow.opacity * aa;
                 }
                 context.shadowColor = color;
                 context.shadowBlur = blur;
                 context.shadowOffsetX = offset.x;
                 context.shadowOffsetY = offset.y;
-                this.appliedShadow = true;
                 return true;
             }
 
@@ -447,11 +453,6 @@ Kinetic.Shape = (function() {
                     context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                 }
 
-                this.applyOpacity(context);
-                this.applyLineJoin(context);
-                this.applyLineCap(context);
-                this.appliedShadow = false;
-
                 drawFunc.call(this, context);
                 context.restore();
             }
@@ -474,12 +475,7 @@ Kinetic.Shape = (function() {
                     var node = family[n], t = node.getTransform(), m = t.getMatrix();
                     context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                 }
-
-                this.applyOpacity(context);
-                this.applyLineJoin(context);
-                this.applyLineCap(context);
-                this.appliedShadow = false;
-
+                
                 drawFunc.call(this, context);
                 context.restore();
             }
@@ -503,10 +499,6 @@ Kinetic.Shape = (function() {
                     context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                 }
 
-                // don't draw shadows on hit context
-                this.applyLineJoin(context);
-                this.applyLineCap(context);
-
                 drawFunc.call(this, context);
                 context.restore();
             }
@@ -523,7 +515,7 @@ Kinetic.Shape = (function() {
     Kinetic.Global.extend(Shape, Kinetic.Node);
 
     // add getters and setters
-    Kinetic.Node.addGettersSetters(Shape, ['stroke', 'lineJoin', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'cornerRadius']);
+    Kinetic.Node.addGettersSetters(Shape, ['stroke', 'lineJoin', 'lineCap', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'cornerRadius']);
     Kinetic.Node.addGetters(Shape, ['shadow', 'fill']);
 
     /**

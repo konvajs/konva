@@ -388,6 +388,8 @@ Test.Modules.NODE = {
 
         stage.draw();
         
+        warn(layer.toDataURL() === cloneGroup, 'problem cloning group');
+        
         
     },
     'test on attr change': function(containerId) {

@@ -36,8 +36,7 @@ Kinetic.Image.prototype = {
         context.beginPath();
         context.rect(0, 0, width, height);
         context.closePath();
-        this.fill(context);
-        this.stroke(context);
+        this.render(context);
 
         if(this.attrs.image) {
             // if cropping
@@ -55,19 +54,16 @@ Kinetic.Image.prototype = {
         }
     },
     drawHitFunc: function(context) {
-        var width = this.getWidth(), height = this.getHeight(), imageBuffer = this.imageBuffer;
+        var width = this.getWidth(), height = this.getHeight(), imageBuffer = this.imageBuffer, appliedShadow = false;
 
         context.beginPath();
         context.rect(0, 0, width, height);
         context.closePath();
+        this.render(context);
 
         if(imageBuffer) {
             this.drawImage(context, this.imageBuffer, 0, 0, width, height);
         }
-        else {
-            this.fill(context);
-        }
-        this.stroke(context);
     },
     /**
      * apply filter

@@ -68,8 +68,7 @@ Kinetic.Text.prototype = {
         }
         context.closePath();
 
-        this.fill(context);
-        this.stroke(context);
+        this.render(context);
         /*
          * draw text
          */
@@ -85,14 +84,8 @@ Kinetic.Text.prototype = {
         context.translate(0, p + this.getTextHeight() / 2);
 
         // draw text lines
-        var appliedShadow = this.appliedShadow;
         for(var n = 0; n < textArr.length; n++) {
             var text = textArr[n];
-            /*
-             * need to reset appliedShadow flag so that shadows
-             * are appropriately applied to each line of text
-             */
-            this.appliedShadow = appliedShadow;
 
             // horizontal alignment
             context.save();
@@ -103,24 +96,50 @@ Kinetic.Text.prototype = {
                 context.translate((this.getWidth() - this._getTextSize(text).width - p * 2) / 2, 0);
             }
 
-            this.fillText(context, text);
-            this.strokeText(context, text);
+            var appliedShadow = this.fillText(context, text, this.getTextFill(), this.getShadow());
+            this.strokeText(context, text, this.getTextStroke(), this.getTextStrokeWidth(), appliedShadow ? null : this.getShadow());
             context.restore();
 
             context.translate(0, lineHeightPx);
         }
         context.restore();
     },
+    drawHitFunc: function(context) {
+        // draw rect
+        context.beginPath();
+        var boxWidth = this.getWidth();
+        var boxHeight = this.getHeight();
+
+        if(this.attrs.cornerRadius === 0) {
+            // simple rect - don't bother doing all that complicated maths stuff.
+            context.rect(0, 0, boxWidth, boxHeight);
+        }
+        else {
+            // arcTo would be nicer, but browser support is patchy (Opera)
+            context.moveTo(this.attrs.cornerRadius, 0);
+            context.lineTo(boxWidth - this.attrs.cornerRadius, 0);
+            context.arc(boxWidth - this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI * 3 / 2, 0, false);
+            context.lineTo(boxWidth, boxHeight - this.attrs.cornerRadius);
+            context.arc(boxWidth - this.attrs.cornerRadius, boxHeight - this.attrs.cornerRadius, this.attrs.cornerRadius, 0, Math.PI / 2, false);
+            context.lineTo(this.attrs.cornerRadius, boxHeight);
+            context.arc(this.attrs.cornerRadius, boxHeight - this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI / 2, Math.PI, false);
+            context.lineTo(0, this.attrs.cornerRadius);
+            context.arc(this.attrs.cornerRadius, this.attrs.cornerRadius, this.attrs.cornerRadius, Math.PI, Math.PI * 3 / 2, false);
+        }
+        context.closePath();
+
+        this.render(context);
+    },
     /**
-	 * set text
-	 * @name setText
-	 * @methodOf Kinetic.Text.prototype
-	 * @param {String} text
-	 */
-	setText: function(text) {
-		var str = Kinetic.Type._isString(text) ? text : text.toString();
-		this.setAttr('text', str);
-	},
+     * set text
+     * @name setText
+     * @methodOf Kinetic.Text.prototype
+     * @param {String} text
+     */
+    setText: function(text) {
+        var str = Kinetic.Type._isString(text) ? text : text.toString();
+        this.setAttr('text', str);
+    },
     /**
      * get width
      * @name getWidth
@@ -172,36 +191,38 @@ Kinetic.Text.prototype = {
      * @name fillText
      * @methodOf Kinetic.Text.prototype
      */
-    fillText: function(context, text) {
+    fillText: function(context, text, textFill, shadow) {
         if(context.type === 'scene') {
-            this._fillTextScene(context, text);
+            return this._fillTextScene(context, text, textFill, shadow);
         }
-        else if(context.type === 'buffer') {
-            this._fillTextBuffer(context, text);
+        else if(context.type === 'hit') {
+            return this._fillTextHit(context, text);
         }
+        return false;
     },
-    _fillTextScene: function(context, text) {
-        var appliedShadow = false;
-        if(this.attrs.textFill) {
+    _fillTextScene: function(context, text, textFill, shadow) {
+        if(textFill) {
             context.save();
-            if(this.attrs.shadow && !this.appliedShadow) {
-                appliedShadow = this._applyShadow(context);
+            var appliedShadow = this._applyShadow(context, shadow);
+            context.fillStyle = textFill;
+            context.fillText(text, 0, 0);
+            context.restore();
+
+            if(appliedShadow) {
+                if(shadow.opacity) {
+                    this._fillTextScene(context, text, textFill);
+                    return true;
+                }
             }
-            context.fillStyle = this.attrs.textFill;
-            context.fillText(text, 0, 0);
-            context.restore();
         }
-        if(appliedShadow) {
-            this.fillText(context, text, 0, 0);
-        }
+        return false;
     },
-    _fillTextBuffer: function(context, text) {
-        if(this.attrs.textFill) {
-            context.save();
-            context.fillStyle = this.colorKey;
-            context.fillText(text, 0, 0);
-            context.restore();
-        }
+    _fillTextHit: function(context, text) {
+        context.save();
+        context.fillStyle = this.colorKey;
+        context.fillText(text, 0, 0);
+        context.restore();
+        return false;
     },
     /**
      * helper method to stroke text
@@ -210,46 +231,46 @@ Kinetic.Text.prototype = {
      * @methodOf Kinetic.Shape.prototype
      * @param {String} text
      */
-    strokeText: function(context, text) {
+    strokeText: function(context, text, textStroke, textStrokeWidth, shadow) {
         if(context.type === 'scene') {
-            this._strokeTextScene(context, text);
+            this._strokeTextScene(context, text, textStroke, textStrokeWidth, shadow);
         }
-        else if(context.type === 'buffer') {
-            this._strokeTextBuffer(context, text);
+        else if(context.type === 'hit') {
+            this._strokeTextHit(context, text, textStrokeWidth);
         }
+        return false;
     },
-    _strokeTextScene: function(context, text) {
-        var appliedShadow = false;
-
-        if(this.attrs.textStroke || this.attrs.textStrokeWidth) {
+    _strokeTextScene: function(context, text, textStroke, textStrokeWidth, shadow) {
+        if(textStroke || textStrokeWidth) {
             context.save();
-            if(this.attrs.shadow && !this.appliedShadow) {
-                appliedShadow = this._applyShadow(context);
+            var appliedShadow = this._applyShadow(context, shadow);
+            // defaults
+            textStroke = textStroke || 'black';
+            textStrokeWidth = textStrokeWidth || 2;
+            context.lineWidth = textStrokeWidth;
+            context.strokeStyle = textStroke;
+            context.strokeText(text, 0, 0);
+            context.restore();
+
+            if(appliedShadow) {
+                if(shadow.opacity) {
+                    this._strokeTextScene(context, text, textStroke, textStrokeWidth);
+                    return true;
+                }
             }
-            // defaults
-            var textStroke = this.attrs.textStroke ? this.attrs.textStroke : 'black';
-            var textStrokeWidth = this.attrs.textStrokeWidth ? this.attrs.textStrokeWidth : 2;
-            context.lineWidth = textStrokeWidth;
-            context.strokeStyle = textStroke;
-            context.strokeText(text, 0, 0);
-            context.restore();
         }
-
-        if(appliedShadow) {
-            this.strokeText(context, text, 0, 0);
-        }
+        return false;
     },
-    _strokeTextBuffer: function(context, text) {
-        if(this.attrs.textStroke || this.attrs.textStrokeWidth) {
-            context.save();
-            // defaults
-            var textStroke = this.colorKey ? this.colorKey : 'black';
-            var textStrokeWidth = this.attrs.textStrokeWidth ? this.attrs.textStrokeWidth : 2;
-            context.lineWidth = textStrokeWidth;
-            context.strokeStyle = textStroke;
-            context.strokeText(text, 0, 0);
-            context.restore();
-        }
+    _strokeTextHit: function(context, text, textStrokeWidth) {
+        context.save();
+        // defaults
+        var textStroke = this.colorKey ? this.colorKey : 'black';
+        var textStrokeWidth = textStrokeWidth || 2;
+        context.lineWidth = textStrokeWidth;
+        context.strokeStyle = textStroke;
+        context.strokeText(text, 0, 0);
+        context.restore();
+        return false;
     },
     /**
      * set text data.  wrap logic and width and height setting occurs

@@ -42,8 +42,7 @@ Kinetic.Rect.prototype = {
         }
         context.closePath();
 
-        this.fill(context);
-        this.stroke(context);
+        this.render(context);
     }
 };
 

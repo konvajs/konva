@@ -68,11 +68,9 @@ Kinetic.TextPath.prototype = {
             var ht = parseFloat(this.attrs.fontSize);
 
             context.translate(p0.x, p0.y);
-
             context.rotate(glyphInfo[i].rotation);
 
-            this.fillText(context, glyphInfo[i].text);
-            this.strokeText(context, glyphInfo[i].text);
+            this.render(context);
 
             context.restore();
 
@@ -310,10 +308,10 @@ Kinetic.Node.addGetters(Kinetic.TextPath, ['text']);
 // reference Text methods
 Kinetic.TextPath.prototype.fillText = Kinetic.Text.prototype.fillText;
 Kinetic.TextPath.prototype._fillTextScene = Kinetic.Text.prototype._fillTextScene;
-Kinetic.TextPath.prototype._fillTextBuffer = Kinetic.Text.prototype._fillTextBuffer;
+Kinetic.TextPath.prototype._fillTextHit = Kinetic.Text.prototype._fillTextHit;
 Kinetic.TextPath.prototype.strokeText = Kinetic.Text.prototype.strokeText;
 Kinetic.TextPath.prototype._strokeTextScene = Kinetic.Text.prototype._strokeTextScene;
-Kinetic.TextPath.prototype._strokeTextBuffer = Kinetic.Text.prototype._strokeTextBuffer;
+Kinetic.TextPath.prototype._strokeTextHit = Kinetic.Text.prototype._strokeTextHit;
 /**
  * set font family
  * @name setFontFamily

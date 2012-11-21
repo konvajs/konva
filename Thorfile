@@ -17,7 +17,6 @@ class Build < Thor
   	"tests/js/unit/layerTests.js", 
   	"tests/js/unit/shapeTests.js", 
   	"tests/js/unit/ddTests.js", 
-  	"tests/js/unit/customShapeTests.js",
   	"tests/js/unit/animationTests.js", 
   	"tests/js/unit/transitionTests.js", 
   	"tests/js/unit/shapes/rectTests.js", 

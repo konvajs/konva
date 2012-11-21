@@ -38,8 +38,7 @@ Kinetic.Sprite.prototype = {
         context.beginPath();
         context.rect(0, 0, f.width, f.height);
         context.closePath();
-        this.fill(context);
-        this.stroke(context);
+        this.render(context);
 
         if(this.attrs.image) {
 
@@ -58,8 +57,8 @@ Kinetic.Sprite.prototype = {
         context.beginPath();
         context.rect(0, 0, f.width, f.height);
         context.closePath();
-        this.fill(context);
-        this.stroke(context);
+        this.fill(context, this.getFill(), null);
+        this.stroke(context, this.getStroke(), this.getStrokeWidth(), null);
     },
     /**
      * start sprite animation

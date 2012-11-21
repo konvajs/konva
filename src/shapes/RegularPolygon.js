@@ -34,8 +34,7 @@ Kinetic.RegularPolygon.prototype = {
             context.lineTo(x, y);
         }
         context.closePath();
-        this.fill(context);
-        this.stroke(context);
+        this.render(context);
     }
 };
 Kinetic.Global.extend(Kinetic.RegularPolygon, Kinetic.Shape);
