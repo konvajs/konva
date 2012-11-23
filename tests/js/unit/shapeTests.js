@@ -96,11 +96,11 @@ Test.Modules.SHAPE = {
         });
 
         stage.add(layer.add(triangle));
-        
+
         warn(layer.toDataURL() === customShapeTwoFills, 'problem with custom shape with two fills');
 
     },
-   'custom shape with fill, stroke, and strokeWidth': function(containerId) {
+    'custom shape with fill, stroke, and strokeWidth': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -141,7 +141,8 @@ Test.Modules.SHAPE = {
                 context.lineTo(100, 0);
                 context.lineTo(100, 100);
                 context.closePath();
-                this.render(context);
+                this.fill(context);
+                this.stroke(context);
             },
             x: 200,
             y: 100,
@@ -156,7 +157,8 @@ Test.Modules.SHAPE = {
             context.lineTo(200, 0);
             context.lineTo(200, 100);
             context.closePath();
-            this.render(context);
+            this.fill(context);
+            this.stroke(context);
         });
         var rect = new Kinetic.Rect({
             x: 10,
@@ -175,7 +177,8 @@ Test.Modules.SHAPE = {
             context.lineTo(200, 0);
             context.lineTo(200, 100);
             context.closePath();
-            this.render(context);
+            this.fill(context);
+            this.stroke(context);
         });
 
         layer.add(shape);

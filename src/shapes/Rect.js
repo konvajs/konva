@@ -42,7 +42,7 @@ Kinetic.Rect.prototype = {
         }
         context.closePath();
 
-        this.render(context);
+        this.fillStroke(context);
     }
 };
 

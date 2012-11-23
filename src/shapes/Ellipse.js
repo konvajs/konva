@@ -36,7 +36,7 @@ Kinetic.Ellipse.prototype = {
         context.arc(0, 0, r.x, 0, Math.PI * 2, true);
         context.restore();
         context.closePath();
-        this.render(context);
+        this.fillStroke(context);
     },
     /**
      * set radius

@@ -37,7 +37,7 @@ Kinetic.Star.prototype = {
         }
         context.closePath();
 
-        this.render(context);
+        this.fillStroke(context);
     }
 };
 Kinetic.Global.extend(Kinetic.Star, Kinetic.Shape);

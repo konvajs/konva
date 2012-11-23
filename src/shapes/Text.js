@@ -68,7 +68,7 @@ Kinetic.Text.prototype = {
         }
         context.closePath();
 
-        this.render(context);
+        this.fillStroke(context);
         /*
          * draw text
          */
@@ -96,10 +96,8 @@ Kinetic.Text.prototype = {
                 context.translate((this.getWidth() - this._getTextSize(text).width - p * 2) / 2, 0);
             }
 
-            var appliedShadow = this.fillText(context, text, this.getTextFill(), this.getShadow());
-            this.strokeText(context, text, this.getTextStroke(), this.getTextStrokeWidth(), appliedShadow ? null : this.getShadow());
+            this.fillStrokeText(context, text);
             context.restore();
-
             context.translate(0, lineHeightPx);
         }
         context.restore();
@@ -128,7 +126,7 @@ Kinetic.Text.prototype = {
         }
         context.closePath();
 
-        this.render(context);
+        this.fillStroke(context);
     },
     /**
      * set text
@@ -185,92 +183,60 @@ Kinetic.Text.prototype = {
             height: parseInt(this.attrs.fontSize, 10)
         };
     },
-    /**
-     * helper method to fill text
-     * @param {String} text
-     * @name fillText
-     * @methodOf Kinetic.Text.prototype
-     */
-    fillText: function(context, text, textFill, shadow) {
-        if(context.type === 'scene') {
-            return this._fillTextScene(context, text, textFill, shadow);
-        }
-        else if(context.type === 'hit') {
-            return this._fillTextHit(context, text);
-        }
-        return false;
-    },
-    _fillTextScene: function(context, text, textFill, shadow) {
+    fillText: function(context, text, skipShadow) {
+        var textFill = this.getTextFill(), shadow = this.getShadow();
         if(textFill) {
             context.save();
-            var appliedShadow = this._applyShadow(context, shadow);
+            if(!skipShadow && shadow) {
+                this._applyTextShadow(context);
+            }
             context.fillStyle = textFill;
             context.fillText(text, 0, 0);
             context.restore();
 
-            if(appliedShadow) {
-                if(shadow.opacity) {
-                    this._fillTextScene(context, text, textFill);
-                    return true;
-                }
+            if(!skipShadow && shadow && shadow.opacity) {
+                this.fillText(context, text, true);
             }
         }
-        return false;
     },
-    _fillTextHit: function(context, text) {
-        context.save();
-        context.fillStyle = this.colorKey;
-        context.fillText(text, 0, 0);
-        context.restore();
-        return false;
-    },
-    /**
-     * helper method to stroke text
-     * if needed
-     * @name strokeText
-     * @methodOf Kinetic.Shape.prototype
-     * @param {String} text
-     */
-    strokeText: function(context, text, textStroke, textStrokeWidth, shadow) {
-        if(context.type === 'scene') {
-            this._strokeTextScene(context, text, textStroke, textStrokeWidth, shadow);
-        }
-        else if(context.type === 'hit') {
-            this._strokeTextHit(context, text, textStrokeWidth);
-        }
-        return false;
-    },
-    _strokeTextScene: function(context, text, textStroke, textStrokeWidth, shadow) {
+    strokeText: function(context, text, skipShadow) {
+        var textStroke = this.getTextStroke(), textStrokeWidth = this.getTextStrokeWidth(), shadow = this.getShadow();
         if(textStroke || textStrokeWidth) {
             context.save();
-            var appliedShadow = this._applyShadow(context, shadow);
-            // defaults
-            textStroke = textStroke || 'black';
-            textStrokeWidth = textStrokeWidth || 2;
-            context.lineWidth = textStrokeWidth;
-            context.strokeStyle = textStroke;
+            if(!skipShadow && shadow) {
+                this._applyTextShadow(context);
+            }
+
+            context.lineWidth = textStrokeWidth || 2;
+            context.strokeStyle = textStroke || 'black';
             context.strokeText(text, 0, 0);
             context.restore();
 
-            if(appliedShadow) {
-                if(shadow.opacity) {
-                    this._strokeTextScene(context, text, textStroke, textStrokeWidth);
-                    return true;
-                }
+            if(!skipShadow && shadow && shadow.opacity) {
+                this.strokeText(context, text, true);
             }
         }
-        return false;
     },
-    _strokeTextHit: function(context, text, textStrokeWidth) {
-        context.save();
-        // defaults
-        var textStroke = this.colorKey ? this.colorKey : 'black';
-        var textStrokeWidth = textStrokeWidth || 2;
-        context.lineWidth = textStrokeWidth;
-        context.strokeStyle = textStroke;
-        context.strokeText(text, 0, 0);
-        context.restore();
-        return false;
+    fillStrokeText: function(context, text) {
+        this.fillText(context, text);
+        this.strokeText(context, text, this.getTextShadow() && this.getTextFill());
+    },
+    /**
+     * set text shadow object
+     * @name setTextShadow
+     * @methodOf Kinetic.Text.prototype
+     * @param {Object} config
+     * @param {String} config.color
+     * @param {Number} config.blur
+     * @param {Array|Object|Number} config.offset
+     * @param {Number} config.opacity
+     */
+    setTextShadow: function(config) {
+        var type = Kinetic.Type;
+        if(config.offset !== undefined) {
+            config.offset = type._getXY(config.offset);
+        }
+        this.setAttr('textShadow', type._merge(config, this.getTextShadow()));
     },
     /**
      * set text data.  wrap logic and width and height setting occurs
@@ -337,13 +303,34 @@ Kinetic.Text.prototype = {
             row++;
         }
         this.textArr = arr;
+    },
+    _applyTextShadow: function(context) {
+        var textShadow = this.getTextShadow();
+        if(textShadow) {
+            var aa = this.getAbsoluteOpacity();
+            // defaults
+            var color = textShadow.color || 'black';
+            var blur = textShadow.blur || 5;
+            var offset = textShadow.offset || {
+                x: 0,
+                y: 0
+            };
+
+            if(textShadow.opacity) {
+                context.globalAlpha = textShadow.opacity * aa;
+            }
+            context.shadowColor = color;
+            context.shadowBlur = blur;
+            context.shadowOffsetX = offset.x;
+            context.shadowOffsetY = offset.y;
+        }
     }
 };
 Kinetic.Global.extend(Kinetic.Text, Kinetic.Shape);
 
 // add getters setters
 Kinetic.Node.addGettersSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'lineHeight']);
-Kinetic.Node.addGetters(Kinetic.Text, ['text']);
+Kinetic.Node.addGetters(Kinetic.Text, ['text', 'textShadow']);
 /**
  * set font family
  * @name setFontFamily

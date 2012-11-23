@@ -1,4 +1,53 @@
 Test.Modules.Text = {
+	'add text with shadows': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var text = new Kinetic.Text({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            stroke: '#555',
+            strokeWidth: 5,
+            fill: '#ddd',
+            text: 'Hello World!',
+            fontSize: 50,
+            fontFamily: 'Calibri',
+            fontStyle: 'normal',
+            textFill: '#888',
+            textStroke: '#333',
+            align: 'right',
+            lineHeight: 1.2,
+            width: 400,
+            height: 100,
+            padding: 10,
+            
+            shadow: {
+                color: 'black',
+                blur: 1,
+                offset: [10, 10],
+                opacity: 0.2
+            },
+            textShadow: {
+                color: 'red',
+                blur: 1,
+                offset: [10, 10],
+                opacity: 0.2
+            },
+            
+            cornerRadius: 10,
+            draggable: true
+        });
+
+        // center text box
+        text.setOffset(text.getWidth() / 2, text.getHeight() / 2);
+
+        layer.add(text);
+        stage.add(layer);
+    },
     'text getters and setters': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

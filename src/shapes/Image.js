@@ -36,7 +36,7 @@ Kinetic.Image.prototype = {
         context.beginPath();
         context.rect(0, 0, width, height);
         context.closePath();
-        this.render(context);
+        this.fillStroke(context);
 
         if(this.attrs.image) {
             // if cropping
@@ -59,7 +59,7 @@ Kinetic.Image.prototype = {
         context.beginPath();
         context.rect(0, 0, width, height);
         context.closePath();
-        this.render(context);
+        this.fillStroke(context);
 
         if(imageBuffer) {
             this.drawImage(context, this.imageBuffer, 0, 0, width, height);

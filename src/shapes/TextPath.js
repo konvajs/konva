@@ -30,7 +30,7 @@ Kinetic.TextPath.prototype = {
         // call super constructor
         Kinetic.Shape.call(this, config);
         this._setDrawFuncs();
-        
+
         this.dataArray = Kinetic.Path.parsePathData(this.attrs.data);
         this.on('dataChange', function() {
             that.dataArray = Kinetic.Path.parsePathData(this.attrs.data);
@@ -70,7 +70,7 @@ Kinetic.TextPath.prototype = {
             context.translate(p0.x, p0.y);
             context.rotate(glyphInfo[i].rotation);
 
-            this.render(context);
+            this.fillStrokeText(context);
 
             context.restore();
 
@@ -307,11 +307,9 @@ Kinetic.Node.addGetters(Kinetic.TextPath, ['text']);
 
 // reference Text methods
 Kinetic.TextPath.prototype.fillText = Kinetic.Text.prototype.fillText;
-Kinetic.TextPath.prototype._fillTextScene = Kinetic.Text.prototype._fillTextScene;
-Kinetic.TextPath.prototype._fillTextHit = Kinetic.Text.prototype._fillTextHit;
 Kinetic.TextPath.prototype.strokeText = Kinetic.Text.prototype.strokeText;
-Kinetic.TextPath.prototype._strokeTextScene = Kinetic.Text.prototype._strokeTextScene;
-Kinetic.TextPath.prototype._strokeTextHit = Kinetic.Text.prototype._strokeTextHit;
+Kinetic.TextPath.prototype.fillStrokeText = Kinetic.Text.prototype.strokeText;
+
 /**
  * set font family
  * @name setFontFamily

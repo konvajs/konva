@@ -98,49 +98,6 @@ Kinetic.Shape = (function() {
         getCanvas: function() {
             return this.getLayer().getCanvas();
         },
-        /**
-         * helper method to stroke the shape
-         * @name stroke
-         * @methodOf Kinetic.Shape.prototype
-         */
-        stroke: function(context, stroke, strokeWidth, shadow) {
-            if(context.type === 'scene') {
-                return this._strokeScene(context, stroke, strokeWidth, shadow);
-            }
-            else if(context.type === 'hit') {
-                return this._strokeHit(context, strokeWidth);
-            }
-            return false;
-        },
-        _strokeScene: function(context, stroke, strokeWidth, shadow) {
-            if(stroke || strokeWidth) {
-                context.save();
-                var appliedShadow = this._applyShadow(context, shadow);
-                context.lineWidth = strokeWidth || 2;
-                context.strokeStyle = stroke || 'black';
-                context.stroke(context);
-                context.restore();
-
-                if(appliedShadow) {
-                    if(shadow.opacity) {
-                        this._strokeScene(context, stroke);
-                    }
-                    return true;
-                }
-            }
-            return false;
-        },
-        _strokeHit: function(context, strokeWidth) {
-            var stroke = this.colorKey;
-            if(stroke || strokeWidth) {
-                context.save();
-                context.lineWidth = strokeWidth || 2;
-                context.strokeStyle = stroke || 'black';
-                context.stroke(context);
-                context.restore();
-            }
-            return false;
-        },
         _getFillType: function(fill) {
             var type = Kinetic.Type;
             if(!fill) {
@@ -163,111 +120,36 @@ Kinetic.Shape = (function() {
             }
         },
         /**
-         * helper method to fill and stroke shape based on fill and stroke properties,
-         * and also automatically handle shadows, line joins, and line caps
-         * @name render
-         * @methodOf Kinetic.Shape.prototype
-         */
-        render: function(context) {
-            this.applyLineJoin(context, this.getLineJoin());
-            this.applyLineCap(context, this.getLineCap());
-            if(context.type === 'scene') {
-                this.applyOpacity(context);
-            }
-
-            var appliedShadow = this.fill(context, this.getFill(), this.getShadow());
-            this.stroke(context, this.getStroke(), this.getStrokeWidth(), appliedShadow ? null : this.getShadow());
-        },
-        /**
-         * helper method to fill the shape
+         * fill current path
          * @name fill
          * @methodOf Kinetic.Shape.prototype
          */
-        fill: function(context, fill, shadow) {
-            if(context.type === 'scene') {
-                return this._fillScene(context, fill, shadow);
-            }
-            else if(context.type === 'hit') {
-                return this._fillHit(context);
-            }
-            return false;
-        },
-        _fillScene: function(context, fill, shadow) {
-            var fillType = this._getFillType(fill);
-            if(fill) {
-                context.save();
-
-                var appliedShadow = this._applyShadow(context, shadow);
-                var s = fill.start;
-                var e = fill.end;
-
-                // color fill
-                switch(fillType) {
-                    case 'COLOR':
-                        context.fillStyle = fill;
-                        context.fill(context);
-                        break;
-                    case 'PATTERN':
-                        var repeat = !fill.repeat ? 'repeat' : fill.repeat;
-                        if(fill.scale) {
-                            context.scale(fill.scale.x, fill.scale.y);
-                        }
-                        if(fill.offset) {
-                            context.translate(fill.offset.x, fill.offset.y);
-                        }
-
-                        context.fillStyle = context.createPattern(fill.image, repeat);
-                        context.fill(context);
-                        break;
-                    case 'LINEAR_GRADIENT':
-                        var grd = context.createLinearGradient(s.x, s.y, e.x, e.y);
-                        var colorStops = fill.colorStops;
-
-                        // build color stops
-                        for(var n = 0; n < colorStops.length; n += 2) {
-                            grd.addColorStop(colorStops[n], colorStops[n + 1]);
-                        }
-                        context.fillStyle = grd;
-                        context.fill(context);
-
-                        break;
-                    case 'RADIAL_GRADIENT':
-                        var grd = context.createRadialGradient(s.x, s.y, s.radius, e.x, e.y, e.radius);
-                        var colorStops = fill.colorStops;
-
-                        // build color stops
-                        for(var n = 0; n < colorStops.length; n += 2) {
-                            grd.addColorStop(colorStops[n], colorStops[n + 1]);
-                        }
-                        context.fillStyle = grd;
-                        context.fill(context);
-                        break;
-                    default:
-                        context.fillStyle = 'black';
-                        context.fill(context);
-                        break;
-                }
-
-                context.restore();
-
-                if(appliedShadow) {
-                    if(shadow.opacity) {
-                        this._fillScene(context, fill);
-                    }
-                    return true;
-                }
-            }
-            return false;
-        },
-        _fillHit: function(context) {
-            context.save();
-            context.fillStyle = this.colorKey;
-            context.fill(context);
-            context.restore();
-            return false;
+        fill: function(context) {
+            context.renderer._fill(this);
         },
         /**
-         * helper method to draw an image
+         * stroke current path
+         * @name stroke
+         * @methodOf Kinetic.Shape.prototype
+         */
+        stroke: function(context) {
+            context.renderer._stroke(this);
+        },
+        /**
+         * fill and stroke current path.&nbsp; Aside from being a convenience method
+         *  which fills and strokes the current path with a single method, its main purpose is
+         *  to ensure that the shadow object is not applied to both the fill and stroke.&nbsp; A shadow
+         *  will only be applied to either the fill or stroke.&nbsp; Fill
+         *  is given priority over stroke.
+         * @name fillStroke
+         * @methodOf Kinetic.Shape.prototype
+         */
+        fillStroke: function(context) {
+            context.renderer._fill(this);
+            context.renderer._stroke(this, this.getShadow() && this.getFill());
+        },
+        /**
+         * draw an image
          * @name drawImage
          * @methodOf Kinetic.Shape.prototype
          */
@@ -287,34 +169,20 @@ Kinetic.Shape = (function() {
 
             context.restore();
         },
-        applyOpacity: function(context) {
+        _applyOpacity: function(context) {
             var absOpacity = this.getAbsoluteOpacity();
             if(absOpacity !== 1) {
                 context.globalAlpha = absOpacity;
             }
         },
-        /**
-         * helper method to set the line join of a shape
-         * based on the applyLineJoin property
-         * @name lineJoin
-         * @methodOf Kinetic.Shape.prototype
-         * @param {CanvasContext} context
-         * @param {String} lineJoin
-         */
-        applyLineJoin: function(context, lineJoin) {
+        _applyLineJoin: function(context) {
+            var lineJoin = this.getLineJoin();
             if(lineJoin) {
                 context.lineJoin = lineJoin;
             }
         },
-        /**
-         * helper method to set the line cap of a path
-         * based on the lineCap property
-         * @name applyLineCap
-         * @methodOf Kinetic.Shape.prototype
-         * @param {CanvasContext} context
-         * @param {String} lineCap
-         */
-        applyLineCap: function(context, lineCap) {
+        _applyLineCap: function(context) {
+            var lineCap = this.getLineCap();
             if(lineCap) {
                 context.lineCap = lineCap;
             }
@@ -391,29 +259,6 @@ Kinetic.Shape = (function() {
         _get: function(selector) {
             return this.nodeType === selector || this.shapeType === selector ? [this] : [];
         },
-        _applyShadow: function(context, shadow) {
-            if(shadow) {
-                var aa = this.getAbsoluteOpacity();
-                // defaults
-                var color = shadow.color || 'black';
-                var blur = shadow.blur || 5;
-                var offset = shadow.offset || {
-                    x: 0,
-                    y: 0
-                };
-
-                if(shadow.opacity) {
-                    context.globalAlpha = shadow.opacity * aa;
-                }
-                context.shadowColor = color;
-                context.shadowBlur = blur;
-                context.shadowOffsetX = offset.x;
-                context.shadowOffsetY = offset.y;
-                return true;
-            }
-
-            return false;
-        },
         /**
          * determines if point is in the shape
          * @param {Object|Array} point point can be an object containing
@@ -447,6 +292,9 @@ Kinetic.Shape = (function() {
                 }
 
                 context.save();
+                this._applyOpacity(context);
+                this._applyLineJoin(context);
+                this._applyLineCap(context);
                 var len = family.length;
                 for(var n = 0; n < len; n++) {
                     var node = family[n], t = node.getTransform(), m = t.getMatrix();
@@ -470,12 +318,15 @@ Kinetic.Shape = (function() {
                 }
 
                 context.save();
+                this._applyOpacity(context);
+                this._applyLineJoin(context);
+                this._applyLineCap(context);
                 var len = family.length;
                 for(var n = 0; n < len; n++) {
                     var node = family[n], t = node.getTransform(), m = t.getMatrix();
                     context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                 }
-                
+
                 drawFunc.call(this, context);
                 context.restore();
             }
@@ -493,6 +344,8 @@ Kinetic.Shape = (function() {
                 }
 
                 context.save();
+                this._applyLineJoin(context);
+                this._applyLineCap(context);
                 var len = family.length;
                 for(var n = 0; n < len; n++) {
                     var node = family[n], t = node.getTransform(), m = t.getMatrix();

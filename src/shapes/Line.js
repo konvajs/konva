@@ -47,7 +47,7 @@ Kinetic.Line.prototype = {
             }
         }
 
-        this.stroke(context, this.getStroke(), this.getStrokeWidth(), this.getShadow());
+        this.stroke(context);
     },
     /**
 	 * set points array

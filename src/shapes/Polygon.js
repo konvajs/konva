@@ -30,7 +30,7 @@ Kinetic.Polygon.prototype = {
             context.lineTo(this.attrs.points[n].x, this.attrs.points[n].y);
         }
         context.closePath();
-        this.render(context);
+        this.fillStroke(context);
     },
     /**
 	 * set points array

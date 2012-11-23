@@ -27,7 +27,7 @@ Kinetic.Circle.prototype = {
         context.beginPath();
         context.arc(0, 0, this.getRadius(), 0, Math.PI * 2, true);
         context.closePath();
-        this.render(context);
+        this.fillStroke(context);
     },
     getWidth: function() {
         return this.getRadius() * 2;

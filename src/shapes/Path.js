@@ -68,7 +68,7 @@ Kinetic.Path.prototype = {
                     break;
             }
         }
-        this.render(context);
+        this.fillStroke(context);
     }
 };
 Kinetic.Global.extend(Kinetic.Path, Kinetic.Shape);
