@@ -21,7 +21,7 @@ Kinetic.Image.prototype = {
 
         // call super constructor
         Kinetic.Shape.call(this, config);
-		this._setDrawFuncs();
+        this._setDrawFuncs();
 
         var that = this;
         this.on('imageChange', function(evt) {
@@ -56,13 +56,19 @@ Kinetic.Image.prototype = {
     drawHitFunc: function(context) {
         var width = this.getWidth(), height = this.getHeight(), imageBuffer = this.imageBuffer, appliedShadow = false;
 
-        context.beginPath();
-        context.rect(0, 0, width, height);
-        context.closePath();
-        this.fillStroke(context);
-
         if(imageBuffer) {
             this.drawImage(context, this.imageBuffer, 0, 0, width, height);
+            
+            context.beginPath();
+            context.rect(0, 0, width, height);
+            context.closePath();
+            this.stroke(context);
+        }
+        else {
+            context.beginPath();
+            context.rect(0, 0, width, height);
+            context.closePath();
+            this.fillStroke(context);
         }
     },
     /**

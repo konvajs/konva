@@ -85,7 +85,7 @@ Test.Modules.LINE = {
                 blur: 10,
                 offset: [20, 20]
             },
-            opacity: 0.2
+            //opacity: 0.2
         });
 
         layer.add(line);

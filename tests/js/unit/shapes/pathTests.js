@@ -392,7 +392,7 @@ Test.Modules.PATH = {
         layer.add(group);
         stage.add(layer);
 
-        //document.body.appendChild(layer.bufferCanvas.element)
+       	showHit(layer);
 
     },
     'Able to determine point on line some distance from another point on line': function(containerId) {
