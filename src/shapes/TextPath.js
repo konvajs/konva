@@ -70,7 +70,7 @@ Kinetic.TextPath.prototype = {
             context.translate(p0.x, p0.y);
             context.rotate(glyphInfo[i].rotation);
 
-            this.fillStrokeText(context);
+            this.fillStrokeText(context, glyphInfo[i].text);
 
             context.restore();
 

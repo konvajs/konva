@@ -647,7 +647,7 @@ Test.Modules.CONTAINER = {
         test(group.get('Group').length === 0, 'group should have 0 groups');
 
     },
-    'node and shape type selector': function(containerId) {
+    '*node and shape type selector': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -781,6 +781,12 @@ Test.Modules.CONTAINER = {
         test(group.get('Group').length === 0, 'group should have 0 groups');
         test(group.get('Rect').length === 1, 'group should have 1 rects');
         test(group.get('Circle').length === 1, 'gropu should have 1 circles');
+
+        stage.toDataURL({
+            callback: function(dataUrl) {
+                test(dataUrl === nodeShapeTypeSelector, 'problem with node and shape type selector render.');
+            }
+        });
     },
     'remove shape': function(containerId) {
         var stage = new Kinetic.Stage({
