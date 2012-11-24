@@ -647,7 +647,7 @@ Test.Modules.CONTAINER = {
         test(group.get('Group').length === 0, 'group should have 0 groups');
 
     },
-    '*node and shape type selector': function(containerId) {
+    'node and shape type selector': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,

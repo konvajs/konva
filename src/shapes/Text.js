@@ -136,26 +136,26 @@ Kinetic.Text.prototype = {
         };
     },
     fillText: function(context, text, skipShadow) {
-        var textFill = this.getTextFill(), shadow = this.getShadow();
+        var textFill = this.getTextFill(), textShadow = this.getTextShadow();
         if(textFill) {
             context.save();
-            if(!skipShadow && shadow) {
+            if(!skipShadow && textShadow) {
                 this._applyTextShadow(context);
             }
             context.fillStyle = textFill;
             context.fillText(text, 0, 0);
             context.restore();
 
-            if(!skipShadow && shadow && shadow.opacity) {
+            if(!skipShadow && textShadow && textShadow.opacity) {
                 this.fillText(context, text, true);
             }
         }
     },
     strokeText: function(context, text, skipShadow) {
-        var textStroke = this.getTextStroke(), textStrokeWidth = this.getTextStrokeWidth(), shadow = this.getShadow();
+        var textStroke = this.getTextStroke(), textStrokeWidth = this.getTextStrokeWidth(), textShadow = this.getTextShadow();
         if(textStroke || textStrokeWidth) {
             context.save();
-            if(!skipShadow && shadow) {
+            if(!skipShadow && textShadow) {
                 this._applyTextShadow(context);
             }
 
@@ -164,7 +164,7 @@ Kinetic.Text.prototype = {
             context.strokeText(text, 0, 0);
             context.restore();
 
-            if(!skipShadow && shadow && shadow.opacity) {
+            if(!skipShadow && textShadow && textShadow.opacity) {
                 this.strokeText(context, text, true);
             }
         }

@@ -303,9 +303,10 @@ Kinetic.Global.extend(Kinetic.TextPath, Kinetic.Shape);
 
 // add setters and getters
 Kinetic.Node.addGettersSetters(Kinetic.TextPath, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth']);
-Kinetic.Node.addGetters(Kinetic.TextPath, ['text']);
+Kinetic.Node.addGetters(Kinetic.TextPath, ['text', 'textShadow']);
 
 // reference Text methods
+Kinetic.TextPath.prototype.setTextShadow = Kinetic.Text.prototype.setTextShadow;
 Kinetic.TextPath.prototype.fillText = Kinetic.Text.prototype.fillText;
 Kinetic.TextPath.prototype.strokeText = Kinetic.Text.prototype.strokeText;
 Kinetic.TextPath.prototype.fillStrokeText = Kinetic.Text.prototype.strokeText;

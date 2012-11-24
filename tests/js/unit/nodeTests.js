@@ -771,7 +771,7 @@ Test.Modules.NODE = {
 
 				
                 cachedShape.createImageBuffer(function() {
-                	console.log(111)
+       
                     layer.draw();
                     //console.log(layer.toDataURL());
                     warn(dataUrls['regular and cahced polygon'] === layer.toDataURL(), 'regular and cached polygon layer data url is incorrect');

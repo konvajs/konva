@@ -308,7 +308,7 @@ Test.Modules.Text = {
             //width: 200,
             padding: 20,
             align: 'center',
-            shadow: {
+            textShadow: {
                 color: 'red',
                 blur: 1,
                 offset: [10, 10],
@@ -321,10 +321,8 @@ Test.Modules.Text = {
 
         layer.add(text);
         stage.add(layer);
-
-        //console.log(layer.toDataURL());
-
-        warn(layer.toDataURL() === dataUrls['multi line text with shadows'], 'multi line text with shadows data url is incorrect');
+        
+        warn(layer.toDataURL() === multiLineTextWithShadows, 'multi line text with shadows data url is incorrect');
     },
     'change font size should update text data': function(containerId) {
         var stage = new Kinetic.Stage({
