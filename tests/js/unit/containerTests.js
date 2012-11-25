@@ -784,7 +784,7 @@ Test.Modules.CONTAINER = {
 
         stage.toDataURL({
             callback: function(dataUrl) {
-                test(dataUrl === nodeShapeTypeSelector, 'problem with node and shape type selector render.');
+                test(dataUrl === dataUrls['node shape type selector'], 'problem with node and shape type selector render.');
             }
         });
     },

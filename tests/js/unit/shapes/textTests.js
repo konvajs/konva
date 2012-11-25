@@ -321,8 +321,8 @@ Test.Modules.Text = {
 
         layer.add(text);
         stage.add(layer);
-        
-        warn(layer.toDataURL() === multiLineTextWithShadows, 'multi line text with shadows data url is incorrect');
+
+        warn(layer.toDataURL() === dataUrls['multiline text with shadows'], 'multi line text with shadows data url is incorrect');
     },
     'change font size should update text data': function(containerId) {
         var stage = new Kinetic.Stage({

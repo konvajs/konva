@@ -124,7 +124,7 @@ Test.Modules.NODE = {
 				
 				var dataUrl = layer.toDataURL();
 				
-				warn(dataUrl === groupToImageDataUrl, 'group to image data url is incorrect');
+				warn(dataUrl === dataUrls['group to image'], 'group to image data url is incorrect');
 			}
 		});
         
@@ -388,7 +388,9 @@ Test.Modules.NODE = {
 
         stage.draw();
         
-        warn(layer.toDataURL() === cloneGroup, 'problem cloning group');
+        //console.log(layer.toDataURL());
+        
+        warn(layer.toDataURL() === dataUrls['clone group'], 'problem cloning group');
         
         
     },
@@ -774,7 +776,7 @@ Test.Modules.NODE = {
        
                     layer.draw();
                     //console.log(layer.toDataURL());
-                    warn(dataUrls['regular and cahced polygon'] === layer.toDataURL(), 'regular and cached polygon layer data url is incorrect');
+                    warn(dataUrls['regular and cached polygon'] === layer.toDataURL(), 'regular and cached polygon layer data url is incorrect');
 
                     
                 });
@@ -2013,8 +2015,6 @@ Test.Modules.NODE = {
         test(stage.toJSON() === json, "problem loading stage with json");
     },
     'serialize stage with custom shape': function(containerId) {
-        var urls = dataUrls['STAGE - serialize stage with custom shape'];
-
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2046,7 +2046,7 @@ Test.Modules.NODE = {
 
         var startDataUrl = layer.toDataURL();
 
-        //warn(startDataUrl === urls[0], 'start data url is incorrect');
+        warn(startDataUrl === dataUrls['serialize stage with custom shape'], 'start data url is incorrect');
         test(triangle.getId() === 'myTriangle', 'triangle id should be myTriangle');
 
         //console.log(stage.toJSON());
@@ -2062,7 +2062,7 @@ Test.Modules.NODE = {
         layer.draw();
 
         var endDataUrl = layer.toDataURL();
-        //warn(endDataUrl === urls[0], 'end data url is incorrect');
+        warn(endDataUrl === dataUrls['serialize stage with custom shape'], 'end data url is incorrect');
 
     },
     'load stage with custom shape using json': function(containerId) {

@@ -59,32 +59,14 @@ Test.Modules.SHAPE = {
             context.lineTo(420, 80);
             context.quadraticCurveTo(300, 100, 260, 170);
             context.closePath();
-            this.fill(context, 'red');
-            this.stroke(context, 'black', this.getStrokeWidth(), {
-                color: 'black',
-                offset: {
-                    x: 20,
-                    y: 20
-                },
-                opacity: 0.5
-            });
+            this.fillStroke(context);
 
             context.beginPath();
             context.moveTo(300, 150);
             context.lineTo(520, 180);
             context.quadraticCurveTo(400, 200, 360, 270);
             context.closePath();
-
-            this.fill(context, 'green', {
-                color: 'black',
-                offset: {
-                    x: 20,
-                    y: 20
-                },
-                opacity: 0.5
-            });
-
-            this.stroke(context, 'yellow', this.getStrokeWidth());
+            this.fillStroke(context);
         };
         var triangle = new Kinetic.Shape({
             drawFunc: drawTriangle,
@@ -92,12 +74,20 @@ Test.Modules.SHAPE = {
             stroke: "black",
             strokeWidth: 4,
             id: 'myTriangle',
-            draggable: true
+            draggable: true,
+            shadow: {
+            	color: 'black',
+            	opacity: 0.5,
+            	blur: 10,
+            	offset: 10
+            }
         });
 
         stage.add(layer.add(triangle));
 
-        warn(layer.toDataURL() === customShapeTwoFills, 'problem with custom shape with two fills');
+		var dataUrl = layer.toDataURL();
+		//console.log(dataUrl);
+        warn(dataUrl === dataUrls['custom shape with two fills and strokes'], 'problem with custom shape with two fills');
 
     },
     'custom shape with fill, stroke, and strokeWidth': function(containerId) {
@@ -125,7 +115,7 @@ Test.Modules.SHAPE = {
         });
 
         layer.add(shape);
-        stage.add(layer);
+        stage.add(layer); 
     },
     'change custom shape draw func': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -187,6 +177,6 @@ Test.Modules.SHAPE = {
 
         var dataUrl = layer.toDataURL();
 
-        test(dataUrls['SHAPE - change custom shape draw func'] === dataUrl, 'problem with setDrawFunc');
+        test(dataUrls['change custom shape draw func'] === dataUrl, 'problem with setDrawFunc');
     }
 };

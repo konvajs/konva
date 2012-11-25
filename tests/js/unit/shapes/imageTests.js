@@ -151,7 +151,7 @@ Test.Modules.IMAGE = {
                 layer.draw();
                 var dataUrl = layer.toDataURL();
                 //console.log(dataUrl);
-                warn(dataUrl === dataUrls['Filters - grayscale image'], 'problem with Grayscale filter.');
+                warn(dataUrl === dataUrls['grayscale image'], 'problem with Grayscale filter.');
             });
         };
         imageObj.src = '../assets/darth-vader.jpg';
@@ -184,7 +184,7 @@ Test.Modules.IMAGE = {
                 layer.draw();
                 var dataUrl = layer.toDataURL();
                 //console.log(dataUrl);
-                //warn(dataUrl === dataUrls['Filters - invert image'], 'problem with Invert filter.');
+                warn(dataUrl === dataUrls['invert image'], 'problem with Invert filter.');
 
             });
         };
@@ -220,14 +220,13 @@ Test.Modules.IMAGE = {
                 layer.draw();
                 var dataUrl = layer.toDataURL();
                 //console.log(dataUrl);
-                warn(dataUrl === dataUrls['Filters - adjust image brightness'], 'problem with Brighten filter.');
+                warn(dataUrl === dataUrls['adjust image brightness'], 'problem with Brighten filter.');
 
             });
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
     'filter transformed image': function(containerId) {
-        var urls = dataUrls['SHAPE - filter transformed image'];
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = new Kinetic.Stage({
@@ -260,7 +259,8 @@ Test.Modules.IMAGE = {
             darth.applyFilter(Kinetic.Filters.Grayscale, null, function() {
                 //stage.start();
                 layer.draw();
-                warn(layer.toDataURL() === urls[0], 'data url is incorrect');
+                //console.log(layer.toDataURL());
+                warn(layer.toDataURL() === dataUrls['filter transformed image'], 'problem filtering transformed image');
 
             });
         };
