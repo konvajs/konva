@@ -171,6 +171,7 @@ Kinetic.Node = (function() {
                 while(this.children && this.children.length > 0) {
                     this.children[0].remove();
                 }
+                delete this.parent;
             }
         },
         /**

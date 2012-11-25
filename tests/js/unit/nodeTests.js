@@ -78,8 +78,8 @@ Test.Modules.NODE = {
         layer.add(rect);
         stage.add(layer);
 
-		rect.setListening(false);
-		layer.drawHit();
+        rect.setListening(false);
+        layer.drawHit();
 
         showHit(layer);
     },
@@ -108,26 +108,26 @@ Test.Modules.NODE = {
             listening: false
         });
 
-		group.add(rect).add(rect2);
+        group.add(rect).add(rect2);
         layer.add(group);
         stage.add(layer);
 
-		group.toImage({
-			callback: function(imageObj) {
-				var img = new Kinetic.Image({
-					image: imageObj,
-					x: 50,
-					y: 50
-				});
-				
-				layer.add(img).draw();
-				
-				var dataUrl = layer.toDataURL();
-				
-				warn(dataUrl === dataUrls['group to image'], 'group to image data url is incorrect');
-			}
-		});
-        
+        group.toImage({
+            callback: function(imageObj) {
+                var img = new Kinetic.Image({
+                    image: imageObj,
+                    x: 50,
+                    y: 50
+                });
+
+                layer.add(img).draw();
+
+                var dataUrl = layer.toDataURL();
+
+                warn(dataUrl === dataUrls['group to image'], 'group to image data url is incorrect');
+            }
+        });
+
     },
     'test offset attr change': function(containerId) {
         /*
@@ -317,23 +317,16 @@ Test.Modules.NODE = {
         rect.on('tap', function() {
             taps.push(this.attrs.myAttr);
         });
-        
-        
         var clone = group.clone({
             x: 300,
             name: 'groupClone'
         });
-        
-        
+
         showHit(layer);
 
-	
-
-		
         layer.add(group);
         layer.add(clone);
         stage.add(layer);
-
 
         test(clone.getX() === 300, 'clone x should be 300');
         test(clone.getY() === 0, 'clone y should be 50');
@@ -353,10 +346,8 @@ Test.Modules.NODE = {
             myAttr: 'clone rect'
         });
 
-        
-         // Make sure that when we change a clone object attr that the rect object
-         // attr isn't updated by reference
-         
+        // Make sure that when we change a clone object attr that the rect object
+        // attr isn't updated by reference
 
         test(group.get('.myText')[0].getTextFill() === 'blue', 'group text should be blue');
         test(clone.get('.myText')[0].getTextFill() === 'black', 'clone text should be blue');
@@ -385,14 +376,12 @@ Test.Modules.NODE = {
         clone.get('.myRect')[0].simulate('tap');
         test(taps.toString() === 'group rect,clone rect', 'tap order should be group rect followed by clone rect');
 
-
         stage.draw();
-        
+
         //console.log(layer.toDataURL());
-        
+
         warn(layer.toDataURL() === dataUrls['clone group'], 'problem cloning group');
-        
-        
+
     },
     'test on attr change': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -706,7 +695,7 @@ Test.Modules.NODE = {
             clone.start();
         };
         imageObj.src = '../assets/scorpion-sprite.png';
-    },  
+    },
     'node caching': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -752,8 +741,8 @@ Test.Modules.NODE = {
             width: 500,
             height: 300,
             callback: function(imageObj) {
-            	
-            	//document.body.appendChild(imageObj)
+
+                //document.body.appendChild(imageObj)
                 test(Kinetic.Type._isElement(imageObj), 'shape toImage() should be an image object');
 
                 var cachedShape = new Kinetic.Image({
@@ -771,38 +760,33 @@ Test.Modules.NODE = {
 
                 //console.log(layer.toDataURL());
 
-				
                 cachedShape.createImageBuffer(function() {
-       
+
                     layer.draw();
                     //console.log(layer.toDataURL());
                     warn(dataUrls['regular and cached polygon'] === layer.toDataURL(), 'regular and cached polygon layer data url is incorrect');
 
-                    
                 });
-                
             }
-            
-            
         });
 
-		/*
-        group.toImage({
-            callback: function(imageObj) {
-                test(Kinetic.Type._isElement(imageObj), 'group toImage() should be an image object');
-            }
-        });
-        layer.toImage({
-            callback: function(imageObj) {
-                test(Kinetic.Type._isElement(imageObj), 'layer toImage() should be an image object');
-            }
-        });
-        stage.toImage({
-            callback: function(imageObj) {
-                test(Kinetic.Type._isElement(imageObj), 'stage toImage() should be an image object');
-            }
-        });
-     	*/
+        /*
+         group.toImage({
+         callback: function(imageObj) {
+         test(Kinetic.Type._isElement(imageObj), 'group toImage() should be an image object');
+         }
+         });
+         layer.toImage({
+         callback: function(imageObj) {
+         test(Kinetic.Type._isElement(imageObj), 'layer toImage() should be an image object');
+         }
+         });
+         stage.toImage({
+         callback: function(imageObj) {
+         test(Kinetic.Type._isElement(imageObj), 'stage toImage() should be an image object');
+         }
+         });
+         */
 
         showHit(layer);
     },
@@ -1493,21 +1477,21 @@ Test.Modules.NODE = {
 
         layer.add(rect);
         stage.add(layer);
-        
+
         test(rect.isListening(), 'rect should be listening');
-        
-        rect.setListening(false);  
+
+        rect.setListening(false);
         test(!rect.isListening(), 'rect should not be listening');
-        
+
         rect.setListening(true);
         test(rect.isListening(), 'rect should be listening');
-        
+
         layer.setListening(false);
         test(!rect.isListening(), 'rect should not be listening because layer is not listening');
-        
+
         layer.setListening(true);
         test(rect.isListening(), 'rect should be listening');
-        
+
         stage.setListening(false);
         test(!rect.isListening(), 'rect should not be listening because stage is not listening');
     },
@@ -1543,10 +1527,9 @@ Test.Modules.NODE = {
              console.log(rightClick);
              */
         });
-        
         var foo;
         circle.on('customEvent', function(evt) {
-        	foo = evt.foo;
+            foo = evt.foo;
         });
 
         layer.on('click', function() {
@@ -1561,12 +1544,14 @@ Test.Modules.NODE = {
         circle.fire('click');
 
         test(clicks.toString() == 'circle,layer,circle', 'problem with fire');
-        
+
         // test custom event
-        circle.fire('customEvent', {foo:'bar'});
-        
+        circle.fire('customEvent', {
+            foo: 'bar'
+        });
+
         test(foo === 'bar', 'problem with customEvent param passing');
-        
+
     },
     'add remove event': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -2124,5 +2109,193 @@ Test.Modules.NODE = {
             stage.draw();
         };
         imageObj.src = '../assets/darth-vader.jpg';
+    },
+    'remove shape': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle'
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        test(layer.children.length === 1, 'layer should have 1 children');
+
+        circle.remove();
+
+        test(layer.children.length === 0, 'layer should have 0 children');
+        //test(layer.getChild('myCircle') === undefined, 'shape should be null');
+
+        layer.draw();
+
+        test(circle.getParent() === undefined, 'circle parent should be undefined');
+    },
+    'remove shape without adding its parent to stage': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            id: 'myCircle'
+        });
+
+        var go = Kinetic.Global;
+
+        test(go.tempNodes[circle._id] === undefined, 'circle shouldn\'t be in the temp nodes hash');
+
+        layer.add(circle);
+
+        var node = stage.get('#myCircle')[0];
+
+        test(node === undefined, 'node should be undefined');
+
+        test(go.tempNodes[circle._id].attrs.id === 'myCircle', 'circle should be in temp nodes');
+
+        circle.remove();
+
+        test(go.tempNodes[circle._id] === undefined, 'circle shouldn\'t be in the temp nodes hash');
+
+    },
+    'remove layer with shape': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer({
+            name: 'myLayer'
+        });
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle'
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        test(stage.children.length === 1, 'stage should have 1 children');
+        test(stage.get('.myLayer')[0] !== undefined, 'layer should exist');
+        test(stage.get('.myCircle')[0] !== undefined, 'circle should exist');
+
+        layer.remove();
+
+        test(stage.children.length === 0, 'stage should have 0 children');
+        test(stage.get('.myLayer')[0] === undefined, 'layer should not exist');
+        test(stage.get('.myCircle')[0] === undefined, 'circle should not exist');
+
+        stage.draw();
+    },
+    'remove layer with no shapes': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        stage.add(layer);
+        layer.remove();
+
+        test(stage.children.length === 0, 'stage should have 0 children');
+    },
+    'remove shape multiple times': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var shape1 = new Kinetic.Circle({
+            x: 150,
+            y: 100,
+            radius: 50,
+            fill: 'green',
+            name: 'myCircle'
+        });
+
+        var shape2 = new Kinetic.Circle({
+            x: 250,
+            y: 100,
+            radius: 50,
+            fill: 'green',
+            name: 'myCircle'
+        });
+
+        layer.add(shape1);
+        layer.add(shape2);
+        stage.add(layer);
+
+        test(layer.getChildren().length === 2, 'layer should have two children');
+
+        shape1.remove();
+        shape1.remove();
+
+        test(layer.getChildren().length === 1, 'layer should have two children');
+
+        layer.draw();
+
+    },
+    'remove layer multiple times': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer1 = new Kinetic.Layer();
+        var layer2 = new Kinetic.Layer();
+
+        var shape1 = new Kinetic.Circle({
+            x: 150,
+            y: 100,
+            radius: 50,
+            fill: 'green',
+            name: 'myCircle'
+        });
+
+        var shape2 = new Kinetic.Circle({
+            x: 250,
+            y: 100,
+            radius: 50,
+            fill: 'green',
+            name: 'myCircle'
+        });
+
+        layer1.add(shape1);
+        layer2.add(shape2);
+        stage.add(layer1);
+        stage.add(layer2);
+
+        test(stage.getChildren().length === 2, 'stage should have two children');
+
+        layer1.remove();
+        layer1.remove();
+
+        test(stage.getChildren().length === 1, 'stage should have one child');
+
+        stage.draw();
+
     }
 };

@@ -245,13 +245,14 @@ Kinetic.Layer.prototype = {
      * remove layer from stage
      */
     remove: function() {
+    	var stage = this.getStage();
         Kinetic.Node.prototype.remove.call(this);
         /*
          * remove canvas DOM from the document if
          * it exists
          */
         try {
-            this.getStage().content.removeChild(this.canvas.element);
+            stage.content.removeChild(this.canvas.element);
         }
         catch(e) {
             Kinetic.Global.warn('unable to remove layer scene canvas element from the document');
