@@ -1,12 +1,13 @@
 Kinetic.Node = (function() {
     /**
-     * Node constructor.&nbsp; Nodes are entities that can be transformed, layered,
-     * and have events bound to them.  They are the building blocks of a KineticJS
-     * application
+     * Node constructor. Nodes are entities that can be transformed, layered,
+     * and have bound events. The stage, layers, groups, and shapes all extend Node.
      * @constructor
      * @param {Object} config
      * @param {Number} [config.x]
      * @param {Number} [config.y]
+     * @param {Number} [config.width]
+     * @param {Number} [config.height]
      * @param {Boolean} [config.visible]
      * @param {Boolean} [config.listening] whether or not the node is listening for events
      * @param {String} [config.id] unique id
@@ -17,11 +18,11 @@ Kinetic.Node = (function() {
      * @param {Number} [config.scale.y]
      * @param {Number} [config.rotation] rotation in radians
      * @param {Number} [config.rotationDeg] rotation in degrees
-     * @param {Object} [config.offset] offsets default position point and rotation point
+     * @param {Object} [config.offset] offset from center point and rotation point
      * @param {Number} [config.offset.x]
      * @param {Number} [config.offset.y]
      * @param {Boolean} [config.draggable]
-     * @param {Function} [config.dragBoundFunc] dragBoundFunc(pos, evt) should return new position
+     * @param {Function} [config.dragBoundFunc]
      */
     var Node = function(config) {
         this._nodeInit(config);
@@ -70,16 +71,16 @@ Kinetic.Node = (function() {
             });
         },
         /**
-         * bind events to the node.  KineticJS supports mouseover, mousemove,
-         *  mouseout, mousedown, mouseup, click, dblclick, touchstart, touchmove,
-         *  touchend, tap, dbltap, dragstart, dragmove, and dragend.  Pass in a string
-         *  of event types delimmited by a space to bind multiple events at once
-         *  such as 'mousedown mouseup mousemove'. include a namespace to bind an
+         * bind events to the node. KineticJS supports mouseover, mousemove,
+         *  mouseout, mouseenter, mouseleave, mousedown, mouseup, click, dblclick, touchstart, touchmove,
+         *  touchend, tap, dbltap, dragstart, dragmove, and dragend events. Pass in a string
+         *  of events delimmited by a space to bind multiple events at once
+         *  such as 'mousedown mouseup mousemove'. Include a namespace to bind an
          *  event by name such as 'click.foobar'.
          * @name on
          * @methodOf Kinetic.Node.prototype
-         * @param {String} typesStr
-         * @param {Function} handler
+         * @param {String} typesStr e.g. 'click', 'mousedown touchstart', 'mousedown.foo touchstart.foo'
+         * @param {Function} handler The handler function is passed an event object
          */
         on: function(typesStr, handler) {
             var types = typesStr.split(' ');
@@ -107,7 +108,7 @@ Kinetic.Node = (function() {
             }
         },
         /**
-         * remove event bindings from the node.  Pass in a string of
+         * remove event bindings from the node. Pass in a string of
          *  event types delimmited by a space to remove multiple event
          *  bindings at once such as 'mousedown mouseup mousemove'.
          *  include a namespace to remove an event binding by name
@@ -115,7 +116,7 @@ Kinetic.Node = (function() {
          *  all events in that namespace will be removed.
          * @name off
          * @methodOf Kinetic.Node.prototype
-         * @param {String} typesStr
+         * @param {String} typesStr e.g. 'click', 'mousedown touchstart', '.foobar'
          */
         off: function(typesStr) {
             var types = typesStr.split(' ');
@@ -148,7 +149,6 @@ Kinetic.Node = (function() {
          * remove child from container
          * @name remove
          * @methodOf Kinetic.Container.prototype
-         * @param {Node} child
          */
         remove: function() {
             var parent = this.getParent();
@@ -214,7 +214,7 @@ Kinetic.Node = (function() {
          * set attrs
          * @name setAttrs
          * @methodOf Kinetic.Node.prototype
-         * @param {Object} config
+         * @param {Object} config object containing key value pairs
          */
         setAttrs: function(config) {
             if(config) {
@@ -276,7 +276,7 @@ Kinetic.Node = (function() {
             this.setVisible(false);
         },
         /**
-         * get zIndex
+         * get zIndex relative to the node's siblings who share the same parent
          * @name getZIndex
          * @methodOf Kinetic.Node.prototype
          */
@@ -285,7 +285,7 @@ Kinetic.Node = (function() {
         },
         /**
          * get absolute z-index which takes into account sibling
-         *  and parent indices
+         *  and ancestor indices
          * @name getAbsoluteZIndex
          * @methodOf Kinetic.Node.prototype
          */
@@ -321,7 +321,9 @@ Kinetic.Node = (function() {
             return index;
         },
         /**
-         * get node level in node tree
+         * get node level in node tree.  Returns an integer.<br><br>
+         *  e.g. Stage level will always be 0.  Layers will always be 1.  Groups and Shapes will always 
+         *  be >= 2
          * @name getLevel
          * @methodOf Kinetic.Node.prototype
          */
@@ -335,7 +337,7 @@ Kinetic.Node = (function() {
             return level;
         },
         /**
-         * set node position
+         * set node position relative to parent
          * @name setPosition
          * @methodOf Kinetic.Node.prototype
          * @param {Number} x
@@ -347,7 +349,7 @@ Kinetic.Node = (function() {
             this.setAttr('y', pos.y);
         },
         /**
-         * get node position relative to container
+         * get node position relative to parent
          * @name getPosition
          * @methodOf Kinetic.Node.prototype
          */
@@ -359,7 +361,7 @@ Kinetic.Node = (function() {
             };
         },
         /**
-         * get absolute position
+         * get absolute position relative to the top left corner of the stage container div
          * @name getAbsolutePosition
          * @methodOf Kinetic.Node.prototype
          */
@@ -373,8 +375,8 @@ Kinetic.Node = (function() {
          * set absolute position
          * @name setAbsolutePosition
          * @methodOf Kinetic.Node.prototype
-         * @param {Object} pos object containing an x and
-         *  y property
+         * @param {Number} x
+         * @param {Number} y
          */
         setAbsolutePosition: function() {
             var pos = Kinetic.Type._getXY([].slice.call(arguments));
@@ -399,7 +401,7 @@ Kinetic.Node = (function() {
             this._setTransform(trans);
         },
         /**
-         * move node by an amount
+         * move node by an amount relative to its current position
          * @name move
          * @methodOf Kinetic.Node.prototype
          * @param {Number} x
@@ -438,7 +440,7 @@ Kinetic.Node = (function() {
             this.setRotation(rotDeg * Math.PI / 180);
         },
         /**
-         * rotate node by an amount in radians
+         * rotate node by an amount in radians relative to its current rotation
          * @name rotate
          * @methodOf Kinetic.Node.prototype
          * @param {Number} theta
@@ -447,7 +449,7 @@ Kinetic.Node = (function() {
             this.setRotation(this.getRotation() + theta);
         },
         /**
-         * rotate node by an amount in degrees
+         * rotate node by an amount in degrees relative to its current rotation
          * @name rotateDeg
          * @methodOf Kinetic.Node.prototype
          * @param {Number} deg
@@ -511,7 +513,7 @@ Kinetic.Node = (function() {
             }
         },
         /**
-         * set zIndex
+         * set zIndex relative to siblings
          * @name setZIndex
          * @methodOf Kinetic.Node.prototype
          * @param {Integer} zIndex
@@ -553,7 +555,7 @@ Kinetic.Node = (function() {
             newContainer._setChildrenIndices();
         },
         /**
-         * convert Node into an object for serialization
+         * convert Node into an object for serialization.  Returns an object.
          * @name toObject
          * @methodOf Kinetic.Node.prototype
          */
@@ -575,6 +577,11 @@ Kinetic.Node = (function() {
 
             return obj;
         },
+        /**
+         * convert Node into a JSON string.  Returns a JSON string.
+         * @name toJSON
+         * @methodOf Kinetic.Node.prototype
+         */
         toJSON: function() {
             return JSON.stringify(this.toObject());
         },
@@ -587,7 +594,7 @@ Kinetic.Node = (function() {
             return this.parent;
         },
         /**
-         * get layer that contains the node
+         * get layer ancestor
          * @name getLayer
          * @methodOf Kinetic.Node.prototype
          */
@@ -595,7 +602,7 @@ Kinetic.Node = (function() {
             return this.getParent().getLayer();
         },
         /**
-         * get stage that contains the node
+         * get stage ancestor
          * @name getStage
          * @methodOf Kinetic.Node.prototype
          */
@@ -618,7 +625,7 @@ Kinetic.Node = (function() {
             this._handleEvent(eventType, evt || {});
         },
         /**
-         * synthetically fire an event.&nbsp; The event object will not bubble up the Node tree.&nbsp; You can also pass in custom properties
+         * synthetically fire an event. The event object will not bubble up the Node tree. You can also pass in custom properties
          * @name fire
          * @methodOf Kinetic.Node.prototype
          * @param {String} eventType
@@ -629,7 +636,7 @@ Kinetic.Node = (function() {
         },
         /**
          * get absolute transform of the node which takes into
-         *  account its parent transforms
+         *  account its ancestor transforms
          * @name getAbsoluteTransform
          * @methodOf Kinetic.Node.prototype
          */
@@ -679,7 +686,7 @@ Kinetic.Node = (function() {
             return m;
         },
         /**
-         * clone node
+         * clone node.  Returns a new Node instance with identical attributes
          * @name clone
          * @methodOf Kinetic.Node.prototype
          * @param {Object} attrs override attrs
@@ -749,12 +756,12 @@ Kinetic.Node = (function() {
         },
         /**
          * converts node into an image.  Since the toImage
-         *  method is asynchronous, a callback is required
+         *  method is asynchronous, a callback is required.  toImage is most commonly used
+         *  to cache complex drawings as an image so that they don't have to constantly be redrawn
          * @name toImage
          * @methodOf Kinetic.Node.prototype
          * @param {Object} config
-         * @param {Function} config.callback since the toImage() method is asynchonrous, the
-         *  resulting image object is passed into the callback function
+         * @param {Function} config.callback function that is passed the image object
          * @param {String} [config.mimeType] mime type.  can be "image/png" or "image/jpeg".
          *  "image/png" is the default
          * @param {Number} [config.width] data url image width
@@ -914,9 +921,6 @@ Kinetic.Node = (function() {
                 this._fireChangeEvent(key, oldVal, val);
             }
         },
-        /**
-         * handle node event
-         */
         _handleEvent: function(eventType, evt, compareShape) {
             if(evt && this.nodeType === 'Shape') {
                 evt.shape = this;
@@ -996,10 +1000,12 @@ Kinetic.Node = (function() {
      * 	serialized object huge).  If your app uses custom shapes, images, and
      *  event handlers (it probably does), then you need to select the appropriate
      *  shapes after loading the stage and set these properties via on(), setDrawFunc(),
-     *  and setImage()
+     *  and setImage() methods
      * @name create
      * @methodOf Kinetic.Node
      * @param {String} JSON string
+     * @param {DomElement} [container] optional container dom element used only if you're 
+     *  creating a stage node
      */
     Node.create = function(json, container) {
         return this._createNode(JSON.parse(json), container);
@@ -1042,7 +1048,7 @@ Kinetic.Node = (function() {
     Node.addGetters(Node, ['scale', 'offset']);
     Node.addSetters(Node, ['width', 'height', 'listening', 'visible']);
 
-    // mappings
+    // aliases
     /**
      * Alias of getListening()
      * @name isListening
@@ -1071,21 +1077,21 @@ Kinetic.Node = (function() {
     }
 
     /**
-     * set node x position
+     * set x position
      * @name setX
      * @methodOf Kinetic.Node.prototype
      * @param {Number} x
      */
 
     /**
-     * set node y position
+     * set y position
      * @name setY
      * @methodOf Kinetic.Node.prototype
      * @param {Number} y
      */
 
     /**
-     * set node rotation in radians
+     * set rotation in radians
      * @name setRotation
      * @methodOf Kinetic.Node.prototype
      * @param {Number} theta
@@ -1113,6 +1119,20 @@ Kinetic.Node = (function() {
      * @methodOf Kinetic.Node.prototype
      * @param {String} id
      */
+    
+    /**
+     * set width
+     * @name setWidth
+     * @methodOf Kinetic.Node.prototype
+     * @param {Number} width
+     */
+    
+    /**
+     * set height
+     * @name setHeight
+     * @methodOf Kinetic.Node.prototype
+     * @param {Number} height
+     */
 
     /**
      * listen or don't listen to events
@@ -1129,13 +1149,13 @@ Kinetic.Node = (function() {
      */
 
     /**
-     * get node x position
+     * get x position
      * @name getX
      * @methodOf Kinetic.Node.prototype
      */
 
     /**
-     * get node y position
+     * get y position
      * @name getY
      * @methodOf Kinetic.Node.prototype
      */
