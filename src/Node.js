@@ -1,4 +1,4 @@
-Kinetic.Node = (function() {
+(function() {
     /**
      * Node constructor. Nodes are entities that can be transformed, layered,
      * and have bound events. The stage, layers, groups, and shapes all extend Node.
@@ -24,11 +24,11 @@ Kinetic.Node = (function() {
      * @param {Boolean} [config.draggable]
      * @param {Function} [config.dragBoundFunc]
      */
-    var Node = function(config) {
+    Kinetic.Node = function(config) {
         this._nodeInit(config);
     };
 
-    Node.prototype = {
+    Kinetic.Node.prototype = {
         _nodeInit: function(config) {
             this.defaultNodeAttrs = {
                 visible: true,
@@ -962,32 +962,32 @@ Kinetic.Node = (function() {
     };
 
     // add getter and setter methods
-    Node.addSetters = function(constructor, arr) {
+    Kinetic.Node.addSetters = function(constructor, arr) {
         var len = arr.length;
         for(var n = 0; n < len; n++) {
             var attr = arr[n];
             this._addSetter(constructor, attr);
         }
     };
-    Node.addGetters = function(constructor, arr) {
+    Kinetic.Node.addGetters = function(constructor, arr) {
         var len = arr.length;
         for(var n = 0; n < len; n++) {
             var attr = arr[n];
             this._addGetter(constructor, attr);
         }
     };
-    Node.addGettersSetters = function(constructor, arr) {
+    Kinetic.Node.addGettersSetters = function(constructor, arr) {
         this.addSetters(constructor, arr);
         this.addGetters(constructor, arr);
     };
-    Node._addSetter = function(constructor, attr) {
+    Kinetic.Node._addSetter = function(constructor, attr) {
         var that = this;
         var method = 'set' + attr.charAt(0).toUpperCase() + attr.slice(1);
         constructor.prototype[method] = function(val) {
             this.setAttr(attr, val);
         };
     };
-    Node._addGetter = function(constructor, attr) {
+    Kinetic.Node._addGetter = function(constructor, attr) {
         var that = this;
         var method = 'get' + attr.charAt(0).toUpperCase() + attr.slice(1);
         constructor.prototype[method] = function(arg) {
@@ -1007,10 +1007,10 @@ Kinetic.Node = (function() {
      * @param {DomElement} [container] optional container dom element used only if you're 
      *  creating a stage node
      */
-    Node.create = function(json, container) {
+    Kinetic.Node.create = function(json, container) {
         return this._createNode(JSON.parse(json), container);
     };
-    Node._createNode = function(obj, container) {
+    Kinetic.Node._createNode = function(obj, container) {
         var type;
 
         // determine type
@@ -1044,9 +1044,9 @@ Kinetic.Node = (function() {
         return no;
     };
     // add getters setters
-    Node.addGettersSetters(Node, ['x', 'y', 'rotation', 'opacity', 'name', 'id']);
-    Node.addGetters(Node, ['scale', 'offset']);
-    Node.addSetters(Node, ['width', 'height', 'listening', 'visible']);
+    Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'rotation', 'opacity', 'name', 'id']);
+    Kinetic.Node.addGetters(Kinetic.Node, ['scale', 'offset']);
+    Kinetic.Node.addSetters(Kinetic.Node, ['width', 'height', 'listening', 'visible']);
 
     // aliases
     /**
@@ -1054,13 +1054,13 @@ Kinetic.Node = (function() {
      * @name isListening
      * @methodOf Kinetic.Node.prototype
      */
-    Node.prototype.isListening = Node.prototype.getListening;
+    Kinetic.Node.prototype.isListening = Kinetic.Node.prototype.getListening;
     /**
      * Alias of getVisible()
      * @name isVisible
      * @methodOf Kinetic.Node.prototype
      */
-    Node.prototype.isVisible = Node.prototype.getVisible;
+    Kinetic.Node.prototype.isVisible = Kinetic.Node.prototype.getVisible;
 
     // collection mappings
     var collectionMappings = ['on', 'off'];
@@ -1195,6 +1195,4 @@ Kinetic.Node = (function() {
      * @name getOffset
      * @methodOf Kinetic.Node.prototype
      */
-
-    return Node;
 })();

@@ -1,4 +1,4 @@
-Kinetic.Shape = (function() {
+(function() {
     /**
      * Shape constructor.  Shapes are primitive objects such as rectangles,
      *  circles, text, lines, etc.
@@ -57,11 +57,11 @@ Kinetic.Shape = (function() {
      * @param {Number} [config.dragBounds.bottom]
      * @param {Number} [config.dragBounds.left]
      */
-    var Shape = function(config) {
+    Kinetic.Shape = function(config) {
         this._initShape(config);
     };
 
-    Shape.prototype = {
+    Kinetic.Shape.prototype = {
         _initShape: function(config) {
             this.nodeType = 'Shape';
 
@@ -365,11 +365,11 @@ Kinetic.Shape = (function() {
             }
         }
     };
-    Kinetic.Global.extend(Shape, Kinetic.Node);
+    Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
 
     // add getters and setters
-    Kinetic.Node.addGettersSetters(Shape, ['stroke', 'lineJoin', 'lineCap', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'cornerRadius']);
-    Kinetic.Node.addGetters(Shape, ['shadow', 'fill']);
+    Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'lineCap', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'cornerRadius']);
+    Kinetic.Node.addGetters(Kinetic.Shape, ['shadow', 'fill']);
 
     /**
      * set stroke color
@@ -474,6 +474,4 @@ Kinetic.Shape = (function() {
      * @name getLineCap
      * @methodOf Kinetic.Shape.prototype
      */
-
-    return Shape;
 })();
