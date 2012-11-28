@@ -362,7 +362,7 @@ Test.Modules.MANUAL = {
         layer.add(star);
         stage.add(layer);
 
-        //document.body.appendChild(layer.bufferCanvas.element)
+        showHit(layer);
     },
     'EVENTS - drag events click': function(containerId) {
         var stage = new Kinetic.Stage({

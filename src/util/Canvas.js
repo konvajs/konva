@@ -216,12 +216,12 @@ Kinetic.HitRenderer.prototype = {
     _fill: function(shape) {
         var context = this.context;
         context.save();
-        context.fillStyle = shape.colorKey;
+        context.fillStyle = '#' + shape.colorKey;
         context.fill(context);
         context.restore();
     },
     _stroke: function(shape) {
-        var context = this.context, stroke = shape.colorKey, strokeWidth = shape.getStrokeWidth();
+        var context = this.context, stroke = '#' + shape.colorKey, strokeWidth = shape.getStrokeWidth();
         if(stroke || strokeWidth) {
             context.save();
             context.lineWidth = strokeWidth || 2;
