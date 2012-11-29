@@ -162,7 +162,7 @@ Kinetic.Image.prototype = {
             });
         }
         catch(e) {
-            Kinetic.Global.warn('Unable to create image buffer.');
+            Kinetic.Global.warn('Unable to create image buffer. ' + e.message);
         }
     },
     /**

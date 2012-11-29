@@ -123,13 +123,16 @@ Test.Modules.IMAGE = {
     },
     'create image buffer': function(containerId) {
         var imageObj = new Image();
+
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
         imageObj.onload = function() {
-            var stage = new Kinetic.Stage({
-                container: containerId,
-                width: 578,
-                height: 200
-            });
-            var layer = new Kinetic.Layer();
+
             var lion = new Kinetic.Image({
                 x: 200,
                 y: 40,
@@ -143,16 +146,24 @@ Test.Modules.IMAGE = {
                 }
             });
 
+            // override color key with black
+            lion.colorKey = '000000';
+
             layer.add(lion);
 
             lion.createImageBuffer(function() {
                 stage.add(layer);
                 layer.drawHit();
-            });
-            showHit(layer);
 
+                var hitDataUrl = layer.hitCanvas.toDataURL();
+
+                //console.log(hitDataUrl);
+                warn(hitDataUrl === dataUrls['transparent image hit render'], 'problem rendering image on hit graph');
+            });
         };
         imageObj.src = '../assets/lion.png';
+
+        showHit(layer);
     },
     'grayscale image': function(containerId) {
         var imageObj = new Image();
@@ -355,13 +366,16 @@ Test.Modules.IMAGE = {
     },
     'apply shadow to transparent image': function(containerId) {
         var imageObj = new Image();
+
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
         imageObj.onload = function() {
-            var stage = new Kinetic.Stage({
-                container: containerId,
-                width: 578,
-                height: 200
-            });
-            var layer = new Kinetic.Layer();
+
             var lion = new Kinetic.Image({
                 x: 200,
                 y: 40,
@@ -377,13 +391,14 @@ Test.Modules.IMAGE = {
 
             layer.add(lion);
             stage.add(layer);
-            showHit(layer);
 
-            //var dataUrl = layer.toDataURL();
+            var dataUrl = layer.toDataURL();
 
-            //warn(dataUrl === dataUrls['transparent image shadow'], 'problem applying shadow to image with transparent pixels');
+            warn(dataUrl === dataUrls['transparent image shadow'], 'problem applying shadow to image with transparent pixels');
 
         };
         imageObj.src = '../assets/lion.png';
+
+        showHit(layer);
     }
 };

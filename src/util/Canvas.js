@@ -93,7 +93,13 @@ Kinetic.Canvas.prototype = {
             return this.element.toDataURL(mimeType, quality);
         }
         catch(e) {
-            return this.element.toDataURL();
+            try {
+                return this.element.toDataURL();
+            }
+            catch(e) {
+            	Kinetic.Global.warn('Unable to get data URL. ' + e.message)
+				return '';
+            }
         }
     }
 };
