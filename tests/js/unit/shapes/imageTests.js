@@ -121,7 +121,7 @@ Test.Modules.IMAGE = {
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
-    'create image buffer': function(containerId) {
+    'create image hit region': function(containerId) {
         var imageObj = new Image();
 
         var stage = new Kinetic.Stage({

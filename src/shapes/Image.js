@@ -65,10 +65,10 @@ Kinetic.Image.prototype = {
 
     },
     drawHitFunc: function(context) {
-        var width = this.getWidth(), height = this.getHeight(), imageBuffer = this.imageBuffer, appliedShadow = false;
+        var width = this.getWidth(), height = this.getHeight(), imageHitRegion = this.imageHitRegion, appliedShadow = false;
 
-        if(imageBuffer) {
-            this.drawImage(context, this.imageBuffer, 0, 0, width, height);
+        if(imageHitRegion) {
+            this.drawImage(context, imageHitRegion, 0, 0, width, height);
 
             context.beginPath();
             context.rect(0, 0, width, height);
@@ -130,12 +130,12 @@ Kinetic.Image.prototype = {
         this.setAttr('crop', Kinetic.Type._merge(both, this.getCrop()));
     },
     /**
-     * create image buffer which enables more accurate hit detection mapping of the image
+     * create image hit region which enables more accurate hit detection mapping of the image
      *  by avoiding event detections for transparent pixels
      * @name createImageHitRegion
      * @methodOf Kinetic.Image.prototype
      * @param {Function} [callback] callback function to be called once
-     *  the buffer image has been created and set
+     *  the image hit region has been created
      */
     createImageHitRegion: function(callback) {
         var canvas = new Kinetic.Canvas(this.attrs.width, this.attrs.height);
@@ -155,23 +155,23 @@ Kinetic.Image.prototype = {
 
             var that = this;
             Kinetic.Type._getImage(imageData, function(imageObj) {
-                that.imageBuffer = imageObj;
+                that.imageHitRegion = imageObj;
                 if(callback) {
                     callback();
                 }
             });
         }
         catch(e) {
-            Kinetic.Global.warn('Unable to create image buffer. ' + e.message);
+            Kinetic.Global.warn('Unable to create image hit region. ' + e.message);
         }
     },
     /**
-     * clear buffer image
-     * @name clearImageBuffer
+     * clear image hit region
+     * @name clearImageHitRegion
      * @methodOf Kinetic.Image.prototype
      */
-    clearImageBuffer: function() {
-        delete this.imageBuffer;
+    clearImageHitRegion: function() {
+        delete this.imageHitRegion;
     },
     _syncSize: function() {
         if(this.attrs.image) {
