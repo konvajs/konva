@@ -105,7 +105,7 @@ Test.prototype = {
                     console.log(this.counter + ') ' + key);
                     tests[key](key);
                     obj.testMessage.innerHTML = this.counter + ') ' + key + ': PASSED';
-                    obj.testMessage.setAttribute('class', 'green');
+                    obj.testMessage.setAttribute('class', 'gray');
                 }
             }
             

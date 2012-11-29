@@ -15,6 +15,12 @@ p {
 	font-size: 12px;
 }
 
+.gray {
+	background-color: #333;
+	color: #eee;
+	font-size: 12px;
+}
+
 .red {
 	background-color: red;
 	color: white;
@@ -31,9 +37,9 @@ p {
 	position: fixed;
 	right: 0px;
 	top: 0px;
-	background-color: black;
+	background-color: green;
 	padding: 10px;
 	border-radius: 3px;
-	color: #aaa;
+	color: white;
 	font-size: 2em;
 }
