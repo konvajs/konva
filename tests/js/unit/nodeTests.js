@@ -760,7 +760,7 @@ Test.Modules.NODE = {
 
                 //console.log(layer.toDataURL());
 
-                cachedShape.createImageBuffer(function() {
+                cachedShape.createImageHitRegion(function() {
 
                     layer.draw();
                     //console.log(layer.toDataURL());

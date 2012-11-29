@@ -132,12 +132,12 @@ Kinetic.Image.prototype = {
     /**
      * create image buffer which enables more accurate hit detection mapping of the image
      *  by avoiding event detections for transparent pixels
-     * @name createImageBuffer
+     * @name createImageHitRegion
      * @methodOf Kinetic.Image.prototype
      * @param {Function} [callback] callback function to be called once
      *  the buffer image has been created and set
      */
-    createImageBuffer: function(callback) {
+    createImageHitRegion: function(callback) {
         var canvas = new Kinetic.Canvas(this.attrs.width, this.attrs.height);
         var context = canvas.getContext();
         context.drawImage(this.attrs.image, 0, 0);

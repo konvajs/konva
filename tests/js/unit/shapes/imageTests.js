@@ -151,7 +151,7 @@ Test.Modules.IMAGE = {
 
             layer.add(lion);
 
-            lion.createImageBuffer(function() {
+            lion.createImageHitRegion(function() {
                 stage.add(layer);
                 layer.drawHit();
 
