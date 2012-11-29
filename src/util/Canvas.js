@@ -221,11 +221,11 @@ Kinetic.HitRenderer.prototype = {
         context.restore();
     },
     _stroke: function(shape) {
-        var context = this.context, stroke = '#' + shape.colorKey, strokeWidth = shape.getStrokeWidth();
+        var context = this.context, stroke = shape.getStroke(), strokeWidth = shape.getStrokeWidth();
         if(stroke || strokeWidth) {
             context.save();
             context.lineWidth = strokeWidth || 2;
-            context.strokeStyle = stroke || 'black';
+            context.strokeStyle = '#' + shape.colorKey;
             context.stroke(context);
             context.restore();
         }

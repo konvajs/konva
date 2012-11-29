@@ -7,9 +7,7 @@ Test.Modules.IMAGE = {
                 width: 578,
                 height: 200
             });
-            var layer = new Kinetic.Layer({
-                throttle: 999
-            });
+            var layer = new Kinetic.Layer();
             darth = new Kinetic.Image({
                 x: 200,
                 y: 60,
@@ -122,6 +120,39 @@ Test.Modules.IMAGE = {
 
         };
         imageObj.src = '../assets/darth-vader.jpg';
+    },
+    'create image buffer': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            var lion = new Kinetic.Image({
+                x: 200,
+                y: 40,
+                image: imageObj,
+                draggable: true,
+                shadow: {
+                    color: 'black',
+                    blur: 10,
+                    offset: [20, 20],
+                    opacity: 0.2
+                }
+            });
+
+            layer.add(lion);
+
+            lion.createImageBuffer(function() {
+                stage.add(layer);
+                layer.drawHit();
+            });
+            showHit(layer);
+
+        };
+        imageObj.src = '../assets/lion.png';
     },
     'grayscale image': function(containerId) {
         var imageObj = new Image();
@@ -345,10 +376,12 @@ Test.Modules.IMAGE = {
             });
 
             layer.add(lion);
-            lion.createImageBuffer(function() {
-                stage.add(layer);
-            });
-            //document.body.appendChild(layer.bufferCanvas.element);
+            stage.add(layer);
+            showHit(layer);
+
+            //var dataUrl = layer.toDataURL();
+
+            //warn(dataUrl === dataUrls['transparent image shadow'], 'problem applying shadow to image with transparent pixels');
 
         };
         imageObj.src = '../assets/lion.png';

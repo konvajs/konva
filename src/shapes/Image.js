@@ -31,7 +31,7 @@ Kinetic.Image.prototype = {
         this._syncSize();
     },
     drawFunc: function(context) {
-        var width = this.getWidth(), height = this.getHeight();
+        var width = this.getWidth(), height = this.getHeight(), params, that = this;
 
         context.beginPath();
         context.rect(0, 0, width, height);
@@ -45,20 +45,31 @@ Kinetic.Image.prototype = {
                 var cropY = this.attrs.crop.y ? this.attrs.crop.y : 0;
                 var cropWidth = this.attrs.crop.width;
                 var cropHeight = this.attrs.crop.height;
-                this.drawImage(context, this.attrs.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height);
+                params = [context, this.attrs.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height];
             }
             // no cropping
             else {
-                this.drawImage(context, this.attrs.image, 0, 0, width, height);
+                params = [context, this.attrs.image, 0, 0, width, height];
             }
+
+            if(this.getShadow()) {
+                this.applyShadow(context, function() {
+                    that.drawImage.apply(that, params);
+                });
+            }
+            else {
+                this.drawImage.apply(this, params);
+            }
+
         }
+
     },
     drawHitFunc: function(context) {
         var width = this.getWidth(), height = this.getHeight(), imageBuffer = this.imageBuffer, appliedShadow = false;
 
         if(imageBuffer) {
             this.drawImage(context, this.imageBuffer, 0, 0, width, height);
-            
+
             context.beginPath();
             context.rect(0, 0, width, height);
             context.closePath();

@@ -142,6 +142,7 @@
          *  will only be applied to either the fill or stroke.&nbsp; Fill
          *  is given priority over stroke.
          * @name fillStroke
+         * @param {CanvasContext} context
          * @methodOf Kinetic.Shape.prototype
          */
         fillStroke: function(context) {
@@ -149,9 +150,24 @@
             context.renderer._stroke(this, this.getShadow() && this.getFill());
         },
         /**
+         * apply shadow
+         * @name applyShadow
+         * @param {CanvasContext} context
+         * @param {Function} func draw function
+         * @methodOf Kinetic.Shape.prototype
+         */
+        applyShadow: function(context, func) {
+            context.save();
+            context.renderer._applyShadow(this);
+            func();
+            context.restore();
+            func();
+        },
+        /**
          * draw an image
          * @name drawImage
          * @methodOf Kinetic.Shape.prototype
+         * @param {CanvasContext} context
          */
         drawImage: function() {
             var context = arguments[0];
