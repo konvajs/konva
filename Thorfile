@@ -7,7 +7,7 @@ class Build < Thor
     "src/Global.js", "src/util/Type.js", "src/util/Canvas.js", "src/util/Tween.js", "src/util/Transform.js", "src/util/Collection.js",
     "src/filters/Grayscale.js", "src/filters/Brighten.js", "src/filters/Invert.js", 
     "src/Animation.js", "src/Node.js", "src/DragAndDrop.js", "src/Transition.js", "src/Container.js", "src/Stage.js", "src/Layer.js", "src/Group.js", "src/Shape.js",
-    "src/shapes/Rect.js", "src/shapes/Circle.js", "src/shapes/Ellipse.js", "src/shapes/Image.js", "src/shapes/Polygon.js", "src/shapes/Text.js", "src/shapes/Line.js", "src/shapes/Sprite.js", "src/shapes/Star.js", "src/shapes/RegularPolygon.js", "src/shapes/Path.js", "src/shapes/TextPath.js"       
+    "src/shapes/Rect.js", "src/shapes/Circle.js", "src/shapes/Wedge.js", "src/shapes/Ellipse.js", "src/shapes/Image.js", "src/shapes/Polygon.js", "src/shapes/Text.js", "src/shapes/Line.js", "src/shapes/Sprite.js", "src/shapes/Star.js", "src/shapes/RegularPolygon.js", "src/shapes/Path.js", "src/shapes/TextPath.js"       
   ]
   
   UNIT_TESTS = [
@@ -21,6 +21,7 @@ class Build < Thor
   	"tests/js/unit/transitionTests.js", 
   	"tests/js/unit/shapes/rectTests.js", 
   	"tests/js/unit/shapes/circleTests.js", 
+  	"tests/js/unit/shapes/wedgeTests.js", 
   	"tests/js/unit/shapes/ellipseTests.js",
   	"tests/js/unit/shapes/imageTests.js",
   	"tests/js/unit/shapes/polygonTests.js",

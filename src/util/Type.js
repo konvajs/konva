@@ -290,5 +290,11 @@ Kinetic.Type = {
             }
         }
         return retObj;
+    },
+    _degToRad: function(deg) {
+        return deg * Math.PI / 180;
+    },
+    _radToDeg: function(rad) {
+        return rad * 180 / Math.PI;
     }
 };

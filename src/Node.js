@@ -322,7 +322,7 @@
         },
         /**
          * get node level in node tree.  Returns an integer.<br><br>
-         *  e.g. Stage level will always be 0.  Layers will always be 1.  Groups and Shapes will always 
+         *  e.g. Stage level will always be 0.  Layers will always be 1.  Groups and Shapes will always
          *  be >= 2
          * @name getLevel
          * @methodOf Kinetic.Node.prototype
@@ -428,16 +428,16 @@
          * @methodOf Kinetic.Node.prototype
          */
         getRotationDeg: function() {
-            return this.getRotation() * 180 / Math.PI;
+            return Kinetic.Type._radToDeg(this.getRotation());
         },
         /**
          * set rotation in degrees
          * @name setRotationDeg
          * @methodOf Kinetic.Node.prototype
-         * @param {Number} rotDeg
+         * @param {Number} deg
          */
-        setRotationDeg: function(rotDeg) {
-            this.setRotation(rotDeg * Math.PI / 180);
+        setRotationDeg: function(deg) {
+            this.setRotation(Kinetic.Type._degToRad(deg));
         },
         /**
          * rotate node by an amount in radians relative to its current rotation
@@ -455,7 +455,7 @@
          * @param {Number} deg
          */
         rotateDeg: function(deg) {
-            this.setRotation(this.getRotation() + (deg * Math.PI / 180));
+            this.setRotation(this.getRotation() + Kinetic.Type._degToRad(deg));
         },
         /**
          * move node to the top of its siblings
@@ -1004,7 +1004,7 @@
      * @name create
      * @methodOf Kinetic.Node
      * @param {String} JSON string
-     * @param {DomElement} [container] optional container dom element used only if you're 
+     * @param {DomElement} [container] optional container dom element used only if you're
      *  creating a stage node
      */
     Kinetic.Node.create = function(json, container) {
@@ -1119,14 +1119,14 @@
      * @methodOf Kinetic.Node.prototype
      * @param {String} id
      */
-    
+
     /**
      * set width
      * @name setWidth
      * @methodOf Kinetic.Node.prototype
      * @param {Number} width
      */
-    
+
     /**
      * set height
      * @name setHeight
