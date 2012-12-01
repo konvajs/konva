@@ -38,8 +38,8 @@ Kinetic.Image.prototype = {
         if(this.attrs.image) {
             // if cropping
             if(this.attrs.crop && this.attrs.crop.width && this.attrs.crop.height) {
-                var cropX = this.attrs.crop.x ? this.attrs.crop.x : 0;
-                var cropY = this.attrs.crop.y ? this.attrs.crop.y : 0;
+                var cropX = this.attrs.crop.x || 0;
+                var cropY = this.attrs.crop.y || 0;
                 var cropWidth = this.attrs.crop.width;
                 var cropHeight = this.attrs.crop.height;
                 params = [context, this.attrs.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height];

@@ -121,6 +121,35 @@ Test.Modules.IMAGE = {
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
+    'crop add and scale image': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 200,
+                y: 75,
+                image: imageObj,
+                width: 107,
+                height: 75,
+                crop: [186, 211, 292 - 186, 285 - 211],
+                draggable: true,
+                scale: [0.5, 0.5]
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+            
+            //console.log(layer.toDataURL());
+            
+            warn(layer.toDataURL() === dataUrls['crop and scale image'], 'problem rendering cropped and scaled image');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+    },
     'create image hit region': function(containerId) {
         var imageObj = new Image();
 
