@@ -24,19 +24,19 @@ Kinetic.Line.prototype = {
         this._setDrawFuncs();
     },
     drawFunc: function(context) {
-        var lastPos = {};
+        var lastPos = {}, points = this.getPoints(), length = points.length, dashArray = this.getDashArray(), dashLength = dashArray.length;
         context.beginPath();
 
-        context.moveTo(this.attrs.points[0].x, this.attrs.points[0].y);
+        context.moveTo(points[0].x, points[0].y);
 
-        for(var n = 1; n < this.attrs.points.length; n++) {
-            var x = this.attrs.points[n].x;
-            var y = this.attrs.points[n].y;
-            if(this.attrs.dashArray.length > 0) {
+        for(var n = 1; n < length; n++) {
+            var x = points[n].x;
+            var y = points[n].y;
+            if(dashLength > 0) {
                 // draw dashed line
-                var lastX = this.attrs.points[n - 1].x;
-                var lastY = this.attrs.points[n - 1].y;
-                this._dashedLine(context, lastX, lastY, x, y, this.attrs.dashArray);
+                var lastX = points[n - 1].x;
+                var lastY = points[n - 1].y;
+                this._dashedLine(context, lastX, lastY, x, y, dashArray);
             }
             else {
                 // draw normal line

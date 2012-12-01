@@ -1,4 +1,67 @@
 Test.Modules.PERFORMANCE = {
+    '*draw 1000 cropped images': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+
+			startTimer();
+            for(var n = 0; n < 1000; n++) {
+                var darth = new Kinetic.Image({
+                    x: 200,
+                    y: 75,
+                    image: imageObj,
+                    width: 107,
+                    height: 75,
+                    crop: [186, 211, 292 - 186, 285 - 211],
+                    draggable: true,
+                    scale: [0.5, 0.5]
+                });
+
+                layer.add(darth);
+            }
+
+            stage.add(layer);
+            endTimer('draw 1000 cropped images');
+
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+    },
+    '*draw 1000 pre-processed cropped images': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+
+			startTimer();
+            for(var n = 0; n < 1000; n++) {
+                var darth = new Kinetic.Image({
+                    x: 200,
+                    y: 75,
+                    image: imageObj,
+                    width: 107,
+                    height: 75,
+                    //crop: [186, 211, 292 - 186, 285 - 211],
+                    draggable: true,
+                    scale: [0.5, 0.5]
+                });
+
+                layer.add(darth);
+            }
+
+            stage.add(layer);
+            endTimer('draw 1000 pre-processed images');
+        };
+        imageObj.src = '../assets/cropped-darth.jpg';
+    },
     'DRAWING - draw rect': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -51,10 +114,10 @@ Test.Modules.PERFORMANCE = {
         var centerX = stage.getWidth() / 2 - 100 / 2;
 
         var anim = new Kinetic.Animation(function(frame) {
-                rect.attrs.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
+            rect.attrs.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
 
-                //console.log(frame.timeDiff)
-            }, layer);
+            //console.log(frame.timeDiff)
+        }, layer);
 
         anim.start();
 
@@ -77,7 +140,7 @@ Test.Modules.PERFORMANCE = {
         var colors = ["red", "orange", "yellow", "green", "blue", "cyan", "purple"];
         var colorIndex = 0;
 
-		startTimer();
+        startTimer();
         for(var n = 0; n < 10000; n++) {
             // induce scope
             ( function() {
@@ -89,7 +152,7 @@ Test.Modules.PERFORMANCE = {
 
                 var randX = Math.random() * stage.getWidth();
                 var randY = Math.random() * stage.getHeight();
-                
+
                 var circle = new Kinetic.Ellipse({
                     x: randX,
                     y: randY,
@@ -115,7 +178,7 @@ Test.Modules.PERFORMANCE = {
                 circlesLayer.add(circle);
             }());
         }
-      
+
         var tooltip = new Kinetic.Text({
             text: "",
             fontFamily: "Calibri",
@@ -128,13 +191,12 @@ Test.Modules.PERFORMANCE = {
         });
 
         tooltipLayer.add(tooltip);
-        
 
         stage.add(circlesLayer);
         stage.add(tooltipLayer);
-        
+
         endTimer('drew 10,000 circles');
-        
+
         //document.body.appendChild(circlesLayer.bufferCanvas.element)
 
     },
