@@ -4,13 +4,14 @@ require 'uglifier'
 class Build < Thor  
   # This is the list of files to concatenate. The first file will appear at the top of the final file. All files are relative to the lib directory.
   FILES = [
-    "src/Global.js", "src/util/Type.js", "src/util/Canvas.js", "src/util/Tween.js", "src/util/Transform.js", "src/util/Collection.js",
+    "src/Global.js", "src/util/Type.js", "src/Canvas.js", "src/util/Tween.js", "src/util/Transform.js", "src/util/Collection.js",
     "src/filters/Grayscale.js", "src/filters/Brighten.js", "src/filters/Invert.js", 
     "src/Animation.js", "src/Node.js", "src/DragAndDrop.js", "src/Transition.js", "src/Container.js", "src/Stage.js", "src/Layer.js", "src/Group.js", "src/Shape.js",
     "src/shapes/Rect.js", "src/shapes/Circle.js", "src/shapes/Wedge.js", "src/shapes/Ellipse.js", "src/shapes/Image.js", "src/shapes/Polygon.js", "src/shapes/Text.js", "src/shapes/Line.js", "src/shapes/Sprite.js", "src/shapes/Star.js", "src/shapes/RegularPolygon.js", "src/shapes/Path.js", "src/shapes/TextPath.js"       
   ]
   
   UNIT_TESTS = [
+    "tests/js/unit/globalTests.js", 
   	"tests/js/unit/nodeTests.js", 
   	"tests/js/unit/stageTests.js", 
   	"tests/js/unit/containerTests.js", 
@@ -38,11 +39,11 @@ class Build < Thor
   end
     
   # dev build
-  desc "dev", "Concatenate all the js files into /dist/kinetic-VERSION.js."
+  desc "dev", "Concatenate all the js files into /dist/kinetic-vVERSION.js."
   def dev(version)
 
     
-    file_name = "dist/kinetic-#{version}.js"
+    file_name = "dist/kinetic-v#{version}.js"
     
     puts ":: Deleting other development files..."
     Dir.foreach("dist") do |file|
@@ -79,9 +80,9 @@ class Build < Thor
   end
 
   #prod build
-  desc "prod", "Concatenate all the js files in into /dist/kinetic-VERSION.min.js and minify it."
+  desc "prod", "Concatenate all the js files in into /dist/kinetic-vVERSION.min.js and minify it."
   def prod(version)
-    file_name = "dist/kinetic-#{version}.min.js"
+    file_name = "dist/kinetic-v#{version}.min.js"
     
     puts ":: Deleting other prod files..."
     Dir.foreach("dist") do |file|
@@ -106,7 +107,7 @@ class Build < Thor
       content = IO.read(File.expand_path(file)) << "\n"
       mod = File.basename(file)
       mod[".js"] = ""
-      module_filename = "dist/kinetic-#{mod}-#{version}.min.js"
+      module_filename = "dist/kinetic-#{mod}-v#{version}.min.js"
       File.open(module_filename, "w") do |file2|
         uglify = Uglifier.compile(content, :copyright => mod == "Global")
         file2.puts replace_tokens(uglify, version)
@@ -140,7 +141,7 @@ class Build < Thor
       date = Time.now.strftime("%b %d %Y")
       
       # Add the version number
-      content.sub!("@version", version)
+      content.gsub!("@version", version)
       
       # Add the date
       content.sub!("@date", date)
