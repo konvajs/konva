@@ -32,6 +32,8 @@
             var anim = this.attrs.animation;
             var index = this.attrs.index;
             var f = this.attrs.animations[anim][index];
+            var width = this.attrs.width || f.width;
+            var height = this.attrs.height || f.height;
 
             if(this.attrs.image) {
 
@@ -39,16 +41,18 @@
                 context.rect(0, 0, f.width, f.height);
                 context.closePath();
 
-                this.drawImage(context, this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
+                this.drawImage(context, this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, width, height);
             }
         },
         drawHitFunc: function(context) {
             var anim = this.attrs.animation;
             var index = this.attrs.index;
             var f = this.attrs.animations[anim][index];
-
+            var width = this.attrs.width || f.width;
+            var height = this.attrs.height || f.height;
+            
             context.beginPath();
-            context.rect(0, 0, f.width, f.height);
+            context.rect(0, 0, width, height);
             context.closePath();
             this.fillStroke(context);
         },
