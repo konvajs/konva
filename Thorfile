@@ -30,7 +30,8 @@ class Build < Thor
   	"tests/js/unit/shapes/regularPolygonTests.js",
   	"tests/js/unit/shapes/starTests.js",
   	"tests/js/unit/shapes/textTests.js",
-  	"tests/js/unit/shapes/pathTests.js"
+  	"tests/js/unit/shapes/pathTests.js",
+  	"tests/js/unit/shapes/spriteTests.js"
   ]
 
   if !File.directory?("dist")

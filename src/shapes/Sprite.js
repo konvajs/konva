@@ -32,13 +32,13 @@
             var anim = this.attrs.animation;
             var index = this.attrs.index;
             var f = this.attrs.animations[anim][index];
-            var width = this.attrs.width || f.width;
-            var height = this.attrs.height || f.height;
+            var width = f.width || this.attrs.width;
+            var height = f.height || this.attrs.height;
 
             if(this.attrs.image) {
 
                 context.beginPath();
-                context.rect(0, 0, f.width, f.height);
+                context.rect(0, 0, width, height);
                 context.closePath();
 
                 this.drawImage(context, this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, width, height);
