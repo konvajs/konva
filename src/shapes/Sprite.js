@@ -32,22 +32,18 @@
             var anim = this.attrs.animation;
             var index = this.attrs.index;
             var f = this.attrs.animations[anim][index];
-            var width = f.width || this.attrs.width;
-            var height = f.height || this.attrs.height;
 
             if(this.attrs.image) {
-                this.drawImage(context, this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, width, height);
+                this.drawImage(context, this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
             }
         },
         drawHitFunc: function(context) {
             var anim = this.attrs.animation;
             var index = this.attrs.index;
             var f = this.attrs.animations[anim][index];
-            var width = f.width || this.attrs.width;
-            var height = f.height || this.attrs.height;
-            
+
             context.beginPath();
-            context.rect(0, 0, width, height);
+            context.rect(0, 0, f.width, f.height);
             context.closePath();
             this.fill(context);
         },
