@@ -178,5 +178,47 @@ Test.Modules.SHAPE = {
         var dataUrl = layer.toDataURL();
 
         test(dataUrls['change custom shape draw func'] === dataUrl, 'problem with setDrawFunc');
+    },
+    'add star with translated, scaled, rotated fill': function(containerId) {
+        var imageObj = new Image();
+	        imageObj.onload = function() {
+	        var stage = new Kinetic.Stage({
+	            container: containerId,
+	            width: 578,
+	            height: 200
+	        });
+	        var layer = new Kinetic.Layer();
+	
+	        var star = new Kinetic.Star({
+	            x: 200,
+	            y: 100,
+	            numPoints: 5,
+	            innerRadius: 40,
+	            outerRadius: 70,
+	            fill: {
+		            image: imageObj,
+		            x: -20,
+		            y: -20,
+		            //scale: {x: 0.5, y: 0.5},
+		            offset: {x: 219, y: 150},
+		            rotation: Math.PI * 0.5,
+		            repeat: 'no-repeat'
+		        },
+	            stroke: 'blue',
+	            strokeWidth: 5,
+	            draggable: true
+	        });
+	
+	        layer.add(star);
+	        stage.add(layer);
+	        
+	        /*
+	        var anim = new Kinetic.Animation(function() {
+	        	star.attrs.fill.rotation += 0.02;
+	        }, layer);
+	        anim.start();
+	        */
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
     }
 };

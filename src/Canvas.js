@@ -118,8 +118,6 @@
                 if(!skipShadow && shadow) {
                     this._applyShadow(shape);
                 }
-                var s = fill.start;
-                var e = fill.end;
 
                 // color fill
                 switch(fillType) {
@@ -128,18 +126,25 @@
                         context.fill(context);
                         break;
                     case 'PATTERN':
-                        var repeat = !fill.repeat ? 'repeat' : fill.repeat;
+                        if(fill.x || fill.y) {
+                            context.translate(fill.x || 0, fill.y || 0);
+                        }
+                        if(fill.rotation) {
+                            context.rotate(fill.rotation);
+                        }
                         if(fill.scale) {
                             context.scale(fill.scale.x, fill.scale.y);
                         }
                         if(fill.offset) {
-                            context.translate(fill.offset.x, fill.offset.y);
-                        } file:///C:/Users/Eric/Documents/Eric/workspaces/KineticJS/dist/kinetic-current.js
+                            context.translate(-1 * fill.offset.x, -1 * fill.offset.y);
+                        }
 
-                        context.fillStyle = context.createPattern(fill.image, repeat);
+                        context.fillStyle = context.createPattern(fill.image, fill.repeat || 'repeat');
                         context.fill(context);
                         break;
                     case 'LINEAR_GRADIENT':
+                        var s = fill.start;
+                        var e = fill.end;
                         var grd = context.createLinearGradient(s.x, s.y, e.x, e.y);
                         var colorStops = fill.colorStops;
 
@@ -152,6 +157,8 @@
 
                         break;
                     case 'RADIAL_GRADIENT':
+                        var s = fill.start;
+                        var e = fill.end;
                         var grd = context.createRadialGradient(s.x, s.y, s.radius, e.x, e.y, e.radius);
                         var colorStops = fill.colorStops;
 
