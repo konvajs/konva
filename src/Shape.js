@@ -233,9 +233,15 @@
             var newOrOldFillIsColor = fillType === 'COLOR' || oldFillType === 'COLOR';
             var changedFillType = fillType === oldFillType || fillType === 'UNKNOWN';
 
-            // if fill.offset is defined, normalize the xy value
+            // normalize properties
             if(fill.offset !== undefined) {
                 fill.offset = type._getXY(fill.offset);
+            }
+            if(fill.scale !== undefined) {
+                fill.scale = type._getXY(fill.scale);
+            }
+            if(fill.rotationDeg !== undefined) {
+                fill.rotation = type._degToRad(fill.rotationDeg);
             }
 
             /*

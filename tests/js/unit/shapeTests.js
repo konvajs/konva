@@ -76,17 +76,17 @@ Test.Modules.SHAPE = {
             id: 'myTriangle',
             draggable: true,
             shadow: {
-            	color: 'black',
-            	opacity: 0.5,
-            	blur: 10,
-            	offset: 10
+                color: 'black',
+                opacity: 0.5,
+                blur: 10,
+                offset: 10
             }
         });
 
         stage.add(layer.add(triangle));
 
-		var dataUrl = layer.toDataURL();
-		//console.log(dataUrl);
+        var dataUrl = layer.toDataURL();
+        //console.log(dataUrl);
         warn(dataUrl === dataUrls['custom shape with two fills and strokes'], 'problem with custom shape with two fills');
 
     },
@@ -115,7 +115,7 @@ Test.Modules.SHAPE = {
         });
 
         layer.add(shape);
-        stage.add(layer); 
+        stage.add(layer);
     },
     'change custom shape draw func': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -181,43 +181,78 @@ Test.Modules.SHAPE = {
     },
     'add star with translated, scaled, rotated fill': function(containerId) {
         var imageObj = new Image();
-	        imageObj.onload = function() {
-	        var stage = new Kinetic.Stage({
-	            container: containerId,
-	            width: 578,
-	            height: 200
-	        });
-	        var layer = new Kinetic.Layer();
-	
-	        var star = new Kinetic.Star({
-	            x: 200,
-	            y: 100,
-	            numPoints: 5,
-	            innerRadius: 40,
-	            outerRadius: 70,
-	            fill: {
-		            image: imageObj,
-		            x: -20,
-		            y: -20,
-		            //scale: {x: 0.5, y: 0.5},
-		            offset: {x: 219, y: 150},
-		            rotation: Math.PI * 0.5,
-		            repeat: 'no-repeat'
-		        },
-	            stroke: 'blue',
-	            strokeWidth: 5,
-	            draggable: true
-	        });
-	
-	        layer.add(star);
-	        stage.add(layer);
-	        
-	        /*
-	        var anim = new Kinetic.Animation(function() {
-	        	star.attrs.fill.rotation += 0.02;
-	        }, layer);
-	        anim.start();
-	        */
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+
+            var star = new Kinetic.Star({
+                x: 200,
+                y: 100,
+                numPoints: 5,
+                innerRadius: 40,
+                outerRadius: 70,
+                fill: {
+                    image: imageObj,
+                    x: -20,
+                    y: -30,
+                    scale: {
+                        x: 0.5,
+                        y: 0.5
+                    },
+                    offset: {
+                        x: 219,
+                        y: 150
+                    },
+                    rotation: Math.PI * 0.5,
+                    repeat: 'no-repeat'
+                },
+                stroke: 'blue',
+                strokeWidth: 5,
+                draggable: true
+            });
+
+            layer.add(star);
+            stage.add(layer);
+
+            /*
+             var anim = new Kinetic.Animation(function() {
+             star.attrs.fill.rotation += 0.02;
+             }, layer);
+             anim.start();
+             */
+
+            test(star.getFill().x === -20, 'star fill x should be -20');
+            test(star.getFill().y === -30, 'star fill y should be -30');
+            test(star.getFill().scale.x === 0.5, 'star fill scale x should be 0.5');
+            test(star.getFill().scale.y === 0.5, 'star fill scale y should be 0.5');
+            test(star.getFill().offset.x === 219, 'star fill offset x should be 219');
+            test(star.getFill().offset.y === 150, 'star fill offset y should be 150');
+            test(star.getFill().rotation === Math.PI * 0.5, 'star fill rotation should be Math.PI * 0.5');
+
+            star.setFill({
+				rotationDeg: 180
+            });
+            
+            test(star.getFill().rotation === Math.PI, 'star fill rotation should be Math.PI');
+            
+            star.setFill({
+            	scale: 1
+            });
+            
+            test(star.getFill().scale.x === 1, 'star fill scale x should be 1');
+            test(star.getFill().scale.y === 1, 'star fill scale y should be 1');
+            
+            star.setFill({
+            	offset: [100, 120]
+            });
+            
+            test(star.getFill().offset.x === 100, 'star fill offset x should be 100');
+            test(star.getFill().offset.y === 120, 'star fill offset y should be 120');
+
         };
         imageObj.src = '../assets/darth-vader.jpg';
     }
