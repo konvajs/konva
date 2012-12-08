@@ -183,9 +183,18 @@
             }
         },
         _stroke: function(shape, skipShadow) {
-            var context = this.context, stroke = shape.getStroke(), strokeWidth = shape.getStrokeWidth(), shadow = shape.getShadow();
+            var context = this.context, stroke = shape.getStroke(), strokeWidth = shape.getStrokeWidth(), shadow = shape.getShadow(), dashArray = shape.getDashArray();
             if(stroke || strokeWidth) {
                 context.save();
+                this._applyLineCap(shape);
+                if(dashArray) {
+                    if(context.setLineDash) {
+                        context.setLineDash(dashArray);
+                    }
+                    else {
+                        Kinetic.Global.warn('Could not apply dash array because your browser does not support it.');
+                    }
+                }
                 if(!skipShadow && shadow) {
                     this._applyShadow(shape);
                 }
@@ -219,6 +228,12 @@
                 context.shadowOffsetX = offset.x;
                 context.shadowOffsetY = offset.y;
             }
+        },
+        _applyLineCap: function(shape) {
+            var lineCap = shape.getLineCap();
+            if(lineCap) {
+                this.context.lineCap = lineCap;
+            }
         }
     };
 
@@ -237,11 +252,18 @@
         _stroke: function(shape) {
             var context = this.context, stroke = shape.getStroke(), strokeWidth = shape.getStrokeWidth();
             if(stroke || strokeWidth) {
+                this._applyLineCap(shape);
                 context.save();
                 context.lineWidth = strokeWidth || 2;
                 context.strokeStyle = '#' + shape.colorKey;
                 context.stroke(context);
                 context.restore();
+            }
+        },
+        _applyLineCap: function(shape) {
+            var lineCap = shape.getLineCap();
+            if(lineCap) {
+                this.context.lineCap = lineCap;
             }
         }
     };

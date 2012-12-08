@@ -195,12 +195,6 @@
                 context.lineJoin = lineJoin;
             }
         },
-        _applyLineCap: function(context) {
-            var lineCap = this.getLineCap();
-            if(lineCap) {
-                context.lineCap = lineCap;
-            }
-        },
         /**
          * set shadow object
          * @name setShadow
@@ -314,7 +308,6 @@
                 context.save();
                 this._applyOpacity(context);
                 this._applyLineJoin(context);
-                this._applyLineCap(context);
                 var len = family.length;
                 for(var n = 0; n < len; n++) {
                     var node = family[n], t = node.getTransform(), m = t.getMatrix();
@@ -340,7 +333,6 @@
                 context.save();
                 this._applyOpacity(context);
                 this._applyLineJoin(context);
-                this._applyLineCap(context);
                 var len = family.length;
                 for(var n = 0; n < len; n++) {
                     var node = family[n], t = node.getTransform(), m = t.getMatrix();
@@ -365,7 +357,6 @@
 
                 context.save();
                 this._applyLineJoin(context);
-                this._applyLineCap(context);
                 var len = family.length;
                 for(var n = 0; n < len; n++) {
                     var node = family[n], t = node.getTransform(), m = t.getMatrix();
@@ -388,7 +379,7 @@
     Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
 
     // add getters and setters
-    Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'lineCap', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'cornerRadius']);
+    Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'lineCap', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'cornerRadius', 'dashArray']);
     Kinetic.Node.addGetters(Kinetic.Shape, ['shadow', 'fill']);
 
     /**
@@ -439,6 +430,19 @@
      * @name setLineCap
      * @methodOf Kinetic.Shape.prototype
      * @param {String} lineCap
+     */
+
+    /**
+     * set dash array.
+     * @name setDashArray
+     * @methodOf Kinetic.Line.prototype
+     * @param {Array} dashArray
+     *  examples:<br>
+     *  [10, 5] dashes are 10px long and 5 pixels apart
+     *  [10, 20, 0, 20] if using a round lineCap, the line will
+     *  be made up of alternating dashed lines that are 10px long
+     *  and 20px apart, and dots that have a radius of 5 and are 20px
+     *  apart
      */
 
     /**
@@ -493,5 +497,11 @@
      * get line cap
      * @name getLineCap
      * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get dash array
+     * @name getDashArray
+     * @methodOf Kinetic.Line.prototype
      */
 })();
