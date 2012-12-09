@@ -28,24 +28,20 @@
                 that.setIndex(0);
             });
         },
-        drawFunc: function(context) {
-            var anim = this.attrs.animation;
-            var index = this.attrs.index;
-            var f = this.attrs.animations[anim][index];
+        drawFunc: function(canvas) {
+            var anim = this.attrs.animation, index = this.attrs.index, f = this.attrs.animations[anim][index], context = canvas.getContext(), image = this.attrs.image;
 
-            if(this.attrs.image) {
-                this.drawImage(context, this.attrs.image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
+            if(image) {
+                context.drawImage(image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
             }
         },
-        drawHitFunc: function(context) {
-            var anim = this.attrs.animation;
-            var index = this.attrs.index;
-            var f = this.attrs.animations[anim][index];
+        drawHitFunc: function(canvas) {
+            var anim = this.attrs.animation, index = this.attrs.index, f = this.attrs.animations[anim][index], context = canvas.getContext();
 
             context.beginPath();
             context.rect(0, 0, f.width, f.height);
             context.closePath();
-            this.fill(context);
+            canvas.fill(this);
         },
         /**
          * start sprite animation

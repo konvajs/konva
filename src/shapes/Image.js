@@ -28,13 +28,13 @@
 
             this._syncSize();
         },
-        drawFunc: function(context) {
-            var width = this.getWidth(), height = this.getHeight(), params, that = this;
+        drawFunc: function(canvas) {
+            var width = this.getWidth(), height = this.getHeight(), params, that = this, context = canvas.getContext();
 
             context.beginPath();
             context.rect(0, 0, width, height);
             context.closePath();
-            this.fillStroke(context);
+            canvas.fillStroke(this);
 
             if(this.attrs.image) {
                 // if cropping
@@ -43,41 +43,40 @@
                     var cropY = this.attrs.crop.y || 0;
                     var cropWidth = this.attrs.crop.width;
                     var cropHeight = this.attrs.crop.height;
-                    params = [context, this.attrs.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height];
+                    params = [this.attrs.image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height];
                 }
                 // no cropping
                 else {
-                    params = [context, this.attrs.image, 0, 0, width, height];
+                    params = [this.attrs.image, 0, 0, width, height];
                 }
 
                 if(this.getShadow()) {
-                    this.applyShadow(context, function() {
-                        that.drawImage.apply(that, params);
+                    canvas.applyShadow(this, function() {
+                        that._drawImage(context, params);
                     });
                 }
                 else {
-                    this.drawImage.apply(this, params);
+                    this._drawImage(context, params);
                 }
 
             }
 
         },
-        drawHitFunc: function(context) {
-            var width = this.getWidth(), height = this.getHeight(), imageHitRegion = this.imageHitRegion, appliedShadow = false;
+        drawHitFunc: function(canvas) {
+            var width = this.getWidth(), height = this.getHeight(), imageHitRegion = this.imageHitRegion, appliedShadow = false, context = canvas.getContext();
 
             if(imageHitRegion) {
-                this.drawImage(context, imageHitRegion, 0, 0, width, height);
-
+                context.drawImage(imageHitRegion, 0, 0, width, height);
                 context.beginPath();
                 context.rect(0, 0, width, height);
                 context.closePath();
-                this.stroke(context);
+                canvas.stroke(this);
             }
             else {
                 context.beginPath();
                 context.rect(0, 0, width, height);
                 context.closePath();
-                this.fillStroke(context);
+                canvas.fillStroke(this);
             }
         },
         /**
@@ -179,6 +178,14 @@
                 if(!this.attrs.height) {
                     this.setHeight(this.attrs.image.height);
                 }
+            }
+        },
+        _drawImage: function(context, a) {
+            if(a.length === 5) {
+                context.drawImage(a[0], a[1], a[2], a[3], a[4]);
+            }
+            else if(a.length === 9) {
+                context.drawImage(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8]);
             }
         }
     };

@@ -41,8 +41,8 @@
             }
             that._setTextData();
         },
-        drawFunc: function(context) {
-            var charArr = this.charArr;
+        drawFunc: function(canvas) {
+            var charArr = this.charArr, context = canvas.getContext();
 
             context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'pt ' + this.attrs.fontFamily;
             context.textBaseline = 'middle';
@@ -50,15 +50,7 @@
             context.save();
 
             var glyphInfo = this.glyphInfo;
-
-            var appliedShadow = this.appliedShadow;
             for(var i = 0; i < glyphInfo.length; i++) {
-                /*
-                 * need to reset appliedShadow flag so that shadows
-                 * are appropriately applied to each line of text
-                 */
-                this.appliedShadow = appliedShadow;
-
                 context.save();
 
                 var p0 = glyphInfo[i].p0;
@@ -68,7 +60,7 @@
                 context.translate(p0.x, p0.y);
                 context.rotate(glyphInfo[i].rotation);
 
-                this.fillStrokeText(context, glyphInfo[i].text);
+                canvas.fillStrokeText(this, glyphInfo[i].text);
 
                 context.restore();
 

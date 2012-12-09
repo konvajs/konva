@@ -191,7 +191,7 @@
              */
             var width = config && config.width ? config.width : this.attrs.width;
             var height = config && config.height ? config.height : this.attrs.height;
-            var canvas = new Kinetic.Canvas(width, height);
+            var canvas = new Kinetic.SceneCanvas(width, height);
             var context = canvas.getContext();
             var layers = this.children;
 
@@ -569,8 +569,8 @@
             this.content.className = 'kineticjs-content';
             this.attrs.container.appendChild(this.content);
 
-            this.bufferCanvas = new Kinetic.Canvas();
-            this.hitCanvas = new Kinetic.Canvas(0, 0, true);
+            this.bufferCanvas = new Kinetic.SceneCanvas();
+            this.hitCanvas = new Kinetic.HitCanvas(0, 0);
 
             this._resizeDOM();
         },

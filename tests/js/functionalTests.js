@@ -38,7 +38,6 @@ Test.Modules.DD = {
         circle.on('dragend', function() {
             dragEnd = true;
         });
-
         warn(layer.toDataURL() === dataUrls['drag circle before'], 'start data url is incorrect');
         /*
         * simulate drag and drop
@@ -179,7 +178,7 @@ Test.Modules.DD = {
 
         var top = stage.content.getBoundingClientRect().top;
 
-		//console.log(layer.toDataURL())
+        //console.log(layer.toDataURL())
         warn(layer.toDataURL() === dataUrls['drag layer before'], 'start data url is incorrect');
 
         /*
@@ -199,7 +198,7 @@ Test.Modules.DD = {
             clientX: 210,
             clientY: 109 + top
         });
-		//console.log(layer.toDataURL())
+        //console.log(layer.toDataURL())
         warn(layer.toDataURL() === dataUrls['drag layer after'], 'end data url is incorrect');
 
     }
@@ -869,12 +868,13 @@ Test.Modules['HIT FUNCS'] = {
             strokeWidth: 4,
             fill: 'red',
             stroke: 'black',
-            drawHitFunc: function(context) {
+            drawHitFunc: function(canvas) {
+                var context = canvas.getContext()
                 context.beginPath();
                 context.arc(0, 0, this.getRadius() + 100, 0, Math.PI * 2, true);
                 context.closePath();
-                this.fill(context);
-                this.stroke(context);
+                canvas.fill(this);
+                canvas.stroke(this);
             }
         });
 
@@ -895,8 +895,7 @@ Test.Modules['HIT FUNCS'] = {
         circle.on('mouseout', function() {
             mouseouts++;
         });
-
-		// move mouse far outside circle
+        // move mouse far outside circle
         stage._mousemove({
             clientX: 113,
             clientY: 112 + top
@@ -923,47 +922,48 @@ Test.Modules['HIT FUNCS'] = {
 
         // set drawBufferFunc with setter
 
-        circle.setDrawHitFunc(function(context) {
+        circle.setDrawHitFunc(function(canvas) {
+            var context = canvas.getContext();
             context.beginPath();
             context.arc(0, 0, this.getRadius() - 50, 0, Math.PI * 2, true);
             context.closePath();
-            this.fill(context);
-            this.stroke(context);
+            canvas.fill(this);
+            canvas.stroke(this);
         });
-        
+
         layer.drawHit();
-        
+
         // move mouse far outside circle
         stage._mousemove({
             clientX: 113,
             clientY: 112 + top
         });
-        
+
         test(mouseovers === 1, 'mouseovers should be 1');
         test(mouseouts === 1, 'mouseouts should be 1');
-        
+
         stage._mousemove({
             clientX: 286,
             clientY: 118 + top
         });
-        
+
         test(mouseovers === 1, 'mouseovers should be 1');
         test(mouseouts === 1, 'mouseouts should be 1');
-        
+
         stage._mousemove({
             clientX: 321,
             clientY: 112 + top
         });
-        
+
         test(mouseovers === 1, 'mouseovers should be 1');
         test(mouseouts === 1, 'mouseouts should be 1');
-        
+
         // move to center of circle
         stage._mousemove({
             clientX: 375,
             clientY: 112 + top
         });
-        
+
         test(mouseovers === 2, 'mouseovers should be 2');
         test(mouseouts === 1, 'mouseouts should be 1');
     }

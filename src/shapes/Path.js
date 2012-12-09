@@ -25,8 +25,8 @@
                 that.dataArray = Kinetic.Path.parsePathData(that.attrs.data);
             });
         },
-        drawFunc: function(context) {
-            var ca = this.dataArray;
+        drawFunc: function(canvas) {
+            var ca = this.dataArray, context = canvas.getContext();
             // context position
             context.beginPath();
             for(var n = 0; n < ca.length; n++) {
@@ -66,7 +66,7 @@
                         break;
                 }
             }
-            this.fillStroke(context);
+            canvas.fillStroke(this);
         }
     };
     Kinetic.Global.extend(Kinetic.Path, Kinetic.Shape);

@@ -21,14 +21,15 @@
             Kinetic.Shape.call(this, config);
             this._setDrawFuncs();
         },
-        drawFunc: function(context) {
+        drawFunc: function(canvas) {
+            var context = canvas.getContext(), points = this.getPoints(), length = points.length;
             context.beginPath();
-            context.moveTo(this.attrs.points[0].x, this.attrs.points[0].y);
-            for(var n = 1; n < this.attrs.points.length; n++) {
-                context.lineTo(this.attrs.points[n].x, this.attrs.points[n].y);
+            context.moveTo(points[0].x, points[0].y);
+            for(var n = 1; n < length; n++) {
+                context.lineTo(points[n].x, points[n].y);
             }
             context.closePath();
-            this.fillStroke(context);
+            canvas.fillStroke(this);
         },
         /**
          * set points array

@@ -24,8 +24,8 @@
             Kinetic.Shape.call(this, config);
             this._setDrawFuncs();
         },
-        drawFunc: function(context) {
-            var r = this.getRadius();
+        drawFunc: function(canvas) {
+        	var context = canvas.getContext(), r = this.getRadius();
             context.beginPath();
             context.save();
             if(r.x !== r.y) {
@@ -34,7 +34,7 @@
             context.arc(0, 0, r.x, 0, Math.PI * 2, true);
             context.restore();
             context.closePath();
-            this.fillStroke(context);
+            canvas.fillStroke(this);
         },
         /**
          * set radius

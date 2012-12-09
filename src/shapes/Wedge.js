@@ -23,12 +23,13 @@
             Kinetic.Shape.call(this, config);
             this._setDrawFuncs();
         },
-        drawFunc: function(context) {
+        drawFunc: function(canvas) {
+            var context = canvas.getContext();
             context.beginPath();
             context.arc(0, 0, this.getRadius(), 0, this.getAngle(), this.getClockwise());
             context.lineTo(0, 0);
             context.closePath();
-            this.fillStroke(context);
+            canvas.fillStroke(this);
         },
         setAngleDeg: function(deg) {
             this.setAngle(Kinetic.Type._degToRad(deg));

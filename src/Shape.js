@@ -120,82 +120,6 @@
             }
         },
         /**
-         * fill current path
-         * @name fill
-         * @methodOf Kinetic.Shape.prototype
-         */
-        fill: function(context) {
-            context.renderer._fill(this);
-        },
-        /**
-         * stroke current path
-         * @name stroke
-         * @methodOf Kinetic.Shape.prototype
-         */
-        stroke: function(context) {
-            context.renderer._stroke(this);
-        },
-        /**
-         * fill and stroke current path.&nbsp; Aside from being a convenience method
-         *  which fills and strokes the current path with a single method, its main purpose is
-         *  to ensure that the shadow object is not applied to both the fill and stroke.&nbsp; A shadow
-         *  will only be applied to either the fill or stroke.&nbsp; Fill
-         *  is given priority over stroke.
-         * @name fillStroke
-         * @param {CanvasContext} context
-         * @methodOf Kinetic.Shape.prototype
-         */
-        fillStroke: function(context) {
-            context.renderer._fill(this);
-            context.renderer._stroke(this, this.getShadow() && this.getFill());
-        },
-        /**
-         * apply shadow
-         * @name applyShadow
-         * @param {CanvasContext} context
-         * @param {Function} func draw function
-         * @methodOf Kinetic.Shape.prototype
-         */
-        applyShadow: function(context, func) {
-            context.save();
-            context.renderer._applyShadow(this);
-            func();
-            context.restore();
-            func();
-        },
-        /**
-         * draw an image
-         * @name drawImage
-         * @methodOf Kinetic.Shape.prototype
-         * @param {CanvasContext} context
-         */
-        drawImage: function() {
-            var context = arguments[0];
-            context.save();
-            var a = Array.prototype.slice.call(arguments);
-
-            if(a.length === 6) {
-                context.drawImage(a[1], a[2], a[3], a[4], a[5]);
-            }
-            else if(a.length === 10) {
-                context.drawImage(a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9]);
-            }
-
-            context.restore();
-        },
-        _applyOpacity: function(context) {
-            var absOpacity = this.getAbsoluteOpacity();
-            if(absOpacity !== 1) {
-                context.globalAlpha = absOpacity;
-            }
-        },
-        _applyLineJoin: function(context) {
-            var lineJoin = this.getLineJoin();
-            if(lineJoin) {
-                context.lineJoin = lineJoin;
-            }
-        },
-        /**
          * set shadow object
          * @name setShadow
          * @methodOf Kinetic.Shape.prototype
@@ -306,20 +230,20 @@
                 }
 
                 context.save();
-                this._applyOpacity(context);
-                this._applyLineJoin(context);
+                canvas._applyOpacity(this);
+                canvas._applyLineJoin(this);
                 var len = family.length;
                 for(var n = 0; n < len; n++) {
                     var node = family[n], t = node.getTransform(), m = t.getMatrix();
                     context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                 }
 
-                drawFunc.call(this, context);
+                drawFunc.call(this, canvas);
                 context.restore();
             }
         },
         drawScene: function() {
-            var attrs = this.attrs, drawFunc = attrs.drawFunc, context = this.getLayer().getCanvas().getContext();
+            var attrs = this.attrs, drawFunc = attrs.drawFunc, canvas = this.getLayer().getCanvas(), context = canvas.getContext();
 
             if(drawFunc && this.isVisible()) {
                 var stage = this.getStage(), family = [], parent = this.parent;
@@ -331,20 +255,20 @@
                 }
 
                 context.save();
-                this._applyOpacity(context);
-                this._applyLineJoin(context);
+                canvas._applyOpacity(this);
+                canvas._applyLineJoin(this);
                 var len = family.length;
                 for(var n = 0; n < len; n++) {
                     var node = family[n], t = node.getTransform(), m = t.getMatrix();
                     context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                 }
 
-                drawFunc.call(this, context);
+                drawFunc.call(this, canvas);
                 context.restore();
             }
         },
         drawHit: function() {
-            var attrs = this.attrs, drawFunc = attrs.drawHitFunc || attrs.drawFunc, context = this.getLayer().hitCanvas.getContext();
+            var attrs = this.attrs, drawFunc = attrs.drawHitFunc || attrs.drawFunc, canvas = this.getLayer().hitCanvas, context = canvas.getContext();
 
             if(drawFunc && this.isVisible() && this.isListening()) {
                 var stage = this.getStage(), family = [], parent = this.parent;
@@ -356,14 +280,14 @@
                 }
 
                 context.save();
-                this._applyLineJoin(context);
+                canvas._applyLineJoin(this);
                 var len = family.length;
                 for(var n = 0; n < len; n++) {
                     var node = family[n], t = node.getTransform(), m = t.getMatrix();
                     context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                 }
 
-                drawFunc.call(this, context);
+                drawFunc.call(this, canvas);
                 context.restore();
             }
         },

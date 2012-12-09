@@ -38,9 +38,9 @@
             this.nodeType = 'Layer';
             this.beforeDrawFunc = undefined;
             this.afterDrawFunc = undefined;
-            this.canvas = new Kinetic.Canvas();
+            this.canvas = new Kinetic.SceneCanvas();
             this.canvas.getElement().style.position = 'absolute';
-            this.hitCanvas = new Kinetic.Canvas(0, 0, true);
+            this.hitCanvas = new Kinetic.HitCanvas(0, 0);
 
             // call super constructor
             Kinetic.Container.call(this, config);
@@ -231,10 +231,10 @@
              */
             if(!this.isVisible()) {
                 var stage = this.getStage();
-                canvas = new Kinetic.Canvas(stage.getWidth(), stage.getHeight());
+                canvas = new Kinetic.SceneCanvas(stage.getWidth(), stage.getHeight());
             }
             else if(config && config.width && config.height) {
-                canvas = new Kinetic.Canvas(config.width, config.height);
+                canvas = new Kinetic.SceneCanvas(config.width, config.height);
                 this.draw(canvas);
             }
             else {

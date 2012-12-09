@@ -21,11 +21,12 @@
             Kinetic.Shape.call(this, config);
             this._setDrawFuncs();
         },
-        drawFunc: function(context) {
+        drawFunc: function(canvas) {
+        	var context = canvas.getContext();
             context.beginPath();
             context.arc(0, 0, this.getRadius(), 0, Math.PI * 2, true);
             context.closePath();
-            this.fillStroke(context);
+            canvas.fillStroke(this);
         },
         getWidth: function() {
             return this.getRadius() * 2;

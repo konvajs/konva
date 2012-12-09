@@ -20,7 +20,8 @@
             Kinetic.Shape.call(this, config);
             this._setDrawFuncs();
         },
-        drawFunc: function(context) {
+        drawFunc: function(canvas) {
+        	var context = canvas.getContext();
             context.beginPath();
             var cornerRadius = this.getCornerRadius(), width = this.getWidth(), height = this.getHeight();
             if(cornerRadius === 0) {
@@ -40,7 +41,7 @@
                 context.arc(cornerRadius, cornerRadius, cornerRadius, Math.PI, Math.PI * 3 / 2, false);
             }
             context.closePath();
-            this.fillStroke(context);
+            canvas.fillStroke(this);
         }
     };
 

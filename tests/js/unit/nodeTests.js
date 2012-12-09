@@ -278,6 +278,7 @@ Test.Modules.NODE = {
             draggable: true,
             name: 'myGroup'
         });
+
         var rect = new Kinetic.Rect({
             x: 0,
             y: 50,
@@ -741,7 +742,6 @@ Test.Modules.NODE = {
             width: 500,
             height: 300,
             callback: function(imageObj) {
-
                 //document.body.appendChild(imageObj)
                 test(Kinetic.Type._isElement(imageObj), 'shape toImage() should be an image object');
 
@@ -2008,14 +2008,15 @@ Test.Modules.NODE = {
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
 
-        var drawTriangle = function(context) {
+        var drawTriangle = function(canvas) {
+        	var context = canvas.getContext();
             context.beginPath();
             context.moveTo(200, 50);
             context.lineTo(420, 80);
             context.quadraticCurveTo(300, 100, 260, 170);
             context.closePath();
-            this.fill(context);
-            this.stroke(context);
+            canvas.fill(this);
+            canvas.stroke(this);
         };
         var triangle = new Kinetic.Shape({
             drawFunc: drawTriangle,
@@ -2051,14 +2052,15 @@ Test.Modules.NODE = {
 
     },
     'load stage with custom shape using json': function(containerId) {
-        var drawTriangle = function(context) {
+        var drawTriangle = function(canvas) {
+        	var context = canvas.getContext();
             context.beginPath();
             context.moveTo(200, 50);
             context.lineTo(420, 80);
             context.quadraticCurveTo(300, 100, 260, 170);
             context.closePath();
-            this.fill(context);
-            this.stroke(context);
+            canvas.fill(this);
+            canvas.stroke(this);
         };
         var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"clearBeforeDraw":true,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Group","children":[{"attrs":{"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false,"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
 

@@ -625,8 +625,11 @@ Test.Modules.CONTAINER = {
         test(group.get('Rect').length === 1, 'group should have 1 rects');
         test(group.get('Circle').length === 1, 'gropu should have 1 circles');
 
+		//console.log(dataUrls['node shape type selector']);
+
         stage.toDataURL({
             callback: function(dataUrl) {
+            	//console.log(dataUrl)
                 warn(dataUrl === dataUrls['node shape type selector'], 'problem with node and shape type selector render.');
             }
         });

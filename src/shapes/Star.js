@@ -23,19 +23,21 @@
             Kinetic.Shape.call(this, config);
             this._setDrawFuncs();
         },
-        drawFunc: function(context) {
+        drawFunc: function(canvas) {
+            var context = canvas.getContext(), innerRadius = this.attrs.innerRadius, outerRadius = this.attrs.outerRadius, numPoints = this.attrs.numPoints;
+
             context.beginPath();
             context.moveTo(0, 0 - this.attrs.outerRadius);
 
-            for(var n = 1; n < this.attrs.numPoints * 2; n++) {
-                var radius = n % 2 === 0 ? this.attrs.outerRadius : this.attrs.innerRadius;
-                var x = radius * Math.sin(n * Math.PI / this.attrs.numPoints);
-                var y = -1 * radius * Math.cos(n * Math.PI / this.attrs.numPoints);
+            for(var n = 1; n < numPoints * 2; n++) {
+                var radius = n % 2 === 0 ? outerRadius : innerRadius;
+                var x = radius * Math.sin(n * Math.PI / numPoints);
+                var y = -1 * radius * Math.cos(n * Math.PI / numPoints);
                 context.lineTo(x, y);
             }
             context.closePath();
 
-            this.fillStroke(context);
+            canvas.fillStroke(this);
         }
     };
     Kinetic.Global.extend(Kinetic.Star, Kinetic.Shape);

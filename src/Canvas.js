@@ -1,19 +1,17 @@
 (function() {
     /**
-     * Canvas wrapper constructor
+     * Canvas Renderer constructor
      * @constructor
      * @param {Number} width
      * @param {Number} height
      */
-    Kinetic.Canvas = function(width, height, isHit) {
+    Kinetic.Canvas = function(width, height) {
         this.element = document.createElement('canvas');
         this.context = this.element.getContext('2d');
 
         // set dimensions
         this.element.width = width || 0;
         this.element.height = height || 0;
-
-        this.context.renderer = isHit ? new Kinetic.HitRenderer(this.context) : new Kinetic.SceneRenderer(this.context);
     };
 
     Kinetic.Canvas.prototype = {
@@ -102,14 +100,77 @@
                     return '';
                 }
             }
+        },
+        /**
+         * fill current path
+         * @name fill
+         * @methodOf Kinetic.Canvas.prototype
+         */
+        fill: function(shape) {
+            this._fill(shape);
+        },
+        /**
+         * stroke current path
+         * @name stroke
+         * @methodOf Kinetic.Canvas.prototype
+         */
+        stroke: function(shape) {
+            this._stroke(shape);
+        },
+        /**
+         * fill and stroke current path.&nbsp; Aside from being a convenience method
+         *  which fills and strokes the current path with a single method, its main purpose is
+         *  to ensure that the shadow object is not applied to both the fill and stroke.&nbsp; A shadow
+         *  will only be applied to either the fill or stroke.&nbsp; Fill
+         *  is given priority over stroke.
+         * @name fillStroke
+         * @param {CanvasContext} context
+         * @methodOf Kinetic.Canvas.prototype
+         */
+        fillStroke: function(shape) {
+            this._fill(shape);
+            this._stroke(shape, shape.getShadow() && shape.getFill());
+        },
+        /**
+         * apply shadow
+         * @name applyShadow
+         * @param {CanvasContext} context
+         * @param {Function} func draw function
+         * @methodOf Kinetic.Canvas.prototype
+         */
+        applyShadow: function(shape, func) {
+            var context = this.context;
+            context.save();
+            this._applyShadow(shape);
+            func();
+            context.restore();
+            func();
+        },
+        _applyLineCap: function(shape) {
+            var lineCap = shape.getLineCap();
+            if(lineCap) {
+                this.context.lineCap = lineCap;
+            }
+        },
+        _applyOpacity: function(shape) {
+            var absOpacity = shape.getAbsoluteOpacity();
+            if(absOpacity !== 1) {
+                this.context.globalAlpha = absOpacity;
+            }
+        },
+        _applyLineJoin: function(shape) {
+            var lineJoin = shape.getLineJoin();
+            if(lineJoin) {
+                this.context.lineJoin = lineJoin;
+            }
         }
     };
 
-    Kinetic.SceneRenderer = function(context) {
-        this.context = context;
+    Kinetic.SceneCanvas = function(width, height) {
+        Kinetic.Canvas.call(this, width, height);
     };
 
-    Kinetic.SceneRenderer.prototype = {
+    Kinetic.SceneCanvas.prototype = {
         _fill: function(shape, skipShadow) {
             var context = this.context, fill = shape.getFill(), fillType = shape._getFillType(fill), shadow = shape.getShadow();
             if(fill) {
@@ -228,20 +289,15 @@
                 context.shadowOffsetX = offset.x;
                 context.shadowOffsetY = offset.y;
             }
-        },
-        _applyLineCap: function(shape) {
-            var lineCap = shape.getLineCap();
-            if(lineCap) {
-                this.context.lineCap = lineCap;
-            }
         }
     };
+    Kinetic.Global.extend(Kinetic.SceneCanvas, Kinetic.Canvas);
 
-    Kinetic.HitRenderer = function(context) {
-        this.context = context;
+    Kinetic.HitCanvas = function(width, height) {
+        Kinetic.Canvas.call(this, width, height);
     };
 
-    Kinetic.HitRenderer.prototype = {
+    Kinetic.HitCanvas.prototype = {
         _fill: function(shape) {
             var context = this.context;
             context.save();
@@ -259,12 +315,7 @@
                 context.stroke(context);
                 context.restore();
             }
-        },
-        _applyLineCap: function(shape) {
-            var lineCap = shape.getLineCap();
-            if(lineCap) {
-                this.context.lineCap = lineCap;
-            }
         }
     };
+    Kinetic.Global.extend(Kinetic.HitCanvas, Kinetic.Canvas);
 })();

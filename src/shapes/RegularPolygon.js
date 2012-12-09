@@ -22,17 +22,18 @@
             Kinetic.Shape.call(this, config);
             this._setDrawFuncs();
         },
-        drawFunc: function(context) {
+        drawFunc: function(canvas) {
+        	var context = canvas.getContext(), sides = this.attrs.sides, radius = this.attrs.radius;
             context.beginPath();
-            context.moveTo(0, 0 - this.attrs.radius);
+            context.moveTo(0, 0 - radius);
 
-            for(var n = 1; n < this.attrs.sides; n++) {
-                var x = this.attrs.radius * Math.sin(n * 2 * Math.PI / this.attrs.sides);
-                var y = -1 * this.attrs.radius * Math.cos(n * 2 * Math.PI / this.attrs.sides);
+            for(var n = 1; n < sides; n++) {
+                var x = radius * Math.sin(n * 2 * Math.PI / sides);
+                var y = -1 * radius * Math.cos(n * 2 * Math.PI / sides);
                 context.lineTo(x, y);
             }
             context.closePath();
-            this.fillStroke(context);
+            canvas.fillStroke(this);
         }
     };
     Kinetic.Global.extend(Kinetic.RegularPolygon, Kinetic.Shape);

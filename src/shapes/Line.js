@@ -24,8 +24,8 @@
             Kinetic.Shape.call(this, config);
             this._setDrawFuncs();
         },
-        drawFunc: function(context) {
-            var lastPos = {}, points = this.getPoints(), length = points.length, dashArray = this.getDashArray(), dashLength = dashArray.length;
+        drawFunc: function(canvas) {
+            var lastPos = {}, points = this.getPoints(), length = points.length, dashArray = this.getDashArray(), dashLength = dashArray.length, context = canvas.getContext();
             context.beginPath();
             context.moveTo(points[0].x, points[0].y);
 
@@ -34,7 +34,7 @@
                 context.lineTo(point.x, point.y);
             }
 
-            this.stroke(context);
+            canvas.stroke(this);
         },
         /**
          * set points array
