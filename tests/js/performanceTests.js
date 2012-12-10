@@ -1,5 +1,5 @@
 Test.Modules.PERFORMANCE = {
-    '*draw 1000 cropped images': function(containerId) {
+    'draw 1000 cropped and scaled images': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = new Kinetic.Stage({
@@ -26,12 +26,74 @@ Test.Modules.PERFORMANCE = {
             }
 
             stage.add(layer);
+            endTimer('draw 1000 cropped and scaled images');
+
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+    },
+    'draw 1000 cropped images': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+
+			startTimer();
+            for(var n = 0; n < 1000; n++) {
+                var darth = new Kinetic.Image({
+                    x: 200,
+                    y: 75,
+                    image: imageObj,
+                    width: 53,
+                    height: 37,
+                    crop: [186, 211, 292 - 186, 285 - 211],
+                    draggable: true
+                });
+
+                layer.add(darth);
+            }
+
+            stage.add(layer);
             endTimer('draw 1000 cropped images');
 
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
-    '*draw 1000 pre-processed cropped images': function(containerId) {
+    'draw 1000 scaled images': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+
+			startTimer();
+            for(var n = 0; n < 1000; n++) {
+                var darth = new Kinetic.Image({
+                    x: 200,
+                    y: 75,
+                    image: imageObj,
+                    width: 107,
+                    height: 75,
+                    draggable: true,
+                    scale: 0.5
+                });
+
+                layer.add(darth);
+            }
+
+            stage.add(layer);
+            endTimer('draw 1000 scaled images');
+
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+    },
+    '*draw 1000 pre-processed cropped and scaled images': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = new Kinetic.Stage({
