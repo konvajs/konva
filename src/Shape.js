@@ -209,7 +209,7 @@
             var stage = this.getStage();
             var hitCanvas = stage.hitCanvas;
             hitCanvas.clear();
-            this.drawBuffer(hitCanvas);
+            this.drawScene(hitCanvas);
             var p = hitCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
             return p[3] > 0;
         },
@@ -217,33 +217,8 @@
             Kinetic.Node.prototype.remove.call(this);
             delete Kinetic.Global.shapes[this.colorKey];
         },
-        drawBuffer: function(canvas) {
-            var attrs = this.attrs, drawFunc = attrs.drawFunc, context = canvas.getContext();
-
-            if(drawFunc && this.isVisible()) {
-                var stage = this.getStage(), family = [], parent = this.parent;
-
-                family.unshift(this);
-                while(parent) {
-                    family.unshift(parent);
-                    parent = parent.parent;
-                }
-
-                context.save();
-                canvas._applyOpacity(this);
-                canvas._applyLineJoin(this);
-                var len = family.length;
-                for(var n = 0; n < len; n++) {
-                    var node = family[n], t = node.getTransform(), m = t.getMatrix();
-                    context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
-                }
-
-                drawFunc.call(this, canvas);
-                context.restore();
-            }
-        },
-        drawScene: function() {
-            var attrs = this.attrs, drawFunc = attrs.drawFunc, canvas = this.getLayer().getCanvas(), context = canvas.getContext();
+        drawScene: function(canvas) {
+            var attrs = this.attrs, drawFunc = attrs.drawFunc, canvas = canvas || this.getLayer().getCanvas(), context = canvas.getContext();
 
             if(drawFunc && this.isVisible()) {
                 var stage = this.getStage(), family = [], parent = this.parent;

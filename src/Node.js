@@ -738,20 +738,25 @@
          *  is very high quality
          */
         toDataURL: function(config) {
-            var mimeType = config && config.mimeType ? config.mimeType : null;
-            var quality = config && config.quality ? config.quality : null;
-            var canvas;
+            config = config || {};
+            var mimeType = config.mimeType || null, quality = config.quality || null, canvas, context, x = config.x || 0, y = config.y || 0;
 
-            //if width and height are defined, create new canvas to draw on, else reuse stage hit canvas
-            if(config && config.width && config.height) {
+            //if width and height are defined, create new canvas to draw on, else reuse stage buffer canvas
+            if(config.width && config.height) {
                 canvas = new Kinetic.SceneCanvas(config.width, config.height);
             }
             else {
                 canvas = this.getStage().bufferCanvas;
                 canvas.clear();
             }
+            context = canvas.getContext();
+            context.save();
+            if(x || y) {
+                context.translate(-1 * x, -1 * y);
+            }
+            this.drawScene(canvas);
+            context.restore();
 
-            this.drawBuffer(canvas);
             return canvas.toDataURL(mimeType, quality);
         },
         /**

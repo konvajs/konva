@@ -241,11 +241,11 @@
             this.drawScene();
             this.drawHit();
         },
-        drawScene: function() {
+        drawScene: function(canvas) {
             if(this.isVisible()) {
                 var children = this.children, len = children.length;
                 for(var n = 0; n < len; n++) {
-                    children[n].drawScene();
+                    children[n].drawScene(canvas);
                 }
             }
         },
@@ -254,14 +254,6 @@
                 var children = this.children, len = children.length;
                 for(var n = 0; n < len; n++) {
                     children[n].drawHit();
-                }
-            }
-        },
-        drawBuffer: function(canvas) {
-            if(this.isVisible()) {
-                var children = this.children, len = children.length;
-                for(var n = 0; n < len; n++) {
-                    children[n].drawBuffer(canvas);
                 }
             }
         }

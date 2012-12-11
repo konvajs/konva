@@ -193,6 +193,8 @@
             var height = config && config.height ? config.height : this.attrs.height;
             var canvas = new Kinetic.SceneCanvas(width, height);
             var context = canvas.getContext();
+            
+            
             var layers = this.children;
 
             function drawLayer(n) {

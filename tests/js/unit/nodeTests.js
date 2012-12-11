@@ -770,23 +770,116 @@ Test.Modules.NODE = {
             }
         });
 
-        /*
-         group.toImage({
-         callback: function(imageObj) {
-         test(Kinetic.Type._isElement(imageObj), 'group toImage() should be an image object');
-         }
-         });
-         layer.toImage({
-         callback: function(imageObj) {
-         test(Kinetic.Type._isElement(imageObj), 'layer toImage() should be an image object');
-         }
-         });
-         stage.toImage({
-         callback: function(imageObj) {
-         test(Kinetic.Type._isElement(imageObj), 'stage toImage() should be an image object');
-         }
-         });
-         */
+        showHit(layer);
+    },
+    'cache shape, group, layer, and stage': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+        var rect = new Kinetic.Rect({
+            x: 10,
+            y: 10,
+            width: 50,
+            height: 30,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true
+        });
+
+        group.add(rect);
+        layer.add(group);
+        stage.add(layer);
+
+		// cache shape
+        rect.toImage({
+            x: 8,
+            y: 8,
+            width: 54,
+            height: 34,
+            callback: function(imageObj) {
+                var cachedShape = new Kinetic.Image({
+                    image: imageObj,
+                    x: 60,
+                    y: 60,
+                    draggable: true
+                });
+                group.add(cachedShape);
+                layer.draw();
+                
+                // cache group
+                group.toImage({
+                	x: 8,
+                	y: 8,
+                	width: 106,
+                	height: 86,
+                	callback: function(imageObj) {
+                		var cachedGroup = new Kinetic.Image({
+		                    image: imageObj,
+		                    x: 100,
+		                    y: 8,
+		                    draggable: true
+		                });
+		                group.add(cachedGroup);
+		                layer.draw();
+		                
+		               
+		                // cache layer
+		                layer.toImage({
+		                	x: 8,
+		                	y: 8,
+		                	width: 200,
+		                	height: 86,
+		                	callback: function(imageObj) {
+		                		
+		                		var cachedLayer = new Kinetic.Image({
+				                    image: imageObj,
+				                    x: 190,
+				                    y: 8,
+				                    draggable: true
+				                });
+				                group.add(cachedLayer);
+				                layer.draw();
+				                
+				       
+				                var dataUrl = layer.toDataURL();
+				                
+				                // cache stage
+				                
+				                stage.toImage({
+				                	x: 8,
+				                	y: 8,
+				                	width: 400,
+				                	height: 86,
+				                	callback: function(imageObj) {
+				                		
+				                		var cachedStage = new Kinetic.Image({
+						                    image: imageObj,
+						                    x: 8,
+						                    y: 100,
+						                    draggable: true
+						                });
+						                group.add(cachedStage);
+						                layer.draw();
+						                
+						                var dataUrl = layer.toDataURL();
+						                //console.log(dataUrl);
+						             	
+						             	warn(dataUrl === dataUrls['cache shape, group, layer, and stage'], 'problem caching shape, group, layer, and stage');
+				                	}
+				                });
+				             	
+				             	
+		                	}
+		                });
+                	}
+                });
+            }
+        });
 
         showHit(layer);
     },
@@ -2009,7 +2102,7 @@ Test.Modules.NODE = {
         var group = new Kinetic.Group();
 
         var drawTriangle = function(canvas) {
-        	var context = canvas.getContext();
+            var context = canvas.getContext();
             context.beginPath();
             context.moveTo(200, 50);
             context.lineTo(420, 80);
@@ -2053,7 +2146,7 @@ Test.Modules.NODE = {
     },
     'load stage with custom shape using json': function(containerId) {
         var drawTriangle = function(canvas) {
-        	var context = canvas.getContext();
+            var context = canvas.getContext();
             context.beginPath();
             context.moveTo(200, 50);
             context.lineTo(420, 80);

@@ -81,11 +81,12 @@
          * @methodOf Kinetic.Layer.prototype
          * @param {Kinetic.Canvas} [canvas]
          */
-        drawScene: function() {
+        drawScene: function(canvas) {
+            canvas = canvas || this.getCanvas();
             if(this.attrs.clearBeforeDraw) {
-                this.getCanvas().clear();
+                canvas.clear();
             }
-            Kinetic.Container.prototype.drawScene.call(this);
+            Kinetic.Container.prototype.drawScene.call(this, canvas);
         },
         /**
          * set before draw handler
@@ -200,47 +201,6 @@
         },
         getLayer: function() {
             return this;
-        },
-        /**
-         * Creates a composite data URL. If MIME type is not
-         *  specified, then "image/png" will result. For "image/jpeg", specify a quality
-         *  level as quality (range 0.0 - 1.0).  Note that this method works
-         *  differently from toDataURL() for other nodes because it generates an absolute dataURL
-         *  based on what's currently drawn on the layer, rather than drawing
-         *  the current state of each child node
-         * @name toDataURL
-         * @methodOf Kinetic.Layer.prototype
-         * @param {Object} config
-         * @param {String} [config.mimeType] mime type.  can be "image/png" or "image/jpeg".
-         *  "image/png" is the default
-         * @param {Number} [config.width] data url image width
-         * @param {Number} [config.height] data url image height
-         * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
-         *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
-         *  is very high quality
-         */
-        toDataURL: function(config) {
-            var canvas;
-            var mimeType = config && config.mimeType ? config.mimeType : null;
-            var quality = config && config.quality ? config.quality : null;
-
-            /*
-             * if layer is hidden, return blank canvas
-             * else if width and height are defined, create blank canvas and draw onto it
-             * else return canvas as is
-             */
-            if(!this.isVisible()) {
-                var stage = this.getStage();
-                canvas = new Kinetic.SceneCanvas(stage.getWidth(), stage.getHeight());
-            }
-            else if(config && config.width && config.height) {
-                canvas = new Kinetic.SceneCanvas(config.width, config.height);
-                this.draw(canvas);
-            }
-            else {
-                canvas = this.getCanvas();
-            }
-            return canvas.toDataURL(mimeType, quality);
         },
         /**
          * remove layer from stage
