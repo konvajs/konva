@@ -182,20 +182,12 @@
          *  is very high quality
          */
         toDataURL: function(config) {
-            var mimeType = config && config.mimeType ? config.mimeType : null;
-            var quality = config && config.quality ? config.quality : null;
-            /*
-             * need to create a canvas element rather than using the hit canvas
-             * because this method is asynchonous which means that other parts of the
-             * code could modify the hit canvas before it's finished
-             */
-            var width = config && config.width ? config.width : this.attrs.width;
-            var height = config && config.height ? config.height : this.attrs.height;
-            var canvas = new Kinetic.SceneCanvas(width, height);
-            var context = canvas.getContext();
-            
-            
-            var layers = this.children;
+            config = config || {};
+            var mimeType = config.mimeType || null, quality = config.quality || null, x = config.x || 0, y = config.y || 0, canvas = new Kinetic.SceneCanvas(config.width || this.getWidth(), config.height || this.getHeight()), context = canvas.getContext(), layers = this.children;
+
+            if(x || y) {
+                context.translate(-1 * x, -1 * y);
+            }
 
             function drawLayer(n) {
                 var layer = layers[n];
@@ -232,13 +224,14 @@
          *  is very high quality
          */
         toImage: function(config) {
-            this.toDataURL({
-                callback: function(dataUrl) {
-                    Kinetic.Type._getImage(dataUrl, function(img) {
-                        config.callback(img);
-                    });
-                }
-            });
+            var cb = config.callback;
+
+            config.callback = function(dataUrl) {
+                Kinetic.Type._getImage(dataUrl, function(img) {
+                    cb(img);
+                });
+            };
+            this.toDataURL(config);
         },
         /**
          * get intersection object that contains shape and pixel data

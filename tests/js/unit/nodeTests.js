@@ -846,7 +846,7 @@ Test.Modules.NODE = {
 				                layer.draw();
 				                
 				       
-				                var dataUrl = layer.toDataURL();
+				                //var dataUrl = layer.toDataURL();
 				                
 				                // cache stage
 				                
