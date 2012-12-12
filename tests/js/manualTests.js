@@ -177,6 +177,68 @@ Test.Modules.MANUAL = {
             anim.stop();
         }, 3000);
     },
+    '*ANIMATION - test multiple animations': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var greenRect = new Kinetic.Rect({
+            x: 200,
+            y: 20,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        var blueRect = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'blue',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(greenRect);
+        layer.add(blueRect);
+        stage.add(layer);
+
+        var amplitude = 150;
+        var period = 1000;
+        // in ms
+        var centerX = stage.getWidth() / 2 - 100 / 2;
+
+        var greenAnim = new Kinetic.Animation(function(frame) {
+            greenRect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
+        }, layer);
+        var blueAnim = new Kinetic.Animation(function(frame) {
+            blueRect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
+        }, layer);
+
+        greenAnim.start();
+
+        setTimeout(function() {
+            blueAnim.start();
+        }, 1000);
+        setTimeout(function() {
+            greenAnim.stop();
+        }, 2000);
+        setTimeout(function() {
+            blueAnim.stop();
+        }, 3000);
+        setTimeout(function() {
+            greenAnim.start();
+        }, 4000);
+        setTimeout(function() {
+            greenAnim.stop();
+        }, 5000);
+
+    },
     'TRANSITION - ease-in, ease-out, ease-in-out hovers': function(containerId) {
         function addHovers(shape, easing) {
             shape.on("mouseover", function() {

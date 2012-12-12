@@ -12,6 +12,11 @@
         this.func = func;
         this.node = node;
         this.id = Kinetic.Animation.animIdCounter++;
+        this.frame = {
+            time: 0,
+            timeDiff: 0,
+            lastTime: new Date().getTime()
+        };
     };
     /*
      * Animation methods
@@ -24,6 +29,8 @@
          */
         start: function() {
             this.stop();
+            this.frame.timeDiff = 0;
+            this.frame.lastTime = new Date().getTime();
             Kinetic.Animation._addAnimation(this);
             Kinetic.Animation._handleAnimation();
         },
@@ -34,17 +41,18 @@
          */
         stop: function() {
             Kinetic.Animation._removeAnimation(this);
+        },
+        _updateFrameObject: function() {
+            var time = new Date().getTime();
+            this.frame.timeDiff = time - this.frame.lastTime;
+            this.frame.lastTime = time;
+            this.frame.time += this.frame.timeDiff;
+            this.frame.frameRate = 1000 / this.frame.timeDiff;
         }
     };
     Kinetic.Animation.animations = [];
     Kinetic.Animation.animIdCounter = 0;
     Kinetic.Animation.animRunning = false;
-    Kinetic.Animation.frame = {
-        time: 0,
-        timeDiff: 0,
-        lastTime: new Date().getTime(),
-        frameRate: 0
-    };
 
     Kinetic.Animation.fixedRequestAnimFrame = function(callback) {
         window.setTimeout(callback, 1000 / 60);
@@ -63,15 +71,8 @@
             }
         }
     };
-    Kinetic.Animation._updateFrameObject = function() {
-        var time = new Date().getTime();
-        this.frame.timeDiff = time - this.frame.lastTime;
-        this.frame.lastTime = time;
-        this.frame.time += this.frame.timeDiff;
-        this.frame.frameRate = 1000 / this.frame.timeDiff;
-    };
+
     Kinetic.Animation._runFrames = function() {
-        this._updateFrameObject();
         var nodes = {};
         /*
          * loop through all animations and execute animation
@@ -82,12 +83,13 @@
          */
         for(var n = 0; n < this.animations.length; n++) {
             var anim = this.animations[n];
+            anim._updateFrameObject();
             if(anim.node && anim.node._id !== undefined) {
                 nodes[anim.node._id] = anim.node;
             }
             // if animation object has a function, execute it
             if(anim.func) {
-                anim.func(this.frame);
+                anim.func(anim.frame);
             }
         }
 
