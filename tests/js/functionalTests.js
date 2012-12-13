@@ -1,4 +1,44 @@
 Test.Modules.DD = {
+	  'remove shape from onclick': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        
+        var top = stage.content.getBoundingClientRect().top;
+        
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle',
+            draggable: true
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        circle.on('click', function() {
+        	this.remove();
+        	layer.draw();
+        });
+        
+        stage._mousedown({
+            clientX: 291,
+            clientY: 112 + top
+        });
+        stage._mouseup({
+            clientX: 291,
+            clientY: 112 + top
+        });
+
+    },
     'test dragstart, dragmove, dragend': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

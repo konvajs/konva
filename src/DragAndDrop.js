@@ -145,6 +145,7 @@
         this.off('mousedown.kinetic');
         this.off('touchstart.kinetic');
     };
+
     /**
      * get draggable.  Alias of getDraggable()
      * @name isDraggable

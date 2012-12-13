@@ -167,6 +167,12 @@
                 parent.children.splice(this.index, 1);
                 parent._setChildrenIndices();
 
+                // remove from DD
+                var dd = Kinetic.DD;
+                if(dd && dd.node && dd.node._id === this._id) {
+                    delete Kinetic.DD.node;
+                }
+
                 // remove children
                 while(this.children && this.children.length > 0) {
                     this.children[0].remove();
