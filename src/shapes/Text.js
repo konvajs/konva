@@ -44,6 +44,7 @@
         },
         drawFunc: function(canvas) {
             var context = canvas.getContext();
+
             // draw rect
             Kinetic.Rect.prototype.drawFunc.call(this, canvas);
 

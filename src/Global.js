@@ -28,7 +28,8 @@
 /**
  * @namespace
  */
-var Kinetic = {}; (function() {
+var Kinetic = {};
+(function() {
     Kinetic.version = '@version';
     /**
      * @namespace

@@ -6,13 +6,15 @@
      * @param {Number} height
      */
     Kinetic.Canvas = function(width, height) {
+        this.width = width;
+        this.height = height;
         this.element = document.createElement('canvas');
         this.context = this.element.getContext('2d');
-
-        // set dimensions
-        this.element.width = width || 0;
-        this.element.height = height || 0;
+        this.setSize(width || 0, height || 0);
     };
+    // calculate pixel ratio
+    var canvas = document.createElement('canvas'), context = canvas.getContext('2d'), devicePixelRatio = window.devicePixelRatio || 1, backingStoreRatio = context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1;
+    Kinetic.Canvas.pixelRatio = devicePixelRatio / backingStoreRatio;
 
     Kinetic.Canvas.prototype = {
         /**
@@ -47,7 +49,10 @@
          * @methodOf Kinetic.Canvas.prototype
          */
         setWidth: function(width) {
-            this.element.width = width;
+            this.width = width;
+            // take into account pixel ratio
+            this.element.width = width * Kinetic.Canvas.pixelRatio;
+            this.element.style.width = width + 'px';
         },
         /**
          * set height
@@ -55,7 +60,10 @@
          * @methodOf Kinetic.Canvas.prototype
          */
         setHeight: function(height) {
-            this.element.height = height;
+            this.height = height;
+            // take into account pixel ratio
+            this.element.height = height * Kinetic.Canvas.pixelRatio;
+            this.element.style.height = height + 'px';
         },
         /**
          * get width
@@ -63,7 +71,7 @@
          * @methodOf Kinetic.Canvas.prototype
          */
         getWidth: function() {
-            return this.element.width;
+            return this.width;
         },
         /**
          * get height
@@ -71,7 +79,7 @@
          * @methodOf Kinetic.Canvas.prototype
          */
         getHeight: function() {
-            return this.element.height;
+            return this.height;
         },
         /**
          * set size
@@ -162,6 +170,12 @@
             var lineJoin = shape.getLineJoin();
             if(lineJoin) {
                 this.context.lineJoin = lineJoin;
+            }
+        },
+        _handlePixelRatio: function() {
+            var pixelRatio = Kinetic.Canvas.pixelRatio;
+            if(pixelRatio !== 1) {
+                this.getContext().scale(pixelRatio, pixelRatio);
             }
         }
     };
