@@ -91,7 +91,7 @@
             return this.getLayer().getContext();
         },
         /**
-         * get canvas tied to the layer
+         * get canvas renderer tied to the layer.  Note that this returns a canvas renderer, not a canvas element
          * @name getCanvas
          * @methodOf Kinetic.Shape.prototype
          */
@@ -141,7 +141,7 @@
          *  radial gradient object, or pattern object
          * @name setFill
          * @methodOf Kinetic.Shape.prototype
-         * @param {String|Object} fill
+         * @param {Object} fill
          */
         setFill: function(fill) {
             var type = Kinetic.Type;
@@ -177,6 +177,8 @@
          * set width and height
          * @name setSize
          * @methodOf Kinetic.Shape.prototype
+         * @param {Number} width
+         * @param {Number} height
          */
         setSize: function() {
             var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
@@ -199,7 +201,9 @@
         },
         /**
          * determines if point is in the shape
-         * @param {Object|Array} point point can be an object containing
+         * @name intersects
+         * @methodOf Kinetic.Shape.prototype
+         * @param {Object} point point can be an object containing
          *  an x and y property, or it can be an array with two elements
          *  in which the first element is the x component and the second
          *  element is the y component
@@ -339,9 +343,9 @@
      * @param {Array} dashArray
      *  examples:<br>
      *  [10, 5] dashes are 10px long and 5 pixels apart
-     *  [10, 20, 0, 20] if using a round lineCap, the line will
+     *  [10, 20, 0.001, 20] if using a round lineCap, the line will
      *  be made up of alternating dashed lines that are 10px long
-     *  and 20px apart, and dots that have a radius of 5 and are 20px
+     *  and 20px apart, and dots that have a radius of 5px and are 20px
      *  apart
      */
 

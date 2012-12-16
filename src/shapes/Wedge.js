@@ -31,9 +31,20 @@
             context.closePath();
             canvas.fillStroke(this);
         },
+        /**
+         * set angle in degrees
+         * @name setAngleDeg
+         * @methodOf Kinetic.Wedge.prototype
+         * @param {Number} deg
+         */
         setAngleDeg: function(deg) {
             this.setAngle(Kinetic.Type._degToRad(deg));
         },
+        /**
+         * set angle in degrees
+         * @name getAngleDeg
+         * @methodOf Kinetic.Wedge.prototype
+         */
         getAngleDeg: function() {
             return Kinetic.Type._radToDeg(this.getAngle());
         }
