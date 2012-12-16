@@ -28,7 +28,7 @@
             context.clearRect(0, 0, el.width, el.height);
         },
         /**
-         * get element
+         * get canvas element
          * @name getElement
          * @methodOf Kinetic.Canvas.prototype
          */
@@ -36,7 +36,7 @@
             return this.element;
         },
         /**
-         * get context
+         * get canvas context
          * @name getContext
          * @methodOf Kinetic.Canvas.prototype
          */
@@ -47,6 +47,7 @@
          * set width
          * @name setWidth
          * @methodOf Kinetic.Canvas.prototype
+         * @param {Number} width
          */
         setWidth: function(width) {
             this.width = width;
@@ -58,6 +59,7 @@
          * set height
          * @name setHeight
          * @methodOf Kinetic.Canvas.prototype
+         * @param {Number} height
          */
         setHeight: function(height) {
             this.height = height;
@@ -85,13 +87,19 @@
          * set size
          * @name setSize
          * @methodOf Kinetic.Canvas.prototype
+         * @param {Number} width
+         * @param {Number} height
          */
         setSize: function(width, height) {
             this.setWidth(width);
             this.setHeight(height);
         },
         /**
-         * toDataURL
+         * to data url
+         * @name toDataURL
+         * @methodOf Kinetic.Canvas.prototype
+         * @param {String} mimeType
+         * @param {Number} quality between 0 and 1 for jpg mime types
          */
         toDataURL: function(mimeType, quality) {
             try {
@@ -110,30 +118,30 @@
             }
         },
         /**
-         * fill current path
+         * fill shape path
          * @name fill
          * @methodOf Kinetic.Canvas.prototype
+         * @param {Kinetic.Shape} shape
          */
         fill: function(shape) {
             this._fill(shape);
         },
         /**
-         * stroke current path
+         * stroke shape path
          * @name stroke
          * @methodOf Kinetic.Canvas.prototype
+         * @param {Kinetic.Shape} shape
          */
         stroke: function(shape) {
             this._stroke(shape);
         },
         /**
-         * fill and stroke current path.&nbsp; Aside from being a convenience method
-         *  which fills and strokes the current path with a single method, its main purpose is
-         *  to ensure that the shadow object is not applied to both the fill and stroke.&nbsp; A shadow
+         * fill, stroke, and apply shadows
          *  will only be applied to either the fill or stroke.&nbsp; Fill
          *  is given priority over stroke.
          * @name fillStroke
-         * @param {CanvasContext} context
          * @methodOf Kinetic.Canvas.prototype
+         * @param {Kinetic.Shape} shape
          */
         fillStroke: function(shape) {
             this._fill(shape);
@@ -145,14 +153,16 @@
          * @param {CanvasContext} context
          * @param {Function} func draw function
          * @methodOf Kinetic.Canvas.prototype
+         * @param {Kinetic.Shape} shape
+         * @param {Function} drawFunc
          */
-        applyShadow: function(shape, func) {
+        applyShadow: function(shape, drawFunc) {
             var context = this.context;
             context.save();
             this._applyShadow(shape);
-            func();
+            drawFunc();
             context.restore();
-            func();
+            drawFunc();
         },
         _applyLineCap: function(shape) {
             var lineCap = shape.getLineCap();
@@ -180,6 +190,13 @@
         }
     };
 
+    /**
+     * Scene Canvas Renderer constructor
+     * @constructor
+     * @augments Kinetic.Canvas
+     * @param {Number} width
+     * @param {Number} height
+     */
     Kinetic.SceneCanvas = function(width, height) {
         Kinetic.Canvas.call(this, width, height);
     };
@@ -307,6 +324,13 @@
     };
     Kinetic.Global.extend(Kinetic.SceneCanvas, Kinetic.Canvas);
 
+    /**
+     * Hit Graph Canvas Renderer constructor
+     * @constructor
+     * @augments Kinetic.Canvas
+     * @param {Number} width
+     * @param {Number} height
+     */
     Kinetic.HitCanvas = function(width, height) {
         Kinetic.Canvas.call(this, width, height);
     };
