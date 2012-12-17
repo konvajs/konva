@@ -735,10 +735,13 @@
          * @name toDataURL
          * @methodOf Kinetic.Node.prototype
          * @param {Object} config
-         * @param {String} [config.mimeType] mime type.  can be "image/png" or "image/jpeg".
+         * @param {Function} config.callback function executed when the composite has completed
+         * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
          *  "image/png" is the default
-         * @param {Number} [config.width] data url image width
-         * @param {Number} [config.height] data url image height
+         * @param {Number} [config.x] x position of canvas section
+         * @param {Number} [config.y] y position of canvas section
+         * @param {Number} [config.width] width of canvas section
+         * @param {Number} [config.height] height of canvas section
          * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
          *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
          *  is very high quality
@@ -772,11 +775,13 @@
          * @name toImage
          * @methodOf Kinetic.Node.prototype
          * @param {Object} config
-         * @param {Function} config.callback function that is passed the image object
-         * @param {String} [config.mimeType] mime type.  can be "image/png" or "image/jpeg".
+         * @param {Function} config.callback function executed when the composite has completed
+         * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
          *  "image/png" is the default
-         * @param {Number} [config.width] data url image width
-         * @param {Number} [config.height] data url image height
+         * @param {Number} [config.x] x position of canvas section
+         * @param {Number} [config.y] y position of canvas section
+         * @param {Number} [config.width] width of canvas section
+         * @param {Number} [config.height] height of canvas section
          * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
          *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
          *  is very high quality
