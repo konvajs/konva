@@ -3,7 +3,6 @@
      * Stage constructor.  A stage is used to contain multiple layers and handle
      * animations
      * @constructor
-     * @augments Kinetic.Container
      * @param {Function} func function executed on each animation frame
      * @param {Kinetic.Node} [node] node to be redrawn.&nbsp; Specifying a node will improve
      *  draw performance.&nbsp; This can be a shape, a group, a layer, or the stage.
