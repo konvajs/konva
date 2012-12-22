@@ -187,6 +187,13 @@
             if(pixelRatio !== 1) {
                 this.getContext().scale(pixelRatio, pixelRatio);
             }
+        },
+        _counterPixelRatio: function() {
+            var pixelRatio = Kinetic.Canvas.pixelRatio;
+            if(pixelRatio !== 1) {
+                pixelRatio = 1 / pixelRatio;
+                this.getContext().scale(pixelRatio, pixelRatio);
+            }
         }
     };
 

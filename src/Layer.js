@@ -40,7 +40,7 @@
             this.afterDrawFunc = undefined;
             this.canvas = new Kinetic.SceneCanvas();
             this.canvas.getElement().style.position = 'absolute';
-            this.hitCanvas = new Kinetic.HitCanvas(0, 0);
+            this.hitCanvas = new Kinetic.HitCanvas();
 
             // call super constructor
             Kinetic.Container.call(this, config);

@@ -563,7 +563,7 @@
             this.attrs.container.appendChild(this.content);
 
             this.bufferCanvas = new Kinetic.SceneCanvas();
-            this.hitCanvas = new Kinetic.HitCanvas(0, 0);
+            this.hitCanvas = new Kinetic.HitCanvas();
 
             this._resizeDOM();
         },

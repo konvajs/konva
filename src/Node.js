@@ -760,6 +760,8 @@
             }
             context = canvas.getContext();
             context.save();
+            canvas._counterPixelRatio();
+            
             if(x || y) {
                 context.translate(-1 * x, -1 * y);
             }
