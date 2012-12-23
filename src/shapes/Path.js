@@ -5,6 +5,7 @@
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
+     * @param {String} config.data SVG data string
      */
     Kinetic.Path = function(config) {
         this._initPath(config);

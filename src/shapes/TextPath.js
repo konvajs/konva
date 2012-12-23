@@ -5,6 +5,13 @@
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
+     * @param {String} config.textFill
+     * @param {String} config.textStroke
+     * @param {Number} config.textStrokeWidth
+     * @param {String} config.fontFamily default is Calibri
+     * @param {Number} config.fontSize default is 12
+     * @param {String} config.fontStyle can be normal, bold, or italic.  Default is normal
+     * @param {String} config.text
      */
     Kinetic.TextPath = function(config) {
         this._initTextPath(config);

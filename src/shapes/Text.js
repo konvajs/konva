@@ -4,6 +4,20 @@
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
+     * @param {String} config.textFill
+     * @param {String} config.textStroke
+     * @param {Number} config.textStrokeWidth
+     * @param {String} config.fontFamily default is Calibri
+     * @param {Number} config.fontSize default is 12
+     * @param {String} config.fontStyle can be normal, bold, or italic.  Default is normal
+     * @param {String} config.text
+     * @param {String} config.align can be left, center, or right
+     * @param {String} config.verticalAlign can be top, middle, or bottom
+     * @param {Number} config.padding
+     * @param {Number} config.width default is auto
+     * @param {Number} config.height default is auto
+     * @param {Number} config.lineHeight default is 1.2
+     * @param {Number} config.cornerRadius
      */
     Kinetic.Text = function(config) {
         this._initText(config);
@@ -296,7 +310,7 @@
     Kinetic.HitCanvas.prototype._applyTextShadow = _applyTextShadow;
 
     // add getters setters
-    Kinetic.Node.addGettersSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'lineHeight']);
+    Kinetic.Node.addGettersSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'lineHeight', 'cornerRadius']);
     Kinetic.Node.addGetters(Kinetic.Text, ['text', 'textShadow']);
     /**
      * set font family

@@ -4,6 +4,9 @@
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
+     * @param {String} config.animation animation key
+     * @param {Object} config.animations animation map
+     * @param {Integer} config.index animation index
      */
     Kinetic.Sprite = function(config) {
         this._initSprite(config);

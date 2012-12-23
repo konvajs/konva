@@ -5,57 +5,37 @@
      * @constructor
      * @augments Kinetic.Node
      * @param {Object} config
-     * @config {String|Object} [config.fill] can be a string color, a linear gradient object, a radial
+     * @param {String|Object} [config.fill] can be a string color, a linear gradient object, a radial
      *  gradient object, or a pattern object.
-     * @config {Image} [config.fill.image] image object if filling the shape with a pattern
-     * @config {Object} [config.fill.offset] pattern offset if filling the shape with a pattern
-     * @config {Number} [config.fill.offset.x]
-     * @config {Number} [config.fill.offset.y]
-     * @config {Object} [config.fill.start] start point if using a linear gradient or
+     * @param {Image} [config.fill.image] image object if filling the shape with a pattern
+     * @param {Object} [config.fill.offset] pattern offset if filling the shape with a pattern
+     * @param {Number} [config.fill.offset.x]
+     * @param {Number} [config.fill.offset.y]
+     * @param {Object} [config.fill.start] start point if using a linear gradient or
      *  radial gradient fill
-     * @config {Number} [config.fill.start.x]
-     * @config {Number} [config.fill.start.y]
-     * @config {Number} [config.fill.start.radius] start radius if using a radial gradient fill
-     * @config {Object} [config.fill.end] end point if using a linear gradient or
+     * @param {Number} [config.fill.start.x]
+     * @param {Number} [config.fill.start.y]
+     * @param {Number} [config.fill.start.radius] start radius if using a radial gradient fill
+     * @param {Object} [config.fill.end] end point if using a linear gradient or
      *  radial gradient fill
-     * @config {Number} [config.fill.end.x]
-     * @config {Number} [config.fill.end.y]
-     * @config {Number} [config.fill.end.radius] end radius if using a radial gradient fill
-     * @config {String} [config.stroke] stroke color
-     * @config {Number} [config.strokeWidth] stroke width
-     * @config {String} [config.lineJoin] line join can be miter, round, or bevel.  The default
+     * @param {Number} [config.fill.end.x]
+     * @param {Number} [config.fill.end.y]
+     * @param {Number} [config.fill.end.radius] end radius if using a radial gradient fill
+     * @param {String} [config.stroke] stroke color
+     * @param {Number} [config.strokeWidth] stroke width
+     * @param {String} [config.lineJoin] line join can be miter, round, or bevel.  The default
      *  is miter
-     * @config {Object} [config.shadow] shadow object
-     * @config {String} [config.shadow.color]
-     * @config {Number} [config.shadow.blur]
-     * @config {Obect} [config.shadow.blur.offset]
-     * @config {Number} [config.shadow.blur.offset.x]
-     * @config {Number} [config.shadow.blur.offset.y]
-     * @config {Number} [config.shadow.opacity] shadow opacity.  Can be any real number
+     * @param {Object} [config.shadow] shadow object
+     * @param {String} [config.shadow.color]
+     * @param {Number} [config.shadow.blur]
+     * @param {Obect} [config.shadow.blur.offset]
+     * @param {Number} [config.shadow.blur.offset.x]
+     * @param {Number} [config.shadow.blur.offset.y]
+     * @param {Number} [config.shadow.opacity] shadow opacity.  Can be any real number
      *  between 0 and 1
-     * @param {Number} [config.x]
-     * @param {Number} [config.y]
-     * @param {Boolean} [config.visible]
-     * @param {Boolean} [config.listening] whether or not the node is listening for events
-     * @param {String} [config.id] unique id
-     * @param {String} [config.name] non-unique name
-     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
-     * @param {Object} [config.scale]
-     * @param {Number} [config.scale.x]
-     * @param {Number} [config.scale.y]
-     * @param {Number} [config.rotation] rotation in radians
-     * @param {Number} [config.rotationDeg] rotation in degrees
-     * @param {Object} [config.offset] offsets default position point and rotation point
-     * @param {Number} [config.offset.x]
-     * @param {Number} [config.offset.y]
-     * @param {Boolean} [config.draggable]
-     * @param {String} [config.dragConstraint] can be vertical, horizontal, or none.  The default
-     *  is none
-     * @param {Object} [config.dragBounds]
-     * @param {Number} [config.dragBounds.top]
-     * @param {Number} [config.dragBounds.right]
-     * @param {Number} [config.dragBounds.bottom]
-     * @param {Number} [config.dragBounds.left]
+     * @param {Array} [config.dashArray]
+     * @param {Number} [config.width]
+     * @param {Number} [config.height]
      */
     Kinetic.Shape = function(config) {
         this._initShape(config);
@@ -283,7 +263,7 @@
     Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
 
     // add getters and setters
-    Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'lineCap', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'cornerRadius', 'dashArray']);
+    Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'lineCap', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'dashArray']);
     Kinetic.Node.addGetters(Kinetic.Shape, ['shadow', 'fill']);
 
     /**
@@ -323,13 +303,6 @@
      */
 
     /**
-     * set corner radius
-     * @name setCornerRadius
-     * @methodOf Kinetic.Shape.prototype
-     * @param {Number} corner radius
-     */
-
-    /**
      * set line cap.  Can be butt, round, or square
      * @name setLineCap
      * @methodOf Kinetic.Shape.prototype
@@ -364,12 +337,6 @@
     /**
      * get stroke width
      * @name getStrokeWidth
-     * @methodOf Kinetic.Shape.prototype
-     */
-
-    /**
-     * get corner radius
-     * @name getCornerRadius
      * @methodOf Kinetic.Shape.prototype
      */
 

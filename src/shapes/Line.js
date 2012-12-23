@@ -4,6 +4,8 @@
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
+     * @param {Array} config.points can be a flattened array of points, or an array of point objects.
+     *  e.g. [0,1,2,3] and [{x:1,y:2},{x:3,y:4}] are equivalent
      */
     Kinetic.Line = function(config) {
         this._initLine(config);

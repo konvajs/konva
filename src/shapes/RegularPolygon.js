@@ -4,6 +4,8 @@
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
+     * @param {Number} sides
+     * @param {Number} radius
      */
     Kinetic.RegularPolygon = function(config) {
         this._initRegularPolygon(config);

@@ -4,6 +4,9 @@
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
+     * @param {Integer} config.numPoints
+     * @param {Number} config.innerRadius
+     * @param {Number} config.outerRadius
      */
     Kinetic.Star = function(config) {
         this._initStar(config);

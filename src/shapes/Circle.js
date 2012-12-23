@@ -4,6 +4,7 @@
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
+     * @param {Number} config.radius
      */
     Kinetic.Circle = function(config) {
         this._initCircle(config);

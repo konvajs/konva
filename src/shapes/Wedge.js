@@ -4,6 +4,9 @@
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
+     * @param {Number} config.angle
+     * @param {Number} config.radius
+     * @param {Boolean} config.clockwise
      */
     Kinetic.Wedge = function(config) {
         this._initWedge(config);

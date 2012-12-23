@@ -4,10 +4,12 @@
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
+     * @param {Number} config.cornerRadius
      */
     Kinetic.Rect = function(config) {
         this._initRect(config);
-    }
+    };
+    
     Kinetic.Rect.prototype = {
         _initRect: function(config) {
             this.setDefaultAttrs({
@@ -21,7 +23,7 @@
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
-        	var context = canvas.getContext();
+            var context = canvas.getContext();
             context.beginPath();
             var cornerRadius = this.getCornerRadius(), width = this.getWidth(), height = this.getHeight();
             if(cornerRadius === 0) {
@@ -46,5 +48,20 @@
     };
 
     Kinetic.Global.extend(Kinetic.Rect, Kinetic.Shape);
+
+    Kinetic.Node.addGettersSetters(Kinetic.Rect, ['cornerRadius']);
+
+    /**
+     * set corner radius
+     * @name setCornerRadius
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} corner radius
+     */
+
+    /**
+     * get corner radius
+     * @name getCornerRadius
+     * @methodOf Kinetic.Shape.prototype
+     */
 
 })();

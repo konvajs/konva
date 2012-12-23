@@ -5,8 +5,6 @@
      * @augments Kinetic.Shape
      * @param {Object} config
      * @param {ImageObject} config.image
-     * @param {Number} [config.width]
-     * @param {Number} [config.height]
      * @param {Object} [config.crop]
      */
     Kinetic.Image = function(config) {
