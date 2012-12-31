@@ -437,6 +437,42 @@
             return Kinetic.Type._radToDeg(this.getRotation());
         },
         /**
+         * iterate through ancestors in reverse
+         * @name eachAncestorReverse
+         * @methodOf Kinetic.Node.prototype
+         * @param {Function} func function is passed two arguments, a node and
+         *  the iterator integer
+         */
+        eachAncestorReverse: function(func) {
+            var family = [], parent = this.getParent();
+
+            // build family by traversing ancestors
+            family.unshift(this);
+            while(parent) {
+                family.unshift(parent);
+                parent = parent.parent;
+            }
+
+            var len = family.length;
+            for(var n = 0; n < len; n++) {
+                func(family[n], n);
+            }
+        },
+        /**
+         * iterate through ancestors
+         * @name eachAncestor
+         * @methodOf Kinetic.Node.prototype
+         * @param {Function} func function is passed two arguments, a node and
+         *  the iterator integer
+         */
+        eachAncestor: function(func) {
+            var family = [], parent = this.getParent(), n = 0;
+            while(parent) {
+                func(parent, n++);
+                parent = parent.parent;
+            }
+        },
+        /**
          * set rotation in degrees
          * @name setRotationDeg
          * @methodOf Kinetic.Node.prototype
@@ -761,7 +797,7 @@
             context = canvas.getContext();
             context.save();
             canvas._counterPixelRatio();
-            
+
             if(x || y) {
                 context.translate(-1 * x, -1 * y);
             }

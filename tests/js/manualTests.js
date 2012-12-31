@@ -177,7 +177,7 @@ Test.Modules.MANUAL = {
             anim.stop();
         }, 3000);
     },
-    '*ANIMATION - test multiple animations': function(containerId) {
+    'ANIMATION - test multiple animations': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,

@@ -205,23 +205,11 @@
             var attrs = this.attrs, drawFunc = attrs.drawFunc, canvas = canvas || this.getLayer().getCanvas(), context = canvas.getContext();
 
             if(drawFunc && this.isVisible()) {
-                var stage = this.getStage(), family = [], parent = this.parent;
-
-                family.unshift(this);
-                while(parent) {
-                    family.unshift(parent);
-                    parent = parent.parent;
-                }
-
                 context.save();
                 canvas._handlePixelRatio();
                 canvas._applyOpacity(this);
                 canvas._applyLineJoin(this);
-                var len = family.length;
-                for(var n = 0; n < len; n++) {
-                    var node = family[n], t = node.getTransform(), m = t.getMatrix();
-                    context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
-                }
+                canvas._applyAncestorTransforms(this);
 
                 drawFunc.call(this, canvas);
                 context.restore();
@@ -231,21 +219,9 @@
             var attrs = this.attrs, drawFunc = attrs.drawHitFunc || attrs.drawFunc, canvas = this.getLayer().hitCanvas, context = canvas.getContext();
 
             if(drawFunc && this.isVisible() && this.isListening()) {
-                var stage = this.getStage(), family = [], parent = this.parent;
-
-                family.unshift(this);
-                while(parent) {
-                    family.unshift(parent);
-                    parent = parent.parent;
-                }
-
                 context.save();
                 canvas._applyLineJoin(this);
-                var len = family.length;
-                for(var n = 0; n < len; n++) {
-                    var node = family[n], t = node.getTransform(), m = t.getMatrix();
-                    context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
-                }
+                canvas._applyAncestorTransforms(this);
 
                 drawFunc.call(this, canvas);
                 context.restore();

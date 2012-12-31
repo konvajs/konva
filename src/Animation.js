@@ -31,7 +31,6 @@
             this.frame.timeDiff = 0;
             this.frame.lastTime = new Date().getTime();
             Kinetic.Animation._addAnimation(this);
-            Kinetic.Animation._handleAnimation();
         },
         /**
          * stop animation
@@ -59,6 +58,7 @@
 
     Kinetic.Animation._addAnimation = function(anim) {
         this.animations.push(anim);
+        this._handleAnimation();
     };
     Kinetic.Animation._removeAnimation = function(anim) {
         var id = anim.id;

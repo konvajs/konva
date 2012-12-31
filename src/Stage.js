@@ -26,12 +26,9 @@
             this._id = Kinetic.Global.idCounter++;
             this._buildDOM();
             this._bindContentEvents();
-
-            var go = Kinetic.Global;
-            go.stages.push(this);
+            Kinetic.Global.stages.push(this);
             this._addId(this);
             this._addName(this);
-
         },
         /**
          * set container dom element which contains the stage wrapper div element
@@ -333,11 +330,6 @@
                 this.targetShape = null;
             }
             this.mousePos = undefined;
-
-            // end drag and drop
-            if(dd) {
-                dd._endDrag(evt);
-            }
         },
         _mousemove: function(evt) {
             this._setUserPosition(evt);
@@ -373,7 +365,7 @@
 
             // start drag and drop
             if(dd) {
-                dd._startDrag(evt);
+                dd._drag(evt);
             }
         },
         _mousedown: function(evt) {
@@ -387,7 +379,7 @@
 
             //init stage drag and drop
             if(Kinetic.DD && this.attrs.draggable) {
-                this._initDrag();
+                this._startDrag();
             }
         },
         _mouseup: function(evt) {
@@ -440,7 +432,7 @@
              * init stage drag and drop
              */
             if(Kinetic.DD && this.attrs.draggable) {
-                this._initDrag();
+                this._startDrag();
             }
         },
         _touchend: function(evt) {
@@ -491,7 +483,7 @@
 
             // start drag and drop
             if(dd) {
-                dd._startDrag(evt);
+                dd._drag(evt);
             }
         },
         /**

@@ -150,8 +150,6 @@
         /**
          * apply shadow
          * @name applyShadow
-         * @param {CanvasContext} context
-         * @param {Function} func draw function
          * @methodOf Kinetic.Canvas.prototype
          * @param {Kinetic.Shape} shape
          * @param {Function} drawFunc
@@ -194,6 +192,13 @@
                 pixelRatio = 1 / pixelRatio;
                 this.getContext().scale(pixelRatio, pixelRatio);
             }
+        },
+        _applyAncestorTransforms: function(node) {
+            var context = this.context;
+            node.eachAncestorReverse(function(no) {
+                var t = no.getTransform(), m = t.getMatrix();
+                context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+            });
         }
     };
 
