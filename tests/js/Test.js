@@ -104,7 +104,7 @@ Test.prototype = {
                     this.counter++;
                     console.log(this.counter + ') ' + key);
                     tests[key](key);
-                    obj.testMessage.innerHTML = this.counter + ') ' + key + ': PASSED';
+                    obj.testMessage.innerHTML = this.counter + ') ' + mod + ' - ' + key + ': PASSED';
                     obj.testMessage.setAttribute('class', 'gray');
                 }
             }

@@ -289,9 +289,7 @@ Test.Modules.NODE = {
             text: 'Some awesome text!',
             fontSize: 14,
             fontFamily: 'Calibri',
-            textFill: 'blue',
-            shadowColor: 'black',
-            shadowOffset: [20, 20],
+            fill: 'blue',
             name: 'myText'
         });
         group.add(rect);
@@ -326,9 +324,9 @@ Test.Modules.NODE = {
 
         test(group.getChildren().length === 2, 'group should have two children');
         test(clone.getChildren().length === 2, 'clone should have two children');
-        test(group.get('.myText')[0].getTextFill() === 'blue', 'group text should be blue');
-        test(clone.get('.myText')[0].getTextFill() === 'blue', 'clone text should be blue');
-        clone.get('.myText')[0].setTextFill('black');
+        test(group.get('.myText')[0].getFill() === 'blue', 'group text should be blue');
+        test(clone.get('.myText')[0].getFill() === 'blue', 'clone text should be blue');
+        clone.get('.myText')[0].setFill('black');
         test(group.get('.myRect')[0].attrs.myAttr === 'group rect', 'group rect should have myAttr: group rect');
         test(clone.get('.myRect')[0].attrs.myAttr === 'group rect', 'clone rect should have myAttr: group rect');
         clone.get('.myRect')[0].setAttrs({
@@ -338,8 +336,8 @@ Test.Modules.NODE = {
         // Make sure that when we change a clone object attr that the rect object
         // attr isn't updated by reference
 
-        test(group.get('.myText')[0].getTextFill() === 'blue', 'group text should be blue');
-        test(clone.get('.myText')[0].getTextFill() === 'black', 'clone text should be blue');
+        test(group.get('.myText')[0].getFill() === 'blue', 'group text should be blue');
+        test(clone.get('.myText')[0].getFill() === 'black', 'clone text should be blue');
 
         test(group.get('.myRect')[0].attrs.myAttr === 'group rect', 'group rect should have myAttr: group rect');
         test(clone.get('.myRect')[0].attrs.myAttr === 'clone rect', 'clone rect should have myAttr: clone rect');

@@ -17,7 +17,6 @@
      * @param {Number} config.width default is auto
      * @param {Number} config.height default is auto
      * @param {Number} config.lineHeight default is 1.2
-     * @param {Number} config.cornerRadius
      */
     Kinetic.Text = function(config) {
         this._initText(config);
@@ -35,8 +34,6 @@
                 padding: 0,
                 width: 'auto',
                 height: 'auto',
-                detectionType: 'path',
-                cornerRadius: 0,
                 lineHeight: 1.2
             });
 
@@ -57,15 +54,7 @@
             that._setTextData();
         },
         drawFunc: function(canvas) {
-            var context = canvas.getContext();
-
-            // draw rect
-            Kinetic.Rect.prototype.drawFunc.call(this, canvas);
-
-            // draw text
-            var p = this.attrs.padding;
-            var lineHeightPx = this.attrs.lineHeight * this.getTextHeight();
-            var textArr = this.textArr;
+            var context = canvas.getContext(), p = this.attrs.padding, lineHeightPx = this.attrs.lineHeight * this.getTextHeight(), textArr = this.textArr;
 
             context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'pt ' + this.attrs.fontFamily;
             context.textBaseline = 'middle';
@@ -73,7 +62,7 @@
             context.save();
             context.translate(p, 0);
             context.translate(0, p + this.getTextHeight() / 2);
-
+            
             // draw text lines
             for(var n = 0; n < textArr.length; n++) {
                 var text = textArr[n];
@@ -93,7 +82,14 @@
             }
             context.restore();
         },
-        drawHitFunc: Kinetic.Rect.prototype.drawFunc,
+        drawHitFunc: function(canvas) {
+        	var context = canvas.getContext(), width = this.getWidth(), height = this.getHeight();
+        	
+            context.beginPath();
+        	context.rect(0, 0, width, height);
+        	context.closePath();
+            canvas.fillStroke(this);
+        },
         /**
          * set text
          * @name setText
@@ -148,23 +144,6 @@
                 width: metrics.width,
                 height: parseInt(this.attrs.fontSize, 10)
             };
-        },
-        /**
-         * set text shadow object
-         * @name setTextShadow
-         * @methodOf Kinetic.Text.prototype
-         * @param {Object} config
-         * @param {String} config.color
-         * @param {Number} config.blur
-         * @param {Array|Object|Number} config.offset
-         * @param {Number} config.opacity
-         */
-        setTextShadow: function(config) {
-            var type = Kinetic.Type;
-            if(config.offset !== undefined) {
-                config.offset = type._getXY(config.offset);
-            }
-            this.setAttr('textShadow', type._merge(config, this.getTextShadow()));
         },
         /**
          * set text data.  wrap logic and width and height setting occurs
@@ -239,27 +218,27 @@
      * extend canvas renderers
      */
     var fillText = function(shape, text, skipShadow) {
-        var textFill = shape.getTextFill(), textShadow = shape.getTextShadow(), context = this.context;
+        var textFill = shape.getFill(), context = this.context;
         if(textFill) {
             context.save();
-            if(!skipShadow && textShadow) {
-                this._applyTextShadow(shape);
+            if(!skipShadow && shape.hasShadow()) {
+                this._applyShadow(shape);
             }
             context.fillStyle = textFill;
             context.fillText(text, 0, 0);
             context.restore();
 
-            if(!skipShadow && textShadow && textShadow.opacity) {
+            if(!skipShadow && shape.hasShadow()) {
                 this.fillText(shape, text, true);
             }
         }
     };
     var strokeText = function(shape, text, skipShadow) {
-        var textStroke = shape.getTextStroke(), textStrokeWidth = shape.getTextStrokeWidth(), textShadow = shape.getTextShadow(), context = this.context;
+        var textStroke = shape.getStroke(), textStrokeWidth = shape.getStrokeWidth(), context = this.context;
         if(textStroke || textStrokeWidth) {
             context.save();
-            if(!skipShadow && textShadow) {
-                this._applyTextShadow(shape);
+            if(!skipShadow && shape.hasShadow()) {
+                this._applyShadow(shape);
             }
 
             context.lineWidth = textStrokeWidth || 2;
@@ -267,51 +246,29 @@
             context.strokeText(text, 0, 0);
             context.restore();
 
-            if(!skipShadow && textShadow && textShadow.opacity) {
+            if(!skipShadow && shape.hasShadow()) {
                 this.strokeText(shape, text, true);
             }
         }
     };
     var fillStrokeText = function(shape, text) {
         this.fillText(shape, text);
-        this.strokeText(shape, text, shape.getTextShadow() && shape.getTextFill());
+        this.strokeText(shape, text, shape.hasShadow() && shape.getFill());
     };
-    var _applyTextShadow = function(shape) {
-        var textShadow = shape.getTextShadow(), context = this.context;
-        if(textShadow) {
-            var aa = shape.getAbsoluteOpacity();
-            // defaults
-            var color = textShadow.color || 'black';
-            var blur = textShadow.blur || 5;
-            var offset = textShadow.offset || {
-                x: 0,
-                y: 0
-            };
 
-            if(textShadow.opacity) {
-                context.globalAlpha = textShadow.opacity * aa;
-            }
-            context.shadowColor = color;
-            context.shadowBlur = blur;
-            context.shadowOffsetX = offset.x;
-            context.shadowOffsetY = offset.y;
-        }
-    };
     // scene canvases
     Kinetic.SceneCanvas.prototype.fillText = fillText;
     Kinetic.SceneCanvas.prototype.strokeText = strokeText;
     Kinetic.SceneCanvas.prototype.fillStrokeText = fillStrokeText;
-    Kinetic.SceneCanvas.prototype._applyTextShadow = _applyTextShadow;
-
+    
     // hit canvases
     Kinetic.HitCanvas.prototype.fillText = fillText;
     Kinetic.HitCanvas.prototype.strokeText = strokeText;
     Kinetic.HitCanvas.prototype.fillStrokeText = fillStrokeText;
-    Kinetic.HitCanvas.prototype._applyTextShadow = _applyTextShadow;
 
     // add getters setters
-    Kinetic.Node.addGettersSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth', 'padding', 'align', 'lineHeight', 'cornerRadius']);
-    Kinetic.Node.addGetters(Kinetic.Text, ['text', 'textShadow']);
+    Kinetic.Node.addGettersSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'align', 'lineHeight']);
+    Kinetic.Node.addGetters(Kinetic.Text, ['text']);
     /**
      * set font family
      * @name setFontFamily
@@ -331,27 +288,6 @@
      * @name setFontStyle
      * @methodOf Kinetic.Text.prototype
      * @param {String} fontStyle
-     */
-
-    /**
-     * set text fill color
-     * @name setTextFill
-     * @methodOf Kinetic.Text.prototype
-     * @param {String} textFill
-     */
-
-    /**
-     * set text stroke color
-     * @name setFontStroke
-     * @methodOf Kinetic.Text.prototype
-     * @param {String} textStroke
-     */
-
-    /**
-     * set text stroke width
-     * @name setTextStrokeWidth
-     * @methodOf Kinetic.Text.prototype
-     * @param {int} textStrokeWidth
      */
 
     /**
@@ -390,24 +326,6 @@
     /**
      * get font style
      * @name getFontStyle
-     * @methodOf Kinetic.Text.prototype
-     */
-
-    /**
-     * get text fill color
-     * @name getTextFill
-     * @methodOf Kinetic.Text.prototype
-     */
-
-    /**
-     * get text stroke color
-     * @name getTextStroke
-     * @methodOf Kinetic.Text.prototype
-     */
-
-    /**
-     * get text stroke width
-     * @name getTextStrokeWidth
      * @methodOf Kinetic.Text.prototype
      */
 
