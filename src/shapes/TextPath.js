@@ -5,9 +5,6 @@
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
-     * @param {String} config.textFill
-     * @param {String} config.textStroke
-     * @param {Number} config.textStrokeWidth
      * @param {String} config.fontFamily default is Calibri
      * @param {Number} config.fontSize default is 12
      * @param {String} config.fontStyle can be normal, bold, or italic.  Default is normal
@@ -23,7 +20,6 @@
                 fontFamily: 'Calibri',
                 fontSize: 12,
                 fontStyle: 'normal',
-                detectionType: 'path',
                 text: ''
             });
 
@@ -299,11 +295,10 @@
     Kinetic.Global.extend(Kinetic.TextPath, Kinetic.Shape);
 
     // add setters and getters
-    Kinetic.Node.addGettersSetters(Kinetic.TextPath, ['fontFamily', 'fontSize', 'fontStyle', 'textFill', 'textStroke', 'textStrokeWidth']);
-    Kinetic.Node.addGetters(Kinetic.TextPath, ['text', 'textShadow']);
+    Kinetic.Node.addGettersSetters(Kinetic.TextPath, ['fontFamily', 'fontSize', 'fontStyle']);
+    Kinetic.Node.addGetters(Kinetic.TextPath, ['text']);
 
     // reference Text methods
-    Kinetic.TextPath.prototype.setTextShadow = Kinetic.Text.prototype.setTextShadow;
     Kinetic.TextPath.prototype.fillText = Kinetic.Text.prototype.fillText;
     Kinetic.TextPath.prototype.strokeText = Kinetic.Text.prototype.strokeText;
     Kinetic.TextPath.prototype.fillStrokeText = Kinetic.Text.prototype.strokeText;
@@ -330,27 +325,6 @@
      */
 
     /**
-     * set text fill color
-     * @name setTextFill
-     * @methodOf Kinetic.TextPath.prototype
-     * @param {String} textFill
-     */
-
-    /**
-     * set text stroke color
-     * @name setFontStroke
-     * @methodOf Kinetic.TextPath.prototype
-     * @param {String} textStroke
-     */
-
-    /**
-     * set text stroke width
-     * @name setTextStrokeWidth
-     * @methodOf Kinetic.TextPath.prototype
-     * @param {int} textStrokeWidth
-     */
-
-    /**
      * get font family
      * @name getFontFamily
      * @methodOf Kinetic.TextPath.prototype
@@ -365,24 +339,6 @@
     /**
      * get font style
      * @name getFontStyle
-     * @methodOf Kinetic.TextPath.prototype
-     */
-
-    /**
-     * get text fill color
-     * @name getTextFill
-     * @methodOf Kinetic.TextPath.prototype
-     */
-
-    /**
-     * get text stroke color
-     * @name getTextStroke
-     * @methodOf Kinetic.TextPath.prototype
-     */
-
-    /**
-     * get text stroke width
-     * @name getTextStrokeWidth
      * @methodOf Kinetic.TextPath.prototype
      */
 
