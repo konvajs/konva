@@ -38,7 +38,7 @@
                     dd.prevParent = this.getParent();
 
                     // re-construct node tree
-                    this.eachAncestorReverse(function(node) {
+                    this._eachAncestorReverse(function(node) {
                         if(node.nodeType === 'Layer') {
                             dd.topLayer = new Kinetic.Layer({
                                 x: node.getX(),

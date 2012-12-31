@@ -436,17 +436,13 @@
         getRotationDeg: function() {
             return Kinetic.Type._radToDeg(this.getRotation());
         },
-        /**
-         * iterate through ancestors in reverse
-         * @name eachAncestorReverse
-         * @methodOf Kinetic.Node.prototype
-         * @param {Function} func function is passed a node on each iteration
-         */
-        eachAncestorReverse: function(func) {
+        _eachAncestorReverse: function(func, includeSelf) {
             var family = [], parent = this.getParent();
 
             // build family by traversing ancestors
-            family.unshift(this);
+            if(includeSelf) {
+                family.unshift(this);
+            }
             while(parent) {
                 family.unshift(parent);
                 parent = parent.parent;
@@ -671,10 +667,10 @@
             // absolute transform
             var am = new Kinetic.Transform();
 
-            this.eachAncestorReverse(function(node) {
+            this._eachAncestorReverse(function(node) {
                 var m = node.getTransform();
                 am.multiply(m);
-            });
+            }, true);
             return am;
         },
         /**

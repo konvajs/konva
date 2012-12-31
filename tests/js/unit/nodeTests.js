@@ -258,7 +258,7 @@ Test.Modules.NODE = {
         clone.simulate('click');
         test(clicks.toString() === 'myRect,rectClone', 'click order should be myRect followed by rectClone');
     },
-    '*clone a group': function(containerId) {
+    'clone a group': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
