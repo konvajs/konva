@@ -167,12 +167,10 @@ Test.Modules.IMAGE = {
                 y: 40,
                 image: imageObj,
                 draggable: true,
-                shadow: {
-                    color: 'black',
-                    blur: 10,
-                    offset: [20, 20],
-                    opacity: 0.2
-                }
+                shadowColor: 'black',
+            	shadowBlur: 10,
+            	shadowOffset: [20, 20],
+            	shadowOpacity: 0.2
             });
 
             // override color key with black
@@ -410,12 +408,10 @@ Test.Modules.IMAGE = {
                 y: 40,
                 image: imageObj,
                 draggable: true,
-                shadow: {
-                    color: 'black',
-                    blur: 10,
-                    offset: [20, 20],
-                    opacity: 0.2
-                }
+                shadowColor: 'black',
+            	shadowBlur: 10,
+            	shadowOffset: [20, 20],
+            	shadowOpacity: 0.2
             });
 
             layer.add(lion);

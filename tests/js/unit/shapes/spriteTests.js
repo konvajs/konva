@@ -88,12 +88,10 @@ Test.Modules.SPRITE = {
                 frameRate: Math.random() * 6 + 6,
                 frameRate: 10,
                 draggable: true,
-                shadow: {
-                    color: 'black',
-                    blur: 3,
-                    offset: [3, 1],
-                    opacity: 0.3
-                }
+                shadowColor: 'black',
+            	shadowBlur: 3,
+            	shadowOffset: [3, 1],
+            	shadowOpacity: 0.3
             });
 
             layer.add(sprite);

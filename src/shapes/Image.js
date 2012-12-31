@@ -48,7 +48,7 @@
                     params = [this.attrs.image, 0, 0, width, height];
                 }
 
-                if(this.getShadow()) {
+                if(this.hasShadow()) {
                     canvas.applyShadow(this, function() {
                         that._drawImage(context, params);
                     });

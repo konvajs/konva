@@ -25,12 +25,11 @@ Test.Modules.Text = {
             height: 100,
             padding: 10,
             
-            shadow: {
-                color: 'black',
-                blur: 1,
-                offset: [10, 10],
-                opacity: 0.2
-            },
+            shadowColor: 'black',
+            shadowBlur: 1,
+            shadowOffset: [10, 10],
+            shadowOpacity: 0.2,
+            
             textShadow: {
                 color: 'red',
                 blur: 1,
@@ -73,12 +72,10 @@ Test.Modules.Text = {
             width: 400,
             height: 100,
             padding: 10,
-            shadow: {
-                color: 'black',
-                blur: 1,
-                offset: [10, 10],
-                opacity: 0.2
-            },
+            shadowColor: 'black',
+            shadowBlur: 1,
+            shadowOffset: [10, 10],
+            shadowOpacity: 0.2,
             cornerRadius: 10,
             draggable: true
         });
@@ -109,7 +106,7 @@ Test.Modules.Text = {
         test(text.getWidth() === 400, 'width should be 400');
         test(text.getHeight() === 100, 'height should be 100');
         test(text.getPadding() === 10, 'padding should be 10');
-        test(text.getShadow().color === 'black', 'text box shadow color should be black');
+        test(text.getShadowColor() === 'black', 'text box shadow color should be black');
         test(text.getCornerRadius() === 10, 'text box corner radius should be 10');
         test(text.getDraggable() === true, 'text should be draggable');
 
@@ -133,9 +130,7 @@ Test.Modules.Text = {
         text.setWidth(300);
         text.setHeight(75);
         text.setPadding(20);
-        text.setShadow({
-            color: 'green'
-        });
+        text.setShadowColor('green');
         text.setCornerRadius(20);
         text.setDraggable(false);
 
@@ -154,7 +149,7 @@ Test.Modules.Text = {
         test(text.getWidth() === 300, 'width should be 300');
         test(text.getHeight() === 75, 'height should be 75');
         test(text.getPadding() === 20, 'padding should be 20');
-        test(text.getShadow().color === 'green', 'text box shadow color should be green');
+        test(text.getShadowColor() === 'green', 'text box shadow color should be green');
         test(text.getCornerRadius() === 20, 'text box corner radius should be 20');
         test(text.getDraggable() === false, 'text draggable should be false');
 
@@ -260,12 +255,10 @@ Test.Modules.Text = {
             //width: 200,
             padding: 20,
             align: 'center',
-            shadow: {
-                color: 'black',
-                blur: 1,
-                offset: [10, 10],
-                opacity: 0.2
-            },
+            shadowColor: 'black',
+            shadowBlur: 1,
+            shadowOffset: [10, 10],
+            shadowOpacity: 0.2,
             cornerRadius: 10,
             draggable: true,
             detectionType: 'path'
@@ -308,12 +301,10 @@ Test.Modules.Text = {
             //width: 200,
             padding: 20,
             align: 'center',
-            textShadow: {
-                color: 'red',
-                blur: 1,
-                offset: [10, 10],
-                opacity: 0.5
-            },
+            shadowColor: 'red',
+            shadowBlur: 1,
+            shadowOffset: [10, 10],
+            shadowOpacity: 0.5,
             cornerRadius: 10,
             draggable: true,
             detectionType: 'path'

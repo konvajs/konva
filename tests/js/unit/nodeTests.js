@@ -150,10 +150,8 @@ Test.Modules.NODE = {
             height: 50,
             fill: 'blue',
             offset: [10, 10],
-            shadow: {
-                color: 'black',
-                offset: [20, 20]
-            }
+            shadowColor: 'black',
+            shadowOffset: [20, 20]
         });
 
         layer.add(rect);
@@ -168,9 +166,7 @@ Test.Modules.NODE = {
 
         rect.setOffset(1, 2);
 
-        rect.setShadow({
-            offset: [3, 4]
-        });
+        rect.setShadowOffset([3, 4]);
 
         test(offsetChange, 'offsetChange should have been triggered with setOffset()');
         test(!shadowOffsetChange, 'offsetChange should not have been triggered with setShadow()');
@@ -212,10 +208,8 @@ Test.Modules.NODE = {
             height: 50,
             fill: 'blue',
             offset: [10, 10],
-            shadow: {
-                color: 'black',
-                offset: [20, 20]
-            },
+            shadowColor: 'black',
+            shadowOffset: [20, 20],
             draggable: true,
             name: 'myRect'
         });
@@ -237,20 +231,18 @@ Test.Modules.NODE = {
         test(clone.getHeight() === 50, 'clone height should be 50');
         test(clone.getFill() === 'red', 'clone fill should be red');
 
-        test(rect.getShadow().color === 'black', 'rect shadow color should be black');
-        test(clone.getShadow().color === 'black', 'clone shadow color should be black');
+        test(rect.getShadowColor() === 'black', 'rect shadow color should be black');
+        test(clone.getShadowColor() === 'black', 'clone shadow color should be black');
 
-        clone.setShadow({
-            color: 'green'
-        });
+        clone.setShadowColor('green');
 
         /*
          * Make sure that when we change a clone object attr that the rect object
          * attr isn't updated by reference
          */
 
-        test(rect.getShadow().color === 'black', 'rect shadow color should be black');
-        test(clone.getShadow().color === 'green', 'clone shadow color should be green');
+        test(rect.getShadowColor() === 'black', 'rect shadow color should be black');
+        test(clone.getShadowColor() === 'green', 'clone shadow color should be green');
 
         layer.add(rect);
         layer.add(clone);
@@ -266,7 +258,7 @@ Test.Modules.NODE = {
         clone.simulate('click');
         test(clicks.toString() === 'myRect,rectClone', 'click order should be myRect followed by rectClone');
     },
-    'clone a group': function(containerId) {
+    '*clone a group': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -286,10 +278,8 @@ Test.Modules.NODE = {
             height: 50,
             fill: 'red',
             offset: [10, 10],
-            shadow: {
-                color: 'black',
-                offset: [20, 20]
-            },
+            shadowColor: 'black',
+            shadowOffset: [20, 20],
             name: 'myRect',
             myAttr: 'group rect'
         });
@@ -300,10 +290,8 @@ Test.Modules.NODE = {
             fontSize: 14,
             fontFamily: 'Calibri',
             textFill: 'blue',
-            shadow: {
-                color: 'red',
-                offset: [20, 20]
-            },
+            shadowColor: 'black',
+            shadowOffset: [20, 20],
             name: 'myText'
         });
         group.add(rect);
@@ -397,9 +385,7 @@ Test.Modules.NODE = {
             width: 200,
             height: 50,
             fill: 'blue',
-            shadow: {
-                offset: [10, 10]
-            }
+            shadowOffset: [10, 10],
         });
 
         var circle = new Kinetic.Ellipse({
@@ -425,7 +411,7 @@ Test.Modules.NODE = {
             test(evt.newVal === 210, 'new width should be 210');
         });
 
-        rect.on('shadowChange', function() {
+        rect.on('shadowOffsetChange', function() {
             shadowChanged++;
         });
 
@@ -436,11 +422,9 @@ Test.Modules.NODE = {
         circle.setRadius(70, 20);
 
         rect.setSize(210);
-        rect.setShadow({
-            offset: {
-                x: 20
-            }
-        });
+        rect.setShadowOffset({
+        	x: 20
+       	});
 
         test(widthChanged === 1, 'width change event was not fired correctly');
         test(shadowChanged === 1, 'shadow change event not fired correctly');
@@ -682,12 +666,10 @@ Test.Modules.NODE = {
                 frameRate: Math.random() * 6 + 6,
                 frameRate: 10,
                 draggable: true,
-                shadow: {
-                    color: 'black',
-                    blur: 3,
-                    offset: [3, 1],
-                    opacity: 0.3
-                }
+                shadowColor: 'black',
+                shadowBlur: 3,
+                shadowOffset: [3, 1],
+                shadowOpacity: 0.3
             });
 
             var clone = sprite.clone();
@@ -795,7 +777,7 @@ Test.Modules.NODE = {
         layer.add(group);
         stage.add(layer);
 
-		// cache shape
+        // cache shape
         rect.toImage({
             x: 8,
             y: 8,
@@ -810,73 +792,70 @@ Test.Modules.NODE = {
                 });
                 group.add(cachedShape);
                 layer.draw();
-                
+
                 // cache group
                 group.toImage({
-                	x: 8,
-                	y: 8,
-                	width: 106,
-                	height: 86,
-                	callback: function(imageObj) {
-                		var cachedGroup = new Kinetic.Image({
-		                    image: imageObj,
-		                    x: 100,
-		                    y: 8,
-		                    draggable: true
-		                });
-		                group.add(cachedGroup);
-		                layer.draw();
-		                
-		               
-		                // cache layer
-		                layer.toImage({
-		                	x: 8,
-		                	y: 8,
-		                	width: 200,
-		                	height: 86,
-		                	callback: function(imageObj) {
-		                		
-		                		var cachedLayer = new Kinetic.Image({
-				                    image: imageObj,
-				                    x: 190,
-				                    y: 8,
-				                    draggable: true
-				                });
-				                group.add(cachedLayer);
-				                layer.draw();
-				                
-				       
-				                //var dataUrl = layer.toDataURL();
-				                
-				                // cache stage
-				                
-				                stage.toImage({
-				                	x: 8,
-				                	y: 8,
-				                	width: 400,
-				                	height: 86,
-				                	callback: function(imageObj) {
-				                		
-				                		var cachedStage = new Kinetic.Image({
-						                    image: imageObj,
-						                    x: 8,
-						                    y: 100,
-						                    draggable: true
-						                });
-						                group.add(cachedStage);
-						                layer.draw();
-						                
-						                var dataUrl = layer.toDataURL();
-						                //console.log(dataUrl);
-						             	
-						             	warn(dataUrl === dataUrls['cache shape, group, layer, and stage'], 'problem caching shape, group, layer, and stage');
-				                	}
-				                });
-				             	
-				             	
-		                	}
-		                });
-                	}
+                    x: 8,
+                    y: 8,
+                    width: 106,
+                    height: 86,
+                    callback: function(imageObj) {
+                        var cachedGroup = new Kinetic.Image({
+                            image: imageObj,
+                            x: 100,
+                            y: 8,
+                            draggable: true
+                        });
+                        group.add(cachedGroup);
+                        layer.draw();
+
+                        // cache layer
+                        layer.toImage({
+                            x: 8,
+                            y: 8,
+                            width: 200,
+                            height: 86,
+                            callback: function(imageObj) {
+
+                                var cachedLayer = new Kinetic.Image({
+                                    image: imageObj,
+                                    x: 190,
+                                    y: 8,
+                                    draggable: true
+                                });
+                                group.add(cachedLayer);
+                                layer.draw();
+
+                                //var dataUrl = layer.toDataURL();
+
+                                // cache stage
+
+                                stage.toImage({
+                                    x: 8,
+                                    y: 8,
+                                    width: 400,
+                                    height: 86,
+                                    callback: function(imageObj) {
+
+                                        var cachedStage = new Kinetic.Image({
+                                            image: imageObj,
+                                            x: 8,
+                                            y: 100,
+                                            draggable: true
+                                        });
+                                        group.add(cachedStage);
+                                        layer.draw();
+
+                                        var dataUrl = layer.toDataURL();
+                                        //console.log(dataUrl);
+
+                                        warn(dataUrl === dataUrls['cache shape, group, layer, and stage'], 'problem caching shape, group, layer, and stage');
+                                    }
+                                });
+
+                            }
+                        });
+                    }
                 });
             }
         });
@@ -1106,50 +1085,40 @@ Test.Modules.NODE = {
             width: 100,
             height: 50,
             fill: 'red',
-            shadow: {
-                color: 'blue',
-                blur: 12
-            }
+            shadowColor: 'blue',
+            shadowBlur: 12
         });
 
         layer.add(rect);
         stage.add(layer);
 
-        rect.setShadow({
-            offset: [1, 2]
-        });
-        test(rect.getShadow().offset.x === 1, 'shadow offset x should be 1');
-        test(rect.getShadow().offset.y === 2, 'shadow offset y should be 2');
+        rect.setShadowOffset([1, 2]);
+        test(rect.getShadowOffset().x === 1, 'shadow offset x should be 1');
+        test(rect.getShadowOffset().y === 2, 'shadow offset y should be 2');
         // make sure we still have the other properties
-        test(rect.getShadow().color === 'blue', 'shadow color should still be blue');
-        test(rect.getShadow().blur === 12, 'shadow blur should still be 12');
+        test(rect.getShadowColor() === 'blue', 'shadow color should still be blue');
+        test(rect.getShadowBlur() === 12, 'shadow blur should still be 12');
 
-        rect.setShadow({
-            offset: {
-                x: 3,
-                y: 4
-            }
+        rect.setShadowOffset({
+         	x: 3,
+          	y: 4
         });
-        test(rect.getShadow().offset.x === 3, 'shadow offset x should be 3');
-        test(rect.getShadow().offset.y === 4, 'shadow offset y should be 4');
+        test(rect.getShadowOffset().x === 3, 'shadow offset x should be 3');
+        test(rect.getShadowOffset().y === 4, 'shadow offset y should be 4');
 
         // test partial setting
-        rect.setShadow({
-            offset: {
-                x: 5
-            }
+        rect.setShadowOffset({
+        	x: 5
         });
-        test(rect.getShadow().offset.x === 5, 'shadow offset x should be 5');
-        test(rect.getShadow().offset.y === 4, 'shadow offset y should be 4');
+        test(rect.getShadowOffset().x === 5, 'shadow offset x should be 5');
+        test(rect.getShadowOffset().y === 4, 'shadow offset y should be 4');
 
         // test partial setting
-        rect.setShadow({
-            offset: {
+        rect.setShadowOffset({
                 y: 6
-            }
-        });
-        test(rect.getShadow().offset.x === 5, 'shadow offset x should be 5');
-        test(rect.getShadow().offset.y === 6, 'shadow offset y should be 6');
+            });
+        test(rect.getShadowOffset().x === 5, 'shadow offset x should be 5');
+        test(rect.getShadowOffset().y === 6, 'shadow offset y should be 6');
 
     },
     'test setOffset': function(containerId) {

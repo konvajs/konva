@@ -25,13 +25,12 @@
      * @param {Number} [config.strokeWidth] stroke width
      * @param {String} [config.lineJoin] line join can be miter, round, or bevel.  The default
      *  is miter
-     * @param {Object} [config.shadow] shadow object
-     * @param {String} [config.shadow.color]
-     * @param {Number} [config.shadow.blur]
-     * @param {Obect} [config.shadow.blur.offset]
-     * @param {Number} [config.shadow.blur.offset.x]
-     * @param {Number} [config.shadow.blur.offset.y]
-     * @param {Number} [config.shadow.opacity] shadow opacity.  Can be any real number
+     * @param {String} [config.shadowColor]
+     * @param {Number} [config.shadowBlur]
+     * @param {Obect} [config.shadowOffset]
+     * @param {Number} [config.shadowOffset.x]
+     * @param {Number} [config.shadowOffset.y]
+     * @param {Number} [config.shadowOpacity] shadow opacity.  Can be any real number
      *  between 0 and 1
      * @param {Array} [config.dashArray]
      * @param {Number} [config.width]
@@ -78,6 +77,14 @@
         getCanvas: function() {
             return this.getLayer().getCanvas();
         },
+        /**
+         * returns whether or not a shadow will be rendered
+         * @name hasShadow
+         * @methodOf Kinetic.Shape.prototype
+         */
+        hasShadow: function() {
+            return !!(this.getShadowColor() || this.getShadowBlur() || this.getShadowOffset());
+        },
         _getFillType: function(fill) {
             var type = Kinetic.Type;
             if(!fill) {
@@ -100,21 +107,20 @@
             }
         },
         /**
-         * set shadow object
-         * @name setShadow
+         * set shadow offset
+         * @name setShadowOffset
          * @methodOf Kinetic.Shape.prototype
-         * @param {Object} config
-         * @param {String} config.color
-         * @param {Number} config.blur
-         * @param {Array|Object|Number} config.offset
-         * @param {Number} config.opacity
+         * @param {Number|Array|Object} offset
          */
-        setShadow: function(config) {
-            var type = Kinetic.Type;
-            if(config.offset !== undefined) {
-                config.offset = type._getXY(config.offset);
+        setShadowOffset: function() {
+            var pos = Kinetic.Type._getXY([].slice.call(arguments));
+            if(pos.x === undefined) {
+                pos.x = this.getShadowOffset().x;
             }
-            this.setAttr('shadow', type._merge(config, this.getShadow()));
+            if(pos.y === undefined) {
+                pos.y = this.getShadowOffset().y;
+            }
+            this.setAttr('shadowOffset', pos);
         },
         /**
          * set fill which can be a color, linear gradient object,
@@ -239,8 +245,8 @@
     Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
 
     // add getters and setters
-    Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'lineCap', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'dashArray']);
-    Kinetic.Node.addGetters(Kinetic.Shape, ['shadow', 'fill']);
+    Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'lineCap', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'dashArray', 'shadowColor', 'shadowBlur', 'shadowOpacity']);
+    Kinetic.Node.addGetters(Kinetic.Shape, ['shadowOffset', 'fill']);
 
     /**
      * set stroke color
@@ -299,6 +305,27 @@
      */
 
     /**
+     * set shadow color
+     * @name setShadowColor
+     * @methodOf Kinetic.Shape.prototype
+     * @param {String} color
+     */
+
+    /**
+     * set shadow blur
+     * @name setShadowBlur
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} blur
+     */
+
+    /**
+     * set shadow opacity
+     * @name setShadowOpacity
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} opacity must be a value between 0 and 1
+     */
+
+    /**
      * get stroke color
      * @name getStroke
      * @methodOf Kinetic.Shape.prototype
@@ -329,8 +356,26 @@
      */
 
     /**
-     * get shadow object
-     * @name getShadow
+     * get shadow color
+     * @name getShadowColor
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get shadow blur
+     * @name getShadowBlur
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get shadow opacity
+     * @name getShadowOpacity
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get shadow offset
+     * @name getShadowOffset
      * @methodOf Kinetic.Shape.prototype
      */
 

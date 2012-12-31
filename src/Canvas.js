@@ -145,7 +145,7 @@
          */
         fillStroke: function(shape) {
             this._fill(shape);
-            this._stroke(shape, shape.getShadow() && shape.getFill());
+            this._stroke(shape, shape.hasShadow() && shape.getFill());
         },
         /**
          * apply shadow
@@ -215,11 +215,11 @@
 
     Kinetic.SceneCanvas.prototype = {
         _fill: function(shape, skipShadow) {
-            var context = this.context, fill = shape.getFill(), fillType = shape._getFillType(fill), shadow = shape.getShadow();
+            var context = this.context, fill = shape.getFill(), fillType = shape._getFillType(fill);
             if(fill) {
                 context.save();
 
-                if(!skipShadow && shadow) {
+                if(!skipShadow && shape.hasShadow()) {
                     this._applyShadow(shape);
                 }
 
@@ -281,13 +281,13 @@
 
                 context.restore();
 
-                if(!skipShadow && shadow && shadow.opacity) {
+                if(!skipShadow && shape.hasShadow()) {
                     this._fill(shape, true);
                 }
             }
         },
         _stroke: function(shape, skipShadow) {
-            var context = this.context, stroke = shape.getStroke(), strokeWidth = shape.getStrokeWidth(), shadow = shape.getShadow(), dashArray = shape.getDashArray();
+            var context = this.context, stroke = shape.getStroke(), strokeWidth = shape.getStrokeWidth(), dashArray = shape.getDashArray();
             if(stroke || strokeWidth) {
                 context.save();
                 this._applyLineCap(shape);
@@ -299,7 +299,7 @@
                         Kinetic.Global.warn('Could not apply dash array because your browser does not support it.');
                     }
                 }
-                if(!skipShadow && shadow) {
+                if(!skipShadow && shape.hasShadow()) {
                     this._applyShadow(shape);
                 }
                 context.lineWidth = strokeWidth || 2;
@@ -307,25 +307,25 @@
                 context.stroke(context);
                 context.restore();
 
-                if(!skipShadow && shadow && shadow.opacity) {
+                if(!skipShadow && shape.hasShadow()) {
                     this._stroke(shape, true);
                 }
             }
         },
         _applyShadow: function(shape) {
-            var context = this.context, shadow = shape.getShadow();
-            if(shadow) {
+            var context = this.context;
+            if(shape.hasShadow()) {
                 var aa = shape.getAbsoluteOpacity();
                 // defaults
-                var color = shadow.color || 'black';
-                var blur = shadow.blur || 5;
-                var offset = shadow.offset || {
+                var color = shape.getShadowColor() || 'black';
+                var blur = shape.getShadowBlur() || 5;
+                var offset = shape.getShadowOffset() || {
                     x: 0,
                     y: 0
                 };
 
-                if(shadow.opacity) {
-                    context.globalAlpha = shadow.opacity * aa;
+                if(shape.getShadowOpacity()) {
+                    context.globalAlpha = shape.getShadowOpacity() * aa;
                 }
                 context.shadowColor = color;
                 context.shadowBlur = blur;
