@@ -440,8 +440,7 @@
          * iterate through ancestors in reverse
          * @name eachAncestorReverse
          * @methodOf Kinetic.Node.prototype
-         * @param {Function} func function is passed two arguments, a node and
-         *  the iterator integer
+         * @param {Function} func function is passed a node on each iteration
          */
         eachAncestorReverse: function(func) {
             var family = [], parent = this.getParent();
@@ -455,21 +454,7 @@
 
             var len = family.length;
             for(var n = 0; n < len; n++) {
-                func(family[n], n);
-            }
-        },
-        /**
-         * iterate through ancestors
-         * @name eachAncestor
-         * @methodOf Kinetic.Node.prototype
-         * @param {Function} func function is passed two arguments, a node and
-         *  the iterator integer
-         */
-        eachAncestor: function(func) {
-            var family = [], parent = this.getParent(), n = 0;
-            while(parent) {
-                func(parent, n++);
-                parent = parent.parent;
+                func(family[n]);
             }
         },
         /**
@@ -686,22 +671,10 @@
             // absolute transform
             var am = new Kinetic.Transform();
 
-            var family = [];
-            var parent = this.parent;
-
-            family.unshift(this);
-            while(parent) {
-                family.unshift(parent);
-                parent = parent.parent;
-            }
-
-            var len = family.length;
-            for(var n = 0; n < len; n++) {
-                var node = family[n];
+            this.eachAncestorReverse(function(node) {
                 var m = node.getTransform();
                 am.multiply(m);
-            }
-
+            });
             return am;
         },
         /**
