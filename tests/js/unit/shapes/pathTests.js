@@ -15,12 +15,10 @@ Test.Modules.PATH = {
             fill: '#ccc',
             stroke: '#333',
             strokeWidth: 2,
-            shadow: {
-                color: 'black',
-                blur: 2,
-                offset: [10, 10],
-                opacity: 0.5
-            },
+            shadowColor: 'black',
+            shadowBlur: 2,
+            shadowOffset: [10, 10],
+            shadowOpacity: 0.5,
             draggable: true
         });
 
@@ -90,12 +88,10 @@ Test.Modules.PATH = {
             fill: '#fcc',
             stroke: '#333',
             strokeWidth: 2,
-            shadow: {
-                color: 'maroon',
-                blur: 2,
-                offset: [10, 10],
-                opacity: 0.5
-            },
+            shadowColor: 'maroon',
+            shadowBlur: 2,
+            shadowOffset: [10, 10],
+            shadowOpacity: 0.5,
             draggable: true
         });
 

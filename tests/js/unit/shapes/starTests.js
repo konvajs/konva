@@ -56,12 +56,10 @@ Test.Modules.STAR = {
             stroke: 'blue',
             strokeWidth: 5,
             lineJoin: "round",
-            shadow: {
-                color: 'black',
-                blur: 10,
-                offset: [20, 20],
-                opacity: 0.5
-            },
+            shadowColor: 'black',
+            shadowBlur: 10,
+            shadowOffset: [20, 20],
+            shadowOpacity: 0.5,
             draggable: true
         });
 
