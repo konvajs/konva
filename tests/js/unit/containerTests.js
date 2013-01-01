@@ -541,9 +541,9 @@ Test.Modules.CONTAINER = {
 
         var textpath = new Kinetic.TextPath({
             y: 35,
-            textStroke: 'black',
-            textStrokeWidth: 1,
-            textFill: 'orange',
+            stroke: 'black',
+            strokeWidth: 1,
+            fill: 'orange',
             fontSize: '18',
             fontFamily: 'Arial',
             text: 'The quick brown fox jumped over the lazy dog\'s back',
