@@ -1,11 +1,13 @@
 (function() {
     /**
-     * Spline constructor.&nbsp; Splines are defined by an array of points
+     * Spline constructor.&nbsp; Splines are defined by an array of points and 
+     *  a tension
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
      * @param {Array} config.points can be a flattened array of points, or an array of point objects.
      *  e.g. [0,1,2,3] and [{x:1,y:2},{x:3,y:4}] are equivalent
+     * @param {Number} config.tension default value is 1.  Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.  
      */
     Kinetic.Spline = function(config) {
         this._initSpline(config);
@@ -28,7 +30,7 @@
             this.setDefaultAttrs({
                 points: [],
                 lineCap: 'butt',
-                tension: 0
+                tension: 1
             });
 
             this.shapeType = 'Spline';
@@ -83,8 +85,8 @@
          * @param {Number} tension
          */
         setTension: function(tension) {
-        	this.setAttr('tension', tension);
-        	this._setAllPoints();
+            this.setAttr('tension', tension);
+            this._setAllPoints();
         },
         _setAllPoints: function() {
             var points = this.getPoints(), length = points.length, tension = this.getTension(), allPoints = [];
