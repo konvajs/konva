@@ -19,10 +19,9 @@
                 }
             });
 
-            this.shapeType = "Ellipse";
-
             // call super constructor
             Kinetic.Shape.call(this, config);
+            this.shapeType = 'Ellipse';
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {

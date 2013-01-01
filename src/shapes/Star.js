@@ -20,10 +20,9 @@
                 outerRadius: 0
             });
 
-            this.shapeType = "Star";
-
             // call super constructor
             Kinetic.Shape.call(this, config);
+            this.shapeType = 'Star';
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {

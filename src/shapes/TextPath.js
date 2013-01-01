@@ -24,12 +24,12 @@
             });
 
             this.dummyCanvas = document.createElement('canvas');
-            this.shapeType = "TextPath";
             this.dataArray = [];
             var that = this;
 
             // call super constructor
             Kinetic.Shape.call(this, config);
+            this.shapeType = 'TextPath';
             this._setDrawFuncs();
 
             this.dataArray = Kinetic.Path.parsePathData(this.attrs.data);
@@ -318,7 +318,7 @@
      */
 
     /**
-     * set font style.  Can be "normal", "italic", or "bold".  "normal" is the default.
+     * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
      * @name setFontStyle
      * @methodOf Kinetic.TextPath.prototype
      * @param {String} fontStyle

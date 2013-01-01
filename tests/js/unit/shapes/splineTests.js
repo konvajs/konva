@@ -68,7 +68,7 @@ Test.Modules.SPLINE = {
         layer.add(line2);
         layer.add(line3);
         stage.add(layer);
-
+        
         /*
          line.transitionTo({
          spline: 3,

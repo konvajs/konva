@@ -17,9 +17,9 @@
                 height: 0,
                 cornerRadius: 0
             });
-            this.shapeType = "Rect";
 
             Kinetic.Shape.call(this, config);
+            this.shapeType = 'Rect';
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {

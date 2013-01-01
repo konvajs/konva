@@ -18,10 +18,10 @@
                 index: 0,
                 frameRate: 17
             });
-            this.shapeType = "Sprite";
-
+            
             // call super constructor
             Kinetic.Shape.call(this, config);
+            this.shapeType = 'Sprite';
             this._setDrawFuncs();
 
             this.anim = new Kinetic.Animation();

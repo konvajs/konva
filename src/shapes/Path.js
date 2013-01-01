@@ -13,12 +13,12 @@
 
     Kinetic.Path.prototype = {
         _initPath: function(config) {
-            this.shapeType = "Path";
             this.dataArray = [];
             var that = this;
 
             // call super constructor
             Kinetic.Shape.call(this, config);
+            this.shapeType = 'Path';
             this._setDrawFuncs();
 
             this.dataArray = Kinetic.Path.parsePathData(this.attrs.data);

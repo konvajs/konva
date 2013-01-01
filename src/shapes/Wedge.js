@@ -20,10 +20,9 @@
                 clickwise: true
             });
 
-            this.shapeType = 'Wedge';
-
             // call super constructor
             Kinetic.Shape.call(this, config);
+            this.shapeType = 'Wedge';
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {

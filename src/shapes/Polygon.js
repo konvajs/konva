@@ -17,10 +17,9 @@
                 points: []
             });
 
-            this.shapeType = "Polygon";
-
             // call super constructor
             Kinetic.Shape.call(this, config);
+            this.shapeType = 'Polygon';
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {

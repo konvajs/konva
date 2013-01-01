@@ -18,10 +18,9 @@
                 lineCap: 'butt'
             });
 
-            this.shapeType = 'Line';
-
             // call super constructor
             Kinetic.Shape.call(this, config);
+            this.shapeType = 'Line';
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {

@@ -18,10 +18,9 @@
                 sides: 0
             });
 
-            this.shapeType = "RegularPolygon";
-
             // call super constructor
             Kinetic.Shape.call(this, config);
+            this.shapeType = 'RegularPolygon';
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {

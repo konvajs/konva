@@ -16,10 +16,9 @@
                 radius: 0
             });
 
-            this.shapeType = 'Circle';
-
             // call super constructor
             Kinetic.Shape.call(this, config);
+            this.shapeType = 'Circle';
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {

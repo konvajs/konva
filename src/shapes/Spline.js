@@ -1,19 +1,23 @@
 (function() {
     /**
-     * Spline constructor.&nbsp; Splines are defined by an array of points and 
+     * Spline constructor.&nbsp; Splines are defined by an array of points and
      *  a tension
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
-     * @param {Array} config.points can be a flattened array of points, or an array of point objects.
-     *  e.g. [0,1,2,3] and [{x:1,y:2},{x:3,y:4}] are equivalent
-     * @param {Number} config.tension default value is 1.  Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.  
+     * @param {Number} config.tension default value is 1.  Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
+     * @augments Kinetic.Line
      */
     Kinetic.Spline = function(config) {
         this._initSpline(config);
     };
-    // function written by Rob Spencer
-    function getControlPoints(x0, y0, x1, y1, x2, y2, t) {
+    Kinetic.Spline._getControlPoints = function(p0, p1, p2, t) {
+        var x0 = p0.x;
+        var y0 = p0.y;
+        var x1 = p1.x;
+        var y1 = p1.y;
+        var x2 = p2.x;
+        var y2 = p2.y;
         var d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
         var d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
         var fa = t * d01 / (d01 + d12);
@@ -22,22 +26,24 @@
         var p1y = y1 - fa * (y2 - y0);
         var p2x = x1 + fb * (x2 - x0);
         var p2y = y1 + fb * (y2 - y0);
-        return [p1x, p1y, p2x, p2y];
-    }
+        return [{
+            x: p1x,
+            y: p1y
+        }, {
+            x: p2x,
+            y: p2y
+        }];
+    };
 
     Kinetic.Spline.prototype = {
         _initSpline: function(config) {
             this.setDefaultAttrs({
-                points: [],
-                lineCap: 'butt',
                 tension: 1
             });
 
-            this.shapeType = 'Spline';
-
             // call super constructor
-            Kinetic.Shape.call(this, config);
-            this._setDrawFuncs();
+            Kinetic.Line.call(this, config);
+            this.shapeType = 'Spline';
         },
         drawFunc: function(canvas) {
             var points = this.getPoints(), length = points.length, context = canvas.getContext(), tension = this.getTension();
@@ -67,15 +73,8 @@
 
             canvas.stroke(this);
         },
-        /**
-         * set points array
-         * @name setPoints
-         * @methodOf Kinetic.Spline.prototype
-         * @param {Array} can be an array of point objects or an array
-         *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
-         */
         setPoints: function(val) {
-            this.setAttr('points', Kinetic.Type._getPoints(val));
+            Kinetic.Line.prototype.setPoints.call(this, val);
             this._setAllPoints();
         },
         /**
@@ -92,29 +91,23 @@
             var points = this.getPoints(), length = points.length, tension = this.getTension(), allPoints = [];
 
             for(var n = 1; n < length - 1; n++) {
-                var p0 = points[n - 1], p1 = points[n], p2 = points[n + 1], cp = getControlPoints(p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, tension);
-                allPoints.push({
-                    x: cp[0],
-                    y: cp[1]
-                });
-                allPoints.push(p1);
-                allPoints.push({
-                    x: cp[2],
-                    y: cp[3]
-                });
+                var cp = Kinetic.Spline._getControlPoints(points[n - 1], points[n], points[n + 1], tension);
+                allPoints.push(cp[0]);
+                allPoints.push(points[n]);
+                allPoints.push(cp[1]);
             }
 
             this.allPoints = allPoints;
         }
     };
-    Kinetic.Global.extend(Kinetic.Spline, Kinetic.Shape);
+    Kinetic.Global.extend(Kinetic.Spline, Kinetic.Line);
 
     // add getters setters
-    Kinetic.Node.addGetters(Kinetic.Spline, ['points', 'tension']);
+    Kinetic.Node.addGetters(Kinetic.Spline, ['tension']);
 
     /**
-     * get points array
-     * @name getPoints
+     * get tension
+     * @name getTension
      * @methodOf Kinetic.Spline.prototype
      */
 })();

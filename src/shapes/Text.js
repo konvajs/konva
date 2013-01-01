@@ -38,10 +38,10 @@
             });
 
             this.dummyCanvas = document.createElement('canvas');
-            this.shapeType = "Text";
-
+            
             // call super constructor
             Kinetic.Shape.call(this, config);
+            this.shapeType = 'Text';
             this._setDrawFuncs();
 
             // update text data for certain attr changes
@@ -284,7 +284,7 @@
      */
 
     /**
-     * set font style.  Can be "normal", "italic", or "bold".  "normal" is the default.
+     * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
      * @name setFontStyle
      * @methodOf Kinetic.Text.prototype
      * @param {String} fontStyle
