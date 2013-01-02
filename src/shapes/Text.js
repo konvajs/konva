@@ -8,7 +8,7 @@
      * @param {String} config.textStroke
      * @param {Number} config.textStrokeWidth
      * @param {String} config.fontFamily default is Calibri
-     * @param {Number} config.fontSize default is 12
+     * @param {Number} config.fontSize in pixels.  Default is 12
      * @param {String} config.fontStyle can be normal, bold, or italic.  Default is normal
      * @param {String} config.text
      * @param {String} config.align can be left, center, or right
@@ -16,7 +16,7 @@
      * @param {Number} config.padding
      * @param {Number} config.width default is auto
      * @param {Number} config.height default is auto
-     * @param {Number} config.lineHeight default is 1.2
+     * @param {Number} config.lineHeight default is 1
      */
     Kinetic.Text = function(config) {
         this._initText(config);
@@ -34,7 +34,7 @@
                 padding: 0,
                 width: 'auto',
                 height: 'auto',
-                lineHeight: 1.2
+                lineHeight: 1
             });
 
             this.dummyCanvas = document.createElement('canvas');
@@ -56,7 +56,7 @@
         drawFunc: function(canvas) {
             var context = canvas.getContext(), p = this.attrs.padding, lineHeightPx = this.attrs.lineHeight * this.getTextHeight(), textArr = this.textArr;
 
-            context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'pt ' + this.attrs.fontFamily;
+            context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'px ' + this.attrs.fontFamily;
             context.textBaseline = 'middle';
             context.textAlign = 'left';
             context.save();
@@ -137,7 +137,7 @@
             var context = dummyCanvas.getContext('2d');
 
             context.save();
-            context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'pt ' + this.attrs.fontFamily;
+            context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'px ' + this.attrs.fontFamily;
             var metrics = context.measureText(text);
             context.restore();
             return {
@@ -277,7 +277,7 @@
      */
 
     /**
-     * set font size
+     * set font size in pixels
      * @name setFontSize
      * @methodOf Kinetic.Text.prototype
      * @param {int} fontSize
@@ -308,7 +308,7 @@
      * set line height
      * @name setLineHeight
      * @methodOf Kinetic.Text.prototype
-     * @param {Number} lineHeight default is 1.2
+     * @param {Number} lineHeight default is 1
      */
 
     /**

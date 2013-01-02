@@ -177,10 +177,6 @@ Test.Modules.Text = {
             //width: 200,
             padding: 20,
             align: 'center',
-            shadowColor: 'black',
-            shadowBlur: 1,
-            shadowOffset: [10, 10],
-            shadowOpacity: 0.2,
             draggable: true
         });
 
@@ -189,6 +185,8 @@ Test.Modules.Text = {
 
         layer.add(text);
         stage.add(layer);
+        
+        test(text.getLineHeight() === 1, 'text line height should be defaulted to 1');
 
         /*
          text.transitionTo({
