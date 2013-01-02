@@ -1,5 +1,5 @@
 Test.Modules.BLOB = {
-    'add blob': function(containerId) {
+    'add blobs': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -7,7 +7,7 @@ Test.Modules.BLOB = {
         });
         var layer = new Kinetic.Layer();
 
-        var line = new Kinetic.Blob({
+        var blob1 = new Kinetic.Blob({
             points: [{
                 x: 73,
                 y: 140
@@ -23,16 +23,42 @@ Test.Modules.BLOB = {
             }],
             stroke: 'blue',
             strokeWidth: 10,
-            lineCap: 'round',
-            lineJoin: 'round',
             draggable: true,
             fill: '#aaf',
             tension: 0.8
         });
         
+        var blob2 = new Kinetic.Blob({
+            points: [{
+                x: 73,
+                y: 140
+            }, {
+                x: 340,
+                y: 23
+            }, {
+                x: 500,
+                y: 109
+            }],
+            stroke: 'red',
+            strokeWidth: 10,
+            draggable: true,
+            fill: '#faa',
+            tension: 1.2,
+            scale: 0.5,
+            x: 100,
+            y: 50
+        });
+        
 
-        layer.add(line);
+        layer.add(blob1);
+        layer.add(blob2);
         stage.add(layer);
+        
+        //console.log(layer.toDataURL());
+        warn(layer.toDataURL() === dataUrls['blobs'], 'problem with blobs');
+        
+        test(blob1.getTension() === 0.8, 'blob1 tension should be 0.8');
+        test(blob2.getTension() === 1.2, 'blob2 tension should be 1.2');
         
 
     }
