@@ -214,76 +214,75 @@
     };
 
     Kinetic.SceneCanvas.prototype = {
+        _fillColor: function(shape) {
+            var context = this.context, fill = shape.getFill();
+            context.fillStyle = fill;
+            context.fill(context);
+        },
+        _fillPattern: function(shape) {
+            var context = this.context, fillPatternImage = shape.getFillPatternImage(), fillPatternX = shape.getFillPatternX(), fillPatternY = shape.getFillPatternY(), fillPatternScale = shape.getFillPatternScale(), fillPatternRotation = shape.getFillPatternRotation(), fillPatternOffset = shape.getFillPatternOffset(), fillPatternRepeat = shape.getFillPatternRepeat();
+
+            if(fillPatternX || fillPatternY) {
+                context.translate(fillPatternX || 0, fillPatternY || 0);
+            }
+            if(fillPatternRotation) {
+                context.rotate(fillPatternRotation);
+            }
+            if(fillPatternScale) {
+                context.scale(fillPatternScale.x, fillPatternScale.y);
+            }
+            if(fillPatternOffset) {
+                context.translate(-1 * fillPatternOffset.x, -1 * fillPatternOffset.y);
+            }
+
+            context.fillStyle = context.createPattern(fillPatternImage, fillPatternRepeat || 'repeat');
+            context.fill(context);
+        },
+        _fillLinearGradient: function(shape) {
+            var context = this.context, start = shape.getFillLinearGradientStartPoint(), end = shape.getFillLinearGradientEndPoint(), colorStops = shape.getFillLinearGradientColorStops(), grd = context.createLinearGradient(start.x, start.y, end.x, end.y);
+
+            // build color stops
+            for(var n = 0; n < colorStops.length; n += 2) {
+                grd.addColorStop(colorStops[n], colorStops[n + 1]);
+            }
+            context.fillStyle = grd;
+            context.fill(context);
+        },
+        _fillRadialGradient: function(shape) {
+            var context = this.context, start = shape.getFillRadialGradientStartPoint(), end = shape.getFillRadialGradientEndPoint(), startRadius = shape.getFillRadialGradientStartRadius(), endRadius = shape.getFillRadialGradientEndRadius(), colorStops = shape.getFillRadialGradientColorStops(), grd = context.createRadialGradient(start.x, start.y, startRadius, end.x, end.y, endRadius);
+
+            // build color stops
+            for(var n = 0; n < colorStops.length; n += 2) {
+                grd.addColorStop(colorStops[n], colorStops[n + 1]);
+            }
+            context.fillStyle = grd;
+            context.fill(context);
+        },
         _fill: function(shape, skipShadow) {
-            var context = this.context, fill = shape.getFill(), fillType = shape._getFillType(fill);
+            var context = this.context, fill = shape.getFill(), fillPatternImage = shape.getFillPatternImage(), fillLinearGradientStartPoint = shape.getFillLinearGradientStartPoint(), fillRadialGradientStartPoint = shape.getFillRadialGradientStartPoint();
+
+            context.save();
+
+            if(!skipShadow && shape.hasShadow()) {
+                this._applyShadow(shape);
+            }
+
             if(fill) {
-                context.save();
+                this._fillColor(shape);
+            }
+            else if(fillPatternImage) {
+                this._fillPattern(shape);
+            }
+            else if(fillLinearGradientStartPoint) {
+                this._fillLinearGradient(shape);
+            }
+            else if(fillRadialGradientStartPoint) {
+                this._fillRadialGradient(shape);
+            }
+            context.restore();
 
-                if(!skipShadow && shape.hasShadow()) {
-                    this._applyShadow(shape);
-                }
-
-                // color fill
-                switch(fillType) {
-                    case 'COLOR':
-                        context.fillStyle = fill;
-                        context.fill(context);
-                        break;
-                    case 'PATTERN':
-                        if(fill.x || fill.y) {
-                            context.translate(fill.x || 0, fill.y || 0);
-                        }
-                        if(fill.rotation) {
-                            context.rotate(fill.rotation);
-                        }
-                        if(fill.scale) {
-                            context.scale(fill.scale.x, fill.scale.y);
-                        }
-                        if(fill.offset) {
-                            context.translate(-1 * fill.offset.x, -1 * fill.offset.y);
-                        }
-
-                        context.fillStyle = context.createPattern(fill.image, fill.repeat || 'repeat');
-                        context.fill(context);
-                        break;
-                    case 'LINEAR_GRADIENT':
-                        var s = fill.start;
-                        var e = fill.end;
-                        var grd = context.createLinearGradient(s.x, s.y, e.x, e.y);
-                        var colorStops = fill.colorStops;
-
-                        // build color stops
-                        for(var n = 0; n < colorStops.length; n += 2) {
-                            grd.addColorStop(colorStops[n], colorStops[n + 1]);
-                        }
-                        context.fillStyle = grd;
-                        context.fill(context);
-
-                        break;
-                    case 'RADIAL_GRADIENT':
-                        var s = fill.start;
-                        var e = fill.end;
-                        var grd = context.createRadialGradient(s.x, s.y, s.radius, e.x, e.y, e.radius);
-                        var colorStops = fill.colorStops;
-
-                        // build color stops
-                        for(var n = 0; n < colorStops.length; n += 2) {
-                            grd.addColorStop(colorStops[n], colorStops[n + 1]);
-                        }
-                        context.fillStyle = grd;
-                        context.fill(context);
-                        break;
-                    default:
-                        context.fillStyle = 'black';
-                        context.fill(context);
-                        break;
-                }
-
-                context.restore();
-
-                if(!skipShadow && shape.hasShadow()) {
-                    this._fill(shape, true);
-                }
+            if(!skipShadow && shape.hasShadow()) {
+                this._fill(shape, true);
             }
         },
         _stroke: function(shape, skipShadow) {

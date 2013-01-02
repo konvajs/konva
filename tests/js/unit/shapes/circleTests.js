@@ -48,12 +48,9 @@ Test.Modules.CIRCLE = {
                 x: stage.getWidth() / 2,
                 y: stage.getHeight() / 2,
                 radius: 70,
-                fill: {
-                    image: imageObj,
-                    repeat: 'no-repeat',
-                    offset: [-200, -70],
-                    scale: 0.7
-                },
+                fillPatternImage: imageObj,
+                fillPatternOffset: -5,
+                fillPatternScale: 0.7,
                 stroke: 'black',
                 strokeWidth: 4,
                 name: 'myCircle',
@@ -64,48 +61,22 @@ Test.Modules.CIRCLE = {
             layer.add(group);
             stage.add(layer);
 
-            test(circle.getFill().repeat === 'no-repeat', 'repeat option should be no-repeat');
-            test(circle.getFill().offset.x === -200, 'fill offset x should be -200');
-            test(circle.getFill().offset.y === -70, 'fill offset y should be -70');
+            test(circle.getFillPatternOffset().x === -5, 'fill offset x should be -5');
+            test(circle.getFillPatternOffset().y === -5, 'fill offset y should be -5');
 
             /*
              * test offset setting
              */
-            circle.setFill({
-                offset: [1, 2]
-            });
-            test(circle.getFill().offset.x === 1, 'fill offset x should be 1');
-            test(circle.getFill().offset.y === 2, 'fill offset y should be 2');
+            circle.setFillPatternOffset(1, 2);
+            test(circle.getFillPatternOffset().x === 1, 'fill offset x should be 1');
+            test(circle.getFillPatternOffset().y === 2, 'fill offset y should be 2');
 
-            circle.setFill({
-                offset: {
-                    x: 3,
-                    y: 4
-                }
+            circle.setFillPatternOffset({
+                x: 3,
+                y: 4
             });
-            test(circle.getFill().offset.x === 3, 'fill offset x should be 3');
-            test(circle.getFill().offset.y === 4, 'fill offset y should be 4');
-
-            circle.setFill({
-                offset: {
-                    x: 5
-                }
-            });
-            test(circle.getFill().offset.x === 5, 'fill offset x should be 5');
-            test(circle.getFill().offset.y === 4, 'fill offset y should be 4');
-
-            circle.setFill({
-                offset: {
-                    y: 6
-                }
-            });
-            test(circle.getFill().offset.x === 5, 'fill offset x should be 5');
-            test(circle.getFill().offset.y === 6, 'fill offset y should be 6');
-
-            circle.setFill({
-                offset: [-200, -70]
-            });
-
+            test(circle.getFillPatternOffset().x === 3, 'fill offset x should be 3');
+            test(circle.getFillPatternOffset().y === 4, 'fill offset y should be 4');
         };
         imageObj.src = '../assets/darth-vader.jpg';
 
@@ -122,19 +93,11 @@ Test.Modules.CIRCLE = {
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
-            fill: {
-                start: {
-                    x: -20,
-                    y: -20,
-                    radius: 0
-                },
-                end: {
-                    x: -60,
-                    y: -60,
-                    radius: 130
-                },
-                colorStops: [0, 'red', 0.2, 'yellow', 1, 'blue']
-            },
+            fillRadialGradientStartPoint: -20,
+            fillRadialGradientStartRadius: 0,
+            fillRadialGradientEndPoint: -60,
+            fillRadialGradientEndRadius: 130,
+            fillRadialGradientColorStops: [0, 'red', 0.2, 'yellow', 1, 'blue'],
             name: 'myCircle',
             draggable: true,
             scale: {
@@ -147,19 +110,15 @@ Test.Modules.CIRCLE = {
         layer.add(group);
         stage.add(layer);
 
-        var fill = circle.getFill();
+        test(circle.getFillRadialGradientStartPoint().x === -20, 'fill start x should be 20');
+        test(circle.getFillRadialGradientStartPoint().y === -20, 'fill start y should be 20');
+        test(circle.getFillRadialGradientStartRadius() === 0, 'fill start radius should be 0');
 
-        test(fill.start.x === -20, 'fill start x should be 20');
-        test(fill.start.y === -20, 'fill start y should be 20');
-        test(fill.start.radius === 0, 'fill start radius should be 0');
+        test(circle.getFillRadialGradientEndPoint().x === -60, 'fill end x should be 60');
+        test(circle.getFillRadialGradientEndPoint().y === -60, 'fill end y should be 60');
+        test(circle.getFillRadialGradientEndRadius() === 130, 'fill end radius should be 130');
 
-        test(fill.end.x === -60, 'fill end x should be 60');
-        test(fill.end.y === -60, 'fill end y should be 60');
-        test(fill.end.radius === 130, 'fill end radius should be 130');
-
-        test(fill.colorStops.length === 6, 'fill colorStops length should be 6');
-
-      
+        test(circle.getFillRadialGradientColorStops().length === 6, 'fill colorStops length should be 6');
 
     },
     'add circle': function(containerId) {
@@ -192,17 +151,9 @@ Test.Modules.CIRCLE = {
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
-            fill: {
-                start: {
-                    x: -35,
-                    y: -35
-                },
-                end: {
-                    x: 35,
-                    y: 35
-                },
-                colorStops: [0, 'red', 1, 'blue']
-            },
+            fillLinearGradientStartPoint: -35,
+            fillLinearGradientEndPoint: 35,
+            fillLinearGradientColorStops: [0, 'red', 1, 'blue'],
             stroke: 'black',
             strokeWidth: 4,
             name: 'myCircle',
@@ -214,7 +165,6 @@ Test.Modules.CIRCLE = {
         stage.add(layer);
 
         test(circle.getName() === 'myCircle', 'circle name should be myCircle');
-
 
     },
     'add circle with opacity': function(containerId) {

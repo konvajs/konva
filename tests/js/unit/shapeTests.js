@@ -54,7 +54,7 @@ Test.Modules.SHAPE = {
         var layer = new Kinetic.Layer();
 
         var drawTriangle = function(canvas) {
-        	var context = canvas.getContext();
+            var context = canvas.getContext();
             context.beginPath();
             context.moveTo(200, 50);
             context.lineTo(420, 80);
@@ -100,7 +100,7 @@ Test.Modules.SHAPE = {
         var layer = new Kinetic.Layer();
         var shape = new Kinetic.Shape({
             drawFunc: function(canvas) {
-            	var context = canvas.getContext();
+                var context = canvas.getContext();
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(100, 0);
@@ -128,7 +128,7 @@ Test.Modules.SHAPE = {
         var layer = new Kinetic.Layer();
         var shape = new Kinetic.Shape({
             drawFunc: function(canvas) {
-            	var context = canvas.getContext();
+                var context = canvas.getContext();
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(100, 0);
@@ -145,7 +145,7 @@ Test.Modules.SHAPE = {
         });
 
         shape.setDrawFunc(function(canvas) {
-        	var context = canvas.getContext();
+            var context = canvas.getContext();
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(200, 0);
@@ -166,7 +166,7 @@ Test.Modules.SHAPE = {
         });
 
         rect.setDrawFunc(function(canvas) {
-        	var context = canvas.getContext();
+            var context = canvas.getContext();
             context.beginPath();
             context.moveTo(0, 0);
             context.lineTo(200, 0);
@@ -200,21 +200,15 @@ Test.Modules.SHAPE = {
                 numPoints: 5,
                 innerRadius: 40,
                 outerRadius: 70,
-                fill: {
-                    image: imageObj,
-                    x: -20,
-                    y: -30,
-                    scale: {
-                        x: 0.5,
-                        y: 0.5
-                    },
-                    offset: {
-                        x: 219,
-                        y: 150
-                    },
-                    rotation: Math.PI * 0.5,
-                    repeat: 'no-repeat'
-                },
+
+                fillPatternImage: imageObj,
+                fillPatternX: -20,
+                fillPatternY: -30,
+                fillPatternScale: 0.5,
+                fillPatternOffset: [219, 150],
+                fillPatternRotation: Math.PI * 0.5,
+                fillPatternRepeat: 'no-repeat',
+
                 stroke: 'blue',
                 strokeWidth: 5,
                 draggable: true
@@ -230,33 +224,27 @@ Test.Modules.SHAPE = {
              anim.start();
              */
 
-            test(star.getFill().x === -20, 'star fill x should be -20');
-            test(star.getFill().y === -30, 'star fill y should be -30');
-            test(star.getFill().scale.x === 0.5, 'star fill scale x should be 0.5');
-            test(star.getFill().scale.y === 0.5, 'star fill scale y should be 0.5');
-            test(star.getFill().offset.x === 219, 'star fill offset x should be 219');
-            test(star.getFill().offset.y === 150, 'star fill offset y should be 150');
-            test(star.getFill().rotation === Math.PI * 0.5, 'star fill rotation should be Math.PI * 0.5');
+            test(star.getFillPatternX() === -20, 'star fill x should be -20');
+            test(star.getFillPatternY() === -30, 'star fill y should be -30');
+            test(star.getFillPatternScale().x === 0.5, 'star fill scale x should be 0.5');
+            test(star.getFillPatternScale().y === 0.5, 'star fill scale y should be 0.5');
+            test(star.getFillPatternOffset().x === 219, 'star fill offset x should be 219');
+            test(star.getFillPatternOffset().y === 150, 'star fill offset y should be 150');
+            test(star.getFillPatternRotation() === Math.PI * 0.5, 'star fill rotation should be Math.PI * 0.5');
 
-            star.setFill({
-				rotationDeg: 180
-            });
-            
-            test(star.getFill().rotation === Math.PI, 'star fill rotation should be Math.PI');
-            
-            star.setFill({
-            	scale: 1
-            });
-            
-            test(star.getFill().scale.x === 1, 'star fill scale x should be 1');
-            test(star.getFill().scale.y === 1, 'star fill scale y should be 1');
-            
-            star.setFill({
-            	offset: [100, 120]
-            });
-            
-            test(star.getFill().offset.x === 100, 'star fill offset x should be 100');
-            test(star.getFill().offset.y === 120, 'star fill offset y should be 120');
+            star.setFillPatternRotationDeg(180);
+
+            test(star.getFillPatternRotation() === Math.PI, 'star fill rotation should be Math.PI');
+
+            star.setFillPatternScale(1);
+
+            test(star.getFillPatternScale().x === 1, 'star fill scale x should be 1');
+            test(star.getFillPatternScale().y === 1, 'star fill scale y should be 1');
+
+            star.setFillPatternOffset([100, 120]);
+
+            test(star.getFillPatternOffset().x === 100, 'star fill offset x should be 100');
+            test(star.getFillPatternOffset().y === 120, 'star fill offset y should be 120');
 
         };
         imageObj.src = '../assets/darth-vader.jpg';
@@ -328,5 +316,50 @@ Test.Modules.SHAPE = {
         test(ellipse.getSize().height === 100, 'ellipse height should be 100');
         test(ellipse.getRadius().x === 200, 'ellipse radius x should be 200');
 
+    },
+    'set image fill to color then image then linear gradient then back to image': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            var circle = new Kinetic.Circle({
+                x: 200,
+                y: 60,
+                radius: 50,
+                fill: 'blue'
+            });
+
+            layer.add(circle);
+            stage.add(layer);
+
+            test(circle.getFill() === 'blue', 'circle fill should be blue');
+
+            circle.setFill(null);
+            circle.setFillPatternImage(imageObj);
+            circle.setFillPatternRepeat('no-repeat');
+            circle.setFillPatternOffset([-200, -70]);
+
+            test(circle.getFillPatternImage() !== undefined, 'circle fill image should be defined');
+            test(circle.getFillPatternRepeat() === 'no-repeat', 'circle fill repeat should be no-repeat');
+            test(circle.getFillPatternOffset().x === -200, 'circle fill offset x should be -200');
+            test(circle.getFillPatternOffset().y === -70, 'circle fill offset y should be -70');
+
+            circle.setFillPatternImage(null);
+            circle.setFillLinearGradientStartPoint(-35);
+            circle.setFillLinearGradientEndPoint(35);
+            circle.setFillLinearGradientColorStops([0, 'red', 1, 'blue']);
+            
+            circle.setFillLinearGradientStartPoint(null);
+            circle.setFillPatternImage(imageObj);
+            circle.setFillPatternRepeat('repeat');
+            circle.setFillPatternOffset(0);
+
+            layer.draw();
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
     }
 };

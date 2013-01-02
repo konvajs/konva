@@ -335,62 +335,6 @@ Test.Modules.IMAGE = {
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
-    'set image fill to color then image then linear gradient then back to image': function(containerId) {
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            var stage = new Kinetic.Stage({
-                container: containerId,
-                width: 578,
-                height: 200
-            });
-            var layer = new Kinetic.Layer();
-            var circle = new Kinetic.Circle({
-                x: 200,
-                y: 60,
-                radius: 50,
-                fill: 'blue'
-            });
-
-            layer.add(circle);
-            stage.add(layer);
-
-            test(circle.getFill() === 'blue', 'circle fill should be blue');
-
-            circle.setFill({
-                image: imageObj,
-                repeat: 'no-repeat',
-                offset: [-200, -70]
-            });
-
-            test(circle.getFill().image !== undefined, 'circle fill image should be defined');
-            test(circle.getFill().repeat === 'no-repeat', 'circle fill repeat should be no-repeat');
-            test(circle.getFill().offset.x === -200, 'circle fill offset x should be -200');
-            test(circle.getFill().offset.y === -70, 'circle fill offset y should be -70');
-
-            circle.setFill({
-                start: {
-                    x: -35,
-                    y: -35
-                },
-                end: {
-                    x: 35,
-                    y: 35
-                },
-                colorStops: [0, 'red', 1, 'blue']
-            });
-
-            test(circle.getFill().image === undefined, 'circle fill image should be undefined');
-
-            circle.setFill({
-                image: imageObj,
-                repeat: 'no-repeat',
-                offset: [-200, -70]
-            });
-
-            layer.draw();
-        };
-        imageObj.src = '../assets/darth-vader.jpg';
-    },
     'apply shadow to transparent image': function(containerId) {
         var imageObj = new Image();
 

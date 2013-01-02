@@ -89,10 +89,7 @@
             }
 
             // default
-            return {
-                x: 0,
-                y: 0
-            };
+            return null;
         },
         /*
          * The argument can be:
@@ -171,10 +168,7 @@
             }
 
             // default
-            return {
-                width: 0,
-                height: 0
-            };
+            return null;
         },
         /*
          * arg will be an array of numbers or
