@@ -118,7 +118,7 @@
             }
         },
         /**
-         * fill shape path
+         * fill shape
          * @name fill
          * @methodOf Kinetic.Canvas.prototype
          * @param {Kinetic.Shape} shape
@@ -127,7 +127,7 @@
             this._fill(shape);
         },
         /**
-         * stroke shape path
+         * stroke shape
          * @name stroke
          * @methodOf Kinetic.Canvas.prototype
          * @param {Kinetic.Shape} shape
@@ -202,13 +202,6 @@
         }
     };
 
-    /**
-     * Scene Canvas Renderer constructor
-     * @constructor
-     * @augments Kinetic.Canvas
-     * @param {Number} width
-     * @param {Number} height
-     */
     Kinetic.SceneCanvas = function(width, height) {
         Kinetic.Canvas.call(this, width, height);
     };
@@ -335,13 +328,6 @@
     };
     Kinetic.Global.extend(Kinetic.SceneCanvas, Kinetic.Canvas);
 
-    /**
-     * Hit Graph Canvas Renderer constructor
-     * @constructor
-     * @augments Kinetic.Canvas
-     * @param {Number} width
-     * @param {Number} height
-     */
     Kinetic.HitCanvas = function(width, height) {
         Kinetic.Canvas.call(this, width, height);
     };
