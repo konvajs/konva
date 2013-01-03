@@ -148,7 +148,7 @@
         /**
          * remove child from container
          * @name remove
-         * @methodOf Kinetic.Container.prototype
+         * @methodOf Kinetic.Node.prototype
          */
         remove: function() {
             var parent = this.getParent();
