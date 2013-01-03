@@ -12,7 +12,6 @@
      * @param {String} config.fontStyle can be normal, bold, or italic.  Default is normal
      * @param {String} config.text
      * @param {String} config.align can be left, center, or right
-     * @param {String} config.verticalAlign can be top, middle, or bottom
      * @param {Number} config.padding
      * @param {Number} config.width default is auto
      * @param {Number} config.height default is auto

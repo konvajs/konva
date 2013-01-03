@@ -38,8 +38,6 @@
      * @param {Number} [config.shadowOpacity] shadow opacity.  Can be any real number
      *  between 0 and 1
      * @param {Array} [config.dashArray]
-     * @param {Number} [config.width]
-     * @param {Number} [config.height]
      */
     Kinetic.Shape = function(config) {
         this._initShape(config);
@@ -89,29 +87,6 @@
          */
         hasShadow: function() {
             return !!(this.getShadowColor() || this.getShadowBlur() || this.getShadowOffset());
-        },
-        /**
-         * set width and height
-         * @name setSize
-         * @methodOf Kinetic.Shape.prototype
-         * @param {Number} width
-         * @param {Number} height
-         */
-        setSize: function() {
-            var size = Kinetic.Type._getSize(Array.prototype.slice.call(arguments));
-            this.setWidth(size.width);
-            this.setHeight(size.height);
-        },
-        /**
-         * return shape size
-         * @name getSize
-         * @methodOf Kinetic.Shape.prototype
-         */
-        getSize: function() {
-            return {
-                width: this.getWidth(),
-                height: this.getHeight()
-            };
         },
         _get: function(selector) {
             return this.nodeType === selector || this.shapeType === selector ? [this] : [];
@@ -178,10 +153,6 @@
     // add getters and setters
     Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'lineCap', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'dashArray', 'shadowColor', 'shadowBlur', 'shadowOpacity', 'fillPatternImage', 'fill', 'fillPatternX', 'fillPatternY', 'fillLinearGradientColorStops', 'fillRadialGradientStartRadius', 'fillRadialGradientEndRadius', 'fillRadialGradientColorStops', 'fillPatternRepeat']);
 
-    Kinetic.Node.addPointGettersSetters(Kinetic.Shape, ['fillPatternOffset', 'fillPatternScale', 'fillLinearGradientStartPoint', 'fillLinearGradientEndPoint', 'fillRadialGradientStartPoint', 'fillRadialGradientEndPoint', 'shadowOffset']);
-
-    Kinetic.Node.addRotationGettersSetters(Kinetic.Shape, ['fillPatternRotation']);
-
     /**
      * set stroke color
      * @name setStroke
@@ -195,6 +166,13 @@
      * @methodOf Kinetic.Shape.prototype
      * @param {String} lineJoin.  Can be miter, round, or bevel.  The
      *  default is miter
+     */
+
+    /**
+     * set line cap.  Can be butt, round, or square
+     * @name setLineCap
+     * @methodOf Kinetic.Shape.prototype
+     * @param {String} lineCap
      */
 
     /**
@@ -216,13 +194,6 @@
      * @name setDrawHitFunc
      * @methodOf Kinetic.Shape.prototype
      * @param {Function} drawHitFunc drawing function used for hit detection
-     */
-
-    /**
-     * set line cap.  Can be butt, round, or square
-     * @name setLineCap
-     * @methodOf Kinetic.Shape.prototype
-     * @param {String} lineCap
      */
 
     /**
@@ -260,10 +231,66 @@
      */
 
     /**
-     * set shadow offset
-     * @name setShadowOffset
+     * set fill pattern image
+     * @name setFillPatternImage
      * @methodOf Kinetic.Shape.prototype
-     * @param {Number|Array|Object} offset
+     * @param {Image} image object
+     */
+
+    /**
+     * set fill color
+     * @name setFill
+     * @methodOf Kinetic.Shape.prototype
+     * @param {String} color
+     */
+
+    /**
+     * set fill pattern x
+     * @name setFillPatternX
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} x
+     */
+
+    /**
+     * set fill pattern y
+     * @name setFillPatternY
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} y
+     */
+
+    /**
+     * set fill linear gradient color stops
+     * @name setFillLinearGradientColorStops
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Array} colorStops
+     */
+
+    /**
+     * set fill radial gradient start radius
+     * @name setFillRadialGradientStartRadius
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} radius
+     */
+
+    /**
+     * set fill radial gradient end radius
+     * @name setFillRadialGradientEndRadius
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} radius
+     */
+
+    /**
+     * set fill radial gradient color stops
+     * @name setFillRadialGradientColorStops
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} colorStops
+     */
+
+    /**
+     * set fill pattern repeat
+     * @name setFillPatternRepeat
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} repeat can be 'repeat', 'repeat-x', 'repeat-y', or 'no-repeat'.  The default is 'no-repeat'
      */
 
     /**
@@ -275,6 +302,12 @@
     /**
      * get line join
      * @name getLineJoin
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get line cap
+     * @name getLineCap
      * @methodOf Kinetic.Shape.prototype
      */
 
@@ -297,6 +330,12 @@
      */
 
     /**
+     * get dash array
+     * @name getDashArray
+     * @methodOf Kinetic.Line.prototype
+     */
+
+    /**
      * get shadow color
      * @name getShadowColor
      * @methodOf Kinetic.Shape.prototype
@@ -315,26 +354,179 @@
      */
 
     /**
-     * get shadow offset
-     * @name getShadowOffset
+     * get fill pattern image
+     * @name getFillPatternImage
      * @methodOf Kinetic.Shape.prototype
      */
 
     /**
-     * get fill
+     * get fill color
      * @name getFill
      * @methodOf Kinetic.Shape.prototype
      */
 
     /**
-     * get line cap
-     * @name getLineCap
+     * get fill pattern x
+     * @name getFillPatternX
      * @methodOf Kinetic.Shape.prototype
      */
 
     /**
-     * get dash array
-     * @name getDashArray
-     * @methodOf Kinetic.Line.prototype
+     * get fill pattern y
+     * @name getFillPatternY
+     * @methodOf Kinetic.Shape.prototype
      */
+
+    /**
+     * get fill linear gradient color stops
+     * @name getFillLinearGradientColorStops
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Array} colorStops
+     */
+
+    /**
+     * get fill radial gradient start radius
+     * @name getFillRadialGradientStartRadius
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get fill radial gradient end radius
+     * @name getFillRadialGradientEndRadius
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get fill radial gradient color stops
+     * @name getFillRadialGradientColorStops
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get fill pattern repeat
+     * @name getFillPatternRepeat
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    Kinetic.Node.addPointGettersSetters(Kinetic.Shape, ['fillPatternOffset', 'fillPatternScale', 'fillLinearGradientStartPoint', 'fillLinearGradientEndPoint', 'fillRadialGradientStartPoint', 'fillRadialGradientEndPoint', 'shadowOffset']);
+
+    /**
+     * set fill pattern offset
+     * @name setFillPatternOffset
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number|Array|Object} offset
+     */
+
+    /**
+     * set fill pattern scale
+     * @name setFillPatternScale
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number|Array|Object} scale
+     */
+
+    /**
+     * set fill linear gradient start point
+     * @name setFillLinearGradientStartPoint
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number|Array|Object} startPoint
+     */
+
+    /**
+     * set fill linear gradient end point
+     * @name setFillLinearGradientEndPoint
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number|Array|Object} endPoint
+     */
+
+    /**
+     * set fill radial gradient start point
+     * @name setFillRadialGradientStartPoint
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number|Array|Object} startPoint
+     */
+
+    /**
+     * set fill radial gradient end point
+     * @name setFillRadialGradientEndPoint
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number|Array|Object} endPoint
+     */
+
+    /**
+     * set shadow offset
+     * @name setShadowOffset
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number|Array|Object} offset
+     */
+
+    /**
+     * get fill pattern offset
+     * @name getFillPatternOffset
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get fill pattern scale
+     * @name getFillPatternScale
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get fill linear gradient start point
+     * @name getFillLinearGradientStartPoint
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get fill linear gradient end point
+     * @name getFillLinearGradientEndPoint
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get fill radial gradient start point
+     * @name getFillRadialGradientStartPoint
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get fill radial gradient end point
+     * @name getFillRadialGradientEndPoint
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get shadow offset
+     * @name getShadowOffset
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    Kinetic.Node.addRotationGettersSetters(Kinetic.Shape, ['fillPatternRotation']);
+
+    /**
+     * set fill pattern rotation in radians
+     * @name setFillPatternRotation
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} rotation
+     */
+
+    /**
+     * set fill pattern rotation in degrees
+     * @name setFillPatternRotationDeg
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} rotationDeg
+     */
+
+    /**
+     * get fill pattern rotation in radians
+     * @name getFillPatternRotation
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get fill pattern rotation in degrees
+     * @name getFillPatternRotationDeg
+     * @methodOf Kinetic.Shape.prototype
+     */
+
 })();

@@ -55,6 +55,7 @@
      * @methodOf Kinetic.RegularPolygon.prototype
      * @param {int} sides
      */
+    
     /**
      * get radius
      * @name getRadius

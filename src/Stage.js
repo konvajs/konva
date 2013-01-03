@@ -5,8 +5,6 @@
      * @augments Kinetic.Container
      * @param {Object} config
      * @param {String|DomElement} config.container Container id or DOM element
-     * @param {Number} config.width
-     * @param {Number} config.height
      */
     Kinetic.Stage = function(config) {
         this._initStage(config);

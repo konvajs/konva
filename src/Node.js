@@ -1082,38 +1082,6 @@
     };
     // add getters setters
     Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'opacity', 'name', 'id']);
-    Kinetic.Node.addRotationGettersSetters(Kinetic.Node, ['rotation']);
-    Kinetic.Node.addPointGettersSetters(Kinetic.Node, ['scale', 'offset']);
-    Kinetic.Node.addSetters(Kinetic.Node, ['width', 'height', 'listening', 'visible']);
-    
-    
-    // aliases
-    /**
-     * Alias of getListening()
-     * @name isListening
-     * @methodOf Kinetic.Node.prototype
-     */
-    Kinetic.Node.prototype.isListening = Kinetic.Node.prototype.getListening;
-    /**
-     * Alias of getVisible()
-     * @name isVisible
-     * @methodOf Kinetic.Node.prototype
-     */
-    Kinetic.Node.prototype.isVisible = Kinetic.Node.prototype.getVisible;
-
-    // collection mappings
-    var collectionMappings = ['on', 'off'];
-    for(var n = 0; n < 2; n++) {
-        // induce scope
-        (function(i) {
-            var method = collectionMappings[i];
-            Kinetic.Collection.prototype[method] = function() {
-                var args = [].slice.call(arguments);
-                args.unshift(method);
-                this.apply.apply(this, args);
-            };
-        })(n);
-    }
 
     /**
      * set x position
@@ -1127,13 +1095,6 @@
      * @name setY
      * @methodOf Kinetic.Node.prototype
      * @param {Number} y
-     */
-
-    /**
-     * set rotation in radians
-     * @name setRotation
-     * @methodOf Kinetic.Node.prototype
-     * @param {Number} theta
      */
 
     /**
@@ -1158,6 +1119,96 @@
      * @methodOf Kinetic.Node.prototype
      * @param {String} id
      */
+
+    /**
+     * get x position
+     * @name getX
+     * @methodOf Kinetic.Node.prototype
+     */
+
+    /**
+     * get y position
+     * @name getY
+     * @methodOf Kinetic.Node.prototype
+     */
+
+    /**
+     * get opacity.
+     * @name getOpacity
+     * @methodOf Kinetic.Node.prototype
+     */
+
+    /**
+     * get name
+     * @name getName
+     * @methodOf Kinetic.Node.prototype
+     */
+
+    /**
+     * get id
+     * @name getId
+     * @methodOf Kinetic.Node.prototype
+     */
+
+    Kinetic.Node.addRotationGettersSetters(Kinetic.Node, ['rotation']);
+
+    /**
+     * set rotation in radians
+     * @name setRotation
+     * @methodOf Kinetic.Node.prototype
+     * @param {Number} theta
+     */
+
+    /**
+     * set rotation in degrees
+     * @name setRotationDeg
+     * @methodOf Kinetic.Node.prototype
+     * @param {Number} deg
+     */
+
+    /**
+     * get rotation in degrees
+     * @name getRotationDeg
+     * @methodOf Kinetic.Node.prototype
+     */
+
+    /**
+     * get rotation in radians
+     * @name getRotation
+     * @methodOf Kinetic.Node.prototype
+     */
+
+    Kinetic.Node.addPointGettersSetters(Kinetic.Node, ['scale', 'offset']);
+
+    /**
+     * set scale
+     * @name setScale
+     * @param {Number} x
+     * @param {Number} y
+     * @methodOf Kinetic.Node.prototype
+     */
+
+    /**
+     * set offset.  A node's offset defines the position and rotation point
+     * @name setOffset
+     * @methodOf Kinetic.Node.prototype
+     * @param {Number} x
+     * @param {Number} y
+     */
+
+    /**
+     * get scale
+     * @name getScale
+     * @methodOf Kinetic.Node.prototype
+     */
+
+    /**
+     * get offset
+     * @name getOffset
+     * @methodOf Kinetic.Node.prototype
+     */
+
+    Kinetic.Node.addSetters(Kinetic.Node, ['width', 'height', 'listening', 'visible']);
 
     /**
      * set width
@@ -1187,80 +1238,31 @@
      * @param {Boolean} visible
      */
 
+    // aliases
     /**
-     * get x position
-     * @name getX
+     * Alias of getListening()
+     * @name isListening
      * @methodOf Kinetic.Node.prototype
      */
+    Kinetic.Node.prototype.isListening = Kinetic.Node.prototype.getListening;
+    /**
+     * Alias of getVisible()
+     * @name isVisible
+     * @methodOf Kinetic.Node.prototype
+     */
+    Kinetic.Node.prototype.isVisible = Kinetic.Node.prototype.getVisible;
 
-    /**
-     * get y position
-     * @name getY
-     * @methodOf Kinetic.Node.prototype
-     */
-
-    /**
-     * get rotation in radians
-     * @name getRotation
-     * @methodOf Kinetic.Node.prototype
-     */
-
-    /**
-     * get opacity.
-     * @name getOpacity
-     * @methodOf Kinetic.Node.prototype
-     */
-
-    /**
-     * get name
-     * @name getName
-     * @methodOf Kinetic.Node.prototype
-     */
-
-    /**
-     * get id
-     * @name getId
-     * @methodOf Kinetic.Node.prototype
-     */
-
-    /**
-     * get scale
-     * @name getScale
-     * @methodOf Kinetic.Node.prototype
-     */
-
-    /**
-     * get offset
-     * @name getOffset
-     * @methodOf Kinetic.Node.prototype
-     */
-
-    /**
-     * get rotation in degrees
-     * @name getRotationDeg
-     * @methodOf Kinetic.Node.prototype
-     */
-
-    /**
-     * set rotation in degrees
-     * @name setRotationDeg
-     * @methodOf Kinetic.Node.prototype
-     * @param {Number} deg
-     */
-
-    /**
-     * set scale.
-     * @name setScale
-     * @param {Number} x
-     * @param {Number} y
-     * @methodOf Kinetic.Node.prototype
-     */
-
-    /**
-     * set offset.  A node's offset defines the position and rotation point
-     * @name setOffset
-     * @methodOf Kinetic.Node.prototype
-     * @param {Number} x
-     * @param {Number} y
-     */
+    // collection mappings
+    var collectionMappings = ['on', 'off'];
+    for(var n = 0; n < 2; n++) {
+        // induce scope
+        (function(i) {
+            var method = collectionMappings[i];
+            Kinetic.Collection.prototype[method] = function() {
+                var args = [].slice.call(arguments);
+                args.unshift(method);
+                this.apply.apply(this, args);
+            };
+        })(n);
+    }
 })();
