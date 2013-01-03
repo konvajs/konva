@@ -71,6 +71,19 @@
             }
             Kinetic.Container.prototype.drawScene.call(this, canvas);
         },
+        toDataURL: function(config) {
+            config = config || {};
+            var mimeType = config.mimeType || null, quality = config.quality || null, canvas, context, x = config.x || 0, y = config.y || 0;
+
+            // if dimension or position is defined, use Node toDataURL
+            if(config.width || config.height || config.x || config.y) {
+                return Kinetic.Node.prototype.toDataURL.call(this, config);
+            }
+            // otherwise get data url of the currently drawn layer
+            else {
+            	return this.getCanvas().toDataURL(mimeType, quality);
+            }
+        },
         /**
          * set before draw handler
          * @name beforeDraw

@@ -228,6 +228,8 @@ Test.Modules.Text = {
 
         layer.add(text);
         stage.add(layer);
+        
+        //console.log(layer.toDataURL());
 
         warn(layer.toDataURL() === dataUrls['multiline text with shadows'], 'multi line text with shadows data url is incorrect');
     },

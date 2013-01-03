@@ -76,12 +76,10 @@ Test.Modules.SHAPE = {
             strokeWidth: 4,
             id: 'myTriangle',
             draggable: true,
-            shadow: {
-                color: 'black',
-                opacity: 0.5,
-                blur: 10,
-                offset: 10
-            }
+            shadowColor: 'black',
+            shadowOpacity: 0.5,
+            shadowBlur: 10,
+            shadowOffset: 10
         });
 
         stage.add(layer.add(triangle));
