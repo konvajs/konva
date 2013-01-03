@@ -28,8 +28,10 @@
      * -------------------------------------------------
      * @param {String} [config.stroke] stroke color
      * @param {Number} [config.strokeWidth] stroke width
-     * @param {String} [config.lineJoin] line join can be miter, round, or bevel.  The default
+     * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
      *  is miter
+     * @param {String} [config.lineCap] can be butt, round, or sqare.  The default
+     *  is butt
      * @param {String} [config.shadowColor]
      * @param {Number} [config.shadowBlur]
      * @param {Obect} [config.shadowOffset]
