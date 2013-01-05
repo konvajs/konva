@@ -287,9 +287,6 @@
                     if(context.setLineDash) {
                         context.setLineDash(dashArray);
                     }
-                    else {
-                        Kinetic.Global.warn('Could not apply dash array because your browser does not support it.');
-                    }
                 }
                 if(!skipShadow && shape.hasShadow()) {
                     this._applyShadow(shape);
