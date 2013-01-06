@@ -223,7 +223,7 @@
     /**
      * set dash array.
      * @name setDashArray
-     * @methodOf Kinetic.Line.prototype
+     * @methodOf Kinetic.Shape.prototype
      * @param {Array} dashArray
      *  examples:<br>
      *  [10, 5] dashes are 10px long and 5 pixels apart
@@ -356,7 +356,7 @@
     /**
      * get dash array
      * @name getDashArray
-     * @methodOf Kinetic.Line.prototype
+     * @methodOf Kinetic.Shape.prototype
      */
 
     /**
