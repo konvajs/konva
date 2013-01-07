@@ -56,14 +56,19 @@
                                 scale: node.getScale(),
                                 rotation: node.getRotation()
                             });
-                            
+
                             lastContainer.add(group);
                             lastContainer = group;
                         }
                     });
 
-                    this.moveTo(lastContainer);
-                    dd.prevParent.getLayer().draw();
+                    this.moveTo(dd.topLayer);
+                    dd.topLayer.draw();
+                    // if we don't delay the prev parent redraw, dd will
+                    // flicker on mobile devices 
+                    setTimeout(function() {
+                        dd.prevParent.getLayer().draw();
+                    }, 0);
                 }
 
                 dd.anim.node = this.getLayer();

@@ -774,7 +774,7 @@ Test.Modules.MANUAL = {
         layer.add(redCircle);
         stage.add(layer);
     },
-    'DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
+    '*DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -807,7 +807,7 @@ Test.Modules.MANUAL = {
         layer.draw();
 
         var trans = null;
-
+/*
         star.on('dragstart', function() {
             if(trans) {
                 trans.stop();
@@ -843,6 +843,7 @@ Test.Modules.MANUAL = {
                 }
             })
         });
+        */
         
         showHit(layer);
     },
