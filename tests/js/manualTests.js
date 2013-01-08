@@ -142,7 +142,7 @@ Test.Modules.MANUAL = {
 
         stage.add(layer);
     },
-    'ANIMATION - start and stop animation': function(containerId) {
+    '*ANIMATION - start and stop animation': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -174,7 +174,7 @@ Test.Modules.MANUAL = {
         anim.start();
 
         setTimeout(function() {
-            anim.stop();
+            //anim.stop();
         }, 3000);
     },
     'ANIMATION - test multiple animations': function(containerId) {
@@ -774,7 +774,7 @@ Test.Modules.MANUAL = {
         layer.add(redCircle);
         stage.add(layer);
     },
-    '*DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
+    'DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
