@@ -174,7 +174,7 @@ Test.Modules.MANUAL = {
         anim.start();
 
         setTimeout(function() {
-            //anim.stop();
+            anim.stop();
         }, 3000);
     },
     'ANIMATION - test multiple animations': function(containerId) {
