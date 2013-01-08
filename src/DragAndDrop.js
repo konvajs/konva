@@ -65,9 +65,11 @@
                     this.moveTo(dd.topLayer);
                     dd.topLayer.draw();
                     // if we don't delay the prev parent redraw, dd will
-                    // flicker on mobile devices 
+                    // flicker on mobile devices
                     setTimeout(function() {
-                        dd.prevParent.getLayer().draw();
+                        if(dd.prevParent) {
+                            dd.prevParent.getLayer().draw();
+                        }
                     }, 0);
                 }
 
@@ -115,7 +117,7 @@
                 node.draw();
             }
             else {
-                if(nodeType === 'Group' || nodeType === 'Shape') {
+                if((nodeType === 'Group' || nodeType === 'Shape') && dd.prevParent) {
                     node.moveTo(dd.prevParent);
                     dd.topLayer.remove();
                     dd.prevParent = null;
@@ -125,7 +127,9 @@
                 node.getLayer().draw();
             }
 
-            // handle dragend
+            // only fire dragend event if the drag and drop
+            // operation actually started.  This can be detected by
+            // checking dd.moving
             if(dd.moving) {
                 dd.moving = false;
                 node._handleEvent('dragend', evt);

@@ -77,6 +77,8 @@ Test.Modules.DD = {
 
         circle.on('dragend', function() {
             dragEnd = true;
+            // test set draggable false after drag end
+            this.setDraggable(false);           
         });
         warn(layer.toDataURL() === dataUrls['drag circle before'], 'start data url is incorrect');
         /*
@@ -109,6 +111,7 @@ Test.Modules.DD = {
         test(dragStart, 'dragstart event was not triggered');
         test(dragMove, 'dragmove event was not triggered');
         test(dragEnd, 'dragend event was not triggered');
+        test(!circle.getDraggable(), 'circle should no longer be draggable');
 
         warn(layer.toDataURL() === dataUrls['drag circle after'], 'end data url is incorrect');
     },
