@@ -5,10 +5,8 @@
      * @constructor
      * @augments Kinetic.Container
      * @param {Object} config
-     * @param {Boolean} [config.clearBeforeDraw] set this property to true if you'd like to disable
-     *  canvas clearing before each new layer draw
-     * 
-     * 
+     * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
+     * to clear the canvas before each layer draw.  The default value is true.
      * 
      * @param {Number} [config.x]
      * @param {Number} [config.y]
