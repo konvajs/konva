@@ -172,6 +172,7 @@
         },
         /*
          * arg will be an array of numbers or
+         *  an array of point arrays or
          *  an array of point objects
          */
         _getPoints: function(arg) {
@@ -179,6 +180,22 @@
                 return [];
             }
 
+            // an array of arrays
+            if(this._isArray(arg[0])) {
+                /*
+                 * convert array of arrays into an array
+                 * of objects containing x, y
+                 */
+                var arr = [];
+                for(var n = 0; n < arg.length; n++) {
+                    arr.push({
+                        x: arg[n][0],
+                        y: arg[n][1]
+                    });
+                }
+
+                return arr;
+            }
             // an array of objects
             if(this._isObject(arg[0])) {
                 return arg;

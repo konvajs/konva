@@ -5,8 +5,8 @@
      * @constructor
      * @augments Kinetic.Line
      * @param {Object} config
-     * @param {Array} config.points can be a flattened array of points, or an array of point objects.
-     *  e.g. [0,1,2,3] and [{x:1,y:2},{x:3,y:4}] are equivalent
+     * @param {Array} config.points can be a flattened array of points, an array of point arrays, or an array of point objects.
+     *  e.g. [0,1,2,3], [[0,1],[2,3]] and [{x:0,y:1},{x:2,y:3}] are equivalent
      * @param {Number} [config.tension] default value is 1.  Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
      * 
      *
