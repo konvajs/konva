@@ -70,7 +70,7 @@
     };
 
     Kinetic.Animation._runFrames = function() {
-        var nodes = {}, animations = this.animations, len = animations.length;
+        var nodes = {}, animations = this.animations;
         /*
          * loop through all animations and execute animation
          *  function.  if the animation object has specified node,
@@ -78,7 +78,11 @@
          *  drawing the same node multiple times.  The node property
          *  can be the stage itself or a layer
          */
-        for(var n = 0; n < len; n++) {
+        /*
+         * WARNING: don't cache animations.length because it could change while
+         * the for loop is running, causing a JS error
+         */
+        for(var n = 0; n < animations.length; n++) {
             var anim = animations[n], node = anim.node, func = anim.func;
             anim._updateFrameObject(new Date().getTime());
             if(node && node._id !== undefined) {

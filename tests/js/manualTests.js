@@ -142,7 +142,7 @@ Test.Modules.MANUAL = {
 
         stage.add(layer);
     },
-    '*ANIMATION - start and stop animation': function(containerId) {
+    'ANIMATION - start and stop animation': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
