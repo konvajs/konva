@@ -64,13 +64,11 @@
 
                     this.moveTo(dd.topLayer);
                     dd.topLayer.draw();
-                    // if we don't delay the prev parent redraw, dd will
-                    // flicker on mobile devices
-                    setTimeout(function() {
-                        if(dd.prevParent) {
-                            dd.prevParent.getLayer().draw();
-                        }
-                    }, 0);
+
+                    if(dd.prevParent) {
+                        dd.prevParent.getLayer().draw();
+                    }
+
                 }
 
                 dd.anim.node = this.getLayer();
