@@ -10,7 +10,7 @@
         topLayer: null
     };
     Kinetic.Node.prototype._startDrag = function() {
-        var dd = Kinetic.DD, stage = this.getStage(), pos = stage.getUserPosition();
+        var that = this, dd = Kinetic.DD, stage = this.getStage(), pos = stage.getUserPosition();
 
         if(pos) {
             var m = this.getTransform().getTranslation(), ap = this.getAbsolutePosition(), nodeType = this.nodeType;
@@ -19,30 +19,33 @@
             dd.offset.x = pos.x - ap.x;
             dd.offset.y = pos.y - ap.y;
 
-            /*
-             * if dragging and dropping the stage,
-             * draw all of the layers
-             */
-            if(nodeType === 'Stage') {
+            // Stage and Layer node types
+            if(nodeType === 'Stage' || nodeType === 'Layer') {
                 dd.anim.node = this;
+                dd.anim.start();
             }
-            else {
-                /*
-                 * if node type is a group or shape, create a top layer,
-                 * and move the node to the top layer
-                 */
-                if(nodeType === 'Group' || nodeType === 'Shape') {
-                    this._moveToTop();
-                }
 
-                dd.anim.node = this.getLayer();
+            // Group or Shape node types
+            else {
+                this._buildTopLayer();
+                dd.anim.node = dd.topLayer;
+                dd.prevParent = this.getParent();
+                // WARNING: it's important to delay the moveTo operation,
+                // layer redraws, and anim.start() until after the method execution
+                // has completed or else there will be a flicker on mobile devices
+                // due to the time it takes to append the dd canvas to the DOM
+                setTimeout(function() {
+                    that.moveTo(dd.topLayer);
+                    dd.prevParent.getLayer().draw();
+                    dd.topLayer.show();
+                    dd.topLayer.draw();
+                    dd.anim.start();
+                }, 0);
             }
-            dd.anim.start();
         }
     };
-    Kinetic.Node.prototype._moveToTop = function() {
+    Kinetic.Node.prototype._buildTopLayer = function() {
         var dd = Kinetic.DD, stage = this.getStage(), nodeType = this.nodeType, lastContainer, group;
-        dd.prevParent = this.getParent();
 
         // re-construct node tree
         this._eachAncestorReverse(function(node) {
@@ -56,6 +59,7 @@
                 });
                 lastContainer = dd.topLayer;
                 stage.add(dd.topLayer);
+                dd.topLayer.getCanvas().getElement().className = 'kinetic-drag-and-drop-layer';
             }
             else if(node.nodeType === 'Group') {
                 group = new Kinetic.Group({
@@ -69,19 +73,6 @@
                 lastContainer = group;
             }
         });
-
-        this.moveTo(dd.topLayer);
-        dd.topLayer.draw();
-
-        setTimeout(function() {
-            if(dd.prevParent) {
-                dd.prevParent.getLayer().draw();
-            }
-            if(dd.topLayer) {
-                dd.topLayer.show();
-                dd.topLayer.draw();
-            }
-        }, 0);
     };
     Kinetic.DD._drag = function(evt) {
         var dd = Kinetic.DD, node = dd.node;
