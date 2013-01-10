@@ -5,9 +5,7 @@
         offset: {
             x: 0,
             y: 0
-        },
-        prevParent: null,
-        topLayer: null
+        }
     };
     Kinetic.Node.prototype._startDrag = function() {
         var that = this, dd = Kinetic.DD, stage = this.getStage(), pos = stage.getUserPosition();
@@ -27,20 +25,26 @@
 
             // Group or Shape node types
             else {
-                this._buildTopLayer();
-                dd.anim.node = dd.topLayer;
-                dd.prevParent = this.getParent();
-                // WARNING: it's important to delay the moveTo operation,
-                // layer redraws, and anim.start() until after the method execution
-                // has completed or else there will be a flicker on mobile devices
-                // due to the time it takes to append the dd canvas to the DOM
-                setTimeout(function() {
-                    that.moveTo(dd.topLayer);
-                    dd.prevParent.getLayer().draw();
-                    dd.topLayer.show();
-                    dd.topLayer.draw();
+                if(this.getDragOnTop()) {
+                    this._buildTopLayer();
+                    dd.anim.node = dd.topLayer;
+                    dd.prevParent = this.getParent();
+                    // WARNING: it's important to delay the moveTo operation,
+                    // layer redraws, and anim.start() until after the method execution
+                    // has completed or else there will be a flicker on mobile devices
+                    // due to the time it takes to append the dd canvas to the DOM
+                    setTimeout(function() {
+                        that.moveTo(dd.topLayer);
+                        dd.prevParent.getLayer().draw();
+                        dd.topLayer.show();
+                        dd.topLayer.draw();
+                        dd.anim.start();
+                    }, 0);
+                }
+                else {
+                    dd.anim.node = this.getLayer();
                     dd.anim.start();
-                }, 0);
+                }
             }
         }
     };
@@ -113,7 +117,7 @@
                 node.draw();
             }
             else {
-                if((nodeType === 'Group' || nodeType === 'Shape') && dd.prevParent) {
+                if((nodeType === 'Group' || nodeType === 'Shape') && node.getDragOnTop() && dd.prevParent) {
                     node.moveTo(dd.prevParent);
                     dd.topLayer.remove();
                     dd.prevParent = null;
@@ -198,7 +202,7 @@
      */
     Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
 
-    Kinetic.Node.addGettersSetters(Kinetic.Node, ['dragBoundFunc']);
+    Kinetic.Node.addGettersSetters(Kinetic.Node, ['dragBoundFunc', 'dragOnTop']);
 
     /**
      * set drag bound function.  This is used to override the default
@@ -209,8 +213,23 @@
      */
 
     /**
+     * set flag which enables or disables automatically moving the draggable node to a
+     *  temporary top layer to improve performance.  The default is true
+     * @name setDragOnTop
+     * @methodOf Kinetic.Node.prototype
+     * @param {Function} dragOnTop
+     */
+
+    /**
      * get dragBoundFunc
      * @name getDragBoundFunc
+     * @methodOf Kinetic.Node.prototype
+     */
+
+    /**
+     * get flag which enables or disables automatically moving the draggable node to a
+     *  temporary top layer to improve performance.
+     * @name getDragOnTop
      * @methodOf Kinetic.Node.prototype
      */
 })();

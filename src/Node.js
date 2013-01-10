@@ -46,7 +46,8 @@
                     x: 0,
                     y: 0
                 },
-                draggable: false
+                draggable: false,
+                dragOnTop: true
             };
 
             this.setDefaultAttrs(this.defaultNodeAttrs);
