@@ -1936,6 +1936,7 @@ Test.Modules.NODE = {
         stage.add(layer);
 
         test(stage.getAbsoluteZIndex() === 0, 'stage abs zindex should be 0');
+        console.log(layer.getAbsoluteZIndex());
         test(layer.getAbsoluteZIndex() === 1, 'layer abs zindex should be 1');
         test(group1.getAbsoluteZIndex() === 2, 'group1 abs zindex should be 2');
         test(group2.getAbsoluteZIndex() === 3, 'group2 abs zindex should be 3');

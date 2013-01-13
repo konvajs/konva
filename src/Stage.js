@@ -5,8 +5,8 @@
      * @augments Kinetic.Container
      * @param {Object} config
      * @param {String|DomElement} config.container Container id or DOM element
-     * 
-     * 
+     *
+     *
      * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
@@ -48,6 +48,10 @@
             Kinetic.Global.stages.push(this);
             this._addId(this);
             this._addName(this);
+
+            if(Kinetic.DD) {
+                this._initDragLayer();
+            }
         },
         /**
          * set container dom element which contains the stage wrapper div element
@@ -216,7 +220,7 @@
             drawLayer(0);
         },
         /**
-         * converts stage into an image. 
+         * converts stage into an image.
          * @name toImage
          * @methodOf Kinetic.Stage.prototype
          * @param {Object} config
