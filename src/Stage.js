@@ -326,6 +326,12 @@
             // chainable
             return this;
         },
+        /**
+         * get drag and drop layer
+         */
+        getDragLayer: function() {
+            return this.dragLayer;
+        },
         _setUserPosition: function(evt) {
             if(!evt) {
                 evt = window.event;

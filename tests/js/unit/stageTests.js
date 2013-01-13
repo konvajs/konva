@@ -259,5 +259,16 @@ Test.Modules.STAGE = {
         test(stage.getStage() !== undefined, 'stage is undefined');
 
         //console.log(stage.getStage());
+    },
+    'test stage.getDragLayer': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        
+        test(stage.getDragLayer().getCanvas().getElement().className === 'kinetic-drag-and-drop-layer', 'problem with stage.getDragLayer');
+
+
     }
 };
