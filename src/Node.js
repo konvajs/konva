@@ -55,23 +55,6 @@
             this.setDefaultAttrs(this.defaultNodeAttrs);
             this.eventListeners = {};
             this.setAttrs(config);
-
-            // bind events
-            var that = this;
-            this.on('idChange.kinetic', function(evt) {
-                var stage = that.getStage();
-                if(stage) {
-                    stage._removeId(evt.oldVal);
-                    stage._addId(that);
-                }
-            });
-            this.on('nameChange.kinetic', function(evt) {
-                var stage = that.getStage();
-                if(stage) {
-                    stage._removeName(evt.oldVal, that._id);
-                    stage._addName(that);
-                }
-            });
         },
         /**
          * bind events to the node. KineticJS supports mouseover, mousemove,
@@ -167,22 +150,18 @@
          * @methodOf Kinetic.Node.prototype
          */
         destroy: function() {
+            var parent = this.getParent(), stage = this.getStage(), dd = Kinetic.DD, go = Kinetic.Global;
+
+            this.remove();
+
             // destroy children
             while(this.children && this.children.length > 0) {
                 this.children[0].destroy();
             }
 
-            var parent = this.getParent(), stage = this.getStage(), dd = Kinetic.DD;
-            this.remove();
-
-            // remove ids and names hashes
-            if(stage) {
-                stage._removeId(this.getId());
-                stage._removeName(this.getName(), this._id);
-            }
-
-            // remove from temp nodes
-            Kinetic.Global._removeTempNode(this);
+            // remove from ids and names hashes
+            go._removeId(this.getId());
+            go._removeName(this.getName(), this._id);
 
             // remove from DD
             if(dd && dd.node && dd.node._id === this._id) {
@@ -558,16 +537,8 @@
          * @param {Container} newContainer
          */
         moveTo: function(newContainer) {
-            var parent = this.parent;
-            // remove from parent's children
-            parent.children.splice(this.index, 1);
-            parent._setChildrenIndices();
-
-            // add to new parent
-            newContainer.children.push(this);
-            this.index = newContainer.children.length - 1;
-            this.parent = newContainer;
-            newContainer._setChildrenIndices();
+            Kinetic.Node.prototype.remove.call(this);
+            newContainer.add(this);
         },
         /**
          * convert Node into an object for serialization.  Returns an object.
@@ -892,6 +863,30 @@
                 newVal: newVal
             });
         },
+        /**
+         * set id
+         * @name setId
+         * @methodOf Kinetic.Node.prototype
+         * @param {String} id
+         */
+        setId: function(id) {
+            var oldId = this.getId(), stage = this.getStage(), go = Kinetic.Global;
+            go._removeId(oldId);
+            go._addId(this, id);
+            this.setAttr('id', id);
+        },
+        /**
+         * set name
+         * @name setName
+         * @methodOf Kinetic.Node.prototype
+         * @param {String} name
+         */
+        setName: function(name) {
+            var oldName = this.getName(), stage = this.getStage(), go = Kinetic.Global;
+            go._removeName(oldName, this._id);
+            go._addName(this, name);
+            this.setAttr('name', name);
+        },
         setAttr: function(key, val) {
             if(val !== undefined) {
                 var oldVal = this.attrs[key];
@@ -1090,7 +1085,7 @@
         return no;
     };
     // add getters setters
-    Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'opacity', 'name', 'id']);
+    Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'opacity']);
 
     /**
      * set x position
@@ -1116,20 +1111,6 @@
      */
 
     /**
-     * set name
-     * @name setName
-     * @methodOf Kinetic.Node.prototype
-     * @param {String} name
-     */
-
-    /**
-     * set id
-     * @name setId
-     * @methodOf Kinetic.Node.prototype
-     * @param {String} id
-     */
-
-    /**
      * get x position
      * @name getX
      * @methodOf Kinetic.Node.prototype
@@ -1146,6 +1127,8 @@
      * @name getOpacity
      * @methodOf Kinetic.Node.prototype
      */
+
+    Kinetic.Node.addGetters(Kinetic.Node, ['name', 'id']);
 
     /**
      * get name

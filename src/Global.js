@@ -28,8 +28,7 @@
 /**
  * @namespace
  */
-var Kinetic = {};
-(function() {
+var Kinetic = {}; (function() {
     Kinetic.version = '@version';
     /**
      * @namespace
@@ -39,7 +38,8 @@ var Kinetic = {};
     Kinetic.Global = {
         stages: [],
         idCounter: 0,
-        tempNodes: {},
+        ids: {},
+        names: {},
         //shapes hash.  rgb keys and shape values
         shapes: {},
         warn: function(str) {
@@ -58,22 +58,39 @@ var Kinetic = {};
                 }
             }
         },
-        _pullNodes: function(stage) {
-            var tempNodes = this.tempNodes;
-            for(var key in tempNodes) {
-                var node = tempNodes[key];
-                if(node.getStage() !== undefined && node.getStage()._id === stage._id) {
-                    stage._addId(node);
-                    stage._addName(node);
-                    this._removeTempNode(node);
-                }
+        _addId: function(node, id) {
+            if(id !== undefined) {
+                this.ids[id] = node;
             }
         },
-        _addTempNode: function(node) {
-            this.tempNodes[node._id] = node;
+        _removeId: function(id) {
+            if(id !== undefined) {
+                delete this.ids[id];
+            }
         },
-        _removeTempNode: function(node) {
-            delete this.tempNodes[node._id];
+        _addName: function(node, name) {
+            if(name !== undefined) {
+                if(this.names[name] === undefined) {
+                    this.names[name] = [];
+                }
+                this.names[name].push(node);
+            }
+        },
+        _removeName: function(name, _id) {
+            if(name !== undefined) {
+                var nodes = this.names[name];
+                if(nodes !== undefined) {
+                    for(var n = 0; n < nodes.length; n++) {
+                        var no = nodes[n];
+                        if(no._id === _id) {
+                            nodes.splice(n, 1);
+                        }
+                    }
+                    if(nodes.length === 0) {
+                        delete this.names[name];
+                    }
+                }
+            }
         }
     };
 })();

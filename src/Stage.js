@@ -46,8 +46,6 @@
             this._buildDOM();
             this._bindContentEvents();
             Kinetic.Global.stages.push(this);
-            this._addId(this);
-            this._addName(this);
 
             if(Kinetic.DD) {
                 this._initDragLayer();
@@ -282,12 +280,6 @@
             }
 
             return null;
-        },
-        _getNodeById: function(key) {
-            return this.ids[key] || null;
-        },
-        _getNodesByName: function(key) {
-            return this.names[key] || [];
         },
         _resizeDOM: function() {
             if(this.content) {
@@ -582,41 +574,6 @@
 
             this._resizeDOM();
         },
-        _addId: function(node) {
-            if(node.attrs.id !== undefined) {
-                this.ids[node.attrs.id] = node;
-            }
-        },
-        _removeId: function(id) {
-            if(id !== undefined) {
-                delete this.ids[id];
-            }
-        },
-        _addName: function(node) {
-            var name = node.attrs.name;
-            if(name !== undefined) {
-                if(this.names[name] === undefined) {
-                    this.names[name] = [];
-                }
-                this.names[name].push(node);
-            }
-        },
-        _removeName: function(name, _id) {
-            if(name !== undefined) {
-                var nodes = this.names[name];
-                if(nodes !== undefined) {
-                    for(var n = 0; n < nodes.length; n++) {
-                        var no = nodes[n];
-                        if(no._id === _id) {
-                            nodes.splice(n, 1);
-                        }
-                    }
-                    if(nodes.length === 0) {
-                        delete this.names[name];
-                    }
-                }
-            }
-        },
         /**
          * bind event listener to container DOM element
          * @param {String} typesStr
@@ -640,13 +597,6 @@
             this.clickStart = false;
             this.touchPos = undefined;
             this.tapStart = false;
-
-            /*
-             * ids and names hash needs to be stored at the stage level to prevent
-             * id and name collisions between multiple stages in the document
-             */
-            this.ids = {};
-            this.names = {};
         }
     };
     Kinetic.Global.extend(Kinetic.Stage, Kinetic.Container);

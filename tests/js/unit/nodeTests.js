@@ -2252,19 +2252,13 @@ Test.Modules.NODE = {
 
         var go = Kinetic.Global;
 
-        test(go.tempNodes[circle._id] === undefined, 'circle shouldn\'t be in the temp nodes hash');
-
         layer.add(circle);
 
         var node = stage.get('#myCircle')[0];
 
         test(node === undefined, 'node should be undefined');
 
-        test(go.tempNodes[circle._id].attrs.id === 'myCircle', 'circle should be in temp nodes');
-
         circle.destroy();
-
-        test(go.tempNodes[circle._id] === undefined, 'circle shouldn\'t be in the temp nodes hash');
 
     },
     'destroy layer with shape': function(containerId) {
@@ -2288,7 +2282,7 @@ Test.Modules.NODE = {
 
         layer.add(circle);
         stage.add(layer);
-
+        
         test(stage.children.length === 1, 'stage should have 1 children');
         test(stage.get('.myLayer')[0] !== undefined, 'layer should exist');
         test(stage.get('.myCircle')[0] !== undefined, 'circle should exist');
@@ -2472,7 +2466,7 @@ Test.Modules.NODE = {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            id: 'myCircle'
+            id: 'myCircle2'
         });
 
         var rect = new Kinetic.Rect({
@@ -2483,32 +2477,33 @@ Test.Modules.NODE = {
             fill: 'purple',
             stroke: 'black',
             strokeWidth: 4,
-            name: 'myRect'
+            name: 'myRect2'
         });
 
         var circleColorKey = circle.colorKey;
         var rectColorKey = rect.colorKey;
+        var go = Kinetic.Global;
 
         layer.add(circle);
         layer.add(rect);
         stage.add(layer);
 
-        test(stage.ids.myCircle._id === circle._id, 'circle not in ids hash');
-        test(stage.names.myRect[0]._id === rect._id, 'rect not in names hash');
+        test(go.ids.myCircle2._id === circle._id, 'circle not in ids hash');
+        test(go.names.myRect2[0]._id === rect._id, 'rect not in names hash');
         test(Kinetic.Global.shapes[circleColorKey]._id === circle._id, 'circle color key should be in shapes hash');
         test(Kinetic.Global.shapes[rectColorKey]._id === rect._id, 'rect color key should be in shapes hash');
 
         circle.destroy();
 
-        test(stage.ids.myCircle === undefined, 'circle still in hash');
-        test(stage.names.myRect[0]._id === rect._id, 'rect not in names hash');
+        test(go.ids.myCircle2 === undefined, 'circle still in hash');
+        test(go.names.myRect2[0]._id === rect._id, 'rect not in names hash');
         test(Kinetic.Global.shapes[circleColorKey] === undefined, 'circle color key should not be in shapes hash');
         test(Kinetic.Global.shapes[rectColorKey]._id === rect._id, 'rect color key should be in shapes hash');
 
         rect.destroy();
 
-        test(stage.ids.myCircle === undefined, 'circle still in hash');
-        test(stage.names.myRect === undefined, 'rect still in hash');
+        test(go.ids.myCircle2 === undefined, 'circle still in hash');
+        test(go.names.myRect2 === undefined, 'rect still in hash');
         test(Kinetic.Global.shapes[circleColorKey] === undefined, 'circle color key should not be in shapes hash');
         test(Kinetic.Global.shapes[rectColorKey] === undefined, 'rect color key should not be in shapes hash');
     }

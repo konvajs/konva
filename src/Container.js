@@ -43,21 +43,6 @@
             child.index = children.length;
             child.parent = this;
             children.push(child);
-            var stage = child.getStage();
-
-            if(!stage) {
-                go._addTempNode(child);
-            }
-            else {
-                stage._addId(child);
-                stage._addName(child);
-
-                /*
-                 * pull in other nodes that are now linked
-                 * to a stage
-                 */
-                go._pullNodes(stage);
-            }
 
             // chainable
             return this;
@@ -99,14 +84,14 @@
             return collection;
         },
         _getNodeById: function(key) {
-            var stage = this.getStage();
-            if(stage.ids[key] !== undefined && this.isAncestorOf(stage.ids[key])) {
-                return stage.ids[key];
+            var stage = this.getStage(), go = Kinetic.Global, node = go.ids[key];
+            if(node !== undefined && this.isAncestorOf(node)) {
+                return node;
             }
             return null;
         },
         _getNodesByName: function(key) {
-            var arr = this.getStage().names[key] || [];
+            var go = Kinetic.Global, arr = go.names[key] || [];
             return this._getDescendants(arr);
         },
         _get: function(selector) {

@@ -798,7 +798,8 @@ Test.Modules.MANUAL = {
            		x: 5,
                 y: 5
             },
-            draggable: true
+            draggable: true,
+            name: 'star'
         });
 
         layer.add(star);

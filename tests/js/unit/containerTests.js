@@ -236,7 +236,7 @@ Test.Modules.CONTAINER = {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            id: 'myCircle'
+            id: 'myCircle3'
         });
 
         var rect = new Kinetic.Rect({
@@ -247,23 +247,25 @@ Test.Modules.CONTAINER = {
             fill: 'purple',
             stroke: 'black',
             strokeWidth: 4,
-            name: 'myRect'
+            name: 'myRect3'
         });
 
         layer.add(circle);
         layer.add(rect);
         stage.add(layer);
+        
+        var go = Kinetic.Global;
 
-        test(stage.ids['myCircle'].getId() === 'myCircle', 'circle id not in ids hash');
-        test(stage.names['myRect'][0].getName() === 'myRect', 'rect name not in names hash');
+        test(go.ids['myCircle3'].getId() === 'myCircle3', 'circle id not in ids hash');
+        test(go.names['myRect3'][0].getName() === 'myRect3', 'rect name not in names hash');
 
         circle.setId('newCircleId');
-        test(stage.ids['newCircleId'] !== undefined, 'circle not in ids hash');
-        test(stage.ids['myCircle'] === undefined, 'old circle id key is still in ids hash');
+        test(go.ids['newCircleId'] !== undefined, 'circle not in ids hash');
+        test(go.ids['myCircle3'] === undefined, 'old circle id key is still in ids hash');
 
         rect.setName('newRectName');
-        test(stage.names['newRectName'][0] !== undefined, 'new rect name not in names hash');
-        test(stage.names['myRect'] === undefined, 'old rect name is still in names hash');
+        test(go.names['newRectName'][0] !== undefined, 'new rect name not in names hash');
+        test(go.names['myRect3'] === undefined, 'old rect name is still in names hash');
     },
     'add layer': function(containerId) {
         var stage = new Kinetic.Stage({
