@@ -109,6 +109,17 @@
             }
         },
         /**
+         * remove stage
+         */
+        remove: function() {
+            var content = this.content;
+            Kinetic.Node.prototype.remove.call(this);
+
+            if(content && Kinetic.Type._isInDocument(content)) {
+                this.attrs.container.removeChild(content);
+            }
+        },
+        /**
          * reset stage to default state
          * @name reset
          * @methodOf Kinetic.Stage.prototype
@@ -154,12 +165,12 @@
             return this;
         },
         /**
-         * get stage DOM node which is a div element
-         *  with the class name "kineticjs-content"
-         * @name getDOM
+         * get stage content div element which has the
+         *  the class name "kineticjs-content"
+         * @name getContent
          * @methodOf Kinetic.Stage.prototype
          */
-        getDOM: function() {
+        getContent: function() {
             return this.content;
         },
         /**

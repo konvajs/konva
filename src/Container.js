@@ -40,8 +40,6 @@
          */
         add: function(child) {
             var go = Kinetic.Global, children = this.children;
-
-            child._id = Kinetic.Global.idCounter++;
             child.index = children.length;
             child.parent = this;
             children.push(child);

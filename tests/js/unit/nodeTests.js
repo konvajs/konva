@@ -421,8 +421,8 @@ Test.Modules.NODE = {
 
         rect.setSize(210);
         rect.setShadowOffset({
-        	x: 20
-       	});
+            x: 20
+        });
 
         test(widthChanged === 1, 'width change event was not fired correctly');
         test(shadowChanged === 1, 'shadow change event not fired correctly');
@@ -1098,23 +1098,23 @@ Test.Modules.NODE = {
         test(rect.getShadowBlur() === 12, 'shadow blur should still be 12');
 
         rect.setShadowOffset({
-         	x: 3,
-          	y: 4
+            x: 3,
+            y: 4
         });
         test(rect.getShadowOffset().x === 3, 'shadow offset x should be 3');
         test(rect.getShadowOffset().y === 4, 'shadow offset y should be 4');
 
         // test partial setting
         rect.setShadowOffset({
-        	x: 5
+            x: 5
         });
         test(rect.getShadowOffset().x === 5, 'shadow offset x should be 5');
         test(rect.getShadowOffset().y === 4, 'shadow offset y should be 4');
 
         // test partial setting
         rect.setShadowOffset({
-                y: 6
-            });
+            y: 6
+        });
         test(rect.getShadowOffset().x === 5, 'shadow offset x should be 5');
         test(rect.getShadowOffset().y === 6, 'shadow offset y should be 6');
 
@@ -2197,13 +2197,42 @@ Test.Modules.NODE = {
         circle.remove();
 
         test(layer.children.length === 0, 'layer should have 0 children');
-        //test(layer.getChild('myCircle') === undefined, 'shape should be null');
 
         layer.draw();
 
         test(circle.getParent() === undefined, 'circle parent should be undefined');
     },
-    'remove shape without adding its parent to stage': function(containerId) {
+    'destroy shape': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle'
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        test(layer.children.length === 1, 'layer should have 1 children');
+
+        circle.destroy();
+
+        test(layer.children.length === 0, 'layer should have 0 children');
+
+        layer.draw();
+
+        test(circle.getParent() === undefined, 'circle parent should be undefined');
+    },
+    'destroy shape without adding its parent to stage': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2232,12 +2261,12 @@ Test.Modules.NODE = {
 
         test(go.tempNodes[circle._id].attrs.id === 'myCircle', 'circle should be in temp nodes');
 
-        circle.remove();
+        circle.destroy();
 
         test(go.tempNodes[circle._id] === undefined, 'circle shouldn\'t be in the temp nodes hash');
 
     },
-    'remove layer with shape': function(containerId) {
+    'destroy layer with shape': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2263,7 +2292,7 @@ Test.Modules.NODE = {
         test(stage.get('.myLayer')[0] !== undefined, 'layer should exist');
         test(stage.get('.myCircle')[0] !== undefined, 'circle should exist');
 
-        layer.remove();
+        layer.destroy();
 
         test(stage.children.length === 0, 'stage should have 0 children');
         test(stage.get('.myLayer')[0] === undefined, 'layer should not exist');
@@ -2271,7 +2300,75 @@ Test.Modules.NODE = {
 
         stage.draw();
     },
-    'remove layer with no shapes': function(containerId) {
+    'destroy stage with layer and shape': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer({
+            name: 'myLayer'
+        });
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle'
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        stage.destroy();
+
+        test(layer.getParent() === undefined, 'layer parent should be undefined');
+        test(circle.getParent() === undefined, 'circle parent should be undefined');
+        test(stage.children.length === 0, 'stage children length should be 0');
+        test(layer.children.length === 0, 'layer children length should be 0');
+    },
+    'destroy group with shape': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer({
+            name: 'myLayer'
+        });
+        var group = new Kinetic.Group({
+            name: 'myGroup'
+        });
+
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle'
+        });
+
+        group.add(circle);
+        layer.add(group);
+        stage.add(layer);
+
+        test(layer.getChildren().length === 1, 'layer should have 1 children');
+        test(stage.get('.myGroup')[0] !== undefined, 'group should exist');
+        test(stage.get('.myCircle')[0] !== undefined, 'circle should exist');
+
+        group.destroy();
+
+        test(layer.children.length === 0, 'layer should have 0 children');
+        test(stage.get('.myGroup')[0] === undefined, 'group should not exist');
+        test(stage.get('.myCircle')[0] === undefined, 'circle should not exist');
+
+        stage.draw();
+    },
+    'destroy layer with no shapes': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2279,11 +2376,11 @@ Test.Modules.NODE = {
         });
         var layer = new Kinetic.Layer();
         stage.add(layer);
-        layer.remove();
+        layer.destroy();
 
         test(stage.children.length === 0, 'stage should have 0 children');
     },
-    'remove shape multiple times': function(containerId) {
+    'destroy shape multiple times': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2312,8 +2409,8 @@ Test.Modules.NODE = {
 
         test(layer.getChildren().length === 2, 'layer should have two children');
 
-        shape1.remove();
-        shape1.remove();
+        shape1.destroy();
+        shape1.destroy();
 
         test(layer.getChildren().length === 1, 'layer should have two children');
 
@@ -2359,5 +2456,59 @@ Test.Modules.NODE = {
 
         stage.draw();
 
+    },
+    'destroy shape by id or name': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            id: 'myCircle'
+        });
+
+        var rect = new Kinetic.Rect({
+            x: 300,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'purple',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myRect'
+        });
+
+        var circleColorKey = circle.colorKey;
+        var rectColorKey = rect.colorKey;
+
+        layer.add(circle);
+        layer.add(rect);
+        stage.add(layer);
+
+        test(stage.ids.myCircle._id === circle._id, 'circle not in ids hash');
+        test(stage.names.myRect[0]._id === rect._id, 'rect not in names hash');
+        test(Kinetic.Global.shapes[circleColorKey]._id === circle._id, 'circle color key should be in shapes hash');
+        test(Kinetic.Global.shapes[rectColorKey]._id === rect._id, 'rect color key should be in shapes hash');
+
+        circle.destroy();
+
+        test(stage.ids.myCircle === undefined, 'circle still in hash');
+        test(stage.names.myRect[0]._id === rect._id, 'rect not in names hash');
+        test(Kinetic.Global.shapes[circleColorKey] === undefined, 'circle color key should not be in shapes hash');
+        test(Kinetic.Global.shapes[rectColorKey]._id === rect._id, 'rect color key should be in shapes hash');
+
+        rect.destroy();
+
+        test(stage.ids.myCircle === undefined, 'circle still in hash');
+        test(stage.names.myRect === undefined, 'rect still in hash');
+        test(Kinetic.Global.shapes[circleColorKey] === undefined, 'circle color key should not be in shapes hash');
+        test(Kinetic.Global.shapes[rectColorKey] === undefined, 'rect color key should not be in shapes hash');
     }
 };

@@ -30,6 +30,8 @@
 
     Kinetic.Node.prototype = {
         _nodeInit: function(config) {
+            this._id = Kinetic.Global.idCounter++;
+
             this.defaultNodeAttrs = {
                 visible: true,
                 listening: true,
@@ -147,38 +149,44 @@
             }
         },
         /**
-         * remove child from container
+         * remove child from container, but don't destroy it
          * @name remove
          * @methodOf Kinetic.Node.prototype
          */
         remove: function() {
             var parent = this.getParent();
-            if(parent && this.index !== undefined && parent.children[this.index]._id == this._id) {
-                var stage = parent.getStage();
-                /*
-                 * remove event listeners and references to the node
-                 * from the ids and names hashes
-                 */
-                if(stage) {
-                    stage._removeId(this.getId());
-                    stage._removeName(this.getName(), this._id);
-                }
-
-                Kinetic.Global._removeTempNode(this);
+            if(parent && parent.children) {
                 parent.children.splice(this.index, 1);
                 parent._setChildrenIndices();
+            }
+            delete this.parent;
+        },
+        /**
+         * remove and destroy node
+         * @name destroy
+         * @methodOf Kinetic.Node.prototype
+         */
+        destroy: function() {
+            // destroy children
+            while(this.children && this.children.length > 0) {
+                this.children[0].destroy();
+            }
 
-                // remove from DD
-                var dd = Kinetic.DD;
-                if(dd && dd.node && dd.node._id === this._id) {
-                    delete Kinetic.DD.node;
-                }
+            var parent = this.getParent(), stage = this.getStage(), dd = Kinetic.DD;
+            this.remove();
 
-                // remove children
-                while(this.children && this.children.length > 0) {
-                    this.children[0].remove();
-                }
-                delete this.parent;
+            // remove ids and names hashes
+            if(stage) {
+                stage._removeId(this.getId());
+                stage._removeName(this.getName(), this._id);
+            }
+
+            // remove from temp nodes
+            Kinetic.Global._removeTempNode(this);
+
+            // remove from DD
+            if(dd && dd.node && dd.node._id === this._id) {
+                delete Kinetic.DD.node;
             }
         },
         /**

@@ -7,7 +7,7 @@
      * @param {Object} config
      * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
      * to clear the canvas before each layer draw.  The default value is true.
-     * 
+     *
      * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
@@ -101,7 +101,7 @@
             }
             // otherwise get data url of the currently drawn layer
             else {
-            	return this.getCanvas().toDataURL(mimeType, quality);
+                return this.getCanvas().toDataURL(mimeType, quality);
             }
         },
         /**
@@ -222,17 +222,11 @@
          * remove layer from stage
          */
         remove: function() {
-            var stage = this.getStage();
+            var stage = this.getStage(), canvas = this.canvas, element = canvas.element;
             Kinetic.Node.prototype.remove.call(this);
-            /*
-             * remove canvas DOM from the document if
-             * it exists
-             */
-            try {
-                stage.content.removeChild(this.canvas.element);
-            }
-            catch(e) {
-                Kinetic.Global.warn('unable to remove layer scene canvas element from the document');
+
+            if(stage && canvas && Kinetic.Type._isInDocument(element)) {
+                stage.content.removeChild(element);
             }
         }
     };

@@ -62,8 +62,8 @@ Test.Modules.STAGE = {
 
         test(stage.getSize().width === 333, 'stage width should be 333');
         test(stage.getSize().height === 155, 'stage height should be 155');
-        test(stage.getDOM().style.width === '333px', 'content width should be 333');
-        test(stage.getDOM().style.height === '155px', 'content height should be 155px');
+        test(stage.getContent().style.width === '333px', 'content width should be 333');
+        test(stage.getContent().style.height === '155px', 'content height should be 155px');
         test(layer.getCanvas().element.width === 333, 'layer canvas element width should be 333');
         test(layer.getCanvas().element.height === 155, 'layer canvas element width should be 155');
     },
@@ -105,7 +105,7 @@ Test.Modules.STAGE = {
             height: 200
         });
 
-        test(stage.getDOM().className === 'kineticjs-content', 'stage DOM class name is wrong');
+        test(stage.getContent().className === 'kineticjs-content', 'stage DOM class name is wrong');
     },
     'test getIntersections': function(containerId) {
         var stage = new Kinetic.Stage({

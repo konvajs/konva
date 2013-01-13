@@ -35,6 +35,14 @@
             }
             return names.length > 0;
         },
+        _isInDocument: function(el) {
+            while( el = el.parentNode) {
+                if(el == document) {
+                    return true;
+                }
+            }
+            return false;
+        },
         /*
          * The argument can be:
          * - an integer (will be applied to both x and y)
