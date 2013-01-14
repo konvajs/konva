@@ -767,7 +767,7 @@ Test.Modules.MANUAL = {
 
         layer.add(redCircle);
         stage.add(layer);
-    },
+    }, 
     'DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

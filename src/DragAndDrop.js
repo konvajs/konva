@@ -7,48 +7,6 @@
             y: 0
         }
     };
-    Kinetic.Node.prototype._startDrag = function() {
-        var that = this, dd = Kinetic.DD, stage = this.getStage(), pos = stage.getUserPosition();
-
-        if(pos) {
-            var m = this.getTransform().getTranslation(), ap = this.getAbsolutePosition(), nodeType = this.nodeType, container;
-
-            dd.node = this;
-            dd.offset.x = pos.x - ap.x;
-            dd.offset.y = pos.y - ap.y;
-
-            // Stage and Layer node types
-            if(nodeType === 'Stage' || nodeType === 'Layer') {
-                dd.anim.node = this;
-                dd.anim.start();
-            }
-
-            // Group or Shape node types
-            else {
-                if(this.getDragOnTop()) {
-                    container = dd._setupDragLayerAndGetContainer(this);
-                    dd.anim.node = stage.dragLayer;
-                    dd.prevParent = this.getParent();
-                    // WARNING: it's important to delay the moveTo operation,
-                    // layer redraws, and anim.start() until after the method execution
-                    // has completed or else there will be a flicker on mobile devices
-                    // due to the time it takes to append the dd canvas to the DOM
-                    setTimeout(function() {
-                        if(dd.node) {
-                            that.moveTo(container);
-                            dd.prevParent.getLayer().draw();
-                            stage.dragLayer.draw();
-                            dd.anim.start();
-                        }
-                    }, 0);
-                }
-                else {
-                    dd.anim.node = this.getLayer();
-                    dd.anim.start();
-                }
-            }
-        }
-    };
     Kinetic.DD._setupDragLayerAndGetContainer = function(no) {
         var dd = Kinetic.DD, stage = no.getStage(), nodeType = no.nodeType, lastContainer, group;
 
@@ -77,10 +35,8 @@
         });
         return lastContainer;
     };
-    Kinetic.Stage.prototype._initDragLayer = function() {
-        var dd = Kinetic.DD, stage = this.getStage(), nodeType = this.nodeType, lastContainer, group;
-
-        this.dragLayer = new Kinetic.Layer();
+    Kinetic.DD._initDragLayer = function(stage) {
+        stage.dragLayer = new Kinetic.Layer();
         stage.dragLayer.getCanvas().getElement().className = 'kinetic-drag-and-drop-layer';
     };
     Kinetic.DD._drag = function(evt) {
@@ -141,6 +97,48 @@
         }
         delete dd.node;
         dd.anim.stop();
+    };
+    Kinetic.Node.prototype._startDrag = function() {
+        var that = this, dd = Kinetic.DD, stage = this.getStage(), pos = stage.getUserPosition();
+
+        if(pos) {
+            var m = this.getTransform().getTranslation(), ap = this.getAbsolutePosition(), nodeType = this.nodeType, container;
+
+            dd.node = this;
+            dd.offset.x = pos.x - ap.x;
+            dd.offset.y = pos.y - ap.y;
+
+            // Stage and Layer node types
+            if(nodeType === 'Stage' || nodeType === 'Layer') {
+                dd.anim.node = this;
+                dd.anim.start();
+            }
+
+            // Group or Shape node types
+            else {
+                if(this.getDragOnTop()) {
+                    container = dd._setupDragLayerAndGetContainer(this);
+                    dd.anim.node = stage.dragLayer;
+                    dd.prevParent = this.getParent();
+                    // WARNING: it's important to delay the moveTo operation,
+                    // layer redraws, and anim.start() until after the method execution
+                    // has completed or else there will be a flicker on mobile devices
+                    // due to the time it takes to append the dd canvas to the DOM
+                    setTimeout(function() {
+                        if(dd.node) {
+                            that.moveTo(container);
+                            dd.prevParent.getLayer().draw();
+                            stage.dragLayer.draw();
+                            dd.anim.start();
+                        }
+                    }, 0);
+                }
+                else {
+                    dd.anim.node = this.getLayer();
+                    dd.anim.start();
+                }
+            }
+        }
     };
     /**
      * set draggable
@@ -236,12 +234,4 @@
      * @name getDragOnTop
      * @methodOf Kinetic.Node.prototype
      */
-
-    // because we're using a high performance inheritance pattern, we will need to re
-    // extend stage and container so that they pick up the drag and drop methods
-    // the build file defines Layer, Group, and Shappe after the DD definition,
-    // so these classes have not been extended yet and will automatically pick up
-    // the drag and drop methods
-    Kinetic.Global.extend(Kinetic.Stage, Kinetic.Container);
-    Kinetic.Global.extend(Kinetic.Container, Kinetic.Node);
 })();

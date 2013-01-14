@@ -33,6 +33,7 @@
 
     Kinetic.Stage.prototype = {
         _initStage: function(config) {
+        	var dd = Kinetic.DD;
             this.setDefaultAttrs({
                 width: 400,
                 height: 200
@@ -47,8 +48,8 @@
             this._bindContentEvents();
             Kinetic.Global.stages.push(this);
 
-            if(Kinetic.DD) {
-                this._initDragLayer();
+            if(dd) {
+                dd._initDragLayer(this);
             }
         },
         /**
