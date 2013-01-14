@@ -11,7 +11,7 @@
         var that = this, dd = Kinetic.DD, stage = this.getStage(), pos = stage.getUserPosition();
 
         if(pos) {
-            var m = this.getTransform().getTranslation(), ap = this.getAbsolutePosition(), nodeType = this.nodeType;
+            var m = this.getTransform().getTranslation(), ap = this.getAbsolutePosition(), nodeType = this.nodeType, container;
 
             dd.node = this;
             dd.offset.x = pos.x - ap.x;
@@ -26,7 +26,7 @@
             // Group or Shape node types
             else {
                 if(this.getDragOnTop()) {
-                    dd._buildDragLayer(this);
+                    container = dd._setupDragLayerAndGetContainer(this);
                     dd.anim.node = stage.dragLayer;
                     dd.prevParent = this.getParent();
                     // WARNING: it's important to delay the moveTo operation,
@@ -35,7 +35,7 @@
                     // due to the time it takes to append the dd canvas to the DOM
                     setTimeout(function() {
                         if(dd.node) {
-                            that.moveTo(stage.dragLayer);
+                            that.moveTo(container);
                             dd.prevParent.getLayer().draw();
                             stage.dragLayer.draw();
                             dd.anim.start();
@@ -49,7 +49,7 @@
             }
         }
     };
-    Kinetic.DD._buildDragLayer = function(no) {
+    Kinetic.DD._setupDragLayerAndGetContainer = function(no) {
         var dd = Kinetic.DD, stage = no.getStage(), nodeType = no.nodeType, lastContainer, group;
 
         // re-construct node tree
@@ -71,11 +71,11 @@
                     scale: node.getScale(),
                     rotation: node.getRotation()
                 });
-
                 lastContainer.add(group);
                 lastContainer = group;
             }
         });
+        return lastContainer;
     };
     Kinetic.Stage.prototype._initDragLayer = function() {
         var dd = Kinetic.DD, stage = this.getStage(), nodeType = this.nodeType, lastContainer, group;
