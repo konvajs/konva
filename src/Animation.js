@@ -21,9 +21,9 @@
      */
     Kinetic.Animation.prototype = {
         /**
-         * determine if animation is running.  returns true or false
+         * determine if animation is running or not.  returns true or false
          * @name isRunning
-         * @methodOf Kinetic.Aniamtion.prototype
+         * @methodOf Kinetic.Animation.prototype
          */
         isRunning: function() {
             var a = Kinetic.Animation, animations = a.animations;
