@@ -12,6 +12,7 @@ class Build < Thor
   ]
   
   UNIT_TESTS = [
+  	"tests/js/unit/animationTests.js", 
     "tests/js/unit/globalTests.js", 
   	"tests/js/unit/nodeTests.js", 
   	"tests/js/unit/stageTests.js", 
@@ -19,7 +20,6 @@ class Build < Thor
   	"tests/js/unit/layerTests.js", 
   	"tests/js/unit/shapeTests.js", 
   	"tests/js/unit/ddTests.js", 
-  	"tests/js/unit/animationTests.js", 
   	"tests/js/unit/transitionTests.js", 
   	"tests/js/unit/shapes/rectTests.js", 
   	"tests/js/unit/shapes/circleTests.js", 

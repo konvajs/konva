@@ -1,5 +1,5 @@
 Test.Modules.DD = {
-	  'remove shape from onclick': function(containerId) {
+	  'remove shape with onclick': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -37,6 +37,8 @@ Test.Modules.DD = {
             clientX: 291,
             clientY: 112 + top
         });
+        
+        warn(layer.toDataURL() === dataUrls['cleared'], 'canvas should be cleared after removing shape onclick');
 
     },
     'test dragstart, dragmove, dragend': function(containerId) {

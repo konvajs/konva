@@ -152,8 +152,6 @@
         destroy: function() {
             var parent = this.getParent(), stage = this.getStage(), dd = Kinetic.DD, go = Kinetic.Global;
 
-            this.remove();
-
             // destroy children
             while(this.children && this.children.length > 0) {
                 this.children[0].destroy();
@@ -163,10 +161,17 @@
             go._removeId(this.getId());
             go._removeName(this.getName(), this._id);
 
-            // remove from DD
+            // stop DD
             if(dd && dd.node && dd.node._id === this._id) {
-                delete Kinetic.DD.node;
+                node._endDrag();
             }
+
+            // stop transition
+            if(this.trans) {
+                this.trans.stop();
+            }
+
+            this.remove();
         },
         /**
          * get attrs

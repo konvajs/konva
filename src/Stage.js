@@ -158,11 +158,6 @@
         getUserPosition: function() {
             return this.getTouchPosition() || this.getMousePosition();
         },
-        /**
-         * get stage
-         * @name getStage
-         * @methodOf Kinetic.Stage.prototype
-         */
         getStage: function() {
             return this;
         },
@@ -416,9 +411,13 @@
         },
         _mouseup: function(evt) {
             this._setUserPosition(evt);
-            var dd = Kinetic.DD;
-            var obj = this.getIntersection(this.getUserPosition());
-            var that = this;
+            var that = this, dd = Kinetic.DD, obj = this.getIntersection(this.getUserPosition());
+
+            // end drag and drop
+            if(dd) {
+                dd._endDrag(evt);
+            }
+
             if(obj && obj.shape) {
                 var shape = obj.shape;
                 shape._handleEvent('mouseup', evt);
@@ -443,11 +442,6 @@
                 }
             }
             this.clickStart = false;
-
-            // end drag and drop
-            if(dd) {
-                dd._endDrag(evt);
-            }
         },
         _touchstart: function(evt) {
             this._setUserPosition(evt);
@@ -469,9 +463,13 @@
         },
         _touchend: function(evt) {
             this._setUserPosition(evt);
-            var dd = Kinetic.DD;
-            var obj = this.getIntersection(this.getUserPosition());
-            var that = this;
+            var that = this, dd = Kinetic.DD, obj = this.getIntersection(this.getUserPosition());
+
+            // end drag and drop
+            if(dd) {
+                dd._endDrag(evt);
+            }
+
             if(obj && obj.shape) {
                 var shape = obj.shape;
                 shape._handleEvent('touchend', evt);
@@ -497,11 +495,6 @@
             }
 
             this.tapStart = false;
-
-            // end drag and drop
-            if(dd) {
-                dd._endDrag(evt);
-            }
         },
         _touchmove: function(evt) {
             this._setUserPosition(evt);

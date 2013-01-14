@@ -4,8 +4,7 @@
      * animations
      * @constructor
      * @param {Function} func function executed on each animation frame
-     * @param {Kinetic.Node} [node] node to be redrawn.&nbsp; Specifying a node will improve
-     *  draw performance.&nbsp; This can be a shape, a group, a layer, or the stage.
+     * @param {Kinetic.Node} [node] node to be redrawn.&nbsp; Can be a layer or the stage.  Not specifying a node will result in no redraw.
      */
     Kinetic.Animation = function(func, node) {
         this.func = func;
@@ -21,6 +20,20 @@
      * Animation methods
      */
     Kinetic.Animation.prototype = {
+        /**
+         * determine if animation is running.  returns true or false
+         * @name isRunning
+         * @methodOf Kinetic.Aniamtion.prototype
+         */
+        isRunning: function() {
+            var a = Kinetic.Animation, animations = a.animations;
+            for(var n = 0; n < animations.length; n++) {
+                if(animations[n].id === this.id) {
+                    return true;
+                }
+            }
+            return false;
+        },
         /**
          * start animation
          * @name start

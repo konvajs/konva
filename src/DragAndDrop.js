@@ -26,7 +26,7 @@
             // Group or Shape node types
             else {
                 if(this.getDragOnTop()) {
-                    this._buildDragLayer();
+                    dd._buildDragLayer(this);
                     dd.anim.node = stage.dragLayer;
                     dd.prevParent = this.getParent();
                     // WARNING: it's important to delay the moveTo operation,
@@ -34,10 +34,12 @@
                     // has completed or else there will be a flicker on mobile devices
                     // due to the time it takes to append the dd canvas to the DOM
                     setTimeout(function() {
-                        that.moveTo(stage.dragLayer);
-                        dd.prevParent.getLayer().draw();
-                        stage.dragLayer.draw();
-                        dd.anim.start();
+                        if(dd.node) {
+                            that.moveTo(stage.dragLayer);
+                            dd.prevParent.getLayer().draw();
+                            stage.dragLayer.draw();
+                            dd.anim.start();
+                        }
                     }, 0);
                 }
                 else {
@@ -47,11 +49,11 @@
             }
         }
     };
-    Kinetic.Node.prototype._buildDragLayer = function() {
-        var dd = Kinetic.DD, stage = this.getStage(), nodeType = this.nodeType, lastContainer, group;
+    Kinetic.DD._buildDragLayer = function(no) {
+        var dd = Kinetic.DD, stage = no.getStage(), nodeType = no.nodeType, lastContainer, group;
 
         // re-construct node tree
-        this._eachAncestorReverse(function(node) {
+        no._eachAncestorReverse(function(node) {
             if(node.nodeType === 'Layer') {
                 stage.dragLayer.setAttrs({
                     x: node.getX(),
@@ -112,9 +114,9 @@
         }
     };
     Kinetic.DD._endDrag = function(evt) {
-        var dd = Kinetic.DD, node = dd.node;
-        if(node) {
-            var nodeType = node.nodeType, stage = node.getStage();
+        var dd = Kinetic.DD, node = dd.node, nodeType, stage;
+
+        if(node) { nodeType = node.nodeType, stage = node.getStage();
             node.setListening(true);
             if(nodeType === 'Stage') {
                 node.draw();
@@ -122,7 +124,7 @@
             else {
                 if((nodeType === 'Group' || nodeType === 'Shape') && node.getDragOnTop() && dd.prevParent) {
                     node.moveTo(dd.prevParent);
-                    stage.dragLayer.remove();
+                    node.getStage().dragLayer.remove();
                     dd.prevParent = null;
                 }
 
@@ -137,7 +139,7 @@
                 node._handleEvent('dragend', evt);
             }
         }
-        dd.node = null;
+        delete dd.node;
         dd.anim.stop();
     };
     /**

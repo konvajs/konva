@@ -83,14 +83,9 @@ Test.Modules.MANUAL = {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            shadow: {
-                color: 'black',
-                offset: {
-                    x: 10,
-                    y: 10
-                },
-                alpha: 0.5
-            }
+            shadowColor: 'black',
+            shadowOffset: 10,
+            shadowOpacity: 0.5
         });
 
         layer.add(rect);
@@ -98,16 +93,15 @@ Test.Modules.MANUAL = {
 
         rect.transitionTo({
             duration: 2,
-            shadow: {
-                offset: {
-                    x: 80
-                }
+            shadowOffset: {
+                x: 80
             },
             x: 400,
             y: 30,
             rotation: Math.PI * 2,
             easing: 'bounce-ease-out'
         });
+       
     },
     'TRANSITION - all transition types': function(containerId) {
         document.getElementById(containerId).style.height = '300px';

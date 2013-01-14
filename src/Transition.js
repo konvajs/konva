@@ -6,10 +6,11 @@
      * @constructor
      */
     Kinetic.Transition = function(node, config) {
+        var that = this, obj = {};
+
         this.node = node;
         this.config = config;
         this.tweens = [];
-        var that = this;
 
         // add tween for each property
         function addTween(c, attrs, obj, rootObj) {
@@ -26,19 +27,38 @@
                 }
             }
         }
-        var obj = {};
         addTween(config, node.attrs, obj, obj);
 
-        var finishedTweens = 0;
-        for(var n = 0; n < this.tweens.length; n++) {
-            var tween = this.tweens[n];
-            tween.onFinished = function() {
-                finishedTweens++;
-                if(finishedTweens >= that.tweens.length) {
-                    that.onFinished();
+        // map first tween event to transition event
+        this.tweens[0].onStarted = function() {
+
+        };
+        this.tweens[0].onStopped = function() {
+            node.transAnim.stop();
+        };
+        this.tweens[0].onResumed = function() {
+            node.transAnim.start();
+        };
+        this.tweens[0].onLooped = function() {
+
+        };
+        this.tweens[0].onChanged = function() {
+
+        };
+        this.tweens[0].onFinished = function() {
+            var newAttrs = {};
+            // create new attr obj
+            for(var key in config) {
+                if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
+                    newAttrs[key] = config[key];
                 }
-            };
-        }
+            }
+            node.transAnim.stop();
+            node.setAttrs(newAttrs);
+            if(config.callback) {
+                config.callback();
+            }
+        };
     };
     /*
      * Transition methods
@@ -116,34 +136,20 @@
      *  transition completes
      */
     Kinetic.Node.prototype.transitionTo = function(config) {
+        var that = this, trans = new Kinetic.Transition(this, config);
+
         if(!this.transAnim) {
             this.transAnim = new Kinetic.Animation();
         }
-        /*
-         * create new transition
-         */
-        var node = this.nodeType === 'Stage' ? this : this.getLayer();
-        var that = this;
-        var trans = new Kinetic.Transition(this, config);
-
         this.transAnim.func = function() {
             trans._onEnterFrame();
         };
-        this.transAnim.node = node;
+        this.transAnim.node = this.nodeType === 'Stage' ? this : this.getLayer();
 
-        // subscribe to onFinished for first tween
-        trans.onFinished = function() {
-            // remove animation
-            that.transAnim.stop();
-
-            // callback
-            if(config.callback) {
-                config.callback();
-            }
-        };
         // auto start
         trans.start();
         this.transAnim.start();
+        this.trans = trans;
         return trans;
     };
 })();

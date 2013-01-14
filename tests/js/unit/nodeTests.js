@@ -1936,7 +1936,7 @@ Test.Modules.NODE = {
         stage.add(layer);
 
         test(stage.getAbsoluteZIndex() === 0, 'stage abs zindex should be 0');
-        console.log(layer.getAbsoluteZIndex());
+        //console.log(layer.getAbsoluteZIndex());
         test(layer.getAbsoluteZIndex() === 1, 'layer abs zindex should be 1');
         test(group1.getAbsoluteZIndex() === 2, 'group1 abs zindex should be 2');
         test(group2.getAbsoluteZIndex() === 3, 'group2 abs zindex should be 3');
@@ -2282,7 +2282,7 @@ Test.Modules.NODE = {
 
         layer.add(circle);
         stage.add(layer);
-        
+
         test(stage.children.length === 1, 'stage should have 1 children');
         test(stage.get('.myLayer')[0] !== undefined, 'layer should exist');
         test(stage.get('.myCircle')[0] !== undefined, 'circle should exist');
@@ -2506,5 +2506,47 @@ Test.Modules.NODE = {
         test(go.names.myRect2 === undefined, 'rect still in hash');
         test(Kinetic.Global.shapes[circleColorKey] === undefined, 'circle color key should not be in shapes hash');
         test(Kinetic.Global.shapes[rectColorKey] === undefined, 'rect color key should not be in shapes hash');
+    },
+    'destroy node mid transition': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 100,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            shadowColor: 'black',
+            shadowOffset: 10,
+            shadowOpacity: 0.5
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        rect.transitionTo({
+            duration: 2,
+            shadowOffset: {
+                x: 80
+            },
+            x: 400,
+            y: 30,
+            rotation: Math.PI * 2,
+            easing: 'bounce-ease-out'
+        });
+
+        setTimeout(function() {
+        	test(rect.transAnim.isRunning(), 'rect trans should be running before destroying it');
+            rect.destroy();
+            test(!rect.transAnim.isRunning(), 'rect trans should not be running after destroying it');
+            layer.draw();
+            warn(layer.toDataURL() === dataUrls['cleared'], 'transitioning rectangle should have been destroyed and removed from the screen');
+        }, 1000);
     }
 };

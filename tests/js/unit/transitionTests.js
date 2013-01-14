@@ -156,5 +156,50 @@ Test.Modules.TRANSITION = {
                  */
             }
         });
+    },
+    'stop transition': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 100,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            shadowColor: 'black',
+            shadowOffset: 10,
+            shadowOpacity: 0.5
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        var trans = rect.transitionTo({
+            duration: 2,
+            shadowOffset: {
+                x: 80
+            },
+            x: 400,
+            y: 30,
+            rotation: Math.PI * 2,
+            easing: 'bounce-ease-out'
+        });
+        
+        setTimeout(function() {
+        	test(rect.transAnim.isRunning(), 'rect trans should be running');
+            trans.stop();
+            test(!rect.transAnim.isRunning(), 'rect trans should not be running');
+        }, 1000);
+        
+        setTimeout(function() {
+            trans.resume();
+            test(rect.transAnim.isRunning(), 'rect trans should be running after resume');
+        }, 1500);
     }
 };
