@@ -40,9 +40,9 @@
      * @param {Number} [config.shadowOpacity] shadow opacity.  Can be any real number
      *  between 0 and 1
      * @param {Array} [config.dashArray]
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
@@ -69,6 +69,13 @@
 
     Kinetic.Shape.prototype = {
         _initShape: function(config) {
+            this.setDefaultAttrs({
+                fillEnabled: true,
+                strokeEnabled: true,
+                shadowEnabled: true,
+                dashArrayEnabled: true
+            });
+
             this.nodeType = 'Shape';
 
             // set colorKey
@@ -112,6 +119,14 @@
         hasShadow: function() {
             return !!(this.getShadowColor() || this.getShadowBlur() || this.getShadowOffset());
         },
+        /**
+         * returns whether or not a fill will be rendered
+         * @name hasFill
+         * @methodOf Kinetic.Shape.prototype
+         */
+        hasFill: function() {
+            return !!(this.getFill() || this.getFillPatternImage() || this.getFillLinearGradientStartPoint() || this.getFillRadialGradientStartPoint());
+        },
         _get: function(selector) {
             return this.nodeType === selector || this.shapeType === selector ? [this] : [];
         },
@@ -132,6 +147,30 @@
             this.drawScene(hitCanvas);
             var p = hitCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
             return p[3] > 0;
+        },
+        enableFill: function() {
+            this.setAttr('fillEnabled', true);
+        },
+        disableFill: function() {
+            this.setAttr('fillEnabled', false);
+        },
+        enableStroke: function() {
+            this.setAttr('strokeEnabled', true);
+        },
+        disableStroke: function() {
+            this.setAttr('strokeEnabled', false);
+        },
+        enableShadow: function() {
+            this.setAttr('shadowEnabled', true);
+        },
+        disableShadow: function() {
+            this.setAttr('shadowEnabled', false);
+        },
+        enableDashArray: function() {
+            this.setAttr('dashArrayEnabled', true);
+        },
+        disableDashArray: function() {
+            this.setAttr('dashArrayEnabled', false);
         },
         remove: function() {
             Kinetic.Node.prototype.remove.call(this);
@@ -175,7 +214,7 @@
     Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
 
     // add getters and setters
-    Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'lineCap', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'dashArray', 'shadowColor', 'shadowBlur', 'shadowOpacity', 'fillPatternImage', 'fill', 'fillPatternX', 'fillPatternY', 'fillLinearGradientColorStops', 'fillRadialGradientStartRadius', 'fillRadialGradientEndRadius', 'fillRadialGradientColorStops', 'fillPatternRepeat']);
+    Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'lineCap', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'dashArray', 'shadowColor', 'shadowBlur', 'shadowOpacity', 'fillPatternImage', 'fill', 'fillPatternX', 'fillPatternY', 'fillLinearGradientColorStops', 'fillRadialGradientStartRadius', 'fillRadialGradientEndRadius', 'fillRadialGradientColorStops', 'fillPatternRepeat', 'fillEnabled', 'strokeEnabled', 'shadowEnabled', 'dashArrayEnabled']);
 
     /**
      * set stroke color

@@ -350,7 +350,7 @@ Test.Modules.SHAPE = {
             circle.setFillLinearGradientStartPoint(-35);
             circle.setFillLinearGradientEndPoint(35);
             circle.setFillLinearGradientColorStops([0, 'red', 1, 'blue']);
-            
+
             circle.setFillLinearGradientStartPoint(null);
             circle.setFillPatternImage(imageObj);
             circle.setFillPatternRepeat('repeat');
@@ -359,5 +359,236 @@ Test.Modules.SHAPE = {
             layer.draw();
         };
         imageObj.src = '../assets/darth-vader.jpg';
+    },
+    'everything enabled': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            shadowColor: 'black',
+            shadowBlur: 10,
+            shadowOffset: 10,
+            dashArray: [10, 10],
+            fillEnabled: true,
+            strokeEnabled: true,
+            shadowEnabled: true,
+            dashArrayEnabled: true
+        });
+        layer.add(circle);
+        stage.add(layer);
+
+        //console.log(layer.toDataURL());
+        test(layer.toDataURL() === dataUrls['everything enabled'], 'should be circle with green fill, dashed stroke, and shadow');
+    },
+    'fill disabled': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            shadowColor: 'black',
+            shadowBlur: 10,
+            shadowOffset: 10,
+            dashArray: [10, 10],
+            fillEnabled: false,
+            strokeEnabled: true,
+            shadowEnabled: true,
+            dashArrayEnabled: true
+        });
+        layer.add(circle);
+        stage.add(layer);
+
+        //console.log(layer.toDataURL());
+        test(layer.toDataURL() === dataUrls['fill disabled'], 'should be circle with no fill, dashed stroke, and shadow');
+    },
+    'stroke disabled': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            shadowColor: 'black',
+            shadowBlur: 10,
+            shadowOffset: 10,
+            dashArray: [10, 10],
+            fillEnabled: true,
+            strokeEnabled: false,
+            shadowEnabled: true,
+            dashArrayEnabled: true
+        });
+        layer.add(circle);
+        stage.add(layer);
+
+        //console.log(layer.toDataURL());
+        test(layer.toDataURL() === dataUrls['stroke disabled'], 'should be circle with green fill, no stroke, and shadow');
+    },
+    'dash array disabled': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            shadowColor: 'black',
+            shadowBlur: 10,
+            shadowOffset: 10,
+            dashArray: [10, 10],
+            fillEnabled: true,
+            strokeEnabled: true,
+            shadowEnabled: true,
+            dashArrayEnabled: false
+        });
+        layer.add(circle);
+        stage.add(layer);
+
+        //console.log(layer.toDataURL());
+        test(layer.toDataURL() === dataUrls['dash array disabled'], 'should be circle with green fill, solid stroke, and shadow');
+    },
+    'shadow disabled': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            shadowColor: 'black',
+            shadowBlur: 10,
+            shadowOffset: 10,
+            dashArray: [10, 10],
+            fillEnabled: true,
+            strokeEnabled: true,
+            shadowEnabled: false,
+            dashArrayEnabled: true
+        });
+        layer.add(circle);
+        stage.add(layer);
+
+        //console.log(layer.toDataURL());
+        test(layer.toDataURL() === dataUrls['shadow disabled'], 'should be circle with green fill, dashed stroke, and no shadow');
+    },
+    'test enablers and disablers': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            shadowColor: 'black',
+            shadowBlur: 10,
+            shadowOffset: 10,
+            dashArray: [10, 10]
+        });
+        layer.add(circle);
+        stage.add(layer);
+
+        test(circle.getFillEnabled() === true, 'fillEnabled should be true');
+        test(circle.getStrokeEnabled() === true, 'strokeEnabled should be true');
+        test(circle.getShadowEnabled() === true, 'shadowEnabled should be true');
+        test(circle.getDashArrayEnabled() === true, 'dashArrayEnabled should be true');
+
+        circle.disableFill();
+
+        test(circle.getFillEnabled() === false, 'fillEnabled should be false');
+        test(circle.getStrokeEnabled() === true, 'strokeEnabled should be true');
+        test(circle.getShadowEnabled() === true, 'shadowEnabled should be true');
+        test(circle.getDashArrayEnabled() === true, 'dashArrayEnabled should be true');
+
+        circle.disableStroke();
+
+        test(circle.getFillEnabled() === false, 'fillEnabled should be false');
+        test(circle.getStrokeEnabled() === false, 'strokeEnabled should be false');
+        test(circle.getShadowEnabled() === true, 'shadowEnabled should be true');
+        test(circle.getDashArrayEnabled() === true, 'dashArrayEnabled should be true');
+
+        circle.disableShadow();
+
+        test(circle.getFillEnabled() === false, 'fillEnabled should be false');
+        test(circle.getStrokeEnabled() === false, 'strokeEnabled should be false');
+        test(circle.getShadowEnabled() === false, 'shadowEnabled should be false');
+        test(circle.getDashArrayEnabled() === true, 'dashArrayEnabled should be true');
+
+        circle.disableDashArray();
+
+        test(circle.getFillEnabled() === false, 'fillEnabled should be false');
+        test(circle.getStrokeEnabled() === false, 'strokeEnabled should be false');
+        test(circle.getShadowEnabled() === false, 'shadowEnabled should be false');
+        test(circle.getDashArrayEnabled() === false, 'dashArrayEnabled should be false');
+
+        // re-enable
+
+        circle.enableDashArray();
+
+        test(circle.getFillEnabled() === false, 'fillEnabled should be false');
+        test(circle.getStrokeEnabled() === false, 'strokeEnabled should be false');
+        test(circle.getShadowEnabled() === false, 'shadowEnabled should be false');
+        test(circle.getDashArrayEnabled() === true, 'dashArrayEnabled should be true');
+
+        circle.enableShadow();
+
+        test(circle.getFillEnabled() === false, 'fillEnabled should be false');
+        test(circle.getStrokeEnabled() === false, 'strokeEnabled should be false');
+        test(circle.getShadowEnabled() === true, 'shadowEnabled should be true');
+        test(circle.getDashArrayEnabled() === true, 'dashArrayEnabled should be true');
+
+        circle.enableStroke();
+
+        test(circle.getFillEnabled() === false, 'fillEnabled should be false');
+        test(circle.getStrokeEnabled() === true, 'strokeEnabled should be true');
+        test(circle.getShadowEnabled() === true, 'shadowEnabled should be true');
+        test(circle.getDashArrayEnabled() === true, 'dashArrayEnabled should be true');
+
+        circle.enableFill();
+
+        test(circle.getFillEnabled() === true, 'fillEnabled should be true');
+        test(circle.getStrokeEnabled() === true, 'strokeEnabled should be true');
+        test(circle.getShadowEnabled() === true, 'shadowEnabled should be true');
+        test(circle.getDashArrayEnabled() === true, 'dashArrayEnabled should be true');
+
     }
 };

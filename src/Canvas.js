@@ -124,7 +124,9 @@
          * @param {Kinetic.Shape} shape
          */
         fill: function(shape) {
-            this._fill(shape);
+            if(shape.getFillEnabled()) {
+                this._fill(shape);
+            }
         },
         /**
          * stroke shape
@@ -133,7 +135,9 @@
          * @param {Kinetic.Shape} shape
          */
         stroke: function(shape) {
-            this._stroke(shape);
+            if(shape.getStrokeEnabled()) {
+                this._stroke(shape);
+            }
         },
         /**
          * fill, stroke, and apply shadows
@@ -144,8 +148,14 @@
          * @param {Kinetic.Shape} shape
          */
         fillStroke: function(shape) {
-            this._fill(shape);
-            this._stroke(shape, shape.hasShadow() && shape.getFill());
+            var fillEnabled = shape.getFillEnabled();
+            if(fillEnabled) {
+                this._fill(shape);
+            }
+
+            if(shape.getStrokeEnabled()) {
+                this._stroke(shape, shape.hasShadow() && shape.hasFill() && fillEnabled);
+            }
         },
         /**
          * apply shadow
@@ -283,7 +293,7 @@
             if(stroke || strokeWidth) {
                 context.save();
                 this._applyLineCap(shape);
-                if(dashArray) {
+                if(dashArray && shape.getDashArrayEnabled()) {
                     if(context.setLineDash) {
                         context.setLineDash(dashArray);
                     }
@@ -303,7 +313,7 @@
         },
         _applyShadow: function(shape) {
             var context = this.context;
-            if(shape.hasShadow()) {
+            if(shape.hasShadow() && shape.getShadowEnabled()) {
                 var aa = shape.getAbsoluteOpacity();
                 // defaults
                 var color = shape.getShadowColor() || 'black';
