@@ -13,7 +13,7 @@
      * @param {Number} [config.width] default is auto
      * @param {Number} [config.height] default is auto
      * @param {Number} [config.lineHeight] default is 1
-     * 
+     *
      *
      * @param {String} [config.fill] fill color
      *
@@ -49,9 +49,9 @@
      * @param {Number} [config.shadowOpacity] shadow opacity.  Can be any real number
      *  between 0 and 1
      * @param {Array} [config.dashArray]
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
@@ -76,6 +76,13 @@
         this._initText(config);
     };
 
+    function _fillFunc(context) {
+        context.fillText(this.partialText, 0, 0);
+    }
+    function _strokeFunc(context) {
+        context.strokeText(this.partialText, 0, 0);
+    }
+
     Kinetic.Text.prototype = {
         _initText: function(config) {
             this.setDefaultAttrs({
@@ -92,9 +99,14 @@
             });
 
             this.dummyCanvas = document.createElement('canvas');
-            
+
             // call super constructor
             Kinetic.Shape.call(this, config);
+
+            // overrides
+            this._fillFunc = _fillFunc;
+            this._strokeFunc = _strokeFunc;
+
             this.shapeType = 'Text';
             this._setDrawFuncs();
 
@@ -105,6 +117,7 @@
                 var attr = attrs[n];
                 this.on(attr + 'Change.kinetic', that._setTextData);
             }
+
             that._setTextData();
         },
         drawFunc: function(canvas) {
@@ -116,7 +129,7 @@
             context.save();
             context.translate(p, 0);
             context.translate(0, p + this.getTextHeight() / 2);
-            
+
             // draw text lines
             for(var n = 0; n < textArr.length; n++) {
                 var text = textArr[n];
@@ -130,18 +143,19 @@
                     context.translate((this.getWidth() - this._getTextSize(text).width - p * 2) / 2, 0);
                 }
 
-                canvas.fillStrokeText(this, text);
+                this.partialText = text;
+                canvas.fillStroke(this);
                 context.restore();
                 context.translate(0, lineHeightPx);
             }
             context.restore();
         },
         drawHitFunc: function(canvas) {
-        	var context = canvas.getContext(), width = this.getWidth(), height = this.getHeight();
-        	
+            var context = canvas.getContext(), width = this.getWidth(), height = this.getHeight();
+
             context.beginPath();
-        	context.rect(0, 0, width, height);
-        	context.closePath();
+            context.rect(0, 0, width, height);
+            context.closePath();
             canvas.fillStroke(this);
         },
         /**
@@ -267,58 +281,6 @@
         }
     };
     Kinetic.Global.extend(Kinetic.Text, Kinetic.Shape);
-
-    /*
-     * extend canvas renderers
-     */
-    var fillText = function(shape, text, skipShadow) {
-        var textFill = shape.getFill(), context = this.context;
-        if(textFill) {
-            context.save();
-            if(!skipShadow && shape.hasShadow()) {
-                this._applyShadow(shape);
-            }
-            context.fillStyle = textFill;
-            context.fillText(text, 0, 0);
-            context.restore();
-
-            if(!skipShadow && shape.hasShadow()) {
-                this.fillText(shape, text, true);
-            }
-        }
-    };
-    var strokeText = function(shape, text, skipShadow) {
-        var textStroke = shape.getStroke(), textStrokeWidth = shape.getStrokeWidth(), context = this.context;
-        if(textStroke || textStrokeWidth) {
-            context.save();
-            if(!skipShadow && shape.hasShadow()) {
-                this._applyShadow(shape);
-            }
-
-            context.lineWidth = textStrokeWidth || 2;
-            context.strokeStyle = textStroke || 'black';
-            context.strokeText(text, 0, 0);
-            context.restore();
-
-            if(!skipShadow && shape.hasShadow()) {
-                this.strokeText(shape, text, true);
-            }
-        }
-    };
-    var fillStrokeText = function(shape, text) {
-        this.fillText(shape, text);
-        this.strokeText(shape, text, shape.hasShadow() && shape.getFill());
-    };
-
-    // scene canvases
-    Kinetic.SceneCanvas.prototype.fillText = fillText;
-    Kinetic.SceneCanvas.prototype.strokeText = strokeText;
-    Kinetic.SceneCanvas.prototype.fillStrokeText = fillStrokeText;
-    
-    // hit canvases
-    Kinetic.HitCanvas.prototype.fillText = fillText;
-    Kinetic.HitCanvas.prototype.strokeText = strokeText;
-    Kinetic.HitCanvas.prototype.fillStrokeText = fillStrokeText;
 
     // add getters setters
     Kinetic.Node.addGettersSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'align', 'lineHeight']);

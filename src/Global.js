@@ -1,5 +1,5 @@
 /**
- * KineticJS JavaScript Library v@version
+ * KineticJS JavaScript Framework v@version
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.

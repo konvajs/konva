@@ -66,6 +66,12 @@
     Kinetic.Shape = function(config) {
         this._initShape(config);
     };
+    function _fillFunc(context) {
+        context.fill();
+    }
+    function _strokeFunc(context) {
+        context.stroke();
+    }
 
     Kinetic.Shape.prototype = {
         _initShape: function(config) {
@@ -77,6 +83,8 @@
             });
 
             this.nodeType = 'Shape';
+            this._fillFunc = _fillFunc;
+            this._strokeFunc = _strokeFunc;
 
             // set colorKey
             var shapes = Kinetic.Global.shapes;

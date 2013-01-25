@@ -9,7 +9,7 @@
      * @param {Number} [config.fontSize] default is 12
      * @param {String} [config.fontStyle] can be normal, bold, or italic.  Default is normal
      * @param {String} config.text
-     * 
+     *
      *
      * @param {String} [config.fill] fill color
      *
@@ -45,9 +45,9 @@
      * @param {Number} [config.shadowOpacity] shadow opacity.  Can be any real number
      *  between 0 and 1
      * @param {Array} [config.dashArray]
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
@@ -71,6 +71,13 @@
     Kinetic.TextPath = function(config) {
         this._initTextPath(config);
     };
+    
+    function _fillFunc(context) {
+        context.fillText(this.partialText, 0, 0);
+    }
+    function _strokeFunc(context) {
+        context.strokeText(this.partialText, 0, 0);
+    }
 
     Kinetic.TextPath.prototype = {
         _initTextPath: function(config) {
@@ -87,6 +94,11 @@
 
             // call super constructor
             Kinetic.Shape.call(this, config);
+
+            // overrides
+            this._fillFunc = _fillFunc;
+            this._strokeFunc = _strokeFunc;
+
             this.shapeType = 'TextPath';
             this._setDrawFuncs();
 
@@ -120,9 +132,8 @@
 
                 context.translate(p0.x, p0.y);
                 context.rotate(glyphInfo[i].rotation);
-
-                canvas.fillStrokeText(this, glyphInfo[i].text);
-
+                this.partialText = glyphInfo[i].text;
+                canvas.fillStroke(this);
                 context.restore();
 
                 //// To assist with debugging visually, uncomment following
@@ -136,7 +147,6 @@
                 // context.lineTo(p1.x, p1.y);
                 // context.stroke();
             }
-
             context.restore();
         },
         /**
@@ -355,11 +365,6 @@
     // add setters and getters
     Kinetic.Node.addGettersSetters(Kinetic.TextPath, ['fontFamily', 'fontSize', 'fontStyle']);
     Kinetic.Node.addGetters(Kinetic.TextPath, ['text']);
-
-    // reference Text methods
-    Kinetic.TextPath.prototype.fillText = Kinetic.Text.prototype.fillText;
-    Kinetic.TextPath.prototype.strokeText = Kinetic.Text.prototype.strokeText;
-    Kinetic.TextPath.prototype.fillStrokeText = Kinetic.Text.prototype.strokeText;
 
     /**
      * set font family

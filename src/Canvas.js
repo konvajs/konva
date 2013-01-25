@@ -220,7 +220,7 @@
         _fillColor: function(shape) {
             var context = this.context, fill = shape.getFill();
             context.fillStyle = fill;
-            context.fill(context);
+            shape._fillFunc(context);
         },
         _fillPattern: function(shape) {
             var context = this.context, fillPatternImage = shape.getFillPatternImage(), fillPatternX = shape.getFillPatternX(), fillPatternY = shape.getFillPatternY(), fillPatternScale = shape.getFillPatternScale(), fillPatternRotation = shape.getFillPatternRotation(), fillPatternOffset = shape.getFillPatternOffset(), fillPatternRepeat = shape.getFillPatternRepeat();
@@ -239,7 +239,7 @@
             }
 
             context.fillStyle = context.createPattern(fillPatternImage, fillPatternRepeat || 'repeat');
-            context.fill(context);
+            context.fill();
         },
         _fillLinearGradient: function(shape) {
             var context = this.context, start = shape.getFillLinearGradientStartPoint(), end = shape.getFillLinearGradientEndPoint(), colorStops = shape.getFillLinearGradientColorStops(), grd = context.createLinearGradient(start.x, start.y, end.x, end.y);
@@ -249,7 +249,7 @@
                 grd.addColorStop(colorStops[n], colorStops[n + 1]);
             }
             context.fillStyle = grd;
-            context.fill(context);
+            context.fill();
         },
         _fillRadialGradient: function(shape) {
             var context = this.context, start = shape.getFillRadialGradientStartPoint(), end = shape.getFillRadialGradientEndPoint(), startRadius = shape.getFillRadialGradientStartRadius(), endRadius = shape.getFillRadialGradientEndRadius(), colorStops = shape.getFillRadialGradientColorStops(), grd = context.createRadialGradient(start.x, start.y, startRadius, end.x, end.y, endRadius);
@@ -259,7 +259,7 @@
                 grd.addColorStop(colorStops[n], colorStops[n + 1]);
             }
             context.fillStyle = grd;
-            context.fill(context);
+            context.fill();
         },
         _fill: function(shape, skipShadow) {
             var context = this.context, fill = shape.getFill(), fillPatternImage = shape.getFillPatternImage(), fillLinearGradientStartPoint = shape.getFillLinearGradientStartPoint(), fillRadialGradientStartPoint = shape.getFillRadialGradientStartPoint();
@@ -303,7 +303,7 @@
                 }
                 context.lineWidth = strokeWidth || 2;
                 context.strokeStyle = stroke || 'black';
-                context.stroke(context);
+                shape._strokeFunc(context);
                 context.restore();
 
                 if(!skipShadow && shape.hasShadow()) {
@@ -344,7 +344,7 @@
             var context = this.context;
             context.save();
             context.fillStyle = '#' + shape.colorKey;
-            context.fill(context);
+            shape._fillFunc(context);
             context.restore();
         },
         _stroke: function(shape) {
@@ -354,7 +354,7 @@
                 context.save();
                 context.lineWidth = strokeWidth || 2;
                 context.strokeStyle = '#' + shape.colorKey;
-                context.stroke(context);
+                shape._strokeFunc(context);
                 context.restore();
             }
         }
