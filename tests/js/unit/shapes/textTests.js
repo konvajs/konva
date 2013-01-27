@@ -185,7 +185,7 @@ Test.Modules.Text = {
 
         layer.add(text);
         stage.add(layer);
-        
+
         test(text.getLineHeight() === 1, 'text line height should be defaulted to 1');
 
         /*
@@ -228,7 +228,7 @@ Test.Modules.Text = {
 
         layer.add(text);
         stage.add(layer);
-        
+
         //console.log(layer.toDataURL());
 
         warn(layer.toDataURL() === dataUrls['multiline text with shadows'], 'multi line text with shadows data url is incorrect');
@@ -266,5 +266,95 @@ Test.Modules.Text = {
         test(text.getWidth() > width, 'text box width should have increased.');
         test(text.getHeight() > height, 'text box height should have increased.');
 
+    },
+    'text everything enabled': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var text = new Kinetic.Text({
+            x: 10,
+            y: 10,
+            text: 'Some awesome text',
+            fontSize: 50,
+            fontFamily: 'Calibri',
+            fontStyle: 'bold',
+            fill: 'blue',
+            stroke: 'red',
+            strokeWidth: 2,
+            shadowColor: 'black',
+            shadowBlur: 10,
+            shadowOffset: 10,
+            fillEnabled: true,
+            strokeEnabled: true,
+            shadowEnabled: true
+        });
+        layer.add(text);
+        stage.add(layer);
+
+        //console.log(layer.toDataURL());
+        test(layer.toDataURL() === dataUrls['text everything enabled'], 'should be text with blue fill and red stroke');
+    },
+    'text fill disabled': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var text = new Kinetic.Text({
+            x: 10,
+            y: 10,
+            text: 'Some awesome text',
+            fontSize: 50,
+            fontFamily: 'Calibri',
+            fontStyle: 'bold',
+            fill: 'blue',
+            stroke: 'red',
+            strokeWidth: 2,
+            shadowColor: 'black',
+            shadowBlur: 10,
+            shadowOffset: 10,
+            fillEnabled: false,
+            strokeEnabled: true,
+            shadowEnabled: true
+        });
+        layer.add(text);
+        stage.add(layer);
+
+        //console.log(layer.toDataURL());
+        test(layer.toDataURL() === dataUrls['text fill disabled'], 'should be text with no fill and red stroke');
+    },
+    'text stroke disabled': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var text = new Kinetic.Text({
+            x: 10,
+            y: 10,
+            text: 'Some awesome text',
+            fontSize: 50,
+            fontFamily: 'Calibri',
+            fontStyle: 'bold',
+            fill: 'blue',
+            stroke: 'red',
+            strokeWidth: 2,
+            shadowColor: 'black',
+            shadowBlur: 10,
+            shadowOffset: 10,
+            fillEnabled: true,
+            strokeEnabled: false,
+            shadowEnabled: true
+        });
+        layer.add(text);
+        stage.add(layer);
+
+        //console.log(layer.toDataURL());
+        test(layer.toDataURL() === dataUrls['text stroke disabled'], 'should be text with blue fill and no stroke');
     }
 };
