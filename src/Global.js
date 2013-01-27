@@ -1,9 +1,9 @@
 /**
- * KineticJS JavaScript Framework v@version
+ * KineticJS JavaScript Framework v{{version}}
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: @date
+ * Date: {{date}}
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -29,7 +29,7 @@
  * @namespace
  */
 var Kinetic = {}; (function() {
-    Kinetic.version = '@version';
+    Kinetic.version = '{{version}}';
     /**
      * @namespace
      */

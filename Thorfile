@@ -143,11 +143,10 @@ class Build < Thor
     def replace_tokens(content, version) 
       date = Time.now.strftime("%b %d %Y")
       
-      # Add the version number
-      content.gsub!("@version", version)
-      
-      # Add the date
-      content.sub!("@date", date)
+      content.gsub!("{{version}}", version)
+      content.sub!("{{date}}", date)
+      content.gsub!("{{NodeParams}}", IO.read("configParams/NodeParams.txt"))
+      content.gsub!("{{ShapeParams}}", IO.read("configParams/ShapeParams.txt"))
       
       return content
     end

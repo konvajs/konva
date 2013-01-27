@@ -4,6 +4,7 @@
      * @constructor
      * @augments Kinetic.Node
      * @param {Object} config
+     * {{NodeParams}}
      */
     Kinetic.Container = function(config) {
         this._containerInit(config);
