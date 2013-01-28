@@ -1,4 +1,6 @@
 (function() {
+    var dd, html = document.getElementsByTagName('html')[0];
+
     Kinetic.DD = {
         anim: new Kinetic.Animation(),
         moving: false,
@@ -7,8 +9,17 @@
             y: 0
         }
     };
+
+    dd = Kinetic.DD;
+
+    //html.addEventListener('mousedown', _htmlMouseup);
+
+    Kinetic.getNodeDragging = function() {
+        return dd.node;
+    };
+
     Kinetic.DD._setupDragLayerAndGetContainer = function(no) {
-        var dd = Kinetic.DD, stage = no.getStage(), nodeType = no.nodeType, lastContainer, group;
+        var stage = no.getStage(), nodeType = no.nodeType, lastContainer, group;
 
         // re-construct node tree
         no._eachAncestorReverse(function(node) {
@@ -40,7 +51,7 @@
         stage.dragLayer.getCanvas().getElement().className = 'kinetic-drag-and-drop-layer';
     };
     Kinetic.DD._drag = function(evt) {
-        var dd = Kinetic.DD, node = dd.node;
+        var node = dd.node;
 
         if(node) {
             var pos = node.getStage().getUserPosition();
@@ -70,7 +81,7 @@
         }
     };
     Kinetic.DD._endDrag = function(evt) {
-        var dd = Kinetic.DD, node = dd.node, nodeType, stage;
+        var node = dd.node, nodeType, stage;
 
         if(node) { nodeType = node.nodeType, stage = node.getStage();
             node.setListening(true);
@@ -98,8 +109,8 @@
         delete dd.node;
         dd.anim.stop();
     };
-    Kinetic.Node.prototype._startDrag = function() {
-        var that = this, dd = Kinetic.DD, stage = this.getStage(), pos = stage.getUserPosition();
+    Kinetic.Node.prototype._startDrag = function(evt) {
+        var that = this, stage = this.getStage(), pos = stage.getUserPosition();
 
         if(pos) {
             var m = this.getTransform().getTranslation(), ap = this.getAbsolutePosition(), nodeType = this.nodeType, container;
@@ -164,13 +175,17 @@
      * @methodOf Kinetic.Node.prototype
      */
     Kinetic.Node.prototype.isDragging = function() {
-        var dd = Kinetic.DD;
         return dd.node && dd.node._id === this._id && dd.moving;
     };
 
     Kinetic.Node.prototype._listenDrag = function() {
         this._dragCleanup();
-        this.on('mousedown.kinetic touchstart.kinetic', this._startDrag);
+        var that = this;
+        this.on('mousedown.kinetic touchstart.kinetic', function(evt) {
+            if(!Kinetic.getNodeDragging()) {
+                that._startDrag(evt);
+            }
+        });
     };
 
     Kinetic.Node.prototype._dragChange = function() {

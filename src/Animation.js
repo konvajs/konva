@@ -138,4 +138,10 @@
         var raf = Kinetic.DD && Kinetic.DD.moving ? this.fixedRequestAnimFrame : RAF;
         raf(callback);
     };
+    
+    var moveTo = Kinetic.Node.prototype.moveTo;
+    Kinetic.Node.prototype.moveTo = function(container) {
+    	moveTo.call(this, container);
+    };
+
 })();

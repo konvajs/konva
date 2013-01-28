@@ -377,8 +377,9 @@
             }
         },
         _mousedown: function(evt) {
+        	var obj, dd = Kinetic.DD;
             this._setUserPosition(evt);
-            var obj = this.getIntersection(this.getUserPosition());
+            obj = this.getIntersection(this.getUserPosition());
             if(obj && obj.shape) {
                 var shape = obj.shape;
                 this.clickStart = true;
@@ -386,8 +387,8 @@
             }
 
             //init stage drag and drop
-            if(Kinetic.DD && this.attrs.draggable) {
-                this._startDrag();
+            if(dd && this.attrs.draggable && !dd.node) {
+                this._startDrag(evt);
             }
         },
         _mouseup: function(evt) {
@@ -425,9 +426,11 @@
             this.clickStart = false;
         },
         _touchstart: function(evt) {
+        	var obj, dd = Kinetic.DD;
+        	
             this._setUserPosition(evt);
             evt.preventDefault();
-            var obj = this.getIntersection(this.getUserPosition());
+            obj = this.getIntersection(this.getUserPosition());
 
             if(obj && obj.shape) {
                 var shape = obj.shape;
@@ -435,11 +438,9 @@
                 shape._handleEvent('touchstart', evt);
             }
 
-            /*
-             * init stage drag and drop
-             */
-            if(Kinetic.DD && this.attrs.draggable) {
-                this._startDrag();
+            // init stage drag and drop
+            if(dd && this.attrs.draggable && !dd.node) {
+                this._startDrag(evt);
             }
         },
         _touchend: function(evt) {

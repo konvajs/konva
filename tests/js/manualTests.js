@@ -1318,7 +1318,8 @@ Test.Modules.DRAG_AND_DROP = {
             offset: {
                 x: 50,
                 y: 25
-            }
+            },
+            dragOnTop: true
         });
 
         group.add(rect);
@@ -1327,8 +1328,44 @@ Test.Modules.DRAG_AND_DROP = {
 
         var anim = new Kinetic.Animation(function() {
             rect.rotate(0.01);
-
         }, layer);
         anim.start();
+    },
+    'stage and shape draggable': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            draggable: true
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+
+        var rect = new Kinetic.Rect({
+            x: 150,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true,
+        });
+        
+        var rect2 = new Kinetic.Rect({
+            x: 300,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'yellow',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true,
+        });
+
+        layer.add(rect).add(rect2);
+        stage.add(layer);
+
+
     }
 };
