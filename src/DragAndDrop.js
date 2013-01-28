@@ -1,6 +1,4 @@
 (function() {
-    var dd, html = document.getElementsByTagName('html')[0];
-
     Kinetic.DD = {
         anim: new Kinetic.Animation(),
         moving: false,
@@ -10,12 +8,8 @@
         }
     };
 
-    dd = Kinetic.DD;
-
-    //html.addEventListener('mousedown', _htmlMouseup);
-
     Kinetic.getNodeDragging = function() {
-        return dd.node;
+        return Kinetic.DD.node;
     };
 
     Kinetic.DD._setupDragLayerAndGetContainer = function(no) {
@@ -51,7 +45,7 @@
         stage.dragLayer.getCanvas().getElement().className = 'kinetic-drag-and-drop-layer';
     };
     Kinetic.DD._drag = function(evt) {
-        var node = dd.node;
+        var dd = Kinetic.DD, node = dd.node;
 
         if(node) {
             var pos = node.getStage().getUserPosition();
@@ -81,9 +75,10 @@
         }
     };
     Kinetic.DD._endDrag = function(evt) {
-        var node = dd.node, nodeType, stage;
+        var dd = Kinetic.DD, node = dd.node;
 
-        if(node) { nodeType = node.nodeType, stage = node.getStage();
+        if(node) {
+            var nodeType = node.nodeType, stage = node.getStage();
             node.setListening(true);
             if(nodeType === 'Stage') {
                 node.draw();
@@ -110,7 +105,7 @@
         dd.anim.stop();
     };
     Kinetic.Node.prototype._startDrag = function(evt) {
-        var that = this, stage = this.getStage(), pos = stage.getUserPosition();
+        var dd = Kinetic.DD, that = this, stage = this.getStage(), pos = stage.getUserPosition();
 
         if(pos) {
             var m = this.getTransform().getTranslation(), ap = this.getAbsolutePosition(), nodeType = this.nodeType, container;
@@ -175,6 +170,7 @@
      * @methodOf Kinetic.Node.prototype
      */
     Kinetic.Node.prototype.isDragging = function() {
+        var dd = Kinetic.DD;
         return dd.node && dd.node._id === this._id && dd.moving;
     };
 
@@ -249,4 +245,8 @@
      * @name getDragOnTop
      * @methodOf Kinetic.Node.prototype
      */
+
+    var html = document.getElementsByTagName('html')[0];
+    html.addEventListener('mouseup', Kinetic.DD._endDrag);
+    html.addEventListener('touchend', Kinetic.DD._endDrag);
 })();

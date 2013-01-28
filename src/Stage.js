@@ -395,11 +395,6 @@
             this._setUserPosition(evt);
             var that = this, dd = Kinetic.DD, obj = this.getIntersection(this.getUserPosition());
 
-            // end drag and drop
-            if(dd) {
-                dd._endDrag(evt);
-            }
-
             if(obj && obj.shape) {
                 var shape = obj.shape;
                 shape._handleEvent('mouseup', evt);
@@ -446,11 +441,6 @@
         _touchend: function(evt) {
             this._setUserPosition(evt);
             var that = this, dd = Kinetic.DD, obj = this.getIntersection(this.getUserPosition());
-
-            // end drag and drop
-            if(dd) {
-                dd._endDrag(evt);
-            }
 
             if(obj && obj.shape) {
                 var shape = obj.shape;

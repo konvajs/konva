@@ -1,13 +1,13 @@
 Test.Modules.DD = {
-	  'remove shape with onclick': function(containerId) {
+    'remove shape with onclick': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
             height: 200
         });
-        
+
         var top = stage.content.getBoundingClientRect().top;
-        
+
         var layer = new Kinetic.Layer();
 
         var circle = new Kinetic.Circle({
@@ -23,12 +23,17 @@ Test.Modules.DD = {
 
         layer.add(circle);
         stage.add(layer);
+        
+        function remove() {
+        	circle.remove();
+            layer.draw();
+            warn(layer.toDataURL() === dataUrls['cleared'], 'canvas should be cleared after removing shape onclick');
+        }
 
         circle.on('click', function() {
-        	this.remove();
-        	layer.draw();
+            setTimeout(remove, 0);
         });
-        
+
         stage._mousedown({
             clientX: 291,
             clientY: 112 + top
@@ -37,9 +42,9 @@ Test.Modules.DD = {
             clientX: 291,
             clientY: 112 + top
         });
-        
-        warn(layer.toDataURL() === dataUrls['cleared'], 'canvas should be cleared after removing shape onclick');
-
+        // end drag is tied to document mouseup and touchend event
+        // which can't be simulated.  call _endDrag manually
+        Kinetic.DD._endDrag();
     },
     'test dragstart, dragmove, dragend': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -80,7 +85,7 @@ Test.Modules.DD = {
         circle.on('dragend', function() {
             dragEnd = true;
             // test set draggable false after drag end
-            this.setDraggable(false);           
+            this.setDraggable(false);
         });
         warn(layer.toDataURL() === dataUrls['drag circle before'], 'start data url is incorrect');
         /*
@@ -109,6 +114,9 @@ Test.Modules.DD = {
             clientX: 100,
             clientY: 98 + top
         });
+        // end drag is tied to document mouseup and touchend event
+        // which can't be simulated.  call _endDrag manually
+        Kinetic.DD._endDrag();
 
         test(dragStart, 'dragstart event was not triggered');
         test(dragMove, 'dragmove event was not triggered');
@@ -177,6 +185,9 @@ Test.Modules.DD = {
             clientX: 100,
             clientY: 100 + top
         });
+        // end drag is tied to document mouseup and touchend event
+        // which can't be simulated.  call _endDrag manually
+        Kinetic.DD._endDrag();
 
         test(circle.getPosition().x === 380, 'circle x should be 380');
         test(circle.getPosition().y === 100, 'circle y should be 100');
@@ -243,6 +254,10 @@ Test.Modules.DD = {
             clientX: 210,
             clientY: 109 + top
         });
+        // end drag is tied to document mouseup and touchend event
+        // which can't be simulated.  call _endDrag manually
+        Kinetic.DD._endDrag();
+
         //console.log(layer.toDataURL())
         warn(layer.toDataURL() === dataUrls['drag layer after'], 'end data url is incorrect');
 
@@ -458,6 +473,9 @@ Test.Modules.EVENT = {
             clientX: 290,
             clientY: 100 + top
         });
+        // end drag is tied to document mouseup and touchend event
+        // which can't be simulated.  call _endDrag manually
+        Kinetic.DD._endDrag();
 
         test(mouseover, '4) mouseover should be true');
         test(mousemove, '4) mousemove should be true');
@@ -486,6 +504,9 @@ Test.Modules.EVENT = {
             clientX: 290,
             clientY: 100 + top
         });
+        // end drag is tied to document mouseup and touchend event
+        // which can't be simulated.  call _endDrag manually
+        Kinetic.DD._endDrag();
 
         test(mouseover, '6) mouseover should be true');
         test(mousemove, '6) mousemove should be true');
@@ -540,6 +561,9 @@ Test.Modules.EVENT = {
             preventDefault: function() {
             }
         });
+        // end drag is tied to document mouseup and touchend event
+        // which can't be simulated.  call _endDrag manually
+        Kinetic.DD._endDrag();
 
         test(touchstart, '9) touchstart should be true');
         test(!touchmove, '9) touchmove should be false');
@@ -568,6 +592,9 @@ Test.Modules.EVENT = {
             preventDefault: function() {
             }
         });
+        // end drag is tied to document mouseup and touchend event
+        // which can't be simulated.  call _endDrag manually
+        Kinetic.DD._endDrag();
 
         test(touchstart, '11) touchstart should be true');
         test(!touchmove, '11) touchmove should be false');
@@ -892,6 +919,9 @@ Test.Modules.EVENT = {
             clientX: 374,
             clientY: 114 + top
         });
+        // end drag is tied to document mouseup and touchend event
+        // which can't be simulated.  call _endDrag manually
+        Kinetic.DD._endDrag();
 
         test(e.toString() === 'circle,group1,group2,layer,stage', 'problem with event bubbling');
     }
