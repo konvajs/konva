@@ -500,17 +500,9 @@ Test.Modules.NODE = {
         test(!layer2.isVisible(), 'layer2 should be invisible');
         test(layer2.canvas.element.style.display === 'none', 'layer canvas element display should be none');
 
-        //console.log(layer1.toDataURL());
-
-        stage.toDataURL({
-            callback: function(dataUrl) {
-                //console.log(dataUrl);
-
-                layer2.show();
-                test(layer2.isVisible(), 'layer2 should be visible');
-                test(layer2.canvas.element.style.display === 'block', 'layer canvas element display should be block');
-            }
-        });
+        layer2.show();
+        test(layer2.isVisible(), 'layer2 should be visible');
+        test(layer2.canvas.element.style.display === 'block', 'layer canvas element should be block');
 
     },
     'rotation in degrees': function(containerId) {
@@ -2542,11 +2534,113 @@ Test.Modules.NODE = {
         });
 
         setTimeout(function() {
-        	test(rect.transAnim.isRunning(), 'rect trans should be running before destroying it');
+            test(rect.transAnim.isRunning(), 'rect trans should be running before destroying it');
             rect.destroy();
             test(!rect.transAnim.isRunning(), 'rect trans should not be running after destroying it');
             layer.draw();
             warn(layer.toDataURL() === dataUrls['cleared'], 'transitioning rectangle should have been destroyed and removed from the screen');
         }, 1000);
+    },
+    'hide stage': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true,
+            rotationDeg: 60,
+            scale: {
+                x: 2,
+                y: 1
+            }
+        });
+
+        group.add(rect);
+        layer.add(group);
+        stage.add(layer);
+
+        stage.hide();
+        stage.draw();
+        
+        // TODO: stage hide() fails.  also need to find a good way to test this
+
+    },
+    'hide layer': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true,
+            rotationDeg: 60,
+            scale: {
+                x: 2,
+                y: 1
+            }
+        });
+
+        group.add(rect);
+        layer.add(group);
+        stage.add(layer);
+
+        layer.hide();
+        layer.draw();
+        test(layer.toDataURL() === dataUrls['cleared'], 'layer is still visible');
+    },
+    'hide group': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true,
+            rotationDeg: 60,
+            scale: {
+                x: 2,
+                y: 1
+            }
+        });
+
+        group.add(rect);
+        layer.add(group);
+        stage.add(layer);
+
+        group.hide();
+        layer.draw();
+
+        test(layer.toDataURL() === dataUrls['cleared'], 'group is still visible');
     }
 };

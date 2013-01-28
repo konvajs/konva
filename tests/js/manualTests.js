@@ -1,5 +1,257 @@
-Test.Modules.MANUAL = {
-    'EVENTS - mousedown mouseup mouseover mouseout mousemove click dblclick / touchstart touchend touchmove tap dbltap': function(containerId) {
+Test.Modules.TRANSITION = {
+    'transition position and rotation': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 100,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            shadowColor: 'black',
+            shadowOffset: 10,
+            shadowOpacity: 0.5
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        rect.transitionTo({
+            duration: 2,
+            shadowOffset: {
+                x: 80
+            },
+            x: 400,
+            y: 30,
+            rotation: Math.PI * 2,
+            easing: 'bounce-ease-out'
+        });
+
+    },
+    'all transition types': function(containerId) {
+        document.getElementById(containerId).style.height = '300px';
+
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 300
+        });
+        var layer = new Kinetic.Layer();
+
+        var easings = ['linear', 'ease-in', 'ease-out', 'ease-in-out', 'back-ease-in', 'back-ease-out', 'back-ease-in-out', 'elastic-ease-in', 'elastic-ease-out', 'elastic-ease-in-out', 'bounce-ease-out', 'bounce-ease-in', 'bounce-ease-in-out', 'strong-ease-in', 'strong-ease-out', 'strong-ease-in-out'];
+        for(var n = 0; n < easings.length; n++) {
+            var rect = new Kinetic.Rect({
+                x: 10,
+                y: 10 + (n * 200 / easings.length),
+                width: 100,
+                height: 10,
+                fill: 'green',
+                stroke: 'black',
+                strokeWidth: 2
+            });
+
+            layer.add(rect);
+
+            rect.transitionTo({
+                duration: 2,
+                width: 500,
+                easing: easings[n]
+            });
+        }
+
+        stage.add(layer);
+    },
+    'ease-in, ease-out, ease-in-out hovers': function(containerId) {
+        function addHovers(shape, easing) {
+            shape.on("mouseover", function() {
+                this.transitionTo({
+                    scale: {
+                        x: 1.5,
+                        y: 1.5
+                    },
+                    duration: 1,
+                    easing: easing
+                });
+            });
+            shape.on("mouseout", function() {
+                this.transitionTo({
+                    scale: {
+                        x: 1,
+                        y: 1
+                    },
+                    duration: 1,
+                    easing: easing
+                });
+            });
+        }
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var greenBox = new Kinetic.Rect({
+            x: 50,
+            y: stage.getHeight() / 2 - 25,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            offset: {
+                x: 50,
+                y: 25
+            }
+        });
+
+        var blueBox = new Kinetic.Rect({
+            x: stage.getWidth() / 2 - 50,
+            y: stage.getHeight() / 2 - 25,
+            width: 100,
+            height: 50,
+            fill: 'blue',
+            stroke: 'black',
+            strokeWidth: 4,
+            offset: {
+                x: 50,
+                y: 25
+            }
+        });
+
+        var redBox = new Kinetic.Rect({
+            x: 428,
+            y: stage.getHeight() / 2 - 25,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4,
+            offset: {
+                x: 50,
+                y: 25
+            }
+        });
+
+        addHovers(greenBox, "ease-in");
+        addHovers(blueBox, "ease-out");
+        addHovers(redBox, "ease-in-out");
+
+        layer.add(greenBox);
+        layer.add(blueBox);
+        layer.add(redBox);
+        stage.add(layer);
+    }
+};
+
+
+Test.Modules.ANIMATION = {
+	'start and stop animation': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        var amplitude = 150;
+        var period = 1000;
+        // in ms
+        var centerX = stage.getWidth() / 2 - 100 / 2;
+
+        var anim = new Kinetic.Animation(function(frame) {
+            rect.attrs.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
+        }, layer);
+
+        anim.start();
+
+        setTimeout(function() {
+            anim.stop();
+        }, 3000);
+    },
+    'test multiple animations': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var greenRect = new Kinetic.Rect({
+            x: 200,
+            y: 20,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        var blueRect = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'blue',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(greenRect);
+        layer.add(blueRect);
+        stage.add(layer);
+
+        var amplitude = 150;
+        var period = 1000;
+        // in ms
+        var centerX = stage.getWidth() / 2 - 100 / 2;
+
+        var greenAnim = new Kinetic.Animation(function(frame) {
+            greenRect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
+        }, layer);
+        var blueAnim = new Kinetic.Animation(function(frame) {
+            blueRect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
+        }, layer);
+
+        greenAnim.start();
+
+        setTimeout(function() {
+            blueAnim.start();
+        }, 1000);
+        setTimeout(function() {
+            greenAnim.stop();
+        }, 2000);
+        setTimeout(function() {
+            blueAnim.stop();
+        }, 3000);
+        setTimeout(function() {
+            greenAnim.start();
+        }, 4000);
+        setTimeout(function() {
+            greenAnim.stop();
+        }, 5000);
+    }
+};
+
+
+Test.Modules.EVENTS = {
+    'mousedown mouseup mouseover mouseout mousemove click dblclick / touchstart touchend touchmove tap dbltap': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -68,253 +320,7 @@ Test.Modules.MANUAL = {
         layer.add(circle);
         stage.add(layer);
     },
-    'TRANSITION - transition position and rotation': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
-            x: 100,
-            y: 100,
-            width: 100,
-            height: 50,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4,
-            shadowColor: 'black',
-            shadowOffset: 10,
-            shadowOpacity: 0.5
-        });
-
-        layer.add(rect);
-        stage.add(layer);
-
-        rect.transitionTo({
-            duration: 2,
-            shadowOffset: {
-                x: 80
-            },
-            x: 400,
-            y: 30,
-            rotation: Math.PI * 2,
-            easing: 'bounce-ease-out'
-        });
-       
-    },
-    'TRANSITION - all transition types': function(containerId) {
-        document.getElementById(containerId).style.height = '300px';
-
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 300
-        });
-        var layer = new Kinetic.Layer();
-
-        var easings = ['linear', 'ease-in', 'ease-out', 'ease-in-out', 'back-ease-in', 'back-ease-out', 'back-ease-in-out', 'elastic-ease-in', 'elastic-ease-out', 'elastic-ease-in-out', 'bounce-ease-out', 'bounce-ease-in', 'bounce-ease-in-out', 'strong-ease-in', 'strong-ease-out', 'strong-ease-in-out'];
-        for(var n = 0; n < easings.length; n++) {
-            var rect = new Kinetic.Rect({
-                x: 10,
-                y: 10 + (n * 200 / easings.length),
-                width: 100,
-                height: 10,
-                fill: 'green',
-                stroke: 'black',
-                strokeWidth: 2
-            });
-
-            layer.add(rect);
-
-            rect.transitionTo({
-                duration: 2,
-                width: 500,
-                easing: easings[n]
-            });
-        }
-
-        stage.add(layer);
-    },
-    'ANIMATION - start and stop animation': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
-            x: 200,
-            y: 100,
-            width: 100,
-            height: 50,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-
-        layer.add(rect);
-        stage.add(layer);
-
-        var amplitude = 150;
-        var period = 1000;
-        // in ms
-        var centerX = stage.getWidth() / 2 - 100 / 2;
-
-        var anim = new Kinetic.Animation(function(frame) {
-                rect.attrs.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
-            }, layer);
-
-        anim.start();
-
-        setTimeout(function() {
-            anim.stop();
-        }, 3000);
-    },
-    'ANIMATION - test multiple animations': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var greenRect = new Kinetic.Rect({
-            x: 200,
-            y: 20,
-            width: 100,
-            height: 50,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-
-        var blueRect = new Kinetic.Rect({
-            x: 200,
-            y: 100,
-            width: 100,
-            height: 50,
-            fill: 'blue',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-
-        layer.add(greenRect);
-        layer.add(blueRect);
-        stage.add(layer);
-
-        var amplitude = 150;
-        var period = 1000;
-        // in ms
-        var centerX = stage.getWidth() / 2 - 100 / 2;
-
-        var greenAnim = new Kinetic.Animation(function(frame) {
-            greenRect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
-        }, layer);
-        var blueAnim = new Kinetic.Animation(function(frame) {
-            blueRect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
-        }, layer);
-
-        greenAnim.start();
-
-        setTimeout(function() {
-            blueAnim.start();
-        }, 1000);
-        setTimeout(function() {
-            greenAnim.stop();
-        }, 2000);
-        setTimeout(function() {
-            blueAnim.stop();
-        }, 3000);
-        setTimeout(function() {
-            greenAnim.start();
-        }, 4000);
-        setTimeout(function() {
-            greenAnim.stop();
-        }, 5000);
-
-    },
-    'TRANSITION - ease-in, ease-out, ease-in-out hovers': function(containerId) {
-        function addHovers(shape, easing) {
-            shape.on("mouseover", function() {
-                this.transitionTo({
-                    scale: {
-                        x: 1.5,
-                        y: 1.5
-                    },
-                    duration: 1,
-                    easing: easing
-                });
-            });
-            shape.on("mouseout", function() {
-                this.transitionTo({
-                    scale: {
-                        x: 1,
-                        y: 1
-                    },
-                    duration: 1,
-                    easing: easing
-                });
-            });
-        }
-
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var greenBox = new Kinetic.Rect({
-            x: 50,
-            y: stage.getHeight() / 2 - 25,
-            width: 100,
-            height: 50,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4,
-            offset: {
-                x: 50,
-                y: 25
-            }
-        });
-
-        var blueBox = new Kinetic.Rect({
-            x: stage.getWidth() / 2 - 50,
-            y: stage.getHeight() / 2 - 25,
-            width: 100,
-            height: 50,
-            fill: 'blue',
-            stroke: 'black',
-            strokeWidth: 4,
-            offset: {
-                x: 50,
-                y: 25
-            }
-        });
-
-        var redBox = new Kinetic.Rect({
-            x: 428,
-            y: stage.getHeight() / 2 - 25,
-            width: 100,
-            height: 50,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 4,
-            offset: {
-                x: 50,
-                y: 25
-            }
-        });
-
-        addHovers(greenBox, "ease-in");
-        addHovers(blueBox, "ease-out");
-        addHovers(redBox, "ease-in-out");
-
-        layer.add(greenBox);
-        layer.add(blueBox);
-        layer.add(redBox);
-        stage.add(layer);
-    },
-    'EVENTS - modify fill stroke and stroke width on hover with star': function(containerId) {
+    'modify fill stroke and stroke width on hover with star': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -351,7 +357,7 @@ Test.Modules.MANUAL = {
         layer.add(star);
         stage.add(layer);
     },
-    'EVENTS - modify fill stroke and stroke width on hover with image': function(containerId) {
+    'modify fill stroke and stroke width on hover with image': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = new Kinetic.Stage({
@@ -380,12 +386,12 @@ Test.Modules.MANUAL = {
 
             layer.add(darth);
             stage.add(layer);
-            
-             //document.body.appendChild(layer.bufferCanvas.element)
+
+            //document.body.appendChild(layer.bufferCanvas.element)
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
-    'EVENTS - star pixel detection': function(containerId) {
+    'star pixel detection': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -420,7 +426,7 @@ Test.Modules.MANUAL = {
 
         showHit(layer);
     },
-    'EVENTS - drag events click': function(containerId) {
+    'drag events click': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -457,7 +463,7 @@ Test.Modules.MANUAL = {
         layer.add(Circle);
         stage.add(layer);
     },
-    'EVENTS - move mouse from shape to another shape in same layer': function(containerId) {
+    'move mouse from shape to another shape in same layer': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -506,7 +512,7 @@ Test.Modules.MANUAL = {
 
         //document.body.appendChild(layer.bufferCanvas.element);
     },
-    'EVENTS - move mouse from shape in one group to shape in another group': function(containerId) {
+    'move mouse from shape in one group to shape in another group': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -555,7 +561,7 @@ Test.Modules.MANUAL = {
 
         stage.add(layer);
     },
-    'EVENTS - move mouse from shape in one layer to shape in another layer': function(containerId) {
+    'move mouse from shape in one layer to shape in another layer': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -601,7 +607,7 @@ Test.Modules.MANUAL = {
         stage.add(redLayer);
         stage.add(greenLayer);
     },
-    'EVENTS - mousemove from shape in one group to shape in another group': function(containerId) {
+    'mousemove from shape in one group to shape in another group': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -644,7 +650,7 @@ Test.Modules.MANUAL = {
 
         stage.add(layer);
     },
-    'EVENTS - group mousemove events': function(containerId) {
+    'group mousemove events': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -681,7 +687,7 @@ Test.Modules.MANUAL = {
         layer.add(group);
         stage.add(layer);
     },
-    'EVENTS - cancel event bubbling (only the red Circle should fire click event)': function(containerId) {
+    'cancel event bubbling (only the red Circle should fire click event)': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -716,7 +722,7 @@ Test.Modules.MANUAL = {
         layer.add(group);
         stage.add(layer);
     },
-    'EVENTS - get currentTarget': function(containerId) {
+    'get currentTarget': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -743,7 +749,7 @@ Test.Modules.MANUAL = {
         layer.add(group);
         stage.add(layer);
     },
-    'EVENTS - shape mouseout handlers when mouse leaves stage': function(containerId) {
+    'shape mouseout handlers when mouse leaves stage': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -767,8 +773,11 @@ Test.Modules.MANUAL = {
 
         layer.add(redCircle);
         stage.add(layer);
-    }, 
-    'DRAG AND DROP - drag and drop elastic star with shadow': function(containerId) {
+    }
+};
+
+Test.Modules.DRAG_AND_DROP = {
+    'drag and drop elastic star with shadow': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -789,7 +798,7 @@ Test.Modules.MANUAL = {
             shadowColor: '#aaa',
             shadowBlur: 10,
             shadowOffset: {
-           		x: 5,
+                x: 5,
                 y: 5
             },
             draggable: true,
@@ -802,47 +811,47 @@ Test.Modules.MANUAL = {
         layer.draw();
 
         var trans = null;
-/*
-        star.on('dragstart', function() {
-            if(trans) {
-                trans.stop();
-            }
+        /*
+         star.on('dragstart', function() {
+         if(trans) {
+         trans.stop();
+         }
 
-            star.setAttrs({
-                shadow: {
-                    offset: {
-                        x: 15,
-                        y: 15
-                    }
-                },
-                offset: {
-                    x: 10,
-                    y: 10
-                }
-            });
-        });
+         star.setAttrs({
+         shadow: {
+         offset: {
+         x: 15,
+         y: 15
+         }
+         },
+         offset: {
+         x: 10,
+         y: 10
+         }
+         });
+         });
 
-        star.on('dragend', function() {
-            trans = star.transitionTo({
-                duration: 0.5,
-                easing: 'elastic-ease-out',
-                shadow: {
-                    offset: {
-                        x: 5,
-                        y: 5
-                    }
-                },
-                offset: {
-                    x: 0,
-                    y: 0
-                }
-            })
-        });
-        */
-        
+         star.on('dragend', function() {
+         trans = star.transitionTo({
+         duration: 0.5,
+         easing: 'elastic-ease-out',
+         shadow: {
+         offset: {
+         x: 5,
+         y: 5
+         }
+         },
+         offset: {
+         x: 0,
+         y: 0
+         }
+         })
+         });
+         */
+
         showHit(layer);
     },
-    'DRAG AND DROP - two draggable shapes': function(containerId) {
+    'two draggable shapes': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -881,7 +890,7 @@ Test.Modules.MANUAL = {
 
         //Circle.savePixels();
     },
-    'DRAG AND DROP - drag and drop stage': function(containerId) {
+    'drag and drop stage': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -900,10 +909,10 @@ Test.Modules.MANUAL = {
 
         layer.add(Circle);
         stage.add(layer);
-        
+
         showHit(layer)
     },
-    'DRAG AND DROP - draggable true false': function(containerId) {
+    'draggable true false': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -926,7 +935,7 @@ Test.Modules.MANUAL = {
 
         Circle.setDraggable(false);
     },
-    'DRAG AND DROP - scale and rotate stage after add layer then drag and drop shape': function(containerId) {
+    'scale and rotate stage after add layer then drag and drop shape': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -958,7 +967,7 @@ Test.Modules.MANUAL = {
 
         stage.draw();
     },
-    'DRAG AND DROP - scale stage before add shape then drag and drop shape': function(containerId) {
+    'scale stage before add shape then drag and drop shape': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -980,7 +989,7 @@ Test.Modules.MANUAL = {
         layer.add(Circle);
         stage.add(layer);
     },
-    'DRAG AND DROP - set stage scale to 1.5 after add layer then drag and drop shape': function(containerId) {
+    'set stage scale to 1.5 after add layer then drag and drop shape': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1005,7 +1014,7 @@ Test.Modules.MANUAL = {
 
         stage.draw();
     },
-    'DRAG AND DROP - drag bound function': function(containerId) {
+    'drag bound function': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1085,7 +1094,7 @@ Test.Modules.MANUAL = {
         layer.add(circle);
         stage.add(layer);
     },
-    'DRAG AND DROP - set stage scale to 1.5 before add layer then drag and drop shape': function(containerId) {
+    'set stage scale to 1.5 before add layer then drag and drop shape': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1108,7 +1117,7 @@ Test.Modules.MANUAL = {
         layer.add(Circle);
         stage.add(layer);
     },
-    'DRAG AND DROP - check that green events are ignored when dragging red Circle': function(containerId) {
+    'check that green events are ignored when dragging red Circle': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1143,7 +1152,7 @@ Test.Modules.MANUAL = {
         layer.add(Circle2);
         stage.add(layer);
     },
-    'DRAG AND DROP - drag and drop constrianed horizontally inside positioned group': function(containerId) {
+    'drag and drop constrianed horizontally inside positioned group': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1163,7 +1172,10 @@ Test.Modules.MANUAL = {
             strokeWidth: 4,
             draggable: true,
             dragBoundFunc: function(pos) {
-            	return {x:pos.x, y:this.getAbsolutePosition().y};
+                return {
+                    x: pos.x,
+                    y: this.getAbsolutePosition().y
+                };
             }
         });
 
@@ -1171,7 +1183,7 @@ Test.Modules.MANUAL = {
         layer.add(group);
         stage.add(layer);
     },
-    'DRAG AND DROP - drag and drop with left bounds': function(containerId) {
+    'drag and drop with left bounds': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1187,16 +1199,18 @@ Test.Modules.MANUAL = {
             strokeWidth: 4,
             draggable: true,
             dragBoundFunc: function(pos) {
-            	var newX = pos.x > 50 ? pos.x : 50;
-            	return {x: newX, y:this.getY()}
+                var newX = pos.x > 50 ? pos.x : 50;
+                return {
+                    x: newX,
+                    y: this.getY()
+                }
             }
         });
 
         layer.add(Circle);
         stage.add(layer);
     },
-
-    'DRAG AND DROP - drag and drop shape inside scrollable div': function(containerId) {
+    'drag and drop shape inside scrollable div': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1221,7 +1235,7 @@ Test.Modules.MANUAL = {
         layer.add(Circle);
         stage.add(layer);
     },
-    'DRAG AND DROP - drag and drop shape inside scaled group': function(containerId) {
+    'drag and drop shape inside scaled group': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1249,7 +1263,7 @@ Test.Modules.MANUAL = {
         layer.add(group);
         stage.add(layer);
     },
-    'DRAG AND DROP - translate, rotate, and scale shape, and then drag and drop': function(containerId) {
+    'translate, rotate, and scale shape, and then drag and drop': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1278,7 +1292,7 @@ Test.Modules.MANUAL = {
         layer.add(group);
         stage.add(layer);
     },
-    'DRAG AND DROP - translate, rotate, center offset, and scale shape, and then drag and drop': function(containerId) {
+    'translate, rotate, center offset, and scale shape, and then drag and drop': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1312,179 +1326,9 @@ Test.Modules.MANUAL = {
         stage.add(layer);
 
         var anim = new Kinetic.Animation(function() {
-                rect.rotate(0.01);
+            rect.rotate(0.01);
 
-            }, layer);
+        }, layer);
         anim.start();
-    },
-    'STAGE - hide stage': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-
-        var rect = new Kinetic.Rect({
-            x: 200,
-            y: 100,
-            width: 100,
-            height: 50,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 4,
-            draggable: true,
-            rotationDeg: 60,
-            scale: {
-                x: 2,
-                y: 1
-            }
-        });
-
-        group.add(rect);
-        layer.add(group);
-        stage.add(layer);
-
-        stage.hide();
-        stage.draw();
-    },
-    'STAGE - hide layer': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-
-        var rect = new Kinetic.Rect({
-            x: 200,
-            y: 100,
-            width: 100,
-            height: 50,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 4,
-            draggable: true,
-            rotationDeg: 60,
-            scale: {
-                x: 2,
-                y: 1
-            }
-        });
-
-        group.add(rect);
-        layer.add(group);
-        stage.add(layer);
-
-        layer.hide();
-
-        stage.draw();
-    },
-    'STAGE - hide group': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-
-        var rect = new Kinetic.Rect({
-            x: 200,
-            y: 100,
-            width: 100,
-            height: 50,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 4,
-            draggable: true,
-            rotationDeg: 60,
-            scale: {
-                x: 2,
-                y: 1
-            }
-        });
-
-        group.add(rect);
-        layer.add(group);
-        stage.add(layer);
-
-        group.hide();
-
-        stage.draw();
-    },
-    'STAGE - save image as png (click on Circle to open new window)': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-
-        var Circle = new Kinetic.Circle({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'violet',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-
-        Circle.on('click', function() {
-            window.open(layer.toDataURL());
-        });
-
-        layer.add(Circle);
-        stage.add(layer);
-    },
-    'STAGE - save image as low quality jpg (click on Circle to open new window)': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-
-        var Circle = new Kinetic.Circle({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'violet',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-
-        Circle.on('click', function() {
-            window.open(layer.toDataURL('image/jpeg', 0));
-        });
-
-        layer.add(Circle);
-        stage.add(layer);
-    },
-    'STAGE - save image as high quality jpg (click on Circle to open new window)': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-
-        var Circle = new Kinetic.Circle({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'violet',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-
-        Circle.on('click', function() {
-            window.open(layer.toDataURL('image/jpeg', 1));
-        });
-
-        layer.add(Circle);
-        stage.add(layer);
     }
 };

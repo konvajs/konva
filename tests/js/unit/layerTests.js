@@ -75,6 +75,84 @@ Test.Modules.LAYER = {
         });
         warn(dataUrls['stacked green circles'] === layer.toDataURL(), 'stacked green circles layer data url is incorrect');
 
+    },
+    'save layer as png (click on Circle to open new window)': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var Circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'violet',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        Circle.on('click', function() {
+            window.open(layer.toDataURL());
+        });
+
+        layer.add(Circle);
+        stage.add(layer);
+    },
+    'save layer as low quality jpg (click on Circle to open new window)': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'violet',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        circle.on('click', function() {
+            window.open(layer.toDataURL({
+               mimeType: 'image/jpeg',
+               quality: 0.2
+            }));
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+    },
+    'save layer as high quality jpg (click on Circle to open new window)': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'violet',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        circle.on('click', function() {
+            window.open(layer.toDataURL({
+               mimeType: 'image/jpeg',
+               quality: 1
+            }));
+        });
+
+        layer.add(circle);
+        stage.add(layer);
     }
 };
 
