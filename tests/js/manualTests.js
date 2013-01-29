@@ -912,14 +912,16 @@ Test.Modules.DRAG_AND_DROP = {
 
         showHit(layer)
     },
-    'draggable true false': function(containerId) {
+    'draggable true': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
             height: 200
         });
-        var layer = new Kinetic.Layer();
-        var Circle = new Kinetic.Circle({
+        var layer = new Kinetic.Layer({
+        	id: 'myLayer'
+        });
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -928,12 +930,15 @@ Test.Modules.DRAG_AND_DROP = {
             strokeWidth: 4
         });
 
-        Circle.setDraggable(true);
+        circle.setDraggable(true);
 
-        layer.add(Circle);
+        layer.add(circle);
         stage.add(layer);
+        
+        circle.on('dragmove', function() {
+            console.log(this.getLayer().getId());
+        });
 
-        Circle.setDraggable(false);
     },
     'scale and rotate stage after add layer then drag and drop shape': function(containerId) {
         var stage = new Kinetic.Stage({

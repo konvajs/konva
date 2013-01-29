@@ -657,9 +657,7 @@
             var classType = this.shapeType || this.nodeType;
             var node = new Kinetic[classType](this.attrs);
 
-            /*
-             * copy over user listeners
-             */
+            // copy over user listeners
             for(var key in this.eventListeners) {
                 var allListeners = this.eventListeners[key];
                 var len = allListeners.length;

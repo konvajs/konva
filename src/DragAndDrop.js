@@ -18,22 +18,12 @@
         // re-construct node tree
         no._eachAncestorReverse(function(node) {
             if(node.nodeType === 'Layer') {
-                stage.dragLayer.setAttrs({
-                    x: node.getX(),
-                    y: node.getY(),
-                    scale: node.getScale(),
-                    rotation: node.getRotation()
-                });
+                stage.dragLayer.setAttrs(node.getAttrs());
                 lastContainer = stage.dragLayer;
                 stage.add(stage.dragLayer);
             }
             else if(node.nodeType === 'Group') {
-                group = new Kinetic.Group({
-                    x: node.getX(),
-                    y: node.getY(),
-                    scale: node.getScale(),
-                    rotation: node.getRotation()
-                });
+                group = new Kinetic.Group(node.getAttrs());
                 lastContainer.add(group);
                 lastContainer = group;
             }
