@@ -73,6 +73,7 @@
             if(nodeType === 'Stage') {
                 node.draw();
             }
+            // else if group, shape, or layer
             else {
                 if((nodeType === 'Group' || nodeType === 'Shape') && node.getDragOnTop() && dd.prevParent) {
                     node.moveTo(dd.prevParent);
@@ -82,6 +83,9 @@
 
                 node.getLayer().draw();
             }
+            
+            delete dd.node;
+            dd.anim.stop();
 
             // only fire dragend event if the drag and drop
             // operation actually started.  This can be detected by
@@ -91,8 +95,6 @@
                 node._handleEvent('dragend', evt);
             }
         }
-        delete dd.node;
-        dd.anim.stop();
     };
     Kinetic.Node.prototype._startDrag = function(evt) {
         var dd = Kinetic.DD, that = this, stage = this.getStage(), pos = stage.getUserPosition();
