@@ -238,7 +238,10 @@
      * @methodOf Kinetic.Node.prototype
      */
 
+    // listen for capturing phase so that the _endDrag method is
+    // called before the stage mouseup event is triggered in order
+    // to render the hit graph just in time to pick up the event
     var html = document.getElementsByTagName('html')[0];
-    html.addEventListener('mouseup', Kinetic.DD._endDrag);
-    html.addEventListener('touchend', Kinetic.DD._endDrag);
+    html.addEventListener('mouseup', Kinetic.DD._endDrag, true);
+    html.addEventListener('touchend', Kinetic.DD._endDrag, true);
 })();

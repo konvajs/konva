@@ -46,7 +46,7 @@ Test.Modules.DD = {
         // which can't be simulated.  call _endDrag manually
         Kinetic.DD._endDrag();
     },
-    'test dragstart, dragmove, dragend': function(containerId) {
+    '*test dragstart, dragmove, dragend': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -73,6 +73,7 @@ Test.Modules.DD = {
         var dragStart = false;
         var dragMove = false;
         var dragEnd = false;
+        var mouseup = false;
 
         circle.on('dragstart', function() {
             dragStart = true;
@@ -85,8 +86,13 @@ Test.Modules.DD = {
         circle.on('dragend', function() {
             dragEnd = true;
             // test set draggable false after drag end
-            this.setDraggable(false);
+            //this.setDraggable(false);
         });
+        
+        circle.on('mouseup', function() {
+            console.log('mousup')
+        });
+        
         warn(layer.toDataURL() === dataUrls['drag circle before'], 'start data url is incorrect');
         /*
         * simulate drag and drop
@@ -121,7 +127,7 @@ Test.Modules.DD = {
         test(dragStart, 'dragstart event was not triggered');
         test(dragMove, 'dragmove event was not triggered');
         test(dragEnd, 'dragend event was not triggered');
-        test(!circle.getDraggable(), 'circle should no longer be draggable');
+        //test(!circle.getDraggable(), 'circle should no longer be draggable');
 
         warn(layer.toDataURL() === dataUrls['drag circle after'], 'end data url is incorrect');
     },
