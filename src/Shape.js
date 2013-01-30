@@ -102,27 +102,51 @@
             var p = hitCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
             return p[3] > 0;
         },
+        /**
+         * enable fill
+         */
         enableFill: function() {
             this.setAttr('fillEnabled', true);
         },
+        /**
+         * disable fill
+         */
         disableFill: function() {
             this.setAttr('fillEnabled', false);
         },
+        /**
+         * enable stroke
+         */
         enableStroke: function() {
             this.setAttr('strokeEnabled', true);
         },
+        /**
+         * disable stroke
+         */
         disableStroke: function() {
             this.setAttr('strokeEnabled', false);
         },
+        /**
+         * enable shadow
+         */
         enableShadow: function() {
             this.setAttr('shadowEnabled', true);
         },
+        /**
+         * disable shadow
+         */
         disableShadow: function() {
             this.setAttr('shadowEnabled', false);
         },
+        /**
+         * enable dash array
+         */
         enableDashArray: function() {
             this.setAttr('dashArrayEnabled', true);
         },
+        /**
+         * disable dash array
+         */
         disableDashArray: function() {
             this.setAttr('dashArrayEnabled', false);
         },
