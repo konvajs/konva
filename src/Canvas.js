@@ -262,7 +262,7 @@
             context.fill();
         },
         _fill: function(shape, skipShadow) {
-            var context = this.context, fill = shape.getFill(), fillPatternImage = shape.getFillPatternImage(), fillLinearGradientStartPoint = shape.getFillLinearGradientStartPoint(), fillRadialGradientStartPoint = shape.getFillRadialGradientStartPoint();
+            var context = this.context, fill = shape.getFill(), fillPatternImage = shape.getFillPatternImage(), fillLinearGradientStartPoint = shape.getFillLinearGradientStartPoint(), fillRadialGradientStartPoint = shape.getFillRadialGradientStartPoint(), fillPriority = shape.getFillPriority();
 
             context.save();
 
@@ -270,7 +270,21 @@
                 this._applyShadow(shape);
             }
 
-            if(fill) {
+            // priority fills
+            if(fill && fillPriority === 'color') {
+                this._fillColor(shape);
+            }
+            else if(fillPatternImage && fillPriority === 'pattern') {
+                this._fillPattern(shape);
+            }
+            else if(fillLinearGradientStartPoint && fillPriority === 'linear-gradient') {
+                this._fillLinearGradient(shape);
+            }
+            else if(fillRadialGradientStartPoint && fillPriority === 'radial-gradient') {
+                this._fillRadialGradient(shape);
+            }
+            // now just try and fill with whatever is available
+            else if(fill) {
                 this._fillColor(shape);
             }
             else if(fillPatternImage) {

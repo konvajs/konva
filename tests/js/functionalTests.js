@@ -46,7 +46,7 @@ Test.Modules.DD = {
         // which can't be simulated.  call _endDrag manually
         Kinetic.DD._endDrag();
     },
-    '*test dragstart, dragmove, dragend': function(containerId) {
+    'test dragstart, dragmove, dragend': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,

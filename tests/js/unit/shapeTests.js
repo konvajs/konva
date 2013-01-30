@@ -590,5 +590,50 @@ Test.Modules.SHAPE = {
         test(circle.getShadowEnabled() === true, 'shadowEnabled should be true');
         test(circle.getDashArrayEnabled() === true, 'dashArrayEnabled should be true');
 
+    },
+    'fill overrides': function(containerId) {
+
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var star = new Kinetic.Star({
+            x: 200,
+            y: 100,
+            numPoints: 5,
+            innerRadius: 40,
+            outerRadius: 70,
+
+            fill: 'red',
+            fillLinearGradientStartPoint: -35,
+            fillLinearGradientEndPoint: 35,
+            fillLinearGradientColorStops: [0, 'red', 1, 'blue'],
+
+            stroke: 'blue',
+            strokeWidth: 5,
+            draggable: true
+        });
+
+        layer.add(star);
+        stage.add(layer);
+
+        //console.log(layer.toDataURL());
+
+        warn(layer.toDataURL() === dataUrls['red star'], 'star should have red fill');
+
+        star.setFillPriority('linear-gradient');
+        layer.draw();
+
+        warn(layer.toDataURL() === dataUrls['star with linear gradient fill'], 'star should have linear gradient fill');
+
+        star.setFillPriority('color');
+        layer.draw();
+        
+        warn(layer.toDataURL() === dataUrls['red star'], 'star should have red fill again');
+
+
     }
 };

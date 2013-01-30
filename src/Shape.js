@@ -24,7 +24,8 @@
                 fillEnabled: true,
                 strokeEnabled: true,
                 shadowEnabled: true,
-                dashArrayEnabled: true
+                dashArrayEnabled: true,
+                fillPriority: 'color'
             });
 
             this.nodeType = 'Shape';
@@ -167,7 +168,7 @@
     Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
 
     // add getters and setters
-    Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'lineCap', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'dashArray', 'shadowColor', 'shadowBlur', 'shadowOpacity', 'fillPatternImage', 'fill', 'fillPatternX', 'fillPatternY', 'fillLinearGradientColorStops', 'fillRadialGradientStartRadius', 'fillRadialGradientEndRadius', 'fillRadialGradientColorStops', 'fillPatternRepeat', 'fillEnabled', 'strokeEnabled', 'shadowEnabled', 'dashArrayEnabled']);
+    Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'lineCap', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'dashArray', 'shadowColor', 'shadowBlur', 'shadowOpacity', 'fillPatternImage', 'fill', 'fillPatternX', 'fillPatternY', 'fillLinearGradientColorStops', 'fillRadialGradientStartRadius', 'fillRadialGradientEndRadius', 'fillRadialGradientColorStops', 'fillPatternRepeat', 'fillEnabled', 'strokeEnabled', 'shadowEnabled', 'dashArrayEnabled', 'fillPriority']);
 
     /**
      * set stroke color
@@ -310,6 +311,14 @@
      */
 
     /**
+     * set fill priority
+     * @name setFillPriority
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} priority can be color, pattern, linear-gradient, or radial-gradient
+     *  The default is color.
+     */
+
+    /**
      * get stroke color
      * @name getStroke
      * @methodOf Kinetic.Shape.prototype
@@ -421,6 +430,12 @@
     /**
      * get fill pattern repeat
      * @name getFillPatternRepeat
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+    /**
+     * get fill priority
+     * @name getFillPriority
      * @methodOf Kinetic.Shape.prototype
      */
 
