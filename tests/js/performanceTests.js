@@ -1,4 +1,214 @@
 Test.Modules.PERFORMANCE = {
+	'*animating nested nodes': function(containerId) {
+      var angularVelocity = 6;
+      var angularVelocities = [];
+      var lastRotations = 0;
+      var controlled = false;
+      var numWedges = 25;
+      var angularFriction = 0.2;
+      var target, activeWedge, stage, animatedLayer, wheel, pointer;
+
+      function getAverageAngularVelocity() {
+        var total = 0;
+        var len = angularVelocities.length;
+
+        if(len === 0) {
+          return 0;
+        }
+
+        for(var n = 0; n < len; n++) {
+          total += angularVelocities[n];
+        }
+        return total / len;
+      }
+      function purifyColor(color) {
+        var randIndex = Math.round(Math.random() * 3);
+        color[randIndex] = 0;
+        return color;
+      }
+      function getRandomColor() {
+        var r = 100 + Math.round(Math.random() * 55);
+        var g = 100 + Math.round(Math.random() * 55);
+        var b = 100 + Math.round(Math.random() * 55);
+        var color = [r, b, b];
+        color = purifyColor(color);
+        color = purifyColor(color);
+
+        return color;
+      }
+      function bind() {
+        wheel.on('mousedown', function(evt) {
+          angularVelocity = 0;
+          controlled = true;
+          target = evt.shape;
+        });
+        // add listeners to container
+        document.body.addEventListener('mouseup', function() {
+          controlled = false;
+          angularVelocity = getAverageAngularVelocity() * 5;
+          angularVelocities = [];
+        }, false);
+
+        document.body.addEventListener('mousemove', function(evt) {
+          var mousePos = stage.getMousePosition();
+          if(controlled && mousePos && target) {
+            var x = mousePos.x - wheel.getX();
+            var y = mousePos.y - wheel.getY();
+            var atan = Math.atan(y / x);
+            var rotation = x >= 0 ? atan : atan + Math.PI;
+            var targetGroup = target.getParent();
+
+            wheel.setRotation(rotation - targetGroup.startRotation - (target.getAngle() / 2));
+          }
+        }, false);
+      }
+      function buildWedge(n) {
+        var s = getRandomColor();
+        var r = s[0];
+        var g = s[1];
+        var b = s[2];
+
+        var endColor = 'rgb(' + r + ',' + g + ',' + b + ')';
+        r += 100;
+        g += 100;
+        b += 100;
+
+        var startColor = 'rgb(' + r + ',' + g + ',' + b + ')';
+
+        var wedge = new Kinetic.Group({
+          rotation: 2 * n * Math.PI / numWedges,
+        });
+
+        var wedgeBackground = new Kinetic.Wedge({
+          radius: 400,
+          angle: 2 * Math.PI / numWedges,
+          fillRadialGradientStartPoint: 0,
+          fillRadialGradientStartRadius: 0,
+          fillRadialGradientEndPoint: 0,
+          fillRadialGradientEndRadius: 400,
+          fillRadialGradientColorStops: [0, startColor, 1, endColor],
+          fill: '#64e9f8',
+          fillPriority: 'radial-gradient',
+          stroke: '#ccc',
+          strokeWidth: 2
+        });
+
+        var text = new Kinetic.Text({
+          x: 0,
+          y: 0,
+          text: 'testing testing testing testing',
+          fontFamily: 'Calibri',
+          fontSize: 30,
+          fill: 'red'
+        });
+
+        wedge.add(wedgeBackground);
+        wedge.add(text);
+
+        wedge.startRotation = wedge.getRotation();
+
+        return wedge;
+      }
+      function animate(frame) {
+      	console.log(frame.frameRate);
+        // handle wheel spin
+        var angularVelocityChange = angularVelocity * frame.timeDiff * (1 - angularFriction) / 1000;
+        angularVelocity -= angularVelocityChange;
+
+        if(controlled) {
+          if(angularVelocities.length > 10) {
+            angularVelocities.shift();
+          }
+
+          angularVelocities.push((wheel.getRotation() - lastRotation) * 1000 / frame.timeDiff);
+        }
+        else {
+          wheel.rotate(frame.timeDiff * angularVelocity / 1000);
+        }
+        lastRotation = wheel.getRotation();
+
+        // activate / deactivate wedges based on point intersection
+        var intersection = stage.getIntersection({
+          x: stage.getWidth() / 2,
+          y: 100
+        });
+
+        if(intersection) {
+          var shape = intersection.shape;
+
+          if(shape && (!activeWedge || (shape._id !== activeWedge._id))) {
+            pointer.setY(20);
+            pointer.transitionTo({
+              y: 30,
+              easing: 'elastic-ease-out',
+              duration: 0.3
+            });
+
+            if(activeWedge) {
+              activeWedge.setFillPriority('radial-gradient');
+            }
+            shape.setFillPriority('fill');
+            activeWedge = shape;
+          }
+        }
+      }
+      function init() {
+        stage = new Kinetic.Stage({
+          container: containerId,
+          width: 578,
+          height: 200
+        });
+        animatedLayer = new Kinetic.Layer();
+        wheel = new Kinetic.Group({
+          x: stage.getWidth() / 2,
+          y: 410
+        });
+
+        for(var n = 0; n < numWedges; n++) {
+          var wedge = buildWedge(n);
+          wheel.add(wedge);
+        }
+        pointer = new Kinetic.Wedge({
+          fillRadialGradientStartPoint: 0,
+          fillRadialGradientStartRadius: 0,
+          fillRadialGradientEndPoint: 0,
+          fillRadialGradientEndRadius: 30,
+          fillRadialGradientColorStops: [0, 'white', 1, 'red'],
+          stroke: 'white',
+          strokeWidth: 2,
+          lineJoin: 'round',
+          angleDeg: 30,
+          radius: 30,
+          x: stage.getWidth() / 2,
+          y: 30,
+          rotationDeg: -105,
+          shadowColor: 'black',
+          shadowOffset: 3,
+          shadowBlur: 2,
+          shadowOpacity: 0.5
+        });
+
+        // add components to the stage
+        animatedLayer.add(wheel);
+        animatedLayer.add(pointer);
+        stage.add(animatedLayer);
+
+        // bind events
+        bind();
+
+        var anim = new Kinetic.Animation(animate, animatedLayer);
+
+        // wait one second and then spin the wheel
+        setTimeout(function() {
+          anim.start();
+        }, 1000);
+        
+        setTimeout(function() {
+        	anim.stop();
+        }, 5000);
+      }
+      init();
+    },
     'draw 1000 cropped and scaled images': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
@@ -93,7 +303,7 @@ Test.Modules.PERFORMANCE = {
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
-    '*draw 1000 pre-processed cropped and scaled images': function(containerId) {
+    'draw 1000 pre-processed cropped and scaled images': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = new Kinetic.Stage({

@@ -1,4 +1,28 @@
 (function() {
+    // constants
+    var AUTO = 'auto', 
+        CALIBRI = 'Calibri',
+        CANVAS = 'canvas', 
+        CENTER = 'center',
+        CHANGE_KINETIC = 'Change.kinetic',
+        CONTEXT_2D = '2d',
+        DASH = '\n',
+        EMPTY_STRING = '', 
+        LEFT = 'left',
+        NEW_LINE = '\n',
+        TEXT = 'text',
+        TEXT_UPPER = 'Text', 
+        TOP = 'top', 
+        MIDDLE = 'middle',
+        NORMAL = 'normal',
+        PX_SPACE = 'px ',
+        SPACE = ' ',
+        RIGHT = 'right',
+        ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'align', 'lineHeight', 'text', 'width', 'height'],
+        
+        // cached variables
+        attrChangeListLen = ATTR_CHANGE_LIST.length;
+
     /**
      * Text constructor
      * @constructor
@@ -19,7 +43,6 @@
     Kinetic.Text = function(config) {
         this._initText(config);
     };
-
     function _fillFunc(context) {
         context.fillText(this.partialText, 0, 0);
     }
@@ -29,62 +52,67 @@
 
     Kinetic.Text.prototype = {
         _initText: function(config) {
+            var that = this;
             this.setDefaultAttrs({
-                fontFamily: 'Calibri',
-                text: '',
+                fontFamily: CALIBRI,
+                text: EMPTY_STRING,
                 fontSize: 12,
-                align: 'left',
-                verticalAlign: 'top',
-                fontStyle: 'normal',
+                align: LEFT,
+                verticalAlign: TOP,
+                fontStyle: NORMAL,
                 padding: 0,
-                width: 'auto',
-                height: 'auto',
+                width: AUTO,
+                height: AUTO,
                 lineHeight: 1
             });
 
-            this.dummyCanvas = document.createElement('canvas');
+            this.dummyCanvas = document.createElement(CANVAS);
 
             // call super constructor
             Kinetic.Shape.call(this, config);
 
-            // overrides
             this._fillFunc = _fillFunc;
             this._strokeFunc = _strokeFunc;
-
-            this.shapeType = 'Text';
+            this.shapeType = TEXT_UPPER;
             this._setDrawFuncs();
 
             // update text data for certain attr changes
-            var attrs = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'align', 'lineHeight', 'text', 'width', 'height'];
-            var that = this;
-            for(var n = 0; n < attrs.length; n++) {
-                var attr = attrs[n];
-                this.on(attr + 'Change.kinetic', that._setTextData);
+            for(var n = 0; n < attrChangeListLen; n++) {
+                this.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, that._setTextData);
             }
 
-            that._setTextData();
+            this._setTextData();
         },
         drawFunc: function(canvas) {
-            var context = canvas.getContext(), p = this.attrs.padding, lineHeightPx = this.attrs.lineHeight * this.getTextHeight(), textArr = this.textArr;
+            var context = canvas.getContext(), 
+                p = this.getPadding(), 
+                fontStyle = this.getFontStyle(),
+                fontSize = this.getFontSize(),
+                fontFamily = this.getFontFamily(),
+                textHeight = this.getTextHeight(),
+                lineHeightPx = this.getLineHeight() * textHeight, 
+                textArr = this.textArr,
+                textArrLen = textArr.length,
+                width = this.getWidth();
 
-            context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'px ' + this.attrs.fontFamily;
-            context.textBaseline = 'middle';
-            context.textAlign = 'left';
+            context.font = fontStyle + SPACE + fontSize + PX_SPACE + fontFamily;
+            context.textBaseline = MIDDLE;
+            context.textAlign = LEFT;
             context.save();
             context.translate(p, 0);
-            context.translate(0, p + this.getTextHeight() / 2);
+            context.translate(0, p + textHeight / 2);
 
             // draw text lines
-            for(var n = 0; n < textArr.length; n++) {
+            for(var n = 0; n < textArrLen; n++) {
                 var text = textArr[n];
 
                 // horizontal alignment
                 context.save();
-                if(this.attrs.align === 'right') {
-                    context.translate(this.getWidth() - this._getTextSize(text).width - p * 2, 0);
+                if(this.getAlign() === RIGHT) {
+                    context.translate(width - this._getTextSize(text).width - p * 2, 0);
                 }
-                else if(this.attrs.align === 'center') {
-                    context.translate((this.getWidth() - this._getTextSize(text).width - p * 2) / 2, 0);
+                else if(this.getAlign() === CENTER) {
+                    context.translate((width - this._getTextSize(text).width - p * 2) / 2, 0);
                 }
 
                 this.partialText = text;
@@ -95,7 +123,9 @@
             context.restore();
         },
         drawHitFunc: function(canvas) {
-            var context = canvas.getContext(), width = this.getWidth(), height = this.getHeight();
+            var context = canvas.getContext(), 
+                width = this.getWidth(), 
+                height = this.getHeight();
 
             context.beginPath();
             context.rect(0, 0, width, height);
@@ -110,7 +140,7 @@
          */
         setText: function(text) {
             var str = Kinetic.Type._isString(text) ? text : text.toString();
-            this.setAttr('text', str);
+            this.setAttr(TEXT, str);
         },
         /**
          * get width
@@ -118,7 +148,7 @@
          * @methodOf Kinetic.Text.prototype
          */
         getWidth: function() {
-            return this.attrs.width === 'auto' ? this.getTextWidth() + this.attrs.padding * 2 : this.attrs.width;
+            return this.attrs.width === AUTO ? this.getTextWidth() + this.getPadding() * 2 : this.attrs.width;
         },
         /**
          * get height
@@ -126,7 +156,7 @@
          * @methodOf Kinetic.Text.prototype
          */
         getHeight: function() {
-            return this.attrs.height === 'auto' ? (this.getTextHeight() * this.textArr.length * this.attrs.lineHeight) + this.attrs.padding * 2 : this.attrs.height;
+            return this.attrs.height === AUTO ? (this.getTextHeight() * this.textArr.length * this.attrs.lineHeight) + this.attrs.padding * 2 : this.attrs.height;
         },
         /**
          * get text width
@@ -145,16 +175,19 @@
             return this.textHeight;
         },
         _getTextSize: function(text) {
-            var dummyCanvas = this.dummyCanvas;
-            var context = dummyCanvas.getContext('2d');
+            var dummyCanvas = this.dummyCanvas,
+                context = dummyCanvas.getContext(CONTEXT_2D),
+                fontSize = this.getFontSize(),
+                metrics;
 
             context.save();
-            context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'px ' + this.attrs.fontFamily;
-            var metrics = context.measureText(text);
+            context.font = this.getFontStyle() + SPACE + fontSize + PX_SPACE + this.getFontFamily();
+            
+            metrics = context.measureText(text);
             context.restore();
             return {
                 width: metrics.width,
-                height: parseInt(this.attrs.fontSize, 10)
+                height: parseInt(fontSize, 10)
             };
         },
         /**
@@ -162,29 +195,33 @@
          * here
          */
         _setTextData: function() {
-            var charArr = this.attrs.text.split('');
-            var arr = [];
-            var row = 0;
-            var addLine = true;
+            var charArr = this.getText().split(EMPTY_STRING),
+                arr = [],
+                row = 0;
+                addLine = true,
+                lineHeightPx = 0,
+                padding = this.getPadding();
+                
             this.textWidth = 0;
-            this.textHeight = this._getTextSize(this.attrs.text).height;
-            var lineHeightPx = this.attrs.lineHeight * this.textHeight;
-            while(charArr.length > 0 && addLine && (this.attrs.height === 'auto' || lineHeightPx * (row + 1) < this.attrs.height - this.attrs.padding * 2)) {
+            this.textHeight = this._getTextSize(this.getText()).height;
+            lineHeightPx = this.getLineHeight() * this.textHeight;
+            
+            while(charArr.length > 0 && addLine && (this.attrs.height === AUTO || lineHeightPx * (row + 1) < this.attrs.height - padding * 2)) {
                 var index = 0;
                 var line = undefined;
                 addLine = false;
 
                 while(index < charArr.length) {
-                    if(charArr.indexOf('\n') === index) {
+                    if(charArr.indexOf(NEW_LINE) === index) {
                         // remove newline char
                         charArr.splice(index, 1);
-                        line = charArr.splice(0, index).join('');
+                        line = charArr.splice(0, index).join(EMPTY_STRING);
                         break;
                     }
 
                     // if line exceeds inner box width
                     var lineArr = charArr.slice(0, index);
-                    if(this.attrs.width !== 'auto' && this._getTextSize(lineArr.join('')).width > this.attrs.width - this.attrs.padding * 2) {
+                    if(this.attrs.width !== AUTO && this._getTextSize(lineArr.join(EMPTY_STRING)).width > this.attrs.width - padding * 2) {
                         /*
                          * if a single character is too large to fit inside
                          * the text box width, then break out of the loop
@@ -193,25 +230,25 @@
                         if(index == 0) {
                             break;
                         }
-                        var lastSpace = lineArr.lastIndexOf(' ');
-                        var lastDash = lineArr.lastIndexOf('-');
+                        var lastSpace = lineArr.lastIndexOf(SPACE);
+                        var lastDash = lineArr.lastIndexOf(DASH);
                         var wrapIndex = Math.max(lastSpace, lastDash);
                         if(wrapIndex >= 0) {
-                            line = charArr.splice(0, 1 + wrapIndex).join('');
+                            line = charArr.splice(0, 1 + wrapIndex).join(EMPTY_STRING);
                             break;
                         }
                         /*
                          * if not able to word wrap based on space or dash,
                          * go ahead and wrap in the middle of a word if needed
                          */
-                        line = charArr.splice(0, index).join('');
+                        line = charArr.splice(0, index).join(EMPTY_STRING);
                         break;
                     }
                     index++;
 
                     // if the end is reached
                     if(index === charArr.length) {
-                        line = charArr.splice(0, index).join('');
+                        line = charArr.splice(0, index).join(EMPTY_STRING);
                     }
                 }
                 this.textWidth = Math.max(this.textWidth, this._getTextSize(line).width);
@@ -228,7 +265,7 @@
 
     // add getters setters
     Kinetic.Node.addGettersSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'align', 'lineHeight']);
-    Kinetic.Node.addGetters(Kinetic.Text, ['text']);
+    Kinetic.Node.addGetters(Kinetic.Text, [TEXT]);
     /**
      * set font family
      * @name setFontFamily
