@@ -93,7 +93,7 @@
                 lineHeightPx = this.getLineHeight() * textHeight, 
                 textArr = this.textArr,
                 textArrLen = textArr.length,
-                width = this.getWidth();
+                totalWidth = this.getWidth();
 
             context.font = fontStyle + SPACE + fontSize + PX_SPACE + fontFamily;
             context.textBaseline = MIDDLE;
@@ -104,15 +104,17 @@
 
             // draw text lines
             for(var n = 0; n < textArrLen; n++) {
-                var text = textArr[n];
+                var obj = textArr[n],
+                    text = obj.text,
+                    width = obj.width;
 
                 // horizontal alignment
                 context.save();
                 if(this.getAlign() === RIGHT) {
-                    context.translate(width - this._getTextSize(text).width - p * 2, 0);
+                    context.translate(totalWidth - width - p * 2, 0);
                 }
                 else if(this.getAlign() === CENTER) {
-                    context.translate((width - this._getTextSize(text).width - p * 2) / 2, 0);
+                    context.translate((totalWidth - width - p * 2) / 2, 0);
                 }
 
                 this.partialText = text;
@@ -190,6 +192,22 @@
                 height: parseInt(fontSize, 10)
             };
         },
+        _expandTextData: function(arr) {
+            var len = arr.length;
+                n = 0, 
+                text = EMPTY_STRING,
+                newArr = [];
+                
+            for (n=0; n<len; n++) {
+                text = arr[n];
+                newArr.push({
+                    text: text,
+                    width: this._getTextSize(text).width                    
+                });
+            }
+                
+            return newArr;
+        },
         /**
          * set text data.  wrap logic and width and height setting occurs
          * here
@@ -258,7 +276,7 @@
                 }
                 row++;
             }
-            this.textArr = arr;
+            this.textArr = this._expandTextData(arr);
         }
     };
     Kinetic.Global.extend(Kinetic.Text, Kinetic.Shape);
