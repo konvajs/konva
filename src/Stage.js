@@ -290,7 +290,7 @@
             // draw layer and append canvas to container
             layer.draw();
             this.content.appendChild(layer.canvas.element);
-
+            
             // chainable
             return this;
         },

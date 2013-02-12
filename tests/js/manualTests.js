@@ -1303,6 +1303,8 @@ Test.Modules.DRAG_AND_DROP = {
             width: 578,
             height: 200
         });
+        
+        var bgLayer = new Kinetic.Layer();
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
 
@@ -1329,6 +1331,8 @@ Test.Modules.DRAG_AND_DROP = {
 
         group.add(rect);
         layer.add(group);
+        
+        stage.add(bgLayer);
         stage.add(layer);
 
         var anim = new Kinetic.Animation(function() {
@@ -1337,6 +1341,13 @@ Test.Modules.DRAG_AND_DROP = {
         anim.start();
         
         showHit(layer);
+        
+        var context = bgLayer.getCanvas().getContext();
+        context.beginPath();
+        context.moveTo(0, 0);
+        context.lineTo(100, 20);
+        context.strokeStyle = 'red';
+        context.stroke();
     },
     'stage and shape draggable': function(containerId) {
         var stage = new Kinetic.Stage({

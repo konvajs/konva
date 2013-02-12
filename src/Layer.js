@@ -36,11 +36,13 @@
          * @methodOf Kinetic.Layer.prototype
          */
         draw: function() {
+            var context = this.getContext();
+            
             // before draw  handler
             if(this.beforeDrawFunc !== undefined) {
                 this.beforeDrawFunc.call(this);
             }
-
+            
             Kinetic.Container.prototype.draw.call(this);
 
             // after draw  handler
