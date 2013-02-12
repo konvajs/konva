@@ -629,8 +629,18 @@
          * @methodOf Kinetic.Node.prototype
          */
         getTransform: function() {
-            var m = new Kinetic.Transform(), attrs = this.attrs, x = attrs.x, y = attrs.y, rotation = attrs.rotation, scale = attrs.scale, scaleX = scale.x, scaleY = scale.y, offset = attrs.offset, offsetX = offset.x, offsetY = offset.y;
-
+            var m = new Kinetic.Transform(), 
+                attrs = this.attrs, 
+                x = attrs.x, 
+                y = attrs.y, 
+                rotation = attrs.rotation, 
+                scale = attrs.scale, 
+                scaleX = scale.x, 
+                scaleY = scale.y, 
+                offset = attrs.offset, 
+                offsetX = offset.x, 
+                offsetY = offset.y;
+                
             if(x !== 0 || y !== 0) {
                 m.translate(x, y);
             }
@@ -713,7 +723,6 @@
             }
             context = canvas.getContext();
             context.save();
-            canvas._counterPixelRatio();
 
             if(x || y) {
                 context.translate(-1 * x, -1 * y);
@@ -802,20 +811,22 @@
             }
         },
         _clearTransform: function() {
-            var attrs = this.attrs, scale = attrs.scale, offset = attrs.offset;
-            var trans = {
-                x: attrs.x,
-                y: attrs.y,
-                rotation: attrs.rotation,
-                scale: {
-                    x: scale.x,
-                    y: scale.y
-                },
-                offset: {
-                    x: offset.x,
-                    y: offset.y
-                }
-            };
+            var attrs = this.attrs, 
+              scale = attrs.scale, 
+              offset = attrs.offset,
+              trans = {
+                  x: attrs.x,
+                  y: attrs.y,
+                  rotation: attrs.rotation,
+                  scale: {
+                      x: scale.x,
+                      y: scale.y
+                  },
+                  offset: {
+                      x: offset.x,
+                      y: offset.y
+                  }
+              };
 
             this.attrs.x = 0;
             this.attrs.y = 0;

@@ -1297,7 +1297,7 @@ Test.Modules.DRAG_AND_DROP = {
         layer.add(group);
         stage.add(layer);
     },
-    'translate, rotate, center offset, and scale shape, and then drag and drop': function(containerId) {
+    '*translate, rotate, center offset, and scale shape, and then drag and drop': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1335,6 +1335,8 @@ Test.Modules.DRAG_AND_DROP = {
             rect.rotate(0.01);
         }, layer);
         anim.start();
+        
+        showHit(layer);
     },
     'stage and shape draggable': function(containerId) {
         var stage = new Kinetic.Stage({

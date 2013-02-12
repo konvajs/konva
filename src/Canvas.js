@@ -1,4 +1,4 @@
-(function() {
+(function() {    
     /**
      * Canvas Renderer constructor
      * @constructor
@@ -12,6 +12,7 @@
         this.context = this.element.getContext('2d');
         this.setSize(width || 0, height || 0);
     };
+    
     // calculate pixel ratio
     var canvas = document.createElement('canvas'), context = canvas.getContext('2d'), devicePixelRatio = window.devicePixelRatio || 1, backingStoreRatio = context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1;
     Kinetic.Canvas.pixelRatio = devicePixelRatio / backingStoreRatio;
@@ -190,19 +191,6 @@
                 this.context.lineJoin = lineJoin;
             }
         },
-        _handlePixelRatio: function() {
-            var pixelRatio = Kinetic.Canvas.pixelRatio;
-            if(pixelRatio !== 1) {
-                this.getContext().scale(pixelRatio, pixelRatio);
-            }
-        },
-        _counterPixelRatio: function() {
-            var pixelRatio = Kinetic.Canvas.pixelRatio;
-            if(pixelRatio !== 1) {
-                pixelRatio = 1 / pixelRatio;
-                this.getContext().scale(pixelRatio, pixelRatio);
-            }
-        },
         _applyAncestorTransforms: function(node) {
             var context = this.context;
             node._eachAncestorReverse(function(no) {
@@ -217,6 +205,16 @@
     };
 
     Kinetic.SceneCanvas.prototype = {
+        setWidth: function(width) {
+            this.width = width;
+            this.element.width = width;
+            this.element.style.width = width + 'px';
+        },
+        setHeight: function(height) {
+            this.height = height;
+            this.element.height = height;
+            this.element.style.height = height + 'px';
+        },
         _fillColor: function(shape) {
             var context = this.context, fill = shape.getFill();
             context.fillStyle = fill;

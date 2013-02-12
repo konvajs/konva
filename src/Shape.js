@@ -167,7 +167,6 @@
 
             if(drawFunc && this.isVisible()) {
                 context.save();
-                canvas._handlePixelRatio();
                 canvas._applyOpacity(this);
                 canvas._applyLineJoin(this);
                 canvas._applyAncestorTransforms(this);
