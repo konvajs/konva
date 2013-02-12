@@ -17,6 +17,12 @@
     function _strokeFunc(context) {
         context.stroke();
     }
+    function _fillFuncHit(context) {
+        context.fill();
+    }
+    function _strokeFuncHit(context) {
+        context.stroke();
+    }
 
     Kinetic.Shape.prototype = {
         _initShape: function(config) {
@@ -31,6 +37,8 @@
             this.nodeType = 'Shape';
             this._fillFunc = _fillFunc;
             this._strokeFunc = _strokeFunc;
+            this._fillFuncHit = _fillFuncHit;
+            this._strokeFuncHit = _strokeFuncHit;
 
             // set colorKey
             var shapes = Kinetic.Global.shapes;

@@ -23,9 +23,9 @@ Test.Modules.DD = {
 
         layer.add(circle);
         stage.add(layer);
-        
+
         function remove() {
-        	circle.remove();
+            circle.remove();
             layer.draw();
             warn(layer.toDataURL() === dataUrls['cleared'], 'canvas should be cleared after removing shape onclick');
         }
@@ -88,11 +88,10 @@ Test.Modules.DD = {
             // test set draggable false after drag end
             //this.setDraggable(false);
         });
-        
+
         circle.on('mouseup', function() {
             console.log('mousup')
         });
-        
         warn(layer.toDataURL() === dataUrls['drag circle before'], 'start data url is incorrect');
         /*
         * simulate drag and drop
@@ -271,6 +270,52 @@ Test.Modules.DD = {
 };
 
 Test.Modules.EVENT = {
+    '*text events': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            throttle: 999
+        });
+        var layer = new Kinetic.Layer();
+        var text = new Kinetic.Text({
+            x: 290,
+            y: 111,
+            fontFamily: 'Calibri',
+            fontSize: 30,
+            fill: 'red',
+            text: 'Testing 123',
+            draggable: true
+        });
+        
+        var click = false
+        
+        text.on('click', function() {
+            click = true; 
+        });
+
+        layer.add(text);
+        stage.add(layer);
+
+        var top = stage.content.getBoundingClientRect().top;
+        
+        showHit(layer);
+        
+        stage._mousedown({
+            clientX: 291,
+            clientY: 112 + top
+        });
+        stage._mouseup({
+            clientX: 291,
+            clientY: 112 + top
+        });
+        // end drag is tied to document mouseup and touchend event
+        // which can't be simulated.  call _endDrag manually
+        Kinetic.DD._endDrag();
+        
+        test(click, 'click event should have been fired when mousing down and then up on text');
+
+    },
     'modify fill stroke and stroke width on hover with circle': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

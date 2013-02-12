@@ -364,7 +364,7 @@
             var context = this.context;
             context.save();
             context.fillStyle = '#' + shape.colorKey;
-            shape._fillFunc(context);
+            shape._fillFuncHit(context);
             context.restore();
         },
         _stroke: function(shape) {
@@ -374,7 +374,7 @@
                 context.save();
                 context.lineWidth = strokeWidth || 2;
                 context.strokeStyle = '#' + shape.colorKey;
-                shape._strokeFunc(context);
+                shape._strokeFuncHit(context);
                 context.restore();
             }
         }
