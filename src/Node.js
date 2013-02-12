@@ -715,7 +715,7 @@
 
             //if width and height are defined, create new canvas to draw on, else reuse stage buffer canvas
             if(config.width && config.height) {
-                canvas = new Kinetic.SceneCanvas(config.width, config.height);
+                canvas = new Kinetic.SceneCanvas(config.width, config.height, 1);
             }
             else {
                 canvas = this.getStage().bufferCanvas;

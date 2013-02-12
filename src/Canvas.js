@@ -3,7 +3,7 @@
     var canvas = document.createElement('canvas'), 
         context = canvas.getContext('2d'), 
         devicePixelRatio = window.devicePixelRatio || 1, backingStoreRatio = context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1, 
-        pixelRatio = devicePixelRatio / backingStoreRatio;
+        _pixelRatio = devicePixelRatio / backingStoreRatio;
         
     /**
      * Canvas Renderer constructor
@@ -11,7 +11,8 @@
      * @param {Number} width
      * @param {Number} height
      */
-    Kinetic.Canvas = function(width, height) {
+    Kinetic.Canvas = function(width, height, pixelRatio) {
+        this.pixelRatio = pixelRatio || _pixelRatio;
         this.width = width;
         this.height = height;
         this.element = document.createElement('canvas');
@@ -55,7 +56,7 @@
         setWidth: function(width) {
             this.width = width;
             // take into account pixel ratio
-            this.element.width = width * pixelRatio;
+            this.element.width = width * this.pixelRatio;
             this.element.style.width = width + 'px';
         },
         /**
@@ -67,7 +68,7 @@
         setHeight: function(height) {
             this.height = height;
             // take into account pixel ratio
-            this.element.height = height * pixelRatio;
+            this.element.height = height * this.pixelRatio;
             this.element.style.height = height + 'px';
         },
         /**
@@ -202,16 +203,18 @@
         }
     };
 
-    Kinetic.SceneCanvas = function(width, height) {
-        Kinetic.Canvas.call(this, width, height);
+    Kinetic.SceneCanvas = function(width, height, pixelRatio) {
+        Kinetic.Canvas.call(this, width, height, pixelRatio);
     };
 
     Kinetic.SceneCanvas.prototype = {
-        setWidth: function(width) {             
+        setWidth: function(width) {  
+            var pixelRatio = this.pixelRatio;           
             Kinetic.Canvas.prototype.setWidth.call(this, width);
             this.context.scale(pixelRatio, pixelRatio);
         },
         setHeight: function(height) { 
+            var pixelRatio = this.pixelRatio; 
             Kinetic.Canvas.prototype.setHeight.call(this, height);
             this.context.scale(pixelRatio, pixelRatio);
         },
@@ -353,8 +356,8 @@
     };
     Kinetic.Global.extend(Kinetic.SceneCanvas, Kinetic.Canvas);
 
-    Kinetic.HitCanvas = function(width, height) {
-        Kinetic.Canvas.call(this, width, height);
+    Kinetic.HitCanvas = function(width, height, pixelRatio) {
+        Kinetic.Canvas.call(this, width, height, pixelRatio);
     };
 
     Kinetic.HitCanvas.prototype = {

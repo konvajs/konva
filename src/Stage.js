@@ -266,7 +266,7 @@
                 this.content.style.width = width + 'px';
                 this.content.style.height = height + 'px';
 
-                this.bufferCanvas.setSize(width, height);
+                this.bufferCanvas.setSize(width, height, 1);
                 this.hitCanvas.setSize(width, height);
                 // set user defined layer dimensions
                 var layers = this.children;
