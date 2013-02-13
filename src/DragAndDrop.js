@@ -222,7 +222,7 @@
      *  temporary top layer to improve performance.  The default is true
      * @name setDragOnTop
      * @methodOf Kinetic.Node.prototype
-     * @param {Function} dragOnTop
+     * @param {Boolean} dragOnTop
      */
 
     /**

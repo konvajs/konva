@@ -19,7 +19,7 @@
             this.setDefaultAttrs({
                 radius: 0,
                 angle: 0,
-                clickwise: true
+                clockwise: false
             });
 
             // call super constructor
@@ -74,7 +74,7 @@
 
     /**
      * set clockwise draw direction.  If set to true, the wedge will be drawn clockwise
-     *  If set to false, the wedge will be drawn anti-clockwise.  The default is true.
+     *  If set to false, the wedge will be drawn anti-clockwise.  The default is false.
      * @name setClockwise
      * @methodOf Kinetic.Wedge.prototype
      * @param {Boolean} clockwise
