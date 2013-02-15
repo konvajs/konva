@@ -1,4 +1,35 @@
 Test.Modules.LAYER = {
+    'test canvas inline styles': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: 100,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        var style = layer.getCanvas().getElement().style;
+
+        console.log('--' + style.display);
+
+        test(style.position === 'absolute', 'canvas position style should be absolute');
+        test(style.border === '0px', 'canvas border style should be 0px');
+        test(style.margin === '0px', 'canvas margin style should be 0px');
+        test(style.padding === '0px', 'canvas padding style should be 0px');
+        test(style.backgroundColor === 'transparent', 'canvas backgroundColor style should be transparent');
+    },
     'beforeDraw and afterDraw': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

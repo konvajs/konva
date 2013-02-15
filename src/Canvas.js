@@ -16,6 +16,10 @@
         this.width = width;
         this.height = height;
         this.element = document.createElement('canvas');
+        this.element.style.padding = '0';
+        this.element.style.margin = '0';
+        this.element.style.border = '0';
+        this.element.style.background = 'transparent';
         this.context = this.element.getContext('2d');
         this.setSize(width || 0, height || 0);
     };
