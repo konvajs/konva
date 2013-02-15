@@ -387,7 +387,7 @@ Test.Modules.SHAPE = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        test(layer.toDataURL() === dataUrls['everything enabled'], 'should be circle with green fill, dashed stroke, and shadow');
+        warn(layer.toDataURL() === dataUrls['everything enabled'], 'should be circle with green fill, dashed stroke, and shadow');
     },
     'fill disabled': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -416,7 +416,7 @@ Test.Modules.SHAPE = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        test(layer.toDataURL() === dataUrls['fill disabled'], 'should be circle with no fill, dashed stroke, and shadow');
+        warn(layer.toDataURL() === dataUrls['fill disabled'], 'should be circle with no fill, dashed stroke, and shadow');
     },
     'stroke disabled': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -445,7 +445,7 @@ Test.Modules.SHAPE = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        test(layer.toDataURL() === dataUrls['stroke disabled'], 'should be circle with green fill, no stroke, and shadow');
+        warn(layer.toDataURL() === dataUrls['stroke disabled'], 'should be circle with green fill, no stroke, and shadow');
     },
     'dash array disabled': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -474,7 +474,7 @@ Test.Modules.SHAPE = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        test(layer.toDataURL() === dataUrls['dash array disabled'], 'should be circle with green fill, solid stroke, and shadow');
+        warn(layer.toDataURL() === dataUrls['dash array disabled'], 'should be circle with green fill, solid stroke, and shadow');
     },
     'shadow disabled': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -503,7 +503,7 @@ Test.Modules.SHAPE = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        test(layer.toDataURL() === dataUrls['shadow disabled'], 'should be circle with green fill, dashed stroke, and no shadow');
+        warn(layer.toDataURL() === dataUrls['shadow disabled'], 'should be circle with green fill, dashed stroke, and no shadow');
     },
     'test enablers and disablers': function(containerId) {
         var stage = new Kinetic.Stage({
