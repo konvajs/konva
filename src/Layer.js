@@ -8,6 +8,7 @@
      * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
      * to clear the canvas before each layer draw.  The default value is true.
      * {{NodeParams}}
+     * {{ContainerParams}}
      */
     Kinetic.Layer = function(config) {
         this._initLayer(config);

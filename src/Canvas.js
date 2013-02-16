@@ -204,6 +204,15 @@
                 var t = no.getTransform(), m = t.getMatrix();
                 context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }, true);
+        },
+        _clip: function(container) {
+            var context = this.getContext(); 
+            context.save();
+            this._applyAncestorTransforms(container);
+            context.beginPath(); 
+            container.getClipFunc()(this);
+            context.clip();
+            context.setTransform(1, 0, 0, 1, 0, 0);
         }
     };
 
