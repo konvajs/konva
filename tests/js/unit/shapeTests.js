@@ -1,4 +1,31 @@
 Test.Modules.SHAPE = {
+    'scale rect with stroke scale disabled': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 90,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            scale: [3, 1],
+            draggable: true,
+            strokeScaleEnabled: false
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+        
+        //console.log(layer.toDataURL());
+        
+        warn(layer.toDataURL() === dataUrls['scaled rect with disabled stroke scale'], 'probem with stroke scale disabling');
+    },
     'test intersects()': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

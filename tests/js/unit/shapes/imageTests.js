@@ -295,7 +295,7 @@ Test.Modules.IMAGE = {
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
-    '*gaussian blur filter': function(containerId) {
+    'gaussian blur filter': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = new Kinetic.Stage({

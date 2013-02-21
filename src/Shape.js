@@ -31,7 +31,8 @@
                 strokeEnabled: true,
                 shadowEnabled: true,
                 dashArrayEnabled: true,
-                fillPriority: 'color'
+                fillPriority: 'color',
+                strokeScaleEnabled: true
             });
 
             this.nodeType = 'Shape';
@@ -135,6 +136,18 @@
             this.setAttr('strokeEnabled', false);
         },
         /**
+         * enable stroke scale
+         */
+        enableStrokeScale: function() {
+            this.setAttr('strokeScaleEnabled', true);
+        },
+        /**
+         * disable stroke scale
+         */
+        disableStrokeScale: function() {
+            this.setAttr('strokeScaleEnabled', false);
+        },
+        /**
          * enable shadow
          */
         enableShadow: function() {
@@ -168,9 +181,8 @@
             if(drawFunc && this.isVisible()) {
                 context.save();
                 canvas._applyOpacity(this);
-                canvas._applyLineJoin(this);
+                canvas._applyLineJoin(this);                
                 canvas._applyAncestorTransforms(this);
-
                 drawFunc.call(this, canvas);
                 context.restore();
             }
@@ -199,7 +211,7 @@
     Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
 
     // add getters and setters
-    Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'lineCap', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'dashArray', 'shadowColor', 'shadowBlur', 'shadowOpacity', 'fillPatternImage', 'fill', 'fillPatternX', 'fillPatternY', 'fillLinearGradientColorStops', 'fillRadialGradientStartRadius', 'fillRadialGradientEndRadius', 'fillRadialGradientColorStops', 'fillPatternRepeat', 'fillEnabled', 'strokeEnabled', 'shadowEnabled', 'dashArrayEnabled', 'fillPriority']);
+    Kinetic.Node.addGettersSetters(Kinetic.Shape, ['stroke', 'lineJoin', 'lineCap', 'strokeWidth', 'drawFunc', 'drawHitFunc', 'dashArray', 'shadowColor', 'shadowBlur', 'shadowOpacity', 'fillPatternImage', 'fill', 'fillPatternX', 'fillPatternY', 'fillLinearGradientColorStops', 'fillRadialGradientStartRadius', 'fillRadialGradientEndRadius', 'fillRadialGradientColorStops', 'fillPatternRepeat', 'fillEnabled', 'strokeEnabled', 'shadowEnabled', 'dashArrayEnabled', 'fillPriority', 'strokeScaleEnabled']);
 
     /**
      * set stroke color

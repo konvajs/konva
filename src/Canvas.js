@@ -320,6 +320,10 @@
             var context = this.context, stroke = shape.getStroke(), strokeWidth = shape.getStrokeWidth(), dashArray = shape.getDashArray();
             if(stroke || strokeWidth) {
                 context.save();
+                if (!shape.getStrokeScaleEnabled()) {
+                  
+                    context.setTransform(1, 0, 0, 1, 0, 0);
+                }
                 this._applyLineCap(shape);
                 if(dashArray && shape.getDashArrayEnabled()) {
                     if(context.setLineDash) {
