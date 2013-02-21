@@ -1,4 +1,34 @@
 Test.Modules.CONTAINER = {
+    'use clipping function': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            draggable: true
+        });
+        var layer = new Kinetic.Layer({
+            clipFunc: function(canvas) {
+                var context = canvas.getContext();
+                context.rect(0, 0, 400, 100);
+            } 
+        });
+        var group = new Kinetic.Group();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle',
+            draggable: true
+        });
+
+        stage.add(layer);
+        layer.add(group);
+        group.add(circle);
+        layer.draw();
+    },
     'add layer then group then shape': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

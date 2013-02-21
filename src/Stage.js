@@ -6,6 +6,7 @@
      * @param {Object} config
      * @param {String|DomElement} config.container Container id or DOM element
      * {{NodeParams}}
+     * {{ContainerParams}}
      */
     Kinetic.Stage = function(config) {
         this._initStage(config);

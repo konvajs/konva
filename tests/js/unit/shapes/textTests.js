@@ -295,7 +295,7 @@ Test.Modules.Text = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        test(layer.toDataURL() === dataUrls['text everything enabled'], 'should be text with blue fill and red stroke');
+        warn(layer.toDataURL() === dataUrls['text everything enabled'], 'should be text with blue fill and red stroke');
     },
     'text fill disabled': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -325,7 +325,7 @@ Test.Modules.Text = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        test(layer.toDataURL() === dataUrls['text fill disabled'], 'should be text with no fill and red stroke');
+        warn(layer.toDataURL() === dataUrls['text fill disabled'], 'should be text with no fill and red stroke');
     },
     'text stroke disabled': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -355,6 +355,6 @@ Test.Modules.Text = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        test(layer.toDataURL() === dataUrls['text stroke disabled'], 'should be text with blue fill and no stroke');
+        warn(layer.toDataURL() === dataUrls['text stroke disabled'], 'should be text with blue fill and no stroke');
     }
 };

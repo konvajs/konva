@@ -5,6 +5,7 @@
      * @augments Kinetic.Container
      * @param {Object} config
      * {{NodeParams}}
+     * {{ContainerParams}}
      */
     Kinetic.Group = function(config) {
         this._initGroup(config);

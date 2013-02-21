@@ -5,6 +5,7 @@
      * @augments Kinetic.Node
      * @param {Object} config
      * {{NodeParams}}
+     * {{ContainerParams}}
      */
     Kinetic.Container = function(config) {
         this._containerInit(config);
@@ -203,21 +204,56 @@
             this.drawHit();
         },
         drawScene: function(canvas) {
+            var clip = !!this.getClipFunc() && canvas;
+
+            if (clip) {
+                canvas._clip(this);
+            }
             if(this.isVisible()) {
                 var children = this.children, len = children.length;
                 for(var n = 0; n < len; n++) {
                     children[n].drawScene(canvas);
                 }
             }
+            if (clip) {
+                canvas.getContext().restore();
+            }
         },
         drawHit: function() {
+            var clip = !!this.getClipFunc() && this.nodeType !== 'Stage',
+                hitCanvas;
+
+            if (clip) {
+                hitCanvas = this.getLayer().hitCanvas; 
+                hitCanvas._clip(this);
+            }
             if(this.isVisible() && this.isListening()) {
                 var children = this.children, len = children.length;
                 for(var n = 0; n < len; n++) {
                     children[n].drawHit();
                 }
             }
+            if (clip) {
+                hitCanvas.getContext().restore();
+            }
         }
     };
+
     Kinetic.Global.extend(Kinetic.Container, Kinetic.Node);
+
+    // add getters setters
+    Kinetic.Node.addGettersSetters(Kinetic.Container, ['clipFunc']);
+
+    /**
+     * set clipping function 
+     * @name setClipFunc
+     * @methodOf Kinetic.Container.prototype
+     * @param {Number} deg
+     */
+
+    /**
+     * get clipping function 
+     * @name getClipFunc
+     * @methodOf Kinetic.Container.prototype
+     */
 })();

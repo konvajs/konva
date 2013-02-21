@@ -13,7 +13,7 @@ Currently, KineticJS has unit, functional, performance, manual, and special test
 ### Running the tests
 Unit, functional, and performance tests output the results to the console via `console.log()` so be sure to have it open.  
 
-In order for the data url tests and image manipulation tests to pass, you need to run the unit test suite on a web server due to canvas security constraints ([read more about that here](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#security-with-canvas-elements)).  All tests should pass in Google Chrome with no warnings, and all tests should pass with some warnings in other browsers.  
+In order for the data url tests and image manipulation tests to pass, you need to run the unit test suite on a web server due to canvas security constraints ([read more about that here](http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#security-with-canvas-elements)).  All tests should pass in Google Chrome on Windows 7 with no warnings, and all tests should pass with some warnings in other browsers and operating systems.  
 
 ### Updating the tests
 
