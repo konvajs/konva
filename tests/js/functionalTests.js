@@ -270,7 +270,7 @@ Test.Modules.DD = {
 };
 
 Test.Modules.EVENT = {
-    '*text events': function(containerId) {
+    'text events': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
