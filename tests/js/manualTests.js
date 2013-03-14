@@ -328,7 +328,7 @@ Test.Modules.EVENTS = {
         });
         var layer = new Kinetic.Layer();
 
-        var star = new Kinetic.Star({
+        var star = new Kinetic.Plugins.Star({
             x: 200,
             y: 100,
             numPoints: 10,
@@ -401,7 +401,7 @@ Test.Modules.EVENTS = {
         var layer = new Kinetic.Layer({
             rotationDeg: 20
         });
-        var star = new Kinetic.Star({
+        var star = new Kinetic.Plugins.Star({
             x: 200,
             y: 100,
             numPoints: 10,
@@ -785,7 +785,7 @@ Test.Modules.DRAG_AND_DROP = {
         });
         var layer = new Kinetic.Layer();
 
-        var star = new Kinetic.Star({
+        var star = new Kinetic.Plugins.Star({
             x: 200,
             y: 100,
             numPoints: 5,
@@ -1297,7 +1297,7 @@ Test.Modules.DRAG_AND_DROP = {
         layer.add(group);
         stage.add(layer);
     },
-    '*translate, rotate, center offset, and scale shape, and then drag and drop': function(containerId) {
+    'translate, rotate, center offset, and scale shape, and then drag and drop': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,

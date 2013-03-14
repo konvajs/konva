@@ -1,5 +1,5 @@
 Test.Modules.PERFORMANCE = {
-	'*animating nested nodes': function(containerId) {
+	'animating nested nodes': function(containerId) {
       var angularVelocity = 6;
       var angularVelocities = [];
       var lastRotations = 0;
@@ -556,7 +556,7 @@ Test.Modules.PERFORMANCE = {
 
         startTimer();
         for(var n = 0; n < 1000; n++) {
-            var star = new Kinetic.Star({
+            var star = new Kinetic.Plugins.Star({
                 innerRadius: 20,
                 outerRadius: 50,
                 fill: 'yellow',
@@ -588,7 +588,7 @@ Test.Modules.PERFORMANCE = {
         });
         var layer = new Kinetic.Layer();
 
-        var star = new Kinetic.Star({
+        var star = new Kinetic.Plugins.Star({
             innerRadius: 20,
             outerRadius: 50,
             fill: 'yellow',

@@ -12,7 +12,7 @@
      * {{ShapeParams}}
      * {{NodeParams}}
      */
-    Kinetic.TextPath = function(config) {
+    Kinetic.Plugins.TextPath = function(config) {
         this._initTextPath(config);
     };
     
@@ -23,7 +23,7 @@
         context.strokeText(this.partialText, 0, 0);
     }
 
-    Kinetic.TextPath.prototype = {
+    Kinetic.Plugins.TextPath.prototype = {
         _initTextPath: function(config) {
             this.setDefaultAttrs({
                 fontFamily: 'Calibri',
@@ -96,7 +96,7 @@
         /**
          * get text width in pixels
          * @name getTextWidth
-         * @methodOf Kinetic.TextPath.prototype
+         * @methodOf Kinetic.Plugins.TextPath.prototype
          */
         getTextWidth: function() {
             return this.textWidth;
@@ -104,7 +104,7 @@
         /**
          * get text height in pixels
          * @name getTextHeight
-         * @methodOf Kinetic.TextPath.prototype
+         * @methodOf Kinetic.Plugins.TextPath.prototype
          */
         getTextHeight: function() {
             return this.textHeight;
@@ -112,7 +112,7 @@
         /**
          * set text
          * @name setText
-         * @methodOf Kinetic.TextPath.prototype
+         * @methodOf Kinetic.Plugins.TextPath.prototype
          * @param {String} text
          */
         setText: function(text) {
@@ -304,54 +304,54 @@
             }
         }
     };
-    Kinetic.Global.extend(Kinetic.TextPath, Kinetic.Shape);
+    Kinetic.Global.extend(Kinetic.Plugins.TextPath, Kinetic.Shape);
 
     // add setters and getters
-    Kinetic.Node.addGettersSetters(Kinetic.TextPath, ['fontFamily', 'fontSize', 'fontStyle']);
-    Kinetic.Node.addGetters(Kinetic.TextPath, ['text']);
+    Kinetic.Node.addGettersSetters(Kinetic.Plugins.TextPath, ['fontFamily', 'fontSize', 'fontStyle']);
+    Kinetic.Node.addGetters(Kinetic.Plugins.TextPath, ['text']);
 
     /**
      * set font family
      * @name setFontFamily
-     * @methodOf Kinetic.TextPath.prototype
+     * @methodOf Kinetic.Plugins.TextPath.prototype
      * @param {String} fontFamily
      */
 
     /**
      * set font size
      * @name setFontSize
-     * @methodOf Kinetic.TextPath.prototype
+     * @methodOf Kinetic.Plugins.TextPath.prototype
      * @param {int} fontSize
      */
 
     /**
      * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
      * @name setFontStyle
-     * @methodOf Kinetic.TextPath.prototype
+     * @methodOf Kinetic.Plugins.TextPath.prototype
      * @param {String} fontStyle
      */
 
     /**
      * get font family
      * @name getFontFamily
-     * @methodOf Kinetic.TextPath.prototype
+     * @methodOf Kinetic.Plugins.TextPath.prototype
      */
 
     /**
      * get font size
      * @name getFontSize
-     * @methodOf Kinetic.TextPath.prototype
+     * @methodOf Kinetic.Plugins.TextPath.prototype
      */
 
     /**
      * get font style
      * @name getFontStyle
-     * @methodOf Kinetic.TextPath.prototype
+     * @methodOf Kinetic.Plugins.TextPath.prototype
      */
 
     /**
      * get text
      * @name getText
-     * @methodOf Kinetic.TextPath.prototype
+     * @methodOf Kinetic.Plugins.TextPath.prototype
      */
 })();

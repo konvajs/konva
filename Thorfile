@@ -7,7 +7,8 @@ class Build < Thor
     "src/Global.js", "src/util/Type.js", "src/Canvas.js", "src/util/Tween.js", "src/util/Transform.js", "src/util/Collection.js",
     "src/filters/Grayscale.js", "src/filters/Brighten.js", "src/filters/Invert.js", "src/filters/Gauss.js", 
     "src/Node.js", "src/Animation.js", "src/DragAndDrop.js", "src/Transition.js", "src/Container.js", "src/Shape.js", "src/Stage.js", "src/Layer.js", "src/Group.js",
-    "src/shapes/Rect.js", "src/shapes/Circle.js", "src/shapes/Wedge.js", "src/shapes/Ellipse.js", "src/shapes/Image.js", "src/shapes/Polygon.js", "src/shapes/Text.js", "src/shapes/Line.js", "src/shapes/Spline.js", "src/shapes/Blob.js", "src/shapes/Sprite.js", "src/shapes/Star.js", "src/shapes/RegularPolygon.js", "src/shapes/Path.js", "src/shapes/TextPath.js"       
+    "src/shapes/Rect.js", "src/shapes/Circle.js", "src/shapes/Wedge.js", "src/shapes/Ellipse.js", "src/shapes/Image.js", "src/shapes/Polygon.js", "src/shapes/Text.js", "src/shapes/Line.js", "src/shapes/Spline.js", "src/shapes/Blob.js", "src/shapes/Sprite.js", "src/shapes/Path.js",
+    "src/plugins/TextPath.js", "src/plugins/RegularPolygon.js", "src/plugins/Star.js"       
   ]
   
   UNIT_TESTS = [
@@ -29,11 +30,13 @@ class Build < Thor
   	"tests/js/unit/shapes/lineTests.js",
   	"tests/js/unit/shapes/splineTests.js",
   	"tests/js/unit/shapes/blobTests.js",
-  	"tests/js/unit/shapes/regularPolygonTests.js",
-  	"tests/js/unit/shapes/starTests.js",
   	"tests/js/unit/shapes/textTests.js",
   	"tests/js/unit/shapes/pathTests.js",
-  	"tests/js/unit/shapes/spriteTests.js"
+  	"tests/js/unit/shapes/spriteTests.js",
+  	
+  	"tests/js/unit/plugins/regularPolygonTests.js",
+  	"tests/js/unit/plugins/starTests.js",
+  	"tests/js/unit/plugins/textPathTests.js"	
   ]
 
   if !File.directory?("dist")
