@@ -96,6 +96,7 @@
          */
         beforeDraw: function(func) {
             this.beforeDrawFunc = func;
+            return this;
         },
         /**
          * set after draw handler
@@ -105,6 +106,7 @@
          */
         afterDraw: function(func) {
             this.afterDrawFunc = func;
+            return this;
         },
         /**
          * get layer canvas
