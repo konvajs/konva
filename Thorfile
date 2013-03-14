@@ -149,7 +149,7 @@ class Build < Thor
       content.gsub!("{{version}}", version)
       content.sub!("{{date}}", date)
       content.gsub!("{{NodeParams}}", IO.read("configParams/NodeParams.txt"))
-      content.gsub!("{{ContainerParams}}", IO.read("configParams/ContainerParams.txt"))
+      content.gsub!("{{ContainerParams}}", IO.read("configParams/containerParams.txt"))
       content.gsub!("{{ShapeParams}}", IO.read("configParams/ShapeParams.txt"))
       
       return content
