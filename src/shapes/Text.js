@@ -21,7 +21,10 @@
         ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'align', 'lineHeight', 'text', 'width', 'height'],
         
         // cached variables
-        attrChangeListLen = ATTR_CHANGE_LIST.length;
+        attrChangeListLen = ATTR_CHANGE_LIST.length,
+        
+        // shared dummy canvas context
+        dummyContext = null;
 
     /**
      * Text constructor
@@ -66,7 +69,9 @@
                 lineHeight: 1
             });
 
-            this.dummyCanvas = document.createElement(CANVAS);
+            if (!dummyContext) {
+                dummyContext = document.createElement(CANVAS).getContext(CONTEXT_2D);
+            }
 
             // call super constructor
             Kinetic.Shape.call(this, config);
@@ -177,16 +182,14 @@
             return this.textHeight;
         },
         _getTextSize: function(text) {
-            var dummyCanvas = this.dummyCanvas,
-                context = dummyCanvas.getContext(CONTEXT_2D),
-                fontSize = this.getFontSize(),
+            var fontSize = this.getFontSize(),
                 metrics;
 
-            context.save();
-            context.font = this.getFontStyle() + SPACE + fontSize + PX_SPACE + this.getFontFamily();
+            dummyContext.save();
+            dummyContext.font = this.getFontStyle() + SPACE + fontSize + PX_SPACE + this.getFontFamily();
             
-            metrics = context.measureText(text);
-            context.restore();
+            metrics = dummyContext.measureText(text);
+            dummyContext.restore();
             return {
                 width: metrics.width,
                 height: parseInt(fontSize, 10)
