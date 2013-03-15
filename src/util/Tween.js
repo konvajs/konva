@@ -5,10 +5,9 @@
      * an animation of a single Node property.  A Transition is a set of
      * multiple tweens
      */
-    Kinetic.Tween = function(obj, propFunc, func, begin, finish, duration) {
+    Kinetic.Tween = function(propFunc, func, begin, finish, duration) {
         this._listeners = [];
         this.addListener(this);
-        this.obj = obj;
         this.propFunc = propFunc;
         this.begin = begin;
         this._pos = begin;

@@ -1,4 +1,10 @@
 (function() {
+    function createTween(obj, key, easingFunc, start, end, duration) {
+        var tween = new Kinetic.Tween(function(i) {
+           obj[key] = i;
+        }, easingFunc, start, end, duration);
+        return tween;
+    }
     /**
      * Transition constructor.  The transitionTo() Node method
      *  returns a reference to the transition object which you can use
@@ -6,46 +12,61 @@
      * @constructor
      */
     Kinetic.Transition = function(node, config) {
-        var that = this, obj = {};
+        var that = this,
+            easing = config.easing || 'linear',
+            easingFunc = Kinetic.Tweens[easing];  
+            duration = config.duration || 0,
+            configVal = null,
+            lastTweenIndex = 0;
+            obj = {}, 
+            x = 0, 
+            y = 0; 
 
-        this.node = node;
-        this.config = config;
         this.tweens = [];
+        this.attrs = {};
+        this.node = node;
 
-        // add tween for each property
-        function addTween(c, attrs, obj, rootObj) {
-            for(var key in c) {
-                if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
-                    // if val is an object then traverse
-                    if(Kinetic.Type._isObject(c[key])) {
-                        obj[key] = {};
-                        addTween(c[key], attrs[key], obj[key], rootObj);
+        for (var key in config) {
+            if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
+                configVal = config[key];   
+                obj = node.getAttr(key); 
+                if(Kinetic.Type._isObject(obj)) {
+                    configValX = configVal.x; 
+                    configValY = configVal.y;
+
+                    this.attrs[key] = {};
+                    if (configValX !== undefined) {
+                        that.tweens.push(createTween(this.attrs[key], 'x', easingFunc, obj.x, configValX, duration));
                     }
-                    else {
-                        that._add(that._getTween(attrs, key, c[key], obj, rootObj));
-                    }
+                    if (configValY !== undefined) { 
+                        that.tweens.push(createTween(this.attrs[key], 'y', easingFunc, obj.y, configValY, duration));
+                    } 
                 }
+                else {
+                    that.tweens.push(createTween(this.attrs, key, easingFunc, node.getAttr(key), configVal, duration));
+                } 
             }
         }
-        addTween(config, node.attrs, obj, obj);
+
+        lastTweenIndex = this.tweens.length - 1;
 
         // map first tween event to transition event
-        this.tweens[0].onStarted = function() {
+        this.tweens[lastTweenIndex].onStarted = function() {
 
         };
-        this.tweens[0].onStopped = function() {
+        this.tweens[lastTweenIndex].onStopped = function() {
             node.transAnim.stop();
         };
-        this.tweens[0].onResumed = function() {
+        this.tweens[lastTweenIndex].onResumed = function() {
             node.transAnim.start();
         };
-        this.tweens[0].onLooped = function() {
+        this.tweens[lastTweenIndex].onLooped = function() {
 
         };
-        this.tweens[0].onChanged = function() {
+        this.tweens[lastTweenIndex].onChanged = function() {
 
         };
-        this.tweens[0].onFinished = function() {
+        this.tweens[lastTweenIndex].onFinished = function() {
             var newAttrs = {};
             // create new attr obj
             for(var key in config) {
@@ -98,24 +119,12 @@
             for(var n = 0; n < this.tweens.length; n++) {
                 this.tweens[n].onEnterFrame();
             }
+            // now that the temp attrs object has been updated,
+            // set the node attrs
+            this.node.setAttrs(this.attrs);
         },
         _add: function(tween) {
             this.tweens.push(tween);
-        },
-        _getTween: function(attrs, prop, val, obj, rootObj) {
-            var config = this.config;
-            var node = this.node;
-            var easing = config.easing;
-            if(easing === undefined) {
-                easing = 'linear';
-            }
-
-            var tween = new Kinetic.Tween(node, function(i) {
-                obj[prop] = i;
-                node.setAttrs(rootObj);
-            }, Kinetic.Tweens[easing], attrs[prop], val, config.duration);
-
-            return tween;
         }
     };
 

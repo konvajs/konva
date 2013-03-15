@@ -136,10 +136,11 @@
          * get attr
          * @name getAttr
          * @methodOf Kinetic.Node.prototype
+         * @param {String} attr  
          */
         getAttr: function(attr) {
             var method = 'get' + attr.charAt(0).toUpperCase() + attr.slice(1);
-            return method();
+            return this[method](); 
         },
         /**
          * get attrs

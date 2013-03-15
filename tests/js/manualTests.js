@@ -24,11 +24,11 @@ Test.Modules.TRANSITION = {
 
         rect.transitionTo({
             duration: 2,
+            x: 400,
+            y: 30,
             shadowOffset: {
                 x: 80
             },
-            x: 400,
-            y: 30,
             rotation: Math.PI * 2,
             easing: 'bounce-ease-out'
         });
@@ -76,7 +76,10 @@ Test.Modules.TRANSITION = {
                         y: 1.5
                     },
                     duration: 1,
-                    easing: easing
+                    easing: easing,
+                    callback: function() {
+                        console.log('finished');
+                    }
                 });
             });
             shape.on("mouseout", function() {
