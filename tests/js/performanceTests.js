@@ -400,7 +400,7 @@ Test.Modules.PERFORMANCE = {
             anim.start();
         }, 4000);
     },
-    'DRAWING - draw 10,000 small circles with tooltips': function(containerId) {
+    '*DRAWING - draw 10,000 small circles with tooltips': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -408,7 +408,7 @@ Test.Modules.PERFORMANCE = {
         });
 
         var circlesLayer = new Kinetic.Layer();
-        var tooltipLayer = new Kinetic.Layer();
+
         var colors = ["red", "orange", "yellow", "green", "blue", "cyan", "purple"];
         var colorIndex = 0;
 
@@ -425,47 +425,19 @@ Test.Modules.PERFORMANCE = {
                 var randX = Math.random() * stage.getWidth();
                 var randY = Math.random() * stage.getHeight();
 
-                var circle = new Kinetic.Ellipse({
+                var circle = new Kinetic.Circle({
                     x: randX,
                     y: randY,
                     radius: 2,
                     fill: color
                 });
 
-                circle.on("mousemove", function() {
-                    // update tooltip
-                    console.log('mouseover')
-                    var mousePos = stage.getMousePosition();
-                    tooltip.setPosition(mousePos.x + 5, mousePos.y + 5);
-                    tooltip.setText("node: " + i + ", color: " + color);
-                    tooltip.show();
-                    tooltipLayer.draw();
-                });
-
-                circle.on("mouseout", function() {
-                    tooltip.hide();
-                    tooltipLayer.draw();
-                });
-
                 circlesLayer.add(circle);
             }());
         }
 
-        var tooltip = new Kinetic.Text({
-            text: "",
-            fontFamily: "Calibri",
-            fontSize: 12,
-            padding: 5,
-            visible: false,
-            fill: "black",
-            alpha: 0.75,
-            textFill: "white"
-        });
-
-        tooltipLayer.add(tooltip);
 
         stage.add(circlesLayer);
-        stage.add(tooltipLayer);
 
         endTimer('drew 10,000 circles');
 

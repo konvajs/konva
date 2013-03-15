@@ -14,7 +14,7 @@
     Kinetic.Group.prototype = {
         _initGroup: function(config) {
             this.nodeType = 'Group';
-
+            this.createAttrs();
             // call super constructor
             Kinetic.Container.call(this, config);
         }

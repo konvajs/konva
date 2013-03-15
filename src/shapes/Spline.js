@@ -40,10 +40,7 @@
 
     Kinetic.Spline.prototype = {
         _initSpline: function(config) {
-            this.setDefaultAttrs({
-                tension: 1
-            });
-
+            this.createAttrs();
             // call super constructor
             Kinetic.Line.call(this, config);
             this.shapeType = 'Spline';
@@ -106,7 +103,7 @@
     Kinetic.Global.extend(Kinetic.Spline, Kinetic.Line);
 
     // add getters setters
-    Kinetic.Node.addGetters(Kinetic.Spline, ['tension']);
+    Kinetic.Node.addGetter(Kinetic.Spline, 'tension', 1);
 
     /**
      * get tension

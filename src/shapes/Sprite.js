@@ -16,10 +16,7 @@
 
     Kinetic.Sprite.prototype = {
         _initSprite: function(config) {
-            this.setDefaultAttrs({
-                index: 0,
-                frameRate: 17
-            });
+            this.createAttrs();
             
             // call super constructor
             Kinetic.Shape.call(this, config);
@@ -111,7 +108,10 @@
     Kinetic.Global.extend(Kinetic.Sprite, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Node.addGettersSetters(Kinetic.Sprite, ['animation', 'animations', 'index']);
+    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'animation');
+    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'animations');
+    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'index', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'frameRate', 17);
 
     /**
      * set animation key

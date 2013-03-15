@@ -67,37 +67,6 @@ Test.Modules.STAGE = {
         test(layer.getCanvas().element.width === 333, 'layer canvas element width should be 333');
         test(layer.getCanvas().element.height === 155, 'layer canvas element width should be 155');
     },
-    'reset stage': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200,
-            x: 100
-        });
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-        var circle = new Kinetic.Circle({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4,
-            name: 'myCircle',
-            draggable: true
-        });
-
-        stage.add(layer);
-        layer.add(group);
-        group.add(circle);
-        layer.draw();
-
-        test(stage.getChildren().length === 1, 'stage should have one child');
-        test(stage.getX() === 100, 'stage x should be 100');
-        stage.reset();
-        test(stage.getChildren().length === 0, 'stage should have no children');
-        test(stage.getX() === 0, 'stage x should be 0');
-    },
     'get stage DOM': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

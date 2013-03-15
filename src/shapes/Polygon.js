@@ -15,9 +15,7 @@
 
     Kinetic.Polygon.prototype = {
         _initPolygon: function(config) {
-            this.setDefaultAttrs({
-                points: []
-            });
+            this.createAttrs();
 
             // call super constructor
             Kinetic.Shape.call(this, config);
@@ -48,7 +46,7 @@
     Kinetic.Global.extend(Kinetic.Polygon, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Node.addGetters(Kinetic.Polygon, ['points']);
+    Kinetic.Node.addGetter(Kinetic.Polygon, 'points', []);
 
     /**
      * get points array

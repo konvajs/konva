@@ -15,10 +15,7 @@
 
     Kinetic.Line.prototype = {
         _initLine: function(config) {
-            this.setDefaultAttrs({
-                points: [],
-                lineCap: 'butt'
-            });
+            this.createAttrs();
 
             // call super constructor
             Kinetic.Shape.call(this, config);
@@ -51,7 +48,7 @@
     Kinetic.Global.extend(Kinetic.Line, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Node.addGetters(Kinetic.Line, ['points']);
+    Kinetic.Node.addGetter(Kinetic.Line, 'points', []);
 
     /**
      * get points array

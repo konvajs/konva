@@ -13,28 +13,6 @@
     Kinetic.Node.prototype = {
         _nodeInit: function(config) {
             this._id = Kinetic.Global.idCounter++;
-
-            this.defaultNodeAttrs = {
-                visible: true,
-                listening: true,
-                name: undefined,
-                opacity: 1,
-                x: 0,
-                y: 0,
-                scale: {
-                    x: 1,
-                    y: 1
-                },
-                rotation: 0,
-                offset: {
-                    x: 0,
-                    y: 0
-                },
-                draggable: false,
-                dragOnTop: true
-            };
-
-            this.setDefaultAttrs(this.defaultNodeAttrs);
             this.eventListeners = {};
             this.setAttrs(config);
         },
@@ -91,7 +69,6 @@
             var len = types.length;
             for(var n = 0; n < len; n++) {
                 var type = types[n];
-                //var event = (type.indexOf('touch') === -1) ? 'on' + type : type;
                 var event = type;
                 var parts = event.split('.');
                 var baseEvent = parts[0];
@@ -156,41 +133,32 @@
             this.remove();
         },
         /**
+         * get attr
+         * @name getAttr
+         * @methodOf Kinetic.Node.prototype
+         */
+        getAttr: function(attr) {
+            var method = 'get' + attr.charAt(0).toUpperCase() + attr.slice(1);
+            return method();
+        },
+        /**
          * get attrs
          * @name getAttrs
          * @methodOf Kinetic.Node.prototype
          */
         getAttrs: function() {
-            return this.attrs;
+            return this.attrs || {};
         },
         /**
-         * set default attrs.  This method should only be used if
-         *  you're creating a custom node
-         * @name setDefaultAttrs
+         * @name createAttrs
          * @methodOf Kinetic.Node.prototype
-         * @param {Object} confic
          */
-        setDefaultAttrs: function(config) {
-            // create attrs object if undefined
+        createAttrs: function() {
             if(this.attrs === undefined) {
                 this.attrs = {};
             }
-
-            if(config) {
-                for(var key in config) {
-                    /*
-                     * only set the attr if it's undefined in case
-                     * a developer writes a custom class that extends
-                     * a Kinetic Class such that their default property
-                     * isn't overwritten by the Kinetic Class default
-                     * property
-                     */
-                    if(this.attrs[key] === undefined) {
-                        this.attrs[key] = config[key];
-                    }
-                }
-            }
         },
+        
         /**
          * set attrs
          * @name setAttrs
@@ -220,7 +188,14 @@
          * @methodOf Kinetic.Node.prototype
          */
         getVisible: function() {
-            var visible = this.attrs.visible, parent = this.getParent();
+            var visible = this.attrs.visible, 
+                parent = this.getParent();
+              
+            // default  
+            if (visible === undefined) {
+                visible = true;  
+            }
+            
             if(visible && parent && !parent.getVisible()) {
                 return false;
             }
@@ -234,7 +209,14 @@
          * @methodOf Kinetic.Node.prototype
          */
         getListening: function() {
-            var listening = this.attrs.listening, parent = this.getParent();
+            var listening = this.attrs.listening, 
+                parent = this.getParent();
+                
+            // default  
+            if (listening === undefined) {
+                listening = true;  
+            }
+            
             if(listening && parent && !parent.getListening()) {
                 return false;
             }
@@ -262,7 +244,7 @@
          * @methodOf Kinetic.Node.prototype
          */
         getZIndex: function() {
-            return this.index;
+            return this.index || 0;
         },
         /**
          * get absolute z-index which takes into account sibling
@@ -335,10 +317,9 @@
          * @methodOf Kinetic.Node.prototype
          */
         getPosition: function() {
-            var attrs = this.attrs;
             return {
-                x: attrs.x,
-                y: attrs.y
+                x: this.getX(),
+                y: this.getY()
             };
         },
         /**
@@ -630,14 +611,13 @@
          */
         getTransform: function() {
             var m = new Kinetic.Transform(), 
-                attrs = this.attrs, 
-                x = attrs.x, 
-                y = attrs.y, 
-                rotation = attrs.rotation, 
-                scale = attrs.scale, 
+                x = this.getX(), 
+                y = this.getY(), 
+                rotation = this.getRotation(),
+                scale = this.getScale(), 
                 scaleX = scale.x, 
                 scaleY = scale.y, 
-                offset = attrs.offset, 
+                offset = this.getOffset(), 
                 offsetX = offset.x, 
                 offsetY = offset.y;
                 
@@ -811,13 +791,12 @@
             }
         },
         _clearTransform: function() {
-            var attrs = this.attrs, 
-              scale = attrs.scale, 
-              offset = attrs.offset,
+            var scale = this.getScale(), 
+              offset = this.getOffset(),
               trans = {
-                  x: attrs.x,
-                  y: attrs.y,
-                  rotation: attrs.rotation,
+                  x: this.getX(),
+                  y: this.getY(),
+                  rotation: this.getRotation(),
                   scale: {
                       x: scale.x,
                       y: scale.y
@@ -932,65 +911,37 @@
     };
 
     // add getter and setter methods
-    Kinetic.Node.addSetters = function(constructor, arr) {
-        var len = arr.length;
-        for(var n = 0; n < len; n++) {
-            var attr = arr[n];
-            this._addSetter(constructor, attr);
-        }
+
+    Kinetic.Node.addGetterSetter = function(constructor, arr, def) {
+        this.addGetter(constructor, arr, def);
+        this.addSetter(constructor, arr);
     };
-    Kinetic.Node.addPointSetters = function(constructor, arr) {
-        var len = arr.length;
-        for(var n = 0; n < len; n++) {
-            var attr = arr[n];
-            this._addPointSetter(constructor, attr);
-        }
+    Kinetic.Node.addPointGetterSetter = function(constructor, arr, def) {
+        this.addGetter(constructor, arr, def);
+        this.addPointSetter(constructor, arr);     
     };
-    Kinetic.Node.addRotationSetters = function(constructor, arr) {
-        var len = arr.length;
-        for(var n = 0; n < len; n++) {
-            var attr = arr[n];
-            this._addRotationSetter(constructor, attr);
-        }
+    Kinetic.Node.addRotationGetterSetter = function(constructor, arr, def) {
+        this.addRotationGetter(constructor, arr, def);
+        this.addRotationSetter(constructor, arr);    
     };
-    Kinetic.Node.addGetters = function(constructor, arr) {
-        var len = arr.length;
-        for(var n = 0; n < len; n++) {
-            var attr = arr[n];
-            this._addGetter(constructor, attr);
-        }
-    };
-    Kinetic.Node.addRotationGetters = function(constructor, arr) {
-        var len = arr.length;
-        for(var n = 0; n < len; n++) {
-            var attr = arr[n];
-            this._addRotationGetter(constructor, attr);
-        }
-    };
-    Kinetic.Node.addGettersSetters = function(constructor, arr) {
-        this.addSetters(constructor, arr);
-        this.addGetters(constructor, arr);
-    };
-    Kinetic.Node.addPointGettersSetters = function(constructor, arr) {
-        this.addPointSetters(constructor, arr);
-        this.addGetters(constructor, arr);
-    };
-    Kinetic.Node.addRotationGettersSetters = function(constructor, arr) {
-        this.addRotationSetters(constructor, arr);
-        this.addRotationGetters(constructor, arr);
-    };
-    Kinetic.Node._addSetter = function(constructor, attr) {
+    Kinetic.Node.addSetter = function(constructor, attr) {
         var that = this;
         var method = 'set' + attr.charAt(0).toUpperCase() + attr.slice(1);
         constructor.prototype[method] = function(val) {
             this.setAttr(attr, val);
         };
     };
-    Kinetic.Node._addPointSetter = function(constructor, attr) {
+    Kinetic.Node.addPointSetter = function(constructor, attr) {
         var that = this;
         var method = 'set' + attr.charAt(0).toUpperCase() + attr.slice(1);
         constructor.prototype[method] = function() {
             var pos = Kinetic.Type._getXY([].slice.call(arguments));
+            
+            // default
+            if (!this.attrs[attr]) {
+                this.attrs[attr] = {x:1,y:1};  
+            }
+            
             if(pos && pos.x === undefined) {
                 pos.x = this.attrs[attr].x;
             }
@@ -1000,7 +951,7 @@
             this.setAttr(attr, pos);
         };
     };
-    Kinetic.Node._addRotationSetter = function(constructor, attr) {
+    Kinetic.Node.addRotationSetter = function(constructor, attr) {
         var that = this;
         var method = 'set' + attr.charAt(0).toUpperCase() + attr.slice(1);
         // radians
@@ -1012,23 +963,35 @@
             this.setAttr(attr, Kinetic.Type._degToRad(deg));
         };
     };
-    Kinetic.Node._addGetter = function(constructor, attr) {
+    Kinetic.Node.addGetter = function(constructor, attr, def) {
         var that = this;
         var method = 'get' + attr.charAt(0).toUpperCase() + attr.slice(1);
         constructor.prototype[method] = function(arg) {
-            return this.attrs[attr];
+            var val = this.attrs[attr];
+            if (val === undefined) {
+                val = def; 
+            }
+            return val;    
         };
     };
-    Kinetic.Node._addRotationGetter = function(constructor, attr) {
+    Kinetic.Node.addRotationGetter = function(constructor, attr, def) {
         var that = this;
         var method = 'get' + attr.charAt(0).toUpperCase() + attr.slice(1);
         // radians
         constructor.prototype[method] = function() {
-            return this.attrs[attr];
+            var val = this.attrs[attr];
+            if (val === undefined) {
+                val = def; 
+            }
+            return val;
         };
         // degrees
         constructor.prototype[method + 'Deg'] = function() {
-            return Kinetic.Type._radToDeg(this.attrs[attr])
+            var val = this.attrs[attr];
+            if (val === undefined) {
+                val = def; 
+            }
+            return Kinetic.Type._radToDeg(val);
         };
     };
     /**
@@ -1081,7 +1044,9 @@
         return no;
     };
     // add getters setters
-    Kinetic.Node.addGettersSetters(Kinetic.Node, ['x', 'y', 'opacity']);
+    Kinetic.Node.addGetterSetter(Kinetic.Node, 'x', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.Node, 'y', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.Node, 'opacity', 1);
 
     /**
      * set x position
@@ -1124,7 +1089,8 @@
      * @methodOf Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addGetters(Kinetic.Node, ['name', 'id']);
+    Kinetic.Node.addGetter(Kinetic.Node, 'name');
+    Kinetic.Node.addGetter(Kinetic.Node, 'id');
 
     /**
      * get name
@@ -1138,7 +1104,7 @@
      * @methodOf Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addRotationGettersSetters(Kinetic.Node, ['rotation']);
+    Kinetic.Node.addRotationGetterSetter(Kinetic.Node, 'rotation', 0);
 
     /**
      * set rotation in radians
@@ -1166,7 +1132,8 @@
      * @methodOf Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addPointGettersSetters(Kinetic.Node, ['scale', 'offset']);
+    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'scale', {x:1,y:1});
+    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'offset', {x:0,y:0});
 
     /**
      * set scale
@@ -1196,7 +1163,10 @@
      * @methodOf Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addSetters(Kinetic.Node, ['width', 'height', 'listening', 'visible']);
+    Kinetic.Node.addSetter(Kinetic.Node, 'width');
+    Kinetic.Node.addSetter(Kinetic.Node, 'height');
+    Kinetic.Node.addSetter(Kinetic.Node, 'listening');
+    Kinetic.Node.addSetter(Kinetic.Node, 'visible');
 
     /**
      * set width

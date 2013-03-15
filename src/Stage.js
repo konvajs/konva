@@ -14,15 +14,11 @@
 
     Kinetic.Stage.prototype = {
         _initStage: function(config) {
-        	var dd = Kinetic.DD;
-            this.setDefaultAttrs({
-                width: 400,
-                height: 200
-            });
-
+            var dd = Kinetic.DD;
+            
+            this.createAttrs();
             // call super constructor
             Kinetic.Container.call(this, config);
-
             this._setStageDefaultProperties();
             this._id = Kinetic.Global.idCounter++;
             this._buildDOM();
@@ -104,19 +100,6 @@
             }
         },
         /**
-         * reset stage to default state
-         * @name reset
-         * @methodOf Kinetic.Stage.prototype
-         */
-        reset: function() {
-            // remove children
-            this.removeChildren();
-
-            // defaults
-            this._setStageDefaultProperties();
-            this.setAttrs(this.defaultNodeAttrs);
-        },
-        /**
          * get mouse position for desktop apps
          * @name getMousePosition
          * @methodOf Kinetic.Stage.prototype
@@ -170,7 +153,13 @@
          */
         toDataURL: function(config) {
             config = config || {};
-            var mimeType = config.mimeType || null, quality = config.quality || null, x = config.x || 0, y = config.y || 0, canvas = new Kinetic.SceneCanvas(config.width || this.getWidth(), config.height || this.getHeight()), context = canvas.getContext(), layers = this.children;
+            var mimeType = config.mimeType || null, 
+                quality = config.quality || null, 
+                x = config.x || 0, 
+                y = config.y || 0, 
+                canvas = new Kinetic.SceneCanvas(config.width || this.getWidth(), config.height || this.getHeight()), 
+                context = canvas.getContext(), 
+                layers = this.children;
 
             if(x || y) {
                 context.translate(-1 * x, -1 * y);
@@ -568,7 +557,7 @@
     Kinetic.Global.extend(Kinetic.Stage, Kinetic.Container);
 
     // add getters and setters
-    Kinetic.Node.addGetters(Kinetic.Stage, ['container']);
+    Kinetic.Node.addGetter(Kinetic.Stage, 'container');
 
     /**
      * get container DOM element

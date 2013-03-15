@@ -53,24 +53,18 @@
     Kinetic.Text.prototype = {
         _initText: function(config) {
             var that = this;
-            this.setDefaultAttrs({
-                fontFamily: CALIBRI,
-                text: EMPTY_STRING,
-                fontSize: 12,
-                align: LEFT,
-                verticalAlign: TOP,
-                fontStyle: NORMAL,
-                padding: 0,
-                width: AUTO,
-                height: AUTO,
-                lineHeight: 1
-            });
-
             this.dummyCanvas = document.createElement(CANVAS);
-
+            this.createAttrs();
+            
+            // since width and height work a bit different for Text,
+            // we need to default the values here
+            this.attrs.width = AUTO;
+            this.attrs.height = AUTO;
+            
             // call super constructor
             Kinetic.Shape.call(this, config);
 
+            this.shapeType = TEXT;
             this._fillFunc = _fillFunc;
             this._strokeFunc = _strokeFunc;
             this.shapeType = TEXT_UPPER;
@@ -158,7 +152,7 @@
          * @methodOf Kinetic.Text.prototype
          */
         getHeight: function() {
-            return this.attrs.height === AUTO ? (this.getTextHeight() * this.textArr.length * this.attrs.lineHeight) + this.attrs.padding * 2 : this.attrs.height;
+            return this.attrs.height === AUTO ? (this.getTextHeight() * this.textArr.length * this.getLineHeight()) + this.attrs.padding * 2 : this.attrs.height;
         },
         /**
          * get text width
@@ -280,10 +274,19 @@
         }
     };
     Kinetic.Global.extend(Kinetic.Text, Kinetic.Shape);
-
+ 
     // add getters setters
-    Kinetic.Node.addGettersSetters(Kinetic.Text, ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'align', 'lineHeight']);
-    Kinetic.Node.addGetters(Kinetic.Text, [TEXT]);
+    Kinetic.Node.addGetterSetter(Kinetic.Text, 'fontFamily', CALIBRI);
+    Kinetic.Node.addGetterSetter(Kinetic.Text, 'fontSize', 12);
+    Kinetic.Node.addGetterSetter(Kinetic.Text, 'fontStyle', NORMAL);
+    Kinetic.Node.addGetterSetter(Kinetic.Text, 'padding', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.Text, 'align', LEFT);
+    Kinetic.Node.addGetterSetter(Kinetic.Text, 'lineHeight', 1);
+
+    Kinetic.Node.addGetter(Kinetic.Text, TEXT, EMPTY_STRING);
+    
+    Kinetic.Node.addSetter(Kinetic.Text, 'width');
+    Kinetic.Node.addSetter(Kinetic.Text, 'height');
     /**
      * set font family
      * @name setFontFamily

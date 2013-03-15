@@ -561,7 +561,7 @@ Test.Modules.SHAPE = {
         test(circle.getDashArrayEnabled() === true, 'dashArrayEnabled should be true');
 
         circle.disableFill();
-
+        
         test(circle.getFillEnabled() === false, 'fillEnabled should be false');
         test(circle.getStrokeEnabled() === true, 'strokeEnabled should be true');
         test(circle.getShadowEnabled() === true, 'shadowEnabled should be true');

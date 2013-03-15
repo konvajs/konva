@@ -14,17 +14,14 @@
 
     Kinetic.Circle.prototype = {
         _initCircle: function(config) {
-            this.setDefaultAttrs({
-                radius: 0
-            });
-
+            this.createAttrs();
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.shapeType = 'Circle';
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
-        	var context = canvas.getContext();
+        	  var context = canvas.getContext();
             context.beginPath();
             context.arc(0, 0, this.getRadius(), 0, Math.PI * 2, true);
             context.closePath();
@@ -48,7 +45,7 @@
     Kinetic.Global.extend(Kinetic.Circle, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Node.addGettersSetters(Kinetic.Circle, ['radius']);
+    Kinetic.Node.addGetterSetter(Kinetic.Circle, 'radius', 0);
 
     /**
      * set radius

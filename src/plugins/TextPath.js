@@ -1,4 +1,8 @@
 (function() {
+    var EMPTY_STRING = '',
+        CALIBRI = 'Calibri',
+        NORMAL = 'normal';
+
     /**
      * Path constructor.
      * @author Jason Follas
@@ -25,13 +29,7 @@
 
     Kinetic.Plugins.TextPath.prototype = {
         _initTextPath: function(config) {
-            this.setDefaultAttrs({
-                fontFamily: 'Calibri',
-                fontSize: 12,
-                fontStyle: 'normal',
-                text: ''
-            });
-
+            this.createAttrs();
             this.dummyCanvas = document.createElement('canvas');
             this.dataArray = [];
             var that = this;
@@ -307,8 +305,11 @@
     Kinetic.Global.extend(Kinetic.Plugins.TextPath, Kinetic.Shape);
 
     // add setters and getters
-    Kinetic.Node.addGettersSetters(Kinetic.Plugins.TextPath, ['fontFamily', 'fontSize', 'fontStyle']);
-    Kinetic.Node.addGetters(Kinetic.Plugins.TextPath, ['text']);
+    Kinetic.Node.addGetterSetter(Kinetic.Plugins.TextPath, 'fontFamily', CALIBRI);
+    Kinetic.Node.addGetterSetter(Kinetic.Plugins.TextPath, 'fontSize', 12);
+    Kinetic.Node.addGetterSetter(Kinetic.Plugins.TextPath, 'fontStyle', NORMAL);
+    
+    Kinetic.Node.addGetter(Kinetic.Plugins.TextPath, 'text', EMPTY_STRING);
 
     /**
      * set font family

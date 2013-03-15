@@ -852,7 +852,7 @@ Test.Modules.NODE = {
 
         showHit(layer);
     },
-    'hide group': function(containerId) {
+    'hide group 2': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -2611,6 +2611,9 @@ Test.Modules.NODE = {
 
         layer.hide();
         layer.draw();
+        
+        console.log(layer.toDataURL());
+        
         test(layer.toDataURL() === dataUrls['cleared'], 'layer is still visible');
     },
     'hide group': function(containerId) {

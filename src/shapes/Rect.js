@@ -14,21 +14,20 @@
     
     Kinetic.Rect.prototype = {
         _initRect: function(config) {
-            this.setDefaultAttrs({
-                width: 0,
-                height: 0,
-                cornerRadius: 0
-            });
-
+            this.createAttrs();
             Kinetic.Shape.call(this, config);
             this.shapeType = 'Rect';
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
-            var context = canvas.getContext();
+            var context = canvas.getContext(),
+                cornerRadius = this.getCornerRadius(), 
+                width = this.getWidth(), 
+                height = this.getHeight();
+                
             context.beginPath();
-            var cornerRadius = this.getCornerRadius(), width = this.getWidth(), height = this.getHeight();
-            if(cornerRadius === 0) {
+            
+            if(!cornerRadius) {
                 // simple rect - don't bother doing all that complicated maths stuff.
                 context.rect(0, 0, width, height);
             }
@@ -51,7 +50,7 @@
 
     Kinetic.Global.extend(Kinetic.Rect, Kinetic.Shape);
 
-    Kinetic.Node.addGettersSetters(Kinetic.Rect, ['cornerRadius']);
+    Kinetic.Node.addGetterSetter(Kinetic.Rect, 'cornerRadius', 0);
 
     /**
      * set corner radius

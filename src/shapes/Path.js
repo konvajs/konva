@@ -543,7 +543,7 @@
         return [cx, cy, rx, ry, theta, dTheta, psi, fs];
     };
     // add getters setters
-    Kinetic.Node.addGettersSetters(Kinetic.Path, ['data']);
+    Kinetic.Node.addGetterSetter(Kinetic.Path, 'data');
 
     /**
      * set SVG path data string.  This method

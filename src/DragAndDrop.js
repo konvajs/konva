@@ -148,14 +148,7 @@
         this.setAttr('draggable', draggable);
         this._dragChange();
     };
-    /**
-     * get draggable
-     * @name getDraggable
-     * @methodOf Kinetic.Node.prototype
-     */
-    Kinetic.Node.prototype.getDraggable = function() {
-        return this.attrs.draggable;
-    };
+
     /**
      * determine if node is currently in drag and drop mode
      * @name isDragging
@@ -200,14 +193,11 @@
         this.off('mousedown.kinetic');
         this.off('touchstart.kinetic');
     };
-    /**
-     * get draggable.  Alias of getDraggable()
-     * @name isDraggable
-     * @methodOf Kinetic.Node.prototype
-     */
-    Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
 
-    Kinetic.Node.addGettersSetters(Kinetic.Node, ['dragBoundFunc', 'dragOnTop']);
+    Kinetic.Node.addGetterSetter(Kinetic.Node, 'dragBoundFunc');
+    Kinetic.Node.addGetterSetter(Kinetic.Node, 'dragOnTop', true);
+    
+    Kinetic.Node.addGetter(Kinetic.Node, 'draggable', false);
 
     /**
      * set drag bound function.  This is used to override the default
@@ -237,7 +227,20 @@
      * @name getDragOnTop
      * @methodOf Kinetic.Node.prototype
      */
+    
+     /**
+     * get draggable
+     * @name getDraggable
+     * @methodOf Kinetic.Node.prototype
+     */
 
+    /**
+     * get draggable.  Alias of getDraggable()
+     * @name isDraggable
+     * @methodOf Kinetic.Node.prototype
+     */
+    Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
+    
     // listen for capturing phase so that the _endDrag method is
     // called before the stage mouseup event is triggered in order
     // to render the hit graph just in time to pick up the event

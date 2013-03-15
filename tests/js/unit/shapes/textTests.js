@@ -256,12 +256,16 @@ Test.Modules.Text = {
 
         var width = text.getWidth();
         var height = text.getHeight();
+        
+        
 
         layer.add(text);
         stage.add(layer);
 
         text.setFontSize(30);
         layer.draw();
+        
+        //console.log(text.getHeight() + ',' + height);
 
         test(text.getWidth() > width, 'text box width should have increased.');
         test(text.getHeight() > height, 'text box height should have increased.');

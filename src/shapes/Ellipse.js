@@ -14,12 +14,7 @@
 
     Kinetic.Ellipse.prototype = {
         _initEllipse: function(config) {
-            this.setDefaultAttrs({
-                radius: {
-                    x: 0,
-                    y: 0
-                }
-            });
+            this.createAttrs();
 
             // call super constructor
             Kinetic.Shape.call(this, config);
@@ -60,7 +55,7 @@
     Kinetic.Global.extend(Kinetic.Ellipse, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Node.addPointGettersSetters(Kinetic.Ellipse, ['radius']);
+    Kinetic.Node.addPointGetterSetter(Kinetic.Ellipse, 'radius', {x:0,y:0});
 
     /**
      * set radius

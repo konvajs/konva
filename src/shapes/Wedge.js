@@ -16,11 +16,7 @@
 
     Kinetic.Wedge.prototype = {
         _initWedge: function(config) {
-            this.setDefaultAttrs({
-                radius: 0,
-                angle: 0,
-                clockwise: false
-            });
+            this.createAttrs();
 
             // call super constructor
             Kinetic.Shape.call(this, config);
@@ -56,7 +52,9 @@
     Kinetic.Global.extend(Kinetic.Wedge, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Node.addGettersSetters(Kinetic.Wedge, ['radius', 'angle', 'clockwise']);
+    Kinetic.Node.addGetterSetter(Kinetic.Wedge, 'radius', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.Wedge, 'angle', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.Wedge, 'clockwise', false);
 
     /**
      * set radius

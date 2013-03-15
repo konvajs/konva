@@ -191,8 +191,8 @@
     Kinetic.Global.extend(Kinetic.Image, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Node.addGettersSetters(Kinetic.Image, ['image']);
-    Kinetic.Node.addGetters(Kinetic.Image, ['crop']);
+    Kinetic.Node.addGetterSetter(Kinetic.Image, 'image');
+    Kinetic.Node.addGetter(Kinetic.Image, 'crop');
 
     /**
      * set image

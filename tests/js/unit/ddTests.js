@@ -21,13 +21,13 @@ Test.Modules.DD = {
         layer.draw();
 
         // test defaults
-        test(circle.attrs.draggable === false, 'draggable should be false');
+        test(circle.isDraggable() === false, 'draggable should be false');
 
         //change properties
         circle.setDraggable(true);
 
         // test new properties
-        test(circle.attrs.draggable === true, 'draggable should be true');
+        test(circle.getDraggable() === true, 'draggable should be true');
     },
     'DRAG AND DROP - multiple drag and drop sets with setDraggable()': function(containerId) {
         var stage = new Kinetic.Stage({

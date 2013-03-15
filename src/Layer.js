@@ -16,10 +16,6 @@
 
     Kinetic.Layer.prototype = {
         _initLayer: function(config) {
-            this.setDefaultAttrs({
-                clearBeforeDraw: true
-            });
-
             this.nodeType = 'Layer';
             this.beforeDrawFunc = undefined;
             this.afterDrawFunc = undefined;
@@ -27,6 +23,7 @@
             this.canvas.getElement().style.position = 'absolute';
             this.hitCanvas = new Kinetic.HitCanvas();
 
+            this.createAttrs();
             // call super constructor
             Kinetic.Container.call(this, config);
         },
@@ -70,14 +67,18 @@
          */
         drawScene: function(canvas) {
             canvas = canvas || this.getCanvas();
-            if(this.attrs.clearBeforeDraw) {
+            if(this.getClearBeforeDraw()) {
                 canvas.clear();
             }
             Kinetic.Container.prototype.drawScene.call(this, canvas);
         },
         toDataURL: function(config) {
             config = config || {};
-            var mimeType = config.mimeType || null, quality = config.quality || null, canvas, context, x = config.x || 0, y = config.y || 0;
+            var mimeType = config.mimeType || null, 
+                quality = config.quality || null, 
+                canvas, context, 
+                x = config.x || 0, 
+                y = config.y || 0;
 
             // if dimension or position is defined, use Node toDataURL
             if(config.width || config.height || config.x || config.y) {
@@ -87,6 +88,7 @@
             else {
                 return this.getCanvas().toDataURL(mimeType, quality);
             }
+  
         },
         /**
          * set before draw handler
@@ -217,7 +219,7 @@
     Kinetic.Global.extend(Kinetic.Layer, Kinetic.Container);
 
     // add getters and setters
-    Kinetic.Node.addGettersSetters(Kinetic.Layer, ['clearBeforeDraw']);
+    Kinetic.Node.addGetterSetter(Kinetic.Layer, 'clearBeforeDraw', true);
 
     /**
      * set flag which determines if the layer is cleared or not
