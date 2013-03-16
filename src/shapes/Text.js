@@ -21,7 +21,8 @@
         ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'align', 'lineHeight', 'text', 'width', 'height'],
         
         // cached variables
-        attrChangeListLen = ATTR_CHANGE_LIST.length;
+        attrChangeListLen = ATTR_CHANGE_LIST.length,
+        dummyCanvas = document.createElement(CANVAS);
 
     /**
      * Text constructor
@@ -53,7 +54,6 @@
     Kinetic.Text.prototype = {
         _initText: function(config) {
             var that = this;
-            this.dummyCanvas = document.createElement(CANVAS);
             this.createAttrs();
             
             // since width and height work a bit different for Text,
@@ -171,8 +171,7 @@
             return this.textHeight;
         },
         _getTextSize: function(text) {
-            var dummyCanvas = this.dummyCanvas,
-                context = dummyCanvas.getContext(CONTEXT_2D),
+            var context = dummyCanvas.getContext(CONTEXT_2D),
                 fontSize = this.getFontSize(),
                 metrics;
 
