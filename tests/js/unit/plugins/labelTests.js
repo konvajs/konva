@@ -11,6 +11,9 @@ Test.Modules.LABEL = {
             x: 20,
             y: 20, 
             draggable: true,
+            arrow: 'left',
+            arrowWidth: 20,
+            arrowHeight: 20,
             text: {
                 text: 'Hello World!',
                 fontSize: 50,
@@ -27,7 +30,7 @@ Test.Modules.LABEL = {
                 shadowBlur: 1,
                 shadowOffset: [10, 10],
                 shadowOpacity: 0.2,
-                cornerRadius: 10,
+                lineJoin: 'round'
             }
         });
 
