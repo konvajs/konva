@@ -8,29 +8,30 @@ Test.Modules.LABEL = {
         var layer = new Kinetic.Layer();
 
         var label = new Kinetic.Plugins.Label({
-            x: 20,
-            y: 20, 
+            x: 100,
+            y: 100, 
             draggable: true,
-            arrow: 'left',
-            arrowWidth: 20,
-            arrowHeight: 20,
-            text: {
+            text: { 
                 text: 'Hello World!',
                 fontSize: 50,
                 fontFamily: 'Calibri',
                 fontStyle: 'normal',
                 lineHeight: 1.2,
                 padding: 10,
-                fill: 'green',
-            },
+                fill: 'green'
+            }, 
             rect: {
                 fill: '#bbb',
                 stroke: '#333',
                 shadowColor: 'black',
-                shadowBlur: 1,
+                shadowBlur: 10,
                 shadowOffset: [10, 10],
                 shadowOpacity: 0.2,
-                lineJoin: 'round'
+                lineJoin: 'round',
+                pointerDirection: 'down',
+                pointerWidth: 20,
+                pointerHeight: 20,
+                cornerRadius: 5
             }
         });
 
