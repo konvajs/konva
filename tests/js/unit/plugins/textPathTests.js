@@ -13,7 +13,7 @@ Test.Modules['TEXT PATH'] = {
 
         var c = "M 10,10 300,150";
 
-        var path = new Kinetic.Path({
+        var path = new Kinetic.Plugins.Path({
             stroke: 'red',
             strokeWidth: 1,
             data: c
@@ -47,7 +47,7 @@ Test.Modules['TEXT PATH'] = {
         var layer = new Kinetic.Layer();
 
         var c = "M10,10 C0,0 10,150 100,100 S300,150 400,50";
-        var path = new Kinetic.Path({
+        var path = new Kinetic.Plugins.Path({
             stroke: 'red',
             strokeWidth: 1,
             data: c
@@ -82,7 +82,7 @@ Test.Modules['TEXT PATH'] = {
         var layer = new Kinetic.Layer();
 
         var c = "M 250,100 A 100 50 30 1 0 150 150";
-        var path = new Kinetic.Path({
+        var path = new Kinetic.Plugins.Path({
             stroke: 'red',
             strokeWidth: 1,
             data: c

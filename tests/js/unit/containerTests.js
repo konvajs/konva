@@ -528,7 +528,7 @@ Test.Modules.CONTAINER = {
             data: "M 10,10 300,150 550,150"
         });
 
-        var path = new Kinetic.Path({
+        var path = new Kinetic.Plugins.Path({
             x: 200,
             y: -75,
             data: 'M200,100h100v50z',
