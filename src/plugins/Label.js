@@ -37,12 +37,17 @@
             Kinetic.Group.call(this, config);
             this.setText(new Kinetic.Text(config.text));
             this.setRect(new Kinetic.Plugins.LabelRect(config.rect));
-            this.getRect().text = this.getText();
             this.innerGroup.add(this.getRect());
             this.innerGroup.add(this.getText()); 
             this.add(this.innerGroup);   
             
             this._setGroupOffset();     
+        },
+        getWidth: function() {
+            return this.getText().getWidth();
+        },
+        getHeight: function() {
+            return this.getText().getHeight();
         },
         _setGroupOffset: function() {
             var text = this.getText(),
@@ -97,9 +102,10 @@
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
-            var context = canvas.getContext(),
-                width = this.text.getWidth(),
-                height = this.text.getHeight(),
+            var label = this.getParent().getParent(),
+                context = canvas.getContext(),
+                width = label.getWidth(),
+                height = label.getHeight(),
                 pointerDirection = this.getPointerDirection(),
                 pointerWidth = this.getPointerWidth(),
                 pointerHeight = this.getPointerHeight(),
