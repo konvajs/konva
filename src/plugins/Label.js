@@ -113,7 +113,7 @@
                 
             context.beginPath();
             context.moveTo(0,0);
-             
+            
             if (pointerDirection === UP) {
                 context.lineTo((width - pointerWidth)/2, 0);
                 context.lineTo(width/2, -1 * pointerHeight);

@@ -14,10 +14,10 @@ Test.Modules.LABEL = {
             text: { 
                 text: 'Hello World!',
                 fontSize: 50,
-                fontFamily: 'Calibri',
-                fontStyle: 'normal',
+                //fontFamily: 'Calibri',
+                //fontStyle: 'normal',
                 lineHeight: 1.2,
-                padding: 10,
+                //padding: 10,
                 fill: 'green'
             }, 
             rect: {
@@ -28,7 +28,7 @@ Test.Modules.LABEL = {
                 shadowOffset: [10, 10],
                 shadowOpacity: 0.2,
                 lineJoin: 'round',
-                pointerDirection: 'down',
+                //pointerDirection: 'down',
                 pointerWidth: 20,
                 pointerHeight: 20,
                 cornerRadius: 5

@@ -152,7 +152,7 @@
          * @methodOf Kinetic.Text.prototype
          */
         getHeight: function() {
-            return this.attrs.height === AUTO ? (this.getTextHeight() * this.textArr.length * this.getLineHeight()) + this.attrs.padding * 2 : this.attrs.height;
+            return this.attrs.height === AUTO ? (this.getTextHeight() * this.textArr.length * this.getLineHeight()) + this.getPadding() * 2 : this.attrs.height;
         },
         /**
          * get text width
