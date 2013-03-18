@@ -12,7 +12,7 @@ Test.Modules.LABEL = {
             y: 100, 
             draggable: true,
             text: { 
-                text: 'Hello World!',
+                text: '',
                 fontSize: 50,
                 //fontFamily: 'Calibri',
                 //fontStyle: 'normal',
@@ -28,7 +28,7 @@ Test.Modules.LABEL = {
                 shadowOffset: [10, 10],
                 shadowOpacity: 0.2,
                 lineJoin: 'round',
-                //pointerDirection: 'down',
+                pointerDirection: 'up',
                 pointerWidth: 20,
                 pointerHeight: 20,
                 cornerRadius: 5
@@ -44,9 +44,11 @@ Test.Modules.LABEL = {
 
         var afterTextWidth = label.getText().getWidth();
 
-        test(afterTextWidth > beforeTextWidth, 'label text width should have grown');
+        //test(afterTextWidth > beforeTextWidth, 'label text width should have grown');
 
         label.getText().setFontSize(50);
+        
+        label.getText().setText('Hello big world');
 
         layer.draw();
     }

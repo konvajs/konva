@@ -1,10 +1,15 @@
 (function() {
     // constants
-    var NONE = 'none',
+    var ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'lineHeight', 'text'],
+        CHANGE_KINETIC = 'Change.kinetic',
+        NONE = 'none',
         UP = 'up',
         RIGHT = 'right',
         DOWN = 'down',
-        LEFT = 'left';
+        LEFT = 'left',
+        
+     // cached variables
+     attrChangeListLen = ATTR_CHANGE_LIST.length;
         
     /**
      * Label constructor.&nbsp; Blobs are defined by an array of points and
@@ -32,16 +37,27 @@
 
     Kinetic.Plugins.Label.prototype = {
         _initLabel: function(config) {
+            var that = this,
+                text = null;
+            
             this.innerGroup = new Kinetic.Group();
             this.createAttrs();
             Kinetic.Group.call(this, config);
-            this.setText(new Kinetic.Text(config.text));
+            text = new Kinetic.Text(config.text);
+            this.setText(text);
             this.setRect(new Kinetic.Plugins.LabelRect(config.rect));
             this.innerGroup.add(this.getRect());
-            this.innerGroup.add(this.getText()); 
+            this.innerGroup.add(text); 
             this.add(this.innerGroup);   
             
-            this._setGroupOffset();     
+            this._setGroupOffset();
+            
+            // update text data for certain attr changes
+            for(var n = 0; n < attrChangeListLen; n++) {
+                text.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, function() {
+                    that._setGroupOffset();
+                 });
+             }     
         },
         getWidth: function() {
             return this.getText().getWidth();
