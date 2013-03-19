@@ -29,11 +29,12 @@
 
     Kinetic.Plugins.TextPath.prototype = {
         _initTextPath: function(config) {
+            var that = this;
+          
             this.createAttrs();
             this.dummyCanvas = document.createElement('canvas');
             this.dataArray = [];
-            var that = this;
-
+            
             // call super constructor
             Kinetic.Shape.call(this, config);
 
@@ -60,7 +61,7 @@
         drawFunc: function(canvas) {
             var charArr = this.charArr, context = canvas.getContext();
 
-            context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'pt ' + this.attrs.fontFamily;
+            context.font = this._getContextFont();
             context.textBaseline = 'middle';
             context.textAlign = 'left';
             context.save();
@@ -124,7 +125,7 @@
 
             context.save();
 
-            context.font = this.attrs.fontStyle + ' ' + this.attrs.fontSize + 'pt ' + this.attrs.fontFamily;
+            context.font = this._getContextFont();
             var metrics = context.measureText(text);
 
             context.restore();
@@ -304,6 +305,10 @@
             }
         }
     };
+
+    // map TextPath methods to Text
+    Kinetic.Plugins.TextPath.prototype._getContextFont = Kinetic.Text.prototype._getContextFont;
+    
     Kinetic.Global.extend(Kinetic.Plugins.TextPath, Kinetic.Shape);
 
     // add setters and getters

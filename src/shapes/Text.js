@@ -89,7 +89,7 @@
                 textArrLen = textArr.length,
                 totalWidth = this.getWidth();
 
-            context.font = fontStyle + SPACE + fontSize + PX_SPACE + fontFamily;
+            context.font = this._getContextFont();
             context.textBaseline = MIDDLE;
             context.textAlign = LEFT;
             context.save();
@@ -176,7 +176,7 @@
                 metrics;
 
             context.save();
-            context.font = this.getFontStyle() + SPACE + fontSize + PX_SPACE + this.getFontFamily();
+            context.font = this._getContextFont();
             
             metrics = context.measureText(text);
             context.restore();
@@ -184,6 +184,9 @@
                 width: metrics.width,
                 height: parseInt(fontSize, 10)
             };
+        },
+        _getContextFont: function() {
+            return this.getFontStyle() + SPACE + this.getFontSize() + PX_SPACE + this.getFontFamily();
         },
         _expandTextData: function(arr) {
             var len = arr.length;
