@@ -306,15 +306,10 @@
             var that = this;
             var events = ['mousedown', 'mousemove', 'mouseup', 'mouseout', 'touchstart', 'touchmove', 'touchend'];
 
-            for(var n = 0; n < events.length; n++) {
-                var pubEvent = events[n];
-                // induce scope
-                ( function() {
-                    var event = pubEvent;
-                    that.content.addEventListener(event, function(evt) {
-                        that['_' + event](evt);
-                    }, false);
-                }());
+            for (var n = 0; n < events.length; n++) {
+              var pubEvent = events[n];
+              var f = that['_' + pubEvent];
+              that.content.addEventListener(pubEvent, f.bind(that), false);
             }
         },
         _mouseout: function(evt) {
