@@ -1,5 +1,5 @@
 Test.Modules.LABEL = {
-    '*add label': function(containerId) {
+    'add label': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,

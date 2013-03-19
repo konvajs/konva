@@ -327,14 +327,14 @@
     Kinetic.Filters = Kinetic.Filters || {};
 
     /**
-     * Gauss Filter
+     * Blur Filter
      * @function
      * @memberOf Kinetic.Filters
      * @param {Object} imageData
      * @param {Object} config
      * @param {Integer} config.radius
      */
-    Kinetic.Filters.Gauss = function(imageData, config) {
+    Kinetic.Filters.Blur = function(imageData, config) {
         var radius = config.radius;
 
         radius |= 0;

@@ -319,7 +319,7 @@ Test.Modules.IMAGE = {
             test(darth.getWidth() === 438, 'image width should be 438');
             test(darth.getHeight() === 300, 'image height should be 300');
 
-            darth.applyFilter(Kinetic.Filters.Gauss, {
+            darth.applyFilter(Kinetic.Filters.Blur, {
                 radius: 10
             }, function() {
                 layer.draw();
