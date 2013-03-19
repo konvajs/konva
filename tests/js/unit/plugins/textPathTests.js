@@ -22,9 +22,9 @@ Test.Modules['TEXT PATH'] = {
         layer.add(path);
 
         var textpath = new Kinetic.Plugins.TextPath({
-            textStroke: 'black',
-            textStrokeWidth: 1,
-            textFill: 'orange',
+            stroke: 'black',
+            strokeWidth: 1,
+            fill: 'orange',
             fontSize: '18',
             fontFamily: 'Arial',
             text: 'The quick brown fox jumped over the lazy dog\'s back',
@@ -56,9 +56,9 @@ Test.Modules['TEXT PATH'] = {
         layer.add(path);
 
         var textpath = new Kinetic.Plugins.TextPath({
-            textStroke: 'black',
-            textStrokeWidth: 1,
-            textFill: 'orange',
+            stroke: 'black',
+            strokeWidth: 1,
+            fill: 'orange',
             fontSize: '8',
             fontFamily: 'Arial',
             text: 'All the world\'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.',
@@ -91,7 +91,7 @@ Test.Modules['TEXT PATH'] = {
         layer.add(path);
 
         var textpath = new Kinetic.Plugins.TextPath({
-            textFill: 'black',
+            fill: 'black',
             fontSize: '10',
             text: 'All the world\'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.',
             data: c
@@ -116,7 +116,7 @@ Test.Modules['TEXT PATH'] = {
 
         var textpath = new Kinetic.Plugins.TextPath({
             y: 50,
-            textFill: 'black',
+            fill: 'black',
             fontSize: '24',
             text: Array(4).join('All the world\'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.'),
             data: c

@@ -38,6 +38,7 @@
             Kinetic.Shape.call(this, config);
 
             // overrides
+            // TODO: shouldn't this be on the prototype?
             this._fillFunc = _fillFunc;
             this._strokeFunc = _strokeFunc;
 
@@ -75,6 +76,7 @@
                 context.translate(p0.x, p0.y);
                 context.rotate(glyphInfo[i].rotation);
                 this.partialText = glyphInfo[i].text;
+                
                 canvas.fillStroke(this);
                 context.restore();
 
