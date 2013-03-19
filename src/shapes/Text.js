@@ -6,7 +6,7 @@
         CENTER = 'center',
         CHANGE_KINETIC = 'Change.kinetic',
         CONTEXT_2D = '2d',
-        DASH = '\n',
+        DASH = '-',
         EMPTY_STRING = '', 
         LEFT = 'left',
         NEW_LINE = '\n',
