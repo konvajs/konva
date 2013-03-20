@@ -155,27 +155,35 @@ Test.Modules.Text = {
         layer.drawHit();
 
     },
-    'text multi line': function(containerId) {
+    '*text multi line': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
             height: 200
         });
         var layer = new Kinetic.Layer();
+        
+        var rect = new Kinetic.Rect({
+          x: 10,
+          y: 10,
+          width: 380,
+          height: 300,
+          fill: 'red'
+        });
 
         var text = new Kinetic.Text({
             x: 10,
             y: 10,
             text: 'HEADING\n\nAll the world\'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.',
             //text: 'HEADING\n\nThis is a really cool paragraph. \n And this is a footer.',
-            fontSize: 16,
+            fontSize: 24,
             fontFamily: 'Calibri',
             fontStyle: 'normal',
             fill: '#555',
             //width: 20,
             width: 380,
             //width: 200,
-            padding: 20,
+            padding: 0,
             align: 'center',
             draggable: true
         });
@@ -183,17 +191,23 @@ Test.Modules.Text = {
         // center text box
         //text.setOffset(text.getBoxWidth() / 2, text.getBoxHeight() / 2);
 
-        layer.add(text);
+        layer.add(rect).add(text);
         stage.add(layer);
 
         test(text.getLineHeight() === 1, 'text line height should be defaulted to 1');
 
-        /*
+         /*
          text.transitionTo({
-         width: 500,
-         duration: 10
+             width: 50,
+             duration: 20
+         });
+         
+         rect.transitionTo({
+             width: 50,
+             duration: 20
          });
          */
+         
     },
     'text multi line with shadows': function(containerId) {
         var stage = new Kinetic.Stage({
