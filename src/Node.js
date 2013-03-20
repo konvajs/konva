@@ -52,6 +52,7 @@
                     handler: handler
                 });
             }
+            return this;
         },
         /**
          * remove event bindings from the node. Pass in a string of
@@ -89,6 +90,7 @@
                     delete this.eventListeners[baseEvent];
                 }
             }
+            return this;
         },
         /**
          * remove child from container, but don't destroy it
