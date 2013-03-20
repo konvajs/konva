@@ -155,7 +155,7 @@ Test.Modules.Text = {
         layer.drawHit();
 
     },
-    '*text multi line': function(containerId) {
+    'text multi line': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -185,7 +185,8 @@ Test.Modules.Text = {
             //width: 200,
             padding: 0,
             align: 'center',
-            draggable: true
+            draggable: true,
+            wrapping: 'WORD'
         });
 
         // center text box
@@ -207,6 +208,7 @@ Test.Modules.Text = {
              duration: 20
          });
          */
+         
          
     },
     'text multi line with shadows': function(containerId) {
@@ -374,5 +376,40 @@ Test.Modules.Text = {
 
         //console.log(layer.toDataURL());
         warn(layer.toDataURL() === dataUrls['text stroke disabled'], 'should be text with blue fill and no stroke');
+    },
+    'wrapped text': function (containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var txt = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+            arr = [txt, txt];
+
+        var layer = new Kinetic.Layer();
+        var text = new Kinetic.Text({
+            x: 0,
+            y: 0,
+            width: 578,
+            text: arr.join(''),
+            fontSize: 15,
+            fontFamily: 'Calibri',
+            fill: '#000',
+            wrapping: 'word'
+        });
+
+        layer.add(text);
+        stage.add(layer);
+
+        warn(layer.toDataURL() === dataUrls['wrapped text']['wrapping to words'], 'text should be wrapped to words');
+
+        text.setWrapping('none');
+        layer.draw();
+        warn(layer.toDataURL() === dataUrls['wrapped text']['no wrapping'], 'text should not be wrapped');
+
+        text.setWrapping('char');
+        layer.draw();
+        warn(layer.toDataURL() === dataUrls['wrapped text']['wrapping to chars'], 'text should be wrapped to chars');
+
     }
 };
