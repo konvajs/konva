@@ -21,7 +21,7 @@
         WORD = 'word',
         CHAR = 'char',
         NONE = 'none',
-        ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'align', 'lineHeight', 'text', 'width', 'height', 'wrapping'],
+        ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'align', 'lineHeight', 'text', 'width', 'height', 'wrap'],
         
         // cached variables
         attrChangeListLen = ATTR_CHANGE_LIST.length,
@@ -41,7 +41,7 @@
      * @param {Number} [config.width] default is auto
      * @param {Number} [config.height] default is auto
      * @param {Number} [config.lineHeight] default is 1
-     * @param {String} [config.wrapping] can be word, char, or none. Default is word
+     * @param {String} [config.wrap] can be word, char, or none. Default is word
      * {{ShapeParams}}
      * {{NodeParams}}
      */
@@ -229,9 +229,9 @@
                  fixedHeight = height !== AUTO,
                  maxHeightPx = height - this.getPadding() * 2,
                  currentHeightPx = 0,
-                 wrapping = this.getWrapping(),
-                 shouldWrap = wrapping !== NONE,
-                 wrapAtWord = wrapping !==  CHAR && shouldWrap;
+                 wrap = this.getWrap(),
+                 shouldWrap = wrap !== NONE,
+                 wrapAtWord = wrap !==  CHAR && shouldWrap;
 
              this.textArr = [];
              dummyContext.save();
@@ -322,7 +322,7 @@
     Kinetic.Node.addGetterSetter(Kinetic.Text, 'padding', 0);
     Kinetic.Node.addGetterSetter(Kinetic.Text, 'align', LEFT);
     Kinetic.Node.addGetterSetter(Kinetic.Text, 'lineHeight', 1);
-    Kinetic.Node.addGetterSetter(Kinetic.Text, 'wrapping', NONE);
+    Kinetic.Node.addGetterSetter(Kinetic.Text, 'wrap', NONE);
 
     Kinetic.Node.addGetter(Kinetic.Text, TEXT, EMPTY_STRING);
     

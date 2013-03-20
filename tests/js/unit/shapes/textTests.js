@@ -186,7 +186,7 @@ Test.Modules.Text = {
             padding: 0,
             align: 'center',
             draggable: true,
-            wrapping: 'WORD'
+            wrap: 'WORD'
         });
 
         // center text box
@@ -395,7 +395,7 @@ Test.Modules.Text = {
             fontSize: 15,
             fontFamily: 'Calibri',
             fill: '#000',
-            wrapping: 'word'
+            wrap: 'word'
         });
 
         layer.add(text);
@@ -403,11 +403,11 @@ Test.Modules.Text = {
 
         warn(layer.toDataURL() === dataUrls['wrapped text']['wrapping to words'], 'text should be wrapped to words');
 
-        text.setWrapping('none');
+        text.setWrap('none');
         layer.draw();
         warn(layer.toDataURL() === dataUrls['wrapped text']['no wrapping'], 'text should not be wrapped');
 
-        text.setWrapping('char');
+        text.setWrap('char');
         layer.draw();
         warn(layer.toDataURL() === dataUrls['wrapped text']['wrapping to chars'], 'text should be wrapped to chars');
 
