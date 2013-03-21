@@ -1,5 +1,5 @@
 # Presentation Schedule
-To add your presentation, just click the "Edit" button, make your changes, and submit for review.
+To add/modify your presentation, just click the "Edit" button, make your changes, and submit for review.
 
 ## Nov 1st 2012
 * _Event:_ [DevConnections](http://devconnections.com/shows/fall2012/sessions.aspx?s=189)
