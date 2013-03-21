@@ -5,6 +5,7 @@
      * @augments Kinetic.Shape
      * @param {Object} config
      * @param {Number} config.angle
+     * @param {Number} config.angleDeg angle in degrees
      * @param {Number} config.radius
      * @param {Boolean} [config.clockwise]
      * {{ShapeParams}}
@@ -69,6 +70,13 @@
      * @methodOf Kinetic.Wedge.prototype
      * @param {Number} angle
      */
+    
+    /**
+     * set angle in degrees
+     * @name setAngleDeg
+     * @methodOf Kinetic.Wedge.prototype
+     * @param {Number} angleDeg
+     */
 
     /**
      * set clockwise draw direction.  If set to true, the wedge will be drawn clockwise
@@ -87,6 +95,12 @@
     /**
      * get angle
      * @name getAngle
+     * @methodOf Kinetic.Wedge.prototype
+     */
+    
+    /**
+     * get angle in degrees
+     * @name getAngleDeg
      * @methodOf Kinetic.Wedge.prototype
      */
 
