@@ -1,3 +1,6 @@
+# Presentation Schedule
+To add/modify your presentation, just click the "Edit" button, make your changes, and submit for review.
+
 ## Nov 1st 2012
 * _Event:_ [DevConnections](http://devconnections.com/shows/fall2012/sessions.aspx?s=189)
 * _Session:_ [Custom Graphics for Your Web Application: The HTML5 Canvas and Kinetic.js](http://devconnections.com/shows/fall2012/sessions.aspx?s=189)
