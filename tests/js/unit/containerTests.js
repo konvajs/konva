@@ -247,9 +247,9 @@ Test.Modules.CONTAINER = {
         shapes.on('mouseover', function() {
             a++;
         });
-        circle.simulate('mouseover');
+        circle.fire('mouseover');
         test(a === 1, 'listener should have fired for circle');
-        rect.simulate('mouseover');
+        rect.fire('mouseover');
         test(a === 2, 'listener should have fired for rect');
     },
     'test ids and names hashes': function(containerId) {

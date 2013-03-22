@@ -572,24 +572,22 @@
             }
         },
         /**
-         * simulate event with event bubbling
-         * @name simulate
-         * @methodOf Kinetic.Node.prototype
-         * @param {String} eventType
-         * @param {EventObject} evt event object
-         */
-        simulate: function(eventType, evt) {
-            this._handleEvent(eventType, evt || {});
-        },
-        /**
-         * synthetically fire an event. The event object will not bubble up the Node tree. You can also pass in custom properties
+         * fire event
          * @name fire
          * @methodOf Kinetic.Node.prototype
-         * @param {String} eventType
-         * @param {Object} obj optional object which can be used to pass parameters
+         * @param {String} eventType event type.  can be a regular event, like click, mouseover, or mouseout, or it can be a custom event, like myCustomEvent
+         * @param {EventObject} evt event object
+         * @param {Boolean} preventBubble setting the value to false, or leaving it undefined, will result in the event bubbling.  Setting the value to true will result in the event not bubbling.
          */
-        fire: function(eventType, obj) {
-            this._executeHandlers(eventType, obj || {});
+        fire: function(eventType, evt, preventBubble) {
+            // no bubble
+            if (preventBubble) {
+                this._executeHandlers(eventType, evt || {});
+            }
+            // bubble
+            else {
+                this._handleEvent(eventType, evt || {});
+            }
         },
         /**
          * get absolute transform of the node which takes into
@@ -889,9 +887,7 @@
             }
 
             if(okayToRun) {
-                if(el[eventType]) {
-                    this.fire(eventType, evt);
-                }
+                this._executeHandlers(eventType, evt);
 
                 // simulate event bubbling
                 if(evt && !evt.cancelBubble && this.parent) {
@@ -905,10 +901,14 @@
             }
         },
         _executeHandlers: function(eventType, evt) {
-            var events = this.eventListeners[eventType];
-            var len = events.length;
-            for(var i = 0; i < len; i++) {
-                events[i].handler.apply(this, [evt]);
+            var events = this.eventListeners[eventType],
+                len, i;
+                
+            if (events) {
+                len = events.length;
+                for(i = 0; i < len; i++) {
+                    events[i].handler.apply(this, [evt]);
+                }
             }
         }
     };

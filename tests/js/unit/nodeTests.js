@@ -253,9 +253,9 @@ Test.Modules.NODE = {
 
         // test user event binding cloning
         test(clicks.length === 0, 'no clicks should have been triggered yet');
-        rect.simulate('click');
+        rect.fire('click');
         test(clicks.toString() === 'myRect', 'only myRect should have been clicked on');
-        clone.simulate('click');
+        clone.fire('click');
         test(clicks.toString() === 'myRect,rectClone', 'click order should be myRect followed by rectClone');
     },
     'clone a group': function(containerId) {
@@ -351,16 +351,16 @@ Test.Modules.NODE = {
 
         // test user event binding cloning
         test(clicks.length === 0, 'no clicks should have been triggered yet');
-        group.simulate('click');
+        group.fire('click');
         test(clicks.toString() === 'myGroup', 'only myGroup should have been clicked on');
-        clone.simulate('click');
+        clone.fire('click');
         test(clicks.toString() === 'myGroup,groupClone', 'click order should be myGroup followed by groupClone');
 
         // test user event binding cloning on children
         test(taps.length === 0, 'no taps should have been triggered yet');
-        group.get('.myRect')[0].simulate('tap');
+        group.get('.myRect')[0].fire('tap');
         test(taps.toString() === 'group rect', 'only group rect should have been tapped on');
-        clone.get('.myRect')[0].simulate('tap');
+        clone.get('.myRect')[0].fire('tap');
         test(taps.toString() === 'group rect,clone rect', 'tap order should be group rect followed by clone rect');
 
         stage.draw();
@@ -1547,7 +1547,7 @@ Test.Modules.NODE = {
         stage.setListening(false);
         test(!rect.isListening(), 'rect should not be listening because stage is not listening');
     },
-    'test simulate and fire event': function(containerId) {
+    'test fire event': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1587,15 +1587,17 @@ Test.Modules.NODE = {
         layer.on('click', function() {
             clicks.push('layer');
         });
-        // simulated event
-        circle.simulate('click');
+        // fire event with bubbling
+        circle.fire('click');
+        
+        //console.log(clicks);
 
-        test(clicks.toString() == 'circle,layer', 'problem with simulate');
+        test(clicks.toString() == 'circle,layer', 'problem with fire 1');
 
         // synthetic event
-        circle.fire('click');
+        circle.fire('click', null, true);
 
-        test(clicks.toString() == 'circle,layer,circle', 'problem with fire');
+        test(clicks.toString() == 'circle,layer,circle', 'problem with fire 2');
 
         // test custom event
         circle.fire('customEvent', {
@@ -1603,6 +1605,9 @@ Test.Modules.NODE = {
         });
 
         test(foo === 'bar', 'problem with customEvent param passing');
+        
+        // test fireing custom event that doesn't exist.  script should not fail
+        circle.fire('kaboom');
 
     },
     'add remove event': function(containerId) {
@@ -1716,7 +1721,7 @@ Test.Modules.NODE = {
             clicks.push('layer');
         });
 
-        circle.simulate('click');
+        circle.fire('click');
 
         test(clicks[0] === 'circle', 'circle event should be fired first');
         test(clicks[1] === 'layer', 'layer event should be fired second');
