@@ -141,7 +141,7 @@
          * @param {String} attr  
          */
         getAttr: function(attr) {
-            var method = 'get' + attr.charAt(0).toUpperCase() + attr.slice(1);
+            var method = 'get' + Kinetic.Type._capitalize(attr);
             return this[method](); 
         },
         /**
@@ -171,7 +171,7 @@
         setAttrs: function(config) {
             if(config) {
                 for(var key in config) {
-                    var method = 'set' + key.charAt(0).toUpperCase() + key.slice(1);
+                    var method = 'set' + Kinetic.Type._capitalize(key);
                     // use setter if available
                     if(Kinetic.Type._isFunction(this[method])) {
                         this[method](config[key]);
@@ -828,7 +828,7 @@
             }
         },
         _fireBeforeChangeEvent: function(attr, oldVal, newVal) {
-            this._handleEvent('before' + attr.toUpperCase() + 'Change', {
+            this._handleEvent('before' + Kinetic.Type._capitalize(attr) + 'Change', {
                 oldVal: oldVal,
                 newVal: newVal
             });
@@ -929,14 +929,14 @@
     };
     Kinetic.Node.addSetter = function(constructor, attr) {
         var that = this;
-        var method = 'set' + attr.charAt(0).toUpperCase() + attr.slice(1);
+        var method = 'set' + Kinetic.Type._capitalize(attr);
         constructor.prototype[method] = function(val) {
             this.setAttr(attr, val);
         };
     };
     Kinetic.Node.addPointSetter = function(constructor, attr) {
         var that = this;
-        var method = 'set' + attr.charAt(0).toUpperCase() + attr.slice(1);
+        var method = 'set' + Kinetic.Type._capitalize(attr);
         constructor.prototype[method] = function() {
             var pos = Kinetic.Type._getXY([].slice.call(arguments));
             
@@ -956,7 +956,7 @@
     };
     Kinetic.Node.addRotationSetter = function(constructor, attr) {
         var that = this;
-        var method = 'set' + attr.charAt(0).toUpperCase() + attr.slice(1);
+        var method = 'set' + Kinetic.Type._capitalize(attr);
         // radians
         constructor.prototype[method] = function(val) {
             this.setAttr(attr, val);
@@ -968,7 +968,7 @@
     };
     Kinetic.Node.addGetter = function(constructor, attr, def) {
         var that = this;
-        var method = 'get' + attr.charAt(0).toUpperCase() + attr.slice(1);
+        var method = 'get' + Kinetic.Type._capitalize(attr);
         constructor.prototype[method] = function(arg) {
             var val = this.attrs[attr];
             if (val === undefined) {
@@ -979,7 +979,7 @@
     };
     Kinetic.Node.addRotationGetter = function(constructor, attr, def) {
         var that = this;
-        var method = 'get' + attr.charAt(0).toUpperCase() + attr.slice(1);
+        var method = 'get' + Kinetic.Type._capitalize(attr);
         // radians
         constructor.prototype[method] = function() {
             var val = this.attrs[attr];

@@ -1,4 +1,10 @@
 (function() {
+    // CONSTANTS
+    var EVENTS = ['mousedown', 'mousemove', 'mouseup', 'mouseout', 'touchstart', 'touchmove', 'touchend'],
+    
+    // cached variables
+    eventsLength = EVENTS.length;
+    
     /**
      * Stage constructor.  A stage is used to contain multiple layers
      * @constructor
@@ -302,13 +308,12 @@
          * to the container
          */
         _bindContentEvents: function() {
-            var go = Kinetic.Global;
-            var that = this;
-            var events = ['mousedown', 'mousemove', 'mouseup', 'mouseout', 'touchstart', 'touchmove', 'touchend'];
+            var that = this,
+                n, pubEvent, f;
 
-            for (var n = 0; n < events.length; n++) {
-              var pubEvent = events[n];
-              var f = that['_' + pubEvent];
+            for (var n = 0; n < eventsLength; n++) {
+              pubEvent = EVENTS[n];
+              f = that['_' + pubEvent];
               that.content.addEventListener(pubEvent, f.bind(that), false);
             }
         },

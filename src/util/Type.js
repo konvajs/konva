@@ -316,6 +316,9 @@
         },
         _radToDeg: function(rad) {
             return rad * 180 / Math.PI;
+        },
+        _capitalize: function(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
         }
     };
 })();
