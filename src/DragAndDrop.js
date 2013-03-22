@@ -11,25 +11,6 @@
     Kinetic.getNodeDragging = function() {
         return Kinetic.DD.node;
     };
-
-    Kinetic.DD._setupDragLayerAndGetContainer = function(no) {
-        var stage = no.getStage(), nodeType = no.nodeType, lastContainer, group;
-
-        // re-construct node tree
-        no._eachAncestorReverse(function(node) {
-            if(node.nodeType === 'Layer') {
-                stage.dragLayer.setAttrs(node.getAttrs());
-                lastContainer = stage.dragLayer;
-                stage.add(stage.dragLayer);
-            }
-            else if(node.nodeType === 'Group') {
-                group = new Kinetic.Group(node.getAttrs());
-                lastContainer.add(group);
-                lastContainer = group;
-            }
-        });
-        return lastContainer;
-    };
     Kinetic.DD._initDragLayer = function(stage) {
         stage.dragLayer = new Kinetic.Layer();
         stage.dragLayer.getCanvas().getElement().className = 'kinetic-drag-and-drop-layer';
@@ -59,7 +40,7 @@
                 // execute dragstart events if defined
                 node._handleEvent('dragstart', evt);
             }
-
+            
             // execute ondragmove if defined
             node._handleEvent('dragmove', evt);
         }
@@ -75,12 +56,11 @@
             }
             // else if group, shape, or layer
             else {
-                if((nodeType === 'Group' || nodeType === 'Shape') && node.getDragOnTop() && dd.prevParent) {
-                    node.moveTo(dd.prevParent);
+                if((nodeType === 'Group' || nodeType === 'Shape') && node.getDragOnTop()) {
                     node.getStage().dragLayer.remove();
-                    dd.prevParent = null;
                 }
 
+                node.moveToTop();
                 node.getLayer().draw();
             }
             
@@ -97,7 +77,11 @@
         }
     };
     Kinetic.Node.prototype._startDrag = function(evt) {
-        var dd = Kinetic.DD, that = this, stage = this.getStage(), pos = stage.getUserPosition();
+        var dd = Kinetic.DD, 
+            that = this, 
+            stage = this.getStage(),
+            layer = this.getLayer(), 
+            pos = stage.getUserPosition();
 
         if(pos) {
             var m = this.getTransform().getTranslation(), ap = this.getAbsolutePosition(), nodeType = this.nodeType, container;
@@ -105,34 +89,34 @@
             dd.node = this;
             dd.offset.x = pos.x - ap.x;
             dd.offset.y = pos.y - ap.y;
+            dd.anim.node = this;
 
             // Stage and Layer node types
             if(nodeType === 'Stage' || nodeType === 'Layer') {
-                dd.anim.node = this;
                 dd.anim.start();
             }
 
             // Group or Shape node types
             else {
                 if(this.getDragOnTop()) {
-                    container = dd._setupDragLayerAndGetContainer(this);
-                    dd.anim.node = stage.dragLayer;
-                    dd.prevParent = this.getParent();
+                    
+                    
                     // WARNING: it's important to delay the moveTo operation,
                     // layer redraws, and anim.start() until after the method execution
                     // has completed or else there will be a flicker on mobile devices
                     // due to the time it takes to append the dd canvas to the DOM
-                    setTimeout(function() {
-                        if(dd.node) {
-                            that.moveTo(container);
-                            dd.prevParent.getLayer().draw();
-                            stage.dragLayer.draw();
+                    //setTimeout(function() {
+                        //if(dd.node) {
+                            // clear shape from layer canvas
+                            that.setVisible(false);
+                            layer.draw();
+                            that.setVisible(true);
+                            stage.add(stage.dragLayer);
                             dd.anim.start();
-                        }
-                    }, 0);
+                        //}
+                    //}, 0);
                 }
                 else {
-                    dd.anim.node = this.getLayer();
                     dd.anim.start();
                 }
             }

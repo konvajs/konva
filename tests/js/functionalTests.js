@@ -46,26 +46,40 @@ Test.Modules.DD = {
         // which can't be simulated.  call _endDrag manually
         Kinetic.DD._endDrag();
     },
-    '*test dragstart, dragmove, dragend': function(containerId) {
+    'test dragstart, dragmove, dragend': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
-            height: 200,
-            throttle: 999
+            height: 200
         });
         var layer = new Kinetic.Layer();
+        
+        var greenCircle = new Kinetic.Circle({
+            x: 40,
+            y: 40,
+            radius: 20,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black',
+            opacity: 0.5
+        });
+        
+        
         var circle = new Kinetic.Circle({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,
             strokeWidth: 4,
             fill: 'red',
-            stroke: 'black'
+            stroke: 'black',
+            opacity: 0.5
+            
         });
 
         circle.setDraggable(true);
 
         layer.add(circle);
+        layer.add(greenCircle);
         stage.add(layer);
 
         var top = stage.content.getBoundingClientRect().top;
@@ -87,7 +101,7 @@ Test.Modules.DD = {
         */
         
         layer.on('dragmove', function() {
-            console.log('move');
+            //console.log('move');
         });
 
         circle.on('dragend', function() {
@@ -135,6 +149,10 @@ Test.Modules.DD = {
         test(dragEnd, 'dragend event was not triggered');
 
         warn(layer.toDataURL() === dataUrls['drag circle after'], 'end data url is incorrect');
+        
+        console.log(layer);
+        
+        console.log(layer.eventListeners['dragmove']);
     },
     'cancel drag and drop by setting draggable to false': function(containerId) {
         var stage = new Kinetic.Stage({

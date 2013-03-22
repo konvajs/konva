@@ -34,8 +34,6 @@
          * @methodOf Kinetic.Layer.prototype
          */
         draw: function() {
-            var context = this.getContext();
-            
             // before draw  handler
             if(this.beforeDrawFunc !== undefined) {
                 this.beforeDrawFunc.call(this);
@@ -116,7 +114,8 @@
          * @methodOf Kinetic.Layer.prototype
          */
         getCanvas: function() {
-            return this.canvas;
+            var stage = this.getStage();
+            return (stage && stage._isTempDDLayerActive()) ? stage.dragLayer.canvas : this.canvas;     
         },
         /**
          * get layer canvas context
@@ -124,7 +123,7 @@
          * @methodOf Kinetic.Layer.prototype
          */
         getContext: function() {
-            return this.canvas.context;
+            return this.getCanvas().getContext(); 
         },
         /**
          * clear canvas tied to the layer
@@ -138,11 +137,11 @@
         setVisible: function(visible) {
             Kinetic.Node.prototype.setVisible.call(this, visible);
             if(visible) {
-                this.canvas.element.style.display = 'block';
+                this.getCanvas().element.style.display = 'block';
                 this.hitCanvas.element.style.display = 'block';
             }
             else {
-                this.canvas.element.style.display = 'none';
+                this.getCanvas().element.style.display = 'none';
                 this.hitCanvas.element.style.display = 'none';
             }
         },
@@ -150,13 +149,13 @@
             Kinetic.Node.prototype.setZIndex.call(this, index);
             var stage = this.getStage();
             if(stage) {
-                stage.content.removeChild(this.canvas.element);
+                stage.content.removeChild(this.getCanvas().element);
 
                 if(index < stage.getChildren().length - 1) {
-                    stage.content.insertBefore(this.canvas.element, stage.getChildren()[index + 1].canvas.element);
+                    stage.content.insertBefore(this.getCanvas().element, stage.getChildren()[index + 1].getCanvas().element);
                 }
                 else {
-                    stage.content.appendChild(this.canvas.element);
+                    stage.content.appendChild(this.getCanvas().element);
                 }
             }
         },
@@ -164,21 +163,21 @@
             Kinetic.Node.prototype.moveToTop.call(this);
             var stage = this.getStage();
             if(stage) {
-                stage.content.removeChild(this.canvas.element);
-                stage.content.appendChild(this.canvas.element);
+                stage.content.removeChild(this.getCanvas().element);
+                stage.content.appendChild(this.getCanvas().element);
             }
         },
         moveUp: function() {
             if(Kinetic.Node.prototype.moveUp.call(this)) {
                 var stage = this.getStage();
                 if(stage) {
-                    stage.content.removeChild(this.canvas.element);
+                    stage.content.removeChild(this.getCanvas().element);
 
                     if(this.index < stage.getChildren().length - 1) {
-                        stage.content.insertBefore(this.canvas.element, stage.getChildren()[this.index + 1].canvas.element);
+                        stage.content.insertBefore(this.getCanvas().element, stage.getChildren()[this.index + 1].getCanvas().element);
                     }
                     else {
-                        stage.content.appendChild(this.canvas.element);
+                        stage.content.appendChild(this.getCanvas().element);
                     }
                 }
             }
@@ -188,8 +187,8 @@
                 var stage = this.getStage();
                 if(stage) {
                     var children = stage.getChildren();
-                    stage.content.removeChild(this.canvas.element);
-                    stage.content.insertBefore(this.canvas.element, children[this.index + 1].canvas.element);
+                    stage.content.removeChild(this.getCanvas().element);
+                    stage.content.insertBefore(this.getCanvas().element, children[this.index + 1].getCanvas().element);
                 }
             }
         },
@@ -198,8 +197,8 @@
                 var stage = this.getStage();
                 if(stage) {
                     var children = stage.getChildren();
-                    stage.content.removeChild(this.canvas.element);
-                    stage.content.insertBefore(this.canvas.element, children[1].canvas.element);
+                    stage.content.removeChild(this.getCanvas().element);
+                    stage.content.insertBefore(this.getCanvas().element, children[1].getCanvas().element);
                 }
             }
         },
@@ -210,7 +209,7 @@
          * remove layer from stage
          */
         remove: function() {
-            var stage = this.getStage(), canvas = this.canvas, element = canvas.element;
+            var stage = this.getStage(), canvas = this.getCanvas(), element = canvas.element;
             Kinetic.Node.prototype.remove.call(this);
 
             if(stage && canvas && Kinetic.Type._isInDocument(element)) {

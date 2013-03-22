@@ -163,7 +163,10 @@
                 quality = config.quality || null, 
                 x = config.x || 0, 
                 y = config.y || 0, 
-                canvas = new Kinetic.SceneCanvas(config.width || this.getWidth(), config.height || this.getHeight()), 
+                canvas = new Kinetic.SceneCanvas({
+                    width: config.width || this.getWidth(), 
+                    height: config.height || this.getHeight()
+                }), 
                 context = canvas.getContext(), 
                 layers = this.children;
 
@@ -295,6 +298,16 @@
          */
         getDragLayer: function() {
             return this.dragLayer;
+        },
+        getParent: function() {
+            return null;
+        },
+        getLayer: function() {
+            return null;
+        },
+        _isTempDDLayerActive: function() {
+            var dragLayer = this.dragLayer;
+            return dragLayer && dragLayer.getStage();
         },
         _setUserPosition: function(evt) {
             if(!evt) {

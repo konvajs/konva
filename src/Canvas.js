@@ -11,20 +11,28 @@
      * @param {Number} width
      * @param {Number} height
      */
-    Kinetic.Canvas = function(width, height, pixelRatio) {
-        this.pixelRatio = pixelRatio || _pixelRatio;
-        this.width = width;
-        this.height = height;
-        this.element = document.createElement('canvas');
-        this.element.style.padding = 0;
-        this.element.style.margin = 0;
-        this.element.style.border = 0;
-        this.element.style.background = 'transparent';
-        this.context = this.element.getContext('2d');
-        this.setSize(width || 0, height || 0);
+    Kinetic.Canvas = function(config) {
+        this.init(config);
     };
 
     Kinetic.Canvas.prototype = {
+        init: function(config) {
+            var config = config || {},
+                width = config.width || 0,
+                height = config.height || 0,
+                pixelRatio = config.pixelRatio || _pixelRatio;
+                
+            this.pixelRatio = pixelRatio;
+            this.width = width;
+            this.height = height;
+            this.element = document.createElement('canvas');
+            this.element.style.padding = 0;
+            this.element.style.margin = 0;
+            this.element.style.border = 0;
+            this.element.style.background = 'transparent';
+            this.context = this.element.getContext('2d');
+            this.setSize(width, height);   
+        },
         /**
          * clear canvas
          * @name clear

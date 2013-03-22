@@ -196,27 +196,35 @@
                 children[n].index = n;
             }
         },
-        /*
-         * draw both scene and hit graphs
-         */
-        draw: function() {
-            this.drawScene();
-            this.drawHit();
-        },
         drawScene: function(canvas) {
-            var clip = !!this.getClipFunc() && canvas;
-
-            if (clip) {
-                canvas._clip(this);
+            var layer = this.getLayer(),
+                clip = !!this.getClipFunc(),
+                stage = this.getStage(),
+                children, len;
+                
+            if (!canvas && layer) {
+                canvas = layer.getCanvas(); 
             }
+            
+            if(layer && layer.getClearBeforeDraw()) {
+                canvas.clear();
+            }
+
             if(this.isVisible()) {
-                var children = this.children, len = children.length;
+                if (clip) {
+                    canvas._clip(this);
+                }
+                
+                children = this.children, 
+                len = children.length;
+                
                 for(var n = 0; n < len; n++) {
                     children[n].drawScene(canvas);
                 }
-            }
-            if (clip) {
-                canvas.getContext().restore();
+                
+                if (clip) {
+                    canvas.getContext().restore();
+                }
             }
         },
         drawHit: function() {

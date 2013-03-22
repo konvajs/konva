@@ -696,7 +696,11 @@
 
             //if width and height are defined, create new canvas to draw on, else reuse stage buffer canvas
             if(config.width && config.height) {
-                canvas = new Kinetic.SceneCanvas(config.width, config.height, 1);
+                canvas = new Kinetic.SceneCanvas({
+                  width: config.width, 
+                  height: config.height, 
+                  pixelRatio: 1
+                });
             }
             else {
                 canvas = this.getStage().bufferCanvas;
@@ -886,7 +890,7 @@
                 okayToRun = false;
             }
 
-            if(okayToRun) {
+            if(okayToRun) {                
                 this._executeHandlers(eventType, evt);
 
                 // simulate event bubbling
@@ -910,6 +914,22 @@
                     events[i].handler.apply(this, [evt]);
                 }
             }
+        },
+        /*
+         * draw both scene and hit graphs.  
+         * @name draw
+         * @methodOf Kinetic.Node.prototype
+         *  the scene renderer
+         */
+        draw: function() {
+            var layer = this.getLayer();
+            
+            if(layer && layer.getClearBeforeDraw()) {
+                layer.getCanvas().clear();
+            }
+            
+            this.drawScene();
+            this.drawHit();
         }
     };
 
