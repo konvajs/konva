@@ -24,7 +24,7 @@ Test.Modules.SHAPE = {
         
         //console.log(layer.toDataURL());
         
-        warn(layer.toDataURL() === dataUrls['scaled rect with disabled stroke scale'], 'probem with stroke scale disabling');
+        testDataUrl(layer.toDataURL(), 'scaled rect with disabled stroke scale', 'probem with stroke scale disabling');
     },
     'test intersects()': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -113,7 +113,7 @@ Test.Modules.SHAPE = {
 
         var dataUrl = layer.toDataURL();
         //console.log(dataUrl);
-        warn(dataUrl === dataUrls['custom shape with two fills and strokes'], 'problem with custom shape with two fills');
+        testDataUrl(dataUrl, 'custom shape with two fills and strokes', 'problem with custom shape with two fills');
 
     },
     'custom shape with fill, stroke, and strokeWidth': function(containerId) {
@@ -208,7 +208,7 @@ Test.Modules.SHAPE = {
         var dataUrl = layer.toDataURL();
 
         //console.log(dataUrl);
-        warn(dataUrls['change custom shape draw func'] === dataUrl, 'problem with setDrawFunc');
+        testDataUrl(dataUrl, 'change custom shape draw func', 'problem with setDrawFunc');
     },
     'add star with translated, scaled, rotated fill': function(containerId) {
         var imageObj = new Image();
@@ -415,7 +415,7 @@ Test.Modules.SHAPE = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        warn(layer.toDataURL() === dataUrls['everything enabled'], 'should be circle with green fill, dashed stroke, and shadow');
+        testDataUrl(layer.toDataURL(), 'everything enabled', 'should be circle with green fill, dashed stroke, and shadow');
     },
     'fill disabled': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -444,7 +444,7 @@ Test.Modules.SHAPE = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        warn(layer.toDataURL() === dataUrls['fill disabled'], 'should be circle with no fill, dashed stroke, and shadow');
+        testDataUrl(layer.toDataURL(), 'fill disabled', 'should be circle with no fill, dashed stroke, and shadow');
     },
     'stroke disabled': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -473,7 +473,7 @@ Test.Modules.SHAPE = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        warn(layer.toDataURL() === dataUrls['stroke disabled'], 'should be circle with green fill, no stroke, and shadow');
+        testDataUrl(layer.toDataURL(), 'stroke disabled', 'should be circle with green fill, no stroke, and shadow');
     },
     'dash array disabled': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -502,7 +502,7 @@ Test.Modules.SHAPE = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        warn(layer.toDataURL() === dataUrls['dash array disabled'], 'should be circle with green fill, solid stroke, and shadow');
+        testDataUrl(layer.toDataURL(), 'dash array disabled', 'should be circle with green fill, solid stroke, and shadow');
     },
     'shadow disabled': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -531,7 +531,7 @@ Test.Modules.SHAPE = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        warn(layer.toDataURL() === dataUrls['shadow disabled'], 'should be circle with green fill, dashed stroke, and no shadow');
+        testDataUrl(layer.toDataURL(), 'shadow disabled', 'should be circle with green fill, dashed stroke, and no shadow');
     },
     'test enablers and disablers': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -650,17 +650,17 @@ Test.Modules.SHAPE = {
 
         //console.log(layer.toDataURL());
 
-        warn(layer.toDataURL() === dataUrls['red star'], 'star should have red fill');
+        testDataUrl(layer.toDataURL(), 'red star', 'star should have red fill');
 
         star.setFillPriority('linear-gradient');
         layer.draw();
 
-        warn(layer.toDataURL() === dataUrls['star with linear gradient fill'], 'star should have linear gradient fill');
+        testDataUrl(layer.toDataURL(), 'star with linear gradient fill', 'star should have linear gradient fill');
 
         star.setFillPriority('color');
         layer.draw();
         
-        warn(layer.toDataURL() === dataUrls['red star'], 'star should have red fill again');
+        testDataUrl(layer.toDataURL(), 'red star', 'star should have red fill again');
 
 
     }

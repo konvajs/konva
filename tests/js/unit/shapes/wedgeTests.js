@@ -22,7 +22,7 @@ Test.Modules.Wedge = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        warn(layer.toDataURL() === dataUrls['wedge'], 'problem rendering wedge');
+        testDataUrl(layer.toDataURL(), 'wedge', 'problem rendering wedge');
         
         test(wedge.getShapeType() === 'Wedge', 'shape type should be Wedge');
     },
@@ -77,6 +77,6 @@ Test.Modules.Wedge = {
         layer.draw();
 
         //console.log(layer.toDataURL());
-        warn(layer.toDataURL() === dataUrls['rotate wedge'], 'problem with rotated wedge rendering');
+        testDataUrl(layer.toDataURL(), 'rotate wedge', 'problem with rotated wedge rendering');
     }
 };

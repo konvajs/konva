@@ -124,7 +124,7 @@ Test.Modules.NODE = {
 
                 var dataUrl = layer.toDataURL();
 
-                warn(dataUrl === dataUrls['group to image'], 'group to image data url is incorrect');
+                testDataUrl(dataUrl, 'group to image', 'group to image data url is incorrect');
             }
         });
 
@@ -367,7 +367,7 @@ Test.Modules.NODE = {
 
         //console.log(layer.toDataURL());
 
-        warn(layer.toDataURL() === dataUrls['clone group'], 'problem cloning group');
+        testDataUrl(layer.toDataURL(), 'clone group', 'problem cloning group');
 
     },
     'test on attr change': function(containerId) {
@@ -736,7 +736,7 @@ Test.Modules.NODE = {
 
                     layer.draw();
                     //console.log(layer.toDataURL());
-                    warn(dataUrls['regular and cached polygon'] === layer.toDataURL(), 'regular and cached polygon layer data url is incorrect');
+                    testDataUrl(layer.toDataURL(), 'regular and cached polygon', 'regular and cached polygon layer data url is incorrect');
 
                 });
             }
@@ -839,7 +839,7 @@ Test.Modules.NODE = {
                                         var dataUrl = layer.toDataURL();
                                         //console.log(dataUrl);
 
-                                        warn(dataUrl === dataUrls['cache shape, group, layer, and stage'], 'problem caching shape, group, layer, and stage');
+                                        testDataUrl(dataUrl, 'cache shape, group, layer, and stage', 'problem caching shape, group, layer, and stage');
                                     }
                                 });
 
@@ -2092,7 +2092,7 @@ Test.Modules.NODE = {
         
         //console.log(startDataUrl);
 
-        warn(startDataUrl === dataUrls['serialize stage with custom shape'], 'start data url is incorrect');
+        testDataUrl(startDataUrl, 'serialize stage with custom shape', 'start data url is incorrect');
         //test(triangle.getId() === 'myTriangle', 'triangle id should be myTriangle');
 
         //console.log(stage.toJSON());
@@ -2108,7 +2108,7 @@ Test.Modules.NODE = {
         layer.draw();
 
         var endDataUrl = layer.toDataURL();
-        warn(endDataUrl === dataUrls['serialize stage with custom shape'], 'end data url is incorrect');
+        testDataUrl(endDataUrl,'serialize stage with custom shape', 'end data url is incorrect');
 
     },
     'load stage with custom shape using json': function(containerId) {
@@ -2549,7 +2549,7 @@ Test.Modules.NODE = {
             rect.destroy();
             //test(!rect.transAnim.isRunning(), 'rect trans should not be running after destroying it');
             layer.draw();
-            warn(layer.toDataURL() === dataUrls['cleared'], 'transitioning rectangle should have been destroyed and removed from the screen');
+            testDataUrl(layer.toDataURL(), 'cleared', 'transitioning rectangle should have been destroyed and removed from the screen');
         }, 1000);
     },
     'hide stage': function(containerId) {

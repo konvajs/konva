@@ -77,7 +77,7 @@ Test.Modules.SPLINE = {
          */
         
         //console.log(layer.toDataURL());
-        warn(layer.toDataURL() === dataUrls['curvy lines'], 'problem with curvy lines');
+        testDataUrl(layer.toDataURL(), 'curvy lines', 'problem with curvy lines');
         
         test(line1.getShapeType() === 'Spline', 'shape type should be Spline');
 

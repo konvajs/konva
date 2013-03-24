@@ -322,7 +322,7 @@
     Kinetic.Node.addGetterSetter(Kinetic.Text, 'padding', 0);
     Kinetic.Node.addGetterSetter(Kinetic.Text, 'align', LEFT);
     Kinetic.Node.addGetterSetter(Kinetic.Text, 'lineHeight', 1);
-    Kinetic.Node.addGetterSetter(Kinetic.Text, 'wrap', NONE);
+    Kinetic.Node.addGetterSetter(Kinetic.Text, 'wrap', WORD);
 
     Kinetic.Node.addGetter(Kinetic.Text, TEXT, EMPTY_STRING);
     
