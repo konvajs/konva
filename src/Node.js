@@ -154,7 +154,7 @@
             go._removeName(this.getName(), this._id);
 
             // stop DD
-            if(dd && dd.node && dd.node._id === this._id) {
+            if(dd && dd.targetNode && dd.targetNode._id === this._id) {
                 node._endDrag();
             }
 
@@ -947,7 +947,7 @@
         },
         _handleEvent: function(eventType, evt, compareShape) {
             if(evt && this.nodeType === SHAPE) {
-                evt.node = this;
+                evt.targetNode = this;
             }
             var stage = this.getStage();
             var el = this.eventListeners;
