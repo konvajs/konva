@@ -30,10 +30,6 @@
             this._buildDOM();
             this._bindContentEvents();
             Kinetic.Global.stages.push(this);
-
-            if(dd) {
-                dd._initDragLayer(this);
-            }
         },
         /**
          * set container dom element which contains the stage wrapper div element
@@ -309,21 +305,11 @@
             // chainable
             return this;
         },
-        /**
-         * get drag and drop layer
-         */
-        getDragLayer: function() {
-            return this.dragLayer;
-        },
         getParent: function() {
             return null;
         },
         getLayer: function() {
             return null;
-        },
-        _isTempDDLayerActive: function() {
-            var dragLayer = this.dragLayer;
-            return dragLayer && dragLayer.getStage();
         },
         _setPointerPosition: function(evt) {
             if(!evt) {

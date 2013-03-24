@@ -1,7 +1,9 @@
 (function() {
     Kinetic.DD = {
         anim: new Kinetic.Animation(),
-        started: false,
+        // this flag is set to true the moment the user starts moving the mouse
+        // after they have mousedowned or touchstarted the node
+        moving: false,
         offset: {
             x: 0,
             y: 0
@@ -10,10 +12,6 @@
 
     Kinetic.getNodeDragging = function() {
         return Kinetic.DD.node;
-    };
-    Kinetic.DD._initDragLayer = function(stage) {
-        stage.dragLayer = new Kinetic.Layer();
-        stage.dragLayer.getCanvas().getElement().className = 'kinetic-drag-and-drop-layer';
     };
     Kinetic.DD._drag = function(evt) {
         var dd = Kinetic.DD, node = dd.node;
@@ -51,11 +49,6 @@
         if(node) {
             nodeType = node.nodeType,
             layer = node.getLayer();
-           
-            if((nodeType === 'Group' || nodeType === 'Shape') && node.getDragOnTop()) {
-                node.getStage().dragLayer.remove();
-            }
-
             dd.anim.stop();
 
             // only fire dragend event if the drag and drop
@@ -97,32 +90,15 @@
             pos = stage.getPointerPosition();
 
         if(pos) {
-            var m = this.getTransform().getTranslation(), ap = this.getAbsolutePosition(), nodeType = this.nodeType, container;
+            var m = this.getTransform().getTranslation(), 
+                ap = this.getAbsolutePosition(), 
+                layer = this.getLayer();
 
             dd.node = this;
             dd.offset.x = pos.x - ap.x;
             dd.offset.y = pos.y - ap.y;
-            dd.anim.node = this;
-
-            // Stage and Layer node types
-            if(nodeType === 'Stage' || nodeType === 'Layer') {
-                dd.anim.start();
-            }
-
-            // Group or Shape node types
-            else {
-                if(this.getDragOnTop()) {
-                    // clear shape from layer canvas
-                    that.setVisible(false);
-                    layer.draw();
-                    that.setVisible(true);
-                    stage.add(stage.dragLayer);
-                    dd.anim.start();
-                }
-                else {
-                    dd.anim.start();
-                }
-            }
+            dd.anim.node = layer;
+            dd.anim.start();
         }
     };
     /**

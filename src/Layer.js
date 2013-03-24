@@ -90,8 +90,7 @@
          * @methodOf Kinetic.Layer.prototype
          */
         getCanvas: function() {
-            var stage = this.getStage();
-            return (stage && stage._isTempDDLayerActive()) ? stage.dragLayer.canvas : this.canvas;     
+            return this.canvas;     
         },
         /**
          * get layer hit canvas
