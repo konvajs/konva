@@ -337,7 +337,7 @@
             var dd = Kinetic.DD;
             // if there's a current target shape, run mouseout handlers
             var targetShape = this.targetShape;
-            if(targetShape && (!dd || !dd.moving)) {
+            if(targetShape && (!dd || !dd.isDragging)) {
                 targetShape._handleEvent('mouseout', evt);
                 targetShape._handleEvent('mouseleave', evt);
                 this.targetShape = null;
@@ -352,7 +352,7 @@
             if(obj) {
                 var shape = obj.shape;
                 if(shape) {
-                    if((!dd || !dd.moving) && obj.pixel[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
+                    if((!dd || !dd.isDragging) && obj.pixel[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
                         if(this.targetShape) {
                             this.targetShape._handleEvent('mouseout', evt, shape);
                             this.targetShape._handleEvent('mouseleave', evt, shape);
@@ -370,7 +370,7 @@
              * if no shape was detected, clear target shape and try
              * to run mouseout from previous target shape
              */
-            else if(this.targetShape && (!dd || !dd.moving)) {
+            else if(this.targetShape && (!dd || !dd.isDragging)) {
                 this.targetShape._handleEvent('mouseout', evt);
                 this.targetShape._handleEvent('mouseleave', evt);
                 this.targetShape = null;
@@ -388,6 +388,7 @@
             if(obj && obj.shape) {
                 var shape = obj.shape;
                 this.clickStart = true;
+                this.clickStartShape = shape;
                 shape._handleEvent('mousedown', evt);
             }
 
@@ -409,10 +410,10 @@
                 // detect if click or double click occurred
                 if(this.clickStart) {
                     /*
-                     * if dragging and dropping, don't fire click or dbl click
-                     * event
+                     * if dragging and dropping, or if click doesn't map to 
+                     * the correct shape, don't fire click or dbl click event
                      */
-                    if(!dd || !dd.moving || !dd.node) {
+                    if(!dd || !dd.isDragging || !dd.node) {
                         shape._handleEvent('click', evt);
 
                         if(this.inDoubleClickWindow) {
@@ -459,7 +460,7 @@
                      * if dragging and dropping, don't fire tap or dbltap
                      * event
                      */
-                    if(!dd || !dd.moving || !dd.node) {
+                    if(!dd || !dd.isDragging || !dd.node) {
                         shape._handleEvent('tap', evt);
 
                         if(this.inDoubleClickWindow) {

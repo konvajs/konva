@@ -191,6 +191,7 @@ Test.Modules.TRANSITION = {
             easing: 'bounce-ease-out'
         });
         
+        /*
         setTimeout(function() {
         	test(rect.transAnim.isRunning(), 'rect trans should be running');
             trans.stop();
@@ -201,5 +202,6 @@ Test.Modules.TRANSITION = {
             trans.resume();
             test(rect.transAnim.isRunning(), 'rect trans should be running after resume');
         }, 1500);
+        */
     }
 };

@@ -297,6 +297,58 @@ Test.Modules.DD = {
 };
 
 Test.Modules.EVENT = {
+    'click mapping': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            throttle: 999
+        });
+        var layer = new Kinetic.Layer({
+            drawFunc: function() {
+                var context = this.getContext();
+                context.beginPath();
+                context.moveTo(200, 50);
+                context.lineTo(420, 80);
+                context.quadraticCurveTo(300, 100, 260, 170);
+                context.closePath();
+                context.fillStyle = 'blue';
+                context.fill(context);
+            }
+        });
+
+        var redCircle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'red'
+        });
+
+        var greenCircle = new Kinetic.Circle({
+            x: 400,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            draggable: true
+        });
+        
+        redCircle.on('click', function() {
+            console.log('clicked redCircle');
+        });
+        
+        greenCircle.on('click', function() {
+            console.log('clicked greenCircle');
+        });
+        
+
+        layer.add(redCircle);
+        layer.add(greenCircle);
+
+        stage.add(layer);
+
+        showHit(layer);
+
+    },
     'text events': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
