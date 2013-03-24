@@ -138,11 +138,11 @@
             return this.touchPos;
         },
         /**
-         * get user position which can be a touc position or mouse position
-         * @name getUserPosition
+         * get pointer position which can be a touc position or mouse position
+         * @name getPointerPosition
          * @methodOf Kinetic.Stage.prototype
          */
-        getUserPosition: function() {
+        getPointerPosition: function() {
             return this.getTouchPosition() || this.getMousePosition();
         },
         getStage: function() {
@@ -283,7 +283,7 @@
 
                 this.bufferCanvas.setSize(width, height, 1);
                 this.hitCanvas.setSize(width, height);
-                // set user defined layer dimensions
+                // set pointer defined layer dimensions
                 var layers = this.children;
                 for(var n = 0; n < layers.length; n++) {
                     var layer = layers[n];
@@ -325,7 +325,7 @@
             var dragLayer = this.dragLayer;
             return dragLayer && dragLayer.getStage();
         },
-        _setUserPosition: function(evt) {
+        _setPointerPosition: function(evt) {
             if(!evt) {
                 evt = window.event;
             }
@@ -347,7 +347,7 @@
             }
         },
         _mouseout: function(evt) {
-            this._setUserPosition(evt);
+            this._setPointerPosition(evt);
             var dd = Kinetic.DD;
             // if there's a current target shape, run mouseout handlers
             var targetShape = this.targetShape;
@@ -359,9 +359,9 @@
             this.mousePos = undefined;
         },
         _mousemove: function(evt) {
-            this._setUserPosition(evt);
+            this._setPointerPosition(evt);
             var dd = Kinetic.DD;
-            var obj = this.getIntersection(this.getUserPosition());
+            var obj = this.getIntersection(this.getPointerPosition());
 
             if(obj) {
                 var shape = obj.shape;
@@ -397,8 +397,8 @@
         },
         _mousedown: function(evt) {
         	var obj, dd = Kinetic.DD;
-            this._setUserPosition(evt);
-            obj = this.getIntersection(this.getUserPosition());
+            this._setPointerPosition(evt);
+            obj = this.getIntersection(this.getPointerPosition());
             if(obj && obj.shape) {
                 var shape = obj.shape;
                 this.clickStart = true;
@@ -411,10 +411,10 @@
             }
         },
         _mouseup: function(evt) {
-            this._setUserPosition(evt);
+            this._setPointerPosition(evt);
             var that = this, 
                 dd = Kinetic.DD, 
-                obj = this.getIntersection(this.getUserPosition());
+                obj = this.getIntersection(this.getPointerPosition());
                 
             if(obj && obj.shape) {
                 var shape = obj.shape;
@@ -444,9 +444,9 @@
         _touchstart: function(evt) {
         	var obj, dd = Kinetic.DD;
         	
-            this._setUserPosition(evt);
+            this._setPointerPosition(evt);
             evt.preventDefault();
-            obj = this.getIntersection(this.getUserPosition());
+            obj = this.getIntersection(this.getPointerPosition());
 
             if(obj && obj.shape) {
                 var shape = obj.shape;
@@ -460,8 +460,8 @@
             }
         },
         _touchend: function(evt) {
-            this._setUserPosition(evt);
-            var that = this, dd = Kinetic.DD, obj = this.getIntersection(this.getUserPosition());
+            this._setPointerPosition(evt);
+            var that = this, dd = Kinetic.DD, obj = this.getIntersection(this.getPointerPosition());
 
             if(obj && obj.shape) {
                 var shape = obj.shape;
@@ -490,10 +490,10 @@
             this.tapStart = false;
         },
         _touchmove: function(evt) {
-            this._setUserPosition(evt);
+            this._setPointerPosition(evt);
             var dd = Kinetic.DD;
             evt.preventDefault();
-            var obj = this.getIntersection(this.getUserPosition());
+            var obj = this.getIntersection(this.getPointerPosition());
             if(obj && obj.shape) {
                 var shape = obj.shape;
                 shape._handleEvent('touchmove', evt);

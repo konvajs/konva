@@ -19,7 +19,7 @@
         var dd = Kinetic.DD, node = dd.node;
 
         if(node) {
-            var pos = node.getStage().getUserPosition();
+            var pos = node.getStage().getPointerPosition();
             var dbf = node.attrs.dragBoundFunc;
 
             var newNodePos = {
@@ -94,7 +94,7 @@
             that = this, 
             stage = this.getStage(),
             layer = this.getLayer(), 
-            pos = stage.getUserPosition();
+            pos = stage.getPointerPosition();
 
         if(pos) {
             var m = this.getTransform().getTranslation(), ap = this.getAbsolutePosition(), nodeType = this.nodeType, container;
