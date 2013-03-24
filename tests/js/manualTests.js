@@ -893,7 +893,7 @@ Test.Modules.DRAG_AND_DROP = {
 
         //Circle.savePixels();
     },
-    '*drag and drop stage': function(containerId) {
+    'drag and drop stage': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,

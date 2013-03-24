@@ -1,8 +1,4 @@
 
-function trigger(event, x, y) {
-  
-}
-
 Test.Modules.DD = {
     'remove shape with onclick': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -32,7 +28,7 @@ Test.Modules.DD = {
         function remove() {
             circle.remove();
             layer.draw();
-            warn(layer.toDataURL() === dataUrls['cleared'], 'canvas should be cleared after removing shape onclick');
+            testDataUrl(layer.toDataURL(), 'cleared', 'canvas should be cleared after removing shape onclick');
         }
 
         circle.on('click', function() {
@@ -123,7 +119,7 @@ Test.Modules.DD = {
             events.push('mouseup');
         });
         
-        warn(layer.toDataURL() === dataUrls['drag circle before'], 'start data url is incorrect');
+        testDataUrl(layer.toDataURL(), 'drag circle before', 'start data url is incorrect');
         /*
         * simulate drag and drop
         */
@@ -159,7 +155,7 @@ Test.Modules.DD = {
         
         test(events.toString() === 'mouseup,dragend', 'mouseup should occur before dragend');
 
-        warn(layer.toDataURL() === dataUrls['drag circle after'], 'end data url is incorrect');
+        testDataUrl(layer.toDataURL(), 'drag circle after', 'end data url is incorrect');
         
         showHit(layer);
         
@@ -273,7 +269,7 @@ Test.Modules.DD = {
         var top = stage.content.getBoundingClientRect().top;
 
         //console.log(layer.toDataURL())
-        warn(layer.toDataURL() === dataUrls['drag layer before'], 'start data url is incorrect');
+        testDataUrl(layer.toDataURL(), 'drag layer before', 'start data url is incorrect');
 
         /*
          * simulate drag and drop
@@ -296,7 +292,7 @@ Test.Modules.DD = {
         Kinetic.DD._endDragAfter({dragEndNode:circle2});
 
         //console.log(layer.toDataURL())
-        warn(layer.toDataURL() === dataUrls['drag layer after'], 'end data url is incorrect');
+        testDataUrl(layer.toDataURL(), 'drag layer after', 'end data url is incorrect');
 
     }
 };
@@ -546,14 +542,14 @@ Test.Modules.EVENT = {
 
         var top = stage.content.getBoundingClientRect().top;
 
-        warn(layer.toDataURL() === dataUrls['modify fill and stroke before'], 'start data url is incorrect');
+        testDataUrl(layer.toDataURL(), 'modify fill and stroke before', 'start data url is incorrect');
 
         stage._mousemove({
             clientX: 377,
             clientY: 101 + top
         });
 
-        warn(layer.toDataURL() === dataUrls['modify fill and stroke after'], 'mid data url is incorrect');
+        testDataUrl(layer.toDataURL(), 'modify fill and stroke after', 'mid data url is incorrect');
 
         // move mouse back out of circle
         stage._mousemove({
@@ -565,7 +561,7 @@ Test.Modules.EVENT = {
             clientY: 138 + top
         });
 
-        warn(layer.toDataURL() === dataUrls['modify fill and stroke before'], 'end data url is incorrect');
+        testDataUrl(layer.toDataURL(), 'modify fill and stroke before', 'end data url is incorrect');
     },
     'mousedown mouseup mouseover mouseout mousemove click dblclick / touchstart touchend touchmove tap dbltap': function(containerId) {
         var stage = new Kinetic.Stage({
