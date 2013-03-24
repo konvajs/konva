@@ -926,6 +926,14 @@
             go._addName(this, name);
             this.setAttr(NAME, name);
         },
+        /**
+         * get node type.  Returns 'Stage', 'Layer', 'Group', or 'Shape'
+         * @name getNodeType
+         * @methodOf Kinetic.Node.prototype
+         */
+        getNodeType: function() {
+            return this.nodeType;
+        },
         setAttr: function(key, val) {
             var oldVal;
             if(val !== undefined) {

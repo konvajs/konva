@@ -51,5 +51,7 @@ Test.Modules.LABEL = {
         label.getText().setText('Hello big world');
 
         layer.draw();
+        
+        test(label.getNodeType() === 'Group', 'label should be a group');
     }
 };

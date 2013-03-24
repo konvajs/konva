@@ -36,6 +36,8 @@ Test.Modules.POLYGON - {
 
         layer.add(poly);
         stage.add(layer);
+        
+        test(poly.getShapeType() === 'Polygon', 'shape type should be Polygon');
 
     }	
 };

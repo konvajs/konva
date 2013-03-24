@@ -33,6 +33,8 @@ Test.Modules['TEXT PATH'] = {
 
         layer.add(textpath);
         stage.add(layer);
+        
+        test(textpath.getShapeType() === 'TextPath', 'shape type should be TextPath');
     },
     'Render Text Along two connected Bezier': function(containerId) {
         var stage = new Kinetic.Stage({

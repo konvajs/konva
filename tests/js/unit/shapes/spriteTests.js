@@ -112,6 +112,8 @@ Test.Modules.SPRITE = {
                 sprite.stop();
             }, 3000);
             //document.body.appendChild(layer.bufferCanvas.element)
+            
+            test(sprite.getShapeType() === 'Sprite', 'shape type should be Sprite');
         };
         imageObj.src = '../assets/scorpion-sprite.png';
     }

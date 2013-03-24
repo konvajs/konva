@@ -46,6 +46,8 @@ Test.Modules.LINE = {
 
         line.setPoints([73, 160, 340, 23]);
         test(line.getPoints()[0].x === 73, 'first point x should be 73');
+        
+        test(line.getShapeType() === 'Line', 'shape type should be Line');
     },
     'add dashed line': function(containerId) {
         var stage = new Kinetic.Stage({

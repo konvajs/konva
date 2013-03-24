@@ -117,6 +117,8 @@ Test.Modules.IMAGE = {
             });
 
             //document.body.appendChild(layer.bufferCanvas.element)
+            
+            test(darth.getShapeType() === 'Image', 'shape type should be Image');
 
         };
         imageObj.src = '../assets/darth-vader.jpg';

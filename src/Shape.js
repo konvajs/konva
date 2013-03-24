@@ -163,6 +163,14 @@
         disableDashArray: function() {
             this.setAttr('dashArrayEnabled', false);
         },
+        /**
+         * get shape type.  Ex. 'Circle', 'Rect', 'Text', etc.
+         * @name getShapeType
+         * @methodOf Kinetic.Shape.prototype
+         */
+        getShapeType: function() {
+            return this.shapeType;
+        },
         remove: function() {
             Kinetic.Node.prototype.remove.call(this);
             delete Kinetic.Global.shapes[this.colorKey];

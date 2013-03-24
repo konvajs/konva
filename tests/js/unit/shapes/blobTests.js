@@ -60,6 +60,8 @@ Test.Modules.BLOB = {
         test(blob1.getTension() === 0.8, 'blob1 tension should be 0.8');
         test(blob2.getTension() === 1.2, 'blob2 tension should be 1.2');
         
+        test(blob1.getShapeType() === 'Blob', 'shape type should be Blob');
+        
 
     }
 };

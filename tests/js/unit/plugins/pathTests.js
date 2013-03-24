@@ -45,6 +45,8 @@ Test.Modules.PATH = {
         test(path.dataArray.length === 1, 'data array should have 1 element');
 
         path.setData('M200,100h100v50z');
+        
+        test(path.getShapeType() === 'Path', 'shape type should be Path');
 
     },
     'add path with line cap and line join': function(containerId) {
