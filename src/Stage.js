@@ -334,10 +334,10 @@
         },
         _mouseout: function(evt) {
             this._setPointerPosition(evt);
-            var dd = Kinetic.DD;
+            var go = Kinetic.Global;
             // if there's a current target shape, run mouseout handlers
             var targetShape = this.targetShape;
-            if(targetShape && (!dd || !dd.isDragging)) {
+            if(targetShape && !go.isDragging()) {
                 targetShape._handleEvent('mouseout', evt);
                 targetShape._handleEvent('mouseleave', evt);
                 this.targetShape = null;
@@ -346,13 +346,14 @@
         },
         _mousemove: function(evt) {
             this._setPointerPosition(evt);
-            var dd = Kinetic.DD;
-            var obj = this.getIntersection(this.getPointerPosition());
+            var go = Kinetic.Global,
+                dd = Kinetic.DD,
+                obj = this.getIntersection(this.getPointerPosition());
 
             if(obj) {
                 var shape = obj.shape;
                 if(shape) {
-                    if((!dd || !dd.isDragging) && obj.pixel[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
+                    if(!go.isDragging() && obj.pixel[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
                         if(this.targetShape) {
                             this.targetShape._handleEvent('mouseout', evt, shape);
                             this.targetShape._handleEvent('mouseleave', evt, shape);
@@ -370,7 +371,7 @@
              * if no shape was detected, clear target shape and try
              * to run mouseout from previous target shape
              */
-            else if(this.targetShape && (!dd || !dd.isDragging)) {
+            else if(this.targetShape && !go.isDragging()) {
                 this.targetShape._handleEvent('mouseout', evt);
                 this.targetShape._handleEvent('mouseleave', evt);
                 this.targetShape = null;
@@ -400,7 +401,7 @@
         _mouseup: function(evt) {
             this._setPointerPosition(evt);
             var that = this, 
-                dd = Kinetic.DD, 
+                go = Kinetic.Global, 
                 obj = this.getIntersection(this.getPointerPosition());
                 
             if(obj && obj.shape) {
@@ -413,7 +414,7 @@
                      * if dragging and dropping, or if click doesn't map to 
                      * the correct shape, don't fire click or dbl click event
                      */
-                    if(!dd || !dd.isDragging || !dd.node) {
+                    if(!go.isDragging() && shape._id === this.clickStartShape._id) {
                         shape._handleEvent('click', evt);
 
                         if(this.inDoubleClickWindow) {
@@ -429,7 +430,9 @@
             this.clickStart = false;
         },
         _touchstart: function(evt) {
-        	var obj, dd = Kinetic.DD;
+        	var dd = Kinetic.DD,
+        	    go = Kinetic.Global,
+        	    obj;
         	
             this._setPointerPosition(evt);
             evt.preventDefault();
@@ -442,7 +445,7 @@
             }
 
             // init stage drag and drop
-            if(dd && this.attrs.draggable && !dd.node) {
+            if(dd && !go.isDragging() && this.isDraggable()) {
                 this._startDrag(evt);
             }
         },

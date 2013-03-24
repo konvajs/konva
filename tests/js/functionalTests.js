@@ -1,3 +1,8 @@
+
+function trigger(event, x, y) {
+  
+}
+
 Test.Modules.DD = {
     'remove shape with onclick': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -328,16 +333,20 @@ Test.Modules.EVENT = {
             x: 400,
             y: stage.getHeight() / 2,
             radius: 70,
-            fill: 'green',
-            draggable: true
+            fill: 'green'
         });
+        
+        var redClicks = 0;
+        var greenClicks = 0;
         
         redCircle.on('click', function() {
             console.log('clicked redCircle');
+            redClicks++;
         });
         
         greenCircle.on('click', function() {
             console.log('clicked greenCircle');
+            greenClicks++;
         });
         
 
@@ -345,9 +354,58 @@ Test.Modules.EVENT = {
         layer.add(greenCircle);
 
         stage.add(layer);
+        var top = stage.content.getBoundingClientRect().top;
 
         showHit(layer);
 
+        // mousedown and mouseup on red circle
+        stage._mousedown({
+            clientX: 284,
+            clientY: 113 + top
+        });
+        
+        Kinetic.DD._endDragBefore();
+        stage._mouseup({
+            clientX: 284,
+            clientY: 113 + top
+        });
+        Kinetic.DD._endDragAfter({dragEndNode:redCircle});
+        
+        test(redClicks === 1, 'red circle should have 1 click');
+        test(greenClicks === 0, 'green circle should have 0 clicks');
+        
+        // mousedown and mouseup on green circle
+        stage._mousedown({
+            clientX: 397,
+            clientY: 108 + top
+        });
+        
+        Kinetic.DD._endDragBefore();
+        stage._mouseup({
+            clientX: 397,
+            clientY: 108 + top
+        });
+        Kinetic.DD._endDragAfter({dragEndNode:redCircle});
+        
+        test(redClicks === 1, 'red circle should have 1 click');
+        test(greenClicks === 1, 'green circle should have 1 click');
+        
+        // mousedown red circle and mouseup on green circle
+        stage._mousedown({
+            clientX: 284,
+            clientY: 113 + top
+        });
+        
+        Kinetic.DD._endDragBefore();
+        stage._mouseup({
+            clientX: 397,
+            clientY: 108 + top
+        });
+        Kinetic.DD._endDragAfter({dragEndNode:redCircle});
+        
+        test(redClicks === 1, 'red circle should still have 1 click');
+        test(greenClicks === 1, 'green circle should still have 1 click');
+        
     },
     'text events': function(containerId) {
         var stage = new Kinetic.Stage({

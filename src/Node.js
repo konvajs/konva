@@ -993,8 +993,7 @@
             this.drawHit();
         },
         shouldDrawHit: function() { 
-            var dd = Kinetic.DD;
-            return this.isVisible() && this.isListening() && (!dd || !dd.isDragging); 
+            return this.isVisible() && this.isListening() && !Kinetic.Global.isDragging(); 
         }
     };
 

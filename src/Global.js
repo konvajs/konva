@@ -44,7 +44,7 @@ var Kinetic = {};
         shapes: {},
         isDragging: function() {
             var dd = Kinetic.DD;   
-            return (dd && dd.isDragging);
+            return (!dd || dd.isDragging);
         },
         warn: function(str) {
             /*
