@@ -57,8 +57,6 @@
                 
                 delete dd.node;
                 
-                node.moveToTop();
-                
                 if (layer) {
                     layer.draw(); 
                 }
