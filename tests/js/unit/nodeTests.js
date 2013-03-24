@@ -2089,6 +2089,8 @@ Test.Modules.NODE = {
         stage.add(layer);
 
         var startDataUrl = layer.toDataURL();
+        
+        //console.log(startDataUrl);
 
         warn(startDataUrl === dataUrls['serialize stage with custom shape'], 'start data url is incorrect');
         //test(triangle.getId() === 'myTriangle', 'triangle id should be myTriangle');
@@ -2617,7 +2619,7 @@ Test.Modules.NODE = {
         layer.hide();
         layer.draw();
         
-        console.log(layer.toDataURL());
+        //console.log(layer.toDataURL());
         
         test(layer.toDataURL() === dataUrls['cleared'], 'layer is still visible');
     },

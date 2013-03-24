@@ -856,7 +856,7 @@ Test.Modules.CONTAINER = {
 
         blueLayer.setZIndex(1);
         
-        console.log(greenLayer.getZIndex());
+        //console.log(greenLayer.getZIndex());
 
         test(greenLayer.getZIndex() === 0, 'green layer should have z index of 0');
         test(blueLayer.getZIndex() === 1, 'blue layer should have z index of 1');
