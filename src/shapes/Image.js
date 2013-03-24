@@ -97,7 +97,10 @@
          */
         applyFilter: function(filter, config, callback) {
             var image = this.getImage(),
-                canvas = new Kinetic.Canvas(image.width, image.height),
+                canvas = new Kinetic.Canvas({
+                    width: image.width, 
+                    height: image.height
+                }),
                 context = canvas.getContext(),
                 that = this;
                 

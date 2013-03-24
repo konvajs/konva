@@ -606,7 +606,7 @@ Test.Modules.CONTAINER = {
         stage.toDataURL({
             callback: function(dataUrl) {
             	//console.log(dataUrl)
-                warn(dataUrl === dataUrls['node shape type selector'], 'problem with node and shape type selector render.');
+                testDataUrl(dataUrl,'node shape type selector', 'problem with node and shape type selector render.');
             }
         });
     },
@@ -864,7 +864,7 @@ Test.Modules.CONTAINER = {
         stage.toDataURL({
             callback: function(dataUrl) {
                 //console.log(dataUrl)
-                warn(dataUrls['blue on top of green'] === dataUrl, 'layer setZIndex is not working');
+                testDataUrl(dataUrl, 'blue on top of green', 'layer setZIndex is not working');
             }
         });
     },
@@ -905,7 +905,7 @@ Test.Modules.CONTAINER = {
 
         stage.toDataURL({
             callback: function(dataUrl) {
-                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToTop is not working');
+                testDataUrl(dataUrl, 'blue on top of green', 'layer moveToTop is not working');
             }
         });
     },
@@ -946,7 +946,7 @@ Test.Modules.CONTAINER = {
 
         stage.toDataURL({
             callback: function(dataUrl) {
-                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveToBottom is not working');
+                testDataUrl(dataUrl, 'blue on top of green', 'layer moveToBottom is not working');
             }
         });
     },
@@ -986,7 +986,7 @@ Test.Modules.CONTAINER = {
 
         stage.toDataURL({
             callback: function(dataUrl) {
-                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveDown is not working');
+                testDataUrl(dataUrl, 'blue on top of green', 'layer moveDown is not working');
             }
         });
     },
@@ -1026,7 +1026,7 @@ Test.Modules.CONTAINER = {
 
         stage.toDataURL({
             callback: function(dataUrl) {
-                warn(dataUrls['blue on top of green'] === dataUrl, 'layer moveUp is not working');
+                testDataUrl(dataUrl, 'blue on top of green', 'layer moveUp is not working');
             }
         });
     },
