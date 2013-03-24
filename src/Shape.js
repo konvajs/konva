@@ -188,7 +188,7 @@
                 canvas = this.getLayer().hitCanvas, 
                 context = canvas.getContext();
 
-            if(drawFunc && this.isVisible() && this.isListening()) {
+            if(drawFunc && this.shouldDrawHit()) {
                 context.save();
                 canvas._applyLineJoin(this);
                 canvas._applyAncestorTransforms(this);

@@ -916,7 +916,7 @@
             }
         },
         /*
-         * draw both scene and hit graphs.  
+         * draw both scene and hit graphs.  If the node being drawn is the stage, all of the layers will be cleared and redra
          * @name draw
          * @methodOf Kinetic.Node.prototype
          *  the scene renderer
@@ -926,10 +926,15 @@
             
             if(layer && layer.getClearBeforeDraw()) {
                 layer.getCanvas().clear();
+                layer.getHitCanvas().clear();
             }
             
             this.drawScene();
             this.drawHit();
+        },
+        shouldDrawHit: function() {
+            var dd = Kinetic.DD;
+            return this.isVisible() && this.isListening() && (!dd || !dd.moving); 
         }
     };
 

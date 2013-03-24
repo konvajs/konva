@@ -51,6 +51,22 @@
             }
             this.setAttr('container', container);
         },
+        draw: function() {
+            // clear children layers
+            var children = this.getChildren(), 
+                len = children.length,
+                n, layer;
+            
+            for(n = 0; n < len; n++) {
+                layer = children[n];
+                if (layer.getClearBeforeDraw()) {
+                    layer.getCanvas().clear();
+                    layer.getHitCanvas().clear();
+                }
+            }
+          
+            Kinetic.Node.prototype.draw.call(this);
+        },
         /**
          * draw layer scene graphs
          * @name draw
@@ -396,8 +412,10 @@
         },
         _mouseup: function(evt) {
             this._setUserPosition(evt);
-            var that = this, dd = Kinetic.DD, obj = this.getIntersection(this.getUserPosition());
-
+            var that = this, 
+                dd = Kinetic.DD, 
+                obj = this.getIntersection(this.getUserPosition());
+                
             if(obj && obj.shape) {
                 var shape = obj.shape;
                 shape._handleEvent('mouseup', evt);

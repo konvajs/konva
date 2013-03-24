@@ -204,11 +204,7 @@
                 
             if (!canvas && layer) {
                 canvas = layer.getCanvas(); 
-            }
-            
-            if(layer && layer.getClearBeforeDraw()) {
-                canvas.clear();
-            }
+            }  
 
             if(this.isVisible()) {
                 if (clip) {
@@ -229,20 +225,21 @@
         },
         drawHit: function() {
             var clip = !!this.getClipFunc() && this.nodeType !== 'Stage',
+                dd = Kinetic.DD,
                 hitCanvas;
 
-            if (clip) {
-                hitCanvas = this.getLayer().hitCanvas; 
-                hitCanvas._clip(this);
-            }
-            if(this.isVisible() && this.isListening()) {
+            if(this.shouldDrawHit()) {
+                if (clip) {
+                    hitCanvas = this.getLayer().hitCanvas; 
+                    hitCanvas._clip(this);
+                }
                 var children = this.children, len = children.length;
                 for(var n = 0; n < len; n++) {
                     children[n].drawHit();
                 }
-            }
-            if (clip) {
-                hitCanvas.getContext().restore();
+                if (clip) {
+                    hitCanvas.getContext().restore();
+                }
             }
         }
     };

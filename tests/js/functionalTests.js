@@ -38,13 +38,13 @@ Test.Modules.DD = {
             clientX: 291,
             clientY: 112 + top
         });
+        
+        Kinetic.DD._endDragBefore();
         stage._mouseup({
             clientX: 291,
             clientY: 112 + top
         });
-        // end drag is tied to document mouseup and touchend event
-        // which can't be simulated.  call _endDrag manually
-        Kinetic.DD._endDrag();
+        Kinetic.DD._endDragAfter({dragEndNode:circle});
     },
     'test dragstart, dragmove, dragend': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -89,16 +89,17 @@ Test.Modules.DD = {
         var dragEnd = false;
         var mouseup = false;
         var layerDragMove = false;
+        var events = [];
 
         circle.on('dragstart', function() {
             dragStart = true;
         });
 
-        /*
+        
         circle.on('dragmove', function() {
             dragMove = true;
         });
-        */
+        
         
         layer.on('dragmove', function() {
             //console.log('move');
@@ -106,13 +107,17 @@ Test.Modules.DD = {
 
         circle.on('dragend', function() {
             dragEnd = true;
-            // test set draggable false after drag end
-            //this.setDraggable(false);
+            console.log('dragend');
+            events.push('dragend');
         });
 
+        
+
         circle.on('mouseup', function() {
-            //console.log('mousup')
+            console.log('mouseup');
+            events.push('mouseup');
         });
+        
         warn(layer.toDataURL() === dataUrls['drag circle before'], 'start data url is incorrect');
         /*
         * simulate drag and drop
@@ -136,23 +141,23 @@ Test.Modules.DD = {
         //test(dragMove, 'dragmove event was not triggered');
         test(!dragEnd, 'dragend event should not have been triggered');
 
+        Kinetic.DD._endDragBefore();
         stage._mouseup({
             clientX: 100,
             clientY: 98 + top
         });
-        // end drag is tied to document mouseup and touchend event
-        // which can't be simulated.  call _endDrag manually
-        Kinetic.DD._endDrag();
-
+        Kinetic.DD._endDragAfter({dragEndNode:circle});
+        
         test(dragStart, 'dragstart event was not triggered');
-        //test(dragMove, 'dragmove event was not triggered');
+        test(dragMove, 'dragmove event was not triggered');
         test(dragEnd, 'dragend event was not triggered');
+        
+        test(events.toString() === 'mouseup,dragend', 'mouseup should occur before dragend');
 
         warn(layer.toDataURL() === dataUrls['drag circle after'], 'end data url is incorrect');
         
-        console.log(layer);
+        showHit(layer);
         
-        console.log(layer.eventListeners['dragmove']);
     },
     'cancel drag and drop by setting draggable to false': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -210,13 +215,12 @@ Test.Modules.DD = {
             clientY: 100 + top
         });
 
+        Kinetic.DD._endDragBefore();
         stage._mouseup({
             clientX: 100,
             clientY: 100 + top
         });
-        // end drag is tied to document mouseup and touchend event
-        // which can't be simulated.  call _endDrag manually
-        Kinetic.DD._endDrag();
+        Kinetic.DD._endDragAfter({dragEndNode:circle});
 
         test(circle.getPosition().x === 380, 'circle x should be 380');
         test(circle.getPosition().y === 100, 'circle y should be 100');
@@ -279,13 +283,12 @@ Test.Modules.DD = {
             clientY: 109 + top
         });
 
+        Kinetic.DD._endDragBefore();
         stage._mouseup({
             clientX: 210,
             clientY: 109 + top
         });
-        // end drag is tied to document mouseup and touchend event
-        // which can't be simulated.  call _endDrag manually
-        Kinetic.DD._endDrag();
+        Kinetic.DD._endDragAfter({dragEndNode:circle2});
 
         //console.log(layer.toDataURL())
         warn(layer.toDataURL() === dataUrls['drag layer after'], 'end data url is incorrect');
@@ -315,6 +318,7 @@ Test.Modules.EVENT = {
         var click = false
         
         text.on('click', function() {
+            console.log('text click');
             click = true; 
         });
 
@@ -326,17 +330,18 @@ Test.Modules.EVENT = {
         showHit(layer);
         
         stage._mousedown({
-            clientX: 291,
-            clientY: 112 + top
+            clientX: 300,
+            clientY: 120 + top
         });
-        stage._mouseup({
-            clientX: 291,
-            clientY: 112 + top
-        });
-        // end drag is tied to document mouseup and touchend event
-        // which can't be simulated.  call _endDrag manually
-        Kinetic.DD._endDrag();
         
+        Kinetic.DD._endDragBefore();
+        stage._mouseup({
+            clientX: 300,
+            clientY: 120 + top
+        });
+        Kinetic.DD._endDragAfter({dragEndNode:text});
+        
+        //TODO: can't get this to pass
         test(click, 'click event should have been fired when mousing down and then up on text');
 
     },
@@ -544,13 +549,12 @@ Test.Modules.EVENT = {
         test(!mouseout, '3) mouseout should be false');
 
         // mouseup inside circle
+        Kinetic.DD._endDragBefore();
         stage._mouseup({
             clientX: 290,
             clientY: 100 + top
         });
-        // end drag is tied to document mouseup and touchend event
-        // which can't be simulated.  call _endDrag manually
-        Kinetic.DD._endDrag();
+        Kinetic.DD._endDragAfter({dragEndNode:circle});
 
         test(mouseover, '4) mouseover should be true');
         test(mousemove, '4) mousemove should be true');
@@ -575,13 +579,12 @@ Test.Modules.EVENT = {
         test(!mouseout, '5) mouseout should be false');
 
         // mouseup inside circle to trigger double click
+        Kinetic.DD._endDragBefore();
         stage._mouseup({
             clientX: 290,
             clientY: 100 + top
         });
-        // end drag is tied to document mouseup and touchend event
-        // which can't be simulated.  call _endDrag manually
-        Kinetic.DD._endDrag();
+        Kinetic.DD._endDragAfter({dragEndNode:circle});
 
         test(mouseover, '6) mouseover should be true');
         test(mousemove, '6) mousemove should be true');
@@ -638,7 +641,7 @@ Test.Modules.EVENT = {
         });
         // end drag is tied to document mouseup and touchend event
         // which can't be simulated.  call _endDrag manually
-        Kinetic.DD._endDrag();
+        //Kinetic.DD._endDrag();
 
         test(touchstart, '9) touchstart should be true');
         test(!touchmove, '9) touchmove should be false');
@@ -669,7 +672,7 @@ Test.Modules.EVENT = {
         });
         // end drag is tied to document mouseup and touchend event
         // which can't be simulated.  call _endDrag manually
-        Kinetic.DD._endDrag();
+        //Kinetic.DD._endDrag();
 
         test(touchstart, '11) touchstart should be true');
         test(!touchmove, '11) touchmove should be false');
@@ -990,13 +993,12 @@ Test.Modules.EVENT = {
             clientX: 374,
             clientY: 114 + top
         });
+        Kinetic.DD._endDragBefore();
         stage._mouseup({
             clientX: 374,
             clientY: 114 + top
         });
-        // end drag is tied to document mouseup and touchend event
-        // which can't be simulated.  call _endDrag manually
-        Kinetic.DD._endDrag();
+        Kinetic.DD._endDragAfter({dragEndNode:circle});
 
         test(e.toString() === 'circle,group1,group2,layer,stage', 'problem with event bubbling');
     }
@@ -1051,25 +1053,28 @@ Test.Modules['HIT FUNCS'] = {
             clientY: 112 + top
         });
 
-        test(mouseovers === 0, 'mouseovers should be 0');
-        test(mouseouts === 0, 'mouseouts should be 0');
+        test(mouseovers === 0, '1) mouseovers should be 0');
+        test(mouseouts === 0, '1) mouseouts should be 0');
 
         stage._mousemove({
             clientX: 286,
             clientY: 118 + top
         });
 
-        test(mouseovers === 1, 'mouseovers should be 1');
-        test(mouseouts === 0, 'mouseouts should be 0');
+        test(mouseovers === 1, '2) mouseovers should be 1');
+        test(mouseouts === 0, '2)mouseouts should be 0');
 
         stage._mousemove({
             clientX: 113,
             clientY: 112 + top
         });
 
-        test(mouseovers === 1, 'mouseovers should be 1');
-        test(mouseouts === 1, 'mouseouts should be 1');
+        test(mouseovers === 1, '3) mouseovers should be 1');
+        test(mouseouts === 1, '3) mouseouts should be 1');
 
+        showHit(layer);
+        
+        
         // set drawBufferFunc with setter
 
         circle.setDrawHitFunc(function(canvas) {
@@ -1081,32 +1086,34 @@ Test.Modules['HIT FUNCS'] = {
             canvas.stroke(this);
         });
 
+        layer.getHitCanvas().clear();
         layer.drawHit();
-
+        
+  
         // move mouse far outside circle
         stage._mousemove({
             clientX: 113,
             clientY: 112 + top
         });
 
-        test(mouseovers === 1, 'mouseovers should be 1');
-        test(mouseouts === 1, 'mouseouts should be 1');
+        test(mouseovers === 1, '4) mouseovers should be 1');
+        test(mouseouts === 1, '4) mouseouts should be 1');
 
         stage._mousemove({
             clientX: 286,
             clientY: 118 + top
         });
 
-        test(mouseovers === 1, 'mouseovers should be 1');
-        test(mouseouts === 1, 'mouseouts should be 1');
+        test(mouseovers === 1, '5) mouseovers should be 1');
+        test(mouseouts === 1, '5) mouseouts should be 1');
 
         stage._mousemove({
             clientX: 321,
             clientY: 112 + top
         });
 
-        test(mouseovers === 1, 'mouseovers should be 1');
-        test(mouseouts === 1, 'mouseouts should be 1');
+        test(mouseovers === 1, '6) mouseovers should be 1');
+        test(mouseouts === 1, '6) mouseouts should be 1');
 
         // move to center of circle
         stage._mousemove({
@@ -1114,7 +1121,8 @@ Test.Modules['HIT FUNCS'] = {
             clientY: 112 + top
         });
 
-        test(mouseovers === 2, 'mouseovers should be 2');
-        test(mouseouts === 1, 'mouseouts should be 1');
+        test(mouseovers === 2, '7) mouseovers should be 2');
+        test(mouseouts === 1, '7) mouseouts should be 1');
+
     }
 };

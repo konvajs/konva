@@ -46,30 +46,6 @@
                 this.afterDrawFunc.call(this);
             }
         },
-        /**
-         * draw children nodes on hit.  this includes any groups
-         *  or shapes
-         * @name drawHit
-         * @methodOf Kinetic.Layer.prototype
-         */
-        drawHit: function() {
-            this.hitCanvas.clear();
-            Kinetic.Container.prototype.drawHit.call(this);
-        },
-        /**
-         * draw children nodes on scene.  this includes any groups
-         *  or shapes
-         * @name drawScene
-         * @methodOf Kinetic.Layer.prototype
-         * @param {Kinetic.Canvas} [canvas]
-         */
-        drawScene: function(canvas) {
-            canvas = canvas || this.getCanvas();
-            if(this.getClearBeforeDraw()) {
-                canvas.clear();
-            }
-            Kinetic.Container.prototype.drawScene.call(this, canvas);
-        },
         toDataURL: function(config) {
             config = config || {};
             var mimeType = config.mimeType || null, 
@@ -116,6 +92,14 @@
         getCanvas: function() {
             var stage = this.getStage();
             return (stage && stage._isTempDDLayerActive()) ? stage.dragLayer.canvas : this.canvas;     
+        },
+        /**
+         * get layer hit canvas
+         * @name getHitCanvas
+         * @methodOf Kinetic.Layer.prototype
+         */
+        getHitCanvas: function() {
+            return this.hitCanvas;
         },
         /**
          * get layer canvas context
