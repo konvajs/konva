@@ -154,7 +154,7 @@
             go._removeName(this.getName(), this._id);
 
             // stop DD
-            if(dd && dd.targetNode && dd.targetNode._id === this._id) {
+            if(dd && dd.node && dd.node._id === this._id) {
                 node._endDrag();
             }
 
