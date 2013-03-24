@@ -193,12 +193,12 @@
             delete this.imageHitRegion;
         },
         getWidth: function() {
-            var image = this.getImage();
-            return this.attrs.width || image.width || 0; 
+            var image = this.getImage(); 
+            return this.attrs.width || (image ? image.width : 0); 
         },
         getHeight: function() {
             var image = this.getImage();
-            return this.attrs.height || image.height || 0; 
+            return this.attrs.height || (image ? image.height : 0);
         },
         _drawImage: function(context, a) {
             if(a.length === 5) {

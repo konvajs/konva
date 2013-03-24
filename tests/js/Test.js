@@ -53,6 +53,23 @@ function testDataUrl(actual, key, message) {
     numTests++;
     testCounter.innerHTML = numTests;
 }
+function testJSON(actual, expected, message) {
+
+    if(actual !== expected) {
+        if(testCounter.style.backgroundColor != 'red') {
+            testCounter.style.backgroundColor = 'orange';
+            testCounter.style.color = 'black';
+        }
+        console.warn(message + ' (NOTE: use Google Chrome for data url comparisons, run on web server for caching and filtering)');
+        
+        console.log('actual:');
+        console.log(actual);
+        console.log('expected:');
+        console.log(expected);
+    }
+    numTests++;
+    testCounter.innerHTML = numTests;
+}
 function log(message) {
     console.log('LOG: ' + message);
 }

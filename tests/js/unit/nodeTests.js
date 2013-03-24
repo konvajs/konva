@@ -2013,12 +2013,11 @@ Test.Modules.NODE = {
         group.add(circle);
         layer.draw();
 
-        var expectedJson = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"clearBeforeDraw":true,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Group","children":[{"attrs":{"radius":70,"visible":true,"listening":true,"name":"myCircle","opacity":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":true,"fill":"green","stroke":"black","strokeWidth":4},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
+        var expectedJson = '{"attrs":{"width":578,"height":200},"nodeType":"Stage","children":[{"attrs":{},"nodeType":"Layer","children":[{"attrs":{},"nodeType":"Group","children":[{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
 
-        //console.log(stage.toJSON())
 
-        //console.log(expectedJson);
         //test(stage.toJSON() === expectedJson, 'problem with serialization');
+        testJSON(stage.toJSON(), expectedJson, 'problem with serialization');
     },
     'serialize shape': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -2044,18 +2043,16 @@ Test.Modules.NODE = {
         group.add(circle);
         layer.draw();
 
-        var expectedJson = '{"attrs":{"radius":70,"visible":true,"listening":true,"name":"myCircle","opacity":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":true,"fill":"green","stroke":"black","strokeWidth":4},"nodeType":"Shape","shapeType":"Circle"}';
+        var expectedJson = '{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true},"nodeType":"Shape","shapeType":"Circle"}';
 
-        //console.log(circle.toJSON())
 
-        //console.log(expectedJson);
-        //test(circle.toJSON() === expectedJson, 'problem with serialization');
+        testJSON(circle.toJSON(), expectedJson, 'problem with serialization');
     },
     'load stage using json': function(containerId) {
-        var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"clearBeforeDraw":true,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Group","children":[{"attrs":{"radius":70,"visible":true,"listening":true,"name":"myCircle","opacity":1,"x":289,"y":100,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":true,"fill":"green","stroke":"black","strokeWidth":4},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
+        var json = '{"attrs":{"width":578,"height":200},"nodeType":"Stage","children":[{"attrs":{},"nodeType":"Layer","children":[{"attrs":{},"nodeType":"Group","children":[{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true},"nodeType":"Shape","shapeType":"Circle"}]}]}]}';
         var stage = Kinetic.Node.create(json, containerId);
 
-        //test(stage.toJSON() === json, "problem loading stage with json");
+        testJSON(stage.toJSON(), json, 'problem loading stage with json');
     },
     'serialize stage with custom shape': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -2089,22 +2086,15 @@ Test.Modules.NODE = {
         stage.add(layer);
 
         var startDataUrl = layer.toDataURL();
-        
-        //console.log(startDataUrl);
 
         testDataUrl(startDataUrl, 'serialize stage with custom shape', 'start data url is incorrect');
-        //test(triangle.getId() === 'myTriangle', 'triangle id should be myTriangle');
+        test(triangle.getId() === 'myTriangle', 'triangle id should be myTriangle');
 
-        //console.log(stage.toJSON());
-        var expectedJson = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"clearBeforeDraw":true,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Group","children":[{"attrs":{"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false,"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
+        var expectedJson = '{"attrs":{"width":578,"height":200},"nodeType":"Stage","children":[{"attrs":{},"nodeType":"Layer","children":[{"attrs":{},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
 
-        //console.log(stage.toJSON())
-        //test(stage.toJSON() === expectedJson, "problem serializing stage with custom shape");
+     
+        testJSON(stage.toJSON(), expectedJson, 'problem serializing stage with custom shape');
 
-        /*
-         * test redrawing layer after serialization
-         * drawing should be the same
-         */
         layer.draw();
 
         var endDataUrl = layer.toDataURL();
@@ -2122,15 +2112,15 @@ Test.Modules.NODE = {
             canvas.fill(this);
             canvas.stroke(this);
         };
-        var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"clearBeforeDraw":true,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Group","children":[{"attrs":{"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false,"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
+        var json = '{"attrs":{"width":578,"height":200},"nodeType":"Stage","children":[{"attrs":{},"nodeType":"Layer","children":[{"attrs":{},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
 
         var stage = Kinetic.Node.create(json, containerId);
 
         stage.get('#myTriangle').apply('setDrawFunc', drawTriangle);
 
         stage.draw();
-        //console.log(stage.toJSON());
-        //test(stage.toJSON() === json, "problem loading stage with custom shape json");
+
+        testJSON(stage.toJSON(), json, 'problem loading stage with custom shape json');
     },
     'serialize stage with an image': function(containerId) {
         var imageObj = new Image();
@@ -2154,19 +2144,19 @@ Test.Modules.NODE = {
 
             layer.add(darth);
             stage.add(layer);
-            var expectedJson = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"clearBeforeDraw":true,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"opacity":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":50,"y":150},"draggable":false,"id":"darth","width":438,"height":300},"nodeType":"Shape","shapeType":"Image"}]}]}';
-            //console.log(stage.toJSON())
-            //test(stage.toJSON() === expectedJson, 'problem with serializing stage with image');
+            var expectedJson = '{"attrs":{"width":578,"height":200},"nodeType":"Stage","children":[{"attrs":{},"nodeType":"Layer","children":[{"attrs":{"x":200,"y":60,"offset":{"x":50,"y":150},"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}';
+           
+            testJSON(stage.toJSON(), expectedJson, 'problem with serializing stage with image');
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
     'load stage with an image': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
-            var json = '{"attrs":{"width":578,"height":200,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Stage","children":[{"attrs":{"clearBeforeDraw":true,"visible":true,"listening":true,"opacity":1,"x":0,"y":0,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":0,"y":0},"draggable":false},"nodeType":"Layer","children":[{"attrs":{"visible":true,"listening":true,"opacity":1,"x":200,"y":60,"scale":{"x":1,"y":1},"rotation":0,"offset":{"x":50,"y":150},"draggable":false,"id":"darth","width":438,"height":300},"nodeType":"Shape","shapeType":"Image"}]}]}';
+            var json = '{"attrs":{"width":578,"height":200},"nodeType":"Stage","children":[{"attrs":{},"nodeType":"Layer","children":[{"attrs":{"x":200,"y":60,"offset":{"x":50,"y":150},"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}';
             var stage = Kinetic.Node.create(json, containerId);
 
-            //test(stage.toJSON(), json, 'problem loading stage json with image');
+            testJSON(stage.toJSON(), json, 'problem loading stage json with image');
             stage.get('#darth').apply('setImage', imageObj);
             stage.draw();
         };
