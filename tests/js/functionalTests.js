@@ -302,6 +302,57 @@ Test.Modules.DD = {
 };
 
 Test.Modules.EVENT = {
+    'draw events': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            throttle: 999
+        });
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'red'
+        });
+        
+        var eventNodes = [];
+        var savedEvt;
+        var order = [];
+
+        layer.on('draw', function(evt) {
+            savedEvt = evt;
+            eventNodes.push(this.getNodeType());
+            order.push('layer draw');
+        });
+        
+        stage.on('draw', function(evt) {
+            eventNodes.push(this.getNodeType());
+            order.push('stage draw');
+        });
+        
+        layer.on('beforeDraw', function(evt) {
+            order.push('layer beforeDraw');
+        });
+        
+        stage.on('beforeDraw', function(evt) {
+            order.push('stage beforeDraw');
+        });
+       
+
+        layer.add(circle);
+        stage.add(layer);
+        
+
+        test(eventNodes.toString() === 'Layer,Stage', 'layer draw event should have fired followed by stage draw event');
+        
+        test(savedEvt.node.getNodeType() === 'Layer', 'event object should contain a node property which is Layer');
+        
+        test(order.toString() === 'layer beforeDraw,stage beforeDraw,layer draw,stage draw', 'order should be: layer beforeDraw,stage beforeDraw,layer draw,stage draw');
+
+    },
     'click mapping': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

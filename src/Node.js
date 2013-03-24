@@ -18,7 +18,9 @@
         MOUSELEAVE = 'mouseleave',
         DEG = 'Deg',
         ON = 'on',
-        OFF = 'off';
+        OFF = 'off',
+        BEFORE_DRAW = 'beforeDraw',
+        DRAW = 'draw';
         
     /**
      * Node constructor. Nodes are entities that can be transformed, layered,
@@ -945,7 +947,7 @@
         },
         _handleEvent: function(eventType, evt, compareShape) {
             if(evt && this.nodeType === SHAPE) {
-                evt.shape = this;
+                evt.node = this;
             }
             var stage = this.getStage();
             var el = this.eventListeners;
@@ -990,15 +992,20 @@
          *  the scene renderer
          */
         draw: function() {
-            var layer = this.getLayer();
+            var layer = this.getLayer(),
+                evt = {
+                    node: this
+                };
             
             if(layer && layer.getClearBeforeDraw()) {
                 layer.getCanvas().clear();
                 layer.getHitCanvas().clear();
             }
             
+            this.fire(BEFORE_DRAW, evt);
             this.drawScene();
             this.drawHit();
+            this.fire(DRAW, evt);
         },
         shouldDrawHit: function() { 
             return this.isVisible() && this.isListening() && !Kinetic.Global.isDragging(); 

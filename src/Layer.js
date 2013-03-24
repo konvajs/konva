@@ -27,25 +27,6 @@
             // call super constructor
             Kinetic.Container.call(this, config);
         },
-        /**
-         * draw children nodes.  this includes any groups
-         *  or shapes
-         * @name draw
-         * @methodOf Kinetic.Layer.prototype
-         */
-        draw: function() {
-            // before draw  handler
-            if(this.beforeDrawFunc !== undefined) {
-                this.beforeDrawFunc.call(this);
-            }
-            
-            Kinetic.Container.prototype.draw.call(this);
-
-            // after draw  handler
-            if(this.afterDrawFunc !== undefined) {
-                this.afterDrawFunc.call(this);
-            }
-        },
         toDataURL: function(config) {
             config = config || {};
             var mimeType = config.mimeType || null, 
