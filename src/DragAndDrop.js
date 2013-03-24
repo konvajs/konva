@@ -11,11 +11,12 @@
         
         // methods
         _drag: function(evt) {
-            var dd = Kinetic.DD, node = dd.node;
+            var dd = Kinetic.DD, 
+                node = dd.node;
     
             if(node) {
                 var pos = node.getStage().getPointerPosition();
-                var dbf = node.attrs.dragBoundFunc;
+                var dbf = node.getDragBoundFunc();
     
                 var newNodePos = {
                     x: pos.x - dd.offset.x,
@@ -72,34 +73,46 @@
             if (evt && dragEndNode) {
               dragEndNode._handleEvent('dragend', evt); 
             }
-        },
-        _endDrag: function() {
-            this._endDragBefore();
-            this._endDragAfter();
         }
     };
 
     // Node extenders
     
-    Kinetic.Node.prototype._startDrag = function(evt) {
+    /**
+     * initiate drag and drop
+     * @name startDrag
+     * @methodOf Kinetic.Node.prototype
+     */
+    Kinetic.Node.prototype.startDrag = function() {
         var dd = Kinetic.DD, 
             that = this, 
             stage = this.getStage(),
             layer = this.getLayer(), 
-            pos = stage.getPointerPosition();
-
+            pos = stage.getPointerPosition(),
+            m = this.getTransform().getTranslation(), 
+            ap = this.getAbsolutePosition(), 
+            animNode = layer || this;
+                
         if(pos) {
-            var m = this.getTransform().getTranslation(), 
-                ap = this.getAbsolutePosition(), 
-                layer = this.getLayer();
-
             dd.node = this;
             dd.offset.x = pos.x - ap.x;
             dd.offset.y = pos.y - ap.y;
-            dd.anim.node = layer;
+            dd.anim.node = animNode;
             dd.anim.start();
         }
     };
+    
+    /**
+     * stop drag and drop
+     * @name stopDrag
+     * @methodOf Kinetic.Node.prototype
+     */
+    Kinetic.Node.prototype.stopDrag = function() {
+        var dd = Kinetic.DD;
+        dd._endDragBefore();
+        dd._endDragAfter();
+    };
+            
     /**
      * set draggable
      * @name setDraggable
@@ -126,7 +139,7 @@
         var that = this;
         this.on('mousedown.kinetic touchstart.kinetic', function(evt) {
             if(!Kinetic.DD.node) {
-                that._startDrag(evt);
+                that.startDrag(evt);
             }
         });
     };
@@ -147,7 +160,7 @@
             var stage = this.getStage();
             var dd = Kinetic.DD;
             if(stage && dd.node && dd.node._id === this._id) {
-                dd._endDrag();
+                dd.node.stopDrag();
             }
         }
     };
@@ -204,7 +217,7 @@
      */
     Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
 
-    // listen for capturing phase so that the _endDrag method is
+    // listen for capturing phase so that the _endDrag* methods are
     // called before the stage mouseup event is triggered in order
     // to render the hit graph just in time to pick up the event
     var html = document.getElementsByTagName('html')[0];
