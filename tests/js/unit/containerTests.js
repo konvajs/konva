@@ -517,7 +517,7 @@ Test.Modules.CONTAINER = {
             fill: 'red'
         });
 
-        var textpath = new Kinetic.Plugins.TextPath({
+        var textpath = new Kinetic.TextPath({
             y: 35,
             stroke: 'black',
             strokeWidth: 1,
@@ -528,7 +528,7 @@ Test.Modules.CONTAINER = {
             data: "M 10,10 300,150 550,150"
         });
 
-        var path = new Kinetic.Plugins.Path({
+        var path = new Kinetic.Path({
             x: 200,
             y: -75,
             data: 'M200,100h100v50z',
@@ -541,7 +541,7 @@ Test.Modules.CONTAINER = {
             shadowOpacity: 0.5
         });
 
-        var poly = new Kinetic.Plugins.RegularPolygon({
+        var poly = new Kinetic.RegularPolygon({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             sides: 5,

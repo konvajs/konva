@@ -331,7 +331,7 @@ Test.Modules.EVENTS = {
         });
         var layer = new Kinetic.Layer();
 
-        var star = new Kinetic.Plugins.Star({
+        var star = new Kinetic.Star({
             x: 200,
             y: 100,
             numPoints: 10,
@@ -404,7 +404,7 @@ Test.Modules.EVENTS = {
         var layer = new Kinetic.Layer({
             rotationDeg: 20
         });
-        var star = new Kinetic.Plugins.Star({
+        var star = new Kinetic.Star({
             x: 200,
             y: 100,
             numPoints: 10,
@@ -788,7 +788,7 @@ Test.Modules.DRAG_AND_DROP = {
         });
         var layer = new Kinetic.Layer();
 
-        var star = new Kinetic.Plugins.Star({
+        var star = new Kinetic.Star({
             x: 200,
             y: 100,
             numPoints: 5,

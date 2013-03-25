@@ -7,7 +7,7 @@ Test.Modules.STAR = {
         });
         var layer = new Kinetic.Layer();
 
-        var star = new Kinetic.Plugins.Star({
+        var star = new Kinetic.Star({
             x: 200,
             y: 100,
             numPoints: 5,
@@ -48,7 +48,7 @@ Test.Modules.STAR = {
             fill: 'red'
         });
 
-        var star = new Kinetic.Plugins.Star({
+        var star = new Kinetic.Star({
             x: 200,
             y: 100,
             numPoints: 5,

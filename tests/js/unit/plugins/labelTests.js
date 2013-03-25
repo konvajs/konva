@@ -7,7 +7,7 @@ Test.Modules.LABEL = {
         });
         var layer = new Kinetic.Layer();
 
-        var label = new Kinetic.Plugins.Label({
+        var label = new Kinetic.Label({
             x: 100,
             y: 100, 
             draggable: true,

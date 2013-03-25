@@ -528,7 +528,7 @@ Test.Modules.PERFORMANCE = {
 
         startTimer();
         for(var n = 0; n < 1000; n++) {
-            var star = new Kinetic.Plugins.Star({
+            var star = new Kinetic.Star({
                 innerRadius: 20,
                 outerRadius: 50,
                 fill: 'yellow',
@@ -560,7 +560,7 @@ Test.Modules.PERFORMANCE = {
         });
         var layer = new Kinetic.Layer();
 
-        var star = new Kinetic.Plugins.Star({
+        var star = new Kinetic.Star({
             innerRadius: 20,
             outerRadius: 50,
             fill: 'yellow',

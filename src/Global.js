@@ -31,7 +31,6 @@ var Kinetic = {};
     
     // namespaces without constructors
     Kinetic.Filters = {};
-    Kinetic.Plugins = {};
     Kinetic.DD = {};
     
     // global namespace
