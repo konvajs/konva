@@ -425,7 +425,7 @@
             }
 
             //init stage drag and drop
-            if(this.isDraggable()) {
+            if(this.isDraggable() && !dd.node) {
                 this.startDrag(evt);
             }
         },
