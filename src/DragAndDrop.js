@@ -93,7 +93,7 @@
             ap = this.getAbsolutePosition(), 
             animNode = layer || this;
                 
-        if(pos) {
+        if(pos && !dd.node) {
             dd.node = this;
             dd.offset.x = pos.x - ap.x;
             dd.offset.y = pos.y - ap.y;

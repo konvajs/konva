@@ -425,7 +425,7 @@
             }
 
             //init stage drag and drop
-            if(dd && !go.isDragging() && this.isDraggable()) {
+            if(this.isDraggable()) {
                 this.startDrag(evt);
             }
         },
