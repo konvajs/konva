@@ -25,15 +25,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+/** 
+ * @namespace 
+ */
 var Kinetic = {}; 
 (function() {
     Kinetic.version = '{{version}}';
     
-    // namespaces without constructors
+    /** 
+     * @namespace 
+     */
     Kinetic.Filters = {};
     Kinetic.DD = {};
     
-    // global namespace
+    /** 
+     * @namespace 
+     */
     Kinetic.Global = {
         stages: [],
         idCounter: 0,
@@ -41,6 +48,11 @@ var Kinetic = {};
         names: {},
         //shapes hash.  rgb keys and shape values
         shapes: {},
+        /**
+         * @method isDragging returns whether or not drag and drop
+         *  is currently active
+         * @methodOf Kinetic.Global
+         */
         isDragging: function() {
             var dd = Kinetic.DD;   
             return (!dd || dd.isDragging);
