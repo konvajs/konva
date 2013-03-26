@@ -1316,18 +1316,6 @@
      * @methodOf Kinetic.Node.prototype
      */
     Kinetic.Node.prototype.isVisible = Kinetic.Node.prototype.getVisible;
-
-    // collection mappings
-    var collectionMappings = [ON, OFF];
-    for(var n = 0; n < 2; n++) {
-        // induce scope
-        (function(i) {
-            var method = collectionMappings[i];
-            Kinetic.Collection.prototype[method] = function() {
-                var args = [].slice.call(arguments);
-                args.unshift(method);
-                this.apply.apply(this, args);
-            };
-        })(n);
-    }
+    
+    Kinetic.Collection.mapMethods(['on', 'off']);
 })();

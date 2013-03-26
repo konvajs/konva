@@ -15,22 +15,6 @@
     }
     Kinetic.Collection.prototype = new Array();
     /**
-     * apply a method to all nodes in the array
-     * @name apply
-     * @methodOf Kinetic.Collection.prototype
-     * @param {String} method
-     * @param val
-     */
-    Kinetic.Collection.prototype.apply = function(method) {
-        args = [].slice.call(arguments);
-        args.shift();
-        for(var n = 0; n < this.length; n++) {
-            if(Kinetic.Type._isFunction(this[n][method])) {
-                this[n][method].apply(this[n], args);
-            }
-        }
-    };
-    /**
      * iterate through node array
      * @name each
      * @methodOf Kinetic.Collection.prototype
@@ -38,7 +22,28 @@
      */
     Kinetic.Collection.prototype.each = function(func) {
         for(var n = 0; n < this.length; n++) {
-            func.call(this[n], n, this[n]);
+            func(this[n], n);
+        }
+    };
+
+    Kinetic.Collection.mapMethods = function(arr) {
+        var leng = arr.length,
+            n;
+            
+        for(n = 0; n < leng; n++) {
+            // induce scope
+            (function(i) {
+                var method = arr[i];
+                Kinetic.Collection.prototype[method] = function() {
+                    var len = this.length,
+                        i;
+                        
+                    args = [].slice.call(arguments);
+                    for(i = 0; i < len; i++) {
+                        this[i][method].apply(this[i], args);
+                    }        
+                };
+            })(n);
         }
     };
 })();

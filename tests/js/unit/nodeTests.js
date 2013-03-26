@@ -2116,7 +2116,9 @@ Test.Modules.NODE = {
 
         var stage = Kinetic.Node.create(json, containerId);
 
-        stage.get('#myTriangle').apply('setDrawFunc', drawTriangle);
+        stage.get('#myTriangle').each(function(node) {
+            node.setDrawFunc(drawTriangle);
+        }); 
 
         stage.draw();
 
@@ -2157,7 +2159,9 @@ Test.Modules.NODE = {
             var stage = Kinetic.Node.create(json, containerId);
 
             testJSON(stage.toJSON(), json, 'problem loading stage json with image');
-            stage.get('#darth').apply('setImage', imageObj);
+            stage.get('#darth').each(function(node) {
+                node.setImage(imageObj);
+            });
             stage.draw();
         };
         imageObj.src = '../assets/darth-vader.jpg';

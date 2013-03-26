@@ -156,12 +156,14 @@ Test.Modules.CONTAINER = {
 
         test(shapes.length === 2, 'shapes array should have 2 elements');
 
-        shapes.apply('setX', 200);
+        shapes.each(function(node) {
+            node.setX(200);
+        });
 
         layer.draw();
 
-        shapes.each(function() {
-            test(this.getX() === 200, 'shape x should be 200');
+        shapes.each(function(node) {
+            test(node.getX() === 200, 'shape x should be 200');
         });
     },
     'set fill on array by Shape-selector': function(containerId) {
@@ -200,12 +202,14 @@ Test.Modules.CONTAINER = {
 
         test(shapes.length === 2, 'shapes array should have 2 elements');
 
-        shapes.apply('setFill', 'gray');
+        shapes.each(function(node) {
+            node.setFill('gray');
+        });
 
         layer.draw();
 
-        shapes.each(function() {
-            test(this.getFill() === 'gray', 'shape x should be 200');
+        shapes.each(function(node) {
+            test(node.getFill() === 'gray', 'shape x should be 200');
         });
     },
     'add listener to an array of nodes': function(containerId) {
