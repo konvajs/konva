@@ -1,4 +1,13 @@
 (function() {
+    // CONSTANTS
+    var CANVAS = 'canvas',
+        CONTEXT_2D = '2d',
+        OBJECT_ARRAY = '[object Array]',
+        OBJECT_NUMBER = '[object Number]',
+        OBJECT_STRING = '[object String]',
+        PI_OVER_DEG180 = Math.PI / 180,
+        DEG180_OVER_PI = 180 / Math.PI;
+        
     /*
      * utilities that handle data type detection, conversion, and manipulation
      */
@@ -16,27 +25,30 @@
             return (!!obj && obj.constructor == Object);
         },
         _isArray: function(obj) {
-            return Object.prototype.toString.call(obj) == '[object Array]';
+            return Object.prototype.toString.call(obj) == OBJECT_ARRAY;
         },
         _isNumber: function(obj) {
-            return Object.prototype.toString.call(obj) == '[object Number]';
+            return Object.prototype.toString.call(obj) == OBJECT_NUMBER;
         },
         _isString: function(obj) {
-            return Object.prototype.toString.call(obj) == '[object String]';
+            return Object.prototype.toString.call(obj) == OBJECT_STRING;
         },
         /*
          * other utils
          */
         _hasMethods: function(obj) {
-            var names = [];
-            for(var key in obj) {
-                if(this._isFunction(obj[key]))
+            var names = [],
+                key;
+                
+            for(key in obj) {
+                if(this._isFunction(obj[key])) {
                     names.push(key);
+                }
             }
             return names.length > 0;
         },
         _isInDocument: function(el) {
-            while( el = el.parentNode) {
+            while(el = el.parentNode) {
                 if(el == document) {
                     return true;
                 }
@@ -229,6 +241,8 @@
          * arg can be an image object or image data
          */
         _getImage: function(arg, callback) {
+            var imageObj, canvas, context, dataUrl;
+            
             // if arg is null or undefined
             if(!arg) {
                 callback(null);
@@ -241,8 +255,7 @@
 
             // if arg is a string, then it's a data url
             else if(this._isString(arg)) {
-                var imageObj = new Image();
-                /** @ignore */
+                imageObj = new Image();
                 imageObj.onload = function() {
                     callback(imageObj);
                 }
@@ -251,14 +264,13 @@
 
             //if arg is an object that contains the data property, it's an image object
             else if(arg.data) {
-                var canvas = document.createElement('canvas');
+                canvas = document.createElement(CANVAS);
                 canvas.width = arg.width;
                 canvas.height = arg.height;
-                var context = canvas.getContext('2d');
+                context = canvas.getContext(CONTEXT_2D);
                 context.putImageData(arg, 0, 0);
-                var dataUrl = canvas.toDataURL();
-                var imageObj = new Image();
-                /** @ignore */
+                dataUrl = canvas.toDataURL();
+                imageObj = new Image();
                 imageObj.onload = function() {
                     callback(imageObj);
                 }
@@ -280,9 +292,10 @@
             };
         },
         _getRandomColorKey: function() {
-            var r = (Math.random() * 255) | 0;
-            var g = (Math.random() * 255) | 0;
-            var b = (Math.random() * 255) | 0;
+            var r = (Math.random() * 255) | 0,
+                g = (Math.random() * 255) | 0,
+                b = (Math.random() * 255) | 0;
+                
             return this._rgbToHex(r, g, b);
         },
         // o1 takes precedence over o2
@@ -312,10 +325,10 @@
             return retObj;
         },
         _degToRad: function(deg) {
-            return deg * Math.PI / 180;
+            return deg * PI_OVER_DEG180;
         },
         _radToDeg: function(rad) {
-            return rad * 180 / Math.PI;
+            return rad * DEG180_OVER_PI;
         },
         _capitalize: function(str) {
             return str.charAt(0).toUpperCase() + str.slice(1);

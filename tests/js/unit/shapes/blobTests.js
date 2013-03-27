@@ -55,10 +55,12 @@ Test.Modules.BLOB = {
         stage.add(layer);
         
         //console.log(layer.toDataURL());
-        warn(layer.toDataURL() === dataUrls['blobs'], 'problem with blobs');
+        testDataUrl(layer.toDataURL(), 'blobs', 'problem with blobs');
         
         test(blob1.getTension() === 0.8, 'blob1 tension should be 0.8');
         test(blob2.getTension() === 1.2, 'blob2 tension should be 1.2');
+        
+        test(blob1.getShapeType() === 'Blob', 'shape type should be Blob');
         
 
     }

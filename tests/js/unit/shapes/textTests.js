@@ -54,6 +54,8 @@ Test.Modules.Text = {
         group.add(text);
         layer.add(group);
         stage.add(layer);
+        
+        test(text.getShapeType() === 'Text', 'shape type should be Text');
     },
     'text getters and setters': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -247,7 +249,7 @@ Test.Modules.Text = {
 
         //console.log(layer.toDataURL());
 
-        warn(layer.toDataURL() === dataUrls['multiline text with shadows'], 'multi line text with shadows data url is incorrect');
+        testDataUrl(layer.toDataURL(),'multiline text with shadows', 'multi line text with shadows data url is incorrect');
     },
     'change font size should update text data': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -315,7 +317,7 @@ Test.Modules.Text = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        warn(layer.toDataURL() === dataUrls['text everything enabled'], 'should be text with blue fill and red stroke');
+        testDataUrl(layer.toDataURL(), 'text everything enabled', 'should be text with blue fill and red stroke');
     },
     'text fill disabled': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -345,7 +347,7 @@ Test.Modules.Text = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        warn(layer.toDataURL() === dataUrls['text fill disabled'], 'should be text with no fill and red stroke');
+        testDataUrl(layer.toDataURL(), 'text fill disabled', 'should be text with no fill and red stroke');
     },
     'text stroke disabled': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -375,7 +377,7 @@ Test.Modules.Text = {
         stage.add(layer);
 
         //console.log(layer.toDataURL());
-        warn(layer.toDataURL() === dataUrls['text stroke disabled'], 'should be text with blue fill and no stroke');
+        testDataUrl(layer.toDataURL(),'text stroke disabled', 'should be text with blue fill and no stroke');
     },
     'wrapped text': function (containerId) {
         var stage = new Kinetic.Stage({
@@ -401,15 +403,15 @@ Test.Modules.Text = {
         layer.add(text);
         stage.add(layer);
 
-        warn(layer.toDataURL() === dataUrls['wrapped text']['wrapping to words'], 'text should be wrapped to words');
+        testDataUrl(layer.toDataURL(),'wrapping to words', 'text should be wrapped to words');
 
         text.setWrap('none');
         layer.draw();
-        warn(layer.toDataURL() === dataUrls['wrapped text']['no wrapping'], 'text should not be wrapped');
+        testDataUrl(layer.toDataURL(),'no wrapping', 'text should not be wrapped');
 
         text.setWrap('char');
         layer.draw();
-        warn(layer.toDataURL() === dataUrls['wrapped text']['wrapping to chars'], 'text should be wrapped to chars');
+        testDataUrl(layer.toDataURL(), 'wrapping to chars', 'text should be wrapped to chars');
 
     }
 };

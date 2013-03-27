@@ -31,11 +31,11 @@
      * @param {Number} [config.text.lineHeight] default is 1
      * {{NodeParams}}
      */
-    Kinetic.Plugins.Label = function(config) {
+    Kinetic.Label = function(config) {
         this._initLabel(config);
     };
 
-    Kinetic.Plugins.Label.prototype = {
+    Kinetic.Label.prototype = {
         _initLabel: function(config) {
             var that = this,
                 text = null;
@@ -45,7 +45,7 @@
             Kinetic.Group.call(this, config);
             text = new Kinetic.Text(config.text);
             this.setText(text);
-            this.setRect(new Kinetic.Plugins.LabelRect(config.rect));
+            this.setRect(new Kinetic.LabelRect(config.rect));
             this.innerGroup.add(this.getRect());
             this.innerGroup.add(text); 
             this.add(this.innerGroup);   
@@ -102,15 +102,15 @@
         }
     };
     
-    Kinetic.Global.extend(Kinetic.Plugins.Label, Kinetic.Group);
-    Kinetic.Node.addGetterSetter(Kinetic.Plugins.Label, 'text');
-    Kinetic.Node.addGetterSetter(Kinetic.Plugins.Label, 'rect');
+    Kinetic.Global.extend(Kinetic.Label, Kinetic.Group);
+    Kinetic.Node.addGetterSetter(Kinetic.Label, 'text');
+    Kinetic.Node.addGetterSetter(Kinetic.Label, 'rect');
         
-    Kinetic.Plugins.LabelRect = function(config) {
+    Kinetic.LabelRect = function(config) {
         this._initLabelRect(config);
     };
 
-    Kinetic.Plugins.LabelRect.prototype = {
+    Kinetic.LabelRect.prototype = {
         _initLabelRect: function(config) {
             this.createAttrs();
             Kinetic.Shape.call(this, config);
@@ -165,9 +165,9 @@
         }
     };
     
-    Kinetic.Global.extend(Kinetic.Plugins.LabelRect, Kinetic.Shape);
-    Kinetic.Node.addGetterSetter(Kinetic.Plugins.LabelRect, 'pointerDirection', NONE);
-    Kinetic.Node.addGetterSetter(Kinetic.Plugins.LabelRect, 'pointerWidth', 0);
-    Kinetic.Node.addGetterSetter(Kinetic.Plugins.LabelRect, 'pointerHeight', 0);
-    Kinetic.Node.addGetterSetter(Kinetic.Plugins.LabelRect, 'cornerRadius', 0);
+    Kinetic.Global.extend(Kinetic.LabelRect, Kinetic.Shape);
+    Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'pointerDirection', NONE);
+    Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'pointerWidth', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'pointerHeight', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'cornerRadius', 0);
 })();

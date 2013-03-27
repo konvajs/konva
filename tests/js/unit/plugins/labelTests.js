@@ -7,7 +7,7 @@ Test.Modules.LABEL = {
         });
         var layer = new Kinetic.Layer();
 
-        var label = new Kinetic.Plugins.Label({
+        var label = new Kinetic.Label({
             x: 100,
             y: 100, 
             draggable: true,
@@ -51,5 +51,7 @@ Test.Modules.LABEL = {
         label.getText().setText('Hello big world');
 
         layer.draw();
+        
+        test(label.getNodeType() === 'Group', 'label should be a group');
     }
 };

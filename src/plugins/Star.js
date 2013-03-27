@@ -10,11 +10,11 @@
      * {{ShapeParams}}
      * {{NodeParams}}
      */
-    Kinetic.Plugins.Star = function(config) {
+    Kinetic.Star = function(config) {
         this._initStar(config);
     };
 
-    Kinetic.Plugins.Star.prototype = {
+    Kinetic.Star.prototype = {
         _initStar: function(config) {
             this.createAttrs();
 
@@ -40,49 +40,49 @@
             canvas.fillStroke(this);
         }
     };
-    Kinetic.Global.extend(Kinetic.Plugins.Star, Kinetic.Shape);
+    Kinetic.Global.extend(Kinetic.Star, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Node.addGetterSetter(Kinetic.Plugins.Star, 'numPoints', 0);
-    Kinetic.Node.addGetterSetter(Kinetic.Plugins.Star, 'innerRadius', 0);
-    Kinetic.Node.addGetterSetter(Kinetic.Plugins.Star, 'outerRadius', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.Star, 'numPoints', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.Star, 'innerRadius', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.Star, 'outerRadius', 0);
 
     /**
      * set number of points
      * @name setNumPoints
-     * @methodOf Kinetic.Plugins.Star.prototype
+     * @methodOf Kinetic.Star.prototype
      * @param {Integer} points
      */
 
     /**
      * set outer radius
      * @name setOuterRadius
-     * @methodOf Kinetic.Plugins.Star.prototype
+     * @methodOf Kinetic.Star.prototype
      * @param {Number} radius
      */
 
     /**
      * set inner radius
      * @name setInnerRadius
-     * @methodOf Kinetic.Plugins.Star.prototype
+     * @methodOf Kinetic.Star.prototype
      * @param {Number} radius
      */
 
     /**
      * get number of points
      * @name getNumPoints
-     * @methodOf Kinetic.Plugins.Star.prototype
+     * @methodOf Kinetic.Star.prototype
      */
 
     /**
      * get outer radius
      * @name getOuterRadius
-     * @methodOf Kinetic.Plugins.Star.prototype
+     * @methodOf Kinetic.Star.prototype
      */
 
     /**
      * get inner radius
      * @name getInnerRadius
-     * @methodOf Kinetic.Plugins.Star.prototype
+     * @methodOf Kinetic.Star.prototype
      */
 })();

@@ -117,6 +117,8 @@ Test.Modules.IMAGE = {
             });
 
             //document.body.appendChild(layer.bufferCanvas.element)
+            
+            test(darth.getShapeType() === 'Image', 'shape type should be Image');
 
         };
         imageObj.src = '../assets/darth-vader.jpg';
@@ -185,7 +187,7 @@ Test.Modules.IMAGE = {
                 var hitDataUrl = layer.hitCanvas.toDataURL();
 
                 //console.log(hitDataUrl);
-                warn(hitDataUrl === dataUrls['transparent image hit render'], 'problem rendering image on hit graph');
+                testDataUrl(hitDataUrl,'transparent image hit render', 'problem rendering image on hit graph');
             });
         };
         imageObj.src = '../assets/lion.png';
@@ -289,7 +291,7 @@ Test.Modules.IMAGE = {
                 layer.draw();
                 var dataUrl = layer.toDataURL();
                 //console.log(dataUrl);
-                warn(dataUrl === dataUrls['adjust image brightness'], 'problem with Brighten filter.');
+                testDataUrl(dataUrl, 'adjust image brightness', 'problem with Brighten filter.');
 
             });
         };
@@ -325,7 +327,7 @@ Test.Modules.IMAGE = {
                 layer.draw();
                 var dataUrl = layer.toDataURL();
                 //console.log(dataUrl);
-                warn(dataUrl === dataUrls['adjust image brightness'], 'problem with Brighten filter.');
+                testDataUrl(dataUrl, 'blur filter', 'problem with Blur filter.');
 
             });
         };

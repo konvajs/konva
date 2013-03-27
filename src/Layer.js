@@ -27,49 +27,6 @@
             // call super constructor
             Kinetic.Container.call(this, config);
         },
-        /**
-         * draw children nodes.  this includes any groups
-         *  or shapes
-         * @name draw
-         * @methodOf Kinetic.Layer.prototype
-         */
-        draw: function() {
-            // before draw  handler
-            if(this.beforeDrawFunc !== undefined) {
-                this.beforeDrawFunc.call(this);
-            }
-            
-            Kinetic.Container.prototype.draw.call(this);
-
-            // after draw  handler
-            if(this.afterDrawFunc !== undefined) {
-                this.afterDrawFunc.call(this);
-            }
-        },
-        /**
-         * draw children nodes on hit.  this includes any groups
-         *  or shapes
-         * @name drawHit
-         * @methodOf Kinetic.Layer.prototype
-         */
-        drawHit: function() {
-            this.hitCanvas.clear();
-            Kinetic.Container.prototype.drawHit.call(this);
-        },
-        /**
-         * draw children nodes on scene.  this includes any groups
-         *  or shapes
-         * @name drawScene
-         * @methodOf Kinetic.Layer.prototype
-         * @param {Kinetic.Canvas} [canvas]
-         */
-        drawScene: function(canvas) {
-            canvas = canvas || this.getCanvas();
-            if(this.getClearBeforeDraw()) {
-                canvas.clear();
-            }
-            Kinetic.Container.prototype.drawScene.call(this, canvas);
-        },
         toDataURL: function(config) {
             config = config || {};
             var mimeType = config.mimeType || null, 
@@ -114,8 +71,15 @@
          * @methodOf Kinetic.Layer.prototype
          */
         getCanvas: function() {
-            var stage = this.getStage();
-            return (stage && stage._isTempDDLayerActive()) ? stage.dragLayer.canvas : this.canvas;     
+            return this.canvas;     
+        },
+        /**
+         * get layer hit canvas
+         * @name getHitCanvas
+         * @methodOf Kinetic.Layer.prototype
+         */
+        getHitCanvas: function() {
+            return this.hitCanvas;
         },
         /**
          * get layer canvas context

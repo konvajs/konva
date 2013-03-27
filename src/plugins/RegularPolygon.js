@@ -9,11 +9,11 @@
      * {{ShapeParams}}
      * {{NodeParams}}
      */
-    Kinetic.Plugins.RegularPolygon = function(config) {
+    Kinetic.RegularPolygon = function(config) {
         this._initRegularPolygon(config);
     };
 
-    Kinetic.Plugins.RegularPolygon.prototype = {
+    Kinetic.RegularPolygon.prototype = {
         _initRegularPolygon: function(config) {
             this.createAttrs();
 
@@ -36,35 +36,35 @@
             canvas.fillStroke(this);
         }
     };
-    Kinetic.Global.extend(Kinetic.Plugins.RegularPolygon, Kinetic.Shape);
+    Kinetic.Global.extend(Kinetic.RegularPolygon, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Node.addGetterSetter(Kinetic.Plugins.RegularPolygon, 'radius', 0);
-    Kinetic.Node.addGetterSetter(Kinetic.Plugins.RegularPolygon, 'sides', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.RegularPolygon, 'radius', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.RegularPolygon, 'sides', 0);
 
     /**
      * set radius
      * @name setRadius
-     * @methodOf Kinetic.Plugins.RegularPolygon.prototype
+     * @methodOf Kinetic.RegularPolygon.prototype
      * @param {Number} radius
      */
 
     /**
      * set number of sides
      * @name setSides
-     * @methodOf Kinetic.Plugins.RegularPolygon.prototype
+     * @methodOf Kinetic.RegularPolygon.prototype
      * @param {int} sides
      */
     
     /**
      * get radius
      * @name getRadius
-     * @methodOf Kinetic.Plugins.RegularPolygon.prototype
+     * @methodOf Kinetic.RegularPolygon.prototype
      */
 
     /**
      * get number of sides
      * @name getSides
-     * @methodOf Kinetic.Plugins.RegularPolygon.prototype
+     * @methodOf Kinetic.RegularPolygon.prototype
      */
 })();

@@ -7,7 +7,7 @@ Test.Modules.REGULAR_POLYGON = {
         });
         var layer = new Kinetic.Layer();
 
-        var poly = new Kinetic.Plugins.RegularPolygon({
+        var poly = new Kinetic.RegularPolygon({
             x: 200,
             y: 100,
             sides: 3,
@@ -24,6 +24,8 @@ Test.Modules.REGULAR_POLYGON = {
 
         layer.add(poly);
         stage.add(layer);
+        
+        test(poly.getShapeType() === 'RegularPolygon', 'shape type should be RegularPolygon');
 
     },
     'add regular polygon square': function(containerId) {
@@ -34,7 +36,7 @@ Test.Modules.REGULAR_POLYGON = {
         });
         var layer = new Kinetic.Layer();
 
-        var poly = new Kinetic.Plugins.RegularPolygon({
+        var poly = new Kinetic.RegularPolygon({
             x: 200,
             y: 100,
             sides: 4,
@@ -56,7 +58,7 @@ Test.Modules.REGULAR_POLYGON = {
         });
         var layer = new Kinetic.Layer();
 
-        var poly = new Kinetic.Plugins.RegularPolygon({
+        var poly = new Kinetic.RegularPolygon({
             x: 200,
             y: 100,
             sides: 5,
@@ -78,7 +80,7 @@ Test.Modules.REGULAR_POLYGON = {
         });
         var layer = new Kinetic.Layer();
 
-        var poly = new Kinetic.Plugins.RegularPolygon({
+        var poly = new Kinetic.RegularPolygon({
             x: 200,
             y: 100,
             sides: 8,

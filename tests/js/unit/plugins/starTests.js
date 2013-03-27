@@ -7,7 +7,7 @@ Test.Modules.STAR = {
         });
         var layer = new Kinetic.Layer();
 
-        var star = new Kinetic.Plugins.Star({
+        var star = new Kinetic.Star({
             x: 200,
             y: 100,
             numPoints: 5,
@@ -29,6 +29,8 @@ Test.Modules.STAR = {
 
         layer.add(star);
         stage.add(layer);
+        
+        test(star.getShapeType() === 'Star', 'shape type should be Star');
     },
     'add five point star with line join and shadow': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -46,7 +48,7 @@ Test.Modules.STAR = {
             fill: 'red'
         });
 
-        var star = new Kinetic.Plugins.Star({
+        var star = new Kinetic.Star({
             x: 200,
             y: 100,
             numPoints: 5,

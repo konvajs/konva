@@ -135,7 +135,7 @@
     })();
 
     Kinetic.Animation.requestAnimFrame = function(callback) {
-        var raf = Kinetic.DD && Kinetic.DD.moving ? this.fixedRequestAnimFrame : RAF;
+        var raf = Kinetic.DD && Kinetic.DD.isDragging ? this.fixedRequestAnimFrame : RAF;
         raf(callback);
     };
     

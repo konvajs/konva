@@ -22,8 +22,6 @@ Test.Modules.LAYER = {
 
         var style = layer.getCanvas().getElement().style;
 
-        console.log('--' + style.display);
-
         test(style.position === 'absolute', 'canvas position style should be absolute');
         test(style.border === '0px', 'canvas border style should be 0px');
         test(style.margin === '0px', 'canvas margin style should be 0px');
@@ -104,6 +102,7 @@ Test.Modules.LAYER = {
                 warn(dataUrls['stacked green circles'] === dataUrl, 'stacked green circles stage data url is incorrect');
             }
         });
+
         warn(dataUrls['stacked green circles'] === layer.toDataURL(), 'stacked green circles layer data url is incorrect');
 
     },

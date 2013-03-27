@@ -331,7 +331,7 @@ Test.Modules.EVENTS = {
         });
         var layer = new Kinetic.Layer();
 
-        var star = new Kinetic.Plugins.Star({
+        var star = new Kinetic.Star({
             x: 200,
             y: 100,
             numPoints: 10,
@@ -404,7 +404,7 @@ Test.Modules.EVENTS = {
         var layer = new Kinetic.Layer({
             rotationDeg: 20
         });
-        var star = new Kinetic.Plugins.Star({
+        var star = new Kinetic.Star({
             x: 200,
             y: 100,
             numPoints: 10,
@@ -788,7 +788,7 @@ Test.Modules.DRAG_AND_DROP = {
         });
         var layer = new Kinetic.Layer();
 
-        var star = new Kinetic.Plugins.Star({
+        var star = new Kinetic.Star({
             x: 200,
             y: 100,
             numPoints: 5,
@@ -1355,12 +1355,13 @@ Test.Modules.DRAG_AND_DROP = {
     'stage and shape draggable': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
+            draggable: true,
             width: 578,
-            height: 200,
-            draggable: true
+            height: 200
         });
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
+        var layer = new Kinetic.Layer({
+            draggable: true 
+        });
 
         var rect = new Kinetic.Rect({
             x: 150,
@@ -1369,8 +1370,7 @@ Test.Modules.DRAG_AND_DROP = {
             height: 50,
             fill: 'red',
             stroke: 'black',
-            strokeWidth: 4,
-            draggable: true,
+            strokeWidth: 4
         });
         
         var rect2 = new Kinetic.Rect({

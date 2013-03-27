@@ -1,4 +1,4 @@
-Test.Modules.ELLISPE = {
+Test.Modules.ELLIPSE = {
     'add ellipse': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -6,7 +6,7 @@ Test.Modules.ELLISPE = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Ellipse({
+        var ellipse = new Kinetic.Ellipse({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: [70, 35],
@@ -14,7 +14,8 @@ Test.Modules.ELLISPE = {
             stroke: 'black',
             strokeWidth: 8
         });
-        layer.add(circle);
+        layer.add(ellipse);
         stage.add(layer);
+        test(ellipse.getShapeType() === 'Ellipse', 'shape type should be Ellipse');
     }
 };

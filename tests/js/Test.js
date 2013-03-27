@@ -12,27 +12,62 @@ function endTimer(str) {
     var diff = after - before;
     console.log(str + ': ' + diff + 'ms');
 }
-function warn(condition, message) {
-    test(condition, message, true);
-}
 function test(condition, message, warn) {
     if(!condition) {
-        if(warn) {
-            if(testCounter.style.backgroundColor != 'red') {
-                testCounter.style.backgroundColor = 'orange';
-                testCounter.style.color = 'black';
-            }
-            console.warn(message + ' (NOTE: use Google Chrome for data url comparisons, run on web server for caching and filtering)');
-        }
-        else {
-            testCounter.style.backgroundColor = 'red';
-            testCounter.style.color = 'black';
-            throw new Error(message);
-        }
-
+        testCounter.style.backgroundColor = 'red';
+        testCounter.style.color = 'black';
+        throw new Error(message);
     }
     numTests++;
 
+    testCounter.innerHTML = numTests;
+}
+function warn(condition, message) {
+    if(!condition) {
+        if(testCounter.style.backgroundColor != 'red') {
+            testCounter.style.backgroundColor = 'orange';
+            testCounter.style.color = 'black';
+        }
+        console.warn(message);
+
+    }
+    numTests++;
+    testCounter.innerHTML = numTests;
+}
+function testDataUrl(actual, key, message) {
+    var expected = dataUrls[key];
+    
+    if(actual !== expected) {
+        if(testCounter.style.backgroundColor != 'red') {
+            testCounter.style.backgroundColor = 'orange';
+            testCounter.style.color = 'black';
+        }
+        console.warn(message + ' (NOTE: use Google Chrome for data url comparisons, run on web server for caching and filtering)');
+        
+        console.log('key: ' + key);
+        console.log('actual:');
+        console.log(actual);
+        console.log('expected:');
+        console.log(expected);
+    }
+    numTests++;
+    testCounter.innerHTML = numTests;
+}
+function testJSON(actual, expected, message) {
+
+    if(actual !== expected) {
+        if(testCounter.style.backgroundColor != 'red') {
+            testCounter.style.backgroundColor = 'orange';
+            testCounter.style.color = 'black';
+        }
+        console.warn(message + ' (NOTE: use Google Chrome for data url comparisons, run on web server for caching and filtering)');
+        
+        console.log('actual:');
+        console.log(actual);
+        console.log('expected:');
+        console.log(expected);
+    }
+    numTests++;
     testCounter.innerHTML = numTests;
 }
 function log(message) {
