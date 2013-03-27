@@ -192,22 +192,6 @@
         _getContextFont: function() {
             return this.getFontStyle() + SPACE + this.getFontSize() + PX_SPACE + this.getFontFamily();
         },
-        _expandTextData: function(arr) {
-            var len = arr.length;
-                n = 0, 
-                text = EMPTY_STRING,
-                newArr = [];
-                
-            for (n=0; n<len; n++) {
-                text = arr[n];
-                newArr.push({
-                    text: text,
-                    width: this._getTextSize(text).width                    
-                });
-            }
-                
-            return newArr;
-        },
         _addTextLine: function (line, width, height) {
             return this.textArr.push({text: line, width: width});
         },
@@ -227,7 +211,9 @@
                  height = this.attrs.height,
                  fixedWidth = width !== AUTO,
                  fixedHeight = height !== AUTO,
-                 maxHeightPx = height - this.getPadding() * 2,
+                 padding = this.getPadding(),
+                 maxWidth = width - padding * 2,
+                 maxHeightPx = height - padding * 2,
                  currentHeightPx = 0,
                  wrap = this.getWrap(),
                  shouldWrap = wrap !== NONE,
@@ -239,7 +225,7 @@
              for (var i = 0, max = lines.length; i < max; ++i) {
                  var line = lines[i],
                      lineWidth = this._getTextWidth(line);
-                 if (fixedWidth && lineWidth > width) {
+                 if (fixedWidth && lineWidth > maxWidth) {
                      /* 
                       * if width is fixed and line does not fit entirely
                       * break the line into multiple fitting lines
@@ -255,7 +241,7 @@
                              var mid = (low + high) >>> 1,
                                  substr = line.slice(0, mid + 1),
                                  substrWidth = this._getTextWidth(substr);
-                             if (substrWidth <= width) {
+                             if (substrWidth <= maxWidth) {
                                  low = mid + 1;
                                  match = substr;
                                  matchWidth = substrWidth;
@@ -292,6 +278,16 @@
                                  break;
                              }
                              line = line.slice(low);
+                             if (line.length > 0) {
+                                 // Check if the remaining text would fit on one line
+                                 lineWidth = this._getTextWidth(line);
+                                 if (lineWidth <= maxWidth) {
+                                     // if it does, add the line and break out of the loop
+                                     this._addTextLine(line, lineWidth);
+                                     currentHeightPx += lineHeightPx;
+                                     break;
+                                 }
+                             }
                          } else {
                              // not even one character could fit in the element, abort
                              break;
