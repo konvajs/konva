@@ -14,10 +14,10 @@
     Kinetic.Transition = function(node, config) {
         var that = this,
             easing = config.easing || 'linear',
-            easingFunc = Kinetic.Tweens[easing];  
+            easingFunc = Kinetic.Tweens[easing],
             duration = config.duration || 0,
             configVal = null,
-            lastTweenIndex = 0;
+            lastTweenIndex = 0,
             obj = {}, 
             x = 0, 
             y = 0; 
