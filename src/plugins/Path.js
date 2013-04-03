@@ -23,9 +23,9 @@
             this.shapeType = 'Path';
             this._setDrawFuncs();
 
-            this.dataArray = Kinetic.Path.parsePathData(this.attrs.data);
+            this.dataArray = Kinetic.Path.parsePathData(this.getData());
             this.on('dataChange', function() {
-                that.dataArray = Kinetic.Path.parsePathData(that.attrs.data);
+                that.dataArray = Kinetic.Path.parsePathData(this.getData());
             });
         },
         drawFunc: function(canvas) {
@@ -74,10 +74,6 @@
     };
     Kinetic.Global.extend(Kinetic.Path, Kinetic.Shape);
 
-    /*
-     * Utility methods written by jfollas to
-     * handle length and point measurements
-     */
     Kinetic.Path.getLineLength = function(x1, y1, x2, y2) {
         return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     };

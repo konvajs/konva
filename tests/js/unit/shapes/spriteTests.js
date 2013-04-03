@@ -84,7 +84,6 @@ Test.Modules.SPRITE = {
                 image: imageObj,
                 animation: 'standing',
                 animations: anims,
-                index: 0,
                 frameRate: Math.random() * 6 + 6,
                 frameRate: 10,
                 draggable: true,
@@ -114,6 +113,8 @@ Test.Modules.SPRITE = {
             //document.body.appendChild(layer.bufferCanvas.element)
             
             test(sprite.getShapeType() === 'Sprite', 'shape type should be Sprite');
+
+            test(sprite.getIndex() === 0, 'sprite index should default to 0');
         };
         imageObj.src = '../assets/scorpion-sprite.png';
     }

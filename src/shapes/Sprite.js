@@ -7,12 +7,13 @@
      * @param {String} config.animation animation key
      * @param {Object} config.animations animation map
      * @param {Integer} [config.index] animation index
+     * @param {Image} image image object
      * {{ShapeParams}}
      * {{NodeParams}}
      */
     Kinetic.Sprite = function(config) {
         this._initSprite(config);
-    };
+    }
 
     Kinetic.Sprite.prototype = {
         _initSprite: function(config) {
@@ -31,14 +32,21 @@
             });
         },
         drawFunc: function(canvas) {
-            var anim = this.attrs.animation, index = this.attrs.index, f = this.attrs.animations[anim][index], context = canvas.getContext(), image = this.attrs.image;
+            var anim = this.getAnimation(), 
+                index = this.getIndex(), 
+                f = this.getAnimations()[anim][index], 
+                context = canvas.getContext(), 
+                image = this.getImage();
 
             if(image) {
                 context.drawImage(image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
             }
         },
         drawHitFunc: function(canvas) {
-            var anim = this.attrs.animation, index = this.attrs.index, f = this.attrs.animations[anim][index], context = canvas.getContext();
+            var anim = this.getAnimation(), 
+                index = this.getIndex(), 
+                f = this.getAnimations()[anim][index], 
+                context = canvas.getContext();
 
             context.beginPath();
             context.rect(0, 0, f.width, f.height);
@@ -63,14 +71,14 @@
             this.anim.node = layer;
 
             this.interval = setInterval(function() {
-                var index = that.attrs.index;
+                var index = that.getIndex();
                 that._updateIndex();
                 if(that.afterFrameFunc && index === that.afterFrameIndex) {
                     that.afterFrameFunc();
                     delete that.afterFrameFunc;
                     delete that.afterFrameIndex;
                 }
-            }, 1000 / this.attrs.frameRate);
+            }, 1000 / this.getFrameRate());
 
             this.anim.start();
         },
@@ -95,13 +103,17 @@
             this.afterFrameFunc = func;
         },
         _updateIndex: function() {
-            var i = this.attrs.index;
-            var a = this.attrs.animation;
-            if(i < this.attrs.animations[a].length - 1) {
-                this.attrs.index++;
+            var index = this.getIndex(),
+                animation = this.getAnimation(),
+                animations = this.getAnimations(),
+                anim = animations[animation], 
+                len = anim.length;
+                 
+            if(index < len - 1) {
+                this.setIndex(index + 1);
             }
             else {
-                this.attrs.index = 0;
+                this.setIndex(0);
             }
         }
     };
@@ -110,6 +122,7 @@
     // add getters setters
     Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'animation');
     Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'animations');
+    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'image');
     Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'index', 0);
     Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'frameRate', 17);
 
@@ -128,6 +141,13 @@
      */
 
     /**
+     * set image 
+     * @name setImage
+     * @methodOf Kinetic.Sprite.prototype
+     * @param {Image} image 
+     */
+
+    /**
      * set animation frame index
      * @name setIndex
      * @methodOf Kinetic.Sprite.prototype
@@ -143,6 +163,12 @@
     /**
      * get animations object
      * @name getAnimations
+     * @methodOf Kinetic.Sprite.prototype
+     */
+
+    /**
+     * get image
+     * @name getImage
      * @methodOf Kinetic.Sprite.prototype
      */
 
