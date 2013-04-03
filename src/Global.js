@@ -54,8 +54,35 @@ var Kinetic = {};
          * @methodOf Kinetic.Global
          */
         isDragging: function() {
-            var dd = Kinetic.DD;   
-            return (!dd || dd.isDragging);
+            var dd = Kinetic.DD;  
+
+            // if DD is not included with the build, then
+            // drag and drop is not even possible
+            if (!dd) {
+                return false;
+            } 
+            // if DD is included with the build
+            else {
+                return dd.isDragging;
+            }
+        },
+        /**
+        * @method isDragReady returns whether or not a drag and drop operation is ready, but may
+        *  not necessarily have started
+        * @methodOf Kinetic.Global
+        */
+        isDragReady: function() {
+            var dd = Kinetic.DD;  
+
+            // if DD is not included with the build, then
+            // drag and drop is not even possible
+            if (!dd) {
+                return false;
+            } 
+            // if DD is included with the build
+            else {
+                return !!dd.node;
+            }
         },
         warn: function(str) {
             /*

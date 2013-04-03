@@ -120,6 +120,10 @@ Test.Modules.DD = {
         });
         
         testDataUrl(layer.toDataURL(), 'drag circle before', 'start data url is incorrect');
+
+        test(!Kinetic.Global.isDragging(), 'Global isDragging() should be false');
+        test(!Kinetic.Global.isDragReady(), 'Global isDragReady()) should be false');
+
         /*
         * simulate drag and drop
         */
@@ -133,10 +137,16 @@ Test.Modules.DD = {
         //test(!dragMove, 'dragmove event should not have been triggered');
         test(!dragEnd, 'dragend event should not have been triggered');
 
+        test(!Kinetic.Global.isDragging(), 'Global isDragging() should be false');
+        test(Kinetic.Global.isDragReady(), 'Global isDragReady()) should be true');
+
         stage._mousemove({
             clientX: 100,
             clientY: 98 + top
         });
+
+        test(Kinetic.Global.isDragging(), 'Global isDragging() should be true');
+        test(Kinetic.Global.isDragReady(), 'Global isDragReady()) should be true');
 
         test(dragStart, 'dragstart event was not triggered');
         //test(dragMove, 'dragmove event was not triggered');
@@ -154,6 +164,10 @@ Test.Modules.DD = {
         test(dragEnd, 'dragend event was not triggered');
         
         test(events.toString() === 'mouseup,dragend', 'mouseup should occur before dragend');
+
+
+        test(!Kinetic.Global.isDragging(), 'Global isDragging() should be false');
+        test(!Kinetic.Global.isDragReady(), 'Global isDragReady()) should be false');
 
         testDataUrl(layer.toDataURL(), 'drag circle after', 'end data url is incorrect');
         

@@ -412,10 +412,9 @@
         },
         _mousedown: function(evt) {
             this._setPointerPosition(evt);
-        	  var dd = Kinetic.DD,
-        	      go = Kinetic.Global,
-        	      obj = this.getIntersection(this.getPointerPosition()), 
-        	      shape;
+        	var go = Kinetic.Global,
+        	    obj = this.getIntersection(this.getPointerPosition()), 
+        	    shape;
 
             if(obj && obj.shape) {
                 shape = obj.shape;
@@ -425,7 +424,7 @@
             }
 
             //init stage drag and drop
-            if(this.isDraggable() && !dd.node) {
+            if(this.isDraggable() && !go.isDragReady()) {
                 this.startDrag(evt);
             }
         },
