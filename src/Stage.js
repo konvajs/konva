@@ -121,7 +121,7 @@
          */
         clear: function() {
             var layers = this.children,
-                len = length,
+                len = layers.length,
                 n;
                 
             for(n = 0; n < len; n++) {
