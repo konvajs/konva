@@ -407,5 +407,44 @@ Test.Modules.IMAGE = {
         imageObj.src = '../assets/lion.png';
 
         showHit(layer);
+    },
+     'crop unicolor background filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 600,
+                height: 200
+            });
+            var layer = new Kinetic.Layer({
+                throttle: 999
+            });
+            var bamoon = new Kinetic.Image({
+                x: 0,
+                y: 0,
+                image: imageObj,
+                draggable: true
+            }),
+            filtered = new Kinetic.Image({
+                x: 300,
+                y: 0,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(bamoon);
+            layer.add(filtered);
+            stage.add(layer);
+
+            filtered.applyFilter(Kinetic.Filters.Crop, {
+                threshold: 10
+            }, function() {
+                layer.draw();
+                var dataUrl = layer.toDataURL();
+                //console.log(dataUrl);
+                testDataUrl(dataUrl, 'crop filter', 'problem with Crop filter.');
+            });
+        };
+        imageObj.src = '../assets/bamoon.jpg';
     }
 };
