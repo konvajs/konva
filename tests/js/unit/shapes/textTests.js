@@ -176,7 +176,7 @@ Test.Modules.Text = {
         var text = new Kinetic.Text({
             x: 10,
             y: 10,
-            text: 'HEADING\n\nAll the world\'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.',
+            text: 'HEADING\n\nAll the world\'s a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.',
             //text: 'HEADING\n\nThis is a really cool paragraph. \n And this is a footer.',
             fontSize: 24,
             fontFamily: 'Calibri',
@@ -185,7 +185,7 @@ Test.Modules.Text = {
             //width: 20,
             width: 380,
             //width: 200,
-            padding: 0,
+            padding: 10,
             align: 'center',
             draggable: true,
             wrap: 'WORD'

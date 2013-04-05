@@ -408,7 +408,7 @@ Test.Modules.IMAGE = {
 
         showHit(layer);
     },
-     'crop unicolor background filter': function(containerId) {
+     '*mask unicolor background filter': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = new Kinetic.Stage({
@@ -436,13 +436,13 @@ Test.Modules.IMAGE = {
             layer.add(filtered);
             stage.add(layer);
 
-            filtered.applyFilter(Kinetic.Filters.Crop, {
+            filtered.applyFilter(Kinetic.Filters.Mask, {
                 threshold: 10
             }, function() {
                 layer.draw();
                 var dataUrl = layer.toDataURL();
                 //console.log(dataUrl);
-                testDataUrl(dataUrl, 'crop filter', 'problem with Crop filter.');
+                testDataUrl(dataUrl, 'mask filter', 'problem with Mask filter.');
             });
         };
         imageObj.src = '../assets/bamoon.jpg';
