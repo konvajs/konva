@@ -15,5 +15,6 @@
      * @param {Object} [config.offset] offset from center point and rotation point
      * @param {Number} [config.offset.x]
      * @param {Number} [config.offset.y]
-     * @param {Boolean} [config.draggable]
+     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
+     *  the entire stage by dragging any portion of the stage
      * @param {Function} [config.dragBoundFunc]

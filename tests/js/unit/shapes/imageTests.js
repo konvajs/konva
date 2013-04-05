@@ -408,7 +408,7 @@ Test.Modules.IMAGE = {
 
         showHit(layer);
     },
-     '*mask unicolor background filter': function(containerId) {
+     'mask unicolor background filter': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = new Kinetic.Stage({
