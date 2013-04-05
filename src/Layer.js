@@ -45,25 +45,23 @@
             }
   
         },
-        /**
-         * set before draw handler
-         * @name beforeDraw
-         * @methodOf Kinetic.Layer.prototype
-         * @param {Function} handler
-         */
-        beforeDraw: function(func) {
-            this.beforeDrawFunc = func;
-            return this;
+        drawScene: function(canvas) {
+            var layer = this.getLayer();
+
+            if(layer && layer.getClearBeforeDraw()) {
+                layer.getCanvas().clear();
+            }
+
+            Kinetic.Container.prototype.drawScene.call(this, canvas);
         },
-        /**
-         * set after draw handler
-         * @name afterDraw
-         * @methodOf Kinetic.Layer.prototype
-         * @param {Function} handler
-         */
-        afterDraw: function(func) {
-            this.afterDrawFunc = func;
-            return this;
+        drawHit: function() {
+            var layer = this.getLayer();
+            
+            if(layer && layer.getClearBeforeDraw()) {
+                layer.getHitCanvas().clear();
+            }
+
+            Kinetic.Container.prototype.drawHit.call(this);
         },
         /**
          * get layer canvas

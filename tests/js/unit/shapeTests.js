@@ -26,6 +26,7 @@ Test.Modules.SHAPE = {
         
         testDataUrl(layer.toDataURL(), 'scaled rect with disabled stroke scale', 'probem with stroke scale disabling');
     },
+
     'test intersects()': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

@@ -28,41 +28,39 @@ Test.Modules.LAYER = {
         test(style.padding === '0px', 'canvas padding style should be 0px');
         test(style.backgroundColor === 'transparent', 'canvas backgroundColor style should be transparent');
     },
-    'beforeDraw and afterDraw': function(containerId) {
+    'redraw hit graph': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
             height: 200
         });
-
         var layer = new Kinetic.Layer();
-
-        var circle = new Kinetic.Circle({
-            x: 100,
-            y: stage.getHeight() / 2,
-            radius: 70,
+        var rect = new Kinetic.Rect({
+            x: 200,
+            width: 100,
+            height: 50,
             fill: 'green',
             stroke: 'black',
-            strokeWidth: 4
+            strokeWidth: 4,
+            scale: [3, 1],
+            draggable: true,
+            strokeScaleEnabled: false
         });
 
-        layer.add(circle);
+        rect.colorKey = '000000';
+
+        layer.add(rect);
         stage.add(layer);
 
-        var counter = 0;
+        rect.setY(100);
+        layer.drawHit();
 
-        layer.beforeDraw(function() {
-            counter++;
-            test(counter === 1, 'counter should be 1');
-        });
+        showHit(layer);
 
-        layer.afterDraw(function() {
-            counter++;
-            test(counter === 2, 'counter should be 2');
-        });
+        testDataUrl(layer.hitCanvas.toDataURL(), 'black rect hit graph', 'redrawn hitgraph data url is incorrect');
 
-        layer.draw();
     },
+
     'set clearBeforeDraw to false, and test toDataURL for stage, layer, group, and shape': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

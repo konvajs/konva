@@ -992,15 +992,9 @@
          *  the scene renderer
          */
         draw: function() {
-            var layer = this.getLayer(),
-                evt = {
+            var evt = {
                     node: this
                 };
-            
-            if(layer && layer.getClearBeforeDraw()) {
-                layer.getCanvas().clear();
-                layer.getHitCanvas().clear();
-            }
             
             this.fire(BEFORE_DRAW, evt);
             this.drawScene();
