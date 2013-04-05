@@ -41,16 +41,17 @@
          */
         setPoints: function(val) {
             this.setAttr('points', Kinetic.Type._getPoints(val));
+        },
+        /**
+         * get points array
+         * @name getPoints
+         * @methodOf Kinetic.Polygon.prototype
+         */
+         // NOTE: cannot use getter method because we need to return a new
+         // default array literal each time because arrays are modified by reference
+        getPoints: function() {
+            return this.attrs.points || [];
         }
     };
     Kinetic.Global.extend(Kinetic.Polygon, Kinetic.Shape);
-
-    // add getters setters
-    Kinetic.Node.addGetter(Kinetic.Polygon, 'points', []);
-
-    /**
-     * get points array
-     * @name getPoints
-     * @methodOf Kinetic.Polygon.prototype
-     */
 })();
