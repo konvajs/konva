@@ -49,6 +49,41 @@ Test.Modules.LINE = {
         
         test(line.getShapeType() === 'Line', 'shape type should be Line');
     },
+    'test default ponts array for two lines': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var line = new Kinetic.Line({
+            stroke: 'blue',
+            strokeWidth: 20,
+            lineCap: 'round',
+            lineJoin: 'round',
+            draggable: true
+        });
+
+        var redLine = new Kinetic.Line({
+            x: 50,
+            stroke: 'red',
+            strokeWidth: 20,
+            lineCap: 'round',
+            lineJoin: 'round',
+            draggable: true
+        });
+
+        line.setPoints([0,1,2,3]);
+        redLine.setPoints([4,5,6,7]);
+
+        layer.add(line).add(redLine);
+        stage.add(layer);
+
+        test(line.getPoints()[0].x === 0, 'line points is wrong');
+        test(redLine.getPoints()[0].x === 4, 'redLine points is wrong');
+        
+    },
     'add dashed line': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
