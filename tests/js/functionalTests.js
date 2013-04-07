@@ -174,6 +174,95 @@ Test.Modules.DD = {
         showHit(layer);
         
     },
+    'destroy shape while dragging': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        
+        var greenCircle = new Kinetic.Circle({
+            x: 40,
+            y: 40,
+            radius: 20,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black',
+            opacity: 0.5
+        });
+        
+        
+        var circle = new Kinetic.Circle({
+            x: 380,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            opacity: 0.5
+            
+        });
+
+        circle.setDraggable(true);
+
+        layer.add(circle);
+        layer.add(greenCircle);
+        stage.add(layer);
+
+        var top = stage.content.getBoundingClientRect().top;
+
+
+        var dragEnd = false;
+
+
+        circle.on('dragend', function() {
+            dragEnd = true;
+
+        });
+
+        
+
+        circle.on('mouseup', function() {
+            console.log('mouseup');
+            events.push('mouseup');
+        });
+        
+        testDataUrl(layer.toDataURL(), 'drag circle before', 'start data url is incorrect');
+
+        test(!Kinetic.Global.isDragging(), 'Global isDragging() should be false');
+        test(!Kinetic.Global.isDragReady(), 'Global isDragReady()) should be false');
+
+
+        stage._mousedown({
+            clientX: 380,
+            clientY: 98 + top
+        });
+
+        test(!circle.isDragging(), 'circle should not be dragging');
+
+        stage._mousemove({
+            clientX: 100,
+            clientY: 98 + top
+        });
+
+   
+        test(circle.isDragging(), 'circle should be dragging');
+        test(!dragEnd, 'dragEnd should not have fired yet');
+
+        // at this point, we are in drag and drop mode
+
+
+        // removing or destroying the circle should trigger dragend
+        circle.destroy();
+        layer.draw();
+
+        test(!circle.isDragging(), 'destroying circle should stop drag and drop');
+        test(dragEnd, 'dragEnd should have fired');
+        
+
+        
+    },
     'cancel drag and drop by setting draggable to false': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

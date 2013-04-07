@@ -153,11 +153,6 @@
             go._removeId(this.getId());
             go._removeName(this.getName(), this._id);
 
-            // stop DD
-            if(dd && dd.node && dd.node._id === this._id) {
-                this._endDrag();
-            }
-
             // stop transition
             if(this.trans) {
                 this.trans.stop();

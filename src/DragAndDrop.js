@@ -40,7 +40,6 @@
         },
         _endDragBefore: function(evt) {
             var dd = Kinetic.DD, 
-                evt = evt || {},
                 node = dd.node,
                 nodeType, layer;
     
@@ -53,17 +52,15 @@
                 // operation actually started. 
                 if(dd.isDragging) {
                     dd.isDragging = false;
-                    evt.dragEndNode = node;
+
+                    if (evt) {
+                        evt.dragEndNode = node;
+                    } 
                 }
                 
                 delete dd.node;
-                
-                if (layer) {
-                    layer.draw(); 
-                }
-                else {
-                    node.draw();
-                }
+               
+                (layer || node).draw();
             }
         },
         _endDragAfter: function(evt) {
@@ -112,9 +109,10 @@
      * @methodOf Kinetic.Node.prototype
      */
     Kinetic.Node.prototype.stopDrag = function() {
-        var dd = Kinetic.DD;
-        dd._endDragBefore();
-        dd._endDragAfter();
+        var dd = Kinetic.DD,
+            evt = {};
+        dd._endDragBefore(evt);
+        dd._endDragAfter(evt);
     };
             
     /**
@@ -126,6 +124,20 @@
     Kinetic.Node.prototype.setDraggable = function(draggable) {
         this.setAttr('draggable', draggable);
         this._dragChange();
+    };
+
+    var origDestroy = Kinetic.Node.prototype.destroy;
+
+    Kinetic.Node.prototype.destroy = function() {
+        var dd = Kinetic.DD;
+
+        // stop DD
+        if(dd.node && dd.node._id === this._id) {
+
+            this.stopDrag();
+        } 
+
+        origDestroy.call(this); 
     };
 
     /**
