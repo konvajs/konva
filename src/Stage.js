@@ -462,11 +462,9 @@
         },
         _touchstart: function(evt) {
           this._setPointerPosition(evt);
-        	var dd = Kinetic.DD,
-        	    go = Kinetic.Global,
+        	var go = Kinetic.Global,
         	    obj = this.getIntersection(this.getPointerPosition()), 
         	    shape;
-        	
             
             evt.preventDefault();
 
@@ -477,8 +475,8 @@
                 shape._handleEvent(TOUCHSTART, evt);
             }
 
-            // init stage drag and drop
-            if(dd && !go.isDragging() && this.isDraggable()) {
+            //init stage drag and drop
+            if(this.isDraggable() && !go.isDragReady()) {
                 this.startDrag(evt);
             }
         },

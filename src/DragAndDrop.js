@@ -221,9 +221,6 @@
      */
     Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
 
-    // listen for capturing phase so that the _endDrag* methods are
-    // called before the stage mouseup event is triggered in order
-    // to render the hit graph just in time to pick up the event
     var html = document.getElementsByTagName('html')[0];
     html.addEventListener('mouseup', Kinetic.DD._endDragBefore, true);
     html.addEventListener('touchend', Kinetic.DD._endDragBefore, true);
