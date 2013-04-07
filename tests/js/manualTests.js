@@ -1388,5 +1388,34 @@ Test.Modules.DRAG_AND_DROP = {
         stage.add(layer);
 
 
+    },
+    '*transition stage width': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+
+        var layer = new Kinetic.Layer();
+
+        layer.canvas.element.style.backgroundColor = 'blue';
+
+        var rect = new Kinetic.Rect({
+            x: 10,
+            y: 10,
+            width: 100,
+            height: 50,
+            fill: 'red'
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        stage.transitionTo({
+            width: 300,
+            duration: 2
+        });
+
+        
     }
 };

@@ -6,6 +6,7 @@ Test.Modules.STAGE = {
             height: 200
         });
     },
+
     'instantiate stage with dom element': function(containerId) {
         var containerDom = document.getElementById(containerId);
         var stage = new Kinetic.Stage({
