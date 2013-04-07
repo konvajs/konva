@@ -735,7 +735,7 @@ Test.Modules.EVENTS = {
         var group = new Kinetic.Group();
 
         layer.on('click', function(evt) {
-            log(evt.shape.getName());
+            log(evt.targetNode.getName());
 
         });
         var redCircle = new Kinetic.Circle({
@@ -1389,7 +1389,7 @@ Test.Modules.DRAG_AND_DROP = {
 
 
     },
-    '*transition stage width': function(containerId) {
+    'transition stage width': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
