@@ -6,7 +6,7 @@
      * @param {Array|Object} [config.fillPatternScale] array with two elements or object with x and y component
      * @param {Number} [config.fillPatternRotation]
      * @param {String} [config.fillPatternRepeat] can be 'repeat', 'repeat-x', 'repeat-y', or 'no-repeat'.  The default is 'no-repeat'
-@param {Array|Object} [config.fillLinearGradientStartPoint] array with two elements or object with x and y component
+     * @param {Array|Object} [config.fillLinearGradientStartPoint] array with two elements or object with x and y component
      * @param {Array|Object} [config.fillLinearGradientEndPoint] array with two elements or object with x and y component
      * @param {Array} [config.fillLinearGradientColorStops] array of color stops
      * @param {Array|Object} [config.fillRadialGradientStartPoint] array with two elements or object with x and y component
