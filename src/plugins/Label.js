@@ -12,23 +12,23 @@
      attrChangeListLen = ATTR_CHANGE_LIST.length;
         
     /**
-     * Label constructor.&nbsp; Blobs are defined by an array of points and
-     *  a tension
+     * Label constructor.&nbsp; Labels are groups that contain Text and LabelRect shape 
      * @constructor
      * @param {Object} config
-     * @param {String} [config.pointerDirection] can be none, up, right, down, or left.  none is the default
-     * @param {Number} [config.pointerWidth]
-     * @param {Number} [config.pointerHeight]
-      @param {Number} [config.cornerRadius] default is 0
-     * @param {Object} config.text
-     * @param {Object} config.rect
+     * @param {Object} config.text Text config
      * @param {String} [config.text.fontFamily] default is Calibri
      * @param {Number} [config.text.fontSize] in pixels.  Default is 12
      * @param {String} [config.text.fontStyle] can be normal, bold, or italic.  Default is normal
-     * @param {String} config.text.text
+     * @param {String} config.text.text 
      * @param {String} [config.text.align] can be left, center, or right
      * @param {Number} [config.text.padding]
      * @param {Number} [config.text.lineHeight] default is 1
+     * @param {Object} [config.rect] LabelRect config
+     * @param {String} [config.rect.pointerDirection] can be up, right, down, left, or none; the default
+     *  is none.  When a pointer is present, the positioning of the label is relative to the tip of the pointer.
+     * @param {Number} [config.rect.pointerWidth]
+     * @param {Number} [config.rect.pointerHeight]
+     * @param {Number} [config.rect.cornerRadius] 
      * {{NodeParams}}
      */
     Kinetic.Label = function(config) {
@@ -101,11 +101,36 @@
             }); 
         }
     };
+
+    /**
+     * get LabelRect shape for the label.  You need to access the LabelRect shape in order to update
+     * the pointer propertie and the corner radius
+     * @name getRect
+     * @methodOf Kinetic.Label.prototype
+     */
+
+    /**
+     * get Text shape for the label.  You need to access the Text shape in order to update
+     * the text properties
+     * @name getText
+     * @methodOf Kinetic.Label.prototype
+     */
     
     Kinetic.Global.extend(Kinetic.Label, Kinetic.Group);
     Kinetic.Node.addGetterSetter(Kinetic.Label, 'text');
     Kinetic.Node.addGetterSetter(Kinetic.Label, 'rect');
-        
+       
+    /**
+     * LabelRect constructor.&nbsp; A LabelRect is similar to a Rect, except that it can be configured
+     *  to have a pointer element that points up, right, down, or left 
+     * @constructor
+     * @param {Object} config
+     * @param {String} [config.pointerDirection] can be up, right, down, left, or none; the default
+     *  is none.  When a pointer is present, the positioning of the label is relative to the tip of the pointer.
+     * @param {Number} [config.pointerWidth]
+     * @param {Number} [config.pointerHeight]
+     * @param {Number} [config.cornerRadius] 
+     */ 
     Kinetic.LabelRect = function(config) {
         this._initLabelRect(config);
     };
@@ -170,4 +195,58 @@
     Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'pointerWidth', 0);
     Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'pointerHeight', 0);
     Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'cornerRadius', 0);
+
+
+    /**
+     * set pointer Direction
+     * @name setPointerDirection
+     * @methodOf Kinetic.LabelRect.prototype
+     * @param {String} pointerDirection can be up, right, down, left, or none.  The
+     *  default is none 
+     */
+
+     /**
+     * set pointer width 
+     * @name setPointerWidth
+     * @methodOf Kinetic.LabelRect.prototype
+     * @param {Number} pointerWidth 
+     */
+
+     /**
+     * set pointer height 
+     * @name setPointerHeight
+     * @methodOf Kinetic.LabelRect.prototype
+     * @param {Number} pointerHeight
+     */
+
+    /**
+     * set corner radius
+     * @name setCornerRadius
+     * @methodOf Kinetic.LabelRect.prototype
+     * @param {Number} corner radius
+     */
+
+    /**
+     * get pointer Direction
+     * @name getPointerDirection
+     * @methodOf Kinetic.LabelRect.prototype
+     */
+
+     /**
+     * get pointer width 
+     * @name getPointerWidth
+     * @methodOf Kinetic.LabelRect.prototype
+     */
+
+     /**
+     * get pointer height 
+     * @name getPointerHeight
+     * @methodOf Kinetic.LabelRect.prototype
+     */
+
+    /**
+     * get corner radius
+     * @name getCornerRadius
+     * @methodOf Kinetic.LabelRect.prototype
+     */
 })();
