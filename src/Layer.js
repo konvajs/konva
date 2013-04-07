@@ -17,8 +17,6 @@
     Kinetic.Layer.prototype = {
         _initLayer: function(config) {
             this.nodeType = 'Layer';
-            this.beforeDrawFunc = undefined;
-            this.afterDrawFunc = undefined;
             this.canvas = new Kinetic.SceneCanvas();
             this.canvas.getElement().style.position = 'absolute';
             this.hitCanvas = new Kinetic.HitCanvas();

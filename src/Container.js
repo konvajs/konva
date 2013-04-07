@@ -225,7 +225,9 @@
         },
         drawHit: function() {
             var clip = !!this.getClipFunc() && this.nodeType !== 'Stage',
-                dd = Kinetic.DD,
+                n = 0, 
+                len = 0, 
+                children = [],
                 hitCanvas;
 
             if(this.shouldDrawHit()) {
@@ -233,8 +235,11 @@
                     hitCanvas = this.getLayer().hitCanvas; 
                     hitCanvas._clip(this);
                 }
-                var children = this.children, len = children.length;
-                for(var n = 0; n < len; n++) {
+                
+                children = this.children; 
+                len = children.length;
+
+                for(n = 0; n < len; n++) {
                     children[n].drawHit();
                 }
                 if (clip) {
