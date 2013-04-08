@@ -211,7 +211,7 @@
                     canvas._clip(this);
                 }
                 
-                children = this.children, 
+                children = this.children; 
                 len = children.length;
                 
                 for(var n = 0; n < len; n++) {
