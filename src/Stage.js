@@ -28,6 +28,12 @@
         
     // cached variables
     eventsLength = EVENTS.length;
+
+    function addEvent(ctx, eventName) {
+      ctx.content.addEventListener(eventName, function(evt) {
+        ctx['_' + eventName](evt);
+      }, false);
+    }
     
     /**
      * Stage constructor.  A stage is used to contain multiple layers
@@ -352,12 +358,10 @@
          */
         _bindContentEvents: function() {
             var that = this,
-                n, pubEvent, f;
+                n;
 
             for (n = 0; n < eventsLength; n++) {
-              pubEvent = EVENTS[n];
-              f = that['_' + pubEvent];
-              that.content.addEventListener(pubEvent, f.bind(that), false);
+              addEvent(this, EVENTS[n]);
             }
         },
         _mouseout: function(evt) {
