@@ -173,8 +173,8 @@
         getShapeType: function() {
             return this.shapeType;
         },
-        remove: function() {
-            Kinetic.Node.prototype.remove.call(this);
+        destroy: function() {
+            Kinetic.Node.prototype.destroy.call(this);
             delete Kinetic.Global.shapes[this.colorKey];
         },
         drawScene: function(canvas) {
