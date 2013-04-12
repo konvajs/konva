@@ -28,6 +28,45 @@ Test.Modules.LAYER = {
         test(style.padding === '0px', 'canvas padding style should be 0px');
         test(style.backgroundColor === 'transparent', 'canvas backgroundColor style should be transparent');
     },
+    'layer getIntersections()': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            throttle: 999
+        });
+        var layer = new Kinetic.Layer();
+
+        var redCircle = new Kinetic.Circle({
+            x: 380,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            id: 'redCircle'
+        });
+
+        var greenCircle = new Kinetic.Circle({
+            x: 300,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black',
+            id: 'greenCircle'
+        });
+
+        layer.add(redCircle);
+        layer.add(greenCircle);
+        stage.add(layer);
+
+        test(layer.getIntersection(300, 100).shape.getId() === 'greenCircle', 'shape should be greenCircle');
+        test(layer.getIntersection(380, 100).shape.getId() === 'redCircle', 'shape should be redCircle');
+        test(layer.getIntersection(100, 100) === null, 'shape should be null');
+
+
+    },
     'redraw hit graph': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

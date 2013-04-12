@@ -43,6 +43,37 @@
             }
   
         },
+        /**
+         * get intersection object that contains shape and pixel data
+         * @name getIntersection
+         * @methodOf Kinetic.Stage.prototype
+         * @param {Object} pos point object
+         */
+        getIntersection: function() {
+            var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments)),
+                p, colorKey, shape;
+
+            if(this.isVisible() && this.isListening()) {
+                p = this.hitCanvas.context.getImageData(pos.x | 0, pos.y | 0, 1, 1).data;
+                // this indicates that a hit pixel may have been found
+                if(p[3] === 255) {
+                    colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
+                    shape = Kinetic.Global.shapes[colorKey];
+                    return {
+                        shape: shape,
+                        pixel: p
+                    };
+                }
+                // if no shape mapped to that pixel, return pixel array
+                else if(p[0] > 0 || p[1] > 0 || p[2] > 0 || p[3] > 0) {
+                    return {
+                        pixel: p
+                    };
+                }
+            }
+
+            return null;
+        },
         drawScene: function(canvas) {
             var layer = this.getLayer();
 

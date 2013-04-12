@@ -86,7 +86,9 @@
             return this.nodeType === selector || this.shapeType === selector ? [this] : [];
         },
         /**
-         * determines if point is in the shape
+         * determines if point is in the shape, regardless if other shapes are on top of it.  Note: because
+         * this method clears a temp hit canvas, and redraws the shape, it performs very poorly if executed many times
+         * consecutively.  If possible, it's better to use the stage.getIntersections() method instead
          * @name intersects
          * @methodOf Kinetic.Shape.prototype
          * @param {Object} point point can be an object containing
@@ -100,7 +102,7 @@
             var hitCanvas = stage.hitCanvas;
             hitCanvas.clear();
             this.drawScene(hitCanvas);
-            var p = hitCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
+            var p = hitCanvas.context.getImageData(pos.x | 0, pos.y | 0, 1, 1).data;
             return p[3] > 0;
         },
         /**

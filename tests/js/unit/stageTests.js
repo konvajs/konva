@@ -77,6 +77,45 @@ Test.Modules.STAGE = {
 
         test(stage.getContent().className === 'kineticjs-content', 'stage DOM class name is wrong');
     },
+    'stage getIntersections()': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            throttle: 999
+        });
+        var layer = new Kinetic.Layer();
+
+        var redCircle = new Kinetic.Circle({
+            x: 380,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            id: 'redCircle'
+        });
+
+        var greenCircle = new Kinetic.Circle({
+            x: 300,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black',
+            id: 'greenCircle'
+        });
+
+        layer.add(redCircle);
+        layer.add(greenCircle);
+        stage.add(layer);
+
+        test(stage.getIntersection(300, 100).shape.getId() === 'greenCircle', 'shape should be greenCircle');
+        test(stage.getIntersection(380, 100).shape.getId() === 'redCircle', 'shape should be redCircle');
+        test(stage.getIntersection(100, 100) === null, 'shape should be null');
+
+
+    },
     'test getIntersections': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

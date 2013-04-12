@@ -265,35 +265,17 @@
          * @methodOf Kinetic.Stage.prototype
          * @param {Object} pos point object
          */
-        getIntersection: function(pos) {
-            var layers = this.getChildren(),
+        getIntersection: function() {
+            var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments)),
+                layers = this.getChildren(),
                 len = layers.length,
                 end = len - 1,
-                n, layer, p, colorKey, shape;
+                n, obj;
 
-            /*
-             * traverse through layers from top to bottom and look
-             * for hit detection
-             */
             for(n = end; n >= 0; n--) {
-                layer = layers[n];
-                if(layer.isVisible() && layer.isListening()) {
-                    p = layer.hitCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
-                    // this indicates that a hit pixel may have been found
-                    if(p[3] === 255) {
-                        colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
-                        shape = Kinetic.Global.shapes[colorKey];
-                        return {
-                            shape: shape,
-                            pixel: p
-                        };
-                    }
-                    // if no shape mapped to that pixel, return pixel array
-                    else if(p[0] > 0 || p[1] > 0 || p[2] > 0 || p[3] > 0) {
-                        return {
-                            pixel: p
-                        };
-                    }
+                obj = layers[n].getIntersection(pos);
+                if (obj) {
+                    return obj;
                 }
             }
 
