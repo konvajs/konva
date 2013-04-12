@@ -16,14 +16,24 @@
 
     Kinetic.Layer.prototype = {
         _initLayer: function(config) {
+            var contextType = '';
             this.nodeType = 'Layer';
-            this.canvas = new Kinetic.SceneCanvas();
-            this.canvas.getElement().style.position = 'absolute';
-            this.hitCanvas = new Kinetic.HitCanvas();
-
             this.createAttrs();
             // call super constructor
             Kinetic.Container.call(this, config);
+
+            contextType = this.getContextType();
+            if (contextType === '2d') {
+                this.canvas = new Kinetic.SceneCanvas();
+            }
+            else {
+                this.canvas = new Kinetic.GenericCanvas({
+                    contextType: contextType 
+                });
+            }
+
+            this.canvas.getElement().style.position = 'absolute';
+            this.hitCanvas = new Kinetic.HitCanvas();
         },
         toDataURL: function(config) {
             config = config || {};
@@ -212,6 +222,7 @@
 
     // add getters and setters
     Kinetic.Node.addGetterSetter(Kinetic.Layer, 'clearBeforeDraw', true);
+    Kinetic.Node.addGetterSetter(Kinetic.Layer, 'contextType', '2d');
 
     /**
      * set flag which determines if the layer is cleared or not

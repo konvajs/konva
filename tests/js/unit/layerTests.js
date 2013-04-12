@@ -28,6 +28,24 @@ Test.Modules.LAYER = {
         test(style.padding === '0px', 'canvas padding style should be 0px');
         test(style.backgroundColor === 'transparent', 'canvas backgroundColor style should be transparent');
     },
+    'webgl context type': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+
+        var layer = new Kinetic.Layer({
+            contextType: 'experimental-webgl'
+        });
+
+
+        stage.add(layer);
+
+        test(layer.getContextType() === 'experimental-webgl', 'context type should be experimental-webgl'); 
+
+
+    },
     'layer getIntersections()': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
