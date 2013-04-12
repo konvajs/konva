@@ -283,20 +283,12 @@
         _rgbToHex: function(r, g, b) {
             return ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
         },
-        _hexToRgb: function(hex) {
-            var bigint = parseInt(hex, 16);
-            return {
-                r: (bigint >> 16) & 255,
-                g: (bigint >> 8) & 255,
-                b: bigint & 255
-            };
-        },
         _getRandomColorKey: function() {
-            var r = (Math.random() * 255) | 0,
-                g = (Math.random() * 255) | 0,
-                b = (Math.random() * 255) | 0;
-                
-            return this._rgbToHex(r, g, b);
+            var randColor = (Math.random() * 0xFFFFFF << 0).toString(16);
+            while (randColor.length < 6) {
+              randColor = '0' + randColor;
+            }
+            return randColor;
         },
         // o1 takes precedence over o2
         _merge: function(o1, o2) {
