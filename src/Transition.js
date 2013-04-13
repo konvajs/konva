@@ -77,7 +77,7 @@
             node.transAnim.stop();
             node.setAttrs(newAttrs);
             if(config.callback) {
-                config.callback();
+                config.callback.call(node);
             }
         };
     };

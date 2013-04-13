@@ -13,7 +13,8 @@ Test.Modules.TRANSITION = {
             height: 50,
             fill: 'green',
             stroke: 'black',
-            strokeWidth: 4
+            strokeWidth: 4,
+            id: 'rect'
         });
 
         layer.add(rect);
@@ -37,7 +38,8 @@ Test.Modules.TRANSITION = {
             x: 300,
             duration: 1,
             callback: function() {
-                test(rect.getX() === 300, 'rect x is not 300');
+                test(this.getX() === 300, 'rect x is not 300');
+                test(this.getId() === 'rect', 'rect id should be rect');
                 anim.start();
             }
         });

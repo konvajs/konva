@@ -2,7 +2,12 @@
     // calculate pixel ratio
     var canvas = document.createElement('canvas'), 
         context = canvas.getContext('2d'), 
-        devicePixelRatio = window.devicePixelRatio || 1, backingStoreRatio = context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1, 
+        devicePixelRatio = window.devicePixelRatio || 1, 
+        backingStoreRatio = context.webkitBackingStorePixelRatio 
+            || context.mozBackingStorePixelRatio 
+            || context.msBackingStorePixelRatio 
+            || context.oBackingStorePixelRatio 
+            || context.backingStorePixelRatio || 1, 
         _pixelRatio = devicePixelRatio / backingStoreRatio;
         
     /**
