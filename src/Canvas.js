@@ -423,13 +423,4 @@
     };
     Kinetic.Global.extend(Kinetic.HitCanvas, Kinetic.Canvas2D);
 
-    Kinetic.GenericCanvas = function(config) {
-        Kinetic.Canvas.call(this, config);
-    };
-
-    Kinetic.GenericCanvas.prototype = {
-        clear: function() {}
-    };
-
-    Kinetic.Global.extend(Kinetic.GenericCanvas, Kinetic.Canvas);
 })();
