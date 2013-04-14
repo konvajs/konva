@@ -735,28 +735,22 @@
             var config = config || {},
                 mimeType = config.mimeType || null, 
                 quality = config.quality || null,
+                stage = this.getStage(),
                 x = config.x || 0, 
                 y = config.y || 0,
-                canvas, context;
-
-            //if width and height are defined, create new canvas to draw on, else reuse stage buffer canvas
-            if(config.width && config.height) {
                 canvas = new Kinetic.SceneCanvas({
-                  width: config.width, 
-                  height: config.height, 
-                  pixelRatio: 1
-                });
-            }
-            else {
-                canvas = this.getStage().bufferCanvas;
-                canvas.clear();
-            }
-            context = canvas.getContext();
+                    width: config.width || stage.getWidth(), 
+                    height: config.height || stage.getHeight(),
+                    pixelRatio: 1
+                }),
+                context = canvas.getContext();
+            
             context.save();
 
             if(x || y) {
                 context.translate(-1 * x, -1 * y);
             }
+
             this.drawScene(canvas);
             context.restore();
 

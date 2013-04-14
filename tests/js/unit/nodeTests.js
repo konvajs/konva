@@ -23,6 +23,42 @@ Test.Modules.NODE = {
         test(circle.getAbsoluteOpacity() === 0.25, 'abs opacity should be 0.25');
         test(layer.getAbsoluteOpacity() === 0.5, 'abs opacity should be 0.5');
     },
+    'test pixel ratio toDataURL': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        // override pixel ratio
+       
+        layer.canvas = new Kinetic.SceneCanvas({
+           pixelRatio: 2 
+        });
+        layer.canvas.getElement().style.position = 'absolute';
+
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        test(layer.canvas.pixelRatio === 2, 'layer pixel ratio should be 2');
+
+        testDataUrl(layer.toDataURL(), 'green circle', 'problem with pixel ratio and dataURL');
+
+        //console.log(layer.toDataURL())
+
+        
+    },
+
     'listen and don\'t listen': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -2613,9 +2649,9 @@ Test.Modules.NODE = {
         layer.hide();
         layer.draw();
         
-        //console.log(layer.toDataURL());
         
-        test(layer.toDataURL() === dataUrls['cleared'], 'layer is still visible');
+        //console.log(layer.toDataURL());
+        testDataUrl(layer.toDataURL(), 'cleared', 'layer is still visible');
     },
     'hide group': function(containerId) {
         var stage = new Kinetic.Stage({

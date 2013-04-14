@@ -25,24 +25,6 @@
             this.canvas.getElement().style.position = 'absolute';
             this.hitCanvas = new Kinetic.HitCanvas();
         },
-        toDataURL: function(config) {
-            config = config || {};
-            var mimeType = config.mimeType || null, 
-                quality = config.quality || null, 
-                canvas, context, 
-                x = config.x || 0, 
-                y = config.y || 0;
-
-            // if dimension or position is defined, use Node toDataURL
-            if(config.width || config.height || config.x || config.y) {
-                return Kinetic.Node.prototype.toDataURL.call(this, config);
-            }
-            // otherwise get data url of the currently drawn layer
-            else {
-                return this.getCanvas().toDataURL(mimeType, quality);
-            }
-  
-        },
         /**
          * get intersection object that contains shape and pixel data
          * @name getIntersection
@@ -75,10 +57,10 @@
             return null;
         },
         drawScene: function(canvas) {
-            var layer = this.getLayer();
+            var canvas = canvas || this.getCanvas();
 
-            if(layer && layer.getClearBeforeDraw()) {
-                layer.getCanvas().clear();
+            if(this.getClearBeforeDraw()) {
+                canvas.clear();
             }
 
             Kinetic.Container.prototype.drawScene.call(this, canvas);

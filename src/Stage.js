@@ -205,7 +205,8 @@
                 y = config.y || 0, 
                 canvas = new Kinetic.SceneCanvas({
                     width: config.width || this.getWidth(), 
-                    height: config.height || this.getHeight()
+                    height: config.height || this.getHeight(),
+                    pixelRatio: 1
                 }), 
                 context = canvas.getContext(), 
                 layers = this.children;
