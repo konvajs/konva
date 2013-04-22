@@ -23,6 +23,38 @@ Test.Modules.NODE = {
         test(circle.getAbsoluteOpacity() === 0.25, 'abs opacity should be 0.25');
         test(layer.getAbsoluteOpacity() === 0.5, 'abs opacity should be 0.5');
     },
+    'transformation matrix caching': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        test(!circle.cachedTransform, 'circle transform cache should be empty');
+ 
+        layer.add(circle);
+        stage.add(layer);
+
+        test(circle.cachedTransform, 'circle transform cache should be present');
+
+        circle.setX(100);
+
+        test(!circle.cachedTransform, 'circle transform cache should be empty');
+
+        layer.draw();
+
+        test(circle.cachedTransform, 'circle transform cache should be present');
+
+    },
     'test pixel ratio toDataURL': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

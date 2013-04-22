@@ -178,8 +178,7 @@
             delete Kinetic.Global.shapes[this.colorKey];
         },
         drawScene: function(canvas) {
-            var attrs = this.getAttrs(), 
-                drawFunc = attrs.drawFunc, 
+            var drawFunc = this.getDrawFunc(), 
                 canvas = canvas || this.getLayer().getCanvas(), 
                 context = canvas.getContext();
 

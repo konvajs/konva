@@ -199,8 +199,7 @@
         drawScene: function(canvas) {
             var layer = this.getLayer(),
                 clip = !!this.getClipFunc(),
-                stage = this.getStage(),
-                children, len;
+                children, n, len;
                 
             if (!canvas && layer) {
                 canvas = layer.getCanvas(); 
@@ -214,7 +213,7 @@
                 children = this.children; 
                 len = children.length;
                 
-                for(var n = 0; n < len; n++) {
+                for(n = 0; n < len; n++) {
                     children[n].drawScene(canvas);
                 }
                 

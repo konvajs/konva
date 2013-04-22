@@ -29,8 +29,6 @@
                 contextType = config.contextType || '2d'; 
 
             this.pixelRatio = pixelRatio;
-            this.width = width;
-            this.height = height;
             this.element = document.createElement('canvas');
             this.element.style.padding = 0;
             this.element.style.margin = 0;
@@ -62,9 +60,8 @@
          * @param {Number} width
          */
         setWidth: function(width) {
-            this.width = width;
             // take into account pixel ratio
-            this.element.width = width * this.pixelRatio;
+            this.width = this.element.width = width * this.pixelRatio;
             this.element.style.width = width + 'px';
         },
         /**
@@ -74,9 +71,8 @@
          * @param {Number} height
          */
         setHeight: function(height) {
-            this.height = height;
             // take into account pixel ratio
-            this.element.height = height * this.pixelRatio;
+            this.height = this.element.height = height * this.pixelRatio;
             this.element.style.height = height + 'px';
         },
         /**
@@ -127,7 +123,7 @@
         clear: function() {
             var context = this.getContext();
             var el = this.getElement();
-            context.clearRect(0, 0, el.width, el.height);
+            context.clearRect(0, 0, this.getWidth(), this.getHeight());
         },
         /**
          * to data url
@@ -226,9 +222,12 @@
             }
         },
         _applyAncestorTransforms: function(node) {
-            var context = this.context;
+            var context = this.context,
+                t, m;
+
             node._eachAncestorReverse(function(no) {
-                var t = no.getTransform(), m = t.getMatrix();
+                t = no.getTransform(true); 
+                m = t.getMatrix();
                 context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }, true);
         },
