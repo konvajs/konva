@@ -168,7 +168,13 @@
          */
         getAttr: function(attr) {
             var method = GET + Kinetic.Type._capitalize(attr);
-            return this[method](); 
+    		if(Kinetic.Type._isFunction(this[method])) {
+				return this[method]();
+			}
+			// otherwise get directly
+			else {
+				return this.attrs[attr];
+			}
         },
         /**
          * get attrs
