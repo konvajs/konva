@@ -1,6 +1,11 @@
 # Presentation Schedule
 To add/modify your presentation, just click the "Edit" button, make your changes, and submit for review.
 
+## Apr 25 2012
+* _Event:_ [Front End Developers United](http://www.meetup.com/Front-End-Developers-United/events/114192072/)
+* _Session:_ [Data Viz and KineticJS](http://www.meetup.com/Front-End-Developers-United/events/114192072/)
+* _Speaker:_ [Eric Rowell](http://www.twitter.com/ericdrowell)
+
 ## Mar 13 2013
 * _Event:_ [Toledo Web Professionals](http://www.meetup.com/Toledo-Web-Design/events/92857942/)
 * _Session:_ [Canvas Interaction with Jason Follas at Hanson, Inc.](http://www.meetup.com/Toledo-Web-Design/events/92857942/)
