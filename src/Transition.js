@@ -11,7 +11,7 @@
      *  to stop, resume, or restart the transition
      * @constructor
      */
-    Kinetic.Transition = function(node, config) {
+    Kinetic.Transition = function(node, config, anim) {
         var that = this,
             easing = config.easing || 'linear',
             easingFunc = Kinetic.Tweens[easing],
@@ -55,10 +55,10 @@
 
         };
         this.tweens[lastTweenIndex].onStopped = function() {
-            node.transAnim.stop();
+            anim.stop();
         };
         this.tweens[lastTweenIndex].onResumed = function() {
-            node.transAnim.start();
+            anim.start();
         };
         this.tweens[lastTweenIndex].onLooped = function() {
 
@@ -74,7 +74,7 @@
                     newAttrs[key] = config[key];
                 }
             }
-            node.transAnim.stop();
+            anim.stop();
             node.setAttrs(newAttrs);
             if(config.callback) {
                 config.callback.call(node);
@@ -130,8 +130,8 @@
 
     /**
      * transition node to another state.  Any property that can accept a real
-     *  number can be transitioned, including x, y, rotation, opacity, strokeWidth,
-     *  radius, scale.x, scale.y, offset.x, offset.y, etc.
+     *  number or point object can be transitioned, including x, y, rotation, opacity, strokeWidth,
+     *  radius, scale, offset, scaleX, and scaleY
      * @name transitionTo
      * @methodOf Kinetic.Node.prototype
      * @param {Object} config
@@ -145,20 +145,18 @@
      *  transition completes
      */
     Kinetic.Node.prototype.transitionTo = function(config) {
-        var that = this, trans = new Kinetic.Transition(this, config);
+        var that = this, 
+            anim = new Kinetic.Animation(),
+            trans = new Kinetic.Transition(this, config, anim);
 
-        if(!this.transAnim) {
-            this.transAnim = new Kinetic.Animation();
-        }
-        this.transAnim.func = function() {
+        anim.func = function() {
             trans._onEnterFrame();
         };
-        this.transAnim.node = this.nodeType === 'Stage' ? this : this.getLayer();
+        anim.node = this.nodeType === 'Stage' ? this : this.getLayer();
 
         // auto start
         trans.start();
-        this.transAnim.start();
-        this.trans = trans;
+        anim.start();
         return trans;
     };
 })();

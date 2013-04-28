@@ -155,11 +155,8 @@
             go._removeId(this.getId());
             go._removeName(this.getName(), this._id);
 
-            // stop transition
-            if(this.trans) {
-                this.trans.stop();
-            }
-
+            // TODO: stop transitions
+ 
             this.remove();
         },
         /**

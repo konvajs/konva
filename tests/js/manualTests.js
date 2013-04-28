@@ -22,18 +22,23 @@ Test.Modules.TRANSITION = {
         layer.add(rect);
         stage.add(layer);
 
+        // transition 1
         rect.transitionTo({
             duration: 2,
             x: 400,
             y: 30,
-            shadowOffset: {
-                x: 80
-            },
-            rotation: Math.PI * 2,
             easing: 'bounce-ease-out'
         });
 
+        // transition 2
+        rect.transitionTo({
+            duration: 2,
+            shadowOffsetX: 80, 
+            rotation: Math.PI * 2,
+            easing: 'bounce-ease-out'
+        });
     },
+
     'all transition types': function(containerId) {
         document.getElementById(containerId).style.height = '300px';
 
@@ -70,7 +75,10 @@ Test.Modules.TRANSITION = {
     'ease-in, ease-out, ease-in-out hovers': function(containerId) {
         function addHovers(shape, easing) {
             shape.on("mouseover", function() {
-                this.transitionTo({
+                if (this.trans) {
+                    this.trans.stop();
+                }
+                this.trans = this.transitionTo({
                     scale: {
                         x: 1.5,
                         y: 1.5
@@ -83,7 +91,10 @@ Test.Modules.TRANSITION = {
                 });
             });
             shape.on("mouseout", function() {
-                this.transitionTo({
+                if (this.trans) {
+                    this.trans.stop();
+                }
+                this.trans = this.transitionTo({
                     scale: {
                         x: 1,
                         y: 1

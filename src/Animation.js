@@ -64,9 +64,7 @@
     Kinetic.Animation.animIdCounter = 0;
     Kinetic.Animation.animRunning = false;
 
-    Kinetic.Animation.fixedRequestAnimFrame = function(callback) {
-        window.setTimeout(callback, 1000 / 60);
-    };
+
 
     Kinetic.Animation._addAnimation = function(anim) {
         this.animations.push(anim);
@@ -131,11 +129,20 @@
         }
     };
     RAF = (function() {
-        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || Kinetic.Animation.fixedRequestAnimFrame;
+        return window.requestAnimationFrame 
+            || window.webkitRequestAnimationFrame 
+            || window.mozRequestAnimationFrame 
+            || window.oRequestAnimationFrame 
+            || window.msRequestAnimationFrame 
+            || Kinetic.Animation.fixedRequestAnimFrame;
     })();
 
+    function FRAF(callback) {
+        window.setTimeout(callback, 1000 / 60);
+    }
+
     Kinetic.Animation.requestAnimFrame = function(callback) {
-        var raf = Kinetic.DD && Kinetic.DD.isDragging ? this.fixedRequestAnimFrame : RAF;
+        var raf = Kinetic.DD && Kinetic.DD.isDragging ? FRAF : RAF;
         raf(callback);
     };
     
