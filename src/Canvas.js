@@ -265,7 +265,14 @@
             shape._fillFunc(context);
         },
         _fillPattern: function(shape) {
-            var context = this.context, fillPatternImage = shape.getFillPatternImage(), fillPatternX = shape.getFillPatternX(), fillPatternY = shape.getFillPatternY(), fillPatternScale = shape.getFillPatternScale(), fillPatternRotation = shape.getFillPatternRotation(), fillPatternOffset = shape.getFillPatternOffset(), fillPatternRepeat = shape.getFillPatternRepeat();
+            var context = this.context, 
+                fillPatternImage = shape.getFillPatternImage(), 
+                fillPatternX = shape.getFillPatternX(), 
+                fillPatternY = shape.getFillPatternY(), 
+                fillPatternScale = shape.getFillPatternScale(), 
+                fillPatternRotation = shape.getFillPatternRotation(), 
+                fillPatternOffset = shape.getFillPatternOffset(), 
+                fillPatternRepeat = shape.getFillPatternRepeat();
 
             if(fillPatternX || fillPatternY) {
                 context.translate(fillPatternX || 0, fillPatternY || 0);
@@ -284,17 +291,29 @@
             context.fill();
         },
         _fillLinearGradient: function(shape) {
-            var context = this.context, start = shape.getFillLinearGradientStartPoint(), end = shape.getFillLinearGradientEndPoint(), colorStops = shape.getFillLinearGradientColorStops(), grd = context.createLinearGradient(start.x, start.y, end.x, end.y);
+            var context = this.context, 
+                start = shape.getFillLinearGradientStartPoint(), 
+                end = shape.getFillLinearGradientEndPoint(), 
+                colorStops = shape.getFillLinearGradientColorStops(), 
+                grd = context.createLinearGradient(start.x, start.y, end.x, end.y);
 
-            // build color stops
-            for(var n = 0; n < colorStops.length; n += 2) {
-                grd.addColorStop(colorStops[n], colorStops[n + 1]);
+            if (colorStops) {
+                // build color stops
+                for(var n = 0; n < colorStops.length; n += 2) {
+                    grd.addColorStop(colorStops[n], colorStops[n + 1]);
+                }
+                context.fillStyle = grd;
+                context.fill();  
             }
-            context.fillStyle = grd;
-            context.fill();
         },
         _fillRadialGradient: function(shape) {
-            var context = this.context, start = shape.getFillRadialGradientStartPoint(), end = shape.getFillRadialGradientEndPoint(), startRadius = shape.getFillRadialGradientStartRadius(), endRadius = shape.getFillRadialGradientEndRadius(), colorStops = shape.getFillRadialGradientColorStops(), grd = context.createRadialGradient(start.x, start.y, startRadius, end.x, end.y, endRadius);
+            var context = this.context, 
+            start = shape.getFillRadialGradientStartPoint(), 
+            end = shape.getFillRadialGradientEndPoint(), 
+            startRadius = shape.getFillRadialGradientStartRadius(), 
+            endRadius = shape.getFillRadialGradientEndRadius(), 
+            colorStops = shape.getFillRadialGradientColorStops(), 
+            grd = context.createRadialGradient(start.x, start.y, startRadius, end.x, end.y, endRadius);
 
             // build color stops
             for(var n = 0; n < colorStops.length; n += 2) {
@@ -304,7 +323,12 @@
             context.fill();
         },
         _fill: function(shape, skipShadow) {
-            var context = this.context, fill = shape.getFill(), fillPatternImage = shape.getFillPatternImage(), fillLinearGradientStartPoint = shape.getFillLinearGradientStartPoint(), fillRadialGradientStartPoint = shape.getFillRadialGradientStartPoint(), fillPriority = shape.getFillPriority();
+            var context = this.context, 
+                fill = shape.getFill(), 
+                fillPatternImage = shape.getFillPatternImage(), 
+                fillLinearGradientStartPoint = shape.getFillLinearGradientStartPoint(), 
+                fillRadialGradientStartPoint = shape.getFillRadialGradientStartPoint(), 
+                fillPriority = shape.getFillPriority();
 
             context.save();
 
@@ -345,7 +369,11 @@
             }
         },
         _stroke: function(shape, skipShadow) {
-            var context = this.context, stroke = shape.getStroke(), strokeWidth = shape.getStrokeWidth(), dashArray = shape.getDashArray();
+            var context = this.context, 
+                stroke = shape.getStroke(), 
+                strokeWidth = shape.getStrokeWidth(), 
+                dashArray = shape.getDashArray();
+
             if(stroke || strokeWidth) {
                 context.save();
                 if (!shape.getStrokeScaleEnabled()) {
@@ -414,7 +442,10 @@
             context.restore();
         },
         _stroke: function(shape) {
-            var context = this.context, stroke = shape.getStroke(), strokeWidth = shape.getStrokeWidth();
+            var context = this.context, 
+                stroke = shape.getStroke(), 
+                strokeWidth = shape.getStrokeWidth();
+
             if(stroke || strokeWidth) {
                 this._applyLineCap(shape);
                 context.save();

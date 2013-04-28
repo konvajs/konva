@@ -72,7 +72,7 @@
          * @methodOf Kinetic.Shape.prototype
          */
         hasShadow: function() {
-            return !!(this.getShadowColor() || this.getShadowBlur() || this.getShadowOffset());
+            return !!(this.getShadowColor() || this.getShadowBlur() || this.getShadowOffsetX() || this.getShadowOffsetY());
         },
         /**
          * returns whether or not a fill will be rendered
@@ -513,13 +513,13 @@
      * @methodOf Kinetic.Shape.prototype
      */
 
-    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'fillPatternOffset');
-    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'fillPatternScale');
-    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPoint');
-    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPoint');
-    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint');
-    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPoint');
-    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'shadowOffset');
+    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'fillPatternOffset', {x:0,y:0});
+    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'fillPatternScale', {x:1,y:1});
+    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPoint', {x:0,y:0});
+    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPoint', {x:0,y:0});
+    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', {x:0,y:0});
+    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPoint', {x:0,y:0});
+    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'shadowOffset', {x:0,y:0});
 
     /**
      * set fill pattern offset

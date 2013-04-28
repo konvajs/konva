@@ -234,10 +234,7 @@ Test.Modules.NODE = {
 
         rect.setOffset(1, 2);
 
-        rect.setShadowOffset([3, 4]);
-
         test(offsetChange, 'offsetChange should have been triggered with setOffset()');
-        test(!shadowOffsetChange, 'offsetChange should not have been triggered with setShadow()');
     },
     'simple clone': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -261,6 +258,9 @@ Test.Modules.NODE = {
 
         layer.add(clone);
         stage.add(layer);
+
+        test(rect.getStroke() === 'red', 'rect should have red stroke');
+        test(clone.getStroke() === 'green', 'cloned rect should have green stroke');
     },
     'complex clone': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1064,7 +1064,7 @@ Test.Modules.NODE = {
             height: 50,
             stroke: 'blue',
             offset: {
-                x: 20,
+                x: 40,
                 y: 20
             }
         });
@@ -1072,12 +1072,18 @@ Test.Modules.NODE = {
         layer.add(rect);
         stage.add(layer);
 
-        test(rect.getOffset().x === 20, 'center offset x should be 20');
+        test(rect.getOffsetX() === 40, 'center offset x should be 20');
+        test(rect.getOffsetY() === 20, 'center offset y should be 20');
+
+        test(rect.getOffset().x === 40, 'center offset x should be 20');
         test(rect.getOffset().y === 20, 'center offset y should be 20');
 
-        rect.setOffset(40, 40);
+        rect.setOffset(80, 40);
 
-        test(rect.getOffset().x === 40, 'center offset x should be 40');
+        test(rect.getOffsetX() === 80, 'center offset x should be 40');
+        test(rect.getOffsetY() === 40, 'center offset y should be 40');
+
+        test(rect.getOffset().x === 80, 'center offset x should be 40');
         test(rect.getOffset().y === 40, 'center offset y should be 40');
 
     },
