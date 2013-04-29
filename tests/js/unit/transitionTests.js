@@ -184,9 +184,7 @@ Test.Modules.TRANSITION = {
 
         var trans = rect.transitionTo({
             duration: 2,
-            shadowOffset: {
-                x: 80
-            },
+            shadowOffsetX: 80,
             x: 400,
             y: 30,
             rotation: Math.PI * 2,

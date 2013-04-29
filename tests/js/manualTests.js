@@ -79,10 +79,8 @@ Test.Modules.TRANSITION = {
                     this.trans.stop();
                 }
                 this.trans = this.transitionTo({
-                    scale: {
-                        x: 1.5,
-                        y: 1.5
-                    },
+                    scaleX: 1.5,
+                    scaleY: 1.5,
                     duration: 1,
                     easing: easing,
                     callback: function() {
@@ -95,10 +93,8 @@ Test.Modules.TRANSITION = {
                     this.trans.stop();
                 }
                 this.trans = this.transitionTo({
-                    scale: {
-                        x: 1,
-                        y: 1
-                    },
+                    scaleX: 1,
+                    scaleY: 1,
                     duration: 1,
                     easing: easing
                 });

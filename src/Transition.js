@@ -17,10 +17,7 @@
             easingFunc = Kinetic.Tweens[easing],
             duration = config.duration || 0,
             configVal = null,
-            lastTweenIndex = 0,
-            obj = {}, 
-            x = 0, 
-            y = 0; 
+            lastTweenIndex = 0;
 
         this.tweens = [];
         this.attrs = {};
@@ -29,22 +26,7 @@
         for (var key in config) {
             if(key !== 'duration' && key !== 'easing' && key !== 'callback') {
                 configVal = config[key];   
-                obj = node.getAttr(key); 
-                if(Kinetic.Type._isObject(obj)) {
-                    configValX = configVal.x; 
-                    configValY = configVal.y;
-
-                    this.attrs[key] = {};
-                    if (configValX !== undefined) {
-                        that.tweens.push(createTween(this.attrs[key], 'x', easingFunc, obj.x, configValX, duration));
-                    }
-                    if (configValY !== undefined) { 
-                        that.tweens.push(createTween(this.attrs[key], 'y', easingFunc, obj.y, configValY, duration));
-                    } 
-                }
-                else {
-                    that.tweens.push(createTween(this.attrs, key, easingFunc, node.getAttr(key), configVal, duration));
-                } 
+                that.tweens.push(createTween(this.attrs, key, easingFunc, node.getAttr(key), configVal, duration));
             }
         }
 
