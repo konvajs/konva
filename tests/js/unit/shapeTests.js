@@ -27,6 +27,62 @@ Test.Modules.SHAPE = {
         testDataUrl(layer.toDataURL(), 'scaled rect with disabled stroke scale', 'probem with stroke scale disabling');
     },
 
+    'shape color components': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 90,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'red'
+
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        // test component getters
+        test(rect.getFillRGB().r === 0, 'rect fill RGB.r should be 0');
+        test(rect.getFillRGB().g === 128, 'rect fill RGB.g should be 128');
+        test(rect.getFillRGB().b === 0, 'rect fill RGB.b should be 0');
+
+        test(rect.getFillR() === 0, 'rect fill r should be 0');
+        test(rect.getFillG() === 128, 'rect fill g should be 128');
+        test(rect.getFillB() === 0, 'rect fill b should be 0');
+
+        test(rect.getStrokeR() === 255, 'rect stroke r should be 255');
+        test(rect.getStrokeG() === 0, 'rect stroke g should be 0');
+        test(rect.getStrokeB() === 0, 'rect stroke b should be 0');
+
+        rect.setFill('#008000');
+        rect.setStroke('#ff0000');
+
+        test(rect.getFillR() === 0, 'rect fill r should be 0');
+        test(rect.getFillG() === 128, 'rect fill g should be 128');
+        test(rect.getFillB() === 0, 'rect fill b should be 0');
+
+        test(rect.getStrokeR() === 255, 'rect stroke r should be 255');
+        test(rect.getStrokeG() === 0, 'rect stroke g should be 0');
+        test(rect.getStrokeB() === 0, 'rect stroke b should be 0');
+
+        rect.setFill('rgb(0,128,0)');
+        rect.setStroke('rgb(255, 0, 0)');
+
+        test(rect.getFillR() === 0, 'rect fill r should be 0');
+        test(rect.getFillG() === 128, 'rect fill g should be 128');
+        test(rect.getFillB() === 0, 'rect fill b should be 0');
+
+        test(rect.getStrokeR() === 255, 'rect stroke r should be 255');
+        test(rect.getStrokeG() === 0, 'rect stroke g should be 0');
+        test(rect.getStrokeB() === 0, 'rect stroke b should be 0');
+    },
+
     'test intersects()': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

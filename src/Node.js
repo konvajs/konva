@@ -22,7 +22,12 @@
         ON = 'on',
         OFF = 'off',
         BEFORE_DRAW = 'beforeDraw',
-        DRAW = 'draw';
+        DRAW = 'draw',
+        BLACK = 'black',
+        RGB = 'RGB',
+        R = 'r',
+        G = 'g',
+        B = 'b';
         
     /**
      * Node constructor. Nodes are entities that can be transformed, layered,
@@ -1029,6 +1034,29 @@
     Kinetic.Node.addRotationGetterSetter = function(constructor, attr, def, isTransform) {
         this.addRotationGetter(constructor, attr, def);
         this.addRotationSetter(constructor, attr, isTransform);    
+    };
+    Kinetic.Node.addColorGetterSetter = function(constructor, attr) {
+        this.addGetter(constructor, attr);
+        this.addSetter(constructor, attr); 
+  
+        // components
+        this.addColorRGBGetter(constructor, attr);
+        this.addColorComponentGetter(constructor, attr, R);
+        this.addColorComponentGetter(constructor, attr, G);
+        this.addColorComponentGetter(constructor, attr, B);
+    };
+    Kinetic.Node.addColorRGBGetter = function(constructor, attr) {
+        var method = GET + Kinetic.Type._capitalize(attr) + RGB;
+        constructor.prototype[method] = function() {
+            return Kinetic.Type.getRGB(this.attrs[attr]);
+        };
+    };
+    Kinetic.Node.addColorComponentGetter = function(constructor, attr, c) {
+        var baseMethod = GET + Kinetic.Type._capitalize(attr),
+            method = baseMethod + Kinetic.Type._capitalize(c);
+        constructor.prototype[method] = function() {
+            return this[baseMethod + RGB]()[c];
+        };
     };
     Kinetic.Node.addSetter = function(constructor, attr, isTransform) {
         var that = this,

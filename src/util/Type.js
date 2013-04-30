@@ -6,8 +6,34 @@
         OBJECT_NUMBER = '[object Number]',
         OBJECT_STRING = '[object String]',
         PI_OVER_DEG180 = Math.PI / 180,
-        DEG180_OVER_PI = 180 / Math.PI;
-        
+        DEG180_OVER_PI = 180 / Math.PI,
+        HASH = '#',
+        RGB_PAREN = 'rgb(',
+        COLORS = {
+            aqua: [0,255,255],
+            lime: [0,255,0],
+            silver: [192,192,192],
+            black: [0,0,0],
+            maroon: [128,0,0],
+            teal: [0,128,128],
+            blue: [0,0,255],
+            navy: [0,0,128],
+            white: [255,255,255],
+            fuchsia: [255,0,255],
+            olive:[128,128,0],
+            yellow: [255,255,0],
+            orange: [255,165,0],
+            gray: [128,128,128],
+            purple: [128,0,128],
+            green: [0,128,0],
+            red: [255,0,0],
+            pink: [255,192,203],
+            cyan: [0,255,255],
+            transparent: [255,255,255,0]
+        },
+
+        RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
+
     /*
      * utilities that handle data type detection, conversion, and manipulation
      */
@@ -297,6 +323,39 @@
               randColor = '0' + randColor;
             }
             return randColor;
+        },
+        getRGB: function(color) {
+          var rgb;
+          // color string
+          if (color in COLORS) {
+            rgb = COLORS[color];
+            return {
+              r: rgb[0],
+              g: rgb[1],
+              b: rgb[2]
+            };
+          }
+          // hex
+          else if (color[0] === HASH) {
+            return this._hexToRgb(color.substring(1));
+          }
+          // rgb string
+          else if (color.substr(0, 4) === RGB_PAREN) {
+            rgb = RGB_REGEX.exec(color.replace(/ /g,'')); 
+            return {
+                r: parseInt(rgb[1]),
+                g: parseInt(rgb[2]),
+                b: parseInt(rgb[3])
+            };
+          }
+          // default
+          else {
+            return {
+                r: 0,
+                g: 0,
+                b: 0
+            };
+          }
         },
         // o1 takes precedence over o2
         _merge: function(o1, o2) {

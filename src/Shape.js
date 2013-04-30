@@ -218,18 +218,18 @@
     Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
 
     // add getters and setters
-    Kinetic.Node.addGetterSetter(Kinetic.Shape, 'stroke');
+    Kinetic.Node.addColorGetterSetter(Kinetic.Shape, 'stroke');
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'lineJoin');
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'lineCap');
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'strokeWidth');
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'drawFunc');
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'drawHitFunc');
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'dashArray');
-    Kinetic.Node.addGetterSetter(Kinetic.Shape, 'shadowColor');
+    Kinetic.Node.addColorGetterSetter(Kinetic.Shape, 'shadowColor');
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'shadowBlur');
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'shadowOpacity');
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'fillPatternImage');
-    Kinetic.Node.addGetterSetter(Kinetic.Shape, 'fill');
+    Kinetic.Node.addColorGetterSetter(Kinetic.Shape, 'fill');
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'fillPatternX');
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'fillPatternY');
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'fillLinearGradientColorStops');
