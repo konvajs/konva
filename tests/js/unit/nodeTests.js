@@ -600,6 +600,41 @@ Test.Modules.NODE = {
         layer.add(rect);
         stage.add(layer);
     },
+    'skew': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            skewX: 1
+        });
+
+
+        layer.add(rect);
+        stage.add(layer);
+
+        test(rect.getSkewX() === 1, 'rect skewX should be 1');
+        test(rect.getSkewY() === 0, 'rect skewY should be 0');
+
+        /*
+        rect.transitionTo({
+            duration: 4,
+            skewY: -2,
+            easing: 'ease-in-out' 
+
+
+        })
+        */
+    },
     'init with position, scale, rotation, then change scale': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

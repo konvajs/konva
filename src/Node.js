@@ -660,18 +660,21 @@
                 x = this.getX(), 
                 y = this.getY(), 
                 rotation = this.getRotation(),
-                scale = this.getScale(), 
-                scaleX = scale.x, 
-                scaleY = scale.y, 
-                offset = this.getOffset(), 
-                offsetX = offset.x, 
-                offsetY = offset.y;
+                scaleX = this.getScaleX(), 
+                scaleY = this.getScaleY(), 
+                skewX = this.getSkewX(), 
+                skewY = this.getSkewY(), 
+                offsetX = this.getOffsetX(), 
+                offsetY = this.getOffsetY();
                 
             if(x !== 0 || y !== 0) {
                 m.translate(x, y);
             }
             if(rotation !== 0) {
                 m.rotate(rotation);
+            }
+            if(skewX !== 0 || skewY !== 0) {
+                m.skew(skewX, skewY);
             }
             if(scaleX !== 1 || scaleY !== 1) {
                 m.scale(scaleX, scaleY);
@@ -859,33 +862,27 @@
             }
         },
         _clearTransform: function() {
-            var scale = this.getScale(), 
-              offset = this.getOffset(),
-              trans = {
-                  x: this.getX(),
-                  y: this.getY(),
-                  rotation: this.getRotation(),
-                  scale: {
-                      x: scale.x,
-                      y: scale.y
-                  },
-                  offset: {
-                      x: offset.x,
-                      y: offset.y
-                  }
-              };
+            var trans = {
+                x: this.getX(),
+                y: this.getY(),
+                rotation: this.getRotation(),
+                scaleX: this.getScaleX(),
+                scaleY: this.getScaleY(),
+                offsetX: this.getOffsetX(),
+                offsetY: this.getOffsetY(),
+                skewX: this.getSkewX(),
+                skewY: this.getSkewY()
+            };
 
             this.attrs.x = 0;
             this.attrs.y = 0;
             this.attrs.rotation = 0;
-            this.attrs.scale = {
-                x: 1,
-                y: 1
-            };
-            this.attrs.offset = {
-                x: 0,
-                y: 0
-            };
+            this.attrs.scaleX = 1;
+            this.attrs.scaleY = 1;
+            this.attrs.offsetX = 1;
+            this.attrs.offsetY = 1;
+            this.attrs.skewX = 0;
+            this.attrs.skewY = 0;
 
             return trans;
         },
@@ -1210,8 +1207,6 @@
     };
     // add getters setters
     Kinetic.Node.addGetterSetter(Kinetic.Node, 'x', 0, true);
-    Kinetic.Node.addGetterSetter(Kinetic.Node, 'y', 0, true);
-    Kinetic.Node.addGetterSetter(Kinetic.Node, 'opacity', 1);
 
     /**
      * set x position
@@ -1221,11 +1216,27 @@
      */
 
     /**
+     * get x position
+     * @name getX
+     * @methodOf Kinetic.Node.prototype
+     */
+
+    Kinetic.Node.addGetterSetter(Kinetic.Node, 'y', 0, true);
+
+    /**
      * set y position
      * @name setY
      * @methodOf Kinetic.Node.prototype
      * @param {Number} y
      */
+
+    /**
+     * get y position
+     * @name getY
+     * @methodOf Kinetic.Node.prototype
+     */
+
+    Kinetic.Node.addGetterSetter(Kinetic.Node, 'opacity', 1);
 
     /**
      * set opacity.  Opacity values range from 0 to 1.
@@ -1237,31 +1248,20 @@
      */
 
     /**
-     * get x position
-     * @name getX
-     * @methodOf Kinetic.Node.prototype
-     */
-
-    /**
-     * get y position
-     * @name getY
-     * @methodOf Kinetic.Node.prototype
-     */
-
-    /**
      * get opacity.
      * @name getOpacity
      * @methodOf Kinetic.Node.prototype
      */
 
     Kinetic.Node.addGetter(Kinetic.Node, 'name');
-    Kinetic.Node.addGetter(Kinetic.Node, 'id');
 
-    /**
+     /**
      * get name
      * @name getName
      * @methodOf Kinetic.Node.prototype
      */
+
+    Kinetic.Node.addGetter(Kinetic.Node, 'id');
 
     /**
      * get id
@@ -1298,7 +1298,6 @@
      */
 
     Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'scale', {x:1,y:1}, true);
-    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'offset', {x:0,y:0}, true);
 
     /**
      * set scale
@@ -1309,17 +1308,35 @@
      */
 
     /**
+     * get scale
+     * @name getScale
+     * @methodOf Kinetic.Node.prototype
+     */
+
+    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'skew', {x:0,y:0}, true);
+
+    /**
+     * set skew
+     * @name setSkew
+     * @param {Number} x
+     * @param {Number} y
+     * @methodOf Kinetic.Node.prototype
+     */
+
+    /**
+     * get skew 
+     * @name getSkew
+     * @methodOf Kinetic.Node.prototype
+     */
+
+    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'offset', {x:0,y:0}, true);
+
+    /**
      * set offset.  A node's offset defines the position and rotation point
      * @name setOffset
      * @methodOf Kinetic.Node.prototype
      * @param {Number} x
      * @param {Number} y
-     */
-
-    /**
-     * get scale
-     * @name getScale
-     * @methodOf Kinetic.Node.prototype
      */
 
     /**
@@ -1329,9 +1346,6 @@
      */
 
     Kinetic.Node.addSetter(Kinetic.Node, 'width');
-    Kinetic.Node.addSetter(Kinetic.Node, 'height');
-    Kinetic.Node.addSetter(Kinetic.Node, 'listening');
-    Kinetic.Node.addSetter(Kinetic.Node, 'visible');
 
     /**
      * set width
@@ -1340,6 +1354,8 @@
      * @param {Number} width
      */
 
+    Kinetic.Node.addSetter(Kinetic.Node, 'height');
+
     /**
      * set height
      * @name setHeight
@@ -1347,12 +1363,16 @@
      * @param {Number} height
      */
 
+    Kinetic.Node.addSetter(Kinetic.Node, 'listening');
+
     /**
      * listen or don't listen to events
      * @name setListening
      * @methodOf Kinetic.Node.prototype
      * @param {Boolean} listening
      */
+
+    Kinetic.Node.addSetter(Kinetic.Node, 'visible');
 
     /**
      * set visible
