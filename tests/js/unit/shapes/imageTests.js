@@ -251,13 +251,13 @@ Test.Modules.IMAGE = {
             test(darth.getWidth() === 438, 'image width should be 438');
             test(darth.getHeight() === 300, 'image height should be 300');
 
-            darth.applyFilter(Kinetic.Filters.Invert, null, function() {
-                layer.draw();
-                var dataUrl = layer.toDataURL();
-                //console.log(dataUrl);
-                warn(dataUrl === dataUrls['invert image'], 'problem with Invert filter.');
+            darth.applyFilter(Kinetic.Filters.Invert);
 
-            });
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            warn(dataUrl === dataUrls['invert image'], 'problem with Invert filter.');
+
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
@@ -285,15 +285,12 @@ Test.Modules.IMAGE = {
             test(darth.getWidth() === 438, 'image width should be 438');
             test(darth.getHeight() === 300, 'image height should be 300');
 
-            darth.applyFilter(Kinetic.Filters.Brighten, {
-                val: 100
-            }, function() {
-                layer.draw();
-                var dataUrl = layer.toDataURL();
-                //console.log(dataUrl);
-                testDataUrl(dataUrl, 'adjust image brightness', 'problem with Brighten filter.');
+            darth.applyFilter(Kinetic.Filters.Brighten, 100);
 
-            });
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'adjust image brightness', 'problem with Brighten filter.');
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
@@ -321,15 +318,12 @@ Test.Modules.IMAGE = {
             test(darth.getWidth() === 438, 'image width should be 438');
             test(darth.getHeight() === 300, 'image height should be 300');
 
-            darth.applyFilter(Kinetic.Filters.Blur, {
-                radius: 10
-            }, function() {
-                layer.draw();
-                var dataUrl = layer.toDataURL();
-                //console.log(dataUrl);
-                testDataUrl(dataUrl, 'blur filter', 'problem with Blur filter.');
+            darth.applyFilter(Kinetic.Filters.Blur, 10);
 
-            });
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'blur filter', 'problem with Blur filter.');
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
@@ -363,13 +357,11 @@ Test.Modules.IMAGE = {
             test(darth.getWidth() === 438, 'image width should be 438');
             test(darth.getHeight() === 300, 'image height should be 300');
 
-            darth.applyFilter(Kinetic.Filters.Grayscale, null, function() {
-                //stage.start();
-                layer.draw();
-                //console.log(layer.toDataURL());
-                warn(layer.toDataURL() === dataUrls['filter transformed image'], 'problem filtering transformed image');
+            darth.applyFilter(Kinetic.Filters.Grayscale);
 
-            });
+            layer.draw();
+            //console.log(layer.toDataURL());
+            warn(layer.toDataURL() === dataUrls['filter transformed image'], 'problem filtering transformed image');
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
@@ -436,14 +428,12 @@ Test.Modules.IMAGE = {
             layer.add(filtered);
             stage.add(layer);
 
-            filtered.applyFilter(Kinetic.Filters.Mask, {
-                threshold: 10
-            }, function() {
-                layer.draw();
-                var dataUrl = layer.toDataURL();
-                //console.log(dataUrl);
-                testDataUrl(dataUrl, 'mask filter', 'problem with Mask filter.');
-            });
+            filtered.applyFilter(Kinetic.Filters.Mask, 10);
+
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'mask filter', 'problem with Mask filter.');
         };
         imageObj.src = '../assets/bamoon.jpg';
     }

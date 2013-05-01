@@ -32,9 +32,17 @@
                 params, 
                 that = this, 
                 context = canvas.getContext(),
-                image = this.getImage(),
                 crop = this.getCrop(),
-                cropX, cropY, cropWidth, cropHeight;
+                cropX, cropY, cropWidth, cropHeight,
+                filterCanvas = this.filterCanvas, 
+                image;
+
+            if (filterCanvas) {
+                image = filterCanvas.getElement();
+            }
+            else {
+                image = this.getImage();
+            }
 
             context.beginPath();
             context.rect(0, 0, width, height);
@@ -91,33 +99,46 @@
          * @methodOf Kinetic.Image.prototype
          * @param {Object} config
          * @param {Function} filter filter function
-         * @param {Object} [config] optional config object used to configure filter
-         * @param {Function} [callback] callback function to be called once
-         *  filter has been applied
+         * @param {*} [val] optional val parameter that can be any data type.  See the
+         *  docs for the filter in question 
          */
-        applyFilter: function(filter, config, callback) {
+        applyFilter: function(filter, val) {
             var image = this.getImage(),
-                canvas = new Kinetic.Canvas({
-                    width: image.width, 
-                    height: image.height
-                }),
-                context = canvas.getContext(),
-                that = this;
-                
-            context.drawImage(image, 0, 0);
-            try {
-                var imageData = context.getImageData(0, 0, canvas.getWidth(), canvas.getHeight());
-                filter(imageData, config);
-                Kinetic.Type._getImage(imageData, function(imageObj) {
-                    that.setImage(imageObj);
-                    if(callback) {
-                        callback();
-                    }
+                that = this,
+                width = this.getWidth(),
+                height = this.getHeight(),
+                filterCanvas, context, imageData;
+
+            if (this.filterCanvas){
+                filterCanvas = this.filterCanvas;
+            }
+            else {
+                filterCanvas = this.filterCanvas = new Kinetic.SceneCanvas({
+                    width: width, 
+                    height: height
                 });
             }
+
+            context = filterCanvas.getContext();
+
+            try {
+                this._drawImage(context, [image, 0, 0, width, height]);
+                imageData = context.getImageData(0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
+                filter(imageData, val);
+                context.putImageData(imageData, 0, 0);
+            }
             catch(e) {
+                this.clearFilter();
                 Kinetic.Global.warn('Unable to apply filter. ' + e.message);
             }
+        },
+        /**
+         * clear filter
+         * @name clearFilter
+         * @methodOf Kinetic.Image.prototype
+         */
+        clearFilter: function() {
+            this.filterCanvas = null;
         },
         /**
          * set crop

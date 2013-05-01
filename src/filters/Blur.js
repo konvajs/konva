@@ -331,14 +331,10 @@
      * @function
      * @memberOf Kinetic.Filters
      * @param {Object} imageData
-     * @param {Object} config
-     * @param {Integer} config.radius
+     * @param {Integer} radius
      */
-    Kinetic.Filters.Blur = function(imageData, config) {
-        var radius = config.radius;
-
-        radius |= 0;
-
+    Kinetic.Filters.Blur = function(imageData, radius) {
+        radius = radius || 0;
         filterGaussBlurRGBA(imageData, radius);
     };
 

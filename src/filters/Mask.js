@@ -27,14 +27,14 @@
 		return m;
 	};
 
-	function backgroundMask(idata, config) {
+	function backgroundMask(idata, threshold) {
 		var rgbv_no = pixelAt(idata, 0, 0);
 		var rgbv_ne = pixelAt(idata, idata.width - 1, 0);
 		var rgbv_so = pixelAt(idata, 0, idata.height - 1);
 		var rgbv_se = pixelAt(idata, idata.width - 1, idata.height - 1);
 
 
-		var thres = (config && config.threshold) ? config.threshold : 10;
+		var thres = threshold || 10; 
 		if (rgbDistance(rgbv_no, rgbv_ne) < thres && rgbDistance(rgbv_ne, rgbv_se) < thres && rgbDistance(rgbv_se, rgbv_so) < thres && rgbDistance(rgbv_so, rgbv_no) < thres) {
 
 			// Mean color
@@ -170,12 +170,11 @@
 	 * @function
 	 * @memberOf Kinetic.Filters
 	 * @param {Object} imageData
-	 * @param {Object} config
-	 * @param {Integer} config.threshold The RGB euclidian distance threshold (default : 10) 
+	 * @param {Integer} threshold The RGB euclidian distance threshold (default : 10) 
 	 */
-	Kinetic.Filters.Mask = function(idata, config) {
+	Kinetic.Filters.Mask = function(idata, threshold) {
 		// Detect pixels close to the background color
-		var mask = backgroundMask(idata, config);
+		var mask = backgroundMask(idata, threshold);
 		if (mask) {
 			// Erode
 			mask = erodeMask(mask, idata.width, idata.height);
