@@ -313,17 +313,6 @@
  
     // add getters setters
     Kinetic.Node.addGetterSetter(Kinetic.Text, 'fontFamily', CALIBRI);
-    Kinetic.Node.addGetterSetter(Kinetic.Text, 'fontSize', 12);
-    Kinetic.Node.addGetterSetter(Kinetic.Text, 'fontStyle', NORMAL);
-    Kinetic.Node.addGetterSetter(Kinetic.Text, 'padding', 0);
-    Kinetic.Node.addGetterSetter(Kinetic.Text, 'align', LEFT);
-    Kinetic.Node.addGetterSetter(Kinetic.Text, 'lineHeight', 1);
-    Kinetic.Node.addGetterSetter(Kinetic.Text, 'wrap', WORD);
-
-    Kinetic.Node.addGetter(Kinetic.Text, TEXT, EMPTY_STRING);
-    
-    Kinetic.Node.addSetter(Kinetic.Text, 'width');
-    Kinetic.Node.addSetter(Kinetic.Text, 'height');
 
     /**
      * set font family
@@ -332,12 +321,28 @@
      * @param {String} fontFamily
      */
 
+     /**
+     * get font family
+     * @name getFontFamily
+     * @methodOf Kinetic.Text.prototype
+     */
+
+    Kinetic.Node.addGetterSetter(Kinetic.Text, 'fontSize', 12);
+
     /**
      * set font size in pixels
      * @name setFontSize
      * @methodOf Kinetic.Text.prototype
      * @param {int} fontSize
      */
+
+     /**
+     * get font size
+     * @name getFontSize
+     * @methodOf Kinetic.Text.prototype
+     */
+
+    Kinetic.Node.addGetterSetter(Kinetic.Text, 'fontStyle', NORMAL);
 
     /**
      * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
@@ -346,12 +351,28 @@
      * @param {String} fontStyle
      */
 
+     /**
+     * get font style
+     * @name getFontStyle
+     * @methodOf Kinetic.Text.prototype
+     */
+
+    Kinetic.Node.addGetterSetter(Kinetic.Text, 'padding', 0);
+
     /**
      * set padding
      * @name setPadding
      * @methodOf Kinetic.Text.prototype
      * @param {int} padding
      */
+
+     /**
+     * get padding
+     * @name getPadding
+     * @methodOf Kinetic.Text.prototype
+     */
+
+    Kinetic.Node.addGetterSetter(Kinetic.Text, 'align', LEFT);
 
     /**
      * set horizontal align of text
@@ -360,6 +381,14 @@
      * @param {String} align align can be 'left', 'center', or 'right'
      */
 
+     /**
+     * get horizontal align
+     * @name getAlign
+     * @methodOf Kinetic.Text.prototype
+     */
+
+    Kinetic.Node.addGetterSetter(Kinetic.Text, 'lineHeight', 1);
+
     /**
      * set line height
      * @name setLineHeight
@@ -367,45 +396,22 @@
      * @param {Number} lineHeight default is 1
      */
 
-    /**
-     * get font family
-     * @name getFontFamily
-     * @methodOf Kinetic.Text.prototype
-     */
-
-    /**
-     * get font size
-     * @name getFontSize
-     * @methodOf Kinetic.Text.prototype
-     */
-
-    /**
-     * get font style
-     * @name getFontStyle
-     * @methodOf Kinetic.Text.prototype
-     */
-
-    /**
-     * get padding
-     * @name getPadding
-     * @methodOf Kinetic.Text.prototype
-     */
-
-    /**
-     * get horizontal align
-     * @name getAlign
-     * @methodOf Kinetic.Text.prototype
-     */
-
-    /**
+     /**
      * get line height
      * @name getLineHeight
      * @methodOf Kinetic.Text.prototype
      */
+
+    Kinetic.Node.addGetterSetter(Kinetic.Text, 'wrap', WORD);
+
+    Kinetic.Node.addGetter(Kinetic.Text, TEXT, EMPTY_STRING);
 
     /**
      * get text
      * @name getText
      * @methodOf Kinetic.Text.prototype
      */
+    
+    Kinetic.Node.addSetter(Kinetic.Text, 'width');
+    Kinetic.Node.addSetter(Kinetic.Text, 'height'); 
 })();

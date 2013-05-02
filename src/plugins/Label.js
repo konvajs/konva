@@ -192,10 +192,6 @@
     
     Kinetic.Global.extend(Kinetic.LabelRect, Kinetic.Shape);
     Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'pointerDirection', NONE);
-    Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'pointerWidth', 0);
-    Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'pointerHeight', 0);
-    Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'cornerRadius', 0);
-
 
     /**
      * set pointer Direction
@@ -206,30 +202,18 @@
      */
 
      /**
+     * get pointer Direction
+     * @name getPointerDirection
+     * @methodOf Kinetic.LabelRect.prototype
+     */
+
+    Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'pointerWidth', 0);
+
+    /**
      * set pointer width 
      * @name setPointerWidth
      * @methodOf Kinetic.LabelRect.prototype
      * @param {Number} pointerWidth 
-     */
-
-     /**
-     * set pointer height 
-     * @name setPointerHeight
-     * @methodOf Kinetic.LabelRect.prototype
-     * @param {Number} pointerHeight
-     */
-
-    /**
-     * set corner radius
-     * @name setCornerRadius
-     * @methodOf Kinetic.LabelRect.prototype
-     * @param {Number} corner radius
-     */
-
-    /**
-     * get pointer Direction
-     * @name getPointerDirection
-     * @methodOf Kinetic.LabelRect.prototype
      */
 
      /**
@@ -238,10 +222,28 @@
      * @methodOf Kinetic.LabelRect.prototype
      */
 
+    Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'pointerHeight', 0);
+
+    /**
+     * set pointer height 
+     * @name setPointerHeight
+     * @methodOf Kinetic.LabelRect.prototype
+     * @param {Number} pointerHeight
+     */
+
      /**
      * get pointer height 
      * @name getPointerHeight
      * @methodOf Kinetic.LabelRect.prototype
+     */
+
+    Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'cornerRadius', 0);
+
+    /**
+     * set corner radius
+     * @name setCornerRadius
+     * @methodOf Kinetic.LabelRect.prototype
+     * @param {Number} corner radius
      */
 
     /**

@@ -121,10 +121,6 @@
 
     // add getters setters
     Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'animation');
-    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'animations');
-    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'image');
-    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'index', 0);
-    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'frameRate', 17);
 
     /**
      * set animation key
@@ -133,12 +129,28 @@
      * @param {String} anim animation key
      */
 
+     /**
+     * get animation key
+     * @name getAnimation
+     * @methodOf Kinetic.Sprite.prototype
+     */
+
+    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'animations');
+
     /**
-     * set animations object
+     * set animations map
      * @name setAnimations
      * @methodOf Kinetic.Sprite.prototype
      * @param {Object} animations
      */
+
+     /**
+     * get animations map
+     * @name getAnimations
+     * @methodOf Kinetic.Sprite.prototype
+     */
+
+    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'image');
 
     /**
      * set image 
@@ -147,6 +159,14 @@
      * @param {Image} image 
      */
 
+     /**
+     * get image
+     * @name getImage
+     * @methodOf Kinetic.Sprite.prototype
+     */
+
+    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'index', 0);
+
     /**
      * set animation frame index
      * @name setIndex
@@ -154,27 +174,12 @@
      * @param {Integer} index frame index
      */
 
-    /**
-     * get animation key
-     * @name getAnimation
-     * @methodOf Kinetic.Sprite.prototype
-     */
-
-    /**
-     * get animations object
-     * @name getAnimations
-     * @methodOf Kinetic.Sprite.prototype
-     */
-
-    /**
-     * get image
-     * @name getImage
-     * @methodOf Kinetic.Sprite.prototype
-     */
-
-    /**
+     /**
      * get animation frame index
      * @name getIndex
      * @methodOf Kinetic.Sprite.prototype
      */
+
+    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'frameRate', 17);
+
 })();

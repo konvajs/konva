@@ -43,8 +43,6 @@
 
     // add getters setters
     Kinetic.Node.addGetterSetter(Kinetic.Wedge, 'radius', 0);
-    Kinetic.Node.addGetterSetter(Kinetic.Wedge, 'angle', 0);
-    Kinetic.Node.addGetterSetter(Kinetic.Wedge, 'clockwise', false);
 
     /**
      * set radius
@@ -53,19 +51,41 @@
      * @param {Number} radius
      */
 
+     /**
+     * get radius
+     * @name getRadius
+     * @methodOf Kinetic.Wedge.prototype
+     */
+
+    Kinetic.Node.addGetterSetter(Kinetic.Wedge, 'angle', 0);
+
     /**
      * set angle
      * @name setAngle
      * @methodOf Kinetic.Wedge.prototype
      * @param {Number} angle
      */
-    
-    /**
+
+     /**
      * set angle in degrees
      * @name setAngleDeg
      * @methodOf Kinetic.Wedge.prototype
      * @param {Number} angleDeg
      */
+
+     /**
+     * get angle
+     * @name getAngle
+     * @methodOf Kinetic.Wedge.prototype
+     */
+
+     /**
+     * get angle in degrees
+     * @name getAngleDeg
+     * @methodOf Kinetic.Wedge.prototype
+     */
+
+    Kinetic.Node.addGetterSetter(Kinetic.Wedge, 'clockwise', false);
 
     /**
      * set clockwise draw direction.  If set to true, the wedge will be drawn clockwise
@@ -73,24 +93,6 @@
      * @name setClockwise
      * @methodOf Kinetic.Wedge.prototype
      * @param {Boolean} clockwise
-     */
-
-    /**
-     * get radius
-     * @name getRadius
-     * @methodOf Kinetic.Wedge.prototype
-     */
-
-    /**
-     * get angle
-     * @name getAngle
-     * @methodOf Kinetic.Wedge.prototype
-     */
-    
-    /**
-     * get angle in degrees
-     * @name getAngleDeg
-     * @methodOf Kinetic.Wedge.prototype
      */
 
     /**

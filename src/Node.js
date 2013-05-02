@@ -862,6 +862,7 @@
             }
         },
         _clearTransform: function() {
+
             var trans = {
                 x: this.getX(),
                 y: this.getY(),
@@ -879,8 +880,8 @@
             this.attrs.rotation = 0;
             this.attrs.scaleX = 1;
             this.attrs.scaleY = 1;
-            this.attrs.offsetX = 1;
-            this.attrs.offsetY = 1;
+            this.attrs.offsetX = 0;
+            this.attrs.offsetY = 0;
             this.attrs.skewX = 0;
             this.attrs.skewY = 0;
 
@@ -892,6 +893,8 @@
             for(key in trans) {
                 this.attrs[key] = trans[key];
             }
+
+            this.cachedTransform = null;
         },
         _fireBeforeChangeEvent: function(attr, oldVal, newVal) {
             this._handleEvent(BEFORE + Kinetic.Type._capitalize(attr) + CHANGE, {
@@ -1023,8 +1026,8 @@
         this.addPointSetter(constructor, attr);  
 
         // add invdividual component getters and setters
-        this.addGetter(constructor, attr + UPPER_X, def.x);
-        this.addGetter(constructor, attr + UPPER_Y, def.y);
+        this.addGetter(constructor, attr + UPPER_X, def);
+        this.addGetter(constructor, attr + UPPER_Y, def);
         this.addSetter(constructor, attr + UPPER_X, isTransform);
         this.addSetter(constructor, attr + UPPER_Y, isTransform);
     };
@@ -1297,7 +1300,7 @@
      * @methodOf Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'scale', {x:1,y:1}, true);
+    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'scale', 1, true);
 
     /**
      * set scale
@@ -1313,7 +1316,7 @@
      * @methodOf Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'skew', {x:0,y:0}, true);
+    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'skew', 0, true);
 
     /**
      * set skew
@@ -1329,7 +1332,7 @@
      * @methodOf Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'offset', {x:0,y:0}, true);
+    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'offset', 0, true);
 
     /**
      * set offset.  A node's offset defines the position and rotation point

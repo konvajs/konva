@@ -313,10 +313,6 @@
 
     // add setters and getters
     Kinetic.Node.addGetterSetter(Kinetic.TextPath, 'fontFamily', CALIBRI);
-    Kinetic.Node.addGetterSetter(Kinetic.TextPath, 'fontSize', 12);
-    Kinetic.Node.addGetterSetter(Kinetic.TextPath, 'fontStyle', NORMAL);
-    
-    Kinetic.Node.addGetter(Kinetic.TextPath, 'text', EMPTY_STRING);
 
     /**
      * set font family
@@ -325,12 +321,28 @@
      * @param {String} fontFamily
      */
 
+     /**
+     * get font family
+     * @name getFontFamily
+     * @methodOf Kinetic.TextPath.prototype
+     */
+
+    Kinetic.Node.addGetterSetter(Kinetic.TextPath, 'fontSize', 12);
+
     /**
      * set font size
      * @name setFontSize
      * @methodOf Kinetic.TextPath.prototype
      * @param {int} fontSize
      */
+
+     /**
+     * get font size
+     * @name getFontSize
+     * @methodOf Kinetic.TextPath.prototype
+     */
+
+    Kinetic.Node.addGetterSetter(Kinetic.TextPath, 'fontStyle', NORMAL);
 
     /**
      * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
@@ -339,23 +351,13 @@
      * @param {String} fontStyle
      */
 
-    /**
-     * get font family
-     * @name getFontFamily
-     * @methodOf Kinetic.TextPath.prototype
-     */
-
-    /**
-     * get font size
-     * @name getFontSize
-     * @methodOf Kinetic.TextPath.prototype
-     */
-
-    /**
+     /**
      * get font style
      * @name getFontStyle
      * @methodOf Kinetic.TextPath.prototype
      */
+    
+    Kinetic.Node.addGetter(Kinetic.TextPath, 'text', EMPTY_STRING);
 
     /**
      * get text
