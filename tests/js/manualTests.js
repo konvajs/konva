@@ -52,7 +52,6 @@ Test.Modules.TRANSITION = {
             easing: 'bounce-ease-out'
         });
     },
-
     'all transition types': function(containerId) {
         document.getElementById(containerId).style.height = '300px';
 
@@ -1438,5 +1437,46 @@ Test.Modules.DRAG_AND_DROP = {
         });
 
         
+    },
+    'transition gaussian blur filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true,
+                filter: Kinetic.Filters.Blur,
+                filterRadius: 20
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+    
+            darth.on('mouseover', function() {
+                darth.transitionTo({
+                    easing: 'ease-in-out',
+                    duration: 0.5,
+                    filterRadius: 0
+                });
+            });
+
+            darth.on('mouseout', function() {
+                darth.transitionTo({
+                    easing: 'ease-in-out',
+                    duration: 0.5,
+                    filterRadius: 20
+                });
+            });
+            
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
     }
 };

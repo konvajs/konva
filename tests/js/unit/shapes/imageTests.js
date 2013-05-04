@@ -218,12 +218,13 @@ Test.Modules.IMAGE = {
             test(darth.getWidth() === 438, 'image width should be 438');
             test(darth.getHeight() === 300, 'image height should be 300');
 
-            darth.applyFilter(Kinetic.Filters.Grayscale, null, function() {
-                layer.draw();
-                var dataUrl = layer.toDataURL();
-                //console.log(dataUrl);
-                warn(dataUrl === dataUrls['grayscale image'], 'problem with Grayscale filter.');
-            });
+            darth.setFilter(Kinetic.Filters.Grayscale);
+
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            warn(dataUrl === dataUrls['grayscale image'], 'problem with Grayscale filter.');
+       
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
@@ -251,7 +252,7 @@ Test.Modules.IMAGE = {
             test(darth.getWidth() === 438, 'image width should be 438');
             test(darth.getHeight() === 300, 'image height should be 300');
 
-            darth.applyFilter(Kinetic.Filters.Invert);
+            darth.setFilter(Kinetic.Filters.Invert);
 
             layer.draw();
             var dataUrl = layer.toDataURL();
@@ -285,7 +286,8 @@ Test.Modules.IMAGE = {
             test(darth.getWidth() === 438, 'image width should be 438');
             test(darth.getHeight() === 300, 'image height should be 300');
 
-            darth.applyFilter(Kinetic.Filters.Brighten, 100);
+            darth.setFilter(Kinetic.Filters.Brighten);
+            darth.setFilterBrightness(100);
 
             layer.draw();
             var dataUrl = layer.toDataURL();
@@ -302,9 +304,7 @@ Test.Modules.IMAGE = {
                 width: 578,
                 height: 200
             });
-            var layer = new Kinetic.Layer({
-                throttle: 999
-            });
+            var layer = new Kinetic.Layer();
             darth = new Kinetic.Image({
                 x: 10,
                 y: 10,
@@ -318,8 +318,8 @@ Test.Modules.IMAGE = {
             test(darth.getWidth() === 438, 'image width should be 438');
             test(darth.getHeight() === 300, 'image height should be 300');
 
-            darth.applyFilter(Kinetic.Filters.Blur, 10);
-
+            darth.setFilter(Kinetic.Filters.Blur);
+            darth.setFilterRadius(10);
             layer.draw();
             var dataUrl = layer.toDataURL();
             //console.log(dataUrl);
@@ -357,7 +357,7 @@ Test.Modules.IMAGE = {
             test(darth.getWidth() === 438, 'image width should be 438');
             test(darth.getHeight() === 300, 'image height should be 300');
 
-            darth.applyFilter(Kinetic.Filters.Grayscale);
+            darth.setFilter(Kinetic.Filters.Grayscale);
 
             layer.draw();
             //console.log(layer.toDataURL());
@@ -428,7 +428,8 @@ Test.Modules.IMAGE = {
             layer.add(filtered);
             stage.add(layer);
 
-            filtered.applyFilter(Kinetic.Filters.Mask, 10);
+            filtered.setFilter(Kinetic.Filters.Mask);
+            filtered.setFilterThreshold(10);
 
             layer.draw();
             var dataUrl = layer.toDataURL();

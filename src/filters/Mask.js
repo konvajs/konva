@@ -1,4 +1,4 @@
-(function(Kinetic) {
+(function() {
 
 	function pixelAt(idata, x, y) {
 		var idx = (y * idata.width + x) * 4;
@@ -159,9 +159,6 @@
 		return maskResult;
 	}
 	
-	Kinetic = Kinetic || {};
-	Kinetic.Filters = Kinetic.Filters || {};
-
 	/**
 	 * Mask Filter
 	 *
@@ -170,11 +167,11 @@
 	 * @function
 	 * @memberOf Kinetic.Filters
 	 * @param {Object} imageData
-	 * @param {Integer} threshold The RGB euclidian distance threshold (default : 10) 
 	 */
-	Kinetic.Filters.Mask = function(idata, threshold) {
+	Kinetic.Filters.Mask = function(idata) {
 		// Detect pixels close to the background color
-		var mask = backgroundMask(idata, threshold);
+		var threshold = this.getFilterThreshold(),
+		    mask = backgroundMask(idata, threshold);
 		if (mask) {
 			// Erode
 			mask = erodeMask(mask, idata.width, idata.height);
@@ -194,6 +191,8 @@
 		return idata;
 	};
 
-	window['Kinetic'] = Kinetic;
+	Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filterThreshold', 0);
 
-})(Kinetic);
+	//threshold The RGB euclidian distance threshold (default : 10) 
+
+})();

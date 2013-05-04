@@ -1,7 +1,8 @@
 (function() {
     // CONSTANTS
     var IMAGE = 'Image',
-        CROP = 'crop';
+        CROP = 'crop',
+        SET = 'set';
     
     /**
      * Image constructor
@@ -33,12 +34,17 @@
                 that = this, 
                 context = canvas.getContext(),
                 crop = this.getCrop(),
-                cropX, cropY, cropWidth, cropHeight,
-                filterCanvas = this.filterCanvas, 
-                image;
+                cropX, cropY, cropWidth, cropHeight, image;
 
-            if (filterCanvas) {
-                image = filterCanvas.getElement();
+            // if a filter is set, and the filter needs to be updated, reapply
+            if (this.getFilter() && this._applyFilter) {
+                this.applyFilter();
+                this._applyFilter = false;
+            }
+
+            // NOTE: this.filterCanvas may be set by the above code block
+            if (this.filterCanvas) {
+                image = this.filterCanvas.getElement();
             }
             else {
                 image = this.getImage();
@@ -97,16 +103,13 @@
          * apply filter
          * @name applyFilter
          * @methodOf Kinetic.Image.prototype
-         * @param {Object} config
-         * @param {Function} filter filter function
-         * @param {*} [val] optional val parameter that can be any data type.  See the
-         *  docs for the filter in question 
          */
-        applyFilter: function(filter, val) {
+        applyFilter: function() {
             var image = this.getImage(),
                 that = this,
                 width = this.getWidth(),
                 height = this.getHeight(),
+                filter = this.getFilter(),
                 filterCanvas, context, imageData;
 
             if (this.filterCanvas){
@@ -124,7 +127,7 @@
             try {
                 this._drawImage(context, [image, 0, 0, width, height]);
                 imageData = context.getImageData(0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
-                filter(imageData, val);
+                filter.call(this, imageData);
                 context.putImageData(imageData, 0, 0);
             }
             catch(e) {
@@ -139,6 +142,7 @@
          */
         clearFilter: function() {
             this.filterCanvas = null;
+            this._applyFilter = false;
         },
         /**
          * set crop
@@ -232,6 +236,22 @@
     };
     Kinetic.Global.extend(Kinetic.Image, Kinetic.Shape);
 
+
+    Kinetic.Node.addFilterGetterSetter = function(constructor, attr, def) {
+        this.addGetter(constructor, attr, def);
+        this.addFilterSetter(constructor, attr);
+    };
+
+    Kinetic.Node.addFilterSetter = function(constructor, attr) {
+        var that = this,
+            method = SET + Kinetic.Type._capitalize(attr);
+            
+        constructor.prototype[method] = function(val) {
+            this.setAttr(attr, val);
+            this._applyFilter = true;
+        };
+    };
+
     // add getters setters
     Kinetic.Node.addGetterSetter(Kinetic.Image, 'image');
 
@@ -255,5 +275,8 @@
      * @name getCrop
      * @methodOf Kinetic.Image.prototype
      */
+
+     Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filter');
+
 
 })();

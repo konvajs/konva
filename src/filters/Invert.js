@@ -4,9 +4,8 @@
      * @function
      * @memberOf Kinetic.Filters
      * @param {Object} imageData
-     * @param {Object} config
      */
-    Kinetic.Filters.Invert = function(imageData, config) {
+    Kinetic.Filters.Invert = function(imageData) {
         var data = imageData.data;
         for(var i = 0; i < data.length; i += 4) {
             // red
