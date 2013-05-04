@@ -234,7 +234,6 @@
 
     // add getters setters
     Kinetic.Node.addGetterSetter(Kinetic.Image, 'image');
-    Kinetic.Node.addGetter(Kinetic.Image, 'crop');
 
     /**
      * set image
@@ -244,14 +243,17 @@
      */
 
     /**
+     * get image
+     * @name getImage
+     * @methodOf Kinetic.Image.prototype
+     */
+     
+    Kinetic.Node.addGetter(Kinetic.Image, 'crop');
+
+    /**
      * get crop
      * @name getCrop
      * @methodOf Kinetic.Image.prototype
      */
 
-    /**
-     * get image
-     * @name getImage
-     * @methodOf Kinetic.Image.prototype
-     */
 })();

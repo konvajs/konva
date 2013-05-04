@@ -22,17 +22,31 @@ Test.Modules.TRANSITION = {
         layer.add(rect);
         stage.add(layer);
 
+        var blue = Kinetic.Type.getRGB('blue');
+        var yellow = Kinetic.Type.getRGB('yellow');
+        var red = Kinetic.Type.getRGB('red');
+
+
         // transition 1
         rect.transitionTo({
-            duration: 2,
+            duration: 5,
             x: 400,
             y: 30,
+            fillR: blue.r,
+            fillG: blue.g,
+            fillB: blue.b,
+            strokeR: red.r,
+            strokeG: red.g,
+            strokeB: red.b,
+            shadowColorR: yellow.r,
+            shadowColorG: yellow.g,
+            shadowColorB: yellow.b,
             easing: 'bounce-ease-out'
         });
 
         // transition 2
         rect.transitionTo({
-            duration: 2,
+            duration: 5,
             shadowOffsetX: 80, 
             rotation: Math.PI * 2,
             easing: 'bounce-ease-out'

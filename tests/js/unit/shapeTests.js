@@ -81,6 +81,25 @@ Test.Modules.SHAPE = {
         test(rect.getStrokeR() === 255, 'rect stroke r should be 255');
         test(rect.getStrokeG() === 0, 'rect stroke g should be 0');
         test(rect.getStrokeB() === 0, 'rect stroke b should be 0');
+
+        // test setters
+        rect.setFillRGB({
+            r: 100,
+            b: 200
+        });
+
+        test(rect.getFillR() === 100, 'rect fill r should be 100');
+        test(rect.getFillG() === 128, 'rect fill g should be 128');
+        test(rect.getFillB() === 200, 'rect fill b should be 200');
+
+        rect.setFillR(130);
+        test(rect.getFillR() === 130, 'rect fill r should be 130');
+
+        rect.setFillG(140);
+        test(rect.getFillG() === 140, 'rect fill g should be 140');
+
+        rect.setFillB(150);
+        test(rect.getFillB() === 150, 'rect fill b should be 150');
     },
 
     'test intersects()': function(containerId) {

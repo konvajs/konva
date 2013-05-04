@@ -27,7 +27,11 @@
         RGB = 'RGB',
         R = 'r',
         G = 'g',
-        B = 'b';
+        B = 'b',
+        UPPER_R = 'R',
+        UPPER_G = 'G',
+        UPPER_B = 'B',
+        HASH = '#';
         
     /**
      * Node constructor. Nodes are entities that can be transformed, layered,
@@ -1039,11 +1043,17 @@
         this.addGetter(constructor, attr);
         this.addSetter(constructor, attr); 
   
-        // components
+        // component getters 
         this.addColorRGBGetter(constructor, attr);
         this.addColorComponentGetter(constructor, attr, R);
         this.addColorComponentGetter(constructor, attr, G);
         this.addColorComponentGetter(constructor, attr, B);
+
+        // component setters
+        this.addColorRGBSetter(constructor, attr);
+        this.addColorComponentSetter(constructor, attr, R);
+        this.addColorComponentSetter(constructor, attr, G);
+        this.addColorComponentSetter(constructor, attr, B);
     };
     Kinetic.Node.addColorRGBGetter = function(constructor, attr) {
         var method = GET + Kinetic.Type._capitalize(attr) + RGB;
@@ -1051,11 +1061,31 @@
             return Kinetic.Type.getRGB(this.attrs[attr]);
         };
     };
+    Kinetic.Node.addColorRGBSetter = function(constructor, attr) {
+        var method = SET + Kinetic.Type._capitalize(attr) + RGB;
+
+        constructor.prototype[method] = function(obj) {
+            var r = obj && obj.r !== undefined ? obj.r | 0 : this.getAttr(attr + UPPER_R),
+                g = obj && obj.g !== undefined ? obj.g | 0 : this.getAttr(attr + UPPER_G),
+                b = obj && obj.b !== undefined ? obj.b | 0 : this.getAttr(attr + UPPER_B);
+
+            this.setAttr(attr, HASH + Kinetic.Type._rgbToHex(r, g, b));
+        };
+    };
     Kinetic.Node.addColorComponentGetter = function(constructor, attr, c) {
-        var baseMethod = GET + Kinetic.Type._capitalize(attr),
-            method = baseMethod + Kinetic.Type._capitalize(c);
+        var prefix = GET + Kinetic.Type._capitalize(attr),
+            method = prefix + Kinetic.Type._capitalize(c);
         constructor.prototype[method] = function() {
-            return this[baseMethod + RGB]()[c];
+            return this[prefix + RGB]()[c];
+        };
+    };
+    Kinetic.Node.addColorComponentSetter = function(constructor, attr, c) {
+        var prefix = SET + Kinetic.Type._capitalize(attr),
+            method = prefix + Kinetic.Type._capitalize(c);
+        constructor.prototype[method] = function(val) {
+            var obj = {};
+            obj[c] = val;
+            this[prefix + RGB](obj);
         };
     };
     Kinetic.Node.addSetter = function(constructor, attr, isTransform) {
