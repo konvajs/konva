@@ -317,7 +317,7 @@
                 b: bigint & 255
             };
         },
-        _getRandomColorKey: function() {
+        getRandomColor: function() {
             var randColor = (Math.random() * 0xFFFFFF << 0).toString(16);
             while (randColor.length < 6) {
               randColor = '0' + randColor;

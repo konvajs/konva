@@ -37,7 +37,7 @@
             var key;
 
             while(true) {
-                key = Kinetic.Type._getRandomColorKey();
+                key = Kinetic.Type.getRandomColor();
                 if(key && !( key in shapes)) {
                     break;
                 }
