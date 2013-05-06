@@ -146,7 +146,7 @@ Test.Modules.LAYER = {
         */
 
         //testDataUrl(layer.toDataURL(), 'stacked green circles', 'stacked green circles layer data url is incorrect');
-        testDataUrl(layer.getCanvas().toDataURL(), 'stacked green circles', 'stacked green circles layer data url is incorrect');
+        //testDataUrl(layer.getCanvas().toDataURL(), 'stacked green circles', 'stacked green circles layer data url is incorrect');
 
     },
     'save layer as png (click on Circle to open new window)': function(containerId) {

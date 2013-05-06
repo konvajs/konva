@@ -324,10 +324,10 @@
         },
         _fill: function(shape, skipShadow) {
             var context = this.context, 
-                fill = shape.getFill(), 
-                fillPatternImage = shape.getFillPatternImage(), 
-                fillLinearGradientStartPoint = shape.getFillLinearGradientStartPoint(), 
-                fillRadialGradientStartPoint = shape.getFillRadialGradientStartPoint(), 
+                hasColor = shape.getFill(), 
+                hasPattern = shape.getFillPatternImage(), 
+                hasLinearGradient = shape.getFillLinearGradientColorStops(), 
+                hasRadialGradient = shape.getFillRadialGradientColorStops(), 
                 fillPriority = shape.getFillPriority();
 
             context.save();
@@ -337,29 +337,29 @@
             }
 
             // priority fills
-            if(fill && fillPriority === 'color') {
+            if(hasColor && fillPriority === 'color') {
                 this._fillColor(shape);
             }
-            else if(fillPatternImage && fillPriority === 'pattern') {
+            else if(hasPattern && fillPriority === 'pattern') {
                 this._fillPattern(shape);
             }
-            else if(fillLinearGradientStartPoint && fillPriority === 'linear-gradient') {
+            else if(hasLinearGradient && fillPriority === 'linear-gradient') {
                 this._fillLinearGradient(shape);
             }
-            else if(fillRadialGradientStartPoint && fillPriority === 'radial-gradient') {
+            else if(hasRadialGradient && fillPriority === 'radial-gradient') {
                 this._fillRadialGradient(shape);
             }
             // now just try and fill with whatever is available
-            else if(fill) {
+            else if(hasColor) {
                 this._fillColor(shape);
             }
-            else if(fillPatternImage) {
+            else if(hasPattern) {
                 this._fillPattern(shape);
             }
-            else if(fillLinearGradientStartPoint) {
+            else if(hasLinearGradient) {
                 this._fillLinearGradient(shape);
             }
-            else if(fillRadialGradientStartPoint) {
+            else if(hasRadialGradient) {
                 this._fillRadialGradient(shape);
             }
             context.restore();

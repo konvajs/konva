@@ -75,12 +75,12 @@
             return !!(this.getShadowColor() || this.getShadowBlur() || this.getShadowOffsetX() || this.getShadowOffsetY());
         },
         /**
-         * returns whether or not a fill will be rendered
+         * returns whether or not a fill is present
          * @name hasFill
          * @methodOf Kinetic.Shape.prototype
          */
         hasFill: function() {
-            return !!(this.getFill() || this.getFillPatternImage() || this.getFillLinearGradientStartPoint() || this.getFillRadialGradientStartPoint());
+            return !!(this.getFill() || this.getFillPatternImage() || this.getFillLinearGradientColorStops() || this.getFillRadialGradientColorStops());
         },
         _get: function(selector) {
             return this.nodeType === selector || this.shapeType === selector ? [this] : [];

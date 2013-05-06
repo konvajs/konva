@@ -96,6 +96,6 @@ Test.Modules.ANIMATION = {
         // since batch draw is async, we need to test the draw count with a timeout
         setTimeout(function() {
             test(draws === 4, 'draw count should be 4');
-        }, 200); 
+        }, 1000); 
     }
 };
