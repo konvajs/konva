@@ -68,7 +68,7 @@
              *  below.  The anim object only needs the layer reference for
              *  redraw
              */
-            this.anim.node = layer;
+            this.anim.setLayers(layer);
 
             this.interval = setInterval(function() {
                 var index = that.getIndex();

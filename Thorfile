@@ -4,8 +4,8 @@ require 'uglifier'
 class Build < Thor  
   # This is the list of files to concatenate. The first file will appear at the top of the final file. All files are relative to the lib directory.
   FILES = [
-    "src/Global.js", "src/util/Type.js", "src/Canvas.js", "src/util/Tween.js", "src/util/Transform.js", "src/util/Collection.js",
-    "src/Node.js", "src/Animation.js", "src/DragAndDrop.js", "src/Transition.js", "src/Container.js", "src/Shape.js", "src/Stage.js", "src/Layer.js", "src/Group.js",
+    "src/Global.js", "src/util/Type.js", "src/Canvas.js", "src/util/Transform.js", "src/util/Collection.js",
+    "src/Node.js", "src/Animation.js", "src/DragAndDrop.js", "src/Container.js", "src/Shape.js", "src/Stage.js", "src/Layer.js", "src/Group.js",
     "src/shapes/Rect.js", "src/shapes/Circle.js", "src/shapes/Wedge.js", "src/shapes/Ellipse.js", "src/shapes/Image.js", "src/shapes/Polygon.js", "src/shapes/Text.js", "src/shapes/Line.js", "src/shapes/Spline.js", "src/shapes/Blob.js", "src/shapes/Sprite.js",
     "src/filters/Grayscale.js", "src/filters/Brighten.js", "src/filters/Invert.js", "src/filters/Blur.js", "src/filters/Mask.js",
     "src/plugins/Path.js", "src/plugins/TextPath.js", "src/plugins/RegularPolygon.js", "src/plugins/Star.js", "src/plugins/Label.js"       
@@ -21,7 +21,6 @@ class Build < Thor
   	"tests/js/unit/layerTests.js", 
   	"tests/js/unit/shapeTests.js", 
   	"tests/js/unit/ddTests.js", 
-  	"tests/js/unit/transitionTests.js", 
   	"tests/js/unit/shapes/rectTests.js", 
   	"tests/js/unit/shapes/circleTests.js", 
   	"tests/js/unit/shapes/wedgeTests.js", 

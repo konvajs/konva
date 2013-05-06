@@ -87,8 +87,7 @@
             layer = this.getLayer(), 
             pos = stage.getPointerPosition(),
             m = this.getTransform().getTranslation(), 
-            ap = this.getAbsolutePosition(), 
-            animNode = layer || this;
+            ap = this.getAbsolutePosition();
                 
         if(pos) {
             if (dd.node) {
@@ -98,7 +97,7 @@
             dd.node = this;
             dd.offset.x = pos.x - ap.x;
             dd.offset.y = pos.y - ap.y;
-            dd.anim.node = animNode;
+            dd.anim.setLayers(layer || this.getLayers());
             dd.anim.start();
         }
     };

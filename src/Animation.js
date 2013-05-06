@@ -1,14 +1,13 @@
 (function() {
     /**
-     * Stage constructor.  A stage is used to contain multiple layers and handle
-     * animations
+     * Animation constructor.  A stage is used to contain multiple layers and handle
      * @constructor
      * @param {Function} func function executed on each animation frame
-     * @param {Kinetic.Node} [node] node to be redrawn.&nbsp; Can be a layer or the stage.  Not specifying a node will result in no redraw.
+     * @param {Kinetic.Layer|Array} [layers] layer(s) to be redrawn.&nbsp; Can be a layer, an array of layers, or null.  Not specifying a node will result in no redraw.
      */
-    Kinetic.Animation = function(func, node) {
+    Kinetic.Animation = function(func, layers) {
         this.func = func;
-        this.node = node;
+        this.setLayers(layers);
         this.id = Kinetic.Animation.animIdCounter++;
         this.frame = {
             time: 0,
@@ -20,6 +19,37 @@
      * Animation methods
      */
     Kinetic.Animation.prototype = {
+        /**
+         * set layers to be redrawn on each animation frame
+         * @name setLayers
+         * @methodOf Kinetic.Animation.prototype
+         * @param {Kinetic.Layer|Array} [layers] layer(s) to be redrawn.&nbsp; Can be a layer, an array of layers, or null.  Not specifying a node will result in no redraw.
+         */
+        setLayers: function(layers) {
+            var lays = []; 
+            // if passing in no layers
+            if (!layers) {
+                lays = null;
+            }
+            // if passing in an array of Layers
+            else if (Kinetic.Type._isArray(layers)) {
+                lays = layers;
+            }
+            // if passing in a Layer
+            else {
+                lays = [layers];
+            }
+
+            this.layers = lays;
+        },
+        /**
+         * get layers
+         * @name getLayers
+         * @methodOf Kinetic.Animation.prototype
+         */
+        getLayers: function() {
+            return this.layers;
+        },
         /**
          * determine if animation is running or not.  returns true or false
          * @name isRunning
@@ -81,7 +111,10 @@
     };
 
     Kinetic.Animation._runFrames = function() {
-        var nodes = {}, animations = this.animations;
+        var layerHash = {}, 
+            animations = this.animations,
+            len = animations.length,
+            anim, layers, func, n, i, layersLen, layer, key;
         /*
          * loop through all animations and execute animation
          *  function.  if the animation object has specified node,
@@ -93,20 +126,31 @@
          * WARNING: don't cache animations.length because it could change while
          * the for loop is running, causing a JS error
          */
-        for(var n = 0; n < animations.length; n++) {
-            var anim = animations[n], node = anim.node, func = anim.func;
+        for(n = 0; n < len; n++) {
+            anim = animations[n];
+            layers = anim.layers; 
+            func = anim.func;
+
             anim._updateFrameObject(new Date().getTime());
-            if(node && node._id !== undefined) {
-                nodes[node._id] = node;
-            }
-            // if animation object has a function, execute it
-            if(func) {
-                func(anim.frame);
+
+            if (layers) {
+                layersLen = layers.length;
+
+                for (i=0; i<layersLen; i++) {
+                    layer = layers[i]
+                    if(layer._id !== undefined) {
+                        layerHash[layer._id] = layer;
+                    }
+                    // if animation object has a function, execute it
+                    if(func) {
+                        func(anim.frame);
+                    }
+                }
             }
         }
 
-        for(var key in nodes) {
-            nodes[key].draw();
+        for(key in layerHash) {
+            layerHash[key].draw();
         }
     };
     Kinetic.Animation._animationLoop = function() {

@@ -1,5 +1,5 @@
 Test.Modules.TRANSITION = {
-    'transition position and rotation': function(containerId) {
+    '!transition position and rotation': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -29,7 +29,7 @@ Test.Modules.TRANSITION = {
 
         // transition 1
         rect.transitionTo({
-            duration: 5,
+            duration: 3,
             x: 400,
             y: 30,
             fillR: blue.r,
@@ -46,13 +46,13 @@ Test.Modules.TRANSITION = {
 
         // transition 2
         rect.transitionTo({
-            duration: 5,
+            duration: 3,
             shadowOffsetX: 80, 
             rotation: Math.PI * 2,
             easing: 'bounce-ease-out'
         });
     },
-    'all transition types': function(containerId) {
+    '!all transition types': function(containerId) {
         document.getElementById(containerId).style.height = '300px';
 
         var stage = new Kinetic.Stage({
@@ -85,7 +85,7 @@ Test.Modules.TRANSITION = {
 
         stage.add(layer);
     },
-    'ease-in, ease-out, ease-in-out hovers': function(containerId) {
+    '!ease-in, ease-out, ease-in-out hovers': function(containerId) {
         function addHovers(shape, easing) {
             shape.on("mouseover", function() {
                 if (this.trans) {
@@ -208,6 +208,48 @@ Test.Modules.ANIMATION = {
         setTimeout(function() {
             anim.stop();
         }, 3000);
+    },
+    'animation with two layers': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(rect);
+
+        var layer2 = new Kinetic.Layer();
+        var rect2 = new Kinetic.Rect({
+            x: 250,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer2.add(rect2);
+        stage.add(layer);
+        stage.add(layer2);
+
+        var anim = new Kinetic.Animation(function(frame) {
+            rect.rotateDeg(1);
+            rect2.rotateDeg(1);
+        }, [layer, layer2]);
+
+        anim.start();
+
     },
     'test multiple animations': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1409,7 +1451,7 @@ Test.Modules.DRAG_AND_DROP = {
 
 
     },
-    'transition stage width': function(containerId) {
+    '!transition stage width': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -1438,7 +1480,7 @@ Test.Modules.DRAG_AND_DROP = {
 
         
     },
-    'transition gaussian blur filter': function(containerId) {
+    '!transition gaussian blur filter': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = new Kinetic.Stage({
@@ -1459,9 +1501,14 @@ Test.Modules.DRAG_AND_DROP = {
             layer.add(darth);
             stage.add(layer);
 
+            var trans = null;
+
     
             darth.on('mouseover', function() {
-                darth.transitionTo({
+                if (trans) {
+                    trans.stop();
+                }
+                trans = darth.transitionTo({
                     easing: 'ease-in-out',
                     duration: 0.5,
                     filterRadius: 0
@@ -1469,7 +1516,10 @@ Test.Modules.DRAG_AND_DROP = {
             });
 
             darth.on('mouseout', function() {
-                darth.transitionTo({
+                if (trans) {
+                    trans.stop();
+                }
+                trans = darth.transitionTo({
                     easing: 'ease-in-out',
                     duration: 0.5,
                     filterRadius: 20

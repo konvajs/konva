@@ -2609,7 +2609,7 @@ Test.Modules.NODE = {
         test(Kinetic.Global.shapes[circleColorKey] === undefined, 'circle color key should not be in shapes hash');
         test(Kinetic.Global.shapes[rectColorKey] === undefined, 'rect color key should not be in shapes hash');
     },
-    'destroy node mid transition': function(containerId) {
+    '!destroy node mid transition': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,

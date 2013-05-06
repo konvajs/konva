@@ -17,7 +17,7 @@
             easingFunc = Kinetic.Tweens[easing],
             duration = config.duration || 0,
             configVal = null,
-            lastTweenIndex = 0;
+            lastTween = null;
 
         this.tweens = [];
         this.attrs = {};
@@ -30,25 +30,25 @@
             }
         }
 
-        lastTweenIndex = this.tweens.length - 1;
+        lastTween = this.tweens[this.tweens.length - 1];
 
-        // map first tween event to transition event
-        this.tweens[lastTweenIndex].onStarted = function() {
+        // map first last event to transition event
+        lastTween.onStarted = function() {
 
         };
-        this.tweens[lastTweenIndex].onStopped = function() {
+        lastTween.onStopped = function() {
             anim.stop();
         };
-        this.tweens[lastTweenIndex].onResumed = function() {
+        lastTween.onResumed = function() {
             anim.start();
         };
-        this.tweens[lastTweenIndex].onLooped = function() {
+        lastTween.onLooped = function() {
 
         };
-        this.tweens[lastTweenIndex].onChanged = function() {
+        lastTween.onChanged = function() {
 
         };
-        this.tweens[lastTweenIndex].onFinished = function() {
+        lastTween.onFinished = function() {
             var newAttrs = {};
             // create new attr obj
             for(var key in config) {
@@ -67,15 +67,22 @@
      * Transition methods
      */
     Kinetic.Transition.prototype = {
+        _mapTweens: function(method) {
+            var tweens = this.tweens,
+                len = tweens.length,
+                n;
+
+            for(n = 0; n < len; n++) {
+                tweens[n][method]();
+            }
+        },
         /**
          * start transition
          * @name start
          * @methodOf Kinetic.Transition.prototype
          */
         start: function() {
-            for(var n = 0; n < this.tweens.length; n++) {
-                this.tweens[n].start();
-            }
+            this._mapTweens('start');
         },
         /**
          * stop transition

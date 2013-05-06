@@ -328,6 +328,14 @@
         getLayer: function() {
             return null;
         },
+        /**
+         * get layers
+         * @name getLayers
+         * @methodOf Kinetic.Stage.prototype
+         */
+         getLayers: function() {
+             return this.getChildren();
+         },
         _setPointerPosition: function(evt) {
             if(!evt) {
                 evt = window.event;
