@@ -4,7 +4,7 @@ Test.Modules.ANIMATION = {
      * animation because it's accessing the global animation object which could
      * be modified by other unit tests
      */
-    'ANIMATION - test start and stop': function(containerId) {
+    'test start and stop': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -53,5 +53,49 @@ Test.Modules.ANIMATION = {
 
         anim.stop();
         test(a.animations.length === 0, 'should be no animations running');
+    },
+    'batch draw': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        draws = 0;
+
+        layer.on('draw', function() {
+            console.log('draw')
+            draws++;
+        });
+
+        layer.draw();
+        layer.draw();
+        layer.draw();
+
+        test(draws === 3, 'draw count should be 3');
+
+        layer.batchDraw();
+        layer.batchDraw();
+        layer.batchDraw();
+
+        test(Kinetic.Layer.batchAnim.getLayers().length === 1, 'batch animation should only have one layer');
+
+        // since batch draw is async, we need to test the draw count with a timeout
+        setTimeout(function() {
+            test(draws === 4, 'draw count should be 4');
+        }, 200); 
     }
 };

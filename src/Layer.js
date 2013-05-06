@@ -14,6 +14,13 @@
         this._initLayer(config);
     };
 
+    Kinetic.Layer.batchAnim = new Kinetic.Animation(function() {
+        if (this.getLayers().length === 0) {
+            this.stop();
+        }
+        this.setLayers([]);
+    });
+
     Kinetic.Layer.prototype = {
         _initLayer: function(config) {
             this.nodeType = 'Layer';
@@ -28,8 +35,7 @@
         /**
          * get intersection object that contains shape and pixel data
          * @name getIntersection
-         * @methodOf Kinetic.Stage.prototype
-         * @param {Object} pos point object
+         * @methodOf Kinetic.Layer.prototype
          */
         getIntersection: function() {
             var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments)),
@@ -55,6 +61,19 @@
             }
 
             return null;
+        },
+        /**
+         * get batch draw
+         * @name batchDraw
+         * @methodOf Kinetic.Layer.prototype
+         */
+        batchDraw: function() {
+            var batchAnim = Kinetic.Layer.batchAnim;
+            batchAnim.addLayer(this);  
+
+            if (!batchAnim.isRunning()) {
+                batchAnim.start(); 
+            } 
         },
         drawScene: function(canvas) {
             var canvas = canvas || this.getCanvas();

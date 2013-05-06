@@ -51,6 +51,33 @@
             return this.layers;
         },
         /**
+         * add layer.  Returns true if the layer was added, and false if it was not
+         * @name addLayer
+         * @methodOf Kinetic.Animation.prototype
+         * @param {Kinetic.Layer} layer
+         */
+        addLayer: function(layer) {
+            var layers = this.layers,
+                len, n;
+
+            if (layers) {
+                len = layers.length;
+
+                // don't add the layer if it already exists
+                for (n = 0; n < len; n++) {
+                    if (layers[n]._id === layer._id) {
+                        return false; 
+                    } 
+                } 
+            }
+            else {
+                this.layers = [];
+            }
+
+            this.layers.push(layer);
+            return true;
+        },
+        /**
          * determine if animation is running or not.  returns true or false
          * @name isRunning
          * @methodOf Kinetic.Animation.prototype
@@ -143,7 +170,7 @@
                     }
                     // if animation object has a function, execute it
                     if(func) {
-                        func(anim.frame);
+                        func.call(anim, anim.frame);
                     }
                 }
             }
