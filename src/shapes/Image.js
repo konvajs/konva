@@ -278,5 +278,16 @@
 
      Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filter');
 
+     /**
+     * set filter
+     * @name setFilter
+     * @methodOf Kinetic.Image.prototype
+     * @param {Function} filter
+     */
 
+    /**
+     * get filter
+     * @name getFilter
+     * @methodOf Kinetic.Image.prototype
+     */
 })();

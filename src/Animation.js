@@ -121,8 +121,6 @@
     Kinetic.Animation.animIdCounter = 0;
     Kinetic.Animation.animRunning = false;
 
-
-
     Kinetic.Animation._addAnimation = function(anim) {
         this.animations.push(anim);
         this._handleAnimation();

@@ -169,6 +169,40 @@ Test.Modules.TRANSITION = {
         layer.add(blueBox);
         layer.add(redBox);
         stage.add(layer);
+    },
+    'simple transition': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var greenBox = new Kinetic.Rect({
+            x: 50,
+            y: stage.getHeight() / 2 - 25,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            offset: {
+                x: 50,
+                y: 25
+            }
+        });
+
+        layer.add(greenBox);
+        stage.add(layer);
+
+        TweenLite.to(greenBox, 2, {
+            setX: 200,
+            setScaleX: 2,
+            setScaleY: 2,
+            ease: Linear.easeNone,
+            onUpdate: function() {
+                layer.batchDraw();
+            }
+        });
     }
 };
 

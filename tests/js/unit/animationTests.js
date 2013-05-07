@@ -93,9 +93,6 @@ Test.Modules.ANIMATION = {
 
         test(Kinetic.Layer.batchAnim.getLayers().length === 1, 'batch animation should only have one layer');
 
-        // since batch draw is async, we need to test the draw count with a timeout
-        setTimeout(function() {
-            test(draws === 4, 'draw count should be 4');
-        }, 1000); 
+        test(draws !== 6, 'should not be 6 draws');
     }
 };

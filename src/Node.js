@@ -1340,9 +1340,35 @@
      * @methodOf Kinetic.Node.prototype
      */
 
+     /**
+     * set scale x
+     * @name setScaleX
+     * @param {Number} x
+     * @methodOf Kinetic.Node.prototype
+     */
+
+     /**
+     * set scale y
+     * @name setScaleY
+     * @param {Number} y
+     * @methodOf Kinetic.Node.prototype
+     */
+
     /**
      * get scale
      * @name getScale
+     * @methodOf Kinetic.Node.prototype
+     */
+
+     /**
+     * get scale x
+     * @name getScaleX
+     * @methodOf Kinetic.Node.prototype
+     */
+
+     /**
+     * get scale y
+     * @name getScaleY
      * @methodOf Kinetic.Node.prototype
      */
 
@@ -1356,9 +1382,35 @@
      * @methodOf Kinetic.Node.prototype
      */
 
+     /**
+     * set skew x
+     * @name setSkewX
+     * @param {Number} x
+     * @methodOf Kinetic.Node.prototype
+     */
+
+     /**
+     * set skew y
+     * @name setSkewY
+     * @param {Number} y
+     * @methodOf Kinetic.Node.prototype
+     */
+
     /**
      * get skew 
      * @name getSkew
+     * @methodOf Kinetic.Node.prototype
+     */
+
+     /**
+     * get skew x
+     * @name getSkewX
+     * @methodOf Kinetic.Node.prototype
+     */
+
+     /**
+     * get skew y
+     * @name getSkewY
      * @methodOf Kinetic.Node.prototype
      */
 
@@ -1372,9 +1424,35 @@
      * @param {Number} y
      */
 
+     /**
+     * set offset x
+     * @name setOffsetX
+     * @methodOf Kinetic.Node.prototype
+     * @param {Number} x
+     */
+
+     /**
+     * set offset y
+     * @name setOffsetY
+     * @methodOf Kinetic.Node.prototype
+     * @param {Number} y
+     */
+
     /**
      * get offset
      * @name getOffset
+     * @methodOf Kinetic.Node.prototype
+     */
+
+     /**
+     * get offset x
+     * @name getOffsetX
+     * @methodOf Kinetic.Node.prototype
+     */
+
+     /**
+     * get offset y
+     * @name getOffsetY
      * @methodOf Kinetic.Node.prototype
      */
 

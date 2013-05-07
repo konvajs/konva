@@ -55,14 +55,14 @@
     /**
      * set corner radius
      * @name setCornerRadius
-     * @methodOf Kinetic.Shape.prototype
+     * @methodOf Kinetic.Rect.prototype
      * @param {Number} corner radius
      */
 
     /**
      * get corner radius
      * @name getCornerRadius
-     * @methodOf Kinetic.Shape.prototype
+     * @methodOf Kinetic.Rect.prototype
      */
 
 })();

@@ -57,7 +57,7 @@
      * @methodOf Kinetic.Wedge.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Wedge, 'angle', 0);
+    Kinetic.Node.addRotationGetterSetter(Kinetic.Wedge, 'angle', 0);
 
     /**
      * set angle

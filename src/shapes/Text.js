@@ -404,6 +404,19 @@
 
     Kinetic.Node.addGetterSetter(Kinetic.Text, 'wrap', WORD);
 
+    /**
+     * set wrap
+     * @name setWrap
+     * @methodOf Kinetic.Text.prototype
+     * @param {String} wrap can be word, char, or none. Default is word
+     */
+
+     /**
+     * get wrap
+     * @name getWrap
+     * @methodOf Kinetic.Text.prototype
+     */
+
     Kinetic.Node.addGetter(Kinetic.Text, TEXT, EMPTY_STRING);
 
     /**
@@ -413,5 +426,20 @@
      */
     
     Kinetic.Node.addSetter(Kinetic.Text, 'width');
+
+    /**
+     * set width
+     * @name setWidth
+     * @methodOf Kinetic.Text.prototype
+     * @param {Number|String} width default is auto
+     */
+
     Kinetic.Node.addSetter(Kinetic.Text, 'height'); 
+
+    /**
+     * set height
+     * @name setHeight
+     * @methodOf Kinetic.Text.prototype
+     * @param {Number|String} height default is auto
+     */
 })();

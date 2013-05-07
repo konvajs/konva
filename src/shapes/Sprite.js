@@ -182,4 +182,18 @@
 
     Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'frameRate', 17);
 
+    /**
+     * set frame rate in frames / second.  Default is 17 frames per second.  Increase this number to make the sprite
+     *  animation run faster, and decrease the number to make the sprite animation run slower
+     * @name setFrameRate
+     * @methodOf Kinetic.Sprite.prototype
+     * @param {Integer} frameRate
+     */
+
+     /**
+     * get frame rate
+     * @name getFrameRate
+     * @methodOf Kinetic.Sprite.prototype
+     */
+
 })();

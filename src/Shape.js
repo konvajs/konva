@@ -224,12 +224,64 @@
      * set stroke color
      * @name setStroke
      * @methodOf Kinetic.Shape.prototype
-     * @param {String} stroke
+     * @param {String} color
+     */
+
+     /**
+     * set stroke color with an object literal
+     * @name setStrokeRGB
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Obect} color requires an object literal containing an r, g, and b component
+     */
+
+     /**
+     * set stroke color red component
+     * @name setStrokeR
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Integer} red
+     */
+
+     /**
+     * set stroke color green component
+     * @name setStrokeG
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Integer} green
+     */
+
+     /**
+     * set stroke color blue component
+     * @name setStrokeB
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Integer} blue
      */
 
      /**
      * get stroke color
      * @name getStroke
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get stroke color as an object literal
+     * @name getStrokeRGB
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get stroke color red component
+     * @name getStrokeR
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get stroke color green component
+     * @name getStrokeG
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get stroke color blue component
+     * @name getStrokeB
      * @methodOf Kinetic.Shape.prototype
      */
 
@@ -341,8 +393,60 @@
      */
 
      /**
+     * set shadow color with an object literal
+     * @name setShadowColorRGB
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Obect} color requires an object literal containing an r, g, and b component
+     */
+
+     /**
+     * set shadow color red component
+     * @name setShadowColorR
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Integer} red
+     */
+
+     /**
+     * set shadow color green component
+     * @name setShadowColorG
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Integer} green
+     */
+
+     /**
+     * set shadow color blue component
+     * @name setShadowColorB
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Integer} blue
+     */
+
+     /**
      * get shadow color
      * @name getShadowColor
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get shadow color as an object literal
+     * @name getShadowColorRGB
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get shadow color red component
+     * @name getShadowColorR
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get shadow color green component
+     * @name getShadowColorG
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get shadow color blue component
+     * @name getShadowColorB
      * @methodOf Kinetic.Shape.prototype
      */
 
@@ -401,8 +505,60 @@
      */
 
      /**
+     * set fill color with an object literal
+     * @name setFillRGB
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Obect} color requires an object literal containing an r, g, and b component
+     */
+
+     /**
+     * set fill color red component
+     * @name setFillR
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Integer} red
+     */
+
+     /**
+     * set fill color green component
+     * @name setFillG
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Integer} green
+     */
+
+     /**
+     * set fill color blue component
+     * @name setFillB
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Integer} blue
+     */
+
+     /**
      * get fill color
      * @name getFill
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get fill color as an object literal
+     * @name getFillRGB
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get fill color red component
+     * @name getFillR
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get fill color green component
+     * @name getFillG
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get fill color blue component
+     * @name getFillB
      * @methodOf Kinetic.Shape.prototype
      */
 
@@ -514,10 +670,64 @@
 
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'fillEnabled', true);
 
+    /**
+     * set fill enabled
+     * @name setFillEnabled
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Boolean} enabled
+     */
+
+     /**
+     * get fill enabled
+     * @name getFillEnabled
+     * @methodOf Kinetic.Shape.prototype
+     */
 
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'strokeEnabled', true);
+
+    /**
+     * set stroke enabled
+     * @name setStrokeEnabled
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Boolean} enabled
+     */
+
+     /**
+     * get stroke enabled
+     * @name getStrokeEnabled
+     * @methodOf Kinetic.Shape.prototype
+     */
+
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'shadowEnabled', true);
+
+    /**
+     * set shadow enabled
+     * @name setShadowEnabled
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Boolean} enabled
+     */
+
+     /**
+     * get shadow enabled
+     * @name getShadowEnabled
+     * @methodOf Kinetic.Shape.prototype
+     */
+
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'dashArrayEnabled', true);
+
+    /**
+     * set dash array enabled
+     * @name setDashArrayEnabled
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Boolean} enabled
+     */
+
+     /**
+     * get dash array enabled
+     * @name getDashArrayEnabled
+     * @methodOf Kinetic.Shape.prototype
+     */
+
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'fillPriority', 'color');
 
     /**
@@ -536,6 +746,18 @@
 
     Kinetic.Node.addGetterSetter(Kinetic.Shape, 'strokeScaleEnabled', true);
 
+     /**
+     * set stroke scale enabled
+     * @name setStrokeScaleEnabled
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Boolean} enabled
+     */
+
+     /**
+     * get stroke scale enabled
+     * @name getStrokeScaleEnabled
+     * @methodOf Kinetic.Shape.prototype
+     */
 
     Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'fillPatternOffset', 0);
 
@@ -547,11 +769,36 @@
      */
 
      /**
+     * set fill pattern offset x
+     * @name setFillPatternOffsetX
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} x
+     */
+
+     /**
+     * set fill pattern offset y
+     * @name setFillPatternOffsetY
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} y
+     */
+
+     /**
      * get fill pattern offset
      * @name getFillPatternOffset
      * @methodOf Kinetic.Shape.prototype
      */
 
+     /**
+     * get fill pattern offset x
+     * @name getFillPatternOffsetX
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get fill pattern offset y
+     * @name getFillPatternOffsetY
+     * @methodOf Kinetic.Shape.prototype
+     */
 
     Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'fillPatternScale', 1);
 
@@ -563,8 +810,34 @@
      */
 
      /**
+     * set fill pattern scale x
+     * @name setFillPatternScaleX
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} x
+     */
+
+     /**
+     * set fill pattern scale y
+     * @name setFillPatternScaleY
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} y
+     */
+
+     /**
      * get fill pattern scale
      * @name getFillPatternScale
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get fill pattern scale x
+     * @name getFillPatternScaleX
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get fill pattern scale y
+     * @name getFillPatternScaleY
      * @methodOf Kinetic.Shape.prototype
      */
 
@@ -578,8 +851,34 @@
      */
 
      /**
+     * set fill linear gradient start point x
+     * @name setFillLinearGradientStartPointX
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} x
+     */
+
+     /**
+     * set fill linear gradient start point y
+     * @name setFillLinearGradientStartPointY
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} y
+     */
+
+     /**
      * get fill linear gradient start point
      * @name getFillLinearGradientStartPoint
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get fill linear gradient start point x
+     * @name getFillLinearGradientStartPointX
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get fill linear gradient start point y
+     * @name getFillLinearGradientStartPointY
      * @methodOf Kinetic.Shape.prototype
      */
 
@@ -593,8 +892,34 @@
      */
 
      /**
+     * set fill linear gradient end point x
+     * @name setFillLinearGradientEndPointX
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} x
+     */
+
+     /**
+     * set fill linear gradient end point y
+     * @name setFillLinearGradientEndPointY
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} y
+     */
+
+     /**
      * get fill linear gradient end point
      * @name getFillLinearGradientEndPoint
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get fill linear gradient end point x
+     * @name getFillLinearGradientEndPointX
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get fill linear gradient end point y
+     * @name getFillLinearGradientEndPointY
      * @methodOf Kinetic.Shape.prototype
      */
 
@@ -608,8 +933,34 @@
      */
 
      /**
+     * set fill radial gradient start point x
+     * @name setFillRadialGradientStartPointX
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} x
+     */
+
+     /**
+     * set fill radial gradient start point y
+     * @name setFillRadialGradientStartPointY
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} y
+     */
+
+     /**
      * get fill radial gradient start point
      * @name getFillRadialGradientStartPoint
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get fill radial gradient start point x
+     * @name getFillRadialGradientStartPointX
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get fill radial gradient start point y
+     * @name getFillRadialGradientStartPointY
      * @methodOf Kinetic.Shape.prototype
      */
 
@@ -623,8 +974,34 @@
      */
 
      /**
+     * set fill radial gradient end point x
+     * @name setFillRadialGradientEndPointX
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} x
+     */
+
+     /**
+     * set fill radial gradient end point y
+     * @name setFillRadialGradientEndPointY
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} y
+     */
+
+     /**
      * get fill radial gradient end point
      * @name getFillRadialGradientEndPoint
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get fill radial gradient end point x
+     * @name getFillRadialGradientEndPointX
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get fill radial gradient end point y
+     * @name getFillRadialGradientEndPointY
      * @methodOf Kinetic.Shape.prototype
      */
 
@@ -637,9 +1014,35 @@
      * @param {Number|Array|Object} offset
      */
 
+     /**
+     * set shadow offset x
+     * @name setShadowOffsetX
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} x
+     */
+
+     /**
+     * set shadow offset y
+     * @name setShadowOffsetY
+     * @methodOf Kinetic.Shape.prototype
+     * @param {Number} y
+     */
+
     /**
      * get shadow offset
      * @name getShadowOffset
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get shadow offset x
+     * @name getShadowOffsetX
+     * @methodOf Kinetic.Shape.prototype
+     */
+
+     /**
+     * get shadow offset y
+     * @name getShadowOffsetY
      * @methodOf Kinetic.Shape.prototype
      */
 

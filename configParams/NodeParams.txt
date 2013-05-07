@@ -7,14 +7,14 @@
      * @param {String} [config.id] unique id
      * @param {String} [config.name] non-unique name
      * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
-     * @param {Object} [config.scale]
-     * @param {Number} [config.scale.x]
-     * @param {Number} [config.scale.y]
+     * @param {Object} [config.scale] set scale
+     * @param {Number} [config.scaleX] set scale x
+     * @param {Number} [config.scaleY] set scale y
      * @param {Number} [config.rotation] rotation in radians
      * @param {Number} [config.rotationDeg] rotation in degrees
      * @param {Object} [config.offset] offset from center point and rotation point
-     * @param {Number} [config.offset.x]
-     * @param {Number} [config.offset.y]
+     * @param {Number} [config.offsetX] set offset x
+     * @param {Number} [config.offsetY] set offset y
      * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
      *  the entire stage by dragging any portion of the stage
      * @param {Function} [config.dragBoundFunc]
