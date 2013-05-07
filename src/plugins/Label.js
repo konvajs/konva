@@ -104,7 +104,7 @@
 
     /**
      * get LabelRect shape for the label.  You need to access the LabelRect shape in order to update
-     * the pointer propertie and the corner radius
+     * the pointer properties and the corner radius
      * @name getRect
      * @methodOf Kinetic.Label.prototype
      */
