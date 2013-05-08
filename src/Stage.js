@@ -34,16 +34,6 @@
         ctx['_' + eventName](evt);
       }, false);
     }
-    
-    /**
-     * Stage constructor.  A stage is used to contain multiple layers
-     * @constructor
-     * @augments Kinetic.Container
-     * @param {Object} config
-     * @param {String|DomElement} config.container Container id or DOM element
-     * {{NodeParams}}
-     * {{ContainerParams}}
-     */
 
     Kinetic.Util.addMethods(Kinetic.Stage, {
         _initStage: function(config) {

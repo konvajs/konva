@@ -221,8 +221,8 @@
 
         RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
 
-    /*
-     * utilities that handle data type detection, conversion, and manipulation
+    /** 
+     * @namespace 
      */
     Kinetic.Util = {
         /*
@@ -597,7 +597,7 @@
         },
         /**
          * @method addMethods adds methods to a constructor prototype
-         * @methodOf Kinetic.Global
+         * @methodOf Kinetic.Util
          * @param {Function} constructor
          * @param {Object} methods
          */

@@ -818,7 +818,7 @@ Test.Modules.NODE = {
             height: 300,
             callback: function(imageObj) {
                 //document.body.appendChild(imageObj)
-                test(Kinetic.Type._isElement(imageObj), 'shape toImage() should be an image object');
+                test(Kinetic.Util._isElement(imageObj), 'shape toImage() should be an image object');
 
                 var cachedShape = new Kinetic.Image({
                     image: imageObj,
@@ -2758,7 +2758,7 @@ Test.Modules.NODE = {
         group.hide();
         layer.draw();
 
-        test(layer.toDataURL() === dataUrls['cleared'], 'group is still visible');
+        testDataUrl(layer.toDataURL(), 'cleared', 'group is still visible');
     },
     'test getNodeType()': function(containerId) {
         var stage = new Kinetic.Stage({

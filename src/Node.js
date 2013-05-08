@@ -33,14 +33,6 @@
         UPPER_B = 'B',
         HASH = '#';
         
-    /**
-     * Node constructor. Nodes are entities that can be transformed, layered,
-     * and have bound events. The stage, layers, groups, and shapes all extend Node.
-     * @constructor
-     * @param {Object} config
-     * {{NodeParams}}
-     */
-
     Kinetic.Util.addMethods(Kinetic.Node, {
         _nodeInit: function(config) {
             this._id = Kinetic.Global.idCounter++;

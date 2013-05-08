@@ -1,13 +1,4 @@
 (function() {
-    /**
-     * Shape constructor.  Shapes are primitive objects such as rectangles,
-     *  circles, text, lines, etc.
-     * @constructor
-     * @augments Kinetic.Node
-     * @param {Object} config
-     * {{ShapeParams}}
-     * {{NodeParams}}
-     */
     function _fillFunc(context) {
         context.fill();
     }

@@ -37,26 +37,78 @@ var Kinetic = {};
      */
     Kinetic.Filters = {};
 
+    /**
+     * Node constructor. Nodes are entities that can be transformed, layered,
+     * and have bound events. The stage, layers, groups, and shapes all extend Node.
+     * @constructor
+     * @param {Object} config
+     * {{NodeParams}}
+     */
     Kinetic.Node = function(config) {
         this._nodeInit(config);
     };
 
+    /**
+     * Shape constructor.  Shapes are primitive objects such as rectangles,
+     *  circles, text, lines, etc.
+     * @constructor
+     * @augments Kinetic.Node
+     * @param {Object} config
+     * {{ShapeParams}}
+     * {{NodeParams}}
+     */
     Kinetic.Shape = function(config) {
         this._initShape(config);
     }; 
 
+    /**
+     * Container constructor.&nbsp; Containers are used to contain nodes or other containers
+     * @constructor
+     * @augments Kinetic.Node
+     * @param {Object} config
+     * {{NodeParams}}
+     * {{ContainerParams}}
+     */
     Kinetic.Container = function(config) {
         this._containerInit(config);
     };
 
+    /**
+     * Stage constructor.  A stage is used to contain multiple layers
+     * @constructor
+     * @augments Kinetic.Container
+     * @param {Object} config
+     * @param {String|DomElement} config.container Container id or DOM element
+     * {{NodeParams}}
+     * {{ContainerParams}}
+     */
     Kinetic.Stage = function(config) {
         this._initStage(config);
     };
 
+    /**
+     * Layer constructor.  Layers are tied to their own canvas element and are used
+     * to contain groups or shapes
+     * @constructor
+     * @augments Kinetic.Container
+     * @param {Object} config
+     * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
+     * to clear the canvas before each layer draw.  The default value is true.
+     * {{NodeParams}}
+     * {{ContainerParams}}
+     */
     Kinetic.Layer = function(config) {
         this._initLayer(config);
     };
 
+    /**
+     * Group constructor.  Groups are used to contain shapes or other groups.
+     * @constructor
+     * @augments Kinetic.Container
+     * @param {Object} config
+     * {{NodeParams}}
+     * {{ContainerParams}}
+     */
     Kinetic.Group = function(config) {
         this._initGroup(config);
     }; 
