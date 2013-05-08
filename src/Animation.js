@@ -220,4 +220,24 @@
     	moveTo.call(this, container);
     };
 
+    Kinetic.Layer.batchAnim = new Kinetic.Animation(function() {
+        if (this.getLayers().length === 0) {
+            this.stop();
+        }
+        this.setLayers([]);
+    });
+
+    /**
+     * get batch draw
+     * @name batchDraw
+     * @methodOf Kinetic.Layer.prototype
+     */
+    Kinetic.Layer.prototype.batchDraw = function() {
+        var batchAnim = Kinetic.Layer.batchAnim;
+        batchAnim.addLayer(this);  
+
+        if (!batchAnim.isRunning()) {
+            batchAnim.start(); 
+        } 
+    };
 })();

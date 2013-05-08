@@ -7,11 +7,7 @@
      * {{NodeParams}}
      * {{ContainerParams}}
      */
-    Kinetic.Container = function(config) {
-        this._containerInit(config);
-    };
-
-    Kinetic.Container.prototype = {
+    Kinetic.Global.addMethods(Kinetic.Container, {
         _containerInit: function(config) {
             this.children = [];
             Kinetic.Node.call(this, config);
@@ -246,7 +242,7 @@
                 }
             }
         }
-    };
+    });
 
     Kinetic.Global.extend(Kinetic.Container, Kinetic.Node);
 

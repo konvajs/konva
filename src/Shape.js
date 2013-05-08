@@ -8,9 +8,6 @@
      * {{ShapeParams}}
      * {{NodeParams}}
      */
-    Kinetic.Shape = function(config) {
-        this._initShape(config);
-    };
     function _fillFunc(context) {
         context.fill();
     }
@@ -24,7 +21,7 @@
         context.stroke();
     }
 
-    Kinetic.Shape.prototype = {
+    Kinetic.Global.addMethods(Kinetic.Shape, {
         _initShape: function(config) {
             this.nodeType = 'Shape';
             this._fillFunc = _fillFunc;
@@ -214,7 +211,7 @@
                 this.setDrawHitFunc(this.drawHitFunc);
             }
         }
-    };
+    });
     Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
 
     // add getters and setters

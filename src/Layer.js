@@ -10,18 +10,7 @@
      * {{NodeParams}}
      * {{ContainerParams}}
      */
-    Kinetic.Layer = function(config) {
-        this._initLayer(config);
-    };
-
-    Kinetic.Layer.batchAnim = new Kinetic.Animation(function() {
-        if (this.getLayers().length === 0) {
-            this.stop();
-        }
-        this.setLayers([]);
-    });
-
-    Kinetic.Layer.prototype = {
+    Kinetic.Global.addMethods(Kinetic.Layer, {
         _initLayer: function(config) {
             this.nodeType = 'Layer';
             this.createAttrs();
@@ -61,19 +50,6 @@
             }
 
             return null;
-        },
-        /**
-         * get batch draw
-         * @name batchDraw
-         * @methodOf Kinetic.Layer.prototype
-         */
-        batchDraw: function() {
-            var batchAnim = Kinetic.Layer.batchAnim;
-            batchAnim.addLayer(this);  
-
-            if (!batchAnim.isRunning()) {
-                batchAnim.start(); 
-            } 
         },
         drawScene: function(canvas) {
             var canvas = canvas || this.getCanvas();
@@ -208,7 +184,7 @@
                 stage.content.removeChild(element);
             }
         }
-    };
+    });
     Kinetic.Global.extend(Kinetic.Layer, Kinetic.Container);
 
     // add getters and setters

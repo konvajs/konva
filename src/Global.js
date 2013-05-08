@@ -36,8 +36,31 @@ var Kinetic = {};
      * @namespace 
      */
     Kinetic.Filters = {};
-    Kinetic.DD = {};
-    
+
+    Kinetic.Node = function(config) {
+        this._nodeInit(config);
+    };
+
+    Kinetic.Shape = function(config) {
+        this._initShape(config);
+    }; 
+
+    Kinetic.Container = function(config) {
+        this._containerInit(config);
+    };
+
+    Kinetic.Stage = function(config) {
+        this._initStage(config);
+    };
+
+    Kinetic.Layer = function(config) {
+        this._initLayer(config);
+    };
+
+    Kinetic.Group = function(config) {
+        this._initGroup(config);
+    }; 
+
     /** 
      * @namespace 
      */
@@ -48,6 +71,19 @@ var Kinetic = {};
         names: {},
         //shapes hash.  rgb keys and shape values
         shapes: {},
+        /**
+         * @method addMethods adds methods to a constructor prototype
+         * @methodOf Kinetic.Global
+         * @param {Function} constructor
+         * @param {Object} methods
+         */
+        addMethods: function(constructor, methods) {
+          var key;
+
+          for (key in methods) {
+            constructor.prototype[key] = methods[key];
+          }
+        },
         /**
          * @method isDragging returns whether or not drag and drop
          *  is currently active

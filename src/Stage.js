@@ -44,11 +44,8 @@
      * {{NodeParams}}
      * {{ContainerParams}}
      */
-    Kinetic.Stage = function(config) {
-        this._initStage(config);
-    };
 
-    Kinetic.Stage.prototype = {
+    Kinetic.Global.addMethods(Kinetic.Stage, {
         _initStage: function(config) {
             this.createAttrs();
             // call super constructor
@@ -601,7 +598,7 @@
                 this.content.addEventListener(baseEvent, handler, false);
             }
         }
-    };
+    });
     Kinetic.Global.extend(Kinetic.Stage, Kinetic.Container);
 
     // add getters and setters

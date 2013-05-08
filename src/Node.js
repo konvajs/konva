@@ -40,11 +40,8 @@
      * @param {Object} config
      * {{NodeParams}}
      */
-    Kinetic.Node = function(config) {
-        this._nodeInit(config);
-    };
 
-    Kinetic.Node.prototype = {
+    Kinetic.Global.addMethods(Kinetic.Node, {
         _nodeInit: function(config) {
             this._id = Kinetic.Global.idCounter++;
             this.eventListeners = {};
@@ -1007,8 +1004,8 @@
          */
         draw: function() {
             var evt = {
-                    node: this
-                };
+                node: this
+            };
             
             this.fire(BEFORE_DRAW, evt);
             this.drawScene();
@@ -1018,7 +1015,7 @@
         shouldDrawHit: function() { 
             return this.isVisible() && this.isListening() && !Kinetic.Global.isDragging(); 
         }
-    };
+    });
 
     // add getter and setter methods
     Kinetic.Node.addGetterSetter = function(constructor, attr, def, isTransform) {
