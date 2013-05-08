@@ -353,8 +353,8 @@
          */
         setPosition: function() {
             var pos = Kinetic.Util._getXY([].slice.call(arguments));
-            this.setAttr(X, pos.x);
-            this.setAttr(Y, pos.y);
+            this.setX(pos.x);
+            this.setY(pos.y);
         },
         /**
          * get node position relative to parent
