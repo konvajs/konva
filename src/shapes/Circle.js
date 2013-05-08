@@ -42,7 +42,7 @@
             this.setRadius(height / 2);
         }
     };
-    Kinetic.Global.extend(Kinetic.Circle, Kinetic.Shape);
+    Kinetic.Util.extend(Kinetic.Circle, Kinetic.Shape);
 
     // add getters setters
     Kinetic.Node.addGetterSetter(Kinetic.Circle, 'radius', 0);

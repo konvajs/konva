@@ -100,7 +100,7 @@
             this.allPoints = allPoints;
         }
     };
-    Kinetic.Global.extend(Kinetic.Spline, Kinetic.Line);
+    Kinetic.Util.extend(Kinetic.Spline, Kinetic.Line);
 
     // add getters setters
     Kinetic.Node.addGetter(Kinetic.Spline, 'tension', 1);

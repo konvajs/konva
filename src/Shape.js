@@ -21,7 +21,7 @@
         context.stroke();
     }
 
-    Kinetic.Global.addMethods(Kinetic.Shape, {
+    Kinetic.Util.addMethods(Kinetic.Shape, {
         _initShape: function(config) {
             this.nodeType = 'Shape';
             this._fillFunc = _fillFunc;
@@ -34,7 +34,7 @@
             var key;
 
             while(true) {
-                key = Kinetic.Type.getRandomColor();
+                key = Kinetic.Util.getRandomColor();
                 if(key && !( key in shapes)) {
                     break;
                 }
@@ -94,7 +94,7 @@
          *  element is the y component
          */
         intersects: function() {
-            var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
+            var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments));
             var stage = this.getStage();
             var hitCanvas = stage.hitCanvas;
             hitCanvas.clear();
@@ -212,7 +212,7 @@
             }
         }
     });
-    Kinetic.Global.extend(Kinetic.Shape, Kinetic.Node);
+    Kinetic.Util.extend(Kinetic.Shape, Kinetic.Node);
 
     // add getters and setters
     Kinetic.Node.addColorGetterSetter(Kinetic.Shape, 'stroke');

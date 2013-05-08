@@ -45,7 +45,7 @@
      * {{ContainerParams}}
      */
 
-    Kinetic.Global.addMethods(Kinetic.Stage, {
+    Kinetic.Util.addMethods(Kinetic.Stage, {
         _initStage: function(config) {
             this.createAttrs();
             // call super constructor
@@ -138,7 +138,7 @@
             var content = this.content;
             Kinetic.Node.prototype.remove.call(this);
 
-            if(content && Kinetic.Type._isInDocument(content)) {
+            if(content && Kinetic.Util._isInDocument(content)) {
                 this.getContainer().removeChild(content);
             }
         },
@@ -251,7 +251,7 @@
             var cb = config.callback;
 
             config.callback = function(dataUrl) {
-                Kinetic.Type._getImage(dataUrl, function(img) {
+                Kinetic.Util._getImage(dataUrl, function(img) {
                     cb(img);
                 });
             };
@@ -264,7 +264,7 @@
          * @param {Object} pos point object
          */
         getIntersection: function() {
-            var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments)),
+            var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments)),
                 layers = this.getChildren(),
                 len = layers.length,
                 end = len - 1,
@@ -599,7 +599,7 @@
             }
         }
     });
-    Kinetic.Global.extend(Kinetic.Stage, Kinetic.Container);
+    Kinetic.Util.extend(Kinetic.Stage, Kinetic.Container);
 
     // add getters and setters
     Kinetic.Node.addGetter(Kinetic.Stage, 'container');

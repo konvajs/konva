@@ -40,7 +40,7 @@
             canvas.fillStroke(this);
         }
     };
-    Kinetic.Global.extend(Kinetic.Star, Kinetic.Shape);
+    Kinetic.Util.extend(Kinetic.Star, Kinetic.Shape);
 
     // add getters setters
     Kinetic.Node.addGetterSetter(Kinetic.Star, 'numPoints', 0);

@@ -71,19 +71,7 @@ var Kinetic = {};
         names: {},
         //shapes hash.  rgb keys and shape values
         shapes: {},
-        /**
-         * @method addMethods adds methods to a constructor prototype
-         * @methodOf Kinetic.Global
-         * @param {Function} constructor
-         * @param {Object} methods
-         */
-        addMethods: function(constructor, methods) {
-          var key;
 
-          for (key in methods) {
-            constructor.prototype[key] = methods[key];
-          }
-        },
         /**
          * @method isDragging returns whether or not drag and drop
          *  is currently active
@@ -118,22 +106,6 @@ var Kinetic = {};
             // if DD is included with the build
             else {
                 return !!dd.node;
-            }
-        },
-        warn: function(str) {
-            /*
-             * IE9 on Windows7 64bit will throw a JS error
-             * if we don't use window.console in the conditional
-             */
-            if(window.console && console.warn) {
-                console.warn('Kinetic warning: ' + str);
-            }
-        },
-        extend: function(c1, c2) {
-            for(var key in c2.prototype) {
-                if(!( key in c1.prototype)) {
-                    c1.prototype[key] = c2.prototype[key];
-                }
             }
         },
         _addId: function(node, id) {

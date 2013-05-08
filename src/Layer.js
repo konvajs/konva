@@ -10,7 +10,7 @@
      * {{NodeParams}}
      * {{ContainerParams}}
      */
-    Kinetic.Global.addMethods(Kinetic.Layer, {
+    Kinetic.Util.addMethods(Kinetic.Layer, {
         _initLayer: function(config) {
             this.nodeType = 'Layer';
             this.createAttrs();
@@ -27,14 +27,14 @@
          * @methodOf Kinetic.Layer.prototype
          */
         getIntersection: function() {
-            var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments)),
+            var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments)),
                 p, colorKey, shape;
 
             if(this.isVisible() && this.isListening()) {
                 p = this.hitCanvas.context.getImageData(pos.x | 0, pos.y | 0, 1, 1).data;
                 // this indicates that a hit pixel may have been found
                 if(p[3] === 255) {
-                    colorKey = Kinetic.Type._rgbToHex(p[0], p[1], p[2]);
+                    colorKey = Kinetic.Util._rgbToHex(p[0], p[1], p[2]);
                     shape = Kinetic.Global.shapes[colorKey];
                     return {
                         shape: shape,
@@ -180,12 +180,12 @@
             var stage = this.getStage(), canvas = this.getCanvas(), element = canvas.element;
             Kinetic.Node.prototype.remove.call(this);
 
-            if(stage && canvas && Kinetic.Type._isInDocument(element)) {
+            if(stage && canvas && Kinetic.Util._isInDocument(element)) {
                 stage.content.removeChild(element);
             }
         }
     });
-    Kinetic.Global.extend(Kinetic.Layer, Kinetic.Container);
+    Kinetic.Util.extend(Kinetic.Layer, Kinetic.Container);
 
     // add getters and setters
     Kinetic.Node.addGetterSetter(Kinetic.Layer, 'clearBeforeDraw', true);

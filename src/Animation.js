@@ -32,7 +32,7 @@
                 lays = null;
             }
             // if passing in an array of Layers
-            else if (Kinetic.Type._isArray(layers)) {
+            else if (Kinetic.Util._isArray(layers)) {
                 lays = layers;
             }
             // if passing in a Layer

@@ -132,7 +132,7 @@
             }
             catch(e) {
                 this.clearFilter();
-                Kinetic.Global.warn('Unable to apply filter. ' + e.message);
+                Kinetic.Util.warn('Unable to apply filter. ' + e.message);
             }
         },
         /**
@@ -156,11 +156,11 @@
          */
         setCrop: function() {
             var config = [].slice.call(arguments),
-                pos = Kinetic.Type._getXY(config),
-                size = Kinetic.Type._getSize(config),
-                both = Kinetic.Type._merge(pos, size);
+                pos = Kinetic.Util._getXY(config),
+                size = Kinetic.Util._getSize(config),
+                both = Kinetic.Util._merge(pos, size);
                 
-            this.setAttr(CROP, Kinetic.Type._merge(both, this.getCrop()));
+            this.setAttr(CROP, Kinetic.Util._merge(both, this.getCrop()));
         },
         /**
          * create image hit region which enables more accurate hit detection mapping of the image
@@ -187,7 +187,7 @@
             try {
                 imageData = context.getImageData(0, 0, width, height);
                 data = imageData.data;
-                rgbColorKey = Kinetic.Type._hexToRgb(this.colorKey);
+                rgbColorKey = Kinetic.Util._hexToRgb(this.colorKey);
                 
                 // replace non transparent pixels with color key
                 for(i = 0, n = data.length; i < n; i += 4) {
@@ -198,7 +198,7 @@
                     }
                 }
 
-                Kinetic.Type._getImage(imageData, function(imageObj) {
+                Kinetic.Util._getImage(imageData, function(imageObj) {
                     that.imageHitRegion = imageObj;
                     if(callback) {
                         callback();
@@ -206,7 +206,7 @@
                 });
             }
             catch(e) {
-                Kinetic.Global.warn('Unable to create image hit region. ' + e.message);
+                Kinetic.Util.warn('Unable to create image hit region. ' + e.message);
             }
         },
         /**
@@ -234,7 +234,7 @@
             }
         }
     };
-    Kinetic.Global.extend(Kinetic.Image, Kinetic.Shape);
+    Kinetic.Util.extend(Kinetic.Image, Kinetic.Shape);
 
 
     Kinetic.Node.addFilterGetterSetter = function(constructor, attr, def) {
@@ -244,7 +244,7 @@
 
     Kinetic.Node.addFilterSetter = function(constructor, attr) {
         var that = this,
-            method = SET + Kinetic.Type._capitalize(attr);
+            method = SET + Kinetic.Util._capitalize(attr);
             
         constructor.prototype[method] = function(val) {
             this.setAttr(attr, val);

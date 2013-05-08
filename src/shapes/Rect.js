@@ -48,7 +48,7 @@
         }
     };
 
-    Kinetic.Global.extend(Kinetic.Rect, Kinetic.Shape);
+    Kinetic.Util.extend(Kinetic.Rect, Kinetic.Shape);
 
     Kinetic.Node.addGetterSetter(Kinetic.Rect, 'cornerRadius', 0);
 

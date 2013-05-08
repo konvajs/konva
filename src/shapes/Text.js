@@ -139,7 +139,7 @@
          * @param {String} text
          */
         setText: function(text) {
-            var str = Kinetic.Type._isString(text) ? text : text.toString();
+            var str = Kinetic.Util._isString(text) ? text : text.toString();
             this.setAttr(TEXT, str);
         },
         /**
@@ -309,7 +309,7 @@
              this.textWidth = textWidth;
          }
     };
-    Kinetic.Global.extend(Kinetic.Text, Kinetic.Shape);
+    Kinetic.Util.extend(Kinetic.Text, Kinetic.Shape);
  
     // add getters setters
     Kinetic.Node.addGetterSetter(Kinetic.Text, 'fontFamily', CALIBRI);

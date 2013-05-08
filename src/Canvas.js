@@ -143,7 +143,7 @@
                     return this.element.toDataURL();
                 }
                 catch(e) {
-                    Kinetic.Global.warn('Unable to get data URL. ' + e.message)
+                    Kinetic.Util.warn('Unable to get data URL. ' + e.message)
                     return '';
                 }
             }
@@ -242,7 +242,7 @@
         }
     };
 
-    Kinetic.Global.extend(Kinetic.Canvas2D, Kinetic.Canvas);
+    Kinetic.Util.extend(Kinetic.Canvas2D, Kinetic.Canvas);
 
     Kinetic.SceneCanvas = function(config) {
         Kinetic.Canvas2D.call(this, config);
@@ -427,7 +427,7 @@
             }
         }
     };
-    Kinetic.Global.extend(Kinetic.SceneCanvas, Kinetic.Canvas2D);
+    Kinetic.Util.extend(Kinetic.SceneCanvas, Kinetic.Canvas2D);
 
     Kinetic.HitCanvas = function(config) {
         Kinetic.Canvas2D.call(this, config);
@@ -456,6 +456,6 @@
             }
         }
     };
-    Kinetic.Global.extend(Kinetic.HitCanvas, Kinetic.Canvas2D);
+    Kinetic.Util.extend(Kinetic.HitCanvas, Kinetic.Canvas2D);
 
 })();

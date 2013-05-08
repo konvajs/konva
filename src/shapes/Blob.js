@@ -62,5 +62,5 @@
         }
     };
 
-    Kinetic.Global.extend(Kinetic.Blob, Kinetic.Spline);
+    Kinetic.Util.extend(Kinetic.Blob, Kinetic.Spline);
 })();

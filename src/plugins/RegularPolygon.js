@@ -36,7 +36,7 @@
             canvas.fillStroke(this);
         }
     };
-    Kinetic.Global.extend(Kinetic.RegularPolygon, Kinetic.Shape);
+    Kinetic.Util.extend(Kinetic.RegularPolygon, Kinetic.Shape);
 
     // add getters setters
     Kinetic.Node.addGetterSetter(Kinetic.RegularPolygon, 'radius', 0);

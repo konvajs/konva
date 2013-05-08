@@ -33,13 +33,13 @@
             canvas.fillStroke(this);
         },
         setAngleDeg: function(deg) {
-            this.setAngle(Kinetic.Type._degToRad(deg));
+            this.setAngle(Kinetic.Util._degToRad(deg));
         },
         getAngleDeg: function() {
-            return Kinetic.Type._radToDeg(this.getAngle());
+            return Kinetic.Util._radToDeg(this.getAngle());
         }
     };
-    Kinetic.Global.extend(Kinetic.Wedge, Kinetic.Shape);
+    Kinetic.Util.extend(Kinetic.Wedge, Kinetic.Shape);
 
     // add getters setters
     Kinetic.Node.addGetterSetter(Kinetic.Wedge, 'radius', 0);

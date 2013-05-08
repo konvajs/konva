@@ -7,7 +7,7 @@
      * {{NodeParams}}
      * {{ContainerParams}}
      */
-    Kinetic.Global.addMethods(Kinetic.Container, {
+    Kinetic.Util.addMethods(Kinetic.Container, {
         _containerInit: function(config) {
             this.children = [];
             Kinetic.Node.call(this, config);
@@ -169,7 +169,7 @@
          * @param {Object} point
          */
         getIntersections: function() {
-            var pos = Kinetic.Type._getXY(Array.prototype.slice.call(arguments));
+            var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments));
             var arr = [];
             var shapes = this.get('Shape');
 
@@ -244,7 +244,7 @@
         }
     });
 
-    Kinetic.Global.extend(Kinetic.Container, Kinetic.Node);
+    Kinetic.Util.extend(Kinetic.Container, Kinetic.Node);
 
     // add getters setters
     Kinetic.Node.addGetterSetter(Kinetic.Container, 'clipFunc');

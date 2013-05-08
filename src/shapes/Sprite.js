@@ -117,7 +117,7 @@
             }
         }
     };
-    Kinetic.Global.extend(Kinetic.Sprite, Kinetic.Shape);
+    Kinetic.Util.extend(Kinetic.Sprite, Kinetic.Shape);
 
     // add getters setters
     Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'animation');

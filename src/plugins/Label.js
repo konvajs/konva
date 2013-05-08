@@ -116,7 +116,7 @@
      * @methodOf Kinetic.Label.prototype
      */
     
-    Kinetic.Global.extend(Kinetic.Label, Kinetic.Group);
+    Kinetic.Util.extend(Kinetic.Label, Kinetic.Group);
     Kinetic.Node.addGetterSetter(Kinetic.Label, 'text');
     Kinetic.Node.addGetterSetter(Kinetic.Label, 'rect');
        
@@ -190,7 +190,7 @@
         }
     };
     
-    Kinetic.Global.extend(Kinetic.LabelRect, Kinetic.Shape);
+    Kinetic.Util.extend(Kinetic.LabelRect, Kinetic.Shape);
     Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'pointerDirection', NONE);
 
     /**

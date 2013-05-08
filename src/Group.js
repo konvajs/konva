@@ -7,7 +7,7 @@
      * {{NodeParams}}
      * {{ContainerParams}}
      */
-    Kinetic.Global.addMethods(Kinetic.Group, {
+    Kinetic.Util.addMethods(Kinetic.Group, {
         _initGroup: function(config) {
             this.nodeType = 'Group';
             this.createAttrs();
@@ -15,5 +15,5 @@
             Kinetic.Container.call(this, config);
         }
     });
-    Kinetic.Global.extend(Kinetic.Group, Kinetic.Container);
+    Kinetic.Util.extend(Kinetic.Group, Kinetic.Container);
 })();

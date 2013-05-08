@@ -4,7 +4,7 @@ require 'uglifier'
 class Build < Thor  
   # This is the list of files to concatenate. The first file will appear at the top of the final file. All files are relative to the lib directory.
   FILES = [
-    "src/Global.js", "src/util/Type.js", "src/Canvas.js", "src/util/Transform.js", "src/util/Collection.js",
+    "src/Global.js", "src/Util.js", "src/Canvas.js",
     "src/Node.js", "src/Animation.js", "src/DragAndDrop.js", "src/Container.js", "src/Shape.js", "src/Stage.js", "src/Layer.js", "src/Group.js",
     "src/shapes/Rect.js", "src/shapes/Circle.js", "src/shapes/Wedge.js", "src/shapes/Ellipse.js", "src/shapes/Image.js", "src/shapes/Polygon.js", "src/shapes/Text.js", "src/shapes/Line.js", "src/shapes/Spline.js", "src/shapes/Blob.js", "src/shapes/Sprite.js",
     "src/filters/Grayscale.js", "src/filters/Brighten.js", "src/filters/Invert.js", "src/filters/Blur.js", "src/filters/Mask.js",
@@ -14,7 +14,7 @@ class Build < Thor
   UNIT_TESTS = [
   	"tests/js/unit/animationTests.js", 
     "tests/js/unit/globalTests.js", 
-    "tests/js/unit/typeTests.js", 
+    "tests/js/unit/utilTests.js", 
   	"tests/js/unit/nodeTests.js", 
   	"tests/js/unit/stageTests.js", 
   	"tests/js/unit/containerTests.js", 

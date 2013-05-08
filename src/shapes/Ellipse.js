@@ -52,7 +52,7 @@
             });
         }
     };
-    Kinetic.Global.extend(Kinetic.Ellipse, Kinetic.Shape);
+    Kinetic.Util.extend(Kinetic.Ellipse, Kinetic.Shape);
 
     // add getters setters
     Kinetic.Node.addPointGetterSetter(Kinetic.Ellipse, 'radius', 0);
