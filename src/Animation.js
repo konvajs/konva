@@ -203,7 +203,7 @@
             || window.mozRequestAnimationFrame 
             || window.oRequestAnimationFrame 
             || window.msRequestAnimationFrame 
-            || Kinetic.Animation.fixedRequestAnimFrame;
+            || FRAF;
     })();
 
     function FRAF(callback) {
