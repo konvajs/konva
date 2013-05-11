@@ -200,7 +200,7 @@ Test.Modules.TRANSITION = {
             x: 400,
             scaleX: 2,
             scaleY: 2,
-            ease: Kinetic.Ease.BounceEaseOut,
+            ease: Kinetic.Easings.BounceEaseOut,
             yoyo: false
         });
 

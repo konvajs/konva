@@ -249,7 +249,7 @@
     * These easings were ported from an Adobe Flash tweening library to JavaScript
     * by Xaric
     */
-    Kinetic.Ease = {
+    Kinetic.Easings = {
         'BackEaseIn': function(t, b, c, d, a, p) {
             var s = 1.70158;
             return c * (t /= d) * t * ((s + 1) * t - s) + b;
