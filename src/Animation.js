@@ -126,12 +126,8 @@
         this._handleAnimation();
     };
     Kinetic.Animation._removeAnimation = function(anim) {
-        var id = anim.id, 
-            animations = this.animations, 
-            len = animations.length,
-            n;
-
-        for(n = 0; n < len; n++) {
+        var id = anim.id, animations = this.animations, len = animations.length;
+        for(var n = 0; n < len; n++) {
             if(animations[n].id === id) {
                 this.animations.splice(n, 1);
                 break;
@@ -220,7 +216,7 @@
     
     var moveTo = Kinetic.Node.prototype.moveTo;
     Kinetic.Node.prototype.moveTo = function(container) {
-    	moveTo.call(this, container);
+        moveTo.call(this, container);
     };
 
     Kinetic.Layer.batchAnim = new Kinetic.Animation(function() {

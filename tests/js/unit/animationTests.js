@@ -34,25 +34,25 @@ Test.Modules.ANIMATION = {
         }, layer);
         var a = Kinetic.Animation;
 
-        test(a.animations.length === 0, 'should be no animations running');
+        test(a.animations.length === 0, '1should be no animations running');
 
         anim.start();
-        test(a.animations.length === 1, 'should be 1 animation running');
+        test(a.animations.length === 1, '2should be 1 animation running');
 
         anim.stop();
-        test(a.animations.length === 0, 'should be no animations running');
+        test(a.animations.length === 0, '3should be no animations running');
 
         anim.start();
-        test(a.animations.length === 1, 'should be 1 animation running');
+        test(a.animations.length === 1, '4should be 1 animation running');
 
         anim.start();
-        test(a.animations.length === 1, 'should be 1 animation runningg');
+        test(a.animations.length === 1, '5should be 1 animation runningg');
 
         anim.stop();
-        test(a.animations.length === 0, 'should be no animations running');
+        test(a.animations.length === 0, '6should be no animations running');
 
         anim.stop();
-        test(a.animations.length === 0, 'should be no animations running');
+        test(a.animations.length === 0, '7should be no animations running');
     },
     'batch draw': function(containerId) {
         var stage = new Kinetic.Stage({

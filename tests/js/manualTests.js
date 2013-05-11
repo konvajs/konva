@@ -85,34 +85,7 @@ Test.Modules.TRANSITION = {
 
         stage.add(layer);
     },
-    '!ease-in, ease-out, ease-in-out hovers': function(containerId) {
-        function addHovers(shape, easing) {
-            shape.on("mouseover", function() {
-                if (this.trans) {
-                    this.trans.stop();
-                }
-                this.trans = this.transitionTo({
-                    scaleX: 1.5,
-                    scaleY: 1.5,
-                    duration: 1,
-                    easing: easing,
-                    callback: function() {
-                        console.log('finished');
-                    }
-                });
-            });
-            shape.on("mouseout", function() {
-                if (this.trans) {
-                    this.trans.stop();
-                }
-                this.trans = this.transitionTo({
-                    scaleX: 1,
-                    scaleY: 1,
-                    duration: 1,
-                    easing: easing
-                });
-            });
-        }
+    'ease-in, ease-out, ease-in-out hovers': function(containerId) {    
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -130,7 +103,7 @@ Test.Modules.TRANSITION = {
             offset: {
                 x: 50,
                 y: 25
-            }
+            } 
         });
 
         var blueBox = new Kinetic.Rect({
@@ -147,6 +120,8 @@ Test.Modules.TRANSITION = {
             }
         });
 
+
+
         var redBox = new Kinetic.Rect({
             x: 428,
             y: stage.getHeight() / 2 - 25,
@@ -161,14 +136,43 @@ Test.Modules.TRANSITION = {
             }
         });
 
-        addHovers(greenBox, "ease-in");
-        addHovers(blueBox, "ease-out");
-        addHovers(redBox, "ease-in-out");
+
 
         layer.add(greenBox);
         layer.add(blueBox);
         layer.add(redBox);
         stage.add(layer);
+
+        greenBox.tween = new Kinetic.Tween({
+            node: greenBox,
+            scaleX: 1.5,
+            scaleY: 1.5,
+            duration: 1, 
+            ease: Kinetic.Eases.EaseIn
+        });
+
+        blueBox.tween = new Kinetic.Tween({
+            node: blueBox,
+            scaleX: 1.5,
+            scaleY: 1.5,
+            duration: 1, 
+            ease: Kinetic.Eases.EaseOut
+        });
+
+        redBox.tween = new Kinetic.Tween({
+            node: redBox,
+            scaleX: 1.5,
+            scaleY: 1.5,
+            duration: 1, 
+            ease: Kinetic.Eases.EaseInOut
+        });
+
+        layer.on("mouseover", function(evt) {
+            evt.targetNode.tween.play();
+        });
+        layer.on("mouseout", function(evt) {
+            evt.targetNode.tween.reverse();
+        });
     },
     'simple transition': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -200,14 +204,28 @@ Test.Modules.TRANSITION = {
             x: 400,
             scaleX: 2,
             scaleY: 2,
-            ease: Kinetic.Easings.BounceEaseOut,
-            yoyo: false
+            ease: Kinetic.Eases.BounceEaseOut,
+            yoyo: false,
+            onFinish: function() {
+                console.log('finished!')
+            }
         });
 
         tween.play();
 
+        /*
+        var tween2 = new Kinetic.Tween({
+            node: greenBox,
+            duration: 2,
+            x: 200,
+            ease: Kinetic.Eases.BounceEaseOut,
+        });
+
+        tween2.play();
+        */
+
         document.getElementById(containerId).addEventListener('click', function() {
-            tween.goto(1.5);
+            tween.seek(1.5);
             tween.reverse();
         });
     }

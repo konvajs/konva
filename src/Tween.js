@@ -3,7 +3,7 @@
         node: 1,
         duration: 1,
         ease: 1,
-        onFinished: 1,
+        onFinish: 1,
         yoyo: 1
     },
 
@@ -12,94 +12,144 @@
     REVERSING = 3;
 
     function createTween(node, key, ease, end, duration, yoyo) {
-        return new Tween(function(i) {
-            node['set' + Kinetic.Util._capitalize(key)](i);  
+        var method = 'set' + Kinetic.Util._capitalize(key);
+        return new Tween(key, function(i) {
+            node[method](i);  
         }, ease, node['get' + Kinetic.Util._capitalize(key)](), end, duration * 1000, yoyo);
     }
 
     Kinetic.Tween = function(config) {
         var that = this,
             node = config.node,
+            nodeId = node._id,
             duration = config.duration || 1,
             ease = config.ease || Kinetic.Ease.Linear,
             yoyo = !!config.yoyo,
             key, tween;
 
         this.tweens = [];
-
-        for (key in config) {
-            if (blacklist[key] === undefined) {
-                this.tweens.push(createTween(node, key, ease, config[key], duration, yoyo));
-            }
-        }
+        this.node = node;
+        // event handlers
+        this.onFinish = config.onFinish;
 
         this.anim = new Kinetic.Animation(function() {
             that.onEnterFrame();
         }, node.getLayer());
 
-        this._listenToLastTween();
+        for (key in config) {
+            if (blacklist[key] === undefined) {
+                tween = createTween(node, key, ease, config[key], duration, yoyo); 
+                this.tweens.push(tween);
+                this._addListeners(tween);
+                Kinetic.Tween.add(nodeId, key, this);
+            }
+        }
+
         this.reset();
     };
 
+    Kinetic.Tween.tweens = {};
+
+    Kinetic.Tween.add = function(nodeId, prop, ktween) {
+        var key = nodeId + '-' + prop,
+            tween = Kinetic.Tween.tweens[key];
+
+        if (tween) {
+            tween._removeTween(prop);
+        }
+        
+        Kinetic.Tween.tweens[key] = ktween;   
+    };
+
+
     Kinetic.Tween.prototype = {
-        _getLastTween: function() {
-            var that = this,
-                tweens = this.tweens,
-                lastIndex = this.tweens.length - 1;
-            return lastTween = tweens[lastIndex];
-                
-        },
-        _listenToLastTween: function() {
-            var that = this,
-                tweens = this.tweens,
-                lastIndex = this.tweens.length - 1,
-                lastTween = tweens[lastIndex],
-                anim = this.anim;
-
-            this._getLastTween().onPause = function() {
-                anim.stop(); 
-            }
-        },
-        _run: function(method, param) {
+        _iterate: function(func) {
             var tweens = this.tweens,
-                len = tweens.length,
-                n;
+                n = 0,
+                tween = tweens[n];
 
-            for (n=0; n<len; n++) {
-                tweens[n][method](param);
-            }
+            while(tween) {
+                func(tween, n++);
+                tween = tweens[n];
+            }  
+        },
+        _addListeners: function(tween) {
+            var that = this;
+
+            // start listeners
+            tween.onPlay = function() {
+                that.anim.start();
+            };
+            tween.onReverse = function() {
+                that.anim.start();
+            };
+
+            // stop listeners
+            tween.onPause = function() {
+                that.anim.stop();
+            };
+            tween.onFinish = function() {
+                if (that.onFinish) {
+                    that.onFinish();
+                }
+            };
         },
         play: function() {
-            this.anim.start();
-            this._run('play');
+            this._iterate(function(tween) {
+                tween.play();
+            });
         },
         reverse: function() {
-            this.anim.start();
-            this._run('reverse');
+            this._iterate(function(tween) {
+                tween.reverse();
+            });
         },
         reset: function() {
-            this._run('reset');
+            this._iterate(function(tween) {
+                tween.reset();
+            });
         },
-        goto: function(t) {
-            this._run('goto', t * 1000);
+        seek: function(t) {
+            this._iterate(function(tween) {
+                tween.seek(t * 1000);
+            });
         },
         pause: function() {
-            console.log('pause stop')
-            this._run('pause');
+            this._iterate(function(tween) {
+                tween.pause();
+            });
+        },
+        finish: function() {
+            this._iterate(function(tween) {
+                tween.finish();
+            });
         },
         onEnterFrame: function() {
-            this._run('onEnterFrame');
+            this._iterate(function(tween) {
+                tween.onEnterFrame();
+            });
+        },
+        destroy: function() {
+
+        },
+        _removeTween: function(prop) {
+            console.log('remove ' + prop)
+            var that = this;
+            this._iterate(function(tween, n) {
+                if (tween.prop === prop) {
+                    console.log('removed')
+                    that.tweens.splice(n, 1);
+                }
+            });
         }
     };
 
-    var Tween = function(propFunc, func, begin, finish, duration, yoyo) {
-        this._listeners = [];
-        this.addListener(this);
+    var Tween = function(prop, propFunc, func, begin, finish, duration, yoyo) {
+        this.prop = prop;
         this.propFunc = propFunc;
         this.begin = begin;
         this._pos = begin;
         this.duration = duration;
-        this.state = PAUSED;
         this._change = 0;
         this.prevPos = 0;
         this.yoyo = yoyo;
@@ -109,11 +159,18 @@
         this._finish = 0;
         this.func = func;
         this._change = finish - this.begin;
+        this.pause();
     };
     /*
      * Tween methods
      */
     Tween.prototype = {
+        fire: function(str) {
+            var handler = this[str];
+            if (handler) {
+                handler();
+            }
+        },
         setTime: function(t) {
             if(t > this.duration) {
                 if(this.yoyo) {
@@ -145,10 +202,6 @@
             this.prevPos = this._pos;
             this.propFunc(p);
             this._pos = p;
-            this.broadcastMessage('onChange', {
-                target: this,
-                type: 'onChange'
-            });
         },
         getPosition: function(t) {
             if(t === undefined) {
@@ -160,34 +213,31 @@
             this.state = PLAYING;
             this._startTime = this.getTimer() - this._time;
             this.onEnterFrame();
-            this.broadcastMessage('onPlay', {
-                target: this,
-                type: 'onPlay'
-            });
+            this.fire('onPlay');
         },
         reverse: function() {
             this.state = REVERSING;
             this._time = this.duration - this._time;
             this._startTime = this.getTimer() - this._time;
             this.onEnterFrame();
-            this.broadcastMessage('onReverse', {
-                target: this,
-                type: 'onReverse'
-            });
+            this.fire('onReverse');
         },
-        goto: function(t) {
+        seek: function(t) {
             this._time = t;
             this.update();
+            this.fire('onSeek');
         },
         reset: function() {
             this.pause();
             this._time = 0;
             this.update();
+            this.fire('onReset');
         },
         finish: function() {
             this.pause();
             this._time = this.duration;
             this.update();
+            this.fire('onFinish');
         },
         update: function() {
             this.setPosition(this.getPosition(this._time));
@@ -203,42 +253,7 @@
         },
         pause: function() {
             this.state = PAUSED; 
-            this.broadcastMessage('onPause', {
-                target: this,
-                type: 'onPause'
-            });
-        },
-        addListener: function(o) {
-            this.removeListener(o);
-            return this._listeners.push(o);
-        },
-        removeListener: function(o) {
-            var a = this._listeners,
-                i = a.length;
-            while(i--) {
-                if(a[i] === o) {
-                    a.splice(i, 1);
-                    return true;
-                }
-            }
-            return false;
-        },
-        broadcastMessage: function() {
-            var arr = [],
-                len = arguments.length,
-                i, e, a, l;
-
-            for(i = 0; i < len; i++) {
-                arr.push(arguments[i]);
-            }
-            e = arr.shift();
-            a = this._listeners;
-            l = a.length;
-            for(i = 0; i < l; i++) {
-                if(a[i][e]) {
-                    a[i][e].apply(a[i], arr);
-                }
-            }
+            this.fire('onPause');
         },
         getTimer: function() {
             return new Date().getTime();
@@ -246,10 +261,10 @@
     };
 
     /*
-    * These easings were ported from an Adobe Flash tweening library to JavaScript
+    * These eases were ported from an Adobe Flash tweening library to JavaScript
     * by Xaric
     */
-    Kinetic.Easings = {
+    Kinetic.Eases = {
         'BackEaseIn': function(t, b, c, d, a, p) {
             var s = 1.70158;
             return c * (t /= d) * t * ((s + 1) * t - s) + b;
