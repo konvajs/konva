@@ -223,6 +223,7 @@
             this.fire('onReverse');
         },
         seek: function(t) {
+            this.pause();
             this._time = t;
             this.update();
             this.fire('onSeek');
