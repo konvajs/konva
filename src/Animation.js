@@ -126,8 +126,12 @@
         this._handleAnimation();
     };
     Kinetic.Animation._removeAnimation = function(anim) {
-        var id = anim.id, animations = this.animations, len = animations.length;
-        for(var n = 0; n < len; n++) {
+        var id = anim.id, 
+            animations = this.animations, 
+            len = animations.length,
+            n;
+
+        for(n = 0; n < len; n++) {
             if(animations[n].id === id) {
                 this.animations.splice(n, 1);
                 break;
@@ -138,7 +142,6 @@
     Kinetic.Animation._runFrames = function() {
         var layerHash = {}, 
             animations = this.animations,
-            len = animations.length,
             anim, layers, func, n, i, layersLen, layer, key;
         /*
          * loop through all animations and execute animation
@@ -151,7 +154,7 @@
          * WARNING: don't cache animations.length because it could change while
          * the for loop is running, causing a JS error
          */
-        for(n = 0; n < len; n++) {
+        for(n = 0; n < animations.length; n++) {
             anim = animations[n];
             layers = anim.layers; 
             func = anim.func;

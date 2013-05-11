@@ -194,14 +194,21 @@ Test.Modules.TRANSITION = {
         layer.add(greenBox);
         stage.add(layer);
 
-        TweenLite.to(greenBox, 2, {
-            setX: 200,
-            setScaleX: 2,
-            setScaleY: 2,
-            ease: Linear.easeNone,
-            onUpdate: function() {
-                layer.batchDraw();
-            }
+        var tween = new Kinetic.Tween({
+            node: greenBox,
+            duration: 2,
+            x: 400,
+            scaleX: 2,
+            scaleY: 2,
+            ease: Kinetic.Ease.BounceEaseOut,
+            yoyo: false
+        });
+
+        tween.play();
+
+        document.getElementById(containerId).addEventListener('click', function() {
+            tween.goto(1.5);
+            tween.reverse();
         });
     }
 };
