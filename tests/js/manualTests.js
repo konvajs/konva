@@ -148,7 +148,7 @@ Test.Modules.TRANSITION = {
             scaleX: 1.5,
             scaleY: 1.5,
             duration: 1, 
-            ease: Kinetic.Eases.EaseIn
+            easing: Kinetic.Easings.EaseIn
         });
 
         blueBox.tween = new Kinetic.Tween({
@@ -156,7 +156,7 @@ Test.Modules.TRANSITION = {
             scaleX: 1.5,
             scaleY: 1.5,
             duration: 1, 
-            ease: Kinetic.Eases.EaseOut
+            easing: Kinetic.Easings.EaseOut
         });
 
         redBox.tween = new Kinetic.Tween({
@@ -164,7 +164,7 @@ Test.Modules.TRANSITION = {
             scaleX: 1.5,
             scaleY: 1.5,
             duration: 1, 
-            ease: Kinetic.Eases.EaseInOut
+            easing: Kinetic.Easings.EaseInOut
         });
 
         layer.on("mouseover", function(evt) {
@@ -204,7 +204,7 @@ Test.Modules.TRANSITION = {
             x: 400,
             scaleX: 2,
             scaleY: 2,
-            ease: Kinetic.Eases.BounceEaseOut,
+            easing: Kinetic.Easings.BounceEaseOut,
             yoyo: false,
             onFinish: function() {
                 console.log('finished!')
@@ -218,7 +218,7 @@ Test.Modules.TRANSITION = {
             node: greenBox,
             duration: 2,
             x: 200,
-            ease: Kinetic.Eases.BounceEaseOut,
+            easing: Kinetic.Easings.BounceEaseOut,
         });
 
         tween2.play();

@@ -2,7 +2,7 @@
     var blacklist = {
         node: 1,
         duration: 1,
-        ease: 1,
+        easing: 1,
         onFinish: 1,
         yoyo: 1
     },
@@ -11,11 +11,11 @@
     PLAYING = 2,
     REVERSING = 3;
 
-    function createTween(node, key, ease, end, duration, yoyo) {
+    function createTween(node, key, easing, end, duration, yoyo) {
         var method = 'set' + Kinetic.Util._capitalize(key);
         return new Tween(key, function(i) {
             node[method](i);  
-        }, ease, node['get' + Kinetic.Util._capitalize(key)](), end, duration * 1000, yoyo);
+        }, easing, node['get' + Kinetic.Util._capitalize(key)](), end, duration * 1000, yoyo);
     }
 
     Kinetic.Tween = function(config) {
@@ -23,7 +23,7 @@
             node = config.node,
             nodeId = node._id,
             duration = config.duration || 1,
-            ease = config.ease || Kinetic.Ease.Linear,
+            easing = config.easing || Kinetic.Easings.Linear,
             yoyo = !!config.yoyo,
             key, tween;
 
@@ -38,7 +38,7 @@
 
         for (key in config) {
             if (blacklist[key] === undefined) {
-                tween = createTween(node, key, ease, config[key], duration, yoyo); 
+                tween = createTween(node, key, easing, config[key], duration, yoyo); 
                 this.tweens.push(tween);
                 this._addListeners(tween);
                 Kinetic.Tween.add(nodeId, key, this);
@@ -108,11 +108,13 @@
             this._iterate(function(tween) {
                 tween.reset();
             });
+            this.node.getLayer().draw();
         },
         seek: function(t) {
             this._iterate(function(tween) {
                 tween.seek(t * 1000);
             });
+            this.node.getLayer().draw();
         },
         pause: function() {
             this._iterate(function(tween) {
@@ -123,6 +125,7 @@
             this._iterate(function(tween) {
                 tween.finish();
             });
+            this.node.getLayer().draw();
         },
         onEnterFrame: function() {
             this._iterate(function(tween) {
@@ -133,11 +136,9 @@
 
         },
         _removeTween: function(prop) {
-            console.log('remove ' + prop)
             var that = this;
             this._iterate(function(tween, n) {
                 if (tween.prop === prop) {
-                    console.log('removed')
                     that.tweens.splice(n, 1);
                 }
             });
@@ -265,7 +266,7 @@
     * These eases were ported from an Adobe Flash tweening library to JavaScript
     * by Xaric
     */
-    Kinetic.Eases = {
+    Kinetic.Easings = {
         'BackEaseIn': function(t, b, c, d, a, p) {
             var s = 1.70158;
             return c * (t /= d) * t * ((s + 1) * t - s) + b;
@@ -362,14 +363,14 @@
             }
         },
         'BounceEaseIn': function(t, b, c, d) {
-            return c - Kinetic.Ease['bounce-ease-out'](d - t, 0, c, d) + b;
+            return c - Kinetic.Easings.BounceEaseOut(d - t, 0, c, d) + b;
         },
         'BounceEaseInOut': function(t, b, c, d) {
             if(t < d / 2) {
-                return Kinetic.Ease['bounce-ease-in'](t * 2, 0, c, d) * 0.5 + b;
+                return Kinetic.Easings.BounceEaseIn(t * 2, 0, c, d) * 0.5 + b;
             }
             else {
-                return Kinetic.Ease['bounce-ease-out'](t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b;
+                return Kinetic.Easings.BounceEaseOut(t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b;
             }
         },
         'EaseIn': function(t, b, c, d) {
@@ -390,7 +391,7 @@
         'StrongEaseOut': function(t, b, c, d) {
             return c * (( t = t / d - 1) * t * t * t * t + 1) + b;
         },
-        'StrongEaseIn': function(t, b, c, d) {
+        'StrongEaseInOut': function(t, b, c, d) {
             if((t /= d / 2) < 1) {
                 return c / 2 * t * t * t * t * t + b;
             }
