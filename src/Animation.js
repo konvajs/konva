@@ -29,7 +29,7 @@
             var lays = []; 
             // if passing in no layers
             if (!layers) {
-                lays = null;
+                lays = [];
             }
             // if passing in an array of Layers
             else if (Kinetic.Util._isArray(layers)) {
@@ -156,20 +156,18 @@
             func = anim.func;
 
             anim._updateFrameObject(new Date().getTime());
+            layersLen = layers.length;
 
-            if (layers) {
-                layersLen = layers.length;
-
-                for (i=0; i<layersLen; i++) {
-                    layer = layers[i]
-                    if(layer._id !== undefined) {
-                        layerHash[layer._id] = layer;
-                    }
-                    // if animation object has a function, execute it
-                    if(func) {
-                        func.call(anim, anim.frame);
-                    }
+            for (i=0; i<layersLen; i++) {
+                layer = layers[i]
+                if(layer._id !== undefined) {
+                    layerHash[layer._id] = layer;
                 }
+            }
+
+            // if animation object has a function, execute it
+            if(func) {
+                func.call(anim, anim.frame);
             }
         }
 
