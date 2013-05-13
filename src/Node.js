@@ -619,16 +619,17 @@
          * @methodOf Kinetic.Node.prototype
          * @param {String} eventType event type.  can be a regular event, like click, mouseover, or mouseout, or it can be a custom event, like myCustomEvent
          * @param {EventObject} evt event object
-         * @param {Boolean} preventBubble setting the value to false, or leaving it undefined, will result in the event bubbling.  Setting the value to true will result in the event not bubbling.
+         * @param {Boolean} bubble setting the value to false, or leaving it undefined, will result in the event 
+         *  not bubbling.  Setting the value to true will result in the event bubbling.
          */
-        fire: function(eventType, evt, preventBubble) {
-            // no bubble
-            if (preventBubble) {
-                this._executeHandlers(eventType, evt || {});
-            }
+        fire: function(eventType, evt, bubble) {
             // bubble
+            if (bubble) {
+                this._fireAndBubble(eventType, evt || {});
+            }
+            // no bubble
             else {
-                this._executeAndBubble(eventType, evt || {});
+                this._fire(eventType, evt || {});
             }
         },
         /**
@@ -890,16 +891,16 @@
             this.cachedTransform = null;
         },
         _fireBeforeChangeEvent: function(attr, oldVal, newVal) {
-            this.fire(BEFORE + Kinetic.Util._capitalize(attr) + CHANGE, {
+            this._fire(BEFORE + Kinetic.Util._capitalize(attr) + CHANGE, {
                 oldVal: oldVal,
                 newVal: newVal
-            }, true);
+            });
         },
         _fireChangeEvent: function(attr, oldVal, newVal) {
-            this.fire(attr + CHANGE, {
+            this._fire(attr + CHANGE, {
                 oldVal: oldVal,
                 newVal: newVal
-            }, true);
+            });
         },
         /**
          * set id
@@ -948,7 +949,7 @@
                 this._fireChangeEvent(key, oldVal, val);
             }
         },
-        _executeAndBubble: function(eventType, evt, compareShape) {
+        _fireAndBubble: function(eventType, evt, compareShape) {
             if(evt && this.nodeType === SHAPE) {
                 evt.targetNode = this;
             }
@@ -964,20 +965,20 @@
             }
 
             if(okayToRun) {                
-                this._executeHandlers(eventType, evt);
+                this._fire(eventType, evt);
 
                 // simulate event bubbling
                 if(evt && !evt.cancelBubble && this.parent) {
                     if(compareShape && compareShape.parent) {
-                        this._executeAndBubble.call(this.parent, eventType, evt, compareShape.parent);
+                        this._fireAndBubble.call(this.parent, eventType, evt, compareShape.parent);
                     }
                     else {
-                        this._executeAndBubble.call(this.parent, eventType, evt);
+                        this._fireAndBubble.call(this.parent, eventType, evt);
                     }
                 }
             }
         },
-        _executeHandlers: function(eventType, evt) {
+        _fire: function(eventType, evt) {
             var events = this.eventListeners[eventType],
                 len, i;
                 
@@ -999,10 +1000,10 @@
                 node: this
             };
             
-            this.fire(BEFORE_DRAW, evt);
+            this._fire(BEFORE_DRAW, evt);
             this.drawScene();
             this.drawHit();
-            this.fire(DRAW, evt);
+            this._fire(DRAW, evt);
         },
         shouldDrawHit: function() { 
             return this.isVisible() && this.isListening() && !Kinetic.Global.isDragging(); 

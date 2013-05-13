@@ -444,12 +444,12 @@ Test.Modules.EVENT = {
         layer.add(circle);
         stage.add(layer);
         
-
-        test(eventNodes.toString() === 'Layer,Stage', 'layer draw event should have fired followed by stage draw event');
+        // Note: draw events no longer bubble
+        //test(eventNodes.toString() === 'Layer,Stage', 'layer draw event should have fired followed by stage draw event');
         
         test(savedEvt.node.getNodeType() === 'Layer', 'event object should contain a node property which is Layer');
         
-        test(order.toString() === 'layer beforeDraw,stage beforeDraw,layer draw,stage draw', 'order should be: layer beforeDraw,stage beforeDraw,layer draw,stage draw');
+        //test(order.toString() === 'layer beforeDraw,stage beforeDraw,layer draw,stage draw', 'order should be: layer beforeDraw,stage beforeDraw,layer draw,stage draw');
 
     },
     'click mapping': function(containerId) {
