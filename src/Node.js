@@ -628,7 +628,7 @@
             }
             // bubble
             else {
-                this._handleEvent(eventType, evt || {});
+                this._executeAndBubble(eventType, evt || {});
             }
         },
         /**
@@ -890,16 +890,16 @@
             this.cachedTransform = null;
         },
         _fireBeforeChangeEvent: function(attr, oldVal, newVal) {
-            this._handleEvent(BEFORE + Kinetic.Util._capitalize(attr) + CHANGE, {
+            this.fire(BEFORE + Kinetic.Util._capitalize(attr) + CHANGE, {
                 oldVal: oldVal,
                 newVal: newVal
-            });
+            }, true);
         },
         _fireChangeEvent: function(attr, oldVal, newVal) {
-            this._handleEvent(attr + CHANGE, {
+            this.fire(attr + CHANGE, {
                 oldVal: oldVal,
                 newVal: newVal
-            });
+            }, true);
         },
         /**
          * set id
@@ -948,7 +948,7 @@
                 this._fireChangeEvent(key, oldVal, val);
             }
         },
-        _handleEvent: function(eventType, evt, compareShape) {
+        _executeAndBubble: function(eventType, evt, compareShape) {
             if(evt && this.nodeType === SHAPE) {
                 evt.targetNode = this;
             }
@@ -969,10 +969,10 @@
                 // simulate event bubbling
                 if(evt && !evt.cancelBubble && this.parent) {
                     if(compareShape && compareShape.parent) {
-                        this._handleEvent.call(this.parent, eventType, evt, compareShape.parent);
+                        this._executeAndBubble.call(this.parent, eventType, evt, compareShape.parent);
                     }
                     else {
-                        this._handleEvent.call(this.parent, eventType, evt);
+                        this._executeAndBubble.call(this.parent, eventType, evt);
                     }
                 }
             }

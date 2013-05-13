@@ -348,8 +348,8 @@
                 targetShape = this.targetShape;
                 
             if(targetShape && !go.isDragging()) {
-                targetShape._handleEvent(MOUSEOUT, evt);
-                targetShape._handleEvent(MOUSELEAVE, evt);
+                targetShape.fire(MOUSEOUT, evt);
+                targetShape.fire(MOUSELEAVE, evt);
                 this.targetShape = null;
             }
             this.mousePos = undefined;
@@ -366,15 +366,15 @@
                 if(shape) {
                     if(!go.isDragging() && obj.pixel[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
                         if(this.targetShape) {
-                            this.targetShape._handleEvent(MOUSEOUT, evt, shape);
-                            this.targetShape._handleEvent(MOUSELEAVE, evt, shape);
+                            this.targetShape.fire(MOUSEOUT, evt, shape);
+                            this.targetShape.fire(MOUSELEAVE, evt, shape);
                         }
-                        shape._handleEvent(MOUSEOVER, evt, this.targetShape);
-                        shape._handleEvent(MOUSEENTER, evt, this.targetShape);
+                        shape.fire(MOUSEOVER, evt, this.targetShape);
+                        shape.fire(MOUSEENTER, evt, this.targetShape);
                         this.targetShape = shape;
                     }
                     else {
-                        shape._handleEvent(MOUSEMOVE, evt);
+                        shape.fire(MOUSEMOVE, evt);
                     }
                 }
             }
@@ -383,8 +383,8 @@
              * to run mouseout from previous target shape
              */
             else if(this.targetShape && !go.isDragging()) {
-                this.targetShape._handleEvent(MOUSEOUT, evt);
-                this.targetShape._handleEvent(MOUSELEAVE, evt);
+                this.targetShape.fire(MOUSEOUT, evt);
+                this.targetShape.fire(MOUSELEAVE, evt);
                 this.targetShape = null;
             }
 
@@ -402,7 +402,7 @@
                 shape = obj.shape;
                 this.clickStart = true;
                 this.clickStartShape = shape;
-                shape._handleEvent(MOUSEDOWN, evt);
+                shape.fire(MOUSEDOWN, evt);
             }
 
             //init stage drag and drop
@@ -419,7 +419,7 @@
                 
             if(obj && obj.shape) {
                 shape = obj.shape;
-                shape._handleEvent(MOUSEUP, evt);
+                shape.fire(MOUSEUP, evt);
 
                 // detect if click or double click occurred
                 if(this.clickStart) {
@@ -428,10 +428,10 @@
                      * the correct shape, don't fire click or dbl click event
                      */
                     if(!go.isDragging() && shape._id === this.clickStartShape._id) {
-                        shape._handleEvent(CLICK, evt);
+                        shape.fire(CLICK, evt);
 
                         if(this.inDoubleClickWindow) {
-                            shape._handleEvent(DBL_CLICK, evt);
+                            shape.fire(DBL_CLICK, evt);
                         }
                         this.inDoubleClickWindow = true;
                         setTimeout(function() {
@@ -454,7 +454,7 @@
                 shape = obj.shape;
                 this.tapStart = true;
                 this.tapStartShape = shape;
-                shape._handleEvent(TOUCHSTART, evt);
+                shape.fire(TOUCHSTART, evt);
             }
 
             //init stage drag and drop
@@ -471,7 +471,7 @@
 
             if(obj && obj.shape) {
                 shape = obj.shape;
-                shape._handleEvent(TOUCHEND, evt);
+                shape.fire(TOUCHEND, evt);
 
                 // detect if tap or double tap occurred
                 if(this.tapStart) {
@@ -480,10 +480,10 @@
                      * event
                      */
                     if(!go.isDragging() && shape._id === this.tapStartShape._id) {
-                        shape._handleEvent(TAP, evt);
+                        shape.fire(TAP, evt);
 
                         if(this.inDoubleClickWindow) {
-                            shape._handleEvent(DBL_TAP, evt);
+                            shape.fire(DBL_TAP, evt);
                         }
                         this.inDoubleClickWindow = true;
                         setTimeout(function() {
@@ -505,7 +505,7 @@
             
             if(obj && obj.shape) {
                 shape = obj.shape;
-                shape._handleEvent(TOUCHMOVE, evt);
+                shape.fire(TOUCHMOVE, evt);
             }
 
             // start drag and drop
