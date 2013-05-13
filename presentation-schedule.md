@@ -5,6 +5,7 @@ To add/modify your presentation, just click the "Edit" button, make your changes
 * _Event:_ [Front End Developers United](http://www.meetup.com/Front-End-Developers-United/events/114192072/)
 * _Session:_ [Data Viz and KineticJS](http://www.meetup.com/Front-End-Developers-United/events/114192072/)
 * _Speaker:_ [Eric Rowell](http://www.twitter.com/ericdrowell)
+* _Video:_ [http://www.youtube.com/watch?feature=player_detailpage&v=ZS6QqNJ0VRA#t=1s](http://www.youtube.com/watch?feature=player_detailpage&v=ZS6QqNJ0VRA#t=1s)
 
 ## Mar 13 2013
 * _Event:_ [Toledo Web Professionals](http://www.meetup.com/Toledo-Web-Design/events/92857942/)
