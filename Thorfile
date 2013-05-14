@@ -6,7 +6,7 @@ class Build < Thor
   FILES = [
     "src/Global.js", "src/Util.js", "src/Canvas.js",
     "src/Node.js", "src/Animation.js", "src/Tween.js", "src/DragAndDrop.js", "src/Container.js", "src/Shape.js", "src/Stage.js", "src/Layer.js", "src/Group.js",
-    "src/shapes/Rect.js", "src/shapes/Circle.js", "src/shapes/Wedge.js", "src/shapes/Ellipse.js", "src/shapes/Image.js", "src/shapes/Polygon.js", "src/shapes/Text.js", "src/shapes/Line.js", "src/shapes/Spline.js", "src/shapes/Blob.js", "src/shapes/Sprite.js",
+    "src/shapes/Rect.js", "src/shapes/Circle.js", "src/shapes/Wedge.js", "src/shapes/Image.js", "src/shapes/Polygon.js", "src/shapes/Text.js", "src/shapes/Line.js", "src/shapes/Spline.js", "src/shapes/Blob.js", "src/shapes/Sprite.js",
     "src/plugins/Path.js", "src/plugins/TextPath.js", "src/plugins/RegularPolygon.js", "src/plugins/Star.js", "src/plugins/Label.js",
     "src/filters/Grayscale.js", "src/filters/Brighten.js", "src/filters/Invert.js", "src/filters/Blur.js", "src/filters/Mask.js"
   ]
@@ -24,7 +24,6 @@ class Build < Thor
   	"tests/js/unit/shapes/rectTests.js", 
   	"tests/js/unit/shapes/circleTests.js", 
   	"tests/js/unit/shapes/wedgeTests.js", 
-  	"tests/js/unit/shapes/ellipseTests.js",
   	"tests/js/unit/shapes/imageTests.js",
   	"tests/js/unit/shapes/polygonTests.js",
   	"tests/js/unit/shapes/lineTests.js",

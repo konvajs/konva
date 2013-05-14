@@ -454,10 +454,10 @@ Test.Modules.NODE = {
             shadowOffset: [10, 10],
         });
 
-        var circle = new Kinetic.Ellipse({
+        var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
-            radius: [70, 35],
+            radius: 35,
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4
@@ -1697,14 +1697,14 @@ Test.Modules.NODE = {
             clicks.push('layer');
         });
         // fire event with bubbling
-        circle.fire('click');
+        circle.fire('click', null, true);
         
         //console.log(clicks);
 
         test(clicks.toString() == 'circle,layer', 'problem with fire 1');
 
-        // synthetic event
-        circle.fire('click', null, true);
+        // no bubble
+        circle.fire('click');
 
         test(clicks.toString() == 'circle,layer,circle', 'problem with fire 2');
 
@@ -1830,7 +1830,7 @@ Test.Modules.NODE = {
             clicks.push('layer');
         });
 
-        circle.fire('click');
+        circle.fire('click', null, true);
 
         test(clicks[0] === 'circle', 'circle event should be fired first');
         test(clicks[1] === 'layer', 'layer event should be fired second');
