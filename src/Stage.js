@@ -57,7 +57,7 @@
             if( typeof container === STRING) {
                 container = document.getElementById(container);
             }
-            this.setAttr(CONTAINER, container);
+            this._setAttr(CONTAINER, container);
         },
         draw: function() {
             // clear children layers

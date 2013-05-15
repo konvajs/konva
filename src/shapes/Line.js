@@ -42,7 +42,7 @@
          *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
          */
         setPoints: function(val) {
-            this.setAttr('points', Kinetic.Util._getPoints(val));
+            this._setAttr('points', Kinetic.Util._getPoints(val));
         },
         /**
          * get points array

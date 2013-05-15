@@ -1,4 +1,37 @@
 Test.Modules.NODE = {
+    'setAttr': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        stage.add(layer.add(circle));
+
+        circle.setAttr('fill', 'red');
+        layer.draw();
+
+        test(circle.getFill() === 'red', 'circle should now be red');
+
+        circle.setAttr('position', 5, 6);
+
+        test(circle.getX() === 5, 'circle x should be 5');
+        test(circle.getY() === 6, 'circle y should be 6');
+
+        circle.setAttr('foobar', 12);
+
+        test(circle.getAttr('foobar') === 12, 'custom foobar attr should be 12');
+        
+    },
     'set shape and layer opacity to 0.5': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

@@ -160,7 +160,7 @@
                 size = Kinetic.Util._getSize(config),
                 both = Kinetic.Util._merge(pos, size);
                 
-            this.setAttr(CROP, Kinetic.Util._merge(both, this.getCrop()));
+            this._setAttr(CROP, Kinetic.Util._merge(both, this.getCrop()));
         },
         /**
          * create image hit region which enables more accurate hit detection mapping of the image
@@ -247,7 +247,7 @@
             method = SET + Kinetic.Util._capitalize(attr);
             
         constructor.prototype[method] = function(val) {
-            this.setAttr(attr, val);
+            this._setAttr(attr, val);
             this._applyFilter = true;
         };
     };

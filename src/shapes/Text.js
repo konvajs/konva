@@ -140,7 +140,7 @@
          */
         setText: function(text) {
             var str = Kinetic.Util._isString(text) ? text : text.toString();
-            this.setAttr(TEXT, str);
+            this._setAttr(TEXT, str);
         },
         /**
          * get width

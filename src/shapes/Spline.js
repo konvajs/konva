@@ -84,7 +84,7 @@
          * @param {Number} tension
          */
         setTension: function(tension) {
-            this.setAttr('tension', tension);
+            this._setAttr('tension', tension);
             this._setAllPoints();
         },
         _setAllPoints: function() {

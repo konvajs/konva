@@ -97,61 +97,61 @@
          * enable fill
          */
         enableFill: function() {
-            this.setAttr('fillEnabled', true);
+            this._setAttr('fillEnabled', true);
         },
         /**
          * disable fill
          */
         disableFill: function() {
-            this.setAttr('fillEnabled', false);
+            this._setAttr('fillEnabled', false);
         },
         /**
          * enable stroke
          */
         enableStroke: function() {
-            this.setAttr('strokeEnabled', true);
+            this._setAttr('strokeEnabled', true);
         },
         /**
          * disable stroke
          */
         disableStroke: function() {
-            this.setAttr('strokeEnabled', false);
+            this._setAttr('strokeEnabled', false);
         },
         /**
          * enable stroke scale
          */
         enableStrokeScale: function() {
-            this.setAttr('strokeScaleEnabled', true);
+            this._setAttr('strokeScaleEnabled', true);
         },
         /**
          * disable stroke scale
          */
         disableStrokeScale: function() {
-            this.setAttr('strokeScaleEnabled', false);
+            this._setAttr('strokeScaleEnabled', false);
         },
         /**
          * enable shadow
          */
         enableShadow: function() {
-            this.setAttr('shadowEnabled', true);
+            this._setAttr('shadowEnabled', true);
         },
         /**
          * disable shadow
          */
         disableShadow: function() {
-            this.setAttr('shadowEnabled', false);
+            this._setAttr('shadowEnabled', false);
         },
         /**
          * enable dash array
          */
         enableDashArray: function() {
-            this.setAttr('dashArrayEnabled', true);
+            this._setAttr('dashArrayEnabled', true);
         },
         /**
          * disable dash array
          */
         disableDashArray: function() {
-            this.setAttr('dashArrayEnabled', false);
+            this._setAttr('dashArrayEnabled', false);
         },
         /**
          * get shape type.  Ex. 'Circle', 'Rect', 'Text', etc.

@@ -174,6 +174,28 @@
             }
         },
         /**
+         * set attr
+         * @name setAttr
+         * @methodOf Kinetic.Node.prototype
+         * @param {String} attr  
+         * #param {*} val
+         */
+        setAttr: function() {
+            var args = Array.prototype.slice.call(arguments),
+                attr = args[0],
+                method = SET + Kinetic.Util._capitalize(attr),
+                func = this[method];
+
+            args.shift();
+            if(Kinetic.Util._isFunction(func)) {
+                func.apply(this, args);
+            }
+            // otherwise get directly
+            else {
+                this.attrs[attr] = args[0];
+            }
+        },
+        /**
          * get attrs
          * @name getAttrs
          * @methodOf Kinetic.Node.prototype
@@ -209,7 +231,7 @@
                     }
                     // otherwise set directly
                     else {
-                        this.setAttr(key, config[key]);
+                        this._setAttr(key, config[key]);
                     }
                 }
             }
@@ -915,7 +937,7 @@
                 
             go._removeId(oldId);
             go._addId(this, id);
-            this.setAttr(ID, id);
+            this._setAttr(ID, id);
         },
         /**
          * set name
@@ -930,7 +952,7 @@
                 
             go._removeName(oldName, this._id);
             go._addName(this, name);
-            this.setAttr(NAME, name);
+            this._setAttr(NAME, name);
         },
         /**
          * get node type.  Returns 'Stage', 'Layer', 'Group', or 'Shape'
@@ -940,7 +962,7 @@
         getNodeType: function() {
             return this.nodeType;
         },
-        setAttr: function(key, val) {
+        _setAttr: function(key, val) {
             var oldVal;
             if(val !== undefined) {
                 oldVal = this.attrs[key];
@@ -985,7 +1007,7 @@
             if (events) {
                 len = events.length;
                 for(i = 0; i < len; i++) {
-                    events[i].handler.apply(this, [evt]);
+                    events[i].handler.call(this, evt);
                 }
             }
         },
@@ -1059,7 +1081,7 @@
                 g = obj && obj.g !== undefined ? obj.g | 0 : this.getAttr(attr + UPPER_G),
                 b = obj && obj.b !== undefined ? obj.b | 0 : this.getAttr(attr + UPPER_B);
 
-            this.setAttr(attr, HASH + Kinetic.Util._rgbToHex(r, g, b));
+            this._setAttr(attr, HASH + Kinetic.Util._rgbToHex(r, g, b));
         };
     };
     Kinetic.Node.addColorComponentGetter = function(constructor, attr, c) {
@@ -1083,7 +1105,7 @@
             method = SET + Kinetic.Util._capitalize(attr);
             
         constructor.prototype[method] = function(val) {
-            this.setAttr(attr, val);
+            this._setAttr(attr, val);
             if (isTransform) {
                 this.cachedTransform = null;
             }
@@ -1120,14 +1142,14 @@
             
         // radians
         constructor.prototype[method] = function(val) {
-            this.setAttr(attr, val);
+            this._setAttr(attr, val);
             if (isTransform) {
                 this.cachedTransform = null;
             }
         };
         // degrees
         constructor.prototype[method + DEG] = function(deg) {
-            this.setAttr(attr, Kinetic.Util._degToRad(deg));
+            this._setAttr(attr, Kinetic.Util._degToRad(deg));
             if (isTransform) {
                 this.cachedTransform = null;
             }

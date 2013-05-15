@@ -121,7 +121,7 @@
      * @param {String} draggable
      */
     Kinetic.Node.prototype.setDraggable = function(draggable) {
-        this.setAttr('draggable', draggable);
+        this._setAttr('draggable', draggable);
         this._dragChange();
     };
 
