@@ -12,8 +12,8 @@
         },
         /**
          * get intersection object that contains shape and pixel data
-         * @name getIntersection
-         * @methodOf Kinetic.Layer.prototype
+         * @method
+         * @memberof Kinetic.Node.prototype
          */
         getIntersection: function() {
             var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments)),
@@ -60,32 +60,32 @@
         },
         /**
          * get layer canvas
-         * @name getCanvas
-         * @methodOf Kinetic.Layer.prototype
+         * @method
+         * @memberof Kinetic.Node.prototype
          */
         getCanvas: function() {
             return this.canvas;     
         },
         /**
          * get layer hit canvas
-         * @name getHitCanvas
-         * @methodOf Kinetic.Layer.prototype
+         * @method
+         * @memberof Kinetic.Node.prototype
          */
         getHitCanvas: function() {
             return this.hitCanvas;
         },
         /**
          * get layer canvas context
-         * @name getContext
-         * @methodOf Kinetic.Layer.prototype
+         * @method
+         * @memberof Kinetic.Node.prototype
          */
         getContext: function() {
             return this.getCanvas().getContext(); 
         },
         /**
          * clear canvas tied to the layer
-         * @name clear
-         * @methodOf Kinetic.Layer.prototype
+         * @method
+         * @memberof Kinetic.Node.prototype
          */
         clear: function() {
             this.getCanvas().clear();
@@ -162,9 +162,6 @@
         getLayer: function() {
             return this;
         },
-        /**
-         * remove layer from stage
-         */
         remove: function() {
             var stage = this.getStage(), canvas = this.getCanvas(), element = canvas.element;
             Kinetic.Node.prototype.remove.call(this);
@@ -183,7 +180,8 @@
      * set flag which determines if the layer is cleared or not
      *  before drawing
      * @name setClearBeforeDraw
-     * @methodOf Kinetic.Layer.prototype
+     * @method
+     * @memberof Kinetic.Node.prototype
      * @param {Boolean} clearBeforeDraw
      */
 
@@ -191,6 +189,7 @@
      * get flag which determines if the layer is cleared or not
      *  before drawing
      * @name getClearBeforeDraw
-     * @methodOf Kinetic.Layer.prototype
+     * @method
+     * @memberof Kinetic.Node.prototype
      */
 })();

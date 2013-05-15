@@ -26,14 +26,14 @@
  * THE SOFTWARE.
  */
 /** 
- * @namespace 
+ * @namespace Kinetic
  */
 var Kinetic = {}; 
 (function() {
     Kinetic.version = '{{version}}';
     
     /** 
-     * @namespace 
+     * @namespace Filters
      */
     Kinetic.Filters = {};
 
@@ -41,6 +41,8 @@ var Kinetic = {};
      * Node constructor. Nodes are entities that can be transformed, layered,
      * and have bound events. The stage, layers, groups, and shapes all extend Node.
      * @constructor
+     * @memberof Kinetic
+     * @abstract
      * @param {Object} config
      * {{NodeParams}}
      */
@@ -52,6 +54,7 @@ var Kinetic = {};
      * Shape constructor.  Shapes are primitive objects such as rectangles,
      *  circles, text, lines, etc.
      * @constructor
+     * @memberof Kinetic
      * @augments Kinetic.Node
      * @param {Object} config
      * {{ShapeParams}}
@@ -64,7 +67,9 @@ var Kinetic = {};
     /**
      * Container constructor.&nbsp; Containers are used to contain nodes or other containers
      * @constructor
+     * @memberof Kinetic
      * @augments Kinetic.Node
+     * @abstract
      * @param {Object} config
      * {{NodeParams}}
      * {{ContainerParams}}
@@ -76,6 +81,7 @@ var Kinetic = {};
     /**
      * Stage constructor.  A stage is used to contain multiple layers
      * @constructor
+     * @memberof Kinetic
      * @augments Kinetic.Container
      * @param {Object} config
      * @param {String|DomElement} config.container Container id or DOM element
@@ -90,6 +96,7 @@ var Kinetic = {};
      * Layer constructor.  Layers are tied to their own canvas element and are used
      * to contain groups or shapes
      * @constructor
+     * @memberof Kinetic
      * @augments Kinetic.Container
      * @param {Object} config
      * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
@@ -104,6 +111,7 @@ var Kinetic = {};
     /**
      * Group constructor.  Groups are used to contain shapes or other groups.
      * @constructor
+     * @memberof Kinetic
      * @augments Kinetic.Container
      * @param {Object} config
      * {{NodeParams}}
@@ -114,7 +122,8 @@ var Kinetic = {};
     }; 
 
     /** 
-     * @namespace 
+     * @namespace Global
+     * @memberof Kinetic
      */
     Kinetic.Global = {
         stages: [],
@@ -125,9 +134,9 @@ var Kinetic = {};
         shapes: {},
 
         /**
-         * @method isDragging returns whether or not drag and drop
-         *  is currently active
-         * @methodOf Kinetic.Global
+         * returns whether or not drag and drop is currently active
+         * @method
+         * @memberof Kinetic.Global
          */
         isDragging: function() {
             var dd = Kinetic.DD;  
@@ -143,9 +152,10 @@ var Kinetic = {};
             }
         },
         /**
-        * @method isDragReady returns whether or not a drag and drop operation is ready, but may
+        * returns whether or not a drag and drop operation is ready, but may
         *  not necessarily have started
-        * @methodOf Kinetic.Global
+        * @method
+        * @memberof Kinetic.Global
         */
         isDragReady: function() {
             var dd = Kinetic.DD;  

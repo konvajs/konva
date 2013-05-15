@@ -49,8 +49,8 @@
         },
         /**
          * set container dom element which contains the stage wrapper div element
-         * @name setContainer
-         * @methodOf Kinetic.Stage.prototype
+         * @method
+         * @memberof Kinetic.Stage.prototype
          * @param {DomElement} container can pass in a dom element or id string
          */
         setContainer: function(container) {
@@ -78,19 +78,21 @@
         /**
          * draw layer scene graphs
          * @name draw
-         * @methodOf Kinetic.Stage.prototype
+         * @method
+         * @memberof Kinetic.Stage.prototype
          */
 
         /**
          * draw layer hit graphs
          * @name drawHit
-         * @methodOf Kinetic.Stage.prototype
+         * @method
+         * @memberof Kinetic.Stage.prototype
          */
 
         /**
          * set height
-         * @name setHeight
-         * @methodOf Kinetic.Stage.prototype
+         * @method
+         * @memberof Kinetic.Stage.prototype
          * @param {Number} height
          */
         setHeight: function(height) {
@@ -99,8 +101,8 @@
         },
         /**
          * set width
-         * @name setWidth
-         * @methodOf Kinetic.Stage.prototype
+         * @method
+         * @memberof Kinetic.Stage.prototype
          * @param {Number} width
          */
         setWidth: function(width) {
@@ -109,8 +111,8 @@
         },
         /**
          * clear all layers
-         * @name clear
-         * @methodOf Kinetic.Stage.prototype
+         * @method
+         * @memberof Kinetic.Stage.prototype
          */
         clear: function() {
             var layers = this.children,
@@ -123,6 +125,8 @@
         },
         /**
          * remove stage
+         * @method
+         * @memberof Kinetic.Stage.prototype
          */
         remove: function() {
             var content = this.content;
@@ -134,24 +138,24 @@
         },
         /**
          * get mouse position for desktop apps
-         * @name getMousePosition
-         * @methodOf Kinetic.Stage.prototype
+         * @method
+         * @memberof Kinetic.Stage.prototype
          */
         getMousePosition: function() {
             return this.mousePos;
         },
         /**
          * get touch position for mobile apps
-         * @name getTouchPosition
-         * @methodOf Kinetic.Stage.prototype
+         * @method
+         * @memberof Kinetic.Stage.prototype
          */
         getTouchPosition: function() {
             return this.touchPos;
         },
         /**
          * get pointer position which can be a touc position or mouse position
-         * @name getPointerPosition
-         * @methodOf Kinetic.Stage.prototype
+         * @method
+         * @memberof Kinetic.Stage.prototype
          */
         getPointerPosition: function() {
             return this.getTouchPosition() || this.getMousePosition();
@@ -162,16 +166,16 @@
         /**
          * get stage content div element which has the
          *  the class name "kineticjs-content"
-         * @name getContent
-         * @methodOf Kinetic.Stage.prototype
+         * @method
+         * @memberof Kinetic.Stage.prototype
          */
         getContent: function() {
             return this.content;
         },
         /**
          * Creates a composite data URL and requires a callback because the composite is generated asynchronously.
-         * @name toDataURL
-         * @methodOf Kinetic.Stage.prototype
+         * @method
+         * @memberof Kinetic.Stage.prototype
          * @param {Object} config
          * @param {Function} config.callback function executed when the composite has completed
          * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
@@ -223,8 +227,8 @@
         },
         /**
          * converts stage into an image.
-         * @name toImage
-         * @methodOf Kinetic.Stage.prototype
+         * @method
+         * @memberof Kinetic.Stage.prototype
          * @param {Object} config
          * @param {Function} config.callback function executed when the composite has completed
          * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
@@ -249,8 +253,8 @@
         },
         /**
          * get intersection object that contains shape and pixel data
-         * @name getIntersection
-         * @methodOf Kinetic.Stage.prototype
+         * @method
+         * @memberof Kinetic.Stage.prototype
          * @param {Object} pos point object
          */
         getIntersection: function() {
@@ -295,6 +299,8 @@
         },
         /**
          * add layer to stage
+         * @method
+         * @memberof Kinetic.Stage.prototype
          * @param {Kinetic.Layer} layer
          */
         add: function(layer) {
@@ -317,8 +323,8 @@
         },
         /**
          * get layers
-         * @name getLayers
-         * @methodOf Kinetic.Stage.prototype
+         * @method
+         * @memberof Kinetic.Stage.prototype
          */
          getLayers: function() {
              return this.getChildren();
@@ -330,10 +336,6 @@
             this._setMousePosition(evt);
             this._setTouchPosition(evt);
         },
-        /**
-         * begin listening for events by adding event handlers
-         * to the container
-         */
         _bindContentEvents: function() {
             var that = this,
                 n;
@@ -513,10 +515,6 @@
                 dd._drag(evt);
             }
         },
-        /**
-         * set mouse positon for desktop apps
-         * @param {Event} evt
-         */
         _setMousePosition: function(evt) {
             var mouseX = evt.clientX - this._getContentPosition().left,
                 mouseY = evt.clientY - this._getContentPosition().top;
@@ -526,10 +524,6 @@
                 y: mouseY
             };
         },
-        /**
-         * set touch position for mobile apps
-         * @param {Event} evt
-         */
         _setTouchPosition: function(evt) {
             var touch, touchX, touchY;
             
@@ -547,9 +541,6 @@
                 };
             }
         },
-        /**
-         * get container position
-         */
         _getContentPosition: function() {
             var rect = this.content.getBoundingClientRect();
             return {
@@ -557,9 +548,6 @@
                 left: rect.left
             };
         },
-        /**
-         * build dom
-         */
         _buildDOM: function() {
             // content
             this.content = document.createElement(DIV);
@@ -573,11 +561,6 @@
 
             this._resizeDOM();
         },
-        /**
-         * bind event listener to container DOM element
-         * @param {String} typesStr
-         * @param {function} handler
-         */
         _onContent: function(typesStr, handler) {
             var types = typesStr.split(SPACE),
                 len = types.length,
@@ -597,6 +580,7 @@
     /**
      * get container DOM element
      * @name getContainer
-     * @methodOf Kinetic.Stage.prototype
+     * @method
+     * @memberof Kinetic.Stage.prototype
      */
 })();

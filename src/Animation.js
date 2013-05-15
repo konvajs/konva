@@ -2,6 +2,7 @@
     /**
      * Animation constructor.  A stage is used to contain multiple layers and handle
      * @constructor
+     * @memberof Kinetic
      * @param {Function} func function executed on each animation frame
      * @param {Kinetic.Layer|Array} [layers] layer(s) to be redrawn.&nbsp; Can be a layer, an array of layers, or null.  Not specifying a node will result in no redraw.
      */
@@ -21,8 +22,8 @@
     Kinetic.Animation.prototype = {
         /**
          * set layers to be redrawn on each animation frame
-         * @name setLayers
-         * @methodOf Kinetic.Animation.prototype
+         * @method
+         * @memberof Kinetic.Animation.prototype
          * @param {Kinetic.Layer|Array} [layers] layer(s) to be redrawn.&nbsp; Can be a layer, an array of layers, or null.  Not specifying a node will result in no redraw.
          */
         setLayers: function(layers) {
@@ -44,16 +45,16 @@
         },
         /**
          * get layers
-         * @name getLayers
-         * @methodOf Kinetic.Animation.prototype
+         * @method
+         * @memberof Kinetic.Animation.prototype
          */
         getLayers: function() {
             return this.layers;
         },
         /**
          * add layer.  Returns true if the layer was added, and false if it was not
-         * @name addLayer
-         * @methodOf Kinetic.Animation.prototype
+         * @method
+         * @memberof Kinetic.Animation.prototype
          * @param {Kinetic.Layer} layer
          */
         addLayer: function(layer) {
@@ -79,8 +80,8 @@
         },
         /**
          * determine if animation is running or not.  returns true or false
-         * @name isRunning
-         * @methodOf Kinetic.Animation.prototype
+         * @method
+         * @memberof Kinetic.Animation.prototype
          */
         isRunning: function() {
             var a = Kinetic.Animation, animations = a.animations;
@@ -93,8 +94,8 @@
         },
         /**
          * start animation
-         * @name start
-         * @methodOf Kinetic.Animation.prototype
+         * @method
+         * @memberof Kinetic.Animation.prototype
          */
         start: function() {
             this.stop();
@@ -104,8 +105,8 @@
         },
         /**
          * stop animation
-         * @name stop
-         * @methodOf Kinetic.Animation.prototype
+         * @method
+         * @memberof Kinetic.Animation.prototype
          */
         stop: function() {
             Kinetic.Animation._removeAnimation(this);
@@ -226,8 +227,8 @@
 
     /**
      * get batch draw
-     * @name batchDraw
-     * @methodOf Kinetic.Layer.prototype
+     * @method
+     * @memberof Kinetic.Layer.prototype
      */
     Kinetic.Layer.prototype.batchDraw = function() {
         var batchAnim = Kinetic.Layer.batchAnim;

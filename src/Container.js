@@ -1,12 +1,4 @@
 (function() {
-    /**
-     * Container constructor.&nbsp; Containers are used to contain nodes or other containers
-     * @constructor
-     * @augments Kinetic.Node
-     * @param {Object} config
-     * {{NodeParams}}
-     * {{ContainerParams}}
-     */
     Kinetic.Util.addMethods(Kinetic.Container, {
         _containerInit: function(config) {
             this.children = [];
@@ -14,16 +6,16 @@
         },
         /**
          * get children
-         * @name getChildren
-         * @methodOf Kinetic.Container.prototype
+         * @method
+         * @memberof Kinetic.Container.prototype
          */
         getChildren: function() {
             return this.children;
         },
         /**
          * remove all children
-         * @name removeChildren
-         * @methodOf Kinetic.Container.prototype
+         * @method
+         * @memberof Kinetic.Container.prototype
          */
         removeChildren: function() {
             while(this.children.length > 0) {
@@ -32,8 +24,8 @@
         },
         /**
          * add node to container
-         * @name add
-         * @methodOf Kinetic.Container.prototype
+         * @method
+         * @memberof Kinetic.Container.prototype
          * @param {Node} child
          */
         add: function(child) {
@@ -51,8 +43,8 @@
          * ex:
          * var node = stage.get('#foo'); // selects node with id foo
          * var nodes = layer.get('.bar'); // selects nodes with name bar inside layer
-         * @name get
-         * @methodOf Kinetic.Container.prototype
+         * @method
+         * @memberof Kinetic.Container.prototype
          * @param {String} selector
          */
         get: function(selector) {
@@ -131,8 +123,8 @@
         /**
          * determine if node is an ancestor
          * of descendant
-         * @name isAncestorOf
-         * @methodOf Kinetic.Container.prototype
+         * @method
+         * @memberof Kinetic.Container.prototype
          * @param {Kinetic.Node} node
          */
         isAncestorOf: function(node) {
@@ -148,8 +140,8 @@
         },
         /**
          * clone node
-         * @name clone
-         * @methodOf Kinetic.Container.prototype
+         * @method
+         * @memberof Kinetic.Container.prototype
          * @param {Object} attrs override attrs
          */
         clone: function(obj) {
@@ -164,8 +156,8 @@
         },
         /**
          * get shapes that intersect a point
-         * @name getIntersections
-         * @methodOf Kinetic.Container.prototype
+         * @method
+         * @memberof Kinetic.Container.prototype
          * @param {Object} point
          */
         getIntersections: function() {
@@ -183,9 +175,6 @@
 
             return arr;
         },
-        /**
-         * set children indices
-         */
         _setChildrenIndices: function() {
             var children = this.children, len = children.length;
             for(var n = 0; n < len; n++) {
@@ -252,13 +241,15 @@
     /**
      * set clipping function 
      * @name setClipFunc
-     * @methodOf Kinetic.Container.prototype
+     * @method
+     * @memberof Kinetic.Container.prototype
      * @param {Number} deg
      */
 
     /**
      * get clipping function 
      * @name getClipFunc
-     * @methodOf Kinetic.Container.prototype
+     * @method
+     * @memberof Kinetic.Container.prototype
      */
 })();

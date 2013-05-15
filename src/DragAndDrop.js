@@ -77,8 +77,8 @@
     
     /**
      * initiate drag and drop
-     * @name startDrag
-     * @methodOf Kinetic.Node.prototype
+     * @method
+     * @memberof Kinetic.Node.prototype
      */
     Kinetic.Node.prototype.startDrag = function() {
         var dd = Kinetic.DD, 
@@ -104,8 +104,8 @@
     
     /**
      * stop drag and drop
-     * @name stopDrag
-     * @methodOf Kinetic.Node.prototype
+     * @method
+     * @memberof Kinetic.Node.prototype
      */
     Kinetic.Node.prototype.stopDrag = function() {
         var dd = Kinetic.DD,
@@ -116,8 +116,8 @@
             
     /**
      * set draggable
-     * @name setDraggable
-     * @methodOf Kinetic.Node.prototype
+     * @method
+     * @memberof Kinetic.Node.prototype
      * @param {String} draggable
      */
     Kinetic.Node.prototype.setDraggable = function(draggable) {
@@ -141,8 +141,8 @@
 
     /**
      * determine if node is currently in drag and drop mode
-     * @name isDragging
-     * @methodOf Kinetic.Node.prototype
+     * @method
+     * @memberof Kinetic.Node.prototype
      */
     Kinetic.Node.prototype.isDragging = function() {
         var dd = Kinetic.DD;
@@ -186,9 +186,6 @@
     };
 
     Kinetic.Node.addGetterSetter(Kinetic.Node, 'dragBoundFunc');
-    Kinetic.Node.addGetterSetter(Kinetic.Node, 'dragOnTop', true);
-    
-    Kinetic.Node.addGetter(Kinetic.Node, 'draggable', false);
 
     /**
      * set drag bound function.  This is used to override the default
@@ -199,25 +196,12 @@
      */
 
     /**
-     * set flag which enables or disables automatically moving the draggable node to a
-     *  temporary top layer to improve performance.  The default is true
-     * @name setDragOnTop
-     * @methodOf Kinetic.Node.prototype
-     * @param {Boolean} dragOnTop
-     */
-
-    /**
      * get dragBoundFunc
      * @name getDragBoundFunc
      * @methodOf Kinetic.Node.prototype
      */
 
-    /**
-     * get flag which enables or disables automatically moving the draggable node to a
-     *  temporary top layer to improve performance.
-     * @name getDragOnTop
-     * @methodOf Kinetic.Node.prototype
-     */
+    Kinetic.Node.addGetter(Kinetic.Node, 'draggable', false);
     
      /**
      * get draggable
@@ -227,6 +211,13 @@
 
     /**
      * get draggable.  Alias of getDraggable()
+     * @name isDraggable
+     * @methodOf Kinetic.Node.prototype
+     */
+
+
+    /**
+     * alias of getDraggable
      * @name isDraggable
      * @methodOf Kinetic.Node.prototype
      */
