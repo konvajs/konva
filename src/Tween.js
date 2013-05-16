@@ -18,6 +18,11 @@
         }, easing, node['get' + Kinetic.Util._capitalize(key)](), end, duration * 1000, yoyo);
     }
 
+    /**
+     * Tween constructor.  
+     * @constructor
+     * @memberof Kinetic
+     */
     Kinetic.Tween = function(config) {
         var that = this,
             node = config.node,
@@ -94,44 +99,85 @@
                 }
             };
         },
+        /**
+         * play
+         * @method
+         * @memberof Kinetic.Tween.prototype
+         */
         play: function() {
             this._iterate(function(tween) {
                 tween.play();
             });
         },
+        /**
+         * reverse
+         * @method
+         * @memberof Kinetic.Tween.prototype
+         */
         reverse: function() {
             this._iterate(function(tween) {
                 tween.reverse();
             });
         },
+        /**
+         * reset
+         * @method
+         * @memberof Kinetic.Tween.prototype
+         */
         reset: function() {
             this._iterate(function(tween) {
                 tween.reset();
             });
             this.node.getLayer().draw();
         },
+        /**
+         * seek
+         * @method
+         * @memberof Kinetic.Tween.prototype
+         * @param {Integer} t time in seconds between 0 and the duration
+         */
         seek: function(t) {
             this._iterate(function(tween) {
                 tween.seek(t * 1000);
             });
             this.node.getLayer().draw();
         },
+        /**
+         * pause
+         * @method
+         * @memberof Kinetic.Tween.prototype
+         */
         pause: function() {
             this._iterate(function(tween) {
                 tween.pause();
             });
         },
+        /**
+         * finish
+         * @method
+         * @memberof Kinetic.Tween.prototype
+         */
         finish: function() {
             this._iterate(function(tween) {
                 tween.finish();
             });
             this.node.getLayer().draw();
         },
+        /**
+         * define a function that's executed on each tween animation frame
+         * @method
+         * @memberof Kinetic.Tween.prototype
+         */
         onEnterFrame: function() {
             this._iterate(function(tween) {
                 tween.onEnterFrame();
             });
         },
+        /**
+         * destroy
+         * @method
+         * @memberof Kinetic.Tween.prototype
+         */
         destroy: function() {
 
         },
@@ -266,15 +312,35 @@
     * These eases were ported from an Adobe Flash tweening library to JavaScript
     * by Xaric
     */
+
+    /** 
+     * @namespace Easings
+     * @memberof Kinetic
+     */
     Kinetic.Easings = {
+        /**
+        * back ease in
+        * @function
+        * @memberof Kinetic.Easings
+        */
         'BackEaseIn': function(t, b, c, d, a, p) {
             var s = 1.70158;
             return c * (t /= d) * t * ((s + 1) * t - s) + b;
         },
+        /**
+        * back ease out
+        * @function
+        * @memberof Kinetic.Easings
+        */
         'BackEaseOut': function(t, b, c, d, a, p) {
             var s = 1.70158;
             return c * (( t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
         },
+        /**
+        * back ease in out
+        * @function
+        * @memberof Kinetic.Easings
+        */
         'BackEaseInOut': function(t, b, c, d, a, p) {
             var s = 1.70158;
             if((t /= d / 2) < 1) {
@@ -282,6 +348,11 @@
             }
             return c / 2 * ((t -= 2) * t * (((s *= (1.525)) + 1) * t + s) + 2) + b;
         },
+        /**
+        * elastic ease in
+        * @function
+        * @memberof Kinetic.Easings
+        */
         'ElasticEaseIn': function(t, b, c, d, a, p) {
             // added s = 0
             var s = 0;
@@ -303,6 +374,11 @@
             }
             return -(a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
         },
+        /**
+        * elastic ease out
+        * @function
+        * @memberof Kinetic.Easings
+        */
         'ElasticEaseOut': function(t, b, c, d, a, p) {
             // added s = 0
             var s = 0;
@@ -324,6 +400,11 @@
             }
             return (a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b);
         },
+        /**
+        * elastic ease in out
+        * @function
+        * @memberof Kinetic.Easings
+        */
         'ElasticEaseInOut': function(t, b, c, d, a, p) {
             // added s = 0
             var s = 0;
@@ -348,6 +429,11 @@
             }
             return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * 0.5 + c + b;
         },
+        /**
+        * bounce ease out
+        * @function
+        * @memberof Kinetic.Easings
+        */
         'BounceEaseOut': function(t, b, c, d) {
             if((t /= d) < (1 / 2.75)) {
                 return c * (7.5625 * t * t) + b;
@@ -362,9 +448,19 @@
                 return c * (7.5625 * (t -= (2.625 / 2.75)) * t + 0.984375) + b;
             }
         },
+        /**
+        * bounce ease in
+        * @function
+        * @memberof Kinetic.Easings
+        */
         'BounceEaseIn': function(t, b, c, d) {
             return c - Kinetic.Easings.BounceEaseOut(d - t, 0, c, d) + b;
         },
+        /**
+        * bounce ease in out
+        * @function
+        * @memberof Kinetic.Easings
+        */
         'BounceEaseInOut': function(t, b, c, d) {
             if(t < d / 2) {
                 return Kinetic.Easings.BounceEaseIn(t * 2, 0, c, d) * 0.5 + b;
@@ -373,30 +469,65 @@
                 return Kinetic.Easings.BounceEaseOut(t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b;
             }
         },
+        /**
+        * ease in
+        * @function
+        * @memberof Kinetic.Easings
+        */
         'EaseIn': function(t, b, c, d) {
             return c * (t /= d) * t + b;
         },
+        /**
+        * ease out
+        * @function
+        * @memberof Kinetic.Easings
+        */
         'EaseOut': function(t, b, c, d) {
             return -c * (t /= d) * (t - 2) + b;
         },
+        /**
+        * ease in out
+        * @function
+        * @memberof Kinetic.Easings
+        */
         'EaseInOut': function(t, b, c, d) {
             if((t /= d / 2) < 1) {
                 return c / 2 * t * t + b;
             }
             return -c / 2 * ((--t) * (t - 2) - 1) + b;
         },
+        /**
+        * strong ease in
+        * @function
+        * @memberof Kinetic.Easings
+        */
         'StrongEaseIn': function(t, b, c, d) {
             return c * (t /= d) * t * t * t * t + b;
         },
+        /**
+        * strong ease out
+        * @function
+        * @memberof Kinetic.Easings
+        */
         'StrongEaseOut': function(t, b, c, d) {
             return c * (( t = t / d - 1) * t * t * t * t + 1) + b;
         },
+        /**
+        * strong ease in out
+        * @function
+        * @memberof Kinetic.Easings
+        */
         'StrongEaseInOut': function(t, b, c, d) {
             if((t /= d / 2) < 1) {
                 return c / 2 * t * t * t * t * t + b;
             }
             return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
         },
+        /**
+        * linear
+        * @function
+        * @memberof Kinetic.Easings
+        */
         'Linear': function(t, b, c, d) {
             return c * t / d + b;
         }

@@ -13,6 +13,8 @@
     /**
      * Canvas Renderer constructor
      * @constructor
+     * @abstract
+     * @memberof Kinetic
      * @param {Number} width
      * @param {Number} height
      */
@@ -39,24 +41,24 @@
         },        
         /**
          * get canvas element
-         * @name getElement
-         * @methodOf Kinetic.Canvas.prototype
+         * @method
+         * @memberof Kinetic.Canvas.prototype
          */
         getElement: function() {
             return this.element;
         },
         /**
          * get canvas context
-         * @name getContext
-         * @methodOf Kinetic.Canvas.prototype
+         * @method
+         * @memberof Kinetic.Canvas.prototype
          */
         getContext: function() {
             return this.context;
         },
         /**
          * set width
-         * @name setWidth
-         * @methodOf Kinetic.Canvas.prototype
+         * @method
+         * @memberof Kinetic.Canvas.prototype
          * @param {Number} width
          */
         setWidth: function(width) {
@@ -66,8 +68,8 @@
         },
         /**
          * set height
-         * @name setHeight
-         * @methodOf Kinetic.Canvas.prototype
+         * @method
+         * @memberof Kinetic.Canvas.prototype
          * @param {Number} height
          */
         setHeight: function(height) {
@@ -77,48 +79,35 @@
         },
         /**
          * get width
-         * @name getWidth
-         * @methodOf Kinetic.Canvas.prototype
+         * @method
+         * @memberof Kinetic.Canvas.prototype
          */
         getWidth: function() {
             return this.width;
         },
         /**
          * get height
-         * @name getHeight
-         * @methodOf Kinetic.Canvas.prototype
+         * @method
+         * @memberof Kinetic.Canvas.prototype
          */
         getHeight: function() {
             return this.height;
         },
         /**
          * set size
-         * @name setSize
-         * @methodOf Kinetic.Canvas.prototype
+         * @method
+         * @memberof Kinetic.Canvas.prototype
          * @param {Number} width
          * @param {Number} height
          */
         setSize: function(width, height) {
             this.setWidth(width);
             this.setHeight(height);
-        }
-    };
-
-    /**
-     * Canvas 2D Renderer constructor
-     * @constructor
-     * @param {Number} width
-     * @param {Number} height
-     */
-    Kinetic.Canvas2D = function(config) {
-        Kinetic.Canvas.call(this, config);
-    };
-
-    Kinetic.Canvas2D.prototype = {
+        },
         /**
          * clear canvas
-         * @name clear
-         * @methodOf Kinetic.Canvas.prototype
+         * @method
+         * @memberof Kinetic.Canvas.prototype
          */
         clear: function() {
             var context = this.getContext();
@@ -127,8 +116,8 @@
         },
         /**
          * to data url
-         * @name toDataURL
-         * @methodOf Kinetic.Canvas2D.prototype
+         * @method
+         * @memberof Kinetic.Canvas.prototype
          * @param {String} mimeType
          * @param {Number} quality between 0 and 1 for jpg mime types
          */
@@ -150,8 +139,8 @@
         },
         /**
          * fill shape
-         * @name fill
-         * @methodOf Kinetic.Canvas2D.prototype
+         * @method
+         * @memberof Kinetic.Canvas.prototype
          * @param {Kinetic.Shape} shape
          */
         fill: function(shape) {
@@ -161,8 +150,8 @@
         },
         /**
          * stroke shape
-         * @name stroke
-         * @methodOf Kinetic.Canvas2D.prototype
+         * @method
+         * @memberof Kinetic.Canvas.prototype
          * @param {Kinetic.Shape} shape
          */
         stroke: function(shape) {
@@ -174,8 +163,8 @@
          * fill, stroke, and apply shadows
          *  will only be applied to either the fill or stroke.&nbsp; Fill
          *  is given priority over stroke.
-         * @name fillStroke
-         * @methodOf Kinetic.Canvas2D.prototype
+         * @method
+         * @memberof Kinetic.Canvas.prototype
          * @param {Kinetic.Shape} shape
          */
         fillStroke: function(shape) {
@@ -190,8 +179,8 @@
         },
         /**
          * apply shadow
-         * @name applyShadow
-         * @methodOf Kinetic.Canvas2D.prototype
+         * @method
+         * @memberof Kinetic.Canvas.prototype
          * @param {Kinetic.Shape} shape
          * @param {Function} drawFunc
          */
@@ -242,10 +231,8 @@
         }
     };
 
-    Kinetic.Util.extend(Kinetic.Canvas2D, Kinetic.Canvas);
-
     Kinetic.SceneCanvas = function(config) {
-        Kinetic.Canvas2D.call(this, config);
+        Kinetic.Canvas.call(this, config);
     };
 
     Kinetic.SceneCanvas.prototype = {
@@ -427,10 +414,10 @@
             }
         }
     };
-    Kinetic.Util.extend(Kinetic.SceneCanvas, Kinetic.Canvas2D);
+    Kinetic.Util.extend(Kinetic.SceneCanvas, Kinetic.Canvas);
 
     Kinetic.HitCanvas = function(config) {
-        Kinetic.Canvas2D.call(this, config);
+        Kinetic.Canvas.call(this, config);
     };
 
     Kinetic.HitCanvas.prototype = {
@@ -456,6 +443,6 @@
             }
         }
     };
-    Kinetic.Util.extend(Kinetic.HitCanvas, Kinetic.Canvas2D);
+    Kinetic.Util.extend(Kinetic.HitCanvas, Kinetic.Canvas);
 
 })();

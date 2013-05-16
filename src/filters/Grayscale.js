@@ -2,7 +2,7 @@
     /**
      * Grayscale Filter
      * @function
-     * @memberOf Kinetic.Filters
+     * @memberof Kinetic.Filters
      * @param {Object} imageData
      */
     Kinetic.Filters.Grayscale = function(imageData) {

@@ -165,7 +165,7 @@
 	 * Only crop unicolor background images for instance
 	 *
 	 * @function
-	 * @memberOf Kinetic.Filters
+	 * @memberof Kinetic.Filters
 	 * @param {Object} imageData
 	 */
 	Kinetic.Filters.Mask = function(idata) {

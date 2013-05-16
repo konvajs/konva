@@ -34,6 +34,7 @@ var Kinetic = {};
     
     /** 
      * @namespace Filters
+     * @memberof Kinetic
      */
     Kinetic.Filters = {};
 

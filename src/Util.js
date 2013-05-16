@@ -3,6 +3,7 @@
      * Collection constructor.  Collection extends
      *  Array.  This class is used in conjunction with get()
      * @constructor
+     * @memberof Kinetic
      */
     Kinetic.Collection = function() {
         var args = [].slice.call(arguments), length = args.length, i = 0;
@@ -15,9 +16,10 @@
     }
     Kinetic.Collection.prototype = new Array();
     /**
-     * iterate through node array
-     * @name each
-     * @methodOf Kinetic.Collection.prototype
+     * iterate through node array and run a function for each node.
+     *  The node and index is passed into the function
+     * @method
+     * @memberof Kinetic.Collection.prototype
      * @param {Function} func
      */
     Kinetic.Collection.prototype.each = function(func) {
@@ -63,12 +65,13 @@
     /*
     * The usage of this class was inspired by some of the work done by a forked
     * project, KineticJS-Ext by Wappworks, which is based on Simon's Transform
-    * class.
+    * class.  Modified by Eric Rowell
     */
 
     /**
      * Transform constructor
      * @constructor
+     * @memberof Kinetic
      */
     Kinetic.Transform = function() {
         this.m = [1, 0, 0, 1, 0, 0];
@@ -77,6 +80,8 @@
     Kinetic.Transform.prototype = {
         /**
          * Apply translation
+         * @method
+         * @memberof Kinetic.Transform.prototype
          * @param {Number} x
          * @param {Number} y
          */
@@ -86,6 +91,8 @@
         },
         /**
          * Apply scale
+         * @method
+         * @memberof Kinetic.Transform.prototype
          * @param {Number} sx
          * @param {Number} sy
          */
@@ -97,6 +104,8 @@
         },
         /**
          * Apply rotation
+         * @method
+         * @memberof Kinetic.Transform.prototype
          * @param {Number} rad  Angle in radians
          */
         rotate: function(rad) {
@@ -113,6 +122,8 @@
         },
         /**
          * Returns the translation
+         * @method
+         * @memberof Kinetic.Transform.prototype
          * @returns {Object} 2D point(x, y)
          */
         getTranslation: function() {
@@ -123,6 +134,8 @@
         },
         /**
          * Apply skew 
+         * @method
+         * @memberof Kinetic.Transform.prototype
          * @param {Number} sx
          * @param {Number} sy
          */
@@ -138,6 +151,8 @@
          },
         /**
          * Transform multiplication
+         * @method
+         * @memberof Kinetic.Transform.prototype
          * @param {Kinetic.Transform} matrix
          */
         multiply: function(matrix) {
@@ -159,6 +174,8 @@
         },
         /**
          * Invert the matrix
+         * @method
+         * @memberof Kinetic.Transform.prototype
          */
         invert: function() {
             var d = 1 / (this.m[0] * this.m[3] - this.m[1] * this.m[2]);
@@ -177,6 +194,8 @@
         },
         /**
          * return matrix
+         * @method
+         * @memberof Kinetic.Transform.prototype
          */
         getMatrix: function() {
             return this.m;
@@ -222,7 +241,8 @@
         RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
 
     /** 
-     * @namespace 
+     * @namespace Util
+     * @memberof Kinetic
      */
     Kinetic.Util = {
         /*
@@ -504,6 +524,11 @@
                 b: bigint & 255
             };
         },
+        /**
+         * get random color
+         * @method
+         * @memberof Kinetic.Util.prototype
+         */
         getRandomColor: function() {
             var randColor = (Math.random() * 0xFFFFFF << 0).toString(16);
             while (randColor.length < 6) {
@@ -511,6 +536,12 @@
             }
             return randColor;
         },
+        /**
+         * get RGB components of a color
+         * @method
+         * @memberof Kinetic.Util.prototype
+         * @param {String} color 
+         */
         getRGB: function(color) {
           var rgb;
           // color string
@@ -596,8 +627,9 @@
             }
         },
         /**
-         * @method addMethods adds methods to a constructor prototype
-         * @methodOf Kinetic.Util
+         * adds methods to a constructor prototype
+         * @method
+         * @memberof Kinetic.Util.prototype
          * @param {Function} constructor
          * @param {Object} methods
          */

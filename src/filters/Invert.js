@@ -2,7 +2,7 @@
     /**
      * Invert Filter
      * @function
-     * @memberOf Kinetic.Filters
+     * @memberof Kinetic.Filters
      * @param {Object} imageData
      */
     Kinetic.Filters.Invert = function(imageData) {

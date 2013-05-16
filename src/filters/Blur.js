@@ -325,7 +325,7 @@
     /**
      * Blur Filter
      * @function
-     * @memberOf Kinetic.Filters
+     * @memberof Kinetic.Filters
      * @param {Object} imageData
      */
     Kinetic.Filters.Blur = function(imageData) {
