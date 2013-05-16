@@ -2,6 +2,7 @@
     /**
      * Star constructor
      * @constructor
+     * @memberof Kinetic
      * @augments Kinetic.Shape
      * @param {Object} config
      * @param {Integer} config.numPoints
@@ -48,14 +49,16 @@
     /**
      * set number of points
      * @name setNumPoints
-     * @methodOf Kinetic.Star.prototype
+     * @method
+     * @memberof Kinetic.Star.prototype
      * @param {Integer} points
      */
 
      /**
      * get number of points
      * @name getNumPoints
-     * @methodOf Kinetic.Star.prototype
+     * @method
+     * @memberof Kinetic.Star.prototype
      */
 
     Kinetic.Node.addGetterSetter(Kinetic.Star, 'innerRadius', 0);
@@ -63,14 +66,16 @@
     /**
      * set inner radius
      * @name setInnerRadius
-     * @methodOf Kinetic.Star.prototype
+     * @method
+     * @memberof Kinetic.Star.prototype
      * @param {Number} radius
      */
 
      /**
      * get inner radius
      * @name getInnerRadius
-     * @methodOf Kinetic.Star.prototype
+     * @method
+     * @memberof Kinetic.Star.prototype
      */
 
     Kinetic.Node.addGetterSetter(Kinetic.Star, 'outerRadius', 0);
@@ -78,13 +83,15 @@
     /**
      * set outer radius
      * @name setOuterRadius
-     * @methodOf Kinetic.Star.prototype
+     * @method
+     * @memberof Kinetic.Star.prototype
      * @param {Number} radius
      */
 
      /**
      * get outer radius
      * @name getOuterRadius
-     * @methodOf Kinetic.Star.prototype
+     * @method
+     * @memberof Kinetic.Star.prototype
      */
 })();

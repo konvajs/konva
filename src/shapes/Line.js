@@ -2,6 +2,7 @@
     /**
      * Line constructor.&nbsp; Lines are defined by an array of points
      * @constructor
+     * @memberof Kinetic
      * @augments Kinetic.Shape
      * @param {Object} config
      * @param {Array} config.points can be a flattened array of points, an array of point arrays, or an array of point objects.
@@ -36,8 +37,8 @@
         },
         /**
          * set points array
-         * @name setPoints
-         * @methodOf Kinetic.Line.prototype
+         * @method
+         * @memberof Kinetic.Line.prototype
          * @param {Array} can be an array of point objects or an array
          *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
          */
@@ -46,8 +47,8 @@
         },
         /**
          * get points array
-         * @name getPoints
-         * @methodOf Kinetic.Line.prototype
+         * @method
+         * @memberof Kinetic.Line.prototype
          */
          // NOTE: cannot use getter method because we need to return a new
          // default array literal each time because arrays are modified by reference

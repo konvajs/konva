@@ -7,6 +7,7 @@
      * Path constructor.
      * @author Jason Follas
      * @constructor
+     * @memberof Kinetic
      * @augments Kinetic.Shape
      * @param {Object} config
      * @param {String} [config.fontFamily] default is Calibri
@@ -96,24 +97,24 @@
         },
         /**
          * get text width in pixels
-         * @name getTextWidth
-         * @methodOf Kinetic.TextPath.prototype
+         * @method
+         * @memberof Kinetic.TextPath.prototype
          */
         getTextWidth: function() {
             return this.textWidth;
         },
         /**
          * get text height in pixels
-         * @name getTextHeight
-         * @methodOf Kinetic.TextPath.prototype
+         * @method
+         * @memberof Kinetic.TextPath.prototype
          */
         getTextHeight: function() {
             return this.textHeight;
         },
         /**
          * set text
-         * @name setText
-         * @methodOf Kinetic.TextPath.prototype
+         * @method
+         * @memberof Kinetic.TextPath.prototype
          * @param {String} text
          */
         setText: function(text) {
@@ -135,9 +136,6 @@
                 height: parseInt(this.attrs.fontSize, 10)
             };
         },
-        /**
-         * set text data.
-         */
         _setTextData: function() {
 
             var that = this;
@@ -317,14 +315,16 @@
     /**
      * set font family
      * @name setFontFamily
-     * @methodOf Kinetic.TextPath.prototype
+     * @method
+     * @memberof Kinetic.TextPath.prototype
      * @param {String} fontFamily
      */
 
      /**
      * get font family
      * @name getFontFamily
-     * @methodOf Kinetic.TextPath.prototype
+     * @method
+     * @memberof Kinetic.TextPath.prototype
      */
 
     Kinetic.Node.addGetterSetter(Kinetic.TextPath, 'fontSize', 12);
@@ -332,14 +332,16 @@
     /**
      * set font size
      * @name setFontSize
-     * @methodOf Kinetic.TextPath.prototype
+     * @method
+     * @memberof Kinetic.TextPath.prototype
      * @param {int} fontSize
      */
 
      /**
      * get font size
      * @name getFontSize
-     * @methodOf Kinetic.TextPath.prototype
+     * @method
+     * @memberof Kinetic.TextPath.prototype
      */
 
     Kinetic.Node.addGetterSetter(Kinetic.TextPath, 'fontStyle', NORMAL);
@@ -347,14 +349,16 @@
     /**
      * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
      * @name setFontStyle
-     * @methodOf Kinetic.TextPath.prototype
+     * @method
+     * @memberof Kinetic.TextPath.prototype
      * @param {String} fontStyle
      */
 
      /**
      * get font style
      * @name getFontStyle
-     * @methodOf Kinetic.TextPath.prototype
+     * @method
+     * @memberof Kinetic.TextPath.prototype
      */
     
     Kinetic.Node.addGetter(Kinetic.TextPath, 'text', EMPTY_STRING);
@@ -362,6 +366,7 @@
     /**
      * get text
      * @name getText
-     * @methodOf Kinetic.TextPath.prototype
+     * @method
+     * @memberof Kinetic.TextPath.prototype
      */
 })();

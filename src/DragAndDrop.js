@@ -191,14 +191,16 @@
      * set drag bound function.  This is used to override the default
      *  drag and drop position
      * @name setDragBoundFunc
-     * @methodOf Kinetic.Node.prototype
+     * @method
+     * @memberof Kinetic.Node.prototype
      * @param {Function} dragBoundFunc
      */
 
     /**
      * get dragBoundFunc
      * @name getDragBoundFunc
-     * @methodOf Kinetic.Node.prototype
+     * @method
+     * @memberof Kinetic.Node.prototype
      */
 
     Kinetic.Node.addGetter(Kinetic.Node, 'draggable', false);
@@ -206,21 +208,25 @@
      /**
      * get draggable
      * @name getDraggable
-     * @methodOf Kinetic.Node.prototype
+     * @method
+     * @memberof Kinetic.Node.prototype
      */
 
     /**
-     * get draggable.  Alias of getDraggable()
+     * alias of getDraggable()
      * @name isDraggable
-     * @methodOf Kinetic.Node.prototype
+     * @method
+     * @memberof Kinetic.Node.prototype
      */
 
 
     /**
      * alias of getDraggable
      * @name isDraggable
-     * @methodOf Kinetic.Node.prototype
+     * @method
+     * @memberof Kinetic.Node.prototype
      */
+     
     Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
 
     var html = document.getElementsByTagName('html')[0];

@@ -2,6 +2,7 @@
     /**
      * Rect constructor
      * @constructor
+     * @memberof Kinetic
      * @augments Kinetic.Shape
      * @param {Object} config
      * @param {Number} [config.cornerRadius]
@@ -55,14 +56,16 @@
     /**
      * set corner radius
      * @name setCornerRadius
-     * @methodOf Kinetic.Rect.prototype
+     * @method
+     * @memberof Kinetic.Rect.prototype
      * @param {Number} corner radius
      */
 
     /**
      * get corner radius
      * @name getCornerRadius
-     * @methodOf Kinetic.Rect.prototype
+     * @method
+     * @memberof Kinetic.Rect.prototype
      */
 
 })();

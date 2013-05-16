@@ -7,6 +7,7 @@
     /**
      * Image constructor
      * @constructor
+     * @memberof Kinetic
      * @augments Kinetic.Shape
      * @param {Object} config
      * @param {ImageObject} config.image
@@ -99,11 +100,6 @@
                 canvas.fillStroke(this);
             }
         },
-        /**
-         * apply filter
-         * @name applyFilter
-         * @methodOf Kinetic.Image.prototype
-         */
         applyFilter: function() {
             var image = this.getImage(),
                 that = this,
@@ -137,8 +133,8 @@
         },
         /**
          * clear filter
-         * @name clearFilter
-         * @methodOf Kinetic.Image.prototype
+         * @method
+         * @memberof Kinetic.Image.prototype
          */
         clearFilter: function() {
             this.filterCanvas = null;
@@ -146,8 +142,8 @@
         },
         /**
          * set crop
-         * @name setCrop
-         * @methodOf Kinetic.Image.prototype
+         * @method
+         * @memberof Kinetic.Image.prototype
          * @param {Object|Array} config
          * @param {Number} config.x
          * @param {Number} config.y
@@ -165,8 +161,8 @@
         /**
          * create image hit region which enables more accurate hit detection mapping of the image
          *  by avoiding event detections for transparent pixels
-         * @name createImageHitRegion
-         * @methodOf Kinetic.Image.prototype
+         * @method
+         * @memberof Kinetic.Image.prototype
          * @param {Function} [callback] callback function to be called once
          *  the image hit region has been created
          */
@@ -211,8 +207,8 @@
         },
         /**
          * clear image hit region
-         * @name clearImageHitRegion
-         * @methodOf Kinetic.Image.prototype
+         * @method
+         * @memberof Kinetic.Image.prototype
          */
         clearImageHitRegion: function() {
             delete this.imageHitRegion;
@@ -258,14 +254,16 @@
     /**
      * set image
      * @name setImage
-     * @methodOf Kinetic.Image.prototype
+     * @method
+     * @memberof Kinetic.Image.prototype
      * @param {ImageObject} image
      */
 
     /**
      * get image
      * @name getImage
-     * @methodOf Kinetic.Image.prototype
+     * @method
+     * @memberof Kinetic.Image.prototype
      */
      
     Kinetic.Node.addGetter(Kinetic.Image, 'crop');
@@ -273,7 +271,8 @@
     /**
      * get crop
      * @name getCrop
-     * @methodOf Kinetic.Image.prototype
+     * @method
+     * @memberof Kinetic.Image.prototype
      */
 
      Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filter');
@@ -281,13 +280,15 @@
      /**
      * set filter
      * @name setFilter
-     * @methodOf Kinetic.Image.prototype
+     * @method
+     * @memberof Kinetic.Image.prototype
      * @param {Function} filter
      */
 
     /**
      * get filter
      * @name getFilter
-     * @methodOf Kinetic.Image.prototype
+     * @method
+     * @memberof Kinetic.Image.prototype
      */
 })();

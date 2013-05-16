@@ -23,12 +23,14 @@
     * get filter brightness.  The brightness is a number between -255 and 255.&nbsp; Positive values 
     *  increase the brightness and negative values decrease the brightness, making the image darker
     * @name getFilterBrightness
-    * @methodOf Kinetic.Image.prototype
+    * @method
+    * @memberof Kinetic.Image.prototype
     */
 
     /**
     * set filter brightness
     * @name setFilterBrightness
-    * @methodOf Kinetic.Image.prototype
+    * @method
+    * @memberof Kinetic.Image.prototype
     */
 })();

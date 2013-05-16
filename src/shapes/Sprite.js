@@ -2,6 +2,7 @@
     /**
      * Sprite constructor
      * @constructor
+     * @memberof Kinetic
      * @augments Kinetic.Shape
      * @param {Object} config
      * @param {String} config.animation animation key
@@ -55,8 +56,8 @@
         },
         /**
          * start sprite animation
-         * @name start
-         * @methodOf Kinetic.Sprite.prototype
+         * @method
+         * @memberof Kinetic.Sprite.prototype
          */
         start: function() {
             var that = this;
@@ -84,8 +85,8 @@
         },
         /**
          * stop sprite animation
-         * @name stop
-         * @methodOf Kinetic.Sprite.prototype
+         * @method
+         * @memberof Kinetic.Sprite.prototype
          */
         stop: function() {
             this.anim.stop();
@@ -93,8 +94,8 @@
         },
         /**
          * set after frame event handler
-         * @name afterFrame
-         * @methodOf Kinetic.Sprite.prototype
+         * @method
+         * @memberof Kinetic.Sprite.prototype
          * @param {Integer} index frame index
          * @param {Function} func function to be executed after frame has been drawn
          */
@@ -125,14 +126,16 @@
     /**
      * set animation key
      * @name setAnimation
-     * @methodOf Kinetic.Sprite.prototype
+     * @method
+     * @memberof Kinetic.Sprite.prototype
      * @param {String} anim animation key
      */
 
      /**
      * get animation key
      * @name getAnimation
-     * @methodOf Kinetic.Sprite.prototype
+     * @method
+     * @memberof Kinetic.Sprite.prototype
      */
 
     Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'animations');
@@ -140,14 +143,16 @@
     /**
      * set animations map
      * @name setAnimations
-     * @methodOf Kinetic.Sprite.prototype
+     * @method
+     * @memberof Kinetic.Sprite.prototype
      * @param {Object} animations
      */
 
      /**
      * get animations map
      * @name getAnimations
-     * @methodOf Kinetic.Sprite.prototype
+     * @method
+     * @memberof Kinetic.Sprite.prototype
      */
 
     Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'image');
@@ -155,14 +160,16 @@
     /**
      * set image 
      * @name setImage
-     * @methodOf Kinetic.Sprite.prototype
+     * @method
+     * @memberof Kinetic.Sprite.prototype
      * @param {Image} image 
      */
 
      /**
      * get image
      * @name getImage
-     * @methodOf Kinetic.Sprite.prototype
+     * @method
+     * @memberof Kinetic.Sprite.prototype
      */
 
     Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'index', 0);
@@ -170,14 +177,16 @@
     /**
      * set animation frame index
      * @name setIndex
-     * @methodOf Kinetic.Sprite.prototype
+     * @method
+     * @memberof Kinetic.Sprite.prototype
      * @param {Integer} index frame index
      */
 
      /**
      * get animation frame index
      * @name getIndex
-     * @methodOf Kinetic.Sprite.prototype
+     * @method
+     * @memberof Kinetic.Sprite.prototype
      */
 
     Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'frameRate', 17);
@@ -186,14 +195,16 @@
      * set frame rate in frames / second.  Default is 17 frames per second.  Increase this number to make the sprite
      *  animation run faster, and decrease the number to make the sprite animation run slower
      * @name setFrameRate
-     * @methodOf Kinetic.Sprite.prototype
+     * @method
+     * @memberof Kinetic.Sprite.prototype
      * @param {Integer} frameRate
      */
 
      /**
      * get frame rate
      * @name getFrameRate
-     * @methodOf Kinetic.Sprite.prototype
+     * @method
+     * @memberof Kinetic.Sprite.prototype
      */
 
 })();

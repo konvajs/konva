@@ -3,6 +3,7 @@
      * Path constructor.
      * @author Jason Follas
      * @constructor
+     * @memberof Kinetic
      * @augments Kinetic.Shape
      * @param {Object} config
      * @param {String} config.data SVG data string
@@ -175,7 +176,7 @@
             y: cy + (pt.x * sinPsi + pt.y * cosPsi)
         };
     };
-    /**
+    /*
      * get parsed data array from the data
      *  string.  V, v, H, h, and l data are converted to
      *  L data for the purpose of high performance Path
@@ -547,13 +548,15 @@
      *  into a data array.  Currently supported SVG data:
      *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
      * @name setData
-     * @methodOf Kinetic.Path.prototype
+     * @method
+     * @memberof Kinetic.Path.prototype
      * @param {String} SVG path command string
      */
 
     /**
      * get SVG path data string
      * @name getData
-     * @methodOf Kinetic.Path.prototype
+     * @method
+     * @memberof Kinetic.Path.prototype
      */
 })();

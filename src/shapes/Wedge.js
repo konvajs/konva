@@ -31,12 +31,6 @@
             context.lineTo(0, 0);
             context.closePath();
             canvas.fillStroke(this);
-        },
-        setAngleDeg: function(deg) {
-            this.setAngle(Kinetic.Util._degToRad(deg));
-        },
-        getAngleDeg: function() {
-            return Kinetic.Util._radToDeg(this.getAngle());
         }
     };
     Kinetic.Util.extend(Kinetic.Wedge, Kinetic.Shape);
@@ -47,14 +41,16 @@
     /**
      * set radius
      * @name setRadius
-     * @methodOf Kinetic.Wedge.prototype
+     * @method
+     * @memberof Kinetic.Wedge.prototype
      * @param {Number} radius
      */
 
      /**
      * get radius
      * @name getRadius
-     * @methodOf Kinetic.Wedge.prototype
+     * @method
+     * @memberof Kinetic.Wedge.prototype
      */
 
     Kinetic.Node.addRotationGetterSetter(Kinetic.Wedge, 'angle', 0);
@@ -62,27 +58,31 @@
     /**
      * set angle
      * @name setAngle
-     * @methodOf Kinetic.Wedge.prototype
+     * @method
+     * @memberof Kinetic.Wedge.prototype
      * @param {Number} angle
      */
 
      /**
      * set angle in degrees
      * @name setAngleDeg
-     * @methodOf Kinetic.Wedge.prototype
+     * @method
+     * @memberof Kinetic.Wedge.prototype
      * @param {Number} angleDeg
      */
 
      /**
      * get angle
      * @name getAngle
-     * @methodOf Kinetic.Wedge.prototype
+     * @method
+     * @memberof Kinetic.Wedge.prototype
      */
 
      /**
      * get angle in degrees
      * @name getAngleDeg
-     * @methodOf Kinetic.Wedge.prototype
+     * @method
+     * @memberof Kinetic.Wedge.prototype
      */
 
     Kinetic.Node.addGetterSetter(Kinetic.Wedge, 'clockwise', false);
@@ -91,13 +91,15 @@
      * set clockwise draw direction.  If set to true, the wedge will be drawn clockwise
      *  If set to false, the wedge will be drawn anti-clockwise.  The default is false.
      * @name setClockwise
-     * @methodOf Kinetic.Wedge.prototype
+     * @method
+     * @memberof Kinetic.Wedge.prototype
      * @param {Boolean} clockwise
      */
 
     /**
      * get clockwise
      * @name getClockwise
-     * @methodOf Kinetic.Wedge.prototype
+     * @method
+     * @memberof Kinetic.Wedge.prototype
      */
 })();

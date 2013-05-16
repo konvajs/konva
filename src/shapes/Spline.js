@@ -3,6 +3,7 @@
      * Spline constructor.&nbsp; Splines are defined by an array of points and
      *  a tension
      * @constructor
+     * @memberof Kinetic
      * @augments Kinetic.Line
      * @param {Object} config
      * @param {Array} config.points can be a flattened array of points, an array of point arrays, or an array of point objects.
@@ -79,8 +80,8 @@
         },
         /**
          * set tension
-         * @name setTension
-         * @methodOf Kinetic.Spline.prototype
+         * @method
+         * @memberof Kinetic.Spline.prototype
          * @param {Number} tension
          */
         setTension: function(tension) {
@@ -108,6 +109,7 @@
     /**
      * get tension
      * @name getTension
-     * @methodOf Kinetic.Spline.prototype
+     * @method
+     * @memberof Kinetic.Spline.prototype
      */
 })();

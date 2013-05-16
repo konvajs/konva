@@ -2,6 +2,7 @@
     /**
      * RegularPolygon constructor.&nbsp; Examples include triangles, squares, pentagons, hexagons, etc.
      * @constructor
+     * @memberof Kinetic
      * @augments Kinetic.Shape
      * @param {Object} config
      * @param {Number} config.sides
@@ -44,14 +45,16 @@
     /**
      * set radius
      * @name setRadius
-     * @methodOf Kinetic.RegularPolygon.prototype
+     * @method
+     * @memberof Kinetic.RegularPolygon.prototype
      * @param {Number} radius
      */
 
      /**
      * get radius
      * @name getRadius
-     * @methodOf Kinetic.RegularPolygon.prototype
+     * @method
+     * @memberof Kinetic.RegularPolygon.prototype
      */
 
     Kinetic.Node.addGetterSetter(Kinetic.RegularPolygon, 'sides', 0);
@@ -59,13 +62,15 @@
     /**
      * set number of sides
      * @name setSides
-     * @methodOf Kinetic.RegularPolygon.prototype
+     * @method
+     * @memberof Kinetic.RegularPolygon.prototype
      * @param {int} sides
      */
 
     /**
      * get number of sides
      * @name getSides
-     * @methodOf Kinetic.RegularPolygon.prototype
+     * @method
+     * @memberof Kinetic.RegularPolygon.prototype
      */
 })();

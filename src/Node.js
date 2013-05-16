@@ -53,7 +53,7 @@
          * @example
          * node.on('click', function() {<br>
          *   console.log('you clicked me!');<br>
-         * }
+         * });
          */
         on: function(typesStr, handler) {
             var types = typesStr.split(SPACE),

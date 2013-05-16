@@ -2,6 +2,7 @@
     /**
      * Circle constructor
      * @constructor
+     * @memberof Kinetic
      * @augments Kinetic.Shape
      * @param {Object} config
      * @param {Number} config.radius
@@ -49,14 +50,14 @@
 
     /**
      * set radius
-     * @name setRadius
-     * @methodOf Kinetic.Circle.prototype
+     * @method
+     * @memberof Kinetic.Circle.prototype
      * @param {Number} radius
      */
 
     /**
      * get radius
-     * @name getRadius
-     * @methodOf Kinetic.Circle.prototype
+     * @method
+     * @memberof Kinetic.Circle.prototype
      */
 })();

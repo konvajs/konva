@@ -1,8 +1,9 @@
 (function() {
     /**
-     * Blob constructor.&nbsp; Blobs are defined by an array of points and
+     * Blob constructor.  Blobs are defined by an array of points and
      *  a tension
      * @constructor
+     * @memberof Kinetic
      * @augments Kinetic.Spline
      * @param {Object} config
      * @param {Array} config.points can be a flattened array of points, an array of point arrays, or an array of point objects.

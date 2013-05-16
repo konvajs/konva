@@ -14,6 +14,7 @@
     /**
      * Label constructor.&nbsp; Labels are groups that contain Text and LabelRect shape 
      * @constructor
+     * @memberof Kinetic
      * @param {Object} config
      * @param {Object} config.text Text config
      * @param {String} [config.text.fontFamily] default is Calibri
@@ -101,29 +102,36 @@
             }); 
         }
     };
+    
+    Kinetic.Util.extend(Kinetic.Label, Kinetic.Group);
 
-    /**
-     * get LabelRect shape for the label.  You need to access the LabelRect shape in order to update
-     * the pointer properties and the corner radius
-     * @name getRect
-     * @methodOf Kinetic.Label.prototype
-     */
+    Kinetic.Node.addGetterSetter(Kinetic.Label, 'text');
 
     /**
      * get Text shape for the label.  You need to access the Text shape in order to update
      * the text properties
      * @name getText
-     * @methodOf Kinetic.Label.prototype
+     * @method
+     * @memberof Kinetic.Label.prototype
      */
-    
-    Kinetic.Util.extend(Kinetic.Label, Kinetic.Group);
-    Kinetic.Node.addGetterSetter(Kinetic.Label, 'text');
+
     Kinetic.Node.addGetterSetter(Kinetic.Label, 'rect');
        
+    /**
+     * get LabelRect shape for the label.  You need to access the LabelRect shape in order to update
+     * the pointer properties and the corner radius
+     * @name getRect
+     * @method
+     * @memberof Kinetic.Label.prototype
+     */
+
+
     /**
      * LabelRect constructor.&nbsp; A LabelRect is similar to a Rect, except that it can be configured
      *  to have a pointer element that points up, right, down, or left 
      * @constructor
+     * @memberof Kinetic
+     * @abstract
      * @param {Object} config
      * @param {String} [config.pointerDirection] can be up, right, down, left, or none; the default
      *  is none.  When a pointer is present, the positioning of the label is relative to the tip of the pointer.
@@ -196,7 +204,8 @@
     /**
      * set pointer Direction
      * @name setPointerDirection
-     * @methodOf Kinetic.LabelRect.prototype
+     * @method
+     * @memberof Kinetic.LabelRect.prototype
      * @param {String} pointerDirection can be up, right, down, left, or none.  The
      *  default is none 
      */
@@ -204,7 +213,8 @@
      /**
      * get pointer Direction
      * @name getPointerDirection
-     * @methodOf Kinetic.LabelRect.prototype
+     * @method
+     * @memberof Kinetic.LabelRect.prototype
      */
 
     Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'pointerWidth', 0);
@@ -212,14 +222,16 @@
     /**
      * set pointer width 
      * @name setPointerWidth
-     * @methodOf Kinetic.LabelRect.prototype
+     * @method
+     * @memberof Kinetic.LabelRect.prototype
      * @param {Number} pointerWidth 
      */
 
      /**
      * get pointer width 
      * @name getPointerWidth
-     * @methodOf Kinetic.LabelRect.prototype
+     * @method
+     * @memberof Kinetic.LabelRect.prototype
      */
 
     Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'pointerHeight', 0);
@@ -227,14 +239,16 @@
     /**
      * set pointer height 
      * @name setPointerHeight
-     * @methodOf Kinetic.LabelRect.prototype
+     * @method
+     * @memberof Kinetic.LabelRect.prototype
      * @param {Number} pointerHeight
      */
 
      /**
      * get pointer height 
      * @name getPointerHeight
-     * @methodOf Kinetic.LabelRect.prototype
+     * @method
+     * @memberof Kinetic.LabelRect.prototype
      */
 
     Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'cornerRadius', 0);
@@ -242,13 +256,15 @@
     /**
      * set corner radius
      * @name setCornerRadius
-     * @methodOf Kinetic.LabelRect.prototype
+     * @method
+     * @memberof Kinetic.LabelRect.prototype
      * @param {Number} corner radius
      */
 
     /**
      * get corner radius
      * @name getCornerRadius
-     * @methodOf Kinetic.LabelRect.prototype
+     * @method
+     * @memberof Kinetic.LabelRect.prototype
      */
 })();
