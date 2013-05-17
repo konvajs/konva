@@ -51,8 +51,29 @@
          * @param {String} typesStr e.g. 'click', 'mousedown touchstart', 'mousedown.foo touchstart.foo'
          * @param {Function} handler The handler function is passed an event object
          * @example
+         * // add click listener
          * node.on('click', function() {<br>
          *   console.log('you clicked me!');<br>
+         * });<br><br>
+         * 
+         * // get the target node
+         * node.on('click', function(evt) {<br>
+         *   console.log(evt.targetNode);<br>
+         * });<br><br>
+         *
+         * // stop event propagation
+         * node.on('click', function(evt) {<br>
+         *   evt.cancelBubble = true;
+         * });<br><br>
+         *
+         * // bind multiple listeners
+         * node.on('click touchstart', function() {<br>
+         *   console.log('you clicked/touched me!');<br>
+         * });<br><br>
+         *
+         * // namespace listener
+         * node.on('click.foo', function() {<br>
+         *   console.log('you clicked/touched me!');<br>
          * });
          */
         on: function(typesStr, handler) {
@@ -124,7 +145,7 @@
             return this;
         },
         /**
-         * remove child from container, but don't destroy it
+         * remove self from parent, but don't destroy
          * @method
          * @memberof Kinetic.Node.prototype
          */
@@ -138,7 +159,7 @@
             delete this.parent;
         },
         /**
-         * remove and destroy node
+         * remove and destroy self
          * @method
          * @memberof Kinetic.Node.prototype
          */
@@ -858,6 +879,22 @@
          */
         getHeight: function() {
             return this.attrs.height || 0;
+        },
+        /**
+         * get class name, which may return Stage, Layer, Group, or shape class names like Rect, Circle, Text, etc.
+         * @method
+         * @memberof Kinetic.Node.prototype
+         */
+        getClassName: function() {
+            return this.shapeType || this.nodeType;
+        },
+        /**
+         * get the node type, which may return Stage, Layer, Group, or Node
+         * @method
+         * @memberof Kinetic.Node.prototype
+         */
+        getType: function() {
+            return this.nodeType;
         },
         _get: function(selector) {
             return this.nodeType === selector ? [this] : [];

@@ -1,4 +1,37 @@
 Test.Modules.NODE = {
+    'getType and getClassName': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        stage.add(layer.add(group.add(circle)));
+
+        console.log(stage.getType());
+
+        test(stage.getType() === 'Stage', 'stage type should be Stage');
+        test(layer.getType() === 'Layer', 'layer type should be Layer');
+        test(group.getType() === 'Group', 'group type should be Group');
+        test(circle.getType() === 'Shape', 'circle type should be Shape');
+
+        test(stage.getClassName() === 'Stage', 'stage class name should be Stage');
+        test(layer.getClassName() === 'Layer', 'layer class name should be Layer');
+        test(group.getClassName() === 'Group', 'group class name should be Group');
+        test(circle.getClassName() === 'Circle', 'circle class name should be Circle');
+
+        
+    },
     'setAttr': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
