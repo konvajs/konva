@@ -155,12 +155,12 @@
             return node;
         },
         /**
-         * get shapes that intersect a point
+         * get all shapes that intersect a point
          * @method
          * @memberof Kinetic.Container.prototype
-         * @param {Object} point
+         * @param {Object} pos
          */
-        getIntersections: function() {
+        getAllIntersections: function() {
             var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments));
             var arr = [];
             var shapes = this.get('Shape');

@@ -74,7 +74,7 @@ var Kinetic = {};
      *     context.quadraticCurveTo(300, 100, 260, 170);<br>
      *     context.closePath();<br>
      *     canvas.fillStroke(this);<br>
-     *   }   
+     *   }<br>   
      *});
      */
     Kinetic.Shape = function(config) {

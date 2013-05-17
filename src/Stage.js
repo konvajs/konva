@@ -252,7 +252,8 @@
             this.toDataURL(config);
         },
         /**
-         * get intersection object that contains shape and pixel data
+         * get visible intersection object that contains shape and pixel data. This is the preferred
+         * method for determining if a point intersects a shape or not
          * @method
          * @memberof Kinetic.Stage.prototype
          * @param {Object} pos point object

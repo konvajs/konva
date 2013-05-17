@@ -11,9 +11,11 @@
             this.hitCanvas = new Kinetic.HitCanvas();
         },
         /**
-         * get intersection object that contains shape and pixel data
+         * get visible intersection object that contains shape and pixel data. This is the preferred
+         * method for determining if a point intersects a shape or not
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Kinetic.Layer.prototype
+         * @param {Object} pos point object
          */
         getIntersection: function() {
             var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments)),
