@@ -8,9 +8,63 @@
      * @param {String} config.animation animation key
      * @param {Object} config.animations animation map
      * @param {Integer} [config.index] animation index
-     * @param {Image} image image object
+     * @param {Image} config.image image object
      * {{ShapeParams}}
      * {{NodeParams}}
+     * @example
+     * var animations = {<br>
+     *   idle: [{<br>
+     *     x: 2,<br>
+     *     y: 2,<br>
+     *     width: 70,<br>
+     *     height: 119<br>
+     *   }, {<br>
+     *     x: 71,<br>
+     *     y: 2,<br>
+     *     width: 74,<br>
+     *     height: 119<br>
+     *   }, {<br>
+     *     x: 146,<br>
+     *     y: 2,<br>
+     *     width: 81,<br>
+     *     height: 119<br>
+     *   }, {<br>
+     *     x: 226,<br>
+     *     y: 2,<br>
+     *     width: 76,<br>
+     *     height: 119<br>
+     *   }],<br>
+     *   punch: [{<br>
+     *     x: 2,<br>
+     *     y: 138,<br>
+     *     width: 74,<br>
+     *     height: 122<br>
+     *   }, {<br>
+     *     x: 76,<br>
+     *     y: 138,<br>
+     *     width: 84,<br>
+     *     height: 122<br>
+     *   }, {<br>
+     *     x: 346,<br>
+     *     y: 138,<br>
+     *     width: 120,<br>
+     *     height: 122<br>
+     *   }]<br>
+     * };<br><br>
+     *
+     * var imageObj = new Image();<br>
+     * imageObj.onload = function() {<br>
+     *   var sprite = new Kinetic.Sprite({<br>
+     *     x: 200,<br>
+     *     y: 100,<br>
+     *     image: imageObj,<br>
+     *     animation: 'idle',<br>
+     *     animations: animations,<br>
+     *     frameRate: 7,<br>
+     *     index: 0<br>    
+     *   });<br>
+     * };<br>
+     * imageObj.src = '/path/to/image.jpg'
      */
     Kinetic.Sprite = function(config) {
         this._initSprite(config);

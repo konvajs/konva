@@ -14,17 +14,17 @@
      *   radius: 5,<br>
      *   fill: 'red',<br>
      *   stroke: 'black'<br>
-     *   strokeWidth: 5
-     * });
+     *   strokeWidth: 5<br>
+     * });<br><br>
      *
-     * // create ellipse
+     * // create ellipse<br>
      * var circle = new Kinetic.Circle({<br>
      *   radius: 5,<br>
      *   fill: 'red',<br>
      *   stroke: 'black'<br>
      *   strokeWidth: 5,<br>
      *   scaleX: 2,<br>
-     *   strokeScaleEnabled: false
+     *   strokeScaleEnabled: false<br>
      * });
      */
     Kinetic.Circle = function(config) {

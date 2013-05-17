@@ -118,7 +118,7 @@
          * // remove listener<br>
          * node.off('click');<br><br>
          *
-         * // remove multiple listener<br>
+         * // remove multiple listeners<br>
          * node.off('click touchstart');<br><br>
          *
          * // remove listener by name<br>
@@ -414,7 +414,7 @@
          * // set x only<br>
          * node.setPosition({<br>
          *   x: 5<br>
-         * });<br>
+         * });<br><br>
          *
          * // set x and y using an array<br>
          * node.setPosition([5, 10]);<br><br>

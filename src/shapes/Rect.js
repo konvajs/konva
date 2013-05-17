@@ -14,7 +14,7 @@
      *   height: 50,<br>
      *   fill: 'red',<br>
      *   stroke: 'black'<br>
-     *   strokeWidth: 5
+     *   strokeWidth: 5<br>
      * });
      */
     Kinetic.Rect = function(config) {

@@ -17,7 +17,7 @@
      *   tension: 0.8,<br>
      *   fill: 'red',<br>
      *   stroke: 'black'<br>
-     *   strokeWidth: 5
+     *   strokeWidth: 5<br>
      * });
      */
     Kinetic.Blob = function(config) {
