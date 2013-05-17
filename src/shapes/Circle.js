@@ -8,6 +8,24 @@
      * @param {Number} config.radius
      * {{ShapeParams}}
      * {{NodeParams}}
+     * @example
+     * // create simple circle
+     * var circle = new Kinetic.Circle({<br>
+     *   radius: 5,<br>
+     *   fill: 'red',<br>
+     *   stroke: 'black'<br>
+     *   strokeWidth: 5
+     * });
+     *
+     * // create ellipse
+     * var circle = new Kinetic.Circle({<br>
+     *   radius: 5,<br>
+     *   fill: 'red',<br>
+     *   stroke: 'black'<br>
+     *   strokeWidth: 5,<br>
+     *   scaleX: 2,<br>
+     *   strokeScaleEnabled: false
+     * });
      */
     Kinetic.Circle = function(config) {
         this._initCircle(config);

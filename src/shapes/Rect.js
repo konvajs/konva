@@ -8,6 +8,14 @@
      * @param {Number} [config.cornerRadius]
      * {{ShapeParams}}
      * {{NodeParams}}
+     * @example
+     * var rect = new Kinetic.Rect({<br>
+     *   width: 100,<br>
+     *   height: 50,<br>
+     *   fill: 'red',<br>
+     *   stroke: 'black'<br>
+     *   strokeWidth: 5
+     * });
      */
     Kinetic.Rect = function(config) {
         this._initRect(config);

@@ -11,6 +11,14 @@
      * @param {Number} [config.tension] default value is 1.  Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
      * {{ShapeParams}}
      * {{NodeParams}}
+     * @example
+     * var blob = new Kinetic.Blob({<br>
+     *   points: [73, 140, 340, 23, 500, 109, 300, 170],<br>
+     *   tension: 0.8,<br>
+     *   fill: 'red',<br>
+     *   stroke: 'black'<br>
+     *   strokeWidth: 5
+     * });
      */
     Kinetic.Blob = function(config) {
         this._initBlob(config);

@@ -60,6 +60,22 @@ var Kinetic = {};
      * @param {Object} config
      * {{ShapeParams}}
      * {{NodeParams}}
+     * @example
+     * var customShape = new Kinetic.Shape({<br>
+     *   x: 5,<br>
+     *   y: 10,<br>
+     *   fill: 'red',<br>
+     *   // a Kinetic.Canvas renderer is passed into the drawFunc function<br>
+     *   drawFunc: function(canvas) {<br>
+     *     var context = canvas.getContext();<br>
+     *     context.beginPath();<br>
+     *     context.moveTo(200, 50);<br>
+     *     context.lineTo(420, 80);<br>
+     *     context.quadraticCurveTo(300, 100, 260, 170);<br>
+     *     context.closePath();<br>
+     *     canvas.fillStroke(this);<br>
+     *   }   
+     *});
      */
     Kinetic.Shape = function(config) {
         this._initShape(config);
@@ -88,6 +104,12 @@ var Kinetic = {};
      * @param {String|DomElement} config.container Container id or DOM element
      * {{NodeParams}}
      * {{ContainerParams}}
+     * @example
+     * var stage = new Kinetic.Stage({<br>
+     *   width: 500,<br>
+     *   height: 800,<br>
+     *   container: 'containerId'<br>
+     * });
      */
     Kinetic.Stage = function(config) {
         this._initStage(config);
@@ -104,6 +126,8 @@ var Kinetic = {};
      * to clear the canvas before each layer draw.  The default value is true.
      * {{NodeParams}}
      * {{ContainerParams}}
+     * @example
+     * var layer = new Kinetic.Layer();
      */
     Kinetic.Layer = function(config) {
         this._initLayer(config);
@@ -117,6 +141,8 @@ var Kinetic = {};
      * @param {Object} config
      * {{NodeParams}}
      * {{ContainerParams}}
+     * @example
+     * var group = new Kinetic.Group();
      */
     Kinetic.Group = function(config) {
         this._initGroup(config);

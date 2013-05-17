@@ -14,6 +14,18 @@
      * @param {Object} [config.crop]
      * {{ShapeParams}}
      * {{NodeParams}}
+     * @example
+     * var imageObj = new Image();<br>
+     * imageObj.onload = function() {<br>
+     *   var image = new Kinetic.Image({<br>
+     *     x: 200,<br>
+     *     y: 50,<br>
+     *     image: imageObj,<br>
+     *     width: 100,<br>
+     *     height: 100<br>
+     *   });<br>
+     * };<br>
+     * imageObj.src = '/path/to/image.jpg'
      */
     Kinetic.Image = function(config) {
         this._initImage(config);

@@ -494,7 +494,7 @@
          * // move node in x direction by 1px<br>
          * node.move({<br>
          *   x: 1<br>
-         * })
+         * });
          */
         move: function() {
             var pos = Kinetic.Util._getXY([].slice.call(arguments)),
@@ -721,7 +721,7 @@
          * // fire custom event with custom event object<br>
          * node.fire('foo', {<br>
          *   bar: 10<br>
-         * });<br>
+         * });<br><br>
          *
          * // fire click event that doesn't bubble<br>
          * node.fire('click', null, false);
@@ -908,7 +908,7 @@
          *   callback: function(img) {<br>
          *     // do stuff with img<br>
          *   }<br>
-         * })
+         * });
          */
         toImage: function(config) {
             Kinetic.Util._getImage(this.toDataURL(config), function(img) {
