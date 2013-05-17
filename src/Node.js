@@ -51,27 +51,27 @@
          * @param {String} typesStr e.g. 'click', 'mousedown touchstart', 'mousedown.foo touchstart.foo'
          * @param {Function} handler The handler function is passed an event object
          * @example
-         * // add click listener
+         * // add click listener<br>
          * node.on('click', function() {<br>
          *   console.log('you clicked me!');<br>
          * });<br><br>
          * 
-         * // get the target node
+         * // get the target node<br>
          * node.on('click', function(evt) {<br>
          *   console.log(evt.targetNode);<br>
          * });<br><br>
          *
-         * // stop event propagation
+         * // stop event propagation<br>
          * node.on('click', function(evt) {<br>
-         *   evt.cancelBubble = true;
+         *   evt.cancelBubble = true;<br>
          * });<br><br>
          *
-         * // bind multiple listeners
+         * // bind multiple listeners<br>
          * node.on('click touchstart', function() {<br>
          *   console.log('you clicked/touched me!');<br>
          * });<br><br>
          *
-         * // namespace listener
+         * // namespace listener<br>
          * node.on('click.foo', function() {<br>
          *   console.log('you clicked/touched me!');<br>
          * });
@@ -114,6 +114,15 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {String} typesStr e.g. 'click', 'mousedown touchstart', '.foobar'
+         * @example
+         * // remove listener<br>
+         * node.off('click');<br><br>
+         *
+         * // remove multiple listener<br>
+         * node.off('click touchstart');<br><br>
+         *
+         * // remove listener by name<br>
+         * node.off('click.foo');
          */
         off: function(typesStr) {
             var types = typesStr.split(SPACE),
@@ -148,6 +157,8 @@
          * remove self from parent, but don't destroy
          * @method
          * @memberof Kinetic.Node.prototype
+         * @example
+         * node.remove();
          */
         remove: function() {
             var parent = this.getParent();
@@ -162,6 +173,8 @@
          * remove and destroy self
          * @method
          * @memberof Kinetic.Node.prototype
+         * @example
+         * node.destroy();
          */
         destroy: function() {
             var parent = this.getParent(), 
@@ -187,6 +200,8 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {String} attr  
+         * @example
+         * var attr = node.getAttr('x');
          */
         getAttr: function(attr) {
             var method = GET + Kinetic.Util._capitalize(attr);
@@ -204,6 +219,8 @@
          * @memberof Kinetic.Node.prototype
          * @param {String} attr  
          * #param {*} val
+         * @example
+         * node.setAttr('x', 5);
          */
         setAttr: function() {
             var args = Array.prototype.slice.call(arguments),
@@ -221,7 +238,7 @@
             }
         },
         /**
-         * get attrs
+         * get attrs object literal
          * @method
          * @memberof Kinetic.Node.prototype
          */
@@ -235,10 +252,15 @@
         },
         
         /**
-         * set attrs
+         * set multiple attrs at once using an object literal
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {Object} config object containing key value pairs
+         * @example
+         * node.setAttrs({<br>
+         *   x: 5,<br>
+         *   fill: 'red'<br>
+         * });<br>
          */
         setAttrs: function(config) {
             var key, method;
@@ -385,6 +407,20 @@
          * @memberof Kinetic.Node.prototype
          * @param {Number} x
          * @param {Number} y
+         * @example
+         * // set x and y<br>
+         * node.setPosition(5, 10);<br><br>
+         *
+         * // set x only<br>
+         * node.setPosition({<br>
+         *   x: 5<br>
+         * });<br>
+         *
+         * // set x and y using an array<br>
+         * node.setPosition([5, 10]);<br><br>
+         *
+         * // set both x and y to 5<br>
+         * node.setPosition(5);
          */
         setPosition: function() {
             var pos = Kinetic.Util._getXY([].slice.call(arguments));
@@ -451,6 +487,14 @@
          * @memberof Kinetic.Node.prototype
          * @param {Number} x
          * @param {Number} y
+         * @example
+         * // move node in x direction by 1px and y direction by 2px<br>
+         * node.move(1, 2);<br><br>
+         *
+         * // move node in x direction by 1px<br>
+         * node.move({<br>
+         *   x: 1<br>
+         * })
          */
         move: function() {
             var pos = Kinetic.Util._getXY([].slice.call(arguments)),
@@ -588,6 +632,9 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {Container} newContainer
+         * @example
+         * // move node from current layer into layer2<br>
+         * node.moveTo(layer2);
          */
         moveTo: function(newContainer) {
             Kinetic.Node.prototype.remove.call(this);
@@ -664,6 +711,20 @@
          * @param {EventObject} evt event object
          * @param {Boolean} bubble setting the value to false, or leaving it undefined, will result in the event 
          *  not bubbling.  Setting the value to true will result in the event bubbling.
+         * @example
+         * // manually fire click event<br>
+         * node.fire('click');<br><br>
+         *
+         * // fire custom event<br>
+         * node.fire('foo');<br><br>
+         *
+         * // fire custom event with custom event object<br>
+         * node.fire('foo', {<br>
+         *   bar: 10<br>
+         * });<br>
+         *
+         * // fire click event that doesn't bubble<br>
+         * node.fire('click', null, false);
          */
         fire: function(eventType, evt, bubble) {
             // bubble
@@ -743,6 +804,14 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {Object} attrs override attrs
+         * @example
+         * // clone a rectangle<br>
+         * var rectClone = rect.clone();<br><br>
+         *
+         * // clone a rectangle, but override the x position<br>
+         * var rectClone = rect.clone({<br>
+         *   x: 5<br>
+         * });
          */
         clone: function(obj) {
             // instantiate new node
@@ -834,6 +903,12 @@
          * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
          *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
          *  is very high quality
+         * @example
+         * var image = node.toImage({<br>
+         *   callback: function(img) {<br>
+         *     // do stuff with img<br>
+         *   }<br>
+         * })
          */
         toImage: function(config) {
             Kinetic.Util._getImage(this.toDataURL(config), function(img) {
@@ -886,7 +961,7 @@
          * @memberof Kinetic.Node.prototype
          */
         getClassName: function() {
-            return this.shapeType || this.nodeType;
+            return this.className || this.shapeType || this.nodeType;
         },
         /**
          * get the node type, which may return Stage, Layer, Group, or Node
@@ -990,14 +1065,6 @@
             go._removeName(oldName, this._id);
             go._addName(this, name);
             this._setAttr(NAME, name);
-        },
-        /**
-         * get node type.  Returns 'Stage', 'Layer', 'Group', or 'Shape'
-         * @method
-         * @memberof Kinetic.Node.prototype
-         */
-        getNodeType: function() {
-            return this.nodeType;
         },
         _setAttr: function(key, val) {
             var oldVal;

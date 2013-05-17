@@ -52,6 +52,7 @@ Test.Modules.LABEL = {
 
         layer.draw();
         
-        test(label.getNodeType() === 'Group', 'label should be a group');
+        test(label.getType() === 'Group', 'label should be a group');
+        test(label.getClassName() === 'Label', 'label class name should be Label');
     }
 };

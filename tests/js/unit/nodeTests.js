@@ -2825,40 +2825,5 @@ Test.Modules.NODE = {
         layer.draw();
 
         testDataUrl(layer.toDataURL(), 'cleared', 'group is still visible');
-    },
-    'test getNodeType()': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-
-        var rect = new Kinetic.Rect({
-            x: 200,
-            y: 100,
-            width: 100,
-            height: 50,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 4,
-            draggable: true,
-            rotationDeg: 60,
-            scale: {
-                x: 2,
-                y: 1
-            }
-        });
-
-        group.add(rect);
-        layer.add(group);
-        stage.add(layer);
-       
-        test(stage.getNodeType() === 'Stage', 'node type should be Stage');
-        test(layer.getNodeType() === 'Layer', 'node type should be Layer');
-        test(group.getNodeType() === 'Group', 'node type should be Group');
-        test(rect.getNodeType() === 'Shape', 'node type should be Shape');
-
     }
 };

@@ -7,6 +7,7 @@
         RIGHT = 'right',
         DOWN = 'down',
         LEFT = 'left',
+        LABEL = 'Label',
         
      // cached variables
      attrChangeListLen = ATTR_CHANGE_LIST.length;
@@ -43,6 +44,7 @@
             
             this.innerGroup = new Kinetic.Group();
             this.createAttrs();
+            this.className = LABEL;
             Kinetic.Group.call(this, config);
             text = new Kinetic.Text(config.text);
             this.setText(text);
