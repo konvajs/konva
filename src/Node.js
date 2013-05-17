@@ -1154,7 +1154,7 @@
             
         constructor.prototype[baseMethod] = function() {
             var pos = Kinetic.Util._getXY([].slice.call(arguments)),
-                oldVal = this.attrs[attr]; 
+                oldVal = this.attrs[attr],
                 x = 0,
                 y = 0;
 
