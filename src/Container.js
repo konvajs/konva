@@ -155,7 +155,10 @@
             return node;
         },
         /**
-         * get all shapes that intersect a point
+         * get all shapes that intersect a point.  Note: because this method must clear a temporary
+         * canvas and redraw every shape inside the container, it should only be used for special sitations 
+         * because it performs very poorly.  Please use the {@link Kinetic.Stage#getIntersection} method if at all possible
+         * because it performs much better
          * @method
          * @memberof Kinetic.Container.prototype
          * @param {Object} pos
