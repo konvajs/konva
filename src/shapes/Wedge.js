@@ -10,6 +10,16 @@
      * @param {Boolean} [config.clockwise]
      * {{ShapeParams}}
      * {{NodeParams}}
+     * @example
+     * // draw a wedge that's pointing downwards<br>
+     * var wedge = new Kinetic.Wedge({<br>
+     *   radius: 40,<br>
+     *   fill: 'red',<br>
+     *   stroke: 'black'<br>
+     *   strokeWidth: 5,<br>
+     *   angleDeg: 60,<br>
+     *   rotationDeg: -120<br>
+     * });
      */
     Kinetic.Wedge = function(config) {
         this._initWedge(config);

@@ -11,7 +11,7 @@
      * @example
      * // create simple circle
      * var circle = new Kinetic.Circle({<br>
-     *   radius: 5,<br>
+     *   radius: 40,<br>
      *   fill: 'red',<br>
      *   stroke: 'black'<br>
      *   strokeWidth: 5<br>

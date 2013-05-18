@@ -11,6 +11,14 @@
      * @param {Number} [config.tension] default value is 1.  Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
      * {{ShapeParams}}
      * {{NodeParams}}
+     * @example
+     * var spline = new Kinetic.Spline({<br>
+     *   x: 100,<br>
+     *   y: 50,<br>
+     *   points: [73, 70, 340, 23, 450, 60, 500, 20],<br>
+     *   stroke: 'red',<br>
+     *   tension: 1<br>
+     * });
      */
     Kinetic.Spline = function(config) {
         this._initSpline(config);

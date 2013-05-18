@@ -800,16 +800,18 @@
             }
         },
         /**
-         * clone node.  Returns a new Node instance with identical attributes
+         * clone node.  Returns a new Node instance with identical attributes.  You can also override
+         *  the node properties with an object literal, enabling you to use an existing node as a template
+         *  for another node
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {Object} attrs override attrs
          * @example
-         * // clone a rectangle<br>
-         * var rectClone = rect.clone();<br><br>
+         * // simple clone<br>
+         * var clone = node.clone();<br><br>
          *
-         * // clone a rectangle, but override the x position<br>
-         * var rectClone = rect.clone({<br>
+         * // clone a node and override the x position<br>
+         * var clone = rect.clone({<br>
          *   x: 5<br>
          * });
          */

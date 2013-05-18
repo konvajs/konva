@@ -45,6 +45,15 @@
      * @param {String} [config.wrap] can be word, char, or none. Default is word
      * {{ShapeParams}}
      * {{NodeParams}}
+     * @example
+     * var text = new Kinetic.Text({<br>
+     *   x: stage.getWidth() / 2,<br>
+     *   y: 15,<br>
+     *   text: 'Simple Text',<br>
+     *   fontSize: 30,<br>
+     *   fontFamily: 'Calibri',<br>
+     *   fill: 'green'<br>
+     * });
      */
     Kinetic.Text = function(config) {
         this._initText(config);

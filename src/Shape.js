@@ -75,9 +75,9 @@
         },
         /**
          * determines if point is in the shape, regardless if other shapes are on top of it.  Note: because
-         * this method clears a temp hit canvas, and redraws the shape, it performs very poorly if executed many times
-         * consecutively.  Please use the {@link Kinetic.Stage#getIntersection} method if at all possible
-         * because it performs much better
+         *  this method clears a temporary canvas and then redraws the shape, it performs very poorly if executed many times
+         *  consecutively.  Please use the {@link Kinetic.Stage#getIntersection} method if at all possible
+         *  because it performs much better
          * @method
          * @memberof Kinetic.Shape.prototype
          * @param {Object} point point can be an object containing

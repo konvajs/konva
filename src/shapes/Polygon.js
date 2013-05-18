@@ -9,6 +9,13 @@
      *  e.g. [0,1,2,3], [[0,1],[2,3]] and [{x:0,y:1},{x:2,y:3}] are equivalent
      * {{ShapeParams}}
      * {{NodeParams}}
+     * @example
+     * var polygon = new Kinetic.Polygon({<br>
+     *   points: [73, 192, 73, 160, 340, 23, 500, 109, 499, 139, 342, 93],<br>
+     *   fill: '#00D2FF',<br>
+     *   stroke: 'black',<br>
+     *   strokeWidth: 5<br>
+     * });
      */
     Kinetic.Polygon = function(config) {
         this._initPolygon(config);
