@@ -19,9 +19,25 @@
     }
 
     /**
-     * Tween constructor.  
+     * Tween constructor.  Tweens enable you to animate a node between the current state and a new state.
+     *  You can play, pause, reverse, seek, reset, and finish tweens.  By default, tweens are animated using
+     *  a linear easing.  For more tweening options, check out {@link Kinetic.Easings}
      * @constructor
      * @memberof Kinetic
+     * @example
+     * // instantiate new tween which fully rotates a node in 1 second
+     * var tween = new Kinetic.Tween({<br>
+     *   node: node,<br>
+     *   rotationDeg: 360,<br>
+     *   duration: 1,<br>
+     *   Kinetic.Easings.EaseInOut<br>   
+     * });<br><br>
+     * 
+     * // play tween<br>
+     * tween.play();<br><br>
+     *
+     * // pause tween<br>
+     * tween.pause();
      */
     Kinetic.Tween = function(config) {
         var that = this,
@@ -38,7 +54,7 @@
         this.onFinish = config.onFinish;
 
         this.anim = new Kinetic.Animation(function() {
-            that.onEnterFrame();
+            that._onEnterFrame();
         }, node.getLayer());
 
         for (key in config) {
@@ -163,12 +179,7 @@
             });
             this.node.getLayer().draw();
         },
-        /**
-         * define a function that's executed on each tween animation frame
-         * @method
-         * @memberof Kinetic.Tween.prototype
-         */
-        onEnterFrame: function() {
+        _onEnterFrame: function() {
             this._iterate(function(tween) {
                 tween.onEnterFrame();
             });

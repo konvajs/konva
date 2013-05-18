@@ -1,7 +1,7 @@
 (function() {
     /**
      * Collection constructor.  Collection extends
-     *  Array.  This class is used in conjunction with get()
+     *  Array.  This class is used in conjunction with {@link Kinetic.Container#get}
      * @constructor
      * @memberof Kinetic
      */
@@ -21,6 +21,11 @@
      * @method
      * @memberof Kinetic.Collection.prototype
      * @param {Function} func
+     * @example
+     * // get all nodes with name foo inside layer, and set x to 10 for each
+     * layer.get('.foo').each(function(shape, n) {<br>
+     *   shape.setX(10);<br>
+     * });
      */
     Kinetic.Collection.prototype.each = function(func) {
         for(var n = 0; n < this.length; n++) {
@@ -214,6 +219,8 @@
         PI_OVER_DEG180 = Math.PI / 180,
         DEG180_OVER_PI = 180 / Math.PI,
         HASH = '#',
+        ZERO = '0',
+        KINETIC_WARNING = 'Kinetic warning: ',
         RGB_PAREN = 'rgb(',
         COLORS = {
             aqua: [0,255,255],
@@ -525,22 +532,27 @@
             };
         },
         /**
-         * get random color
+         * return random hex color
          * @method
          * @memberof Kinetic.Util.prototype
          */
         getRandomColor: function() {
             var randColor = (Math.random() * 0xFFFFFF << 0).toString(16);
             while (randColor.length < 6) {
-              randColor = '0' + randColor;
+              randColor = ZERO + randColor;
             }
-            return randColor;
+            return HASH + randColor;
         },
         /**
          * get RGB components of a color
          * @method
          * @memberof Kinetic.Util.prototype
          * @param {String} color 
+         * @example
+         * // each of the following examples return {r:0, g:0, b:255}<br>
+         * var rgb = Kinetic.Util.getRGB('blue');<br>
+         * var rgb = Kinetic.Util.getRGB('#0000ff');<br>
+         * var rgb = Kinetic.Util.getRGB('rgb(0,0,255)');
          */
         getRGB: function(color) {
           var rgb;
@@ -616,7 +628,7 @@
              * if we don't use window.console in the conditional
              */
             if(window.console && console.warn) {
-                console.warn('Kinetic warning: ' + str);
+                console.warn(KINETIC_WARNING + str);
             }
         },
         extend: function(c1, c2) {

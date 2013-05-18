@@ -1,4 +1,7 @@
 (function() {
+    // constants
+    var HASH = '#';
+
     Kinetic.Util.addMethods(Kinetic.Layer, {
         _initLayer: function(config) {
             this.nodeType = 'Layer';
@@ -26,7 +29,7 @@
                 // this indicates that a hit pixel may have been found
                 if(p[3] === 255) {
                     colorKey = Kinetic.Util._rgbToHex(p[0], p[1], p[2]);
-                    shape = Kinetic.Global.shapes[colorKey];
+                    shape = Kinetic.Global.shapes[HASH + colorKey];
                     return {
                         shape: shape,
                         pixel: p

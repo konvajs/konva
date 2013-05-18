@@ -424,7 +424,7 @@
         _fill: function(shape) {
             var context = this.context;
             context.save();
-            context.fillStyle = '#' + shape.colorKey;
+            context.fillStyle = shape.colorKey;
             shape._fillFuncHit(context);
             context.restore();
         },
@@ -437,7 +437,7 @@
                 this._applyLineCap(shape);
                 context.save();
                 context.lineWidth = strokeWidth || 2;
-                context.strokeStyle = '#' + shape.colorKey;
+                context.strokeStyle = shape.colorKey;
                 shape._strokeFuncHit(context);
                 context.restore();
             }

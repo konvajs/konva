@@ -201,7 +201,7 @@
          * @memberof Kinetic.Node.prototype
          * @param {String} attr  
          * @example
-         * var attr = node.getAttr('x');
+         * var x = node.getAttr('x');
          */
         getAttr: function(attr) {
             var method = GET + Kinetic.Util._capitalize(attr);
@@ -723,8 +723,8 @@
          *   bar: 10<br>
          * });<br><br>
          *
-         * // fire click event that doesn't bubble<br>
-         * node.fire('click', null, false);
+         * // fire click event that bubbles<br>
+         * node.fire('click', null, true);
          */
         fire: function(eventType, evt, bubble) {
             // bubble
@@ -1465,10 +1465,23 @@
     /**
      * set scale
      * @name setScale
-     * @param {Number} x
-     * @param {Number} y
+     * @param {Number} scale
      * @method
      * @memberof Kinetic.Node.prototype
+     * @example
+     * // set x and y to the same value<br>
+     * shape.setScale(5);<br><br>
+     *
+     * // set x and y<br>
+     * shape.setScale(20, 40);<br><br>
+     *
+     * // set x only <br>
+     * shape.setScale({<br>
+     *   x: 20<br>
+     * });<br><br>
+     *
+     * // set x and y using an array<br>
+     * shape.setScale([20, 40]);
      */
 
      /**
@@ -1517,6 +1530,20 @@
      * @param {Number} y
      * @method
      * @memberof Kinetic.Node.prototype
+     * @example
+     * // set x and y<br>
+     * shape.setSkew(20, 40);<br><br>
+     *
+     * // set x only <br>
+     * shape.setSkew({<br>
+     *   x: 20<br>
+     * });<br><br>
+     *
+     * // set x and y using an array<br>
+     * shape.setSkew([20, 40]);<br><br>
+     *
+     * // set x and y to the same value<br>
+     * shape.setSkew(5);
      */
 
      /**
@@ -1565,6 +1592,20 @@
      * @memberof Kinetic.Node.prototype
      * @param {Number} x
      * @param {Number} y
+     * @example
+     * // set x and y<br>
+     * shape.setOffset(20, 40);<br><br>
+     *
+     * // set x only <br>
+     * shape.setOffset({<br>
+     *   x: 20<br>
+     * });<br><br>
+     *
+     * // set x and y using an array<br>
+     * shape.setOffset([20, 40]);<br><br>
+     *
+     * // set x and y to the same value<br>
+     * shape.setOffset(5);
      */
 
      /**

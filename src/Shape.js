@@ -243,6 +243,12 @@
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Obect} color requires an object literal containing an r, g, and b component
+     * @example
+     * shape.setStrokeRGB({<br>
+     *   r: 200,<br>
+     *   g: 50,<br>
+     *   b: 100<br>
+     * });
      */
 
      /**
@@ -430,6 +436,12 @@
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Obect} color requires an object literal containing an r, g, and b component
+     * @example
+     * shape.setShadowRGB({<br>
+     *   r: 200,<br>
+     *   g: 50,<br>
+     *   b: 100<br>
+     * });
      */
 
      /**
@@ -558,6 +570,12 @@
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Obect} color requires an object literal containing an r, g, and b component
+     * @example
+     * shape.setFillRGB({<br>
+     *   r: 200,<br>
+     *   g: 50,<br>
+     *   b: 100<br>
+     * });
      */
 
      /**
@@ -850,6 +868,20 @@
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number|Array|Object} offset
+     * @example
+     * // set x and y<br>
+     * shape.setFillPatternOffset(20, 40);<br><br>
+     *
+     * // set x only <br>
+     * shape.setFillPatternOffset({<br>
+     *   x: 20<br>
+     * });<br><br>
+     *
+     * // set x and y using an array<br>
+     * shape.setFillPatternOffset([20, 40]);<br><br>
+     *
+     * // set x and y to the same value<br>
+     * shape.setFillPatternOffset(5);
      */
 
      /**
@@ -896,7 +928,21 @@
      * @name setFillPatternScale
      * @method
      * @memberof Kinetic.Shape.prototype
-     * @param {Number|Array|Object} scale
+     * @param {Number} scale
+     * @example
+     * // set x and y to the same value<br>
+     * shape.setFillPatternScale(5);<br><br>
+     *
+     * // set x and y<br>
+     * shape.setFillPatternScale(20, 40);<br><br>
+     *
+     * // set x only <br>
+     * shape.setFillPatternScale({<br>
+     *   x: 20<br>
+     * });<br><br>
+     *
+     * // set x and y using an array<br>
+     * shape.setFillPatternScale([20, 40]);
      */
 
      /**
@@ -944,6 +990,20 @@
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number|Array|Object} startPoint
+     * @example
+     * // set x and y<br>
+     * shape.setFillLinearGradientStartPoint(20, 40);<br><br>
+     *
+     * // set x only <br>
+     * shape.setFillLinearGradientStartPoint({<br>
+     *   x: 20<br>
+     * });<br><br>
+     *
+     * // set x and y using an array<br>
+     * shape.setFillLinearGradientStartPoint([20, 40]);<br><br>
+     *
+     * // set x and y to the same value<br>
+     * shape.setFillLinearGradientStartPoint(5);
      */
 
      /**
@@ -991,6 +1051,20 @@
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number|Array|Object} endPoint
+     * @example
+     * // set x and y<br>
+     * shape.setFillLinearGradientEndPoint(20, 40);<br><br>
+     *
+     * // set x only <br>
+     * shape.setFillLinearGradientEndPoint({<br>
+     *   x: 20<br>
+     * });<br><br>
+     *
+     * // set x and y using an array<br>
+     * shape.setFillLinearGradientEndPoint([20, 40]);<br><br>
+     *
+     * // set x and y to the same value<br>
+     * shape.setFillLinearGradientEndPoint(5);
      */
 
      /**
@@ -1038,6 +1112,20 @@
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number|Array|Object} startPoint
+     * @example
+     * // set x and y<br>
+     * shape.setFillRadialGradientStartPoint(20, 40);<br><br>
+     *
+     * // set x only <br>
+     * shape.setFillRadialGradientStartPoint({<br>
+     *   x: 20<br>
+     * });<br><br>
+     *
+     * // set x and y using an array<br>
+     * shape.setFillRadialGradientStartPoint([20, 40]);<br><br>
+     *
+     * // set x and y to the same value<br>
+     * shape.setFillRadialGradientStartPoint(5);
      */
 
      /**
@@ -1085,6 +1173,20 @@
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number|Array|Object} endPoint
+     * @example
+     * // set x and y<br>
+     * shape.setFillRadialGradientEndPoint(20, 40);<br><br>
+     *
+     * // set x only <br>
+     * shape.setFillRadialGradientEndPoint({<br>
+     *   x: 20<br>
+     * });<br><br>
+     *
+     * // set x and y using an array<br>
+     * shape.setFillRadialGradientEndPoint([20, 40]);<br><br>
+     *
+     * // set x and y to the same value<br>
+     * shape.setFillRadialGradientEndPoint(5);
      */
 
      /**
@@ -1132,6 +1234,20 @@
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number|Array|Object} offset
+     * @example
+     * // set x and y<br>
+     * shape.setShadowOffset(20, 40);<br><br>
+     *
+     * // set x only <br>
+     * shape.setShadowOffset({<br>
+     *   x: 20<br>
+     * });<br><br>
+     *
+     * // set x and y using an array<br>
+     * shape.setShadowOffset([20, 40]);<br><br>
+     *
+     * // set x and y to the same value<br>
+     * shape.setShadowOffset(5);
      */
 
      /**

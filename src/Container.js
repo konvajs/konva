@@ -38,14 +38,23 @@
             return this;
         },
         /**
-         * return an array of nodes that match the selector.  Use '#' for id selections
-         * and '.' for name selections
-         * ex:
-         * var node = stage.get('#foo'); // selects node with id foo
-         * var nodes = layer.get('.bar'); // selects nodes with name bar inside layer
+         * return a {@link Kinetic.Collection} of nodes that match the selector.  Use '#' for id selections
+         * and '.' for name selections.  You can also select by type or class name
          * @method
          * @memberof Kinetic.Container.prototype
          * @param {String} selector
+         * @example
+         * // select node with id foo<br>
+         * var node = stage.get('#foo');<br><br>
+         *
+         * // select nodes with name bar inside layer<br>
+         * var nodes = layer.get('.bar');<br><br>
+         *
+         * // select all groups inside layer<br>
+         * var nodes = layer.get('Group');<br><br>
+         *
+         * // select all rectangles inside layer<br>
+         * var nodes = layer.get('Rect');
          */
         get: function(selector) {
             var collection = new Kinetic.Collection();
@@ -138,12 +147,6 @@
 
             return false;
         },
-        /**
-         * clone node
-         * @method
-         * @memberof Kinetic.Container.prototype
-         * @param {Object} attrs override attrs
-         */
         clone: function(obj) {
             // call super method
             var node = Kinetic.Node.prototype.clone.call(this, obj)
