@@ -14,8 +14,19 @@
      * @param {Number} [config.fontSize] default is 12
      * @param {String} [config.fontStyle] can be normal, bold, or italic.  Default is normal
      * @param {String} config.text
+     * @param {String} config.data SVG data string
      * {{ShapeParams}}
      * {{NodeParams}}
+     * @example
+     * var textpath = new Kinetic.TextPath({<br>
+     *   x: 100,<br>
+     *   y: 50,<br>
+     *   fill: '#333',<br>
+     *   fontSize: '24',<br>
+     *   fontFamily: 'Arial',<br>
+     *   text: 'All the world\'s a stage, and all the men and women merely players.',<br>
+     *   data: 'M10,10 C0,0 10,150 100,100 S300,150 400,50'<br>
+     * });
      */
     Kinetic.TextPath = function(config) {
         this._initTextPath(config);

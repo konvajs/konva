@@ -20,7 +20,7 @@ Test.Modules.LABEL = {
                 //padding: 10,
                 fill: 'green'
             }, 
-            rect: {
+            tag: {
                 fill: '#bbb',
                 stroke: '#333',
                 shadowColor: 'black',

@@ -3,8 +3,23 @@
      * Animation constructor.  A stage is used to contain multiple layers and handle
      * @constructor
      * @memberof Kinetic
-     * @param {Function} func function executed on each animation frame
-     * @param {Kinetic.Layer|Array} [layers] layer(s) to be redrawn.&nbsp; Can be a layer, an array of layers, or null.  Not specifying a node will result in no redraw.
+     * @param {Function} func function executed on each animation frame.  The function is passed a frame object, which contains
+     *  timeDiff, lastTime, time, and frameRate properties.  The timeDiff property is the number of milliseconds that have passed
+     *  since the last animation frame.  The lastTime property is time in milliseconds that elapsed from the moment the animation started
+     *  to the last animation frame.  The time property is the time in milliseconds that ellapsed from the moment the animation started
+     *  to the current animation frame.  The frameRate property is the current frame rate in frames / second
+     * @param {Kinetic.Layer|Array} [layers] layer(s) to be redrawn on each animation frame. Can be a layer, an array of layers, or null.  
+     *  Not specifying a node will result in no redraw.
+     * @example
+     * // move a node to the right at 50 pixels / second<br>
+     * var velocity = 50;<br><br>
+     *
+     * var anim = new Kinetic.Animation(function(frame) {<br>
+     *   var dist = velocity * (frame.timeDiff / 1000);<br>
+     *   node.move(dist, 0);<br>
+     * }, layer);<br><br>
+     *
+     * anim.start();
      */
     Kinetic.Animation = function(func, layers) {
         this.func = func;

@@ -10,6 +10,17 @@
      * @param {Number} config.outerRadius
      * {{ShapeParams}}
      * {{NodeParams}}
+     * @example
+     * var star = new Kinetic.Star({<br>
+     *   x: 100,<br>
+     *   y: 200,<br>
+     *   numPoints: 5,<br>
+     *   innerRadius: 70,<br>
+     *   outerRadius: 70,<br>
+     *   fill: 'red',<br>
+     *   stroke: 'black',<br>
+     *   strokeWidth: 4<br>
+     * });
      */
     Kinetic.Star = function(config) {
         this._initStar(config);

@@ -13,7 +13,7 @@
      attrChangeListLen = ATTR_CHANGE_LIST.length;
         
     /**
-     * Label constructor.&nbsp; Labels are groups that contain Text and LabelRect shape 
+     * Label constructor.&nbsp; Labels are groups that contain a Text and Tag shape 
      * @constructor
      * @memberof Kinetic
      * @param {Object} config
@@ -25,13 +25,53 @@
      * @param {String} [config.text.align] can be left, center, or right
      * @param {Number} [config.text.padding]
      * @param {Number} [config.text.lineHeight] default is 1
-     * @param {Object} [config.rect] LabelRect config
-     * @param {String} [config.rect.pointerDirection] can be up, right, down, left, or none; the default
+     * @param {Object} [config.tag] Tag config
+     * @param {String} [config.tag.pointerDirection] can be up, right, down, left, or none; the default
      *  is none.  When a pointer is present, the positioning of the label is relative to the tip of the pointer.
-     * @param {Number} [config.rect.pointerWidth]
-     * @param {Number} [config.rect.pointerHeight]
-     * @param {Number} [config.rect.cornerRadius] 
+     * @param {Number} [config.tag.pointerWidth]
+     * @param {Number} [config.tag.pointerHeight]
+     * @param {Number} [config.tag.cornerRadius] 
      * {{NodeParams}}
+     * @example
+     * var label = new Kinetic.Label({<br>
+     *   x: 350,<br>
+     *   y: 50,<br>
+     *   opacity: 0.75,<br>
+     *   text: {<br>
+     *     text: 'Simple label',<br>
+     *     fontFamily: 'Calibri',<br>
+     *     fontSize: 18,<br>
+     *     padding: 5,<br>
+     *     fill: 'black'<br>
+     *   },<br>
+     *   tag: {<br>
+     *     fill: 'yellow',<br>
+     *   }<br>
+     * });<br><br>
+     *
+     * var tooltip = new Kinetic.Label({<br>
+     *   x: 170,<br>
+     *   y: 75,<br>
+     *   opacity: 0.75,<br>
+     *   text: {<br>
+     *     text: 'Tooltip pointing down',<br>
+     *     fontFamily: 'Calibri',<br>
+     *     fontSize: 18,<br>
+     *     padding: 5,<br>
+     *     fill: 'white'<br>
+     *   },<br>
+     *   tag: {<br>
+     *     fill: 'black',<br>
+     *     pointerDirection: 'down',<br>
+     *     pointerWidth: 10,<br>
+     *     pointerHeight: 10,<br>
+     *     lineJoin: 'round',<br>
+     *     shadowColor: 'black',<br>
+     *     shadowBlur: 10,<br>
+     *     shadowOffset: 10,<br>
+     *     shadowOpacity: 0.5<br>
+     *   }<br>
+     * });
      */
     Kinetic.Label = function(config) {
         this._initLabel(config);
@@ -48,8 +88,8 @@
             Kinetic.Group.call(this, config);
             text = new Kinetic.Text(config.text);
             this.setText(text);
-            this.setRect(new Kinetic.LabelRect(config.rect));
-            this.innerGroup.add(this.getRect());
+            this.setTag(new Kinetic.Tag(config.tag));
+            this.innerGroup.add(this.getTag());
             this.innerGroup.add(text); 
             this.add(this.innerGroup);   
             
@@ -72,10 +112,10 @@
             var text = this.getText(),
                 width = text.getWidth(),
                 height = text.getHeight(),
-                rect = this.getRect(),
-                pointerDirection = rect.getPointerDirection(),
-                pointerWidth = rect.getPointerWidth(),
-                pointerHeight = rect.getPointerHeight(),
+                tag = this.getTag(),
+                pointerDirection = tag.getPointerDirection(),
+                pointerWidth = tag.getPointerWidth(),
+                pointerHeight = tag.getPointerHeight(),
                 x = 0, 
                 y = 0;
             
@@ -117,23 +157,21 @@
      * @memberof Kinetic.Label.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Label, 'rect');
+    Kinetic.Node.addGetterSetter(Kinetic.Label, 'tag');
        
     /**
-     * get LabelRect shape for the label.  You need to access the LabelRect shape in order to update
+     * get Tag shape for the label.  You need to access the Tag shape in order to update
      * the pointer properties and the corner radius
-     * @name getRect
+     * @name getTag
      * @method
      * @memberof Kinetic.Label.prototype
      */
 
-
     /**
-     * LabelRect constructor.&nbsp; A LabelRect is similar to a Rect, except that it can be configured
+     * Tag constructor.&nbsp; A Tag can be configured
      *  to have a pointer element that points up, right, down, or left 
      * @constructor
      * @memberof Kinetic
-     * @abstract
      * @param {Object} config
      * @param {String} [config.pointerDirection] can be up, right, down, left, or none; the default
      *  is none.  When a pointer is present, the positioning of the label is relative to the tip of the pointer.
@@ -141,15 +179,15 @@
      * @param {Number} [config.pointerHeight]
      * @param {Number} [config.cornerRadius] 
      */ 
-    Kinetic.LabelRect = function(config) {
-        this._initLabelRect(config);
+    Kinetic.Tag = function(config) {
+        this._initTag(config);
     };
 
-    Kinetic.LabelRect.prototype = {
-        _initLabelRect: function(config) {
+    Kinetic.Tag.prototype = {
+        _initTag: function(config) {
             this.createAttrs();
             Kinetic.Shape.call(this, config);
-            this.shapeType = 'LabelRect';
+            this.shapeType = 'Tag';
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
@@ -200,14 +238,14 @@
         }
     };
     
-    Kinetic.Util.extend(Kinetic.LabelRect, Kinetic.Shape);
-    Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'pointerDirection', NONE);
+    Kinetic.Util.extend(Kinetic.Tag, Kinetic.Shape);
+    Kinetic.Node.addGetterSetter(Kinetic.Tag, 'pointerDirection', NONE);
 
     /**
      * set pointer Direction
      * @name setPointerDirection
      * @method
-     * @memberof Kinetic.LabelRect.prototype
+     * @memberof Kinetic.Tag.prototype
      * @param {String} pointerDirection can be up, right, down, left, or none.  The
      *  default is none 
      */
@@ -216,16 +254,16 @@
      * get pointer Direction
      * @name getPointerDirection
      * @method
-     * @memberof Kinetic.LabelRect.prototype
+     * @memberof Kinetic.Tag.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'pointerWidth', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.Tag, 'pointerWidth', 0);
 
     /**
      * set pointer width 
      * @name setPointerWidth
      * @method
-     * @memberof Kinetic.LabelRect.prototype
+     * @memberof Kinetic.Tag.prototype
      * @param {Number} pointerWidth 
      */
 
@@ -233,16 +271,16 @@
      * get pointer width 
      * @name getPointerWidth
      * @method
-     * @memberof Kinetic.LabelRect.prototype
+     * @memberof Kinetic.Tag.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'pointerHeight', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.Tag, 'pointerHeight', 0);
 
     /**
      * set pointer height 
      * @name setPointerHeight
      * @method
-     * @memberof Kinetic.LabelRect.prototype
+     * @memberof Kinetic.Tag.prototype
      * @param {Number} pointerHeight
      */
 
@@ -250,16 +288,16 @@
      * get pointer height 
      * @name getPointerHeight
      * @method
-     * @memberof Kinetic.LabelRect.prototype
+     * @memberof Kinetic.Tag.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.LabelRect, 'cornerRadius', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.Tag, 'cornerRadius', 0);
 
     /**
      * set corner radius
      * @name setCornerRadius
      * @method
-     * @memberof Kinetic.LabelRect.prototype
+     * @memberof Kinetic.Tag.prototype
      * @param {Number} corner radius
      */
 
@@ -267,6 +305,6 @@
      * get corner radius
      * @name getCornerRadius
      * @method
-     * @memberof Kinetic.LabelRect.prototype
+     * @memberof Kinetic.Tag.prototype
      */
 })();

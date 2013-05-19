@@ -9,6 +9,16 @@
      * @param {Number} config.radius
      * {{ShapeParams}}
      * {{NodeParams}}
+     * @example
+     * var hexagon = new Kinetic.RegularPolygon({<br>
+     *   x: 100,<br>
+     *   y: 200,<br>
+     *   sides: 6,<br>
+     *   radius: 70,<br>
+     *   fill: 'red',<br>
+     *   stroke: 'black',<br>
+     *   strokeWidth: 4<br>
+     * });
      */
     Kinetic.RegularPolygon = function(config) {
         this._initRegularPolygon(config);

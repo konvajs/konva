@@ -30,7 +30,7 @@
      *   node: node,<br>
      *   rotationDeg: 360,<br>
      *   duration: 1,<br>
-     *   Kinetic.Easings.EaseInOut<br>   
+     *   easing: Kinetic.Easings.EaseInOut<br>   
      * });<br><br>
      * 
      * // play tween<br>
