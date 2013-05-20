@@ -80,27 +80,60 @@
     Kinetic.Label.prototype = {
         _initLabel: function(config) {
             var that = this,
-                text = null;
-            
+                textConfig = config.text,
+                tagConfig = config.tag,
+                n;
+
+            // clear text and tag configs because they aren't actually attrs
+            // TODO: is there a better way to config children attrs from a super config?
+            delete config.text;
+            delete config.tag;
+
+            // need the inner group in case the dev wants to set the label offset
             this.innerGroup = new Kinetic.Group();
             this.createAttrs();
             this.className = LABEL;
             Kinetic.Group.call(this, config);
-            text = new Kinetic.Text(config.text);
-            this.setText(text);
-            this.setTag(new Kinetic.Tag(config.tag));
+            this.text = new Kinetic.Text(textConfig);
+            this.tag = new Kinetic.Tag(tagConfig);
             this.innerGroup.add(this.getTag());
-            this.innerGroup.add(text); 
+            this.innerGroup.add(this.getText()); 
             this.add(this.innerGroup);   
-            
             this._setGroupOffset();
-            
+
             // update text data for certain attr changes
-            for(var n = 0; n < attrChangeListLen; n++) {
-                text.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, function() {
+            for(n = 0; n < attrChangeListLen; n++) {
+                that.text.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, function() {
                     that._setGroupOffset();
-                 });
-             }     
+                });
+            }     
+        },
+        toObject: function() {
+            var obj = Kinetic.Node.prototype.toObject.call(this);
+            obj.attrs.text = Kinetic.Node.prototype.toObject.call(this.text).attrs;
+            obj.attrs.tag = Kinetic.Node.prototype.toObject.call(this.tag).attrs;
+
+            return obj;
+        },
+        /**
+         * get Text shape for the label.  You need to access the Text shape in order to update
+         * the text properties
+         * @name getText
+         * @method
+         * @memberof Kinetic.Label.prototype
+         */
+         getText: function() {
+            return this.text;
+         },    
+        /**
+         * get Tag shape for the label.  You need to access the Tag shape in order to update
+         * the pointer properties and the corner radius
+         * @name getTag
+         * @method
+         * @memberof Kinetic.Label.prototype
+         */
+        getTag: function() {
+            return this.tag;
         },
         getWidth: function() {
             return this.getText().getWidth();
@@ -138,7 +171,7 @@
                     break;
             }
             
-            this.setOffset({
+            this.innerGroup.setOffset({
                 x: x,
                 y: y
             }); 
@@ -146,26 +179,6 @@
     };
     
     Kinetic.Util.extend(Kinetic.Label, Kinetic.Group);
-
-    Kinetic.Node.addGetterSetter(Kinetic.Label, 'text');
-
-    /**
-     * get Text shape for the label.  You need to access the Text shape in order to update
-     * the text properties
-     * @name getText
-     * @method
-     * @memberof Kinetic.Label.prototype
-     */
-
-    Kinetic.Node.addGetterSetter(Kinetic.Label, 'tag');
-       
-    /**
-     * get Tag shape for the label.  You need to access the Tag shape in order to update
-     * the pointer properties and the corner radius
-     * @name getTag
-     * @method
-     * @memberof Kinetic.Label.prototype
-     */
 
     /**
      * Tag constructor.&nbsp; A Tag can be configured
