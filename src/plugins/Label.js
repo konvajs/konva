@@ -187,7 +187,7 @@
         _initTag: function(config) {
             this.createAttrs();
             Kinetic.Shape.call(this, config);
-            this.shapeType = 'Tag';
+            this.className = 'Tag';
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {

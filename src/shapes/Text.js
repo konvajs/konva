@@ -78,10 +78,9 @@
             // call super constructor
             Kinetic.Shape.call(this, config);
 
-            this.shapeType = TEXT;
             this._fillFunc = _fillFunc;
             this._strokeFunc = _strokeFunc;
-            this.shapeType = TEXT_UPPER;
+            this.className = TEXT_UPPER;
             this._setDrawFuncs();
 
             // update text data for certain attr changes

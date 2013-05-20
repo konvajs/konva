@@ -71,7 +71,7 @@
             return !!(this.getFill() || this.getFillPatternImage() || this.getFillLinearGradientColorStops() || this.getFillRadialGradientColorStops());
         },
         _get: function(selector) {
-            return this.nodeType === selector || this.shapeType === selector ? [this] : [];
+            return this.className === selector || this.nodeType === selector ? [this] : [];
         },
         /**
          * determines if point is in the shape, regardless if other shapes are on top of it.  Note: because
@@ -173,14 +173,6 @@
          */
         disableDashArray: function() {
             this._setAttr('dashArrayEnabled', false);
-        },
-        /**
-         * get shape type.  Ex. 'Circle', 'Rect', 'Text', etc.
-         * @method
-         * @memberof Kinetic.Shape.prototype
-         */
-        getShapeType: function() {
-            return this.shapeType;
         },
         destroy: function() {
             Kinetic.Node.prototype.destroy.call(this);

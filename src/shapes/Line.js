@@ -41,7 +41,7 @@
 
             // call super constructor
             Kinetic.Shape.call(this, config);
-            this.shapeType = 'Line';
+            this.className = 'Line';
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {

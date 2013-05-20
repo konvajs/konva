@@ -55,7 +55,7 @@ Test.Modules.Text = {
         layer.add(group);
         stage.add(layer);
         
-        test(text.getShapeType() === 'Text', 'shape type should be Text');
+        test(text.getClassName() === 'Text', 'getClassName should be Text');
     },
     'text getters and setters': function(containerId) {
         var stage = new Kinetic.Stage({

@@ -25,7 +25,7 @@ Test.Modules.REGULAR_POLYGON = {
         layer.add(poly);
         stage.add(layer);
         
-        test(poly.getShapeType() === 'RegularPolygon', 'shape type should be RegularPolygon');
+        test(poly.getClassName() === 'RegularPolygon', 'sgetClassName should be RegularPolygon');
 
     },
     'add regular polygon square': function(containerId) {

@@ -24,7 +24,7 @@ Test.Modules.Wedge = {
         //console.log(layer.toDataURL());
         testDataUrl(layer.toDataURL(), 'wedge', 'problem rendering wedge');
         
-        test(wedge.getShapeType() === 'Wedge', 'shape type should be Wedge');
+        test(wedge.getClassName() === 'Wedge', 'getClassName should be Wedge');
     },
     'set wedge angle using degrees': function(containerId) {
         var stage = new Kinetic.Stage({

@@ -55,7 +55,7 @@
             this._fillFunc = _fillFunc;
             this._strokeFunc = _strokeFunc;
 
-            this.shapeType = 'TextPath';
+            this.className = 'TextPath';
             this._setDrawFuncs();
 
             this.dataArray = Kinetic.Path.parsePathData(this.attrs.data);

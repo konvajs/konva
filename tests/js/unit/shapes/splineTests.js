@@ -79,7 +79,7 @@ Test.Modules.SPLINE = {
         //console.log(layer.toDataURL());
         testDataUrl(layer.toDataURL(), 'curvy lines', 'problem with curvy lines');
         
-        test(line1.getShapeType() === 'Spline', 'shape type should be Spline');
+        test(line1.getClassName() === 'Spline', 'getClassName should be Spline');
 
     },
     'create from points represented as a flat array': function(containerId) {

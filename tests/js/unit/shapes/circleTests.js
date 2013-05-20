@@ -33,7 +33,7 @@ Test.Modules.CIRCLE = {
         test(attrs.strokeWidth === 4, 'strokeWidth attr should be strokeWidth');
         test(attrs.name === 'myCircle', 'name attr should be myCircle');
         test(attrs.draggable === true, 'draggable attr should be true');
-        test(circle.getShapeType() === 'Circle', 'shape type should be Circle');
+        test(circle.getClassName() === 'Circle', 'getClassName should be Circle');
     }, 
     'add circle with pattern fill': function(containerId) {
         var imageObj = new Image();

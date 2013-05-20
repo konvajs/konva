@@ -111,9 +111,9 @@ Test.Modules.CONTAINER = {
 
         var node;
         node = stage.get('#myCircle')[0];
-        test(node.shapeType === 'Circle', 'shape type should be Circle');
+        test(node.className === 'Circle', 'className should be Circle');
         node = layer.get('.myRect')[0];
-        test(node.shapeType === 'Rect', 'shape type should be rect');
+        test(node.className === 'Rect', 'className should be rect');
         node = layer.get('#myLayer')[0];
         test(node === undefined, 'node should be undefined');
         node = stage.get('#myLayer')[0];

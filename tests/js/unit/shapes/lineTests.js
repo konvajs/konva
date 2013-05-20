@@ -47,7 +47,7 @@ Test.Modules.LINE = {
         line.setPoints([73, 160, 340, 23]);
         test(line.getPoints()[0].x === 73, 'first point x should be 73');
         
-        test(line.getShapeType() === 'Line', 'shape type should be Line');
+        test(line.getClassName() === 'Line', 'getClassName should be Line');
     },
     'test default ponts array for two lines': function(containerId) {
         var stage = new Kinetic.Stage({

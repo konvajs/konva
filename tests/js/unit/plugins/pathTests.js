@@ -46,7 +46,7 @@ Test.Modules.PATH = {
 
         path.setData('M200,100h100v50z');
         
-        test(path.getShapeType() === 'Path', 'shape type should be Path');
+        test(path.getClassName() === 'Path', 'getClassName should be Path');
 
     },
     'add path with line cap and line join': function(containerId) {

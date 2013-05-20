@@ -661,8 +661,8 @@
                 }
             }
 
+            obj.className = this.className;
             obj.nodeType = this.nodeType;
-            obj.shapeType = this.shapeType;
 
             return obj;
         },
@@ -817,8 +817,8 @@
          */
         clone: function(obj) {
             // instantiate new node
-            var classType = this.shapeType || this.nodeType,
-                node = new Kinetic[classType](this.attrs),
+            var className = this.getClassName(),
+                node = new Kinetic[className](this.attrs),
                 key, allListeners, len, n, listener;
 
             // copy over listeners
@@ -963,7 +963,7 @@
          * @memberof Kinetic.Node.prototype
          */
         getClassName: function() {
-            return this.className || this.shapeType || this.nodeType;
+            return this.className || this.nodeType;
         },
         /**
          * get the node type, which may return Stage, Layer, Group, or Node
@@ -1324,33 +1324,20 @@
         return this._createNode(JSON.parse(json), container);
     };
     Kinetic.Node._createNode = function(obj, container) {
-        var type, no, len, n;
-
-        // determine type
-        if(obj.nodeType === SHAPE) {
-            // add custom shape
-            if(obj.shapeType === undefined) {
-                type = SHAPE;
-            }
-            // add standard shape
-            else {
-                type = obj.shapeType;
-            }
-        }
-        else {
-            type = obj.nodeType;
-        }
+        var className = Kinetic.Node.prototype.getClassName.call(obj),
+            children = obj.children,
+            no, len, n;
 
         // if container was passed in, add it to attrs
         if(container) {
             obj.attrs.container = container;
         }
 
-        no = new Kinetic[type](obj.attrs);
-        if(obj.children) {
-            len = obj.children.length;
+        no = new Kinetic[className](obj.attrs);
+        if(children) {
+            len = children.length;
             for(n = 0; n < len; n++) {
-                no.add(this._createNode(obj.children[n]));
+                no.add(this._createNode(children[n]));
             }
         }
 

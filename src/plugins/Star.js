@@ -32,7 +32,7 @@
 
             // call super constructor
             Kinetic.Shape.call(this, config);
-            this.shapeType = 'Star';
+            this.className = 'Star';
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {

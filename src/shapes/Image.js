@@ -37,7 +37,7 @@
             
             // call super constructor
             Kinetic.Shape.call(this, config);
-            this.shapeType = IMAGE;
+            this.className = IMAGE;
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {

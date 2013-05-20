@@ -25,7 +25,7 @@ Test.Modules.RECT = {
         layer.add(rect);
         stage.add(layer);
         
-        test(rect.getShapeType() === 'Rect', 'shape type should be Rect');
+        test(rect.getClassName() === 'Rect', 'className should be Rect');
     },
     'add stroke rect': function(containerId) {
         var stage = new Kinetic.Stage({

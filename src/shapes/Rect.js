@@ -25,7 +25,7 @@
         _initRect: function(config) {
             this.createAttrs();
             Kinetic.Shape.call(this, config);
-            this.shapeType = 'Rect';
+            this.className = 'Rect';
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {

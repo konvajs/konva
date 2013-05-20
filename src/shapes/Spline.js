@@ -52,7 +52,7 @@
             this.createAttrs();
             // call super constructor
             Kinetic.Line.call(this, config);
-            this.shapeType = 'Spline';
+            this.className = 'Spline';
         },
         drawFunc: function(canvas) {
             var points = this.getPoints(), length = points.length, context = canvas.getContext(), tension = this.getTension();

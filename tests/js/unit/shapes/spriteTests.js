@@ -112,7 +112,7 @@ Test.Modules.SPRITE = {
             }, 3000);
             //document.body.appendChild(layer.bufferCanvas.element)
             
-            test(sprite.getShapeType() === 'Sprite', 'shape type should be Sprite');
+            test(sprite.getClassName() === 'Sprite', 'getClassName should be Sprite');
 
             test(sprite.getIndex() === 0, 'sprite index should default to 0');
         };

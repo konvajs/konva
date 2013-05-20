@@ -28,7 +28,7 @@
         _initBlob: function(config) {
             // call super constructor
             Kinetic.Spline.call(this, config);
-            this.shapeType = 'Blob';
+            this.className = 'Blob';
         },
         drawFunc: function(canvas) {
             var points = this.getPoints(), length = points.length, context = canvas.getContext(), tension = this.getTension();

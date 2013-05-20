@@ -31,7 +31,7 @@
 
             // call super constructor
             Kinetic.Shape.call(this, config);
-            this.shapeType = 'Wedge';
+            this.className = 'Wedge';
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {

@@ -76,7 +76,7 @@
             
             // call super constructor
             Kinetic.Shape.call(this, config);
-            this.shapeType = 'Sprite';
+            this.className = 'Sprite';
             this._setDrawFuncs();
 
             this.anim = new Kinetic.Animation();
