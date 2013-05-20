@@ -423,12 +423,12 @@ Test.Modules.EVENT = {
 
         layer.on('draw', function(evt) {
             savedEvt = evt;
-            eventNodes.push(this.getNodeType());
+            eventNodes.push(this.getType());
             order.push('layer draw');
         });
         
         stage.on('draw', function(evt) {
-            eventNodes.push(this.getNodeType());
+            eventNodes.push(this.getType());
             order.push('stage draw');
         });
         
@@ -447,7 +447,7 @@ Test.Modules.EVENT = {
         // Note: draw events no longer bubble
         //test(eventNodes.toString() === 'Layer,Stage', 'layer draw event should have fired followed by stage draw event');
         
-        test(savedEvt.node.getNodeType() === 'Layer', 'event object should contain a node property which is Layer');
+        test(savedEvt.node.getType() === 'Layer', 'event object should contain a node property which is Layer');
         
         //test(order.toString() === 'layer beforeDraw,stage beforeDraw,layer draw,stage draw', 'order should be: layer beforeDraw,stage beforeDraw,layer draw,stage draw');
 

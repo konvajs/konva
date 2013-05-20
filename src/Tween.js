@@ -55,7 +55,7 @@
 
         this.anim = new Kinetic.Animation(function() {
             that._onEnterFrame();
-        }, node.getLayer());
+        }, node.getLayer() || node.getLayers());
 
         for (key in config) {
             if (blacklist[key] === undefined) {
@@ -141,10 +141,11 @@
          * @memberof Kinetic.Tween.prototype
          */
         reset: function() {
+            var node = this.node;
             this._iterate(function(tween) {
                 tween.reset();
             });
-            this.node.getLayer().draw();
+            (node.getLayer() || node.getLayers()).draw();
         },
         /**
          * seek
@@ -153,10 +154,11 @@
          * @param {Integer} t time in seconds between 0 and the duration
          */
         seek: function(t) {
+            this.node = node;
             this._iterate(function(tween) {
                 tween.seek(t * 1000);
             });
-            this.node.getLayer().draw();
+            (node.getLayer() || node.getLayers()).draw();
         },
         /**
          * pause
@@ -174,10 +176,11 @@
          * @memberof Kinetic.Tween.prototype
          */
         finish: function() {
+            this.node = node;
             this._iterate(function(tween) {
                 tween.finish();
             });
-            this.node.getLayer().draw();
+            (node.getLayer() || node.getLayers()).draw();
         },
         _onEnterFrame: function() {
             this._iterate(function(tween) {

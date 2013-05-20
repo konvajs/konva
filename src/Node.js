@@ -366,7 +366,7 @@
                     index++;
 
                     if(child.nodeType !== SHAPE) {
-                        nodes = nodes.concat(child.getChildren());
+                        nodes = nodes.concat(child.getChildren().toArray());
                     }
 
                     if(child._id === that._id) {
@@ -1701,5 +1701,5 @@
      */
     Kinetic.Node.prototype.isVisible = Kinetic.Node.prototype.getVisible;
     
-    Kinetic.Collection.mapMethods(['on', 'off']);
+    Kinetic.Collection.mapMethods(['on', 'off', 'draw']);
 })();

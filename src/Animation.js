@@ -48,7 +48,9 @@
                 lays = [];
             }
             // if passing in an array of Layers
-            else if (Kinetic.Util._isArray(layers)) {
+            // NOTE: layers could be an array or Kinetic.Collection.  for simplicity, I'm just inspecting
+            // the length property to check for both cases
+            else if (layers.length > 0) {
                 lays = layers;
             }
             // if passing in a Layer

@@ -323,13 +323,13 @@
             return null;
         },
         /**
-         * get layers
+         * returns a {@link Kinetic.Collection} of layers
          * @method
          * @memberof Kinetic.Stage.prototype
          */
-         getLayers: function() {
-             return this.getChildren();
-         },
+        getLayers: function() {
+            return this.getChildren();
+        },
         _setPointerPosition: function(evt) {
             if(!evt) {
                 evt = window.event;

@@ -32,6 +32,18 @@
             func(this[n], n);
         }
     };
+    /**
+     * convert collection into an array
+     * @method
+     * @memberof Kinetic.Collection.prototype
+     */
+    Kinetic.Collection.prototype.toArray = function() {
+        var arr = [];
+        for(var n = 0; n < this.length; n++) {
+            arr.push(this[n]);
+        }
+        return arr;
+    };
 
     Kinetic.Collection.mapMethods = function(arr) {
         var leng = arr.length,

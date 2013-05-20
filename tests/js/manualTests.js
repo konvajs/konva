@@ -1,4 +1,4 @@
-Test.Modules.TRANSITION = {
+Test.Modules.Tween = {
     '!transition position and rotation': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -213,21 +213,50 @@ Test.Modules.TRANSITION = {
 
         tween.play();
 
-        /*
-        var tween2 = new Kinetic.Tween({
-            node: greenBox,
-            duration: 2,
-            x: 200,
-            easing: Kinetic.Easings.BounceEaseOut,
-        });
-
-        tween2.play();
-        */
-
         document.getElementById(containerId).addEventListener('click', function() {
             tween.seek(1.5);
             tween.reverse();
         });
+    },
+    'tween stage': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var greenBox = new Kinetic.Rect({
+            x: 50,
+            y: stage.getHeight() / 2 - 25,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            offset: {
+                x: 50,
+                y: 25
+            }
+        });
+
+        layer.add(greenBox);
+        stage.add(layer);
+
+        var tween = new Kinetic.Tween({
+            node: stage,
+            duration: 2,
+            x: 400,
+            scaleX: 2,
+            scaleY: 2,
+            easing: Kinetic.Easings.BounceEaseOut,
+            yoyo: false,
+            onFinish: function() {
+                console.log('finished!')
+            }
+        });
+
+        tween.play();
+      
     }
 };
 

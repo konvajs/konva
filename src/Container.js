@@ -1,11 +1,11 @@
 (function() {
     Kinetic.Util.addMethods(Kinetic.Container, {
         _containerInit: function(config) {
-            this.children = [];
+            this.children = new Kinetic.Collection();
             Kinetic.Node.call(this, config);
         },
         /**
-         * get children
+         * returns a {@link Kinetic.Collection} of direct descendant nodes
          * @method
          * @memberof Kinetic.Container.prototype
          */
@@ -149,12 +149,11 @@
         },
         clone: function(obj) {
             // call super method
-            var node = Kinetic.Node.prototype.clone.call(this, obj)
+            var node = Kinetic.Node.prototype.clone.call(this, obj);
 
-            // perform deep clone on containers
-            for(var key in this.children) {
-                node.add(this.children[key].clone());
-            }
+            this.getChildren().each(function(no) {
+                node.add(no.clone());
+            });
             return node;
         },
         /**
