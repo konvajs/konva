@@ -231,6 +231,7 @@
         PI_OVER_DEG180 = Math.PI / 180,
         DEG180_OVER_PI = 180 / Math.PI,
         HASH = '#',
+        EMPTY_STRING = '',
         ZERO = '0',
         KINETIC_WARNING = 'Kinetic warning: ',
         RGB_PAREN = 'rgb(',
@@ -536,6 +537,7 @@
             return ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
         },
         _hexToRgb: function(hex) {
+            hex = hex.replace(HASH, EMPTY_STRING);
             var bigint = parseInt(hex, 16);
             return {
                 r: (bigint >> 16) & 255,

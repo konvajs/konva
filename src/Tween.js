@@ -167,7 +167,7 @@
          * @param {Integer} t time in seconds between 0 and the duration
          */
         seek: function(t) {
-            this.node = node;
+            var node = this.node;
             this._iterate(function(tween) {
                 tween.seek(t * 1000);
             });
@@ -189,7 +189,7 @@
          * @memberof Kinetic.Tween.prototype
          */
         finish: function() {
-            this.node = node;
+            var node = this.node;
             this._iterate(function(tween) {
                 tween.finish();
             });
