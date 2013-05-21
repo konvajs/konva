@@ -36,7 +36,8 @@ class Build < Thor
     "tests/js/unit/plugins/pathTests.js",
   	"tests/js/unit/plugins/regularPolygonTests.js",
   	"tests/js/unit/plugins/starTests.js",
-  	"tests/js/unit/plugins/textPathTests.js"
+  	"tests/js/unit/plugins/textPathTests.js",
+    "tests/js/unit/plugins/labelTests.js"
   ]
 
   if !File.directory?("dist")
