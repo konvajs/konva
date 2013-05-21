@@ -13,6 +13,7 @@ class Build < Thor
   
   UNIT_TESTS = [
   	"tests/js/unit/animationTests.js", 
+    "tests/js/unit/tweenTests.js", 
     "tests/js/unit/globalTests.js", 
     "tests/js/unit/utilTests.js", 
   	"tests/js/unit/nodeTests.js", 
@@ -35,8 +36,7 @@ class Build < Thor
     "tests/js/unit/plugins/pathTests.js",
   	"tests/js/unit/plugins/regularPolygonTests.js",
   	"tests/js/unit/plugins/starTests.js",
-  	"tests/js/unit/plugins/textPathTests.js",
-    "tests/js/unit/plugins/labelTests.js"
+  	"tests/js/unit/plugins/textPathTests.js"
   ]
 
   if !File.directory?("dist")

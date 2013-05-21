@@ -94,23 +94,36 @@
                 tween = tweens[n];
             }  
         },
+        _isLastTween: function(tween) {
+            var tweens = this.tweens,
+                len = tweens.length,
+                n;
+
+            return tweens[len - 1].prop === tween.prop;
+        },
         _addListeners: function(tween) {
             var that = this;
 
             // start listeners
             tween.onPlay = function() {
-                that.anim.start();
+                if (that._isLastTween(tween)) {
+                    that.anim.start();
+                }
             };
             tween.onReverse = function() {
-                that.anim.start();
+                if (that._isLastTween(tween)) {
+                    that.anim.start();
+                }
             };
 
             // stop listeners
             tween.onPause = function() {
-                that.anim.stop();
+                if (that._isLastTween(tween)) {
+                    that.anim.stop();
+                }
             };
             tween.onFinish = function() {
-                if (that.onFinish) {
+                if (that._isLastTween(tween) && that.onFinish) {
                     that.onFinish();
                 }
             };
