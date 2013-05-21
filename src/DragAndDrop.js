@@ -31,11 +31,11 @@
     
                 if(!dd.isDragging) {
                     dd.isDragging = true;
-                    node.fire('dragstart', evt);
+                    node.fire('dragstart', evt, true);
                 }
                 
                 // execute ondragmove if defined
-                node.fire('dragmove', evt);
+                node.fire('dragmove', evt, true);
             }
         },
         _endDragBefore: function(evt) {
@@ -68,7 +68,7 @@
                 dragEndNode = evt.dragEndNode;
                   
             if (evt && dragEndNode) {
-              dragEndNode.fire('dragend', evt); 
+              dragEndNode.fire('dragend', evt, true); 
             }
         }
     };
