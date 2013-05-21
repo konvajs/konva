@@ -31,7 +31,8 @@
         UPPER_R = 'R',
         UPPER_G = 'G',
         UPPER_B = 'B',
-        HASH = '#';
+        HASH = '#',
+        CHILDREN = 'children';
         
     Kinetic.Util.addMethods(Kinetic.Node, {
         _nodeInit: function(config) {
@@ -267,14 +268,19 @@
             
             if(config) {
                 for(key in config) {
-                    method = SET + Kinetic.Util._capitalize(key);
-                    // use setter if available
-                    if(Kinetic.Util._isFunction(this[method])) {
-                        this[method](config[key]);
+                    if (key === CHILDREN) {
+                   
                     }
-                    // otherwise set directly
                     else {
-                        this._setAttr(key, config[key]);
+                        method = SET + Kinetic.Util._capitalize(key);
+                        // use setter if available
+                        if(Kinetic.Util._isFunction(this[method])) {
+                            this[method](config[key]);
+                        }
+                        // otherwise set directly
+                        else {
+                            this._setAttr(key, config[key]);
+                        }
                     }
                 }
             }
@@ -661,9 +667,7 @@
                 }
             }
 
-            obj.className = this.className;
-            obj.nodeType = this.nodeType;
-
+            obj.className = this.getClassName();
             return obj;
         },
         /**

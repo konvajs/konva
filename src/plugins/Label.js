@@ -33,45 +33,36 @@
      * @param {Number} [config.tag.cornerRadius] 
      * {{NodeParams}}
      * @example
+     * // create label
      * var label = new Kinetic.Label({<br>
-     *   x: 350,<br>
-     *   y: 50,<br>
-     *   opacity: 0.75,<br>
-     *   text: {<br>
-     *     text: 'Simple label',<br>
-     *     fontFamily: 'Calibri',<br>
-     *     fontSize: 18,<br>
-     *     padding: 5,<br>
-     *     fill: 'black'<br>
-     *   },<br>
-     *   tag: {<br>
-     *     fill: 'yellow',<br>
-     *   }<br>
+     *   x: 100,<br>
+     *   y: 100, <br>
+     *   draggable: true<br>
      * });<br><br>
      *
-     * var tooltip = new Kinetic.Label({<br>
-     *   x: 170,<br>
-     *   y: 75,<br>
-     *   opacity: 0.75,<br>
-     *   text: {<br>
-     *     text: 'Tooltip pointing down',<br>
-     *     fontFamily: 'Calibri',<br>
-     *     fontSize: 18,<br>
-     *     padding: 5,<br>
-     *     fill: 'white'<br>
-     *   },<br>
-     *   tag: {<br>
-     *     fill: 'black',<br>
-     *     pointerDirection: 'down',<br>
-     *     pointerWidth: 10,<br>
-     *     pointerHeight: 10,<br>
-     *     lineJoin: 'round',<br>
-     *     shadowColor: 'black',<br>
-     *     shadowBlur: 10,<br>
-     *     shadowOffset: 10,<br>
-     *     shadowOpacity: 0.5<br>
-     *   }<br>
-     * });
+     * // add a tag to the label<br>
+     * label.add(new Kinetic.Tag({<br>
+     *   fill: '#bbb',<br>
+     *   stroke: '#333',<br>
+     *   shadowColor: 'black',<br>
+     *   shadowBlur: 10,<br>
+     *   shadowOffset: [10, 10],<br>
+     *   shadowOpacity: 0.2,<br>
+     *   lineJoin: 'round',<br>
+     *   pointerDirection: 'up',<br>
+     *   pointerWidth: 20,<br>
+     *   pointerHeight: 20,<br>
+     *   cornerRadius: 5<br>
+     * }));<br><br>
+     *
+     * // add text to the label<br>
+     * label.add(new Kinetic.Text({<br>
+     *   text: 'Hello World!',<br>
+     *   fontSize: 50,<br>
+     *   lineHeight: 1.2,<br>
+     *   padding: 10,<br>
+     *   fill: 'green'<br>
+     *  }));
      */
     Kinetic.Label = function(config) {
         this._initLabel(config);
@@ -79,41 +70,16 @@
 
     Kinetic.Label.prototype = {
         _initLabel: function(config) {
-            var that = this,
-                textConfig = config.text,
-                tagConfig = config.tag,
-                n;
+            var that = this;
 
-            // clear text and tag configs because they aren't actually attrs
-            // TODO: is there a better way to config children attrs from a super config?
-            delete config.text;
-            delete config.tag;
-
-            // need the inner group in case the dev wants to set the label offset
-            this.innerGroup = new Kinetic.Group();
             this.createAttrs();
             this.className = LABEL;
-            Kinetic.Group.call(this, config);
-            this.text = new Kinetic.Text(textConfig);
-            this.tag = new Kinetic.Tag(tagConfig);
-            this.innerGroup.add(this.getTag());
-            this.innerGroup.add(this.getText()); 
-            this.add(this.innerGroup);   
-            this._setGroupOffset();
+            Kinetic.Group.call(this, config); 
 
-            // update text data for certain attr changes
-            for(n = 0; n < attrChangeListLen; n++) {
-                that.text.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, function() {
-                    that._setGroupOffset();
-                });
-            }     
-        },
-        toObject: function() {
-            var obj = Kinetic.Node.prototype.toObject.call(this);
-            obj.attrs.text = Kinetic.Node.prototype.toObject.call(this.text).attrs;
-            obj.attrs.tag = Kinetic.Node.prototype.toObject.call(this.tag).attrs;
-
-            return obj;
+            this.on('add', function(evt) {
+                that._addListeners(evt.child);
+                that._sync();
+            });
         },
         /**
          * get Text shape for the label.  You need to access the Text shape in order to update
@@ -122,9 +88,9 @@
          * @method
          * @memberof Kinetic.Label.prototype
          */
-         getText: function() {
-            return this.text;
-         },    
+        getText: function() {
+            return this.get('Text')[0];
+        },    
         /**
          * get Tag shape for the label.  You need to access the Tag shape in order to update
          * the pointer properties and the corner radius
@@ -133,7 +99,17 @@
          * @memberof Kinetic.Label.prototype
          */
         getTag: function() {
-            return this.tag;
+            return this.get('Tag')[0];
+        },
+        _addListeners: function(context) {
+            var that = this,
+                n;
+            // update text data for certain attr changes
+            for(n = 0; n < attrChangeListLen; n++) {
+                context.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, function() {
+                    that._sync();
+                });
+            } 
         },
         getWidth: function() {
             return this.getText().getWidth();
@@ -141,40 +117,45 @@
         getHeight: function() {
             return this.getText().getHeight();
         },
-        _setGroupOffset: function() {
+        _sync: function() {
             var text = this.getText(),
-                width = text.getWidth(),
-                height = text.getHeight(),
                 tag = this.getTag(),
+                width, height, pointerDirection, pointerWidth, x, y;
+
+            if (text && tag) {
+                width = text.getWidth(),
+                height = text.getHeight(),   
                 pointerDirection = tag.getPointerDirection(),
                 pointerWidth = tag.getPointerWidth(),
                 pointerHeight = tag.getPointerHeight(),
                 x = 0, 
                 y = 0;
-            
-            switch(pointerDirection) {
-                case UP:
-                    x = width / 2;
-                    y = -1 * pointerHeight;
-                    break;
-                case RIGHT:
-                    x = width + pointerWidth;
-                    y = height / 2;
-                    break;
-                case DOWN:
-                    x = width / 2;
-                    y = height + pointerHeight;
-                    break;
-                case LEFT:
-                    x = -1 * pointerWidth;
-                    y = height / 2;
-                    break;
+
+                switch(pointerDirection) {
+                    case UP:
+                        x = width / 2;
+                        y = -1 * pointerHeight;
+                        break;
+                    case RIGHT:
+                        x = width + pointerWidth;
+                        y = height / 2;
+                        break;
+                    case DOWN:
+                        x = width / 2;
+                        y = height + pointerHeight;
+                        break;
+                    case LEFT:
+                        x = -1 * pointerWidth;
+                        y = height / 2;
+                        break;
+                }
+                
+                tag.setAttrs({
+
+                    width: width,
+                    height: height
+                }); 
             }
-            
-            this.innerGroup.setOffset({
-                x: x,
-                y: y
-            }); 
         }
     };
     
@@ -204,10 +185,9 @@
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
-            var label = this.getParent().getParent(),
-                context = canvas.getContext(),
-                width = label.getWidth(),
-                height = label.getHeight(),
+            var context = canvas.getContext(),
+                width = this.getWidth(),
+                height = this.getHeight(),
                 pointerDirection = this.getPointerDirection(),
                 pointerWidth = this.getPointerWidth(),
                 pointerHeight = this.getPointerHeight(),
