@@ -151,10 +151,16 @@
                 }
                 
                 tag.setAttrs({
-
+                    x: -1 * x,
+                    y: -1 * y,
                     width: width,
                     height: height
                 }); 
+
+                text.setAttrs({
+                    x: -1 * x,
+                    y: -1 * y
+                });
             }
         }
     };
