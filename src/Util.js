@@ -665,6 +665,6 @@
           for (key in methods) {
             constructor.prototype[key] = methods[key];
           }
-        },
+        }
     };
 })();
