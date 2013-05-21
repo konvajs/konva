@@ -33,9 +33,9 @@
             child.index = children.length;
             child.parent = this;
             children.push(child);
-            this.fire('add', {
+            this._fire('add', {
                 child: child
-            }, true);
+            });
 
             // chainable
             return this;

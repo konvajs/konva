@@ -29,7 +29,7 @@ Test.Modules.LAYER = {
         test(style.backgroundColor === 'transparent', 'canvas backgroundColor style should be transparent');
     },
 
-    'layer getIntersections()': function(containerId) {
+    'layer getIntersection()': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -67,6 +67,32 @@ Test.Modules.LAYER = {
         test(layer.getIntersection(100, 100) === null, 'shape should be null');
 
 
+    },
+    'set layer visibility': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer({
+            visible: false
+        });
+        var rect = new Kinetic.Rect({
+            x: 200,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            scale: [3, 1],
+            draggable: true,
+            strokeScaleEnabled: false
+        });
+
+        rect.colorKey = '000000';
+
+        layer.add(rect);
+        stage.add(layer);
     },
     'redraw hit graph': function(containerId) {
         var stage = new Kinetic.Stage({

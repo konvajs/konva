@@ -6,12 +6,11 @@
         _initLayer: function(config) {
             this.nodeType = 'Layer';
             this.createAttrs();
-            // call super constructor
-            Kinetic.Container.call(this, config);
-
             this.canvas = new Kinetic.SceneCanvas();
             this.canvas.getElement().style.position = 'absolute';
             this.hitCanvas = new Kinetic.HitCanvas();
+            // call super constructor
+            Kinetic.Container.call(this, config);
         },
         /**
          * get visible intersection object that contains shape and pixel data. This is the preferred
