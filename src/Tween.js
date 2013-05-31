@@ -67,6 +67,9 @@
         }
 
         this.reset();
+
+	// add Reset event handler after initial reset is fired
+	this.onReset = config.onReset;
     };
 
     Kinetic.Tween.tweens = {};
@@ -125,6 +128,11 @@
             tween.onFinish = function() {
                 if (that._isLastTween(tween) && that.onFinish) {
                     that.onFinish();
+                }
+            };
+            tween.onReset = function() {
+                if (that._isLastTween(tween) && that.onReset) {
+                    that.onReset();
                 }
             };
         },
