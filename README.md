@@ -1,14 +1,14 @@
 #Building the KineticJS Framework 
-To build the framework, you need to have Grunt.js installed. After that, run `gem install thor`, `gem install json_pure`, and `gem install uglifier` to install the dependencies.
+To build the framework, you need to have node and grunt installed. After that, run `npm install` to install the node module dependencies.
 
-To build a development version of the framework, run `thor build:dev VERSION`, where VERSION is a string that can be anything you like. For example, using `thor build:dev current` will produce `kinetic-vcurrent.js`. To build a minified version of the framework, run `thor build:prod VERSION`.   
+To build a development version of the framework, run `grunt dev`, To run a full build, which also produces the minified version and the individually minified modules for the custom build, run `grunt full`.   
 
-If you add a file in the src directory, be sure to add the filename to the filename array in the Thorfile.
+If you add a file in the src directory, be sure to add the filename to the sourceFiles array variable in Gruntfile.js.
 
 #Testing
 
 ### Getting the tests up and running
-Currently, KineticJS has unit, functional, performance, manual, and special test suites.  To build the unit tests, you'll need to build the `unitTests.js` file by running `thor build:test` and then opening `unitTests.html`.  Open `tests/html/index.html` to navigate to different test suites.  
+Currently, KineticJS has unit, functional, performance, manual, and special test suites.  To build the unit tests, you'll need to build the `unitTests.js` file by running `grunt test` and then opening `unitTests.html`.  Open `tests/html/index.html` to navigate to different test suites.  
 
 ### Running the tests
 Unit, functional, and performance tests output the results to the console via `console.log()` so be sure to have it open.  
