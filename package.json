@@ -7,11 +7,10 @@
     "grunt-contrib-nodeunit": "~0.1.2",
     "grunt-contrib-uglify": "~0.2.2",
     "grunt-contrib-concat": "~0.3.0",
-    "grunt-replace": "~0.4.4"
+    "grunt-replace": "~0.4.4",
+    "grunt-contrib-clean": "~0.4.1"
   },
   "readmeFilename": "README.md",
-  "gitHead": "7b9322c15c08b3ff78f64f5cfd3e9f88850dcadc",
-  "description": "To build the framework, you need to have Ruby and Rubygems installed. After that, run `gem install thor`, `gem install json_pure`, and `gem install uglifier` to install the dependencies.",
   "main": "Gruntfile.js",
   "directories": {
     "test": "tests"
