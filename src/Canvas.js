@@ -24,8 +24,9 @@
 
     Kinetic.Canvas.prototype = {
         init: function(config) {
-            var config = config || {},
-                width = config.width || 0,
+            config = config || {};
+
+            var width = config.width || 0,
                 height = config.height || 0,
                 pixelRatio = config.pixelRatio || _pixelRatio,
                 contextType = config.contextType || '2d'; 

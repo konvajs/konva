@@ -177,7 +177,7 @@
             layersLen = layers.length;
 
             for (i=0; i<layersLen; i++) {
-                layer = layers[i]
+                layer = layers[i];
                 if(layer._id !== undefined) {
                     layerHash[layer._id] = layer;
                 }

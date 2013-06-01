@@ -64,8 +64,9 @@
             }
         },
         _endDragAfter: function(evt) {
-            var evt = evt || {},
-                dragEndNode = evt.dragEndNode;
+            evt = evt || {};
+            
+            var dragEndNode = evt.dragEndNode;
                   
             if (evt && dragEndNode) {
               dragEndNode.fire('dragend', evt, true); 
