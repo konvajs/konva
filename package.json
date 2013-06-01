@@ -12,12 +12,6 @@
   },
   "readmeFilename": "README.md",
   "main": "Gruntfile.js",
-  "directories": {
-    "test": "tests"
-  },
-  "scripts": {
-    "test": "test"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/ericdrowell/KineticJS.git"
