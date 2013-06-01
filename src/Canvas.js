@@ -38,13 +38,6 @@
             this.element.style.background = 'transparent';
             this.context = this.element.getContext(contextType);
             this.setSize(width, height);   
-
-            this.element.addEventListener('mousedown', function(evt) {
-                evt.preventDefault();
-            });
-            this.element.addEventListener('touchstart', function(evt) {
-                evt.preventDefault();
-            });
         },        
         /**
          * get canvas element

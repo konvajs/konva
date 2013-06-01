@@ -23,6 +23,7 @@
         INLINE_BLOCK = 'inline-block',
         KINETICJS_CONTENT = 'kineticjs-content',
         SPACE = ' ',
+        UNDERSCORE = '_',
         CONTAINER = 'container',
         EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND],
         
@@ -31,7 +32,8 @@
 
     function addEvent(ctx, eventName) {
       ctx.content.addEventListener(eventName, function(evt) {
-        ctx['_' + eventName](evt);
+        evt.preventDefault();
+        ctx[UNDERSCORE + eventName](evt);
       }, false);
     }
 
@@ -451,8 +453,6 @@
         	    obj = this.getIntersection(this.getPointerPosition()), 
         	    shape;
             
-            evt.preventDefault();
-
             if(obj && obj.shape) {
                 shape = obj.shape;
                 this.tapStart = true;
@@ -503,8 +503,6 @@
             var dd = Kinetic.DD,
                 obj = this.getIntersection(this.getPointerPosition()),
                 shape;
-            
-            evt.preventDefault();
             
             if(obj && obj.shape) {
                 shape = obj.shape;
