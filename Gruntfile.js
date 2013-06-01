@@ -41,6 +41,35 @@ module.exports = function(grunt) {
     'src/filters/Mask.js'
   ];
 
+  var unitTestFiles = [
+    'tests/js/unit/animationTests.js', 
+    'tests/js/unit/tweenTests.js', 
+    'tests/js/unit/globalTests.js', 
+    'tests/js/unit/utilTests.js', 
+    'tests/js/unit/nodeTests.js', 
+    'tests/js/unit/stageTests.js', 
+    'tests/js/unit/containerTests.js', 
+    'tests/js/unit/layerTests.js', 
+    'tests/js/unit/shapeTests.js', 
+    'tests/js/unit/ddTests.js', 
+    'tests/js/unit/shapes/rectTests.js', 
+    'tests/js/unit/shapes/circleTests.js', 
+    'tests/js/unit/shapes/wedgeTests.js', 
+    'tests/js/unit/shapes/imageTests.js',
+    'tests/js/unit/shapes/polygonTests.js',
+    'tests/js/unit/shapes/lineTests.js',
+    'tests/js/unit/shapes/splineTests.js',
+    'tests/js/unit/shapes/blobTests.js',
+    'tests/js/unit/shapes/textTests.js',
+    'tests/js/unit/shapes/spriteTests.js',
+
+    'tests/js/unit/plugins/pathTests.js',
+    'tests/js/unit/plugins/regularPolygonTests.js',
+    'tests/js/unit/plugins/starTests.js',
+    'tests/js/unit/plugins/textPathTests.js',
+    'tests/js/unit/plugins/labelTests.js'
+  ];
+
   // Project configuration.
   var config = {
     pkg: grunt.file.readJSON('package.json'),
@@ -48,9 +77,13 @@ module.exports = function(grunt) {
       options: {
         separator: ';'
       },
-      build: {
+      source: {
         src: sourceFiles,
         dest: 'dist/kinetic-v<%= pkg.version %>.js'
+      },
+      test: {
+        src: unitTestFiles,
+        dest: 'tests/js/unitTests.js'
       }
     },
     replace: {
@@ -117,7 +150,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
 
   // Tasks
-  grunt.registerTask('dev', ['clean', 'concat', 'replace:dev']);
-  grunt.registerTask('full', ['clean', 'concat', 'replace:dev', 'uglify', 'replace:prod']);
+  grunt.registerTask('dev', ['clean', 'concat:source', 'replace:dev']);
+  grunt.registerTask('full', ['clean', 'concat:source', 'replace:dev', 'uglify', 'replace:prod']);
+  grunt.registerTask('test', ['concat:test']);
 
 };

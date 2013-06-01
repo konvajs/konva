@@ -1,5 +1,5 @@
 #Building the KineticJS Framework 
-To build the framework, you need to have Ruby and Rubygems installed. After that, run `gem install thor`, `gem install json_pure`, and `gem install uglifier` to install the dependencies.
+To build the framework, you need to have Grunt.js installed. After that, run `gem install thor`, `gem install json_pure`, and `gem install uglifier` to install the dependencies.
 
 To build a development version of the framework, run `thor build:dev VERSION`, where VERSION is a string that can be anything you like. For example, using `thor build:dev current` will produce `kinetic-vcurrent.js`. To build a minified version of the framework, run `thor build:prod VERSION`.   
 
