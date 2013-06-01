@@ -31,7 +31,7 @@
      * @param {Number} [config.tag.pointerWidth]
      * @param {Number} [config.tag.pointerHeight]
      * @param {Number} [config.tag.cornerRadius] 
-     * {{NodeParams}}
+     * @@nodeParams
      * @example
      * // create label
      * var label = new Kinetic.Label({<br>

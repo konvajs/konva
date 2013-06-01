@@ -15,8 +15,8 @@
      * @param {String} [config.fontStyle] can be normal, bold, or italic.  Default is normal
      * @param {String} config.text
      * @param {String} config.data SVG data string
-     * {{ShapeParams}}
-     * {{NodeParams}}
+     * @@shapeParams
+     * @@nodeParams
      * @example
      * var textpath = new Kinetic.TextPath({<br>
      *   x: 100,<br>

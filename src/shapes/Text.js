@@ -43,8 +43,8 @@
      * @param {Number} [config.height] default is auto
      * @param {Number} [config.lineHeight] default is 1
      * @param {String} [config.wrap] can be word, char, or none. Default is word
-     * {{ShapeParams}}
-     * {{NodeParams}}
+     * @@shapeParams
+     * @@nodeParams
      * @example
      * var text = new Kinetic.Text({<br>
      *   x: stage.getWidth() / 2,<br>

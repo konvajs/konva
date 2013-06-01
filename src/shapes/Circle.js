@@ -6,8 +6,8 @@
      * @augments Kinetic.Shape
      * @param {Object} config
      * @param {Number} config.radius
-     * {{ShapeParams}}
-     * {{NodeParams}}
+     * @@shapeParams
+     * @@nodeParams
      * @example
      * // create simple circle
      * var circle = new Kinetic.Circle({<br>

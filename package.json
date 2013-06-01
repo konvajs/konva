@@ -1,6 +1,6 @@
 {
   "name": "KineticJS",
-  "version": "4.5.4",
+  "version": "current",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-jshint": "~0.1.1",

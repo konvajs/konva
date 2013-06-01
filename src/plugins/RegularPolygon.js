@@ -7,8 +7,8 @@
      * @param {Object} config
      * @param {Number} config.sides
      * @param {Number} config.radius
-     * {{ShapeParams}}
-     * {{NodeParams}}
+     * @@shapeParams
+     * @@nodeParams
      * @example
      * var hexagon = new Kinetic.RegularPolygon({<br>
      *   x: 100,<br>

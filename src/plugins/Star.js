@@ -8,8 +8,8 @@
      * @param {Integer} config.numPoints
      * @param {Number} config.innerRadius
      * @param {Number} config.outerRadius
-     * {{ShapeParams}}
-     * {{NodeParams}}
+     * @@shapeParams
+     * @@nodeParams
      * @example
      * var star = new Kinetic.Star({<br>
      *   x: 100,<br>

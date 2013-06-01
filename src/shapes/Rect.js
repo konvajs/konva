@@ -6,8 +6,8 @@
      * @augments Kinetic.Shape
      * @param {Object} config
      * @param {Number} [config.cornerRadius]
-     * {{ShapeParams}}
-     * {{NodeParams}}
+     * @@shapeParams
+     * @@nodeParams
      * @example
      * var rect = new Kinetic.Rect({<br>
      *   width: 100,<br>

@@ -7,8 +7,8 @@
      * @param {Object} config
      * @param {Array} config.points can be a flattened array of points, an array of point arrays, or an array of point objects.
      *  e.g. [0,1,2,3], [[0,1],[2,3]] and [{x:0,y:1},{x:2,y:3}] are equivalent
-     * {{ShapeParams}}
-     * {{NodeParams}}
+     * @@shapeParams
+     * @@nodeParams
      * @example
      * var polygon = new Kinetic.Polygon({<br>
      *   points: [73, 192, 73, 160, 340, 23, 500, 109, 499, 139, 342, 93],<br>

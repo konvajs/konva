@@ -7,8 +7,8 @@
      * @augments Kinetic.Shape
      * @param {Object} config
      * @param {String} config.data SVG data string
-     * {{ShapeParams}}
-     * {{NodeParams}}
+     * @@shapeParams
+     * @@nodeParams
      * @example
      * var path = new Kinetic.Path({<br>
      *   x: 240,<br>

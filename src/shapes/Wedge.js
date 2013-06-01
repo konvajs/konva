@@ -8,8 +8,8 @@
      * @param {Number} config.angleDeg angle in degrees
      * @param {Number} config.radius
      * @param {Boolean} [config.clockwise]
-     * {{ShapeParams}}
-     * {{NodeParams}}
+     * @@shapeParams
+     * @@nodeParams
      * @example
      * // draw a wedge that's pointing downwards<br>
      * var wedge = new Kinetic.Wedge({<br>

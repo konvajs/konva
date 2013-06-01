@@ -56,8 +56,11 @@ module.exports = function(grunt) {
       dist: {
         options: {
           variables: {
-            'version': '<%= pkg.version %>',
-            'date': '<%= grunt.template.today("yyyy-mm-dd") %>'
+            version: '<%= pkg.version %>',
+            date: '<%= grunt.template.today("yyyy-mm-dd") %>',
+            nodeParams: '<%= grunt.file.read("doc-includes/NodeParams.txt") %>',
+            containerParams: '<%= grunt.file.read("doc-includes/ContainerParams.txt") %>',
+            shapeParams: '<%= grunt.file.read("doc-includes/ShapeParams.txt") %>'
           },
           prefix: '@@'
         },

@@ -12,8 +12,8 @@
      * @param {Object} config
      * @param {ImageObject} config.image
      * @param {Object} [config.crop]
-     * {{ShapeParams}}
-     * {{NodeParams}}
+     * @@shapeParams
+     * @@nodeParams
      * @example
      * var imageObj = new Image();<br>
      * imageObj.onload = function() {<br>

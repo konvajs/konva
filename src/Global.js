@@ -45,7 +45,7 @@ var Kinetic = {};
      * @memberof Kinetic
      * @abstract
      * @param {Object} config
-     * {{NodeParams}}
+     * @@nodeParams
      */
     Kinetic.Node = function(config) {
         this._nodeInit(config);
@@ -58,8 +58,8 @@ var Kinetic = {};
      * @memberof Kinetic
      * @augments Kinetic.Node
      * @param {Object} config
-     * {{ShapeParams}}
-     * {{NodeParams}}
+     * @@shapeParams
+     * @@nodeParams
      * @example
      * var customShape = new Kinetic.Shape({<br>
      *   x: 5,<br>
@@ -88,8 +88,8 @@ var Kinetic = {};
      * @augments Kinetic.Node
      * @abstract
      * @param {Object} config
-     * {{NodeParams}}
-     * {{ContainerParams}}
+     * @@nodeParams
+     * @@containerParams
      */
     Kinetic.Container = function(config) {
         this._containerInit(config);
@@ -102,8 +102,8 @@ var Kinetic = {};
      * @augments Kinetic.Container
      * @param {Object} config
      * @param {String|DomElement} config.container Container id or DOM element
-     * {{NodeParams}}
-     * {{ContainerParams}}
+     * @@nodeParams
+     * @@containerParams
      * @example
      * var stage = new Kinetic.Stage({<br>
      *   width: 500,<br>
@@ -124,8 +124,8 @@ var Kinetic = {};
      * @param {Object} config
      * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
      * to clear the canvas before each layer draw.  The default value is true.
-     * {{NodeParams}}
-     * {{ContainerParams}}
+     * @@nodeParams
+     * @@containerParams
      * @example
      * var layer = new Kinetic.Layer();
      */
@@ -139,8 +139,8 @@ var Kinetic = {};
      * @memberof Kinetic
      * @augments Kinetic.Container
      * @param {Object} config
-     * {{NodeParams}}
-     * {{ContainerParams}}
+     * @@nodeParams
+     * @@containerParams
      * @example
      * var group = new Kinetic.Group();
      */

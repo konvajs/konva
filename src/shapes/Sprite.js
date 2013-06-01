@@ -9,8 +9,8 @@
      * @param {Object} config.animations animation map
      * @param {Integer} [config.index] animation index
      * @param {Image} config.image image object
-     * {{ShapeParams}}
-     * {{NodeParams}}
+     * @@shapeParams
+     * @@nodeParams
      * @example
      * var animations = {<br>
      *   idle: [{<br>
