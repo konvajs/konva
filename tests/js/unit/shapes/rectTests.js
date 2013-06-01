@@ -27,6 +27,26 @@ Test.Modules.RECT = {
         
         test(rect.getClassName() === 'Rect', 'className should be Rect');
     },
+    'add fill stroke rect': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'blue',
+            stroke: 'green',
+            strokeWidth: 4
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+    },
     'add stroke rect': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
