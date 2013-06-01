@@ -3,6 +3,7 @@ jsdoc-master
 dist
 tests/js/unitTests.js
 analysis
+node_modules
 
 # Numerous always-ignore extensions
 *.diff
