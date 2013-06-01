@@ -129,6 +129,9 @@ module.exports = function(grunt) {
     },
     clean: {
       build: ['dist/*']
+    },
+    jshint: {
+      all: ['src/**/*.js']
     }
   };
 
@@ -148,10 +151,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-replace');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
 
   // Tasks
   grunt.registerTask('dev', ['clean', 'concat:source', 'replace:dev']);
   grunt.registerTask('full', ['clean', 'concat:source', 'replace:dev', 'uglify', 'replace:prod']);
   grunt.registerTask('test', ['concat:test']);
-
+  grunt.registerTask('hint', ['jshint']);
 };
