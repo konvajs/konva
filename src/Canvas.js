@@ -132,8 +132,8 @@
                 try {
                     return this.element.toDataURL();
                 }
-                catch(e) {
-                    Kinetic.Util.warn('Unable to get data URL. ' + e.message)
+                catch(err) {
+                    Kinetic.Util.warn('Unable to get data URL. ' + err.message);
                     return '';
                 }
             }

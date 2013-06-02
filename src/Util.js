@@ -13,8 +13,8 @@
             this[i] = args[i];
         }
         return this;
-    }
-    Kinetic.Collection.prototype = new Array();
+    };
+    Kinetic.Collection.prototype = [];
     /**
      * iterate through node array and run a function for each node.
      *  The node and index is passed into the function
@@ -92,7 +92,7 @@
      */
     Kinetic.Transform = function() {
         this.m = [1, 0, 0, 1, 0, 0];
-    }
+    };
 
     Kinetic.Transform.prototype = {
         /**
@@ -449,9 +449,14 @@
          *  an array of point objects
          */
         _getPoints: function(arg) {
+            var arr = [],
+                n, len;
+
             if(arg === undefined) {
                 return [];
             }
+
+            len = arg.length;
 
             // an array of arrays
             if(this._isArray(arg[0])) {
@@ -459,8 +464,7 @@
                  * convert array of arrays into an array
                  * of objects containing x, y
                  */
-                var arr = [];
-                for(var n = 0; n < arg.length; n++) {
+                for(n = 0; n < len; n++) {
                     arr.push({
                         x: arg[n][0],
                         y: arg[n][1]
@@ -479,8 +483,7 @@
                  * convert array of numbers into an array
                  * of objects containing x, y
                  */
-                var arr = [];
-                for(var n = 0; n < arg.length; n += 2) {
+                for(n = 0; n < len; n += 2) {
                     arr.push({
                         x: arg[n],
                         y: arg[n + 1]
@@ -511,7 +514,7 @@
                 imageObj = new Image();
                 imageObj.onload = function() {
                     callback(imageObj);
-                }
+                };
                 imageObj.src = arg;
             }
 
@@ -526,7 +529,7 @@
                 imageObj = new Image();
                 imageObj.onload = function() {
                     callback(imageObj);
-                }
+                };
                 imageObj.src = dataUrl;
             }
             else {
@@ -587,9 +590,9 @@
           else if (color.substr(0, 4) === RGB_PAREN) {
             rgb = RGB_REGEX.exec(color.replace(/ /g,'')); 
             return {
-                r: parseInt(rgb[1]),
-                g: parseInt(rgb[2]),
-                b: parseInt(rgb[3])
+                r: parseInt(rgb[1], 10),
+                g: parseInt(rgb[2], 10),
+                b: parseInt(rgb[3], 10)
             };
           }
           // default

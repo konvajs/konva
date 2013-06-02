@@ -131,6 +131,9 @@ module.exports = function(grunt) {
       build: ['dist/*']
     },
     jshint: {
+      options: {
+        laxbreak: true
+      },
       all: ['src/**/*.js']
     }
   };

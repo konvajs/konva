@@ -5,7 +5,6 @@
         PX = 'px',
         MOUSEOUT = 'mouseout',
         MOUSELEAVE = 'mouseleave',
-        MOUSEOUT = 'mouseout',
         MOUSEOVER = 'mouseover',
         MOUSEENTER = 'mouseenter',
         MOUSEMOVE = 'mousemove',
@@ -13,8 +12,8 @@
         MOUSEUP = 'mouseup',
         CLICK = 'click',
         DBL_CLICK = 'dblclick',
-        TOUCHSTART = 'touchstart'
-        TOUCHEND = 'touchend'
+        TOUCHSTART = 'touchstart',
+        TOUCHEND = 'touchend',
         TAP = 'tap',
         DBL_TAP = 'dbltap',
         TOUCHMOVE = 'touchmove',
@@ -191,8 +190,9 @@
          *  is very high quality
          */
         toDataURL: function(config) {
-            var config = config || {},
-                mimeType = config.mimeType || null, 
+            config = config || {};
+
+            var mimeType = config.mimeType || null, 
                 quality = config.quality || null, 
                 x = config.x || 0, 
                 y = config.y || 0, 
@@ -399,9 +399,9 @@
         },
         _mousedown: function(evt) {
             this._setPointerPosition(evt);
-        	var go = Kinetic.Global,
-        	    obj = this.getIntersection(this.getPointerPosition()), 
-        	    shape;
+            var go = Kinetic.Global,
+                obj = this.getIntersection(this.getPointerPosition()), 
+                shape;
 
             if(obj && obj.shape) {
                 shape = obj.shape;
@@ -448,10 +448,10 @@
             this.clickStart = false;
         },
         _touchstart: function(evt) {
-          this._setPointerPosition(evt);
-        	var go = Kinetic.Global,
-        	    obj = this.getIntersection(this.getPointerPosition()), 
-        	    shape;
+            this._setPointerPosition(evt);
+            var go = Kinetic.Global,
+                obj = this.getIntersection(this.getPointerPosition()),  
+                shape;
             
             if(obj && obj.shape) {
                 shape = obj.shape;

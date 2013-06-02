@@ -45,7 +45,7 @@
             return null;
         },
         drawScene: function(canvas) {
-            var canvas = canvas || this.getCanvas();
+            canvas = canvas || this.getCanvas();
 
             if(this.getClearBeforeDraw()) {
                 canvas.clear();

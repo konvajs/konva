@@ -128,7 +128,7 @@
         off: function(typesStr) {
             var types = typesStr.split(SPACE),
                 len = types.length,
-                n, type, event, parts, baseEvent;
+                n, type, t, event, parts, baseEvent;
                 
             for(n = 0; n < len; n++) {
                 type = types[n];
@@ -143,8 +143,8 @@
                         }
                     }
                     else {
-                        for(var type in this.eventListeners) {
-                            this._off(type, parts[1]);
+                        for(t in this.eventListeners) {
+                            this._off(t, parts[1]);
                         }
                     }
                 }
@@ -868,8 +868,9 @@
          *  is very high quality
          */
         toDataURL: function(config) {
-            var config = config || {},
-                mimeType = config.mimeType || null, 
+            config = config || {};
+
+            var mimeType = config.mimeType || null, 
                 quality = config.quality || null,
                 stage = this.getStage(),
                 x = config.x || 0, 
@@ -1317,7 +1318,7 @@
     /**
      * create node with JSON string.  De-serializtion does not generate custom
      *  shape drawing functions, images, or event handlers (this would make the
-     * 	serialized object huge).  If your app uses custom shapes, images, and
+     *  serialized object huge).  If your app uses custom shapes, images, and
      *  event handlers (it probably does), then you need to select the appropriate
      *  shapes after loading the stage and set these properties via on(), setDrawFunc(),
      *  and setImage() methods

@@ -37,16 +37,18 @@
 
             // tension
             if(tension !== 0 && length > 2) {
-                var ap = this.allPoints, len = ap.length;
-                var n = 0;
+                var ap = this.allPoints, 
+                    len = ap.length,
+                    n, point;
+
                 while(n < len-1) {
                     context.bezierCurveTo(ap[n].x, ap[n++].y, ap[n].x, ap[n++].y, ap[n].x, ap[n++].y);
                 } 
             }
             // no tension
             else {
-                for(var n = 1; n < length; n++) {
-                    var point = points[n];
+                for(n = 1; n < length; n++) {
+                    point = points[n];
                     context.lineTo(point.x, point.y);
                 }
             }
