@@ -28,7 +28,6 @@ Test.Modules.DD = {
         function remove() {
             circle.remove();
             layer.draw();
-            testDataUrl(layer.toDataURL(), 'cleared', 'canvas should be cleared after removing shape onclick');
         }
 
         circle.on('click', function() {
@@ -119,7 +118,6 @@ Test.Modules.DD = {
             events.push('mouseup');
         });
         
-        testDataUrl(layer.toDataURL(), 'drag circle before', 'start data url is incorrect');
 
         test(!Kinetic.Global.isDragging(), 'Global isDragging() should be false');
         test(!Kinetic.Global.isDragReady(), 'Global isDragReady()) should be false');
@@ -169,7 +167,15 @@ Test.Modules.DD = {
         test(!Kinetic.Global.isDragging(), 'Global isDragging() should be false');
         test(!Kinetic.Global.isDragReady(), 'Global isDragReady()) should be false');
 
-        testDataUrl(layer.toDataURL(), 'drag circle after', 'end data url is incorrect');
+        //console.log(greenCircle.getPosition());
+        //console.log(circle.getPosition());
+
+
+
+        test(greenCircle.getX() === 40, 'green circle x should be 40');
+        test(greenCircle.getY() === 40, 'green circle y should be 40');
+        test(circle.getX() === 100, 'circle x should be 100');
+        test(circle.getY() === 100, 'circle y should be 100');
         
         showHit(layer);
         
@@ -228,8 +234,6 @@ Test.Modules.DD = {
             events.push('mouseup');
         });
         
-        testDataUrl(layer.toDataURL(), 'drag circle before', 'start data url is incorrect');
-
         test(!Kinetic.Global.isDragging(), 'Global isDragging() should be false');
         test(!Kinetic.Global.isDragReady(), 'Global isDragReady()) should be false');
 
@@ -371,9 +375,6 @@ Test.Modules.DD = {
 
         var top = stage.content.getBoundingClientRect().top;
 
-        //console.log(layer.toDataURL())
-        testDataUrl(layer.toDataURL(), 'drag layer before', 'start data url is incorrect');
-
         /*
          * simulate drag and drop
          */
@@ -394,8 +395,10 @@ Test.Modules.DD = {
         });
         Kinetic.DD._endDragAfter({dragEndNode:circle2});
 
-        //console.log(layer.toDataURL())
-        testDataUrl(layer.toDataURL(), 'drag layer after', 'end data url is incorrect');
+        console.log(layer.getPosition())
+
+        test(layer.getX() === -189, 'layer x should be -189');
+        test(layer.getY() === 13, 'layer y should be 13');
 
     }
 };
@@ -645,14 +648,16 @@ Test.Modules.EVENT = {
 
         var top = stage.content.getBoundingClientRect().top;
 
-        testDataUrl(layer.toDataURL(), 'modify fill and stroke before', 'start data url is incorrect');
+        test(circle.getFill() === 'red', 'circle fill should be red');
+        test(circle.getStroke() === 'black', 'circle stroke should be black');
 
         stage._mousemove({
             clientX: 377,
             clientY: 101 + top
         });
 
-        testDataUrl(layer.toDataURL(), 'modify fill and stroke after', 'mid data url is incorrect');
+        test(circle.getFill() === 'yellow', 'circle fill should be yellow');
+        test(circle.getStroke() === 'purple', 'circle stroke should be purple');
 
         // move mouse back out of circle
         stage._mousemove({
@@ -664,7 +669,8 @@ Test.Modules.EVENT = {
             clientY: 138 + top
         });
 
-        testDataUrl(layer.toDataURL(), 'modify fill and stroke before', 'end data url is incorrect');
+        test(circle.getFill() === 'red', 'circle fill should be red');
+        test(circle.getStroke() === 'black', 'circle stroke should be black');
     },
     'mousedown mouseup mouseover mouseout mousemove click dblclick / touchstart touchend touchmove tap dbltap': function(containerId) {
         var stage = new Kinetic.Stage({
