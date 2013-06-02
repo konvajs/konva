@@ -1,89 +1,52 @@
 Test.Modules.Tween = {
-    '!transition position and rotation': function(containerId) {
+    '*tween spline': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
             height: 200
         });
         var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
-            x: 100,
-            y: 100,
-            width: 100,
-            height: 50,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4,
-            shadowColor: 'black',
-            shadowOffset: 10,
-            shadowOpacity: 0.5
+
+        var spline = new Kinetic.Spline({
+            points: [
+                73, 160,
+                340, 23,
+                500, 109,
+                300, 109
+            ],
+            endPoints: [
+                200, 160,
+                200, 23,
+                500, 109,
+                100, 10
+            ],
+            stroke: 'blue',
+            strokeWidth: 10,
+            lineCap: 'round',
+            lineJoin: 'round',
+            draggable: true,
+            tension: 1,
+            pointsPosition: 0
         });
 
-        layer.add(rect);
+        layer.add(spline);
         stage.add(layer);
 
-        var blue = Kinetic.Type.getRGB('blue');
-        var yellow = Kinetic.Type.getRGB('yellow');
-        var red = Kinetic.Type.getRGB('red');
-
-
-        // transition 1
-        rect.transitionTo({
-            duration: 3,
-            x: 400,
-            y: 30,
-            fillR: blue.r,
-            fillG: blue.g,
-            fillB: blue.b,
-            strokeR: red.r,
-            strokeG: red.g,
-            strokeB: red.b,
-            shadowColorR: yellow.r,
-            shadowColorG: yellow.g,
-            shadowColorB: yellow.b,
-            easing: 'bounce-ease-out'
+        var tween = new Kinetic.Tween({
+            node: spline,
+            duration: 1,
+            pointsPosition: 1,
+            easing: Kinetic.Easings.BackEaseOut
         });
 
-        // transition 2
-        rect.transitionTo({
-            duration: 3,
-            shadowOffsetX: 80, 
-            rotation: Math.PI * 2,
-            easing: 'bounce-ease-out'
+        stage.getContent().addEventListener('mouseover', function() {
+          tween.play();
         });
-    },
-    '!all transition types': function(containerId) {
-        document.getElementById(containerId).style.height = '300px';
 
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 300
+        stage.getContent().addEventListener('mouseout', function() {
+          tween.reverse();
         });
-        var layer = new Kinetic.Layer();
 
-        var easings = ['linear', 'ease-in', 'ease-out', 'ease-in-out', 'back-ease-in', 'back-ease-out', 'back-ease-in-out', 'elastic-ease-in', 'elastic-ease-out', 'elastic-ease-in-out', 'bounce-ease-out', 'bounce-ease-in', 'bounce-ease-in-out', 'strong-ease-in', 'strong-ease-out', 'strong-ease-in-out'];
-        for(var n = 0; n < easings.length; n++) {
-            var rect = new Kinetic.Rect({
-                x: 10,
-                y: 10 + (n * 200 / easings.length),
-                width: 100,
-                height: 10,
-                fill: 'green',
-                stroke: 'black',
-                strokeWidth: 2
-            });
-
-            layer.add(rect);
-
-            rect.transitionTo({
-                duration: 2,
-                width: 500,
-                easing: easings[n]
-            });
-        }
-
-        stage.add(layer);
     },
     'ease-in, ease-out, ease-in-out hovers': function(containerId) {    
         var stage = new Kinetic.Stage({
@@ -174,7 +137,7 @@ Test.Modules.Tween = {
             evt.targetNode.tween.reverse();
         });
     },
-    'simple transition': function(containerId) {
+    'simple tween': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -964,43 +927,7 @@ Test.Modules.DRAG_AND_DROP = {
         layer.draw();
 
         var trans = null;
-        /*
-         star.on('dragstart', function() {
-         if(trans) {
-         trans.stop();
-         }
 
-         star.setAttrs({
-         shadow: {
-         offset: {
-         x: 15,
-         y: 15
-         }
-         },
-         offset: {
-         x: 10,
-         y: 10
-         }
-         });
-         });
-
-         star.on('dragend', function() {
-         trans = star.transitionTo({
-         duration: 0.5,
-         easing: 'elastic-ease-out',
-         shadow: {
-         offset: {
-         x: 5,
-         y: 5
-         }
-         },
-         offset: {
-         x: 0,
-         y: 0
-         }
-         })
-         });
-         */
 
         showHit(layer);
     },
@@ -1538,83 +1465,5 @@ Test.Modules.DRAG_AND_DROP = {
         stage.add(layer);
 
 
-    },
-    '!transition stage width': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-
-        var layer = new Kinetic.Layer();
-
-        layer.canvas.element.style.backgroundColor = 'blue';
-
-        var rect = new Kinetic.Rect({
-            x: 10,
-            y: 10,
-            width: 100,
-            height: 50,
-            fill: 'red'
-        });
-
-        layer.add(rect);
-        stage.add(layer);
-
-        stage.transitionTo({
-            width: 300,
-            duration: 2
-        });
-
-        
-    },
-    '!transition gaussian blur filter': function(containerId) {
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            var stage = new Kinetic.Stage({
-                container: containerId,
-                width: 578,
-                height: 200
-            });
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
-                x: 10,
-                y: 10,
-                image: imageObj,
-                draggable: true,
-                filter: Kinetic.Filters.Blur,
-                filterRadius: 20
-            });
-
-            layer.add(darth);
-            stage.add(layer);
-
-            var trans = null;
-
-    
-            darth.on('mouseover', function() {
-                if (trans) {
-                    trans.stop();
-                }
-                trans = darth.transitionTo({
-                    easing: 'ease-in-out',
-                    duration: 0.5,
-                    filterRadius: 0
-                });
-            });
-
-            darth.on('mouseout', function() {
-                if (trans) {
-                    trans.stop();
-                }
-                trans = darth.transitionTo({
-                    easing: 'ease-in-out',
-                    duration: 0.5,
-                    filterRadius: 20
-                });
-            });
-            
-        };
-        imageObj.src = '../assets/darth-vader.jpg';
     }
 };

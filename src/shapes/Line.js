@@ -45,12 +45,16 @@
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
-            var points = this.getPoints(), length = points.length, context = canvas.getContext();
+            var points = this.getPoints(), 
+                length = points.length, 
+                context = canvas.getContext(),
+                n, point;
+
             context.beginPath();
             context.moveTo(points[0].x, points[0].y);
 
-            for(var n = 1; n < length; n++) {
-                var point = points[n];
+            for(n = 1; n < length; n++) {
+                point = points[n];
                 context.lineTo(point.x, point.y);
             }
 
@@ -64,7 +68,39 @@
          *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
          */
         setPoints: function(val) {
-            this._setAttr('points', Kinetic.Util._getPoints(val));
+            var points = Kinetic.Util._getPoints(val);
+            this._setAttr('points', points);
+            this._points = points;
+        },
+        setEndPoints: function(val) {
+            var points = Kinetic.Util._getPoints(val);
+            this._setAttr('endPoints', points);
+        },
+        setPointsPosition: function(val) {
+            var points = this._points,
+                endPoints = this.getEndPoints(),
+                len = points.length,
+                newPoints = [],
+                n, point, endPoint, diff;
+
+            for (n=0; n<len; n++) {
+                point = points[n];
+                endPoint = endPoints[n];
+
+                diffX = (endPoint.x - point.x) * val;
+                diffY = (endPoint.y - point.y) * val;
+
+                newPoints.push({
+                    x: point.x + diffX,
+                    y: point.y + diffY
+                });
+            }
+
+            this._setAttr('pointsPosition', val);
+            this._setAttr('points', newPoints);
+        },
+        getPointsPosition: function() {
+            return this.attrs.pointsPosition;
         },
         /**
          * get points array
@@ -75,6 +111,9 @@
          // default array literal each time because arrays are modified by reference
         getPoints: function() {
             return this.attrs.points || [];
+        },
+        getEndPoints: function() {
+            return this.attrs.endPoints || [];
         }
     };
     Kinetic.Util.extend(Kinetic.Line, Kinetic.Shape);

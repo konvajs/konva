@@ -88,6 +88,10 @@
 
             canvas.stroke(this);
         },
+        setPointsPosition: function(val) {
+            Kinetic.Line.prototype.setPointsPosition.call(this, val);
+            this._setAllPoints();
+        },
         setPoints: function(val) {
             Kinetic.Line.prototype.setPoints.call(this, val);
             this._setAllPoints();
@@ -103,10 +107,14 @@
             this._setAllPoints();
         },
         _setAllPoints: function() {
-            var points = this.getPoints(), length = points.length, tension = this.getTension(), allPoints = [];
+            var points = this.getPoints(), 
+                length = points.length, 
+                tension = this.getTension(), 
+                allPoints = [],
+                n, cp;
 
-            for(var n = 1; n < length - 1; n++) {
-                var cp = Kinetic.Spline._getControlPoints(points[n - 1], points[n], points[n + 1], tension);
+            for(n = 1; n < length - 1; n++) {
+                cp = Kinetic.Spline._getControlPoints(points[n - 1], points[n], points[n + 1], tension);
                 allPoints.push(cp[0]);
                 allPoints.push(points[n]);
                 allPoints.push(cp[1]);
