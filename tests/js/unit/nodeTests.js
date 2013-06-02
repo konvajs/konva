@@ -149,12 +149,7 @@ Test.Modules.NODE = {
         stage.add(layer);
 
         test(layer.canvas.pixelRatio === 2, 'layer pixel ratio should be 2');
-
-        testDataUrl(layer.toDataURL(), 'green circle', 'problem with pixel ratio and dataURL');
-
-        //console.log(layer.toDataURL())
-
-        
+ 
     },
 
     'listen and don\'t listen': function(containerId) {
@@ -216,52 +211,6 @@ Test.Modules.NODE = {
         layer.drawHit();
 
         showHit(layer);
-    },
-    'group to image': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-        var rect = new Kinetic.Rect({
-            x: 50,
-            y: 50,
-            width: 200,
-            height: 50,
-            fill: 'blue'
-        });
-
-        var rect2 = new Kinetic.Rect({
-            x: 200,
-            y: 100,
-            width: 200,
-            height: 50,
-            fill: 'red',
-            listening: false
-        });
-
-        group.add(rect).add(rect2);
-        layer.add(group);
-        stage.add(layer);
-
-        group.toImage({
-            callback: function(imageObj) {
-                var img = new Kinetic.Image({
-                    image: imageObj,
-                    x: 50,
-                    y: 50
-                });
-
-                layer.add(img).draw();
-
-                var dataUrl = layer.toDataURL();
-
-                testDataUrl(dataUrl, 'group to image', 'group to image data url is incorrect');
-            }
-        });
-
     },
     'test offset attr change': function(containerId) {
         /*
@@ -498,10 +447,6 @@ Test.Modules.NODE = {
         test(taps.toString() === 'group rect,clone rect', 'tap order should be group rect followed by clone rect');
 
         stage.draw();
-
-        //console.log(layer.toDataURL());
-
-        testDataUrl(layer.toDataURL(), 'clone group', 'problem cloning group');
 
     },
     'test on attr change': function(containerId) {
@@ -898,124 +843,6 @@ Test.Modules.NODE = {
 
                 layer.add(cachedShape);
                 layer.draw();
-
-                //console.log(layer.toDataURL());
-
-                cachedShape.createImageHitRegion(function() {
-
-                    layer.draw();
-                    //console.log(layer.toDataURL());
-                    testDataUrl(layer.toDataURL(), 'regular and cached polygon', 'regular and cached polygon layer data url is incorrect');
-
-                });
-            }
-        });
-
-        showHit(layer);
-    },
-    'cache shape, group, layer, and stage': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-        var rect = new Kinetic.Rect({
-            x: 10,
-            y: 10,
-            width: 50,
-            height: 30,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4,
-            draggable: true
-        });
-
-        group.add(rect);
-        layer.add(group);
-        stage.add(layer);
-
-        // cache shape
-        rect.toImage({
-            x: 8,
-            y: 8,
-            width: 54,
-            height: 34,
-            callback: function(imageObj) {
-                var cachedShape = new Kinetic.Image({
-                    image: imageObj,
-                    x: 60,
-                    y: 60,
-                    draggable: true
-                });
-                group.add(cachedShape);
-                layer.draw();
-
-                // cache group
-                group.toImage({
-                    x: 8,
-                    y: 8,
-                    width: 106,
-                    height: 86,
-                    callback: function(imageObj) {
-                        var cachedGroup = new Kinetic.Image({
-                            image: imageObj,
-                            x: 100,
-                            y: 8,
-                            draggable: true
-                        });
-                        group.add(cachedGroup);
-                        layer.draw();
-
-                        // cache layer
-                        layer.toImage({
-                            x: 8,
-                            y: 8,
-                            width: 200,
-                            height: 86,
-                            callback: function(imageObj) {
-
-                                var cachedLayer = new Kinetic.Image({
-                                    image: imageObj,
-                                    x: 190,
-                                    y: 8,
-                                    draggable: true
-                                });
-                                group.add(cachedLayer);
-                                layer.draw();
-
-                                //var dataUrl = layer.toDataURL();
-
-                                // cache stage
-
-                                stage.toImage({
-                                    x: 8,
-                                    y: 8,
-                                    width: 400,
-                                    height: 86,
-                                    callback: function(imageObj) {
-
-                                        var cachedStage = new Kinetic.Image({
-                                            image: imageObj,
-                                            x: 8,
-                                            y: 100,
-                                            draggable: true
-                                        });
-                                        group.add(cachedStage);
-                                        layer.draw();
-
-                                        var dataUrl = layer.toDataURL();
-                                        //console.log(dataUrl);
-
-                                        testDataUrl(dataUrl, 'cache shape, group, layer, and stage', 'problem caching shape, group, layer, and stage');
-                                    }
-                                });
-
-                            }
-                        });
-                    }
-                });
             }
         });
 
@@ -2262,7 +2089,6 @@ Test.Modules.NODE = {
 
         var startDataUrl = layer.toDataURL();
 
-        testDataUrl(startDataUrl, 'serialize stage with custom shape', 'start data url is incorrect');
         test(triangle.getId() === 'myTriangle', 'triangle id should be myTriangle');
 
         var expectedJson = '{"attrs":{"width":578,"height":200},"nodeType":"Stage","children":[{"attrs":{},"nodeType":"Layer","children":[{"attrs":{},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
@@ -2271,9 +2097,6 @@ Test.Modules.NODE = {
         testJSON(stage.toJSON(), expectedJson, 'problem serializing stage with custom shape');
 
         layer.draw();
-
-        var endDataUrl = layer.toDataURL();
-        testDataUrl(endDataUrl,'serialize stage with custom shape', 'end data url is incorrect');
 
     },
     'load stage with custom shape using json': function(containerId) {
@@ -2675,52 +2498,6 @@ Test.Modules.NODE = {
         test(Kinetic.Global.shapes[circleColorKey] === undefined, 'circle color key should not be in shapes hash');
         test(Kinetic.Global.shapes[rectColorKey] === undefined, 'rect color key should not be in shapes hash');
     },
-    '!destroy node mid transition': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
-            x: 100,
-            y: 100,
-            width: 100,
-            height: 50,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4,
-            shadowColor: 'black',
-            shadowOffset: 10,
-            shadowOpacity: 0.5
-        });
-
-        layer.add(rect);
-        stage.add(layer);
-
-        rect.transitionTo({
-            duration: 2,
-            shadowOffset: {
-                x: 80
-            },
-            x: 400,
-            y: 30,
-            rotation: Math.PI * 2,
-            easing: 'bounce-ease-out'
-        });
-
-        setTimeout(function() {
-          /*
-                 * TODO: this method fails every now and then, seemingly
-                 * from a race condition.  need to investigate
-                 */
-            //test(rect.transAnim.isRunning(), 'rect trans should be running before destroying it');
-            rect.destroy();
-            //test(!rect.transAnim.isRunning(), 'rect trans should not be running after destroying it');
-            layer.draw();
-            testDataUrl(layer.toDataURL(), 'cleared', 'transitioning rectangle should have been destroyed and removed from the screen');
-        }, 1000);
-    },
     'hide stage': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -2755,75 +2532,5 @@ Test.Modules.NODE = {
         
         // TODO: stage hide() fails.  also need to find a good way to test this
 
-    },
-    'hide layer': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-
-        var rect = new Kinetic.Rect({
-            x: 200,
-            y: 100,
-            width: 100,
-            height: 50,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 4,
-            draggable: true,
-            rotationDeg: 60,
-            scale: {
-                x: 2,
-                y: 1
-            }
-        });
-
-        group.add(rect);
-        layer.add(group);
-        stage.add(layer);
-
-        layer.hide();
-        layer.draw();
-        
-        
-        //console.log(layer.toDataURL());
-        testDataUrl(layer.toDataURL(), 'cleared', 'layer is still visible');
-    },
-    'hide group': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-
-        var rect = new Kinetic.Rect({
-            x: 200,
-            y: 100,
-            width: 100,
-            height: 50,
-            fill: 'red',
-            stroke: 'black',
-            strokeWidth: 4,
-            draggable: true,
-            rotationDeg: 60,
-            scale: {
-                x: 2,
-                y: 1
-            }
-        });
-
-        group.add(rect);
-        layer.add(group);
-        stage.add(layer);
-
-        group.hide();
-        layer.draw();
-
-        testDataUrl(layer.toDataURL(), 'cleared', 'group is still visible');
     }
 };

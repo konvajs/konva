@@ -94,38 +94,6 @@ Test.Modules.LAYER = {
         layer.add(rect);
         stage.add(layer);
     },
-    'redraw hit graph': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
-            x: 200,
-            width: 100,
-            height: 50,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4,
-            scale: [3, 1],
-            draggable: true,
-            strokeScaleEnabled: false
-        });
-
-        rect.colorKey = '000000';
-
-        layer.add(rect);
-        stage.add(layer);
-
-        rect.setY(100);
-        layer.drawHit();
-
-        showHit(layer);
-
-        testDataUrl(layer.hitCanvas.toDataURL(), 'black rect hit graph', 'redrawn hitgraph data url is incorrect');
-
-    },
 
     'set clearBeforeDraw to false, and test toDataURL for stage, layer, group, and shape': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -162,17 +130,6 @@ Test.Modules.LAYER = {
         // TODO: investigate re-enabling toDataURL with clearBeforeDraw = false.
         // disabled it for now because toDataURL breaks on devices with pixelRatio != 1
         //console.log(layer.toDataURL());
-
-        /*
-        stage.toDataURL({
-            callback: function(dataUrl) {
-                testDataUrl(layer.toDataURL(), 'stacked green circles', 'stacked green circles stage data url is incorrect');
-            }
-        });
-        */
-
-        //testDataUrl(layer.toDataURL(), 'stacked green circles', 'stacked green circles layer data url is incorrect');
-        //testDataUrl(layer.getCanvas().toDataURL(), 'stacked green circles', 'stacked green circles layer data url is incorrect');
 
     },
     'save layer as png (click on Circle to open new window)': function(containerId) {

@@ -604,15 +604,6 @@ Test.Modules.CONTAINER = {
         test(group.get('Group').length === 0, 'group should have 0 groups');
         test(group.get('Rect').length === 1, 'group should have 1 rects');
         test(group.get('Circle').length === 1, 'gropu should have 1 circles');
-
-		//console.log(dataUrls['node shape type selector']);
-
-        stage.toDataURL({
-            callback: function(dataUrl) {
-            	//console.log(dataUrl)
-                testDataUrl(dataUrl,'node shape type selector', 'problem with node and shape type selector render.');
-            }
-        });
     },
     'test get() selector by adding shape, then group, then layer': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -864,13 +855,6 @@ Test.Modules.CONTAINER = {
 
         test(greenLayer.getZIndex() === 0, 'green layer should have z index of 0');
         test(blueLayer.getZIndex() === 1, 'blue layer should have z index of 1');
-
-        stage.toDataURL({
-            callback: function(dataUrl) {
-                //console.log(dataUrl)
-                testDataUrl(dataUrl, 'blue on top of green', 'layer setZIndex is not working');
-            }
-        });
     },
     'move blue layer on top of green layer with moveToTop': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -907,11 +891,6 @@ Test.Modules.CONTAINER = {
 
         blueLayer.moveToTop();
 
-        stage.toDataURL({
-            callback: function(dataUrl) {
-                testDataUrl(dataUrl, 'blue on top of green', 'layer moveToTop is not working');
-            }
-        });
     },
     'move green layer below blue layer with moveToBottom': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -948,11 +927,6 @@ Test.Modules.CONTAINER = {
 
         greenLayer.moveToBottom();
 
-        stage.toDataURL({
-            callback: function(dataUrl) {
-                testDataUrl(dataUrl, 'blue on top of green', 'layer moveToBottom is not working');
-            }
-        });
     },
     'move green layer below blue layer with moveDown': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -988,11 +962,6 @@ Test.Modules.CONTAINER = {
         stage.add(greenLayer);
         greenLayer.moveDown();
 
-        stage.toDataURL({
-            callback: function(dataUrl) {
-                testDataUrl(dataUrl, 'blue on top of green', 'layer moveDown is not working');
-            }
-        });
     },
     'move blue layer above green layer with moveUp': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1028,11 +997,6 @@ Test.Modules.CONTAINER = {
         stage.add(greenLayer);
         blueLayer.moveUp();
 
-        stage.toDataURL({
-            callback: function(dataUrl) {
-                testDataUrl(dataUrl, 'blue on top of green', 'layer moveUp is not working');
-            }
-        });
     },
     'move blue circle on top of green circle with moveToTop': function(containerId) {
         var stage = new Kinetic.Stage({

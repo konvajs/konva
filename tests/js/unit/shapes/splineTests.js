@@ -76,9 +76,6 @@ Test.Modules.SPLINE = {
          });
          */
         
-        //console.log(layer.toDataURL());
-        testDataUrl(layer.toDataURL(), 'curvy lines', 'problem with curvy lines');
-        
         test(line1.getClassName() === 'Spline', 'getClassName should be Spline');
 
     },

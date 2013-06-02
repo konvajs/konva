@@ -42,13 +42,7 @@ function testDataUrl(actual, key, message) {
             testCounter.style.backgroundColor = 'orange';
             testCounter.style.color = 'black';
         }
-        console.warn(message + ' (NOTE: use Google Chrome for data url comparisons, run on web server for caching and filtering)');
-        
-        console.log('key: ' + key);
-        console.log('actual:');
-        console.log(actual);
-        console.log('expected:');
-        console.log(expected);
+        console.warn(message + ' (NOTE: use Google Chrome for data url comparisons, run on web server for caching and filtering)');  
     }
     numTests++;
     testCounter.innerHTML = numTests;
