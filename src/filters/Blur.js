@@ -8,10 +8,10 @@
      StackBlur - a fast almost Gaussian Blur For Canvas
 
      Version:   0.5
-     Author:		Mario Klingemann
-     Contact: 	mario@quasimondo.com
-     Website:	http://www.quasimondo.com/StackBlurForCanvas
-     Twitter:	@quasimondo
+     Author:    Mario Klingemann
+     Contact:   mario@quasimondo.com
+     Website:   http://www.quasimondo.com/StackBlurForCanvas
+     Twitter:   @quasimondo
 
      In case you find this class useful - especially in commercial projects -
      I am not totally unhappy for a small donation to my PayPal account

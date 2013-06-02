@@ -160,5 +160,5 @@ module.exports = function(grunt) {
   grunt.registerTask('dev', ['clean', 'concat:source', 'replace:dev']);
   grunt.registerTask('full', ['clean', 'concat:source', 'replace:dev', 'uglify', 'replace:prod']);
   grunt.registerTask('test', ['concat:test']);
-  grunt.registerTask('hint', ['jshint']);
+  grunt.registerTask('hint', ['clean', 'concat:source', 'replace:dev', 'jshint']);
 };

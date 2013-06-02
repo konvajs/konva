@@ -34,13 +34,17 @@
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
-        	var context = canvas.getContext(), sides = this.attrs.sides, radius = this.attrs.radius;
+            var context = canvas.getContext(), 
+                sides = this.attrs.sides, 
+                radius = this.attrs.radius,
+                n, x, y;
+
             context.beginPath();
             context.moveTo(0, 0 - radius);
 
-            for(var n = 1; n < sides; n++) {
-                var x = radius * Math.sin(n * 2 * Math.PI / sides);
-                var y = -1 * radius * Math.cos(n * 2 * Math.PI / sides);
+            for(n = 1; n < sides; n++) {
+                x = radius * Math.sin(n * 2 * Math.PI / sides);
+                y = -1 * radius * Math.cos(n * 2 * Math.PI / sides);
                 context.lineTo(x, y);
             }
             context.closePath();

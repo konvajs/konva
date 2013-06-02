@@ -55,27 +55,33 @@
             this.className = 'Spline';
         },
         drawFunc: function(canvas) {
-            var points = this.getPoints(), length = points.length, context = canvas.getContext(), tension = this.getTension();
+            var points = this.getPoints(), 
+                length = points.length, 
+                context = canvas.getContext(), 
+                tension = this.getTension(),
+                ap, len, n, point;
+
             context.beginPath();
             context.moveTo(points[0].x, points[0].y);
 
             // tension
             if(tension !== 0 && length > 2) {
-                var ap = this.allPoints, len = ap.length;
+                ap = this.allPoints;
+                len = ap.length;
+                n = 2;
+
                 context.quadraticCurveTo(ap[0].x, ap[0].y, ap[1].x, ap[1].y);
 
-                var n = 2;
                 while(n < len - 1) {
                     context.bezierCurveTo(ap[n].x, ap[n++].y, ap[n].x, ap[n++].y, ap[n].x, ap[n++].y);
                 }
 
                 context.quadraticCurveTo(ap[len - 1].x, ap[len - 1].y, points[length - 1].x, points[length - 1].y);
-
             }
             // no tension
             else {
-                for(var n = 1; n < length; n++) {
-                    var point = points[n];
+                for(n = 1; n < length; n++) {
+                    point = points[n];
                     context.lineTo(point.x, point.y);
                 }
             }

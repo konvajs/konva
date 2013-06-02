@@ -1,4 +1,7 @@
 (function() {
+    var PIx2 = Math.PI * 2,
+        CIRCLE = 'Circle';
+
     /**
      * Circle constructor
      * @constructor
@@ -36,13 +39,14 @@
             this.createAttrs();
             // call super constructor
             Kinetic.Shape.call(this, config);
-            this.className = 'Circle';
+            this.className = CIRCLE;
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
-        	  var context = canvas.getContext();
+            var context = canvas.getContext();
+
             context.beginPath();
-            context.arc(0, 0, this.getRadius(), 0, Math.PI * 2, true);
+            context.arc(0, 0, this.getRadius(), 0, PIx2, true);
             context.closePath();
             canvas.fillStroke(this);
         },

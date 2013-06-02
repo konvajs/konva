@@ -31,15 +31,19 @@
             this.className = 'Blob';
         },
         drawFunc: function(canvas) {
-            var points = this.getPoints(), length = points.length, context = canvas.getContext(), tension = this.getTension();
+            var points = this.getPoints(), 
+                length = points.length, 
+                context = canvas.getContext(), 
+                tension = this.getTension(),
+                ap, len, n, point;
+
             context.beginPath();
             context.moveTo(points[0].x, points[0].y);
 
             // tension
             if(tension !== 0 && length > 2) {
-                var ap = this.allPoints, 
-                    len = ap.length,
-                    n, point;
+                ap = this.allPoints;
+                len = ap.length;
 
                 while(n < len-1) {
                     context.bezierCurveTo(ap[n].x, ap[n++].y, ap[n].x, ap[n++].y, ap[n].x, ap[n++].y);

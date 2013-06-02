@@ -68,7 +68,7 @@
      */
     Kinetic.Sprite = function(config) {
         this._initSprite(config);
-    }
+    };
 
     Kinetic.Sprite.prototype = {
         _initSprite: function(config) {
