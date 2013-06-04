@@ -1,5 +1,5 @@
 Test.Modules.Tween = {
-    '*tween spline': function(containerId) {
+    'tween spline': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -14,19 +14,12 @@ Test.Modules.Tween = {
                 500, 109,
                 300, 109
             ],
-            endPoints: [
-                200, 160,
-                200, 23,
-                500, 109,
-                100, 10
-            ],
             stroke: 'blue',
             strokeWidth: 10,
             lineCap: 'round',
             lineJoin: 'round',
             draggable: true,
-            tension: 1,
-            pointsPosition: 0
+            tension: 1
         });
 
         layer.add(spline);
@@ -35,7 +28,14 @@ Test.Modules.Tween = {
         var tween = new Kinetic.Tween({
             node: spline,
             duration: 1,
-            pointsPosition: 1,
+           //x: 100,
+
+            points: [
+                200, 160,
+                200, 23,
+                500, 109,
+                100, 10
+            ],
             easing: Kinetic.Easings.BackEaseOut
         });
 
@@ -48,7 +48,7 @@ Test.Modules.Tween = {
         });
 
     },
-    '*ease-in, ease-out, ease-in-out hovers': function(containerId) {    
+    'ease-in, ease-out, ease-in-out hovers': function(containerId) {    
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -137,7 +137,7 @@ Test.Modules.Tween = {
             evt.targetNode.tween.reverse();
         });
     },
-    '*simple tween': function(containerId) {
+    'simple tween': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -259,7 +259,7 @@ Test.Modules.ANIMATION = {
         var centerX = stage.getWidth() / 2 - 100 / 2;
 
         var anim = new Kinetic.Animation(function(frame) {
-            rect.attrs.x = amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX;
+            rect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
         }, layer);
 
         anim.start();

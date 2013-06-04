@@ -85,7 +85,7 @@
         _addAttrs: function(key, end) {
             var node = this.node,
                 nodeId = node._id,
-                tweenId;
+                start, diff, tweenId, n, len, startVal, endVal;
 
             // remove conflict from tween map if it exists
             tweenId = Kinetic.Tween.tweens[nodeId][key];
@@ -96,22 +96,57 @@
 
             // add to tween map
             start = node['get' + Kinetic.Util._capitalize(key)]();
+            
+            if (Kinetic.Util._isArray(end)) {
+                end = Kinetic.Util._getPoints(end);
+                diff = [];
+                len = end.length;
+                for (n=0; n<len; n++) { 
+                    startVal = start[n];
+                    endVal = end[n];
+                    diff.push({
+                        x: endVal.x - startVal.x,
+                        y: endVal.y - startVal.y
+                    });
+                }
+
+            }
+            else {
+                diff = end - start;
+            }
+
             Kinetic.Tween.attrs[nodeId][this._id][key] = {
                 start: start,
-                diff: end - start
+                diff: diff
             };    
             Kinetic.Tween.tweens[nodeId][key] = this._id; 
         },
         _tweenFunc: function(i) {
             var node = this.node,
                 attrs = Kinetic.Tween.attrs[node._id][this._id],
-                key, attr, start, diff, newVal;
+                key, attr, start, diff, newVal, n, len, startVal, diffVal;
 
             for (key in attrs) {
                 attr = attrs[key];
                 start = attr.start;
                 diff = attr.diff;
-                newVal = start + (diff * i);  
+
+                if (Kinetic.Util._isArray(start)) {
+                    newVal = [];
+                    len = start.length;
+                    for (n=0; n<len; n++) {
+                        startVal = start[n];
+                        diffVal = diff[n];
+                        newVal.push({
+                            x: startVal.x + (diffVal.x * i),
+                            y: startVal.y + (diffVal.y * i)
+                        });
+                    }
+                }
+                else {
+                    newVal = start + (diff * i); 
+                }
+                 
                 node['set' + Kinetic.Util._capitalize(key)](newVal);
             }
         },

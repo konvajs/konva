@@ -88,10 +88,6 @@
 
             canvas.stroke(this);
         },
-        setPointsPosition: function(val) {
-            Kinetic.Line.prototype.setPointsPosition.call(this, val);
-            this._setAllPoints();
-        },
         setPoints: function(val) {
             Kinetic.Line.prototype.setPoints.call(this, val);
             this._setAllPoints();
