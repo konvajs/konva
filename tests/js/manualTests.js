@@ -48,7 +48,7 @@ Test.Modules.Tween = {
         });
 
     },
-    'ease-in, ease-out, ease-in-out hovers': function(containerId) {    
+    '*ease-in, ease-out, ease-in-out hovers': function(containerId) {    
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -137,7 +137,7 @@ Test.Modules.Tween = {
             evt.targetNode.tween.reverse();
         });
     },
-    'simple tween': function(containerId) {
+    '*simple tween': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -164,7 +164,7 @@ Test.Modules.Tween = {
         var tween = new Kinetic.Tween({
             node: greenBox,
             duration: 2,
-            x: 400,
+            x: 200,
             scaleX: 2,
             scaleY: 2,
             easing: Kinetic.Easings.BounceEaseOut,
@@ -174,7 +174,15 @@ Test.Modules.Tween = {
             }
         });
 
+        var tween2 = new Kinetic.Tween({
+            node: greenBox,
+            duration: 4,
+            x: 400,
+            easing: Kinetic.Easings.BounceEaseOut
+        });
+
         tween.play();
+        tween2.play();
 
         document.getElementById(containerId).addEventListener('click', function() {
             tween.seek(1.5);

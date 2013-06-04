@@ -9,14 +9,9 @@
 
     PAUSED = 1,
     PLAYING = 2,
-    REVERSING = 3;
+    REVERSING = 3,
 
-    function createTween(node, key, easing, end, duration, yoyo) {
-        var method = 'set' + Kinetic.Util._capitalize(key);
-        return new Tween(key, function(i) {
-            node[method](i);  
-        }, easing, node['get' + Kinetic.Util._capitalize(key)](), end, duration * 1000, yoyo);
-    }
+    idCounter = 0;
 
     /**
      * Tween constructor.  Tweens enable you to animate a node between the current state and a new state.
@@ -46,84 +41,97 @@
             duration = config.duration || 1,
             easing = config.easing || Kinetic.Easings.Linear,
             yoyo = !!config.yoyo,
-            key, tween;
+            key, tween, start, tweenId;
 
-        this.tweens = [];
         this.node = node;
-        // event handlers
+        this._id = idCounter++;
         this.onFinish = config.onFinish;
 
         this.anim = new Kinetic.Animation(function() {
-            that._onEnterFrame();
+            that.tween.onEnterFrame();
         }, node.getLayer() || node.getLayers());
+
+        this.tween = new Tween(key, function(i) {
+            that._tweenFunc(i);
+        }, easing, 0, 1, duration * 1000, yoyo);
+
+        this._addListeners();
+
+        // init attrs map
+        if (!Kinetic.Tween.attrs[nodeId]) {
+            Kinetic.Tween.attrs[nodeId] = {};
+        }
+        if (!Kinetic.Tween.attrs[nodeId][this._id]) {
+            Kinetic.Tween.attrs[nodeId][this._id] = {};
+        }
+        // init tweens map
+        if (!Kinetic.Tween.tweens[nodeId]) {
+            Kinetic.Tween.tweens[nodeId] = {};
+        }
 
         for (key in config) {
             if (blacklist[key] === undefined) {
-                tween = createTween(node, key, easing, config[key], duration, yoyo); 
-                this.tweens.push(tween);
-                this._addListeners(tween);
-                Kinetic.Tween.add(nodeId, key, this);
+                this._addAttrs(key, config[key]);
             }
         }
 
         this.reset();
     };
 
+    Kinetic.Tween.attrs = {};
     Kinetic.Tween.tweens = {};
 
-    Kinetic.Tween.add = function(nodeId, prop, ktween) {
-        var key = nodeId + '-' + prop,
-            tween = Kinetic.Tween.tweens[key];
-
-        if (tween) {
-            tween._removeTween(prop);
-        }
-        
-        Kinetic.Tween.tweens[key] = ktween;   
-    };
-
-
     Kinetic.Tween.prototype = {
-        _iterate: function(func) {
-            var tweens = this.tweens,
-                n = 0,
-                tween = tweens[n];
+        _addAttrs: function(key, end) {
+            var node = this.node,
+                nodeId = node._id,
+                tweenId;
 
-            while(tween) {
-                func(tween, n++);
-                tween = tweens[n];
-            }  
-        },
-        _isLastTween: function(tween) {
-            var tweens = this.tweens,
-                len = tweens.length,
-                n;
+            // remove conflict from tween map if it exists
+            tweenId = Kinetic.Tween.tweens[nodeId][key];
 
-            return tweens[len - 1].prop === tween.prop;
+            if (tweenId) {
+                delete Kinetic.Tween.attrs[nodeId][tweenId][key];
+            }
+
+            // add to tween map
+            start = node['get' + Kinetic.Util._capitalize(key)]();
+            Kinetic.Tween.attrs[nodeId][this._id][key] = {
+                start: start,
+                diff: end - start
+            };    
+            Kinetic.Tween.tweens[nodeId][key] = this._id; 
         },
-        _addListeners: function(tween) {
+        _tweenFunc: function(i) {
+            var node = this.node,
+                attrs = Kinetic.Tween.attrs[node._id][this._id],
+                key, attr, start, diff, newVal;
+
+            for (key in attrs) {
+                attr = attrs[key];
+                start = attr.start;
+                diff = attr.diff;
+                newVal = start + (diff * i);  
+                node['set' + Kinetic.Util._capitalize(key)](newVal);
+            }
+        },
+        _addListeners: function() {
             var that = this;
 
             // start listeners
-            tween.onPlay = function() {
-                if (that._isLastTween(tween)) {
-                    that.anim.start();
-                }
+            this.tween.onPlay = function() {
+                that.anim.start();
             };
-            tween.onReverse = function() {
-                if (that._isLastTween(tween)) {
-                    that.anim.start();
-                }
+            this.tween.onReverse = function() {
+                that.anim.start();
             };
 
             // stop listeners
-            tween.onPause = function() {
-                if (that._isLastTween(tween)) {
-                    that.anim.stop();
-                }
+            this.tween.onPause = function() {
+                that.anim.stop();
             };
-            tween.onFinish = function() {
-                if (that._isLastTween(tween) && that.onFinish) {
+            this.tween.onFinish = function() {
+                if (that.onFinish) {
                     that.onFinish();
                 }
             };
@@ -134,9 +142,7 @@
          * @memberof Kinetic.Tween.prototype
          */
         play: function() {
-            this._iterate(function(tween) {
-                tween.play();
-            });
+            this.tween.play();
         },
         /**
          * reverse
@@ -144,9 +150,7 @@
          * @memberof Kinetic.Tween.prototype
          */
         reverse: function() {
-            this._iterate(function(tween) {
-                tween.reverse();
-            });
+            this.tween.reverse();
         },
         /**
          * reset
@@ -155,9 +159,7 @@
          */
         reset: function() {
             var node = this.node;
-            this._iterate(function(tween) {
-                tween.reset();
-            });
+            this.tween.reset();
             (node.getLayer() || node.getLayers()).draw();
         },
         /**
@@ -168,9 +170,7 @@
          */
         seek: function(t) {
             var node = this.node;
-            this._iterate(function(tween) {
-                tween.seek(t * 1000);
-            });
+            this.tween.seek(t * 1000);
             (node.getLayer() || node.getLayers()).draw();
         },
         /**
@@ -179,9 +179,7 @@
          * @memberof Kinetic.Tween.prototype
          */
         pause: function() {
-            this._iterate(function(tween) {
-                tween.pause();
-            });
+            tween.pause();
         },
         /**
          * finish
@@ -190,15 +188,8 @@
          */
         finish: function() {
             var node = this.node;
-            this._iterate(function(tween) {
-                tween.finish();
-            });
+            this.tween.finish();
             (node.getLayer() || node.getLayers()).draw();
-        },
-        _onEnterFrame: function() {
-            this._iterate(function(tween) {
-                tween.onEnterFrame();
-            });
         },
         /**
          * destroy
@@ -207,14 +198,6 @@
          */
         destroy: function() {
 
-        },
-        _removeTween: function(prop) {
-            var that = this;
-            this._iterate(function(tween, n) {
-                if (tween.prop === prop) {
-                    that.tweens.splice(n, 1);
-                }
-            });
         }
     };
 
