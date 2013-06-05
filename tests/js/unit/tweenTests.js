@@ -25,6 +25,19 @@ Test.Modules.TWEEN = {
             test(++finishCount <= 1, 'finishCount should not exceed 1');
         }
 
+        var tweens = 0;
+        var attrs = 0;
+
+        for (var key in Kinetic.Tween.tweens) {
+            tweens++;
+        }
+        for (var key in Kinetic.Tween.attrs) {
+            attrs++;
+        }
+
+        test(tweens === 0, 'should be no tweens');
+        test(attrs === 0, 'should be no attrs');
+
         var tween = new Kinetic.Tween({
             node: circle,
             duration: 0.2,
@@ -32,6 +45,21 @@ Test.Modules.TWEEN = {
             y: 100,
             onFinish: onFinish
         }).play();
+
+        var tweens = 0;
+        var attrs = 0;
+        for (var key in Kinetic.Tween.tweens) {
+            tweens++;
+        }
+        for (var key in Kinetic.Tween.attrs[circle._id][tween._id]) {
+            attrs++;
+        }
+
+        test(tweens === 1, 'should one tween');
+        test(attrs === 2, 'should two attrs');
+
+        test(Kinetic.Tween.attrs[circle._id][tween._id].x !== undefined, 'x should not be undefined');
+        test(Kinetic.Tween.attrs[circle._id][tween._id].y !== undefined, 'y should not be undefined');
 
     }
 };

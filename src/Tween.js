@@ -71,7 +71,7 @@
 
         for (key in config) {
             if (blacklist[key] === undefined) {
-                this._addAttrs(key, config[key]);
+                this._addAttr(key, config[key]);
             }
         }
 
@@ -82,7 +82,7 @@
     Kinetic.Tween.tweens = {};
 
     Kinetic.Tween.prototype = {
-        _addAttrs: function(key, end) {
+        _addAttr: function(key, end) {
             var node = this.node,
                 nodeId = node._id,
                 start, diff, tweenId, n, len, startVal, endVal;
@@ -95,7 +95,7 @@
             }
 
             // add to tween map
-            start = node['get' + Kinetic.Util._capitalize(key)]();
+            start = node.getAttr(key);
             
             if (Kinetic.Util._isArray(end)) {
                 end = Kinetic.Util._getPoints(end);
@@ -147,7 +147,7 @@
                     newVal = start + (diff * i); 
                 }
                  
-                node['set' + Kinetic.Util._capitalize(key)](newVal);
+                node.setAttr(key, newVal);
             }
         },
         _addListeners: function() {
@@ -178,6 +178,7 @@
          */
         play: function() {
             this.tween.play();
+            return this;
         },
         /**
          * reverse
@@ -186,6 +187,7 @@
          */
         reverse: function() {
             this.tween.reverse();
+            return this;
         },
         /**
          * reset
@@ -196,6 +198,7 @@
             var node = this.node;
             this.tween.reset();
             (node.getLayer() || node.getLayers()).draw();
+            return this;
         },
         /**
          * seek
@@ -207,6 +210,7 @@
             var node = this.node;
             this.tween.seek(t * 1000);
             (node.getLayer() || node.getLayers()).draw();
+            return this;
         },
         /**
          * pause
@@ -215,6 +219,7 @@
          */
         pause: function() {
             tween.pause();
+            return this;
         },
         /**
          * finish
@@ -225,6 +230,7 @@
             var node = this.node;
             this.tween.finish();
             (node.getLayer() || node.getLayers()).draw();
+            return this;
         },
         /**
          * destroy
