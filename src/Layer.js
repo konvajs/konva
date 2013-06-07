@@ -52,6 +52,7 @@
             }
 
             Kinetic.Container.prototype.drawScene.call(this, canvas);
+            return this;
         },
         drawHit: function() {
             var layer = this.getLayer();
@@ -61,6 +62,7 @@
             }
 
             Kinetic.Container.prototype.drawHit.call(this);
+            return this;
         },
         /**
          * get layer canvas
@@ -93,6 +95,7 @@
          */
         clear: function() {
             this.getCanvas().clear();
+            return this;
         },
         // extenders
         setVisible: function(visible) {
@@ -105,6 +108,7 @@
                 this.getCanvas().element.style.display = 'none';
                 this.hitCanvas.element.style.display = 'none';
             }
+            return this;
         },
         setZIndex: function(index) {
             Kinetic.Node.prototype.setZIndex.call(this, index);
@@ -119,6 +123,7 @@
                     stage.content.appendChild(this.getCanvas().element);
                 }
             }
+            return this;
         },
         moveToTop: function() {
             Kinetic.Node.prototype.moveToTop.call(this);
@@ -173,6 +178,7 @@
             if(stage && canvas && Kinetic.Util._isInDocument(element)) {
                 stage.content.removeChild(element);
             }
+            return this;
         }
     });
     Kinetic.Util.extend(Kinetic.Layer, Kinetic.Container);

@@ -169,6 +169,7 @@
                 parent._setChildrenIndices();
             }
             delete this.parent;
+            return this;
         },
         /**
          * remove and destroy self
@@ -195,6 +196,7 @@
             // TODO: stop transitions
  
             this.remove();
+            return this;
         },
         /**
          * get attr
@@ -237,6 +239,7 @@
             else {
                 this.attrs[attr] = args[0];
             }
+            return this;
         },
         /**
          * get attrs object literal
@@ -250,6 +253,7 @@
             if(this.attrs === undefined) {
                 this.attrs = {};
             }
+            return this;
         },
         
         /**
@@ -284,6 +288,7 @@
                     }
                 }
             }
+            return this;
         },
         /**
          * determine if node is visible or not.  Node is visible only
@@ -334,6 +339,7 @@
          */
         show: function() {
             this.setVisible(true);
+            return this;
         },
         /**
          * hide node.  Hidden nodes are no longer detectable
@@ -342,6 +348,7 @@
          */
         hide: function() {
             this.setVisible(false);
+            return this;
         },
         /**
          * get zIndex relative to the node's siblings who share the same parent
@@ -432,6 +439,7 @@
             var pos = Kinetic.Util._getXY([].slice.call(arguments));
             this.setX(pos.x);
             this.setY(pos.y);
+            return this;
         },
         /**
          * get node position relative to parent
@@ -486,6 +494,7 @@
 
             this.setPosition(pos.x, pos.y);
             this._setTransform(trans);
+            return this;
         },
         /**
          * move node by an amount relative to its current position
@@ -516,6 +525,7 @@
             }
 
             this.setPosition(x, y);
+            return this;
         },
         _eachAncestorReverse: function(func, includeSelf) {
             var family = [], 
@@ -544,6 +554,7 @@
          */
         rotate: function(theta) {
             this.setRotation(this.getRotation() + theta);
+            return this;
         },
         /**
          * rotate node by an amount in degrees relative to its current rotation
@@ -553,6 +564,7 @@
          */
         rotateDeg: function(deg) {
             this.setRotation(this.getRotation() + Kinetic.Util._degToRad(deg));
+            return this;
         },
         /**
          * move node to the top of its siblings
@@ -580,6 +592,7 @@
                 this.parent._setChildrenIndices();
                 return true;
             }
+            return false;
         },
         /**
          * move node down
@@ -594,6 +607,7 @@
                 this.parent._setChildrenIndices();
                 return true;
             }
+            return false;
         },
         /**
          * move node to the bottom of its siblings
@@ -608,6 +622,7 @@
                 this.parent._setChildrenIndices();
                 return true;
             }
+            return false;
         },
         /**
          * set zIndex relative to siblings
@@ -620,6 +635,7 @@
             this.parent.children.splice(index, 1);
             this.parent.children.splice(zIndex, 0, this);
             this.parent._setChildrenIndices();
+            return this;
         },
         /**
          * get absolute opacity
@@ -645,6 +661,7 @@
         moveTo: function(newContainer) {
             Kinetic.Node.prototype.remove.call(this);
             newContainer.add(this);
+            return this;
         },
         /**
          * convert Node into an object for serialization.  Returns an object.
@@ -739,6 +756,7 @@
             else {
                 this._fire(eventType, evt || {});
             }
+            return this;
         },
         /**
          * get absolute transform of the node which takes into
@@ -934,6 +952,7 @@
             var size = Kinetic.Util._getSize(Array.prototype.slice.call(arguments));
             this.setWidth(size.width);
             this.setHeight(size.height);
+            return this;
         },
         /**
          * get size
@@ -1057,6 +1076,7 @@
             go._removeId(oldId);
             go._addId(this, id);
             this._setAttr(ID, id);
+            return this;
         },
         /**
          * set name
@@ -1072,6 +1092,7 @@
             go._removeName(oldName, this._id);
             go._addName(this, name);
             this._setAttr(NAME, name);
+            return this;
         },
         _setAttr: function(key, val) {
             var oldVal;
@@ -1137,6 +1158,7 @@
             this.drawScene();
             this.drawHit();
             this._fire(DRAW, evt);
+            return this;
         },
         shouldDrawHit: function() { 
             return this.isVisible() && this.isListening() && !Kinetic.Global.isDragging(); 
@@ -1696,5 +1718,21 @@
      */
     Kinetic.Node.prototype.isVisible = Kinetic.Node.prototype.getVisible;
     
-    Kinetic.Collection.mapMethods(['on', 'off', 'draw']);
+    Kinetic.Collection.mapMethods([
+        'on', 
+        'off', 
+        'remove', 
+        'destroy', 
+        'show', 
+        'hide', 
+        'move', 
+        'rotate', 
+        'moveToTop', 
+        'moveUp', 
+        'moveDown', 
+        'moveToBottom',  
+        'moveTo', 
+        'fire', 
+        'draw'
+    ]);
 })();

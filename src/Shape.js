@@ -38,6 +38,12 @@
             // call super constructor
             Kinetic.Node.call(this, config);
         },
+        hasChildren: function() {
+            return false;
+        },
+        getChildren: function() {
+            return [];
+        },
         /**
          * get canvas context tied to the layer
          * @method
@@ -101,6 +107,7 @@
          */
         enableFill: function() {
             this._setAttr('fillEnabled', true);
+            return this;
         },
         /**
          * disable fill
@@ -109,6 +116,7 @@
          */
         disableFill: function() {
             this._setAttr('fillEnabled', false);
+            return this;
         },
         /**
          * enable stroke
@@ -117,6 +125,7 @@
          */
         enableStroke: function() {
             this._setAttr('strokeEnabled', true);
+            return this;
         },
         /**
          * disable stroke
@@ -125,6 +134,7 @@
          */
         disableStroke: function() {
             this._setAttr('strokeEnabled', false);
+            return this;
         },
         /**
          * enable stroke scale
@@ -133,6 +143,7 @@
          */
         enableStrokeScale: function() {
             this._setAttr('strokeScaleEnabled', true);
+            return this;
         },
         /**
          * disable stroke scale
@@ -141,6 +152,7 @@
          */
         disableStrokeScale: function() {
             this._setAttr('strokeScaleEnabled', false);
+            return this;
         },
         /**
          * enable shadow
@@ -149,6 +161,7 @@
          */
         enableShadow: function() {
             this._setAttr('shadowEnabled', true);
+            return this;
         },
         /**
          * disable shadow
@@ -157,6 +170,7 @@
          */
         disableShadow: function() {
             this._setAttr('shadowEnabled', false);
+            return this;
         },
         /**
          * enable dash array
@@ -165,6 +179,7 @@
          */
         enableDashArray: function() {
             this._setAttr('dashArrayEnabled', true);
+            return this;
         },
         /**
          * disable dash array
@@ -173,10 +188,12 @@
          */
         disableDashArray: function() {
             this._setAttr('dashArrayEnabled', false);
+            return this;
         },
         destroy: function() {
             Kinetic.Node.prototype.destroy.call(this);
             delete Kinetic.Global.shapes[this.colorKey];
+            return this;
         },
         drawScene: function(canvas) {
             canvas = canvas || this.getLayer().getCanvas();
@@ -192,6 +209,7 @@
                 drawFunc.call(this, canvas);
                 context.restore();
             }
+            return this;
         },
         drawHit: function() {
             var attrs = this.getAttrs(), 
@@ -207,6 +225,7 @@
                 drawFunc.call(this, canvas);
                 context.restore();
             }
+            return this;
         },
         _setDrawFuncs: function() {
             if(!this.attrs.drawFunc && this.drawFunc) {

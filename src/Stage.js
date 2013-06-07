@@ -59,6 +59,7 @@
                 container = document.getElementById(container);
             }
             this._setAttr(CONTAINER, container);
+            return this;
         },
         draw: function() {
             // clear children layers
@@ -75,6 +76,7 @@
             }
           
             Kinetic.Node.prototype.draw.call(this);
+            return this;
         },
         /**
          * draw layer scene graphs
@@ -99,6 +101,7 @@
         setHeight: function(height) {
             Kinetic.Node.prototype.setHeight.call(this, height);
             this._resizeDOM();
+            return this;
         },
         /**
          * set width
@@ -109,6 +112,7 @@
         setWidth: function(width) {
             Kinetic.Node.prototype.setWidth.call(this, width);
             this._resizeDOM();
+            return this;
         },
         /**
          * clear all layers
@@ -123,6 +127,7 @@
             for(n = 0; n < len; n++) {
                 layers[n].clear();
             }
+            return this;
         },
         /**
          * remove stage
@@ -136,6 +141,7 @@
             if(content && Kinetic.Util._isInDocument(content)) {
                 this.getContainer().removeChild(content);
             }
+            return this;
         },
         /**
          * get mouse position for desktop apps
