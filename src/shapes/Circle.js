@@ -1,5 +1,6 @@
 (function() {
-    var PIx2 = Math.PI * 2,
+    // the 0.0001 offset fixes a bug in Chrome 27
+    var PIx2 = (Math.PI * 2) - 0.0001,
         CIRCLE = 'Circle';
 
     /**
@@ -46,7 +47,7 @@
             var context = canvas.getContext();
 
             context.beginPath();
-            context.arc(0, 0, this.getRadius(), 0, PIx2, true);
+            context.arc(0, 0, this.getRadius(), 0, PIx2, false);
             context.closePath();
             canvas.fillStroke(this);
         },

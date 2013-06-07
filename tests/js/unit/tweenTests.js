@@ -13,7 +13,7 @@ Test.Modules.TWEEN = {
             y: stage.getHeight() / 2,
             radius: 70,
             fill: 'green',
-            stroke: 'black',
+            stroke: 'blue',
             strokeWidth: 4
         });
 
