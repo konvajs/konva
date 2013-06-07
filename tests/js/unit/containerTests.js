@@ -350,6 +350,55 @@ Test.Modules.CONTAINER = {
         test(layer.children.length === 0, 'layer should have 0 children');
         test(group.children.length === 0, 'group should have 0 children');
     },
+    'destroy all children from layer': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer({
+            name: 'layerName',
+            id: 'layerId'
+        });
+        var group = new Kinetic.Group();
+        var circle1 = new Kinetic.Circle({
+            x: 100,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'circleName',
+            id: 'circleId'
+        });
+
+        var circle2 = new Kinetic.Circle({
+            x: 300,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        group.add(circle1);
+        group.add(circle2);
+        layer.add(group);
+        stage.add(layer);
+
+        test(layer.children.length === 1, 'layer should have 1 children');
+        test(group.children.length === 2, 'group should have 2 children');
+        test(Kinetic.Global.names.circleName.length > 0, 'circleName should be in names hash');
+        test(Kinetic.Global.ids.circleId.getId() === 'circleId', 'layerId should be in ids hash');
+
+        layer.destroyChildren();
+        layer.draw();
+
+        test(layer.children.length === 0, 'layer should have 0 children');
+        test(group.children.length === 0, 'group should have 0 children');
+        test(Kinetic.Global.names.circleName === undefined, 'circleName should not be in names hash');
+        test(Kinetic.Global.ids.circleId === undefined, 'layerId should not be in ids hash');
+    },
     'add group': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

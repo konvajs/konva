@@ -179,22 +179,18 @@
          * node.destroy();
          */
         destroy: function() {
-            var parent = this.getParent(), 
-                stage = this.getStage(), 
-                dd = Kinetic.DD, 
+            var children = this.children,
                 go = Kinetic.Global;
 
             // destroy children
-            while(this.children && this.children.length > 0) {
-                this.children[0].destroy();
+            while(this.hasChildren() && children.length > 0) {
+                children[0].destroy();
             }
 
             // remove from ids and names hashes
             go._removeId(this.getId());
             go._removeName(this.getName(), this._id);
 
-            // TODO: stop transitions
- 
             this.remove();
             return this;
         },

@@ -40,6 +40,25 @@
             return this;
         },
         /**
+         * destroy all children
+         * @method
+         * @memberof Kinetic.Container.prototype
+         */
+        destroyChildren: function() {
+            var children = this.children,
+                child;
+
+            while(children.length > 0) {
+                var child = children[0];
+                if (child.hasChildren()) {
+                    child.destroyChildren();
+                }
+                child.destroy();
+            }
+
+            return this;
+        },
+        /**
          * add node to container
          * @method
          * @memberof Kinetic.Container.prototype
