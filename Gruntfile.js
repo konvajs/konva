@@ -17,6 +17,7 @@ module.exports = function(grunt) {
     // shapes
     'src/shapes/Rect.js', 
     'src/shapes/Circle.js', 
+    'src/shapes/Ellipse.js',
     'src/shapes/Wedge.js', 
     'src/shapes/Image.js', 
     'src/shapes/Polygon.js', 
@@ -54,6 +55,7 @@ module.exports = function(grunt) {
     'tests/js/unit/ddTests.js', 
     'tests/js/unit/shapes/rectTests.js', 
     'tests/js/unit/shapes/circleTests.js', 
+    'tests/js/unit/shapes/ellipseTests.js', 
     'tests/js/unit/shapes/wedgeTests.js', 
     'tests/js/unit/shapes/imageTests.js',
     'tests/js/unit/shapes/polygonTests.js',
