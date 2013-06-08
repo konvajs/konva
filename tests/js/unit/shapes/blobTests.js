@@ -58,6 +58,8 @@ Test.Modules.BLOB = {
         test(blob2.getTension() === 1.2, 'blob2 tension should be 1.2');
         
         test(blob1.getClassName() === 'Blob', 'getClassName should be Blob');
+
+        //console.log(blob1.getPoints())
         
 
     }

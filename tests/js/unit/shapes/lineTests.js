@@ -1,5 +1,5 @@
 Test.Modules.LINE = {
-    '*add line': function(containerId) {
+    'add line': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -84,7 +84,7 @@ Test.Modules.LINE = {
         test(redLine.getPoints()[0].x === 4, 'redLine points is wrong');
         
     },
-    '*add dashed line': function(containerId) {
+    'add dashed line': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,

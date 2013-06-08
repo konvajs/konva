@@ -69,14 +69,8 @@ Test.Modules.SPLINE = {
         layer.add(line3);
         stage.add(layer);
         
-        /*
-         line.transitionTo({
-         spline: 3,
-         duration: 3
-         });
-         */
-        
         test(line1.getClassName() === 'Spline', 'getClassName should be Spline');
+
 
     },
     'create from points represented as a flat array': function(containerId) {

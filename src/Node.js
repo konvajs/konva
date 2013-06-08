@@ -231,7 +231,7 @@
             if(Kinetic.Util._isFunction(func)) {
                 func.apply(this, args);
             }
-            // otherwise get directly
+            // otherwise set directly
             else {
                 this.attrs[attr] = args[0];
             }
@@ -1164,7 +1164,13 @@
         }
     });
 
-    // add getter and setter methods
+    // setter functions
+    Kinetic.Node.setPoints = function(val) {
+        var points = Kinetic.Util._getPoints(val);
+        this._setAttr('points', points);
+    };
+
+    // getter setter adders
     Kinetic.Node.addGetterSetter = function(constructor, attr, def, isTransform) {
         this.addGetter(constructor, attr, def);
         this.addSetter(constructor, attr, isTransform);
@@ -1203,12 +1209,75 @@
         this.addColorComponentSetter(constructor, attr, G);
         this.addColorComponentSetter(constructor, attr, B);
     };
+
+    // getter adders
     Kinetic.Node.addColorRGBGetter = function(constructor, attr) {
         var method = GET + Kinetic.Util._capitalize(attr) + RGB;
         constructor.prototype[method] = function() {
             return Kinetic.Util.getRGB(this.attrs[attr]);
         };
     };
+
+    Kinetic.Node.addColorComponentGetter = function(constructor, attr, c) {
+        var prefix = GET + Kinetic.Util._capitalize(attr),
+            method = prefix + Kinetic.Util._capitalize(c);
+        constructor.prototype[method] = function() {
+            return this[prefix + RGB]()[c];
+        };
+    };
+    Kinetic.Node.addPointsGetter = function(constructor, attr) {
+        var that = this,
+            method = GET + Kinetic.Util._capitalize(attr);
+           
+        constructor.prototype[method] = function(arg) {
+            var val = this.attrs[attr];
+            return val === undefined ? [] : val;  
+        };
+    };
+    Kinetic.Node.addGetter = function(constructor, attr, def) {
+        var that = this,
+            method = GET + Kinetic.Util._capitalize(attr);
+           
+        constructor.prototype[method] = function(arg) {
+            var val = this.attrs[attr];
+            return val === undefined ? def : val;  
+        };
+    };
+    Kinetic.Node.addPointGetter = function(constructor, attr) {
+        var that = this,
+            baseMethod = GET + Kinetic.Util._capitalize(attr);
+            
+        constructor.prototype[baseMethod] = function(arg) {
+            var that = this;
+            return {
+                x: that[baseMethod + UPPER_X](),
+                y: that[baseMethod + UPPER_Y]()
+            };  
+        };
+    };
+    Kinetic.Node.addRotationGetter = function(constructor, attr, def) {
+        var that = this,
+            method = GET + Kinetic.Util._capitalize(attr);
+            
+        // radians
+        constructor.prototype[method] = function() {
+            var val = this.attrs[attr];
+            if (val === undefined) {
+                val = def; 
+            }
+            return val;
+        };
+        // degrees
+        constructor.prototype[method + DEG] = function() {
+            var val = this.attrs[attr];
+            if (val === undefined) {
+                val = def; 
+            }
+            return Kinetic.Util._radToDeg(val);
+        };
+    };
+
+    // setter adders
     Kinetic.Node.addColorRGBSetter = function(constructor, attr) {
         var method = SET + Kinetic.Util._capitalize(attr) + RGB;
 
@@ -1220,13 +1289,7 @@
             this._setAttr(attr, HASH + Kinetic.Util._rgbToHex(r, g, b));
         };
     };
-    Kinetic.Node.addColorComponentGetter = function(constructor, attr, c) {
-        var prefix = GET + Kinetic.Util._capitalize(attr),
-            method = prefix + Kinetic.Util._capitalize(c);
-        constructor.prototype[method] = function() {
-            return this[prefix + RGB]()[c];
-        };
-    };
+
     Kinetic.Node.addColorComponentSetter = function(constructor, attr, c) {
         var prefix = SET + Kinetic.Util._capitalize(attr),
             method = prefix + Kinetic.Util._capitalize(c);
@@ -1238,19 +1301,7 @@
     };
     Kinetic.Node.addPointsSetter = function(constructor, attr) {
         var method = SET + Kinetic.Util._capitalize(attr);
-        constructor.prototype[method] = function(val) {
-            var points = Kinetic.Util._getPoints(val);
-            this._setAttr('points', points);
-        };
-    };
-    Kinetic.Node.addPointsGetter = function(constructor, attr) {
-        var that = this,
-            method = GET + Kinetic.Util._capitalize(attr);
-           
-        constructor.prototype[method] = function(arg) {
-            var val = this.attrs[attr];
-            return val === undefined ? [] : val;  
-        };
+        constructor.prototype[method] = Kinetic.Node.setPoints;
     };
     Kinetic.Node.addSetter = function(constructor, attr, isTransform) {
         var that = this,
@@ -1307,48 +1358,7 @@
             }
         };
     };
-    Kinetic.Node.addGetter = function(constructor, attr, def) {
-        var that = this,
-            method = GET + Kinetic.Util._capitalize(attr);
-           
-        constructor.prototype[method] = function(arg) {
-            var val = this.attrs[attr];
-            return val === undefined ? def : val;  
-        };
-    };
-    Kinetic.Node.addPointGetter = function(constructor, attr) {
-        var that = this,
-            baseMethod = GET + Kinetic.Util._capitalize(attr);
-            
-        constructor.prototype[baseMethod] = function(arg) {
-            var that = this;
-            return {
-                x: that[baseMethod + UPPER_X](),
-                y: that[baseMethod + UPPER_Y]()
-            };  
-        };
-    };
-    Kinetic.Node.addRotationGetter = function(constructor, attr, def) {
-        var that = this,
-            method = GET + Kinetic.Util._capitalize(attr);
-            
-        // radians
-        constructor.prototype[method] = function() {
-            var val = this.attrs[attr];
-            if (val === undefined) {
-                val = def; 
-            }
-            return val;
-        };
-        // degrees
-        constructor.prototype[method + DEG] = function() {
-            var val = this.attrs[attr];
-            if (val === undefined) {
-                val = def; 
-            }
-            return Kinetic.Util._radToDeg(val);
-        };
-    };
+
     /**
      * create node with JSON string.  De-serializtion does not generate custom
      *  shape drawing functions, images, or event handlers (this would make the
