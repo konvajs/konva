@@ -135,14 +135,13 @@
          * @method
          * @memberof Kinetic.Stage.prototype
          */
-        remove: function() {
+        destroy: function() {
             var content = this.content;
-            Kinetic.Node.prototype.remove.call(this);
+            Kinetic.Container.prototype.destroy.call(this);
 
             if(content && Kinetic.Util._isInDocument(content)) {
                 this.getContainer().removeChild(content);
             }
-            return this;
         },
         /**
          * get mouse position for desktop apps

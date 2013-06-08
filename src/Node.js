@@ -167,8 +167,9 @@
             if(parent && parent.children) {
                 parent.children.splice(this.index, 1);
                 parent._setChildrenIndices();
+                delete this.parent;
             }
-            delete this.parent;
+            
             return this;
         },
         /**
@@ -179,20 +180,13 @@
          * node.destroy();
          */
         destroy: function() {
-            var children = this.children,
-                go = Kinetic.Global;
-
-            // destroy children
-            while(this.hasChildren() && children.length > 0) {
-                children[0].destroy();
-            }
+            var go = Kinetic.Global;
 
             // remove from ids and names hashes
             go._removeId(this.getId());
             go._removeName(this.getName(), this._id);
 
             this.remove();
-            return this;
         },
         /**
          * get attr

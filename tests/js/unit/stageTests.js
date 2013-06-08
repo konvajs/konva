@@ -257,6 +257,67 @@ Test.Modules.STAGE = {
         layer.add(circle);
         stage.add(layer);
     },
+    'remove stage': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        // remove should have no effect, and should cause no JS error
+        stage.remove();
+
+
+    },
+    'destroy stage': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            id: 'stageFalconId',
+            name: 'stageFalconName'
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            id: 'circleFalconId',
+            name: 'circleFalconName'
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        test(Kinetic.Global.ids.stageFalconId._id === stage._id, 'stage id should be in global ids map');
+        test(Kinetic.Global.names.stageFalconName[0]._id === stage._id, 'stage name should be in global names map');
+        test(Kinetic.Global.ids.circleFalconId._id === circle._id, 'circle id should be in global ids map');
+        test(Kinetic.Global.names.circleFalconName[0]._id === circle._id, 'circle name should be in global names map');
+
+        stage.destroy();
+
+        test(Kinetic.Global.ids.stageFalconId === undefined, 'stage should no longer be in ids map');
+        test(Kinetic.Global.names.stageFalconName === undefined, 'stage should no longer be in names map');
+        test(Kinetic.Global.ids.circleFalconId === undefined, 'circle should no longer be in ids map');
+        test(Kinetic.Global.names.circleFalconName === undefined, 'circle should no longer be in names map');
+
+
+    },
     'scale stage with no shapes': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

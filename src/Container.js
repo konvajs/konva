@@ -45,17 +45,10 @@
          * @memberof Kinetic.Container.prototype
          */
         destroyChildren: function() {
-            var children = this.children,
-                child;
-
+            var children = this.children;
             while(children.length > 0) {
-                var child = children[0];
-                if (child.hasChildren()) {
-                    child.destroyChildren();
-                }
-                child.destroy();
+                children[0].destroy();
             }
-
             return this;
         },
         /**
@@ -75,6 +68,14 @@
 
             // chainable
             return this;
+        },
+        destroy: function() {
+            // destroy children
+            if (this.hasChildren()) {
+                this.destroyChildren();
+            }
+            // then destroy self
+            Kinetic.Node.prototype.destroy.call(this);
         },
         /**
          * return a {@link Kinetic.Collection} of nodes that match the selector.  Use '#' for id selections
