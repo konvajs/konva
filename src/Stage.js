@@ -24,6 +24,7 @@
         SPACE = ' ',
         UNDERSCORE = '_',
         CONTAINER = 'container',
+        EMPTY_STRING = '',
         EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND],
         
     // cached variables
@@ -554,12 +555,17 @@
             };
         },
         _buildDOM: function() {
+            var container = this.getContainer();
+            
+            // clear content inside container
+            container.innerHTML = EMPTY_STRING;
+
             // content
             this.content = document.createElement(DIV);
             this.content.style.position = RELATIVE;
             this.content.style.display = INLINE_BLOCK;
             this.content.className = KINETICJS_CONTENT;
-            this.attrs.container.appendChild(this.content);
+            container.appendChild(this.content);
 
             this.bufferCanvas = new Kinetic.SceneCanvas();
             this.hitCanvas = new Kinetic.HitCanvas();

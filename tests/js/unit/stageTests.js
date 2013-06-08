@@ -6,7 +6,6 @@ Test.Modules.STAGE = {
             height: 200
         });
     },
-
     'instantiate stage with dom element': function(containerId) {
         var containerDom = document.getElementById(containerId);
         var stage = new Kinetic.Stage({
@@ -14,6 +13,19 @@ Test.Modules.STAGE = {
             width: 578,
             height: 200
         });
+    },
+    'stage instantiation should clear container': function(containerId) {
+        var container = document.getElementById(containerId);
+        var dummy = document.createElement('p');
+        container.appendChild(dummy);
+
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+
+        test(container.getElementsByTagName('p').length === 0, 'container should have no p tags');
     },
     'set stage size': function(containerId) {
         var stage = new Kinetic.Stage({
