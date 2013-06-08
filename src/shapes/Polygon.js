@@ -39,27 +39,22 @@
             }
             context.closePath();
             canvas.fillStroke(this);
-        },
-        /**
-         * set points array
-         * @method
-         * @memberof Kinetic.Polygon.prototype
-         * @param {Array} can be an array of point objects or an array
-         *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
-         */
-        setPoints: function(val) {
-            this._setAttr('points', Kinetic.Util._getPoints(val));
-        },
-        /**
-         * get points array
-         * @method
-         * @memberof Kinetic.Polygon.prototype
-         */
-         // NOTE: cannot use getter method because we need to return a new
-         // default array literal each time because arrays are modified by reference
-        getPoints: function() {
-            return this.attrs.points || [];
         }
     };
     Kinetic.Util.extend(Kinetic.Polygon, Kinetic.Shape);
+
+    Kinetic.Node.addPointsGetterSetter(Kinetic.Polygon, 'points');
+    /**
+     * set points array
+     * @method
+     * @memberof Kinetic.Polygon.prototype
+     * @param {Array} can be an array of point objects or an array
+     *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
+     */
+
+    /**
+     * get points array
+     * @method
+     * @memberof Kinetic.Polygon.prototype
+     */
 })();

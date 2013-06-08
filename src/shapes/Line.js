@@ -59,29 +59,22 @@
             }
 
             canvas.stroke(this);
-        },
-        /**
-         * set points array
-         * @method
-         * @memberof Kinetic.Line.prototype
-         * @param {Array} can be an array of point objects or an array
-         *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
-         */
-        setPoints: function(val) {
-            var points = Kinetic.Util._getPoints(val);
-            this._setAttr('points', points);
-            this._points = points;
-        },
-        /**
-         * get points array
-         * @method
-         * @memberof Kinetic.Line.prototype
-         */
-         // NOTE: cannot use getter method because we need to return a new
-         // default array literal each time because arrays are modified by reference
-        getPoints: function() {
-            return this.attrs.points || [];
         }
     };
     Kinetic.Util.extend(Kinetic.Line, Kinetic.Shape);
+
+    Kinetic.Node.addPointsGetterSetter(Kinetic.Line, 'points');
+    /**
+     * set points array
+     * @method
+     * @memberof Kinetic.Line.prototype
+     * @param {Array} can be an array of point objects or an array
+     *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
+     */
+
+    /**
+     * get points array
+     * @method
+     * @memberof Kinetic.Line.prototype
+     */
 })();

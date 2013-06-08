@@ -1,5 +1,5 @@
-Test.Modules.POLYGON - {
-    'add polygon': function(containerId) {
+Test.Modules.POLYGON = {
+    '*add polygon': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,

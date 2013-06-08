@@ -1179,6 +1179,10 @@
         this.addSetter(constructor, attr + UPPER_X, isTransform);
         this.addSetter(constructor, attr + UPPER_Y, isTransform);
     };
+    Kinetic.Node.addPointsGetterSetter = function(constructor, attr) {
+        this.addPointsGetter(constructor, attr);
+        this.addPointsSetter(constructor, attr);  
+    };
     Kinetic.Node.addRotationGetterSetter = function(constructor, attr, def, isTransform) {
         this.addRotationGetter(constructor, attr, def);
         this.addRotationSetter(constructor, attr, isTransform);    
@@ -1230,6 +1234,22 @@
             var obj = {};
             obj[c] = val;
             this[prefix + RGB](obj);
+        };
+    };
+    Kinetic.Node.addPointsSetter = function(constructor, attr) {
+        var method = SET + Kinetic.Util._capitalize(attr);
+        constructor.prototype[method] = function(val) {
+            var points = Kinetic.Util._getPoints(val);
+            this._setAttr('points', points);
+        };
+    };
+    Kinetic.Node.addPointsGetter = function(constructor, attr) {
+        var that = this,
+            method = GET + Kinetic.Util._capitalize(attr);
+           
+        constructor.prototype[method] = function(arg) {
+            var val = this.attrs[attr];
+            return val === undefined ? [] : val;  
         };
     };
     Kinetic.Node.addSetter = function(constructor, attr, isTransform) {
@@ -1293,11 +1313,7 @@
            
         constructor.prototype[method] = function(arg) {
             var val = this.attrs[attr];
-            if (val === undefined) {
-                val = def; 
-            }
-
-            return val;    
+            return val === undefined ? def : val;  
         };
     };
     Kinetic.Node.addPointGetter = function(constructor, attr) {
