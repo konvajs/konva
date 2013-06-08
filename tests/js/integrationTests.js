@@ -814,6 +814,38 @@ Test.Modules.LAYER = {
     }
 };
 
+Test.Modules.STAGE = {
+    'hide stage': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        stage.hide();
+
+        stage.toDataURL({
+            callback: function(dataUrl) {
+                testDataUrl(dataUrl, 'cleared', 'stage should not be visible');
+            }
+        })
+
+        stage.draw();
+    },
+};
+
 Test.Modules.SHAPE = {
     'scale rect with stroke scale disabled': function(containerId) {
         var stage = new Kinetic.Stage({
