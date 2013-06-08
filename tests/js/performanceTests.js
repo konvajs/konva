@@ -11,7 +11,7 @@ function stop(build, test) {
 }
 
 var tests = {
-  'render 500 circles': function(Kinetic, container, test) {
+  'render 20,000 circles': function(Kinetic, container, test) {
     start();
     var stage = new Kinetic.Stage({
       width: 500,
@@ -21,7 +21,7 @@ var tests = {
 
     var layer = new Kinetic.Layer();
 
-    for (var n=0; n<500; n++) {
+    for (var n=0; n<20000; n++) {
       var circle = new Kinetic.Circle({
         x: Math.random() * 500,
         y: Math.random() * 200,
