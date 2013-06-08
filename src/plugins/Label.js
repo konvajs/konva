@@ -17,20 +17,6 @@
      * @constructor
      * @memberof Kinetic
      * @param {Object} config
-     * @param {Object} config.text Text config
-     * @param {String} [config.text.fontFamily] default is Calibri
-     * @param {Number} [config.text.fontSize] in pixels.  Default is 12
-     * @param {String} [config.text.fontStyle] can be normal, bold, or italic.  Default is normal
-     * @param {String} config.text.text 
-     * @param {String} [config.text.align] can be left, center, or right
-     * @param {Number} [config.text.padding]
-     * @param {Number} [config.text.lineHeight] default is 1
-     * @param {Object} [config.tag] Tag config
-     * @param {String} [config.tag.pointerDirection] can be up, right, down, left, or none; the default
-     *  is none.  When a pointer is present, the positioning of the label is relative to the tip of the pointer.
-     * @param {Number} [config.tag.pointerWidth]
-     * @param {Number} [config.tag.pointerHeight]
-     * @param {Number} [config.tag.cornerRadius] 
      * @@nodeParams
      * @example
      * // create label
