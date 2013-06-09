@@ -78,7 +78,9 @@
         this.reset();
     };
 
+    // start/diff object = attrs.nodeId.tweenId.attr
     Kinetic.Tween.attrs = {};
+    // tweenId = tweens.nodeId.attr
     Kinetic.Tween.tweens = {};
 
     Kinetic.Tween.prototype = {
@@ -238,7 +240,18 @@
          * @memberof Kinetic.Tween.prototype
          */
         destroy: function() {
+            var nodeId = this.node._id,
+                thisId = this._id,
+                attrs = Kinetic.Tween.tweens[nodeId],
+                key;
 
+            this.pause();
+
+            for (key in attrs) {
+                delete Kinetic.Tween.tweens[nodeId][key];
+            }
+
+            delete Kinetic.Tween.attrs[nodeId][thisId];
         }
     };
 
