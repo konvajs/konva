@@ -218,7 +218,7 @@
          * @memberof Kinetic.Tween.prototype
          */
         pause: function() {
-            tween.pause();
+            this.tween.pause();
             return this;
         },
         /**
