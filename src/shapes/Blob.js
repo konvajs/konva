@@ -26,11 +26,18 @@
 
     Kinetic.Blob.prototype = {
         _initBlob: function(config) {
+            var that = this;
             this.createAttrs();
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = 'Blob';
             this._setDrawFuncs();
+
+            this.on('pointsChange tensionChange', function() {
+                that._setAllPoints();
+            });
+
+            this._setAllPoints();
         },
         drawFunc: function(canvas) {
             var points = this.getPoints(), 
@@ -62,27 +69,6 @@
 
 			context.closePath();
             canvas.fillStroke(this);
-        },
-        /**
-         * set tension
-         * @method
-         * @memberof Kinetic.Blob.prototype
-         * @param {Number} tension
-         */
-        setTension: function(tension) {
-            this._setAttr('tension', tension);
-            this._setAllPoints();
-        },
-        /**
-         * set points array
-         * @method
-         * @memberof Kinetic.Blob.prototype
-         * @param {Array} can be an array of point objects or an array
-         *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
-         */
-        setPoints: function(points) {
-            Kinetic.Node.setPoints.call(this, points);
-            this._setAllPoints();
         },
         _setAllPoints: function() {
             var points = this.getPoints(), 
@@ -116,10 +102,25 @@
      * @memberof Kinetic.Blob.prototype
      */
 
-    Kinetic.Node.addPointsGetter(Kinetic.Blob, 'points');
+    /**
+     * set tension
+     * @method
+     * @memberof Kinetic.Blob.prototype
+     * @param {Number} tension
+     */
+
+    Kinetic.Node.addPointsGetterSetter(Kinetic.Blob, 'points');
     /**
      * get points array
      * @method
      * @memberof Kinetic.Blob.prototype
+     */
+
+    /**
+     * set points array
+     * @method
+     * @memberof Kinetic.Blob.prototype
+     * @param {Array} can be an array of point objects or an array
+     *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
      */
 })();

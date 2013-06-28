@@ -705,6 +705,9 @@
             }
 
             return allPoints;
+        },
+        _removeLastLetter: function(str) {
+            return str.substring(0, str.length - 1);
         }
     };
 })();

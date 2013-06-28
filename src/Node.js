@@ -1,6 +1,7 @@
 (function() {
     // CONSTANTS
-    var SPACE = ' ',
+    var ADD = 'add',
+        SPACE = ' ',
         EMPTY_STRING = '',
         DOT = '.',
         GET = 'get',
@@ -1158,12 +1159,6 @@
         }
     });
 
-    // setter functions
-    Kinetic.Node.setPoints = function(val) {
-        var points = Kinetic.Util._getPoints(val);
-        this._setAttr('points', points);
-    };
-
     // getter setter adders
     Kinetic.Node.addGetterSetter = function(constructor, attr, def, isTransform) {
         this.addGetter(constructor, attr, def);
@@ -1182,6 +1177,7 @@
     Kinetic.Node.addPointsGetterSetter = function(constructor, attr) {
         this.addPointsGetter(constructor, attr);
         this.addPointsSetter(constructor, attr);  
+        this.addPointAdder(constructor, attr);
     };
     Kinetic.Node.addRotationGetterSetter = function(constructor, attr, def, isTransform) {
         this.addRotationGetter(constructor, attr, def);
@@ -1295,7 +1291,10 @@
     };
     Kinetic.Node.addPointsSetter = function(constructor, attr) {
         var method = SET + Kinetic.Util._capitalize(attr);
-        constructor.prototype[method] = Kinetic.Node.setPoints;
+        constructor.prototype[method] = function(val) {
+            var points = Kinetic.Util._getPoints(val);
+            this._setAttr('points', points);
+        };
     };
     Kinetic.Node.addSetter = function(constructor, attr, isTransform) {
         var that = this,
@@ -1350,6 +1349,23 @@
             if (isTransform) {
                 this.cachedTransform = null;
             }
+        };
+    };
+
+    // add adders
+    Kinetic.Node.addPointAdder = function(constructor, attr) {
+        var that = this,
+            baseMethod = ADD + Kinetic.Util._removeLastLetter(Kinetic.Util._capitalize(attr));
+
+        constructor.prototype[baseMethod] = function() {
+            var pos = Kinetic.Util._getXY([].slice.call(arguments)),
+                oldVal = this.attrs[attr];
+
+            if (pos) {
+              this._fireBeforeChangeEvent(attr, oldVal, pos);
+              this.attrs[attr].push(pos);
+              this._fireChangeEvent(attr, oldVal, pos);
+            } 
         };
     };
 

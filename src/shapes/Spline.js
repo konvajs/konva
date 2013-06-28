@@ -26,11 +26,18 @@
 
     Kinetic.Spline.prototype = {
         _initSpline: function(config) {
+            var that = this;
             this.createAttrs();
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = 'Spline';
             this._setDrawFuncs();
+
+            this.on('pointsChange tensionChange', function() {
+                that._setAllPoints();
+            });
+
+            this._setAllPoints();
         },
         drawFunc: function(canvas) {
             var points = this.getPoints(), 
@@ -66,27 +73,6 @@
 
             canvas.stroke(this);
         },
-        /**
-         * set tension
-         * @method
-         * @memberof Kinetic.Spline.prototype
-         * @param {Number} tension
-         */
-        setTension: function(tension) {
-            this._setAttr('tension', tension);
-            this._setAllPoints();
-        },
-        /**
-         * set points array
-         * @method
-         * @memberof Kinetic.Spline.prototype
-         * @param {Array} can be an array of point objects or an array
-         *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
-         */
-        setPoints: function(points) {
-            Kinetic.Node.setPoints.call(this, points);
-            this._setAllPoints();
-        },
         _setAllPoints: function() {
             this.allPoints = Kinetic.Util._expandPoints(this.getPoints(), this.getTension());
         }
@@ -94,7 +80,7 @@
     Kinetic.Util.extend(Kinetic.Spline, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Node.addGetter(Kinetic.Spline, 'tension', 1);
+    Kinetic.Node.addGetterSetter(Kinetic.Spline, 'tension', 1);
 
     /**
      * get tension
@@ -103,10 +89,25 @@
      * @memberof Kinetic.Spline.prototype
      */
 
-    Kinetic.Node.addPointsGetter(Kinetic.Spline, 'points');
+    /**
+     * set tension
+     * @method
+     * @memberof Kinetic.Spline.prototype
+     * @param {Number} tension
+     */
+
+    Kinetic.Node.addPointsGetterSetter(Kinetic.Spline, 'points');
     /**
      * get points array
      * @method
      * @memberof Kinetic.Spline.prototype
+     */
+
+    /**
+     * set points array
+     * @method
+     * @memberof Kinetic.Spline.prototype
+     * @param {Array} can be an array of point objects or an array
+     *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
      */
 })();
