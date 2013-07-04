@@ -393,10 +393,13 @@
              * if no shape was detected, clear target shape and try
              * to run mouseout from previous target shape
              */
-            else if(this.targetShape && !go.isDragging()) {
+            else {
+              if(this.targetShape && !go.isDragging()) {
                 this.targetShape._fireAndBubble(MOUSEOUT, evt);
                 this.targetShape._fireAndBubble(MOUSELEAVE, evt);
                 this.targetShape = null;
+              }
+              this._fire(MOUSEMOVE, evt);
             }
 
             if(dd) {
@@ -406,99 +409,81 @@
         _mousedown: function(evt) {
             this._setPointerPosition(evt);
             var go = Kinetic.Global,
-                obj = this.getIntersection(this.getPointerPosition()), 
-                shape;
+                obj = this.getIntersection(this.getPointerPosition()),
+                shape = obj && obj.shape ? obj.shape : this;
 
-            if(obj && obj.shape) {
-                shape = obj.shape;
-                this.clickStart = true;
-                this.clickStartShape = shape;
-                shape._fireAndBubble(MOUSEDOWN, evt);
-            }
-
-            //init stage drag and drop
-            if(this.isDraggable() && !go.isDragReady()) {
-                this.startDrag(evt);
-            }
+            this.clickStart = true;
+            this.clickStartShape = shape;
+            shape._fireAndBubble(MOUSEDOWN, evt);
         },
         _mouseup: function(evt) {
             this._setPointerPosition(evt);
             var that = this, 
                 go = Kinetic.Global, 
                 obj = this.getIntersection(this.getPointerPosition()),
-                shape;
+                shape = obj && obj.shape ? obj.shape : this;
                 
-            if(obj && obj.shape) {
-                shape = obj.shape;
-                shape._fireAndBubble(MOUSEUP, evt);
 
-                // detect if click or double click occurred
-                if(this.clickStart) {
-                    /*
-                     * if dragging and dropping, or if click doesn't map to 
-                     * the correct shape, don't fire click or dbl click event
-                     */
-                    if(!go.isDragging() && shape._id === this.clickStartShape._id) {
-                        shape._fireAndBubble(CLICK, evt);
+            shape._fireAndBubble(MOUSEUP, evt);
 
-                        if(this.inDoubleClickWindow) {
-                            shape._fireAndBubble(DBL_CLICK, evt);
-                        }
-                        this.inDoubleClickWindow = true;
-                        setTimeout(function() {
-                            that.inDoubleClickWindow = false;
-                        }, this.dblClickWindow);
+            // detect if click or double click occurred
+            if(this.clickStart) {
+                /*
+                 * if dragging and dropping, or if click doesn't map to 
+                 * the correct shape, don't fire click or dbl click event
+                 */
+                if(!go.isDragging() && shape._id === this.clickStartShape._id) {
+                    shape._fireAndBubble(CLICK, evt);
+
+                    if(this.inDoubleClickWindow) {
+                        shape._fireAndBubble(DBL_CLICK, evt);
                     }
+                    this.inDoubleClickWindow = true;
+                    setTimeout(function() {
+                        that.inDoubleClickWindow = false;
+                    }, this.dblClickWindow);
                 }
             }
+            
             this.clickStart = false;
         },
         _touchstart: function(evt) {
             this._setPointerPosition(evt);
             var go = Kinetic.Global,
                 obj = this.getIntersection(this.getPointerPosition()),  
-                shape;
+                shape = obj && obj.shape ? obj.shape : this;
             
-            if(obj && obj.shape) {
-                shape = obj.shape;
-                this.tapStart = true;
-                this.tapStartShape = shape;
-                shape._fireAndBubble(TOUCHSTART, evt);
-            }
-
-            //init stage drag and drop
-            if(this.isDraggable() && !go.isDragReady()) {
-                this.startDrag(evt);
-            }
+            shape = obj.shape;
+            this.tapStart = true;
+            this.tapStartShape = shape;
+            shape._fireAndBubble(TOUCHSTART, evt);
         },
         _touchend: function(evt) {
             this._setPointerPosition(evt);
             var that = this, 
                 go = Kinetic.Global, 
                 obj = this.getIntersection(this.getPointerPosition()),
-                shape;
+                shape = obj && obj.shape ? obj.shape : this;
 
-            if(obj && obj.shape) {
-                shape = obj.shape;
-                shape._fireAndBubble(TOUCHEND, evt);
+            shape = obj.shape;
+            shape._fireAndBubble(TOUCHEND, evt);
 
-                // detect if tap or double tap occurred
-                if(this.tapStart) {
-                    /*
-                     * if dragging and dropping, don't fire tap or dbltap
-                     * event
-                     */
-                    if(!go.isDragging() && shape._id === this.tapStartShape._id) {
-                        shape._fireAndBubble(TAP, evt);
+            // detect if tap or double tap occurred
+            if(this.tapStart) {
+                /*
+                 * if dragging and dropping, don't fire tap or dbltap
+                 * event
+                 */
+                if(!go.isDragging() && shape._id === this.tapStartShape._id) {
+                    shape._fireAndBubble(TAP, evt);
 
-                        if(this.inDoubleClickWindow) {
-                            shape._fireAndBubble(DBL_TAP, evt);
-                        }
-                        this.inDoubleClickWindow = true;
-                        setTimeout(function() {
-                            that.inDoubleClickWindow = false;
-                        }, this.dblClickWindow);
+                    if(this.inDoubleClickWindow) {
+                        shape._fireAndBubble(DBL_TAP, evt);
                     }
+                    this.inDoubleClickWindow = true;
+                    setTimeout(function() {
+                        that.inDoubleClickWindow = false;
+                    }, this.dblClickWindow);
                 }
             }
 
@@ -508,13 +493,11 @@
             this._setPointerPosition(evt);
             var dd = Kinetic.DD,
                 obj = this.getIntersection(this.getPointerPosition()),
-                shape;
+                shape = obj && obj.shape ? obj.shape : this;
             
-            if(obj && obj.shape) {
-                shape = obj.shape;
-                shape._fireAndBubble(TOUCHMOVE, evt);
-            }
-
+            shape = obj.shape;
+            shape._fireAndBubble(TOUCHMOVE, evt);
+  
             // start drag and drop
             if(dd) {
                 dd._drag(evt);

@@ -1,5 +1,75 @@
 
 Test.Modules.DD = {
+    'stage mouse handlers': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            draggable: true
+        });
+
+        var top = stage.content.getBoundingClientRect().top;
+
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle',
+            draggable: true
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        /*
+        stage.on('mousedown', function(evt) {
+          console.log('mousedown');
+          console.log(evt.targetNode);
+          console.log('-------');
+        });
+
+        stage.on('mouseup', function(evt) {
+          console.log('mouseup');
+          console.log(evt.targetNode);
+          console.log('-------');
+        });
+        
+        stage.on('mousemove', function(evt) {
+          console.log('mousemove');
+          console.log(evt.targetNode);
+          console.log('-------');
+        });
+        
+        stage.on('click', function(evt) {
+          console.log('click');
+          console.log(evt.targetNode);
+          console.log('-------');
+        });
+        
+
+        stage.on('dblclick', function(evt) {
+          console.log('dblclick');
+          console.log(evt.targetNode);
+          console.log('-------');
+        });
+
+
+        */
+
+        stage.on('dragstart', function(evt) {
+          console.log('dragstart');
+          console.log(evt.targetNode);
+          console.log('-------');
+        });
+
+
+        
+    },
     'remove shape with onclick': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
