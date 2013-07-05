@@ -59,10 +59,24 @@ Test.Modules.DD = {
         });
 
 
-        */
+        
 
         stage.on('dragstart', function(evt) {
           console.log('dragstart');
+          console.log(evt.targetNode);
+          console.log('-------');
+        });
+        */
+
+
+        stage.on('mouseover', function(evt) {
+          console.log('mouseover');
+          console.log(evt.targetNode);
+          console.log('-------');
+        });
+
+        stage.on('mouseout', function(evt) {
+          console.log('mouseout');
           console.log(evt.targetNode);
           console.log('-------');
         });

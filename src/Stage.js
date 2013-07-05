@@ -25,7 +25,7 @@
         UNDERSCORE = '_',
         CONTAINER = 'container',
         EMPTY_STRING = '',
-        EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND],
+        EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND, MOUSEOVER],
         
     // cached variables
     eventsLength = EVENTS.length;
@@ -353,6 +353,9 @@
               addEvent(this, EVENTS[n]);
             }
         },
+        _mouseover: function(evt) {
+            this._fire(MOUSEOVER, evt);
+        },
         _mouseout: function(evt) {
             this._setPointerPosition(evt);
             var go = Kinetic.Global,
@@ -364,6 +367,8 @@
                 this.targetShape = null;
             }
             this.mousePos = undefined;
+
+            this._fire(MOUSEOUT, evt);
         },
         _mousemove: function(evt) {
             this._setPointerPosition(evt);
