@@ -54,7 +54,7 @@ Test.Modules.ANIMATION = {
         anim.stop();
         test(a.animations.length === 0, '7should be no animations running');
     },
-    'batch draw': function(containerId) {
+    '*batch draw': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -91,8 +91,10 @@ Test.Modules.ANIMATION = {
         layer.batchDraw();
         layer.batchDraw();
 
-        test(Kinetic.Layer.batchAnim.getLayers().length === 1, 'batch animation should only have one layer');
-
         test(draws !== 6, 'should not be 6 draws');
+
+        setTimeout(function() {
+            layer.batchDraw();
+        }, 2000);
     }
 };

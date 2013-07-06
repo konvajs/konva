@@ -1,4 +1,6 @@
 (function() {
+    var BATCH_DRAW_STOP_TIME_DIFF = 500;
+
     /**
      * Animation constructor.  A stage is used to contain multiple layers and handle
      * @constructor
@@ -235,24 +237,27 @@
         moveTo.call(this, container);
     };
 
-    Kinetic.Layer.batchAnim = new Kinetic.Animation(function() {
-        if (this.getLayers().length === 0) {
-            this.stop();
-        }
-        this.setLayers([]);
-    });
-
     /**
      * get batch draw
      * @method
      * @memberof Kinetic.Layer.prototype
      */
     Kinetic.Layer.prototype.batchDraw = function() {
-        var batchAnim = Kinetic.Layer.batchAnim;
-        batchAnim.addLayer(this);  
+        var that = this;
 
-        if (!batchAnim.isRunning()) {
-            batchAnim.start(); 
-        } 
+        if (!this.batchAnim) {
+            this.batchAnim = new Kinetic.Animation(function() {
+              if (that.lastBatchDrawTime && new Date().getTime() - that.lastBatchDrawTime > BATCH_DRAW_STOP_TIME_DIFF) {
+                that.batchAnim.stop();
+              }
+            }, this);
+        }
+
+        this.lastBatchDrawTime = new Date().getTime();
+
+        if (!this.batchAnim.isRunning()) {
+            this.draw();
+            this.batchAnim.start(); 
+        }  
     };
 })();
