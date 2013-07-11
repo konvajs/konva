@@ -90,11 +90,13 @@
         _addListeners: function(context) {
             var that = this,
                 n;
+            var func = function(){
+                    that._sync();
+                };
+            
             // update text data for certain attr changes
             for(n = 0; n < attrChangeListLen; n++) {
-                context.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, function() {
-                    that._sync();
-                });
+                context.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, func);
             } 
         },
         getWidth: function() {

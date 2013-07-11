@@ -105,6 +105,7 @@
             radiusPlus1  = radius + 1,
             sumFactor = radiusPlus1 * ( radiusPlus1 + 1 ) / 2,
             stackStart = new BlurStack(),
+            stackEnd = null,
             stack = stackStart,
             stackIn = null,
             stackOut = null,
@@ -113,7 +114,7 @@
 
         for ( i = 1; i < div; i++ ) {
             stack = stack.next = new BlurStack();
-            if ( i == radiusPlus1 ) var stackEnd = stack;
+            if ( i == radiusPlus1 ) stackEnd = stack;
         }
 
         stack.next = stackStart;
@@ -167,7 +168,7 @@
             for ( x = 0; x < width; x++ )
             {
                 pixels[yi+3] = pa = (a_sum * mul_sum) >> shg_sum;
-                if ( pa != 0 )
+                if ( pa !== 0 )
                 {
                     pa = 255 / pa;
                     pixels[yi]   = ((r_sum * mul_sum) >> shg_sum) * pa;

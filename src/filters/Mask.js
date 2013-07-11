@@ -5,11 +5,11 @@
 		var d = [];
 		d.push(idata.data[idx++], idata.data[idx++], idata.data[idx++], idata.data[idx++]);
 		return d;
-	};
+	}
 
 	function rgbDistance(p1, p2) {
 		return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2) + Math.pow(p1[2] - p2[2], 2));
-	};
+	}
 
 	function rgbMean(pTab) {
 		var m = [0, 0, 0];
@@ -25,7 +25,7 @@
 		m[2] /= pTab.length;
 
 		return m;
-	};
+	}
 
 	function backgroundMask(idata, threshold) {
 		var rgbv_no = pixelAt(idata, 0, 0);
@@ -49,13 +49,13 @@
 
 			return mask;
 		}
-	};
+	}
 
 	function applyMask(idata, mask) {
 		for (var i = 0; i < idata.width * idata.height; i++) {
 			idata.data[4 * i + 3] = mask[i];
 		}
-	};
+	}
 
 	function erodeMask(mask, sw, sh) {
 
@@ -89,7 +89,7 @@
 		}
 
 		return maskResult;
-	};
+	}
 
 	function dilateMask(mask, sw, sh) {
 
@@ -123,7 +123,7 @@
 		}
 
 		return maskResult;
-	};
+	}
 
 	function smoothEdgeMask(mask, sw, sh) {
 
@@ -171,7 +171,7 @@
 	Kinetic.Filters.Mask = function(idata) {
 		// Detect pixels close to the background color
 		var threshold = this.getFilterThreshold(),
-		    mask = backgroundMask(idata, threshold);
+                    mask = backgroundMask(idata, threshold);
 		if (mask) {
 			// Erode
 			mask = erodeMask(mask, idata.width, idata.height);
