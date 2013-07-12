@@ -115,7 +115,7 @@
      * @memberof Kinetic.Filters
      * @param {Object} imageData
      */
-    Kinetic.Filters.OnlyGreen = function(imageData) {
+    Kinetic.Filters.OnlyBlue = function(imageData) {
         var data = imageData.data;
         for(var i = 0; i < data.length; i += 4) {
             data[i + 0] = 0; // red

@@ -1432,6 +1432,196 @@ Test.Modules.IMAGE = {
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
+    'no red filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+            darth.setFilter(Kinetic.Filters.NoRed);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'blur filter', 'problem with Blur filter.');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+    },
+    'no green filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+            darth.setFilter(Kinetic.Filters.NoGreen);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'blur filter', 'problem with Blur filter.');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+    },
+    'no blue filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+            darth.setFilter(Kinetic.Filters.NoBlue);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'blur filter', 'problem with Blur filter.');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+    },
+    'only red filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+            darth.setFilter(Kinetic.Filters.OnlyRed);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'blur filter', 'problem with Blur filter.');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+    },
+    'only green filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+            darth.setFilter(Kinetic.Filters.OnlyGreen);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'blur filter', 'problem with Blur filter.');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+    },
+    'only blue filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+            darth.setFilter(Kinetic.Filters.OnlyBlue);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'blur filter', 'problem with Blur filter.');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+    },
+    'shift hue filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+            darth.setFilter(Kinetic.Filters.ShiftHue);
+            darth.setFilterHueShiftDeg(90);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'blur filter', 'problem with Blur filter.');
+        };
+        imageObj.src = '../assets/lion.png';
+    },
     'filter transformed image': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
