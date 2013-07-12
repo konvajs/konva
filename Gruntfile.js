@@ -39,7 +39,8 @@ module.exports = function(grunt) {
     'src/filters/Brighten.js', 
     'src/filters/Invert.js', 
     'src/filters/Blur.js', 
-    'src/filters/Mask.js'
+    'src/filters/Mask.js',
+    'src/filters/Colors.js'
   ];
 
   var unitTestFiles = [
