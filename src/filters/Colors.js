@@ -55,7 +55,9 @@
      * @param {Object} imageData
      */
     Kinetic.Filters.ShiftHue = function(imageData) {
-        var data = imageData.data, pixel;
+        var data = imageData.data,
+            deg = this.getFilterHueShiftDeg(),
+            pixel;
         for(var i = 0; i < data.length; i += 4) {
             pixel = pixelShiftHue(data[i+0],data[i+1],data[i+2],deg);
             data[i+0] = pixel[0];
