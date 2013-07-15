@@ -1622,6 +1622,49 @@ Test.Modules.IMAGE = {
         };
         imageObj.src = '../assets/lion.png';
     },
+    '1D convolution filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+            //darth.setFilter(Kinetic.Filters.Sharpen);
+            //darth.setFilter(Kinetic.Filters.DetectEdges);
+            //darth.setFilter(Kinetic.Filters.DetectHorizontalEdges);
+            //darth.setFilter(Kinetic.Filters.DetectVerticalEdges);
+            //darth.setFilter(Kinetic.Filters.DetectDiagonal45Edges);
+            //darth.setFilter(Kinetic.Filters.DetectDiagonal135Edges);
+            //darth.setFilter(Kinetic.Filters.RemoveMean);
+            //darth.setFilter(Kinetic.Filters.Emboss);
+            //darth.setFilter(Kinetic.Filters.Darken);
+            //darth.setFilter(Kinetic.Filters.Lighten);
+            //darth.setFilter(Kinetic.Filters.Convolve);
+            //darth.setFilterConvolutionMatrix([0.3,0.2,0.0,0.2,0.3]);
+            //darth.setFilterConvolutionMatrix([[0,-2,0], [-2,11,-2], [0,-2,0]]);
+            darth.setFilter(Kinetic.Filters.SoftBlur);
+            //darth.setFilter(Kinetic.Filters.UnsharpMask);
+            darth.setFilterSoftBlurAmount(90);
+            darth.setFilterSoftBlurSize(7);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, '1D convolution filter', 'problem with convolution filter.');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+        //imageObj.src = '../assets/lion.png';
+    },
     'filter transformed image': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
