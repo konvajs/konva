@@ -40,14 +40,15 @@
             this.className = IMAGE;
             this._setDrawFuncs();
         },
+
         drawFunc: function(canvas) {
             var width = this.getWidth(), 
                 height = this.getHeight(), 
-                params, 
                 that = this, 
                 context = canvas.getContext(),
-                crop = this.getCrop(),
-                cropX, cropY, cropWidth, cropHeight, image;
+				crop,
+                params, 
+				image;
 
             // if a filter is set, and the filter needs to be updated, reapply
             if (this.getFilter() && this._applyFilter) {
@@ -55,32 +56,36 @@
                 this._applyFilter = false;
             }
 
-            // NOTE: this.filterCanvas may be set by the above code block
+        	// NOTE: this.filterCanvas may be set by the above code block
+			// In that case, cropping is already applied.
             if (this.filterCanvas) {
-                image = this.filterCanvas.getElement();
-            }
+            	image = this.filterCanvas.getElement();
+            	params = [image, 0, 0, width, height];
+			}
             else {
-                image = this.getImage();
-            }
+            	image = this.getImage();
+
+            	if (image) {
+            		crop = this.getCrop();
+
+            		if (crop) {
+            			crop.x = crop.x || 0;
+            			crop.y = crop.y || 0;
+            			crop.width = crop.width || image.width - crop.x;
+            			crop.height = crop.height || image.height - crop.y;
+            			params = [image, crop.x, crop.y, crop.width, crop.height, 0, 0, width, height];
+            		} else {
+            			params = [image, 0, 0, width, height];
+            		}
+            	}
+			}
 
             context.beginPath();
             context.rect(0, 0, width, height);
             context.closePath();
             canvas.fillStroke(this);
 
-            if(image) {
-                // if cropping
-                if(crop) {
-                    cropX = crop.x || 0;
-                    cropY = crop.y || 0;
-                    cropWidth = crop.width || 0;
-                    cropHeight = crop.height || 0;
-                    params = [image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height];
-                }
-                // no cropping
-                else {
-                    params = [image, 0, 0, width, height];
-                }
+            if (image) {
 
                 if(this.hasShadow()) {
                     canvas.applyShadow(this, function() {
@@ -92,6 +97,7 @@
                 }
             }
         },
+
         drawHitFunc: function(canvas) {
             var width = this.getWidth(), 
                 height = this.getHeight(), 
@@ -118,22 +124,31 @@
                 width = this.getWidth(),
                 height = this.getHeight(),
                 filter = this.getFilter(),
+				crop = this.getCrop() || {},
                 filterCanvas, context, imageData;
 
-            if (this.filterCanvas){
+            crop.x = crop.x || 0;
+            crop.y = crop.y || 0;
+            crop.width = crop.width || image.width - crop.x;
+            crop.height = crop.height || image.height - crop.y;
+
+            if (this.filterCanvas &&
+				this.filterCanvas.getWidth() == crop.width &&
+				this.filterCanvas.getHeight() == crop.height) {
                 filterCanvas = this.filterCanvas;
             }
             else {
                 filterCanvas = this.filterCanvas = new Kinetic.SceneCanvas({
-                    width: width, 
-                    height: height
+                    width: crop.width, 
+                    height: crop.height,
+					pixelRatio: 1,
                 });
             }
 
             context = filterCanvas.getContext();
 
             try {
-                this._drawImage(context, [image, 0, 0, width, height]);
+            	this._drawImage(context, [image, crop.x, crop.y, crop.width, crop.height, 0, 0, crop.width, crop.height]);
                 imageData = context.getImageData(0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
                 filter.call(this, imageData);
                 context.putImageData(imageData, 0, 0);
