@@ -1,6 +1,26 @@
 (function() {
 
-    function pixelShiftHue(r,g,b,deg){
+    var rgb_to_hsl = function(r,g,b){
+        // Input colors are in 0-255, calculations are between 0-1
+        r /= 255; g /= 255; b /= 255;
+
+        // http://en.wikipedia.org/wiki/HSL_and_HSV
+        // Convert to HSL
+        var max = Math.max(r,g,b),
+            min = Math.min(r,g,b),
+            chroma = max - min,
+            luminance = chroma / 2,
+            saturation = chroma / (1 - Math.abs(2*luminance-1)),
+            hue = 0;
+        
+        if( max == r ){ hue = ((g-b)/chroma) % 6; }else
+        if( max == g ){ hue =  (b-r)/chroma  + 2; }else
+        if( max == b ){ hue =  (r-g)/chroma  + 4; }
+
+        return [(hue*60+360) % 360, saturation, luminance];
+    };
+
+    var pixelShiftHue = function(r,g,b,deg){
 
         // Input colors are in 0-255, calculations are between 0-1
         r /= 255; g /= 255; b /= 255;
@@ -46,7 +66,18 @@
         rB = (255*rB);
         
         return [rR,rG,rB];
-    }
+    };
+
+    var shift_hue = function(imageData,deg){
+        var data = imageData.data,
+            pixel;
+        for(var i = 0; i < data.length; i += 4) {
+            pixel = pixelShiftHue(data[i+0],data[i+1],data[i+2],deg);
+            data[i+0] = pixel[0];
+            data[i+1] = pixel[1];
+            data[i+2] = pixel[2];
+        }
+    };
 
     /**
      * shift hue
@@ -55,15 +86,7 @@
      * @param {Object} imageData
      */
     Kinetic.Filters.ShiftHue = function(imageData) {
-        var data = imageData.data,
-            deg = this.getFilterHueShiftDeg(),
-            pixel;
-        for(var i = 0; i < data.length; i += 4) {
-            pixel = pixelShiftHue(data[i+0],data[i+1],data[i+2],deg);
-            data[i+0] = pixel[0];
-            data[i+1] = pixel[1];
-            data[i+2] = pixel[2];
-        }
+        shift_hue(imageData,this.getFilterHueShiftDeg());
     };
 
     Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filterHueShiftDeg', 0);
@@ -81,85 +104,39 @@
      * @memberof Kinetic.Image.prototype
      */
 
-    /**
-     * show only red
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
-     */
-    Kinetic.Filters.OnlyRed = function(imageData) {
-        var data = imageData.data;
-        for(var i = 0; i < data.length; i += 4) {
-            data[i + 1] = 0; // green
-            data[i + 2] = 0; // blue
-        }
-    };
 
-    /**
-     * show only green
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
-     */
-    Kinetic.Filters.OnlyGreen = function(imageData) {
-        var data = imageData.data;
-        for(var i = 0; i < data.length; i += 4) {
-            data[i + 0] = 0; // red
-            data[i + 2] = 0; // blue
-        }
-    };
 
-    /**
-     * show only blue
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
-     */
-    Kinetic.Filters.OnlyBlue = function(imageData) {
+    Kinetic.Filters.Colorize = function(imageData) {
         var data = imageData.data;
-        for(var i = 0; i < data.length; i += 4) {
-            data[i + 0] = 0; // red
-            data[i + 1] = 0; // green
-        }
-    };
 
-    /**
-     * removes all red from an image
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
-     */
-    Kinetic.Filters.NoRed = function(imageData) {
-        var data = imageData.data;
-        for(var i = 0; i < data.length; i += 4) {
-            data[i + 0] = 0;
-        }
-    };
+        // First we'll colorize it red, then shift by the hue specified
+        var color = this.getFilterColorizeColor(),
+            hsl = rgb_to_hsl(color[0],color[1],color[2]),
+            hue = hsl[0];
 
-    /**
-     * removes all green from an image
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
-     */
-    Kinetic.Filters.NoGreen = function(imageData) {
-        var data = imageData.data;
+        // Color it red
         for(var i = 0; i < data.length; i += 4) {
             data[i + 1] = 0;
-        }
-    };
-
-    /**
-     * removes all blue from an image
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
-     */
-    Kinetic.Filters.NoBlue = function(imageData) {
-        var data = imageData.data;
-        for(var i = 0; i < data.length; i += 4) {
             data[i + 2] = 0;
         }
+
+        // Shift by the hue
+        shift_hue(imageData,hue);
     };
+
+    Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filterColorizeColor', [255,0,0] );
+    /**
+     * Gets the colorizing color.
+     * @name getFilterColorizeColor
+     * @method
+     * @memberof Kinetic.Image.prototype
+     */
+
+    /**
+     * Gets the colorizing color. Should be an array [r,g,b] ie [255,0,128].
+     * @name setFilterColorizeColor
+     * @method
+     * @memberof Kinetic.Image.prototype
+     */
 
 })();
