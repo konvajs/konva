@@ -27,6 +27,7 @@
         // Accumlators and positions for iterating
         var r,g,b,a, x, y, pos, i,j;
 
+        // Handle the 2D matrix
         if( is2D ){
             for( y=yMin; y<yMax; y+=1){
                 for( x=xMin; x<xMax; x+=1){
@@ -51,7 +52,9 @@
                     //result[pos+3] = a;
                 }
             }
-        }else{
+        }
+        // Handle the 1D matrix
+        else{
 
             // Horizontal pass (ie convolving every row of the image)
             for( y=0; y<imageSizeY; y+=1){
@@ -112,6 +115,7 @@
         }
     };
 
+    // Definition of a gaussian function
     var gaussian = function(x,mean,sigma){
         var dx = x - mean;
         return Math.pow(Math.E, -dx*dx / (2*sigma*sigma));
@@ -136,6 +140,17 @@
         return kernel;
     };
 
+    var make_soft_blur_kernel = function( size, blur_percent ){
+        // A soft blur is achieve by blurring the image then
+        // merging the blured and unblurred image (ie 60/40).
+        // Instead of that we've scaling the blur kernel (ie 60)
+        // and adding the identity scaled (ie 40) to the kernel
+        var kernel = make_blur_kernel( size, blur_percent / 100 ),
+            mid = Math.floor(size/2);
+        kernel[mid][mid] += 1 - (blur_percent/100);
+        return kernel;
+    };
+
     var make_unsharp_kernel = function( size, unsharp_percent ){
         // An 'unsharp mask' is made by blurring the inverted image
         // and combining it with the original (like a soft blur but
@@ -146,6 +161,34 @@
         kernel[mid][mid] += 2;
         return kernel;
     };
+
+    /**
+     * general convolution
+     * @function
+     * @memberof Kinetic.Filters
+     * @param {Object} imageData
+     */
+    Kinetic.Filters.Convolve = function(imageData) {
+        convolve_internal(imageData,this.getFilterConvolutionMatrix());
+    };
+
+    Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filterConvolutionMatrix', 0);
+    /**
+     * get the current convolution matrix.
+     * @name getFilterConvolutionMatrix
+     * @method
+     * @memberof Kinetic.Image.prototype
+     */
+
+    /**
+     * set the current convolution matrix, can be a single dimensional array
+     *  or a 2D array. A 1D array will be applied horizontally then flipped
+     *  and applied vertically. A 2D array will be applied as-is. The array
+     *  dimensions should be odd (ie 3x3, 5x5, 7, etc...)
+     * @name setFilterConvolutionMatrix
+     * @method
+     * @memberof Kinetic.Image.prototype
+     */
 
     /**
      * unsharp mask
@@ -160,27 +203,6 @@
                 this.getFilterSoftBlurAmount()
             )
         );
-    };
-
-    /**
-     * general convolution
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
-     */
-    Kinetic.Filters.Convolve = function(imageData) {
-        convolve_internal(imageData,this.getFilterConvolutionMatrix());
-    };
-
-    var make_soft_blur_kernel = function( size, blur_percent ){
-        // A soft blur is achieve by blurring the image then
-        // merging the blured and unblurred image (ie 60/40).
-        // Instead of that we've scaling the blur kernel (ie 60)
-        // and adding the identity scaled (ie 40) to the kernel
-        var kernel = make_blur_kernel( size, blur_percent / 100 ),
-            mid = Math.floor(size/2);
-        kernel[mid][mid] += 1 - (blur_percent/100);
-        return kernel;
     };
 
     /**
@@ -367,23 +389,5 @@
             [ 0,  0, 0]
         ]);
     };
-
-    Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filterConvolutionMatrix', 0);
-    /**
-     * get the current convolution matrix.
-     * @name getFilterConvolutionMatrix
-     * @method
-     * @memberof Kinetic.Image.prototype
-     */
-
-    /**
-     * set the current convolution matrix, can be a single dimensional array
-     *  or a 2D array. A 1D array will be applied horizontally then flipped
-     *  and applied vertically. A 2D array will be applied as-is. The array
-     *  dimensions should be odd (ie 3x3, 5x5, 7, etc...)
-     * @name setFilterConvolutionMatrix
-     * @method
-     * @memberof Kinetic.Image.prototype
-     */
 
 })();

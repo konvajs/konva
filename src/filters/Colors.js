@@ -105,7 +105,12 @@
      */
 
 
-
+    /**
+     * colorizes the image so that it is just varying shades of the specified color
+     * @function
+     * @memberof Kinetic.Filters
+     * @param {Object} imageData
+     */
     Kinetic.Filters.Colorize = function(imageData) {
         var data = imageData.data;
 
@@ -134,6 +139,7 @@
 
     /**
      * Gets the colorizing color. Should be an array [r,g,b] ie [255,0,128].
+     *  note that white [255,255,255] black [0,0,0] and greys [r,r,r] get treated as red.
      * @name setFilterColorizeColor
      * @method
      * @memberof Kinetic.Image.prototype
