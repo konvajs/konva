@@ -235,7 +235,7 @@
         // init context point
         var cpx = 0;
         var cpy = 0;
-        for(var n = 1; n < arr.length; n++) {
+        for( n = 1; n < arr.length; n++) {
             var str = arr[n];
             var c = str.charAt(0);
             str = str.slice(1);
@@ -259,6 +259,10 @@
                 var cmd = null;
                 var points = [];
                 var startX = cpx, startY = cpy;
+                // Move var from within the switch to up here (jshint)
+                var prevCmd, ctlPtx, ctlPty;     // Ss, Tt
+                var rx, ry, psi, fa, fs, x1, y1; // Aa
+                
 
                 // convert l, H, h, V, and v to L
                 switch (c) {
@@ -328,8 +332,8 @@
                         points.push(cpx, cpy);
                         break;
                     case 'S':
-                        var ctlPtx = cpx, ctlPty = cpy;
-                        var prevCmd = ca[ca.length - 1];
+                        ctlPtx = cpx, ctlPty = cpy;
+                        prevCmd = ca[ca.length - 1];
                         if(prevCmd.command === 'C') {
                             ctlPtx = cpx + (cpx - prevCmd.points[2]);
                             ctlPty = cpy + (cpy - prevCmd.points[3]);
@@ -341,8 +345,8 @@
                         points.push(cpx, cpy);
                         break;
                     case 's':
-                        var ctlPtx = cpx, ctlPty = cpy;
-                        var prevCmd = ca[ca.length - 1];
+                        ctlPtx = cpx, ctlPty = cpy;
+                        prevCmd = ca[ca.length - 1];
                         if(prevCmd.command === 'C') {
                             ctlPtx = cpx + (cpx - prevCmd.points[2]);
                             ctlPty = cpy + (cpy - prevCmd.points[3]);
@@ -367,8 +371,8 @@
                         points.push(cpx, cpy);
                         break;
                     case 'T':
-                        var ctlPtx = cpx, ctlPty = cpy;
-                        var prevCmd = ca[ca.length - 1];
+                        ctlPtx = cpx, ctlPty = cpy;
+                        prevCmd = ca[ca.length - 1];
                         if(prevCmd.command === 'Q') {
                             ctlPtx = cpx + (cpx - prevCmd.points[0]);
                             ctlPty = cpy + (cpy - prevCmd.points[1]);
@@ -379,8 +383,8 @@
                         points.push(ctlPtx, ctlPty, cpx, cpy);
                         break;
                     case 't':
-                        var ctlPtx = cpx, ctlPty = cpy;
-                        var prevCmd = ca[ca.length - 1];
+                        ctlPtx = cpx, ctlPty = cpy;
+                        prevCmd = ca[ca.length - 1];
                         if(prevCmd.command === 'Q') {
                             ctlPtx = cpx + (cpx - prevCmd.points[0]);
                             ctlPty = cpy + (cpy - prevCmd.points[1]);
@@ -391,14 +395,14 @@
                         points.push(ctlPtx, ctlPty, cpx, cpy);
                         break;
                     case 'A':
-                        var rx = p.shift(), ry = p.shift(), psi = p.shift(), fa = p.shift(), fs = p.shift();
-                        var x1 = cpx, y1 = cpy; cpx = p.shift(), cpy = p.shift();
+                        rx = p.shift(), ry = p.shift(), psi = p.shift(), fa = p.shift(), fs = p.shift();
+                        x1 = cpx, y1 = cpy; cpx = p.shift(), cpy = p.shift();
                         cmd = 'A';
                         points = this.convertEndpointToCenterParameterization(x1, y1, cpx, cpy, fa, fs, rx, ry, psi);
                         break;
                     case 'a':
-                        var rx = p.shift(), ry = p.shift(), psi = p.shift(), fa = p.shift(), fs = p.shift();
-                        var x1 = cpx, y1 = cpy; cpx += p.shift(), cpy += p.shift();
+                        rx = p.shift(), ry = p.shift(), psi = p.shift(), fa = p.shift(), fs = p.shift();
+                        x1 = cpx, y1 = cpy; cpx += p.shift(), cpy += p.shift();
                         cmd = 'A';
                         points = this.convertEndpointToCenterParameterization(x1, y1, cpx, cpy, fa, fs, rx, ry, psi);
                         break;

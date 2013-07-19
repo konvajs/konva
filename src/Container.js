@@ -30,7 +30,7 @@
                 child;
 
             while(children.length > 0) {
-                var child = children[0];
+                child = children[0];
                 if (child.hasChildren()) {
                     child.removeChildren();
                 }

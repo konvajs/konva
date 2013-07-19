@@ -1432,6 +1432,286 @@ Test.Modules.IMAGE = {
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
+    'colorizing filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+            darth.setFilter(Kinetic.Filters.Colorize);
+            darth.setFilterColorizeColor([255,0,128]);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'colorizing filter', 'problem with colorizing filter.');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+    },
+    'shift hue filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+            darth.setFilter(Kinetic.Filters.ShiftHue);
+            darth.setFilterHueShiftDeg(90);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'shift hue filter', 'problem with hue shifting filter.');
+        };
+        imageObj.src = '../assets/lion.png';
+    },
+    'unsharp mask filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+            darth.setFilter(Kinetic.Filters.UnsharpMask);
+            darth.setFilterSoftBlurAmount(90);
+            darth.setFilterSoftBlurSize(7);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'unsharp mask filter', 'problem with unsharp mask filter.');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+        //imageObj.src = '../assets/lion.png';
+    },
+    'soft blur filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+            darth.setFilter(Kinetic.Filters.SoftBlur);
+            darth.setFilterSoftBlurAmount(10);
+            darth.setFilterSoftBlurSize(7);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'soft blur filter', 'problem with soft blur filter.');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+        //imageObj.src = '../assets/lion.png';
+    },
+    'sharpen filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+            darth.setFilter(Kinetic.Filters.Sharpen);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'sharpen filter', 'problem with sharpen filter.');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+        //imageObj.src = '../assets/lion.png';
+    },
+    'remove mean filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+            darth.setFilter(Kinetic.Filters.RemoveMean);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'remove mean filter', 'problem with remove mean filter.');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+        //imageObj.src = '../assets/lion.png';
+    },
+    'emboss filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+            darth.setFilter(Kinetic.Filters.Emboss);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'emboss filter', 'problem with emboss filter.');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+        //imageObj.src = '../assets/lion.png';
+    },
+    'edge detection filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+            //darth.setFilter(Kinetic.Filters.DetectHorizontalEdge);
+            //darth.setFilter(Kinetic.Filters.DetectVerticalEdge);
+            //darth.setFilter(Kinetic.Filters.DetectDiagonal45Edge);
+            //darth.setFilter(Kinetic.Filters.DetectDiagonal135Edge);
+            darth.setFilter(Kinetic.Filters.DetectEdges);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'edge detection filter', 'problem with edge detection filter.');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+        //imageObj.src = '../assets/lion.png';
+    },
+    'lighten filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+            darth.setFilter(Kinetic.Filters.Lighten);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'lighten filter', 'problem with lighten filter.');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+        //imageObj.src = '../assets/lion.png';
+    },
+    'darken filter': function(containerId) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = new Kinetic.Stage({
+                container: containerId,
+                width: 578,
+                height: 200
+            });
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+            darth.setFilter(Kinetic.Filters.Darken);
+            layer.draw();
+            var dataUrl = layer.toDataURL();
+            //console.log(dataUrl);
+            testDataUrl(dataUrl, 'darken filter', 'problem with darken filter.');
+        };
+        imageObj.src = '../assets/darth-vader.jpg';
+        //imageObj.src = '../assets/lion.png';
+    },
     'filter transformed image': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
