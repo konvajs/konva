@@ -76,6 +76,9 @@
         }
 
         this.reset();
+
+	// add Reset event handler after initial reset is fired
+	this.onReset = config.onReset;
     };
 
     // start/diff object = attrs.nodeId.tweenId.attr
@@ -170,6 +173,11 @@
             this.tween.onFinish = function() {
                 if (that.onFinish) {
                     that.onFinish();
+                }
+            };
+            tween.onReset = function() {
+                if (that._isLastTween(tween) && that.onReset) {
+                    that.onReset();
                 }
             };
         },
