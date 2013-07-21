@@ -48,7 +48,7 @@ Test.Modules.Tween = {
         });
 
     },
-    'ease-in, ease-out, ease-in-out hovers': function(containerId) {    
+    'ease-in, ease-out, ease-in-out hovers': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -66,7 +66,7 @@ Test.Modules.Tween = {
             offset: {
                 x: 50,
                 y: 25
-            } 
+            }
         });
 
         var blueBox = new Kinetic.Rect({
@@ -110,7 +110,7 @@ Test.Modules.Tween = {
             node: greenBox,
             scaleX: 1.5,
             scaleY: 1.5,
-            duration: 1, 
+            duration: 1,
             easing: Kinetic.Easings.EaseIn
         });
 
@@ -118,7 +118,7 @@ Test.Modules.Tween = {
             node: blueBox,
             scaleX: 1.5,
             scaleY: 1.5,
-            duration: 1, 
+            duration: 1,
             easing: Kinetic.Easings.EaseOut
         });
 
@@ -126,7 +126,7 @@ Test.Modules.Tween = {
             node: redBox,
             scaleX: 1.5,
             scaleY: 1.5,
-            duration: 1, 
+            duration: 1,
             easing: Kinetic.Easings.EaseInOut
         });
 
@@ -137,7 +137,7 @@ Test.Modules.Tween = {
             evt.targetNode.tween.reverse();
         });
     },
-    'simple tween': function(containerId) {
+    '*simple tween': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -171,6 +171,9 @@ Test.Modules.Tween = {
             yoyo: false,
             onFinish: function() {
                 console.log('finished!')
+            },
+            onReset: function() {
+                console.log('reset!')
             }
         });
 
@@ -182,7 +185,7 @@ Test.Modules.Tween = {
         });
 
         tween.play();
-        tween2.play();
+        //tween2.play();
 
         document.getElementById(containerId).addEventListener('click', function() {
             tween.seek(1.5);
@@ -227,7 +230,7 @@ Test.Modules.Tween = {
         });
 
         tween.play();
-      
+
     }
 };
 
@@ -1022,7 +1025,7 @@ Test.Modules.DRAG_AND_DROP = {
 
         layer.add(circle);
         stage.add(layer);
-        
+
         circle.on('dragmove', function() {
             console.log(this.getLayer().getId());
         });
@@ -1391,7 +1394,7 @@ Test.Modules.DRAG_AND_DROP = {
             width: 578,
             height: 200
         });
-        
+
         var bgLayer = new Kinetic.Layer();
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
@@ -1419,7 +1422,7 @@ Test.Modules.DRAG_AND_DROP = {
 
         group.add(rect);
         layer.add(group);
-        
+
         stage.add(bgLayer);
         stage.add(layer);
 
@@ -1427,9 +1430,9 @@ Test.Modules.DRAG_AND_DROP = {
             rect.rotate(0.01);
         }, layer);
         anim.start();
-        
+
         showHit(layer);
-        
+
         var context = bgLayer.getCanvas().getContext();
         context.beginPath();
         context.moveTo(0, 0);
@@ -1445,7 +1448,7 @@ Test.Modules.DRAG_AND_DROP = {
             height: 200
         });
         var layer = new Kinetic.Layer({
-            draggable: true 
+            draggable: true
         });
 
         var rect = new Kinetic.Rect({
@@ -1457,7 +1460,7 @@ Test.Modules.DRAG_AND_DROP = {
             stroke: 'black',
             strokeWidth: 4
         });
-        
+
         var rect2 = new Kinetic.Rect({
             x: 300,
             y: 100,

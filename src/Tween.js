@@ -25,9 +25,9 @@
      *   node: node,<br>
      *   rotationDeg: 360,<br>
      *   duration: 1,<br>
-     *   easing: Kinetic.Easings.EaseInOut<br>   
+     *   easing: Kinetic.Easings.EaseInOut<br>
      * });<br><br>
-     * 
+     *
      * // play tween<br>
      * tween.play();<br><br>
      *
@@ -45,7 +45,6 @@
 
         this.node = node;
         this._id = idCounter++;
-        this.onFinish = config.onFinish;
 
         this.anim = new Kinetic.Animation(function() {
             that.tween.onEnterFrame();
@@ -77,8 +76,9 @@
 
         this.reset();
 
-	// add Reset event handler after initial reset is fired
-	this.onReset = config.onReset;
+        // callbacks
+        this.onFinish = config.onFinish;
+        this.onReset = config.onReset;
     };
 
     // start/diff object = attrs.nodeId.tweenId.attr
@@ -101,12 +101,12 @@
 
             // add to tween map
             start = node.getAttr(key);
-            
+
             if (Kinetic.Util._isArray(end)) {
                 end = Kinetic.Util._getPoints(end);
                 diff = [];
                 len = end.length;
-                for (n=0; n<len; n++) { 
+                for (n=0; n<len; n++) {
                     startVal = start[n];
                     endVal = end[n];
                     diff.push({
@@ -123,8 +123,8 @@
             Kinetic.Tween.attrs[nodeId][this._id][key] = {
                 start: start,
                 diff: diff
-            };    
-            Kinetic.Tween.tweens[nodeId][key] = this._id; 
+            };
+            Kinetic.Tween.tweens[nodeId][key] = this._id;
         },
         _tweenFunc: function(i) {
             var node = this.node,
@@ -149,9 +149,9 @@
                     }
                 }
                 else {
-                    newVal = start + (diff * i); 
+                    newVal = start + (diff * i);
                 }
-                 
+
                 node.setAttr(key, newVal);
             }
         },
@@ -175,8 +175,8 @@
                     that.onFinish();
                 }
             };
-            tween.onReset = function() {
-                if (that._isLastTween(tween) && that.onReset) {
+            this.tween.onReset = function() {
+                if (that.onReset) {
                     that.onReset();
                 }
             };
@@ -372,7 +372,7 @@
             }
         },
         pause: function() {
-            this.state = PAUSED; 
+            this.state = PAUSED;
             this.fire('onPause');
         },
         getTimer: function() {
@@ -385,7 +385,7 @@
     * by Xaric
     */
 
-    /** 
+    /**
      * @namespace Easings
      * @memberof Kinetic
      */
