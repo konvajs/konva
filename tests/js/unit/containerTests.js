@@ -10,7 +10,7 @@ Test.Modules.CONTAINER = {
             clipFunc: function(canvas) {
                 var context = canvas.getContext();
                 context.rect(0, 0, 400, 100);
-            } 
+            }
         });
         var group = new Kinetic.Group();
         var circle = new Kinetic.Circle({
@@ -118,6 +118,51 @@ Test.Modules.CONTAINER = {
         test(node === undefined, 'node should be undefined');
         node = stage.get('#myLayer')[0];
         test(node.nodeType === 'Layer', 'node type should be Layer');
+
+    },
+    'select shapes with multiple selectors': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer({
+            id: 'myLayer'
+        });
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            id: 'myCircle'
+        });
+
+        var rect = new Kinetic.Rect({
+            x: 300,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'purple',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myRect'
+        });
+
+        layer.add(circle);
+        layer.add(rect);
+        stage.add(layer);
+
+        test(layer.get('#myCircle, .myRect').length === 2, 'should be 2 items in the array');
+        test(layer.get('#myCircle, .myRect')[0]._id === circle._id, 'circle id is wrong');
+        test(layer.get('#myCircle, .myRect')[1]._id === rect._id, 'rect id is wrong');
+
+        test(layer.get('#myCircle, Circle, .myRect, Rect').length === 4, 'should be 4 items in the array');
+        test(layer.get('#myCircle, Circle, .myRect, Rect')[0]._id === circle._id, 'circle id is wrong');
+        test(layer.get('#myCircle, Circle, .myRect, Rect')[1]._id === circle._id, 'circle id is wrong');
+        test(layer.get('#myCircle, Circle, .myRect, Rect')[2]._id === rect._id, 'rect id is wrong');
+        test(layer.get('#myCircle, Circle, .myRect, Rect')[3]._id === rect._id, 'rect id is wrong');
 
     },
     'set x on an array of nodes': function(containerId) {
@@ -287,7 +332,7 @@ Test.Modules.CONTAINER = {
         layer.add(circle);
         layer.add(rect);
         stage.add(layer);
-        
+
         var go = Kinetic.Global;
 
         test(go.ids['myCircle3'].getId() === 'myCircle3', 'circle id not in ids hash');
@@ -903,7 +948,7 @@ Test.Modules.CONTAINER = {
         stage.add(greenLayer);
 
         blueLayer.setZIndex(1);
-        
+
         //console.log(greenLayer.getZIndex());
 
         test(greenLayer.getZIndex() === 0, 'green layer should have z index of 0');

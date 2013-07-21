@@ -30,7 +30,7 @@ Test.Modules.NODE = {
         test(group.getClassName() === 'Group', 'group class name should be Group');
         test(circle.getClassName() === 'Circle', 'circle class name should be Circle');
 
-        
+
     },
     'setAttr': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -63,7 +63,7 @@ Test.Modules.NODE = {
         circle.setAttr('foobar', 12);
 
         test(circle.getAttr('foobar') === 12, 'custom foobar attr should be 12');
-        
+
     },
     'set shape and layer opacity to 0.5': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -106,7 +106,7 @@ Test.Modules.NODE = {
         });
 
         test(!circle.cachedTransform, 'circle transform cache should be empty');
- 
+
         layer.add(circle);
         stage.add(layer);
 
@@ -130,9 +130,9 @@ Test.Modules.NODE = {
         var layer = new Kinetic.Layer();
 
         // override pixel ratio
-       
+
         layer.canvas = new Kinetic.SceneCanvas({
-           pixelRatio: 2 
+           pixelRatio: 2
         });
         layer.canvas.getElement().style.position = 'absolute';
 
@@ -149,7 +149,7 @@ Test.Modules.NODE = {
         stage.add(layer);
 
         test(layer.canvas.pixelRatio === 2, 'layer pixel ratio should be 2');
- 
+
     },
 
     'listen and don\'t listen': function(containerId) {
@@ -640,7 +640,7 @@ Test.Modules.NODE = {
         rect.transitionTo({
             duration: 4,
             skewY: -2,
-            easing: 'ease-in-out' 
+            easing: 'ease-in-out'
 
 
         })
@@ -1591,7 +1591,7 @@ Test.Modules.NODE = {
         });
         // fire event with bubbling
         circle.fire('click', null, true);
-        
+
         //console.log(clicks);
 
         test(clicks.toString() == 'circle,layer', 'problem with fire 1');
@@ -1607,7 +1607,7 @@ Test.Modules.NODE = {
         });
 
         test(foo === 'bar', 'problem with customEvent param passing');
-        
+
         // test fireing custom event that doesn't exist.  script should not fail
         circle.fire('kaboom');
 
@@ -2093,7 +2093,7 @@ Test.Modules.NODE = {
 
         var expectedJson = '{"attrs":{"width":578,"height":200},"nodeType":"Stage","children":[{"attrs":{},"nodeType":"Layer","children":[{"attrs":{},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
 
-     
+
         testJSON(stage.toJSON(), expectedJson, 'problem serializing stage with custom shape');
 
         layer.draw();
@@ -2116,7 +2116,7 @@ Test.Modules.NODE = {
 
         stage.get('#myTriangle').each(function(node) {
             node.setDrawFunc(drawTriangle);
-        }); 
+        });
 
         stage.draw();
 
@@ -2145,7 +2145,7 @@ Test.Modules.NODE = {
             layer.add(darth);
             stage.add(layer);
             var expectedJson = '{"attrs":{"width":578,"height":200},"nodeType":"Stage","children":[{"attrs":{},"nodeType":"Layer","children":[{"attrs":{"x":200,"y":60,"offset":{"x":50,"y":150},"id":"darth"},"nodeType":"Shape","shapeType":"Image"}]}]}';
-           
+
             testJSON(stage.toJSON(), expectedJson, 'problem with serializing stage with image');
         };
         imageObj.src = '../assets/darth-vader.jpg';
@@ -2529,7 +2529,7 @@ Test.Modules.NODE = {
 
         stage.hide();
         stage.draw();
-        
+
         // TODO: stage hide() fails.  also need to find a good way to test this
 
     }

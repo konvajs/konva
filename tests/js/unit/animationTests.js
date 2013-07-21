@@ -54,7 +54,7 @@ Test.Modules.ANIMATION = {
         anim.stop();
         test(a.animations.length === 0, '7should be no animations running');
     },
-    '*batch draw': function(containerId) {
+    'batch draw': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -77,7 +77,7 @@ Test.Modules.ANIMATION = {
         draws = 0;
 
         layer.on('draw', function() {
-            console.log('draw')
+            //console.log('draw')
             draws++;
         });
 

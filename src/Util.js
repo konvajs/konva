@@ -38,17 +38,36 @@
      * @memberof Kinetic.Collection.prototype
      */
     Kinetic.Collection.prototype.toArray = function() {
-        var arr = [];
-        for(var n = 0; n < this.length; n++) {
+        var arr = [],
+            len = this.length,
+            n;
+
+        for(n = 0; n < len; n++) {
             arr.push(this[n]);
         }
         return arr;
+    };
+    /**
+     * convert array into a collection
+     * @method
+     * @memberof Kinetic.Collection
+     * @param {Array} arr
+     */
+    Kinetic.Collection.toCollection = function(arr) {
+        var collection = new Kinetic.Collection(),
+            len = arr.length,
+            n;
+
+        for(n = 0; n < len; n++) {
+            collection.push(arr[n]);
+        }
+        return collection;
     };
 
     Kinetic.Collection.mapMethods = function(arr) {
         var leng = arr.length,
             n;
-            
+
         for(n = 0; n < leng; n++) {
             // induce scope
             (function(i) {
@@ -56,11 +75,11 @@
                 Kinetic.Collection.prototype[method] = function() {
                     var len = this.length,
                         i;
-                        
+
                     args = [].slice.call(arguments);
                     for(i = 0; i < len; i++) {
                         this[i][method].apply(this[i], args);
-                    }        
+                    }
                 };
             })(n);
         }
@@ -150,7 +169,7 @@
             };
         },
         /**
-         * Apply skew 
+         * Apply skew
          * @method
          * @memberof Kinetic.Transform.prototype
          * @param {Number} sx
@@ -260,7 +279,7 @@
 
         RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
 
-    /** 
+    /**
      * @namespace Util
      * @memberof Kinetic
      */
@@ -292,7 +311,7 @@
         _hasMethods: function(obj) {
             var names = [],
                 key;
-                
+
             for(key in obj) {
                 if(this._isFunction(obj[key])) {
                     names.push(key);
@@ -498,7 +517,7 @@
          */
         _getImage: function(arg, callback) {
             var imageObj, canvas, context, dataUrl;
-            
+
             // if arg is null or undefined
             if(!arg) {
                 callback(null);
@@ -564,7 +583,7 @@
          * get RGB components of a color
          * @method
          * @memberof Kinetic.Util.prototype
-         * @param {String} color 
+         * @param {String} color
          * @example
          * // each of the following examples return {r:0, g:0, b:255}<br>
          * var rgb = Kinetic.Util.getRGB('blue');<br>
@@ -588,7 +607,7 @@
           }
           // rgb string
           else if (color.substr(0, 4) === RGB_PAREN) {
-            rgb = RGB_REGEX.exec(color.replace(/ /g,'')); 
+            rgb = RGB_REGEX.exec(color.replace(/ /g,''));
             return {
                 r: parseInt(rgb[1], 10),
                 g: parseInt(rgb[2], 10),
@@ -693,7 +712,7 @@
             }];
         },
         _expandPoints: function(points, tension) {
-            var length = points.length, 
+            var length = points.length,
                 allPoints = [],
                 n, cp;
 

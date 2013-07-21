@@ -95,39 +95,43 @@
          * var nodes = layer.get('Group');<br><br>
          *
          * // select all rectangles inside layer<br>
-         * var nodes = layer.get('Rect');
+         * var nodes = layer.get('Rect');<br><br>
          *
          * // select node with an id of foo or a name of bar inside layer<br>
-         * var nodes = layer.get('#foo .bar');
+         * var nodes = layer.get('#foo, .bar');
          */
         get: function(selector) {
-            var collection = new Kinetic.Collection();
-            // ID selector
-            selector = selector.split(" ");
-            for (index = 0; index < selector.length; ++index) { 
-                if(selector.charAt(0) === '#') {
-                    var node = this._getNodeById(selector.slice(1));
+            var retArr = [],
+                selectorArr = selector.replace(/ /g, '').split(','),
+                len = selectorArr.length,
+                n, i, sel, arr, node, children, clen;
+
+            for (n = 0; n < len; n++) {
+                sel = selectorArr[n];
+
+                // id selector
+                if(sel.charAt(0) === '#') {
+                    node = this._getNodeById(sel.slice(1));
                     if(node) {
-                        collection.push(node);
+                        retArr.push(node);
                     }
                 }
                 // name selector
-                else if(selector.charAt(0) === '.') {
-                    var nodeList = this._getNodesByName(selector.slice(1));
-                    Kinetic.Collection.apply(collection, nodeList);
+                else if(sel.charAt(0) === '.') {
+                    arr = this._getNodesByName(sel.slice(1));
+                    retArr = retArr.concat(arr);
                 }
                 // unrecognized selector, pass to children
                 else {
-                    var retArr = [];
-                    var children = this.getChildren();
-                    var len = children.length;
-                    for(var n = 0; n < len; n++) {
-                        retArr = retArr.concat(children[n]._get(selector));
+                    children = this.getChildren();
+                    clen = children.length;
+                    for(i = 0; i < clen; i++) {
+                        retArr = retArr.concat(children[i]._get(sel));
                     }
-                    Kinetic.Collection.apply(collection, retArr);
                 }
             }
-            return collection;
+
+            return Kinetic.Collection.toCollection(retArr);
         },
         _getNodeById: function(key) {
             var stage = this.getStage(), go = Kinetic.Global, node = go.ids[key];
@@ -205,7 +209,7 @@
         },
         /**
          * get all shapes that intersect a point.  Note: because this method must clear a temporary
-         * canvas and redraw every shape inside the container, it should only be used for special sitations 
+         * canvas and redraw every shape inside the container, it should only be used for special sitations
          * because it performs very poorly.  Please use the {@link Kinetic.Stage#getIntersection} method if at all possible
          * because it performs much better
          * @method
@@ -237,23 +241,23 @@
             var layer = this.getLayer(),
                 clip = !!this.getClipFunc(),
                 children, n, len;
-                
+
             if (!canvas && layer) {
-                canvas = layer.getCanvas(); 
-            }  
+                canvas = layer.getCanvas();
+            }
 
             if(this.isVisible()) {
                 if (clip) {
                     canvas._clip(this);
                 }
-                
-                children = this.children; 
+
+                children = this.children;
                 len = children.length;
-                
+
                 for(n = 0; n < len; n++) {
                     children[n].drawScene(canvas);
                 }
-                
+
                 if (clip) {
                     canvas.getContext().restore();
                 }
@@ -263,18 +267,18 @@
         },
         drawHit: function() {
             var clip = !!this.getClipFunc() && this.nodeType !== 'Stage',
-                n = 0, 
-                len = 0, 
+                n = 0,
+                len = 0,
                 children = [],
                 hitCanvas;
 
             if(this.shouldDrawHit()) {
                 if (clip) {
-                    hitCanvas = this.getLayer().hitCanvas; 
+                    hitCanvas = this.getLayer().hitCanvas;
                     hitCanvas._clip(this);
                 }
-                
-                children = this.children; 
+
+                children = this.children;
                 len = children.length;
 
                 for(n = 0; n < len; n++) {
@@ -295,7 +299,7 @@
     Kinetic.Node.addGetterSetter(Kinetic.Container, 'clipFunc');
 
     /**
-     * set clipping function 
+     * set clipping function
      * @name setClipFunc
      * @method
      * @memberof Kinetic.Container.prototype
@@ -303,7 +307,7 @@
      */
 
     /**
-     * get clipping function 
+     * get clipping function
      * @name getClipFunc
      * @method
      * @memberof Kinetic.Container.prototype
