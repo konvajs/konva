@@ -79,7 +79,8 @@
         },
         /**
          * return a {@link Kinetic.Collection} of nodes that match the selector.  Use '#' for id selections
-         * and '.' for name selections.  You can also select by type or class name
+         * and '.' for name selections.  You can also select by type or class name. Pass multiple selectors
+         * separated by a space.
          * @method
          * @memberof Kinetic.Container.prototype
          * @param {String} selector
@@ -95,30 +96,36 @@
          *
          * // select all rectangles inside layer<br>
          * var nodes = layer.get('Rect');
+         *
+         * // select node with an id of foo or a name of bar inside layer<br>
+         * var nodes = layer.get('#foo .bar');
          */
         get: function(selector) {
             var collection = new Kinetic.Collection();
             // ID selector
-            if(selector.charAt(0) === '#') {
-                var node = this._getNodeById(selector.slice(1));
-                if(node) {
-                    collection.push(node);
+            selector = selector.split(" ");
+            for (index = 0; index < selector.length; ++index) { 
+                if(selector.charAt(0) === '#') {
+                    var node = this._getNodeById(selector.slice(1));
+                    if(node) {
+                        collection.push(node);
+                    }
                 }
-            }
-            // name selector
-            else if(selector.charAt(0) === '.') {
-                var nodeList = this._getNodesByName(selector.slice(1));
-                Kinetic.Collection.apply(collection, nodeList);
-            }
-            // unrecognized selector, pass to children
-            else {
-                var retArr = [];
-                var children = this.getChildren();
-                var len = children.length;
-                for(var n = 0; n < len; n++) {
-                    retArr = retArr.concat(children[n]._get(selector));
+                // name selector
+                else if(selector.charAt(0) === '.') {
+                    var nodeList = this._getNodesByName(selector.slice(1));
+                    Kinetic.Collection.apply(collection, nodeList);
                 }
-                Kinetic.Collection.apply(collection, retArr);
+                // unrecognized selector, pass to children
+                else {
+                    var retArr = [];
+                    var children = this.getChildren();
+                    var len = children.length;
+                    for(var n = 0; n < len; n++) {
+                        retArr = retArr.concat(children[n]._get(selector));
+                    }
+                    Kinetic.Collection.apply(collection, retArr);
+                }
             }
             return collection;
         },
