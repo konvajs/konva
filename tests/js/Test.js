@@ -36,13 +36,13 @@ function warn(condition, message) {
 }
 function testDataUrl(actual, key, message) {
     var expected = dataUrls[key];
-    
+
     if(actual !== expected) {
         if(testCounter.style.backgroundColor != 'red') {
             testCounter.style.backgroundColor = 'orange';
             testCounter.style.color = 'black';
         }
-        console.warn(message + ' (NOTE: use Google Chrome for data url comparisons, run on web server for caching and filtering)');  
+        console.warn(message + ' (NOTE: use Google Chrome for data url comparisons, run on web server for caching and filtering)');
     }
     numTests++;
     testCounter.innerHTML = numTests;
@@ -55,7 +55,7 @@ function testJSON(actual, expected, message) {
             testCounter.style.color = 'black';
         }
         console.warn(message + ' (NOTE: use Google Chrome for data url comparisons, run on web server for caching and filtering)');
-        
+
         console.log('actual:');
         console.log(actual);
         console.log('expected:');
@@ -69,6 +69,7 @@ function log(message) {
 }
 
 function showHit(layer) {
+    layer.hitCanvas.element.style.position = 'relative';
 	document.body.appendChild(layer.hitCanvas.element);
 }
 
@@ -119,11 +120,11 @@ Test.prototype = {
                 }
             }
         };
-        
+
 		// loop through modules
         for(var mod in modules) {
         	console.log('=================== ' + mod + ' TESTS ===================');
-        	
+
             var tests = modules[mod];
 
 			// loop through tests
@@ -137,10 +138,10 @@ Test.prototype = {
                     obj.testMessage.setAttribute('class', 'gray');
                 }
             }
-            
-            
+
+
         }
-        
+
         console.log('=================== ASYNC OUTPUT ===================');
     }
 };

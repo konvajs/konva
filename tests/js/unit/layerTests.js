@@ -27,6 +27,8 @@ Test.Modules.LAYER = {
         test(style.margin === '0px', 'canvas margin style should be 0px');
         test(style.padding === '0px', 'canvas padding style should be 0px');
         test(style.backgroundColor === 'transparent', 'canvas backgroundColor style should be transparent');
+        test(style.top === '0px', 'canvas top should be 0px');
+        test(style.left === '0px', 'canvas left should be 0px');
     },
 
     'layer getIntersection()': function(containerId) {

@@ -1,15 +1,15 @@
-(function() {    
+(function() {
     // calculate pixel ratio
-    var canvas = document.createElement('canvas'), 
-        context = canvas.getContext('2d'), 
-        devicePixelRatio = window.devicePixelRatio || 1, 
-        backingStoreRatio = context.webkitBackingStorePixelRatio 
-            || context.mozBackingStorePixelRatio 
-            || context.msBackingStorePixelRatio 
-            || context.oBackingStorePixelRatio 
-            || context.backingStorePixelRatio || 1, 
+    var canvas = document.createElement('canvas'),
+        context = canvas.getContext('2d'),
+        devicePixelRatio = window.devicePixelRatio || 1,
+        backingStoreRatio = context.webkitBackingStorePixelRatio
+            || context.mozBackingStorePixelRatio
+            || context.msBackingStorePixelRatio
+            || context.oBackingStorePixelRatio
+            || context.backingStorePixelRatio || 1,
         _pixelRatio = devicePixelRatio / backingStoreRatio;
-        
+
     /**
      * Canvas Renderer constructor
      * @constructor
@@ -29,17 +29,23 @@
             var width = config.width || 0,
                 height = config.height || 0,
                 pixelRatio = config.pixelRatio || _pixelRatio,
-                contextType = config.contextType || '2d'; 
+                contextType = config.contextType || '2d';
 
             this.pixelRatio = pixelRatio;
             this.element = document.createElement('canvas');
+
+            // set inline styles
             this.element.style.padding = 0;
             this.element.style.margin = 0;
             this.element.style.border = 0;
             this.element.style.background = 'transparent';
+            this.element.style.position = 'absolute';
+            this.element.style.top = 0;
+            this.element.style.left = 0;
+
             this.context = this.element.getContext(contextType);
-            this.setSize(width, height);   
-        },        
+            this.setSize(width, height);
+        },
         /**
          * get canvas element
          * @method
@@ -216,16 +222,16 @@
                 t, m;
 
             node._eachAncestorReverse(function(no) {
-                t = no.getTransform(true); 
+                t = no.getTransform(true);
                 m = t.getMatrix();
                 context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }, true);
         },
         _clip: function(container) {
-            var context = this.getContext(); 
+            var context = this.getContext();
             context.save();
             this._applyAncestorTransforms(container);
-            context.beginPath(); 
+            context.beginPath();
             container.getClipFunc()(this);
             context.clip();
             context.setTransform(1, 0, 0, 1, 0, 0);
@@ -237,13 +243,13 @@
     };
 
     Kinetic.SceneCanvas.prototype = {
-        setWidth: function(width) {  
-            var pixelRatio = this.pixelRatio;           
+        setWidth: function(width) {
+            var pixelRatio = this.pixelRatio;
             Kinetic.Canvas.prototype.setWidth.call(this, width);
             this.context.scale(pixelRatio, pixelRatio);
         },
-        setHeight: function(height) { 
-            var pixelRatio = this.pixelRatio; 
+        setHeight: function(height) {
+            var pixelRatio = this.pixelRatio;
             Kinetic.Canvas.prototype.setHeight.call(this, height);
             this.context.scale(pixelRatio, pixelRatio);
         },
@@ -253,13 +259,13 @@
             shape._fillFunc(context);
         },
         _fillPattern: function(shape) {
-            var context = this.context, 
-                fillPatternImage = shape.getFillPatternImage(), 
-                fillPatternX = shape.getFillPatternX(), 
-                fillPatternY = shape.getFillPatternY(), 
-                fillPatternScale = shape.getFillPatternScale(), 
-                fillPatternRotation = shape.getFillPatternRotation(), 
-                fillPatternOffset = shape.getFillPatternOffset(), 
+            var context = this.context,
+                fillPatternImage = shape.getFillPatternImage(),
+                fillPatternX = shape.getFillPatternX(),
+                fillPatternY = shape.getFillPatternY(),
+                fillPatternScale = shape.getFillPatternScale(),
+                fillPatternRotation = shape.getFillPatternRotation(),
+                fillPatternOffset = shape.getFillPatternOffset(),
                 fillPatternRepeat = shape.getFillPatternRepeat();
 
             if(fillPatternX || fillPatternY) {
@@ -279,10 +285,10 @@
             context.fill();
         },
         _fillLinearGradient: function(shape) {
-            var context = this.context, 
-                start = shape.getFillLinearGradientStartPoint(), 
-                end = shape.getFillLinearGradientEndPoint(), 
-                colorStops = shape.getFillLinearGradientColorStops(), 
+            var context = this.context,
+                start = shape.getFillLinearGradientStartPoint(),
+                end = shape.getFillLinearGradientEndPoint(),
+                colorStops = shape.getFillLinearGradientColorStops(),
                 grd = context.createLinearGradient(start.x, start.y, end.x, end.y);
 
             if (colorStops) {
@@ -291,16 +297,16 @@
                     grd.addColorStop(colorStops[n], colorStops[n + 1]);
                 }
                 context.fillStyle = grd;
-                context.fill();  
+                context.fill();
             }
         },
         _fillRadialGradient: function(shape) {
-            var context = this.context, 
-            start = shape.getFillRadialGradientStartPoint(), 
-            end = shape.getFillRadialGradientEndPoint(), 
-            startRadius = shape.getFillRadialGradientStartRadius(), 
-            endRadius = shape.getFillRadialGradientEndRadius(), 
-            colorStops = shape.getFillRadialGradientColorStops(), 
+            var context = this.context,
+            start = shape.getFillRadialGradientStartPoint(),
+            end = shape.getFillRadialGradientEndPoint(),
+            startRadius = shape.getFillRadialGradientStartRadius(),
+            endRadius = shape.getFillRadialGradientEndRadius(),
+            colorStops = shape.getFillRadialGradientColorStops(),
             grd = context.createRadialGradient(start.x, start.y, startRadius, end.x, end.y, endRadius);
 
             // build color stops
@@ -311,11 +317,11 @@
             context.fill();
         },
         _fill: function(shape, skipShadow) {
-            var context = this.context, 
-                hasColor = shape.getFill(), 
-                hasPattern = shape.getFillPatternImage(), 
-                hasLinearGradient = shape.getFillLinearGradientColorStops(), 
-                hasRadialGradient = shape.getFillRadialGradientColorStops(), 
+            var context = this.context,
+                hasColor = shape.getFill(),
+                hasPattern = shape.getFillPatternImage(),
+                hasLinearGradient = shape.getFillLinearGradientColorStops(),
+                hasRadialGradient = shape.getFillRadialGradientColorStops(),
                 fillPriority = shape.getFillPriority();
 
             context.save();
@@ -357,15 +363,15 @@
             }
         },
         _stroke: function(shape, skipShadow) {
-            var context = this.context, 
-                stroke = shape.getStroke(), 
-                strokeWidth = shape.getStrokeWidth(), 
+            var context = this.context,
+                stroke = shape.getStroke(),
+                strokeWidth = shape.getStrokeWidth(),
                 dashArray = shape.getDashArray();
 
             if(stroke || strokeWidth) {
                 context.save();
                 if (!shape.getStrokeScaleEnabled()) {
-                  
+
                     context.setTransform(1, 0, 0, 1, 0, 0);
                 }
                 this._applyLineCap(shape);
@@ -430,8 +436,8 @@
             context.restore();
         },
         _stroke: function(shape) {
-            var context = this.context, 
-                stroke = shape.getStroke(), 
+            var context = this.context,
+                stroke = shape.getStroke(),
                 strokeWidth = shape.getStrokeWidth();
 
             if(stroke || strokeWidth) {

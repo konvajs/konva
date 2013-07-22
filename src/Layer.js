@@ -7,7 +7,6 @@
             this.nodeType = 'Layer';
             this.createAttrs();
             this.canvas = new Kinetic.SceneCanvas();
-            this.canvas.getElement().style.position = 'absolute';
             this.hitCanvas = new Kinetic.HitCanvas();
             // call super constructor
             Kinetic.Container.call(this, config);
@@ -56,7 +55,7 @@
         },
         drawHit: function() {
             var layer = this.getLayer();
-            
+
             if(layer && layer.getClearBeforeDraw()) {
                 layer.getHitCanvas().clear();
             }
@@ -70,7 +69,7 @@
          * @memberof Kinetic.Node.prototype
          */
         getCanvas: function() {
-            return this.canvas;     
+            return this.canvas;
         },
         /**
          * get layer hit canvas
@@ -86,7 +85,7 @@
          * @memberof Kinetic.Node.prototype
          */
         getContext: function() {
-            return this.getCanvas().getContext(); 
+            return this.getCanvas().getContext();
         },
         /**
          * clear canvas tied to the layer
