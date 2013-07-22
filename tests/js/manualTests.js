@@ -137,7 +137,7 @@ Test.Modules.Tween = {
             evt.targetNode.tween.reverse();
         });
     },
-    '*simple tween': function(containerId) {
+    'simple tween': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -942,11 +942,12 @@ Test.Modules.DRAG_AND_DROP = {
 
         showHit(layer);
     },
-    'two draggable shapes': function(containerId) {
+    '*two draggable shapes': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
-            height: 200
+            height: 200,
+            listening: false
         });
         var layer = new Kinetic.Layer();
         var Circle = new Kinetic.Circle({

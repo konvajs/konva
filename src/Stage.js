@@ -26,13 +26,12 @@
         CONTAINER = 'container',
         EMPTY_STRING = '',
         EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND, MOUSEOVER],
-        
+
     // cached variables
     eventsLength = EVENTS.length;
 
     function addEvent(ctx, eventName) {
       ctx.content.addEventListener(eventName, function(evt) {
-        evt.preventDefault();
         ctx[UNDERSCORE + eventName](evt);
       }, false);
     }
@@ -64,10 +63,10 @@
         },
         draw: function() {
             // clear children layers
-            var children = this.getChildren(), 
+            var children = this.getChildren(),
                 len = children.length,
                 n, layer;
-            
+
             for(n = 0; n < len; n++) {
                 layer = children[n];
                 if (layer.getClearBeforeDraw()) {
@@ -75,7 +74,7 @@
                     layer.getHitCanvas().clear();
                 }
             }
-          
+
             Kinetic.Node.prototype.draw.call(this);
             return this;
         },
@@ -124,7 +123,7 @@
             var layers = this.children,
                 len = layers.length,
                 n;
-                
+
             for(n = 0; n < len; n++) {
                 layers[n].clear();
             }
@@ -198,16 +197,16 @@
         toDataURL: function(config) {
             config = config || {};
 
-            var mimeType = config.mimeType || null, 
-                quality = config.quality || null, 
-                x = config.x || 0, 
-                y = config.y || 0, 
+            var mimeType = config.mimeType || null,
+                quality = config.quality || null,
+                x = config.x || 0,
+                y = config.y || 0,
                 canvas = new Kinetic.SceneCanvas({
-                    width: config.width || this.getWidth(), 
+                    width: config.width || this.getWidth(),
                     height: config.height || this.getHeight(),
                     pixelRatio: 1
-                }), 
-                context = canvas.getContext(), 
+                }),
+                context = canvas.getContext(),
                 layers = this.children;
 
             if(x || y) {
@@ -218,7 +217,7 @@
                 var layer = layers[n],
                     layerUrl = layer.toDataURL(),
                     imageObj = new Image();
-                    
+
                 imageObj.onload = function() {
                     context.drawImage(imageObj, 0, 0);
 
@@ -296,7 +295,7 @@
 
                 this.bufferCanvas.setSize(width, height, 1);
                 this.hitCanvas.setSize(width, height);
-                
+
                 // set pointer defined layer dimensions
                 for(n = 0; n < len; n++) {
                     layer = layers[n];
@@ -320,7 +319,7 @@
             // draw layer and append canvas to container
             layer.draw();
             this.content.appendChild(layer.canvas.element);
-            
+
             // chainable
             return this;
         },
@@ -360,7 +359,7 @@
             this._setPointerPosition(evt);
             var go = Kinetic.Global,
                 targetShape = this.targetShape;
-                
+
             if(targetShape && !go.isDragging()) {
                 targetShape._fireAndBubble(MOUSEOUT, evt);
                 targetShape._fireAndBubble(MOUSELEAVE, evt);
@@ -410,6 +409,10 @@
             if(dd) {
                 dd._drag(evt);
             }
+
+            // always call preventDefault for desktop events because some browsers
+            // try to drag and drop the canvas element
+            evt.preventDefault();
         },
         _mousedown: function(evt) {
             this._setPointerPosition(evt);
@@ -420,21 +423,24 @@
             this.clickStart = true;
             this.clickStartShape = shape;
             shape._fireAndBubble(MOUSEDOWN, evt);
+
+            // always call preventDefault for desktop events because some browsers
+            // try to drag and drop the canvas element
+            evt.preventDefault();
         },
         _mouseup: function(evt) {
             this._setPointerPosition(evt);
-            var that = this, 
-                go = Kinetic.Global, 
+            var that = this,
+                go = Kinetic.Global,
                 obj = this.getIntersection(this.getPointerPosition()),
                 shape = obj && obj.shape ? obj.shape : this;
-                
 
             shape._fireAndBubble(MOUSEUP, evt);
 
             // detect if click or double click occurred
             if(this.clickStart) {
                 /*
-                 * if dragging and dropping, or if click doesn't map to 
+                 * if dragging and dropping, or if click doesn't map to
                  * the correct shape, don't fire click or dbl click event
                  */
                 if(!go.isDragging() && shape._id === this.clickStartShape._id) {
@@ -449,28 +455,35 @@
                     }, this.dblClickWindow);
                 }
             }
-            
+
             this.clickStart = false;
+
+            // always call preventDefault for desktop events because some browsers
+            // try to drag and drop the canvas element
+            evt.preventDefault();
         },
         _touchstart: function(evt) {
             this._setPointerPosition(evt);
             var go = Kinetic.Global,
-                obj = this.getIntersection(this.getPointerPosition()),  
-                shape = obj && obj.shape ? obj.shape : this;
-            
-            shape = obj.shape;
-            this.tapStart = true;
-            this.tapStartShape = shape;
-            shape._fireAndBubble(TOUCHSTART, evt);
-        },
-        _touchend: function(evt) {
-            this._setPointerPosition(evt);
-            var that = this, 
-                go = Kinetic.Global, 
                 obj = this.getIntersection(this.getPointerPosition()),
                 shape = obj && obj.shape ? obj.shape : this;
 
-            shape = obj.shape;
+            this.tapStart = true;
+            this.tapStartShape = shape;
+            shape._fireAndBubble(TOUCHSTART, evt);
+
+            // only call preventDefault if the shape is listening for events
+            if (shape.isListening()) {
+                evt.preventDefault();
+            }
+        },
+        _touchend: function(evt) {
+            this._setPointerPosition(evt);
+            var that = this,
+                go = Kinetic.Global,
+                obj = this.getIntersection(this.getPointerPosition()),
+                shape = obj && obj.shape ? obj.shape : this;
+
             shape._fireAndBubble(TOUCHEND, evt);
 
             // detect if tap or double tap occurred
@@ -493,25 +506,34 @@
             }
 
             this.tapStart = false;
+
+            // only call preventDefault if the shape is listening for events
+            if (shape.isListening()) {
+                evt.preventDefault();
+            }
         },
         _touchmove: function(evt) {
             this._setPointerPosition(evt);
             var dd = Kinetic.DD,
                 obj = this.getIntersection(this.getPointerPosition()),
                 shape = obj && obj.shape ? obj.shape : this;
-            
-            shape = obj.shape;
+
             shape._fireAndBubble(TOUCHMOVE, evt);
-  
+
             // start drag and drop
             if(dd) {
                 dd._drag(evt);
+            }
+
+            // only call preventDefault if the shape is listening for events
+            if (shape.isListening()) {
+                evt.preventDefault();
             }
         },
         _setMousePosition: function(evt) {
             var mouseX = evt.clientX - this._getContentPosition().left,
                 mouseY = evt.clientY - this._getContentPosition().top;
-                
+
             this.mousePos = {
                 x: mouseX,
                 y: mouseY
@@ -519,11 +541,11 @@
         },
         _setTouchPosition: function(evt) {
             var touch, touchX, touchY;
-            
+
             if(evt.touches !== undefined && evt.touches.length === 1) {
                 // one finger
                 touch = evt.touches[0];
-                
+
                 // get the information for finger #1
                 touchX = touch.clientX - this._getContentPosition().left;
                 touchY = touch.clientY - this._getContentPosition().top;
@@ -543,7 +565,7 @@
         },
         _buildDOM: function() {
             var container = this.getContainer();
-            
+
             // clear content inside container
             container.innerHTML = EMPTY_STRING;
 
@@ -563,7 +585,7 @@
             var types = typesStr.split(SPACE),
                 len = types.length,
                 n, baseEvent;
-                
+
             for(n = 0; n < len; n++) {
                 baseEvent = types[n];
                 this.content.addEventListener(baseEvent, handler, false);
