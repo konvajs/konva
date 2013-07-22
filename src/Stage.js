@@ -287,7 +287,7 @@
                     height = this.getHeight(),
                     layers = this.getChildren(),
                     len = layers.length,
-                    n;
+                    n, layer;
 
                 // set content dimensions
                 this.content.style.width = width + PX;
