@@ -10,7 +10,7 @@
      *  since the last animation frame.  The lastTime property is time in milliseconds that elapsed from the moment the animation started
      *  to the last animation frame.  The time property is the time in milliseconds that ellapsed from the moment the animation started
      *  to the current animation frame.  The frameRate property is the current frame rate in frames / second
-     * @param {Kinetic.Layer|Array} [layers] layer(s) to be redrawn on each animation frame. Can be a layer, an array of layers, or null.  
+     * @param {Kinetic.Layer|Array} [layers] layer(s) to be redrawn on each animation frame. Can be a layer, an array of layers, or null.
      *  Not specifying a node will result in no redraw.
      * @example
      * // move a node to the right at 50 pixels / second<br>
@@ -44,7 +44,7 @@
          * @param {Kinetic.Layer|Array} [layers] layer(s) to be redrawn.&nbsp; Can be a layer, an array of layers, or null.  Not specifying a node will result in no redraw.
          */
         setLayers: function(layers) {
-            var lays = []; 
+            var lays = [];
             // if passing in no layers
             if (!layers) {
                 lays = [];
@@ -86,9 +86,9 @@
                 // don't add the layer if it already exists
                 for (n = 0; n < len; n++) {
                     if (layers[n]._id === layer._id) {
-                        return false; 
-                    } 
-                } 
+                        return false;
+                    }
+                }
             }
             else {
                 this.layers = [];
@@ -156,7 +156,7 @@
     };
 
     Kinetic.Animation._runFrames = function() {
-        var layerHash = {}, 
+        var layerHash = {},
             animations = this.animations,
             anim, layers, func, n, i, layersLen, layer, key;
         /*
@@ -172,7 +172,7 @@
          */
         for(n = 0; n < animations.length; n++) {
             anim = animations[n];
-            layers = anim.layers; 
+            layers = anim.layers;
             func = anim.func;
 
             anim._updateFrameObject(new Date().getTime());
@@ -215,11 +215,11 @@
         }
     };
     RAF = (function() {
-        return window.requestAnimationFrame 
-            || window.webkitRequestAnimationFrame 
-            || window.mozRequestAnimationFrame 
-            || window.oRequestAnimationFrame 
-            || window.msRequestAnimationFrame 
+        return window.requestAnimationFrame
+            || window.webkitRequestAnimationFrame
+            || window.mozRequestAnimationFrame
+            || window.oRequestAnimationFrame
+            || window.msRequestAnimationFrame
             || FRAF;
     })();
 
@@ -231,14 +231,14 @@
         var raf = Kinetic.DD && Kinetic.DD.isDragging ? FRAF : RAF;
         raf(callback);
     };
-    
+
     var moveTo = Kinetic.Node.prototype.moveTo;
     Kinetic.Node.prototype.moveTo = function(container) {
         moveTo.call(this, container);
     };
 
     /**
-     * get batch draw
+     * batch draw
      * @method
      * @memberof Kinetic.Layer.prototype
      */
@@ -257,7 +257,18 @@
 
         if (!this.batchAnim.isRunning()) {
             this.draw();
-            this.batchAnim.start(); 
-        }  
+            this.batchAnim.start();
+        }
+    };
+
+    /**
+     * batch draw
+     * @method
+     * @memberof Kinetic.Stage.prototype
+     */
+    Kinetic.Stage.prototype.batchDraw = function() {
+        this.getChildren().each(function(layer) {
+            layer.batchDraw();
+        });
     };
 })();

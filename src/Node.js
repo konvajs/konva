@@ -22,8 +22,6 @@
         DEG = 'Deg',
         ON = 'on',
         OFF = 'off',
-        BEFORE_DRAW = 'beforeDraw',
-        DRAW = 'draw',
         BLACK = 'black',
         RGB = 'RGB',
         R = 'r',
@@ -1120,14 +1118,8 @@
          *  the scene renderer
          */
         draw: function() {
-            var evt = {
-                node: this
-            };
-
-            this._fire(BEFORE_DRAW, evt);
             this.drawScene();
             this.drawHit();
-            this._fire(DRAW, evt);
             return this;
         },
         shouldDrawHit: function() {

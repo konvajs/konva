@@ -54,7 +54,7 @@ Test.Modules.ANIMATION = {
         anim.stop();
         test(a.animations.length === 0, '7should be no animations running');
     },
-    'batch draw': function(containerId) {
+    'layer batch draw': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -95,6 +95,49 @@ Test.Modules.ANIMATION = {
 
         setTimeout(function() {
             layer.batchDraw();
+        }, 2000);
+    },
+    'stage batch draw': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        draws = 0;
+
+        layer.on('draw', function() {
+            //console.log('draw')
+            draws++;
+        });
+
+        stage.draw();
+        stage.draw();
+        stage.draw();
+
+        test(draws === 3, 'draw count should be 3');
+
+        stage.batchDraw();
+        stage.batchDraw();
+        stage.batchDraw();
+
+        test(draws !== 6, 'should not be 6 draws');
+
+        setTimeout(function() {
+            stage.batchDraw();
         }, 2000);
     }
 };

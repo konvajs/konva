@@ -1,4 +1,7 @@
 (function() {
+    var BEFORE_DRAW = 'beforeDraw',
+        DRAW = 'draw';
+
     function _fillFunc(context) {
         context.fill();
     }
@@ -198,23 +201,37 @@
         drawScene: function(canvas) {
             canvas = canvas || this.getLayer().getCanvas();
 
-            var drawFunc = this.getDrawFunc(), 
+            var drawFunc = this.getDrawFunc(),
                 context = canvas.getContext();
 
             if(drawFunc && this.isVisible()) {
                 context.save();
                 canvas._applyOpacity(this);
-                canvas._applyLineJoin(this);                
+                canvas._applyLineJoin(this);
                 canvas._applyAncestorTransforms(this);
+                this._fireBeforeDrawEvents();
                 drawFunc.call(this, canvas);
+                this._fireDrawEvents();
                 context.restore();
+
+
             }
             return this;
         },
+        _fireBeforeDrawEvents: function() {
+            this._fireAndBubble(BEFORE_DRAW, {
+                node: this
+            });
+        },
+        _fireDrawEvents: function() {
+            this._fireAndBubble(DRAW, {
+                node: this
+            });
+        },
         drawHit: function() {
-            var attrs = this.getAttrs(), 
-                drawFunc = attrs.drawHitFunc || attrs.drawFunc, 
-                canvas = this.getLayer().hitCanvas, 
+            var attrs = this.getAttrs(),
+                drawFunc = attrs.drawHitFunc || attrs.drawFunc,
+                canvas = this.getLayer().hitCanvas,
                 context = canvas.getContext();
 
             if(drawFunc && this.shouldDrawHit()) {
