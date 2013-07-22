@@ -1541,13 +1541,13 @@ Test.Modules.NODE = {
         test(rect.isListening(), 'rect should be listening');
 
         layer.setListening(false);
-        test(!rect.isListening(), 'rect should not be listening because layer is not listening');
+        test(rect.isListening(), 'rect should be listening even though layer is not listening');
 
         layer.setListening(true);
         test(rect.isListening(), 'rect should be listening');
 
         stage.setListening(false);
-        test(!rect.isListening(), 'rect should not be listening because stage is not listening');
+        test(rect.isListening(), 'rect should be listening even though stage is not listening');
     },
     'test fire event': function(containerId) {
         var stage = new Kinetic.Stage({
