@@ -253,6 +253,7 @@
         EMPTY_STRING = '',
         ZERO = '0',
         KINETIC_WARNING = 'Kinetic warning: ',
+        KINETIC_ERROR = 'Kinetic error: ',
         RGB_PAREN = 'rgb(',
         COLORS = {
             aqua: [0,255,255],
@@ -657,6 +658,9 @@
         },
         _capitalize: function(str) {
             return str.charAt(0).toUpperCase() + str.slice(1);
+        },
+        error: function(str) {
+            throw new Error(KINETIC_ERROR + str);
         },
         warn: function(str) {
             /*

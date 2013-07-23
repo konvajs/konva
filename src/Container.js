@@ -58,7 +58,10 @@
          * @param {Node} child
          */
         add: function(child) {
-            var go = Kinetic.Global, children = this.children;
+            var go = Kinetic.Global,
+                children = this.children;
+
+            this._validateAdd(child);
             child.index = children.length;
             child.parent = this;
             children.push(child);

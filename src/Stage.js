@@ -47,6 +47,11 @@
             this._bindContentEvents();
             Kinetic.Global.stages.push(this);
         },
+        _validateAdd: function(child) {
+            if (child.getType() !== 'Layer') {
+                Kinetic.Util.error('You may only add layers to the stage.');
+            }
+        },
         /**
          * set container dom element which contains the stage wrapper div element
          * @method

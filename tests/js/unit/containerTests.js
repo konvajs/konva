@@ -29,6 +29,105 @@ Test.Modules.CONTAINER = {
         group.add(circle);
         layer.draw();
     },
+    'adder validation': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle'
+        });
+
+        stage.add(layer);
+        layer.add(group);
+        group.add(circle);
+        layer.draw();
+
+        // disassemble the tree
+        circle.remove();
+        group.remove();
+        layer.remove();
+
+        // ===================================
+        var errorThrown = false;
+        try {
+            stage.add(stage);
+        } catch(err) {
+            errorThrown = true;
+        }
+        test(errorThrown, 'error should have been thrown when adding stage to stage');
+        stage.remove();
+
+        // ===================================
+        var errorThrown = false;
+        try {
+            stage.add(group);
+        } catch(err) {
+            errorThrown = true;
+        }
+        test(errorThrown, 'error should have been thrown when adding group to stage');
+        group.remove();
+
+        // ===================================
+        var errorThrown = false;
+        try {
+            stage.add(circle);
+        } catch(err) {
+            errorThrown = true;
+        }
+        test(errorThrown, 'error should have been thrown when adding shape to stage');
+        circle.remove();
+
+        // ===================================
+        var errorThrown = false;
+        try {
+            layer.add(stage);
+        } catch(err) {
+            errorThrown = true;
+        }
+        test(errorThrown, 'error should have been thrown when adding stage to layer');
+        stage.remove();
+
+        // ===================================
+        var errorThrown = false;
+        try {
+            layer.add(layer);
+        } catch(err) {
+            errorThrown = true;
+        }
+        test(errorThrown, 'error should have been thrown when adding layer to layer');
+        layer.remove();
+
+        // ===================================
+        var errorThrown = false;
+        try {
+            group.add(stage);
+        } catch(err) {
+            errorThrown = true;
+        }
+        test(errorThrown, 'error should have been thrown when adding stage to group');
+        stage.remove();
+
+        // ===================================
+        var errorThrown = false;
+        try {
+            group.add(layer);
+        } catch(err) {
+            errorThrown = true;
+        }
+        test(errorThrown, 'error should have been thrown when adding layer to group');
+        layer.remove();
+
+    },
     'add layer then group then shape': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -47,6 +146,7 @@ Test.Modules.CONTAINER = {
             name: 'myCircle'
         });
 
+        // these should all pass because they are valid
         stage.add(layer);
         layer.add(group);
         group.add(circle);

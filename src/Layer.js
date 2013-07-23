@@ -10,6 +10,12 @@
             // call super constructor
             Kinetic.Container.call(this, config);
         },
+        _validateAdd: function(child) {
+            var type = child.getType();
+            if (type !== 'Group' && type !== 'Shape') {
+                Kinetic.Util.error('You may only add groups and shapes to a layer.');
+            }
+        },
         /**
          * get visible intersection object that contains shape and pixel data. This is the preferred
          * method for determining if a point intersects a shape or not
