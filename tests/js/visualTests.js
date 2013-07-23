@@ -1480,8 +1480,24 @@ Test.Modules.IMAGE = {
             stage.add(layer);
 
             darth.setFilter(Kinetic.Filters.ShiftHue);
-            darth.setFilterHueShiftDeg(90);
+            darth.setFilterHueShiftDeg(360);
             layer.draw();
+
+            var tween = new Kinetic.Tween({
+              node: darth, 
+              duration: 5.0,
+              filterHueShiftDeg: 0,
+              easing: Kinetic.Easings.EaseInOut
+            });
+        
+            darth.on('mouseover', function() {
+              tween.play();
+            });
+      
+            darth.on('mouseout', function() {
+              tween.reverse();
+            });
+
             var dataUrl = layer.toDataURL();
             //console.log(dataUrl);
             testDataUrl(dataUrl, 'shift hue filter', 'problem with hue shifting filter.');

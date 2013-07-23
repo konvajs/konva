@@ -16,7 +16,9 @@
         // Note: it should be square and odd (3,5,7,9 etc...)
         var is2D = (matrix[0].length > 0) || 0,
             matrixSizeX = matrix.length,
-            matrixSizeY = matrix.length;
+            matrixSizeY = matrix.length,
+            matrixMidX = Math.floor(matrix.length/2),
+            matrixMidY = Math.floor(matrix.length/2);
 
         // Make sure we don't try to access pixels outside the image
         var xMax = Math.floor(imageSizeX - matrixSizeX/2),
@@ -25,18 +27,26 @@
             yMin = Math.floor(matrixSizeY/2);
 
         // Accumlators and positions for iterating
-        var r,g,b,a, x, y, pos, i,j;
+        var r,g,b,a, x,y, px,py, pos, i,j;
 
         // Handle the 2D matrix
         if( is2D ){
-            for( y=yMin; y<yMax; y+=1){
-                for( x=xMin; x<xMax; x+=1){
+            for( y=0; y<imageSizeY; y+=1){
+                for( x=0; x<imageSizeX; x+=1){
     
                     // Perform the convolution
                     r = 0; g = 0; b = 0; a = 0;
                     for( i=0; i<matrixSizeX; i+=1){
                         for( j=0; j<matrixSizeY; j+=1){
-                            pos = ((y+j)*imageSizeX+x+i)*4;
+                            // tile the image to account for pixels past the
+                            // edge (and make sure they are positive)
+                            px = (x+i-matrixMidX) % imageSizeX;
+                            px = (px>0)?px:-px;
+                            py = (y+i-matrixMidY) % imageSizeY;
+                            py = (py>0)?py:-py;
+                            //pos = ((y+j)*imageSizeX+x+i)*4;
+                            // get the pixel
+                            pos = (py*imageSizeX + px)*4;
                             r += matrix[j][i]*pixels[pos+0];
                             g += matrix[j][i]*pixels[pos+1];
                             b += matrix[j][i]*pixels[pos+2];
