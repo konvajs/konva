@@ -84,9 +84,10 @@
      * @function
      * @memberof Kinetic.Filters
      * @param {Object} imageData
+	 * @author ippo615
      */
     Kinetic.Filters.ShiftHue = function(imageData) {
-        shift_hue(imageData,this.getFilterHueShiftDeg());
+        shift_hue(imageData, this.getFilterHueShiftDeg() % 360 );
     };
 
     Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filterHueShiftDeg', 0);
@@ -110,6 +111,7 @@
      * @function
      * @memberof Kinetic.Filters
      * @param {Object} imageData
+     * @author ippo615
      */
     Kinetic.Filters.Colorize = function(imageData) {
         var data = imageData.data;
@@ -119,7 +121,7 @@
             hsl = rgb_to_hsl(color[0],color[1],color[2]),
             hue = hsl[0];
 
-        // Color it red
+        // Color it red, by removing green and blue
         for(var i = 0; i < data.length; i += 4) {
             data[i + 1] = 0;
             data[i + 2] = 0;

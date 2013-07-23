@@ -40,8 +40,8 @@ module.exports = function(grunt) {
     'src/filters/Invert.js', 
     'src/filters/Blur.js', 
     'src/filters/Mask.js',
-    'src/filters/Colors.js',
-    'src/filters/Convolution.js'
+    'src/filters/ColorPack.js',
+    'src/filters/ConvolvePack.js'
   ];
 
   var unitTestFiles = [

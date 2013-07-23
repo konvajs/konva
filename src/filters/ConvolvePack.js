@@ -167,6 +167,7 @@
      * @function
      * @memberof Kinetic.Filters
      * @param {Object} imageData
+     * @author ippo615
      */
     Kinetic.Filters.Convolve = function(imageData) {
         convolve_internal(imageData,this.getFilterConvolutionMatrix());
@@ -359,34 +360,6 @@
             [-1,-1,-1],
             [-1, 8,-1],
             [-1,-1,-1]
-        ]);
-    };
-
-    /**
-     * makes image lighter
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
-     */
-    Kinetic.Filters.Lighten = function(imageData) {
-        convolve_internal(imageData,[
-            [ 0,  0, 0],
-            [ 0,1.2, 0],
-            [ 0,  0, 0]
-        ]);
-    };
-
-    /**
-     * makes image darker
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
-     */
-    Kinetic.Filters.Darken = function(imageData) {
-        convolve_internal(imageData,[
-            [ 0,  0, 0],
-            [ 0,0.8, 0],
-            [ 0,  0, 0]
         ]);
     };
 

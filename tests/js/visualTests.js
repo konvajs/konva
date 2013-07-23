@@ -1658,60 +1658,6 @@ Test.Modules.IMAGE = {
         imageObj.src = '../assets/darth-vader.jpg';
         //imageObj.src = '../assets/lion.png';
     },
-    'lighten filter': function(containerId) {
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            var stage = new Kinetic.Stage({
-                container: containerId,
-                width: 578,
-                height: 200
-            });
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
-                x: 10,
-                y: 10,
-                image: imageObj,
-                draggable: true
-            });
-
-            layer.add(darth);
-            stage.add(layer);
-            darth.setFilter(Kinetic.Filters.Lighten);
-            layer.draw();
-            var dataUrl = layer.toDataURL();
-            //console.log(dataUrl);
-            testDataUrl(dataUrl, 'lighten filter', 'problem with lighten filter.');
-        };
-        imageObj.src = '../assets/darth-vader.jpg';
-        //imageObj.src = '../assets/lion.png';
-    },
-    'darken filter': function(containerId) {
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            var stage = new Kinetic.Stage({
-                container: containerId,
-                width: 578,
-                height: 200
-            });
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
-                x: 10,
-                y: 10,
-                image: imageObj,
-                draggable: true
-            });
-
-            layer.add(darth);
-            stage.add(layer);
-            darth.setFilter(Kinetic.Filters.Darken);
-            layer.draw();
-            var dataUrl = layer.toDataURL();
-            //console.log(dataUrl);
-            testDataUrl(dataUrl, 'darken filter', 'problem with darken filter.');
-        };
-        imageObj.src = '../assets/darth-vader.jpg';
-        //imageObj.src = '../assets/lion.png';
-    },
     'filter transformed image': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
