@@ -160,6 +160,12 @@ var Kinetic = {};
         //shapes hash.  rgb keys and shape values
         shapes: {},
 
+        // event flags
+        listenClickTap: false,
+        inDblClickWindow: false,
+
+        dblClickWindow: 400,
+
         /**
          * returns whether or not drag and drop is currently active
          * @method

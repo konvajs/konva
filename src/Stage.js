@@ -41,7 +41,6 @@
             // call super constructor
             Kinetic.Container.call(this, config);
             this.nodeType = STAGE;
-            this.dblClickWindow = 400;
             this._id = Kinetic.Global.idCounter++;
             this._buildDOM();
             this._bindContentEvents();
@@ -426,7 +425,7 @@
                 obj = this.getIntersection(this.getPointerPosition()),
                 shape = obj && obj.shape ? obj.shape : this;
 
-            this.clickStart = true;
+            go.listenClickTap = true;
             this.clickStartShape = shape;
             shape._fireAndBubble(MOUSEDOWN, evt);
 
@@ -446,26 +445,28 @@
             shape._fireAndBubble(MOUSEUP, evt);
 
             // detect if click or double click occurred
-            if(this.clickStart) {
+            if(go.listenClickTap) {
                 /*
                  * if dragging and dropping, or if click doesn't map to
                  * the correct shape, don't fire click or dbl click event
                  */
-                 console.log(go.isDragging());
                 if(!go.isDragging() && shape._id === this.clickStartShape._id) {
                     shape._fireAndBubble(CLICK, evt);
 
-                    if(this.inDoubleClickWindow) {
+                    if(go.inDblClickWindow) {
                         shape._fireAndBubble(DBL_CLICK, evt);
+                        go.inDblClickWindow = false;
                     }
-                    this.inDoubleClickWindow = true;
+                    else {
+                        go.inDblClickWindow = true;
+                    }
                     setTimeout(function() {
-                        that.inDoubleClickWindow = false;
-                    }, this.dblClickWindow);
+                        go.inDblClickWindow = false;
+                    }, go.dblClickWindow);
                 }
             }
 
-            this.clickStart = false;
+            go.listenClickTap = false;
 
             // always call preventDefault for desktop events because some browsers
             // try to drag and drop the canvas element
@@ -479,7 +480,7 @@
                 obj = this.getIntersection(this.getPointerPosition()),
                 shape = obj && obj.shape ? obj.shape : this;
 
-            this.tapStart = true;
+            go.listenClickTap = true;
             this.tapStartShape = shape;
             shape._fireAndBubble(TOUCHSTART, evt);
 
@@ -498,7 +499,7 @@
             shape._fireAndBubble(TOUCHEND, evt);
 
             // detect if tap or double tap occurred
-            if(this.tapStart) {
+            if(go.listenClickTap) {
                 /*
                  * if dragging and dropping, don't fire tap or dbltap
                  * event
@@ -506,17 +507,20 @@
                 if(!go.isDragging() && shape._id === this.tapStartShape._id) {
                     shape._fireAndBubble(TAP, evt);
 
-                    if(this.inDoubleClickWindow) {
+                    if(go.inDblClickWindow) {
                         shape._fireAndBubble(DBL_TAP, evt);
+                        go.inDblClickWindow = false;
                     }
-                    this.inDoubleClickWindow = true;
+                    else {
+                        go.inDblClickWindow = true;
+                    }
                     setTimeout(function() {
-                        that.inDoubleClickWindow = false;
-                    }, this.dblClickWindow);
+                        go.inDblClickWindow = false;
+                    }, go.dblClickWindow);
                 }
             }
 
-            this.tapStart = false;
+            go.listenClickTap = false;
 
             // only call preventDefault if the shape is listening for events
             if (shape.isListening() && evt.preventDefault) {

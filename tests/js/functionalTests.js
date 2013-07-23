@@ -351,7 +351,7 @@ Test.Modules.DD = {
 
 
     },
-    '*click should not occur after drag and drop': function(containerId) {
+    'click should not occur after drag and drop': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -380,7 +380,11 @@ Test.Modules.DD = {
             console.log('click');
             clicked = true;
         });
-/*
+
+        circle.on('dblclick', function() {
+            console.log('dblclick');
+        });
+
         stage._mousedown({
             clientX: 40,
             clientY: 40 + top
@@ -398,7 +402,7 @@ Test.Modules.DD = {
         });
         Kinetic.DD._endDragAfter({dragEndNode:circle});
 
-        test(!clicked, 'click event should not have been fired');*/
+        test(!clicked, 'click event should not have been fired');
 
     },
     'cancel drag and drop by setting draggable to false': function(containerId) {
@@ -1009,7 +1013,7 @@ Test.Modules.EVENT = {
         * mobile tests
         */
         // reset inDoubleClickWindow
-        stage.inDoubleClickWindow = false;
+        Kinetic.Global.inDblClickWindow = false;
 
         // touchstart circle
         stage._touchstart({
