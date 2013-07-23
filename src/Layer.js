@@ -5,7 +5,6 @@
     Kinetic.Util.addMethods(Kinetic.Layer, {
         ___init: function(config) {
             this.nodeType = 'Layer';
-            this.createAttrs();
             this.canvas = new Kinetic.SceneCanvas();
             this.hitCanvas = new Kinetic.HitCanvas();
             // call super constructor

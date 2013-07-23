@@ -68,12 +68,13 @@
     Kinetic.Text.prototype = {
         ___init: function(config) {
             var that = this;
-            this.createAttrs();
 
-            // since width and height work a bit different for Text,
-            // we need to default the values here
-            this.attrs.width = AUTO;
-            this.attrs.height = AUTO;
+            if (config.width === undefined) {
+                config.width = AUTO;
+            }
+            if (config.height === undefined) {
+                config.height = AUTO;
+            }
 
             // call super constructor
             Kinetic.Shape.call(this, config);

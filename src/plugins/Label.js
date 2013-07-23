@@ -58,7 +58,6 @@
         ____init: function(config) {
             var that = this;
 
-            this.createAttrs();
             this.className = LABEL;
             Kinetic.Group.call(this, config);
 
@@ -173,7 +172,6 @@
 
     Kinetic.Tag.prototype = {
         ___init: function(config) {
-            this.createAttrs();
             Kinetic.Shape.call(this, config);
             this.className = 'Tag';
         },

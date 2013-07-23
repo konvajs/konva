@@ -37,7 +37,6 @@
             this.colorKey = key;
             shapes[key] = this;
 
-            this.createAttrs();
             // call super constructor
             Kinetic.Node.call(this, config);
 

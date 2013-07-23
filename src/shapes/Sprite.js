@@ -72,8 +72,6 @@
 
     Kinetic.Sprite.prototype = {
         ___init: function(config) {
-            this.createAttrs();
-
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = 'Sprite';

@@ -54,7 +54,7 @@ Test.Modules.Text = {
         group.add(text);
         layer.add(group);
         stage.add(layer);
-        
+
         test(text.getClassName() === 'Text', 'getClassName should be Text');
     },
     'text getters and setters': function(containerId) {
@@ -98,7 +98,6 @@ Test.Modules.Text = {
 
         test(text.getX() === stage.getWidth() / 2, 'text box x should be in center of stage');
         test(text.getY() === stage.getHeight() / 2, 'text box y should be in center of stage');
-
         test(text.getText() === 'Hello World!', 'text should be Hello World!');
         test(text.getFontSize() == 50, 'font size should 50');
         test(text.getFontFamily() == 'Calibri', 'font family should be Calibri');
@@ -112,7 +111,6 @@ Test.Modules.Text = {
         test(text.getPadding() === 10, 'padding should be 10');
         test(text.getShadowColor() === 'black', 'text box shadow color should be black');
         test(text.getDraggable() === true, 'text should be draggable');
-
         test(text.getWidth() === 400, 'box width should be 400');
         test(text.getHeight() === 100, 'box height should be 100');
         test(text.getTextWidth() > 0, 'text width should be greater than 0');
@@ -164,7 +162,7 @@ Test.Modules.Text = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        
+
         var rect = new Kinetic.Rect({
           x: 10,
           y: 10,
@@ -204,14 +202,14 @@ Test.Modules.Text = {
              width: 50,
              duration: 20
          });
-         
+
          rect.transitionTo({
              width: 50,
              duration: 20
          });
          */
-         
-         
+
+
     },
     'text multi line with shadows': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -271,15 +269,15 @@ Test.Modules.Text = {
 
         var width = text.getWidth();
         var height = text.getHeight();
-        
-        
+
+
 
         layer.add(text);
         stage.add(layer);
 
         text.setFontSize(30);
         layer.draw();
-        
+
         //console.log(text.getHeight() + ',' + height);
 
         test(text.getWidth() > width, 'text box width should have increased.');

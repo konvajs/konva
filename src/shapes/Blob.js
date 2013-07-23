@@ -27,7 +27,6 @@
     Kinetic.Blob.prototype = {
         ___init: function(config) {
             var that = this;
-            this.createAttrs();
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = 'Blob';

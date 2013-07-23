@@ -23,7 +23,6 @@
 
     Kinetic.Rect.prototype = {
         ___init: function(config) {
-            this.createAttrs();
             Kinetic.Shape.call(this, config);
             this.className = 'Rect';
         },

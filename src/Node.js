@@ -37,6 +37,7 @@
         _init: function(config) {
             this._id = Kinetic.Global.idCounter++;
             this.eventListeners = {};
+            this.attrs = {};
             this.setAttrs(config);
         },
         /**
@@ -238,13 +239,6 @@
         getAttrs: function() {
             return this.attrs || {};
         },
-        createAttrs: function() {
-            if(this.attrs === undefined) {
-                this.attrs = {};
-            }
-            return this;
-        },
-
         /**
          * set multiple attrs at once using an object literal
          * @method
