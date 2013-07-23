@@ -904,6 +904,33 @@ Test.Modules.EVENTS = {
 };
 
 Test.Modules.DRAG_AND_DROP = {
+    '*drag and drop layer with offset': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer({
+            offset: [50, 50],
+            draggable: true
+        });
+
+        var star = new Kinetic.Star({
+            x: 200,
+            y: 100,
+            numPoints: 5,
+            innerRadius: 40,
+            outerRadius: 70,
+            fill: 'green',
+            stroke: 'blue',
+            strokeWidth: 5,
+            lineJoin: "round"
+        });
+
+        layer.add(star);
+        stage.add(layer);
+        layer.draw();
+    },
     'drag and drop elastic star with shadow': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -942,7 +969,7 @@ Test.Modules.DRAG_AND_DROP = {
 
         showHit(layer);
     },
-    '*two draggable shapes': function(containerId) {
+    'two draggable shapes': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,

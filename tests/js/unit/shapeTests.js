@@ -120,6 +120,42 @@ Test.Modules.SHAPE = {
         }) === false, '(303, 153) should not intersect the shape');
 
     },
+    'test hasShadow() method': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var shape = new Kinetic.Shape({
+            drawFunc: function(canvas) {
+                var context = canvas.getContext();
+                context.beginPath();
+                context.moveTo(0, 0);
+                context.lineTo(100, 0);
+                context.lineTo(100, 100);
+                context.closePath();
+                canvas.fillStroke(this);
+            },
+            x: 10,
+            y: 10,
+            fill: 'green',
+            stroke: 'blue',
+            strokeWidth: 5,
+            shadowColor: 'black',
+            shadowOffset: 10,
+            shadowOpacity: 0
+        });
+
+        layer.add(shape);
+        stage.add(layer);
+
+        test(!shape.hasShadow(), 'shape should not have a shadow because opacity is 0');
+
+        shape.setShadowOpacity(0.5);
+
+        test(shape.hasShadow(), 'shape should have a shadow because opacity is nonzero');
+    },
     'custom shape with fill, stroke, and strokeWidth': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -329,7 +365,7 @@ Test.Modules.SHAPE = {
         test(circle.getDashArrayEnabled() === true, 'dashArrayEnabled should be true');
 
         circle.disableFill();
-        
+
         test(circle.getFillEnabled() === false, 'fillEnabled should be false');
         test(circle.getStrokeEnabled() === true, 'strokeEnabled should be true');
         test(circle.getShadowEnabled() === true, 'shadowEnabled should be true');
