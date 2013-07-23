@@ -38,19 +38,19 @@ Test.Modules.DD = {
           console.log(evt.targetNode);
           console.log('-------');
         });
-        
+
         stage.on('mousemove', function(evt) {
           console.log('mousemove');
           console.log(evt.targetNode);
           console.log('-------');
         });
-        
+
         stage.on('click', function(evt) {
           console.log('click');
           console.log(evt.targetNode);
           console.log('-------');
         });
-        
+
 
         stage.on('dblclick', function(evt) {
           console.log('dblclick');
@@ -59,7 +59,7 @@ Test.Modules.DD = {
         });
 
 
-        
+
 
         stage.on('dragstart', function(evt) {
           console.log('dragstart');
@@ -82,7 +82,7 @@ Test.Modules.DD = {
         });
 
 
-        
+
     },
     'remove shape with onclick': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -122,7 +122,7 @@ Test.Modules.DD = {
             clientX: 291,
             clientY: 112 + top
         });
-        
+
         Kinetic.DD._endDragBefore();
         stage._mouseup({
             clientX: 291,
@@ -137,7 +137,7 @@ Test.Modules.DD = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        
+
         var greenCircle = new Kinetic.Circle({
             x: 40,
             y: 40,
@@ -147,8 +147,8 @@ Test.Modules.DD = {
             stroke: 'black',
             opacity: 0.5
         });
-        
-        
+
+
         var circle = new Kinetic.Circle({
             x: 380,
             y: stage.getHeight() / 2,
@@ -157,7 +157,7 @@ Test.Modules.DD = {
             fill: 'red',
             stroke: 'black',
             opacity: 0.5
-            
+
         });
 
         circle.setDraggable(true);
@@ -179,12 +179,12 @@ Test.Modules.DD = {
             dragStart = true;
         });
 
-        
+
         circle.on('dragmove', function() {
             dragMove = true;
         });
-        
-        
+
+
         layer.on('dragmove', function() {
             //console.log('move');
         });
@@ -195,13 +195,13 @@ Test.Modules.DD = {
             events.push('dragend');
         });
 
-        
+
 
         circle.on('mouseup', function() {
             console.log('mouseup');
             events.push('mouseup');
         });
-        
+
 
         test(!Kinetic.Global.isDragging(), 'Global isDragging() should be false');
         test(!Kinetic.Global.isDragReady(), 'Global isDragReady()) should be false');
@@ -240,11 +240,11 @@ Test.Modules.DD = {
             clientY: 98 + top
         });
         Kinetic.DD._endDragAfter({dragEndNode:circle});
-        
+
         test(dragStart, 'dragstart event was not triggered');
         test(dragMove, 'dragmove event was not triggered');
         test(dragEnd, 'dragend event was not triggered');
-        
+
         test(events.toString() === 'mouseup,dragend', 'mouseup should occur before dragend');
 
 
@@ -260,9 +260,9 @@ Test.Modules.DD = {
         test(greenCircle.getY() === 40, 'green circle y should be 40');
         test(circle.getX() === 100, 'circle x should be 100');
         test(circle.getY() === 100, 'circle y should be 100');
-        
+
         showHit(layer);
-        
+
     },
     'destroy shape while dragging': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -271,7 +271,7 @@ Test.Modules.DD = {
             height: 200
         });
         var layer = new Kinetic.Layer();
-        
+
         var greenCircle = new Kinetic.Circle({
             x: 40,
             y: 40,
@@ -281,8 +281,8 @@ Test.Modules.DD = {
             stroke: 'black',
             opacity: 0.5
         });
-        
-        
+
+
         var circle = new Kinetic.Circle({
             x: 380,
             y: stage.getHeight() / 2,
@@ -291,7 +291,7 @@ Test.Modules.DD = {
             fill: 'red',
             stroke: 'black',
             opacity: 0.5
-            
+
         });
 
         circle.setDraggable(true);
@@ -311,13 +311,13 @@ Test.Modules.DD = {
 
         });
 
-        
+
 
         circle.on('mouseup', function() {
             console.log('mouseup');
             events.push('mouseup');
         });
-        
+
         test(!Kinetic.Global.isDragging(), 'Global isDragging() should be false');
         test(!Kinetic.Global.isDragReady(), 'Global isDragReady()) should be false');
 
@@ -334,7 +334,7 @@ Test.Modules.DD = {
             clientY: 98 + top
         });
 
-   
+
         test(circle.isDragging(), 'circle should be dragging');
         test(!dragEnd, 'dragEnd should not have fired yet');
 
@@ -347,9 +347,59 @@ Test.Modules.DD = {
 
         test(!circle.isDragging(), 'destroying circle should stop drag and drop');
         test(dragEnd, 'dragEnd should have fired');
-        
 
-        
+
+
+    },
+    '*click should not occur after drag and drop': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: 40,
+            y: 40,
+            radius: 20,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black',
+            draggable: true
+        });
+
+
+        layer.add(circle);
+        stage.add(layer);
+
+        var top = stage.content.getBoundingClientRect().top,
+            clicked = false;
+
+        circle.on('click', function() {
+            console.log('click');
+            clicked = true;
+        });
+/*
+        stage._mousedown({
+            clientX: 40,
+            clientY: 40 + top
+        });
+
+        stage._mousemove({
+            clientX: 100,
+            clientY: 100 + top
+        });
+
+        Kinetic.DD._endDragBefore();
+        stage._mouseup({
+            clientX: 100,
+            clientY: 100 + top
+        });
+        Kinetic.DD._endDragAfter({dragEndNode:circle});
+
+        test(!clicked, 'click event should not have been fired');*/
+
     },
     'cancel drag and drop by setting draggable to false': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -503,40 +553,33 @@ Test.Modules.EVENT = {
             radius: 70,
             fill: 'red'
         });
-        
-        var eventNodes = [];
-        var savedEvt;
-        var order = [];
+
+        var events = [];
 
         layer.on('draw', function(evt) {
-            savedEvt = evt;
-            eventNodes.push(this.getType());
-            order.push('layer draw');
+            events.push('layer-draw');
         });
-        
+
         stage.on('draw', function(evt) {
-            eventNodes.push(this.getType());
-            order.push('stage draw');
+            events.push('stage-draw');
         });
-        
+
         layer.on('beforeDraw', function(evt) {
-            order.push('layer beforeDraw');
+            events.push('layer-beforeDraw');
         });
-        
+
         stage.on('beforeDraw', function(evt) {
-            order.push('stage beforeDraw');
+            events.push('stage-beforeDraw');
         });
-       
+
 
         layer.add(circle);
         stage.add(layer);
-        
-        // Note: draw events no longer bubble
-        //test(eventNodes.toString() === 'Layer,Stage', 'layer draw event should have fired followed by stage draw event');
-        
-        test(savedEvt.node.getType() === 'Layer', 'event object should contain a node property which is Layer');
-        
-        //test(order.toString() === 'layer beforeDraw,stage beforeDraw,layer draw,stage draw', 'order should be: layer beforeDraw,stage beforeDraw,layer draw,stage draw');
+
+        console.log(events.toString())
+
+        test(events.toString() === 'layer-beforeDraw,stage-beforeDraw,layer-draw,stage-draw', 'draw event order is incorrect');
+
 
     },
     'click mapping': function(containerId) {
@@ -572,20 +615,20 @@ Test.Modules.EVENT = {
             radius: 70,
             fill: 'green'
         });
-        
+
         var redClicks = 0;
         var greenClicks = 0;
-        
+
         redCircle.on('click', function() {
             console.log('clicked redCircle');
             redClicks++;
         });
-        
+
         greenCircle.on('click', function() {
             console.log('clicked greenCircle');
             greenClicks++;
         });
-        
+
 
         layer.add(redCircle);
         layer.add(greenCircle);
@@ -600,49 +643,49 @@ Test.Modules.EVENT = {
             clientX: 284,
             clientY: 113 + top
         });
-        
+
         Kinetic.DD._endDragBefore();
         stage._mouseup({
             clientX: 284,
             clientY: 113 + top
         });
         Kinetic.DD._endDragAfter({dragEndNode:redCircle});
-        
+
         test(redClicks === 1, 'red circle should have 1 click');
         test(greenClicks === 0, 'green circle should have 0 clicks');
-        
+
         // mousedown and mouseup on green circle
         stage._mousedown({
             clientX: 397,
             clientY: 108 + top
         });
-        
+
         Kinetic.DD._endDragBefore();
         stage._mouseup({
             clientX: 397,
             clientY: 108 + top
         });
         Kinetic.DD._endDragAfter({dragEndNode:redCircle});
-        
+
         test(redClicks === 1, 'red circle should have 1 click');
         test(greenClicks === 1, 'green circle should have 1 click');
-        
+
         // mousedown red circle and mouseup on green circle
         stage._mousedown({
             clientX: 284,
             clientY: 113 + top
         });
-        
+
         Kinetic.DD._endDragBefore();
         stage._mouseup({
             clientX: 397,
             clientY: 108 + top
         });
         Kinetic.DD._endDragAfter({dragEndNode:redCircle});
-        
+
         test(redClicks === 1, 'red circle should still have 1 click');
         test(greenClicks === 1, 'green circle should still have 1 click');
-        
+
     },
     'text events': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -661,33 +704,33 @@ Test.Modules.EVENT = {
             text: 'Testing 123',
             draggable: true
         });
-        
+
         var click = false
-        
+
         text.on('click', function() {
             console.log('text click');
-            click = true; 
+            click = true;
         });
 
         layer.add(text);
         stage.add(layer);
 
         var top = stage.content.getBoundingClientRect().top;
-        
+
         showHit(layer);
-        
+
         stage._mousedown({
             clientX: 300,
             clientY: 120 + top
         });
-        
+
         Kinetic.DD._endDragBefore();
         stage._mouseup({
             clientX: 300,
             clientY: 120 + top
         });
         Kinetic.DD._endDragAfter({dragEndNode:text});
-        
+
         //TODO: can't get this to pass
         test(click, 'click event should have been fired when mousing down and then up on text');
 
@@ -1423,8 +1466,8 @@ Test.Modules['HIT FUNCS'] = {
         test(mouseouts === 1, '3) mouseouts should be 1');
 
         showHit(layer);
-        
-        
+
+
         // set drawBufferFunc with setter
 
         circle.setDrawHitFunc(function(canvas) {
@@ -1438,8 +1481,8 @@ Test.Modules['HIT FUNCS'] = {
 
         layer.getHitCanvas().clear();
         layer.drawHit();
-        
-  
+
+
         // move mouse far outside circle
         stage._mousemove({
             clientX: 113,

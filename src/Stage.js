@@ -416,7 +416,9 @@
 
             // always call preventDefault for desktop events because some browsers
             // try to drag and drop the canvas element
-            evt.preventDefault();
+            if (evt.preventDefault) {
+                evt.preventDefault();
+            }
         },
         _mousedown: function(evt) {
             this._setPointerPosition(evt);
@@ -430,7 +432,9 @@
 
             // always call preventDefault for desktop events because some browsers
             // try to drag and drop the canvas element
-            evt.preventDefault();
+            if (evt.preventDefault) {
+                evt.preventDefault();
+            }
         },
         _mouseup: function(evt) {
             this._setPointerPosition(evt);
@@ -447,6 +451,7 @@
                  * if dragging and dropping, or if click doesn't map to
                  * the correct shape, don't fire click or dbl click event
                  */
+                 console.log(go.isDragging());
                 if(!go.isDragging() && shape._id === this.clickStartShape._id) {
                     shape._fireAndBubble(CLICK, evt);
 
@@ -464,7 +469,9 @@
 
             // always call preventDefault for desktop events because some browsers
             // try to drag and drop the canvas element
-            evt.preventDefault();
+            if (evt.preventDefault) {
+                evt.preventDefault();
+            }
         },
         _touchstart: function(evt) {
             this._setPointerPosition(evt);
@@ -477,7 +484,7 @@
             shape._fireAndBubble(TOUCHSTART, evt);
 
             // only call preventDefault if the shape is listening for events
-            if (shape.isListening()) {
+            if (shape.isListening() && evt.preventDefault) {
                 evt.preventDefault();
             }
         },
@@ -512,7 +519,7 @@
             this.tapStart = false;
 
             // only call preventDefault if the shape is listening for events
-            if (shape.isListening()) {
+            if (shape.isListening() && evt.preventDefault) {
                 evt.preventDefault();
             }
         },
@@ -530,7 +537,7 @@
             }
 
             // only call preventDefault if the shape is listening for events
-            if (shape.isListening()) {
+            if (shape.isListening() && evt.preventDefault) {
                 evt.preventDefault();
             }
         },
