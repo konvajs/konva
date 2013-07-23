@@ -21,11 +21,11 @@
      * });
      */
     Kinetic.RegularPolygon = function(config) {
-        this._initRegularPolygon(config);
+        this.___init(config);
     };
 
     Kinetic.RegularPolygon.prototype = {
-        _initRegularPolygon: function(config) {
+        ___init: function(config) {
             this.createAttrs();
 
             // call super constructor
@@ -34,8 +34,8 @@
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
-            var context = canvas.getContext(), 
-                sides = this.attrs.sides, 
+            var context = canvas.getContext(),
+                sides = this.attrs.sides,
                 radius = this.attrs.radius,
                 n, x, y;
 

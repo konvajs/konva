@@ -34,7 +34,7 @@
         CHILDREN = 'children';
 
     Kinetic.Util.addMethods(Kinetic.Node, {
-        _nodeInit: function(config) {
+        _init: function(config) {
             this._id = Kinetic.Global.idCounter++;
             this.eventListeners = {};
             this.setAttrs(config);

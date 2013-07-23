@@ -21,11 +21,11 @@
      * });
      */
     Kinetic.Blob = function(config) {
-        this._initBlob(config);
+        this.___init(config);
     };
 
     Kinetic.Blob.prototype = {
-        _initBlob: function(config) {
+        ___init: function(config) {
             var that = this;
             this.createAttrs();
             // call super constructor
@@ -40,9 +40,9 @@
             this._setAllPoints();
         },
         drawFunc: function(canvas) {
-            var points = this.getPoints(), 
-                length = points.length, 
-                context = canvas.getContext(), 
+            var points = this.getPoints(),
+                length = points.length,
+                context = canvas.getContext(),
                 tension = this.getTension(),
                 ap, len, n, point;
 
@@ -57,7 +57,7 @@
 
                 while(n < len-1) {
                     context.bezierCurveTo(ap[n].x, ap[n++].y, ap[n].x, ap[n++].y, ap[n].x, ap[n++].y);
-                } 
+                }
             }
             // no tension
             else {
@@ -71,11 +71,11 @@
             canvas.fillStroke(this);
         },
         _setAllPoints: function() {
-            var points = this.getPoints(), 
-                length = points.length, 
-                tension = this.getTension(), 
+            var points = this.getPoints(),
+                length = points.length,
+                tension = this.getTension(),
                 util = Kinetic.Util,
-                firstControlPoints = util._getControlPoints(points[length - 1], points[0], points[1], tension), 
+                firstControlPoints = util._getControlPoints(points[length - 1], points[0], points[1], tension),
                 lastControlPoints = util._getControlPoints(points[length - 2], points[length - 1], points[0], tension);
 
             this.allPoints = Kinetic.Util._expandPoints(this.getPoints(), this.getTension());

@@ -3,7 +3,7 @@
     var IMAGE = 'Image',
         CROP = 'crop',
         SET = 'set';
-    
+
     /**
      * Image constructor
      * @constructor
@@ -28,23 +28,23 @@
      * imageObj.src = '/path/to/image.jpg'
      */
     Kinetic.Image = function(config) {
-        this._initImage(config);
+        this.___init(config);
     };
 
     Kinetic.Image.prototype = {
-        _initImage: function(config) {
+        ___init: function(config) {
             var that = this;
-            
+
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = IMAGE;
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
-            var width = this.getWidth(), 
-                height = this.getHeight(), 
-                params, 
-                that = this, 
+            var width = this.getWidth(),
+                height = this.getHeight(),
+                params,
+                that = this,
                 context = canvas.getContext(),
                 crop = this.getCrop(),
                 cropX, cropY, cropWidth, cropHeight, image;
@@ -93,9 +93,9 @@
             }
         },
         drawHitFunc: function(canvas) {
-            var width = this.getWidth(), 
-                height = this.getHeight(), 
-                imageHitRegion = this.imageHitRegion, 
+            var width = this.getWidth(),
+                height = this.getHeight(),
+                imageHitRegion = this.imageHitRegion,
                 context = canvas.getContext();
 
             if(imageHitRegion) {
@@ -125,7 +125,7 @@
             }
             else {
                 filterCanvas = this.filterCanvas = new Kinetic.SceneCanvas({
-                    width: width, 
+                    width: width,
                     height: height
                 });
             }
@@ -167,7 +167,7 @@
                 pos = Kinetic.Util._getXY(config),
                 size = Kinetic.Util._getSize(config),
                 both = Kinetic.Util._merge(pos, size);
-                
+
             this._setAttr(CROP, Kinetic.Util._merge(both, this.getCrop()));
         },
         /**
@@ -189,14 +189,14 @@
                 context = canvas.getContext(),
                 image = this.getImage(),
                 imageData, data, rgbColorKey, i, n;
-                
+
             context.drawImage(image, 0, 0);
-             
+
             try {
                 imageData = context.getImageData(0, 0, width, height);
                 data = imageData.data;
                 rgbColorKey = Kinetic.Util._hexToRgb(this.colorKey);
-                
+
                 // replace non transparent pixels with color key
                 for(i = 0, n = data.length; i < n; i += 4) {
                     if (data[i + 3] > 0) {
@@ -226,8 +226,8 @@
             delete this.imageHitRegion;
         },
         getWidth: function() {
-            var image = this.getImage(); 
-            return this.attrs.width || (image ? image.width : 0); 
+            var image = this.getImage();
+            return this.attrs.width || (image ? image.width : 0);
         },
         getHeight: function() {
             var image = this.getImage();
@@ -253,7 +253,7 @@
     Kinetic.Node.addFilterSetter = function(constructor, attr) {
         var that = this,
             method = SET + Kinetic.Util._capitalize(attr);
-            
+
         constructor.prototype[method] = function(val) {
             this._setAttr(attr, val);
             this._applyFilter = true;
@@ -277,7 +277,7 @@
      * @method
      * @memberof Kinetic.Image.prototype
      */
-     
+
     Kinetic.Node.addGetter(Kinetic.Image, 'crop');
 
     /**

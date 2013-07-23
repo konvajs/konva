@@ -22,11 +22,11 @@
      * });
      */
     Kinetic.Wedge = function(config) {
-        this._initWedge(config);
+        this.___init(config);
     };
 
     Kinetic.Wedge.prototype = {
-        _initWedge: function(config) {
+        ___init: function(config) {
             this.createAttrs();
 
             // call super constructor

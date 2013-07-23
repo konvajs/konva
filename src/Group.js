@@ -1,6 +1,6 @@
 (function() {
     Kinetic.Util.addMethods(Kinetic.Group, {
-        _initGroup: function(config) {
+        ___init: function(config) {
             this.nodeType = 'Group';
             this.createAttrs();
             // call super constructor

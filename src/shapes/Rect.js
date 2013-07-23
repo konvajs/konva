@@ -18,11 +18,11 @@
      * });
      */
     Kinetic.Rect = function(config) {
-        this._initRect(config);
+        this.___init(config);
     };
-    
+
     Kinetic.Rect.prototype = {
-        _initRect: function(config) {
+        ___init: function(config) {
             this.createAttrs();
             Kinetic.Shape.call(this, config);
             this.className = 'Rect';
@@ -30,12 +30,12 @@
         },
         drawFunc: function(canvas) {
             var context = canvas.getContext(),
-                cornerRadius = this.getCornerRadius(), 
-                width = this.getWidth(), 
+                cornerRadius = this.getCornerRadius(),
+                width = this.getWidth(),
                 height = this.getHeight();
-                
+
             context.beginPath();
-            
+
             if(!cornerRadius) {
                 // simple rect - don't bother doing all that complicated maths stuff.
                 context.rect(0, 0, width, height);

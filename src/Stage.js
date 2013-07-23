@@ -37,7 +37,7 @@
     }
 
     Kinetic.Util.addMethods(Kinetic.Stage, {
-        _initStage: function(config) {
+        ___init: function(config) {
             this.createAttrs();
             // call super constructor
             Kinetic.Container.call(this, config);

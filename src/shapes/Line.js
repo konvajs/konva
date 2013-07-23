@@ -32,11 +32,11 @@
      * });
      */
     Kinetic.Line = function(config) {
-        this._initLine(config);
+        this.___init(config);
     };
 
     Kinetic.Line.prototype = {
-        _initLine: function(config) {
+        ___init: function(config) {
             this.createAttrs();
 
             // call super constructor
@@ -45,8 +45,8 @@
             this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
-            var points = this.getPoints(), 
-                length = points.length, 
+            var points = this.getPoints(),
+                length = points.length,
                 context = canvas.getContext(),
                 n, point;
 

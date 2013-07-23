@@ -29,9 +29,9 @@
      * });
      */
     Kinetic.TextPath = function(config) {
-        this._initTextPath(config);
+        this.___init(config);
     };
-    
+
     function _fillFunc(context) {
         context.fillText(this.partialText, 0, 0);
     }
@@ -40,13 +40,13 @@
     }
 
     Kinetic.TextPath.prototype = {
-        _initTextPath: function(config) {
+        ___init: function(config) {
             var that = this;
-          
+
             this.createAttrs();
             this.dummyCanvas = document.createElement('canvas');
             this.dataArray = [];
-            
+
             // call super constructor
             Kinetic.Shape.call(this, config);
 
@@ -89,7 +89,7 @@
                 context.translate(p0.x, p0.y);
                 context.rotate(glyphInfo[i].rotation);
                 this.partialText = glyphInfo[i].text;
-                
+
                 canvas.fillStroke(this);
                 context.restore();
 
@@ -317,7 +317,7 @@
 
     // map TextPath methods to Text
     Kinetic.TextPath.prototype._getContextFont = Kinetic.Text.prototype._getContextFont;
-    
+
     Kinetic.Util.extend(Kinetic.TextPath, Kinetic.Shape);
 
     // add setters and getters
@@ -371,7 +371,7 @@
      * @method
      * @memberof Kinetic.TextPath.prototype
      */
-    
+
     Kinetic.Node.addGetter(Kinetic.TextPath, 'text', EMPTY_STRING);
 
     /**

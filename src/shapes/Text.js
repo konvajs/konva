@@ -1,18 +1,18 @@
 (function() {
     // constants
-    var AUTO = 'auto', 
+    var AUTO = 'auto',
         CALIBRI = 'Calibri',
-        CANVAS = 'canvas', 
+        CANVAS = 'canvas',
         CENTER = 'center',
         CHANGE_KINETIC = 'Change.kinetic',
         CONTEXT_2D = '2d',
         DASH = '-',
-        EMPTY_STRING = '', 
+        EMPTY_STRING = '',
         LEFT = 'left',
         NEW_LINE = '\n',
         TEXT = 'text',
-        TEXT_UPPER = 'Text', 
-        TOP = 'top', 
+        TEXT_UPPER = 'Text',
+        TOP = 'top',
         MIDDLE = 'middle',
         NORMAL = 'normal',
         PX_SPACE = 'px ',
@@ -22,7 +22,7 @@
         CHAR = 'char',
         NONE = 'none',
         ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'align', 'lineHeight', 'text', 'width', 'height', 'wrap'],
-        
+
         // cached variables
         attrChangeListLen = ATTR_CHANGE_LIST.length,
         dummyContext = document.createElement(CANVAS).getContext(CONTEXT_2D);
@@ -56,7 +56,7 @@
      * });
      */
     Kinetic.Text = function(config) {
-        this._initText(config);
+        this.___init(config);
     };
     function _fillFunc(context) {
         context.fillText(this.partialText, 0, 0);
@@ -66,15 +66,15 @@
     }
 
     Kinetic.Text.prototype = {
-        _initText: function(config) {
+        ___init: function(config) {
             var that = this;
             this.createAttrs();
-            
+
             // since width and height work a bit different for Text,
             // we need to default the values here
             this.attrs.width = AUTO;
             this.attrs.height = AUTO;
-            
+
             // call super constructor
             Kinetic.Shape.call(this, config);
 
@@ -91,13 +91,13 @@
             this._setTextData();
         },
         drawFunc: function(canvas) {
-            var context = canvas.getContext(), 
-                p = this.getPadding(), 
+            var context = canvas.getContext(),
+                p = this.getPadding(),
                 fontStyle = this.getFontStyle(),
                 fontSize = this.getFontSize(),
                 fontFamily = this.getFontFamily(),
                 textHeight = this.getTextHeight(),
-                lineHeightPx = this.getLineHeight() * textHeight, 
+                lineHeightPx = this.getLineHeight() * textHeight,
                 textArr = this.textArr,
                 textArrLen = textArr.length,
                 totalWidth = this.getWidth();
@@ -132,8 +132,8 @@
             context.restore();
         },
         drawHitFunc: function(canvas) {
-            var context = canvas.getContext(), 
-                width = this.getWidth(), 
+            var context = canvas.getContext(),
+                width = this.getWidth(),
                 height = this.getHeight();
 
             context.beginPath();
@@ -190,7 +190,7 @@
 
             context.save();
             context.font = this._getContextFont();
-            
+
             metrics = context.measureText(text);
             context.restore();
             return {
@@ -231,7 +231,7 @@
                  var line = lines[i],
                      lineWidth = this._getTextWidth(line);
                  if (fixedWidth && lineWidth > maxWidth) {
-                     /* 
+                     /*
                       * if width is fixed and line does not fit entirely
                       * break the line into multiple fitting lines
                       */
@@ -315,7 +315,7 @@
          }
     };
     Kinetic.Util.extend(Kinetic.Text, Kinetic.Shape);
- 
+
     // add getters setters
     Kinetic.Node.addGetterSetter(Kinetic.Text, 'fontFamily', CALIBRI);
 
@@ -444,7 +444,7 @@
      * @method
      * @memberof Kinetic.Text.prototype
      */
-    
+
     Kinetic.Node.addSetter(Kinetic.Text, 'width');
 
     /**
@@ -455,7 +455,7 @@
      * @param {Number|String} width default is auto
      */
 
-    Kinetic.Node.addSetter(Kinetic.Text, 'height'); 
+    Kinetic.Node.addSetter(Kinetic.Text, 'height');
 
     /**
      * set height

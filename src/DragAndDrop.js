@@ -8,93 +8,93 @@
             y: 0
         },
         node: null,
-        
+
         // methods
         _drag: function(evt) {
-            var dd = Kinetic.DD, 
+            var dd = Kinetic.DD,
                 node = dd.node;
-    
+
             if(node) {
                 var pos = node.getStage().getPointerPosition();
                 var dbf = node.getDragBoundFunc();
-    
+
                 var newNodePos = {
                     x: pos.x - dd.offset.x,
                     y: pos.y - dd.offset.y
                 };
-    
+
                 if(dbf !== undefined) {
                     newNodePos = dbf.call(node, newNodePos, evt);
                 }
-    
+
                 node.setAbsolutePosition(newNodePos);
-    
+
                 if(!dd.isDragging) {
                     dd.isDragging = true;
                     node.fire('dragstart', evt, true);
                 }
-                
+
                 // execute ondragmove if defined
                 node.fire('dragmove', evt, true);
             }
         },
         _endDragBefore: function(evt) {
-            var dd = Kinetic.DD, 
+            var dd = Kinetic.DD,
                 node = dd.node,
                 nodeType, layer;
-    
+
             if(node) {
                 nodeType = node.nodeType,
                 layer = node.getLayer();
                 dd.anim.stop();
-    
+
                 // only fire dragend event if the drag and drop
-                // operation actually started. 
+                // operation actually started.
                 if(dd.isDragging) {
                     dd.isDragging = false;
 
                     if (evt) {
                         evt.dragEndNode = node;
-                    } 
+                    }
                 }
-                
+
                 delete dd.node;
-               
+
                 (layer || node).draw();
             }
         },
         _endDragAfter: function(evt) {
             evt = evt || {};
-            
+
             var dragEndNode = evt.dragEndNode;
-                  
+
             if (evt && dragEndNode) {
-              dragEndNode.fire('dragend', evt, true); 
+              dragEndNode.fire('dragend', evt, true);
             }
         }
     };
 
     // Node extenders
-    
+
     /**
      * initiate drag and drop
      * @method
      * @memberof Kinetic.Node.prototype
      */
     Kinetic.Node.prototype.startDrag = function() {
-        var dd = Kinetic.DD, 
-            that = this, 
+        var dd = Kinetic.DD,
+            that = this,
             stage = this.getStage(),
-            layer = this.getLayer(), 
+            layer = this.getLayer(),
             pos = stage.getPointerPosition(),
-            m = this.getTransform().getTranslation(), 
+            m = this.getTransform().getTranslation(),
             ap = this.getAbsolutePosition();
-                
+
         if(pos) {
             if (dd.node) {
-                dd.node.stopDrag(); 
+                dd.node.stopDrag();
             }
-          
+
             dd.node = this;
             dd.offset.x = pos.x - ap.x;
             dd.offset.y = pos.y - ap.y;
@@ -102,7 +102,7 @@
             dd.anim.start();
         }
     };
-    
+
     /**
      * stop drag and drop
      * @method
@@ -114,7 +114,7 @@
         dd._endDragBefore(evt);
         dd._endDragAfter(evt);
     };
-            
+
     /**
      * set draggable
      * @method
@@ -135,9 +135,9 @@
         if(dd.node && dd.node._id === this._id) {
 
             this.stopDrag();
-        } 
+        }
 
-        origDestroy.call(this); 
+        origDestroy.call(this);
     };
 
     /**
@@ -180,7 +180,7 @@
             }
         }
     };
-    
+
     Kinetic.Node.prototype._dragCleanup = function() {
         this.off('mousedown.kinetic');
         this.off('touchstart.kinetic');
@@ -205,7 +205,7 @@
      */
 
     Kinetic.Node.addGetter(Kinetic.Node, 'draggable', false);
-    
+
      /**
      * get draggable
      * @name getDraggable
@@ -220,21 +220,13 @@
      * @memberof Kinetic.Node.prototype
      */
 
-
-    /**
-     * alias of getDraggable
-     * @name isDraggable
-     * @method
-     * @memberof Kinetic.Node.prototype
-     */
-     
     Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
 
     var html = document.getElementsByTagName('html')[0];
     html.addEventListener('mouseup', Kinetic.DD._endDragBefore, true);
     html.addEventListener('touchend', Kinetic.DD._endDragBefore, true);
-    
+
     html.addEventListener('mouseup', Kinetic.DD._endDragAfter, false);
     html.addEventListener('touchend', Kinetic.DD._endDragAfter, false);
-    
+
 })();

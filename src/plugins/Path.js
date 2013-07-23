@@ -19,11 +19,11 @@
      * });
      */
     Kinetic.Path = function(config) {
-        this._initPath(config);
+        this.___init(config);
     };
 
     Kinetic.Path.prototype = {
-        _initPath: function(config) {
+        ___init: function(config) {
             this.dataArray = [];
             var that = this;
 
@@ -262,7 +262,7 @@
                 // Move var from within the switch to up here (jshint)
                 var prevCmd, ctlPtx, ctlPty;     // Ss, Tt
                 var rx, ry, psi, fa, fs, x1, y1; // Aa
-                
+
 
                 // convert l, H, h, V, and v to L
                 switch (c) {

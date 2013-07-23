@@ -18,11 +18,11 @@
      * });
      */
     Kinetic.Polygon = function(config) {
-        this._initPolygon(config);
+        this.___init(config);
     };
 
     Kinetic.Polygon.prototype = {
-        _initPolygon: function(config) {
+        ___init: function(config) {
             this.createAttrs();
 
             // call super constructor

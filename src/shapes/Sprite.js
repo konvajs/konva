@@ -61,19 +61,19 @@
      *     animation: 'idle',<br>
      *     animations: animations,<br>
      *     frameRate: 7,<br>
-     *     index: 0<br>    
+     *     index: 0<br>
      *   });<br>
      * };<br>
      * imageObj.src = '/path/to/image.jpg'
      */
     Kinetic.Sprite = function(config) {
-        this._initSprite(config);
+        this.___init(config);
     };
 
     Kinetic.Sprite.prototype = {
-        _initSprite: function(config) {
+        ___init: function(config) {
             this.createAttrs();
-            
+
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = 'Sprite';
@@ -87,10 +87,10 @@
             });
         },
         drawFunc: function(canvas) {
-            var anim = this.getAnimation(), 
-                index = this.getIndex(), 
-                f = this.getAnimations()[anim][index], 
-                context = canvas.getContext(), 
+            var anim = this.getAnimation(),
+                index = this.getIndex(),
+                f = this.getAnimations()[anim][index],
+                context = canvas.getContext(),
                 image = this.getImage();
 
             if(image) {
@@ -98,9 +98,9 @@
             }
         },
         drawHitFunc: function(canvas) {
-            var anim = this.getAnimation(), 
-                index = this.getIndex(), 
-                f = this.getAnimations()[anim][index], 
+            var anim = this.getAnimation(),
+                index = this.getIndex(),
+                f = this.getAnimations()[anim][index],
                 context = canvas.getContext();
 
             context.beginPath();
@@ -161,9 +161,9 @@
             var index = this.getIndex(),
                 animation = this.getAnimation(),
                 animations = this.getAnimations(),
-                anim = animations[animation], 
+                anim = animations[animation],
                 len = anim.length;
-                 
+
             if(index < len - 1) {
                 this.setIndex(index + 1);
             }
@@ -212,11 +212,11 @@
     Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'image');
 
     /**
-     * set image 
+     * set image
      * @name setImage
      * @method
      * @memberof Kinetic.Sprite.prototype
-     * @param {Image} image 
+     * @param {Image} image
      */
 
      /**

@@ -3,7 +3,7 @@
     var HASH = '#';
 
     Kinetic.Util.addMethods(Kinetic.Layer, {
-        _initLayer: function(config) {
+        ___init: function(config) {
             this.nodeType = 'Layer';
             this.createAttrs();
             this.canvas = new Kinetic.SceneCanvas();

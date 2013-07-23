@@ -32,11 +32,11 @@
      * });
      */
     Kinetic.Circle = function(config) {
-        this._initCircle(config);
+        this.___init(config);
     };
 
     Kinetic.Circle.prototype = {
-        _initCircle: function(config) {
+        ___init: function(config) {
             this.createAttrs();
             // call super constructor
             Kinetic.Shape.call(this, config);

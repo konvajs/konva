@@ -13,11 +13,11 @@
      * {{NodeParams}}
      */
     Kinetic.Ellipse = function(config) {
-        this._initEllipse(config);
+        this.___init(config);
     };
 
     Kinetic.Ellipse.prototype = {
-        _initEllipse: function(config) {
+        ___init: function(config) {
             this.createAttrs();
 
             // call super constructor

@@ -21,11 +21,11 @@
      * });
      */
     Kinetic.Spline = function(config) {
-        this._initSpline(config);
+        this.___init(config);
     };
 
     Kinetic.Spline.prototype = {
-        _initSpline: function(config) {
+        ___init: function(config) {
             var that = this;
             this.createAttrs();
             // call super constructor
@@ -40,9 +40,9 @@
             this._setAllPoints();
         },
         drawFunc: function(canvas) {
-            var points = this.getPoints(), 
-                length = points.length, 
-                context = canvas.getContext(), 
+            var points = this.getPoints(),
+                length = points.length,
+                context = canvas.getContext(),
                 tension = this.getTension(),
                 ap, len, n, point;
 

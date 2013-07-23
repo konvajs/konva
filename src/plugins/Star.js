@@ -23,11 +23,11 @@
      * });
      */
     Kinetic.Star = function(config) {
-        this._initStar(config);
+        this.___init(config);
     };
 
     Kinetic.Star.prototype = {
-        _initStar: function(config) {
+        ___init: function(config) {
             this.createAttrs();
 
             // call super constructor

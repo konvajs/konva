@@ -16,7 +16,7 @@
     }
 
     Kinetic.Util.addMethods(Kinetic.Shape, {
-        _initShape: function(config) {
+        __init: function(config) {
             this.nodeType = 'Shape';
             this._fillFunc = _fillFunc;
             this._strokeFunc = _strokeFunc;

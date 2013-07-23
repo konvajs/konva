@@ -8,12 +8,12 @@
         DOWN = 'down',
         LEFT = 'left',
         LABEL = 'Label',
-        
+
      // cached variables
      attrChangeListLen = ATTR_CHANGE_LIST.length;
-        
+
     /**
-     * Label constructor.&nbsp; Labels are groups that contain a Text and Tag shape 
+     * Label constructor.&nbsp; Labels are groups that contain a Text and Tag shape
      * @constructor
      * @memberof Kinetic
      * @param {Object} config
@@ -51,16 +51,16 @@
      *  }));
      */
     Kinetic.Label = function(config) {
-        this._initLabel(config);
+        this.____init(config);
     };
 
     Kinetic.Label.prototype = {
-        _initLabel: function(config) {
+        ____init: function(config) {
             var that = this;
 
             this.createAttrs();
             this.className = LABEL;
-            Kinetic.Group.call(this, config); 
+            Kinetic.Group.call(this, config);
 
             this.on('add', function(evt) {
                 that._addListeners(evt.child);
@@ -76,7 +76,7 @@
          */
         getText: function() {
             return this.get('Text')[0];
-        },    
+        },
         /**
          * get Tag shape for the label.  You need to access the Tag shape in order to update
          * the pointer properties and the corner radius
@@ -93,11 +93,11 @@
             var func = function(){
                     that._sync();
                 };
-            
+
             // update text data for certain attr changes
             for(n = 0; n < attrChangeListLen; n++) {
                 context.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, func);
-            } 
+            }
         },
         getWidth: function() {
             return this.getText().getWidth();
@@ -112,11 +112,11 @@
 
             if (text && tag) {
                 width = text.getWidth(),
-                height = text.getHeight(),   
+                height = text.getHeight(),
                 pointerDirection = tag.getPointerDirection(),
                 pointerWidth = tag.getPointerWidth(),
                 pointerHeight = tag.getPointerHeight(),
-                x = 0, 
+                x = 0,
                 y = 0;
 
                 switch(pointerDirection) {
@@ -137,13 +137,13 @@
                         y = height / 2;
                         break;
                 }
-                
+
                 tag.setAttrs({
                     x: -1 * x,
                     y: -1 * y,
                     width: width,
                     height: height
-                }); 
+                });
 
                 text.setAttrs({
                     x: -1 * x,
@@ -152,12 +152,12 @@
             }
         }
     };
-    
+
     Kinetic.Util.extend(Kinetic.Label, Kinetic.Group);
 
     /**
      * Tag constructor.&nbsp; A Tag can be configured
-     *  to have a pointer element that points up, right, down, or left 
+     *  to have a pointer element that points up, right, down, or left
      * @constructor
      * @memberof Kinetic
      * @param {Object} config
@@ -165,14 +165,14 @@
      *  is none.  When a pointer is present, the positioning of the label is relative to the tip of the pointer.
      * @param {Number} [config.pointerWidth]
      * @param {Number} [config.pointerHeight]
-     * @param {Number} [config.cornerRadius] 
-     */ 
+     * @param {Number} [config.cornerRadius]
+     */
     Kinetic.Tag = function(config) {
-        this._initTag(config);
+        this.___init(config);
     };
 
     Kinetic.Tag.prototype = {
-        _initTag: function(config) {
+        ___init: function(config) {
             this.createAttrs();
             Kinetic.Shape.call(this, config);
             this.className = 'Tag';
@@ -186,45 +186,45 @@
                 pointerWidth = this.getPointerWidth(),
                 pointerHeight = this.getPointerHeight(),
                 cornerRadius = this.getCornerRadius();
-                
+
             context.beginPath();
             context.moveTo(0,0);
-            
+
             if (pointerDirection === UP) {
                 context.lineTo((width - pointerWidth)/2, 0);
                 context.lineTo(width/2, -1 * pointerHeight);
                 context.lineTo((width + pointerWidth)/2, 0);
             }
-            
+
             context.lineTo(width, 0);
-           
+
             if (pointerDirection === RIGHT) {
                 context.lineTo(width, (height - pointerHeight)/2);
                 context.lineTo(width + pointerWidth, height/2);
                 context.lineTo(width, (height + pointerHeight)/2);
             }
-            
+
             context.lineTo(width, height);
-    
+
             if (pointerDirection === DOWN) {
                 context.lineTo((width + pointerWidth)/2, height);
                 context.lineTo(width/2, height + pointerHeight);
-                context.lineTo((width - pointerWidth)/2, height); 
+                context.lineTo((width - pointerWidth)/2, height);
             }
-            
+
             context.lineTo(0, height);
-            
+
             if (pointerDirection === LEFT) {
                 context.lineTo(0, (height + pointerHeight)/2);
                 context.lineTo(-1 * pointerWidth, height/2);
                 context.lineTo(0, (height - pointerHeight)/2);
-            } 
-            
+            }
+
             context.closePath();
             canvas.fillStroke(this);
         }
     };
-    
+
     Kinetic.Util.extend(Kinetic.Tag, Kinetic.Shape);
     Kinetic.Node.addGetterSetter(Kinetic.Tag, 'pointerDirection', NONE);
 
@@ -234,7 +234,7 @@
      * @method
      * @memberof Kinetic.Tag.prototype
      * @param {String} pointerDirection can be up, right, down, left, or none.  The
-     *  default is none 
+     *  default is none
      */
 
      /**
@@ -247,15 +247,15 @@
     Kinetic.Node.addGetterSetter(Kinetic.Tag, 'pointerWidth', 0);
 
     /**
-     * set pointer width 
+     * set pointer width
      * @name setPointerWidth
      * @method
      * @memberof Kinetic.Tag.prototype
-     * @param {Number} pointerWidth 
+     * @param {Number} pointerWidth
      */
 
      /**
-     * get pointer width 
+     * get pointer width
      * @name getPointerWidth
      * @method
      * @memberof Kinetic.Tag.prototype
@@ -264,7 +264,7 @@
     Kinetic.Node.addGetterSetter(Kinetic.Tag, 'pointerHeight', 0);
 
     /**
-     * set pointer height 
+     * set pointer height
      * @name setPointerHeight
      * @method
      * @memberof Kinetic.Tag.prototype
@@ -272,7 +272,7 @@
      */
 
      /**
-     * get pointer height 
+     * get pointer height
      * @name getPointerHeight
      * @method
      * @memberof Kinetic.Tag.prototype

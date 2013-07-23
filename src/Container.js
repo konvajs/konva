@@ -1,6 +1,6 @@
 (function() {
     Kinetic.Util.addMethods(Kinetic.Container, {
-        _containerInit: function(config) {
+        __init: function(config) {
             this.children = new Kinetic.Collection();
             Kinetic.Node.call(this, config);
         },

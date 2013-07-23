@@ -25,14 +25,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-/** 
+/**
  * @namespace Kinetic
  */
-var Kinetic = {}; 
+var Kinetic = {};
 (function() {
     Kinetic.version = '@@version';
-    
-    /** 
+
+    /**
      * @namespace Filters
      * @memberof Kinetic
      */
@@ -48,7 +48,7 @@ var Kinetic = {};
      * @@nodeParams
      */
     Kinetic.Node = function(config) {
-        this._nodeInit(config);
+        this._init(config);
     };
 
     /**
@@ -74,12 +74,12 @@ var Kinetic = {};
      *     context.quadraticCurveTo(300, 100, 260, 170);<br>
      *     context.closePath();<br>
      *     canvas.fillStroke(this);<br>
-     *   }<br>   
+     *   }<br>
      *});
      */
     Kinetic.Shape = function(config) {
-        this._initShape(config);
-    }; 
+        this.__init(config);
+    };
 
     /**
      * Container constructor.&nbsp; Containers are used to contain nodes or other containers
@@ -92,7 +92,7 @@ var Kinetic = {};
      * @@containerParams
      */
     Kinetic.Container = function(config) {
-        this._containerInit(config);
+        this.__init(config);
     };
 
     /**
@@ -112,7 +112,7 @@ var Kinetic = {};
      * });
      */
     Kinetic.Stage = function(config) {
-        this._initStage(config);
+        this.___init(config);
     };
 
     /**
@@ -130,7 +130,7 @@ var Kinetic = {};
      * var layer = new Kinetic.Layer();
      */
     Kinetic.Layer = function(config) {
-        this._initLayer(config);
+        this.___init(config);
     };
 
     /**
@@ -145,10 +145,10 @@ var Kinetic = {};
      * var group = new Kinetic.Group();
      */
     Kinetic.Group = function(config) {
-        this._initGroup(config);
-    }; 
+        this.___init(config);
+    };
 
-    /** 
+    /**
      * @namespace Global
      * @memberof Kinetic
      */
@@ -166,13 +166,13 @@ var Kinetic = {};
          * @memberof Kinetic.Global
          */
         isDragging: function() {
-            var dd = Kinetic.DD;  
+            var dd = Kinetic.DD;
 
             // if DD is not included with the build, then
             // drag and drop is not even possible
             if (!dd) {
                 return false;
-            } 
+            }
             // if DD is included with the build
             else {
                 return dd.isDragging;
@@ -185,13 +185,13 @@ var Kinetic = {};
         * @memberof Kinetic.Global
         */
         isDragReady: function() {
-            var dd = Kinetic.DD;  
+            var dd = Kinetic.DD;
 
             // if DD is not included with the build, then
             // drag and drop is not even possible
             if (!dd) {
                 return false;
-            } 
+            }
             // if DD is included with the build
             else {
                 return !!dd.node;
