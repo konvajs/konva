@@ -40,6 +40,8 @@
             this.createAttrs();
             // call super constructor
             Kinetic.Node.call(this, config);
+
+            this._setDrawFuncs();
         },
         hasChildren: function() {
             return false;

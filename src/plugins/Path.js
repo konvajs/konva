@@ -30,7 +30,6 @@
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = 'Path';
-            this._setDrawFuncs();
 
             this.dataArray = Kinetic.Path.parsePathData(this.getData());
             this.on('dataChange', function() {

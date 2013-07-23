@@ -56,7 +56,6 @@
             this._strokeFunc = _strokeFunc;
 
             this.className = 'TextPath';
-            this._setDrawFuncs();
 
             this.dataArray = Kinetic.Path.parsePathData(this.attrs.data);
             this.on('dataChange', function() {

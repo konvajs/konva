@@ -176,7 +176,6 @@
             this.createAttrs();
             Kinetic.Shape.call(this, config);
             this.className = 'Tag';
-            this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
             var context = canvas.getContext(),

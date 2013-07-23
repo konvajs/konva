@@ -31,7 +31,6 @@
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = 'Spline';
-            this._setDrawFuncs();
 
             this.on('pointsChange tensionChange', function() {
                 that._setAllPoints();

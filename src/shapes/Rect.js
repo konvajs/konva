@@ -26,7 +26,6 @@
             this.createAttrs();
             Kinetic.Shape.call(this, config);
             this.className = 'Rect';
-            this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
             var context = canvas.getContext(),

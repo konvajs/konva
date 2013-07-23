@@ -38,7 +38,6 @@
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = IMAGE;
-            this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
             var width = this.getWidth(),

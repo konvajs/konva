@@ -81,7 +81,6 @@
             this._fillFunc = _fillFunc;
             this._strokeFunc = _strokeFunc;
             this.className = TEXT_UPPER;
-            this._setDrawFuncs();
 
             // update text data for certain attr changes
             for(var n = 0; n < attrChangeListLen; n++) {

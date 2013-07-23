@@ -33,7 +33,6 @@
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = 'Star';
-            this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
             var context = canvas.getContext(), innerRadius = this.attrs.innerRadius, outerRadius = this.attrs.outerRadius, numPoints = this.attrs.numPoints;

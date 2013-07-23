@@ -42,7 +42,6 @@
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = 'Line';
-            this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
             var points = this.getPoints(),

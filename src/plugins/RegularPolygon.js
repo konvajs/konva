@@ -31,7 +31,6 @@
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = 'RegularPolygon';
-            this._setDrawFuncs();
         },
         drawFunc: function(canvas) {
             var context = canvas.getContext(),
