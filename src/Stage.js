@@ -445,25 +445,20 @@
             shape._fireAndBubble(MOUSEUP, evt);
 
             // detect if click or double click occurred
-            if(go.listenClickTap) {
-                /*
-                 * if dragging and dropping, or if click doesn't map to
-                 * the correct shape, don't fire click or dbl click event
-                 */
-                if(!go.isDragging() && shape._id === this.clickStartShape._id) {
-                    shape._fireAndBubble(CLICK, evt);
+            if(go.listenClickTap && shape._id === this.clickStartShape._id) {
+                shape._fireAndBubble(CLICK, evt);
 
-                    if(go.inDblClickWindow) {
-                        shape._fireAndBubble(DBL_CLICK, evt);
-                        go.inDblClickWindow = false;
-                    }
-                    else {
-                        go.inDblClickWindow = true;
-                    }
-                    setTimeout(function() {
-                        go.inDblClickWindow = false;
-                    }, go.dblClickWindow);
+                if(go.inDblClickWindow) {
+                    shape._fireAndBubble(DBL_CLICK, evt);
+                    go.inDblClickWindow = false;
                 }
+                else {
+                    go.inDblClickWindow = true;
+                }
+
+                setTimeout(function() {
+                    go.inDblClickWindow = false;
+                }, go.dblClickWindow);
             }
 
             go.listenClickTap = false;
@@ -499,25 +494,20 @@
             shape._fireAndBubble(TOUCHEND, evt);
 
             // detect if tap or double tap occurred
-            if(go.listenClickTap) {
-                /*
-                 * if dragging and dropping, don't fire tap or dbltap
-                 * event
-                 */
-                if(!go.isDragging() && shape._id === this.tapStartShape._id) {
-                    shape._fireAndBubble(TAP, evt);
+            if(go.listenClickTap && shape._id === this.tapStartShape._id) {
+                shape._fireAndBubble(TAP, evt);
 
-                    if(go.inDblClickWindow) {
-                        shape._fireAndBubble(DBL_TAP, evt);
-                        go.inDblClickWindow = false;
-                    }
-                    else {
-                        go.inDblClickWindow = true;
-                    }
-                    setTimeout(function() {
-                        go.inDblClickWindow = false;
-                    }, go.dblClickWindow);
+                if(go.inDblClickWindow) {
+                    shape._fireAndBubble(DBL_TAP, evt);
+                    go.inDblClickWindow = false;
                 }
+                else {
+                    go.inDblClickWindow = true;
+                }
+
+                setTimeout(function() {
+                    go.inDblClickWindow = false;
+                }, go.dblClickWindow);
             }
 
             go.listenClickTap = false;
