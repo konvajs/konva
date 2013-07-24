@@ -65,7 +65,7 @@
         }
         // Handle the 1D matrix
         else{
-
+            // WARNING: THIS NEEDS TO BE UPDATED!!! TO HANDLE TILING
             // Horizontal pass (ie convolving every row of the image)
             for( y=0; y<imageSizeY; y+=1){
                 for( x=xMin; x<xMax; x+=1){
@@ -150,38 +150,44 @@
         return kernel;
     };
 
-    var make_soft_blur_kernel = function( size, blur_percent ){
+    var make_soft_blur_kernel = function( size, percent ){
         // A soft blur is achieve by blurring the image then
         // merging the blured and unblurred image (ie 60/40).
         // Instead of that we've scaling the blur kernel (ie 60)
         // and adding the identity scaled (ie 40) to the kernel
-        var kernel = make_blur_kernel( size, blur_percent / 100 ),
+        var kernel = make_blur_kernel( size, percent / 100 ),
             mid = Math.floor(size/2);
-        kernel[mid][mid] += 1 - (blur_percent/100);
+        kernel[mid][mid] += 1 - (percent/100);
         return kernel;
     };
 
-    var make_unsharp_kernel = function( size, unsharp_percent ){
+    var make_unsharp_kernel = function( size, percent ){
         // An 'unsharp mask' is made by blurring the inverted image
         // and combining it with the original (like a soft blur but
         // with the blur negated). We can achieve this by negating 
         // blur kernel, and adding twice the identity to that kernel.
-        var kernel = make_blur_kernel( size, -blur_percent / 100 ),
+        var kernel = make_blur_kernel( size, -percent / 100 ),
             mid = Math.floor(size/2);
-        kernel[mid][mid] += 2;
+        kernel[mid][mid] += 1 + (percent/100);
         return kernel;
     };
 
+    Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filterAmount', 50);
     /**
-     * general convolution
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
-     * @author ippo615
+     * get the current filter amount
+     * @name getFilterAmount
+     * @method
+     * @memberof Kinetic.Image.prototype
      */
-    Kinetic.Filters.Convolve = function(imageData) {
-        convolve_internal(imageData,this.getFilterConvolutionMatrix());
-    };
+
+    /**
+     * set the current filter amount 0 = no filter, 100 = max filter
+     * @name setFilterAmount
+     * @method
+     * @memberof Kinetic.Image.prototype
+     */
+
+
 
     Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filterConvolutionMatrix', 0);
     /**
@@ -210,8 +216,8 @@
     Kinetic.Filters.UnsharpMask = function(imageData) {
         convolve_internal(imageData,
             make_unsharp_kernel(
-                this.getFilterSoftBlurSize(),
-                this.getFilterSoftBlurAmount()
+                5,
+                this.getFilterAmount()
             )
         );
     };
@@ -225,41 +231,12 @@
     Kinetic.Filters.SoftBlur = function(imageData) {
         convolve_internal(imageData,
             make_soft_blur_kernel(
-                this.getFilterSoftBlurSize(),
-                this.getFilterSoftBlurAmount()
+                5,
+                this.getFilterAmount()
             )
         );
     };
 
-    Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filterSoftBlurAmount', 60);
-    /**
-     * get the soft blur amount
-     * @name getFilterSoftBlurAmount
-     * @method
-     * @memberof Kinetic.Image.prototype
-     */
-
-    /**
-     * set the soft blur amount. 0 = no blur, 100 = full blur
-     * @name setFilterSoftBlurAmount
-     * @method
-     * @memberof Kinetic.Image.prototype
-     */
-
-    Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filterSoftBlurSize', 3);
-    /**
-     * get the soft blur size
-     * @name getFilterSoftBlurSize
-     * @method
-     * @memberof Kinetic.Image.prototype
-     */
-
-    /**
-     * set the soft blur size in number of pixels
-     * @name setFilterSoftBlurSize
-     * @method
-     * @memberof Kinetic.Image.prototype
-     */
 
     /**
      * sharpening filter, makes edges more pointed
@@ -268,24 +245,12 @@
      * @param {Object} imageData
      */
     Kinetic.Filters.Sharpen = function(imageData) {
+        var s = this.getFilterAmount()/100;
+        if( s === 0 ){ return; }
         convolve_internal(imageData,[
-            [ 0,-2, 0],
-            [-2, 9,-2],
-            [ 0,-2, 0]
-        ]);
-    };
-
-    /**
-     * mean removal
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
-     */
-    Kinetic.Filters.RemoveMean = function(imageData) {
-        convolve_internal(imageData,[
-            [-1,-1,-1],
-            [-1, 9,-1],
-            [-1,-1,-1]
+            [ 0,  -1*s, 0],
+            [-1*s, 4*s,-1*s],
+            [ 0,  -1*s, 0]
         ]);
     };
 
@@ -296,10 +261,12 @@
      * @param {Object} imageData
      */
     Kinetic.Filters.Emboss = function(imageData) {
+        var s = this.getFilterAmount()/100;
+        if( s === 0 ){ return; }
         convolve_internal(imageData,[
-            [-2,-1, 0],
-            [-1, 1, 1],
-            [ 0, 1, 2]
+            [-1*s,-.5*s, 0],
+            [-.5*s,1+.5*s, .5*s],
+            [ 0,    .5*s, 1*s]
         ]);
     };
 
@@ -366,10 +333,12 @@
      * @param {Object} imageData
      */
     Kinetic.Filters.DetectEdges = function(imageData) {
+        var s = this.getFilterAmount()/100;
+        if( s === 0 ){ return; }
         convolve_internal(imageData,[
-            [-1,-1,-1],
-            [-1, 8,-1],
-            [-1,-1,-1]
+            [-1*s,-1*s,-1*s],
+            [-1*s, 8*s,-1*s],
+            [-1*s,-1*s,-1*s]
         ]);
     };
 

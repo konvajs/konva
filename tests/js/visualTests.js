@@ -1523,9 +1523,24 @@ Test.Modules.IMAGE = {
             layer.add(darth);
             stage.add(layer);
             darth.setFilter(Kinetic.Filters.UnsharpMask);
-            darth.setFilterSoftBlurAmount(90);
-            darth.setFilterSoftBlurSize(7);
+            darth.setFilterAmount(100);
             layer.draw();
+
+            var tween = new Kinetic.Tween({
+              node: darth, 
+              duration: 0.6,
+              filterAmount: 0,
+              easing: Kinetic.Easings.EaseInOut
+            });
+        
+            darth.on('mouseover', function() {
+              tween.play();
+            });
+      
+            darth.on('mouseout', function() {
+              tween.reverse();
+            });
+
             var dataUrl = layer.toDataURL();
             //console.log(dataUrl);
             testDataUrl(dataUrl, 'unsharp mask filter', 'problem with unsharp mask filter.');
@@ -1552,9 +1567,24 @@ Test.Modules.IMAGE = {
             layer.add(darth);
             stage.add(layer);
             darth.setFilter(Kinetic.Filters.SoftBlur);
-            darth.setFilterSoftBlurAmount(10);
-            darth.setFilterSoftBlurSize(7);
+            darth.setFilterAmount(100);
             layer.draw();
+
+            var tween = new Kinetic.Tween({
+              node: darth, 
+              duration: 0.6,
+              filterAmount: 0,
+              easing: Kinetic.Easings.EaseInOut
+            });
+        
+            darth.on('mouseover', function() {
+              tween.play();
+            });
+      
+            darth.on('mouseout', function() {
+              tween.reverse();
+            });
+
             var dataUrl = layer.toDataURL();
             //console.log(dataUrl);
             testDataUrl(dataUrl, 'soft blur filter', 'problem with soft blur filter.');
@@ -1581,37 +1611,27 @@ Test.Modules.IMAGE = {
             layer.add(darth);
             stage.add(layer);
             darth.setFilter(Kinetic.Filters.Sharpen);
+            darth.setFilterAmount(100);
             layer.draw();
+
+            var tween = new Kinetic.Tween({
+              node: darth, 
+              duration: 0.6,
+              filterAmount: 0,
+              easing: Kinetic.Easings.EaseInOut
+            });
+        
+            darth.on('mouseover', function() {
+              tween.play();
+            });
+      
+            darth.on('mouseout', function() {
+              tween.reverse();
+            });
+
             var dataUrl = layer.toDataURL();
             //console.log(dataUrl);
             testDataUrl(dataUrl, 'sharpen filter', 'problem with sharpen filter.');
-        };
-        imageObj.src = '../assets/darth-vader.jpg';
-        //imageObj.src = '../assets/lion.png';
-    },
-    'remove mean filter': function(containerId) {
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            var stage = new Kinetic.Stage({
-                container: containerId,
-                width: 578,
-                height: 200
-            });
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
-                x: 10,
-                y: 10,
-                image: imageObj,
-                draggable: true
-            });
-
-            layer.add(darth);
-            stage.add(layer);
-            darth.setFilter(Kinetic.Filters.RemoveMean);
-            layer.draw();
-            var dataUrl = layer.toDataURL();
-            //console.log(dataUrl);
-            testDataUrl(dataUrl, 'remove mean filter', 'problem with remove mean filter.');
         };
         imageObj.src = '../assets/darth-vader.jpg';
         //imageObj.src = '../assets/lion.png';
@@ -1635,7 +1655,24 @@ Test.Modules.IMAGE = {
             layer.add(darth);
             stage.add(layer);
             darth.setFilter(Kinetic.Filters.Emboss);
+            darth.setFilterAmount(50);
             layer.draw();
+
+            var tween = new Kinetic.Tween({
+              node: darth, 
+              duration: 0.6,
+              filterAmount: 0,
+              easing: Kinetic.Easings.EaseInOut
+            });
+        
+            darth.on('mouseover', function() {
+              tween.play();
+            });
+      
+            darth.on('mouseout', function() {
+              tween.reverse();
+            });
+
             var dataUrl = layer.toDataURL();
             //console.log(dataUrl);
             testDataUrl(dataUrl, 'emboss filter', 'problem with emboss filter.');
@@ -1666,7 +1703,24 @@ Test.Modules.IMAGE = {
             //darth.setFilter(Kinetic.Filters.DetectDiagonal45Edge);
             //darth.setFilter(Kinetic.Filters.DetectDiagonal135Edge);
             darth.setFilter(Kinetic.Filters.DetectEdges);
+            darth.setFilterAmount(50);
             layer.draw();
+
+            var tween = new Kinetic.Tween({
+              node: darth, 
+              duration: 0.6,
+              filterAmount: 0,
+              easing: Kinetic.Easings.EaseInOut
+            });
+        
+            darth.on('mouseover', function() {
+              tween.play();
+            });
+      
+            darth.on('mouseout', function() {
+              tween.reverse();
+            });
+
             var dataUrl = layer.toDataURL();
             //console.log(dataUrl);
             testDataUrl(dataUrl, 'edge detection filter', 'problem with edge detection filter.');
