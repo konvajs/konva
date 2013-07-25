@@ -31,7 +31,7 @@
             Kinetic.Shape.call(this, config);
             this.className = 'Blob';
 
-            this.on('pointsChange tensionChange', function() {
+            this.on('pointsChange.kinetic tensionChange.kinetic', function() {
                 that._setAllPoints();
             });
 

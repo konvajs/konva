@@ -49,7 +49,7 @@
          *  event by name such as 'click.foobar'.
          * @method
          * @memberof Kinetic.Node.prototype
-         * @param {String} typesStr e.g. 'click', 'mousedown touchstart', 'mousedown.foo touchstart.foo'
+         * @param {String} evtStr e.g. 'click', 'mousedown touchstart', 'mousedown.foo touchstart.foo'
          * @param {Function} handler The handler function is passed an event object
          * @example
          * // add click listener<br>
@@ -77,10 +77,10 @@
          *   console.log('you clicked/touched me!');<br>
          * });
          */
-        on: function(typesStr, handler) {
-            var types = typesStr.split(SPACE),
-                len = types.length,
-                n, type, event, parts, baseEvent, name;
+        on: function(evtStr, handler) {
+            var events = evtStr.split(SPACE),
+                len = events.length,
+                n, event, parts, baseEvent, name;
 
              /*
              * loop through types and attach event listeners to
@@ -88,12 +88,12 @@
              * will create three event bindings
              */
             for(n = 0; n < len; n++) {
-                type = types[n];
-                event = type;
+                event = events[n];
                 parts = event.split(DOT);
                 baseEvent = parts[0];
-                name = parts.length > 1 ? parts[1] : EMPTY_STRING;
+                name = parts[1] || EMPTY_STRING;
 
+                // create events array if it doesn't exist
                 if(!this.eventListeners[baseEvent]) {
                     this.eventListeners[baseEvent] = [];
                 }
@@ -114,7 +114,7 @@
          *  all events in that namespace will be removed.
          * @method
          * @memberof Kinetic.Node.prototype
-         * @param {String} typesStr e.g. 'click', 'mousedown touchstart', '.foobar'
+         * @param {String} evtStr e.g. 'click', 'mousedown touchstart', '.foobar'
          * @example
          * // remove listener<br>
          * node.off('click');<br><br>
@@ -125,31 +125,26 @@
          * // remove listener by name<br>
          * node.off('click.foo');
          */
-        off: function(typesStr) {
-            var types = typesStr.split(SPACE),
-                len = types.length,
-                n, type, t, event, parts, baseEvent;
+        off: function(evtStr) {
+            var events = evtStr.split(SPACE),
+                len = events.length,
+                n, i, event, parts, baseEvent, name;
 
             for(n = 0; n < len; n++) {
-                type = types[n];
-                event = type;
+                event = events[n];
                 parts = event.split(DOT);
                 baseEvent = parts[0];
+                name = parts[1];
 
-                if(parts.length > 1) {
-                    if(baseEvent) {
-                        if(this.eventListeners[baseEvent]) {
-                            this._off(baseEvent, parts[1]);
-                        }
-                    }
-                    else {
-                        for(t in this.eventListeners) {
-                            this._off(t, parts[1]);
-                        }
+                if(baseEvent) {
+                    if(this.eventListeners[baseEvent]) {
+                        this._off(baseEvent, name);
                     }
                 }
                 else {
-                    delete this.eventListeners[baseEvent];
+                    for(t in this.eventListeners) {
+                        this._off(t, name);
+                    }
                 }
             }
             return this;
@@ -964,10 +959,15 @@
         },
         _off: function(type, name) {
             var evtListeners = this.eventListeners[type],
-                i;
+                i, evtName;
 
             for(i = 0; i < evtListeners.length; i++) {
-                if(evtListeners[i].name === name) {
+                evtName = evtListeners[i].name;
+                // the following two conditions must be true in order to remove a handler:
+                // 1) the current event name cannot be kinetic unless the event name is kinetic
+                //    this enables developers to force remove a kinetic specific listener for whatever reason
+                // 2) an event name is not specified, or if one is specified, it matches the current event name
+                if((evtName !== 'kinetic' || name === 'kinetic') && (!name || evtName === name)) {
                     evtListeners.splice(i, 1);
                     if(evtListeners.length === 0) {
                         delete this.eventListeners[type];

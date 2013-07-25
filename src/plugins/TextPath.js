@@ -56,15 +56,12 @@
             this.className = 'TextPath';
 
             this.dataArray = Kinetic.Path.parsePathData(this.attrs.data);
-            this.on('dataChange', function() {
+            this.on('dataChange.kinetic', function() {
                 that.dataArray = Kinetic.Path.parsePathData(this.attrs.data);
             });
+
             // update text data for certain attr changes
-            var attrs = ['text', 'textStroke', 'textStrokeWidth'];
-            for(var n = 0; n < attrs.length; n++) {
-                var attr = attrs[n];
-                this.on(attr + 'Change', that._setTextData);
-            }
+            this.on('textChange.kinetic textStroke.kinetic textStrokeWidth.kinetic', that._setTextData);
             that._setTextData();
         },
         drawFunc: function(canvas) {

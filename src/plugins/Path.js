@@ -32,7 +32,7 @@
             this.className = 'Path';
 
             this.dataArray = Kinetic.Path.parsePathData(this.getData());
-            this.on('dataChange', function() {
+            this.on('dataChange.kinetic', function() {
                 that.dataArray = Kinetic.Path.parsePathData(this.getData());
             });
         },

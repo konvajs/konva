@@ -78,7 +78,7 @@
 
             this.anim = new Kinetic.Animation();
             var that = this;
-            this.on('animationChange', function() {
+            this.on('animationChange.kinetic', function() {
                 // reset index when animation changes
                 that.setIndex(0);
             });

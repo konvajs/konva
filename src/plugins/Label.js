@@ -61,7 +61,7 @@
             this.className = LABEL;
             Kinetic.Group.call(this, config);
 
-            this.on('add', function(evt) {
+            this.on('add.kinetic', function(evt) {
                 that._addListeners(evt.child);
                 that._sync();
             });

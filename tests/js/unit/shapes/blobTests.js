@@ -105,5 +105,57 @@ Test.Modules.BLOB = {
 
         test(stage.get('Blob')[0].getPoints().length === 4, 'created blob should have 4 points');
 
+    },
+    'add blobs': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var blob = new Kinetic.Blob({
+            points: [{
+                x: 73,
+                y: 140
+            }, {
+                x: 340,
+                y: 23
+            }, {
+                x: 500,
+                y: 109
+            }, {
+                x: 300,
+                y: 170
+            }],
+            stroke: 'blue',
+            strokeWidth: 10,
+            draggable: true,
+            fill: '#aaf',
+            tension: 0.8
+        });
+
+        layer.add(blob);
+
+        stage.add(layer);
+
+        test(blob.eventListeners.pointsChange[0].name === 'kinetic', 'blob should have kinetic specific pointsChange event handler');
+        test(blob.eventListeners.tensionChange[0].name === 'kinetic', 'blob should have kinetic specific tensionChange event handler');
+
+        // removing handlers should not remove kinetic specific handlers
+        blob.off('pointsChange');
+        blob.off('tensionChange');
+
+        test(blob.eventListeners.pointsChange[0].name === 'kinetic', 'blob should have kinetic specific pointsChange event handler');
+        test(blob.eventListeners.tensionChange[0].name === 'kinetic', 'blob should have kinetic specific tensionChange event handler');
+
+        // you can force remove an event by adding the name
+        blob.off('pointsChange.kinetic');
+        blob.off('tensionChange.kinetic');
+
+        test(!blob.eventListeners.pointsChange, 'blob should have no pointsChange handlers');
+        test(!blob.eventListeners.tensionChange, 'blob should have no tensionChange handlers');
+
+
     }
 };
