@@ -28,7 +28,7 @@ Test.Modules.SPLINE = {
             draggable: true,
             tension: 1
         });
-        
+
         var line2 = new Kinetic.Spline({
             points: [{
                 x: 73,
@@ -47,7 +47,7 @@ Test.Modules.SPLINE = {
             draggable: true,
             tension: 1
         });
-        
+
         var line3 = new Kinetic.Spline({
             points: [{
                 x: 73,
@@ -68,7 +68,7 @@ Test.Modules.SPLINE = {
         layer.add(line2);
         layer.add(line3);
         stage.add(layer);
-        
+
         test(line1.getClassName() === 'Spline', 'getClassName should be Spline');
 
 
@@ -102,7 +102,7 @@ Test.Modules.SPLINE = {
             draggable: true,
             tension: 1
         });
-        
+
 
         layer.add(spline);
         stage.add(layer);
@@ -123,7 +123,7 @@ Test.Modules.SPLINE = {
         test(spline.allPoints.length === 3, 'spline all points should have 3 points');
 
         layer.draw();
-        
+
 
     },
     'add point to spline points': function(containerId) {
@@ -155,7 +155,7 @@ Test.Modules.SPLINE = {
             draggable: true,
             tension: 1
         });
-        
+
 
         layer.add(spline);
         stage.add(layer);
