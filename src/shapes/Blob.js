@@ -92,7 +92,7 @@
 
     Kinetic.Util.extend(Kinetic.Blob, Kinetic.Shape);
 
-    Kinetic.Node.addGetter(Kinetic.Blob, 'tension', 1);
+    Kinetic.Node.addGetterSetter(Kinetic.Blob, 'tension', 1);
     /**
      * get tension
      * @name getTension

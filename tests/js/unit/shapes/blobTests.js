@@ -61,7 +61,9 @@ Test.Modules.BLOB = {
 
         //console.log(blob1.getPoints())
 
-
+        // test setter
+        blob1.setTension(1.5);
+        test(blob1.getTension() === 1.5, 'blob1 tension should be 1.5');
     },
     'add blob and define tension first': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -106,7 +108,7 @@ Test.Modules.BLOB = {
         test(stage.get('Blob')[0].getPoints().length === 4, 'created blob should have 4 points');
 
     },
-    'add blobs': function(containerId) {
+    'add blobs2': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
