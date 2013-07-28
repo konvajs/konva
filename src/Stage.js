@@ -65,19 +65,6 @@
             return this;
         },
         draw: function() {
-            // clear children layers
-            var children = this.getChildren(),
-                len = children.length,
-                n, layer;
-
-            for(n = 0; n < len; n++) {
-                layer = children[n];
-                if (layer.getClearBeforeDraw()) {
-                    layer.getCanvas().clear();
-                    layer.getHitCanvas().clear();
-                }
-            }
-
             Kinetic.Node.prototype.draw.call(this);
             return this;
         },
