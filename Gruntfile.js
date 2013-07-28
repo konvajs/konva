@@ -81,7 +81,15 @@ module.exports = function(grunt) {
       options: {
         separator: ';'
       },
-      source: {
+      dev: {
+        src: sourceFiles,
+        dest: 'dist/kinetic-dev.js'
+      },
+      beta: {
+        src: sourceFiles,
+        dest: 'dist/kinetic-v<%= pkg.version %>-beta.js'
+      },
+      prod: {
         src: sourceFiles,
         dest: 'dist/kinetic-v<%= pkg.version %>.js'
       },
@@ -92,6 +100,23 @@ module.exports = function(grunt) {
     },
     replace: {
       dev: {
+        options: {
+          variables: {
+            version: 'dev',
+            date: '<%= grunt.template.today("yyyy-mm-dd") %>',
+            nodeParams: '<%= grunt.file.read("doc-includes/NodeParams.txt") %>',
+            containerParams: '<%= grunt.file.read("doc-includes/ContainerParams.txt") %>',
+            shapeParams: '<%= grunt.file.read("doc-includes/ShapeParams.txt") %>'
+          },
+          prefix: '@@'
+        },
+
+        files: [{
+          src: ['dist/kinetic-dev.js'], 
+          dest: 'dist/kinetic-dev.js'
+        }]
+      },
+      prod1: {
         options: {
           variables: {
             version: '<%= pkg.version %>',
@@ -108,7 +133,7 @@ module.exports = function(grunt) {
           dest: 'dist/kinetic-v<%= pkg.version %>.js'
         }]
       },
-      prod: {
+      prod2: {
         options: {
           variables: {
             version: '<%= pkg.version %>',
@@ -118,6 +143,18 @@ module.exports = function(grunt) {
         files: [{
           src: ['dist/kinetic-Global-v<%= pkg.version %>.min.js'], 
           dest: 'dist/kinetic-Global-v<%= pkg.version %>.min.js'
+        }]
+      },
+      prod3: {
+        options: {
+          variables: {
+            version: '<%= pkg.version %>',
+          },
+          prefix: '@@'
+        },
+        files: [{
+          src: ['dist/kinetic-v<%= pkg.version %>.min.js'], 
+          dest: 'dist/kinetic-v<%= pkg.version %>.min.js'
         }]
       }
     },
@@ -161,8 +198,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
 
   // Tasks
-  grunt.registerTask('dev', ['clean', 'concat:source', 'replace:dev']);
-  grunt.registerTask('full', ['clean', 'concat:source', 'replace:dev', 'uglify', 'replace:prod']);
+  grunt.registerTask('dev', ['clean', 'concat:dev', 'replace:dev']);
+  grunt.registerTask('full', ['clean', 'concat:prod', 'uglify', 'replace:prod1', 'replace:prod2', 'replace:prod3']);
   grunt.registerTask('test', ['concat:test']);
-  grunt.registerTask('hint', ['clean', 'concat:source', 'replace:dev', 'jshint']);
+  grunt.registerTask('hint', ['clean', 'concat:dev', 'replace:dev', 'jshint']);
 };
