@@ -1,14 +1,14 @@
 #Building the KineticJS Framework 
-To build the framework, you need to have node and grunt installed. After that, run `npm install` to install the node module dependencies.
+To build the framework, you need to have node installed. After that, run `npm install` in the main directory to install the node module dependencies.
 
-To build a development version of the framework, run `grunt dev`. To run a full build, which also produces the minified version and the individually minified modules for the custom build, run `grunt full`.   
+To build a development version of the framework, run `grunt dev`. To run a full build, which also produces the minified version and the individually minified modules for the custom build, run `grunt full`.  You can also run `grunt beta` to generate a beta version.   
 
 If you add a file in the src directory, be sure to add the filename to the sourceFiles array variable in Gruntfile.js.
 
 #Testing
 
 ### Getting the tests up and running
-Currently, KineticJS has unit, functional, performance, manual, and special test suites.  To build the unit tests, you'll need to build the `unitTests.js` file by running `grunt test` and then opening `unitTests.html`.  Open `tests/html/index.html` to navigate to different test suites.  
+Currently, KineticJS has unit, functional, visual, manual, performance, and special test suites.  Open `tests/html/index.html` to run each test suite.  Before running any of the tests, be sure to build a dev version first with `grunt dev`.  To build the unit tests, you'll need to build the `unitTests.js` file by running `grunt test` and then opening `unitTests.html`. 
 
 ### Running the tests
 Unit, functional, and performance tests output the results to the console via `console.log()` so be sure to have it open.  

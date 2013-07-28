@@ -116,6 +116,23 @@ module.exports = function(grunt) {
           dest: 'dist/kinetic-dev.js'
         }]
       },
+      beta: {
+        options: {
+          variables: {
+            version: '<%= pkg.version %>-beta',
+            date: '<%= grunt.template.today("yyyy-mm-dd") %>',
+            nodeParams: '<%= grunt.file.read("doc-includes/NodeParams.txt") %>',
+            containerParams: '<%= grunt.file.read("doc-includes/ContainerParams.txt") %>',
+            shapeParams: '<%= grunt.file.read("doc-includes/ShapeParams.txt") %>'
+          },
+          prefix: '@@'
+        },
+
+        files: [{
+          src: ['dist/kinetic-v<%= pkg.version %>-beta.js'], 
+          dest: 'dist/kinetic-v<%= pkg.version %>-beta.js'
+        }]
+      },
       prod1: {
         options: {
           variables: {
@@ -199,6 +216,7 @@ module.exports = function(grunt) {
 
   // Tasks
   grunt.registerTask('dev', ['clean', 'concat:dev', 'replace:dev']);
+  grunt.registerTask('beta', ['clean', 'concat:beta', 'replace:beta']);
   grunt.registerTask('full', ['clean', 'concat:prod', 'uglify', 'replace:prod1', 'replace:prod2', 'replace:prod3']);
   grunt.registerTask('test', ['concat:test']);
   grunt.registerTask('hint', ['clean', 'concat:dev', 'replace:dev', 'jshint']);
