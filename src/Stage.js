@@ -370,12 +370,12 @@
                 shape = obj.shape;
                 if(shape) {
                     if(!go.isDragging() && obj.pixel[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
-                        shape._fireAndBubble(MOUSEOVER, evt, this.targetShape);
-                        shape._fireAndBubble(MOUSEENTER, evt, this.targetShape);
                         if(this.targetShape) {
                             this.targetShape._fireAndBubble(MOUSEOUT, evt, shape);
                             this.targetShape._fireAndBubble(MOUSELEAVE, evt, shape);
                         }
+                        shape._fireAndBubble(MOUSEOVER, evt, this.targetShape);
+                        shape._fireAndBubble(MOUSEENTER, evt, this.targetShape);
                         this.targetShape = shape;
                     }
                     else {
