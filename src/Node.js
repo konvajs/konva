@@ -46,10 +46,6 @@
             skewY: TRANSFORM
         };
 
-        CACHE_ATTRS = {
-            transform: 1
-        };
-
     Kinetic.Util.addMethods(Kinetic.Node, {
         _init: function(config) {
             this._id = Kinetic.Global.idCounter++;
@@ -64,24 +60,15 @@
                 delete this.cache[cacheAttr];
             }
         },
-        _getCache: function(attr, def){
-            var val, cache;
+        _getCache: function(attr, privateGetter){
+            var cache = this.cache[attr];
 
-            // if attr is cacheable
-            if (CACHE_ATTRS[attr]) {
-                cache = this.cache[attr];
-
-                // if not cached, we need to set it using the private getter method.
-                if (!cache) {
-                    this.cache[attr] = this[PRIVATE_GET + Kinetic.Util._capitalize(attr)]();
-                }
-
-                return this.cache[attr];     
+            // if not cached, we need to set it using the private getter method.
+            if (!cache) {
+                this.cache[attr] = privateGetter.call(this);
             }
-            else {
-                val = this.attrs[attr];
-                return val === undefined ? def : val;
-            }
+
+            return this.cache[attr];     
         },
         /**
          * bind events to the node. KineticJS supports mouseover, mousemove,
@@ -1148,6 +1135,14 @@
         },
         isDraggable: function() {
             return false;
+        },
+        /**
+         * get transform of the node
+         * @method
+         * @memberof Kinetic.Node.prototype
+         */
+        getTransform: function() {
+            return this._getCache(TRANSFORM, this._getTransform);
         }
     });
 
@@ -1221,7 +1216,8 @@
             method = GET + Kinetic.Util._capitalize(attr);
 
         constructor.prototype[method] = function() {
-            return this._getCache(attr, def);
+            var val = this.attrs[attr];
+            return val === undefined ? def : val;
         };
     };
     Kinetic.Node.addPointGetter = function(constructor, attr) {
@@ -1725,14 +1721,6 @@
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Boolean} visible
-     */
-
-    Kinetic.Node.addGetter(Kinetic.Node, 'transform');
-    /**
-     * get transform of the node
-     * name getTransform
-     * @method
-     * @memberof Kinetic.Node.prototype
      */
 
     // aliases
