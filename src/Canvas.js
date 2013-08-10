@@ -436,11 +436,9 @@
 
             if(stroke || strokeWidth) {
                 this._applyLineCap(shape);
-                context.save();
                 context.lineWidth = strokeWidth || 2;
                 context.strokeStyle = shape.colorKey;
                 shape._strokeFuncHit(context);
-                context.restore();
             }
         }
     };

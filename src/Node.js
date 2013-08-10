@@ -36,7 +36,19 @@
         UPPER_Y = 'Y',
         VISIBLE = 'visible',
         X = 'x',
-        Y = 'y';
+        Y = 'y',
+
+        transformChangeStr = [
+            'xChange.kinetic',
+            'yChange.kinetic',
+            'scaleXChange.kinetic',
+            'scaleYChange.kinetic',
+            'skewXChange.kinetic',
+            'skewYChange.kinetic',
+            'rotationChange.kinetic',
+            'offsetXChange.kinetic',
+            'offsetYChange.kinetic'
+        ].join(SPACE);
 
     // clear transform cache pair
     function _clearTransformCacheEachChild(node) {
@@ -75,13 +87,6 @@
         }
     }
 
-    // custom clear cache functions
-    Kinetic.Node.clearCacheFuncs = {
-        transform: _clearTransformCache,
-        visible: _clearVisibleCache,
-        absoluteOpacity: _clearAbsoluteOpacityCache
-    };
-
     Kinetic.Util.addMethods(Kinetic.Node, {
         _init: function(config) {
             this._id = Kinetic.Global.idCounter++;
@@ -89,6 +94,11 @@
             this.attrs = {};
             this.cache = {};
             this.setAttrs(config);
+
+            // event bindings for cache handling
+            this.on(transformChangeStr, _clearTransformCache);
+            this.on('visibleChange.kinetic', _clearVisibleCache);
+            this.on('opacityChange.kinetic', _clearAbsoluteOpacityCache);
         },
         _handleCache: function(attr) {
             var func;
@@ -1226,28 +1236,28 @@
     });
 
     // getter setter adders
-    Kinetic.Node.addGetterSetter = function(constructor, attr, def, cacheAttr) {
+    Kinetic.Node.addGetterSetter = function(constructor, attr, def) {
         this.addGetter(constructor, attr, def);
-        this.addSetter(constructor, attr, cacheAttr);
+        this.addSetter(constructor, attr);
     };
-    Kinetic.Node.addPointGetterSetter = function(constructor, attr, def, cacheAttr) {
+    Kinetic.Node.addPointGetterSetter = function(constructor, attr, def) {
         this.addPointGetter(constructor, attr, def);
-        this.addPointSetter(constructor, attr, cacheAttr);
+        this.addPointSetter(constructor, attr);
 
         // add invdividual component getters and setters
         this.addGetter(constructor, attr + UPPER_X, def);
         this.addGetter(constructor, attr + UPPER_Y, def);
-        this.addSetter(constructor, attr + UPPER_X, cacheAttr);
-        this.addSetter(constructor, attr + UPPER_Y, cacheAttr);
+        this.addSetter(constructor, attr + UPPER_X);
+        this.addSetter(constructor, attr + UPPER_Y);
     };
     Kinetic.Node.addPointsGetterSetter = function(constructor, attr) {
         this.addPointsGetter(constructor, attr);
         this.addPointsSetter(constructor, attr);
         this.addPointAdder(constructor, attr);
     };
-    Kinetic.Node.addRotationGetterSetter = function(constructor, attr, def, cacheAttr) {
+    Kinetic.Node.addRotationGetterSetter = function(constructor, attr, def) {
         this.addRotationGetter(constructor, attr, def);
-        this.addRotationSetter(constructor, attr, cacheAttr);
+        this.addRotationSetter(constructor, attr);
     };
     Kinetic.Node.addColorGetterSetter = function(constructor, attr) {
         this.addGetter(constructor, attr);
@@ -1362,15 +1372,14 @@
             this._setAttr('points', points);
         };
     };
-    Kinetic.Node.addSetter = function(constructor, attr, cacheAttr) {
+    Kinetic.Node.addSetter = function(constructor, attr) {
         var method = SET + Kinetic.Util._capitalize(attr);
 
         constructor.prototype[method] = function(val) {
-            this._handleCache(cacheAttr);
             this._setAttr(attr, val);   
         };
     };
-    Kinetic.Node.addPointSetter = function(constructor, attr, cacheAttr) {
+    Kinetic.Node.addPointSetter = function(constructor, attr) {
         var that = this,
             baseMethod = SET + Kinetic.Util._capitalize(attr);
 
@@ -1385,7 +1394,6 @@
               y = pos.y;
 
               this._fireBeforeChangeEvent(attr, oldVal, pos);
-              this._handleCache(cacheAttr);
               if (x !== undefined) {
                 this[baseMethod + UPPER_X](x);
               }
@@ -1396,18 +1404,16 @@
             }
         };
     };
-    Kinetic.Node.addRotationSetter = function(constructor, attr, cacheAttr) {
+    Kinetic.Node.addRotationSetter = function(constructor, attr) {
         var that = this,
             method = SET + Kinetic.Util._capitalize(attr);
 
         // radians
         constructor.prototype[method] = function(val) {
-            this._handleCache(cacheAttr);
             this._setAttr(attr, val);
         };
         // degrees
         constructor.prototype[method + DEG] = function(deg) {
-            this._handleCache(cacheAttr);
             this._setAttr(attr, Kinetic.Util._degToRad(deg));
         };
     };
