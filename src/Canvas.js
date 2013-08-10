@@ -220,17 +220,6 @@
         _applyAncestorTransforms: function(node) {
             var m = node.getAbsoluteTransform().getMatrix();
             this.context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
-            
-            /*
-            var context = this.context,
-                t, m;
-
-            node._eachAncestorReverse(function(no) {
-                t = no.getTransform(true);
-                m = t.getMatrix();
-                context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
-            }, true);
-            */
         },
         _clip: function(container) {
             var context = this.getContext();

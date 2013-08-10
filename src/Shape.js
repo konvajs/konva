@@ -13,9 +13,6 @@
     function _strokeFuncHit(context) {
         context.stroke();
     }
-    function _clearHasShadowCache() {
-        this._clearCache(HAS_SHADOW);
-    }
 
     Kinetic.Util.addMethods(Kinetic.Shape, {
         __init: function(config) {
@@ -441,7 +438,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Node.addColorGetterSetter(Kinetic.Shape, 'shadowColor', undefined, _clearHasShadowCache);
+    Kinetic.Node.addColorGetterSetter(Kinetic.Shape, 'shadowColor', undefined, HAS_SHADOW);
 
     /**
      * set shadow color
@@ -524,7 +521,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Shape, 'shadowBlur', undefined, _clearHasShadowCache);
+    Kinetic.Node.addGetterSetter(Kinetic.Shape, 'shadowBlur', undefined, HAS_SHADOW);
 
     /**
      * set shadow blur
@@ -541,7 +538,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Shape, 'shadowOpacity', undefined, _clearHasShadowCache);
+    Kinetic.Node.addGetterSetter(Kinetic.Shape, 'shadowOpacity', undefined, HAS_SHADOW);
 
     /**
      * set shadow opacity
@@ -1247,7 +1244,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'shadowOffset', 0, _clearHasShadowCache);
+    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'shadowOffset', 0, HAS_SHADOW);
 
     /**
      * set shadow offset
