@@ -5,6 +5,7 @@
         EMPTY_STRING = '',
         DOT = '.',
         GET = 'get',
+        PRIVATE_GET = '_get',
         SET = 'set',
         SHAPE = 'Shape',
         STAGE = 'Stage',
@@ -45,6 +46,10 @@
             skewY: TRANSFORM
         };
 
+        CACHE_ATTRS = {
+            transform: 1
+        };
+
     Kinetic.Util.addMethods(Kinetic.Node, {
         _init: function(config) {
             this._id = Kinetic.Global.idCounter++;
@@ -57,6 +62,25 @@
             var cacheAttr = CACHE_MAP[attr];
             if (cacheAttr) {
                 delete this.cache[cacheAttr];
+            }
+        },
+        _getCache: function(attr, def){
+            var val, cache;
+
+            // if attr is cacheable
+            if (CACHE_ATTRS[attr]) {
+                cache = this.cache[attr];
+
+                // if not cached, we need to set it using the private getter method.
+                if (!cache) {
+                    this.cache[attr] = this[PRIVATE_GET + Kinetic.Util._capitalize(attr)]();
+                }
+
+                return this.cache[attr];     
+            }
+            else {
+                val = this.attrs[attr];
+                return val === undefined ? def : val;
             }
         },
         /**
@@ -751,7 +775,7 @@
             }, true);
             return am;
         },
-        _getAndCacheTransform: function() {
+        _getTransform: function() {
             var m = new Kinetic.Transform(),
                 x = this.getX(),
                 y = this.getY(),
@@ -779,23 +803,7 @@
                 m.translate(-1 * offsetX, -1 * offsetY);
             }
 
-            // cache result
-            this.cache.transform = m;
             return m;
-        },
-        /**
-         * get transform of the node
-         * @method
-         * @memberof Kinetic.Node.prototype
-         */
-        getTransform: function(useCache) {
-            var cachedTransform = this.cache.transform;
-            if (useCache && cachedTransform) {
-                return cachedTransform;
-            }
-            else {
-                return this._getAndCacheTransform();
-            }
         },
         /**
          * clone node.  Returns a new Node instance with identical attributes.  You can also override
@@ -1212,9 +1220,8 @@
         var that = this,
             method = GET + Kinetic.Util._capitalize(attr);
 
-        constructor.prototype[method] = function(arg) {
-            var val = this.attrs[attr];
-            return val === undefined ? def : val;
+        constructor.prototype[method] = function() {
+            return this._getCache(attr, def);
         };
     };
     Kinetic.Node.addPointGetter = function(constructor, attr) {
@@ -1384,6 +1391,7 @@
         return no;
     };
     // add getters setters
+
     Kinetic.Node.addGetterSetter(Kinetic.Node, 'x', 0);
 
     /**
@@ -1719,7 +1727,16 @@
      * @param {Boolean} visible
      */
 
+    Kinetic.Node.addGetter(Kinetic.Node, 'transform');
+    /**
+     * get transform of the node
+     * name getTransform
+     * @method
+     * @memberof Kinetic.Node.prototype
+     */
+
     // aliases
+
     /**
      * Alias of getListening()
      * @name isListening
