@@ -1117,7 +1117,7 @@
             return this;
         },
         shouldDrawHit: function() {
-            return this.isVisible() && this.isListening() && !Kinetic.Global.isDragging();
+            return this.isListening() && this.isVisible() && !Kinetic.Global.isDragging();
         },
         isDraggable: function() {
             return false;

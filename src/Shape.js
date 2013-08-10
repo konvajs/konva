@@ -1,7 +1,4 @@
 (function() {
-    var BEFORE_DRAW = 'beforeDraw',
-        DRAW = 'draw';
-
     function _fillFunc(context) {
         context.fill();
     }
@@ -210,24 +207,10 @@
                 canvas._applyOpacity(this);
                 canvas._applyLineJoin(this);
                 canvas._applyAncestorTransforms(this);
-                this._fireBeforeDrawEvents();
                 drawFunc.call(this, canvas);
-                this._fireDrawEvents();
                 context.restore();
-
-
             }
             return this;
-        },
-        _fireBeforeDrawEvents: function() {
-            this._fireAndBubble(BEFORE_DRAW, {
-                node: this
-            });
-        },
-        _fireDrawEvents: function() {
-            this._fireAndBubble(DRAW, {
-                node: this
-            });
         },
         drawHit: function() {
             var attrs = this.getAttrs(),

@@ -1,6 +1,8 @@
 (function() {
     // constants
-    var HASH = '#';
+    var HASH = '#',
+        BEFORE_DRAW ='beforeDraw',
+        DRAW = 'draw';
 
     Kinetic.Util.addMethods(Kinetic.Layer, {
         ___init: function(config) {
@@ -51,11 +53,20 @@
         drawScene: function(canvas) {
             canvas = canvas || this.getCanvas();
 
+            this._fire(BEFORE_DRAW, {
+                node: this
+            });
+
             if(this.getClearBeforeDraw()) {
                 canvas.clear();
             }
-
+            
             Kinetic.Container.prototype.drawScene.call(this, canvas);
+
+            this._fire(DRAW, {
+                node: this
+            });
+
             return this;
         },
         drawHit: function() {
