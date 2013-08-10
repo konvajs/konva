@@ -1,6 +1,7 @@
 (function() {
     // CONSTANTS
-    var ADD = 'add',
+    var ABSOLUTE_TRANSFORM = 'absoluteTransform',
+        ADD = 'add',
         B = 'b',
         BEFORE = 'before',
         BLACK = 'black',
@@ -34,20 +35,29 @@
         UPPER_Y = 'Y',
         VISIBLE = 'visible',
         X = 'x',
-        Y = 'y',
+        Y = 'y';
 
-        CACHE_MAP = {
-            x: TRANSFORM,
-            y: TRANSFORM,
-            rotation: TRANSFORM,
-            rotationDeg: TRANSFORM,
-            scaleX: TRANSFORM,
-            scaleY: TRANSFORM,
-            skewX: TRANSFORM,
-            skewY: TRANSFORM,
+    function _clearTransformCacheEachChild(node) {
+        _clearTransformCache.call(node);
+    }
+    function _clearTransformCache() {
+        this._clearCache(TRANSFORM);
+        this._clearCache(ABSOLUTE_TRANSFORM);
 
-            visible: VISIBLE
-        };
+        if (this.children) {
+            this.getChildren().each(_clearTransformCacheEachChild);
+        }
+    }
+    function _clearVisibleCacheEachChild(node) {
+        _clearVisibleCache.call(node);
+    }
+    function _clearVisibleCache() {
+        this._clearCache(VISIBLE);
+
+        if (this.children) {
+            this.getChildren().each(_clearVisibleCacheEachChild);
+        }
+    }
 
     Kinetic.Util.addMethods(Kinetic.Node, {
         _init: function(config) {
@@ -58,10 +68,7 @@
             this.setAttrs(config);
         },
         _clearCache: function(attr){
-            var cacheAttr = CACHE_MAP[attr];
-            if (cacheAttr) {
-                delete this.cache[cacheAttr];
-            }
+            delete this.cache[attr];
         },
         _getCache: function(attr, privateGetter){
             var cache = this.cache[attr];
@@ -233,6 +240,26 @@
             else {
                 return this.attrs[attr];
             }
+        },
+        /**
+        * get ancestors
+        * @method
+        * @memberof Kinetic.Node.prototype
+        * @example
+        * shape.getAncestors().each(function(node) {
+        *   console.log(node.getId());
+        * })
+        */
+        getAncestors: function() {
+            var parent = this.getParent(),
+                ancestors = new Kinetic.Collection();
+
+            while (parent) {
+                ancestors.push(parent);
+                parent = parent.getParent();
+            }
+
+            return ancestors;
         },
         /**
          * set attr
@@ -758,6 +785,9 @@
          * @memberof Kinetic.Node.prototype
          */
         getAbsoluteTransform: function() {
+            return this._getCache(ABSOLUTE_TRANSFORM, this._getAbsoluteTransform);
+        },
+        _getAbsoluteTransform: function() {
             // absolute transform
             var am = new Kinetic.Transform(),
                 m;
@@ -1153,28 +1183,28 @@
     });
 
     // getter setter adders
-    Kinetic.Node.addGetterSetter = function(constructor, attr, def) {
+    Kinetic.Node.addGetterSetter = function(constructor, attr, def, before) {
         this.addGetter(constructor, attr, def);
-        this.addSetter(constructor, attr);
+        this.addSetter(constructor, attr, before);
     };
-    Kinetic.Node.addPointGetterSetter = function(constructor, attr, def) {
-        this.addPointGetter(constructor, attr);
-        this.addPointSetter(constructor, attr);
+    Kinetic.Node.addPointGetterSetter = function(constructor, attr, def, before) {
+        this.addPointGetter(constructor, attr, def);
+        this.addPointSetter(constructor, attr, before);
 
         // add invdividual component getters and setters
         this.addGetter(constructor, attr + UPPER_X, def);
         this.addGetter(constructor, attr + UPPER_Y, def);
-        this.addSetter(constructor, attr + UPPER_X);
-        this.addSetter(constructor, attr + UPPER_Y);
+        this.addSetter(constructor, attr + UPPER_X, before);
+        this.addSetter(constructor, attr + UPPER_Y, before);
     };
     Kinetic.Node.addPointsGetterSetter = function(constructor, attr) {
         this.addPointsGetter(constructor, attr);
         this.addPointsSetter(constructor, attr);
         this.addPointAdder(constructor, attr);
     };
-    Kinetic.Node.addRotationGetterSetter = function(constructor, attr, def) {
+    Kinetic.Node.addRotationGetterSetter = function(constructor, attr, def, before) {
         this.addRotationGetter(constructor, attr, def);
-        this.addRotationSetter(constructor, attr);
+        this.addRotationSetter(constructor, attr, before);
     };
     Kinetic.Node.addColorGetterSetter = function(constructor, attr) {
         this.addGetter(constructor, attr);
@@ -1289,16 +1319,17 @@
             this._setAttr('points', points);
         };
     };
-    Kinetic.Node.addSetter = function(constructor, attr) {
-        var that = this,
-            method = SET + Kinetic.Util._capitalize(attr);
+    Kinetic.Node.addSetter = function(constructor, attr, before) {
+        var method = SET + Kinetic.Util._capitalize(attr);
 
         constructor.prototype[method] = function(val) {
-            this._clearCache(attr);
+            if (before) {
+                before.call(this);
+            }
             this._setAttr(attr, val);   
         };
     };
-    Kinetic.Node.addPointSetter = function(constructor, attr) {
+    Kinetic.Node.addPointSetter = function(constructor, attr, before) {
         var that = this,
             baseMethod = SET + Kinetic.Util._capitalize(attr);
 
@@ -1313,6 +1344,9 @@
               y = pos.y;
 
               this._fireBeforeChangeEvent(attr, oldVal, pos);
+              if (before) {
+                  before.call(this);
+              }
               if (x !== undefined) {
                 this[baseMethod + UPPER_X](x);
               }
@@ -1323,18 +1357,22 @@
             }
         };
     };
-    Kinetic.Node.addRotationSetter = function(constructor, attr) {
+    Kinetic.Node.addRotationSetter = function(constructor, attr, before) {
         var that = this,
             method = SET + Kinetic.Util._capitalize(attr);
 
         // radians
         constructor.prototype[method] = function(val) {
-            this._clearCache(attr);
+            if (before) {
+                before.call(this);
+            }
             this._setAttr(attr, val);
         };
         // degrees
         constructor.prototype[method + DEG] = function(deg) {
-            this._clearCache(attr);
+            if (before) {
+                before.call(this);
+            }
             this._setAttr(attr, Kinetic.Util._degToRad(deg));
         };
     };
@@ -1394,7 +1432,7 @@
     };
     // add getters setters
 
-    Kinetic.Node.addGetterSetter(Kinetic.Node, 'x', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.Node, 'x', 0, _clearTransformCache);
 
     /**
      * set x position
@@ -1411,7 +1449,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Node, 'y', 0);
+    Kinetic.Node.addGetterSetter(Kinetic.Node, 'y', 0, _clearTransformCache);
 
     /**
      * set y position
@@ -1465,7 +1503,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addRotationGetterSetter(Kinetic.Node, 'rotation', 0);
+    Kinetic.Node.addRotationGetterSetter(Kinetic.Node, 'rotation', 0, _clearTransformCache);
 
     /**
      * set rotation in radians
@@ -1497,7 +1535,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'scale', 1);
+    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'scale', 1, _clearTransformCache);
 
     /**
      * set scale
@@ -1558,7 +1596,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'skew', 0);
+    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'skew', 0, _clearTransformCache);
 
     /**
      * set skew
@@ -1620,7 +1658,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'offset', 0);
+    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'offset', 0, _clearTransformCache);
 
     /**
      * set offset.  A node's offset defines the position and rotation point
@@ -1719,7 +1757,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addSetter(Kinetic.Node, 'visible');
+    Kinetic.Node.addSetter(Kinetic.Node, 'visible', _clearVisibleCache);
 
     /**
      * set visible

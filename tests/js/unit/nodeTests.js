@@ -89,7 +89,7 @@ Test.Modules.NODE = {
         test(circle.getAbsoluteOpacity() === 0.25, 'abs opacity should be 0.25');
         test(layer.getAbsoluteOpacity() === 0.5, 'abs opacity should be 0.5');
     },
-    '*caching': function(containerId) {
+    'caching': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -105,7 +105,7 @@ Test.Modules.NODE = {
             strokeWidth: 4
         });
 
-        test(!circle.cache.transform, '1) circle transform cache should be empty');
+        test(circle.cache.transform === undefined, '1) circle transform cache should be empty');
 
         layer.add(circle);
         stage.add(layer);
@@ -113,7 +113,7 @@ Test.Modules.NODE = {
         // transform cache
         test(circle.cache.transform, '2) circle transform cache should be primed');
         circle.setX(100);
-        test(!circle.cache.transform, '3) circle transform cache should be empty');
+        test(circle.cache.transform === undefined, '3) circle transform cache should be empty');
         layer.draw();
         test(circle.cache.transform, '4) circle transform cache should be primed');
 
@@ -127,6 +127,16 @@ Test.Modules.NODE = {
         test(circle.cache.visible === undefined, '8) circle visible cache should be empty');
         stage.draw();
         test(circle.cache.visible === true, '9) circle visible cache should be primed');
+
+        // shadow cache
+        test(circle.cache.hasShadow === false, '10) circle shadow cache should be primed');
+        circle.setShadowColor('red');
+        circle.setShadowOffset(10);
+        test(circle.cache.hasShadow === undefined, '11) circle shadow cache should be empty');
+        layer.draw();
+        test(circle.cache.hasShadow === true, '12) circle shadow cache should be primed');
+        layer.draw();
+        test(circle.cache.hasShadow === true, '13) circle shadow cache should still be primed after redraw');
 
     },
     'test pixel ratio toDataURL': function(containerId) {

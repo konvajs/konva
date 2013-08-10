@@ -1,4 +1,6 @@
 (function() {
+    var HAS_SHADOW = 'hasShadow';
+
     function _fillFunc(context) {
         context.fill();
     }
@@ -10,6 +12,9 @@
     }
     function _strokeFuncHit(context) {
         context.stroke();
+    }
+    function _clearHasShadowCache() {
+        this._clearCache(HAS_SHADOW);
     }
 
     Kinetic.Util.addMethods(Kinetic.Shape, {
@@ -67,6 +72,9 @@
          * @memberof Kinetic.Shape.prototype
          */
         hasShadow: function() {
+            return this._getCache(HAS_SHADOW, this._hasShadow);  
+        },
+        _hasShadow: function() {
             return (this.getShadowOpacity() !== 0 && !!(this.getShadowColor() || this.getShadowBlur() || this.getShadowOffsetX() || this.getShadowOffsetY()));
         },
         /**
@@ -433,7 +441,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Node.addColorGetterSetter(Kinetic.Shape, 'shadowColor');
+    Kinetic.Node.addColorGetterSetter(Kinetic.Shape, 'shadowColor', undefined, _clearHasShadowCache);
 
     /**
      * set shadow color
@@ -516,7 +524,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Shape, 'shadowBlur');
+    Kinetic.Node.addGetterSetter(Kinetic.Shape, 'shadowBlur', undefined, _clearHasShadowCache);
 
     /**
      * set shadow blur
@@ -533,7 +541,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Shape, 'shadowOpacity');
+    Kinetic.Node.addGetterSetter(Kinetic.Shape, 'shadowOpacity', undefined, _clearHasShadowCache);
 
     /**
      * set shadow opacity
@@ -1239,7 +1247,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'shadowOffset', 0);
+    Kinetic.Node.addPointGetterSetter(Kinetic.Shape, 'shadowOffset', 0, _clearHasShadowCache);
 
     /**
      * set shadow offset
