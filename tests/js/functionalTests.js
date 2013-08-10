@@ -564,25 +564,16 @@ Test.Modules.EVENT = {
             events.push('layer-draw');
         });
 
-        stage.on('draw', function(evt) {
-            events.push('stage-draw');
-        });
-
         layer.on('beforeDraw', function(evt) {
             events.push('layer-beforeDraw');
         });
-
-        stage.on('beforeDraw', function(evt) {
-            events.push('stage-beforeDraw');
-        });
-
 
         layer.add(circle);
         stage.add(layer);
 
         console.log(events.toString())
 
-        test(events.toString() === 'layer-beforeDraw,stage-beforeDraw,layer-draw,stage-draw', 'draw event order is incorrect');
+        test(events.toString() === 'layer-beforeDraw,layer-draw', 'draw event order is incorrect');
 
 
     },
