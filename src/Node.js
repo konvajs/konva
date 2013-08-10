@@ -50,16 +50,20 @@
             'offsetYChange.kinetic'
         ].join(SPACE);
 
-    // clear transform cache pair
-    function _clearTransformCacheEachChild(node) {
-        _clearTransformCache.call(node);
-    }
     function _clearTransformCache() {
         this._clearCache(TRANSFORM);
+        this._clearAbsoluteTransformCache();
+    }
+
+    // clear absolute transform cache pair
+    function _clearAbsoluteTransformCacheEachChild(node) {
+        _clearAbsoluteTransformCache.call(node);
+    }
+    function _clearAbsoluteTransformCache() {
         this._clearCache(ABSOLUTE_TRANSFORM);
 
         if (this.children) {
-            this.getChildren().each(_clearTransformCacheEachChild);
+            this.getChildren().each(_clearAbsoluteTransformCacheEachChild);
         }
     }
 
@@ -101,25 +105,9 @@
             this.on('opacityChange.kinetic', _clearAbsoluteOpacityCache);
 
             this._clearTransformCache = _clearTransformCache;
+            this._clearAbsoluteTransformCache = _clearAbsoluteTransformCache;
             this._clearVisibleCache = _clearVisibleCache;
             this._clearAbsoluteOpacityCache = _clearAbsoluteOpacityCache;
-        },
-        _handleCache: function(attr) {
-            var func;
-
-            // if attr is not defined, and we haven't already cleared the cache
-            if (attr !== undefined && this.cache[attr] !== undefined) {
-                func = Kinetic.Node.clearCacheFuncs[attr];
-
-                // custom clear cache method
-                if (func) {
-                    func.call(this);
-                }
-                // default clear cache method
-                else {
-                    this._clearCache(attr);
-                }
-            }
         },
         _clearCache: function(attr){
             delete this.cache[attr];
@@ -842,8 +830,7 @@
          * @memberof Kinetic.Node.prototype
          */
         getAbsoluteTransform: function() {
-            return this._getAbsoluteTransform();
-            //return this._getCache(ABSOLUTE_TRANSFORM, this._getAbsoluteTransform);
+            return this._getCache(ABSOLUTE_TRANSFORM, this._getAbsoluteTransform);
         },
         _getAbsoluteTransform: function() {
             // absolute transform
