@@ -105,20 +105,24 @@ Test.Modules.NODE = {
             strokeWidth: 4
         });
 
-        test(!circle.cachedTransform, 'circle transform cache should be empty');
+        test(!circle.cache.transform, '1) circle transform cache should be empty');
 
         layer.add(circle);
         stage.add(layer);
 
-        test(circle.cachedTransform, 'circle transform cache should be present');
+        test(circle.cache.transform, '2) circle transform cache should be present');
+
+        console.log(circle.cache.transform) 
 
         circle.setX(100);
 
-        test(!circle.cachedTransform, 'circle transform cache should be empty');
+        console.log(circle.cache.transform)
+
+        test(!circle.cache.transform, '3) circle transform cache should be empty');
 
         layer.draw();
 
-        test(circle.cachedTransform, 'circle transform cache should be present');
+        test(circle.cache.transform, '4) circle transform cache should be present');
 
     },
     'test pixel ratio toDataURL': function(containerId) {
