@@ -138,6 +138,13 @@ Test.Modules.NODE = {
         layer.draw();
         test(circle.cache.hasShadow === true, '13) circle shadow cache should still be primed after redraw');
 
+        // opacity cache
+        test(circle.cache.absoluteOpacity === 1, '14) circle absolute opacity cache should be primed');
+        circle.setOpacity(0.5);
+        test(circle.cache.absoluteOpacity === undefined, '15) circle absolute opacity cache should be empty');
+        circle.draw();
+        test(circle.cache.absoluteOpacity === 0.5, '15) circle absolute opacity cache should be primed');
+
     },
     'test pixel ratio toDataURL': function(containerId) {
         var stage = new Kinetic.Stage({

@@ -1,6 +1,7 @@
 (function() {
     // CONSTANTS
-    var ABSOLUTE_TRANSFORM = 'absoluteTransform',
+    var ABSOLUTE_OPACITY = 'absoluteOpacity',
+        ABSOLUTE_TRANSFORM = 'absoluteTransform',
         ADD = 'add',
         B = 'b',
         BEFORE = 'before',
@@ -37,6 +38,7 @@
         X = 'x',
         Y = 'y';
 
+    // clear transform cache pair
     function _clearTransformCacheEachChild(node) {
         _clearTransformCache.call(node);
     }
@@ -48,6 +50,8 @@
             this.getChildren().each(_clearTransformCacheEachChild);
         }
     }
+
+    // clear visible cache pair
     function _clearVisibleCacheEachChild(node) {
         _clearVisibleCache.call(node);
     }
@@ -59,10 +63,23 @@
         }
     }
 
+    // clear absolute opacity cache pair
+    function _clearAbsoluteOpacityCacheEachChild(node) {
+        _clearAbsoluteOpacityCache.call(node);
+    }
+    function _clearAbsoluteOpacityCache() {
+        this._clearCache(ABSOLUTE_OPACITY);
+
+        if (this.children) {
+            this.getChildren().each(_clearAbsoluteOpacityCacheEachChild);
+        }
+    }
+
     // custom clear cache functions
     Kinetic.Node.clearCacheFuncs = {
         transform: _clearTransformCache,
-        visible: _clearVisibleCache
+        visible: _clearVisibleCache,
+        absoluteOpacity: _clearAbsoluteOpacityCache
     };
 
     Kinetic.Util.addMethods(Kinetic.Node, {
@@ -76,9 +93,10 @@
         _handleCache: function(attr) {
             var func;
 
-            if (attr !== undefined) {
+            // if attr is not defined, and we haven't already cleared the cache
+            if (attr !== undefined && this.cache[attr] !== undefined) {
                 func = Kinetic.Node.clearCacheFuncs[attr];
-                
+
                 // custom clear cache method
                 if (func) {
                     func.call(this);
@@ -685,6 +703,9 @@
          * @memberof Kinetic.Node.prototype
          */
         getAbsoluteOpacity: function() {
+            return this._getCache(ABSOLUTE_OPACITY, this._getAbsoluteOpacity);
+        },
+        _getAbsoluteOpacity: function() {
             var absOpacity = this.getOpacity();
             if(this.getParent()) {
                 absOpacity *= this.getParent().getAbsoluteOpacity();
@@ -1480,7 +1501,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Node, 'opacity', 1);
+    Kinetic.Node.addGetterSetter(Kinetic.Node, 'opacity', 1, ABSOLUTE_OPACITY);
 
     /**
      * set opacity.  Opacity values range from 0 to 1.
