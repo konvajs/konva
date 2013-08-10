@@ -99,6 +99,10 @@
             this.on(transformChangeStr, _clearTransformCache);
             this.on('visibleChange.kinetic', _clearVisibleCache);
             this.on('opacityChange.kinetic', _clearAbsoluteOpacityCache);
+
+            this._clearTransformCache = _clearTransformCache;
+            this._clearVisibleCache = _clearVisibleCache;
+            this._clearAbsoluteOpacityCache = _clearAbsoluteOpacityCache;
         },
         _handleCache: function(attr) {
             var func;
@@ -838,7 +842,8 @@
          * @memberof Kinetic.Node.prototype
          */
         getAbsoluteTransform: function() {
-            return this._getCache(ABSOLUTE_TRANSFORM, this._getAbsoluteTransform);
+            return this._getAbsoluteTransform();
+            //return this._getCache(ABSOLUTE_TRANSFORM, this._getAbsoluteTransform);
         },
         _getAbsoluteTransform: function() {
             // absolute transform
@@ -1080,6 +1085,9 @@
                 }
             }
         },
+        /**
+        * clears the transform and returns the original transform
+        */
         _clearTransform: function() {
 
             var trans = {
@@ -1104,6 +1112,8 @@
             this.attrs.skewX = 0;
             this.attrs.skewY = 0;
 
+            this._clearTransformCache();
+
             return trans;
         },
         _setTransform: function(trans) {
@@ -1113,7 +1123,7 @@
                 this.attrs[key] = trans[key];
             }
 
-            delete this.cache.transform;
+            this._clearTransformCache();
         },
         _fireBeforeChangeEvent: function(attr, oldVal, newVal) {
             this._fire(BEFORE + Kinetic.Util._capitalize(attr) + CHANGE, {
@@ -1231,6 +1241,7 @@
          * @memberof Kinetic.Node.prototype
          */
         getTransform: function() {
+            //return this._getTransform();
             return this._getCache(TRANSFORM, this._getTransform);
         }
     });

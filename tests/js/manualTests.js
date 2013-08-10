@@ -1444,8 +1444,7 @@ Test.Modules.DRAG_AND_DROP = {
             offset: {
                 x: 50,
                 y: 25
-            },
-            dragOnTop: true
+            }
         });
 
         group.add(rect);
