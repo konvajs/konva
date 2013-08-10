@@ -16,6 +16,7 @@
         HASH = '#',
         ID = 'id',
         KINETIC = 'kinetic',
+        LISTENING = 'listening',
         MOUSEENTER = 'mouseenter',
         MOUSELEAVE = 'mouseleave',
         NAME = 'name',
@@ -79,6 +80,18 @@
         }
     }
 
+    // clear listening cache pair
+    function _clearListeningCacheEachChild(node) {
+        _clearListeningCache.call(node);
+    }
+    function _clearListeningCache() {
+        this._clearCache(LISTENING);
+
+        if (this.children) {
+            this.getChildren().each(_clearListeningCacheEachChild);
+        }
+    }
+
     // clear absolute opacity cache pair
     function _clearAbsoluteOpacityCacheEachChild(node) {
         _clearAbsoluteOpacityCache.call(node);
@@ -102,11 +115,13 @@
             // event bindings for cache handling
             this.on(transformChangeStr, _clearTransformCache);
             this.on('visibleChange.kinetic', _clearVisibleCache);
+            this.on('listeningChange.kinetic', _clearListeningCache);
             this.on('opacityChange.kinetic', _clearAbsoluteOpacityCache);
 
             this._clearTransformCache = _clearTransformCache;
             this._clearAbsoluteTransformCache = _clearAbsoluteTransformCache;
             this._clearVisibleCache = _clearVisibleCache;
+            this._clearListeningCache = _clearListeningCache;
             this._clearAbsoluteOpacityCache = _clearAbsoluteOpacityCache;
         },
         _clearCache: function(attr){
@@ -371,25 +386,39 @@
             return this;
         },
         /**
+         * determine if node is listening for events.  The node is listening only
+         *  if it's listening and all of its ancestors are listening.  If an ancestor
+         *  is listening, this means that the node is also listening
+         * @method
+         * @memberof Kinetic.Node.prototype
+         */
+        isListening: function() {
+          return this._getCache(LISTENING, this._isListening);
+        },
+        _isListening: function() {
+            var listening = this.getListening(),
+                parent = this.getParent();
+
+            if(listening && parent && !parent.isListening()) {
+                return false;
+            }
+            return listening;
+        },
+        /**
          * determine if node is visible or not.  Node is visible only
          *  if it's visible and all of its ancestors are visible.  If an ancestor
          *  is invisible, this means that the node is also invisible
          * @method
          * @memberof Kinetic.Node.prototype
          */
-        getVisible: function() {
-          return this._getCache(VISIBLE, this._getVisible);
+        isVisible: function() {
+          return this._getCache(VISIBLE, this._isVisible);
         },
-        _getVisible: function() {
-            var visible = this.attrs.visible,
+        _isVisible: function() {
+            var visible = this.getVisible(),
                 parent = this.getParent();
 
-            // default
-            if (visible === undefined) {
-                visible = true;
-            }
-
-            if(visible && parent && !parent.getVisible()) {
+            if(visible && parent && !parent.isVisible()) {
                 return false;
             }
             return visible;
@@ -1471,7 +1500,7 @@
     };
     // add getters setters
 
-    Kinetic.Node.addGetterSetter(Kinetic.Node, 'x', 0, TRANSFORM);
+    Kinetic.Node.addGetterSetter(Kinetic.Node, 'x', 0);
 
     /**
      * set x position
@@ -1488,7 +1517,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Node, 'y', 0, TRANSFORM);
+    Kinetic.Node.addGetterSetter(Kinetic.Node, 'y', 0);
 
     /**
      * set y position
@@ -1505,7 +1534,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Node, 'opacity', 1, ABSOLUTE_OPACITY);
+    Kinetic.Node.addGetterSetter(Kinetic.Node, 'opacity', 1);
 
     /**
      * set opacity.  Opacity values range from 0 to 1.
@@ -1542,7 +1571,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addRotationGetterSetter(Kinetic.Node, 'rotation', 0, TRANSFORM);
+    Kinetic.Node.addRotationGetterSetter(Kinetic.Node, 'rotation', 0);
 
     /**
      * set rotation in radians
@@ -1574,7 +1603,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'scale', 1, TRANSFORM);
+    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'scale', 1);
 
     /**
      * set scale
@@ -1635,7 +1664,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'skew', 0, TRANSFORM);
+    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'skew', 0);
 
     /**
      * set skew
@@ -1697,7 +1726,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'offset', 0, TRANSFORM);
+    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'offset', 0);
 
     /**
      * set offset.  A node's offset defines the position and rotation point
@@ -1796,7 +1825,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addSetter(Kinetic.Node, 'visible', VISIBLE);
+    Kinetic.Node.addGetterSetter(Kinetic.Node, 'visible', true);
 
     /**
      * set visible
@@ -1806,22 +1835,13 @@
      * @param {Boolean} visible
      */
 
-    // aliases
-
     /**
-     * Alias of getListening()
-     * @name isListening
+     * get visible property for the node.  If you need to determine if the node is actually visible,
+     * use the isVisible() method because it takes ancestors into account
+     * @name getVisible
      * @method
      * @memberof Kinetic.Node.prototype
      */
-    Kinetic.Node.prototype.isListening = Kinetic.Node.prototype.getListening;
-    /**
-     * Alias of getVisible()
-     * @name isVisible
-     * @method
-     * @memberof Kinetic.Node.prototype
-     */
-    Kinetic.Node.prototype.isVisible = Kinetic.Node.prototype.getVisible;
 
     Kinetic.Collection.mapMethods([
         'on',

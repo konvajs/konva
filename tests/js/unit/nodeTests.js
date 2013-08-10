@@ -125,7 +125,7 @@ Test.Modules.NODE = {
         test(circle.cache.visible === false, '7) circle visible cache should be primed');
         circle.show();
         test(circle.cache.visible === undefined, '8) circle visible cache should be empty');
-        stage.draw();
+        layer.draw();
         test(circle.cache.visible === true, '9) circle visible cache should be primed');
 
         // shadow cache
@@ -142,8 +142,15 @@ Test.Modules.NODE = {
         test(circle.cache.absoluteOpacity === 1, '14) circle absolute opacity cache should be primed');
         circle.setOpacity(0.5);
         test(circle.cache.absoluteOpacity === undefined, '15) circle absolute opacity cache should be empty');
-        circle.draw();
+        layer.draw();
         test(circle.cache.absoluteOpacity === 0.5, '15) circle absolute opacity cache should be primed');
+
+        // listening cache
+        test(circle.cache.listening === true, '16) circle listening cache should be primed');
+        circle.setListening(false);
+        test(circle.cache.listening === undefined, '17) circle listening cache should be empty');
+        layer.draw();
+        test(circle.cache.listening === false, '18) circle listening cache should be primed');
 
     },
     'test pixel ratio toDataURL': function(containerId) {
@@ -1566,13 +1573,13 @@ Test.Modules.NODE = {
         test(rect.isListening(), 'rect should be listening');
 
         layer.setListening(false);
-        test(rect.isListening(), 'rect should be listening even though layer is not listening');
+        test(!rect.isListening(), 'rect should not be listening because layer is not listening');
 
         layer.setListening(true);
         test(rect.isListening(), 'rect should be listening');
 
         stage.setListening(false);
-        test(rect.isListening(), 'rect should be listening even though stage is not listening');
+        test(!rect.isListening(), 'rect should not be listening because stage is not listening');
     },
     'test fire event': function(containerId) {
         var stage = new Kinetic.Stage({
