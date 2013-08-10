@@ -89,7 +89,7 @@ Test.Modules.NODE = {
         test(circle.getAbsoluteOpacity() === 0.25, 'abs opacity should be 0.25');
         test(layer.getAbsoluteOpacity() === 0.5, 'abs opacity should be 0.5');
     },
-    'transformation matrix caching': function(containerId) {
+    '*caching': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -110,19 +110,23 @@ Test.Modules.NODE = {
         layer.add(circle);
         stage.add(layer);
 
-        test(circle.cache.transform, '2) circle transform cache should be present');
-
-        console.log(circle.cache.transform) 
-
+        // transform cache
+        test(circle.cache.transform, '2) circle transform cache should be primed');
         circle.setX(100);
-
-        console.log(circle.cache.transform)
-
         test(!circle.cache.transform, '3) circle transform cache should be empty');
-
         layer.draw();
+        test(circle.cache.transform, '4) circle transform cache should be primed');
 
-        test(circle.cache.transform, '4) circle transform cache should be present');
+        // visible cache
+        test(circle.cache.visible === true, '5) circle visible cache should be primed');
+        circle.hide();
+        test(circle.cache.visible === undefined, '6) circle visible cache should be empty');
+        stage.draw();
+        test(circle.cache.visible === false, '7) circle visible cache should be primed');
+        circle.show();
+        test(circle.cache.visible === undefined, '8) circle visible cache should be empty');
+        stage.draw();
+        test(circle.cache.visible === true, '9) circle visible cache should be primed');
 
     },
     'test pixel ratio toDataURL': function(containerId) {

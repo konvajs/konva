@@ -1,39 +1,40 @@
 (function() {
     // CONSTANTS
     var ADD = 'add',
-        SPACE = ' ',
-        EMPTY_STRING = '',
-        DOT = '.',
-        GET = 'get',
-        PRIVATE_GET = '_get',
-        SET = 'set',
-        SHAPE = 'Shape',
-        STAGE = 'Stage',
-        X = 'x',
-        Y = 'y',
-        UPPER_X = 'X',
-        UPPER_Y = 'Y',
-        KINETIC = 'kinetic',
+        B = 'b',
         BEFORE = 'before',
+        BLACK = 'black',
         CHANGE = 'Change',
+        CHILDREN = 'children',
+        DEG = 'Deg',
+        DOT = '.',
+        EMPTY_STRING = '',
+        G = 'g',
+        GET = 'get',
+        HASH = '#',
         ID = 'id',
-        NAME = 'name',
+        KINETIC = 'kinetic',
         MOUSEENTER = 'mouseenter',
         MOUSELEAVE = 'mouseleave',
-        DEG = 'Deg',
-        ON = 'on',
+        NAME = 'name',
         OFF = 'off',
-        BLACK = 'black',
-        RGB = 'RGB',
+        ON = 'on',
+        PRIVATE_GET = '_get',
         R = 'r',
-        G = 'g',
-        B = 'b',
-        UPPER_R = 'R',
-        UPPER_G = 'G',
-        UPPER_B = 'B',
-        HASH = '#',
-        CHILDREN = 'children',
+        RGB = 'RGB',
+        SET = 'set',
+        SHAPE = 'Shape',
+        SPACE = ' ',
+        STAGE = 'Stage',
         TRANSFORM = 'transform',
+        UPPER_B = 'B',
+        UPPER_G = 'G',
+        UPPER_R = 'R',
+        UPPER_X = 'X',
+        UPPER_Y = 'Y',
+        VISIBLE = 'visible',
+        X = 'x',
+        Y = 'y',
 
         CACHE_MAP = {
             x: TRANSFORM,
@@ -43,7 +44,9 @@
             scaleX: TRANSFORM,
             scaleY: TRANSFORM,
             skewX: TRANSFORM,
-            skewY: TRANSFORM
+            skewY: TRANSFORM,
+
+            visible: VISIBLE
         };
 
     Kinetic.Util.addMethods(Kinetic.Node, {
@@ -64,7 +67,7 @@
             var cache = this.cache[attr];
 
             // if not cached, we need to set it using the private getter method.
-            if (!cache) {
+            if (cache === undefined) {
                 this.cache[attr] = privateGetter.call(this);
             }
 
@@ -306,6 +309,9 @@
          * @memberof Kinetic.Node.prototype
          */
         getVisible: function() {
+          return this._getCache(VISIBLE, this._getVisible);
+        },
+        _getVisible: function() {
             var visible = this.attrs.visible,
                 parent = this.getParent();
 
