@@ -51,7 +51,7 @@
     Kinetic.Util.extend(Kinetic.RegularPolygon, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Node.addGetterSetter(Kinetic.RegularPolygon, 'radius', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.RegularPolygon, 'radius', 0);
 
     /**
      * set radius
@@ -68,7 +68,7 @@
      * @memberof Kinetic.RegularPolygon.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.RegularPolygon, 'sides', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.RegularPolygon, 'sides', 0);
 
     /**
      * set number of sides

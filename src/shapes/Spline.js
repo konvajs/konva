@@ -78,7 +78,7 @@
     Kinetic.Util.extend(Kinetic.Spline, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Node.addGetterSetter(Kinetic.Spline, 'tension', 1);
+    Kinetic.Factory.addGetterSetter(Kinetic.Spline, 'tension', 1);
 
     /**
      * get tension
@@ -94,7 +94,7 @@
      * @param {Number} tension
      */
 
-    Kinetic.Node.addPointsGetterSetter(Kinetic.Spline, 'points');
+    Kinetic.Factory.addPointsGetterSetter(Kinetic.Spline, 'points');
     /**
      * get points array
      * @method

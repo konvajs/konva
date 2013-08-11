@@ -223,7 +223,7 @@
     };
 
     Kinetic.Util.extend(Kinetic.Tag, Kinetic.Shape);
-    Kinetic.Node.addGetterSetter(Kinetic.Tag, 'pointerDirection', NONE);
+    Kinetic.Factory.addGetterSetter(Kinetic.Tag, 'pointerDirection', NONE);
 
     /**
      * set pointer Direction
@@ -241,7 +241,7 @@
      * @memberof Kinetic.Tag.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Tag, 'pointerWidth', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Tag, 'pointerWidth', 0);
 
     /**
      * set pointer width
@@ -258,7 +258,7 @@
      * @memberof Kinetic.Tag.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Tag, 'pointerHeight', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Tag, 'pointerHeight', 0);
 
     /**
      * set pointer height
@@ -275,7 +275,7 @@
      * @memberof Kinetic.Tag.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Tag, 'cornerRadius', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Tag, 'cornerRadius', 0);
 
     /**
      * set corner radius

@@ -52,7 +52,7 @@
     Kinetic.Util.extend(Kinetic.Star, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Node.addGetterSetter(Kinetic.Star, 'numPoints', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Star, 'numPoints', 0);
 
     /**
      * set number of points
@@ -69,7 +69,7 @@
      * @memberof Kinetic.Star.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Star, 'innerRadius', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Star, 'innerRadius', 0);
 
     /**
      * set inner radius
@@ -86,7 +86,7 @@
      * @memberof Kinetic.Star.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Star, 'outerRadius', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Star, 'outerRadius', 0);
 
     /**
      * set outer radius

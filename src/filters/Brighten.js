@@ -18,7 +18,7 @@
         }
     };
 
-    Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filterBrightness', 0);
+    Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterBrightness', 0);
     /**
     * get filter brightness.  The brightness is a number between -255 and 255.&nbsp; Positive values 
     *  increase the brightness and negative values decrease the brightness, making the image darker

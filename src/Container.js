@@ -299,7 +299,7 @@
     Kinetic.Util.extend(Kinetic.Container, Kinetic.Node);
 
     // add getters setters
-    Kinetic.Node.addGetterSetter(Kinetic.Container, 'clipFunc');
+    Kinetic.Factory.addGetterSetter(Kinetic.Container, 'clipFunc');
 
     /**
      * set clipping function

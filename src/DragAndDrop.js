@@ -188,7 +188,7 @@
         this.off('touchstart.kinetic');
     };
 
-    Kinetic.Node.addGetterSetter(Kinetic.Node, 'dragBoundFunc');
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'dragBoundFunc');
 
     /**
      * set drag bound function.  This is used to override the default
@@ -206,7 +206,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addGetter(Kinetic.Node, 'draggable', false);
+    Kinetic.Factory.addGetter(Kinetic.Node, 'draggable', false);
 
      /**
      * get draggable

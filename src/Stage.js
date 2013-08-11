@@ -587,7 +587,7 @@
     Kinetic.Util.extend(Kinetic.Stage, Kinetic.Container);
 
     // add getters and setters
-    Kinetic.Node.addGetter(Kinetic.Stage, 'container');
+    Kinetic.Factory.addGetter(Kinetic.Stage, 'container');
 
     /**
      * get container DOM element

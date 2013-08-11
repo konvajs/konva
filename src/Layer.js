@@ -199,7 +199,7 @@
     Kinetic.Util.extend(Kinetic.Layer, Kinetic.Container);
 
     // add getters and setters
-    Kinetic.Node.addGetterSetter(Kinetic.Layer, 'clearBeforeDraw', true);
+    Kinetic.Factory.addGetterSetter(Kinetic.Layer, 'clearBeforeDraw', true);
 
     /**
      * set flag which determines if the layer is cleared or not

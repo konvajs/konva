@@ -60,7 +60,7 @@
     };
     Kinetic.Util.extend(Kinetic.Line, Kinetic.Shape);
 
-    Kinetic.Node.addPointsGetterSetter(Kinetic.Line, 'points');
+    Kinetic.Factory.addPointsGetterSetter(Kinetic.Line, 'points');
     /**
      * set points array
      * @method

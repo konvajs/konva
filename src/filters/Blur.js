@@ -337,6 +337,6 @@
         }
     };
 
-    Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filterRadius', 0);
+    Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterRadius', 0);
 
 })();

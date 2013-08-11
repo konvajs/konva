@@ -40,7 +40,7 @@
     };
     Kinetic.Util.extend(Kinetic.Polygon, Kinetic.Shape);
 
-    Kinetic.Node.addPointsGetterSetter(Kinetic.Polygon, 'points');
+    Kinetic.Factory.addPointsGetterSetter(Kinetic.Polygon, 'points');
     /**
      * set points array
      * @method

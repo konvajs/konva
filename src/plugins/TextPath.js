@@ -315,7 +315,7 @@
     Kinetic.Util.extend(Kinetic.TextPath, Kinetic.Shape);
 
     // add setters and getters
-    Kinetic.Node.addGetterSetter(Kinetic.TextPath, 'fontFamily', CALIBRI);
+    Kinetic.Factory.addGetterSetter(Kinetic.TextPath, 'fontFamily', CALIBRI);
 
     /**
      * set font family
@@ -332,7 +332,7 @@
      * @memberof Kinetic.TextPath.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.TextPath, 'fontSize', 12);
+    Kinetic.Factory.addGetterSetter(Kinetic.TextPath, 'fontSize', 12);
 
     /**
      * set font size
@@ -349,7 +349,7 @@
      * @memberof Kinetic.TextPath.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.TextPath, 'fontStyle', NORMAL);
+    Kinetic.Factory.addGetterSetter(Kinetic.TextPath, 'fontStyle', NORMAL);
 
     /**
      * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
@@ -366,7 +366,7 @@
      * @memberof Kinetic.TextPath.prototype
      */
 
-    Kinetic.Node.addGetter(Kinetic.TextPath, 'text', EMPTY_STRING);
+    Kinetic.Factory.addGetter(Kinetic.TextPath, 'text', EMPTY_STRING);
 
     /**
      * get text

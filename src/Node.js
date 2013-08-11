@@ -1264,270 +1264,6 @@
         }
     });
 
-    // getter setter adders
-    Kinetic.Node.addGetterSetter = function(constructor, attr, def) {
-        this.addGetter(constructor, attr, def);
-        this.addSetter(constructor, attr);
-    };
-    Kinetic.Node.addPointGetterSetter = function(constructor, attr, def) {
-        this.addPointGetter(constructor, attr, def);
-        this.addPointSetter(constructor, attr);
-
-        // add invdividual component getters and setters
-        this.addGetter(constructor, attr + UPPER_X, def);
-        this.addGetter(constructor, attr + UPPER_Y, def);
-        this.addSetter(constructor, attr + UPPER_X);
-        this.addSetter(constructor, attr + UPPER_Y);
-    };
-    Kinetic.Node.addBoxGetterSetter = function(constructor, attr, def) {
-        this.addBoxGetter(constructor, attr, def);
-        this.addBoxSetter(constructor, attr);
-
-        // add invdividual component getters and setters
-        this.addGetter(constructor, attr + UPPER_X, def);
-        this.addGetter(constructor, attr + UPPER_Y, def);
-        this.addGetter(constructor, attr + UPPER_WIDTH, def);
-        this.addGetter(constructor, attr + UPPER_HEIGHT, def);
-
-        this.addSetter(constructor, attr + UPPER_X);
-        this.addSetter(constructor, attr + UPPER_Y);
-        this.addSetter(constructor, attr + UPPER_WIDTH);
-        this.addSetter(constructor, attr + UPPER_HEIGHT);
-    };
-    Kinetic.Node.addPointsGetterSetter = function(constructor, attr) {
-        this.addPointsGetter(constructor, attr);
-        this.addPointsSetter(constructor, attr);
-        this.addPointAdder(constructor, attr);
-    };
-    Kinetic.Node.addRotationGetterSetter = function(constructor, attr, def) {
-        this.addRotationGetter(constructor, attr, def);
-        this.addRotationSetter(constructor, attr);
-    };
-    Kinetic.Node.addColorGetterSetter = function(constructor, attr) {
-        this.addGetter(constructor, attr);
-        this.addSetter(constructor, attr);
-
-        // component getters
-        this.addColorRGBGetter(constructor, attr);
-        this.addColorComponentGetter(constructor, attr, R);
-        this.addColorComponentGetter(constructor, attr, G);
-        this.addColorComponentGetter(constructor, attr, B);
-
-        // component setters
-        this.addColorRGBSetter(constructor, attr);
-        this.addColorComponentSetter(constructor, attr, R);
-        this.addColorComponentSetter(constructor, attr, G);
-        this.addColorComponentSetter(constructor, attr, B);
-    };
-
-    // getter adders
-    Kinetic.Node.addColorRGBGetter = function(constructor, attr) {
-        var method = GET + Kinetic.Util._capitalize(attr) + RGB;
-        constructor.prototype[method] = function() {
-            return Kinetic.Util.getRGB(this.attrs[attr]);
-        };
-    };
-
-    Kinetic.Node.addColorComponentGetter = function(constructor, attr, c) {
-        var prefix = GET + Kinetic.Util._capitalize(attr),
-            method = prefix + Kinetic.Util._capitalize(c);
-        constructor.prototype[method] = function() {
-            return this[prefix + RGB]()[c];
-        };
-    };
-    Kinetic.Node.addPointsGetter = function(constructor, attr) {
-        var that = this,
-            method = GET + Kinetic.Util._capitalize(attr);
-
-        constructor.prototype[method] = function() {
-            var val = this.attrs[attr];
-            return val === undefined ? [] : val;
-        };
-    };
-    Kinetic.Node.addGetter = function(constructor, attr, def) {
-        var that = this,
-            method = GET + Kinetic.Util._capitalize(attr);
-
-        constructor.prototype[method] = function() {
-            var val = this.attrs[attr];
-            return val === undefined ? def : val;
-        };
-    };
-    Kinetic.Node.addPointGetter = function(constructor, attr) {
-        var that = this,
-            baseMethod = GET + Kinetic.Util._capitalize(attr);
-
-        constructor.prototype[baseMethod] = function() {
-            var that = this;
-            return {
-                x: that[baseMethod + UPPER_X](),
-                y: that[baseMethod + UPPER_Y]()
-            };
-        };
-    };
-    Kinetic.Node.addBoxGetter = function(constructor, attr) {
-        var that = this,
-            baseMethod = GET + Kinetic.Util._capitalize(attr);
-
-        constructor.prototype[baseMethod] = function() {
-            var that = this;
-            return {
-                x: that[baseMethod + UPPER_X](),
-                y: that[baseMethod + UPPER_Y](),
-                width: that[baseMethod + UPPER_WIDTH](),
-                height: that[baseMethod + UPPER_HEIGHT]()
-            };
-        };
-    };
-    Kinetic.Node.addRotationGetter = function(constructor, attr, def) {
-        var that = this,
-            method = GET + Kinetic.Util._capitalize(attr);
-
-        // radians
-        constructor.prototype[method] = function() {
-            var val = this.attrs[attr];
-            if (val === undefined) {
-                val = def;
-            }
-            return val;
-        };
-        // degrees
-        constructor.prototype[method + DEG] = function() {
-            var val = this.attrs[attr];
-            if (val === undefined) {
-                val = def;
-            }
-            return Kinetic.Util._radToDeg(val);
-        };
-    };
-
-    // setter adders
-    Kinetic.Node.addColorRGBSetter = function(constructor, attr) {
-        var method = SET + Kinetic.Util._capitalize(attr) + RGB;
-
-        constructor.prototype[method] = function(obj) {
-            var r = obj && obj.r !== undefined ? obj.r | 0 : this.getAttr(attr + UPPER_R),
-                g = obj && obj.g !== undefined ? obj.g | 0 : this.getAttr(attr + UPPER_G),
-                b = obj && obj.b !== undefined ? obj.b | 0 : this.getAttr(attr + UPPER_B);
-
-            this._setAttr(attr, HASH + Kinetic.Util._rgbToHex(r, g, b));
-        };
-    };
-
-    Kinetic.Node.addColorComponentSetter = function(constructor, attr, c) {
-        var prefix = SET + Kinetic.Util._capitalize(attr),
-            method = prefix + Kinetic.Util._capitalize(c);
-        constructor.prototype[method] = function(val) {
-            var obj = {};
-            obj[c] = val;
-            this[prefix + RGB](obj);
-        };
-    };
-    Kinetic.Node.addPointsSetter = function(constructor, attr) {
-        var method = SET + Kinetic.Util._capitalize(attr);
-        constructor.prototype[method] = function(val) {
-            var points = Kinetic.Util._getPoints(val);
-            this._setAttr('points', points);
-        };
-    };
-    Kinetic.Node.addSetter = function(constructor, attr) {
-        var method = SET + Kinetic.Util._capitalize(attr);
-
-        constructor.prototype[method] = function(val) {
-            this._setAttr(attr, val);   
-        };
-    };
-    Kinetic.Node.addPointSetter = function(constructor, attr) {
-        var that = this,
-            baseMethod = SET + Kinetic.Util._capitalize(attr);
-
-        constructor.prototype[baseMethod] = function() {
-            var pos = Kinetic.Util._getXY([].slice.call(arguments)),
-                oldVal = this.attrs[attr],
-                x = 0,
-                y = 0;
-
-            if (pos) {
-              x = pos.x;
-              y = pos.y;
-
-              this._fireBeforeChangeEvent(attr, oldVal, pos);
-              if (x !== undefined) {
-                this[baseMethod + UPPER_X](x);
-              }
-              if (y !== undefined) {
-                this[baseMethod + UPPER_Y](y);
-              }
-              this._fireChangeEvent(attr, oldVal, pos);
-            }
-        };
-    };
-    Kinetic.Node.addBoxSetter = function(constructor, attr) {
-        var that = this,
-            baseMethod = SET + Kinetic.Util._capitalize(attr);
-
-        constructor.prototype[baseMethod] = function() {
-            var config = [].slice.call(arguments),
-                pos = Kinetic.Util._getXY(config),
-                size = Kinetic.Util._getSize(config),
-                both = Kinetic.Util._merge(pos, size),
-                oldVal = this.attrs[attr],
-                x, y, width, height;
-
-            if (both) {
-              x = both.x;
-              y = both.y;
-              width = both.width;
-              height = both.height;
-
-              this._fireBeforeChangeEvent(attr, oldVal, both);
-              if (x !== undefined) {
-                this[baseMethod + UPPER_X](x);
-              }
-              if (y !== undefined) {
-                this[baseMethod + UPPER_Y](y);
-              }
-              if (width !== undefined) {
-                this[baseMethod + UPPER_WIDTH](width);
-              }
-              if (height !== undefined) {
-                this[baseMethod + UPPER_HEIGHT](height);
-              }
-              this._fireChangeEvent(attr, oldVal, both);
-            }
-        };
-    };
-    Kinetic.Node.addRotationSetter = function(constructor, attr) {
-        var that = this,
-            method = SET + Kinetic.Util._capitalize(attr);
-
-        // radians
-        constructor.prototype[method] = function(val) {
-            this._setAttr(attr, val);
-        };
-        // degrees
-        constructor.prototype[method + DEG] = function(deg) {
-            this._setAttr(attr, Kinetic.Util._degToRad(deg));
-        };
-    };
-
-    // add adders
-    Kinetic.Node.addPointAdder = function(constructor, attr) {
-        var that = this,
-            baseMethod = ADD + Kinetic.Util._removeLastLetter(Kinetic.Util._capitalize(attr));
-
-        constructor.prototype[baseMethod] = function() {
-            var pos = Kinetic.Util._getXY([].slice.call(arguments)),
-                oldVal = this.attrs[attr];
-
-            if (pos) {
-              this._fireBeforeChangeEvent(attr, oldVal, pos);
-              this.attrs[attr].push(pos);
-              this._fireChangeEvent(attr, oldVal, pos);
-            }
-        };
-    };
-
     /**
      * create node with JSON string.  De-serializtion does not generate custom
      *  shape drawing functions, images, or event handlers (this would make the
@@ -1566,7 +1302,7 @@
     };
     // add getters setters
 
-    Kinetic.Node.addGetterSetter(Kinetic.Node, 'x', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'x', 0);
 
     /**
      * set x position
@@ -1583,7 +1319,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Node, 'y', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'y', 0);
 
     /**
      * set y position
@@ -1600,7 +1336,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Node, 'opacity', 1);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'opacity', 1);
 
     /**
      * set opacity.  Opacity values range from 0 to 1.
@@ -1619,7 +1355,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addGetter(Kinetic.Node, 'name');
+    Kinetic.Factory.addGetter(Kinetic.Node, 'name');
 
      /**
      * get name
@@ -1628,7 +1364,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addGetter(Kinetic.Node, 'id');
+    Kinetic.Factory.addGetter(Kinetic.Node, 'id');
 
     /**
      * get id
@@ -1637,7 +1373,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addRotationGetterSetter(Kinetic.Node, 'rotation', 0);
+    Kinetic.Factory.addRotationGetterSetter(Kinetic.Node, 'rotation', 0);
 
     /**
      * set rotation in radians
@@ -1669,7 +1405,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'scale', 1);
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'scale', 1);
 
     /**
      * set scale
@@ -1730,7 +1466,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'skew', 0);
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'skew', 0);
 
     /**
      * set skew
@@ -1792,7 +1528,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addPointGetterSetter(Kinetic.Node, 'offset', 0);
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'offset', 0);
 
     /**
      * set offset.  A node's offset defines the position and rotation point
@@ -1854,7 +1590,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addSetter(Kinetic.Node, 'width');
+    Kinetic.Factory.addSetter(Kinetic.Node, 'width');
 
     /**
      * set width
@@ -1864,7 +1600,7 @@
      * @param {Number} width
      */
 
-    Kinetic.Node.addSetter(Kinetic.Node, 'height');
+    Kinetic.Factory.addSetter(Kinetic.Node, 'height');
 
     /**
      * set height
@@ -1874,7 +1610,7 @@
      * @param {Number} height
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Node, 'listening', true);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'listening', true);
 
     /**
      * listen or don't listen to events
@@ -1891,7 +1627,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Node, 'visible', true);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'visible', true);
 
     /**
      * set visible

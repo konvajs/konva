@@ -43,7 +43,7 @@
     Kinetic.Util.extend(Kinetic.Wedge, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Node.addGetterSetter(Kinetic.Wedge, 'radius', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Wedge, 'radius', 0);
 
     /**
      * set radius
@@ -60,7 +60,7 @@
      * @memberof Kinetic.Wedge.prototype
      */
 
-    Kinetic.Node.addRotationGetterSetter(Kinetic.Wedge, 'angle', 0);
+    Kinetic.Factory.addRotationGetterSetter(Kinetic.Wedge, 'angle', 0);
 
     /**
      * set angle
@@ -92,7 +92,7 @@
      * @memberof Kinetic.Wedge.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Wedge, 'clockwise', false);
+    Kinetic.Factory.addGetterSetter(Kinetic.Wedge, 'clockwise', false);
 
     /**
      * set clockwise draw direction.  If set to true, the wedge will be drawn clockwise

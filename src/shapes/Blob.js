@@ -92,7 +92,7 @@
 
     Kinetic.Util.extend(Kinetic.Blob, Kinetic.Shape);
 
-    Kinetic.Node.addGetterSetter(Kinetic.Blob, 'tension', 1);
+    Kinetic.Factory.addGetterSetter(Kinetic.Blob, 'tension', 1);
     /**
      * get tension
      * @name getTension
@@ -107,7 +107,7 @@
      * @param {Number} tension
      */
 
-    Kinetic.Node.addPointsGetterSetter(Kinetic.Blob, 'points');
+    Kinetic.Factory.addPointsGetterSetter(Kinetic.Blob, 'points');
     /**
      * get points array
      * @method

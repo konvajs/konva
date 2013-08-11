@@ -4,6 +4,7 @@ module.exports = function(grunt) {
     'src/Global.js', 
     'src/Util.js', 
     'src/Canvas.js',
+    'src/Factory.js',
     'src/Node.js', 
     'src/Animation.js', 
     'src/Tween.js', 

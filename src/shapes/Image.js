@@ -225,12 +225,12 @@
     Kinetic.Util.extend(Kinetic.Image, Kinetic.Shape);
 
 
-    Kinetic.Node.addFilterGetterSetter = function(constructor, attr, def) {
+    Kinetic.Factory.addFilterGetterSetter = function(constructor, attr, def) {
         this.addGetter(constructor, attr, def);
         this.addFilterSetter(constructor, attr);
     };
 
-    Kinetic.Node.addFilterSetter = function(constructor, attr) {
+    Kinetic.Factory.addFilterSetter = function(constructor, attr) {
         var that = this,
             method = SET + Kinetic.Util._capitalize(attr);
 
@@ -241,7 +241,7 @@
     };
 
     // add getters setters
-    Kinetic.Node.addGetterSetter(Kinetic.Image, 'image');
+    Kinetic.Factory.addGetterSetter(Kinetic.Image, 'image');
 
     /**
      * set image
@@ -258,7 +258,7 @@
      * @memberof Kinetic.Image.prototype
      */
 
-    Kinetic.Node.addBoxGetterSetter(Kinetic.Image, 'crop');
+    Kinetic.Factory.addBoxGetterSetter(Kinetic.Image, 'crop');
     /**
      * set crop
      * @method
@@ -346,7 +346,7 @@
      * @memberof Kinetic.Image.prototype
      */
 
-     Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filter');
+     Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filter');
 
      /**
      * set filter

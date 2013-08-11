@@ -172,7 +172,7 @@
     Kinetic.Util.extend(Kinetic.Sprite, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'animation');
+    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'animation');
 
     /**
      * set animation key
@@ -189,7 +189,7 @@
      * @memberof Kinetic.Sprite.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'animations');
+    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'animations');
 
     /**
      * set animations map
@@ -206,7 +206,7 @@
      * @memberof Kinetic.Sprite.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'image');
+    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'image');
 
     /**
      * set image
@@ -223,7 +223,7 @@
      * @memberof Kinetic.Sprite.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'index', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'index', 0);
 
     /**
      * set animation frame index
@@ -240,7 +240,7 @@
      * @memberof Kinetic.Sprite.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Sprite, 'frameRate', 17);
+    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'frameRate', 17);
 
     /**
      * set frame rate in frames / second.  Default is 17 frames per second.  Increase this number to make the sprite

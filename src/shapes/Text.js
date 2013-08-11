@@ -317,7 +317,7 @@
     Kinetic.Util.extend(Kinetic.Text, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Node.addGetterSetter(Kinetic.Text, 'fontFamily', CALIBRI);
+    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontFamily', CALIBRI);
 
     /**
      * set font family
@@ -334,7 +334,7 @@
      * @memberof Kinetic.Text.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Text, 'fontSize', 12);
+    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontSize', 12);
 
     /**
      * set font size in pixels
@@ -351,7 +351,7 @@
      * @memberof Kinetic.Text.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Text, 'fontStyle', NORMAL);
+    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontStyle', NORMAL);
 
     /**
      * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
@@ -368,7 +368,7 @@
      * @memberof Kinetic.Text.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Text, 'padding', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'padding', 0);
 
     /**
      * set padding
@@ -385,7 +385,7 @@
      * @memberof Kinetic.Text.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Text, 'align', LEFT);
+    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'align', LEFT);
 
     /**
      * set horizontal align of text
@@ -402,7 +402,7 @@
      * @memberof Kinetic.Text.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Text, 'lineHeight', 1);
+    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'lineHeight', 1);
 
     /**
      * set line height
@@ -419,7 +419,7 @@
      * @memberof Kinetic.Text.prototype
      */
 
-    Kinetic.Node.addGetterSetter(Kinetic.Text, 'wrap', WORD);
+    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'wrap', WORD);
 
     /**
      * set wrap
@@ -436,7 +436,7 @@
      * @memberof Kinetic.Text.prototype
      */
 
-    Kinetic.Node.addGetter(Kinetic.Text, TEXT, EMPTY_STRING);
+    Kinetic.Factory.addGetter(Kinetic.Text, TEXT, EMPTY_STRING);
 
     /**
      * get text
@@ -445,7 +445,7 @@
      * @memberof Kinetic.Text.prototype
      */
 
-    Kinetic.Node.addSetter(Kinetic.Text, 'width');
+    Kinetic.Factory.addSetter(Kinetic.Text, 'width');
 
     /**
      * set width
@@ -455,7 +455,7 @@
      * @param {Number|String} width default is auto
      */
 
-    Kinetic.Node.addSetter(Kinetic.Text, 'height');
+    Kinetic.Factory.addSetter(Kinetic.Text, 'height');
 
     /**
      * set height
