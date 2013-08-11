@@ -45,8 +45,11 @@
                 params,
                 that = this,
                 context = canvas.getContext(),
-                crop = this.getCrop(),
-                cropX, cropY, cropWidth, cropHeight, image;
+                cropX = this.getCropX() || 0,
+                cropY = this.getCropY() || 0,
+                cropWidth = this.getCropWidth(),
+                cropHeight = this.getCropHeight(),
+                image;
 
             // if a filter is set, and the filter needs to be updated, reapply
             if (this.getFilter() && this._applyFilter) {
@@ -69,11 +72,7 @@
 
             if(image) {
                 // if cropping
-                if(crop) {
-                    cropX = crop.x || 0;
-                    cropY = crop.y || 0;
-                    cropWidth = crop.width || 0;
-                    cropHeight = crop.height || 0;
+                if(cropWidth && cropHeight) {
                     params = [image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height];
                 }
                 // no cropping
@@ -150,24 +149,6 @@
         clearFilter: function() {
             this.filterCanvas = null;
             this._applyFilter = false;
-        },
-        /**
-         * set crop
-         * @method
-         * @memberof Kinetic.Image.prototype
-         * @param {Object|Array} config
-         * @param {Number} config.x
-         * @param {Number} config.y
-         * @param {Number} config.width
-         * @param {Number} config.height
-         */
-        setCrop: function() {
-            var config = [].slice.call(arguments),
-                pos = Kinetic.Util._getXY(config),
-                size = Kinetic.Util._getSize(config),
-                both = Kinetic.Util._merge(pos, size);
-
-            this._setAttr(CROP, Kinetic.Util._merge(both, this.getCrop()));
         },
         /**
          * create image hit region which enables more accurate hit detection mapping of the image
@@ -277,11 +258,90 @@
      * @memberof Kinetic.Image.prototype
      */
 
-    Kinetic.Node.addGetter(Kinetic.Image, 'crop');
+    Kinetic.Node.addBoxGetterSetter(Kinetic.Image, 'crop');
+    /**
+     * set crop
+     * @method
+     * @name setCrop
+     * @memberof Kinetic.Image.prototype
+     * @param {Object|Array}
+     * @example
+     * // set crop x, y, width and height with an array<br>
+     * image.setCrop([20, 20, 100, 100]);<br><br>
+     *
+     * // set crop x, y, width and height with an object<br>
+     * image.setCrop({<br>
+     *   x: 20,<br>
+     *   y: 20,<br>
+     *   width: 20,<br>
+     *   height: 20<br>
+     * });
+     */
+
+     /**
+     * set cropX
+     * @method
+     * @name setCropX
+     * @memberof Kinetic.Image.prototype
+     * @param {Number} x
+     */
+
+     /**
+     * set cropY
+     * @name setCropY
+     * @method
+     * @memberof Kinetic.Image.prototype
+     * @param {Number} y
+     */
+
+     /**
+     * set cropWidth
+     * @name setCropWidth
+     * @method
+     * @memberof Kinetic.Image.prototype
+     * @param {Number} width
+     */
+
+     /**
+     * set cropHeight
+     * @name setCropHeight
+     * @method
+     * @memberof Kinetic.Image.prototype
+     * @param {Number} height
+     */
 
     /**
      * get crop
      * @name getCrop
+     * @method
+     * @memberof Kinetic.Image.prototype
+     * @return {Object}
+     */
+
+    /**
+     * get crop x
+     * @name getCropX
+     * @method
+     * @memberof Kinetic.Image.prototype
+     */
+
+    /**
+     * get crop y
+     * @name getCropY
+     * @method
+     * @memberof Kinetic.Image.prototype
+     */
+
+    /**
+     * get crop width
+     * @name getCropWidth
+     * @method
+     * @memberof Kinetic.Image.prototype
+     */
+
+    /**
+     * get crop height
+     * @name getCropHeight
      * @method
      * @memberof Kinetic.Image.prototype
      */

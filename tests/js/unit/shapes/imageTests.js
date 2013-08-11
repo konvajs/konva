@@ -123,7 +123,7 @@ Test.Modules.IMAGE = {
         };
         imageObj.src = '../assets/darth-vader.jpg';
     },
-    'crop add and scale image': function(containerId) {
+    'crop and scale image': function(containerId) {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = new Kinetic.Stage({
@@ -138,14 +138,51 @@ Test.Modules.IMAGE = {
                 image: imageObj,
                 width: 107,
                 height: 75,
-                crop: [186, 211, 292 - 186, 285 - 211],
+                crop: [186, 211, 106, 74],
                 draggable: true,
                 scale: [0.5, 0.5]
             });
 
             layer.add(darth);
             stage.add(layer);
+
+
+            test(darth.getCrop().x === 186, 'crop x should be 186');
+            test(darth.getCrop().y === 211, 'crop y should be 211');
+            test(darth.getCrop().width === 106, 'crop width should be 106');
+            test(darth.getCrop().height === 74, 'crop height should be 74');
+
+            test(darth.getCropX() === 186, 'crop x should be 186');
+            test(darth.getCropY() === 211, 'crop y should be 211');
+            test(darth.getCropWidth() === 106, 'crop width should be 106');
+            test(darth.getCropHeight() === 74, 'crop height should be 74');
+
+            darth.setCrop([1, 2, 3, 4]);
             
+            test(darth.getCrop().x === 1, 'crop x should be 1');
+            test(darth.getCrop().y === 2, 'crop y should be 2');
+            test(darth.getCrop().width === 3, 'crop width should be 3');
+            test(darth.getCrop().height === 4, 'crop height should be 4');
+
+            test(darth.getCropX() === 1, 'crop x should be 1');
+            test(darth.getCropY() === 2, 'crop y should be 2');
+            test(darth.getCropWidth() === 3, 'crop width should be 3');
+            test(darth.getCropHeight() === 4, 'crop height should be 4');
+
+            darth.setCropX(5);
+            darth.setCropY(6);
+            darth.setCropWidth(7);
+            darth.setCropHeight(8);
+
+            test(darth.getCrop().x === 5, 'crop x should be 5');
+            test(darth.getCrop().y === 6, 'crop y should be 6');
+            test(darth.getCrop().width === 7, 'crop width should be 7');
+            test(darth.getCrop().height === 8, 'crop height should be 8');
+
+            test(darth.getCropX() === 5, 'crop x should be 5');
+            test(darth.getCropY() === 6, 'crop y should be 6');
+            test(darth.getCropWidth() === 7, 'crop width should be 7');
+            test(darth.getCropHeight() === 8, 'crop height should be 8');      
 
         };
         imageObj.src = '../assets/darth-vader.jpg';
