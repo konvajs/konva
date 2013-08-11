@@ -222,11 +222,16 @@
             this.context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
         },
         _clip: function(container) {
-            var context = this.getContext();
+            var context = this.getContext(),
+                clipX = container.getClipX() || 0,
+                clipY = container.getClipY() || 0,
+                clipWidth = container.getClipWidth(),
+                clipHeight = container.getClipHeight();
+
             context.save();
             this._applyAncestorTransforms(container);
             context.beginPath();
-            container.getClipFunc()(this);
+            context.rect(clipX, clipY, clipWidth, clipHeight);
             context.clip();
             context.setTransform(1, 0, 0, 1, 0, 0);
         }

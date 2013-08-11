@@ -48,6 +48,54 @@ Test.Modules.Tween = {
         });
 
     },
+    '*tween clipping region': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer({
+            clipX: 0,
+            clipY: 0,
+            clipWidth: 150,
+            clipHeight: 100
+        });
+
+        var spline = new Kinetic.Spline({
+            points: [
+                73, 160,
+                340, 23,
+                500, 109,
+                300, 109
+            ],
+            stroke: 'blue',
+            strokeWidth: 10,
+            lineCap: 'round',
+            lineJoin: 'round',
+            draggable: true,
+            tension: 1
+        });
+
+        layer.add(spline);
+        stage.add(layer);
+
+        var tween = new Kinetic.Tween({
+            node: layer,
+            duration: 1,
+            clipWidth: 500,
+            clipHeight: 200,
+            easing: Kinetic.Easings.BackEaseOut
+        });
+
+        stage.getContent().addEventListener('mouseover', function() {
+          tween.play();
+        });
+
+        stage.getContent().addEventListener('mouseout', function() {
+          tween.reverse();
+        });
+
+    },
     'ease-in, ease-out, ease-in-out hovers': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

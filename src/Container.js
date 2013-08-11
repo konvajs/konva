@@ -242,7 +242,7 @@
         },
         drawScene: function(canvas) {
             var layer = this.getLayer(),
-                clip = !!this.getClipFunc(),
+                clip = this.getClipWidth() && this.getClipHeight(),
                 children, n, len;
 
             if (!canvas && layer) {
@@ -269,7 +269,7 @@
             return this;
         },
         drawHit: function() {
-            var clip = !!this.getClipFunc() && this.nodeType !== 'Stage',
+            var clip = this.getClipWidth() && this.getClipHeight() && this.nodeType !== 'Stage',
                 n = 0,
                 len = 0,
                 children = [],
@@ -299,20 +299,93 @@
     Kinetic.Util.extend(Kinetic.Container, Kinetic.Node);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Container, 'clipFunc');
+    Kinetic.Factory.addBoxGetterSetter(Kinetic.Container, 'clip');
 
     /**
-     * set clipping function
-     * @name setClipFunc
+     * set clip
+     * @method
+     * @name setClip
+     * @memberof Kinetic.Container.prototype
+     * @param {Object|Array}
+     * @example
+     * // set clip x, y, width and height with an array<br>
+     * image.setClip([20, 20, 100, 100]);<br><br>
+     *
+     * // set clip x, y, width and height with an object<br>
+     * image.setClip({<br>
+     *   x: 20,<br>
+     *   y: 20,<br>
+     *   width: 20,<br>
+     *   height: 20<br>
+     * });
+     */
+
+     /**
+     * set clipX
+     * @method
+     * @name setClipX
+     * @memberof Kinetic.Container.prototype
+     * @param {Number} x
+     */
+
+     /**
+     * set clipY
+     * @name setClipY
      * @method
      * @memberof Kinetic.Container.prototype
-     * @param {Number} deg
+     * @param {Number} y
+     */
+
+     /**
+     * set clipWidth
+     * @name setClipWidth
+     * @method
+     * @memberof Kinetic.Container.prototype
+     * @param {Number} width
+     */
+
+     /**
+     * set clipHeight
+     * @name setClipHeight
+     * @method
+     * @memberof Kinetic.Container.prototype
+     * @param {Number} height
      */
 
     /**
-     * get clipping function
-     * @name getClipFunc
+     * get clip
+     * @name getClip
+     * @method
+     * @memberof Kinetic.Container.prototype
+     * @return {Object}
+     */
+
+    /**
+     * get clip x
+     * @name getClipX
      * @method
      * @memberof Kinetic.Container.prototype
      */
+
+    /**
+     * get clip y
+     * @name getClipY
+     * @method
+     * @memberof Kinetic.Container.prototype
+     */
+
+    /**
+     * get clip width
+     * @name getClipWidth
+     * @method
+     * @memberof Kinetic.Container.prototype
+     */
+
+    /**
+     * get clip height
+     * @name getClipHeight
+     * @method
+     * @memberof Kinetic.Container.prototype
+     */
+
 })();
