@@ -1,6 +1,6 @@
 (function() {
 
-    var convolve_internal = function(imageData,matrix,result){
+    var convolve_internal = function(imageData,matrix){
         // Input data
         var pixels = imageData.data,
             imageSizeX = imageData.width,
@@ -9,9 +9,8 @@
             pixel;
 
         // An array for storing the result
-        // (this should now be passed as the 3rd argument)
-        // var result = [];
-        // result.length = imageSizeX*imageSizeY*4;
+        var result = [];
+        result.length = imageSizeX*imageSizeY*4;
 
         // Determine the size and demsionality of the matrix
         // Note: it should be square and odd (3,5,7,9 etc...)
@@ -58,14 +57,13 @@
         }
 
         // copy the result to the original canvas
-        // Should now be handled by the CALLER using the `result` argument
-        //var lastPos = nPixels*4;
-        //for( pos=0; pos<lastPos; pos+=4 ){
-        //     pixels[pos+0] = result[pos+0];
-        //     pixels[pos+1] = result[pos+1];
-        //     pixels[pos+2] = result[pos+2];
-        //     //pixels[pos+3] = result[pos+3];
-        //}
+        var lastPos = nPixels*4;
+        for( pos=0; pos<lastPos; pos+=4 ){
+             pixels[pos+0] = result[pos+0];
+             pixels[pos+1] = result[pos+1];
+             pixels[pos+2] = result[pos+2];
+             //pixels[pos+3] = result[pos+3];
+        }
     };
 
     // Definition of a gaussian function
@@ -143,7 +141,6 @@
      * @method
      * @memberof Kinetic.Image.prototype
      */
-
     /**
      * set the current filter amount 0 = no filter, 100 = max filter
      * @name setFilterAmount
@@ -152,94 +149,67 @@
      */
 
 
-
-    Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filterConvolutionMatrix', 0);
     /**
-     * get the current convolution matrix.
-     * @name getFilterConvolutionMatrix
-     * @method
-     * @memberof Kinetic.Image.prototype
-     */
-
-    /**
-     * set the current convolution matrix, can be a single dimensional array
-     *  or a 2D array. A 1D array will be applied horizontally then flipped
-     *  and applied vertically. A 2D array will be applied as-is. The array
-     *  dimensions should be odd (ie 3x3, 5x5, 7, etc...)
-     * @name setFilterConvolutionMatrix
-     * @method
-     * @memberof Kinetic.Image.prototype
-     */
-
-    /**
-     * unsharp mask
+     * Unsharp Mask Filter.
      * @function
      * @memberof Kinetic.Filters
      * @param {Object} imageData
+     * @author ippo615
      */
     Kinetic.Filters.UnsharpMask = function(imageData) {
-        // Create a temporary image for the result, perform the convolution
-        // then copy the result back
-        var result = this.getCanvas().getContext('2d').createImageData(imageData.width,imageData.height);
         convolve_internal(imageData,
-            make_unsharp_kernel(5,this.getFilterAmount()/100),
-            result
+            make_unsharp_kernel(5,this.getFilterAmount()/100)
         );
-        this.getCanvas().getContext('2d').putImageData(result,0,0);
     };
 
     /**
-     * soft blur
+     * Soft Blur Filter.
      * @function
      * @memberof Kinetic.Filters
      * @param {Object} imageData
+     * @author ippo615
      */
     Kinetic.Filters.SoftBlur = function(imageData) {
-        var result = this.getCanvas().getContext('2d').createImageData(imageData.width,imageData.height);
         convolve_internal(imageData,
-            make_soft_blur_kernel(5,this.getFilterAmount()/100),
-            result
+            make_soft_blur_kernel(5,this.getFilterAmount()/100)
         );
-        this.getCanvas().getContext('2d').putImageData(result,0,0);
     };
 
 
     /**
-     * edge detection filter, makes edges more noticable
+     * Edge Filter.
+     *  Makes edges more noticable.
      * @function
      * @memberof Kinetic.Filters
      * @param {Object} imageData
+     * @author ippo615
      */
     Kinetic.Filters.Edge = function(imageData) {
         var s = this.getFilterAmount()/100;
         if( s === 0 ){ return; }
-        var matrix = [
+        convolve_internal(imageData,[
             [ 0,  -1*s, 0],
             [-1*s,(1-s)+4*s,-1*s],
             [ 0,  -1*s, 0]
-        ];
-        var result = this.getCanvas().getContext('2d').createImageData(imageData.width,imageData.height);
-        convolve_internal(imageData,matrix,result);
-        this.getCanvas().getContext('2d').putImageData(result,0,0);
+        ]);
     };
 
     /**
-     * emboss
+     * Emboss Filter.
+     *  Makes the image apear to have some depth.
      * @function
      * @memberof Kinetic.Filters
      * @param {Object} imageData
+     * @author ippo615
      */
     Kinetic.Filters.Emboss = function(imageData) {
         var s = this.getFilterAmount()/100;
         if( s === 0 ){ return; }
-        var matrix = [
+        convolve_internal(imageData,[
             [-1*s,-0.5*s, 0],
             [-0.5*s,1+0.5*s, 0.5*s],
             [ 0,    0.5*s, 1*s]
-        ];
-        var result = this.getCanvas().getContext('2d').createImageData(imageData.width,imageData.height);
-        convolve_internal(imageData,matrix,result);
-        this.getCanvas().getContext('2d').putImageData(result,0,0);
+        ]);
     };
 
 })();

@@ -80,11 +80,11 @@
     };
 
     /**
-     * shift hue
+     * Shift Hue Filter.
      * @function
      * @memberof Kinetic.Filters
      * @param {Object} imageData
-	 * @author ippo615
+     * @author ippo615
      */
     Kinetic.Filters.ShiftHue = function(imageData) {
         shift_hue(imageData, this.getFilterHueShiftDeg() % 360 );
@@ -107,7 +107,8 @@
 
 
     /**
-     * colorizes the image so that it is just varying shades of the specified color
+     * Colorize Filter.
+     *  colorizes the image so that it is just varying shades of the specified color
      * @function
      * @memberof Kinetic.Filters
      * @param {Object} imageData
@@ -148,3 +149,4 @@
      */
 
 })();
+
