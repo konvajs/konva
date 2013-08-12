@@ -15,19 +15,7 @@
                 node = dd.node;
 
             if(node) {
-                var pos = node.getStage().getPointerPosition();
-                var dbf = node.getDragBoundFunc();
-
-                var newNodePos = {
-                    x: pos.x - dd.offset.x,
-                    y: pos.y - dd.offset.y
-                };
-
-                if(dbf !== undefined) {
-                    newNodePos = dbf.call(node, newNodePos, evt);
-                }
-
-                node.setAbsolutePosition(newNodePos);
+                node._setDragPosition(evt);
 
                 if(!dd.isDragging) {
                     dd.isDragging = true;
@@ -85,11 +73,9 @@
      */
     Kinetic.Node.prototype.startDrag = function() {
         var dd = Kinetic.DD,
-            that = this,
             stage = this.getStage(),
             layer = this.getLayer(),
             pos = stage.getPointerPosition(),
-            m = this.getTransform().getTranslation(),
             ap = this.getAbsolutePosition();
 
         if(pos) {
@@ -102,7 +88,25 @@
             dd.offset.y = pos.y - ap.y;
             dd.anim.setLayers(layer || this.getLayers());
             dd.anim.start();
+
+            this._setDragPosition();
         }
+    };
+
+    Kinetic.Node.prototype._setDragPosition = function(evt) {
+        var dd = Kinetic.DD
+            pos = this.getStage().getPointerPosition(),
+            dbf = this.getDragBoundFunc(),
+            newNodePos = {
+                x: pos.x - dd.offset.x,
+                y: pos.y - dd.offset.y
+            };
+
+        if(dbf !== undefined) {
+            newNodePos = dbf.call(this, newNodePos, evt);
+        }
+
+        this.setAbsolutePosition(newNodePos);
     };
 
     /**

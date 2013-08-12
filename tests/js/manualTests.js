@@ -979,7 +979,7 @@ Test.Modules.DRAG_AND_DROP = {
         stage.add(layer);
         layer.draw();
     },
-    'drag and drop elastic star with shadow': function(containerId) {
+    'drag and drop star with shadow': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -988,8 +988,8 @@ Test.Modules.DRAG_AND_DROP = {
         var layer = new Kinetic.Layer();
 
         var star = new Kinetic.Star({
-            x: 200,
-            y: 100,
+            x: 260,
+            y: 160,
             numPoints: 5,
             innerRadius: 40,
             outerRadius: 70,
@@ -1003,6 +1003,7 @@ Test.Modules.DRAG_AND_DROP = {
                 x: 5,
                 y: 5
             },
+            offset: 60,
             draggable: true,
             name: 'star'
         });
@@ -1011,8 +1012,6 @@ Test.Modules.DRAG_AND_DROP = {
         stage.add(layer);
         star.setLineJoin('bevel');
         layer.draw();
-
-        var trans = null;
 
 
         showHit(layer);
@@ -1415,10 +1414,7 @@ Test.Modules.DRAG_AND_DROP = {
         });
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group({
-            scale: {
-                x: 2,
-                y: 2
-            }
+            scale: 2
         });
 
         var Circle = new Kinetic.Circle({
@@ -1483,7 +1479,6 @@ Test.Modules.DRAG_AND_DROP = {
             fill: 'red',
             stroke: 'black',
             strokeWidth: 4,
-            draggable: true,
             rotationDeg: 60,
             scale: {
                 x: 2,
@@ -1492,11 +1487,12 @@ Test.Modules.DRAG_AND_DROP = {
             offset: {
                 x: 50,
                 y: 25
-            }
+            },
+            draggable: true
         });
 
         group.add(rect);
-        layer.add(group);
+        layer.add(rect);
 
         stage.add(bgLayer);
         stage.add(layer);

@@ -530,11 +530,11 @@
          * @memberof Kinetic.Node.prototype
          */
         getAbsolutePosition: function() {
-            var trans = this.getAbsoluteTransform(),
+            var absoluteTransform = this.getAbsoluteTransform(),
                 o = this.getOffset();
 
-            trans.translate(o.x, o.y);
-            return trans.getTranslation();
+            absoluteTransform.translate(o.x, o.y);
+            return absoluteTransform.getTranslation();
         },
         /**
          * set absolute position
@@ -567,6 +567,44 @@
             this.setPosition(pos.x, pos.y);
             this._setTransform(trans);
             return this;
+        },
+        _setTransform: function(trans) {
+            var key;
+
+            for(key in trans) {
+                this.attrs[key] = trans[key];
+            }
+
+            this._clearCache(TRANSFORM);
+            this._clearSelfAndChildrenCache(ABSOLUTE_TRANSFORM);
+        },
+        _clearTransform: function() {
+            var trans = {
+                x: this.getX(),
+                y: this.getY(),
+                rotation: this.getRotation(),
+                scaleX: this.getScaleX(),
+                scaleY: this.getScaleY(),
+                offsetX: this.getOffsetX(),
+                offsetY: this.getOffsetY(),
+                skewX: this.getSkewX(),
+                skewY: this.getSkewY()
+            };
+
+            this.attrs.x = 0;
+            this.attrs.y = 0;
+            this.attrs.rotation = 0;
+            this.attrs.scaleX = 1;
+            this.attrs.scaleY = 1;
+            this.attrs.offsetX = 0;
+            this.attrs.offsetY = 0;
+            this.attrs.skewX = 0;
+            this.attrs.skewY = 0;
+
+            this._clearCache(TRANSFORM);
+            this._clearSelfAndChildrenCache(ABSOLUTE_TRANSFORM);
+
+            return trans;
         },
         /**
          * move node by an amount relative to its current position
@@ -1085,47 +1123,6 @@
                     i--;
                 }
             }
-        },
-        /**
-        * clears the transform and returns the original transform
-        */
-        _clearTransform: function() {
-            var trans = {
-                x: this.getX(),
-                y: this.getY(),
-                rotation: this.getRotation(),
-                scaleX: this.getScaleX(),
-                scaleY: this.getScaleY(),
-                offsetX: this.getOffsetX(),
-                offsetY: this.getOffsetY(),
-                skewX: this.getSkewX(),
-                skewY: this.getSkewY()
-            };
-
-            this.attrs.x = 0;
-            this.attrs.y = 0;
-            this.attrs.rotation = 0;
-            this.attrs.scaleX = 1;
-            this.attrs.scaleY = 1;
-            this.attrs.offsetX = 0;
-            this.attrs.offsetY = 0;
-            this.attrs.skewX = 0;
-            this.attrs.skewY = 0;
-
-            this._clearCache(TRANSFORM);
-            this._clearSelfAndChildrenCache(ABSOLUTE_TRANSFORM);
-
-            return trans;
-        },
-        _setTransform: function(trans) {
-            var key;
-
-            for(key in trans) {
-                this.attrs[key] = trans[key];
-            }
-
-            this._clearCache(TRANSFORM);
-            this._clearSelfAndChildrenCache(ABSOLUTE_TRANSFORM);
         },
         _fireBeforeChangeEvent: function(attr, oldVal, newVal) {
             this._fire(BEFORE + Kinetic.Util._capitalize(attr) + CHANGE, {
