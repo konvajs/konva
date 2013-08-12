@@ -116,10 +116,18 @@
          * @method
          * @memberof Kinetic.Canvas.prototype
          */
-        clear: function() {
-            var context = this.getContext();
-            var el = this.getElement();
-            context.clearRect(0, 0, this.getWidth(), this.getHeight());
+        clear: function(clip) {
+            var context = this.getContext(),
+                pos, size;
+            
+            if (clip) {
+                pos = Kinetic.Util._getXY(clip);
+                size = Kinetic.Util._getSize(clip);
+                context.clearRect(pos.x || 0, pos.y || 0, size.width, size.height);
+            }
+            else {
+                context.clearRect(0, 0, this.getWidth(), this.getHeight());
+            }
         },
         /**
          * to data url

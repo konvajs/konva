@@ -28,12 +28,13 @@
         SET = 'set',
         SHAPE = 'Shape',
         SPACE = ' ',
-        STAGE = 'Stage',
+        STAGE = 'stage',
         TRANSFORM = 'transform',
         UPPER_B = 'B',
         UPPER_G = 'G',
         UPPER_HEIGHT = 'Height',
         UPPER_R = 'R',
+        UPPER_STAGE = 'Stage',
         UPPER_WIDTH = 'Width',
         UPPER_X = 'X',
         UPPER_Y = 'Y',
@@ -53,61 +54,9 @@
             'offsetYChange.kinetic'
         ].join(SPACE);
 
-    function _clearTransformCache() {
-        this._clearCache(TRANSFORM);
-        this._clearAbsoluteTransformCache();
-    }
-
-    // clear absolute transform cache pair
-    function _clearAbsoluteTransformCacheEachChild(node) {
-        _clearAbsoluteTransformCache.call(node);
-    }
-    function _clearAbsoluteTransformCache() {
-        this._clearCache(ABSOLUTE_TRANSFORM);
-
-        if (this.children) {
-            this.getChildren().each(_clearAbsoluteTransformCacheEachChild);
-        }
-    }
-
-    // clear visible cache pair
-    function _clearVisibleCacheEachChild(node) {
-        _clearVisibleCache.call(node);
-    }
-    function _clearVisibleCache() {
-        this._clearCache(VISIBLE);
-
-        if (this.children) {
-            this.getChildren().each(_clearVisibleCacheEachChild);
-        }
-    }
-
-    // clear listening cache pair
-    function _clearListeningCacheEachChild(node) {
-        _clearListeningCache.call(node);
-    }
-    function _clearListeningCache() {
-        this._clearCache(LISTENING);
-
-        if (this.children) {
-            this.getChildren().each(_clearListeningCacheEachChild);
-        }
-    }
-
-    // clear absolute opacity cache pair
-    function _clearAbsoluteOpacityCacheEachChild(node) {
-        _clearAbsoluteOpacityCache.call(node);
-    }
-    function _clearAbsoluteOpacityCache() {
-        this._clearCache(ABSOLUTE_OPACITY);
-
-        if (this.children) {
-            this.getChildren().each(_clearAbsoluteOpacityCacheEachChild);
-        }
-    }
-
     Kinetic.Util.addMethods(Kinetic.Node, {
         _init: function(config) {
+            var that = this;
             this._id = Kinetic.Global.idCounter++;
             this.eventListeners = {};
             this.attrs = {};
@@ -115,16 +64,29 @@
             this.setAttrs(config);
 
             // event bindings for cache handling
-            this.on(transformChangeStr, _clearTransformCache);
-            this.on('visibleChange.kinetic', _clearVisibleCache);
-            this.on('listeningChange.kinetic', _clearListeningCache);
-            this.on('opacityChange.kinetic', _clearAbsoluteOpacityCache);
-
-            this._clearTransformCache = _clearTransformCache;
-            this._clearAbsoluteTransformCache = _clearAbsoluteTransformCache;
-            this._clearVisibleCache = _clearVisibleCache;
-            this._clearListeningCache = _clearListeningCache;
-            this._clearAbsoluteOpacityCache = _clearAbsoluteOpacityCache;
+            this.on(transformChangeStr, function() {
+                this._clearCache(TRANSFORM);
+                that._clearSelfAndChildrenCache(ABSOLUTE_TRANSFORM);
+            });
+            this.on('visibleChange.kinetic', function() {
+                that._clearSelfAndChildrenCache(VISIBLE);
+            });
+            this.on('listeningChange.kinetic', function() {
+                that._clearSelfAndChildrenCache(LISTENING);
+            });
+            this.on('opacityChange.kinetic', function() {
+                that._clearSelfAndChildrenCache(ABSOLUTE_OPACITY);
+            });
+        },
+        /**
+        * clear cached variables
+        * @method
+        * @memberof Kinetic.Node.prototype
+        * @example
+        * node.clearCache();
+        */
+        clearCache: function() {
+            this.cache = {};
         },
         _clearCache: function(attr){
             delete this.cache[attr];
@@ -138,6 +100,16 @@
             }
 
             return this.cache[attr];     
+        },
+        _clearSelfAndChildrenCache: function(attr) {
+            var that = this;
+            this._clearCache(attr);
+
+            if (this.children) {
+                this.getChildren().each(function(node) {
+                  node._clearSelfAndChildrenCache(attr);
+                });
+            }
         },
         /**
          * bind events to the node. KineticJS supports mouseover, mousemove,
@@ -263,6 +235,14 @@
                 parent._setChildrenIndices();
                 delete this.parent;
             }
+
+            // every cached attr that is calculated via node tree
+            // treversal must be cleared when removing a node
+            this._clearSelfAndChildrenCache(STAGE);
+            this._clearSelfAndChildrenCache(ABSOLUTE_TRANSFORM);
+            this._clearSelfAndChildrenCache(VISIBLE);
+            this._clearSelfAndChildrenCache(LISTENING);
+            this._clearSelfAndChildrenCache(ABSOLUTE_OPACITY);
 
             return this;
         },
@@ -459,7 +439,6 @@
          */
         getAbsoluteZIndex: function() {
             var level = this.getLevel(),
-                stage = this.getStage(),
                 that = this,
                 index = 0,
                 nodes, len, n, child;
@@ -484,7 +463,7 @@
                     addChildren(nodes);
                 }
             }
-            if(that.nodeType !== STAGE) {
+            if(that.nodeType !== UPPER_STAGE) {
                 addChildren(that.getStage().getChildren());
             }
 
@@ -813,8 +792,12 @@
          * @memberof Kinetic.Node.prototype
          */
         getStage: function() {
-            if(this.getParent()) {
-                return this.getParent().getStage();
+            return this._getCache(STAGE, this._getStage);
+        },
+        _getStage: function() {
+            var parent = this.getParent();
+            if(parent) {
+                return parent.getStage();
             }
             else {
                 return undefined;
@@ -1107,7 +1090,6 @@
         * clears the transform and returns the original transform
         */
         _clearTransform: function() {
-
             var trans = {
                 x: this.getX(),
                 y: this.getY(),
@@ -1130,7 +1112,8 @@
             this.attrs.skewX = 0;
             this.attrs.skewY = 0;
 
-            this._clearTransformCache();
+            this._clearCache(TRANSFORM);
+            this._clearSelfAndChildrenCache(ABSOLUTE_TRANSFORM);
 
             return trans;
         },
@@ -1141,7 +1124,8 @@
                 this.attrs[key] = trans[key];
             }
 
-            this._clearTransformCache();
+            this._clearCache(TRANSFORM);
+            this._clearSelfAndChildrenCache(ABSOLUTE_TRANSFORM);
         },
         _fireBeforeChangeEvent: function(attr, oldVal, newVal) {
             this._fire(BEFORE + Kinetic.Util._capitalize(attr) + CHANGE, {
@@ -1163,7 +1147,6 @@
          */
         setId: function(id) {
             var oldId = this.getId(),
-                stage = this.getStage(),
                 go = Kinetic.Global;
 
             go._removeId(oldId);
@@ -1179,7 +1162,6 @@
          */
         setName: function(name) {
             var oldName = this.getName(),
-                stage = this.getStage(),
                 go = Kinetic.Global;
 
             go._removeName(oldName, this._id);
@@ -1197,12 +1179,11 @@
             }
         },
         _fireAndBubble: function(eventType, evt, compareShape) {
+            var okayToRun = true;
+
             if(evt && this.nodeType === SHAPE) {
                 evt.targetNode = this;
             }
-            var stage = this.getStage();
-            var el = this.eventListeners;
-            var okayToRun = true;
 
             if(eventType === MOUSEENTER && compareShape && this._id === compareShape._id) {
                 okayToRun = false;

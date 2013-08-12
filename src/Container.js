@@ -137,7 +137,9 @@
             return Kinetic.Collection.toCollection(retArr);
         },
         _getNodeById: function(key) {
-            var stage = this.getStage(), go = Kinetic.Global, node = go.ids[key];
+            var go = Kinetic.Global, 
+                node = go.ids[key];
+                
             if(node !== undefined && this.isAncestorOf(node)) {
                 return node;
             }

@@ -107,9 +107,12 @@
          * clear canvas tied to the layer
          * @method
          * @memberof Kinetic.Node.prototype
+         * @param {Object} [clip] clipping bounds
+         * @example
+         * layer.clear([0, 0, 100, 100])
          */
-        clear: function() {
-            this.getCanvas().clear();
+        clear: function(clip) {
+            this.getCanvas().clear(clip);
             return this;
         },
         // extenders
@@ -194,6 +197,9 @@
                 stage.content.removeChild(element);
             }
             return this;
+        },
+        getStage: function() {
+            return this.parent;
         }
     });
     Kinetic.Util.extend(Kinetic.Layer, Kinetic.Container);

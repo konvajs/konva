@@ -48,7 +48,7 @@ Test.Modules.Tween = {
         });
 
     },
-    '*tween clipping region': function(containerId) {
+    'tween clipping region': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,

@@ -50,8 +50,8 @@ var tests = {
     var layer = new Kinetic.Layer();
 
     var circle = new Kinetic.Circle({
-      x: Math.random() * 500,
-      y: Math.random() * 200,
+      x: 43,
+      y: 43,
       radius: 40,
       fill: 'red',
       stroke: 'black',
@@ -61,10 +61,10 @@ var tests = {
     layer.add(circle);
     stage.add(layer);
 
+
     for (var n=0; n<2000; n++) {
       layer.draw();
     } 
-
     
     stop(Kinetic, test);
   }

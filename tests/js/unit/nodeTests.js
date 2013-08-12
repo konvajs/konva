@@ -152,6 +152,11 @@ Test.Modules.NODE = {
         layer.draw();
         test(circle.cache.listening === false, '18) circle listening cache should be primed');
 
+
+        // stage cache
+        var st = circle.getStage();
+        test(circle.cache.stage._id === stage._id, '19) circle stage cache should be primed');
+
     },
     'test pixel ratio toDataURL': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -605,8 +610,8 @@ Test.Modules.NODE = {
         layer2.add(circle2);
         stage.add(layer1).add(layer2);
 
-        test(layer2.isVisible(), 'layer2 should be visible');
 
+        test(layer2.isVisible(), 'layer2 should be visible');
         layer2.hide();
         test(!layer2.isVisible(), 'layer2 should be invisible');
         test(layer2.canvas.element.style.display === 'none', 'layer canvas element display should be none');
