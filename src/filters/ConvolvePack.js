@@ -134,7 +134,7 @@
         return kernel;
     };
 
-    Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filterAmount', 50);
+    Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterAmount', 50);
     /**
      * get the current filter amount
      * @name getFilterAmount

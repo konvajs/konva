@@ -90,7 +90,7 @@
         shift_hue(imageData, this.getFilterHueShiftDeg() % 360 );
     };
 
-    Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filterHueShiftDeg', 0);
+    Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterHueShiftDeg', 0);
     /**
      * get hue shift amount.  The shift amount is a number between 0 and 360.
      * @name getFilterBrightness
@@ -132,7 +132,7 @@
         shift_hue(imageData,hue);
     };
 
-    Kinetic.Node.addFilterGetterSetter(Kinetic.Image, 'filterColorizeColor', [255,0,0] );
+    Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterColorizeColor', [255,0,0] );
     /**
      * Gets the colorizing color.
      * @name getFilterColorizeColor
