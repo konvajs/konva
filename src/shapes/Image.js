@@ -118,15 +118,11 @@
                 filter = this.getFilter(),
                 filterCanvas, context, imageData;
 
-            if (this.filterCanvas){
-                filterCanvas = this.filterCanvas;
-            }
-            else {
-                filterCanvas = this.filterCanvas = new Kinetic.SceneCanvas({
-                    width: width,
-                    height: height
-                });
-            }
+
+            filterCanvas = this.filterCanvas = new Kinetic.SceneCanvas({
+                width: width,
+                height: height
+            });
 
             context = filterCanvas.getContext();
 
