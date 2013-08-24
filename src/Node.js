@@ -199,7 +199,7 @@
         off: function(evtStr) {
             var events = evtStr.split(SPACE),
                 len = events.length,
-                n, i, event, parts, baseEvent, name;
+                n, i, t, event, parts, baseEvent, name;
 
             for(n = 0; n < len; n++) {
                 event = events[n];
