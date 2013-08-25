@@ -655,7 +655,7 @@
             }
             return retObj;
         },
-        // deep clone
+        // deep object clone
         _clone: function(obj) {
             var retObj = {};
             for(var key in obj) {

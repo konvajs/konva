@@ -1467,6 +1467,37 @@ Test.Modules.NODE = {
         test(Math.round(rect.getAbsolutePosition().x) === 41, 'rect absolute position x should be about 41');
         test(Math.round(rect.getAbsolutePosition().y) === 92, 'rect absolute position y should be about 92');
     },
+    'test consecutive getAbsolutePositions()s when shape has offset': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 20,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true,
+            offset: 30
+            //rotationDeg: 60
+            //rotationDeg: Math.PI / 3
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+
+        test(rect.getAbsolutePosition().x === 200 && rect.getAbsolutePosition().y === 20, 'absolute position should be 200, 20');
+        test(rect.getAbsolutePosition().x === 200 && rect.getAbsolutePosition().y === 20, 'absolute position should be 200, 20');
+        test(rect.getAbsolutePosition().x === 200 && rect.getAbsolutePosition().y === 20, 'absolute position should be 200, 20');
+        test(rect.getAbsolutePosition().x === 200 && rect.getAbsolutePosition().y === 20, 'absolute position should be 200, 20');
+        test(rect.getAbsolutePosition().x === 200 && rect.getAbsolutePosition().y === 20, 'absolute position should be 200, 20');
+    },
     'test getPosition and getAbsolutePosition for transformed parent with center offset': function(containerId) {
         var side = 100;
         var diagonal = Math.sqrt(side * side * 2);

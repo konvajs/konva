@@ -94,6 +94,8 @@
         _getCache: function(attr, privateGetter){
             var cache = this.cache[attr];
 
+
+
             // if not cached, we need to set it using the private getter method.
             if (cache === undefined) {
                 this.cache[attr] = privateGetter.call(this);
@@ -530,10 +532,15 @@
          * @memberof Kinetic.Node.prototype
          */
         getAbsolutePosition: function() {
-            var absoluteTransform = this.getAbsoluteTransform(),
+            var absoluteMatrix = this.getAbsoluteTransform().getMatrix(),
+                absoluteTransform = new Kinetic.Transform(),
                 o = this.getOffset();
 
+            // clone the matrix array
+            absoluteTransform.m = absoluteMatrix.slice();
+
             absoluteTransform.translate(o.x, o.y);
+
             return absoluteTransform.getTranslation();
         },
         /**
