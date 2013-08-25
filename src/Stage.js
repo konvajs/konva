@@ -549,7 +549,7 @@
             }
         },
         _getContentPosition: function() {
-            var rect = this.content.getBoundingClientRect();
+            var rect = this.content.getBoundingClientRect ? this.content.getBoundingClientRect() : { top: 0, left: 0 };
             return {
                 top: rect.top,
                 left: rect.left
