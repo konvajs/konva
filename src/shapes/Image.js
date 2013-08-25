@@ -118,16 +118,16 @@
                 filter = this.getFilter(),
                 filterCanvas, context, imageData;
 
-
             filterCanvas = this.filterCanvas = new Kinetic.SceneCanvas({
                 width: width,
-                height: height
+                height: height,
+                pixelRatio: 1
             });
 
             context = filterCanvas.getContext();
 
             try {
-                this._drawImage(context, [image, 0, 0, width, height]);
+                this._drawImage(context, [image, 0, 0, filterCanvas.getWidth(), filterCanvas.getHeight()]);
                 imageData = context.getImageData(0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
                 filter.call(this, imageData);
                 context.putImageData(imageData, 0, 0);
