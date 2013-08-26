@@ -804,7 +804,7 @@ Test.Modules.PATH = {
         layer.add(borneo);
         stage.add(layer);
     },
-    '*Stroke only when no fill': function(containerId) {
+    'Stroke only when no fill': function(containerId) {
 
         // https://github.com/ericdrowell/KineticJS/issues/567
         

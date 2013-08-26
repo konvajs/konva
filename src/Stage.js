@@ -523,9 +523,10 @@
             }
         },
         _setMousePosition: function(evt) {
-            var mouseX = evt.clientX - this._getContentPosition().left,
-                mouseY = evt.clientY - this._getContentPosition().top;
 
+            var mouseX = evt.offsetX !== undefined ? evt.offsetX : evt.layerX || (evt.clientX - this._getContentPosition().left),
+                mouseY = evt.offsetY !== undefined ? evt.offsetY : evt.layerY || (evt.clientY - this._getContentPosition().top);
+                
             this.mousePos = {
                 x: mouseX,
                 y: mouseY
