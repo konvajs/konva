@@ -803,5 +803,38 @@ Test.Modules.PATH = {
         });
         layer.add(borneo);
         stage.add(layer);
-    }
+    },
+    '*Stroke only when no fill': function(containerId) {
+
+		// https://github.com/ericdrowell/KineticJS/issues/567
+		
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 1024,
+            height: 480,
+            throttle: 80,
+            scale: 0.75,
+            x: 10,
+            y: 10
+        });
+        var layer = new Kinetic.Layer();
+
+        var path = new Kinetic.Path({
+            data: "M 50 0 C 50 150 170 170 200 170",
+			stroke: 'black'
+        });
+		
+		path.on('mouseover', function () {
+			this.setStroke("#f00");
+			layer.draw();
+		});
+
+		path.on('mouseout', function(){
+			this.setStroke("#000");
+			layer.draw();
+		});
+
+        layer.add(path);
+        stage.add(layer);
+    }	
 };
