@@ -1,5 +1,5 @@
 Test.Modules.CONTAINER = {
-    'use clipping function': function(containerId) {
+    'clip': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -7,10 +7,7 @@ Test.Modules.CONTAINER = {
             draggable: true
         });
         var layer = new Kinetic.Layer({
-            clipFunc: function(canvas) {
-                var context = canvas.getContext();
-                context.rect(0, 0, 400, 100);
-            }
+            clip: [0, 0, stage.getWidth() / 2, 100]
         });
         var group = new Kinetic.Group();
         var circle = new Kinetic.Circle({

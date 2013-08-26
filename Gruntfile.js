@@ -56,6 +56,8 @@ module.exports = function(grunt) {
     'tests/js/unit/layerTests.js', 
     'tests/js/unit/shapeTests.js', 
     'tests/js/unit/ddTests.js', 
+    'tests/js/unit/canvasTests.js', 
+
     'tests/js/unit/shapes/rectTests.js', 
     'tests/js/unit/shapes/circleTests.js', 
     'tests/js/unit/shapes/ellipseTests.js', 

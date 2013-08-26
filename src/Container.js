@@ -255,20 +255,20 @@
                 if (clip) {
                     canvas._clip(this);
                 }
-
-                children = this.children;
-                len = children.length;
-
-                for(n = 0; n < len; n++) {
-                    children[n].drawScene(canvas);
-                }
-
-                if (clip) {
-                    canvas.getContext().restore();
+                else {
+                    this._drawChildren(canvas);
                 }
             }
 
             return this;
+        },
+        _drawChildren: function(canvas) {
+            var children = this.children;
+                len = children.length;
+
+            for(n = 0; n < len; n++) {
+                children[n].drawScene(canvas);
+            }
         },
         drawHit: function() {
             var clip = this.getClipWidth() && this.getClipHeight() && this.nodeType !== 'Stage',

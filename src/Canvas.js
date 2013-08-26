@@ -47,6 +47,12 @@
             this.setSize(width, height);
         },
         /**
+         * reset canvas context transform
+         */
+        reset: function() {
+          this.getContext().setTransform(1 * _pixelRatio, 0, 0, 1 * _pixelRatio, 0, 0);
+        },
+        /**
          * get canvas element
          * @method
          * @memberof Kinetic.Canvas.prototype
@@ -241,7 +247,9 @@
             context.beginPath();
             context.rect(clipX, clipY, clipWidth, clipHeight);
             context.clip();
-            context.setTransform(1, 0, 0, 1, 0, 0);
+            this.reset();
+            container._drawChildren(this);
+            context.restore();
         }
     };
 
