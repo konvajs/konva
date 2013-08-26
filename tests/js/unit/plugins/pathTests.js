@@ -390,7 +390,7 @@ Test.Modules.PATH = {
         layer.add(group);
         stage.add(layer);
 
-       	showHit(layer);
+        showHit(layer);
 
     },
     'Able to determine point on line some distance from another point on line': function(containerId) {
@@ -806,8 +806,8 @@ Test.Modules.PATH = {
     },
     '*Stroke only when no fill': function(containerId) {
 
-		// https://github.com/ericdrowell/KineticJS/issues/567
-		
+        // https://github.com/ericdrowell/KineticJS/issues/567
+        
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 1024,
@@ -821,20 +821,20 @@ Test.Modules.PATH = {
 
         var path = new Kinetic.Path({
             data: "M 50 0 C 50 150 170 170 200 170",
-			stroke: 'black'
+            stroke: 'black'
         });
-		
-		path.on('mouseover', function () {
-			this.setStroke("#f00");
-			layer.draw();
-		});
+        
+        path.on('mouseover', function () {
+            this.setStroke("#f00");
+            layer.draw();
+        });
 
-		path.on('mouseout', function(){
-			this.setStroke("#000");
-			layer.draw();
-		});
+        path.on('mouseout', function(){
+            this.setStroke("#000");
+            layer.draw();
+        });
 
         layer.add(path);
         stage.add(layer);
-    }	
+    }   
 };

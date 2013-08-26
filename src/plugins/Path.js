@@ -77,9 +77,9 @@
                         break;
                 }
             }
-			if (this.getFill() !== undefined)
-				canvas.fill(this);
-				
+            if (this.getFill() !== undefined)
+                canvas.fill(this);
+                
             canvas.stroke(this);
         }
     };
