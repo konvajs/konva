@@ -226,7 +226,8 @@
                             else
                                 currentT -= Math.PI / 360.0 * dTheta / Math.abs(dTheta);
 
-                            if(Math.abs(currentT) > Math.abs(end)) {
+                            // Credit for bug fix: @therth https://github.com/ericdrowell/KineticJS/issues/249
+                            if(dTheta < 0 && currentT < end || dTheta >= 0 && currentT > end) {
                                 currentT = end;
                                 needNewSegment = true;
                             }
