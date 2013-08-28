@@ -455,20 +455,24 @@
             }
         },
         _applyShadow: function(shape) {
-            var context = this.context;
+            var context = this.context,
+                util, absOpacity, color, blur, offset, shadowOpacity;
+
             if(shape.hasShadow() && shape.getShadowEnabled()) {
-                var aa = shape.getAbsoluteOpacity();
-                // defaults
-                var color = shape.getShadowColor() || 'black';
-                var blur = shape.getShadowBlur() || 5;
-                var offset = shape.getShadowOffset() || {
+                util = Kinetic.Util;
+                absOpacity = shape.getAbsoluteOpacity();
+                color = util.get(shape.getShadowColor(), 'black');
+                blur = util.get(shape.getShadowBlur(), 5);
+                shadowOpacity = util.get(shape.getShadowOpacity(), 0);
+                offset = util.get(shape.getShadowOffset(), {
                     x: 0,
                     y: 0
-                };
+                });
 
-                if(shape.getShadowOpacity()) {
-                    context.globalAlpha = shape.getShadowOpacity() * aa;
+                if(shadowOpacity) {
+                    context.globalAlpha = shadowOpacity * absOpacity;
                 }
+
                 context.shadowColor = color;
                 context.shadowBlur = blur;
                 context.shadowOffsetX = offset.x;

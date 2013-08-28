@@ -599,6 +599,19 @@
             return HASH + randColor;
         },
         /**
+         * return value with default fallback
+         * @method
+         * @memberof Kinetic.Util.prototype
+         */
+        get: function(val, def) {
+            if (val === undefined) {
+                return def;
+            }
+            else {
+                return val;
+            }
+        },
+        /**
          * get RGB components of a color
          * @method
          * @memberof Kinetic.Util.prototype
