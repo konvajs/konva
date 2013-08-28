@@ -26,6 +26,21 @@ Test.Modules.CANVAS = {
 
         stage.draw();
 
+        layer.getCanvas().setPixelRatio(1);
+        test(layer.getCanvas().getPixelRatio() === 1, 'pixel ratio should be 1');
+        test(layer.getCanvas().width === 289, 'canvas width should be 289');
+        test(layer.getCanvas().height === 100, 'canvas height should be 100');
+
+        layer.getCanvas().setPixelRatio(2);
+        test(layer.getCanvas().getPixelRatio() === 2, 'pixel ratio should be 2');
+        test(layer.getCanvas().width === 578, 'canvas width should be 578');
+        test(layer.getCanvas().height === 200, 'canvas height should be 200');
+
+
+
+        layer.draw();
+
+
 
 
     }

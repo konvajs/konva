@@ -7,7 +7,8 @@
             || context.mozBackingStorePixelRatio
             || context.msBackingStorePixelRatio
             || context.oBackingStorePixelRatio
-            || context.backingStorePixelRatio || 1,
+            || context.backingStorePixelRatio 
+            || 1,
         _pixelRatio = devicePixelRatio / backingStoreRatio;
 
     /**
@@ -47,10 +48,30 @@
             this.setSize(width, height);
         },
         /**
+         * get pixel ratio
+         * @method
+         * @memberof Kinetic.Canvas.prototype
+         * @returns {Number} pixel ratio
+         */
+        getPixelRatio: function() {
+            return this.pixelRatio;
+        },
+        /**
+         * get pixel ratio
+         * @method
+         * @memberof Kinetic.Canvas.prototype
+         */
+        setPixelRatio: function(pixelRatio) {
+            this.pixelRatio = pixelRatio;
+            this.setSize(this.getWidth(), this.getHeight());
+        },
+        /**
          * reset canvas context transform
+         * @method
+         * @memberof Kinetic.Canvas.prototype
          */
         reset: function() {
-          this.getContext().setTransform(1 * _pixelRatio, 0, 0, 1 * _pixelRatio, 0, 0);
+          this.getContext().setTransform(1 * this.pixelRatio, 0, 0, 1 * this.pixelRatio, 0, 0);
         },
         /**
          * get canvas element
