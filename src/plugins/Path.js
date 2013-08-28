@@ -1,4 +1,4 @@
-(function() {
+(function () {
     /**
      * Path constructor.
      * @author Jason Follas
@@ -18,12 +18,12 @@
      *   scale: 2<br>
      * });
      */
-    Kinetic.Path = function(config) {
+    Kinetic.Path = function (config) {
         this.___init(config);
     };
 
     Kinetic.Path.prototype = {
-        ___init: function(config) {
+        ___init: function (config) {
             this.dataArray = [];
             var that = this;
 
@@ -32,15 +32,15 @@
             this.className = 'Path';
 
             this.dataArray = Kinetic.Path.parsePathData(this.getData());
-            this.on('dataChange.kinetic', function() {
+            this.on('dataChange.kinetic', function () {
                 that.dataArray = Kinetic.Path.parsePathData(this.getData());
             });
         },
-        drawFunc: function(canvas) {
+        drawFunc: function (canvas) {
             var ca = this.dataArray, context = canvas.getContext();
             // context position
             context.beginPath();
-            for(var n = 0; n < ca.length; n++) {
+            for (var n = 0; n < ca.length; n++) {
                 var c = ca[n].command;
                 var p = ca[n].points;
                 switch (c) {
@@ -77,7 +77,10 @@
                         break;
                 }
             }
-            canvas.fillStroke(this);
+            if (this.getFill() !== undefined)
+                canvas.fill(this);
+                
+            canvas.stroke(this);
         }
     };
     Kinetic.Util.extend(Kinetic.Path, Kinetic.Shape);

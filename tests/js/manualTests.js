@@ -218,10 +218,10 @@ Test.Modules.Tween = {
             easing: Kinetic.Easings.BounceEaseOut,
             yoyo: false,
             onFinish: function() {
-                console.log('finished!')
+                console.log('finished!');
             },
             onReset: function() {
-                console.log('reset!')
+                console.log('reset!');
             }
         });
 
@@ -273,7 +273,7 @@ Test.Modules.Tween = {
             easing: Kinetic.Easings.BounceEaseOut,
             yoyo: false,
             onFinish: function() {
-                console.log('finished!')
+                console.log('finished!');
             }
         });
 
@@ -284,7 +284,7 @@ Test.Modules.Tween = {
 
 
 Test.Modules.ANIMATION = {
-	'start and stop animation': function(containerId) {
+    'start and stop animation': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
             width: 578,
@@ -495,6 +495,56 @@ Test.Modules.EVENTS = {
         layer.add(circle);
         stage.add(layer);
     },
+    '_setMousePosition on a 3D-transformed container - drag red circle': function(containerId) {
+    
+        var container = document.getElementById(containerId);
+        container.style.transform = 'perspective(500px) rotateX(45deg)';
+        container.style.webkitTransform = 'perspective(500px) rotateX(45deg) translate3D(80px,80px,100px)';   
+
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+        
+        layer.add(new Kinetic.Rect({
+            x: 0,
+            y: 0,
+            width: stage.getWidth(),
+            height: stage.getHeight(),
+            fill: '#ccf'
+        }));
+        
+        layer.add(new Kinetic.Line({
+            points: [289, 0, 289, 200],
+            stroke: 'black',
+            strokeWidth: 2
+        }));
+          
+        layer.add(new Kinetic.Line({
+            points: [0, 100, 578, 100],
+            stroke: 'black',
+            strokeWidth: 2
+        }));
+        
+        var clickShape = new Kinetic.Circle({
+            x:289,
+            y:100,
+            radius:10,
+            fill:'red', 
+            draggable:true
+        });
+
+        clickShape.on("click tap", function(evt) {
+            layer.add(new Kinetic.Circle({x:evt.offsetX,y:evt.offsetY,radius:5,fill:'blue'}));
+            layer.draw();
+            evt.cancelBubble = true;
+        });
+
+        layer.add(clickShape);
+        stage.add(layer);
+    },  
     'modify fill stroke and stroke width on hover with star': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
@@ -1030,7 +1080,7 @@ Test.Modules.DRAG_AND_DROP = {
             radius: 70,
             fill: 'red',
             stroke: 'black',
-            strokeWidth: 4,
+            strokeWidth: 4
         });
 
         Circle.setDraggable(true);
@@ -1076,7 +1126,7 @@ Test.Modules.DRAG_AND_DROP = {
         layer.add(Circle);
         stage.add(layer);
 
-        showHit(layer)
+        showHit(layer);
     },
     'draggable true': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -1085,7 +1135,7 @@ Test.Modules.DRAG_AND_DROP = {
             height: 200
         });
         var layer = new Kinetic.Layer({
-        	id: 'myLayer'
+            id: 'myLayer'
         });
         var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
@@ -1224,7 +1274,6 @@ Test.Modules.DRAG_AND_DROP = {
             text: "diagonal",
             fill: "black",
             padding: 15,
-            draggable: true,
             dragBoundFunc: function(pos) {
                 p = (pos.y + pos.x) / 2;
                 return {
@@ -1242,7 +1291,6 @@ Test.Modules.DRAG_AND_DROP = {
             strokeWidth: 4,
             draggable: true,
             fontSize: 18,
-            draggable: true,
             dragBoundFunc: function(pos) {
                 var circle = {
                     x: 280,
@@ -1374,7 +1422,7 @@ Test.Modules.DRAG_AND_DROP = {
                 return {
                     x: newX,
                     y: this.getY()
-                }
+                };
             }
         });
 
@@ -1540,7 +1588,7 @@ Test.Modules.DRAG_AND_DROP = {
             fill: 'yellow',
             stroke: 'black',
             strokeWidth: 4,
-            draggable: true,
+            draggable: true
         });
 
         layer.add(rect).add(rect2);
