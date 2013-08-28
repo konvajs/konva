@@ -121,6 +121,7 @@
 
             if (this.filterCanvas){
                 filterCanvas = this.filterCanvas;
+                filterCanvas.clear();
             }
             else {
                 filterCanvas = this.filterCanvas = new Kinetic.SceneCanvas({
@@ -133,7 +134,6 @@
             context = filterCanvas.getContext();
 
             try {
-                context.clearRect(0,0,filterCanvas.getWidth(), filterCanvas.getHeight());
                 this._drawImage(context, [image, 0, 0, filterCanvas.getWidth(), filterCanvas.getHeight()]);
                 imageData = context.getImageData(0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
                 filter.call(this, imageData);
