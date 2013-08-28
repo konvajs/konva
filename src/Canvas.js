@@ -18,6 +18,13 @@
      * @memberof Kinetic
      * @param {Number} width
      * @param {Number} height
+     * @param {Number} pixelRatio KineticJS automatically handles pixel ratio adustments in order to render crisp drawings 
+     *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
+     *  of 1.  Some high end tablets and phones, like iPhones and iPads (not the mini) have a device pixel ratio 
+     *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel 
+     *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
+     *  specificed, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
+     *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
      */
     Kinetic.Canvas = function(config) {
         this.init(config);
@@ -60,6 +67,13 @@
          * get pixel ratio
          * @method
          * @memberof Kinetic.Canvas.prototype
+         * @param {Number} pixelRatio KineticJS automatically handles pixel ratio adustments in order to render crisp drawings 
+         *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
+         *  of 1.  Some high end tablets and phones, like iPhones and iPads (not the mini) have a device pixel ratio 
+         *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel 
+         *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
+         *  specificed, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
+         *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
          */
         setPixelRatio: function(pixelRatio) {
             this.pixelRatio = pixelRatio;
@@ -77,6 +91,7 @@
          * get canvas element
          * @method
          * @memberof Kinetic.Canvas.prototype
+         * @returns {DomElement} canvas element
          */
         getElement: function() {
             return this.element;
@@ -85,6 +100,7 @@
          * get canvas context
          * @method
          * @memberof Kinetic.Canvas.prototype
+         * @returns {CanvasContext} context
          */
         getContext: function() {
             return this.context;
@@ -115,6 +131,7 @@
          * get width
          * @method
          * @memberof Kinetic.Canvas.prototype
+         * @returns {Number} width
          */
         getWidth: function() {
             return this.width;
@@ -123,6 +140,7 @@
          * get height
          * @method
          * @memberof Kinetic.Canvas.prototype
+         * @returns {Number} height
          */
         getHeight: function() {
             return this.height;
@@ -162,6 +180,7 @@
          * @memberof Kinetic.Canvas.prototype
          * @param {String} mimeType
          * @param {Number} quality between 0 and 1 for jpg mime types
+         * @returns {String} data url string
          */
         toDataURL: function(mimeType, quality) {
             try {
