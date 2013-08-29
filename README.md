@@ -7,7 +7,7 @@ If you add a file in the src directory, be sure to add the filename to the sourc
 
 #Testing
 
-Status: [![Build Status](https://travis-ci.org/ericdrowell/KineticJS.png)](https://travis-ci.org/ericdrowell/KineticJS)
+[![Build Status](https://travis-ci.org/ericdrowell/KineticJS.png)](https://travis-ci.org/ericdrowell/KineticJS)
 
 ### Getting the tests up and running
 Currently, KineticJS has unit, functional, visual, manual, performance, and special test suites.  Open `tests/html/index.html` to run each test suite.  Before running any of the tests, be sure to build a dev version first with `grunt dev`.  To build the unit tests, you'll need to build the `unitTests.js` file by running `grunt test` and then opening `unitTests.html`. 
