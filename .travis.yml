@@ -4,4 +4,8 @@ node_js:
   - "0.10"
   - "0.8"
   - "0.6"
-script: mocha-phantomjs test/runner.html
+before_script:
+  - npm install
+script: 
+  - grunt dev
+  - mocha-phantomjs test/runner.html
