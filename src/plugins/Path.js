@@ -103,7 +103,12 @@
         var rise = m * run;
         var pt;
 
-        if((fromY - P1y) / ((fromX - P1x) + 0.00000001) === m) {
+        if (P2x === P1x) { // vertical line
+            pt = {
+                x: fromX,
+                y: fromY + rise
+            };
+        } else if((fromY - P1y) / ((fromX - P1x) + 0.00000001) === m) {
             pt = {
                 x: fromX + run,
                 y: fromY + rise

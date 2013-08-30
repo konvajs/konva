@@ -36,6 +36,98 @@ Test.Modules['TEXT PATH'] = {
         
         test(textpath.getClassName() === 'TextPath', 'getClassName should be TextPath');
     },
+    'Find Next Segment when Arc is in Path': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 1024,
+            height: 480,
+            throttle: 80,
+            scale: 1,
+            x: 50,
+            y: 10
+        });
+        var layer = new Kinetic.Layer();
+
+        var c = "M 50 50 a 150 50 0 0 1 250 50 l 50 0"; 
+        var path = new Kinetic.Path({
+            stroke: 'red',
+            strokeWidth: 1,
+            data: c
+        });
+
+        layer.add(path);
+
+        var textpath = new Kinetic.TextPath({
+            fill: 'black',
+            fontSize: '10',
+            text: 'All the world\'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.',
+            data: c
+        });
+
+        layer.add(textpath);
+        stage.add(layer);   
+    },
+    'Render Text Along Vertical Line': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 1024,
+            height: 480,
+            throttle: 80,
+            scale: 1,
+            x: 50,
+            y: 10
+        });
+        var layer = new Kinetic.Layer();
+
+        // Top Down
+        var c = "M 50,10 50,150";
+
+        var path = new Kinetic.Path({
+            stroke: 'red',
+            strokeWidth: 1,
+            data: c
+        });
+
+        layer.add(path);
+
+        var textpath = new Kinetic.TextPath({
+            stroke: 'black',
+            strokeWidth: 1,
+            fill: 'orange',
+            fontSize: '18',
+            fontFamily: 'Arial',
+            text: 'The quick brown fox jumped over the lazy dog\'s back',
+            data: c
+        });
+
+        layer.add(textpath);
+                
+                
+        // Bottom up
+        c = "M 150,150 150,10";
+
+        path = new Kinetic.Path({
+            stroke: 'red',
+            strokeWidth: 1,
+            data: c
+        });
+
+        layer.add(path);
+
+        textpath = new Kinetic.TextPath({
+            stroke: 'black',
+            strokeWidth: 1,
+            fill: 'orange',
+            fontSize: '18',
+            fontFamily: 'Arial',
+            text: 'The quick brown fox jumped over the lazy dog\'s back',
+            data: c
+        });
+        
+        layer.add(textpath);
+        stage.add(layer);
+        
+    },
     'Render Text Along two connected Bezier': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,

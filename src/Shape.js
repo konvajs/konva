@@ -214,7 +214,7 @@
                 context = canvas.getContext();
 
             if(drawFunc && this.isVisible()) {
-                context.save();
+				context.save();
                 canvas._applyOpacity(this);
                 canvas._applyLineJoin(this);
                 canvas._applyAncestorTransforms(this);

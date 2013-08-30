@@ -227,6 +227,7 @@
                                 currentT -= Math.PI / 360.0 * dTheta / Math.abs(dTheta);
 
                             // Credit for bug fix: @therth https://github.com/ericdrowell/KineticJS/issues/249
+                            // Old code failed to render text along arc of this path: "M 50 50 a 150 50 0 0 1 250 50 l 50 0"
                             if(dTheta < 0 && currentT < end || dTheta >= 0 && currentT > end) {
                                 currentT = end;
                                 needNewSegment = true;
