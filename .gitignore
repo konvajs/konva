@@ -4,6 +4,7 @@ dist
 tests/js/unitTests.js
 analysis
 node_modules
+bower_components
 phantomjs.exe
 
 # Numerous always-ignore extensions
