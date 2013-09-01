@@ -346,6 +346,22 @@
             }
             return false;
         },
+        _roundArrValues: function(arr) {
+            var retArr = [],
+                len = arr.length,
+                _isNumber = Kinetic.Util._isNumber,
+                n, val;
+
+            for (n=0; n<len; n++) {
+                val = arr[n];
+                if (_isNumber(val)) {
+                    val = Math.round(val * 1000) / 1000;
+                }
+                retArr.push(val);
+            }
+
+            return retArr;
+        },
         /*
          * The argument can be:
          * - an integer (will be applied to both x and y)

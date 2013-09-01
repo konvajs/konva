@@ -27,12 +27,11 @@
             this.className = 'Rect';
         },
         drawFunc: function(context) {
-            var _context = context._context,
-                cornerRadius = this.getCornerRadius(),
+            var cornerRadius = this.getCornerRadius(),
                 width = this.getWidth(),
                 height = this.getHeight();
 
-            _context.beginPath();
+            context.beginPath();
 
             if(!cornerRadius) {
                 // simple rect - don't bother doing all that complicated maths stuff.
@@ -40,17 +39,17 @@
             }
             else {
                 // arcTo would be nicer, but browser support is patchy (Opera)
-                _context.moveTo(cornerRadius, 0);
-                _context.lineTo(width - cornerRadius, 0);
-                _context.arc(width - cornerRadius, cornerRadius, cornerRadius, Math.PI * 3 / 2, 0, false);
-                _context.lineTo(width, height - cornerRadius);
-                _context.arc(width - cornerRadius, height - cornerRadius, cornerRadius, 0, Math.PI / 2, false);
-                _context.lineTo(cornerRadius, height);
-                _context.arc(cornerRadius, height - cornerRadius, cornerRadius, Math.PI / 2, Math.PI, false);
-                _context.lineTo(0, cornerRadius);
-                _context.arc(cornerRadius, cornerRadius, cornerRadius, Math.PI, Math.PI * 3 / 2, false);
+                context.moveTo(cornerRadius, 0);
+                context.lineTo(width - cornerRadius, 0);
+                context.arc(width - cornerRadius, cornerRadius, cornerRadius, Math.PI * 3 / 2, 0, false);
+                context.lineTo(width, height - cornerRadius);
+                context.arc(width - cornerRadius, height - cornerRadius, cornerRadius, 0, Math.PI / 2, false);
+                context.lineTo(cornerRadius, height);
+                context.arc(cornerRadius, height - cornerRadius, cornerRadius, Math.PI / 2, Math.PI, false);
+                context.lineTo(0, cornerRadius);
+                context.arc(cornerRadius, cornerRadius, cornerRadius, Math.PI, Math.PI * 3 / 2, false);
             }
-            _context.closePath();
+            context.closePath();
             context.fillStroke(this);
         }
     };

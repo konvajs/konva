@@ -6,9 +6,15 @@
         EQUALS = '=',
         SET = 'set',
         CONTEXT_METHODS = [
+            'arc',
+            'arcTo',
+            'beginPath',
             'clearRect', 
+            'closePath',
             'fill', 
             'fillText', 
+            'lineTo',
+            'moveTo',
             'rect', 
             'restore', 
             'save', 
@@ -42,6 +48,16 @@
                 this.traceArr = [];
                 this._enableTrace();
             }
+        },
+        /**
+         * get context trace if trace is enabled
+         * @method
+         * @memberof Kinetic.Context.prototype
+         * @returns {String}
+         */
+        getTrace: function() {
+            return this.traceArr.join(';');
+
         },
         _trace: function(str) {
             var traceArr = this.traceArr,
@@ -124,20 +140,6 @@
                 this._stroke(shape, shape.hasShadow() && shape.hasFill() && fillEnabled);
             }
         },
-        /**
-         * apply shadow
-         * @method
-         * @memberof Kinetic.Context.prototype
-         * @param {Kinetic.Shape} shape
-         * @param {Function} drawFunc
-         */
-        applyShadow: function(shape, drawFunc) {
-            context.save();
-            this._applyShadow(shape);
-            drawFunc();
-            context.restore();
-            drawFunc();
-        },
         _applyLineCap: function(shape) {
             var lineCap = shape.getLineCap();
             if(lineCap) {
@@ -189,14 +191,32 @@
         },
 
         // context pass through methods
+        arc: function() {
+            var a = arguments;
+            this._context.arc(a[0], a[1], a[2], a[3], a[4], a[5]);
+        },
+        beginPath: function() {
+            this._context.beginPath();
+        },
         clearRect: function(x, y, width, height) {
             this._context.clearRect(x, y, width, height);
+        },
+        closePath: function() {
+            this._context.closePath();
         },
         fill: function() {
             this._context.fill();
         },
         fillText: function(str, x, y) {
             this._context.fillText(str, x, y);
+        },
+        lineTo: function() {
+            var a = arguments;
+            this._context.lineTo(a[0], a[1]);
+        },
+        moveTo: function() {
+            var a = arguments;
+            this._context.moveTo(a[0], a[1]);
         },
         rect: function(x, y, width, height) {
             this._context.rect(x, y, width, height);
@@ -222,6 +242,7 @@
         _enableTrace: function() {
             var that = this,
                 len = CONTEXT_METHODS.length,
+                _roundArrValues = Kinetic.Util._roundArrValues,
                 n;
 
             // methods
@@ -231,7 +252,7 @@
                         args;
 
                     that[contextMethod] = function() {
-                        args = Array.prototype.slice.call(arguments, 0);
+                        args = _roundArrValues(Array.prototype.slice.call(arguments, 0));
                         method.apply(that, arguments);
                         that._trace(contextMethod + OPEN_PAREN + args.join(COMMA) + CLOSE_PAREN);
                     };
