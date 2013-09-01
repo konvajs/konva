@@ -215,12 +215,12 @@
                 context = canvas.getContext();
 
             if(drawFunc && this.isVisible()) {
-                context._context.save();
+                context.save();
                 context._applyOpacity(this);
                 context._applyLineJoin(this);
                 context._applyAncestorTransforms(this);
                 drawFunc.call(this, context);
-                context._context.restore();
+                context.restore();
             }
             return this;
         },

@@ -1,4 +1,11 @@
 (function() {
+    var COMMA = ',',
+        OPEN_PAREN = '(',
+        CLOSE_PAREN = ')',
+        EMPTY_STRING = '',
+        CONTEXT_METHODS = ['clearRect', 'rect', 'restore', 'save', 'setTransform', 'transform'],
+        CONTEXT_PROPERTIES = ['fillStyle', 'lineWidth', 'strokeStyle'];
+
     /**
      * Canvas Context constructor
      * @constructor
@@ -13,6 +20,22 @@
         init: function(canvas) {
             this.canvas = canvas;
             this._context = canvas._canvas.getContext('2d');
+
+            if (Kinetic.enableTrace) {
+                this.traceArr = [];
+                this._enableTrace();
+            }
+        },
+        _trace: function(str) {
+            var traceArr = this.traceArr,
+                len;
+ 
+            traceArr.push(str);
+            len = traceArr.length;
+
+            if (len >= Kinetic.traceArrMax) {
+                traceArr.shift();
+            }
         },
         /**
          * reset canvas context transform
@@ -21,7 +44,7 @@
          */
         reset: function() {
             var pixelRatio = this.getCanvas().getPixelRatio();
-            this._context.setTransform(1 * pixelRatio, 0, 0, 1 * pixelRatio, 0, 0);
+            this.setTransform(1 * pixelRatio, 0, 0, 1 * pixelRatio, 0, 0);
         },
         getCanvas: function() {
             return this.canvas;
@@ -32,17 +55,16 @@
          * @memberof Kinetic.Context.prototype
          */
         clear: function(clip) {
-            var _context = this._context,
-                canvas = this.getCanvas(),
+            var canvas = this.getCanvas(),
                 pos, size;
             
             if (clip) {
                 pos = Kinetic.Util._getXY(clip);
                 size = Kinetic.Util._getSize(clip);
-                _context.clearRect(pos.x || 0, pos.y || 0, size.width, size.height);
+                this.clearRect(pos.x || 0, pos.y || 0, size.width, size.height);
             }
             else {
-                _context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                this.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             }
         },
         /**
@@ -93,11 +115,10 @@
          * @param {Function} drawFunc
          */
         applyShadow: function(shape, drawFunc) {
-            var _context = this._context;
-            _context.save();
+            context.save();
             this._applyShadow(shape);
             drawFunc();
-            _context.restore();
+            context.restore();
             drawFunc();
         },
         _applyLineCap: function(shape) {
@@ -120,7 +141,7 @@
         },
         _applyAncestorTransforms: function(shape) {
             var m = shape.getAbsoluteTransform().getMatrix();
-            this._context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+            this.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
         },
         _clip: function(container) {
             var _context = this._context,
@@ -129,14 +150,59 @@
                 clipWidth = container.getClipWidth(),
                 clipHeight = container.getClipHeight();
 
-            _context.save();
+            this.save();
             this._applyAncestorTransforms(container);
             _context.beginPath();
-            _context.rect(clipX, clipY, clipWidth, clipHeight);
+            this.rect(clipX, clipY, clipWidth, clipHeight);
             _context.clip();
             this.reset();
             container._drawChildren(this.getCanvas());
-            _context.restore();
+            this.restore();
+        },
+        // context pass through methods
+        clearRect: function(x, y, width, height) {
+            this._context.clearRect(x, y, width, height);
+        },
+        rect: function(x, y, width, height) {
+            this._context.rect(x, y, width, height);
+        },
+        restore: function() {
+            this._context.restore();
+        },
+        save: function() {
+            this._context.save();
+        },
+        setTransform: function(a, b, c, d, e, f) {
+            this._context.setTransform(a, b, c, d, e, f);
+        },
+        transform: function(a, b, c, d, e, f) {
+            this._context.transform(a, b, c, d, e, f);
+        },
+        _enableTrace: function() {
+            var that = this,
+                len = CONTEXT_METHODS.length,
+                n;
+
+            // methods
+            for (n=0; n<len; n++) {
+                (function(contextMethod) {
+                    var method = that[contextMethod],
+                        args;
+
+                    that[contextMethod] = function() {
+                        args = Array.prototype.slice.call(arguments, 0);
+                        method.apply(that, arguments);
+                        that._trace(contextMethod + OPEN_PAREN + args.join(COMMA) + CLOSE_PAREN);
+                    };
+                })(CONTEXT_METHODS[n]);
+            }
+
+            // properties
+            len = CONTEXT_PROPERTIES.length;
+
+            for (n=0; n<len; n++) {
+                
+            }
         }
     };
 
@@ -346,5 +412,4 @@
         }
     };
     Kinetic.Util.extend(Kinetic.HitContext, Kinetic.Context);
-
 })();

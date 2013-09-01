@@ -30,122 +30,125 @@
  */
 var Kinetic = {};
 (function() {
-    Kinetic.version = '@@version';
+    Kinetic = {
+        version: '@@version',
+        enableTrace: false,
+        traceArrMax: 100,
+        /**
+         * @namespace Filters
+         * @memberof Kinetic
+         */
+        Filters: {},
 
-    /**
-     * @namespace Filters
-     * @memberof Kinetic
-     */
-    Kinetic.Filters = {};
+        /**
+         * Node constructor. Nodes are entities that can be transformed, layered,
+         * and have bound events. The stage, layers, groups, and shapes all extend Node.
+         * @constructor
+         * @memberof Kinetic
+         * @abstract
+         * @param {Object} config
+         * @@nodeParams
+         */
+        Node: function(config) {
+            this._init(config);
+        },
 
-    /**
-     * Node constructor. Nodes are entities that can be transformed, layered,
-     * and have bound events. The stage, layers, groups, and shapes all extend Node.
-     * @constructor
-     * @memberof Kinetic
-     * @abstract
-     * @param {Object} config
-     * @@nodeParams
-     */
-    Kinetic.Node = function(config) {
-        this._init(config);
-    };
+        /**
+         * Shape constructor.  Shapes are primitive objects such as rectangles,
+         *  circles, text, lines, etc.
+         * @constructor
+         * @memberof Kinetic
+         * @augments Kinetic.Node
+         * @param {Object} config
+         * @@shapeParams
+         * @@nodeParams
+         * @example
+         * var customShape = new Kinetic.Shape({<br>
+         *   x: 5,<br>
+         *   y: 10,<br>
+         *   fill: 'red',<br>
+         *   // a Kinetic.Canvas renderer is passed into the drawFunc function<br>
+         *   drawFunc: function(canvas) {<br>
+         *     var context = canvas.getContext();<br>
+         *     context.beginPath();<br>
+         *     context.moveTo(200, 50);<br>
+         *     context.lineTo(420, 80);<br>
+         *     context.quadraticCurveTo(300, 100, 260, 170);<br>
+         *     context.closePath();<br>
+         *     canvas.fillStroke(this);<br>
+         *   }<br>
+         *});
+         */
+        Shape: function(config) {
+            this.__init(config);
+        },
 
-    /**
-     * Shape constructor.  Shapes are primitive objects such as rectangles,
-     *  circles, text, lines, etc.
-     * @constructor
-     * @memberof Kinetic
-     * @augments Kinetic.Node
-     * @param {Object} config
-     * @@shapeParams
-     * @@nodeParams
-     * @example
-     * var customShape = new Kinetic.Shape({<br>
-     *   x: 5,<br>
-     *   y: 10,<br>
-     *   fill: 'red',<br>
-     *   // a Kinetic.Canvas renderer is passed into the drawFunc function<br>
-     *   drawFunc: function(canvas) {<br>
-     *     var context = canvas.getContext();<br>
-     *     context.beginPath();<br>
-     *     context.moveTo(200, 50);<br>
-     *     context.lineTo(420, 80);<br>
-     *     context.quadraticCurveTo(300, 100, 260, 170);<br>
-     *     context.closePath();<br>
-     *     canvas.fillStroke(this);<br>
-     *   }<br>
-     *});
-     */
-    Kinetic.Shape = function(config) {
-        this.__init(config);
-    };
+        /**
+         * Container constructor.&nbsp; Containers are used to contain nodes or other containers
+         * @constructor
+         * @memberof Kinetic
+         * @augments Kinetic.Node
+         * @abstract
+         * @param {Object} config
+         * @@nodeParams
+         * @@containerParams
+         */
+        Container: function(config) {
+            this.__init(config);
+        },
 
-    /**
-     * Container constructor.&nbsp; Containers are used to contain nodes or other containers
-     * @constructor
-     * @memberof Kinetic
-     * @augments Kinetic.Node
-     * @abstract
-     * @param {Object} config
-     * @@nodeParams
-     * @@containerParams
-     */
-    Kinetic.Container = function(config) {
-        this.__init(config);
-    };
+        /**
+         * Stage constructor.  A stage is used to contain multiple layers
+         * @constructor
+         * @memberof Kinetic
+         * @augments Kinetic.Container
+         * @param {Object} config
+         * @param {String|DomElement} config.container Container id or DOM element
+         * @@nodeParams
+         * @@containerParams
+         * @example
+         * var stage = new Kinetic.Stage({<br>
+         *   width: 500,<br>
+         *   height: 800,<br>
+         *   container: 'containerId'<br>
+         * });
+         */
+        Stage: function(config) {
+            this.___init(config);
+        },
 
-    /**
-     * Stage constructor.  A stage is used to contain multiple layers
-     * @constructor
-     * @memberof Kinetic
-     * @augments Kinetic.Container
-     * @param {Object} config
-     * @param {String|DomElement} config.container Container id or DOM element
-     * @@nodeParams
-     * @@containerParams
-     * @example
-     * var stage = new Kinetic.Stage({<br>
-     *   width: 500,<br>
-     *   height: 800,<br>
-     *   container: 'containerId'<br>
-     * });
-     */
-    Kinetic.Stage = function(config) {
-        this.___init(config);
-    };
+        /**
+         * Layer constructor.  Layers are tied to their own canvas element and are used
+         * to contain groups or shapes
+         * @constructor
+         * @memberof Kinetic
+         * @augments Kinetic.Container
+         * @param {Object} config
+         * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
+         * to clear the canvas before each layer draw.  The default value is true.
+         * @@nodeParams
+         * @@containerParams
+         * @example
+         * var layer = new Kinetic.Layer();
+         */
+        Layer: function(config) {
+            this.___init(config);
+        },
 
-    /**
-     * Layer constructor.  Layers are tied to their own canvas element and are used
-     * to contain groups or shapes
-     * @constructor
-     * @memberof Kinetic
-     * @augments Kinetic.Container
-     * @param {Object} config
-     * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
-     * to clear the canvas before each layer draw.  The default value is true.
-     * @@nodeParams
-     * @@containerParams
-     * @example
-     * var layer = new Kinetic.Layer();
-     */
-    Kinetic.Layer = function(config) {
-        this.___init(config);
-    };
-
-    /**
-     * Group constructor.  Groups are used to contain shapes or other groups.
-     * @constructor
-     * @memberof Kinetic
-     * @augments Kinetic.Container
-     * @param {Object} config
-     * @@nodeParams
-     * @@containerParams
-     * @example
-     * var group = new Kinetic.Group();
-     */
-    Kinetic.Group = function(config) {
-        this.___init(config);
+        /**
+         * Group constructor.  Groups are used to contain shapes or other groups.
+         * @constructor
+         * @memberof Kinetic
+         * @augments Kinetic.Container
+         * @param {Object} config
+         * @@nodeParams
+         * @@containerParams
+         * @example
+         * var group = new Kinetic.Group();
+         */
+        Group: function(config) {
+            this.___init(config);
+        }
     };
 
     /**

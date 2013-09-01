@@ -36,7 +36,7 @@
 
             if(!cornerRadius) {
                 // simple rect - don't bother doing all that complicated maths stuff.
-                _context.rect(0, 0, width, height);
+                context.rect(0, 0, width, height);
             }
             else {
                 // arcTo would be nicer, but browser support is patchy (Opera)
