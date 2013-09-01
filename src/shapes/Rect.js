@@ -26,32 +26,32 @@
             Kinetic.Shape.call(this, config);
             this.className = 'Rect';
         },
-        drawFunc: function(canvas) {
-            var context = canvas.getContext(),
+        drawFunc: function(context) {
+            var _context = context._context,
                 cornerRadius = this.getCornerRadius(),
                 width = this.getWidth(),
                 height = this.getHeight();
 
-            context.beginPath();
+            _context.beginPath();
 
             if(!cornerRadius) {
                 // simple rect - don't bother doing all that complicated maths stuff.
-                context.rect(0, 0, width, height);
+                _context.rect(0, 0, width, height);
             }
             else {
                 // arcTo would be nicer, but browser support is patchy (Opera)
-                context.moveTo(cornerRadius, 0);
-                context.lineTo(width - cornerRadius, 0);
-                context.arc(width - cornerRadius, cornerRadius, cornerRadius, Math.PI * 3 / 2, 0, false);
-                context.lineTo(width, height - cornerRadius);
-                context.arc(width - cornerRadius, height - cornerRadius, cornerRadius, 0, Math.PI / 2, false);
-                context.lineTo(cornerRadius, height);
-                context.arc(cornerRadius, height - cornerRadius, cornerRadius, Math.PI / 2, Math.PI, false);
-                context.lineTo(0, cornerRadius);
-                context.arc(cornerRadius, cornerRadius, cornerRadius, Math.PI, Math.PI * 3 / 2, false);
+                _context.moveTo(cornerRadius, 0);
+                _context.lineTo(width - cornerRadius, 0);
+                _context.arc(width - cornerRadius, cornerRadius, cornerRadius, Math.PI * 3 / 2, 0, false);
+                _context.lineTo(width, height - cornerRadius);
+                _context.arc(width - cornerRadius, height - cornerRadius, cornerRadius, 0, Math.PI / 2, false);
+                _context.lineTo(cornerRadius, height);
+                _context.arc(cornerRadius, height - cornerRadius, cornerRadius, Math.PI / 2, Math.PI, false);
+                _context.lineTo(0, cornerRadius);
+                _context.arc(cornerRadius, cornerRadius, cornerRadius, Math.PI, Math.PI * 3 / 2, false);
             }
-            context.closePath();
-            canvas.fillStroke(this);
+            _context.closePath();
+            context.fillStroke(this);
         }
     };
 

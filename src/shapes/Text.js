@@ -58,11 +58,11 @@
     Kinetic.Text = function(config) {
         this.___init(config);
     };
-    function _fillFunc(context) {
-        context.fillText(this.partialText, 0, 0);
+    function _fillFunc(_context) {
+        _context.fillText(this.partialText, 0, 0);
     }
-    function _strokeFunc(context) {
-        context.strokeText(this.partialText, 0, 0);
+    function _strokeFunc(_context) {
+        _context.strokeText(this.partialText, 0, 0);
     }
 
     Kinetic.Text.prototype = {
@@ -90,8 +90,8 @@
 
             this._setTextData();
         },
-        drawFunc: function(canvas) {
-            var context = canvas.getContext(),
+        drawFunc: function(context) {
+            var _context = context._context,
                 p = this.getPadding(),
                 fontStyle = this.getFontStyle(),
                 fontSize = this.getFontSize(),
@@ -102,12 +102,12 @@
                 textArrLen = textArr.length,
                 totalWidth = this.getWidth();
 
-            context.font = this._getContextFont();
-            context.textBaseline = MIDDLE;
-            context.textAlign = LEFT;
-            context.save();
-            context.translate(p, 0);
-            context.translate(0, p + textHeight / 2);
+            _context.font = this._getContextFont();
+            _context.textBaseline = MIDDLE;
+            _context.textAlign = LEFT;
+            _context.save();
+            _context.translate(p, 0);
+            _context.translate(0, p + textHeight / 2);
 
             // draw text lines
             for(var n = 0; n < textArrLen; n++) {
@@ -116,30 +116,30 @@
                     width = obj.width;
 
                 // horizontal alignment
-                context.save();
+                _context.save();
                 if(this.getAlign() === RIGHT) {
-                    context.translate(totalWidth - width - p * 2, 0);
+                    _context.translate(totalWidth - width - p * 2, 0);
                 }
                 else if(this.getAlign() === CENTER) {
-                    context.translate((totalWidth - width - p * 2) / 2, 0);
+                    _context.translate((totalWidth - width - p * 2) / 2, 0);
                 }
 
                 this.partialText = text;
-                canvas.fillStroke(this);
-                context.restore();
-                context.translate(0, lineHeightPx);
+                context.fillStroke(this);
+                _context.restore();
+                _context.translate(0, lineHeightPx);
             }
-            context.restore();
+            _context.restore();
         },
-        drawHitFunc: function(canvas) {
-            var context = canvas.getContext(),
+        drawHitFunc: function(context) {
+            var _context = context._context,
                 width = this.getWidth(),
                 height = this.getHeight();
 
-            context.beginPath();
-            context.rect(0, 0, width, height);
-            context.closePath();
-            canvas.fillStroke(this);
+            _context.beginPath();
+            _context.rect(0, 0, width, height);
+            _context.closePath();
+            context.fillStroke(this);
         },
         /**
          * set text
@@ -184,15 +184,15 @@
             return this.textHeight;
         },
         _getTextSize: function(text) {
-            var context = dummyContext,
+            var _context = dummyContext,
                 fontSize = this.getFontSize(),
                 metrics;
 
-            context.save();
-            context.font = this._getContextFont();
+            _context.save();
+            _context.font = this._getContextFont();
 
-            metrics = context.measureText(text);
-            context.restore();
+            metrics = _context.measureText(text);
+            _context.restore();
             return {
                 width: metrics.width,
                 height: parseInt(fontSize, 10)

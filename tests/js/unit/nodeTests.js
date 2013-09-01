@@ -171,7 +171,7 @@ Test.Modules.NODE = {
         layer.canvas = new Kinetic.SceneCanvas({
            pixelRatio: 2
         });
-        layer.canvas.getElement().style.position = 'absolute';
+        layer.canvas._canvas.style.position = 'absolute';
 
         var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
@@ -614,11 +614,11 @@ Test.Modules.NODE = {
         test(layer2.isVisible(), 'layer2 should be visible');
         layer2.hide();
         test(!layer2.isVisible(), 'layer2 should be invisible');
-        test(layer2.canvas.element.style.display === 'none', 'layer canvas element display should be none');
+        test(layer2.canvas._canvas.style.display === 'none', 'layer canvas element display should be none');
 
         layer2.show();
         test(layer2.isVisible(), 'layer2 should be visible');
-        test(layer2.canvas.element.style.display === 'block', 'layer canvas element should be block');
+        test(layer2.canvas._canvas.style.display === 'block', 'layer canvas element should be block');
 
     },
     'rotation in degrees': function(containerId) {
@@ -2133,15 +2133,14 @@ Test.Modules.NODE = {
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
 
-        var drawTriangle = function(canvas) {
-            var context = canvas.getContext();
-            context.beginPath();
-            context.moveTo(200, 50);
-            context.lineTo(420, 80);
-            context.quadraticCurveTo(300, 100, 260, 170);
-            context.closePath();
-            canvas.fill(this);
-            canvas.stroke(this);
+        var drawTriangle = function(context) {
+            var _context = context._context;
+            _context.beginPath();
+            _context.moveTo(200, 50);
+            _context.lineTo(420, 80);
+            _context.quadraticCurveTo(300, 100, 260, 170);
+            _context.closePath();
+            context.fillStroke(this);
         };
         var triangle = new Kinetic.Shape({
             drawFunc: drawTriangle,
@@ -2168,15 +2167,14 @@ Test.Modules.NODE = {
 
     },
     'load stage with custom shape using json': function(containerId) {
-        var drawTriangle = function(canvas) {
-            var context = canvas.getContext();
-            context.beginPath();
-            context.moveTo(200, 50);
-            context.lineTo(420, 80);
-            context.quadraticCurveTo(300, 100, 260, 170);
-            context.closePath();
-            canvas.fill(this);
-            canvas.stroke(this);
+        var drawTriangle = function(context) {
+            var _context = context._context;
+            _context.beginPath();
+            _context.moveTo(200, 50);
+            _context.lineTo(420, 80);
+            _context.quadraticCurveTo(300, 100, 260, 170);
+            _context.closePath();
+            context.fillStroke(this);
         };
         var json = '{"attrs":{"width":578,"height":200},"nodeType":"Stage","children":[{"attrs":{},"nodeType":"Layer","children":[{"attrs":{},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
 

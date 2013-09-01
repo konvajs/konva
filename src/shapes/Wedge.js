@@ -31,13 +31,14 @@
             Kinetic.Shape.call(this, config);
             this.className = 'Wedge';
         },
-        drawFunc: function(canvas) {
-            var context = canvas.getContext();
-            context.beginPath();
-            context.arc(0, 0, this.getRadius(), 0, this.getAngle(), this.getClockwise());
-            context.lineTo(0, 0);
-            context.closePath();
-            canvas.fillStroke(this);
+        drawFunc: function(context) {
+            var _context = context._context;
+
+            _context.beginPath();
+            _context.arc(0, 0, this.getRadius(), 0, this.getAngle(), this.getClockwise());
+            _context.lineTo(0, 0);
+            _context.closePath();
+            context.fillStroke(this);
         }
     };
     Kinetic.Util.extend(Kinetic.Wedge, Kinetic.Shape);

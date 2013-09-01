@@ -20,7 +20,7 @@ Test.Modules.LAYER = {
         layer.add(circle);
         stage.add(layer);
 
-        var style = layer.getCanvas().getElement().style;
+        var style = layer.getCanvas()._canvas.style;
 
         test(style.position === 'absolute', 'canvas position style should be absolute');
         test(style.border === '0px', 'canvas border style should be 0px');

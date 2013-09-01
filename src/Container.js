@@ -253,7 +253,7 @@
 
             if(this.isVisible()) {
                 if (clip) {
-                    canvas._clip(this);
+                    canvas.getContext()._clip(this);
                 }
                 else {
                     this._drawChildren(canvas);
@@ -271,16 +271,16 @@
             }
         },
         drawHit: function() {
-            var clip = this.getClipWidth() && this.getClipHeight() && this.nodeType !== 'Stage',
+            var hasClip = this.getClipWidth() && this.getClipHeight() && this.nodeType !== 'Stage',
                 n = 0,
                 len = 0,
                 children = [],
                 hitCanvas;
 
             if(this.shouldDrawHit()) {
-                if (clip) {
+                if (hasClip) {
                     hitCanvas = this.getLayer().hitCanvas;
-                    hitCanvas._clip(this);
+                    hitCanvas.getContext()._clip(this);
                 }
 
                 children = this.children;
@@ -289,8 +289,8 @@
                 for(n = 0; n < len; n++) {
                     children[n].drawHit();
                 }
-                if (clip) {
-                    hitCanvas.getContext().restore();
+                if (hasClip) {
+                    hitCanvas.getContext()._context.restore();
                 }
             }
 

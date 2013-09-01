@@ -41,21 +41,21 @@
             Kinetic.Shape.call(this, config);
             this.className = 'Line';
         },
-        drawFunc: function(canvas) {
+        drawFunc: function(context) {
             var points = this.getPoints(),
                 length = points.length,
-                context = canvas.getContext(),
+                _context = context._context,
                 n, point;
 
-            context.beginPath();
-            context.moveTo(points[0].x, points[0].y);
+            _context.beginPath();
+            _context.moveTo(points[0].x, points[0].y);
 
             for(n = 1; n < length; n++) {
                 point = points[n];
-                context.lineTo(point.x, point.y);
+                _context.lineTo(point.x, point.y);
             }
 
-            canvas.stroke(this);
+            context.stroke(this);
         }
     };
     Kinetic.Util.extend(Kinetic.Line, Kinetic.Shape);

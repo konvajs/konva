@@ -1408,13 +1408,13 @@ Test.Modules['HIT FUNCS'] = {
             strokeWidth: 4,
             fill: 'red',
             stroke: 'black',
-            drawHitFunc: function(canvas) {
-                var context = canvas.getContext()
-                context.beginPath();
-                context.arc(0, 0, this.getRadius() + 100, 0, Math.PI * 2, true);
-                context.closePath();
-                canvas.fill(this);
-                canvas.stroke(this);
+            drawHitFunc: function(context) {
+                var _context = context._context;
+
+                _context.beginPath();
+                _context.arc(0, 0, this.getRadius() + 100, 0, Math.PI * 2, true);
+                _context.closePath();
+                context.fillStroke(this);
             }
         });
 
@@ -1465,16 +1465,16 @@ Test.Modules['HIT FUNCS'] = {
 
         // set drawBufferFunc with setter
 
-        circle.setDrawHitFunc(function(canvas) {
-            var context = canvas.getContext();
-            context.beginPath();
-            context.arc(0, 0, this.getRadius() - 50, 0, Math.PI * 2, true);
-            context.closePath();
-            canvas.fill(this);
-            canvas.stroke(this);
+        circle.setDrawHitFunc(function(context) {
+            var _context = context._context;
+            _context.beginPath();
+            _context.arc(0, 0, this.getRadius() - 50, 0, Math.PI * 2, true);
+            _context.closePath();
+            context.fillStroke(this);
+
         });
 
-        layer.getHitCanvas().clear();
+        layer.getHitCanvas().getContext().clear();
         layer.drawHit();
 
 

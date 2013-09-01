@@ -128,14 +128,14 @@ Test.Modules.SHAPE = {
         });
         var layer = new Kinetic.Layer();
         var shape = new Kinetic.Shape({
-            drawFunc: function(canvas) {
-                var context = canvas.getContext();
-                context.beginPath();
-                context.moveTo(0, 0);
-                context.lineTo(100, 0);
-                context.lineTo(100, 100);
-                context.closePath();
-                canvas.fillStroke(this);
+            drawFunc: function(context) {
+                var _context = context._context;
+                _context.beginPath();
+                _context.moveTo(0, 0);
+                _context.lineTo(100, 0);
+                _context.lineTo(100, 100);
+                _context.closePath();
+                context.fillStroke(this);
             },
             x: 10,
             y: 10,
@@ -164,15 +164,15 @@ Test.Modules.SHAPE = {
         });
         var layer = new Kinetic.Layer();
         var shape = new Kinetic.Shape({
-            drawFunc: function(canvas) {
-                var context = canvas.getContext();
-                context.beginPath();
-                context.moveTo(0, 0);
-                context.lineTo(100, 0);
-                context.lineTo(100, 100);
-                context.closePath();
-                canvas.fill(this);
-                canvas.stroke(this);
+            drawFunc: function(context) {
+                var _context = context._context;
+                
+                _context.beginPath();
+                _context.moveTo(0, 0);
+                _context.lineTo(100, 0);
+                _context.lineTo(100, 100);
+                _context.closePath();
+                context.fillStroke(this);
             },
             x: 200,
             y: 100,

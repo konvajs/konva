@@ -77,8 +77,8 @@ Test.Modules.STAGE = {
         test(stage.getSize().height === 155, 'stage height should be 155');
         test(stage.getContent().style.width === '333px', 'content width should be 333');
         test(stage.getContent().style.height === '155px', 'content height should be 155px');
-        test(layer.getCanvas().element.width === 333, 'layer canvas element width should be 333');
-        test(layer.getCanvas().element.height === 155, 'layer canvas element width should be 155');
+        test(layer.getCanvas()._canvas.width === 333, 'layer canvas element width should be 333');
+        test(layer.getCanvas()._canvas.height === 155, 'layer canvas element width should be 155');
     },
     'get stage DOM': function(containerId) {
         var stage = new Kinetic.Stage({

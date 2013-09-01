@@ -86,7 +86,7 @@
         getTag: function() {
             return this.get('Tag')[0];
         },
-        _addListeners: function(context) {
+        _addListeners: function(text) {
             var that = this,
                 n;
             var func = function(){
@@ -95,7 +95,7 @@
 
             // update text data for certain attr changes
             for(n = 0; n < attrChangeListLen; n++) {
-                context.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, func);
+                text.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, func);
             }
         },
         getWidth: function() {
@@ -175,8 +175,8 @@
             Kinetic.Shape.call(this, config);
             this.className = 'Tag';
         },
-        drawFunc: function(canvas) {
-            var context = canvas.getContext(),
+        drawFunc: function(context) {
+            var _context = context._context,
                 width = this.getWidth(),
                 height = this.getHeight(),
                 pointerDirection = this.getPointerDirection(),
@@ -184,41 +184,41 @@
                 pointerHeight = this.getPointerHeight(),
                 cornerRadius = this.getCornerRadius();
 
-            context.beginPath();
-            context.moveTo(0,0);
+            _context.beginPath();
+            _context.moveTo(0,0);
 
             if (pointerDirection === UP) {
-                context.lineTo((width - pointerWidth)/2, 0);
-                context.lineTo(width/2, -1 * pointerHeight);
-                context.lineTo((width + pointerWidth)/2, 0);
+                _context.lineTo((width - pointerWidth)/2, 0);
+                _context.lineTo(width/2, -1 * pointerHeight);
+                _context.lineTo((width + pointerWidth)/2, 0);
             }
 
-            context.lineTo(width, 0);
+            _context.lineTo(width, 0);
 
             if (pointerDirection === RIGHT) {
-                context.lineTo(width, (height - pointerHeight)/2);
-                context.lineTo(width + pointerWidth, height/2);
-                context.lineTo(width, (height + pointerHeight)/2);
+                _context.lineTo(width, (height - pointerHeight)/2);
+                _context.lineTo(width + pointerWidth, height/2);
+                _context.lineTo(width, (height + pointerHeight)/2);
             }
 
-            context.lineTo(width, height);
+            _context.lineTo(width, height);
 
             if (pointerDirection === DOWN) {
-                context.lineTo((width + pointerWidth)/2, height);
-                context.lineTo(width/2, height + pointerHeight);
-                context.lineTo((width - pointerWidth)/2, height);
+                _context.lineTo((width + pointerWidth)/2, height);
+                _context.lineTo(width/2, height + pointerHeight);
+                _context.lineTo((width - pointerWidth)/2, height);
             }
 
-            context.lineTo(0, height);
+            _context.lineTo(0, height);
 
             if (pointerDirection === LEFT) {
-                context.lineTo(0, (height + pointerHeight)/2);
-                context.lineTo(-1 * pointerWidth, height/2);
-                context.lineTo(0, (height - pointerHeight)/2);
+                _context.lineTo(0, (height + pointerHeight)/2);
+                _context.lineTo(-1 * pointerWidth, height/2);
+                _context.lineTo(0, (height - pointerHeight)/2);
             }
 
-            context.closePath();
-            canvas.fillStroke(this);
+            _context.closePath();
+            context.fillStroke(this);
         }
     };
 

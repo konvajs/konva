@@ -83,27 +83,27 @@
                 that.setIndex(0);
             });
         },
-        drawFunc: function(canvas) {
+        drawFunc: function(context) {
             var anim = this.getAnimation(),
                 index = this.getIndex(),
                 f = this.getAnimations()[anim][index],
-                context = canvas.getContext(),
+                _context = context._context,
                 image = this.getImage();
 
             if(image) {
-                context.drawImage(image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
+                _context.drawImage(image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
             }
         },
-        drawHitFunc: function(canvas) {
+        drawHitFunc: function(context) {
             var anim = this.getAnimation(),
                 index = this.getIndex(),
                 f = this.getAnimations()[anim][index],
-                context = canvas.getContext();
+                _context = context._context;
 
-            context.beginPath();
-            context.rect(0, 0, f.width, f.height);
-            context.closePath();
-            canvas.fill(this);
+            _context.beginPath();
+            _context.rect(0, 0, f.width, f.height);
+            _context.closePath();
+            context.fill(this);
         },
         /**
          * start sprite animation

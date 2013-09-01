@@ -22,17 +22,19 @@
             Kinetic.Shape.call(this, config);
             this.className = ELLIPSE;
         },
-        drawFunc: function(canvas) {
-            var context = canvas.getContext(), r = this.getRadius();
-            context.beginPath();
-            context.save();
+        drawFunc: function(context) {
+            var _context = context._context, 
+                r = this.getRadius();
+
+            _context.beginPath();
+            _context.save();
             if(r.x !== r.y) {
-                context.scale(1, r.y / r.x);
+                _context.scale(1, r.y / r.x);
             }
-            context.arc(0, 0, r.x, 0, PIx2, false);
-            context.restore();
-            context.closePath();
-            canvas.fillStroke(this);
+            _context.arc(0, 0, r.x, 0, PIx2, false);
+            _context.restore();
+            _context.closePath();
+            context.fillStroke(this);
         },
         getWidth: function() {
             return this.getRadius().x * 2;

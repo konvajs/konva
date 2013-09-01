@@ -196,11 +196,11 @@
                     height: config.height || this.getHeight(),
                     pixelRatio: 1
                 }),
-                context = canvas.getContext(),
+                _context = canvas.getContext()._context,
                 layers = this.children;
 
             if(x || y) {
-                context.translate(-1 * x, -1 * y);
+                _context.translate(-1 * x, -1 * y);
             }
 
             function drawLayer(n) {
@@ -209,7 +209,7 @@
                     imageObj = new Image();
 
                 imageObj.onload = function() {
-                    context.drawImage(imageObj, 0, 0);
+                    _context.drawImage(imageObj, 0, 0);
 
                     if(n < layers.length - 1) {
                         drawLayer(n + 1);
@@ -308,7 +308,7 @@
 
             // draw layer and append canvas to container
             layer.draw();
-            this.content.appendChild(layer.canvas.element);
+            this.content.appendChild(layer.canvas._canvas);
 
             // chainable
             return this;

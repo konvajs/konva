@@ -30,7 +30,7 @@
                 p, colorKey, shape;
 
             if(this.isVisible() && this.isListening()) {
-                p = this.hitCanvas.context.getImageData(pos.x | 0, pos.y | 0, 1, 1).data;
+                p = this.hitCanvas.context._context.getImageData(pos.x | 0, pos.y | 0, 1, 1).data;
                 // this indicates that a hit pixel may have been found
                 if(p[3] === 255) {
                     colorKey = Kinetic.Util._rgbToHex(p[0], p[1], p[2]);
@@ -51,6 +51,7 @@
             return null;
         },
         drawScene: function(canvas) {
+            debugger;
             canvas = canvas || this.getCanvas();
 
             this._fire(BEFORE_DRAW, {
@@ -58,7 +59,7 @@
             });
 
             if(this.getClearBeforeDraw()) {
-                canvas.clear();
+                canvas.getContext().clear();
             }
             
             Kinetic.Container.prototype.drawScene.call(this, canvas);
@@ -73,7 +74,7 @@
             var layer = this.getLayer();
 
             if(layer && layer.getClearBeforeDraw()) {
-                layer.getHitCanvas().clear();
+                layer.getHitCanvas().getContext().clear();
             }
 
             Kinetic.Container.prototype.drawHit.call(this);
@@ -115,74 +116,79 @@
             this.getCanvas().clear(clip);
             return this;
         },
-        // extenders
+        // extend Node.prototype.setVisible
         setVisible: function(visible) {
             Kinetic.Node.prototype.setVisible.call(this, visible);
             if(visible) {
-                this.getCanvas().element.style.display = 'block';
-                this.hitCanvas.element.style.display = 'block';
+                this.getCanvas()._canvas.style.display = 'block';
+                this.hitCanvas._canvas.style.display = 'block';
             }
             else {
-                this.getCanvas().element.style.display = 'none';
-                this.hitCanvas.element.style.display = 'none';
+                this.getCanvas()._canvas.style.display = 'none';
+                this.hitCanvas._canvas.style.display = 'none';
             }
             return this;
         },
+        // extend Node.prototype.setZIndex
         setZIndex: function(index) {
             Kinetic.Node.prototype.setZIndex.call(this, index);
             var stage = this.getStage();
             if(stage) {
-                stage.content.removeChild(this.getCanvas().element);
+                stage.content.removeChild(this.getCanvas()._canvas);
 
                 if(index < stage.getChildren().length - 1) {
-                    stage.content.insertBefore(this.getCanvas().element, stage.getChildren()[index + 1].getCanvas().element);
+                    stage.content.insertBefore(this.getCanvas()._canvas, stage.getChildren()[index + 1].getCanvas()._canvas);
                 }
                 else {
-                    stage.content.appendChild(this.getCanvas().element);
+                    stage.content.appendChild(this.getCanvas()._canvas);
                 }
             }
             return this;
         },
+        // extend Node.prototype.moveToTop
         moveToTop: function() {
             Kinetic.Node.prototype.moveToTop.call(this);
             var stage = this.getStage();
             if(stage) {
-                stage.content.removeChild(this.getCanvas().element);
-                stage.content.appendChild(this.getCanvas().element);
+                stage.content.removeChild(this.getCanvas()._canvas);
+                stage.content.appendChild(this.getCanvas()._canvas);
             }
         },
+        // extend Node.prototype.moveUp
         moveUp: function() {
             if(Kinetic.Node.prototype.moveUp.call(this)) {
                 var stage = this.getStage();
                 if(stage) {
-                    stage.content.removeChild(this.getCanvas().element);
+                    stage.content.removeChild(this.getCanvas()._canvas);
 
                     if(this.index < stage.getChildren().length - 1) {
-                        stage.content.insertBefore(this.getCanvas().element, stage.getChildren()[this.index + 1].getCanvas().element);
+                        stage.content.insertBefore(this.getCanvas()._canvas, stage.getChildren()[this.index + 1].getCanvas()._canvas);
                     }
                     else {
-                        stage.content.appendChild(this.getCanvas().element);
+                        stage.content.appendChild(this.getCanvas()._canvas);
                     }
                 }
             }
         },
+        // extend Node.prototype.moveDown
         moveDown: function() {
             if(Kinetic.Node.prototype.moveDown.call(this)) {
                 var stage = this.getStage();
                 if(stage) {
                     var children = stage.getChildren();
-                    stage.content.removeChild(this.getCanvas().element);
-                    stage.content.insertBefore(this.getCanvas().element, children[this.index + 1].getCanvas().element);
+                    stage.content.removeChild(this.getCanvas()._canvas);
+                    stage.content.insertBefore(this.getCanvas()._canvas, children[this.index + 1].getCanvas()._canvas);
                 }
             }
         },
+        // extend Node.prototype.moveToBottom
         moveToBottom: function() {
             if(Kinetic.Node.prototype.moveToBottom.call(this)) {
                 var stage = this.getStage();
                 if(stage) {
                     var children = stage.getChildren();
-                    stage.content.removeChild(this.getCanvas().element);
-                    stage.content.insertBefore(this.getCanvas().element, children[1].getCanvas().element);
+                    stage.content.removeChild(this.getCanvas()._canvas);
+                    stage.content.insertBefore(this.getCanvas()._canvas, children[1].getCanvas()._canvas);
                 }
             }
         },
@@ -190,11 +196,14 @@
             return this;
         },
         remove: function() {
-            var stage = this.getStage(), canvas = this.getCanvas(), element = canvas.element;
+            var stage = this.getStage(), 
+                canvas = this.getCanvas(), 
+                _canvas = canvas._canvas;
+
             Kinetic.Node.prototype.remove.call(this);
 
-            if(stage && canvas && Kinetic.Util._isInDocument(element)) {
-                stage.content.removeChild(element);
+            if(stage && _canvas && Kinetic.Util._isInDocument(_canvas)) {
+                stage.content.removeChild(_canvas);
             }
             return this;
         },

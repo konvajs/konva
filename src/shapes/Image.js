@@ -40,12 +40,12 @@
             Kinetic.Shape.call(this, config);
             this.className = IMAGE;
         },
-        drawFunc: function(canvas) {
+        drawFunc: function(context) {
             var width = this.getWidth(),
                 height = this.getHeight(),
                 params,
                 that = this,
-                context = canvas.getContext(),
+                _context = context._context,
                 cropX = this.getCropX() || 0,
                 cropY = this.getCropY() || 0,
                 cropWidth = this.getCropWidth(),
@@ -60,16 +60,16 @@
 
             // NOTE: this.filterCanvas may be set by the above code block
             if (this.filterCanvas) {
-                image = this.filterCanvas.getElement();
+                image = this.filterCanvas._canvas;
             }
             else {
                 image = this.getImage();
             }
 
-            context.beginPath();
-            context.rect(0, 0, width, height);
-            context.closePath();
-            canvas.fillStroke(this);
+            _context.beginPath();
+            _context.rect(0, 0, width, height);
+            _context.closePath();
+            context.fillStroke(this);
 
             if(image) {
                 // if cropping
@@ -82,33 +82,33 @@
                 }
 
                 if(this.hasShadow()) {
-                    canvas.applyShadow(this, function() {
-                        that._drawImage(context, params);
+                    context.applyShadow(this, function() {
+                        that._drawImage(_context, params);
                     });
                 }
                 else {
-                    this._drawImage(context, params);
+                    this._drawImage(_context, params);
                 }
             }
         },
-        drawHitFunc: function(canvas) {
+        drawHitFunc: function(context) {
             var width = this.getWidth(),
                 height = this.getHeight(),
                 imageHitRegion = this.imageHitRegion,
-                context = canvas.getContext();
+                _context = context._context;
 
             if(imageHitRegion) {
-                context.drawImage(imageHitRegion, 0, 0, width, height);
-                context.beginPath();
-                context.rect(0, 0, width, height);
-                context.closePath();
-                canvas.stroke(this);
+                _context.drawImage(imageHitRegion, 0, 0, width, height);
+                _context.beginPath();
+                _context.rect(0, 0, width, height);
+                _context.closePath();
+                context.stroke(this);
             }
             else {
-                context.beginPath();
-                context.rect(0, 0, width, height);
-                context.closePath();
-                canvas.fillStroke(this);
+                _context.beginPath();
+                _context.rect(0, 0, width, height);
+                _context.closePath();
+                context.fillStroke(this);
             }
         },
         applyFilter: function() {
@@ -117,11 +117,11 @@
                 width = this.getWidth(),
                 height = this.getHeight(),
                 filter = this.getFilter(),
-                filterCanvas, context, imageData;
+                filterCanvas, _context, imageData;
 
             if (this.filterCanvas){
                 filterCanvas = this.filterCanvas;
-                filterCanvas.clear();
+                filterCanvas.getContext().clear();
             }
             else {
                 filterCanvas = this.filterCanvas = new Kinetic.SceneCanvas({
@@ -131,13 +131,13 @@
                 });
             }
 
-            context = filterCanvas.getContext();
+            _context = filterCanvas.getContext()._context;
 
             try {
-                this._drawImage(context, [image, 0, 0, filterCanvas.getWidth(), filterCanvas.getHeight()]);
-                imageData = context.getImageData(0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
+                this._drawImage(_context, [image, 0, 0, filterCanvas.getWidth(), filterCanvas.getHeight()]);
+                imageData = _context.getImageData(0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
                 filter.call(this, imageData);
-                context.putImageData(imageData, 0, 0);
+                _context.putImageData(imageData, 0, 0);
             }
             catch(e) {
                 this.clearFilter();
@@ -165,18 +165,19 @@
             var that = this,
                 width = this.getWidth(),
                 height = this.getHeight(),
-                canvas = new Kinetic.Canvas({
+                // TODO: may consider creating a native canvas element here instead
+                canvas = new Kinetic.SceneCanvas({
                     width: width,
                     height: height
                 }),
-                context = canvas.getContext(),
+                _context = canvas.getContext()._context,
                 image = this.getImage(),
                 imageData, data, rgbColorKey, i, n;
 
-            context.drawImage(image, 0, 0);
+            _context.drawImage(image, 0, 0);
 
             try {
-                imageData = context.getImageData(0, 0, width, height);
+                imageData = _context.getImageData(0, 0, width, height);
                 data = imageData.data;
                 rgbColorKey = Kinetic.Util._hexToRgb(this.colorKey);
 
@@ -216,12 +217,12 @@
             var image = this.getImage();
             return this.attrs.height || (image ? image.height : 0);
         },
-        _drawImage: function(context, a) {
+        _drawImage: function(_context, a) {
             if(a.length === 5) {
-                context.drawImage(a[0], a[1], a[2], a[3], a[4]);
+                _context.drawImage(a[0], a[1], a[2], a[3], a[4]);
             }
             else if(a.length === 9) {
-                context.drawImage(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8]);
+                _context.drawImage(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8]);
             }
         }
     };

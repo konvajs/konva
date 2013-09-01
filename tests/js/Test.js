@@ -69,8 +69,8 @@ function log(message) {
 }
 
 function showHit(layer) {
-    layer.hitCanvas.element.style.position = 'relative';
-	document.body.appendChild(layer.hitCanvas.element);
+    layer.hitCanvas._canvas.style.position = 'relative';
+	document.body.appendChild(layer.hitCanvas._canvas);
 }
 
 function Test() {

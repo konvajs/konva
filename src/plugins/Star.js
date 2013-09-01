@@ -32,21 +32,24 @@
             Kinetic.Shape.call(this, config);
             this.className = 'Star';
         },
-        drawFunc: function(canvas) {
-            var context = canvas.getContext(), innerRadius = this.attrs.innerRadius, outerRadius = this.attrs.outerRadius, numPoints = this.attrs.numPoints;
+        drawFunc: function(context) {
+            var _context = context._context, 
+                innerRadius = this.attrs.innerRadius, 
+                outerRadius = this.attrs.outerRadius, 
+                numPoints = this.attrs.numPoints;
 
-            context.beginPath();
-            context.moveTo(0, 0 - this.attrs.outerRadius);
+            _context.beginPath();
+            _context.moveTo(0, 0 - this.attrs.outerRadius);
 
             for(var n = 1; n < numPoints * 2; n++) {
                 var radius = n % 2 === 0 ? outerRadius : innerRadius;
                 var x = radius * Math.sin(n * Math.PI / numPoints);
                 var y = -1 * radius * Math.cos(n * Math.PI / numPoints);
-                context.lineTo(x, y);
+                _context.lineTo(x, y);
             }
-            context.closePath();
+            _context.closePath();
 
-            canvas.fillStroke(this);
+            context.fillStroke(this);
         }
     };
     Kinetic.Util.extend(Kinetic.Star, Kinetic.Shape);

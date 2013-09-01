@@ -32,11 +32,11 @@
         this.___init(config);
     };
 
-    function _fillFunc(context) {
-        context.fillText(this.partialText, 0, 0);
+    function _fillFunc(_context) {
+        _context.fillText(this.partialText, 0, 0);
     }
-    function _strokeFunc(context) {
-        context.strokeText(this.partialText, 0, 0);
+    function _strokeFunc(_context) {
+        _context.strokeText(this.partialText, 0, 0);
     }
 
     Kinetic.TextPath.prototype = {
@@ -64,28 +64,29 @@
             this.on('textChange.kinetic textStroke.kinetic textStrokeWidth.kinetic', that._setTextData);
             that._setTextData();
         },
-        drawFunc: function(canvas) {
-            var charArr = this.charArr, context = canvas.getContext();
+        drawFunc: function(context) {
+            var charArr = this.charArr, 
+                _context = context._context;
 
-            context.font = this._getContextFont();
-            context.textBaseline = 'middle';
-            context.textAlign = 'left';
-            context.save();
+            _context.font = this._getContextFont();
+            _context.textBaseline = 'middle';
+            _context.textAlign = 'left';
+            _context.save();
 
             var glyphInfo = this.glyphInfo;
             for(var i = 0; i < glyphInfo.length; i++) {
-                context.save();
+                _context.save();
 
                 var p0 = glyphInfo[i].p0;
                 var p1 = glyphInfo[i].p1;
                 var ht = parseFloat(this.attrs.fontSize);
 
-                context.translate(p0.x, p0.y);
-                context.rotate(glyphInfo[i].rotation);
+                _context.translate(p0.x, p0.y);
+                _context.rotate(glyphInfo[i].rotation);
                 this.partialText = glyphInfo[i].text;
 
-                canvas.fillStroke(this);
-                context.restore();
+                context.fillStroke(this);
+                _context.restore();
 
                 //// To assist with debugging visually, uncomment following
                 // context.beginPath();
@@ -98,7 +99,7 @@
                 // context.lineTo(p1.x, p1.y);
                 // context.stroke();
             }
-            context.restore();
+            _context.restore();
         },
         /**
          * get text width in pixels
@@ -127,14 +128,14 @@
         },
         _getTextSize: function(text) {
             var dummyCanvas = this.dummyCanvas;
-            var context = dummyCanvas.getContext('2d');
+            var _context = dummyCanvas.getContext('2d');
 
-            context.save();
+            _context.save();
 
-            context.font = this._getContextFont();
-            var metrics = context.measureText(text);
+            _context.font = this._getContextFont();
+            var metrics = _context.measureText(text);
 
-            context.restore();
+            _context.restore();
 
             return {
                 width: metrics.width,

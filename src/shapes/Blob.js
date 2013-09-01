@@ -37,15 +37,15 @@
 
             this._setAllPoints();
         },
-        drawFunc: function(canvas) {
+        drawFunc: function(context) {
             var points = this.getPoints(),
                 length = points.length,
-                context = canvas.getContext(),
+                _context = context._context,
                 tension = this.getTension(),
                 ap, len, n, point;
 
-            context.beginPath();
-            context.moveTo(points[0].x, points[0].y);
+            _context.beginPath();
+            _context.moveTo(points[0].x, points[0].y);
 
             // tension
             if(tension !== 0 && length > 2) {
@@ -54,19 +54,19 @@
                 n = 0;
 
                 while(n < len-1) {
-                    context.bezierCurveTo(ap[n].x, ap[n++].y, ap[n].x, ap[n++].y, ap[n].x, ap[n++].y);
+                    _context.bezierCurveTo(ap[n].x, ap[n++].y, ap[n].x, ap[n++].y, ap[n].x, ap[n++].y);
                 }
             }
             // no tension
             else {
                 for(n = 1; n < length; n++) {
                     point = points[n];
-                    context.lineTo(point.x, point.y);
+                    _context.lineTo(point.x, point.y);
                 }
             }
 
-			context.closePath();
-            canvas.fillStroke(this);
+			_context.closePath();
+            context.fillStroke(this);
         },
         _setAllPoints: function() {
             var points = this.getPoints(),

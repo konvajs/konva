@@ -30,22 +30,22 @@
             Kinetic.Shape.call(this, config);
             this.className = 'RegularPolygon';
         },
-        drawFunc: function(canvas) {
-            var context = canvas.getContext(),
+        drawFunc: function(context) {
+            var _context = context._context,
                 sides = this.attrs.sides,
                 radius = this.attrs.radius,
                 n, x, y;
 
-            context.beginPath();
-            context.moveTo(0, 0 - radius);
+            _context.beginPath();
+            _context.moveTo(0, 0 - radius);
 
             for(n = 1; n < sides; n++) {
                 x = radius * Math.sin(n * 2 * Math.PI / sides);
                 y = -1 * radius * Math.cos(n * 2 * Math.PI / sides);
-                context.lineTo(x, y);
+                _context.lineTo(x, y);
             }
-            context.closePath();
-            canvas.fillStroke(this);
+            _context.closePath();
+            context.fillStroke(this);
         }
     };
     Kinetic.Util.extend(Kinetic.RegularPolygon, Kinetic.Shape);

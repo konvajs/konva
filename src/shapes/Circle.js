@@ -41,13 +41,13 @@
             Kinetic.Shape.call(this, config);
             this.className = CIRCLE;
         },
-        drawFunc: function(canvas) {
-            var context = canvas.getContext();
+        drawFunc: function(context) {
+            var _context = context._context;
 
-            context.beginPath();
-            context.arc(0, 0, this.getRadius(), 0, PIx2, false);
-            context.closePath();
-            canvas.fillStroke(this);
+            _context.beginPath();
+            _context.arc(0, 0, this.getRadius(), 0, PIx2, false);
+            _context.closePath();
+            context.fillStroke(this);
         },
         getWidth: function() {
             return this.getRadius() * 2;

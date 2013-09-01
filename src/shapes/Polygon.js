@@ -27,15 +27,18 @@
             Kinetic.Shape.call(this, config);
             this.className = 'Polygon';
         },
-        drawFunc: function(canvas) {
-            var context = canvas.getContext(), points = this.getPoints(), length = points.length;
-            context.beginPath();
-            context.moveTo(points[0].x, points[0].y);
+        drawFunc: function(context) {
+            var _context = context._context, 
+                points = this.getPoints(), 
+                length = points.length;
+
+            _context.beginPath();
+            _context.moveTo(points[0].x, points[0].y);
             for(var n = 1; n < length; n++) {
-                context.lineTo(points[n].x, points[n].y);
+                _context.lineTo(points[n].x, points[n].y);
             }
-            context.closePath();
-            canvas.fillStroke(this);
+            _context.closePath();
+            context.fillStroke(this);
         }
     };
     Kinetic.Util.extend(Kinetic.Polygon, Kinetic.Shape);

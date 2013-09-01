@@ -1,17 +1,17 @@
 (function() {
     var HAS_SHADOW = 'hasShadow';
 
-    function _fillFunc(context) {
-        context.fill();
+    function _fillFunc(_context) {
+        _context.fill();
     }
-    function _strokeFunc(context) {
-        context.stroke();
+    function _strokeFunc(_context) {
+        _context.stroke();
     }
-    function _fillFuncHit(context) {
-        context.fill();
+    function _fillFuncHit(_context) {
+        _context.fill();
     }
-    function _strokeFuncHit(context) {
-        context.stroke();
+    function _strokeFuncHit(_context) {
+        _context.stroke();
     }
 
     function _clearHasShadowCache() {
@@ -107,9 +107,9 @@
             var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments));
             var stage = this.getStage();
             var hitCanvas = stage.hitCanvas;
-            hitCanvas.clear();
+            hitCanvas.getContext().clear();
             this.drawScene(hitCanvas);
-            var p = hitCanvas.context.getImageData(pos.x | 0, pos.y | 0, 1, 1).data;
+            var p = hitCanvas.context._context.getImageData(pos.x | 0, pos.y | 0, 1, 1).data;
             return p[3] > 0;
         },
         /**
@@ -202,6 +202,7 @@
             this._setAttr('dashArrayEnabled', false);
             return this;
         },
+        // extends Node.prototype.destroy 
         destroy: function() {
             Kinetic.Node.prototype.destroy.call(this);
             delete Kinetic.Global.shapes[this.colorKey];
@@ -214,12 +215,12 @@
                 context = canvas.getContext();
 
             if(drawFunc && this.isVisible()) {
-                context.save();
-                canvas._applyOpacity(this);
-                canvas._applyLineJoin(this);
-                canvas._applyAncestorTransforms(this);
-                drawFunc.call(this, canvas);
-                context.restore();
+                context._context.save();
+                context._applyOpacity(this);
+                context._applyLineJoin(this);
+                context._applyAncestorTransforms(this);
+                drawFunc.call(this, context);
+                context._context.restore();
             }
             return this;
         },
@@ -230,12 +231,12 @@
                 context = canvas.getContext();
 
             if(drawFunc && this.shouldDrawHit()) {
-                context.save();
-                canvas._applyLineJoin(this);
-                canvas._applyAncestorTransforms(this);
+                context._context.save();
+                context._applyLineJoin(this);
+                context._applyAncestorTransforms(this);
 
-                drawFunc.call(this, canvas);
-                context.restore();
+                drawFunc.call(this, context);
+                context._context.restore();
             }
             return this;
         },

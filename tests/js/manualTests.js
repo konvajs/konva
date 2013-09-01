@@ -1552,12 +1552,12 @@ Test.Modules.DRAG_AND_DROP = {
 
         showHit(layer);
 
-        var context = bgLayer.getCanvas().getContext();
-        context.beginPath();
-        context.moveTo(0, 0);
-        context.lineTo(100, 20);
-        context.strokeStyle = 'red';
-        context.stroke();
+        var _context = bgLayer.getCanvas().getContext()._context;
+        _context.beginPath();
+        _context.moveTo(0, 0);
+        _context.lineTo(100, 20);
+        _context.strokeStyle = 'red';
+        _context.stroke();
     },
     'stage and shape draggable': function(containerId) {
         var stage = new Kinetic.Stage({
