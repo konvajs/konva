@@ -198,8 +198,9 @@
         beginPath: function() {
             this._context.beginPath();
         },
-        clearRect: function(x, y, width, height) {
-            this._context.clearRect(x, y, width, height);
+        clearRect: function() {
+            var a = arguments;
+            this._context.clearRect(a[0], a[1], a[2], a[3]);
         },
         closePath: function() {
             this._context.closePath();
@@ -207,8 +208,9 @@
         fill: function() {
             this._context.fill();
         },
-        fillText: function(str, x, y) {
-            this._context.fillText(str, x, y);
+        fillText: function() {
+            var a = arguments;
+            this._context.fillText(a[0], a[1], a[2]);
         },
         lineTo: function() {
             var a = arguments;
@@ -218,8 +220,9 @@
             var a = arguments;
             this._context.moveTo(a[0], a[1]);
         },
-        rect: function(x, y, width, height) {
-            this._context.rect(x, y, width, height);
+        rect: function() {
+            var a = arguments;
+            this._context.rect(a[0], a[1], a[2], a[3]);
         },
         restore: function() {
             this._context.restore();
@@ -227,17 +230,20 @@
         save: function() {
             this._context.save();
         },
-        setTransform: function(a, b, c, d, e, f) {
-            this._context.setTransform(a, b, c, d, e, f);
+        setTransform: function() {
+            var a = arguments;
+            this._context.setTransform(a[0], a[1], a[2], a[3], a[4], a[5]);
         },
         stroke: function() {
             this._context.stroke();
         },
-        strokeText: function(str, x, y) {
-            this._context.strokeText(str, x, y);
+        strokeText: function() {
+            var a = arguments;
+            this._context.strokeText(a[0], a[1], a[2]);
         },
-        transform: function(a, b, c, d, e, f) {
-            this._context.transform(a, b, c, d, e, f);
+        transform: function() {
+            var a = arguments;
+            this._context.transform(a[0], a[1], a[2], a[3], a[4], a[5]);
         },
         _enableTrace: function() {
             var that = this,

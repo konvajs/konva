@@ -3,6 +3,11 @@
     <meta charset="utf-8">
     <title>KineticJS Mocha Tests</title>
     <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+    <style>
+      #mocha .test {
+        overflow: auto;
+      }
+    </style>
   </head>
   <body>
     <div id="mocha"></div>
@@ -20,7 +25,9 @@
       Kinetic.enableTrace = true;
     </script>
     <script src="unit/Util-test.js"></script>
+
     <script src="unit/Rect-test.js"></script>
+    <script src="unit/Circle-test.js"></script>
     <script>
       if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
       else { mocha.run(); }

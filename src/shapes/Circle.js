@@ -42,11 +42,9 @@
             this.className = CIRCLE;
         },
         drawFunc: function(context) {
-            var _context = context._context;
-
-            _context.beginPath();
-            _context.arc(0, 0, this.getRadius(), 0, PIx2, false);
-            _context.closePath();
+            context.beginPath();
+            context.arc(0, 0, this.getRadius(), 0, PIx2, false);
+            context.closePath();
             context.fillStroke(this);
         },
         getWidth: function() {
