@@ -55,7 +55,7 @@
                 _context.lineTo(point.x, point.y);
             }
 
-            context.stroke(this);
+            context.strokeShape(this);
         }
     };
     Kinetic.Util.extend(Kinetic.Line, Kinetic.Shape);

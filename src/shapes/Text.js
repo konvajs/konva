@@ -58,11 +58,11 @@
     Kinetic.Text = function(config) {
         this.___init(config);
     };
-    function _fillFunc(_context) {
-        _context.fillText(this.partialText, 0, 0);
+    function _fillFunc(context) {
+        context.fillText(this.partialText, 0, 0);
     }
-    function _strokeFunc(_context) {
-        _context.strokeText(this.partialText, 0, 0);
+    function _strokeFunc(context) {
+        context.strokeText(this.partialText, 0, 0);
     }
 
     Kinetic.Text.prototype = {

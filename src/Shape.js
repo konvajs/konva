@@ -1,17 +1,17 @@
 (function() {
     var HAS_SHADOW = 'hasShadow';
 
-    function _fillFunc(_context) {
-        _context.fill();
+    function _fillFunc(context) {
+        context.fill();
     }
-    function _strokeFunc(_context) {
-        _context.stroke();
+    function _strokeFunc(context) {
+        context.stroke();
     }
-    function _fillFuncHit(_context) {
-        _context.fill();
+    function _fillFuncHit(context) {
+        context.fill();
     }
-    function _strokeFuncHit(_context) {
-        _context.stroke();
+    function _strokeFuncHit(context) {
+        context.stroke();
     }
 
     function _clearHasShadowCache() {

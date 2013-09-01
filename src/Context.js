@@ -3,8 +3,25 @@
         OPEN_PAREN = '(',
         CLOSE_PAREN = ')',
         EMPTY_STRING = '',
-        CONTEXT_METHODS = ['clearRect', 'rect', 'restore', 'save', 'setTransform', 'transform'],
-        CONTEXT_PROPERTIES = ['fillStyle', 'lineWidth', 'strokeStyle'];
+        EQUALS = '=',
+        SET = 'set',
+        CONTEXT_METHODS = [
+            'clearRect', 
+            'fill', 
+            'fillText', 
+            'rect', 
+            'restore', 
+            'save', 
+            'setTransform', 
+            'stroke', 
+            'strokeText', 
+            'transform'
+        ],
+        CONTEXT_PROPERTIES = [
+            'fillStyle', 
+            'lineWidth', 
+            'strokeStyle'
+        ];
 
     /**
      * Canvas Context constructor
@@ -73,7 +90,7 @@
          * @memberof Kinetic.Context.prototype
          * @param {Kinetic.Shape} shape
          */
-        fill: function(shape) {
+        fillShape: function(shape) {
             if(shape.getFillEnabled()) {
                 this._fill(shape);
             }
@@ -84,7 +101,7 @@
          * @memberof Kinetic.Context.prototype
          * @param {Kinetic.Shape} shape
          */
-        stroke: function(shape) {
+        strokeShape: function(shape) {
             if(shape.getStrokeEnabled()) {
                 this._stroke(shape);
             }
@@ -159,9 +176,27 @@
             container._drawChildren(this.getCanvas());
             this.restore();
         },
+
+        // context property setters
+        setFillStyle: function(val) {
+            this._context.fillStyle = val;
+        },
+        setLineWidth: function(val) {
+            this._context.lineWidth = val;
+        },
+        setStrokeStyle: function(val) {
+            this._context.strokeStyle = val;
+        },
+
         // context pass through methods
         clearRect: function(x, y, width, height) {
             this._context.clearRect(x, y, width, height);
+        },
+        fill: function() {
+            this._context.fill();
+        },
+        fillText: function(str, x, y) {
+            this._context.fillText(str, x, y);
         },
         rect: function(x, y, width, height) {
             this._context.rect(x, y, width, height);
@@ -174,6 +209,12 @@
         },
         setTransform: function(a, b, c, d, e, f) {
             this._context.setTransform(a, b, c, d, e, f);
+        },
+        stroke: function() {
+            this._context.stroke();
+        },
+        strokeText: function(str, x, y) {
+            this._context.strokeText(str, x, y);
         },
         transform: function(a, b, c, d, e, f) {
             this._context.transform(a, b, c, d, e, f);
@@ -199,9 +240,16 @@
 
             // properties
             len = CONTEXT_PROPERTIES.length;
-
             for (n=0; n<len; n++) {
-                
+                (function(contextProperty) {
+                    var methodName = SET + Kinetic.Util._capitalize(contextProperty),
+                        method = that[methodName];
+
+                    that[methodName] = function(val) {
+                        method.call(that, val);
+                        that._trace(contextProperty + EQUALS + val);
+                    };
+                })(CONTEXT_PROPERTIES[n]);
             }
         }
     };
@@ -215,8 +263,8 @@
             var _context = this._context, 
                 fill = shape.getFill();
 
-            _context.fillStyle = fill;
-            shape._fillFunc(_context);
+            this.setFillStyle(fill);
+            shape._fillFunc(this);
         },
         _fillPattern: function(shape) {
             var _context = this._context,
@@ -241,8 +289,8 @@
                 _context.translate(-1 * fillPatternOffset.x, -1 * fillPatternOffset.y);
             }
 
-            _context.fillStyle = _context.createPattern(fillPatternImage, fillPatternRepeat || 'repeat');
-            _context.fill();
+            this.setFillStyle(_context.createPattern(fillPatternImage, fillPatternRepeat || 'repeat'));
+            this.fill();
         },
         _fillLinearGradient: function(shape) {
             var _context = this._context,
@@ -256,8 +304,8 @@
                 for(var n = 0; n < colorStops.length; n += 2) {
                     grd.addColorStop(colorStops[n], colorStops[n + 1]);
                 }
-                _context.fillStyle = grd;
-                _context.fill();
+                this.setFillStyle(grd);
+                this.fill();
             }
         },
         _fillRadialGradient: function(shape) {
@@ -273,8 +321,8 @@
             for(var n = 0; n < colorStops.length; n += 2) {
                 grd.addColorStop(colorStops[n], colorStops[n + 1]);
             }
-            _context.fillStyle = grd;
-            _context.fill();
+            this.setFillStyle(grd);
+            this.fill();
         },
         _fill: function(shape, skipShadow) {
             var _context = this._context,
@@ -329,9 +377,9 @@
                 dashArray = shape.getDashArray();
 
             if(stroke || strokeWidth) {
-                _context.save();
+                this.save();
                 if (!shape.getStrokeScaleEnabled()) {
-                    _context.setTransform(1, 0, 0, 1, 0, 0);
+                    this.setTransform(1, 0, 0, 1, 0, 0);
                 }
                 this._applyLineCap(shape);
                 if(dashArray && shape.getDashArrayEnabled()) {
@@ -348,10 +396,10 @@
                 if(!skipShadow && shape.hasShadow()) {
                     this._applyShadow(shape);
                 }
-                _context.lineWidth = strokeWidth || 2;
-                _context.strokeStyle = stroke || 'black';
-                shape._strokeFunc(_context);
-                _context.restore();
+                this.setLineWidth(strokeWidth || 2);
+                this.setStrokeStyle(stroke || 'black');
+                shape._strokeFunc(this);
+                this.restore();
 
                 if(!skipShadow && shape.hasShadow()) {
                     this._stroke(shape, true);
@@ -394,7 +442,7 @@
         _fill: function(shape) {
             var _context = this._context;
             _context.save();
-            _context.fillStyle = shape.colorKey;
+            this.setFillStyle(shape.colorKey);
             shape._fillFuncHit(_context);
             _context.restore();
         },

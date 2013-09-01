@@ -69,7 +69,7 @@
                 }
             }
 
-            context.stroke(this);
+            context.strokeShape(this);
         },
         _setAllPoints: function() {
             this.allPoints = Kinetic.Util._expandPoints(this.getPoints(), this.getTension());

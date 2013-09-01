@@ -34,8 +34,20 @@ suite('Rect', function(){
 
     test('context trace array', function() {
       var traceArr = layer.getContext().traceArr;
-      console.log(traceArr)
-      assert.equal(traceArr[0], 'clearRect(0,0,578,200)');
+      var n = 0;
+      //console.log(traceArr);
+      assert.equal(traceArr[n++], 'clearRect(0,0,578,200)');
+      assert.equal(traceArr[n++], 'save()');
+      assert.equal(traceArr[n++], 'transform(1,0,0,1,100,50)');
+      assert.equal(traceArr[n++], 'rect(0,0,100,50)');
+      assert.equal(traceArr[n++], 'fillStyle=green');
+      assert.equal(traceArr[n++], 'fill()');
+      assert.equal(traceArr[n++], 'save()');
+      assert.equal(traceArr[n++], 'lineWidth=2');
+      assert.equal(traceArr[n++], 'strokeStyle=blue');
+      assert.equal(traceArr[n++], 'stroke()');
+      assert.equal(traceArr[n++], 'restore()');
+      assert.equal(traceArr[n++], 'restore()');
     });
   });
 });
