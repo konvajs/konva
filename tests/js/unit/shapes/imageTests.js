@@ -205,9 +205,9 @@ Test.Modules.IMAGE = {
                 image: imageObj,
                 draggable: true,
                 shadowColor: 'black',
-            	shadowBlur: 10,
-            	shadowOffset: [20, 20],
-            	shadowOpacity: 0.2
+                shadowBlur: 10,
+                shadowOffset: [20, 20],
+                shadowOpacity: 0.2
             });
 
             // override color key with black
@@ -226,5 +226,72 @@ Test.Modules.IMAGE = {
         imageObj.src = '../assets/lion.png';
 
         showHit(layer);
+    },
+    'image with svg source': function(containerId) {
+        var imageObj = new Image();
+
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        imageObj.onload = function() {
+
+            var tiger = new Kinetic.Image({
+                x: 0,
+                y: 0,
+                image: imageObj,
+                draggable: true,
+                scale: 0.25
+            });
+
+            layer.add(tiger);
+            stage.add(layer);
+        };
+        imageObj.src = '../assets/Ghostscript_Tiger.svg';
+    },
+    'opacity test for image with svg source': function(containerId) {
+        var imageObj = new Image();
+
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        layer.add(new Kinetic.Line({
+            points: [0,0,578,200],
+            stroke: 'black',
+            strokeWidth: 5
+        }));
+        
+        imageObj.onload = function() {
+
+            var tiger = new Kinetic.Image({
+                x: 0,
+                y: 0,
+                image: imageObj,
+                draggable: true,
+                scale: 0.25,
+                opacity: 0.5
+            });
+
+            layer.add(tiger);
+            
+            layer.add(new Kinetic.Line({
+                points: [578,0,0,200],
+                stroke: 'blue',
+                strokeWidth: 5
+            }));
+        
+            stage.add(layer);
+
+        };
+        imageObj.style.opacity = 0.5;
+        imageObj.src = '../assets/Ghostscript_Tiger.svg';
+                
     }
 };

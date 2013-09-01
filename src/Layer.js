@@ -51,7 +51,6 @@
             return null;
         },
         drawScene: function(canvas) {
-            debugger;
             canvas = canvas || this.getCanvas();
 
             this._fire(BEFORE_DRAW, {
