@@ -2140,7 +2140,7 @@ Test.Modules.NODE = {
             _context.lineTo(420, 80);
             _context.quadraticCurveTo(300, 100, 260, 170);
             _context.closePath();
-            context.fillStroke(this);
+            context.fillStrokeShape(this);
         };
         var triangle = new Kinetic.Shape({
             drawFunc: drawTriangle,
@@ -2174,7 +2174,7 @@ Test.Modules.NODE = {
             _context.lineTo(420, 80);
             _context.quadraticCurveTo(300, 100, 260, 170);
             _context.closePath();
-            context.fillStroke(this);
+            context.fillStrokeShape(this);
         };
         var json = '{"attrs":{"width":578,"height":200},"nodeType":"Stage","children":[{"attrs":{},"nodeType":"Layer","children":[{"attrs":{},"nodeType":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"nodeType":"Shape"}]}]}]}';
 

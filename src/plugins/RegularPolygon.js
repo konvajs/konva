@@ -45,7 +45,7 @@
                 _context.lineTo(x, y);
             }
             _context.closePath();
-            context.fillStroke(this);
+            context.fillStrokeShape(this);
         }
     };
     Kinetic.Util.extend(Kinetic.RegularPolygon, Kinetic.Shape);

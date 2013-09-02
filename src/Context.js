@@ -59,6 +59,14 @@
             return this.traceArr.join(';');
 
         },
+        /**
+         * clear trace if trace is enabled
+         * @method
+         * @memberof Kinetic.Context.prototype
+         */
+        clearTrace: function() {
+            this.traceArr = [];
+        },
         _trace: function(str) {
             var traceArr = this.traceArr,
                 len;
@@ -79,6 +87,12 @@
             var pixelRatio = this.getCanvas().getPixelRatio();
             this.setTransform(1 * pixelRatio, 0, 0, 1 * pixelRatio, 0, 0);
         },
+        /**
+         * get canvas
+         * @method
+         * @memberof Kinetic.Context.prototype
+         * @returns {Kinetic.Canvas}
+         */
         getCanvas: function() {
             return this.canvas;
         },
@@ -123,14 +137,14 @@
             }
         },
         /**
-         * fill, stroke, and apply shadows
+         * fill, stroke, and apply shadows to shape.  Shadows 
          *  will only be applied to either the fill or stroke.&nbsp; Fill
          *  is given priority over stroke.
          * @method
          * @memberof Kinetic.Context.prototype
          * @param {Kinetic.Shape} shape
          */
-        fillStroke: function(shape) {
+        fillStrokeShape: function(shape) {
             var fillEnabled = shape.getFillEnabled();
             if(fillEnabled) {
                 this._fill(shape);

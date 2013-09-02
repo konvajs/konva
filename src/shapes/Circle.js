@@ -45,7 +45,7 @@
             context.beginPath();
             context.arc(0, 0, this.getRadius(), 0, PIx2, false);
             context.closePath();
-            context.fillStroke(this);
+            context.fillStrokeShape(this);
         },
         getWidth: function() {
             return this.getRadius() * 2;

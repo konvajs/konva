@@ -66,7 +66,7 @@
             }
 
 			_context.closePath();
-            context.fillStroke(this);
+            context.fillStrokeShape(this);
         },
         _setAllPoints: function() {
             var points = this.getPoints(),

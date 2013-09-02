@@ -69,7 +69,7 @@
             _context.beginPath();
             _context.rect(0, 0, width, height);
             _context.closePath();
-            context.fillStroke(this);
+            context.fillStrokeShape(this);
 
             if(image) {
                 // if cropping
@@ -108,7 +108,7 @@
                 _context.beginPath();
                 _context.rect(0, 0, width, height);
                 _context.closePath();
-                context.fillStroke(this);
+                context.fillStrokeShape(this);
             }
         },
         applyFilter: function() {

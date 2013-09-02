@@ -218,7 +218,7 @@
             }
 
             _context.closePath();
-            context.fillStroke(this);
+            context.fillStrokeShape(this);
         }
     };
 

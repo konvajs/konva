@@ -49,7 +49,7 @@
             }
             _context.closePath();
 
-            context.fillStroke(this);
+            context.fillStrokeShape(this);
         }
     };
     Kinetic.Util.extend(Kinetic.Star, Kinetic.Shape);

@@ -38,7 +38,7 @@
                 _context.lineTo(points[n].x, points[n].y);
             }
             _context.closePath();
-            context.fillStroke(this);
+            context.fillStrokeShape(this);
         }
     };
     Kinetic.Util.extend(Kinetic.Polygon, Kinetic.Shape);

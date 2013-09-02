@@ -85,7 +85,7 @@
                 _context.rotate(glyphInfo[i].rotation);
                 this.partialText = glyphInfo[i].text;
 
-                context.fillStroke(this);
+                context.fillStrokeShape(this);
                 _context.restore();
 
                 //// To assist with debugging visually, uncomment following

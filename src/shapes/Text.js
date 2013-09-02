@@ -125,7 +125,7 @@
                 }
 
                 this.partialText = text;
-                context.fillStroke(this);
+                context.fillStrokeShape(this);
                 _context.restore();
                 _context.translate(0, lineHeightPx);
             }
@@ -139,7 +139,7 @@
             _context.beginPath();
             _context.rect(0, 0, width, height);
             _context.closePath();
-            context.fillStroke(this);
+            context.fillStrokeShape(this);
         },
         /**
          * set text

@@ -135,7 +135,7 @@ Test.Modules.SHAPE = {
                 _context.lineTo(100, 0);
                 _context.lineTo(100, 100);
                 _context.closePath();
-                context.fillStroke(this);
+                context.fillStrokeShape(this);
             },
             x: 10,
             y: 10,
@@ -172,7 +172,7 @@ Test.Modules.SHAPE = {
                 _context.lineTo(100, 0);
                 _context.lineTo(100, 100);
                 _context.closePath();
-                context.fillStroke(this);
+                context.fillStrokeShape(this);
             },
             x: 200,
             y: 100,

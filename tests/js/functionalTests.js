@@ -1414,7 +1414,7 @@ Test.Modules['HIT FUNCS'] = {
                 _context.beginPath();
                 _context.arc(0, 0, this.getRadius() + 100, 0, Math.PI * 2, true);
                 _context.closePath();
-                context.fillStroke(this);
+                context.fillStrokeShape(this);
             }
         });
 
@@ -1470,7 +1470,7 @@ Test.Modules['HIT FUNCS'] = {
             _context.beginPath();
             _context.arc(0, 0, this.getRadius() - 50, 0, Math.PI * 2, true);
             _context.closePath();
-            context.fillStroke(this);
+            context.fillStrokeShape(this);
 
         });
 

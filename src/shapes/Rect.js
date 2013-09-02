@@ -50,7 +50,7 @@
                 context.arc(cornerRadius, cornerRadius, cornerRadius, Math.PI, Math.PI * 3 / 2, false);
             }
             context.closePath();
-            context.fillStroke(this);
+            context.fillStrokeShape(this);
         }
     };
 

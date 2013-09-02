@@ -38,7 +38,7 @@
             _context.arc(0, 0, this.getRadius(), 0, this.getAngle(), this.getClockwise());
             _context.lineTo(0, 0);
             _context.closePath();
-            context.fillStroke(this);
+            context.fillStrokeShape(this);
         }
     };
     Kinetic.Util.extend(Kinetic.Wedge, Kinetic.Shape);
