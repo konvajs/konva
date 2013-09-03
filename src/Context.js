@@ -216,8 +216,7 @@
             this._context.clearRect(a[0], a[1], a[2], a[3]);
         },
         clip: function() {
-            var a = arguments;
-            this._context.clip(a[0], a[1], a[2], a[3]);
+            this._context.clip();
         },
         closePath: function() {
             this._context.closePath();
