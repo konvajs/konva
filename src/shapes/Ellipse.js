@@ -26,14 +26,14 @@
             var _context = context._context, 
                 r = this.getRadius();
 
-            _context.beginPath();
-            _context.save();
+            context.beginPath();
+            context.save();
             if(r.x !== r.y) {
-                _context.scale(1, r.y / r.x);
+                context.scale(1, r.y / r.x);
             }
-            _context.arc(0, 0, r.x, 0, PIx2, false);
-            _context.restore();
-            _context.closePath();
+            context.arc(0, 0, r.x, 0, PIx2, false);
+            context.restore();
+            context.closePath();
             context.fillStrokeShape(this);
         },
         getWidth: function() {

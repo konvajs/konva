@@ -1009,16 +1009,16 @@
                     height: config.height || stage.getHeight(),
                     pixelRatio: 1
                 }),
-                _context = canvas.getContext()._context;
+                context = canvas.getContext();
 
-            _context.save();
+            context.save();
 
             if(x || y) {
-                _context.translate(-1 * x, -1 * y);
+                context.translate(-1 * x, -1 * y);
             }
 
             this.drawScene(canvas);
-            _context.restore();
+            context.restore();
 
             return canvas.toDataURL(mimeType, quality);
         },

@@ -252,7 +252,7 @@ suite('Text', function(){
         layer.add(text);
         stage.add(layer);
 
-        console.log(layer.getContext().getTrace());
+        //console.log(layer.getContext().getTrace());
 
     });
 

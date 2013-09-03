@@ -11,14 +11,20 @@
             'beginPath',
             'bezierCurveTo',
             'clearRect', 
+            'clip',
             'closePath',
+            'createLinearGradient',
+            'createPattern',
+            'createRadialGradient',
             'fill', 
             'fillText', 
             'lineTo',
             'moveTo',
             'rect', 
             'restore', 
+            'rotate',
             'save', 
+            'scale',
             'setTransform', 
             'stroke', 
             'strokeText', 
@@ -154,19 +160,19 @@
         _applyLineCap: function(shape) {
             var lineCap = shape.getLineCap();
             if(lineCap) {
-                this._context.lineCap = lineCap;
+                this.setAttr('lineCap', lineCap);
             }
         },
         _applyOpacity: function(shape) {
             var absOpacity = shape.getAbsoluteOpacity();
             if(absOpacity !== 1) {
-                this._context.globalAlpha = absOpacity;
+                this.setAttr('globalAlpha', absOpacity);
             }
         },
         _applyLineJoin: function(shape) {
             var lineJoin = shape.getLineJoin();
             if(lineJoin) {
-                this._context.lineJoin = lineJoin;
+                this.setAttr('lineJoin', lineJoin);
             }
         },
         _applyAncestorTransforms: function(shape) {
@@ -174,8 +180,7 @@
             this.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
         },
         _clip: function(container) {
-            var _context = this._context,
-                clipX = container.getClipX() || 0,
+            var clipX = container.getClipX() || 0,
                 clipY = container.getClipY() || 0,
                 clipWidth = container.getClipWidth(),
                 clipHeight = container.getClipHeight();
@@ -184,7 +189,7 @@
             this._applyAncestorTransforms(container);
             this.beginPath();
             this.rect(clipX, clipY, clipWidth, clipHeight);
-            _context.clip();
+            this.clip();
             this.reset();
             container._drawChildren(this.getCanvas());
             this.restore();
@@ -210,8 +215,24 @@
             var a = arguments;
             this._context.clearRect(a[0], a[1], a[2], a[3]);
         },
+        clip: function() {
+            var a = arguments;
+            this._context.clip(a[0], a[1], a[2], a[3]);
+        },
         closePath: function() {
             this._context.closePath();
+        },
+        createLinearGradient: function() {
+            var a = arguments;
+            return this._context.createLinearGradient(a[0], a[1], a[2], a[3]);
+        },
+        createPattern: function() {
+            var a = arguments;
+            this._context.createPattern(a[0], a[1]);
+        },
+        createRadialGradient: function() {
+            var a = arguments;
+            return this._context.createRadialGradient(a[0], a[1], a[2], a[3], a[4], a[5]);
         },
         fill: function() {
             this._context.fill();
@@ -235,8 +256,16 @@
         restore: function() {
             this._context.restore();
         },
+        rotate: function() {
+            var a = arguments;
+            this._context.rotate(a[0]);
+        },
         save: function() {
             this._context.save();
+        },
+        scale: function() {
+            var a = arguments;
+            this._context.scale(a[0], a[1]);
         },
         setTransform: function() {
             var a = arguments;
@@ -267,11 +296,14 @@
             // methods
             for (n=0; n<len; n++) {
                 (function(methodName) {
-                    var origMethod = that[methodName];
+                    var origMethod = that[methodName],
+                        ret;
+
                     that[methodName] = function() {
                         args = _roundArrValues(Array.prototype.slice.call(arguments, 0));
-                        origMethod.apply(that, arguments);
+                        ret = origMethod.apply(that, arguments);
                         that._trace(methodName + OPEN_PAREN + args.join(COMMA) + CLOSE_PAREN);
+                        return ret;
                     };
                 })(CONTEXT_METHODS[n]);
             }
@@ -296,8 +328,7 @@
             shape._fillFunc(this);
         },
         _fillPattern: function(shape) {
-            var _context = this._context,
-                fillPatternImage = shape.getFillPatternImage(),
+            var fillPatternImage = shape.getFillPatternImage(),
                 fillPatternX = shape.getFillPatternX(),
                 fillPatternY = shape.getFillPatternY(),
                 fillPatternScale = shape.getFillPatternScale(),
@@ -309,24 +340,23 @@
                 this.translate(fillPatternX || 0, fillPatternY || 0);
             }
             if(fillPatternRotation) {
-                _context.rotate(fillPatternRotation);
+                this.rotate(fillPatternRotation);
             }
             if(fillPatternScale) {
-                _context.scale(fillPatternScale.x, fillPatternScale.y);
+                this.scale(fillPatternScale.x, fillPatternScale.y);
             }
             if(fillPatternOffset) {
                 this.translate(-1 * fillPatternOffset.x, -1 * fillPatternOffset.y);
             }
 
-            this.setAttr('fillStyle', _context.createPattern(fillPatternImage, fillPatternRepeat || 'repeat'));
+            this.setAttr('fillStyle', this.createPattern(fillPatternImage, fillPatternRepeat || 'repeat'));
             this.fill();
         },
         _fillLinearGradient: function(shape) {
-            var _context = this._context,
-                start = shape.getFillLinearGradientStartPoint(),
+            var start = shape.getFillLinearGradientStartPoint(),
                 end = shape.getFillLinearGradientEndPoint(),
                 colorStops = shape.getFillLinearGradientColorStops(),
-                grd = _context.createLinearGradient(start.x, start.y, end.x, end.y);
+                grd = this.createLinearGradient(start.x, start.y, end.x, end.y);
 
             if (colorStops) {
                 // build color stops
@@ -338,13 +368,12 @@
             }
         },
         _fillRadialGradient: function(shape) {
-            var _context = this._context,
-            start = shape.getFillRadialGradientStartPoint(),
+            var start = shape.getFillRadialGradientStartPoint(),
             end = shape.getFillRadialGradientEndPoint(),
             startRadius = shape.getFillRadialGradientStartRadius(),
             endRadius = shape.getFillRadialGradientEndRadius(),
             colorStops = shape.getFillRadialGradientColorStops(),
-            grd = _context.createRadialGradient(start.x, start.y, startRadius, end.x, end.y, endRadius);
+            grd = this.createRadialGradient(start.x, start.y, startRadius, end.x, end.y, endRadius);
 
             // build color stops
             for(var n = 0; n < colorStops.length; n += 2) {
@@ -354,16 +383,14 @@
             this.fill();
         },
         _fill: function(shape, skipShadow) {
-            var _context = this._context,
-                hasColor = shape.getFill(),
+            var hasColor = shape.getFill(),
                 hasPattern = shape.getFillPatternImage(),
                 hasLinearGradient = shape.getFillLinearGradientColorStops(),
                 hasRadialGradient = shape.getFillRadialGradientColorStops(),
                 fillPriority = shape.getFillPriority();
 
-            this.save();
-
             if(!skipShadow && shape.hasShadow()) {
+                this.save();
                 this._applyShadow(shape);
             }
 
@@ -393,9 +420,9 @@
             else if(hasRadialGradient) {
                 this._fillRadialGradient(shape);
             }
-            this.restore();
-
+            
             if(!skipShadow && shape.hasShadow()) {
+                this.restore();
                 this._fill(shape, true);
             }
         },
@@ -406,8 +433,8 @@
                 dashArray = shape.getDashArray();
 
             if(stroke || strokeWidth) {
-                this.save();
                 if (!shape.getStrokeScaleEnabled()) {
+                    this.save();
                     this.setTransform(1, 0, 0, 1, 0, 0);
                 }
                 this._applyLineCap(shape);
@@ -428,16 +455,15 @@
                 this.setAttr('lineWidth', strokeWidth || 2);
                 this.setAttr('strokeStyle', stroke || 'black');
                 shape._strokeFunc(this);
-                this.restore();
-
+                
                 if(!skipShadow && shape.hasShadow()) {
+                    this.restore();
                     this._stroke(shape, true);
                 }
             }
         },
         _applyShadow: function(shape) {
-            var _context = this._context,
-                util, absOpacity, color, blur, offset, shadowOpacity;
+            var util, absOpacity, color, blur, offset, shadowOpacity;
 
             if(shape.hasShadow() && shape.getShadowEnabled()) {
                 util = Kinetic.Util;
@@ -451,13 +477,13 @@
                 });
 
                 if(shadowOpacity) {
-                    _context.globalAlpha = shadowOpacity * absOpacity;
+                    this.setAttr('globalAlpha', shadowOpacity * absOpacity);
                 }
 
-                _context.shadowColor = color;
-                _context.shadowBlur = blur;
-                _context.shadowOffsetX = offset.x;
-                _context.shadowOffsetY = offset.y;
+                this.setAttr('shadowColor', color);
+                this.setAttr('shadowBlur', blur);
+                this.setAttr('shadowOffsetX', offset.x);
+                this.setAttr('shadowOffsetY', offset.y);
             }
         }
     };
@@ -469,21 +495,19 @@
 
     Kinetic.HitContext.prototype = {
         _fill: function(shape) {
-            var _context = this._context;
             this.save();
             this.setAttr('fillStyle', shape.colorKey);
             shape._fillFuncHit(this);
             this.restore();
         },
         _stroke: function(shape) {
-            var _context = this._context,
-                stroke = shape.getStroke(),
+            var stroke = shape.getStroke(),
                 strokeWidth = shape.getStrokeWidth();
 
             if(stroke || strokeWidth) {
                 this._applyLineCap(shape);
-                _context.lineWidth = strokeWidth || 2;
-                _context.strokeStyle = shape.colorKey;
+                this.setAttr('lineWidth', strokeWidth || 2);
+                this.setAttr('strokeStyle', shape.colorKey);
                 shape._strokeFuncHit(this);
             }
         }
