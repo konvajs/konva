@@ -1,7 +1,8 @@
-Test.Modules.Text = {
-    'add text with shadows': function(containerId) {
+suite('Text', function(){
+    // ======================================================
+    test('add text with shadows', function() {
         var stage = new Kinetic.Stage({
-            container: containerId,
+            container: 'container',
             width: 578,
             height: 200
         });
@@ -55,11 +56,13 @@ Test.Modules.Text = {
         layer.add(group);
         stage.add(layer);
 
-        test(text.getClassName() === 'Text', 'getClassName should be Text');
-    },
-    'text getters and setters': function(containerId) {
+        assert.equal(text.getClassName(),'Text', 'getClassName should be Text');
+    });
+
+    // ======================================================
+    test('text getters and setters', function() {
         var stage = new Kinetic.Stage({
-            container: containerId,
+            container: 'container',
             width: 578,
             height: 200
         });
@@ -96,25 +99,25 @@ Test.Modules.Text = {
          * test getters and setters
          */
 
-        test(text.getX() === stage.getWidth() / 2, 'text box x should be in center of stage');
-        test(text.getY() === stage.getHeight() / 2, 'text box y should be in center of stage');
-        test(text.getText() === 'Hello World!', 'text should be Hello World!');
-        test(text.getFontSize() == 50, 'font size should 50');
-        test(text.getFontFamily() == 'Calibri', 'font family should be Calibri');
-        test(text.getFontStyle() == 'normal', 'font style should be normal');
-        test(text.getFill() == '#888', 'text fill should be #888');
-        test(text.getStroke() == '#333', 'text fill should be #333');
-        test(text.getAlign() === 'right', 'text should be aligned right');
-        test(text.getLineHeight() === 1.2, 'line height should be 1.2');
-        test(text.getWidth() === 400, 'width should be 400');
-        test(text.getHeight() === 100, 'height should be 100');
-        test(text.getPadding() === 10, 'padding should be 10');
-        test(text.getShadowColor() === 'black', 'text box shadow color should be black');
-        test(text.getDraggable() === true, 'text should be draggable');
-        test(text.getWidth() === 400, 'box width should be 400');
-        test(text.getHeight() === 100, 'box height should be 100');
-        test(text.getTextWidth() > 0, 'text width should be greater than 0');
-        test(text.getTextHeight() > 0, 'text height should be greater than 0');
+        assert.equal(text.getX(), stage.getWidth() / 2);
+        assert.equal(text.getY(), stage.getHeight() / 2);
+        assert.equal(text.getText(), 'Hello World!');
+        assert.equal(text.getFontSize(), 50);
+        assert.equal(text.getFontFamily(), 'Calibri');
+        assert.equal(text.getFontStyle(), 'normal');
+        assert.equal(text.getFill(), '#888');
+        assert.equal(text.getStroke(), '#333');
+        assert.equal(text.getAlign(), 'right');
+        assert.equal(text.getLineHeight(), 1.2);
+        assert.equal(text.getWidth(), 400);
+        assert.equal(text.getHeight(), 100);
+        assert.equal(text.getPadding(), 10);
+        assert.equal(text.getShadowColor(), 'black');
+        assert.equal(text.getDraggable(), true);
+        assert.equal(text.getWidth(), 400);
+        assert.equal(text.getHeight(), 100);
+        assert(text.getTextWidth() > 0, 'text width should be greater than 0');
+        assert(text.getTextHeight() > 0, 'text height should be greater than 0');
 
         text.setX(1);
         text.setY(2);
@@ -131,20 +134,20 @@ Test.Modules.Text = {
         text.setShadowColor('green');
         text.setDraggable(false);
 
-        test(text.getX() === 1, 'text box x should be 1');
-        test(text.getY() === 2, 'text box y should be 2');
-        test(text.getText() === 'bye world!', 'text should be bye world!');
-        test(text.getFontSize() == 10, 'font size should 10');
-        test(text.getFontFamily() == 'Arial', 'font family should be Arial');
-        test(text.getFontStyle() == 'bold', 'font style should be bold');
-        test(text.getFill() == 'green', 'text fill should be green');
-        test(text.getStroke() == 'yellow', 'text fill should be yellow');
-        test(text.getAlign() === 'left', 'text should be aligned left');
-        test(text.getWidth() === 300, 'width should be 300');
-        test(text.getHeight() === 75, 'height should be 75');
-        test(text.getPadding() === 20, 'padding should be 20');
-        test(text.getShadowColor() === 'green', 'text box shadow color should be green');
-        test(text.getDraggable() === false, 'text draggable should be false');
+        assert.equal(text.getX(), 1);
+        assert.equal(text.getY(), 2);
+        assert.equal(text.getText(), 'bye world!');
+        assert.equal(text.getFontSize(), 10);
+        assert.equal(text.getFontFamily(), 'Arial');
+        assert.equal(text.getFontStyle(), 'bold');
+        assert.equal(text.getFill(), 'green');
+        assert.equal(text.getStroke(), 'yellow');
+        assert.equal(text.getAlign(), 'left');
+        assert.equal(text.getWidth(), 300);
+        assert.equal(text.getHeight(), 75);
+        assert.equal(text.getPadding(), 20);
+        assert.equal(text.getShadowColor(), 'green');
+        assert.equal(text.getDraggable(), false);
 
         // test set text to integer
         text.setText(5);
@@ -154,10 +157,12 @@ Test.Modules.Text = {
         //layer.setListening(false);
         layer.drawHit();
 
-    },
-    'text multi line': function(containerId) {
+    });
+
+    // ======================================================
+    test('text multi line', function() {
         var stage = new Kinetic.Stage({
-            container: containerId,
+            container: 'container',
             width: 578,
             height: 200
         });
@@ -195,7 +200,7 @@ Test.Modules.Text = {
         layer.add(rect).add(text);
         stage.add(layer);
 
-        test(text.getLineHeight() === 1, 'text line height should be defaulted to 1');
+        assert.equal(text.getLineHeight(), 1);
 
          /*
          text.transitionTo({
@@ -210,10 +215,12 @@ Test.Modules.Text = {
          */
 
 
-    },
-    'text multi line with shadows': function(containerId) {
+    });
+
+    // ======================================================
+    test('text multi line with shadows', function() {
         var stage = new Kinetic.Stage({
-            container: containerId,
+            container: 'container',
             width: 578,
             height: 200
         });
@@ -245,10 +252,14 @@ Test.Modules.Text = {
         layer.add(text);
         stage.add(layer);
 
-    },
-    'change font size should update text data': function(containerId) {
+        console.log(layer.getContext().getTrace());
+
+    });
+
+    // ======================================================
+    test('change font size should update text data', function() {
         var stage = new Kinetic.Stage({
-            container: containerId,
+            container: 'container',
             width: 578,
             height: 200
         });
@@ -280,8 +291,8 @@ Test.Modules.Text = {
 
         //console.log(text.getHeight() + ',' + height);
 
-        test(text.getWidth() > width, 'text box width should have increased.');
-        test(text.getHeight() > height, 'text box height should have increased.');
+        assert(text.getWidth() > width, 'width should have increased');
+        assert(text.getHeight() > height, 'height should have increased');
 
-    }
-};
+    });
+});

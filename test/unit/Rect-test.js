@@ -27,13 +27,13 @@ suite('Rect', function(){
 
     var trace = layer.getContext().getTrace();
     //console.log(trace);
-    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();save();lineWidth=2;strokeStyle=blue;stroke();restore();restore()');
+    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);beginPath();rect(0,0,100,50);closePath();save();fillStyle=green;fill();restore();save();lineWidth=2;strokeStyle=blue;stroke();restore();restore()');
 
   });
 
   // ======================================================
 
-  test('add rect to stage with shadow, rotation, corner radius, and opacity', function(){
+  test('add rect with shadow, rotation, corner radius, and opacity', function(){
     var stage = new Kinetic.Stage({
       container: 'container',
       width: 578,
@@ -70,7 +70,7 @@ suite('Rect', function(){
 
     var trace = layer.getContext().getTrace();
     //console.log(trace);
-    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);beginPath();moveTo(5,0);lineTo(95,0);arc(95,5,5,4.712,0,false);lineTo(100,45);arc(95,45,5,0,1.571,false);lineTo(5,50);arc(5,45,5,1.571,3.142,false);lineTo(0,5);arc(5,5,5,3.142,4.712,false);closePath();fillStyle=green;fill();fillStyle=green;fill();save();lineWidth=2;strokeStyle=blue;stroke();restore();restore()');
+    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);beginPath();moveTo(5,0);lineTo(95,0);arc(95,5,5,4.712,0,false);lineTo(100,45);arc(95,45,5,0,1.571,false);lineTo(5,50);arc(5,45,5,1.571,3.142,false);lineTo(0,5);arc(5,5,5,3.142,4.712,false);closePath();save();fillStyle=green;fill();restore();save();fillStyle=green;fill();restore();save();lineWidth=2;strokeStyle=blue;stroke();restore();restore()');
 
   });
 

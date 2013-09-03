@@ -9,6 +9,7 @@
             'arc',
             'arcTo',
             'beginPath',
+            'bezierCurveTo',
             'clearRect', 
             'closePath',
             'fill', 
@@ -21,12 +22,8 @@
             'setTransform', 
             'stroke', 
             'strokeText', 
-            'transform'
-        ],
-        CONTEXT_PROPERTIES = [
-            'fillStyle', 
-            'lineWidth', 
-            'strokeStyle'
+            'transform',
+            'translate'
         ];
 
     /**
@@ -185,7 +182,7 @@
 
             this.save();
             this._applyAncestorTransforms(container);
-            _context.beginPath();
+            this.beginPath();
             this.rect(clipX, clipY, clipWidth, clipHeight);
             _context.clip();
             this.reset();
@@ -193,15 +190,8 @@
             this.restore();
         },
 
-        // context property setters
-        setFillStyle: function(val) {
-            this._context.fillStyle = val;
-        },
-        setLineWidth: function(val) {
-            this._context.lineWidth = val;
-        },
-        setStrokeStyle: function(val) {
-            this._context.strokeStyle = val;
+        setAttr: function(attr, val) {
+            this._context[attr] = val;
         },
 
         // context pass through methods
@@ -211,6 +201,10 @@
         },
         beginPath: function() {
             this._context.beginPath();
+        },
+        bezierCurveTo: function() {
+            var a = arguments;
+            this._context.bezierCurveTo(a[0], a[1], a[2], a[3], a[4], a[5]);
         },
         clearRect: function() {
             var a = arguments;
@@ -259,39 +253,34 @@
             var a = arguments;
             this._context.transform(a[0], a[1], a[2], a[3], a[4], a[5]);
         },
+        translate: function() {
+            var a = arguments;
+            this._context.translate(a[0], a[1]);
+        },
         _enableTrace: function() {
             var that = this,
                 len = CONTEXT_METHODS.length,
                 _roundArrValues = Kinetic.Util._roundArrValues,
-                n;
+                origSetter = this.setAttr,
+                n, args;
 
             // methods
             for (n=0; n<len; n++) {
-                (function(contextMethod) {
-                    var method = that[contextMethod],
-                        args;
-
-                    that[contextMethod] = function() {
+                (function(methodName) {
+                    var origMethod = that[methodName];
+                    that[methodName] = function() {
                         args = _roundArrValues(Array.prototype.slice.call(arguments, 0));
-                        method.apply(that, arguments);
-                        that._trace(contextMethod + OPEN_PAREN + args.join(COMMA) + CLOSE_PAREN);
+                        origMethod.apply(that, arguments);
+                        that._trace(methodName + OPEN_PAREN + args.join(COMMA) + CLOSE_PAREN);
                     };
                 })(CONTEXT_METHODS[n]);
             }
 
-            // properties
-            len = CONTEXT_PROPERTIES.length;
-            for (n=0; n<len; n++) {
-                (function(contextProperty) {
-                    var methodName = SET + Kinetic.Util._capitalize(contextProperty),
-                        method = that[methodName];
-
-                    that[methodName] = function(val) {
-                        method.call(that, val);
-                        that._trace(contextProperty + EQUALS + val);
-                    };
-                })(CONTEXT_PROPERTIES[n]);
-            }
+            // attrs
+            that.setAttr = function() {
+                origSetter.apply(that, arguments);
+                that._trace(arguments[0] + EQUALS + arguments[1]);
+            };
         }
     };
 
@@ -301,10 +290,9 @@
 
     Kinetic.SceneContext.prototype = {
         _fillColor: function(shape) {
-            var _context = this._context, 
-                fill = shape.getFill();
+            var fill = shape.getFill();
 
-            this.setFillStyle(fill);
+            this.setAttr('fillStyle', fill);
             shape._fillFunc(this);
         },
         _fillPattern: function(shape) {
@@ -318,7 +306,7 @@
                 fillPatternRepeat = shape.getFillPatternRepeat();
 
             if(fillPatternX || fillPatternY) {
-                _context.translate(fillPatternX || 0, fillPatternY || 0);
+                this.translate(fillPatternX || 0, fillPatternY || 0);
             }
             if(fillPatternRotation) {
                 _context.rotate(fillPatternRotation);
@@ -327,10 +315,10 @@
                 _context.scale(fillPatternScale.x, fillPatternScale.y);
             }
             if(fillPatternOffset) {
-                _context.translate(-1 * fillPatternOffset.x, -1 * fillPatternOffset.y);
+                this.translate(-1 * fillPatternOffset.x, -1 * fillPatternOffset.y);
             }
 
-            this.setFillStyle(_context.createPattern(fillPatternImage, fillPatternRepeat || 'repeat'));
+            this.setAttr('fillStyle', _context.createPattern(fillPatternImage, fillPatternRepeat || 'repeat'));
             this.fill();
         },
         _fillLinearGradient: function(shape) {
@@ -345,7 +333,7 @@
                 for(var n = 0; n < colorStops.length; n += 2) {
                     grd.addColorStop(colorStops[n], colorStops[n + 1]);
                 }
-                this.setFillStyle(grd);
+                this.setAttr('fillStyle', grd);
                 this.fill();
             }
         },
@@ -362,7 +350,7 @@
             for(var n = 0; n < colorStops.length; n += 2) {
                 grd.addColorStop(colorStops[n], colorStops[n + 1]);
             }
-            this.setFillStyle(grd);
+            this.setAttr('fillStyle', grd);
             this.fill();
         },
         _fill: function(shape, skipShadow) {
@@ -373,7 +361,7 @@
                 hasRadialGradient = shape.getFillRadialGradientColorStops(),
                 fillPriority = shape.getFillPriority();
 
-            _context.save();
+            this.save();
 
             if(!skipShadow && shape.hasShadow()) {
                 this._applyShadow(shape);
@@ -405,7 +393,7 @@
             else if(hasRadialGradient) {
                 this._fillRadialGradient(shape);
             }
-            _context.restore();
+            this.restore();
 
             if(!skipShadow && shape.hasShadow()) {
                 this._fill(shape, true);
@@ -437,8 +425,8 @@
                 if(!skipShadow && shape.hasShadow()) {
                     this._applyShadow(shape);
                 }
-                this.setLineWidth(strokeWidth || 2);
-                this.setStrokeStyle(stroke || 'black');
+                this.setAttr('lineWidth', strokeWidth || 2);
+                this.setAttr('strokeStyle', stroke || 'black');
                 shape._strokeFunc(this);
                 this.restore();
 
@@ -482,10 +470,10 @@
     Kinetic.HitContext.prototype = {
         _fill: function(shape) {
             var _context = this._context;
-            _context.save();
-            this.setFillStyle(shape.colorKey);
-            shape._fillFuncHit(_context);
-            _context.restore();
+            this.save();
+            this.setAttr('fillStyle', shape.colorKey);
+            shape._fillFuncHit(this);
+            this.restore();
         },
         _stroke: function(shape) {
             var _context = this._context,
@@ -496,7 +484,7 @@
                 this._applyLineCap(shape);
                 _context.lineWidth = strokeWidth || 2;
                 _context.strokeStyle = shape.colorKey;
-                shape._strokeFuncHit(_context);
+                shape._strokeFuncHit(this);
             }
         }
     };

@@ -91,8 +91,7 @@
             this._setTextData();
         },
         drawFunc: function(context) {
-            var _context = context._context,
-                p = this.getPadding(),
+            var p = this.getPadding(),
                 fontStyle = this.getFontStyle(),
                 fontSize = this.getFontSize(),
                 fontFamily = this.getFontFamily(),
@@ -102,12 +101,12 @@
                 textArrLen = textArr.length,
                 totalWidth = this.getWidth();
 
-            _context.font = this._getContextFont();
-            _context.textBaseline = MIDDLE;
-            _context.textAlign = LEFT;
-            _context.save();
-            _context.translate(p, 0);
-            _context.translate(0, p + textHeight / 2);
+            context.setAttr('font', this._getContextFont());
+            context.setAttr('textBaseline', MIDDLE);
+            context.setAttr('textAlign', LEFT);
+            context.save();
+            context.translate(p, 0);
+            context.translate(0, p + textHeight / 2);
 
             // draw text lines
             for(var n = 0; n < textArrLen; n++) {
@@ -116,29 +115,28 @@
                     width = obj.width;
 
                 // horizontal alignment
-                _context.save();
+                context.save();
                 if(this.getAlign() === RIGHT) {
-                    _context.translate(totalWidth - width - p * 2, 0);
+                    context.translate(totalWidth - width - p * 2, 0);
                 }
                 else if(this.getAlign() === CENTER) {
-                    _context.translate((totalWidth - width - p * 2) / 2, 0);
+                    context.translate((totalWidth - width - p * 2) / 2, 0);
                 }
 
                 this.partialText = text;
                 context.fillStrokeShape(this);
-                _context.restore();
-                _context.translate(0, lineHeightPx);
+                context.restore();
+                context.translate(0, lineHeightPx);
             }
-            _context.restore();
+            context.restore();
         },
         drawHitFunc: function(context) {
-            var _context = context._context,
-                width = this.getWidth(),
+            var width = this.getWidth(),
                 height = this.getHeight();
 
-            _context.beginPath();
-            _context.rect(0, 0, width, height);
-            _context.closePath();
+            context.beginPath();
+            context.rect(0, 0, width, height);
+            context.closePath();
             context.fillStrokeShape(this);
         },
         /**
@@ -207,7 +205,7 @@
         _getTextWidth: function (text) {
             return dummyContext.measureText(text).width;
         },
-         _setTextData: function () {
+        _setTextData: function () {
              var lines = this.getText().split('\n'),
                  fontSize = +this.getFontSize(),
                  textWidth = 0,
