@@ -2,11 +2,7 @@ suite('Ellipse', function(){
 
   // ======================================================
   test('add ellipse', function(){
-      var stage = new Kinetic.Stage({
-          container: 'container',
-          width: 578,
-          height: 200
-      });
+      var stage = buildStage();
       var layer = new Kinetic.Layer();
       var ellipse = new Kinetic.Ellipse({
           x: stage.getWidth() / 2,

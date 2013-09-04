@@ -2,11 +2,7 @@ suite('Circle', function(){
   // ======================================================
 
   test('add circle to stage', function(){
-    var stage = new Kinetic.Stage({
-        container: 'container',
-        width: 578,
-        height: 200
-    });
+    var stage = buildStage();
     var layer = new Kinetic.Layer();
     var group = new Kinetic.Group();
     var circle = new Kinetic.Circle({
@@ -49,11 +45,7 @@ suite('Circle', function(){
   test('add circle with pattern fill', function(done) {
       var imageObj = new Image();
       imageObj.onload = function() {
-          var stage = new Kinetic.Stage({
-              container: 'container',
-              width: 578,
-              height: 200
-          });
+          var stage = buildStage();
           var layer = new Kinetic.Layer();
           var group = new Kinetic.Group();
           var circle = new Kinetic.Circle({
@@ -96,11 +88,7 @@ suite('Circle', function(){
 
   // ======================================================
   test('add circle with radial gradient fill', function() {
-      var stage = new Kinetic.Stage({
-          container: 'container',
-          width: 578,
-          height: 200
-      });
+      var stage = buildStage();
       var layer = new Kinetic.Layer();
       var group = new Kinetic.Group();
       var circle = new Kinetic.Circle({
@@ -136,11 +124,7 @@ suite('Circle', function(){
 
   // ======================================================
   test('add shape with linear gradient fill', function() {
-      var stage = new Kinetic.Stage({
-          container: 'container',
-          width: 578,
-          height: 200
-      });
+      var stage = buildStage();
       var layer = new Kinetic.Layer();
       var group = new Kinetic.Group();
       var circle = new Kinetic.Circle({
@@ -166,11 +150,7 @@ suite('Circle', function(){
 
   // ======================================================
   test('set opacity after instantiation', function() {
-      var stage = new Kinetic.Stage({
-          container: 'container',
-          width: 578,
-          height: 200
-      });
+      var stage = buildStage();
       var layer = new Kinetic.Layer();
       var group = new Kinetic.Group();
       var circle = new Kinetic.Circle({
@@ -193,11 +173,7 @@ suite('Circle', function(){
 
   // ======================================================
   test('set fill after instantiation', function() {
-      var stage = new Kinetic.Stage({
-          container: 'container',
-          width: 578,
-          height: 200
-      });
+      var stage = buildStage();
       var layer = new Kinetic.Layer();
       var circle = new Kinetic.Circle({
           x: stage.getWidth() / 2,

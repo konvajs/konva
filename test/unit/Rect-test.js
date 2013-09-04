@@ -1,12 +1,8 @@
 suite('Rect', function(){
-  // ======================================================
 
+  // ======================================================
   test('add rect to stage', function(){
-    var stage = new Kinetic.Stage({
-      container: 'container',
-      width: 578,
-      height: 200
-    });
+    var stage = buildStage();
 
     var layer = new Kinetic.Layer();
 
@@ -32,13 +28,8 @@ suite('Rect', function(){
   });
 
   // ======================================================
-
   test('add rect with shadow, rotation, corner radius, and opacity', function(){
-    var stage = new Kinetic.Stage({
-      container: 'container',
-      width: 578,
-      height: 200
-    });
+    var stage = buildStage();
 
     var layer = new Kinetic.Layer();
 
@@ -78,11 +69,7 @@ suite('Rect', function(){
 
   // ======================================================
   test('draw rect', function() {
-      var stage = new Kinetic.Stage({
-          container: 'container',
-          width: 578,
-          height: 200
-      });
+      var stage = buildStage();
       var layer = new Kinetic.Layer();
       var rect = new Kinetic.Rect({
           x: 200,
@@ -108,11 +95,7 @@ suite('Rect', function(){
 
   // ======================================================
   test('add fill stroke rect', function() {
-      var stage = new Kinetic.Stage({
-          container: 'container',
-          width: 578,
-          height: 200
-      });
+      var stage = buildStage();
       var layer = new Kinetic.Layer();
       var rect = new Kinetic.Rect({
           x: 200,
@@ -130,11 +113,7 @@ suite('Rect', function(){
 
   // ======================================================
   test('add stroke rect', function() {
-      var stage = new Kinetic.Stage({
-          container: 'container',
-          width: 578,
-          height: 200
-      });
+      var stage = buildStage();
       var layer = new Kinetic.Layer();
       var rect = new Kinetic.Rect({
           x: 200,
@@ -151,11 +130,7 @@ suite('Rect', function(){
 
   // ======================================================
   test('use default stroke (stroke color should be black)', function() {
-      var stage = new Kinetic.Stage({
-          container: 'container',
-          width: 578,
-          height: 200
-      });
+      var stage = buildStage();
       var layer = new Kinetic.Layer();
       var rect = new Kinetic.Rect({
           x: 200,
@@ -171,11 +146,7 @@ suite('Rect', function(){
 
   // ======================================================
   test('use default stroke width (stroke width should be 2)', function() {
-      var stage = new Kinetic.Stage({
-          container: 'container',
-          width: 578,
-          height: 200
-      });
+      var stage = buildStage();
       var layer = new Kinetic.Layer();
       var rect = new Kinetic.Rect({
           x: 200,

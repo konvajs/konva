@@ -7,27 +7,58 @@
       #mocha .test {
         overflow: auto;
       }
+      h2.kinetic-title {
+        font-family: Calibri;
+        font-size: 16px;
+        color: #555;
+        border-top: 2px solid #999;
+        padding-left: 10px;
+      }
     </style>
   </head>
   <body>
     <div id="mocha"></div>
-
-    <!-- used for KineticJS container -->
-    <div id="container"></div>
+    <div id="kinetic-container"></div>
 
     <script src="../node_modules/mocha/mocha.js"></script>
     <script src="../node_modules/chai/chai.js"></script>
     <script src="../dist/kinetic-dev.js"></script>
     <script>
       mocha.ui('tdd');
-      var assert = chai.assert;
+      var assert = chai.assert,
+          kineticContainer = document.getElementById('kinetic-container');
 
       Kinetic.enableTrace = true;
+
+      function buildStage() {
+        var container = document.createElement('div'),
+            stage = new Kinetic.Stage({
+                container: container,
+                width: 578,
+                height: 200
+            });
+
+        kineticContainer.appendChild(container);
+
+        return stage;
+      }
+
+      beforeEach(function(){
+        console.log(this)
+          var title = document.createElement('h2'),
+              test = this.currentTest;
+
+          title.innerHTML = test.parent.title + ' - ' + test.title;
+          title.className = 'kinetic-title';
+          kineticContainer.appendChild(title);
+      });
     </script>
     <script src="unit/Util-test.js"></script>
 
     <script src="unit/Rect-test.js"></script>
     <script src="unit/Circle-test.js"></script>
+    <script src="unit/Image-test.js"></script>
+    <script src="unit/Line-test.js"></script>
     <script src="unit/Text-test.js"></script>
     <script src="unit/Blob-test.js"></script>
     <script src="unit/Ellipse-test.js"></script>
