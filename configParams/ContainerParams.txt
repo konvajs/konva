@@ -1,1 +1,0 @@
-@param {Function} [config.clipFunc] clipping function
