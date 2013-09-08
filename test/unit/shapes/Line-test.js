@@ -10,12 +10,7 @@ suite('Line', function() {
         }, {
             x: 340,
             y: 23
-        }
-        /*, {
-         x: 500,
-         y: 109
-         }*/
-        ];
+        }];
 
         var line = new Kinetic.Line({
             points: points,
@@ -41,10 +36,13 @@ suite('Line', function() {
         }]);
         assert.equal(line.getPoints()[0].x, 5);
 
-        line.setPoints([73, 160, 340, 23]);
+        line.setPoints([73, 160, 340, 23, 340, 80]);
         assert.equal(line.getPoints()[0].x, 73);
         
         assert.equal(line.getClassName(), 'Line');
+
+        layer.draw();
+        showHit(layer);
     });
 
     // ======================================================

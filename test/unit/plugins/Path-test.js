@@ -1,13 +1,8 @@
-Test.Modules.PATH = {
-    'add simple path': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            scale: 0.5,
-            x: 50,
-            y: 10
-        });
+suite('Path', function() {
+    // ======================================================
+    test('add simple path', function() {
+        var stage = buildStage();
+
         var layer = new Kinetic.Layer();
 
         var path = new Kinetic.Path({
@@ -36,28 +31,23 @@ Test.Modules.PATH = {
 
         stage.add(layer);
 
-        test(path.getData() === 'M200,100h100v50z', 'data are incorrect');
-        test(path.dataArray.length === 4, 'data array should have 4 elements');
+        assert.equal(path.getData(), 'M200,100h100v50z');
+        assert.equal(path.dataArray.length, 4);
 
         path.setData('M200');
 
-        test(path.getData() === 'M200', 'data are incorrect');
-        test(path.dataArray.length === 1, 'data array should have 1 element');
+        assert.equal(path.getData(), 'M200');
+        assert.equal(path.dataArray.length, 1);
 
         path.setData('M200,100h100v50z');
         
-        test(path.getClassName() === 'Path', 'getClassName should be Path');
+        assert.equal(path.getClassName(), 'Path');
 
-    },
-    'add path with line cap and line join': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            scale: 0.5,
-            x: 50,
-            y: 10
-        });
+    });
+
+    // ======================================================
+    test('add path with line cap and line join', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var path = new Kinetic.Path({
@@ -73,16 +63,11 @@ Test.Modules.PATH = {
 
         stage.add(layer);
 
-    },
-    'moveTo with implied lineTos and trailing comma': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            scale: 0.5,
-            x: 50,
-            y: 10
-        });
+    });
+
+    // ======================================================
+    test('moveTo with implied lineTos and trailing comma', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var path = new Kinetic.Path({
@@ -111,21 +96,20 @@ Test.Modules.PATH = {
 
         stage.add(layer);
 
-        test(path.getData() === 'm200,100,100,0,0,50,z', 'data are incorrect');
-        test(path.dataArray.length === 4, 'data array should have 4 elements');
+        assert.equal(path.getData(), 'm200,100,100,0,0,50,z');
+        assert.equal(path.dataArray.length, 4);
 
-        test(path.dataArray[1].command === 'L', 'second command should be an implied lineTo');
-    },
-    'add map path': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            throttle: 80,
-            scale: 0.5,
-            x: 50,
-            y: 10
-        });
+        assert.equal(path.dataArray[1].command, 'L');
+
+        var trace = layer.getContext().getTrace();
+
+        //console.log(trace);
+        assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(200,100);lineTo(300,100);lineTo(300,150);closePath();save();globalAlpha=0.5;shadowColor=maroon;shadowBlur=2;shadowOffsetX=10;shadowOffsetY=10;fillStyle=#fcc;fill();restore();fillStyle=#fcc;fill();lineWidth=2;strokeStyle=#333;stroke();restore()');
+    });
+    
+    // ======================================================
+    test('add map path', function() {
+        var stage = buildStage();
         var mapLayer = new Kinetic.Layer();
 
         for(var key in worldMap.shapes) {
@@ -138,8 +122,9 @@ Test.Modules.PATH = {
                 strokeWidth: 1
             });
 
-            if(key === 'US')
-                test(path.dataArray[0].command === 'M', 'first command should be a moveTo');
+            if(key === 'US') {
+                assert.equal(path.dataArray[0].command, 'M');
+            }
 
             path.on('mouseover', function() {
                 this.setFill('red');
@@ -157,17 +142,11 @@ Test.Modules.PATH = {
         stage.add(mapLayer);
 
         //document.body.appendChild(mapLayer.bufferCanvas.element);
-    },
-    'PATH - curved arrow path': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            throttle: 80,
-            scale: 1.5,
-            x: 50,
-            y: 10
-        });
+    });
+    
+    // ======================================================
+    test('curved arrow path', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var c = "M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-17.185,4.352-22.33c7.451-5.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.821,23.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z";
@@ -192,17 +171,11 @@ Test.Modules.PATH = {
         layer.add(path);
         stage.add(layer);
 
-    },
-    'Quadradic Curve test from SVG w3c spec': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            throttle: 80,
-            scale: 0.25,
-            x: 50,
-            y: 10
-        });
+    });
+    
+    // ======================================================
+    test('Quadradic Curve test from SVG w3c spec', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var c = "M200,300 Q400,50 600,300 T1000,300";
@@ -258,17 +231,11 @@ Test.Modules.PATH = {
 
         stage.add(layer);
 
-    },
-    'Cubic Bezier Curve test from SVG w3c spec using setData': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            throttle: 80,
-            scale: 0.5,
-            x: 50,
-            y: 10
-        });
+    });
+    
+    // ======================================================
+    test('Cubic Bezier Curve test from SVG w3c spec using setData', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var c = "M100,200 C100,100 250,100 250,200 S400,300 400,200";
@@ -333,17 +300,11 @@ Test.Modules.PATH = {
 
         stage.add(layer);
 
-    },
-    'path arc': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            throttle: 80,
-            scale: 0.5,
-            x: 50,
-            y: 10
-        });
+    });
+    
+    // ======================================================
+    test('path arc', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var c = "M100,350 l 50,-25 a25,25 -30 0,1 50,-25 l 50,-25 a25,50 -30 0,1 50,-25 l 50,-25 a25,75 -30 0,1 50,-25 l 50,-25 a25,100 -30 0,1 50,-25 l 50,-25";
@@ -368,16 +329,11 @@ Test.Modules.PATH = {
         layer.add(path);
         stage.add(layer);
 
-    },
-    'Tiger (RAWR!)': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            scale: 0.25,
-            x: 50,
-            y: 50
-        });
+    });
+    
+    // ======================================================
+    test('Tiger (RAWR!)', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
 
@@ -392,17 +348,11 @@ Test.Modules.PATH = {
 
         showHit(layer);
 
-    },
-    'Able to determine point on line some distance from another point on line': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            throttle: 80,
-            scale: 1,
-            x: 50,
-            y: 10
-        });
+    });
+    
+    // ======================================================
+    test('Able to determine point on line some distance from another point on line', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var c = "M10,10 210,160";
@@ -425,8 +375,8 @@ Test.Modules.PATH = {
 
         var p1 = Kinetic.Path.getPointOnLine(125, 10, 10, 210, 160);
         // should be 1/2 way, or (110,85)
-        test(Math.round(p1.x) === 110, 'point X value should be 110');
-        test(Math.round(p1.y) === 85, 'point Y value should be 85');
+        assert.equal(Math.round(p1.x), 110);
+        assert.equal(Math.round(p1.y), 85);
 
         layer.add(new Kinetic.Circle({
             x: p1.x,
@@ -437,17 +387,11 @@ Test.Modules.PATH = {
 
         stage.add(layer);
 
-    },
-    'Able to determine points on Cubic Bezier Curve': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            throttle: 80,
-            scale: 0.5,
-            x: 50,
-            y: 10
-        });
+    });
+    
+    // ======================================================
+    test('Able to determine points on Cubic Bezier Curve', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var c = "M100,200 C100,100 250,100 250,200 S400,300 400,200";
@@ -480,17 +424,11 @@ Test.Modules.PATH = {
 
         layer.add(testPath);
         stage.add(layer);
-    },
-    'Able to determine points on Quadratic Curve': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            throttle: 80,
-            scale: 0.333,
-            x: 50,
-            y: 10
-        });
+    });
+    
+    // ======================================================
+    test('Able to determine points on Quadratic Curve', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var c = "M200,300 Q400,50 600,300 T1000,300";
@@ -523,17 +461,11 @@ Test.Modules.PATH = {
 
         layer.add(testPath);
         stage.add(layer);
-    },
-    'Able to determine points on Elliptical Arc with clockwise stroke': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            throttle: 80,
-            scale: 1,
-            x: 50,
-            y: 10
-        });
+    });
+    
+    // ======================================================
+    test('Able to determine points on Elliptical Arc with clockwise stroke', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var c = "M 50,100 A 100 50 0 1 1 150 150";
@@ -585,17 +517,11 @@ Test.Modules.PATH = {
 
         layer.add(testpath);
         stage.add(layer);
-    },
-    'Able to determine points on Elliptical Arc with counter-clockwise stroke': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            throttle: 80,
-            scale: 1,
-            x: 50,
-            y: 10
-        });
+    });
+    
+    // ======================================================
+    test('Able to determine points on Elliptical Arc with counter-clockwise stroke', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var c = "M 250,100 A 100 50 0 1 0 150 150";
@@ -647,17 +573,11 @@ Test.Modules.PATH = {
 
         layer.add(testpath);
         stage.add(layer);
-    },
-    'Able to determine points on Elliptical Arc when rotated': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            throttle: 80,
-            scale: 1,
-            x: 50,
-            y: 10
-        });
+    });
+    
+    // ======================================================
+    test('Able to determine points on Elliptical Arc when rotated', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var c = "M 250,100 A 100 50 30 1 0 150 150";
@@ -711,8 +631,10 @@ Test.Modules.PATH = {
 
         layer.add(testpath);
         stage.add(layer);
-    },
-    'getPointOnLine for different directions': function() {
+    });
+    
+    // ======================================================
+    test('getPointOnLine for different directions', function() {
         var origo = {
             x: 0,
             y: 0
@@ -726,7 +648,7 @@ Test.Modules.PATH = {
             y: -10
         };
         point = Kinetic.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
-        test(point.x < 0 && point.y < 0, 'The new point should be up left');
+        assert(point.x < 0 && point.y < 0, 'The new point should be up left');
 
         //point up right
         p = {
@@ -734,7 +656,7 @@ Test.Modules.PATH = {
             y: -10
         };
         point = Kinetic.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
-        test(point.x > 0 && point.y < 0, 'The new point should be up right');
+        assert(point.x > 0 && point.y < 0, 'The new point should be up right');
 
         //point down right
         p = {
@@ -742,7 +664,7 @@ Test.Modules.PATH = {
             y: 10
         };
         point = Kinetic.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
-        test(point.x > 0 && point.y > 0, 'The new point should be down right');
+        assert(point.x > 0 && point.y > 0, 'The new point should be down right');
 
         //point down left
         p = {
@@ -750,7 +672,7 @@ Test.Modules.PATH = {
             y: 10
         };
         point = Kinetic.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
-        test(point.x < 0 && point.y > 0, 'The new point should be down left');
+        assert(point.x < 0 && point.y > 0, 'The new point should be down left');
 
         //point left
         p = {
@@ -758,7 +680,7 @@ Test.Modules.PATH = {
             y: 0
         };
         point = Kinetic.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
-        test(point.x == -10 && point.y == 0, 'The new point should be left');
+        assert(point.x == -10 && point.y == 0, 'The new point should be left');
 
         //point up
         p = {
@@ -766,7 +688,7 @@ Test.Modules.PATH = {
             y: -10
         };
         point = Kinetic.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
-        test(Math.abs(point.x) < 0.0000001 && point.y == -10, 'The new point should be up');
+        assert(Math.abs(point.x) < 0.0000001 && point.y == -10, 'The new point should be up');
 
         //point right
         p = {
@@ -774,7 +696,7 @@ Test.Modules.PATH = {
             y: 0
         };
         point = Kinetic.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
-        test(point.x == 10 && point.y == 0, 'The new point should be right');
+        assert(point.x == 10 && point.y == 0, 'The new point should be right');
 
         //point down
         p = {
@@ -782,19 +704,13 @@ Test.Modules.PATH = {
             y: 10
         };
         point = Kinetic.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
-        test(Math.abs(point.x) < 0.0000001 && point.y == 10, 'The new point should be down');
-    },
-    'Borneo Map (has scientific notation: -10e-4)': function(containerId) {
+        assert(Math.abs(point.x) < 0.0000001 && point.y == 10, 'The new point should be down');
+    });
+    
+    // ======================================================
+    test('Borneo Map (has scientific notation: -10e-4)', function() {
 
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            throttle: 80,
-            scale: 0.75,
-            x: 10,
-            y: 10
-        });
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var borneo = new Kinetic.Path({
@@ -803,27 +719,24 @@ Test.Modules.PATH = {
         });
         layer.add(borneo);
         stage.add(layer);
-    },
-    'Stroke only when no fill': function(containerId) {
+    });
+    
+    // ======================================================
+    test('Stroke only when no fill', function() {
 
         // https://github.com/ericdrowell/KineticJS/issues/567
         
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 1024,
-            height: 480,
-            throttle: 80,
-            scale: 0.75,
-            x: 10,
-            y: 10
-        });
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var path = new Kinetic.Path({
             data: "M 50 0 C 50 150 170 170 200 170",
             stroke: 'black'
         });
-        
+
+        // override color key so that we can test the context trace
+        path.colorKey = 'black';
+
         path.on('mouseover', function () {
             this.setStroke("#f00");
             layer.draw();
@@ -834,7 +747,21 @@ Test.Modules.PATH = {
             layer.draw();
         });
 
+
         layer.add(path);
         stage.add(layer);
-    }   
-};
+
+        showHit(layer);
+
+        var trace = layer.getContext().getTrace();
+
+        //console.log(trace);
+
+        var hitTrace = layer.hitCanvas.getContext().getTrace();
+        //console.log(hitTrace);
+
+        assert.equal(trace,    'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(50,0);bezierCurveTo(50,150,170,170,200,170);lineWidth=2;strokeStyle=black;stroke();restore()');
+        assert.equal(hitTrace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(50,0);bezierCurveTo(50,150,170,170,200,170);lineWidth=2;strokeStyle=black;stroke();restore()');
+    });
+     
+});

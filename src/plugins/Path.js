@@ -37,26 +37,26 @@
             });
         },
         drawFunc: function (context) {
-            var ca = this.dataArray, 
-                _context = context._context;
+            var ca = this.dataArray,
+                closedPath = false;
 
             // context position
-            _context.beginPath();
+            context.beginPath();
             for (var n = 0; n < ca.length; n++) {
                 var c = ca[n].command;
                 var p = ca[n].points;
                 switch (c) {
                     case 'L':
-                        _context.lineTo(p[0], p[1]);
+                        context.lineTo(p[0], p[1]);
                         break;
                     case 'M':
-                        _context.moveTo(p[0], p[1]);
+                        context.moveTo(p[0], p[1]);
                         break;
                     case 'C':
-                        _context.bezierCurveTo(p[0], p[1], p[2], p[3], p[4], p[5]);
+                        context.bezierCurveTo(p[0], p[1], p[2], p[3], p[4], p[5]);
                         break;
                     case 'Q':
-                        _context.quadraticCurveTo(p[0], p[1], p[2], p[3]);
+                        context.quadraticCurveTo(p[0], p[1], p[2], p[3]);
                         break;
                     case 'A':
                         var cx = p[0], cy = p[1], rx = p[2], ry = p[3], theta = p[4], dTheta = p[5], psi = p[6], fs = p[7];
@@ -65,25 +65,28 @@
                         var scaleX = (rx > ry) ? 1 : rx / ry;
                         var scaleY = (rx > ry) ? ry / rx : 1;
 
-                        _context.translate(cx, cy);
-                        _context.rotate(psi);
-                        _context.scale(scaleX, scaleY);
-                        _context.arc(0, 0, r, theta, theta + dTheta, 1 - fs);
-                        _context.scale(1 / scaleX, 1 / scaleY);
-                        _context.rotate(-psi);
-                        _context.translate(-cx, -cy);
+                        context.translate(cx, cy);
+                        context.rotate(psi);
+                        context.scale(scaleX, scaleY);
+                        context.arc(0, 0, r, theta, theta + dTheta, 1 - fs);
+                        context.scale(1 / scaleX, 1 / scaleY);
+                        context.rotate(-psi);
+                        context.translate(-cx, -cy);
 
                         break;
                     case 'z':
-                        _context.closePath();
+                        context.closePath();
+                        closedPath = true;
                         break;
                 }
             }
-            if (this.getFill() !== undefined) {
-                context.fillShape(this);
+
+            if (closedPath) {
+                context.fillStrokeShape(this);
             }
-                
-            context.strokeShape(this);
+            else {
+                context.strokeShape(this);
+            }
         }
     };
     Kinetic.Util.extend(Kinetic.Path, Kinetic.Shape);

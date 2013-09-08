@@ -109,7 +109,7 @@
             var hitCanvas = stage.hitCanvas;
             hitCanvas.getContext().clear();
             this.drawScene(hitCanvas);
-            var p = hitCanvas.context._context.getImageData(pos.x | 0, pos.y | 0, 1, 1).data;
+            var p = hitCanvas.context.getImageData(pos.x | 0, pos.y | 0, 1, 1).data;
             return p[3] > 0;
         },
         /**
@@ -231,12 +231,11 @@
                 context = canvas.getContext();
 
             if(drawFunc && this.shouldDrawHit()) {
-                context._context.save();
+                context.save();
                 context._applyLineJoin(this);
                 context._applyAncestorTransforms(this);
-
                 drawFunc.call(this, context);
-                context._context.restore();
+                context.restore();
             }
             return this;
         },

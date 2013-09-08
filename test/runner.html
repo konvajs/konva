@@ -23,36 +23,12 @@
     <script src="../node_modules/mocha/mocha.js"></script>
     <script src="../node_modules/chai/chai.js"></script>
     <script src="../dist/kinetic-dev.js"></script>
-    <script>
-      mocha.ui('tdd');
-      var assert = chai.assert,
-          kineticContainer = document.getElementById('kinetic-container');
+    <script src="runner.js"></script>
 
-      Kinetic.enableTrace = true;
+    <!-- assets -->
+    <script src="assets/tiger.js"></script>
+    <script src="assets/worldMap.js"></script>
 
-      function buildStage() {
-        var container = document.createElement('div'),
-            stage = new Kinetic.Stage({
-                container: container,
-                width: 578,
-                height: 200
-            });
-
-        kineticContainer.appendChild(container);
-
-        return stage;
-      }
-
-      beforeEach(function(){
-          var title = document.createElement('h2'),
-              test = this.currentTest;
-
-          title.innerHTML = test.parent.title + ' - ' + test.title;
-          title.className = 'kinetic-title';
-          kineticContainer.appendChild(title);
-      });
-    </script>
-    
     <!-- core -->
     <script src="unit/Util-test.js"></script>
 
@@ -73,6 +49,7 @@
     <script src="unit/plugins/Label-test.js"></script>
     <script src="unit/plugins/Star-test.js"></script>
     <script src="unit/plugins/RegularPolygon-test.js"></script>
+    <script src="unit/plugins/Path-test.js"></script>
 
     <script>
       if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
