@@ -176,48 +176,47 @@
             this.className = 'Tag';
         },
         drawFunc: function(context) {
-            var _context = context._context,
-                width = this.getWidth(),
+            var width = this.getWidth(),
                 height = this.getHeight(),
                 pointerDirection = this.getPointerDirection(),
                 pointerWidth = this.getPointerWidth(),
                 pointerHeight = this.getPointerHeight(),
                 cornerRadius = this.getCornerRadius();
 
-            _context.beginPath();
-            _context.moveTo(0,0);
+            context.beginPath();
+            context.moveTo(0,0);
 
             if (pointerDirection === UP) {
-                _context.lineTo((width - pointerWidth)/2, 0);
-                _context.lineTo(width/2, -1 * pointerHeight);
-                _context.lineTo((width + pointerWidth)/2, 0);
+                context.lineTo((width - pointerWidth)/2, 0);
+                context.lineTo(width/2, -1 * pointerHeight);
+                context.lineTo((width + pointerWidth)/2, 0);
             }
 
-            _context.lineTo(width, 0);
+            context.lineTo(width, 0);
 
             if (pointerDirection === RIGHT) {
-                _context.lineTo(width, (height - pointerHeight)/2);
-                _context.lineTo(width + pointerWidth, height/2);
-                _context.lineTo(width, (height + pointerHeight)/2);
+                context.lineTo(width, (height - pointerHeight)/2);
+                context.lineTo(width + pointerWidth, height/2);
+                context.lineTo(width, (height + pointerHeight)/2);
             }
 
-            _context.lineTo(width, height);
+            context.lineTo(width, height);
 
             if (pointerDirection === DOWN) {
-                _context.lineTo((width + pointerWidth)/2, height);
-                _context.lineTo(width/2, height + pointerHeight);
-                _context.lineTo((width - pointerWidth)/2, height);
+                context.lineTo((width + pointerWidth)/2, height);
+                context.lineTo(width/2, height + pointerHeight);
+                context.lineTo((width - pointerWidth)/2, height);
             }
 
-            _context.lineTo(0, height);
+            context.lineTo(0, height);
 
             if (pointerDirection === LEFT) {
-                _context.lineTo(0, (height + pointerHeight)/2);
-                _context.lineTo(-1 * pointerWidth, height/2);
-                _context.lineTo(0, (height - pointerHeight)/2);
+                context.lineTo(0, (height + pointerHeight)/2);
+                context.lineTo(-1 * pointerWidth, height/2);
+                context.lineTo(0, (height - pointerHeight)/2);
             }
 
-            _context.closePath();
+            context.closePath();
             context.fillStrokeShape(this);
         }
     };

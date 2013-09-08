@@ -1,10 +1,8 @@
-Test.Modules.REGULAR_POLYGON = {
-    'add regular polygon triangle': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+suite('RegularPolygon', function() {
+    // ======================================================
+    test('add regular polygon triangle', function() {
+        var stage = buildStage();
+        
         var layer = new Kinetic.Layer();
 
         var poly = new Kinetic.RegularPolygon({
@@ -25,15 +23,13 @@ Test.Modules.REGULAR_POLYGON = {
         layer.add(poly);
         stage.add(layer);
         
-        test(poly.getClassName() === 'RegularPolygon', 'sgetClassName should be RegularPolygon');
+        assert.equal(poly.getClassName(), 'RegularPolygon');
 
-    },
-    'add regular polygon square': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('add regular polygon square', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var poly = new Kinetic.RegularPolygon({
@@ -49,13 +45,11 @@ Test.Modules.REGULAR_POLYGON = {
 
         layer.add(poly);
         stage.add(layer);
-    },
-    'add regular polygon pentagon': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+    
+    // ======================================================
+    test('add regular polygon pentagon', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var poly = new Kinetic.RegularPolygon({
@@ -71,13 +65,11 @@ Test.Modules.REGULAR_POLYGON = {
 
         layer.add(poly);
         stage.add(layer);
-    },
-    'add regular polygon octogon': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+    
+    // ======================================================
+    test('add regular polygon octogon', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var poly = new Kinetic.RegularPolygon({
@@ -93,5 +85,6 @@ Test.Modules.REGULAR_POLYGON = {
 
         layer.add(poly);
         stage.add(layer);
-    }
-};
+    });
+    
+});

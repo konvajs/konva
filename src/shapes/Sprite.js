@@ -87,22 +87,20 @@
             var anim = this.getAnimation(),
                 index = this.getIndex(),
                 f = this.getAnimations()[anim][index],
-                _context = context._context,
                 image = this.getImage();
 
             if(image) {
-                _context.drawImage(image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
+                context.drawImage(image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
             }
         },
         drawHitFunc: function(context) {
             var anim = this.getAnimation(),
                 index = this.getIndex(),
-                f = this.getAnimations()[anim][index],
-                _context = context._context;
+                f = this.getAnimations()[anim][index];
 
-            _context.beginPath();
-            _context.rect(0, 0, f.width, f.height);
-            _context.closePath();
+            context.beginPath();
+            context.rect(0, 0, f.width, f.height);
+            context.closePath();
             context.fill(this);
         },
         /**

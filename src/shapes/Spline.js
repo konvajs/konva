@@ -40,12 +40,11 @@
         drawFunc: function(context) {
             var points = this.getPoints(),
                 length = points.length,
-                _context = context._context,
                 tension = this.getTension(),
                 ap, len, n, point;
 
-            _context.beginPath();
-            _context.moveTo(points[0].x, points[0].y);
+            context.beginPath();
+            context.moveTo(points[0].x, points[0].y);
 
             // tension
             if(tension !== 0 && length > 2) {
@@ -53,19 +52,19 @@
                 len = ap.length;
                 n = 2;
 
-                _context.quadraticCurveTo(ap[0].x, ap[0].y, ap[1].x, ap[1].y);
+                context.quadraticCurveTo(ap[0].x, ap[0].y, ap[1].x, ap[1].y);
 
                 while(n < len - 1) {
-                    _context.bezierCurveTo(ap[n].x, ap[n++].y, ap[n].x, ap[n++].y, ap[n].x, ap[n++].y);
+                    context.bezierCurveTo(ap[n].x, ap[n++].y, ap[n].x, ap[n++].y, ap[n].x, ap[n++].y);
                 }
 
-                _context.quadraticCurveTo(ap[len - 1].x, ap[len - 1].y, points[length - 1].x, points[length - 1].y);
+                context.quadraticCurveTo(ap[len - 1].x, ap[len - 1].y, points[length - 1].x, points[length - 1].y);
             }
             // no tension
             else {
                 for(n = 1; n < length; n++) {
                     point = points[n];
-                    _context.lineTo(point.x, point.y);
+                    context.lineTo(point.x, point.y);
                 }
             }
 

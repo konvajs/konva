@@ -80,10 +80,10 @@
                 }
             }
             if (this.getFill() !== undefined) {
-                context.fill(this);
+                context.fillShape(this);
             }
                 
-            context.stroke(this);
+            context.strokeShape(this);
         }
     };
     Kinetic.Util.extend(Kinetic.Path, Kinetic.Shape);

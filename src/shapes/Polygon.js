@@ -28,16 +28,15 @@
             this.className = 'Polygon';
         },
         drawFunc: function(context) {
-            var _context = context._context, 
-                points = this.getPoints(), 
+            var points = this.getPoints(), 
                 length = points.length;
 
-            _context.beginPath();
-            _context.moveTo(points[0].x, points[0].y);
+            context.beginPath();
+            context.moveTo(points[0].x, points[0].y);
             for(var n = 1; n < length; n++) {
-                _context.lineTo(points[n].x, points[n].y);
+                context.lineTo(points[n].x, points[n].y);
             }
-            _context.closePath();
+            context.closePath();
             context.fillStrokeShape(this);
         }
     };

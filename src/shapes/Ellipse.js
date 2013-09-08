@@ -23,8 +23,7 @@
             this.className = ELLIPSE;
         },
         drawFunc: function(context) {
-            var _context = context._context, 
-                r = this.getRadius();
+            var r = this.getRadius();
 
             context.beginPath();
             context.save();

@@ -31,20 +31,19 @@
             this.className = 'RegularPolygon';
         },
         drawFunc: function(context) {
-            var _context = context._context,
-                sides = this.attrs.sides,
+            var sides = this.attrs.sides,
                 radius = this.attrs.radius,
                 n, x, y;
 
-            _context.beginPath();
-            _context.moveTo(0, 0 - radius);
+            context.beginPath();
+            context.moveTo(0, 0 - radius);
 
             for(n = 1; n < sides; n++) {
                 x = radius * Math.sin(n * 2 * Math.PI / sides);
                 y = -1 * radius * Math.cos(n * 2 * Math.PI / sides);
-                _context.lineTo(x, y);
+                context.lineTo(x, y);
             }
-            _context.closePath();
+            context.closePath();
             context.fillStrokeShape(this);
         }
     };

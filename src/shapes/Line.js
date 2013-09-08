@@ -44,15 +44,14 @@
         drawFunc: function(context) {
             var points = this.getPoints(),
                 length = points.length,
-                _context = context._context,
                 n, point;
 
-            _context.beginPath();
-            _context.moveTo(points[0].x, points[0].y);
+            context.beginPath();
+            context.moveTo(points[0].x, points[0].y);
 
             for(n = 1; n < length; n++) {
                 point = points[n];
-                _context.lineTo(point.x, point.y);
+                context.lineTo(point.x, point.y);
             }
 
             context.strokeShape(this);

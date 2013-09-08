@@ -23,6 +23,7 @@
             'lineTo',
             'moveTo',
             'putImageData',
+            'quadraticCurveTo',
             'rect', 
             'restore', 
             'rotate',
@@ -229,7 +230,7 @@
         },
         createPattern: function() {
             var a = arguments;
-            this._context.createPattern(a[0], a[1]);
+            return this._context.createPattern(a[0], a[1]);
         },
         createRadialGradient: function() {
             var a = arguments;
@@ -270,7 +271,11 @@
         },
         putImageData: function() {
             var a = arguments;
-            this._context.rect(a[0], a[1], a[2]);
+            this._context.putImageData(a[0], a[1], a[2]);
+        },
+        quadraticCurveTo: function() {
+            var a = arguments;
+            this._context.quadraticCurveTo(a[0], a[1], a[2], a[3]);
         },
         restore: function() {
             this._context.restore();

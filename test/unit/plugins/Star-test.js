@@ -1,10 +1,8 @@
-Test.Modules.STAR = {
-    'add five point star': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+suite('Star', function() {
+    // ======================================================
+    test('add five point star', function() {
+        var stage = buildStage();
+
         var layer = new Kinetic.Layer();
 
         var star = new Kinetic.Star({
@@ -30,14 +28,12 @@ Test.Modules.STAR = {
         layer.add(star);
         stage.add(layer);
         
-        test(star.getClassName() === 'Star', 'getClassName should be Star');
-    },
-    'add five point star with line join and shadow': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+        assert.equal(star.getClassName(), 'Star');
+    });
+
+    // ======================================================
+    test('add star with line join and shadow', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var rect = new Kinetic.Rect({
@@ -70,10 +66,10 @@ Test.Modules.STAR = {
 
         stage.add(layer);
 
-        test(star.getLineJoin() === 'round', 'lineJoin property should be round');
+        assert.equal(star.getLineJoin(), 'round');
         star.setLineJoin('bevel');
-        test(star.getLineJoin() === 'bevel', 'lineJoin property should be bevel');
+        assert.equal(star.getLineJoin(), 'bevel');
 
         star.setLineJoin('round');
-    }
-};
+    });
+});
