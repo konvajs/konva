@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id='container'></div>
+	
+    <script src="http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v4.6.0.min.js"></script>
+	<script src="colorStretch.js"></script>
+	<script src="grayscale.js"></script>
+	<script src="threshold.js"></script>
+	<script src="levels.js"></script>
+	<script src="noise.js"></script>
+	<script src="pixelate.js"></script>
+	<script src="flip.js"></script>
+	<script src="mirror.js"></script>
+	<script src="invert.js"></script>
+    <script defer="defer">
+
+    Hmmm = function(src,dst,opt) {
+        var xSize = src.width,
+            ySize = src.height,
+            srcPixels = src.data,
+            dstPixels = dst.data,
+            nPixels = srcPixels.length,
+            x,y,i;
+	for( x=0; x<xSize; x+=1 ){
+		for( y=0; y<ySize; y+=1 ){
+			i = (xSize*y + x)*4;
+	                dstPixels[i+0] = Math.abs(srcPixels[i+0]*Math.cos( (x*y) / opt.phase )); // 60 ~ 180/Math.PI
+	                dstPixels[i+1] = Math.abs(srcPixels[i+1]*Math.cos( (x*y) / opt.phase )); // 60 ~ 180/Math.PI
+	                dstPixels[i+2] = Math.abs(srcPixels[i+2]*Math.cos( (x*y) / opt.phase )); // 60 ~ 180/Math.PI
+	                dstPixels[i+3] = srcPixels[i+3];//*Math.cos( x+y / 180 ); // 60 ~ 180/Math.PI
+		}
+        }	
+    };
+
+var createExample = (function () {
+  var sn = 0;
+  var createExample = function (title, filterFunc) {
+    sn += 1;
+	
+    var html = '<div>';
+    html += '<h2>' + title + '</h2>';
+    html += '<div id="id' + sn + '"></div>';
+    html += '</div>';
+    var div = document.createElement('div');
+    div.innerHTML = html;
+    document.getElementById('container').appendChild(div);
+	
+    var stage = new Kinetic.Stage({
+      container: 'id' + sn,
+      width: 578,
+      height: 200
+    });
+    var shapesLayer = new Kinetic.Layer();
+	
+    // The important line!
+    shapesLayer.on('draw', filterFunc);
+	
+    var triangle = new Kinetic.RegularPolygon({
+      x: 190,
+      y: 120,
+      sides: 3,
+      radius: 80,
+      fillRadialGradientStartPoint: 0,
+      fillRadialGradientStartRadius: 0,
+      fillRadialGradientEndPoint: 0,
+      fillRadialGradientEndRadius: 70,
+      fillRadialGradientColorStops: [0, '#881111', 0.5, '#888811', 1, '#000088'],
+      stroke: 'black',
+      strokeWidth: 4,
+      draggable: true
+    });
+
+    shapesLayer.add(triangle);
+
+    var circle = new Kinetic.Circle({
+      x: 380,
+      y: stage.getHeight() / 2,
+      radius: 70,
+      fill: '#880000',
+      stroke: 'black',
+      strokeWidth: 4,
+      draggable: true
+    });
+
+    shapesLayer.add(circle);
+
+    stage.add(shapesLayer);
+  };
+  return createExample;
+})();
+
+createExample('Original',function(){});
+createExample('ColorStretch',function(){
+  var imageData = this.getContext().getImageData(0,0,this.getCanvas().width,this.getCanvas().height);
+  var scratchData = this.getContext().createImageData(imageData); // only size copied
+  ColorStretch(imageData,scratchData,{});
+  this.getContext().putImageData(scratchData,0,0);
+});
+createExample('ColorStretch + Pixelate',function(){
+  var imageData = this.getContext().getImageData(0,0,this.getCanvas().width,this.getCanvas().height);
+  var scratchData = this.getContext().createImageData(imageData); // only size copied
+  ColorStretch(imageData,scratchData,{});
+  Pixelate(scratchData,imageData,{width:8,height:16});
+  this.getContext().putImageData(imageData,0,0);
+});
+createExample('Noise',function(){
+  var imageData = this.getContext().getImageData(0,0,this.getCanvas().width,this.getCanvas().height);
+  var scratchData = this.getContext().createImageData(imageData); // only size copied
+  Noise(imageData,scratchData,{amount:96});
+  this.getContext().putImageData(scratchData,0,0);
+});
+createExample('Grayscale',function(){
+  var imageData = this.getContext().getImageData(0,0,this.getCanvas().width,this.getCanvas().height);
+  var scratchData = this.getContext().createImageData(imageData); // only size copied
+  Grayscale(imageData,scratchData,{});
+  this.getContext().putImageData(scratchData,0,0);
+});
+createExample('Threshold',function(){
+  var imageData = this.getContext().getImageData(0,0,this.getCanvas().width,this.getCanvas().height);
+  var scratchData = this.getContext().createImageData(imageData); // only size copied
+  Threshold(imageData,scratchData,{level:64});
+  this.getContext().putImageData(scratchData,0,0);
+});
+createExample('Levels',function(){
+  var imageData = this.getContext().getImageData(0,0,this.getCanvas().width,this.getCanvas().height);
+  var scratchData = this.getContext().createImageData(imageData); // only size copied
+  Levels(imageData,scratchData,{levels:4});
+  this.getContext().putImageData(scratchData,0,0);
+});
+createExample('FlipX + FlipY',function(){
+  var imageData = this.getContext().getImageData(0,0,this.getCanvas().width,this.getCanvas().height);
+  var scratchData = this.getContext().createImageData(imageData); // only size copied
+  FlipX(imageData,scratchData,{});
+  FlipY(scratchData,imageData,{});
+  this.getContext().putImageData(imageData,0,0);
+
+  // repeat for hit canvas
+  var hit = this.getHitCanvas();
+  //console.info(hit);
+  imageData = hit.getContext().getImageData(0,0,hit.getWidth(),hit.getHeight());
+  //imageData = hit.context.getImageData(0,0,hit.getWidth(),hit.getHeight());
+  FlipX(imageData,scratchData,{});
+  FlipY(scratchData,imageData,{});
+  hit.getContext().putImageData(imageData,0,0);
+
+  imageData = null;
+  scratchData = null;
+});
+createExample('MirrorX + MirrorY',function(){
+  var imageData = this.getContext().getImageData(0,0,this.getCanvas().width,this.getCanvas().height);
+  var scratchData = this.getContext().createImageData(imageData); // only size copied
+  MirrorX(imageData,scratchData,{});
+  MirrorY(scratchData,imageData,{});
+  this.getContext().putImageData(imageData,0,0);
+  //this.getContext().putImageData(scratchData,0,0);
+});
+
+createExample('MirrorX + MirrorY + Pixelate + Color Stretch + Invert',function(){
+  var imageData = this.getContext().getImageData(0,0,this.getCanvas().width,this.getCanvas().height);
+  var scratchData = this.getContext().createImageData(imageData); // only size copied
+  MirrorX(imageData,scratchData,{});
+  MirrorY(scratchData,imageData,{});
+  Pixelate(imageData,scratchData,{width:8,height:8});
+  ColorStretch(scratchData,imageData,{});
+  Invert(imageData,scratchData,{});
+  //Noise(imageData,scratchData,{amount: 32});
+  //this.getContext().putImageData(imageData,0,0);
+  this.getContext().putImageData(scratchData,0,0);
+});
+
+    </script>
+  </body>
+</html>
