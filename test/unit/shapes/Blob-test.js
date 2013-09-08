@@ -1,10 +1,10 @@
 suite('Blob', function(){
     // ======================================================
-    test('add blobs', function() {
+    test('add blob', function() {
         var stage = buildStage();
         var layer = new Kinetic.Layer();
 
-        var blob1 = new Kinetic.Blob({
+        var blob = new Kinetic.Blob({
             points: [{
                 x: 73,
                 y: 140
@@ -25,46 +25,25 @@ suite('Blob', function(){
             tension: 0.8
         });
 
-        var blob2 = new Kinetic.Blob({
-            points: [{
-                x: 73,
-                y: 140
-            }, {
-                x: 340,
-                y: 23
-            }, {
-                x: 500,
-                y: 109
-            }],
-            stroke: 'red',
-            strokeWidth: 10,
-            draggable: true,
-            fill: '#faa',
-            tension: 1.2,
-            scale: 0.5,
-            x: 100,
-            y: 50
-        });
-
-
-        layer.add(blob1);
-        layer.add(blob2);
+        layer.add(blob);
         stage.add(layer);
 
-        assert.equal(blob1.getTension(), 0.8);
-        assert.equal(blob2.getTension(), 1.2);
+        assert.equal(blob.getTension(), 0.8);
 
-        assert.equal(blob1.getClassName(), 'Blob');
+        assert.equal(blob.getClassName(), 'Blob');
 
         //console.log(blob1.getPoints())
 
         // test setter
-        blob1.setTension(1.5);
-        assert.equal(blob1.getTension(), 1.5);
+        blob.setTension(1.5);
+        assert.equal(blob.getTension(), 1.5);
+
+        var trace = layer.getContext().getTrace();
+        assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(73,140);bezierCurveTo(90.922,74.135,129.542,38.279,340,23);bezierCurveTo(471.142,13.479,514.876,54.33,500,109);bezierCurveTo(482.876,171.93,463.05,158.163,300,170);bezierCurveTo(121.45,182.963,58.922,191.735,73,140);closePath();fillStyle=#aaf;fill();lineWidth=10;strokeStyle=blue;stroke();restore()');
     });
 
     // ======================================================
-    test('add blob and define tension first', function() {
+    test('define tension first', function() {
         var stage = buildStage();
         var layer = new Kinetic.Layer();
 

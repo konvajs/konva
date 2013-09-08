@@ -1,12 +1,9 @@
-Test.Modules.SPRITE = {
-    'add sprite': function(containerId) {
+suite('Sprite', function() {
+    // ======================================================
+    test('add sprite', function(done) {
         var imageObj = new Image();
         imageObj.onload = function() {
-            var stage = new Kinetic.Stage({
-                container: containerId,
-                width: 578,
-                height: 200
-            });
+            var stage = buildStage();
             var layer = new Kinetic.Layer();
 
             var anims = {
@@ -88,14 +85,14 @@ Test.Modules.SPRITE = {
                 frameRate: 10,
                 draggable: true,
                 shadowColor: 'black',
-            	shadowBlur: 3,
-            	shadowOffset: [3, 1],
-            	shadowOpacity: 0.3
+                shadowBlur: 3,
+                shadowOffset: [3, 1],
+                shadowOpacity: 0.3
             });
 
             layer.add(sprite);
             sprite.start();
-            //}
+
 
             stage.add(layer);
 
@@ -110,12 +107,12 @@ Test.Modules.SPRITE = {
             setTimeout(function() {
                 sprite.stop();
             }, 3000);
-            //document.body.appendChild(layer.bufferCanvas.element)
-            
-            test(sprite.getClassName() === 'Sprite', 'getClassName should be Sprite');
 
-            test(sprite.getIndex() === 0, 'sprite index should default to 0');
+            assert.equal(sprite.getClassName(), 'Sprite');
+            assert.equal(sprite.getIndex(), 0);
+
+            done();
         };
-        imageObj.src = '../assets/scorpion-sprite.png';
-    }
-};
+        imageObj.src = 'assets/scorpion-sprite.png';
+    });
+});

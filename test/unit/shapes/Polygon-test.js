@@ -1,10 +1,7 @@
-Test.Modules.POLYGON = {
-    'add polygon': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+suite('Polygon', function() {
+    test('add polygon', function() {
+        var stage = buildStage();
+
         var layer = new Kinetic.Layer();
 
         var points = [{
@@ -37,7 +34,6 @@ Test.Modules.POLYGON = {
         layer.add(poly);
         stage.add(layer);
         
-        test(poly.getClassName() === 'Polygon', 'getClassName should be Polygon');
-
-    }	
-};
+        assert.equal(poly.getClassName(), 'Polygon');
+    });
+});

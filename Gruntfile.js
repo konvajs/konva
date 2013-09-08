@@ -59,18 +59,6 @@ module.exports = function(grunt) {
     'tests/js/unit/ddTests.js', 
     'tests/js/unit/canvasTests.js', 
 
-    'tests/js/unit/shapes/rectTests.js', 
-    'tests/js/unit/shapes/circleTests.js', 
-    'tests/js/unit/shapes/ellipseTests.js', 
-    'tests/js/unit/shapes/wedgeTests.js', 
-    'tests/js/unit/shapes/imageTests.js',
-    'tests/js/unit/shapes/polygonTests.js',
-    'tests/js/unit/shapes/lineTests.js',
-    'tests/js/unit/shapes/splineTests.js',
-    'tests/js/unit/shapes/blobTests.js',
-    'tests/js/unit/shapes/textTests.js',
-    'tests/js/unit/shapes/spriteTests.js',
-
     'tests/js/unit/plugins/pathTests.js',
     'tests/js/unit/plugins/regularPolygonTests.js',
     'tests/js/unit/plugins/starTests.js',

@@ -32,12 +32,10 @@
             this.className = 'Wedge';
         },
         drawFunc: function(context) {
-            var _context = context._context;
-
-            _context.beginPath();
-            _context.arc(0, 0, this.getRadius(), 0, this.getAngle(), this.getClockwise());
-            _context.lineTo(0, 0);
-            _context.closePath();
+            context.beginPath();
+            context.arc(0, 0, this.getRadius(), 0, this.getAngle(), this.getClockwise());
+            context.lineTo(0, 0);
+            context.closePath();
             context.fillStrokeShape(this);
         }
     };

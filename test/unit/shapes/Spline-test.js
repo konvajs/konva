@@ -1,10 +1,7 @@
-Test.Modules.SPLINE = {
-    'add splines': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+suite('Spline', function() {
+    // ======================================================
+    test('add splines', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var line1 = new Kinetic.Spline({
@@ -69,16 +66,14 @@ Test.Modules.SPLINE = {
         layer.add(line3);
         stage.add(layer);
 
-        test(line1.getClassName() === 'Spline', 'getClassName should be Spline');
+        assert.equal(line1.getClassName(), 'Spline');
 
 
-    },
-    'update spline points': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('update spline points', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var spline = new Kinetic.Spline({
@@ -107,7 +102,7 @@ Test.Modules.SPLINE = {
         layer.add(spline);
         stage.add(layer);
 
-        test(spline.allPoints.length === 6, 'spline all points should have 6 points');
+        assert.equal(spline.allPoints.length, 6);
 
         spline.setPoints([{
             x: 73,
@@ -120,18 +115,16 @@ Test.Modules.SPLINE = {
             y: 109
         }]);
 
-        test(spline.allPoints.length === 3, 'spline all points should have 3 points');
+        assert.equal(spline.allPoints.length, 3);
 
         layer.draw();
 
 
-    },
-    'add point to spline points': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('add point to spline points', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var spline = new Kinetic.Spline({
@@ -160,23 +153,21 @@ Test.Modules.SPLINE = {
         layer.add(spline);
         stage.add(layer);
 
-        test(spline.getPoints().length === 4, 'spline should have 4 points');
+        assert.equal(spline.getPoints().length, 4);
 
         spline.addPoint({
             x: 300,
             y: 200
         });
 
-        test(spline.getPoints().length === 5, 'spline should have 5 points');
+        assert.equal(spline.getPoints().length, 5);
 
         layer.draw();
-    },
-    'create from points represented as a flat array': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('create from points represented as a flat array', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var line = new Kinetic.Spline({
@@ -197,14 +188,12 @@ Test.Modules.SPLINE = {
         layer.add(line);
         stage.add(layer);
 
-        test(line.getPoints().length === 4, 'line should have 4 points');
-    },
-    'create from points represented as an array of objects': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+        assert.equal(line.getPoints().length, 4);
+    });
+
+    // ======================================================
+    test('create from points represented as an array of objects', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var line = new Kinetic.Spline({
@@ -232,14 +221,12 @@ Test.Modules.SPLINE = {
         layer.add(line);
         stage.add(layer);
 
-        test(line.getPoints().length === 4, 'line should have 4 points');
-    },
-    'create from points represented as an array of arrays': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+        assert.equal(line.getPoints().length, 4);
+    });
+
+    // ======================================================
+    test('create from points represented as an array of arrays', function() {
+        var stage = buildStage();
         var layer = new Kinetic.Layer();
 
         var line = new Kinetic.Spline({
@@ -260,6 +247,6 @@ Test.Modules.SPLINE = {
         layer.add(line);
         stage.add(layer);
 
-        test(line.getPoints().length === 4, 'line should have 4 points');
-    }
-};
+        assert.equal(line.getPoints().length, 4);
+    });
+});

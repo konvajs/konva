@@ -16,10 +16,13 @@
             'createLinearGradient',
             'createPattern',
             'createRadialGradient',
+            'drawImage',
             'fill', 
             'fillText', 
+            'getImageData',
             'lineTo',
             'moveTo',
+            'putImageData',
             'rect', 
             'restore', 
             'rotate',
@@ -60,7 +63,6 @@
          */
         getTrace: function() {
             return this.traceArr.join(';');
-
         },
         /**
          * clear trace if trace is enabled
@@ -233,12 +235,26 @@
             var a = arguments;
             return this._context.createRadialGradient(a[0], a[1], a[2], a[3], a[4], a[5]);
         },
+        drawImage: function() {
+            var a = arguments,
+                _context = this._context;
+            if(a.length === 5) {
+                _context.drawImage(a[0], a[1], a[2], a[3], a[4]);
+            }
+            else if(a.length === 9) {
+                _context.drawImage(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8]);
+            }
+        },
         fill: function() {
             this._context.fill();
         },
         fillText: function() {
             var a = arguments;
             this._context.fillText(a[0], a[1], a[2]);
+        },
+        getImageData: function() {
+            var a = arguments;
+            return this._context.getImageData(a[0], a[1], a[2], a[3]);
         },
         lineTo: function() {
             var a = arguments;
@@ -251,6 +267,10 @@
         rect: function() {
             var a = arguments;
             this._context.rect(a[0], a[1], a[2], a[3]);
+        },
+        putImageData: function() {
+            var a = arguments;
+            this._context.rect(a[0], a[1], a[2]);
         },
         restore: function() {
             this._context.restore();

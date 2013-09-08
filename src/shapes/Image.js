@@ -45,7 +45,6 @@
                 height = this.getHeight(),
                 params,
                 that = this,
-                _context = context._context,
                 cropX = this.getCropX() || 0,
                 cropY = this.getCropY() || 0,
                 cropWidth = this.getCropWidth(),
@@ -66,9 +65,9 @@
                 image = this.getImage();
             }
 
-            _context.beginPath();
-            _context.rect(0, 0, width, height);
-            _context.closePath();
+            context.beginPath();
+            context.rect(0, 0, width, height);
+            context.closePath();
             context.fillStrokeShape(this);
 
             if(image) {
@@ -83,31 +82,30 @@
 
                 if(this.hasShadow()) {
                     context.applyShadow(this, function() {
-                        that._drawImage(_context, params);
+                        context.drawImage.apply(context, params);
                     });
                 }
                 else {
-                    this._drawImage(_context, params);
+                    context.drawImage.apply(context, params);
                 }
             }
         },
         drawHitFunc: function(context) {
             var width = this.getWidth(),
                 height = this.getHeight(),
-                imageHitRegion = this.imageHitRegion,
-                _context = context._context;
+                imageHitRegion = this.imageHitRegion;
 
             if(imageHitRegion) {
-                _context.drawImage(imageHitRegion, 0, 0, width, height);
-                _context.beginPath();
-                _context.rect(0, 0, width, height);
-                _context.closePath();
+                context.drawImage(imageHitRegion, 0, 0, width, height);
+                context.beginPath();
+                context.rect(0, 0, width, height);
+                context.closePath();
                 context.stroke(this);
             }
             else {
-                _context.beginPath();
-                _context.rect(0, 0, width, height);
-                _context.closePath();
+                context.beginPath();
+                context.rect(0, 0, width, height);
+                context.closePath();
                 context.fillStrokeShape(this);
             }
         },
@@ -117,7 +115,7 @@
                 width = this.getWidth(),
                 height = this.getHeight(),
                 filter = this.getFilter(),
-                filterCanvas, _context, imageData;
+                filterCanvas, context, imageData;
 
             if (this.filterCanvas){
                 filterCanvas = this.filterCanvas;
@@ -131,13 +129,13 @@
                 });
             }
 
-            _context = filterCanvas.getContext()._context;
+            context = filterCanvas.getContext();
 
             try {
-                this._drawImage(_context, [image, 0, 0, filterCanvas.getWidth(), filterCanvas.getHeight()]);
-                imageData = _context.getImageData(0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
+                context.drawImage(image, 0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
+                imageData = context.getImageData(0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
                 filter.call(this, imageData);
-                _context.putImageData(imageData, 0, 0);
+                context.putImageData(imageData, 0, 0);
             }
             catch(e) {
                 this.clearFilter();
@@ -170,14 +168,14 @@
                     width: width,
                     height: height
                 }),
-                _context = canvas.getContext()._context,
+                context = canvas.getContext(),
                 image = this.getImage(),
                 imageData, data, rgbColorKey, i, n;
 
-            _context.drawImage(image, 0, 0);
+            context.drawImage(image, 0, 0);
 
             try {
-                imageData = _context.getImageData(0, 0, width, height);
+                imageData = context.getImageData(0, 0, width, height);
                 data = imageData.data;
                 rgbColorKey = Kinetic.Util._hexToRgb(this.colorKey);
 
@@ -216,14 +214,6 @@
         getHeight: function() {
             var image = this.getImage();
             return this.attrs.height || (image ? image.height : 0);
-        },
-        _drawImage: function(_context, a) {
-            if(a.length === 5) {
-                _context.drawImage(a[0], a[1], a[2], a[3], a[4]);
-            }
-            else if(a.length === 9) {
-                _context.drawImage(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8]);
-            }
         }
     };
     Kinetic.Util.extend(Kinetic.Image, Kinetic.Shape);
