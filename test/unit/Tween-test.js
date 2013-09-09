@@ -1,10 +1,8 @@
-Test.Modules.TWEEN = {
-    'tween node': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+suite('Tween', function() {
+
+    // ======================================================
+    test('tween node', function(done) {
+        var stage = addStage();
 
         var layer = new Kinetic.Layer();
 
@@ -22,7 +20,8 @@ Test.Modules.TWEEN = {
 
         var finishCount = 0;
         var onFinish = function() {
-            test(++finishCount <= 1, 'finishCount should not exceed 1');
+            assert(++finishCount <= 1, 'finishCount should not exceed 1');
+            done();
         }
 
         var tweens = 0;
@@ -35,8 +34,8 @@ Test.Modules.TWEEN = {
             attrs++;
         }
 
-        test(tweens === 0, 'should be no tweens');
-        test(attrs === 0, 'should be no attrs');
+        assert.equal(tweens, 0);
+        assert.equal(attrs, 0);
 
         var tween = new Kinetic.Tween({
             node: circle,
@@ -55,19 +54,17 @@ Test.Modules.TWEEN = {
             attrs++;
         }
 
-        test(tweens === 1, 'should one tween');
-        test(attrs === 2, 'should two attrs');
+        assert.equal(tweens, 1);
+        assert.equal(attrs, 2);
 
-        test(Kinetic.Tween.attrs[circle._id][tween._id].x !== undefined, 'x should not be undefined');
-        test(Kinetic.Tween.attrs[circle._id][tween._id].y !== undefined, 'y should not be undefined');
+        assert.notEqual(Kinetic.Tween.attrs[circle._id][tween._id].x, undefined);
+        assert.notEqual(Kinetic.Tween.attrs[circle._id][tween._id].y, undefined);
 
-    },
-    'tween node': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('tween node', function() {
+        var stage = addStage();
 
         var layer = new Kinetic.Layer();
 
@@ -94,15 +91,15 @@ Test.Modules.TWEEN = {
         // start/diff object = attrs.nodeId.tweenId.attr
         // tweenId = tweens.nodeId.attr
 
-        test(tween._id !== undefined, 'tween.play should return an instance of the tween');
-        test(Kinetic.Tween.tweens[circle._id].x === tween._id, 'circle should be in the tweens hash');
-        test(Kinetic.Tween.attrs[circle._id][tween._id] !== undefined, 'tween should be in the attrs hash');
+        assert.notEqual(tween._id, undefined);
+        assert.equal(Kinetic.Tween.tweens[circle._id].x, tween._id);
+        assert.notEqual(Kinetic.Tween.attrs[circle._id][tween._id], undefined);
 
         tween.destroy();
 
-        test(Kinetic.Tween.tweens[circle._id].x === undefined, 'circle should not be in the tweens hash');
-        test(Kinetic.Tween.attrs[circle._id][tween._id] === undefined, 'tween should not be in the attrs hash');
+        assert.equal(Kinetic.Tween.tweens[circle._id].x, undefined);
+        assert.equal(Kinetic.Tween.attrs[circle._id][tween._id], undefined);
 
 
-    }
-};
+    });
+});

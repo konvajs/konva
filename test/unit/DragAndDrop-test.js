@@ -1,10 +1,8 @@
-Test.Modules.DD = {
-    'test drag and drop properties and methods': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+suite('DragAndDrop', function() {
+
+    // ======================================================
+    test('test drag and drop properties and methods', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
@@ -21,20 +19,18 @@ Test.Modules.DD = {
         layer.draw();
 
         // test defaults
-        test(circle.isDraggable() === false, 'draggable should be false');
+        assert.equal(circle.isDraggable(), false);
 
         //change properties
         circle.setDraggable(true);
 
         // test new properties
-        test(circle.getDraggable() === true, 'draggable should be true');
-    },
-    'DRAG AND DROP - multiple drag and drop sets with setDraggable()': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+        assert.equal(circle.getDraggable(), true);
+    });
+
+    // ======================================================
+    test('multiple drag and drop sets with setDraggable()', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: 380,
@@ -46,14 +42,14 @@ Test.Modules.DD = {
         });
 
         circle.setDraggable(true);
-        test(circle.getDraggable(), 'draggable should be true');
+        assert.equal(circle.getDraggable(), true);
         circle.setDraggable(true);
-        test(circle.getDraggable(), 'draggable should be true');
+        assert.equal(circle.getDraggable(), true);
         circle.setDraggable(false);
-        test(!circle.getDraggable(), 'draggable should be false');
+        assert.equal(!circle.getDraggable(), true);
 
         layer.add(circle);
         stage.add(layer);
 
-    }
-};
+    });
+});
