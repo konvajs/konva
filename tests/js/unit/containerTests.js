@@ -430,18 +430,17 @@ Test.Modules.CONTAINER = {
         layer.add(rect);
         stage.add(layer);
 
-        var go = Kinetic.Global;
 
-        test(go.ids['myCircle3'].getId() === 'myCircle3', 'circle id not in ids hash');
-        test(go.names['myRect3'][0].getName() === 'myRect3', 'rect name not in names hash');
+        test(Kinetic.ids['myCircle3'].getId() === 'myCircle3', 'circle id not in ids hash');
+        test(Kinetic.names['myRect3'][0].getName() === 'myRect3', 'rect name not in names hash');
 
         circle.setId('newCircleId');
-        test(go.ids['newCircleId'] !== undefined, 'circle not in ids hash');
-        test(go.ids['myCircle3'] === undefined, 'old circle id key is still in ids hash');
+        test(Kinetic.ids['newCircleId'] !== undefined, 'circle not in ids hash');
+        test(Kinetic.ids['myCircle3'] === undefined, 'old circle id key is still in ids hash');
 
         rect.setName('newRectName');
-        test(go.names['newRectName'][0] !== undefined, 'new rect name not in names hash');
-        test(go.names['myRect3'] === undefined, 'old rect name is still in names hash');
+        test(Kinetic.names['newRectName'][0] !== undefined, 'new rect name not in names hash');
+        test(Kinetic.names['myRect3'] === undefined, 'old rect name is still in names hash');
     },
     'add layer': function(containerId) {
         var stage = new Kinetic.Stage({
@@ -530,16 +529,16 @@ Test.Modules.CONTAINER = {
 
         test(layer.children.length === 1, 'layer should have 1 children');
         test(group.children.length === 2, 'group should have 2 children');
-        test(Kinetic.Global.names.circleName.length > 0, 'circleName should be in names hash');
-        test(Kinetic.Global.ids.circleId.getId() === 'circleId', 'layerId should be in ids hash');
+        test(Kinetic.names.circleName.length > 0, 'circleName should be in names hash');
+        test(Kinetic.ids.circleId.getId() === 'circleId', 'layerId should be in ids hash');
 
         layer.destroyChildren();
         layer.draw();
 
         test(layer.children.length === 0, 'layer should have 0 children');
         test(group.children.length === 0, 'group should have 0 children');
-        test(Kinetic.Global.names.circleName === undefined, 'circleName should not be in names hash');
-        test(Kinetic.Global.ids.circleId === undefined, 'layerId should not be in ids hash');
+        test(Kinetic.names.circleName === undefined, 'circleName should not be in names hash');
+        test(Kinetic.ids.circleId === undefined, 'layerId should not be in ids hash');
     },
     'add group': function(containerId) {
         var stage = new Kinetic.Stage({

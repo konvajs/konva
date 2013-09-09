@@ -58,8 +58,7 @@
          * @param {Node} child
          */
         add: function(child) {
-            var go = Kinetic.Global,
-                children = this.children;
+            var children = this.children;
 
             this._validateAdd(child);
             child.index = children.length;
@@ -137,8 +136,7 @@
             return Kinetic.Collection.toCollection(retArr);
         },
         _getNodeById: function(key) {
-            var go = Kinetic.Global, 
-                node = go.ids[key];
+            var node = Kinetic.ids[key];
                 
             if(node !== undefined && this.isAncestorOf(node)) {
                 return node;
@@ -146,7 +144,7 @@
             return null;
         },
         _getNodesByName: function(key) {
-            var go = Kinetic.Global, arr = go.names[key] || [];
+            var arr = Kinetic.names[key] || [];
             return this._getDescendants(arr);
         },
         _get: function(selector) {

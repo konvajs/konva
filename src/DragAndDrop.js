@@ -28,7 +28,6 @@
         },
         _endDragBefore: function(evt) {
             var dd = Kinetic.DD,
-                go = Kinetic.Global,
                 node = dd.node,
                 nodeType, layer;
 
@@ -41,7 +40,7 @@
                 // operation actually started.
                 if(dd.isDragging) {
                     dd.isDragging = false;
-                    go.listenClickTap = false;
+                    Kinetic.listenClickTap = false;
 
                     if (evt) {
                         evt.dragEndNode = node;

@@ -2293,8 +2293,6 @@ suite('Node', function() {
             id: 'myCircle'
         });
 
-        var go = Kinetic.Global;
-
         layer.add(circle);
 
         var node = stage.get('#myCircle')[0];
@@ -2511,30 +2509,29 @@ suite('Node', function() {
 
         var circleColorKey = circle.colorKey;
         var rectColorKey = rect.colorKey;
-        var go = Kinetic.Global;
 
         layer.add(circle);
         layer.add(rect);
         stage.add(layer);
 
-        assert.equal(go.ids.myCircle2._id, circle._id);
-        assert.equal(go.names.myRect2[0]._id, rect._id);
-        assert.equal(Kinetic.Global.shapes[circleColorKey]._id, circle._id);
-        assert.equal(Kinetic.Global.shapes[rectColorKey]._id, rect._id);
+        assert.equal(Kinetic.ids.myCircle2._id, circle._id);
+        assert.equal(Kinetic.names.myRect2[0]._id, rect._id);
+        assert.equal(Kinetic.shapes[circleColorKey]._id, circle._id);
+        assert.equal(Kinetic.shapes[rectColorKey]._id, rect._id);
 
         circle.destroy();
 
-        assert.equal(go.ids.myCircle2, undefined);
-        assert.equal(go.names.myRect2[0]._id, rect._id);
-        assert.equal(Kinetic.Global.shapes[circleColorKey], undefined);
-        assert.equal(Kinetic.Global.shapes[rectColorKey]._id, rect._id);
+        assert.equal(Kinetic.ids.myCircle2, undefined);
+        assert.equal(Kinetic.names.myRect2[0]._id, rect._id);
+        assert.equal(Kinetic.shapes[circleColorKey], undefined);
+        assert.equal(Kinetic.shapes[rectColorKey]._id, rect._id);
 
         rect.destroy();
 
-        assert.equal(go.ids.myCircle2, undefined);
-        assert.equal(go.names.myRect2, undefined);
-        assert.equal(Kinetic.Global.shapes[circleColorKey], undefined);
-        assert.equal(Kinetic.Global.shapes[rectColorKey], undefined);
+        assert.equal(Kinetic.ids.myCircle2, undefined);
+        assert.equal(Kinetic.names.myRect2, undefined);
+        assert.equal(Kinetic.shapes[circleColorKey], undefined);
+        assert.equal(Kinetic.shapes[rectColorKey], undefined);
     });
 
     // ======================================================

@@ -304,17 +304,17 @@ Test.Modules.STAGE = {
         layer.add(circle);
         stage.add(layer);
 
-        test(Kinetic.Global.ids.stageFalconId._id === stage._id, 'stage id should be in global ids map');
-        test(Kinetic.Global.names.stageFalconName[0]._id === stage._id, 'stage name should be in global names map');
-        test(Kinetic.Global.ids.circleFalconId._id === circle._id, 'circle id should be in global ids map');
-        test(Kinetic.Global.names.circleFalconName[0]._id === circle._id, 'circle name should be in global names map');
+        test(Kinetic.ids.stageFalconId._id === stage._id, 'stage id should be in global ids map');
+        test(Kinetic.names.stageFalconName[0]._id === stage._id, 'stage name should be in global names map');
+        test(Kinetic.ids.circleFalconId._id === circle._id, 'circle id should be in global ids map');
+        test(Kinetic.names.circleFalconName[0]._id === circle._id, 'circle name should be in global names map');
 
         stage.destroy();
 
-        test(Kinetic.Global.ids.stageFalconId === undefined, 'stage should no longer be in ids map');
-        test(Kinetic.Global.names.stageFalconName === undefined, 'stage should no longer be in names map');
-        test(Kinetic.Global.ids.circleFalconId === undefined, 'circle should no longer be in ids map');
-        test(Kinetic.Global.names.circleFalconName === undefined, 'circle should no longer be in names map');
+        test(Kinetic.ids.stageFalconId === undefined, 'stage should no longer be in ids map');
+        test(Kinetic.names.stageFalconName === undefined, 'stage should no longer be in names map');
+        test(Kinetic.ids.circleFalconId === undefined, 'circle should no longer be in ids map');
+        test(Kinetic.names.circleFalconName === undefined, 'circle should no longer be in names map');
 
 
     },

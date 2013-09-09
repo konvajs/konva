@@ -34,7 +34,7 @@
                 // this indicates that a hit pixel may have been found
                 if(p[3] === 255) {
                     colorKey = Kinetic.Util._rgbToHex(p[0], p[1], p[2]);
-                    shape = Kinetic.Global.shapes[HASH + colorKey];
+                    shape = Kinetic.shapes[HASH + colorKey];
                     return {
                         shape: shape,
                         pixel: p

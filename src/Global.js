@@ -31,9 +31,23 @@
 var Kinetic = {};
 (function() {
     Kinetic = {
+        // public
         version: '@@version',
+
+        // private
+        stages: [],
+        idCounter: 0,
+        ids: {},
+        names: {},
+        shapes: {},
+        listenClickTap: false,
+        inDblClickWindow: false,
+        
+        // configurations
         enableTrace: false,
         traceArrMax: 100,
+        dblClickWindow: 400,
+
         /**
          * @namespace Filters
          * @memberof Kinetic
@@ -148,31 +162,12 @@ var Kinetic = {};
          */
         Group: function(config) {
             this.___init(config);
-        }
-    };
-
-    /**
-     * @namespace Global
-     * @memberof Kinetic
-     */
-    Kinetic.Global = {
-        stages: [],
-        idCounter: 0,
-        ids: {},
-        names: {},
-        //shapes hash.  rgb keys and shape values
-        shapes: {},
-
-        // event flags
-        listenClickTap: false,
-        inDblClickWindow: false,
-
-        dblClickWindow: 400,
+        },
 
         /**
          * returns whether or not drag and drop is currently active
          * @method
-         * @memberof Kinetic.Global
+         * @memberof Kinetic
          */
         isDragging: function() {
             var dd = Kinetic.DD;
@@ -191,7 +186,7 @@ var Kinetic = {};
         * returns whether or not a drag and drop operation is ready, but may
         *  not necessarily have started
         * @method
-        * @memberof Kinetic.Global
+        * @memberof Kinetic
         */
         isDragReady: function() {
             var dd = Kinetic.DD;

@@ -27,7 +27,7 @@
             this._strokeFuncHit = _strokeFuncHit;
 
             // set colorKey
-            var shapes = Kinetic.Global.shapes;
+            var shapes = Kinetic.shapes;
             var key;
 
             while(true) {
@@ -205,7 +205,7 @@
         // extends Node.prototype.destroy 
         destroy: function() {
             Kinetic.Node.prototype.destroy.call(this);
-            delete Kinetic.Global.shapes[this.colorKey];
+            delete Kinetic.shapes[this.colorKey];
             return this;
         },
         drawScene: function(canvas) {

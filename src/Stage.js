@@ -41,10 +41,10 @@
             // call super constructor
             Kinetic.Container.call(this, config);
             this.nodeType = STAGE;
-            this._id = Kinetic.Global.idCounter++;
+            this._id = Kinetic.idCounter++;
             this._buildDOM();
             this._bindContentEvents();
-            Kinetic.Global.stages.push(this);
+            Kinetic.stages.push(this);
         },
         _validateAdd: function(child) {
             if (child.getType() !== 'Layer') {
@@ -347,10 +347,9 @@
         },
         _mouseout: function(evt) {
             this._setPointerPosition(evt);
-            var go = Kinetic.Global,
-                targetShape = this.targetShape;
+            var targetShape = this.targetShape;
 
-            if(targetShape && !go.isDragging()) {
+            if(targetShape && !Kinetic.isDragging()) {
                 targetShape._fireAndBubble(MOUSEOUT, evt);
                 targetShape._fireAndBubble(MOUSELEAVE, evt);
                 this.targetShape = null;
@@ -361,15 +360,14 @@
         },
         _mousemove: function(evt) {
             this._setPointerPosition(evt);
-            var go = Kinetic.Global,
-                dd = Kinetic.DD,
+            var dd = Kinetic.DD,
                 obj = this.getIntersection(this.getPointerPosition()),
                 shape;
 
             if(obj) {
                 shape = obj.shape;
                 if(shape) {
-                    if(!go.isDragging() && obj.pixel[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
+                    if(!Kinetic.isDragging() && obj.pixel[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
                         if(this.targetShape) {
                             this.targetShape._fireAndBubble(MOUSEOUT, evt, shape);
                             this.targetShape._fireAndBubble(MOUSELEAVE, evt, shape);
@@ -389,7 +387,7 @@
              */
             else {
               this._fire(MOUSEMOVE, evt);
-              if(this.targetShape && !go.isDragging()) {
+              if(this.targetShape && !Kinetic.isDragging()) {
                 this.targetShape._fireAndBubble(MOUSEOUT, evt);
                 this.targetShape._fireAndBubble(MOUSELEAVE, evt);
                 this.targetShape = null;
@@ -408,11 +406,10 @@
         },
         _mousedown: function(evt) {
             this._setPointerPosition(evt);
-            var go = Kinetic.Global,
-                obj = this.getIntersection(this.getPointerPosition()),
+            var obj = this.getIntersection(this.getPointerPosition()),
                 shape = obj && obj.shape ? obj.shape : this;
 
-            go.listenClickTap = true;
+            Kinetic.listenClickTap = true;
             this.clickStartShape = shape;
             shape._fireAndBubble(MOUSEDOWN, evt);
 
@@ -425,30 +422,29 @@
         _mouseup: function(evt) {
             this._setPointerPosition(evt);
             var that = this,
-                go = Kinetic.Global,
                 obj = this.getIntersection(this.getPointerPosition()),
                 shape = obj && obj.shape ? obj.shape : this;
 
             shape._fireAndBubble(MOUSEUP, evt);
 
             // detect if click or double click occurred
-            if(go.listenClickTap && shape._id === this.clickStartShape._id) {
+            if(Kinetic.listenClickTap && shape._id === this.clickStartShape._id) {
                 shape._fireAndBubble(CLICK, evt);
 
-                if(go.inDblClickWindow) {
+                if(Kinetic.inDblClickWindow) {
                     shape._fireAndBubble(DBL_CLICK, evt);
-                    go.inDblClickWindow = false;
+                    Kinetic.inDblClickWindow = false;
                 }
                 else {
-                    go.inDblClickWindow = true;
+                    Kinetic.inDblClickWindow = true;
                 }
 
                 setTimeout(function() {
-                    go.inDblClickWindow = false;
-                }, go.dblClickWindow);
+                    Kinetic.inDblClickWindow = false;
+                }, Kinetic.dblClickWindow);
             }
 
-            go.listenClickTap = false;
+            Kinetic.listenClickTap = false;
 
             // always call preventDefault for desktop events because some browsers
             // try to drag and drop the canvas element
@@ -458,11 +454,10 @@
         },
         _touchstart: function(evt) {
             this._setPointerPosition(evt);
-            var go = Kinetic.Global,
-                obj = this.getIntersection(this.getPointerPosition()),
+            var obj = this.getIntersection(this.getPointerPosition()),
                 shape = obj && obj.shape ? obj.shape : this;
 
-            go.listenClickTap = true;
+            Kinetic.listenClickTap = true;
             this.tapStartShape = shape;
             shape._fireAndBubble(TOUCHSTART, evt);
 
@@ -474,30 +469,29 @@
         _touchend: function(evt) {
             this._setPointerPosition(evt);
             var that = this,
-                go = Kinetic.Global,
                 obj = this.getIntersection(this.getPointerPosition()),
                 shape = obj && obj.shape ? obj.shape : this;
 
             shape._fireAndBubble(TOUCHEND, evt);
 
             // detect if tap or double tap occurred
-            if(go.listenClickTap && shape._id === this.tapStartShape._id) {
+            if(Kinetic.listenClickTap && shape._id === this.tapStartShape._id) {
                 shape._fireAndBubble(TAP, evt);
 
-                if(go.inDblClickWindow) {
+                if(Kinetic.inDblClickWindow) {
                     shape._fireAndBubble(DBL_TAP, evt);
-                    go.inDblClickWindow = false;
+                    Kinetic.inDblClickWindow = false;
                 }
                 else {
-                    go.inDblClickWindow = true;
+                    Kinetic.inDblClickWindow = true;
                 }
 
                 setTimeout(function() {
-                    go.inDblClickWindow = false;
-                }, go.dblClickWindow);
+                    Kinetic.inDblClickWindow = false;
+                }, Kinetic.dblClickWindow);
             }
 
-            go.listenClickTap = false;
+            Kinetic.listenClickTap = false;
 
             // only call preventDefault if the shape is listening for events
             if (shape.isListening() && evt.preventDefault) {

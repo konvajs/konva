@@ -57,7 +57,7 @@
     Kinetic.Util.addMethods(Kinetic.Node, {
         _init: function(config) {
             var that = this;
-            this._id = Kinetic.Global.idCounter++;
+            this._id = Kinetic.idCounter++;
             this.eventListeners = {};
             this.attrs = {};
             this.cache = {};
@@ -256,11 +256,9 @@
          * node.destroy();
          */
         destroy: function() {
-            var go = Kinetic.Global;
-
             // remove from ids and names hashes
-            go._removeId(this.getId());
-            go._removeName(this.getName(), this._id);
+            Kinetic._removeId(this.getId());
+            Kinetic._removeName(this.getName(), this._id);
 
             this.remove();
         },
@@ -1150,11 +1148,10 @@
          * @param {String} id
          */
         setId: function(id) {
-            var oldId = this.getId(),
-                go = Kinetic.Global;
+            var oldId = this.getId();
 
-            go._removeId(oldId);
-            go._addId(this, id);
+            Kinetic._removeId(oldId);
+            Kinetic._addId(this, id);
             this._setAttr(ID, id);
             return this;
         },
@@ -1165,11 +1162,10 @@
          * @param {String} name
          */
         setName: function(name) {
-            var oldName = this.getName(),
-                go = Kinetic.Global;
+            var oldName = this.getName();
 
-            go._removeName(oldName, this._id);
-            go._addName(this, name);
+            Kinetic._removeName(oldName, this._id);
+            Kinetic._addName(this, name);
             this._setAttr(NAME, name);
             return this;
         },
@@ -1233,7 +1229,7 @@
             return this;
         },
         shouldDrawHit: function() {
-            return this.isListening() && this.isVisible() && !Kinetic.Global.isDragging();
+            return this.isListening() && this.isVisible() && !Kinetic.isDragging();
         },
         isDraggable: function() {
             return false;
