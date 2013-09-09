@@ -4,7 +4,7 @@ suite('Image', function(){
   test('add image', function(done) {
       var imageObj = new Image();
       imageObj.onload = function() {
-          var stage = buildStage();
+          var stage = addStage();
 
           var layer = new Kinetic.Layer();
           darth = new Kinetic.Image({
@@ -129,7 +129,7 @@ suite('Image', function(){
   test('crop and scale image', function(done) {
       var imageObj = new Image();
       imageObj.onload = function() {
-          var stage = buildStage();
+          var stage = addStage();
           var layer = new Kinetic.Layer();
           darth = new Kinetic.Image({
               x: 200,
@@ -194,7 +194,7 @@ suite('Image', function(){
   test.skip('create image hit region', function(done) {
       var imageObj = new Image();
 
-      var stage = buildStage();
+      var stage = addStage();
       var layer = new Kinetic.Layer();
 
       imageObj.onload = function() {
@@ -234,7 +234,7 @@ suite('Image', function(){
   test('image with svg source', function(done) {
       var imageObj = new Image();
 
-      var stage = buildStage();
+      var stage = addStage();
       var layer = new Kinetic.Layer();
 
       imageObj.onload = function() {
@@ -259,7 +259,7 @@ suite('Image', function(){
   test('opacity test for image with svg source', function(done) {
       var imageObj = new Image();
 
-      var stage = buildStage();
+      var stage = addStage();
       var layer = new Kinetic.Layer();
 
       layer.add(new Kinetic.Line({

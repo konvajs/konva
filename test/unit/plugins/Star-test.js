@@ -1,7 +1,7 @@
 suite('Star', function() {
     // ======================================================
     test('add five point star', function() {
-        var stage = buildStage();
+        var stage = addStage();
 
         var layer = new Kinetic.Layer();
 
@@ -33,7 +33,7 @@ suite('Star', function() {
 
     // ======================================================
     test('add star with line join and shadow', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var rect = new Kinetic.Rect({

@@ -3,7 +3,7 @@ suite('Sprite', function() {
     test('add sprite', function(done) {
         var imageObj = new Image();
         imageObj.onload = function() {
-            var stage = buildStage();
+            var stage = addStage();
             var layer = new Kinetic.Layer();
 
             var anims = {

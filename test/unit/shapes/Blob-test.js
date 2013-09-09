@@ -1,7 +1,7 @@
 suite('Blob', function(){
     // ======================================================
     test('add blob', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var blob = new Kinetic.Blob({
@@ -44,7 +44,7 @@ suite('Blob', function(){
 
     // ======================================================
     test('define tension first', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
      
@@ -79,7 +79,7 @@ suite('Blob', function(){
 
     // ======================================================
     test('check for kinetic event handlers', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var blob = new Kinetic.Blob({

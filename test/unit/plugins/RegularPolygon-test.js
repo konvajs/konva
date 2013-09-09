@@ -1,7 +1,7 @@
 suite('RegularPolygon', function() {
     // ======================================================
     test('add regular polygon triangle', function() {
-        var stage = buildStage();
+        var stage = addStage();
         
         var layer = new Kinetic.Layer();
 
@@ -29,7 +29,7 @@ suite('RegularPolygon', function() {
 
     // ======================================================
     test('add regular polygon square', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var poly = new Kinetic.RegularPolygon({
@@ -49,7 +49,7 @@ suite('RegularPolygon', function() {
     
     // ======================================================
     test('add regular polygon pentagon', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var poly = new Kinetic.RegularPolygon({
@@ -69,7 +69,7 @@ suite('RegularPolygon', function() {
     
     // ======================================================
     test('add regular polygon octogon', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var poly = new Kinetic.RegularPolygon({

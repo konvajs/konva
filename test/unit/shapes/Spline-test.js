@@ -1,7 +1,7 @@
 suite('Spline', function() {
     // ======================================================
     test('add spline', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var line1 = new Kinetic.Spline({
@@ -78,7 +78,7 @@ suite('Spline', function() {
 
     // ======================================================
     test('update spline points', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var spline = new Kinetic.Spline({
@@ -129,7 +129,7 @@ suite('Spline', function() {
 
     // ======================================================
     test('add point to spline points', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var spline = new Kinetic.Spline({
@@ -172,7 +172,7 @@ suite('Spline', function() {
 
     // ======================================================
     test('create from points represented as a flat array', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var line = new Kinetic.Spline({
@@ -198,7 +198,7 @@ suite('Spline', function() {
 
     // ======================================================
     test('create from points represented as an array of objects', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var line = new Kinetic.Spline({
@@ -231,7 +231,7 @@ suite('Spline', function() {
 
     // ======================================================
     test('create from points represented as an array of arrays', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var line = new Kinetic.Spline({

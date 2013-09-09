@@ -1,7 +1,7 @@
 suite('Line', function() {
     // ======================================================
     test('add line', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var points = [{
@@ -47,7 +47,7 @@ suite('Line', function() {
 
     // ======================================================
     test('test default ponts array for two lines', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var line = new Kinetic.Line({
@@ -80,7 +80,7 @@ suite('Line', function() {
 
     // ======================================================
     test('add dashed line', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         /*

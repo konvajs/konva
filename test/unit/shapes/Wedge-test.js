@@ -1,7 +1,7 @@
 suite('Wedge', function() {
     // ======================================================
     test('add wedge', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var wedge = new Kinetic.Wedge({
             x: 100,
@@ -27,7 +27,7 @@ suite('Wedge', function() {
 
     // ======================================================
     test('set wedge angle using degrees', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var wedge = new Kinetic.Wedge({
             x: 100,

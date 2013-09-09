@@ -1,7 +1,7 @@
 suite('Path', function() {
     // ======================================================
     test('add simple path', function() {
-        var stage = buildStage();
+        var stage = addStage();
 
         var layer = new Kinetic.Layer();
 
@@ -47,7 +47,7 @@ suite('Path', function() {
 
     // ======================================================
     test('add path with line cap and line join', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var path = new Kinetic.Path({
@@ -67,7 +67,7 @@ suite('Path', function() {
 
     // ======================================================
     test('moveTo with implied lineTos and trailing comma', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var path = new Kinetic.Path({
@@ -109,7 +109,7 @@ suite('Path', function() {
     
     // ======================================================
     test('add map path', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var mapLayer = new Kinetic.Layer();
 
         for(var key in worldMap.shapes) {
@@ -146,7 +146,7 @@ suite('Path', function() {
     
     // ======================================================
     test('curved arrow path', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var c = "M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-17.185,4.352-22.33c7.451-5.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.821,23.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z";
@@ -175,7 +175,7 @@ suite('Path', function() {
     
     // ======================================================
     test('Quadradic Curve test from SVG w3c spec', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var c = "M200,300 Q400,50 600,300 T1000,300";
@@ -235,7 +235,7 @@ suite('Path', function() {
     
     // ======================================================
     test('Cubic Bezier Curve test from SVG w3c spec using setData', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var c = "M100,200 C100,100 250,100 250,200 S400,300 400,200";
@@ -304,7 +304,7 @@ suite('Path', function() {
     
     // ======================================================
     test('path arc', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var c = "M100,350 l 50,-25 a25,25 -30 0,1 50,-25 l 50,-25 a25,50 -30 0,1 50,-25 l 50,-25 a25,75 -30 0,1 50,-25 l 50,-25 a25,100 -30 0,1 50,-25 l 50,-25";
@@ -333,7 +333,7 @@ suite('Path', function() {
     
     // ======================================================
     test('Tiger (RAWR!)', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
 
@@ -352,7 +352,7 @@ suite('Path', function() {
     
     // ======================================================
     test('Able to determine point on line some distance from another point on line', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var c = "M10,10 210,160";
@@ -391,7 +391,7 @@ suite('Path', function() {
     
     // ======================================================
     test('Able to determine points on Cubic Bezier Curve', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var c = "M100,200 C100,100 250,100 250,200 S400,300 400,200";
@@ -428,7 +428,7 @@ suite('Path', function() {
     
     // ======================================================
     test('Able to determine points on Quadratic Curve', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var c = "M200,300 Q400,50 600,300 T1000,300";
@@ -465,7 +465,7 @@ suite('Path', function() {
     
     // ======================================================
     test('Able to determine points on Elliptical Arc with clockwise stroke', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var c = "M 50,100 A 100 50 0 1 1 150 150";
@@ -521,7 +521,7 @@ suite('Path', function() {
     
     // ======================================================
     test('Able to determine points on Elliptical Arc with counter-clockwise stroke', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var c = "M 250,100 A 100 50 0 1 0 150 150";
@@ -577,7 +577,7 @@ suite('Path', function() {
     
     // ======================================================
     test('Able to determine points on Elliptical Arc when rotated', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var c = "M 250,100 A 100 50 30 1 0 150 150";
@@ -710,7 +710,7 @@ suite('Path', function() {
     // ======================================================
     test('Borneo Map (has scientific notation: -10e-4)', function() {
 
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var borneo = new Kinetic.Path({
@@ -726,7 +726,7 @@ suite('Path', function() {
 
         // https://github.com/ericdrowell/KineticJS/issues/567
         
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var path = new Kinetic.Path({

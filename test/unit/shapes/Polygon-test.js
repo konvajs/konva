@@ -1,6 +1,6 @@
 suite('Polygon', function() {
     test('add polygon', function() {
-        var stage = buildStage();
+        var stage = addStage();
 
         var layer = new Kinetic.Layer();
 

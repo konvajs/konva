@@ -1,7 +1,7 @@
 suite('Text', function(){
     // ======================================================
     test('add text with shadows', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var rect = new Kinetic.Rect({
@@ -57,7 +57,7 @@ suite('Text', function(){
 
     // ======================================================
     test('text getters and setters', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var text = new Kinetic.Text({
@@ -153,7 +153,7 @@ suite('Text', function(){
 
     // ======================================================
     test('text multi line', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var rect = new Kinetic.Rect({
@@ -207,7 +207,7 @@ suite('Text', function(){
 
     // ======================================================
     test('text multi line with shadows', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var text = new Kinetic.Text({
@@ -242,7 +242,7 @@ suite('Text', function(){
 
     // ======================================================
     test('change font size should update text data', function() {
-        var stage = buildStage();
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var text = new Kinetic.Text({

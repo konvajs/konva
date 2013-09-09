@@ -4,7 +4,7 @@ var assert = chai.assert,
 
 Kinetic.enableTrace = true;
 
-function buildStage() {
+function addStage() {
   var container = document.createElement('div'),
       stage = new Kinetic.Stage({
           container: container,
@@ -15,6 +15,14 @@ function buildStage() {
   kineticContainer.appendChild(container);
 
   return stage;
+}
+
+function addContainer() {
+  var container = document.createElement('div');
+
+  kineticContainer.appendChild(container);
+
+  return container;
 }
 
 function showHit(layer) {
