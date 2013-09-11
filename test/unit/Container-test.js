@@ -1,11 +1,8 @@
-Test.Modules.CONTAINER = {
-    'clip': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200,
-            draggable: true
-        });
+suite('Container', function() {
+
+    // ======================================================
+    test('clip', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer({
             clip: [0, 0, stage.getWidth() / 2, 100]
         });
@@ -25,13 +22,11 @@ Test.Modules.CONTAINER = {
         layer.add(group);
         group.add(circle);
         layer.draw();
-    },
-    'adder validation': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('adder validation', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
         var circle = new Kinetic.Circle({
@@ -61,7 +56,7 @@ Test.Modules.CONTAINER = {
         } catch(err) {
             errorThrown = true;
         }
-        test(errorThrown, 'error should have been thrown when adding stage to stage');
+        assert.equal(errorThrown, true, 'error should have been thrown when adding stage to stage');
         stage.remove();
 
         // ===================================
@@ -71,7 +66,7 @@ Test.Modules.CONTAINER = {
         } catch(err) {
             errorThrown = true;
         }
-        test(errorThrown, 'error should have been thrown when adding group to stage');
+        assert.equal(errorThrown, true, 'error should have been thrown when adding group to stage');
         group.remove();
 
         // ===================================
@@ -81,7 +76,7 @@ Test.Modules.CONTAINER = {
         } catch(err) {
             errorThrown = true;
         }
-        test(errorThrown, 'error should have been thrown when adding shape to stage');
+        assert.equal(errorThrown, true, 'error should have been thrown when adding shape to stage');
         circle.remove();
 
         // ===================================
@@ -91,7 +86,7 @@ Test.Modules.CONTAINER = {
         } catch(err) {
             errorThrown = true;
         }
-        test(errorThrown, 'error should have been thrown when adding stage to layer');
+        assert.equal(errorThrown, true, 'error should have been thrown when adding stage to layer');
         stage.remove();
 
         // ===================================
@@ -101,7 +96,7 @@ Test.Modules.CONTAINER = {
         } catch(err) {
             errorThrown = true;
         }
-        test(errorThrown, 'error should have been thrown when adding layer to layer');
+        assert.equal(errorThrown, true, 'error should have been thrown when adding layer to layer');
         layer.remove();
 
         // ===================================
@@ -111,7 +106,7 @@ Test.Modules.CONTAINER = {
         } catch(err) {
             errorThrown = true;
         }
-        test(errorThrown, 'error should have been thrown when adding stage to group');
+        assert.equal(errorThrown, true, 'error should have been thrown when adding stage to group');
         stage.remove();
 
         // ===================================
@@ -121,16 +116,14 @@ Test.Modules.CONTAINER = {
         } catch(err) {
             errorThrown = true;
         }
-        test(errorThrown, 'error should have been thrown when adding layer to group');
+        assert.equal(errorThrown, true, 'error should have been thrown when adding layer to group');
         layer.remove();
 
-    },
-    'add layer then group then shape': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('add layer then group then shape', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
         var circle = new Kinetic.Circle({
@@ -148,13 +141,11 @@ Test.Modules.CONTAINER = {
         layer.add(group);
         group.add(circle);
         layer.draw();
-    },
-    'add shape then stage then layer': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('add shape then stage then layer', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
         var circle = new Kinetic.Circle({
@@ -170,14 +161,11 @@ Test.Modules.CONTAINER = {
         group.add(circle);
         stage.add(layer);
         layer.add(group);
-        layer.draw();
-    },
-    'select shape by id and name': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('select shape by id and name', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer({
             id: 'myLayer'
         });
@@ -208,21 +196,19 @@ Test.Modules.CONTAINER = {
 
         var node;
         node = stage.get('#myCircle')[0];
-        test(node.className === 'Circle', 'className should be Circle');
+        assert.equal(node.className, 'Circle', 'className should be Circle');
         node = layer.get('.myRect')[0];
-        test(node.className === 'Rect', 'className should be rect');
+        assert.equal(node.className, 'Rect', 'className should be rect');
         node = layer.get('#myLayer')[0];
-        test(node === undefined, 'node should be undefined');
+        assert.equal(node, undefined, 'node should be undefined');
         node = stage.get('#myLayer')[0];
-        test(node.nodeType === 'Layer', 'node type should be Layer');
+        assert.equal(node.nodeType, 'Layer', 'node type should be Layer');
 
-    },
-    'select shapes with multiple selectors': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('select shapes with multiple selectors', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer({
             id: 'myLayer'
         });
@@ -251,23 +237,21 @@ Test.Modules.CONTAINER = {
         layer.add(rect);
         stage.add(layer);
 
-        test(layer.get('#myCircle, .myRect').length === 2, 'should be 2 items in the array');
-        test(layer.get('#myCircle, .myRect')[0]._id === circle._id, 'circle id is wrong');
-        test(layer.get('#myCircle, .myRect')[1]._id === rect._id, 'rect id is wrong');
+        assert.equal(layer.get('#myCircle, .myRect').length, 2, 'should be 2 items in the array');
+        assert.equal(layer.get('#myCircle, .myRect')[0]._id, circle._id, 'circle id is wrong');
+        assert.equal(layer.get('#myCircle, .myRect')[1]._id, rect._id, 'rect id is wrong');
 
-        test(layer.get('#myCircle, Circle, .myRect, Rect').length === 4, 'should be 4 items in the array');
-        test(layer.get('#myCircle, Circle, .myRect, Rect')[0]._id === circle._id, 'circle id is wrong');
-        test(layer.get('#myCircle, Circle, .myRect, Rect')[1]._id === circle._id, 'circle id is wrong');
-        test(layer.get('#myCircle, Circle, .myRect, Rect')[2]._id === rect._id, 'rect id is wrong');
-        test(layer.get('#myCircle, Circle, .myRect, Rect')[3]._id === rect._id, 'rect id is wrong');
+        assert.equal(layer.get('#myCircle, Circle, .myRect, Rect').length, 4, 'should be 4 items in the array');
+        assert.equal(layer.get('#myCircle, Circle, .myRect, Rect')[0]._id, circle._id, 'circle id is wrong');
+        assert.equal(layer.get('#myCircle, Circle, .myRect, Rect')[1]._id, circle._id, 'circle id is wrong');
+        assert.equal(layer.get('#myCircle, Circle, .myRect, Rect')[2]._id, rect._id, 'rect id is wrong');
+        assert.equal(layer.get('#myCircle, Circle, .myRect, Rect')[3]._id, rect._id, 'rect id is wrong');
 
-    },
-    'set x on an array of nodes': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('set x on an array of nodes', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
@@ -296,7 +280,7 @@ Test.Modules.CONTAINER = {
 
         var shapes = layer.get('.myShape');
 
-        test(shapes.length === 2, 'shapes array should have 2 elements');
+        assert.equal(shapes.length, 2, 'shapes array should have 2 elements');
 
         shapes.each(function(node) {
             node.setX(200);
@@ -305,15 +289,13 @@ Test.Modules.CONTAINER = {
         layer.draw();
 
         shapes.each(function(node) {
-            test(node.getX() === 200, 'shape x should be 200');
+            assert.equal(node.getX(), 200, 'shape x should be 200');
         });
-    },
-    'set fill on array by Shape-selector': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('set fill on array by Shape-selector', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
@@ -342,7 +324,7 @@ Test.Modules.CONTAINER = {
 
         var shapes = layer.get('Shape');
 
-        test(shapes.length === 2, 'shapes array should have 2 elements');
+        assert.equal(shapes.length, 2, 'shapes array should have 2 elements');
 
         shapes.each(function(node) {
             node.setFill('gray');
@@ -351,15 +333,13 @@ Test.Modules.CONTAINER = {
         layer.draw();
 
         shapes.each(function(node) {
-            test(node.getFill() === 'gray', 'shape x should be 200');
+            assert.equal(node.getFill(), 'gray', 'shape x should be 200');
         });
-    },
-    'add listener to an array of nodes': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('add listener to an array of nodes', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
@@ -388,22 +368,20 @@ Test.Modules.CONTAINER = {
 
         var shapes = layer.get('.myShape');
 
-        test(shapes.length === 2, 'shapes array should have 2 elements');
+        assert.equal(shapes.length, 2, 'shapes array should have 2 elements');
         var a = 0;
         shapes.on('mouseover', function() {
             a++;
         });
         circle.fire('mouseover');
-        test(a === 1, 'listener should have fired for circle');
+        assert.equal(a, 1, 'listener should have fired for circle');
         rect.fire('mouseover');
-        test(a === 2, 'listener should have fired for rect');
-    },
-    'test ids and names hashes': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+        assert.equal(a, 2, 'listener should have fired for rect');
+    });
+
+    // ======================================================
+    test('test ids and names hashes', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
@@ -431,32 +409,28 @@ Test.Modules.CONTAINER = {
         stage.add(layer);
 
 
-        test(Kinetic.ids['myCircle3'].getId() === 'myCircle3', 'circle id not in ids hash');
-        test(Kinetic.names['myRect3'][0].getName() === 'myRect3', 'rect name not in names hash');
+        assert.equal(Kinetic.ids['myCircle3'].getId(), 'myCircle3', 'circle id not in ids hash');
+        assert.equal(Kinetic.names['myRect3'][0].getName(), 'myRect3', 'rect name not in names hash');
 
         circle.setId('newCircleId');
-        test(Kinetic.ids['newCircleId'] !== undefined, 'circle not in ids hash');
-        test(Kinetic.ids['myCircle3'] === undefined, 'old circle id key is still in ids hash');
+        assert.notEqual(Kinetic.ids['newCircleId'], undefined, 'circle not in ids hash');
+        assert.equal(Kinetic.ids['myCircle3'], undefined, 'old circle id key is still in ids hash');
 
         rect.setName('newRectName');
-        test(Kinetic.names['newRectName'][0] !== undefined, 'new rect name not in names hash');
-        test(Kinetic.names['myRect3'] === undefined, 'old rect name is still in names hash');
-    },
-    'add layer': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+        assert.notEqual(Kinetic.names['newRectName'][0], undefined, 'new rect name not in names hash');
+        assert.equal(Kinetic.names['myRect3'], undefined, 'old rect name is still in names hash');
+    });
+
+    // ======================================================
+    test('add layer', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         stage.add(layer);
-    },
-    'remove all children from layer': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('remove all children from layer', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
         var circle1 = new Kinetic.Circle({
@@ -482,21 +456,19 @@ Test.Modules.CONTAINER = {
         layer.add(group);
         stage.add(layer);
 
-        test(layer.children.length === 1, 'layer should have 1 children');
-        test(group.children.length === 2, 'group should have 2 children');
+        assert.equal(layer.children.length, 1, 'layer should have 1 children');
+        assert.equal(group.children.length, 2, 'group should have 2 children');
 
         layer.removeChildren();
         layer.draw();
 
-        test(layer.children.length === 0, 'layer should have 0 children');
-        test(group.children.length === 0, 'group should have 0 children');
-    },
-    'destroy all children from layer': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+        assert.equal(layer.children.length, 0, 'layer should have 0 children');
+        assert.equal(group.children.length, 0, 'group should have 0 children');
+    });
+
+    // ======================================================
+    test('destroy all children from layer', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer({
             name: 'layerName',
             id: 'layerId'
@@ -527,25 +499,23 @@ Test.Modules.CONTAINER = {
         layer.add(group);
         stage.add(layer);
 
-        test(layer.children.length === 1, 'layer should have 1 children');
-        test(group.children.length === 2, 'group should have 2 children');
-        test(Kinetic.names.circleName.length > 0, 'circleName should be in names hash');
-        test(Kinetic.ids.circleId.getId() === 'circleId', 'layerId should be in ids hash');
+        assert.equal(layer.children.length, 1, 'layer should have 1 children');
+        assert.equal(group.children.length, 2, 'group should have 2 children');
+        assert(Kinetic.names.circleName.length > 0, 'circleName should be in names hash');
+        assert.equal(Kinetic.ids.circleId.getId(), 'circleId', 'layerId should be in ids hash');
 
         layer.destroyChildren();
         layer.draw();
 
-        test(layer.children.length === 0, 'layer should have 0 children');
-        test(group.children.length === 0, 'group should have 0 children');
-        test(Kinetic.names.circleName === undefined, 'circleName should not be in names hash');
-        test(Kinetic.ids.circleId === undefined, 'layerId should not be in ids hash');
-    },
-    'add group': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+        assert.equal(layer.children.length, 0, 'layer should have 0 children');
+        assert.equal(group.children.length, 0, 'group should have 0 children');
+        assert.equal(Kinetic.names.circleName, undefined, 'circleName should not be in names hash');
+        assert.equal(Kinetic.ids.circleId, undefined, 'layerId should not be in ids hash');
+    });
+
+    // ======================================================
+    test('add group', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var group = new Kinetic.Group();
 
@@ -561,13 +531,11 @@ Test.Modules.CONTAINER = {
         group.add(circle);
         layer.add(group);
         stage.add(layer);
-    },
-    'create two groups, move first group': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('create two groups, move first group', function() {
+        var stage = addStage();
         var greenLayer = new Kinetic.Layer();
         var blueLayer = new Kinetic.Layer();
         var greenGroup = new Kinetic.Group();
@@ -614,13 +582,11 @@ Test.Modules.CONTAINER = {
         blueLayer.draw();
         blueGroup2.setPosition(100, 0);
         blueLayer.draw();
-    },
-    'node type selector': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('node type selector', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var fooLayer = new Kinetic.Layer();
         var group = new Kinetic.Group();
@@ -647,31 +613,29 @@ Test.Modules.CONTAINER = {
         stage.add(layer);
         stage.add(fooLayer);
 
-        test(stage.get('Shape').length === 2, 'stage should have 2 shapes');
-        test(layer.get('Shape').length === 2, 'layer should have 2 shapes');
-        test(group.get('Shape').length === 1, 'layer should have 2 shapes');
+        assert.equal(stage.get('Shape').length, 2, 'stage should have 2 shapes');
+        assert.equal(layer.get('Shape').length, 2, 'layer should have 2 shapes');
+        assert.equal(group.get('Shape').length, 1, 'layer should have 2 shapes');
 
-        test(stage.get('Layer').length === 2, 'stage should have 2 layers');
-        test(stage.get('Group').length === 1, 'stage should have 1 group');
+        assert.equal(stage.get('Layer').length, 2, 'stage should have 2 layers');
+        assert.equal(stage.get('Group').length, 1, 'stage should have 1 group');
 
-        test(layer.get('Group').length === 1, 'layer should have 1 group');
-        test(layer.get('Shape').length === 2, 'layer should have 2 shapes');
-        test(layer.get('Layer').length === 0, 'layer should have 0 layers');
+        assert.equal(layer.get('Group').length, 1, 'layer should have 1 group');
+        assert.equal(layer.get('Shape').length, 2, 'layer should have 2 shapes');
+        assert.equal(layer.get('Layer').length, 0, 'layer should have 0 layers');
 
-        test(fooLayer.get('Group').length === 0, 'layer should have 0 groups');
-        test(fooLayer.get('Shape').length === 0, 'layer should have 0 shapes');
+        assert.equal(fooLayer.get('Group').length, 0, 'layer should have 0 groups');
+        assert.equal(fooLayer.get('Shape').length, 0, 'layer should have 0 shapes');
 
-        test(group.get('Shape').length === 1, 'group should have 1 shape');
-        test(group.get('Layer').length === 0, 'group should have 0 layers');
-        test(group.get('Group').length === 0, 'group should have 0 groups');
+        assert.equal(group.get('Shape').length, 1, 'group should have 1 shape');
+        assert.equal(group.get('Layer').length, 0, 'group should have 0 layers');
+        assert.equal(group.get('Group').length, 0, 'group should have 0 groups');
 
-    },
-    'node and shape type selector': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('node and shape type selector', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var layer2 = new Kinetic.Layer();
         var fooLayer = new Kinetic.Layer();
@@ -763,50 +727,46 @@ Test.Modules.CONTAINER = {
         stage.add(layer2);
         stage.add(fooLayer);
 
-        test(stage.get('Shape').length === 8, 'stage should have 5 shapes');
-        test(stage.get('Layer').length === 3, 'stage should have 2 layers');
-        test(stage.get('Group').length === 1, 'stage should have 1 group');
-        test(stage.get('Rect').length === 3, 'stage should have 3 rects');
-        test(stage.get('Circle').length === 2, 'stage should have 2 circles');
-        test(stage.get('RegularPolygon').length === 1, 'stage should have 1 regular polygon');
-        test(stage.get('TextPath').length === 1, 'stage should have 1 text path');
-        test(stage.get('Path').length === 1, 'stage should have 1 path');
+        assert.equal(stage.get('Shape').length, 8, 'stage should have 5 shapes');
+        assert.equal(stage.get('Layer').length, 3, 'stage should have 2 layers');
+        assert.equal(stage.get('Group').length, 1, 'stage should have 1 group');
+        assert.equal(stage.get('Rect').length, 3, 'stage should have 3 rects');
+        assert.equal(stage.get('Circle').length, 2, 'stage should have 2 circles');
+        assert.equal(stage.get('RegularPolygon').length, 1, 'stage should have 1 regular polygon');
+        assert.equal(stage.get('TextPath').length, 1, 'stage should have 1 text path');
+        assert.equal(stage.get('Path').length, 1, 'stage should have 1 path');
 
-        test(layer.get('Shape').length === 5, 'layer should have 5 shapes');
-        test(layer.get('Layer').length === 0, 'layer should have 0 layers');
-        test(layer.get('Group').length === 1, 'layer should have 1 group');
-        test(layer.get('Rect').length === 3, 'layer should have 3 rects');
-        test(layer.get('Circle').length === 2, 'layer should have 2 circles');
-        test(layer.get('RegularPolygon').length === 0, 'layer should have 0 regular polygon');
-        test(layer.get('TextPath').length === 0, 'layer should have 0 text path');
-        test(layer.get('Path').length === 0, 'layer should have 0 path');
+        assert.equal(layer.get('Shape').length, 5, 'layer should have 5 shapes');
+        assert.equal(layer.get('Layer').length, 0, 'layer should have 0 layers');
+        assert.equal(layer.get('Group').length, 1, 'layer should have 1 group');
+        assert.equal(layer.get('Rect').length, 3, 'layer should have 3 rects');
+        assert.equal(layer.get('Circle').length, 2, 'layer should have 2 circles');
+        assert.equal(layer.get('RegularPolygon').length, 0, 'layer should have 0 regular polygon');
+        assert.equal(layer.get('TextPath').length, 0, 'layer should have 0 text path');
+        assert.equal(layer.get('Path').length, 0, 'layer should have 0 path');
 
-        test(layer2.get('Shape').length === 3, 'layer2 should have 3 shapes');
-        test(layer2.get('Layer').length === 0, 'layer2 should have 0 layers');
-        test(layer2.get('Group').length === 0, 'layer2 should have 0 group');
-        test(layer2.get('RegularPolygon').length === 1, 'layer2 should have 1 regular polygon');
-        test(layer2.get('TextPath').length === 1, 'layer2 should have 1 text path');
-        test(layer2.get('Path').length === 1, 'layer2 should have 1 path');
+        assert.equal(layer2.get('Shape').length, 3, 'layer2 should have 3 shapes');
+        assert.equal(layer2.get('Layer').length, 0, 'layer2 should have 0 layers');
+        assert.equal(layer2.get('Group').length, 0, 'layer2 should have 0 group');
+        assert.equal(layer2.get('RegularPolygon').length, 1, 'layer2 should have 1 regular polygon');
+        assert.equal(layer2.get('TextPath').length, 1, 'layer2 should have 1 text path');
+        assert.equal(layer2.get('Path').length, 1, 'layer2 should have 1 path');
 
-        test(fooLayer.get('Shape').length === 0, 'layer should have 0 shapes');
-        test(fooLayer.get('Group').length === 0, 'layer should have 0 groups');
-        test(fooLayer.get('Rect').length === 0, 'layer should have 0 rects');
-        test(fooLayer.get('Circle').length === 0, 'layer should have 0 circles');
+        assert.equal(fooLayer.get('Shape').length, 0, 'layer should have 0 shapes');
+        assert.equal(fooLayer.get('Group').length, 0, 'layer should have 0 groups');
+        assert.equal(fooLayer.get('Rect').length, 0, 'layer should have 0 rects');
+        assert.equal(fooLayer.get('Circle').length, 0, 'layer should have 0 circles');
 
-        test(group.get('Shape').length === 2, 'group should have 2 shape');
-        test(group.get('Layer').length === 0, 'group should have 0 layers');
-        test(group.get('Group').length === 0, 'group should have 0 groups');
-        test(group.get('Rect').length === 1, 'group should have 1 rects');
-        test(group.get('Circle').length === 1, 'gropu should have 1 circles');
-    },
-    'test get() selector by adding shape, then group, then layer': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200,
-            name: 'stageName',
-            id: 'stageId'
-        });
+        assert.equal(group.get('Shape').length, 2, 'group should have 2 shape');
+        assert.equal(group.get('Layer').length, 0, 'group should have 0 layers');
+        assert.equal(group.get('Group').length, 0, 'group should have 0 groups');
+        assert.equal(group.get('Rect').length, 1, 'group should have 1 rects');
+        assert.equal(group.get('Circle').length, 1, 'gropu should have 1 circles');
+    });
+
+    // ======================================================
+    test('test get() selector by adding shape, then group, then layer', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer({
             name: 'layerName',
             id: 'layerId'
@@ -831,29 +791,25 @@ Test.Modules.CONTAINER = {
         layer.add(group);
         stage.add(layer);
 
-        test(stage.get('.rectName')[0].attrs.id === 'rectId', 'problem with shape name selector');
-        test(stage.get('#rectId')[0].attrs.id === 'rectId', 'problem with shape id selector');
-        test(layer.get('.rectName')[0].attrs.id === 'rectId', 'problem with shape name selector');
-        test(layer.get('#rectId')[0].attrs.id === 'rectId', 'problem with shape id selector');
-        test(group.get('.rectName')[0].attrs.id === 'rectId', 'problem with shape name selector');
-        test(group.get('#rectId')[0].attrs.id === 'rectId', 'problem with shape id selector');
+        assert.equal(stage.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(stage.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(layer.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(layer.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(group.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(group.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
 
-        test(stage.get('.groupName')[0].attrs.id === 'groupId', 'problem with group name selector');
-        test(stage.get('#groupId')[0].attrs.id === 'groupId', 'problem with group id selector');
-        test(layer.get('.groupName')[0].attrs.id === 'groupId', 'problem with group name selector');
-        test(layer.get('#groupId')[0].attrs.id === 'groupId', 'problem with group id selector');
+        assert.equal(stage.get('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(stage.get('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
+        assert.equal(layer.get('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(layer.get('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
 
-        test(stage.get('.layerName')[0].attrs.id === 'layerId', 'problem with layer name selector');
-        test(stage.get('#layerId')[0].attrs.id === 'layerId', 'problem with layer id selector');
-    },
-    'test get() selector by adding group, then shape, then layer': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200,
-            name: 'stageName',
-            id: 'stageId'
-        });
+        assert.equal(stage.get('.layerName')[0].attrs.id, 'layerId', 'problem with layer name selector');
+        assert.equal(stage.get('#layerId')[0].attrs.id, 'layerId', 'problem with layer id selector');
+    });
+
+    // ======================================================
+    test('test get() selector by adding group, then shape, then layer', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer({
             name: 'layerName',
             id: 'layerId'
@@ -878,29 +834,25 @@ Test.Modules.CONTAINER = {
         group.add(rect);
         stage.add(layer);
 
-        test(stage.get('.rectName')[0].attrs.id === 'rectId', 'problem with shape name selector');
-        test(stage.get('#rectId')[0].attrs.id === 'rectId', 'problem with shape id selector');
-        test(layer.get('.rectName')[0].attrs.id === 'rectId', 'problem with shape name selector');
-        test(layer.get('#rectId')[0].attrs.id === 'rectId', 'problem with shape id selector');
-        test(group.get('.rectName')[0].attrs.id === 'rectId', 'problem with shape name selector');
-        test(group.get('#rectId')[0].attrs.id === 'rectId', 'problem with shape id selector');
+        assert.equal(stage.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(stage.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(layer.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(layer.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(group.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(group.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
 
-        test(stage.get('.groupName')[0].attrs.id === 'groupId', 'problem with group name selector');
-        test(stage.get('#groupId')[0].attrs.id === 'groupId', 'problem with group id selector');
-        test(layer.get('.groupName')[0].attrs.id === 'groupId', 'problem with group name selector');
-        test(layer.get('#groupId')[0].attrs.id === 'groupId', 'problem with group id selector');
+        assert.equal(stage.get('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(stage.get('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
+        assert.equal(layer.get('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(layer.get('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
 
-        test(stage.get('.layerName')[0].attrs.id === 'layerId', 'problem with layer name selector');
-        test(stage.get('#layerId')[0].attrs.id === 'layerId', 'problem with layer id selector');
-    },
-    'test get() selector by adding group, then layer, then shape': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200,
-            name: 'stageName',
-            id: 'stageId'
-        });
+        assert.equal(stage.get('.layerName')[0].attrs.id, 'layerId', 'problem with layer name selector');
+        assert.equal(stage.get('#layerId')[0].attrs.id, 'layerId', 'problem with layer id selector');
+    });
+
+    // ======================================================
+    test('test get() selector by adding group, then layer, then shape', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer({
             name: 'layerName',
             id: 'layerId'
@@ -925,29 +877,25 @@ Test.Modules.CONTAINER = {
         stage.add(layer);
         group.add(rect);
 
-        test(stage.get('.rectName')[0].attrs.id === 'rectId', 'problem with shape name selector');
-        test(stage.get('#rectId')[0].attrs.id === 'rectId', 'problem with shape id selector');
-        test(layer.get('.rectName')[0].attrs.id === 'rectId', 'problem with shape name selector');
-        test(layer.get('#rectId')[0].attrs.id === 'rectId', 'problem with shape id selector');
-        test(group.get('.rectName')[0].attrs.id === 'rectId', 'problem with shape name selector');
-        test(group.get('#rectId')[0].attrs.id === 'rectId', 'problem with shape id selector');
+        assert.equal(stage.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(stage.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(layer.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(layer.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(group.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(group.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
 
-        test(stage.get('.groupName')[0].attrs.id === 'groupId', 'problem with group name selector');
-        test(stage.get('#groupId')[0].attrs.id === 'groupId', 'problem with group id selector');
-        test(layer.get('.groupName')[0].attrs.id === 'groupId', 'problem with group name selector');
-        test(layer.get('#groupId')[0].attrs.id === 'groupId', 'problem with group id selector');
+        assert.equal(stage.get('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(stage.get('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
+        assert.equal(layer.get('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(layer.get('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
 
-        test(stage.get('.layerName')[0].attrs.id === 'layerId', 'problem with layer name selector');
-        test(stage.get('#layerId')[0].attrs.id === 'layerId', 'problem with layer id selector');
-    },
-    'test get() selector by adding layer, then group, then shape': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200,
-            name: 'stageName',
-            id: 'stageId'
-        });
+        assert.equal(stage.get('.layerName')[0].attrs.id, 'layerId', 'problem with layer name selector');
+        assert.equal(stage.get('#layerId')[0].attrs.id, 'layerId', 'problem with layer id selector');
+    });
+
+    // ======================================================
+    test('test get() selector by adding layer, then group, then shape', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer({
             name: 'layerName',
             id: 'layerId'
@@ -972,29 +920,27 @@ Test.Modules.CONTAINER = {
         layer.add(group);
         group.add(rect);
 
-        test(stage.get('.rectName')[0].attrs.id === 'rectId', 'problem with shape name selector');
-        test(stage.get('#rectId')[0].attrs.id === 'rectId', 'problem with shape id selector');
-        test(layer.get('.rectName')[0].attrs.id === 'rectId', 'problem with shape name selector');
-        test(layer.get('#rectId')[0].attrs.id === 'rectId', 'problem with shape id selector');
-        test(group.get('.rectName')[0].attrs.id === 'rectId', 'problem with shape name selector');
-        test(group.get('#rectId')[0].attrs.id === 'rectId', 'problem with shape id selector');
+        assert.equal(stage.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(stage.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(layer.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(layer.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(group.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(group.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
 
-        test(stage.get('.groupName')[0].attrs.id === 'groupId', 'problem with group name selector');
-        test(stage.get('#groupId')[0].attrs.id === 'groupId', 'problem with group id selector');
-        test(layer.get('.groupName')[0].attrs.id === 'groupId', 'problem with group name selector');
-        test(layer.get('#groupId')[0].attrs.id === 'groupId', 'problem with group id selector');
+        assert.equal(stage.get('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(stage.get('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
+        assert.equal(layer.get('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(layer.get('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
 
-        test(stage.get('.layerName')[0].attrs.id === 'layerId', 'problem with layer name selector');
-        test(stage.get('#layerId')[0].attrs.id === 'layerId', 'problem with layer id selector');
+        assert.equal(stage.get('.layerName')[0].attrs.id, 'layerId', 'problem with layer name selector');
+        assert.equal(stage.get('#layerId')[0].attrs.id, 'layerId', 'problem with layer id selector');
 
         layer.draw();
-    },
-    'add layer then shape': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('add layer then shape', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
@@ -1009,13 +955,11 @@ Test.Modules.CONTAINER = {
         stage.add(layer);
         layer.add(circle);
         layer.draw();
-    },
-    'move blue layer on top of green layer with setZIndex': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('move blue layer on top of green layer with setZIndex', function() {
+        var stage = addStage();
         var blueLayer = new Kinetic.Layer();
         var greenLayer = new Kinetic.Layer();
 
@@ -1047,15 +991,13 @@ Test.Modules.CONTAINER = {
 
         //console.log(greenLayer.getZIndex());
 
-        test(greenLayer.getZIndex() === 0, 'green layer should have z index of 0');
-        test(blueLayer.getZIndex() === 1, 'blue layer should have z index of 1');
-    },
-    'move blue layer on top of green layer with moveToTop': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+        assert.equal(greenLayer.getZIndex(), 0, 'green layer should have z index of 0');
+        assert.equal(blueLayer.getZIndex(), 1, 'blue layer should have z index of 1');
+    });
+
+    // ======================================================
+    test('move blue layer on top of green layer with moveToTop', function() {
+        var stage = addStage();
         var blueLayer = new Kinetic.Layer();
         var greenLayer = new Kinetic.Layer();
 
@@ -1085,13 +1027,11 @@ Test.Modules.CONTAINER = {
 
         blueLayer.moveToTop();
 
-    },
-    'move green layer below blue layer with moveToBottom': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('move green layer below blue layer with moveToBottom', function() {
+        var stage = addStage();
         var blueLayer = new Kinetic.Layer();
         var greenLayer = new Kinetic.Layer();
 
@@ -1121,13 +1061,11 @@ Test.Modules.CONTAINER = {
 
         greenLayer.moveToBottom();
 
-    },
-    'move green layer below blue layer with moveDown': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('move green layer below blue layer with moveDown', function() {
+        var stage = addStage();
         var blueLayer = new Kinetic.Layer();
         var greenLayer = new Kinetic.Layer();
 
@@ -1156,13 +1094,11 @@ Test.Modules.CONTAINER = {
         stage.add(greenLayer);
         greenLayer.moveDown();
 
-    },
-    'move blue layer above green layer with moveUp': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('move blue layer above green layer with moveUp', function() {
+        var stage = addStage();
         var blueLayer = new Kinetic.Layer();
         var greenLayer = new Kinetic.Layer();
 
@@ -1191,13 +1127,11 @@ Test.Modules.CONTAINER = {
         stage.add(greenLayer);
         blueLayer.moveUp();
 
-    },
-    'move blue circle on top of green circle with moveToTop': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('move blue circle on top of green circle with moveToTop', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var bluecircle = new Kinetic.Circle({
@@ -1222,22 +1156,20 @@ Test.Modules.CONTAINER = {
         layer.add(greencircle);
         stage.add(layer);
 
-        test(bluecircle.getZIndex() === 0, 'blue circle should have zindex 0 before relayering');
-        test(greencircle.getZIndex() === 1, 'green circle should have zindex 1 before relayering');
+        assert.equal(bluecircle.getZIndex(), 0, 'blue circle should have zindex 0 before relayering');
+        assert.equal(greencircle.getZIndex(), 1, 'green circle should have zindex 1 before relayering');
 
         bluecircle.moveToTop();
 
-        test(bluecircle.getZIndex() === 1, 'blue circle should have zindex 1 after relayering');
-        test(greencircle.getZIndex() === 0, 'green circle should have zindex 0 after relayering');
+        assert.equal(bluecircle.getZIndex(), 1, 'blue circle should have zindex 1 after relayering');
+        assert.equal(greencircle.getZIndex(), 0, 'green circle should have zindex 0 after relayering');
 
         layer.draw();
-    },
-    'move green circle below blue circle with moveDown': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('move green circle below blue circle with moveDown', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var bluecircle = new Kinetic.Circle({
@@ -1262,22 +1194,20 @@ Test.Modules.CONTAINER = {
         layer.add(greencircle);
         stage.add(layer);
 
-        test(bluecircle.getZIndex() === 0, 'blue circle should have zindex 0 before relayering');
-        test(greencircle.getZIndex() === 1, 'green circle should have zindex 1 before relayering');
+        assert.equal(bluecircle.getZIndex(), 0, 'blue circle should have zindex 0 before relayering');
+        assert.equal(greencircle.getZIndex(), 1, 'green circle should have zindex 1 before relayering');
 
         greencircle.moveDown();
 
-        test(bluecircle.getZIndex() === 1, 'blue circle should have zindex 1 after relayering');
-        test(greencircle.getZIndex() === 0, 'green circle should have zindex 0 after relayering');
+        assert.equal(bluecircle.getZIndex(), 1, 'blue circle should have zindex 1 after relayering');
+        assert.equal(greencircle.getZIndex(), 0, 'green circle should have zindex 0 after relayering');
 
         layer.draw();
-    },
-    'layer layer when only one layer': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('layer layer when only one layer', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
 
         var bluecircle = new Kinetic.Circle({
@@ -1293,27 +1223,25 @@ Test.Modules.CONTAINER = {
         stage.add(layer);
 
 
-        test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+        assert.equal(layer.getZIndex(), 0, 'layer should have zindex of 0');
 
         layer.moveDown();
-        test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+        assert.equal(layer.getZIndex(), 0, 'layer should have zindex of 0');
 
         layer.moveToBottom();
-        test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+        assert.equal(layer.getZIndex(), 0, 'layer should have zindex of 0');
 
         layer.moveUp();
-        test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+        assert.equal(layer.getZIndex(), 0, 'layer should have zindex of 0');
 
         layer.moveToTop();
-        test(layer.getZIndex() === 0, 'layer should have zindex of 0');
+        assert.equal(layer.getZIndex(), 0, 'layer should have zindex of 0');
 
-    },
-    'move blue group on top of green group with moveToTop': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('move blue group on top of green group with moveToTop', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var greenGroup = new Kinetic.Group();
         var blueGroup = new Kinetic.Group();
@@ -1343,22 +1271,20 @@ Test.Modules.CONTAINER = {
         layer.add(greenGroup);
         stage.add(layer);
 
-        test(blueGroup.getZIndex() === 0, 'blue group should have zindex 0 before relayering');
-        test(greenGroup.getZIndex() === 1, 'green group should have zindex 1 before relayering');
+        assert.equal(blueGroup.getZIndex(), 0, 'blue group should have zindex 0 before relayering');
+        assert.equal(greenGroup.getZIndex(), 1, 'green group should have zindex 1 before relayering');
 
         blueGroup.moveToTop();
 
-        test(blueGroup.getZIndex() === 1, 'blue group should have zindex 1 after relayering');
-        test(greenGroup.getZIndex() === 0, 'green group should have zindex 0 after relayering');
+        assert.equal(blueGroup.getZIndex(), 1, 'blue group should have zindex 1 after relayering');
+        assert.equal(greenGroup.getZIndex(), 0, 'green group should have zindex 0 after relayering');
 
         layer.draw();
-    },
-    'move blue group on top of green group with moveUp': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    });
+
+    // ======================================================
+    test('move blue group on top of green group with moveUp', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var greenGroup = new Kinetic.Group();
         var blueGroup = new Kinetic.Group();
@@ -1388,14 +1314,14 @@ Test.Modules.CONTAINER = {
         layer.add(greenGroup);
         stage.add(layer);
 
-        test(blueGroup.getZIndex() === 0, 'blue group should have zindex 0 before relayering');
-        test(greenGroup.getZIndex() === 1, 'green group should have zindex 1 before relayering');
+        assert.equal(blueGroup.getZIndex(), 0, 'blue group should have zindex 0 before relayering');
+        assert.equal(greenGroup.getZIndex(), 1, 'green group should have zindex 1 before relayering');
 
         blueGroup.moveUp();
 
-        test(blueGroup.getZIndex() === 1, 'blue group should have zindex 1 after relayering');
-        test(greenGroup.getZIndex() === 0, 'green group should have zindex 0 after relayering');
+        assert.equal(blueGroup.getZIndex(), 1, 'blue group should have zindex 1 after relayering');
+        assert.equal(greenGroup.getZIndex(), 0, 'green group should have zindex 0 after relayering');
 
         layer.draw();
-    }
-};
+    });
+});

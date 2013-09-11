@@ -1,15 +1,7 @@
-Test.Modules.ANIMATION = {
-    /*
-     * WARNING: make sure that this is the first unit test that uses
-     * animation because it's accessing the global animation object which could
-     * be modified by other unit tests
-     */
-    'test start and stop': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+suite('Animation', function() {
+    // ======================================================
+    test('test start and stop', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
             x: 200,
@@ -32,34 +24,33 @@ Test.Modules.ANIMATION = {
         var anim = new Kinetic.Animation(function(frame) {
             rect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
         }, layer);
-        var a = Kinetic.Animation;
+        var a = Kinetic.Animation.animations;
+        var startLen = a.length;
 
-        test(a.animations.length === 0, '1should be no animations running');
-
-        anim.start();
-        test(a.animations.length === 1, '2should be 1 animation running');
-
-        anim.stop();
-        test(a.animations.length === 0, '3should be no animations running');
+        assert.equal(a.length, startLen, '1should be no animations running');
 
         anim.start();
-        test(a.animations.length === 1, '4should be 1 animation running');
+        assert.equal(a.length, startLen + 1, '2should be 1 animation running');
+
+        anim.stop();
+        assert.equal(a.length, startLen, '3should be no animations running');
 
         anim.start();
-        test(a.animations.length === 1, '5should be 1 animation runningg');
+        assert.equal(a.length, startLen + 1, '4should be 1 animation running');
+
+        anim.start();
+        assert.equal(a.length, startLen + 1, '5should be 1 animation runningg');
 
         anim.stop();
-        test(a.animations.length === 0, '6should be no animations running');
+        assert.equal(a.length, startLen, '6should be no animations running');
 
         anim.stop();
-        test(a.animations.length === 0, '7should be no animations running');
-    },
-    'layer batch draw': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+        assert.equal(a.length, startLen, '7should be no animations running');
+    });
+
+    // ======================================================
+    test('layer batch draw', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
             x: 200,
@@ -85,24 +76,18 @@ Test.Modules.ANIMATION = {
         layer.draw();
         layer.draw();
 
-        test(draws === 3, 'draw count should be 3');
+        assert.equal(draws, 3, 'draw count should be 3');
 
         layer.batchDraw();
         layer.batchDraw();
         layer.batchDraw();
 
-        test(draws !== 6, 'should not be 6 draws');
+        assert.notEqual(draws, 6, 'should not be 6 draws');
+    });
 
-        setTimeout(function() {
-            layer.batchDraw();
-        }, 2000);
-    },
-    'stage batch draw': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
+    // ======================================================
+    test('stage batch draw', function() {
+        var stage = addStage();
         var layer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
             x: 200,
@@ -128,16 +113,13 @@ Test.Modules.ANIMATION = {
         stage.draw();
         stage.draw();
 
-        test(draws === 3, 'draw count should be 3');
+        assert.equal(draws, 3, 'draw count should be 3');
 
         stage.batchDraw();
         stage.batchDraw();
         stage.batchDraw();
 
-        test(draws !== 6, 'should not be 6 draws');
+        assert.notEqual(draws, 6, 'should not be 6 draws');
 
-        setTimeout(function() {
-            stage.batchDraw();
-        }, 2000);
-    }
-};
+    });
+});
