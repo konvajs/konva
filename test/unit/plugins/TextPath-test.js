@@ -29,10 +29,6 @@ suite('TextPath', function() {
         stage.add(layer);
         
         assert.equal(textpath.getClassName(), 'TextPath', 'getClassName should be TextPath');
-
-        var trace = layer.getContext().getTrace();
-        //console.log(trace);
-        assert.equal(trace, 'translate(225.232,113.905);rotate(0.45);fillStyle=orange;fillText(v,0,0);lineWidth=1;strokeStyle=black;strokeText(v,0,0);restore();save();translate(233.337,117.818);rotate(0.45);fillStyle=orange;fillText(e,0,0);lineWidth=1;strokeStyle=black;strokeText(e,0,0);restore();save();translate(242.342,122.165);rotate(0.45);fillStyle=orange;fillText(r,0,0);lineWidth=1;strokeStyle=black;strokeText(r,0,0);restore();save();translate(247.746,124.774);rotate(0.45);fillStyle=orange;fillText( ,0,0);lineWidth=1;strokeStyle=black;strokeText( ,0,0);restore();save();translate(252.248,126.947);rotate(0.45);fillStyle=orange;fillText(t,0,0);lineWidth=1;strokeStyle=black;strokeText(t,0,0);restore();save();translate(256.751,129.121);rotate(0.45);fillStyle=orange;fillText(h,0,0);lineWidth=1;strokeStyle=black;strokeText(h,0,0);restore();save();translate(265.757,133.469);rotate(0.45);fillStyle=orange;fillText(e,0,0);lineWidth=1;strokeStyle=black;strokeText(e,0,0);restore();save();translate(274.762,137.816);rotate(0.45);fillStyle=orange;fillText( ,0,0);lineWidth=1;strokeStyle=black;strokeText( ,0,0);restore();save();translate(279.265,139.99);rotate(0.45);fillStyle=orange;fillText(l,0,0);lineWidth=1;strokeStyle=black;strokeText(l,0,0);restore();save();translate(282.867,141.729);rotate(0.45);fillStyle=orange;fillText(a,0,0);lineWidth=1;strokeStyle=black;strokeText(a,0,0);restore();save();translate(291.873,146.076);rotate(0.45);fillStyle=orange;fillText(z,0,0);lineWidth=1;strokeStyle=black;strokeText(z,0,0);restore();restore()');
     });
 
     // ======================================================
