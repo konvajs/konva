@@ -32,11 +32,11 @@
         this.___init(config);
     };
 
-    function _fillFunc(_context) {
-        _context.fillText(this.partialText, 0, 0);
+    function _fillFunc(context) {
+        context.fillText(this.partialText, 0, 0);
     }
-    function _strokeFunc(_context) {
-        _context.strokeText(this.partialText, 0, 0);
+    function _strokeFunc(context) {
+        context.strokeText(this.partialText, 0, 0);
     }
 
     Kinetic.TextPath.prototype = {
@@ -65,28 +65,27 @@
             that._setTextData();
         },
         drawFunc: function(context) {
-            var charArr = this.charArr, 
-                _context = context._context;
+            var charArr = this.charArr;
 
-            _context.font = this._getContextFont();
-            _context.textBaseline = 'middle';
-            _context.textAlign = 'left';
-            _context.save();
+            context.setAttr('font', this._getContextFont());
+            context.setAttr('textBaseline', 'middle');
+            context.setAttr('textAlign', 'left');
+            context.save();
 
             var glyphInfo = this.glyphInfo;
             for(var i = 0; i < glyphInfo.length; i++) {
-                _context.save();
+                context.save();
 
                 var p0 = glyphInfo[i].p0;
                 var p1 = glyphInfo[i].p1;
                 var ht = parseFloat(this.attrs.fontSize);
 
-                _context.translate(p0.x, p0.y);
-                _context.rotate(glyphInfo[i].rotation);
+                context.translate(p0.x, p0.y);
+                context.rotate(glyphInfo[i].rotation);
                 this.partialText = glyphInfo[i].text;
 
                 context.fillStrokeShape(this);
-                _context.restore();
+                context.restore();
 
                 //// To assist with debugging visually, uncomment following
                 // context.beginPath();
@@ -99,7 +98,6 @@
                 // context.lineTo(p1.x, p1.y);
                 // context.stroke();
             }
-            _context.restore();
         },
         /**
          * get text width in pixels
