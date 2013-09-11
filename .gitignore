@@ -1,7 +1,6 @@
 jsdoc-toolkit
 jsdoc-master
 dist
-tests/js/unitTests.js
 analysis
 node_modules
 phantomjs.exe

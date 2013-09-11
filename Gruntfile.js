@@ -46,26 +46,6 @@ module.exports = function(grunt) {
     'src/filters/ConvolvePack.js'
   ];
 
-  var unitTestFiles = [
-    'tests/js/unit/animationTests.js', 
-    'tests/js/unit/tweenTests.js', 
-    'tests/js/unit/globalTests.js', 
-    'tests/js/unit/utilTests.js', 
-    'tests/js/unit/nodeTests.js', 
-    'tests/js/unit/stageTests.js', 
-    'tests/js/unit/containerTests.js', 
-    'tests/js/unit/layerTests.js', 
-    'tests/js/unit/shapeTests.js', 
-    'tests/js/unit/ddTests.js', 
-    'tests/js/unit/canvasTests.js', 
-
-    'tests/js/unit/plugins/pathTests.js',
-    'tests/js/unit/plugins/regularPolygonTests.js',
-    'tests/js/unit/plugins/starTests.js',
-    'tests/js/unit/plugins/textPathTests.js',
-    'tests/js/unit/plugins/labelTests.js'
-  ];
-
   // Project configuration.
   var config = {
     pkg: grunt.file.readJSON('package.json'),
@@ -84,10 +64,6 @@ module.exports = function(grunt) {
       prod: {
         src: sourceFiles,
         dest: 'dist/kinetic-v<%= pkg.version %>.js'
-      },
-      test: {
-        src: unitTestFiles,
-        dest: 'tests/js/unitTests.js'
       }
     },
     replace: {
@@ -210,6 +186,5 @@ module.exports = function(grunt) {
   grunt.registerTask('dev', ['clean', 'concat:dev', 'replace:dev']);
   grunt.registerTask('beta', ['clean', 'concat:beta', 'replace:beta']);
   grunt.registerTask('full', ['clean', 'concat:prod', 'uglify', 'replace:prod1', 'replace:prod2', 'replace:prod3']);
-  grunt.registerTask('test', ['concat:test']);
   grunt.registerTask('hint', ['clean', 'concat:dev', 'replace:dev', 'jshint']);
 };
