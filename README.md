@@ -9,8 +9,9 @@ If you add a file in the src directory, be sure to add the filename to the sourc
 
 [![Build Status](https://travis-ci.org/ericdrowell/KineticJS.png)](https://travis-ci.org/ericdrowell/KineticJS)
 
-### Running the tests
-KineticJS uses Mocha for testing.  Just open up test/runner.html to run the tests in your favorite browser.  To run the tests in PhantomJS, run `mocha-phantomjs test/runner.html` in the console. 
+KineticJS uses Mocha for testing.  Just open up test/runner.html to run the tests in your favorite browser.  To run the tests in PhantomJS, run `mocha-phantomjs test/runner.html` in the console.
+
+KineticJS is covered with hundreds of tests and well over a thousand assertions.  KineticJS uses TDD (test driven development) which means that every new feature or bug fix is accompanied with test. 
 
 #Pull Requests
 I'd be happy to review any pull requests that may better the KineticJS project, in particular if you have a bug fix, enhancement, or a new shape (see `src/shapes` for examples).  Before doing so, please first make sure that all of the tests pass, and also make sure that you don't have any jshint errors.  You can do so by running `grunt hint`
