@@ -21,14 +21,7 @@ suite('Layer', function() {
         var style = layer.getCanvas()._canvas.style;
 
         assert.equal(style.position, 'absolute', 'canvas position style should be absolute');
-
-        if (Kinetic.UA.browser === 'mozilla') {
-          assert.equal(style.border, '0px none', 'canvas border style should be 0px');
-        }
-        else {
-          assert.equal(style.border, '0px', 'canvas border style should be 0px');
-        }
-        
+        assert.equal(style.border.indexOf('0px'), 0, 'canvas border style should be 0px');
         assert.equal(style.margin, '0px', 'canvas margin style should be 0px');
         assert.equal(style.padding, '0px', 'canvas padding style should be 0px');
         assert.equal(style.backgroundColor, 'transparent', 'canvas backgroundColor style should be transparent');

@@ -2,6 +2,8 @@
     var COMMA = ',',
         OPEN_PAREN = '(',
         CLOSE_PAREN = ')',
+        OPEN_PAREN_BRACKET = '([',
+        CLOSE_BRACKET_PAREN = '])',
         EMPTY_STRING = '',
         EQUALS = '=',
         SET = 'set',
@@ -29,6 +31,7 @@
             'rotate',
             'save', 
             'scale',
+            'setLineDash',
             'setTransform', 
             'stroke', 
             'strokeText', 
@@ -291,6 +294,25 @@
             var a = arguments;
             this._context.scale(a[0], a[1]);
         },
+        setLineDash: function() {
+            var a = arguments,
+                _context = this._context;
+
+            // works for Chrome and IE11
+            if(this._context.setLineDash) {
+                _context.setLineDash(a[0]);
+            }
+            // verified that this works in firefox
+            else if('mozDash' in _context) {
+                _context.mozDash = a[0];
+            }
+            // does not currently work for Safari
+            else if('webkitLineDash' in _context) {
+                _context.webkitLineDash = a[0];
+            }
+
+            // no support for IE9 and IE10
+        },
         setTransform: function() {
             var a = arguments;
             this._context.setTransform(a[0], a[1], a[2], a[3], a[4], a[5]);
@@ -326,7 +348,12 @@
                     that[methodName] = function() {
                         args = _roundArrValues(Array.prototype.slice.call(arguments, 0));
                         ret = origMethod.apply(that, arguments);
-                        that._trace(methodName + OPEN_PAREN + args.join(COMMA) + CLOSE_PAREN);
+                        if (Kinetic.Util._isArray(args[0])) {
+                            that._trace(methodName + OPEN_PAREN_BRACKET + args.join(COMMA) + CLOSE_BRACKET_PAREN);
+                        }
+                        else {
+                            that._trace(methodName + OPEN_PAREN + args.join(COMMA) + CLOSE_PAREN);
+                        }
                         return ret;
                     };
                 })(CONTEXT_METHODS[n]);
@@ -451,8 +478,7 @@
             }
         },
         _stroke: function(shape, skipShadow) {
-            var _context = this._context,
-                stroke = shape.getStroke(),
+            var stroke = shape.getStroke(),
                 strokeWidth = shape.getStrokeWidth(),
                 dashArray = shape.getDashArray();
 
@@ -463,15 +489,7 @@
                 }
                 this._applyLineCap(shape);
                 if(dashArray && shape.getDashArrayEnabled()) {
-                    if(_context.setLineDash) {
-                        _context.setLineDash(dashArray);
-                    }
-                    else if('mozDash' in _context) {
-                        _context.mozDash = dashArray;
-                    }
-                    else if('webkitLineDash' in _context) {
-                        _context.webkitLineDash = dashArray;
-                    }
+                    this.setLineDash(dashArray);
                 }
                 if(!skipShadow && shape.hasShadow()) {
                     this._applyShadow(shape);

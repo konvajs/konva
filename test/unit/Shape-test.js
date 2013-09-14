@@ -407,6 +407,10 @@ suite('Shape-test', function() {
         assert.equal(circle.getShadowEnabled(), true, 'shadowEnabled should be true');
         assert.equal(circle.getDashArrayEnabled(), true, 'dashArrayEnabled should be true');
 
+        var trace = layer.getContext().getTrace();
+        //console.log(trace);
+        assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();save();shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;fillStyle=green;fill();restore();fillStyle=green;fill();setLineDash([10,10]);lineWidth=4;strokeStyle=black;stroke();restore()');
+
     });
 
 
