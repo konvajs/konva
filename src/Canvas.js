@@ -34,7 +34,7 @@
         init: function(config) {
             config = config || {};
 
-            var pixelRatio = config.pixelRatio || _pixelRatio;
+            var pixelRatio = config.pixelRatio || Kinetic.pixelRatio || _pixelRatio;
 
             this.pixelRatio = pixelRatio;
             this._canvas = document.createElement('canvas');

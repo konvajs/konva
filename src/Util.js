@@ -84,10 +84,7 @@
             })(n);
         }
     };
-})();
 
-
-(function() {
     /*
     * Last updated November 2011
     * By Simon Sarris
@@ -255,10 +252,25 @@
             this.translate(xt, yt);
         }
     };
-})();
 
+    /*
+    * jQuery UA
+    */
+    Kinetic.UA = (function() {
+        var ua = navigator.userAgent.toLowerCase(),
+            match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
+            /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
+            /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
+            /(msie) ([\w.]+)/.exec( ua ) ||
+            ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
+            [];
 
-(function() {
+        return {
+            browser: match[ 1 ] || '',
+            version: match[ 2 ] || '0'
+        };
+    })();
+
     // CONSTANTS
     var CANVAS = 'canvas',
         CONTEXT_2D = '2d',
