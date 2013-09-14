@@ -253,24 +253,6 @@
         }
     };
 
-    /*
-    * jQuery UA
-    */
-    Kinetic.UA = (function() {
-        var ua = navigator.userAgent.toLowerCase(),
-            match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
-            /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
-            /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
-            /(msie) ([\w.]+)/.exec( ua ) ||
-            ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
-            [];
-
-        return {
-            browser: match[ 1 ] || '',
-            version: match[ 2 ] || '0'
-        };
-    })();
-
     // CONSTANTS
     var CANVAS = 'canvas',
         CONTEXT_2D = '2d',
@@ -589,8 +571,8 @@
                 canvas = document.createElement(CANVAS);
                 canvas.width = arg.width;
                 canvas.height = arg.height;
-                context = canvas.getContext(CONTEXT_2D);
-                context.putImageData(arg, 0, 0);
+                _context = canvas.getContext(CONTEXT_2D);
+                _context.putImageData(arg, 0, 0);
                 dataUrl = canvas.toDataURL();
                 imageObj = new Image();
                 imageObj.onload = function() {

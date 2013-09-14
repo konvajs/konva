@@ -2138,8 +2138,6 @@ suite('Node', function() {
         layer.add(group);
         stage.add(layer);
 
-        var startDataUrl = layer.toDataURL();
-
         assert.equal(triangle.getId(), 'myTriangle');
 
         var expectedJson = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"className":"Shape"}]}]}]}';

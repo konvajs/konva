@@ -51,6 +51,8 @@
                 cropHeight = this.getCropHeight(),
                 image;
 
+            //TODO: this logic needs to hook int othe new caching system
+
             // if a filter is set, and the filter needs to be updated, reapply
             if (this.getFilter() && this._applyFilter) {
                 this.applyFilter();

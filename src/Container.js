@@ -235,10 +235,9 @@
             return arr;
         },
         _setChildrenIndices: function() {
-            var children = this.children, len = children.length;
-            for(var n = 0; n < len; n++) {
-                children[n].index = n;
-            }
+            this.children.each(function(child, n) {
+                child.index = n;
+            });
         },
         drawScene: function(canvas) {
             var layer = this.getLayer(),
@@ -261,12 +260,9 @@
             return this;
         },
         _drawChildren: function(canvas) {
-            var children = this.children;
-                len = children.length;
-
-            for(n = 0; n < len; n++) {
-                children[n].drawScene(canvas);
-            }
+            this.children.each(function(child) {
+                child.drawScene(canvas);
+            });
         },
         drawHit: function() {
             var hasClip = this.getClipWidth() && this.getClipHeight() && this.nodeType !== 'Stage',
