@@ -339,77 +339,52 @@ suite('Shape-test', function() {
             shadowColor: 'black',
             shadowBlur: 10,
             shadowOffset: 10,
-            dashArray: [10, 10]
+            dashArray: [10, 10],
+            scaleX: 3
         });
         layer.add(circle);
         stage.add(layer);
 
+        assert.equal(circle.getStrokeScaleEnabled(), true);
         assert.equal(circle.getFillEnabled(), true, 'fillEnabled should be true');
         assert.equal(circle.getStrokeEnabled(), true, 'strokeEnabled should be true');
         assert.equal(circle.getShadowEnabled(), true, 'shadowEnabled should be true');
         assert.equal(circle.getDashArrayEnabled(), true, 'dashArrayEnabled should be true');
 
-        circle.disableFill();
+        circle.disableStrokeScale();
+        assert.equal(circle.getStrokeScaleEnabled(), false);
 
+        layer.draw();
+        var trace = layer.getContext().getTrace();
+        console.log(trace);
+        assert.equal(trace, 'clearRect(0,0,578,200);save();transform(3,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();save();shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;fillStyle=green;fill();restore();fillStyle=green;fill();setLineDash([10,10]);lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(3,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();save();shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;fillStyle=green;fill();restore();fillStyle=green;fill();save();setTransform(1,0,0,1,0,0);setLineDash([10,10]);lineWidth=4;strokeStyle=black;stroke();restore();restore();');
+
+        circle.disableFill();
         assert.equal(circle.getFillEnabled(), false, 'fillEnabled should be false');
-        assert.equal(circle.getStrokeEnabled(), true, 'strokeEnabled should be true');
-        assert.equal(circle.getShadowEnabled(), true, 'shadowEnabled should be true');
-        assert.equal(circle.getDashArrayEnabled(), true, 'dashArrayEnabled should be true');
+
 
         circle.disableStroke();
-
-        assert.equal(circle.getFillEnabled(), false, 'fillEnabled should be false');
         assert.equal(circle.getStrokeEnabled(), false, 'strokeEnabled should be false');
-        assert.equal(circle.getShadowEnabled(), true, 'shadowEnabled should be true');
-        assert.equal(circle.getDashArrayEnabled(), true, 'dashArrayEnabled should be true');
 
         circle.disableShadow();
-
-        assert.equal(circle.getFillEnabled(), false, 'fillEnabled should be false');
-        assert.equal(circle.getStrokeEnabled(), false, 'strokeEnabled should be false');
         assert.equal(circle.getShadowEnabled(), false, 'shadowEnabled should be false');
-        assert.equal(circle.getDashArrayEnabled(), true, 'dashArrayEnabled should be true');
 
         circle.disableDashArray();
-
-        assert.equal(circle.getFillEnabled(), false, 'fillEnabled should be false');
-        assert.equal(circle.getStrokeEnabled(), false, 'strokeEnabled should be false');
-        assert.equal(circle.getShadowEnabled(), false, 'shadowEnabled should be false');
         assert.equal(circle.getDashArrayEnabled(), false, 'dashArrayEnabled should be false');
 
         // re-enable
 
         circle.enableDashArray();
-
-        assert.equal(circle.getFillEnabled(), false, 'fillEnabled should be false');
-        assert.equal(circle.getStrokeEnabled(), false, 'strokeEnabled should be false');
-        assert.equal(circle.getShadowEnabled(), false, 'shadowEnabled should be false');
         assert.equal(circle.getDashArrayEnabled(), true, 'dashArrayEnabled should be true');
 
         circle.enableShadow();
-
-        assert.equal(circle.getFillEnabled(), false, 'fillEnabled should be false');
-        assert.equal(circle.getStrokeEnabled(), false, 'strokeEnabled should be false');
         assert.equal(circle.getShadowEnabled(), true, 'shadowEnabled should be true');
-        assert.equal(circle.getDashArrayEnabled(), true, 'dashArrayEnabled should be true');
 
         circle.enableStroke();
-
-        assert.equal(circle.getFillEnabled(), false, 'fillEnabled should be false');
         assert.equal(circle.getStrokeEnabled(), true, 'strokeEnabled should be true');
-        assert.equal(circle.getShadowEnabled(), true, 'shadowEnabled should be true');
-        assert.equal(circle.getDashArrayEnabled(), true, 'dashArrayEnabled should be true');
 
         circle.enableFill();
-
         assert.equal(circle.getFillEnabled(), true, 'fillEnabled should be true');
-        assert.equal(circle.getStrokeEnabled(), true, 'strokeEnabled should be true');
-        assert.equal(circle.getShadowEnabled(), true, 'shadowEnabled should be true');
-        assert.equal(circle.getDashArrayEnabled(), true, 'dashArrayEnabled should be true');
-
-        var trace = layer.getContext().getTrace();
-        //console.log(trace);
-        assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();save();shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;fillStyle=green;fill();restore();fillStyle=green;fill();setLineDash([10,10]);lineWidth=4;strokeStyle=black;stroke();restore();');
 
     });
 

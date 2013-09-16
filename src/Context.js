@@ -524,13 +524,16 @@
         _stroke: function(shape, skipShadow) {
             var stroke = shape.getStroke(),
                 strokeWidth = shape.getStrokeWidth(),
-                dashArray = shape.getDashArray();
+                dashArray = shape.getDashArray(),
+                strokeScaleEnabled = shape.getStrokeScaleEnabled();
 
             if(stroke || strokeWidth) {
-                if (!shape.getStrokeScaleEnabled()) {
+                if (!strokeScaleEnabled) {
                     this.save();
                     this.setTransform(1, 0, 0, 1, 0, 0);
                 }
+                
+                /////////////////////
                 this._applyLineCap(shape);
                 if(dashArray && shape.getDashArrayEnabled()) {
                     this.setLineDash(dashArray);
@@ -543,8 +546,12 @@
                 shape._strokeFunc(this);
                 
                 if(!skipShadow && shape.hasShadow()) {
-                    this.restore();
                     this._stroke(shape, true);
+                }
+                /////////////////////
+
+                if (!strokeScaleEnabled) {
+                    this.restore();
                 }
             }
         },
