@@ -283,7 +283,11 @@
         drawImage: function() {
             var a = arguments,
                 _context = this._context;
-            if(a.length === 5) {
+
+            if(a.length === 3) {
+                _context.drawImage(a[0], a[1], a[2]);
+            }
+            else if(a.length === 5) {
                 _context.drawImage(a[0], a[1], a[2], a[3], a[4]);
             }
             else if(a.length === 9) {
