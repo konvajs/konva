@@ -39,7 +39,7 @@ suite('Blob', function(){
         assert.equal(blob.getTension(), 1.5);
 
         var trace = layer.getContext().getTrace();
-        assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(73,140);bezierCurveTo(90.922,74.135,129.542,38.279,340,23);bezierCurveTo(471.142,13.479,514.876,54.33,500,109);bezierCurveTo(482.876,171.93,463.05,158.163,300,170);bezierCurveTo(121.45,182.963,58.922,191.735,73,140);closePath();fillStyle=#aaf;fill();lineWidth=10;strokeStyle=blue;stroke();restore()');
+        assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(73,140);bezierCurveTo(90.922,74.135,129.542,38.279,340,23);bezierCurveTo(471.142,13.479,514.876,54.33,500,109);bezierCurveTo(482.876,171.93,463.05,158.163,300,170);bezierCurveTo(121.45,182.963,58.922,191.735,73,140);closePath();fillStyle=#aaf;fill();lineWidth=10;strokeStyle=blue;stroke();restore();');
     });
 
     // ======================================================

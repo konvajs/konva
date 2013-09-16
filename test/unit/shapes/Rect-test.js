@@ -23,8 +23,11 @@ suite('Rect', function(){
 
     var trace = layer.getContext().getTrace();
     //console.log(trace);
-    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=2;strokeStyle=blue;stroke();restore()');
+    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=2;strokeStyle=blue;stroke();restore();');
 
+    var relaxedTrace = layer.getContext().getTrace(true);
+    //console.log(relaxedTrace);
+    assert.equal(relaxedTrace, 'clearRect();save();transform();beginPath();rect();closePath();fillStyle;fill();lineWidth;strokeStyle;stroke();restore();');
   });
 
   // ======================================================
@@ -61,7 +64,7 @@ suite('Rect', function(){
 
     var trace = layer.getContext().getTrace();
     //console.log(layer.getContext().traceArr);
-    assert.equal(trace, 'clearRect(0,0,578,200);save();globalAlpha=0.4;transform(1,0,0,1,100,50);beginPath();moveTo(5,0);lineTo(95,0);arc(95,5,5,4.712,0,false);lineTo(100,45);arc(95,45,5,0,1.571,false);lineTo(5,50);arc(5,45,5,1.571,3.142,false);lineTo(0,5);arc(5,5,5,3.142,4.712,false);closePath();save();globalAlpha=0.2;shadowColor=red;shadowBlur=10;shadowOffsetX=5;shadowOffsetY=5;fillStyle=green;fill();restore();fillStyle=green;fill();lineWidth=2;strokeStyle=blue;stroke();restore()');
+    assert.equal(trace, 'clearRect(0,0,578,200);save();globalAlpha=0.4;transform(1,0,0,1,100,50);beginPath();moveTo(5,0);lineTo(95,0);arc(95,5,5,4.712,0,false);lineTo(100,45);arc(95,45,5,0,1.571,false);lineTo(5,50);arc(5,45,5,1.571,3.142,false);lineTo(0,5);arc(5,5,5,3.142,4.712,false);closePath();save();globalAlpha=0.2;shadowColor=red;shadowBlur=10;shadowOffsetX=5;shadowOffsetY=5;fillStyle=green;fill();restore();fillStyle=green;fill();lineWidth=2;strokeStyle=blue;stroke();restore();');
 
   });
 

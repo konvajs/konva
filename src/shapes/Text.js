@@ -158,7 +158,7 @@
             return this.attrs.width === AUTO ? this.getTextWidth() + this.getPadding() * 2 : this.attrs.width;
         },
         /**
-         * get height
+         * get the height of the text area, which takes into account multi-line text and padding
          * @method
          * @memberof Kinetic.Text.prototype
          */

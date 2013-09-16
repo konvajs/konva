@@ -4,6 +4,8 @@
         CLOSE_PAREN = ')',
         OPEN_PAREN_BRACKET = '([',
         CLOSE_BRACKET_PAREN = '])',
+        SEMICOLON = ';',
+        DOUBLE_PAREN = '()',
         EMPTY_STRING = '',
         EQUALS = '=',
         SET = 'set',
@@ -63,10 +65,49 @@
          * get context trace if trace is enabled
          * @method
          * @memberof Kinetic.Context.prototype
+         * @param {Boolean} relaxed if false, return strict context trace, which includes method names, method parameters
+         *  properties, and property values.  If true, return relaxed context trace, which only returns method names and
+         *  properites.
          * @returns {String}
          */
-        getTrace: function() {
-            return this.traceArr.join(';');
+        getTrace: function(relaxed) {
+            var traceArr = this.traceArr,
+                len = traceArr.length,
+                str = '',
+                n, trace, method, args;
+
+            for (n=0; n<len; n++) {
+                trace = traceArr[n];
+                method = trace.method;
+
+                // methods
+                if (method) {
+                    args = trace.args;
+                    str += method;
+                    if (relaxed) {
+                        str += DOUBLE_PAREN;
+                    } 
+                    else {
+                        if (Kinetic.Util._isArray(args[0])) {
+                            str += OPEN_PAREN_BRACKET + args.join(COMMA) + CLOSE_BRACKET_PAREN;
+                        }
+                        else {
+                            str += OPEN_PAREN + args.join(COMMA) + CLOSE_PAREN;
+                        }
+                    }
+                }
+                // properties
+                else {
+                    str += trace.property;
+                    if (!relaxed) {
+                        str += EQUALS + trace.val;
+                    }  
+                }
+
+                str += SEMICOLON;
+            }
+
+            return str;
         },
         /**
          * clear trace if trace is enabled
@@ -348,12 +389,12 @@
                     that[methodName] = function() {
                         args = _roundArrValues(Array.prototype.slice.call(arguments, 0));
                         ret = origMethod.apply(that, arguments);
-                        if (Kinetic.Util._isArray(args[0])) {
-                            that._trace(methodName + OPEN_PAREN_BRACKET + args.join(COMMA) + CLOSE_BRACKET_PAREN);
-                        }
-                        else {
-                            that._trace(methodName + OPEN_PAREN + args.join(COMMA) + CLOSE_PAREN);
-                        }
+           
+                        that._trace({
+                            method: methodName,
+                            args: args
+                        });
+                 
                         return ret;
                     };
                 })(CONTEXT_METHODS[n]);
@@ -362,7 +403,10 @@
             // attrs
             that.setAttr = function() {
                 origSetter.apply(that, arguments);
-                that._trace(arguments[0] + EQUALS + arguments[1]);
+                that._trace({
+                    property: arguments[0],
+                    val: arguments[1]
+                });
             };
         }
     };
