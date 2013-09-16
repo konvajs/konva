@@ -102,7 +102,7 @@
                 context.beginPath();
                 context.rect(0, 0, width, height);
                 context.closePath();
-                context.stroke(this);
+                context.strokeShape(this);
             }
             else {
                 context.beginPath();
@@ -165,24 +165,24 @@
             var that = this,
                 width = this.getWidth(),
                 height = this.getHeight(),
-                // TODO: may consider creating a native canvas element here instead
                 canvas = new Kinetic.SceneCanvas({
                     width: width,
                     height: height
                 }),
-                context = canvas.getContext(),
+                _context = canvas.getContext()._context,
                 image = this.getImage(),
-                imageData, data, rgbColorKey, i, n;
+                imageData, data, rgbColorKey, i, len;
 
-            context.drawImage(image, 0, 0);
+            _context.drawImage(image, 0, 0);
 
             try {
-                imageData = context.getImageData(0, 0, width, height);
+                imageData = _context.getImageData(0, 0, width, height);
                 data = imageData.data;
+                len = data.length;
                 rgbColorKey = Kinetic.Util._hexToRgb(this.colorKey);
 
                 // replace non transparent pixels with color key
-                for(i = 0, n = data.length; i < n; i += 4) {
+                for(i = 0; i < len; i += 4) {
                     if (data[i + 3] > 0) {
                         data[i] = rgbColorKey.r;
                         data[i + 1] = rgbColorKey.g;

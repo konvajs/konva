@@ -195,8 +195,7 @@ suite('Image', function(){
   });
 
   // ======================================================
-  // TODO: skipping for now because I need to setup a node server for this one
-  test.skip('create image hit region', function(done) {
+  test('create image hit region', function(done) {
       var imageObj = new Image();
 
       var stage = addStage();
@@ -224,7 +223,9 @@ suite('Image', function(){
               stage.add(layer);
               layer.drawHit();
 
-              var hitDataUrl = layer.hitCanvas.toDataURL();
+              var trace = layer.hitCanvas.getContext().getTrace();
+              //console.log(trace);
+              assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,200,40);drawImage([object HTMLImageElement],0,0,144,139);beginPath();rect(0,0,144,139);closePath();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,200,40);drawImage([object HTMLImageElement],0,0,144,139);beginPath();rect(0,0,144,139);closePath();restore();');
 
               done();  
 

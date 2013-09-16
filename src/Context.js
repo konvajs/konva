@@ -532,7 +532,7 @@
                     this.save();
                     this.setTransform(1, 0, 0, 1, 0, 0);
                 }
-                
+
                 /////////////////////
                 this._applyLineCap(shape);
                 if(dashArray && shape.getDashArrayEnabled()) {
@@ -554,6 +554,13 @@
                     this.restore();
                 }
             }
+        },
+        applyShadow: function(shape, drawFunc) {
+            this.save();
+            this._applyShadow(shape);
+            drawFunc();
+            this.restore();
+            drawFunc();
         },
         _applyShadow: function(shape) {
             var util, absOpacity, color, blur, offset, shadowOpacity;
