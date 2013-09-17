@@ -84,10 +84,12 @@
      * @name getTension
      * @method
      * @memberof Kinetic.Spline.prototype
+     * @returns {Number}
      */
 
     /**
      * set tension
+     * @name setTension
      * @method
      * @memberof Kinetic.Spline.prototype
      * @param {Number} tension
@@ -96,12 +98,15 @@
     Kinetic.Factory.addPointsGetterSetter(Kinetic.Spline, 'points');
     /**
      * get points array
+     * @name getPoints
      * @method
      * @memberof Kinetic.Spline.prototype
+     * @returns {Array}
      */
 
     /**
      * set points array
+     * @name setPoints
      * @method
      * @memberof Kinetic.Spline.prototype
      * @param {Array} can be an array of point objects or an array

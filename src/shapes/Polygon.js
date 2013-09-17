@@ -45,6 +45,7 @@
     Kinetic.Factory.addPointsGetterSetter(Kinetic.Polygon, 'points');
     /**
      * set points array
+     * @name setPoints
      * @method
      * @memberof Kinetic.Polygon.prototype
      * @param {Array} can be an array of point objects or an array
@@ -53,7 +54,9 @@
 
     /**
      * get points array
+     * @name getPoints
      * @method
      * @memberof Kinetic.Polygon.prototype
+     * @returns {Array}
      */
 })();

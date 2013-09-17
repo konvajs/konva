@@ -57,6 +57,7 @@
      * @name getRadius
      * @method
      * @memberof Kinetic.Wedge.prototype
+     * @returns {Number}
      */
 
     Kinetic.Factory.addRotationGetterSetter(Kinetic.Wedge, 'angle', 0);
@@ -82,6 +83,7 @@
      * @name getAngle
      * @method
      * @memberof Kinetic.Wedge.prototype
+     * @returns {Number}
      */
 
      /**
@@ -89,6 +91,7 @@
      * @name getAngleDeg
      * @method
      * @memberof Kinetic.Wedge.prototype
+     * @returns {Number}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Wedge, 'clockwise', false);
@@ -107,5 +110,6 @@
      * @name getClockwise
      * @method
      * @memberof Kinetic.Wedge.prototype
+     * @returns {Boolean}
      */
 })();

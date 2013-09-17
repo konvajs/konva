@@ -185,6 +185,7 @@
      * @name getAnimation
      * @method
      * @memberof Kinetic.Sprite.prototype
+     * @returns {String}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'animations');
@@ -202,6 +203,7 @@
      * @name getAnimations
      * @method
      * @memberof Kinetic.Sprite.prototype
+     * @returns {Object}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'image');
@@ -219,6 +221,7 @@
      * @name getImage
      * @method
      * @memberof Kinetic.Sprite.prototype
+     * @returns {ImageObject}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'index', 0);
@@ -236,6 +239,7 @@
      * @name getIndex
      * @method
      * @memberof Kinetic.Sprite.prototype
+     * @returns {Integer}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'frameRate', 17);
@@ -254,6 +258,7 @@
      * @name getFrameRate
      * @method
      * @memberof Kinetic.Sprite.prototype
+     * @returns {Number}
      */
 
 })();

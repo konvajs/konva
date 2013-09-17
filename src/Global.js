@@ -100,14 +100,13 @@ var Kinetic = {};
          *   y: 10,<br>
          *   fill: 'red',<br>
          *   // a Kinetic.Canvas renderer is passed into the drawFunc function<br>
-         *   drawFunc: function(canvas) {<br>
-         *     var context = canvas.getContext();<br>
+         *   drawFunc: function(context) {<br>
          *     context.beginPath();<br>
          *     context.moveTo(200, 50);<br>
          *     context.lineTo(420, 80);<br>
          *     context.quadraticCurveTo(300, 100, 260, 170);<br>
          *     context.closePath();<br>
-         *     canvas.fillStroke(this);<br>
+         *     context.fillStrokeShape(this);<br>
          *   }<br>
          *});
          */

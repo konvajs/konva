@@ -71,6 +71,7 @@
      * @name getCornerRadius
      * @method
      * @memberof Kinetic.Rect.prototype
+     * @returns {Number}
      */
 
 })();

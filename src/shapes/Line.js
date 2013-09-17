@@ -62,6 +62,7 @@
     Kinetic.Factory.addPointsGetterSetter(Kinetic.Line, 'points');
     /**
      * set points array
+     * @name setPoints
      * @method
      * @memberof Kinetic.Line.prototype
      * @param {Array} can be an array of point objects or an array
@@ -70,7 +71,9 @@
 
     /**
      * get points array
+     * @name getPoints
      * @method
      * @memberof Kinetic.Line.prototype
+     * @returns {Array}
      */
 })();

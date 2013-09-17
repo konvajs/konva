@@ -160,6 +160,10 @@
          * @memberof Kinetic.Image.prototype
          * @param {Function} [callback] callback function to be called once
          *  the image hit region has been created
+         * @example
+         * image.createImageHitRegion(function() {<br>
+         *   layer.drawHit();<br>
+         * });
          */
         createImageHitRegion: function(callback) {
             var that = this,
@@ -252,6 +256,7 @@
      * @name getImage
      * @method
      * @memberof Kinetic.Image.prototype
+     * @returns {ImageObject}
      */
 
     Kinetic.Factory.addBoxGetterSetter(Kinetic.Image, 'crop');
@@ -311,7 +316,7 @@
      * @name getCrop
      * @method
      * @memberof Kinetic.Image.prototype
-     * @return {Object}
+     * @returns {Object}
      */
 
     /**
@@ -319,6 +324,7 @@
      * @name getCropX
      * @method
      * @memberof Kinetic.Image.prototype
+     * @returns {Number}
      */
 
     /**
@@ -326,6 +332,7 @@
      * @name getCropY
      * @method
      * @memberof Kinetic.Image.prototype
+     * @returns {Number}
      */
 
     /**
@@ -333,6 +340,7 @@
      * @name getCropWidth
      * @method
      * @memberof Kinetic.Image.prototype
+     * @returns {Number}
      */
 
     /**
@@ -340,6 +348,7 @@
      * @name getCropHeight
      * @method
      * @memberof Kinetic.Image.prototype
+     * @returns {Number}
      */
 
      Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filter');
@@ -357,5 +366,6 @@
      * @name getFilter
      * @method
      * @memberof Kinetic.Image.prototype
+     * @returns {Function)}
      */
 })();

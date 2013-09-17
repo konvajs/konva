@@ -150,17 +150,19 @@
             this._setAttr(TEXT, str);
         },
         /**
-         * get width
+         * get width of text area, which includes padding
          * @method
          * @memberof Kinetic.Text.prototype
+         * @returns {Number}
          */
         getWidth: function() {
             return this.attrs.width === AUTO ? this.getTextWidth() + this.getPadding() * 2 : this.attrs.width;
         },
         /**
-         * get the height of the text area, which takes into account multi-line text and padding
+         * get the height of the text area, which takes into account multi-line text, line heights, and padding
          * @method
          * @memberof Kinetic.Text.prototype
+         * @returns {Number}
          */
         getHeight: function() {
             return this.attrs.height === AUTO ? (this.getTextHeight() * this.textArr.length * this.getLineHeight()) + this.getPadding() * 2 : this.attrs.height;
@@ -169,6 +171,7 @@
          * get text width
          * @method
          * @memberof Kinetic.Text.prototype
+         * @returns {Number}
          */
         getTextWidth: function() {
             return this.textWidth;
@@ -177,6 +180,7 @@
          * get text height
          * @method
          * @memberof Kinetic.Text.prototype
+         * @returns {Number}
          */
         getTextHeight: function() {
             return this.textHeight;
@@ -330,6 +334,7 @@
      * @name getFontFamily
      * @method
      * @memberof Kinetic.Text.prototype
+     * @returns {String}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontSize', 12);
@@ -339,7 +344,7 @@
      * @name setFontSize
      * @method
      * @memberof Kinetic.Text.prototype
-     * @param {int} fontSize
+     * @param {Number} fontSize
      */
 
      /**
@@ -347,6 +352,7 @@
      * @name getFontSize
      * @method
      * @memberof Kinetic.Text.prototype
+     * @returns {Number}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontStyle', NORMAL);
@@ -364,6 +370,7 @@
      * @name getFontStyle
      * @method
      * @memberof Kinetic.Text.prototype
+     * @returns {String}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Text, 'padding', 0);
@@ -381,6 +388,7 @@
      * @name getPadding
      * @method
      * @memberof Kinetic.Text.prototype
+     * @returns {Number}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Text, 'align', LEFT);
@@ -398,6 +406,7 @@
      * @name getAlign
      * @method
      * @memberof Kinetic.Text.prototype
+     * @returns {String}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Text, 'lineHeight', 1);
@@ -415,6 +424,7 @@
      * @name getLineHeight
      * @method
      * @memberof Kinetic.Text.prototype
+     * @returns {Number}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Text, 'wrap', WORD);
@@ -432,6 +442,7 @@
      * @name getWrap
      * @method
      * @memberof Kinetic.Text.prototype
+     * @returns {String}
      */
 
     Kinetic.Factory.addGetter(Kinetic.Text, TEXT, EMPTY_STRING);
@@ -441,6 +452,7 @@
      * @name getText
      * @method
      * @memberof Kinetic.Text.prototype
+     * @returns {String}
      */
 
     Kinetic.Factory.addSetter(Kinetic.Text, 'width');

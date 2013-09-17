@@ -47,16 +47,20 @@
             context.closePath();
             context.fillStrokeShape(this);
         },
+        // implements Shape.prototype.getWidth()
         getWidth: function() {
             return this.getRadius() * 2;
         },
+        // implements Shape.prototype.getHeight()
         getHeight: function() {
             return this.getRadius() * 2;
         },
+        // implements Shape.prototype.setWidth()
         setWidth: function(width) {
             Kinetic.Node.prototype.setWidth.call(this, width);
             this.setRadius(width / 2);
         },
+        // implements Shape.prototype.setHeight()
         setHeight: function(height) {
             Kinetic.Node.prototype.setHeight.call(this, height);
             this.setRadius(height / 2);
@@ -69,6 +73,7 @@
 
     /**
      * set radius
+     * @name setRadius
      * @method
      * @memberof Kinetic.Circle.prototype
      * @param {Number} radius
@@ -76,7 +81,9 @@
 
     /**
      * get radius
+     * @name getRadius
      * @method
      * @memberof Kinetic.Circle.prototype
+     * @returns {Number}
      */
 })();

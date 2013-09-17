@@ -97,10 +97,12 @@
      * @name getTension
      * @method
      * @memberof Kinetic.Blob.prototype
+     * @returns {Number}
      */
 
     /**
      * set tension
+     * @name setTension
      * @method
      * @memberof Kinetic.Blob.prototype
      * @param {Number} tension
@@ -109,12 +111,15 @@
     Kinetic.Factory.addPointsGetterSetter(Kinetic.Blob, 'points');
     /**
      * get points array
+     * @name getPoints
      * @method
      * @memberof Kinetic.Blob.prototype
+     * @returns {Array}
      */
 
     /**
      * set points array
+     * @name setPoints
      * @method
      * @memberof Kinetic.Blob.prototype
      * @param {Array} can be an array of point objects or an array

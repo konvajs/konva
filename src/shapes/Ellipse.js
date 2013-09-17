@@ -35,18 +35,22 @@
             context.closePath();
             context.fillStrokeShape(this);
         },
+        // implements Shape.prototype.getWidth()
         getWidth: function() {
             return this.getRadius().x * 2;
         },
+        // implements Shape.prototype.getHeight()
         getHeight: function() {
             return this.getRadius().y * 2;
         },
+        // implements Shape.prototype.setWidth()
         setWidth: function(width) {
             Kinetic.Node.prototype.setWidth.call(this, width);
             this.setRadius({
                 x: width / 2
             });
         },
+        // implements Shape.prototype.setHeight()
         setHeight: function(height) {
             Kinetic.Node.prototype.setHeight.call(this, height);
             this.setRadius({
@@ -62,7 +66,8 @@
     /**
      * set radius
      * @name setRadius
-     * @methodOf Kinetic.Ellipse.prototype
+     * @method
+     * @memberof Kinetic.Ellipse.prototype
      * @param {Object|Array} radius
      *  radius can be a number, in which the ellipse becomes a circle,
      *  it can be an object with an x and y component, or it
@@ -75,6 +80,8 @@
     /**
      * get radius
      * @name getRadius
-     * @methodOf Kinetic.Ellipse.prototype
+     * @method
+     * @memberof Kinetic.Ellipse.prototype
+     * @returns {Object}
      */
 })();
