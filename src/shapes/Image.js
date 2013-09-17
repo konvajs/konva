@@ -366,6 +366,6 @@
      * @name getFilter
      * @method
      * @memberof Kinetic.Image.prototype
-     * @returns {Function)}
+     * @returns {Function}
      */
 })();
