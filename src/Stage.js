@@ -405,8 +405,11 @@
                 this.targetShape._fireAndBubble(MOUSELEAVE, evt);
                 this.targetShape = null;
               }
-              this._fire(CONTENT_MOUSEMOVE, evt);
+
             }
+
+            // content event
+            this._fire(CONTENT_MOUSEMOVE, evt);
 
             if(dd) {
                 dd._drag(evt);
@@ -430,6 +433,7 @@
                 shape._fireAndBubble(MOUSEDOWN, evt);
             }
 
+            // content event
             this._fire(CONTENT_MOUSEDOWN);
 
             // always call preventDefault for desktop events because some browsers
@@ -469,6 +473,7 @@
                     }
                 }
             }
+            // content events
             this._fire(CONTENT_MOUSEUP);
             if (Kinetic.listenClickTap) {
                 this._fire(CONTENT_CLICK, evt);
@@ -495,12 +500,14 @@
             if (shape) {
                 this.tapStartShape = shape;
                 shape._fireAndBubble(TOUCHSTART, evt);
-            }
 
-            // only call preventDefault if the shape is listening for events
-            if (shape.isListening() && evt.preventDefault) {
-                evt.preventDefault();
+                // only call preventDefault if the shape is listening for events
+                if (shape.isListening() && evt.preventDefault) {
+                    evt.preventDefault();
+                }
             }
+            // content event
+            this._fire(CONTENT_TOUCHSTART, evt);
         },
         _touchend: function(evt) {
             this._setPointerPosition(evt);
@@ -532,31 +539,40 @@
                         shape._fireAndBubble(DBL_TAP, evt);
                     }
                 }
+                // only call preventDefault if the shape is listening for events
+                if (shape.isListening() && evt.preventDefault) {
+                    evt.preventDefault();
+                }
+            }
+            // content events
+            if (Kinetic.listenClickTap) {
+                this._fire(CONTENT_TOUCHEND, evt);
+                if(fireDblClick) {
+                    this._fire(CONTENT_DBL_TAP, evt);
+                }
             }
 
             Kinetic.listenClickTap = false;
-
-            // only call preventDefault if the shape is listening for events
-            if (shape.isListening() && evt.preventDefault) {
-                evt.preventDefault();
-            }
         },
         _touchmove: function(evt) {
             this._setPointerPosition(evt);
             var dd = Kinetic.DD,
                 obj = this.getIntersection(this.getPointerPosition()),
-                shape = obj && obj.shape ? obj.shape : this;
+                shape = obj && obj.shape ? obj.shape : undefined;
 
-            shape._fireAndBubble(TOUCHMOVE, evt);
+            if (shape) {
+                shape._fireAndBubble(TOUCHMOVE, evt);
+
+                // only call preventDefault if the shape is listening for events
+                if (shape.isListening() && evt.preventDefault) {
+                    evt.preventDefault();
+                }
+            }
+            this._fire(CONTENT_TOUCHMOVE, evt);
 
             // start drag and drop
             if(dd) {
                 dd._drag(evt);
-            }
-
-            // only call preventDefault if the shape is listening for events
-            if (shape.isListening() && evt.preventDefault) {
-                evt.preventDefault();
             }
         },
         _setMousePosition: function(evt) {
