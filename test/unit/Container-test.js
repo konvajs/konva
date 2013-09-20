@@ -195,13 +195,13 @@ suite('Container', function() {
         stage.add(layer);
 
         var node;
-        node = stage.get('#myCircle')[0];
+        node = stage.find('#myCircle')[0];
         assert.equal(node.className, 'Circle', 'className should be Circle');
-        node = layer.get('.myRect')[0];
+        node = layer.find('.myRect')[0];
         assert.equal(node.className, 'Rect', 'className should be rect');
-        node = layer.get('#myLayer')[0];
+        node = layer.find('#myLayer')[0];
         assert.equal(node, undefined, 'node should be undefined');
-        node = stage.get('#myLayer')[0];
+        node = stage.find('#myLayer')[0];
         assert.equal(node.nodeType, 'Layer', 'node type should be Layer');
 
     });
@@ -237,15 +237,15 @@ suite('Container', function() {
         layer.add(rect);
         stage.add(layer);
 
-        assert.equal(layer.get('#myCircle, .myRect').length, 2, 'should be 2 items in the array');
-        assert.equal(layer.get('#myCircle, .myRect')[0]._id, circle._id, 'circle id is wrong');
-        assert.equal(layer.get('#myCircle, .myRect')[1]._id, rect._id, 'rect id is wrong');
+        assert.equal(layer.find('#myCircle, .myRect').length, 2, 'should be 2 items in the array');
+        assert.equal(layer.find('#myCircle, .myRect')[0]._id, circle._id, 'circle id is wrong');
+        assert.equal(layer.find('#myCircle, .myRect')[1]._id, rect._id, 'rect id is wrong');
 
-        assert.equal(layer.get('#myCircle, Circle, .myRect, Rect').length, 4, 'should be 4 items in the array');
-        assert.equal(layer.get('#myCircle, Circle, .myRect, Rect')[0]._id, circle._id, 'circle id is wrong');
-        assert.equal(layer.get('#myCircle, Circle, .myRect, Rect')[1]._id, circle._id, 'circle id is wrong');
-        assert.equal(layer.get('#myCircle, Circle, .myRect, Rect')[2]._id, rect._id, 'rect id is wrong');
-        assert.equal(layer.get('#myCircle, Circle, .myRect, Rect')[3]._id, rect._id, 'rect id is wrong');
+        assert.equal(layer.find('#myCircle, Circle, .myRect, Rect').length, 4, 'should be 4 items in the array');
+        assert.equal(layer.find('#myCircle, Circle, .myRect, Rect')[0]._id, circle._id, 'circle id is wrong');
+        assert.equal(layer.find('#myCircle, Circle, .myRect, Rect')[1]._id, circle._id, 'circle id is wrong');
+        assert.equal(layer.find('#myCircle, Circle, .myRect, Rect')[2]._id, rect._id, 'rect id is wrong');
+        assert.equal(layer.find('#myCircle, Circle, .myRect, Rect')[3]._id, rect._id, 'rect id is wrong');
 
     });
 
@@ -278,7 +278,7 @@ suite('Container', function() {
         layer.add(rect);
         stage.add(layer);
 
-        var shapes = layer.get('.myShape');
+        var shapes = layer.find('.myShape');
 
         assert.equal(shapes.length, 2, 'shapes array should have 2 elements');
 
@@ -322,7 +322,7 @@ suite('Container', function() {
         layer.add(rect);
         stage.add(layer);
 
-        var shapes = layer.get('Shape');
+        var shapes = layer.find('Shape');
 
         assert.equal(shapes.length, 2, 'shapes array should have 2 elements');
 
@@ -366,7 +366,7 @@ suite('Container', function() {
         layer.add(rect);
         stage.add(layer);
 
-        var shapes = layer.get('.myShape');
+        var shapes = layer.find('.myShape');
 
         assert.equal(shapes.length, 2, 'shapes array should have 2 elements');
         var a = 0;
@@ -613,23 +613,23 @@ suite('Container', function() {
         stage.add(layer);
         stage.add(fooLayer);
 
-        assert.equal(stage.get('Shape').length, 2, 'stage should have 2 shapes');
-        assert.equal(layer.get('Shape').length, 2, 'layer should have 2 shapes');
-        assert.equal(group.get('Shape').length, 1, 'layer should have 2 shapes');
+        assert.equal(stage.find('Shape').length, 2, 'stage should have 2 shapes');
+        assert.equal(layer.find('Shape').length, 2, 'layer should have 2 shapes');
+        assert.equal(group.find('Shape').length, 1, 'layer should have 2 shapes');
 
-        assert.equal(stage.get('Layer').length, 2, 'stage should have 2 layers');
-        assert.equal(stage.get('Group').length, 1, 'stage should have 1 group');
+        assert.equal(stage.find('Layer').length, 2, 'stage should have 2 layers');
+        assert.equal(stage.find('Group').length, 1, 'stage should have 1 group');
 
-        assert.equal(layer.get('Group').length, 1, 'layer should have 1 group');
-        assert.equal(layer.get('Shape').length, 2, 'layer should have 2 shapes');
-        assert.equal(layer.get('Layer').length, 0, 'layer should have 0 layers');
+        assert.equal(layer.find('Group').length, 1, 'layer should have 1 group');
+        assert.equal(layer.find('Shape').length, 2, 'layer should have 2 shapes');
+        assert.equal(layer.find('Layer').length, 0, 'layer should have 0 layers');
 
-        assert.equal(fooLayer.get('Group').length, 0, 'layer should have 0 groups');
-        assert.equal(fooLayer.get('Shape').length, 0, 'layer should have 0 shapes');
+        assert.equal(fooLayer.find('Group').length, 0, 'layer should have 0 groups');
+        assert.equal(fooLayer.find('Shape').length, 0, 'layer should have 0 shapes');
 
-        assert.equal(group.get('Shape').length, 1, 'group should have 1 shape');
-        assert.equal(group.get('Layer').length, 0, 'group should have 0 layers');
-        assert.equal(group.get('Group').length, 0, 'group should have 0 groups');
+        assert.equal(group.find('Shape').length, 1, 'group should have 1 shape');
+        assert.equal(group.find('Layer').length, 0, 'group should have 0 layers');
+        assert.equal(group.find('Group').length, 0, 'group should have 0 groups');
 
     });
 
@@ -727,45 +727,45 @@ suite('Container', function() {
         stage.add(layer2);
         stage.add(fooLayer);
 
-        assert.equal(stage.get('Shape').length, 8, 'stage should have 5 shapes');
-        assert.equal(stage.get('Layer').length, 3, 'stage should have 2 layers');
-        assert.equal(stage.get('Group').length, 1, 'stage should have 1 group');
-        assert.equal(stage.get('Rect').length, 3, 'stage should have 3 rects');
-        assert.equal(stage.get('Circle').length, 2, 'stage should have 2 circles');
-        assert.equal(stage.get('RegularPolygon').length, 1, 'stage should have 1 regular polygon');
-        assert.equal(stage.get('TextPath').length, 1, 'stage should have 1 text path');
-        assert.equal(stage.get('Path').length, 1, 'stage should have 1 path');
+        assert.equal(stage.find('Shape').length, 8, 'stage should have 5 shapes');
+        assert.equal(stage.find('Layer').length, 3, 'stage should have 2 layers');
+        assert.equal(stage.find('Group').length, 1, 'stage should have 1 group');
+        assert.equal(stage.find('Rect').length, 3, 'stage should have 3 rects');
+        assert.equal(stage.find('Circle').length, 2, 'stage should have 2 circles');
+        assert.equal(stage.find('RegularPolygon').length, 1, 'stage should have 1 regular polygon');
+        assert.equal(stage.find('TextPath').length, 1, 'stage should have 1 text path');
+        assert.equal(stage.find('Path').length, 1, 'stage should have 1 path');
 
-        assert.equal(layer.get('Shape').length, 5, 'layer should have 5 shapes');
-        assert.equal(layer.get('Layer').length, 0, 'layer should have 0 layers');
-        assert.equal(layer.get('Group').length, 1, 'layer should have 1 group');
-        assert.equal(layer.get('Rect').length, 3, 'layer should have 3 rects');
-        assert.equal(layer.get('Circle').length, 2, 'layer should have 2 circles');
-        assert.equal(layer.get('RegularPolygon').length, 0, 'layer should have 0 regular polygon');
-        assert.equal(layer.get('TextPath').length, 0, 'layer should have 0 text path');
-        assert.equal(layer.get('Path').length, 0, 'layer should have 0 path');
+        assert.equal(layer.find('Shape').length, 5, 'layer should have 5 shapes');
+        assert.equal(layer.find('Layer').length, 0, 'layer should have 0 layers');
+        assert.equal(layer.find('Group').length, 1, 'layer should have 1 group');
+        assert.equal(layer.find('Rect').length, 3, 'layer should have 3 rects');
+        assert.equal(layer.find('Circle').length, 2, 'layer should have 2 circles');
+        assert.equal(layer.find('RegularPolygon').length, 0, 'layer should have 0 regular polygon');
+        assert.equal(layer.find('TextPath').length, 0, 'layer should have 0 text path');
+        assert.equal(layer.find('Path').length, 0, 'layer should have 0 path');
 
-        assert.equal(layer2.get('Shape').length, 3, 'layer2 should have 3 shapes');
-        assert.equal(layer2.get('Layer').length, 0, 'layer2 should have 0 layers');
-        assert.equal(layer2.get('Group').length, 0, 'layer2 should have 0 group');
-        assert.equal(layer2.get('RegularPolygon').length, 1, 'layer2 should have 1 regular polygon');
-        assert.equal(layer2.get('TextPath').length, 1, 'layer2 should have 1 text path');
-        assert.equal(layer2.get('Path').length, 1, 'layer2 should have 1 path');
+        assert.equal(layer2.find('Shape').length, 3, 'layer2 should have 3 shapes');
+        assert.equal(layer2.find('Layer').length, 0, 'layer2 should have 0 layers');
+        assert.equal(layer2.find('Group').length, 0, 'layer2 should have 0 group');
+        assert.equal(layer2.find('RegularPolygon').length, 1, 'layer2 should have 1 regular polygon');
+        assert.equal(layer2.find('TextPath').length, 1, 'layer2 should have 1 text path');
+        assert.equal(layer2.find('Path').length, 1, 'layer2 should have 1 path');
 
-        assert.equal(fooLayer.get('Shape').length, 0, 'layer should have 0 shapes');
-        assert.equal(fooLayer.get('Group').length, 0, 'layer should have 0 groups');
-        assert.equal(fooLayer.get('Rect').length, 0, 'layer should have 0 rects');
-        assert.equal(fooLayer.get('Circle').length, 0, 'layer should have 0 circles');
+        assert.equal(fooLayer.find('Shape').length, 0, 'layer should have 0 shapes');
+        assert.equal(fooLayer.find('Group').length, 0, 'layer should have 0 groups');
+        assert.equal(fooLayer.find('Rect').length, 0, 'layer should have 0 rects');
+        assert.equal(fooLayer.find('Circle').length, 0, 'layer should have 0 circles');
 
-        assert.equal(group.get('Shape').length, 2, 'group should have 2 shape');
-        assert.equal(group.get('Layer').length, 0, 'group should have 0 layers');
-        assert.equal(group.get('Group').length, 0, 'group should have 0 groups');
-        assert.equal(group.get('Rect').length, 1, 'group should have 1 rects');
-        assert.equal(group.get('Circle').length, 1, 'gropu should have 1 circles');
+        assert.equal(group.find('Shape').length, 2, 'group should have 2 shape');
+        assert.equal(group.find('Layer').length, 0, 'group should have 0 layers');
+        assert.equal(group.find('Group').length, 0, 'group should have 0 groups');
+        assert.equal(group.find('Rect').length, 1, 'group should have 1 rects');
+        assert.equal(group.find('Circle').length, 1, 'gropu should have 1 circles');
     });
 
     // ======================================================
-    test('test get() selector by adding shape, then group, then layer', function() {
+    test('test find() selector by adding shape, then group, then layer', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer({
             name: 'layerName',
@@ -791,24 +791,67 @@ suite('Container', function() {
         layer.add(group);
         stage.add(layer);
 
-        assert.equal(stage.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(stage.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
-        assert.equal(layer.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(layer.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
-        assert.equal(group.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(group.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(stage.find('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(stage.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(layer.find('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(layer.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(group.find('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(group.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
 
-        assert.equal(stage.get('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
-        assert.equal(stage.get('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
-        assert.equal(layer.get('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
-        assert.equal(layer.get('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
+        assert.equal(stage.find('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(stage.find('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
+        assert.equal(layer.find('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(layer.find('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
 
-        assert.equal(stage.get('.layerName')[0].attrs.id, 'layerId', 'problem with layer name selector');
-        assert.equal(stage.get('#layerId')[0].attrs.id, 'layerId', 'problem with layer id selector');
+        assert.equal(stage.find('.layerName')[0].attrs.id, 'layerId', 'problem with layer name selector');
+        assert.equal(stage.find('#layerId')[0].attrs.id, 'layerId', 'problem with layer id selector');
     });
 
     // ======================================================
-    test('test get() selector by adding group, then shape, then layer', function() {
+    test('test find() selector by adding group, then shape, then layer', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer({
+            name: 'layerName',
+            id: 'layerId'
+        });
+        var group = new Kinetic.Group({
+            name: 'groupName',
+            id: 'groupId'
+        });
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 20,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'rectName',
+            id: 'rectId'
+        });
+
+        layer.add(group);
+        group.add(rect);
+        stage.add(layer);
+
+        assert.equal(stage.find('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(stage.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(layer.find('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(layer.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(group.find('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(group.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+
+        assert.equal(stage.find('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(stage.find('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
+        assert.equal(layer.find('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(layer.find('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
+
+        assert.equal(stage.find('.layerName')[0].attrs.id, 'layerId', 'problem with layer name selector');
+        assert.equal(stage.find('#layerId')[0].attrs.id, 'layerId', 'problem with layer id selector');
+    });
+
+    // ======================================================
+    test('test deprecated get() method', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer({
             name: 'layerName',
@@ -835,23 +878,10 @@ suite('Container', function() {
         stage.add(layer);
 
         assert.equal(stage.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(stage.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
-        assert.equal(layer.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(layer.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
-        assert.equal(group.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(group.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
-
-        assert.equal(stage.get('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
-        assert.equal(stage.get('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
-        assert.equal(layer.get('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
-        assert.equal(layer.get('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
-
-        assert.equal(stage.get('.layerName')[0].attrs.id, 'layerId', 'problem with layer name selector');
-        assert.equal(stage.get('#layerId')[0].attrs.id, 'layerId', 'problem with layer id selector');
     });
 
     // ======================================================
-    test('test get() selector by adding group, then layer, then shape', function() {
+    test('test find() selector by adding group, then layer, then shape', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer({
             name: 'layerName',
@@ -877,24 +907,24 @@ suite('Container', function() {
         stage.add(layer);
         group.add(rect);
 
-        assert.equal(stage.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(stage.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
-        assert.equal(layer.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(layer.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
-        assert.equal(group.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(group.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(stage.find('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(stage.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(layer.find('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(layer.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(group.find('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(group.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
 
-        assert.equal(stage.get('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
-        assert.equal(stage.get('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
-        assert.equal(layer.get('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
-        assert.equal(layer.get('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
+        assert.equal(stage.find('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(stage.find('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
+        assert.equal(layer.find('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(layer.find('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
 
-        assert.equal(stage.get('.layerName')[0].attrs.id, 'layerId', 'problem with layer name selector');
-        assert.equal(stage.get('#layerId')[0].attrs.id, 'layerId', 'problem with layer id selector');
+        assert.equal(stage.find('.layerName')[0].attrs.id, 'layerId', 'problem with layer name selector');
+        assert.equal(stage.find('#layerId')[0].attrs.id, 'layerId', 'problem with layer id selector');
     });
 
     // ======================================================
-    test('test get() selector by adding layer, then group, then shape', function() {
+    test('test find() selector by adding layer, then group, then shape', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer({
             name: 'layerName',
@@ -920,20 +950,20 @@ suite('Container', function() {
         layer.add(group);
         group.add(rect);
 
-        assert.equal(stage.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(stage.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
-        assert.equal(layer.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(layer.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
-        assert.equal(group.get('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(group.get('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(stage.find('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(stage.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(layer.find('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(layer.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(group.find('.rectName')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(group.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
 
-        assert.equal(stage.get('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
-        assert.equal(stage.get('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
-        assert.equal(layer.get('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
-        assert.equal(layer.get('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
+        assert.equal(stage.find('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(stage.find('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
+        assert.equal(layer.find('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(layer.find('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
 
-        assert.equal(stage.get('.layerName')[0].attrs.id, 'layerId', 'problem with layer name selector');
-        assert.equal(stage.get('#layerId')[0].attrs.id, 'layerId', 'problem with layer id selector');
+        assert.equal(stage.find('.layerName')[0].attrs.id, 'layerId', 'problem with layer name selector');
+        assert.equal(stage.find('#layerId')[0].attrs.id, 'layerId', 'problem with layer id selector');
 
         layer.draw();
     });

@@ -47,7 +47,7 @@ suite('Blob', function(){
         var stage = addStage();
         var layer = new Kinetic.Layer();
 
-     
+
         var blob = new Kinetic.Blob({
             tension: 0.8,
             points: [{
@@ -73,7 +73,7 @@ suite('Blob', function(){
         layer.add(blob);
         stage.add(layer);
 
-        assert.equal(stage.get('Blob')[0].getPoints().length, 4);
+        assert.equal(stage.find('Blob')[0].getPoints().length, 4);
 
     });
 

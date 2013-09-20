@@ -152,7 +152,7 @@ suite('Node', function() {
         });
         layer.add(circle);
         stage.add(layer);
-        
+
         // shadow cache
         assert.equal(circle.cache.hasShadow, false);
         circle.setShadowColor('red');
@@ -179,7 +179,7 @@ suite('Node', function() {
         });
         layer.add(circle);
         stage.add(layer);
-        
+
         // opacity cache
         assert.equal(circle.cache.absoluteOpacity, 1);
         circle.setOpacity(0.5);
@@ -203,7 +203,7 @@ suite('Node', function() {
         });
         layer.add(circle);
         stage.add(layer);
-        
+
         // listening cache
         assert.equal(circle.cache.listening, true);
         circle.setListening(false);
@@ -227,7 +227,7 @@ suite('Node', function() {
         });
         layer.add(circle);
         stage.add(layer);
-        
+
         // stage cache
         var st = circle.getStage();
         assert.equal(circle.cache.stage._id, stage._id);
@@ -504,30 +504,30 @@ suite('Node', function() {
 
         assert.equal(group.getChildren().length, 2);
         assert.equal(clone.getChildren().length, 2);
-        assert.equal(group.get('.myText')[0].getFill(), 'blue');
-        assert.equal(clone.get('.myText')[0].getFill(), 'blue');
-        clone.get('.myText')[0].setFill('black');
-        assert.equal(group.get('.myRect')[0].attrs.myAttr, 'group rect');
-        assert.equal(clone.get('.myRect')[0].attrs.myAttr, 'group rect');
-        clone.get('.myRect')[0].setAttrs({
+        assert.equal(group.find('.myText')[0].getFill(), 'blue');
+        assert.equal(clone.find('.myText')[0].getFill(), 'blue');
+        clone.find('.myText')[0].setFill('black');
+        assert.equal(group.find('.myRect')[0].attrs.myAttr, 'group rect');
+        assert.equal(clone.find('.myRect')[0].attrs.myAttr, 'group rect');
+        clone.find('.myRect')[0].setAttrs({
             myAttr: 'clone rect'
         });
 
         // Make sure that when we change a clone object attr that the rect object
         // attr isn't updated by reference
 
-        assert.equal(group.get('.myText')[0].getFill(), 'blue');
-        assert.equal(clone.get('.myText')[0].getFill(), 'black');
+        assert.equal(group.find('.myText')[0].getFill(), 'blue');
+        assert.equal(clone.find('.myText')[0].getFill(), 'black');
 
-        assert.equal(group.get('.myRect')[0].attrs.myAttr, 'group rect');
-        assert.equal(clone.get('.myRect')[0].attrs.myAttr, 'clone rect');
+        assert.equal(group.find('.myRect')[0].attrs.myAttr, 'group rect');
+        assert.equal(clone.find('.myRect')[0].attrs.myAttr, 'clone rect');
 
         // make sure private ids are different
         assert.notEqual(group._id, clone._id);
 
         // make sure childrens private ids are different
-        assert.notEqual(group.get('.myRect')[0]._id, clone.get('.myRect')[0]._id);
-        assert.notEqual(group.get('.myText')[0]._id, clone.get('.myText')[0]._id);
+        assert.notEqual(group.find('.myRect')[0]._id, clone.find('.myRect')[0]._id);
+        assert.notEqual(group.find('.myText')[0]._id, clone.find('.myText')[0]._id);
 
         // test user event binding cloning
         assert.equal(clicks.length, 0);
@@ -538,9 +538,9 @@ suite('Node', function() {
 
         // test user event binding cloning on children
         assert.equal(taps.length, 0);
-        group.get('.myRect')[0].fire('tap');
+        group.find('.myRect')[0].fire('tap');
         assert.equal(taps.toString(), 'group rect');
-        clone.get('.myRect')[0].fire('tap');
+        clone.find('.myRect')[0].fire('tap');
         assert.equal(taps.toString(), 'group rect,clone rect');
 
         stage.draw();
@@ -2165,7 +2165,7 @@ suite('Node', function() {
 
         var stage = Kinetic.Node.create(json, container);
 
-        stage.get('#myTriangle').each(function(node) {
+        stage.find('#myTriangle').each(function(node) {
             node.setDrawFunc(drawTriangle);
         });
 
@@ -2211,7 +2211,7 @@ suite('Node', function() {
             var stage = Kinetic.Node.create(json, container);
 
             assert.equal(stage.toJSON(), json);
-            stage.get('#darth').each(function(node) {
+            stage.find('#darth').each(function(node) {
                 node.setImage(imageObj);
             });
             stage.draw();
@@ -2293,7 +2293,7 @@ suite('Node', function() {
 
         layer.add(circle);
 
-        var node = stage.get('#myCircle')[0];
+        var node = stage.find('#myCircle')[0];
 
         assert.equal(node, undefined);
 
@@ -2321,14 +2321,14 @@ suite('Node', function() {
         stage.add(layer);
 
         assert.equal(stage.children.length, 1);
-        assert(stage.get('.myLayer')[0] !== undefined);
-        assert(stage.get('.myCircle')[0] !== undefined);
+        assert(stage.find('.myLayer')[0] !== undefined);
+        assert(stage.find('.myCircle')[0] !== undefined);
 
         layer.destroy();
 
         assert.equal(stage.children.length, 0);
-        assert.equal(stage.get('.myLayer')[0], undefined);
-        assert.equal(stage.get('.myCircle')[0], undefined);
+        assert.equal(stage.find('.myLayer')[0], undefined);
+        assert.equal(stage.find('.myCircle')[0], undefined);
 
         stage.draw();
     });
@@ -2385,14 +2385,14 @@ suite('Node', function() {
         stage.add(layer);
 
         assert.equal(layer.getChildren().length, 1);
-        assert(stage.get('.myGroup')[0] !== undefined);
-        assert(stage.get('.myCircle')[0] !== undefined);
+        assert(stage.find('.myGroup')[0] !== undefined);
+        assert(stage.find('.myCircle')[0] !== undefined);
 
         group.destroy();
 
         assert.equal(layer.children.length, 0);
-        assert.equal(stage.get('.myGroup')[0], undefined);
-        assert.equal(stage.get('.myCircle')[0], undefined);
+        assert.equal(stage.find('.myGroup')[0], undefined);
+        assert.equal(stage.find('.myCircle')[0], undefined);
 
         stage.draw();
     });

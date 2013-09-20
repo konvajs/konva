@@ -74,7 +74,7 @@
          * @memberof Kinetic.Label.prototype
          */
         getText: function() {
-            return this.get('Text')[0];
+            return this.find('Text')[0];
         },
         /**
          * get Tag shape for the label.  You need to access the Tag shape in order to update
@@ -84,7 +84,7 @@
          * @memberof Kinetic.Label.prototype
          */
         getTag: function() {
-            return this.get('Tag')[0];
+            return this.find('Tag')[0];
         },
         _addListeners: function(text) {
             var that = this,

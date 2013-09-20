@@ -6,7 +6,7 @@ suite('Label', function() {
 
         var label = new Kinetic.Label({
             x: 100,
-            y: 100, 
+            y: 100,
             draggable: true
         });
 
@@ -31,7 +31,7 @@ suite('Label', function() {
             fontSize: 50,
             //fontFamily: 'Calibri',
             //fontStyle: 'normal',
-            lineHeight: 1.2, 
+            lineHeight: 1.2,
             //padding: 10,
             fill: 'green'
         }));
@@ -39,7 +39,7 @@ suite('Label', function() {
         layer.add(label);
         stage.add(layer);
 
-        
+
         var beforeTextWidth = label.getText().getWidth();
 
         label.getText().setFontSize(100);
@@ -47,23 +47,23 @@ suite('Label', function() {
         var afterTextWidth = label.getText().getWidth();
 
         label.getText().setFontSize(50);
-        
+
         label.getText().setText('Hello big world');
 
         layer.draw();
-      
-        
+
+
         assert.equal(label.getType(), 'Group');
         assert.equal(label.getClassName(), 'Label');
 
         var json = label.toJSON();
         //console.log(json);
 
-        // use relaxed trace because  text can be a slightly different size in different browsers, 
+        // use relaxed trace because  text can be a slightly different size in different browsers,
         // resulting in slightly different tag dimensions
         var relaxedTrace = layer.getContext().getTrace(true);
         //console.log(relaxedTrace);
-        
+
         assert.equal(relaxedTrace, 'clearRect();save();lineJoin;transform();beginPath();moveTo();lineTo();lineTo();lineTo();lineTo();lineTo();lineTo();closePath();save();globalAlpha;shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;fillStyle;fill();restore();fillStyle;fill();lineWidth;strokeStyle;stroke();restore();save();transform();font;textBaseline;textAlign;save();translate();translate();save();fillStyle;fillText();restore();translate();restore();restore();clearRect();save();lineJoin;transform();beginPath();moveTo();lineTo();lineTo();lineTo();lineTo();lineTo();lineTo();closePath();save();globalAlpha;shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;fillStyle;fill();restore();fillStyle;fill();lineWidth;strokeStyle;stroke();restore();save();transform();font;textBaseline;textAlign;save();translate();translate();save();fillStyle;fillText();restore();translate();restore();restore();');
     });
 

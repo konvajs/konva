@@ -88,21 +88,21 @@
          * @param {String} selector
          * @example
          * // select node with id foo<br>
-         * var node = stage.get('#foo');<br><br>
+         * var node = stage.find('#foo');<br><br>
          *
          * // select nodes with name bar inside layer<br>
-         * var nodes = layer.get('.bar');<br><br>
+         * var nodes = layer.find('.bar');<br><br>
          *
          * // select all groups inside layer<br>
-         * var nodes = layer.get('Group');<br><br>
+         * var nodes = layer.find('Group');<br><br>
          *
          * // select all rectangles inside layer<br>
-         * var nodes = layer.get('Rect');<br><br>
+         * var nodes = layer.find('Rect');<br><br>
          *
          * // select node with an id of foo or a name of bar inside layer<br>
-         * var nodes = layer.get('#foo, .bar');
+         * var nodes = layer.find('#foo, .bar');
          */
-        get: function(selector) {
+        find: function(selector) {
             var retArr = [],
                 selectorArr = selector.replace(/ /g, '').split(','),
                 len = selectorArr.length,
@@ -137,7 +137,7 @@
         },
         _getNodeById: function(key) {
             var node = Kinetic.ids[key];
-                
+
             if(node !== undefined && this.isAncestorOf(node)) {
                 return node;
             }
@@ -222,7 +222,7 @@
         getAllIntersections: function() {
             var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments));
             var arr = [];
-            var shapes = this.get('Shape');
+            var shapes = this.find('Shape');
 
             var len = shapes.length;
             for(var n = 0; n < len; n++) {
@@ -293,6 +293,8 @@
     });
 
     Kinetic.Util.extend(Kinetic.Container, Kinetic.Node);
+    // deprecated methods
+    Kinetic.Container.prototype.get = Kinetic.Container.prototype.find;
 
     // add getters setters
     Kinetic.Factory.addBoxGetterSetter(Kinetic.Container, 'clip');
