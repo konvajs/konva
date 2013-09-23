@@ -203,8 +203,8 @@ Test.Modules.DD = {
         });
 
 
-        test(!Kinetic.Global.isDragging(), 'Global isDragging() should be false');
-        test(!Kinetic.Global.isDragReady(), 'Global isDragReady()) should be false');
+        test(!Kinetic.isDragging(), ' isDragging() should be false');
+        test(!Kinetic.isDragReady(), ' isDragReady()) should be false');
 
         /*
         * simulate drag and drop
@@ -219,16 +219,16 @@ Test.Modules.DD = {
         //test(!dragMove, 'dragmove event should not have been triggered');
         test(!dragEnd, 'dragend event should not have been triggered');
 
-        test(!Kinetic.Global.isDragging(), 'Global isDragging() should be false');
-        test(Kinetic.Global.isDragReady(), 'Global isDragReady()) should be true');
+        test(!Kinetic.isDragging(), ' isDragging() should be false');
+        test(Kinetic.isDragReady(), ' isDragReady()) should be true');
 
         stage._mousemove({
             clientX: 100,
             clientY: 98 + top
         });
 
-        test(Kinetic.Global.isDragging(), 'Global isDragging() should be true');
-        test(Kinetic.Global.isDragReady(), 'Global isDragReady()) should be true');
+        test(Kinetic.isDragging(), ' isDragging() should be true');
+        test(Kinetic.isDragReady(), ' isDragReady()) should be true');
 
         test(dragStart, 'dragstart event was not triggered');
         //test(dragMove, 'dragmove event was not triggered');
@@ -248,8 +248,8 @@ Test.Modules.DD = {
         test(events.toString() === 'mouseup,dragend', 'mouseup should occur before dragend');
 
 
-        test(!Kinetic.Global.isDragging(), 'Global isDragging() should be false');
-        test(!Kinetic.Global.isDragReady(), 'Global isDragReady()) should be false');
+        test(!Kinetic.isDragging(), ' isDragging() should be false');
+        test(!Kinetic.isDragReady(), ' isDragReady()) should be false');
 
         //console.log(greenCircle.getPosition());
         //console.log(circle.getPosition());
@@ -318,8 +318,8 @@ Test.Modules.DD = {
             events.push('mouseup');
         });
 
-        test(!Kinetic.Global.isDragging(), 'Global isDragging() should be false');
-        test(!Kinetic.Global.isDragReady(), 'Global isDragReady()) should be false');
+        test(!Kinetic.isDragging(), ' isDragging() should be false');
+        test(!Kinetic.isDragReady(), ' isDragReady()) should be false');
 
 
         stage._mousedown({
@@ -799,7 +799,6 @@ Test.Modules.EVENT = {
             container: containerId,
             width: 578,
             height: 200,
-            throttle: 999
         });
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
@@ -1004,7 +1003,7 @@ Test.Modules.EVENT = {
         * mobile tests
         */
         // reset inDoubleClickWindow
-        Kinetic.Global.inDblClickWindow = false;
+        Kinetic.inDblClickWindow = false;
 
         // touchstart circle
         stage._touchstart({

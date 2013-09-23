@@ -1,0 +1,420 @@
+suite('DragAndDrop Events', function() {
+    // ======================================================
+    test('test dragstart, dragmove, dragend': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var greenCircle = new Kinetic.Circle({
+            x: 40,
+            y: 40,
+            radius: 20,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black',
+            opacity: 0.5
+        });
+
+
+        var circle = new Kinetic.Circle({
+            x: 380,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            opacity: 0.5
+
+        });
+
+        circle.setDraggable(true);
+
+        layer.add(circle);
+        layer.add(greenCircle);
+        stage.add(layer);
+
+        var top = stage.content.getBoundingClientRect().top;
+
+        var dragStart = false;
+        var dragMove = false;
+        var dragEnd = false;
+        var mouseup = false;
+        var layerDragMove = false;
+        var events = [];
+
+        circle.on('dragstart', function() {
+            dragStart = true;
+        });
+
+
+        circle.on('dragmove', function() {
+            dragMove = true;
+        });
+
+
+        layer.on('dragmove', function() {
+            //console.log('move');
+        });
+
+        circle.on('dragend', function() {
+            dragEnd = true;
+            console.log('dragend');
+            events.push('dragend');
+        });
+
+
+
+        circle.on('mouseup', function() {
+            console.log('mouseup');
+            events.push('mouseup');
+        });
+
+
+        assert.equal(!Kinetic.isDragging(), ' isDragging() should be false');
+        assert.equal(!Kinetic.isDragReady(), ' isDragReady()) should be false');
+
+        /*
+        * simulate drag and drop
+        */
+        //console.log(1)
+        stage._mousedown({
+            clientX: 380,
+            clientY: 98 + top
+        });
+        //console.log(2)
+        assert.equal(!dragStart, 'dragstart event should not have been triggered');
+        //assert.equal(!dragMove, 'dragmove event should not have been triggered');
+        assert.equal(!dragEnd, 'dragend event should not have been triggered');
+
+        assert.equal(!Kinetic.isDragging(), ' isDragging() should be false');
+        assert.equal(Kinetic.isDragReady(), ' isDragReady()) should be true');
+
+        stage._mousemove({
+            clientX: 100,
+            clientY: 98 + top
+        });
+
+        assert.equal(Kinetic.isDragging(), ' isDragging() should be true');
+        assert.equal(Kinetic.isDragReady(), ' isDragReady()) should be true');
+
+        assert.equal(dragStart, 'dragstart event was not triggered');
+        //assert.equal(dragMove, 'dragmove event was not triggered');
+        assert.equal(!dragEnd, 'dragend event should not have been triggered');
+
+        Kinetic.DD._endDragBefore();
+        stage._mouseup({
+            clientX: 100,
+            clientY: 98 + top
+        });
+        Kinetic.DD._endDragAfter({dragEndNode:circle});
+
+        assert.equal(dragStart, 'dragstart event was not triggered');
+        assert.equal(dragMove, 'dragmove event was not triggered');
+        assert.equal(dragEnd, 'dragend event was not triggered');
+
+        assert.equal(events.toString() === 'mouseup,dragend', 'mouseup should occur before dragend');
+
+
+        assert.equal(!Kinetic.isDragging(), ' isDragging() should be false');
+        assert.equal(!Kinetic.isDragReady(), ' isDragReady()) should be false');
+
+        //console.log(greenCircle.getPosition());
+        //console.log(circle.getPosition());
+
+
+
+        assert.equal(greenCircle.getX() === 40, 'green circle x should be 40');
+        assert.equal(greenCircle.getY() === 40, 'green circle y should be 40');
+        assert.equal(circle.getX() === 100, 'circle x should be 100');
+        assert.equal(circle.getY() === 100, 'circle y should be 100');
+
+        showHit(layer);
+
+    });
+
+    // ======================================================
+    test('destroy shape while dragging': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var greenCircle = new Kinetic.Circle({
+            x: 40,
+            y: 40,
+            radius: 20,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black',
+            opacity: 0.5
+        });
+
+
+        var circle = new Kinetic.Circle({
+            x: 380,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            opacity: 0.5
+
+        });
+
+        circle.setDraggable(true);
+
+        layer.add(circle);
+        layer.add(greenCircle);
+        stage.add(layer);
+
+        var top = stage.content.getBoundingClientRect().top;
+
+
+        var dragEnd = false;
+
+
+        circle.on('dragend', function() {
+            dragEnd = true;
+
+        });
+
+
+
+        circle.on('mouseup', function() {
+            console.log('mouseup');
+            events.push('mouseup');
+        });
+
+        assert.equal(!Kinetic.isDragging(), ' isDragging() should be false');
+        assert.equal(!Kinetic.isDragReady(), ' isDragReady()) should be false');
+
+
+        stage._mousedown({
+            clientX: 380,
+            clientY: 98 + top
+        });
+
+        assert.equal(!circle.isDragging(), 'circle should not be dragging');
+
+        stage._mousemove({
+            clientX: 100,
+            clientY: 98 + top
+        });
+
+
+        assert.equal(circle.isDragging(), 'circle should be dragging');
+        assert.equal(!dragEnd, 'dragEnd should not have fired yet');
+
+        // at this point, we are in drag and drop mode
+
+
+        // removing or destroying the circle should trigger dragend
+        circle.destroy();
+        layer.draw();
+
+        assert.equal(!circle.isDragging(), 'destroying circle should stop drag and drop');
+        assert.equal(dragEnd, 'dragEnd should have fired');
+
+
+
+    });
+
+    // ======================================================
+    test('click should not occur after drag and drop': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200
+        });
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: 40,
+            y: 40,
+            radius: 20,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black',
+            draggable: true
+        });
+
+
+        layer.add(circle);
+        stage.add(layer);
+
+        var top = stage.content.getBoundingClientRect().top,
+            clicked = false;
+
+        circle.on('click', function() {
+            console.log('click');
+            clicked = true;
+        });
+
+        circle.on('dblclick', function() {
+            console.log('dblclick');
+        });
+
+        stage._mousedown({
+            clientX: 40,
+            clientY: 40 + top
+        });
+
+        stage._mousemove({
+            clientX: 100,
+            clientY: 100 + top
+        });
+
+        Kinetic.DD._endDragBefore();
+        stage._mouseup({
+            clientX: 100,
+            clientY: 100 + top
+        });
+        Kinetic.DD._endDragAfter({dragEndNode:circle});
+
+        assert.equal(!clicked, 'click event should not have been fired');
+
+    });
+
+    // ======================================================
+    test('cancel drag and drop by setting draggable to false': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            throttle: 999
+        });
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: 380,
+            y: 100,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            draggable: true
+        });
+
+        var dragStart = false;
+        var dragMove = false;
+        var dragEnd = false;
+
+        circle.on('dragstart', function() {
+            dragStart = true;
+        });
+
+        circle.on('dragmove', function() {
+            dragMove = true;
+        });
+
+        circle.on('dragend', function() {
+            dragEnd = true;
+        });
+
+        circle.on('mousedown', function() {
+            circle.setDraggable(false);
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        var top = stage.content.getBoundingClientRect().top;
+
+        /*
+         * simulate drag and drop
+         */
+        stage._mousedown({
+            clientX: 380,
+            clientY: 100 + top
+        });
+
+        stage._mousemove({
+            clientX: 100,
+            clientY: 100 + top
+        });
+
+        Kinetic.DD._endDragBefore();
+        stage._mouseup({
+            clientX: 100,
+            clientY: 100 + top
+        });
+        Kinetic.DD._endDragAfter({dragEndNode:circle});
+
+        assert.equal(circle.getPosition().x === 380, 'circle x should be 380');
+        assert.equal(circle.getPosition().y === 100, 'circle y should be 100');
+    });
+
+    // ======================================================
+    test('drag and drop layer': function(containerId) {
+        var stage = new Kinetic.Stage({
+            container: containerId,
+            width: 578,
+            height: 200,
+            throttle: 999
+        });
+        var layer = new Kinetic.Layer({
+            drawFunc: function() {
+                var context = this.getContext();
+                context.beginPath();
+                context.moveTo(200, 50);
+                context.lineTo(420, 80);
+                context.quadraticCurveTo(300, 100, 260, 170);
+                context.closePath();
+                context.fillStyle = 'blue';
+                context.fill(context);
+            },
+            draggable: true
+        });
+
+        var circle1 = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'red'
+        });
+
+        var circle2 = new Kinetic.Circle({
+            x: 400,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green'
+        });
+
+        layer.add(circle1);
+        layer.add(circle2);
+
+        stage.add(layer);
+
+        var top = stage.content.getBoundingClientRect().top;
+
+        /*
+         * simulate drag and drop
+         */
+        stage._mousedown({
+            clientX: 399,
+            clientY: 96 + top
+        });
+
+        stage._mousemove({
+            clientX: 210,
+            clientY: 109 + top
+        });
+
+        Kinetic.DD._endDragBefore();
+        stage._mouseup({
+            clientX: 210,
+            clientY: 109 + top
+        });
+        Kinetic.DD._endDragAfter({dragEndNode:circle2});
+
+        console.log(layer.getPosition())
+
+        assert.equal(layer.getX() === -189, 'layer x should be -189');
+        assert.equal(layer.getY() === 13, 'layer y should be 13');
+
+    });
+});
