@@ -98,6 +98,7 @@
                 // context.lineTo(p1.x, p1.y);
                 // context.stroke();
             }
+            context.restore();
         },
         /**
          * get text width in pixels
