@@ -151,13 +151,14 @@
          * @method
          * @memberof Kinetic.Context.prototype
          */
-        clear: function(clip) {
-            var canvas = this.getCanvas(),
+        clear: function() {
+            var args = [].slice.call(arguments),
+                canvas = this.getCanvas(),
                 pos, size;
             
-            if (clip) {
-                pos = Kinetic.Util._getXY(clip);
-                size = Kinetic.Util._getSize(clip);
+            if (args.length) {
+                pos = Kinetic.Util._getXY(args);
+                size = Kinetic.Util._getSize(args);
                 this.clearRect(pos.x || 0, pos.y || 0, size.width, size.height);
             }
             else {

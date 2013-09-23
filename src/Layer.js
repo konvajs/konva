@@ -104,15 +104,20 @@
             return this.getCanvas().getContext();
         },
         /**
-         * clear canvas tied to the layer
+         * clear scene and hit canvas contexts tied to the layer
          * @method
          * @memberof Kinetic.Node.prototype
-         * @param {Object} [clip] clipping bounds
+         * @param {Array|Object} [bounds]
          * @example
-         * layer.clear([0, 0, 100, 100])
+         * layer.clear();<br>
+         * layer.clear(0, 0, 100, 100);
          */
-        clear: function(clip) {
-            this.getCanvas().clear(clip);
+        clear: function() {
+            var context = this.getContext(),
+                hitContext = this.getHitCanvas().getContext();
+
+            context.clear.apply(context, arguments);
+            hitContext.clear.apply(hitContext, arguments);
             return this;
         },
         // extend Node.prototype.setVisible

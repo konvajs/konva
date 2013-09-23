@@ -29,6 +29,78 @@ suite('Layer', function() {
         assert.equal(style.left, '0px', 'canvas left should be 0px');
     });
 
+    test('test clear()', function(){
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: 100,
+            y: 100,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle',
+            draggable: true
+        });
+  
+        circle.colorKey = '#000000';
+     
+        circle.on('mouseover', function() {
+          console.log('mouseover');
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        layer.clear();
+
+        var trace = layer.getContext().getTrace();
+        //console.log(trace);
+        assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);');
+
+        var hitTrace = layer.getHitCanvas().getContext().getTrace();
+        //console.log(hitTrace);
+        assert.equal(hitTrace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,70,0,6.283,false);closePath();save();fillStyle=#000000;fill();restore();lineWidth=4;strokeStyle=#000000;stroke();restore();clearRect(0,0,578,200);');
+
+        showHit(layer);
+    });
+
+    test('test clear() with bounds', function(){
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: 100,
+            y: 100,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle',
+            draggable: true
+        });
+  
+        circle.colorKey = '#000000';
+     
+        circle.on('mouseover', function() {
+          console.log('mouseover');
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        layer.clear(100, 100, 100, 100);
+
+        var trace = layer.getContext().getTrace();
+        //console.log(trace);
+        assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(100,100,100,100);');
+
+        var hitTrace = layer.getHitCanvas().getContext().getTrace();
+        //console.log(hitTrace);
+        assert.equal(hitTrace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,70,0,6.283,false);closePath();save();fillStyle=#000000;fill();restore();lineWidth=4;strokeStyle=#000000;stroke();restore();clearRect(100,100,100,100);');
+
+        showHit(layer);
+    });
+
     // ======================================================
     test('layer getIntersection()', function() {
         var stage = addStage();
