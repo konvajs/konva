@@ -577,12 +577,30 @@
         },
         _setMousePosition: function(evt) {
             var contentPosition = this._getContentPosition(),
-                mouseX = evt.offsetX 
-                    || ((evt.clientX || evt.pageX || 0) - contentPosition.left) 
-                    || 0,
-                mouseY = evt.offsetY 
-                    || ((evt.clientY || evt.pageY || 0) - contentPosition.top) 
-                    || 0;
+                offsetX = evt.offsetX,
+                clientX = evt.clientX,
+                mouseX = 0,
+                mouseY = 0;
+
+            // if offsetX is defined, assume that offsetY is defined as well
+            if (offsetX !== undefined) {
+                mouseX = offsetX;
+                mouseY = evt.offsetY;
+            }
+            // we unforunately have to use UA detection here because accessing
+            // the layerX or layerY properties in newer veresions of Chrome
+            // throw a JS warning.  layerX and layerY are required for FF
+            // when the container is transformed via CSS.
+            else if (Kinetic.UA.browser === 'mozilla') {
+                mouseX = evt.layerX;
+                mouseY = evt.layerY;
+            }
+            // if clientX is defined, assume that clientY is defined as well
+            else if (clientX !== undefined && contentPosition) {
+                mouseX = clientX - contentPosition.left;
+                mouseY = evt.clientY - contentPosition.top;
+            }
+
 
             this.mousePos = {
                 x: mouseX,
