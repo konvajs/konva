@@ -576,9 +576,15 @@
             }
         },
         _setMousePosition: function(evt) {
-
-            var mouseX = evt.offsetX !== undefined ? evt.offsetX : evt.layerX || (evt.clientX - this._getContentPosition().left),
-                mouseY = evt.offsetY !== undefined ? evt.offsetY : evt.layerY || (evt.clientY - this._getContentPosition().top);
+            var contentPosition = this._getContentPosition(),
+                mouseX = evt.offsetX 
+                    || ((evt.clientX || 0) - contentPosition.left) 
+                    || evt.layerX 
+                    || 0,
+                mouseY = evt.offsetY 
+                    || ((evt.clientY || 0) - contentPosition.top) 
+                    || evt.layerY 
+                    || 0;
 
             this.mousePos = {
                 x: mouseX,
@@ -586,15 +592,16 @@
             };
         },
         _setTouchPosition: function(evt) {
-            var touch, touchX, touchY;
+            var contentPosition = this._getContentPosition(),
+                touch, touchX, touchY;
 
             if(evt.touches !== undefined && evt.touches.length === 1) {
                 // one finger
                 touch = evt.touches[0];
 
                 // get the information for finger #1
-                touchX = touch.clientX - this._getContentPosition().left;
-                touchY = touch.clientY - this._getContentPosition().top;
+                touchX = touch.clientX - contentPosition.left;
+                touchY = touch.clientY - contentPosition.top;
 
                 this.touchPos = {
                     x: touchX,
