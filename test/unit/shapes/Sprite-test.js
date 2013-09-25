@@ -91,10 +91,19 @@ suite('Sprite', function() {
             });
 
             layer.add(sprite);
+            stage.add(layer);
+
+            assert.equal(sprite.getClassName(), 'Sprite');
+            assert.equal(sprite.getIndex(), 0);
+
+            showHit(layer);
+
+            var trace = layer.hitCanvas.getContext().getTrace();
+
+            assert.equal(trace.indexOf(sprite.colorKey) >= 0, true);
+
             sprite.start();
 
-
-            stage.add(layer);
 
             // kick once
             setTimeout(function() {
@@ -108,8 +117,7 @@ suite('Sprite', function() {
                 sprite.stop();
             }, 3000);
 
-            assert.equal(sprite.getClassName(), 'Sprite');
-            assert.equal(sprite.getIndex(), 0);
+
 
             done();
         };

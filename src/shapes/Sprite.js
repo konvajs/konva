@@ -101,7 +101,7 @@
             context.beginPath();
             context.rect(0, 0, f.width, f.height);
             context.closePath();
-            context.fill(this);
+            context.fillShape(this);
         },
         /**
          * start sprite animation
