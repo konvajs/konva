@@ -578,12 +578,10 @@
         _setMousePosition: function(evt) {
             var contentPosition = this._getContentPosition(),
                 mouseX = evt.offsetX 
-                    || ((evt.clientX || 0) - contentPosition.left) 
-                    || evt.layerX 
+                    || ((evt.clientX || evt.pageX || 0) - contentPosition.left) 
                     || 0,
                 mouseY = evt.offsetY 
-                    || ((evt.clientY || 0) - contentPosition.top) 
-                    || evt.layerY 
+                    || ((evt.clientY || evt.pageY || 0) - contentPosition.top) 
                     || 0;
 
             this.mousePos = {
