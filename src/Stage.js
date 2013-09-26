@@ -589,7 +589,7 @@
             }
             // we unforunately have to use UA detection here because accessing
             // the layerX or layerY properties in newer veresions of Chrome
-            // throw a JS warning.  layerX and layerY are required for FF
+            // throws a JS warning.  layerX and layerY are required for FF
             // when the container is transformed via CSS.
             else if (Kinetic.UA.browser === 'mozilla') {
                 mouseX = evt.layerX;

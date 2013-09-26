@@ -41,4 +41,9 @@ beforeEach(function(){
     title.innerHTML = test.parent.title + ' - ' + test.title;
     title.className = 'kinetic-title';
     kineticContainer.appendChild(title);
+
+    // resets
+    Kinetic.inDblClickWindow = false;
+    Kinetic.DD.isDragging = false;
+    Kinetic.DD.node = undefined;
 });
