@@ -544,6 +544,7 @@
                     this.setLineDash(dashArray);
                 }
                 if(!skipShadow && shape.hasShadow()) {
+                    this.save();
                     this._applyShadow(shape);
                 }
                 this.setAttr('lineWidth', strokeWidth || 2);
@@ -551,6 +552,7 @@
                 shape._strokeFunc(this);
                 
                 if(!skipShadow && shape.hasShadow()) {
+                    this.restore();
                     this._stroke(shape, true);
                 }
                 /////////////////////

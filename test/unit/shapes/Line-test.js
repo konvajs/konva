@@ -124,4 +124,40 @@ suite('Line', function() {
         assert.equal(line.getPoints().length, 4);
 
     });
+
+   // ======================================================
+    test('add line with shadow', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+
+        var points = [{
+            x: 73,
+            y: 160
+        }, {
+            x: 340,
+            y: 23
+        }];
+
+        var line = new Kinetic.Line({
+            points: points,
+            stroke: 'blue',
+            strokeWidth: 20,
+            lineCap: 'round',
+            lineJoin: 'round',
+            shadowColor: 'black',
+            shadowBlur: 20,
+            shadowOffset: 10,
+            shadowOpacity: 0.3
+        });
+
+        layer.add(line);
+        stage.add(layer);
+
+        
+
+        var trace = layer.getContext().getTrace();
+        //console.log(trace);
+        assert.equal(trace, 'clearRect(0,0,578,200);save();lineJoin=round;transform(1,0,0,1,0,0);beginPath();moveTo(73,160);lineTo(340,23);lineCap=round;save();globalAlpha=0.3;shadowColor=black;shadowBlur=20;shadowOffsetX=10;shadowOffsetY=10;lineWidth=20;strokeStyle=blue;stroke();restore();lineCap=round;lineWidth=20;strokeStyle=blue;stroke();restore();');
+
+    });
 });
