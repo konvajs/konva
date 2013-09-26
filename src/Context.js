@@ -62,6 +62,43 @@
             }
         },
         /**
+         * fill shape
+         * @method
+         * @memberof Kinetic.Context.prototype
+         * @param {Kinetic.Shape} shape
+         */
+        fillShape: function(shape) {
+            if(shape.getFillEnabled()) {
+                this._fill(shape);
+            }
+        },
+        /**
+         * stroke shape
+         * @method
+         * @memberof Kinetic.Context.prototype
+         * @param {Kinetic.Shape} shape
+         */
+        strokeShape: function(shape) {
+            if(shape.getStrokeEnabled()) {
+                this._stroke(shape);
+            }
+        },
+        /**
+         * fill then stroke
+         * @method
+         * @memberof Kinetic.Context.prototype
+         * @param {Kinetic.Shape} shape
+         */
+        fillStrokeShape: function(shape) {
+            var fillEnabled = shape.getFillEnabled();
+            if(fillEnabled) {
+                this._fill(shape);
+            }
+            if(shape.getStrokeEnabled()) {
+                this._stroke(shape);
+            }
+        },
+        /**
          * get context trace if trace is enabled
          * @method
          * @memberof Kinetic.Context.prototype
@@ -163,46 +200,6 @@
             }
             else {
                 this.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            }
-        },
-        /**
-         * fill shape
-         * @method
-         * @memberof Kinetic.Context.prototype
-         * @param {Kinetic.Shape} shape
-         */
-        fillShape: function(shape) {
-            if(shape.getFillEnabled()) {
-                this._fill(shape);
-            }
-        },
-        /**
-         * stroke shape
-         * @method
-         * @memberof Kinetic.Context.prototype
-         * @param {Kinetic.Shape} shape
-         */
-        strokeShape: function(shape) {
-            if(shape.getStrokeEnabled()) {
-                this._stroke(shape);
-            }
-        },
-        /**
-         * fill, stroke, and apply shadows to shape.  Shadows 
-         *  will only be applied to either the fill or stroke.&nbsp; Fill
-         *  is given priority over stroke.
-         * @method
-         * @memberof Kinetic.Context.prototype
-         * @param {Kinetic.Shape} shape
-         */
-        fillStrokeShape: function(shape) {
-            var fillEnabled = shape.getFillEnabled();
-            if(fillEnabled) {
-                this._fill(shape);
-            }
-
-            if(shape.getStrokeEnabled()) {
-                this._stroke(shape, shape.hasShadow() && shape.hasFill() && fillEnabled);
             }
         },
         _applyLineCap: function(shape) {
@@ -381,7 +378,7 @@
         _enableTrace: function() {
             var that = this,
                 len = CONTEXT_METHODS.length,
-                _roundArrValues = Kinetic.Util._roundArrValues,
+                _simplifyArray = Kinetic.Util._simplifyArray,
                 origSetter = this.setAttr,
                 n, args;
 
@@ -392,7 +389,7 @@
                         ret;
 
                     that[methodName] = function() {
-                        args = _roundArrValues(Array.prototype.slice.call(arguments, 0));
+                        args = _simplifyArray(Array.prototype.slice.call(arguments, 0));
                         ret = origMethod.apply(that, arguments);
            
                         that._trace({
@@ -482,17 +479,12 @@
             this.setAttr('fillStyle', grd);
             this.fill();
         },
-        _fill: function(shape, skipShadow) {
+        _fill: function(shape) {
             var hasColor = shape.getFill(),
                 hasPattern = shape.getFillPatternImage(),
                 hasLinearGradient = shape.getFillLinearGradientColorStops(),
                 hasRadialGradient = shape.getFillRadialGradientColorStops(),
                 fillPriority = shape.getFillPriority();
-
-            if(!skipShadow && shape.hasShadow()) {
-                this.save();
-                this._applyShadow(shape);
-            }
 
             // priority fills
             if(hasColor && fillPriority === 'color') {
@@ -520,13 +512,8 @@
             else if(hasRadialGradient) {
                 this._fillRadialGradient(shape);
             }
-            
-            if(!skipShadow && shape.hasShadow()) {
-                this.restore();
-                this._fill(shape, true);
-            }
         },
-        _stroke: function(shape, skipShadow) {
+        _stroke: function(shape) {
             var stroke = shape.getStroke(),
                 strokeWidth = shape.getStrokeWidth(),
                 dashArray = shape.getDashArray(),
@@ -543,55 +530,36 @@
                 if(dashArray && shape.getDashArrayEnabled()) {
                     this.setLineDash(dashArray);
                 }
-                if(!skipShadow && shape.hasShadow()) {
-                    this.save();
-                    this._applyShadow(shape);
-                }
+
                 this.setAttr('lineWidth', strokeWidth || 2);
                 this.setAttr('strokeStyle', stroke || 'black');
                 shape._strokeFunc(this);
                 
-                if(!skipShadow && shape.hasShadow()) {
-                    this.restore();
-                    this._stroke(shape, true);
-                }
-                /////////////////////
-
                 if (!strokeScaleEnabled) {
                     this.restore();
                 }
             }
         },
-        applyShadow: function(shape, drawFunc) {
-            this.save();
-            this._applyShadow(shape);
-            drawFunc();
-            this.restore();
-            drawFunc();
-        },
         _applyShadow: function(shape) {
-            var util, absOpacity, color, blur, offset, shadowOpacity;
-
-            if(shape.hasShadow() && shape.getShadowEnabled()) {
-                util = Kinetic.Util;
-                absOpacity = shape.getAbsoluteOpacity();
-                color = util.get(shape.getShadowColor(), 'black');
-                blur = util.get(shape.getShadowBlur(), 5);
-                shadowOpacity = util.get(shape.getShadowOpacity(), 0);
+            var util = Kinetic.Util,
+                absOpacity = shape.getAbsoluteOpacity(),
+                color = util.get(shape.getShadowColor(), 'black'),
+                blur = util.get(shape.getShadowBlur(), 5),
+                shadowOpacity = util.get(shape.getShadowOpacity(), 0),
                 offset = util.get(shape.getShadowOffset(), {
                     x: 0,
                     y: 0
                 });
 
-                if(shadowOpacity) {
-                    this.setAttr('globalAlpha', shadowOpacity * absOpacity);
-                }
-
-                this.setAttr('shadowColor', color);
-                this.setAttr('shadowBlur', blur);
-                this.setAttr('shadowOffsetX', offset.x);
-                this.setAttr('shadowOffsetY', offset.y);
+            if(shadowOpacity) {
+                this.setAttr('globalAlpha', shadowOpacity * absOpacity);
             }
+
+            this.setAttr('shadowColor', color);
+            this.setAttr('shadowBlur', blur);
+            this.setAttr('shadowOffsetX', offset.x);
+            this.setAttr('shadowOffsetY', offset.y);
+        
         }
     };
     Kinetic.Util.extend(Kinetic.SceneContext, Kinetic.Context);

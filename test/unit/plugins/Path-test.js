@@ -104,7 +104,7 @@ suite('Path', function() {
         var trace = layer.getContext().getTrace();
 
         //console.log(trace);
-        assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(200,100);lineTo(300,100);lineTo(300,150);closePath();save();globalAlpha=0.5;shadowColor=maroon;shadowBlur=2;shadowOffsetX=10;shadowOffsetY=10;fillStyle=#fcc;fill();restore();fillStyle=#fcc;fill();lineWidth=2;strokeStyle=#333;stroke();restore();');
+        assert.equal(trace, 'clearRect(0,0,578,200);save();save();globalAlpha=0.5;shadowColor=maroon;shadowBlur=2;shadowOffsetX=10;shadowOffsetY=10;drawImage([object HTMLCanvasElement],0,0);restore();drawImage([object HTMLCanvasElement],0,0);restore();');
     });
     
     // ======================================================

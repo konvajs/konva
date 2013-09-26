@@ -147,17 +147,17 @@ suite('Line', function() {
             shadowColor: 'black',
             shadowBlur: 20,
             shadowOffset: 10,
-            shadowOpacity: 0.3
+            shadowOpacity: 0.5,
+            draggable: true
         });
 
         layer.add(line);
         stage.add(layer);
 
-        
 
-        var trace = layer.getContext().getTrace();
-        //console.log(trace);
-        assert.equal(trace, 'clearRect(0,0,578,200);save();lineJoin=round;transform(1,0,0,1,0,0);beginPath();moveTo(73,160);lineTo(340,23);lineCap=round;save();globalAlpha=0.3;shadowColor=black;shadowBlur=20;shadowOffsetX=10;shadowOffsetY=10;lineWidth=20;strokeStyle=blue;stroke();restore();lineCap=round;lineWidth=20;strokeStyle=blue;stroke();restore();');
+        var relaxedTrace = layer.getContext().getTrace(true);
+        //console.log(relaxedTrace);
+        assert.equal(relaxedTrace, 'clearRect();save();save();globalAlpha;shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;drawImage();restore();drawImage();restore();');
 
     });
 });

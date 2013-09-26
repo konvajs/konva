@@ -208,20 +208,46 @@
             delete Kinetic.shapes[this.colorKey];
             return this;
         },
-        drawScene: function(canvas) {
-            canvas = canvas || this.getLayer().getCanvas();
-
-            var drawFunc = this.getDrawFunc(),
-                context = canvas.getContext();
+        drawScene: function(can) {
+            var canvas = can || this.getLayer().getCanvas(),
+                context = canvas.getContext(),
+                drawFunc = this.getDrawFunc(),
+                applyShadow = this.hasShadow() && this.getShadowEnabled(),
+                stage, tempCanvas, tempContext;
 
             if(drawFunc && this.isVisible()) {
-                context.save();
-                context._applyOpacity(this);
-                context._applyLineJoin(this);
-                context._applyAncestorTransforms(this);
-                drawFunc.call(this, context);
-                context.restore();
+                if (applyShadow) {
+                    stage = this.getStage();
+                    tempCanvas = new Kinetic.SceneCanvas({
+                        width: stage.getWidth(),
+                        height: stage.getHeight()
+                    });
+                    tempContext = tempCanvas.getContext();
+                    tempContext.save();
+                    tempContext._applyLineJoin(this);
+                    tempContext._applyAncestorTransforms(this);
+                    drawFunc.call(this, tempContext);
+                    tempContext.restore();
+
+                    context.save();
+                    context.save();
+                    context._applyShadow(this);
+                    context.drawImage(tempCanvas._canvas, 0, 0); 
+                    context.restore();
+                    context._applyOpacity(this);
+                    context.drawImage(tempCanvas._canvas, 0, 0);
+                    context.restore();
+                }
+                else {
+                    context.save();
+                    context._applyOpacity(this);
+                    context._applyLineJoin(this);
+                    context._applyAncestorTransforms(this);
+                    drawFunc.call(this, context);
+                    context.restore();
+                }
             }
+
             return this;
         },
         drawHit: function() {

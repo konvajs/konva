@@ -340,17 +340,21 @@
             }
             return false;
         },
-        _roundArrValues: function(arr) {
+        _simplifyArray: function(arr) {
             var retArr = [],
                 len = arr.length,
-                _isNumber = Kinetic.Util._isNumber,
+                util = Kinetic.Util,
                 n, val;
 
             for (n=0; n<len; n++) {
                 val = arr[n];
-                if (_isNumber(val)) {
+                if (util._isNumber(val)) {
                     val = Math.round(val * 1000) / 1000;
                 }
+                else if (!util._isString(val)) {
+                    val = val.toString();
+                }
+
                 retArr.push(val);
             }
 

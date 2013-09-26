@@ -357,7 +357,7 @@ suite('Shape-test', function() {
         layer.draw();
         var trace = layer.getContext().getTrace();
         //console.log(trace);
-        assert.equal(trace, 'clearRect(0,0,578,200);save();transform(3,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();save();shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;fillStyle=green;fill();restore();fillStyle=green;fill();setLineDash([10,10]);lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(3,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();save();shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;fillStyle=green;fill();restore();fillStyle=green;fill();save();setTransform(1,0,0,1,0,0);setLineDash([10,10]);lineWidth=4;strokeStyle=black;stroke();restore();restore();');
+        assert.equal(trace, 'clearRect(0,0,578,200);save();save();shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;drawImage([object HTMLCanvasElement],0,0);restore();drawImage([object HTMLCanvasElement],0,0);restore();clearRect(0,0,578,200);save();save();shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;drawImage([object HTMLCanvasElement],0,0);restore();drawImage([object HTMLCanvasElement],0,0);restore();');
 
         circle.disableFill();
         assert.equal(circle.getFillEnabled(), false, 'fillEnabled should be false');

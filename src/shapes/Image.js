@@ -82,14 +82,7 @@
                     params = [image, 0, 0, width, height];
                 }
 
-                if(this.hasShadow()) {
-                    context.applyShadow(this, function() {
-                        context.drawImage.apply(context, params);
-                    });
-                }
-                else {
-                    context.drawImage.apply(context, params);
-                }
+                context.drawImage.apply(context, params);
             }
         },
         drawHitFunc: function(context) {

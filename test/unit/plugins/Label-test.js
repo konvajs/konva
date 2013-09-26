@@ -64,7 +64,8 @@ suite('Label', function() {
         var relaxedTrace = layer.getContext().getTrace(true);
         //console.log(relaxedTrace);
 
-        assert.equal(relaxedTrace, 'clearRect();save();lineJoin;transform();beginPath();moveTo();lineTo();lineTo();lineTo();lineTo();lineTo();lineTo();closePath();save();globalAlpha;shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;fillStyle;fill();restore();fillStyle;fill();lineWidth;strokeStyle;stroke();restore();save();transform();font;textBaseline;textAlign;save();translate();translate();save();fillStyle;fillText();restore();translate();restore();restore();clearRect();save();lineJoin;transform();beginPath();moveTo();lineTo();lineTo();lineTo();lineTo();lineTo();lineTo();closePath();save();globalAlpha;shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;fillStyle;fill();restore();fillStyle;fill();lineWidth;strokeStyle;stroke();restore();save();transform();font;textBaseline;textAlign;save();translate();translate();save();fillStyle;fillText();restore();translate();restore();restore();');
+        assert.equal(relaxedTrace, 'clearRect();save();save();globalAlpha;shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;drawImage();restore();drawImage();restore();save();transform();font;textBaseline;textAlign;save();translate();translate();save();fillStyle;fillText();restore();translate();restore();restore();clearRect();save();save();globalAlpha;shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;drawImage();restore();drawImage();restore();save();transform();font;textBaseline;textAlign;save();translate();translate();save();fillStyle;fillText();restore();translate();restore();restore();');
+
     });
 
     // ======================================================
