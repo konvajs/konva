@@ -156,13 +156,24 @@
     };
 
     Kinetic.Node.prototype._listenDrag = function() {
-        this._dragCleanup();
         var that = this;
-        this.on('mousedown.kinetic touchstart.kinetic', function(evt) {
-            if(!Kinetic.DD.node) {
-                that.startDrag(evt);
-            }
-        });
+
+        this._dragCleanup();
+
+        if (this.getClassName() === 'Stage') {
+            this.on('contentMousedown.kinetic contentTouchstart.kinetic', function(evt) {
+                if(!Kinetic.DD.node) {
+                    that.startDrag(evt);
+                }
+            });
+        }
+        else {
+            this.on('mousedown.kinetic touchstart.kinetic', function(evt) {
+                if(!Kinetic.DD.node) {
+                    that.startDrag(evt);
+                }
+            });
+        }
     };
 
     Kinetic.Node.prototype._dragChange = function() {

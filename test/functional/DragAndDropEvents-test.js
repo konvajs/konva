@@ -396,4 +396,53 @@ suite('DragAndDropEvents', function() {
         assert.equal(layer.getY(), 13, 'layer y should be 13');
 
     });
+
+    // ======================================================
+    test('drag and drop stage', function() {
+        var stage = addStage();
+
+        stage.setDraggable(true);
+
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: 100,
+            y: 100,
+            radius: 70,
+            fill: 'red'
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        var top = stage.content.getBoundingClientRect().top;
+
+        assert.equal(stage.getX(), 0);
+        assert.equal(stage.getY(), 0);
+
+        /*
+         * simulate drag and drop
+         */
+        stage._mousedown({
+            clientX: 100,
+            clientY: 100 + top
+        });
+
+        stage._mousemove({
+            clientX: 300,
+            clientY: 110 + top
+        });
+
+        Kinetic.DD._endDragBefore();
+        stage._mouseup({
+            clientX: 300,
+            clientY: 110 + top
+        });
+        Kinetic.DD._endDragAfter();
+
+        assert.equal(stage.getX(), 200);
+        assert.equal(stage.getY(), 10);
+
+
+    });
 });
