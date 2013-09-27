@@ -104,12 +104,14 @@
          *  element is the y component
          */
         intersects: function() {
-            var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments));
-            var stage = this.getStage();
-            var hitCanvas = stage.hitCanvas;
-            hitCanvas.getContext().clear();
-            this.drawScene(hitCanvas);
-            var p = hitCanvas.context.getImageData(pos.x | 0, pos.y | 0, 1, 1).data;
+            var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments)),
+                stage = this.getStage(),
+                bufferHitCanvas = stage.bufferHitCanvas,
+                p;
+
+            bufferHitCanvas.getContext().clear();
+            this.drawScene(bufferHitCanvas);
+            p = bufferHitCanvas.context.getImageData(pos.x | 0, pos.y | 0, 1, 1).data;
             return p[3] > 0;
         },
         /**
@@ -213,29 +215,27 @@
                 context = canvas.getContext(),
                 drawFunc = this.getDrawFunc(),
                 applyShadow = this.hasShadow() && this.getShadowEnabled(),
-                stage, tempCanvas, tempContext;
+                stage, bufferCanvas, bufferContext;
 
             if(drawFunc && this.isVisible()) {
                 if (applyShadow) {
                     stage = this.getStage();
-                    tempCanvas = new Kinetic.SceneCanvas({
-                        width: stage.getWidth(),
-                        height: stage.getHeight()
-                    });
-                    tempContext = tempCanvas.getContext();
-                    tempContext.save();
-                    tempContext._applyLineJoin(this);
-                    tempContext._applyAncestorTransforms(this);
-                    drawFunc.call(this, tempContext);
-                    tempContext.restore();
+                    bufferCanvas = stage.bufferCanvas;
+                    bufferContext = bufferCanvas.getContext();
+                    bufferContext.clear();
+                    bufferContext.save();
+                    bufferContext._applyLineJoin(this);
+                    bufferContext._applyAncestorTransforms(this);
+                    drawFunc.call(this, bufferContext);
+                    bufferContext.restore();
 
                     context.save();
                     context.save();
                     context._applyShadow(this);
-                    context.drawImage(tempCanvas._canvas, 0, 0); 
+                    context.drawImage(bufferCanvas._canvas, 0, 0); 
                     context.restore();
                     context._applyOpacity(this);
-                    context.drawImage(tempCanvas._canvas, 0, 0);
+                    context.drawImage(bufferCanvas._canvas, 0, 0);
                     context.restore();
                 }
                 else {

@@ -300,10 +300,10 @@
                 this.content.style.width = width + PX;
                 this.content.style.height = height + PX;
 
-                this.bufferCanvas.setSize(width, height, 1);
-                this.hitCanvas.setSize(width, height);
+                this.bufferCanvas.setSize(width, height);
+                this.bufferHitCanvas.setSize(width, height);
 
-                // set pointer defined layer dimensions
+                // set layer dimensions
                 for(n = 0; n < len; n++) {
                     layer = layers[n];
                     layer.getCanvas().setSize(width, height);
@@ -646,7 +646,7 @@
             container.appendChild(this.content);
 
             this.bufferCanvas = new Kinetic.SceneCanvas();
-            this.hitCanvas = new Kinetic.HitCanvas();
+            this.bufferHitCanvas = new Kinetic.HitCanvas();
 
             this._resizeDOM();
         },
