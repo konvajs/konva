@@ -40,15 +40,13 @@
             Kinetic.Shape.call(this, config);
             this.className = IMAGE;
         },
+
         drawFunc: function(context) {
-            var width = this.getWidth(),
-                height = this.getHeight(),
-                params,
-                that = this,
-                cropX = this.getCropX() || 0,
-                cropY = this.getCropY() || 0,
-                cropWidth = this.getCropWidth(),
-                cropHeight = this.getCropHeight(),
+            var width = this.getWidth(), 
+                height = this.getHeight(), 
+                that = this, 
+                crop,
+                params, 
                 image;
 
             //TODO: this logic needs to hook int othe new caching system
@@ -60,11 +58,26 @@
             }
 
             // NOTE: this.filterCanvas may be set by the above code block
+            // In that case, cropping is already applied.
             if (this.filterCanvas) {
                 image = this.filterCanvas._canvas;
+                params = [image, 0, 0, width, height];
             }
             else {
                 image = this.getImage();
+
+                if (image) {
+                    crop = this.getCrop();
+                    if (crop) {
+                        crop.x = crop.x || 0;
+                        crop.y = crop.y || 0;
+                        crop.width = crop.width || image.width - crop.x;
+                        crop.height = crop.height || image.height - crop.y;
+                        params = [image, crop.x, crop.y, crop.width, crop.height, 0, 0, width, height];
+                    } else {
+                        params = [image, 0, 0, width, height];
+                    }
+                }
             }
 
             context.beginPath();
@@ -72,22 +85,13 @@
             context.closePath();
             context.fillStrokeShape(this);
 
-            if(image) {
-                // if cropping
-                if(cropWidth && cropHeight) {
-                    params = [image, cropX, cropY, cropWidth, cropHeight, 0, 0, width, height];
-                }
-                // no cropping
-                else {
-                    params = [image, 0, 0, width, height];
-                }
-
+            if (image) {
                 context.drawImage.apply(context, params);
             }
         },
         drawHitFunc: function(context) {
-            var width = this.getWidth(),
-                height = this.getHeight(),
+            var width = this.getWidth(), 
+                height = this.getHeight(), 
                 imageHitRegion = this.imageHitRegion;
 
             if(imageHitRegion) {
@@ -110,25 +114,37 @@
                 width = this.getWidth(),
                 height = this.getHeight(),
                 filter = this.getFilter(),
+                crop = this.getCrop() || {},
                 filterCanvas, context, imageData;
 
-            if (this.filterCanvas){
+            // Determine the region we are cropping
+            crop.x = crop.x || 0;
+            crop.y = crop.y || 0;
+            crop.width = crop.width || image.width - crop.x;
+            crop.height = crop.height || image.height - crop.y;
+
+            // Make a filterCanvas the same size as the cropped image
+            if (this.filterCanvas &&
+                    this.filterCanvas.getWidth() === crop.width &&
+                    this.filterCanvas.getHeight() === crop.height) {
                 filterCanvas = this.filterCanvas;
                 filterCanvas.getContext().clear();
             }
             else {
                 filterCanvas = this.filterCanvas = new Kinetic.SceneCanvas({
-                    width: width,
-                    height: height,
-                    pixelRatio: 1
+                    width: crop.width, 
+                    height: crop.height,
+                    pixelRatio: 1,
                 });
             }
 
             context = filterCanvas.getContext();
 
             try {
-                context.drawImage(image, 0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
-                imageData = context.getImageData(0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
+                // Crop the image onto the filterCanvas then apply
+                // the filter to the filterCanvas
+                context.drawImage(image, crop.x, crop.y, crop.width, crop.height, 0,0,crop.width, crop.height);
+                imageData = context.getImageData(0, 0, crop.width, crop.height);
                 filter.call(this, imageData);
                 context.putImageData(imageData, 0, 0);
             }
