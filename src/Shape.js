@@ -215,10 +215,12 @@
                 context = canvas.getContext(),
                 drawFunc = this.getDrawFunc(),
                 applyShadow = this.hasShadow() && this.getShadowEnabled(),
+                applyOpacity = this.getOpacity() !== 1,
                 stage, bufferCanvas, bufferContext;
 
             if(drawFunc && this.isVisible()) {
-                if (applyShadow) {
+                // buffer canvas is needed to apply shadows or opacity
+                if (applyShadow || applyOpacity) {
                     stage = this.getStage();
                     bufferCanvas = stage.bufferCanvas;
                     bufferContext = bufferCanvas.getContext();
@@ -230,20 +232,27 @@
                     bufferContext.restore();
 
                     context.save();
-                    context.save();
-                    context._applyShadow(this);
-                    context.drawImage(bufferCanvas._canvas, 0, 0); 
-                    context.restore();
-                    context._applyOpacity(this);
+                    if (applyShadow) {
+                        context.save();
+                        context._applyShadow(this);
+                        context.drawImage(bufferCanvas._canvas, 0, 0); 
+                        context.restore();
+                    }
+
+                    if (applyOpacity) {
+                        context._applyOpacity(this);
+                    }
+
                     context.drawImage(bufferCanvas._canvas, 0, 0);
                     context.restore();
                 }
+                // if buffer canvas is not needed
                 else {
                     context.save();
-                    context._applyOpacity(this);
-                    context._applyLineJoin(this);
-                    context._applyAncestorTransforms(this);
-                    drawFunc.call(this, context);
+                        context._applyOpacity(this);
+                        context._applyLineJoin(this);
+                        context._applyAncestorTransforms(this);
+                        drawFunc.call(this, context);
                     context.restore();
                 }
             }
