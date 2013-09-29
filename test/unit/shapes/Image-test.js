@@ -210,12 +210,13 @@ suite('Image', function(){
               draggable: true,
               shadowColor: 'black',
               shadowBlur: 10,
-              shadowOffset: [20, 20],
+              shadowOffset: 20,
               shadowOpacity: 0.2
           });
 
           // override color key with black
-          lion.colorKey = '000000';
+          lion.colorKey = '#000000';
+          Kinetic.shapes['#000000'] = lion;
 
           layer.add(lion);
 
@@ -226,6 +227,10 @@ suite('Image', function(){
               var trace = layer.hitCanvas.getContext().getTrace();
               //console.log(trace);
               assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,200,40);drawImage([object HTMLImageElement],0,0,144,139);beginPath();rect(0,0,144,139);closePath();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,200,40);drawImage([object HTMLImageElement],0,0,144,139);beginPath();rect(0,0,144,139);closePath();restore();');
+
+              var hitTrace = layer.hitCanvas.getContext().getTrace();
+              //console.log(hitTrace);
+              assert.equal(hitTrace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,200,40);drawImage([object HTMLImageElement],0,0,144,139);beginPath();rect(0,0,144,139);closePath();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,200,40);drawImage([object HTMLImageElement],0,0,144,139);beginPath();rect(0,0,144,139);closePath();restore();');
 
               done();  
 
@@ -303,4 +308,75 @@ suite('Image', function(){
               
   });
 
+  // ======================================================
+  test('image with opacity and shadow', function(done) {
+      var imageObj = new Image();
+      imageObj.onload = function() {
+          var stage = addStage();
+
+          var layer = new Kinetic.Layer();
+          darth = new Kinetic.Image({
+              x: 200,
+              y: 60,
+              image: imageObj,
+              width: 100,
+              height: 100,
+              offset: [50, 30],
+              draggable: true,
+              opacity: 0.5,
+              shadowColor: 'black',
+              shadowBlur: 10,
+              shadowOpacity: 0.5,
+              shadowOffset: 20
+          });
+
+          layer.add(darth);
+          stage.add(layer);
+
+          var trace = layer.getContext().getTrace();
+          //console.log(trace);
+          assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);save();globalAlpha=0.25;shadowColor=black;shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;beginPath();rect(0,0,100,100);closePath();drawImage([object HTMLImageElement],0,0,100,100);restore();globalAlpha=0.5;beginPath();rect(0,0,100,100);closePath();drawImage([object HTMLImageElement],0,0,100,100);restore();');
+
+          done();
+
+      };
+      imageObj.src = 'assets/darth-vader.jpg';
+  });
+
+  // ======================================================
+  test('image with stroke, opacity and shadow', function(done) {
+      var imageObj = new Image();
+      imageObj.onload = function() {
+          var stage = addStage();
+
+          var layer = new Kinetic.Layer();
+          darth = new Kinetic.Image({
+              x: 200,
+              y: 60,
+              image: imageObj,
+              width: 100,
+              height: 100,
+              offset: [50, 30],
+              draggable: true,
+              opacity: 0.5,
+              shadowColor: 'black',
+              shadowBlur: 10,
+              shadowOpacity: 0.5,
+              shadowOffset: 20,
+              stroke: 'red',
+              strokeWidth: 20
+          });
+
+          layer.add(darth);
+          stage.add(layer);
+
+          var trace = layer.getContext().getTrace();
+          //console.log(trace);
+          assert.equal(trace, 'clearRect(0,0,578,200);save();save();globalAlpha=0.25;shadowColor=black;shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;drawImage([object HTMLCanvasElement],0,0);restore();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0);restore();');
+
+          done();
+
+      };
+      imageObj.src = 'assets/darth-vader.jpg';
+  });
 });

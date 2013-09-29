@@ -103,6 +103,9 @@
             context.closePath();
             context.fillShape(this);
         },
+        _useBufferCanvas: function() {
+            return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasStroke();
+        },
         /**
          * start sprite animation
          * @method

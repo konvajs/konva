@@ -78,15 +78,23 @@
             return this._getCache(HAS_SHADOW, this._hasShadow);  
         },
         _hasShadow: function() {
-            return (this.getShadowOpacity() !== 0 && !!(this.getShadowColor() || this.getShadowBlur() || this.getShadowOffsetX() || this.getShadowOffsetY()));
+            return this.getShadowEnabled() && (this.getShadowOpacity() !== 0 && !!(this.getShadowColor() || this.getShadowBlur() || this.getShadowOffsetX() || this.getShadowOffsetY()));
         },
         /**
-         * returns whether or not a fill is present
+         * returns whether or not the shape will be filled
          * @method
          * @memberof Kinetic.Shape.prototype
          */
         hasFill: function() {
             return !!(this.getFill() || this.getFillPatternImage() || this.getFillLinearGradientColorStops() || this.getFillRadialGradientColorStops());
+        },
+        /**
+         * returns whether or not the shape will be stroked
+         * @method
+         * @memberof Kinetic.Shape.prototype
+         */
+        hasStroke: function() {
+            return !!(this.getStroke() || this.getStrokeWidth());
         },
         _get: function(selector) {
             return this.className === selector || this.nodeType === selector ? [this] : [];
@@ -210,17 +218,18 @@
             delete Kinetic.shapes[this.colorKey];
             return this;
         },
+        _useBufferCanvas: function() {
+            return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke();
+        },
         drawScene: function(can) {
             var canvas = can || this.getLayer().getCanvas(),
                 context = canvas.getContext(),
                 drawFunc = this.getDrawFunc(),
-                applyShadow = this.hasShadow() && this.getShadowEnabled(),
-                applyOpacity = this.getAbsoluteOpacity() !== 1,
+                hasShadow = this.hasShadow(),
                 stage, bufferCanvas, bufferContext;
 
-            if(drawFunc && this.isVisible()) {
-                // buffer canvas is needed to apply shadows or opacity
-                if (applyShadow || applyOpacity) {
+            if(drawFunc && this.isVisible()) { 
+                if (this._useBufferCanvas()) {
                     stage = this.getStage();
                     bufferCanvas = stage.bufferCanvas;
                     bufferContext = bufferCanvas.getContext();
@@ -232,27 +241,32 @@
                     bufferContext.restore();
 
                     context.save();
-                    if (applyShadow) {
+                    if (hasShadow) {
                         context.save();
                         context._applyShadow(this);
                         context.drawImage(bufferCanvas._canvas, 0, 0); 
                         context.restore();
                     }
 
-                    if (applyOpacity) {
-                        context._applyOpacity(this);
-                    }
-
+                    context._applyOpacity(this);
                     context.drawImage(bufferCanvas._canvas, 0, 0);
                     context.restore();
                 }
                 // if buffer canvas is not needed
                 else {
                     context.save();
-                        context._applyOpacity(this);
-                        context._applyLineJoin(this);
-                        context._applyAncestorTransforms(this);
+                    context._applyLineJoin(this);
+                    context._applyAncestorTransforms(this);
+
+                    if (hasShadow) {
+                        context.save();
+                        context._applyShadow(this);
                         drawFunc.call(this, context);
+                        context.restore();
+                    }   
+
+                    context._applyOpacity(this);
+                    drawFunc.call(this, context);
                     context.restore();
                 }
             }

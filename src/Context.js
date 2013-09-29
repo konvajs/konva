@@ -519,7 +519,7 @@
                 dashArray = shape.getDashArray(),
                 strokeScaleEnabled = shape.getStrokeScaleEnabled();
 
-            if(stroke || strokeWidth) {
+            if(shape.hasStroke()) {
                 if (!strokeScaleEnabled) {
                     this.save();
                     this.setTransform(1, 0, 0, 1, 0, 0);

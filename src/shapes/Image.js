@@ -40,6 +40,9 @@
             Kinetic.Shape.call(this, config);
             this.className = IMAGE;
         },
+        _useBufferCanvas: function() {
+            return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasStroke();
+        },
         drawFunc: function(context) {
             var width = this.getWidth(),
                 height = this.getHeight(),

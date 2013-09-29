@@ -388,5 +388,99 @@ suite('Shape-test', function() {
 
     });
 
+  // ======================================================
+  test('fill with shadow and opacity', function(){
+    var stage = addStage();
 
+    var layer = new Kinetic.Layer();
+
+    var rect = new Kinetic.Rect({
+      x: 100,
+      y: 50,
+      width: 100,
+      height: 50,
+      fill: 'green',
+      opacity: 0.5,
+      shadowColor: 'black',
+      shadowBlur: 10,
+      shadowOffset: 10,
+      shadowOpacity: 0.5
+    });
+
+    layer.add(rect);
+    stage.add(layer);
+
+    assert.equal(rect.getX(), 100);
+    assert.equal(rect.getY(), 50);
+
+    var trace = layer.getContext().getTrace();
+    //console.log(trace);
+
+    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);save();globalAlpha=0.25;shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();restore();globalAlpha=0.5;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();restore();');
+
+  });
+
+  // ======================================================
+  test('stroke with shadow and opacity', function(){
+    var stage = addStage();
+
+    var layer = new Kinetic.Layer();
+
+    var rect = new Kinetic.Rect({
+      x: 100,
+      y: 50,
+      width: 100,
+      height: 50,
+      stroke: 'red',
+      strokeWidth: 20,
+      opacity: 0.5,
+      shadowColor: 'black',
+      shadowBlur: 10,
+      shadowOffset: 10,
+      shadowOpacity: 0.5
+    });
+
+    layer.add(rect);
+    stage.add(layer);
+
+    assert.equal(rect.getX(), 100);
+    assert.equal(rect.getY(), 50);
+
+    var trace = layer.getContext().getTrace();
+    //console.log(trace);
+    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);save();globalAlpha=0.25;shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;beginPath();rect(0,0,100,50);closePath();lineWidth=20;strokeStyle=red;stroke();restore();globalAlpha=0.5;beginPath();rect(0,0,100,50);closePath();lineWidth=20;strokeStyle=red;stroke();restore();');
+  });
+
+  // ======================================================
+  test('fill and stroke with shadow and opacity', function(){
+    var stage = addStage();
+
+    var layer = new Kinetic.Layer();
+
+    var rect = new Kinetic.Rect({
+      x: 100,
+      y: 50,
+      width: 100,
+      height: 50,
+      fill: 'green',
+      stroke: 'red',
+      strokeWidth: 20,
+      opacity: 0.5,
+      shadowColor: 'black',
+      shadowBlur: 10,
+      shadowOffset: 10,
+      shadowOpacity: 0.5,
+      draggable: true
+    });
+
+    layer.add(rect);
+    stage.add(layer);
+
+    assert.equal(rect.getX(), 100);
+    assert.equal(rect.getY(), 50);
+
+    var trace = layer.getContext().getTrace();
+    assert.equal(trace, 'clearRect(0,0,578,200);save();save();globalAlpha=0.25;shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;drawImage([object HTMLCanvasElement],0,0);restore();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0);restore();');
+
+  });
 });
