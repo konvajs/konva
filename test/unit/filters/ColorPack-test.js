@@ -1,6 +1,6 @@
 suite('Color Pack', function() {
     // ======================================================
-    test('colorize', function(done) {
+    test('colorize basic', function(done) {
         var stage = addStage();
 
         var imageObj = new Image();
@@ -31,7 +31,7 @@ suite('Color Pack', function() {
     });
 
     // ======================================================
-    test('crop', function(done) {
+    test('colorize crop', function(done) {
         var stage = addStage();
 
         var imageObj = new Image();
@@ -59,6 +59,34 @@ suite('Color Pack', function() {
 
         };
         imageObj.src = 'assets/darth-vader.jpg';
+    });
+
+    // ======================================================
+    test('colorize transparancy', function(done) {
+        var stage = addStage();
+
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+            darth.setFilter(Kinetic.Filters.Colorize);
+            darth.setFilterColorizeColor([0,128,255]);
+            layer.draw();
+
+            done();
+        };
+        imageObj.src = 'assets/lion.png';
+
     });
 
 });
