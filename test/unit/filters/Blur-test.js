@@ -21,6 +21,8 @@ suite('Blur', function() {
             darth.setFilterRadius(10);
             layer.draw();
 
+            assert.equal(darth.getFilterRadius(), 10);
+
             done();
         };
         imageObj.src = 'assets/darth-vader.jpg';
