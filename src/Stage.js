@@ -55,9 +55,9 @@
 
     Kinetic.Util.addMethods(Kinetic.Stage, {
         ___init: function(config) {
+            this.nodeType = STAGE;
             // call super constructor
             Kinetic.Container.call(this, config);
-            this.nodeType = STAGE;
             this._id = Kinetic.idCounter++;
             this._buildDOM();
             this._bindContentEvents();

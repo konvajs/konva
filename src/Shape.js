@@ -215,7 +215,7 @@
                 context = canvas.getContext(),
                 drawFunc = this.getDrawFunc(),
                 applyShadow = this.hasShadow() && this.getShadowEnabled(),
-                applyOpacity = this.getOpacity() !== 1,
+                applyOpacity = this.getAbsoluteOpacity() !== 1,
                 stage, bufferCanvas, bufferContext;
 
             if(drawFunc && this.isVisible()) {

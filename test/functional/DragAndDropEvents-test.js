@@ -399,9 +399,17 @@ suite('DragAndDropEvents', function() {
 
     // ======================================================
     test('drag and drop stage', function() {
-        var stage = addStage();
+          var container = document.createElement('div'),
+              stage = new Kinetic.Stage({
+                  container: container,
+                  width: 578,
+                  height: 200,
+                  draggable: true
+              });
 
-        stage.setDraggable(true);
+          kineticContainer.appendChild(container);
+
+        //stage.setDraggable(true);
 
         var layer = new Kinetic.Layer();
 
@@ -424,7 +432,7 @@ suite('DragAndDropEvents', function() {
          * simulate drag and drop
          */
         stage._mousedown({
-            clientX: 100,
+            clientX: 0,
             clientY: 100 + top
         });
 
@@ -440,7 +448,7 @@ suite('DragAndDropEvents', function() {
         });
         Kinetic.DD._endDragAfter();
 
-        assert.equal(stage.getX(), 200);
+        assert.equal(stage.getX(), 300);
         assert.equal(stage.getY(), 10);
 
 
