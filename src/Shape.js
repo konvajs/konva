@@ -45,7 +45,7 @@
 
             this._setDrawFuncs();
 
-            this.on('shadowColorChange.kinetic shadowBlurChange.kinetic shadowOffsetChange.kinetic shadowOpacityChange.kinetic', _clearHasShadowCache);
+            this.on('shadowColorChange.kinetic shadowBlurChange.kinetic shadowOffsetChange.kinetic shadowOpacityChange.kinetic shadowEnabledChanged', _clearHasShadowCache);
         },
         hasChildren: function() {
             return false;
