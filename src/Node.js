@@ -1208,7 +1208,7 @@
         },
         _fire: function(eventType, evt) {
             var events = this.eventListeners[eventType],
-                len, i;
+                i;
 
             if (events) {
                 for(i = 0; i < events.length; i++) {
