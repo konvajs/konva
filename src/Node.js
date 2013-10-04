@@ -1211,8 +1211,7 @@
                 len, i;
 
             if (events) {
-                len = events.length;
-                for(i = 0; i < len; i++) {
+                for(i = 0; i < events.length; i++) {
                     events[i].handler.call(this, evt);
                 }
             }
