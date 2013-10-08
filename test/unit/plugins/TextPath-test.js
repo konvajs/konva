@@ -16,17 +16,18 @@ suite('TextPath', function() {
         layer.add(path);
 
         var textpath = new Kinetic.TextPath({
-            stroke: 'black',
-            strokeWidth: 1,
             fill: 'orange',
-            fontSize: '18',
+            fontSize: '24',
             fontFamily: 'Arial',
             text: 'The quick brown fox jumped over the lazy dog\'s back',
             data: c
         });
-
+		textpath.on('mouseover', function() { this.setFill('blue'); layer.drawScene(); });
+		textpath.on('mouseout', function() { this.setFill('orange'); layer.drawScene(); });
+		
         layer.add(textpath);
         stage.add(layer);
+		showHit(layer);
         
         assert.equal(textpath.getClassName(), 'TextPath', 'getClassName should be TextPath');
 

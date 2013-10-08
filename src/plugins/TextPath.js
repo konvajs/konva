@@ -52,7 +52,9 @@
             // TODO: shouldn't this be on the prototype?
             this._fillFunc = _fillFunc;
             this._strokeFunc = _strokeFunc;
-
+            this._fillFuncHit = _fillFunc;
+            this._strokeFuncHit = _strokeFunc;
+            
             this.className = 'TextPath';
 
             this.dataArray = Kinetic.Path.parsePathData(this.attrs.data);
@@ -65,8 +67,6 @@
             that._setTextData();
         },
         drawFunc: function(context) {
-            var charArr = this.charArr;
-
             context.setAttr('font', this._getContextFont());
             context.setAttr('textBaseline', 'middle');
             context.setAttr('textAlign', 'left');
@@ -77,8 +77,6 @@
                 context.save();
 
                 var p0 = glyphInfo[i].p0;
-                var p1 = glyphInfo[i].p1;
-                var ht = parseFloat(this.attrs.fontSize);
 
                 context.translate(p0.x, p0.y);
                 context.rotate(glyphInfo[i].rotation);
@@ -93,7 +91,7 @@
                 // context.strokeStyle = 'cyan';
                 // else
                 // context.strokeStyle = 'green';
-
+                // var p1 = glyphInfo[i].p1;
                 // context.moveTo(p0.x, p0.y);
                 // context.lineTo(p1.x, p1.y);
                 // context.stroke();
@@ -183,7 +181,7 @@
 
                 var currLen = 0;
                 var attempts = 0;
-                var needNextSegment = false;
+
                 p1 = undefined;
                 while(Math.abs(glyphWidth - currLen) / glyphWidth > 0.01 && attempts < 25) {
                     attempts++;
