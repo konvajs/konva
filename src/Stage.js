@@ -150,28 +150,12 @@
             }
         },
         /**
-         * get mouse position for desktop apps
-         * @method
-         * @memberof Kinetic.Stage.prototype
-         */
-        getMousePosition: function() {
-            return this.mousePos;
-        },
-        /**
-         * get touch position for mobile apps
-         * @method
-         * @memberof Kinetic.Stage.prototype
-         */
-        getTouchPosition: function() {
-            return this.touchPos;
-        },
-        /**
-         * get pointer position which can be a touc position or mouse position
+         * get pointer position which can be a touch position or mouse position
          * @method
          * @memberof Kinetic.Stage.prototype
          */
         getPointerPosition: function() {
-            return this.getTouchPosition() || this.getMousePosition();
+            return this.pointerPos;
         },
         getStage: function() {
             return this;
@@ -344,13 +328,6 @@
         getLayers: function() {
             return this.getChildren();
         },
-        _setPointerPosition: function(evt) {
-            if(!evt) {
-                evt = window.event;
-            }
-            this._setMousePosition(evt);
-            this._setTouchPosition(evt);
-        },
         _bindContentEvents: function() {
             var that = this,
                 n;
@@ -371,7 +348,7 @@
                 targetShape._fireAndBubble(MOUSELEAVE, evt);
                 this.targetShape = null;
             }
-            this.mousePos = undefined;
+            this.pointerPos = undefined;
 
             this._fire(CONTENT_MOUSEOUT, evt);
         },
@@ -575,55 +552,50 @@
                 dd._drag(evt);
             }
         },
-        _setMousePosition: function(evt) {
-            var contentPosition = this._getContentPosition(),
+        _setPointerPosition: function(evt) {
+            var evt = evt ? evt : window.event,
+                contentPosition = this._getContentPosition(),
                 offsetX = evt.offsetX,
                 clientX = evt.clientX,
-                mouseX = 0,
-                mouseY = 0;
+                x = 0,
+                y = 0,
+                touch;
 
-            // if offsetX is defined, assume that offsetY is defined as well
-            if (offsetX !== undefined) {
-                mouseX = offsetX;
-                mouseY = evt.offsetY;
-            }
-            // we unforunately have to use UA detection here because accessing
-            // the layerX or layerY properties in newer veresions of Chrome
-            // throws a JS warning.  layerX and layerY are required for FF
-            // when the container is transformed via CSS.
-            else if (Kinetic.UA.browser === 'mozilla') {
-                mouseX = evt.layerX;
-                mouseY = evt.layerY;
-            }
-            // if clientX is defined, assume that clientY is defined as well
-            else if (clientX !== undefined && contentPosition) {
-                mouseX = clientX - contentPosition.left;
-                mouseY = evt.clientY - contentPosition.top;
-            }
-
-
-            this.mousePos = {
-                x: mouseX,
-                y: mouseY
-            };
-        },
-        _setTouchPosition: function(evt) {
-            var contentPosition = this._getContentPosition(),
-                touch, touchX, touchY;
-
+            // touch events
             if(evt.touches !== undefined && evt.touches.length === 1) {
                 // one finger
                 touch = evt.touches[0];
 
                 // get the information for finger #1
-                touchX = touch.clientX - contentPosition.left;
-                touchY = touch.clientY - contentPosition.top;
-
-                this.touchPos = {
-                    x: touchX,
-                    y: touchY
-                };
+                x = touch.clientX - contentPosition.left;
+                y = touch.clientY - contentPosition.top;   
             }
+            // mouse events
+            else {
+                // if offsetX is defined, assume that offsetY is defined as well
+                if (offsetX !== undefined) {
+                    x = offsetX;
+                    y = evt.offsetY;
+                }
+                // we unforunately have to use UA detection here because accessing
+                // the layerX or layerY properties in newer veresions of Chrome
+                // throws a JS warning.  layerX and layerY are required for FF
+                // when the container is transformed via CSS.
+                else if (Kinetic.UA.browser === 'mozilla') {
+                    x = evt.layerX;
+                    y = evt.layerY;
+                }
+                // if clientX is defined, assume that clientY is defined as well
+                else if (clientX !== undefined && contentPosition) {
+                    x = clientX - contentPosition.left;
+                    y = evt.clientY - contentPosition.top;
+                }
+            }
+
+            this.pointerPos = {
+                x: x,
+                y: y
+            };
         },
         _getContentPosition: function() {
             var rect = this.content.getBoundingClientRect();
