@@ -228,7 +228,7 @@
     }
 
     Kinetic.Animation.requestAnimFrame = function(callback) {
-        var raf = Kinetic.DD && Kinetic.DD.isDragging ? FRAF : RAF;
+        var raf = Kinetic.isDragging ? FRAF : RAF;
         raf(callback);
     };
 
