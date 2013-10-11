@@ -1210,11 +1210,10 @@
         },
         _fire: function(eventType, evt) {
             var events = this.eventListeners[eventType],
-                len, i;
+                i;
 
             if (events) {
-                len = events.length;
-                for(i = 0; i < len; i++) {
+                for(i = 0; i < events.length; i++) {
                     events[i].handler.call(this, evt);
                 }
             }

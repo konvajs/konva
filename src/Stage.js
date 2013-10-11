@@ -411,7 +411,7 @@
             }
 
             // content event
-            this._fire(CONTENT_MOUSEDOWN);
+            this._fire(CONTENT_MOUSEDOWN, evt);
 
             // always call preventDefault for desktop events because some browsers
             // try to drag and drop the canvas element
@@ -451,7 +451,7 @@
                 }
             }
             // content events
-            this._fire(CONTENT_MOUSEUP);
+            this._fire(CONTENT_MOUSEUP, evt);
             if (Kinetic.listenClickTap) {
                 this._fire(CONTENT_CLICK, evt);
                 if(fireDblClick) {
