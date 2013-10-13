@@ -231,6 +231,12 @@
         getHeight: function() {
             var image = this.getImage();
             return this.attrs.height || (image ? image.height : 0);
+        },
+        destroy: function(){
+            Kinetic.Shape.prototype.destroy.call(this);
+            delete this.filterCanvas;
+            delete this.attrs;
+            return this;
         }
     };
     Kinetic.Util.extend(Kinetic.Image, Kinetic.Shape);
