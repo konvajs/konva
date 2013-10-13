@@ -1218,7 +1218,7 @@
                 }
             }
         },
-        /*
+        /**
          * draw both scene and hit graphs.  If the node being drawn is the stage, all of the layers will be cleared and redra
          * @method
          * @memberof Kinetic.Node.prototype

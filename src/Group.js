@@ -10,7 +10,7 @@
             if (type !== 'Group' && type !== 'Shape') {
                 Kinetic.Util.error('You may only add groups and shapes to groups.');
             }
-        },
+        }
     });
     Kinetic.Util.extend(Kinetic.Group, Kinetic.Container);
 })();

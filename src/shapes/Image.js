@@ -136,7 +136,7 @@
                 filterCanvas = this.filterCanvas = new Kinetic.SceneCanvas({
                     width: crop.width, 
                     height: crop.height,
-                    pixelRatio: 1,
+                    pixelRatio: 1
                 });
             }
 
