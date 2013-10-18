@@ -1,0 +1,21 @@
+{
+  "name": "KineticJS",
+  "version": "4.7.0",
+  "homepage": "http://kineticjs.com/",
+  "authors": [
+    "Eric Rowell"
+  ],
+  "description": "KineticJS is an HTML5 Canvas JavaScript framework that enables high performance animations, transitions, node nesting, layering, filtering, caching, event handling for desktop and mobile applications, and much more.",
+  "keywords": [
+    "canvas",
+    "animations"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
