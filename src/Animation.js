@@ -214,7 +214,7 @@
             that._animationLoop();
         }
     };
-    RAF = (function() {
+    var RAF = (function() {
         return window.requestAnimationFrame
             || window.webkitRequestAnimationFrame
             || window.mozRequestAnimationFrame

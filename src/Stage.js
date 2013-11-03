@@ -617,7 +617,12 @@
             this.content.className = KINETICJS_CONTENT;
             container.appendChild(this.content);
 
-            this.bufferCanvas = new Kinetic.SceneCanvas();
+            // the buffer canvas pixel ratio must be 1 because it is used as an 
+            // intermediate canvas before copying the result onto a scene canvas.
+            // not setting it to 1 will result in an over compensation
+            this.bufferCanvas = new Kinetic.SceneCanvas({
+                pixelRatio: 1
+            });
             this.bufferHitCanvas = new Kinetic.HitCanvas();
 
             this._resizeDOM();

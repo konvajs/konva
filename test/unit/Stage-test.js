@@ -15,6 +15,30 @@ suite('Stage', function() {
     });
 
     // ======================================================
+    test('test stage buffer canvas and hit buffer canvas', function() {
+      var container = document.createElement('div');
+      container.id = 'container';
+
+      kineticContainer.appendChild(container);
+
+      // simulate pixelRatio = 2
+      Kinetic.pixelRatio = 2;
+
+      var stage = new Kinetic.Stage({
+          container: 'container',
+          width: 578,
+          height: 200
+      });
+
+
+      assert.equal(stage.bufferCanvas.getPixelRatio(), 1);
+      assert.equal(stage.bufferHitCanvas.getPixelRatio(), 2);
+
+      // reset
+      Kinetic.pixelRatio = 1;
+    });
+
+    // ======================================================
     test('instantiate stage with dom element', function() {
       var container = document.createElement('div');
 

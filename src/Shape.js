@@ -229,6 +229,7 @@
                 stage, bufferCanvas, bufferContext;
 
             if(drawFunc && this.isVisible()) { 
+                // if buffer canvas is needed
                 if (this._useBufferCanvas()) {
                     stage = this.getStage();
                     bufferCanvas = stage.bufferCanvas;
