@@ -136,7 +136,7 @@
                 filterCanvas = this.filterCanvas = new Kinetic.SceneCanvas({
                     width: crop.width, 
                     height: crop.height,
-                    pixelRatio: 1,
+                    pixelRatio: 1
                 });
             }
 
@@ -231,6 +231,12 @@
         getHeight: function() {
             var image = this.getImage();
             return this.attrs.height || (image ? image.height : 0);
+        },
+        destroy: function(){
+            Kinetic.Shape.prototype.destroy.call(this);
+            delete this.filterCanvas;
+            delete this.attrs;
+            return this;
         }
     };
     Kinetic.Util.extend(Kinetic.Image, Kinetic.Shape);

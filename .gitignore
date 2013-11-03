@@ -3,6 +3,7 @@ jsdoc-master
 dist
 analysis
 node_modules
+bower_components
 phantomjs.exe
 
 # Numerous always-ignore extensions
