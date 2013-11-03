@@ -44,8 +44,7 @@ function init() {
 
 
 Kinetic.enableTrace = true;
-// make sure pixel ratio is 1 or else the tests will fail on devices with retina display
-Kinetic.pixelRatio = 1;
+
 
 function addStage() {
   var container = document.createElement('div'),

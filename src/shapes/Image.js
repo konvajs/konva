@@ -97,7 +97,7 @@
                 imageHitRegion = this.imageHitRegion;
 
             if(imageHitRegion) {
-                context.drawImage(imageHitRegion, 0, 0, width, height);
+                context.drawImage(imageHitRegion, 0, 0);
                 context.beginPath();
                 context.rect(0, 0, width, height);
                 context.closePath();
@@ -182,7 +182,8 @@
                 height = this.getHeight(),
                 canvas = new Kinetic.SceneCanvas({
                     width: width,
-                    height: height
+                    height: height,
+                    pixelRatio: 1
                 }),
                 _context = canvas.getContext()._context,
                 image = this.getImage(),

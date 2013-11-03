@@ -577,12 +577,7 @@
                 canvas.height = arg.height;
                 _context = canvas.getContext(CONTEXT_2D);
                 _context.putImageData(arg, 0, 0);
-                dataUrl = canvas.toDataURL();
-                imageObj = new Image();
-                imageObj.onload = function() {
-                    callback(imageObj);
-                };
-                imageObj.src = dataUrl;
+                this._getImage(canvas.toDataURL(), callback);
             }
             else {
                 callback(null);
