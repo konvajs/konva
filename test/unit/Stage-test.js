@@ -1,7 +1,7 @@
 suite('Stage', function() {
 
     // ======================================================
-    test.only('instantiate stage with id', function() {
+    test('instantiate stage with id', function() {
       var container = document.createElement('div');
       container.id = 'container';
 

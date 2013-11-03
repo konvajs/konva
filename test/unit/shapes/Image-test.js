@@ -195,7 +195,7 @@ suite('Image', function(){
   });
 
   // ======================================================
-  test.only('create image hit region', function(done) {
+  test('create image hit region', function(done) {
       var imageObj = new Image();
 
       var stage = addStage();
