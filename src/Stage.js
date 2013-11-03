@@ -615,6 +615,7 @@
             this.content.style.position = RELATIVE;
             this.content.style.display = INLINE_BLOCK;
             this.content.className = KINETICJS_CONTENT;
+            this.content.setAttribute('role', 'presentation');
             container.appendChild(this.content);
 
             // the buffer canvas pixel ratio must be 1 because it is used as an 

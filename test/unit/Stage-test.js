@@ -1,7 +1,7 @@
 suite('Stage', function() {
 
     // ======================================================
-    test('instantiate stage with id', function() {
+    test.only('instantiate stage with id', function() {
       var container = document.createElement('div');
       container.id = 'container';
 
@@ -12,6 +12,11 @@ suite('Stage', function() {
           width: 578,
           height: 200
       });
+
+      assert.equal(stage.getContent().className, 'kineticjs-content');
+      assert.equal(stage.getContent().getAttribute('role'), 'presentation');
+
+
     });
 
     // ======================================================
