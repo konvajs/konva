@@ -1,7 +1,6 @@
 (function() {
     // constants
     var AUTO = 'auto',
-        CALIBRI = 'Calibri',
         CANVAS = 'canvas',
         CENTER = 'center',
         CHANGE_KINETIC = 'Change.kinetic',
@@ -319,7 +318,7 @@
     Kinetic.Util.extend(Kinetic.Text, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontFamily', CALIBRI);
+    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontFamily', 'Arial');
 
     /**
      * set font family
