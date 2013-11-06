@@ -182,8 +182,13 @@
     };
     
     Kinetic.Node.prototype._dragCleanup = function() {
-        this.off('mousedown.kinetic');
-        this.off('touchstart.kinetic');
+        if (this.getClassName() === 'Stage') {
+            this.off('contentMousedown.kinetic');
+            this.off('contentTouchstart.kinetic');
+        } else {
+            this.off('mousedown.kinetic');
+            this.off('touchstart.kinetic');
+        }
     };
 
     Kinetic.Node.addGetterSetter(Kinetic.Node, 'dragBoundFunc');
