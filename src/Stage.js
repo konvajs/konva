@@ -557,18 +557,21 @@
                 contentPosition = this._getContentPosition(),
                 offsetX = evt.offsetX,
                 clientX = evt.clientX,
-                x = 0,
-                y = 0,
+                x = null,
+                y = null,
                 touch;
 
             // touch events
-            if(evt.touches !== undefined && evt.touches.length === 1) {
-                // one finger
-                touch = evt.touches[0];
+            if(evt.touches !== undefined) {
+                // currently, only handle one finger
+                if (evt.touches.length === 1) {
 
-                // get the information for finger #1
-                x = touch.clientX - contentPosition.left;
-                y = touch.clientY - contentPosition.top;   
+                    touch = evt.touches[0];
+
+                    // get the information for finger #1
+                    x = touch.clientX - contentPosition.left;
+                    y = touch.clientY - contentPosition.top; 
+                }
             }
             // mouse events
             else {
@@ -592,10 +595,12 @@
                 }
             }
 
-            this.pointerPos = {
-                x: x,
-                y: y
-            };
+            if (x !== null && y !== null) {
+                this.pointerPos = {
+                    x: x,
+                    y: y
+                };
+            }
         },
         _getContentPosition: function() {
             var rect = this.content.getBoundingClientRect ? this.content.getBoundingClientRect() : { top: 0, left: 0 };

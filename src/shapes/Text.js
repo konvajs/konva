@@ -32,7 +32,7 @@
      * @memberof Kinetic
      * @augments Kinetic.Shape
      * @param {Object} config
-     * @param {String} [config.fontFamily] default is Calibri
+     * @param {String} [config.fontFamily] default is Arial
      * @param {Number} [config.fontSize] in pixels.  Default is 12
      * @param {String} [config.fontStyle] can be normal, bold, or italic.  Default is normal
      * @param {String} config.text

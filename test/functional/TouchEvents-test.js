@@ -58,13 +58,14 @@ suite('TouchEvents', function() {
     });
 
     stage._touchstart({
-        clientX: 100,
-        clientY: 100 + top
+        touches: [{
+            clientX: 100,
+            clientY: 100 + top
+        }]
     });
 
     stage._touchend({
-        clientX: 100,
-        clientY: 100 + top
+        touches: []
     });
 
     assert.equal(circleTouchstart, 1, 1);
@@ -74,12 +75,13 @@ suite('TouchEvents', function() {
     assert.equal(stageContentDbltap, 0, 5);
 
     stage._touchstart({
-        clientX: 1,
-        clientY: 1 + top
+        touches: [{
+            clientX: 1,
+            clientY: 1 + top
+        }]
     });
     stage._touchend({
-        clientX: 1,
-        clientY: 1 + top
+        touches: []
     });
 
     assert.equal(stageContentTouchstart, 2, 6);
@@ -117,10 +119,12 @@ suite('TouchEvents', function() {
         circle.on('touchstart', function() {
             touchstart = true;
             //log('touchstart');
+            //alert('touchstart')
         });
 
         circle.on('touchend', function() {
             touchend = true;
+            //alert('touchend')
             //log('touchend');
         });
 
@@ -149,8 +153,10 @@ suite('TouchEvents', function() {
 
         // touchstart circle
         stage._touchstart({
-            clientX: 289,
-            clientY: 100 + top,
+            touches: [{
+                clientX: 289,
+                clientY: 100 + top,
+            }],
             preventDefault: function() {
             }
         });
@@ -163,8 +169,7 @@ suite('TouchEvents', function() {
 
         // touchend circle
         stage._touchend({
-            clientX: 289,
-            clientY: 100 + top,
+            touches: [],
             preventDefault: function() {
             }
         });
@@ -180,8 +185,10 @@ suite('TouchEvents', function() {
 
         // touchstart circle
         stage._touchstart({
-            clientX: 289,
-            clientY: 100 + top,
+            touches: [{
+                clientX: 289,
+                clientY: 100 + top,
+            }],
             preventDefault: function() {
             }
         });
@@ -194,8 +201,7 @@ suite('TouchEvents', function() {
 
         // touchend circle to triger dbltap
         stage._touchend({
-            clientX: 289,
-            clientY: 100 + top,
+            touches: [],
             preventDefault: function() {
             }
         });
@@ -211,8 +217,10 @@ suite('TouchEvents', function() {
 
         // touchmove circle
         stage._touchmove({
-            clientX: 290,
-            clientY: 100 + top,
+            touches: [{
+                clientX: 290,
+                clientY: 100 + top,
+            }],
             preventDefault: function() {
             }
         });
