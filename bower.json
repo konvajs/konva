@@ -17,5 +17,6 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "main": "./src/Global.js",
 }
