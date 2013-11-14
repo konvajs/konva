@@ -951,39 +951,6 @@ suite('Node', function() {
     });
 
     // ======================================================
-    test('node caching width minimal configuration', function(done) {
-        var stage = addStage();
-        var layer = new Kinetic.Layer();
-        stage.add(layer);
-
-        var rect = new Kinetic.Rect({
-            width : 50,
-            height : 50,
-            fill: 'green',
-            stroke: 'blue',
-            strokeWidth: 5,
-            draggable: true
-        });
-
-        rect.toImage({
-            callback: function(imageObj) {
-                assert.equal(Kinetic.Util._isElement(imageObj), true);
-                var cachedShape = new Kinetic.Image({
-                    image: imageObj,
-                    draggable: true,
-                    stroke: 'red',
-                    strokeWidth: 5
-                });
-
-                layer.add(cachedShape);
-                layer.draw();
-                done();
-            }
-        });
-
-        showHit(layer);
-    });
-    // ======================================================
     test('hide group', function() {
         var stage = addStage();
 

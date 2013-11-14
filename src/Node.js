@@ -1009,8 +1009,8 @@
                 x = config.x || 0,
                 y = config.y || 0,
                 canvas = new Kinetic.SceneCanvas({
-                    width: this.getWidth() || config.width || (stage ? stage.getWidth() : 0),
-                    height: this.getHeight() || config.height || (stage ? stage.getHeight() : 0),
+                    width: config.width || stage.getWidth(),
+                    height: config.height || stage.getHeight(),
                     pixelRatio: 1
                 }),
                 context = canvas.getContext();
