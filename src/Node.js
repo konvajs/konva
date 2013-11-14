@@ -829,7 +829,11 @@
          * @memberof Kinetic.Node.prototype
          */
         getLayer: function() {
-            return this.getParent().getLayer();
+            if (this.getParent()) {
+                return this.getParent().getLayer();
+            } else {
+                return null;
+            }
         },
         /**
          * get stage ancestor
@@ -1005,8 +1009,8 @@
                 x = config.x || 0,
                 y = config.y || 0,
                 canvas = new Kinetic.SceneCanvas({
-                    width: config.width || stage.getWidth(),
-                    height: config.height || stage.getHeight(),
+                    width: this.getWidth() || config.width || (stage ? stage.getWidth() : 0),
+                    height: this.getHeight() || config.height || (stage ? stage.getHeight() : 0),
                     pixelRatio: 1
                 }),
                 context = canvas.getContext();

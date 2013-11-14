@@ -30,7 +30,24 @@ suite('Node', function() {
 
 
     });
+    // ======================================================
+    test('get layer', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+        assert.equal(circle.getLayer(), null);
 
+        stage.add(layer.add(circle));
+        assert.equal(circle.getLayer(), layer);
+
+    });
     // ======================================================
     test('setAttr', function() {
         var stage = addStage();
@@ -933,6 +950,39 @@ suite('Node', function() {
         showHit(layer);
     });
 
+    // ======================================================
+    test('node caching width minimal configuration', function(done) {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+        stage.add(layer);
+
+        var rect = new Kinetic.Rect({
+            width : 50,
+            height : 50,
+            fill: 'green',
+            stroke: 'blue',
+            strokeWidth: 5,
+            draggable: true
+        });
+
+        rect.toImage({
+            callback: function(imageObj) {
+                assert.equal(Kinetic.Util._isElement(imageObj), true);
+                var cachedShape = new Kinetic.Image({
+                    image: imageObj,
+                    draggable: true,
+                    stroke: 'red',
+                    strokeWidth: 5
+                });
+
+                layer.add(cachedShape);
+                layer.draw();
+                done();
+            }
+        });
+
+        showHit(layer);
+    });
     // ======================================================
     test('hide group', function() {
         var stage = addStage();
