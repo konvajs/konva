@@ -43,7 +43,8 @@ module.exports = function(grunt) {
     'src/filters/Blur.js', 
     'src/filters/Mask.js',
     'src/filters/ColorPack.js',
-    'src/filters/ConvolvePack.js'
+    'src/filters/ConvolvePack.js',
+    'src/filters/Sepia.js'
   ];
 
   // Project configuration.
