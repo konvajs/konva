@@ -1,6 +1,6 @@
-suite('Color Stretch', function () {
+suite('Pixelate', function () {
     // ======================================================
-    test('enhancing colors', function (done) {
+    test('pixelate', function (done) {
         var stage = addStage();
 
         var shapesLayer = new Kinetic.Layer();
@@ -9,8 +9,9 @@ suite('Color Stretch', function () {
         shapesLayer.on('draw', function () {
           var imageData = this.getContext().getImageData(0, 0, this.getCanvas().width/2, this.getCanvas().height);
           var scratchData = this.getContext().createImageData(imageData); // only size copied
-          Kinetic.Filters.ColorStretch(imageData, scratchData, {});
-          this.getContext().putImageData(scratchData, 0, 0);
+          Kinetic.Filters.Pixelate(imageData,scratchData,{pixelWidth:8,pixelHeight:16});
+          Kinetic.Filters.ColorStretch(scratchData,imageData,{});
+          this.getContext().putImageData(imageData,0,0);
         });
 
         var triangle = new Kinetic.RegularPolygon({
@@ -39,6 +40,22 @@ suite('Color Stretch', function () {
           id: 'myCircle'
         });
 
+        for( var i=0; i<10; i+=1 ){
+          for( var j=0; j<10; j+=1 ){
+            var rect = new Kinetic.Rect({
+              x: i/10*stage.getWidth(),
+              y: j/10*stage.getHeight(),
+              width: stage.getWidth()/10,
+              height: stage.getHeight()/10,
+              fill: (i+j)%2===0?'#FF0000':'#FFFF00',
+              stroke: 'black',
+              strokeWidth: 4,
+              draggable: true
+            });
+            shapesLayer.add(rect);
+          }
+        }
+
         shapesLayer.add(circle);
         shapesLayer.add(triangle);
 
@@ -46,4 +63,5 @@ suite('Color Stretch', function () {
 
         done();
     });
+
 });
