@@ -37,13 +37,23 @@ module.exports = function(grunt) {
     'src/plugins/Label.js',
 
     // filters
+    'src/filters/FilterWrapper.js', 
     'src/filters/Grayscale.js', 
     'src/filters/Brighten.js', 
     'src/filters/Invert.js', 
     'src/filters/Blur.js', 
     'src/filters/Mask.js',
     'src/filters/ColorPack.js',
-    'src/filters/ConvolvePack.js'
+    'src/filters/ConvolvePack.js',
+    'src/filters/ColorStretch.js',
+    'src/filters/Flip.js',
+    'src/filters/Levels.js',
+    'src/filters/Mirror.js',
+    'src/filters/Noise.js',
+    'src/filters/Pixelate.js',
+    'src/filters/Polar.js',
+    'src/filters/Threshold.js'
+
   ];
 
   // Project configuration.
