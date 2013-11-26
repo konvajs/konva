@@ -24,6 +24,7 @@
             'fill', 
             'fillText', 
             'getImageData',
+            'createImageData',
             'lineTo',
             'moveTo',
             'putImageData',
@@ -265,6 +266,15 @@
         },
         closePath: function() {
             this._context.closePath();
+        },
+        createImageData: function() {
+            var a = arguments;
+            if(a.length === 2) {
+                return this._context.createImageData(a[0], a[1]);
+            }
+            else if(a.length === 1) {
+                return this._context.createImageData(a[0]);
+            }
         },
         createLinearGradient: function() {
             var a = arguments;
