@@ -2,7 +2,6 @@
 
     // CONSTANTS
     var IMAGE = 'Image',
-        CROP = 'crop',
         SET = 'set';
 
     /**
@@ -34,8 +33,6 @@
 
     Kinetic.Image.prototype = {
         ___init: function(config) {
-            var that = this;
-
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = IMAGE;
@@ -46,7 +43,6 @@
         drawFunc: function(context) {
             var width = this.getWidth(), 
                 height = this.getHeight(), 
-                that = this, 
                 crop,
                 params, 
                 image;
@@ -112,7 +108,6 @@
         },
         applyFilter: function() {
             var image = this.getImage(),
-                that = this,
                 width = this.getWidth(),
                 height = this.getHeight(),
                 filter = this.getFilter(),
@@ -249,8 +244,7 @@
     };
 
     Kinetic.Factory.addFilterSetter = function(constructor, attr) {
-        var that = this,
-            method = SET + Kinetic.Util._capitalize(attr);
+        var method = SET + Kinetic.Util._capitalize(attr);
 
         constructor.prototype[method] = function(val) {
             this._setAttr(attr, val);
@@ -369,7 +363,7 @@
      * @returns {Number}
      */
 
-     Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filter');
+    Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filter');
 
      /**
      * set filter

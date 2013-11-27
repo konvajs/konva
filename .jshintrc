@@ -13,5 +13,8 @@
   "indent": 4,
   "latedef": true,
   "quotmark": "single",
-  "unused": true
+  "unused": true,
+  "globals": { 
+    "Kinetic": false 
+  }
 }
