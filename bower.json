@@ -18,5 +18,5 @@
     "test",
     "tests"
   ],
-  "main": "./src/Global.js",
+  "main": "./src/Global.js"
 }
