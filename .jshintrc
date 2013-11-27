@@ -15,6 +15,7 @@
   "quotmark": "single",
   "unused": true,
   "globals": { 
-    "Kinetic": false 
+    "Kinetic": false,
+    "document": false
   }
 }

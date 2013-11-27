@@ -8,10 +8,8 @@
         DASH = '-',
         EMPTY_STRING = '',
         LEFT = 'left',
-        NEW_LINE = '\n',
         TEXT = 'text',
         TEXT_UPPER = 'Text',
-        TOP = 'top',
         MIDDLE = 'middle',
         NORMAL = 'normal',
         PX_SPACE = 'px ',
@@ -91,14 +89,12 @@
         },
         drawFunc: function(context) {
             var p = this.getPadding(),
-                fontStyle = this.getFontStyle(),
-                fontSize = this.getFontSize(),
-                fontFamily = this.getFontFamily(),
                 textHeight = this.getTextHeight(),
                 lineHeightPx = this.getLineHeight() * textHeight,
                 textArr = this.textArr,
                 textArrLen = textArr.length,
-                totalWidth = this.getWidth();
+                totalWidth = this.getWidth(),
+                n;
 
             context.setAttr('font', this._getContextFont());
             context.setAttr('textBaseline', MIDDLE);
@@ -108,7 +104,7 @@
             context.translate(0, p + textHeight / 2);
 
             // draw text lines
-            for(var n = 0; n < textArrLen; n++) {
+            for(n = 0; n < textArrLen; n++) {
                 var obj = textArr[n],
                     text = obj.text,
                     width = obj.width;
@@ -202,118 +198,118 @@
         _getContextFont: function() {
             return this.getFontStyle() + SPACE + this.getFontSize() + PX_SPACE + this.getFontFamily();
         },
-        _addTextLine: function (line, width, height) {
+        _addTextLine: function (line, width) {
             return this.textArr.push({text: line, width: width});
         },
         _getTextWidth: function (text) {
             return dummyContext.measureText(text).width;
         },
         _setTextData: function () {
-             var lines = this.getText().split('\n'),
-                 fontSize = +this.getFontSize(),
-                 textWidth = 0,
-                 lineHeightPx = this.getLineHeight() * fontSize,
-                 width = this.attrs.width,
-                 height = this.attrs.height,
-                 fixedWidth = width !== AUTO,
-                 fixedHeight = height !== AUTO,
-                 padding = this.getPadding(),
-                 maxWidth = width - padding * 2,
-                 maxHeightPx = height - padding * 2,
-                 currentHeightPx = 0,
-                 wrap = this.getWrap(),
-                 shouldWrap = wrap !== NONE,
-                 wrapAtWord = wrap !==  CHAR && shouldWrap;
+            var lines = this.getText().split('\n'),
+                fontSize = +this.getFontSize(),
+                textWidth = 0,
+                lineHeightPx = this.getLineHeight() * fontSize,
+                width = this.attrs.width,
+                height = this.attrs.height,
+                fixedWidth = width !== AUTO,
+                fixedHeight = height !== AUTO,
+                padding = this.getPadding(),
+                maxWidth = width - padding * 2,
+                maxHeightPx = height - padding * 2,
+                currentHeightPx = 0,
+                wrap = this.getWrap(),
+                shouldWrap = wrap !== NONE,
+                wrapAtWord = wrap !==  CHAR && shouldWrap;
 
-             this.textArr = [];
-             dummyContext.save();
-             dummyContext.font = this.getFontStyle() + SPACE + fontSize + PX_SPACE + this.getFontFamily();
-             for (var i = 0, max = lines.length; i < max; ++i) {
-                 var line = lines[i],
-                     lineWidth = this._getTextWidth(line);
-                 if (fixedWidth && lineWidth > maxWidth) {
-                     /*
-                      * if width is fixed and line does not fit entirely
-                      * break the line into multiple fitting lines
-                      */
-                     while (line.length > 0) {
+            this.textArr = [];
+            dummyContext.save();
+            dummyContext.font = this.getFontStyle() + SPACE + fontSize + PX_SPACE + this.getFontFamily();
+            for (var i = 0, max = lines.length; i < max; ++i) {
+                var line = lines[i],
+                    lineWidth = this._getTextWidth(line);
+                if (fixedWidth && lineWidth > maxWidth) {
+                    /*
+                     * if width is fixed and line does not fit entirely
+                     * break the line into multiple fitting lines
+                     */
+                    while (line.length > 0) {
                         /*
                          * use binary search to find the longest substring that
                          * that would fit in the specified width
                          */
-                         var low = 0, high = line.length,
-                             match = '', matchWidth = 0;
-                         while (low < high) {
-                             var mid = (low + high) >>> 1,
-                                 substr = line.slice(0, mid + 1),
-                                 substrWidth = this._getTextWidth(substr);
-                             if (substrWidth <= maxWidth) {
-                                 low = mid + 1;
-                                 match = substr;
-                                 matchWidth = substrWidth;
-                             } else {
-                                 high = mid;
-                             }
-                         }
-                         /*
-                          * 'low' is now the index of the substring end
-                          * 'match' is the substring
-                          * 'matchWidth' is the substring width in px
-                          */
-                         if (match) {
-                             // a fitting substring was found
-                             if (wrapAtWord) {
-                                 // try to find a space or dash where wrapping could be done
-                                 var wrapIndex = Math.max(match.lastIndexOf(SPACE),
+                        var low = 0, high = line.length,
+                            match = '', matchWidth = 0;
+                        while (low < high) {
+                            var mid = (low + high) >>> 1,
+                                substr = line.slice(0, mid + 1),
+                                substrWidth = this._getTextWidth(substr);
+                            if (substrWidth <= maxWidth) {
+                                low = mid + 1;
+                                match = substr;
+                                matchWidth = substrWidth;
+                            } else {
+                                high = mid;
+                            }
+                        }
+                        /*
+                         * 'low' is now the index of the substring end
+                         * 'match' is the substring
+                         * 'matchWidth' is the substring width in px
+                         */
+                        if (match) {
+                            // a fitting substring was found
+                            if (wrapAtWord) {
+                                // try to find a space or dash where wrapping could be done
+                                var wrapIndex = Math.max(match.lastIndexOf(SPACE),
                                                           match.lastIndexOf(DASH)) + 1;
-                                 if (wrapIndex > 0) {
-                                     // re-cut the substring found at the space/dash position
-                                     low = wrapIndex;
-                                     match = match.slice(0, low);
-                                     matchWidth = this._getTextWidth(match);
-                                 }
-                             }
-                             this._addTextLine(match, matchWidth);
-                             currentHeightPx += lineHeightPx;
-                             if (!shouldWrap ||
-                                 (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx)) {
-                                 /*
-                                  * stop wrapping if wrapping is disabled or if adding
-                                  * one more line would overflow the fixed height
-                                  */
-                                 break;
-                             }
-                             line = line.slice(low);
-                             if (line.length > 0) {
-                                 // Check if the remaining text would fit on one line
-                                 lineWidth = this._getTextWidth(line);
-                                 if (lineWidth <= maxWidth) {
-                                     // if it does, add the line and break out of the loop
-                                     this._addTextLine(line, lineWidth);
-                                     currentHeightPx += lineHeightPx;
-                                     break;
-                                 }
-                             }
-                         } else {
-                             // not even one character could fit in the element, abort
-                             break;
-                         }
-                     }
-                 } else {
-                     // element width is automatically adjusted to max line width
-                     this._addTextLine(line, lineWidth);
-                     currentHeightPx += lineHeightPx;
-                     textWidth = Math.max(textWidth, lineWidth);
-                 }
-                 // if element height is fixed, abort if adding one more line would overflow
-                 if (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx) {
-                     break;
-                 }
-             }
-             dummyContext.restore();
-             this.textHeight = fontSize;
-             this.textWidth = textWidth;
-         }
+                                if (wrapIndex > 0) {
+                                    // re-cut the substring found at the space/dash position
+                                    low = wrapIndex;
+                                    match = match.slice(0, low);
+                                    matchWidth = this._getTextWidth(match);
+                                }
+                            }
+                            this._addTextLine(match, matchWidth);
+                            currentHeightPx += lineHeightPx;
+                            if (!shouldWrap ||
+                                (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx)) {
+                                /*
+                                 * stop wrapping if wrapping is disabled or if adding
+                                 * one more line would overflow the fixed height
+                                 */
+                                break;
+                            }
+                            line = line.slice(low);
+                            if (line.length > 0) {
+                                // Check if the remaining text would fit on one line
+                                lineWidth = this._getTextWidth(line);
+                                if (lineWidth <= maxWidth) {
+                                    // if it does, add the line and break out of the loop
+                                    this._addTextLine(line, lineWidth);
+                                    currentHeightPx += lineHeightPx;
+                                    break;
+                                }
+                            }
+                        } else {
+                            // not even one character could fit in the element, abort
+                            break;
+                        }
+                    }
+                } else {
+                    // element width is automatically adjusted to max line width
+                    this._addTextLine(line, lineWidth);
+                    currentHeightPx += lineHeightPx;
+                    textWidth = Math.max(textWidth, lineWidth);
+                }
+                // if element height is fixed, abort if adding one more line would overflow
+                if (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx) {
+                    break;
+                }
+            }
+            dummyContext.restore();
+            this.textHeight = fontSize;
+            this.textWidth = textWidth;
+        }
     };
     Kinetic.Util.extend(Kinetic.Text, Kinetic.Shape);
 
