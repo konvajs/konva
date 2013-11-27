@@ -829,11 +829,8 @@
          * @memberof Kinetic.Node.prototype
          */
         getLayer: function() {
-            if (this.getParent()) {
-                return this.getParent().getLayer();
-            } else {
-                return null;
-            }
+            var parent = this.getParent();
+            return parent ? parent.getLayer() : null;
         },
         /**
          * get stage ancestor
