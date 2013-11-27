@@ -122,13 +122,13 @@
             // Determine the region we are cropping
             crop.x = crop.x || 0;
             crop.y = crop.y || 0;
-            crop.width = crop.width || image.width - crop.x;
-            crop.height = crop.height || image.height - crop.y;
+            crop.width = crop.width || width - crop.x;
+            crop.height = crop.height || height - crop.y;
 
             // Make a filterCanvas the same size as the cropped image
             if (this.filterCanvas &&
-                    this.filterCanvas.getWidth() === crop.width &&
-                    this.filterCanvas.getHeight() === crop.height) {
+                this.filterCanvas.getWidth() === crop.width &&
+                this.filterCanvas.getHeight() === crop.height) {
                 filterCanvas = this.filterCanvas;
                 filterCanvas.getContext().clear();
             }
