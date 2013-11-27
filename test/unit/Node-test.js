@@ -30,7 +30,24 @@ suite('Node', function() {
 
 
     });
+    // ======================================================
+    test('get layer', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+        assert.equal(circle.getLayer(), null);
 
+        stage.add(layer.add(circle));
+        assert.equal(circle.getLayer(), layer);
+
+    });
     // ======================================================
     test('setAttr', function() {
         var stage = addStage();
