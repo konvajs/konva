@@ -31,6 +31,7 @@
                 width = this.getWidth(),
                 height = this.getHeight();
 
+            
             context.beginPath();
 
             if(!cornerRadius) {
