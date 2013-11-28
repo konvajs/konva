@@ -216,7 +216,7 @@ suite('Stage', function() {
         assert.equal(stage.getIntersection(370, 93).getId(), 'greenCircle', 'shape should be greenCircle');
         // TODO: this passes in the browser but fails in phantomjs.  no idea why.
         //assert.equal(stage.getIntersection(371, 93).getId(), 'greenCircle', 'shape should be greenCircle');
-        assert.equal(stage.getIntersection(372, 93).getId(), 'redCircle', 'shape should be greenCircle');
+        assert.equal(stage.getIntersection(372, 93).getId(), 'redCircle', 'shape should be redCircle');
 
         //console.log(layer.hitCanvas.context._context.getImageData(1, 1, 1, 1).data)
 
