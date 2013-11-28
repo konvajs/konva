@@ -44,21 +44,25 @@
          * method for determining if a point intersects a shape or not
          * @method
          * @memberof Kinetic.Layer.prototype
-         * @param {Kinetic.Shape} shape
+         * @param {Kinetic.Shape|null} shape
          */
         getIntersection: function() {
             var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments)),
-                shape, i, intersectionOffset;
+                obj, i, intersectionOffset, shape;
 
             if(this.isVisible()) {
                 for (i=0; i<INTERSECTION_OFFSETS_LEN; i++) {
                     intersectionOffset = INTERSECTION_OFFSETS[i];
-                    shape = this._getIntersection({
+                    obj = this._getIntersection({
                         x: pos.x + intersectionOffset.x,
                         y: pos.y + intersectionOffset.y
                     });
+                    shape = obj.shape;
                     if (shape) {
                         return shape;
+                    }
+                    else if (!obj.antialiased) {
+                        return null;
                     }
                 }
             }
@@ -68,16 +72,26 @@
         },
         _getIntersection: function(pos) {
             var p = this.hitCanvas.context._context.getImageData(pos.x, pos.y, 1, 1).data,
+                p3 = p[3],
                 colorKey, shape;
 
-            // this indicates that a hit pixel may have been found
-            if(p[3] === 255) {
+            // fully opaque pixel
+            if(p3 === 255) {
                 colorKey = Kinetic.Util._rgbToHex(p[0], p[1], p[2]);
                 shape = Kinetic.shapes[HASH + colorKey];
-                return shape;
+                return {
+                    shape: shape
+                };
             }
+            // antialiased pixel
+            else if(p3 > 0) {
+                return {
+                    antialiased: true
+                };
+            }
+            // empty pixel
             else {
-                return null
+                return {};
             }
         },
         drawScene: function(canvas) {
