@@ -358,7 +358,7 @@
                 obj = this.getIntersection(this.getPointerPosition()),
                 shape = obj && obj.shape ? obj.shape : undefined;
 
-            if(shape) {
+            if(shape && shape.isListening()) {
                 if(!Kinetic.isDragging() && obj.pixel[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
                     if(this.targetShape) {
                         this.targetShape._fireAndBubble(MOUSEOUT, evt, shape);
@@ -405,7 +405,7 @@
 
             Kinetic.listenClickTap = true;
 
-            if (shape) {
+            if (shape && shape.isListening()) {
                 this.clickStartShape = shape;
                 shape._fireAndBubble(MOUSEDOWN, evt);
             }
@@ -438,7 +438,7 @@
                 Kinetic.inDblClickWindow = false;
             }, Kinetic.dblClickWindow);
 
-            if (shape) {
+            if (shape && shape.isListening()) {
                 shape._fireAndBubble(MOUSEUP, evt);
 
                 // detect if click or double click occurred
@@ -474,7 +474,7 @@
 
             Kinetic.listenClickTap = true;
 
-            if (shape) {
+            if (shape && shape.isListening()) {
                 this.tapStartShape = shape;
                 shape._fireAndBubble(TOUCHSTART, evt);
 
@@ -505,7 +505,7 @@
                     Kinetic.inDblClickWindow = false;
                 }, Kinetic.dblClickWindow);
 
-            if (shape) {
+            if (shape && shape.isListening()) {
                 shape._fireAndBubble(TOUCHEND, evt);
 
                 // detect if tap or double tap occurred
@@ -537,7 +537,7 @@
                 obj = this.getIntersection(this.getPointerPosition()),
                 shape = obj && obj.shape ? obj.shape : undefined;
 
-            if (shape) {
+            if (shape && shape.isListening()) {
                 shape._fireAndBubble(TOUCHMOVE, evt);
 
                 // only call preventDefault if the shape is listening for events

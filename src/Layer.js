@@ -29,8 +29,9 @@
             var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments)),
                 p, colorKey, shape;
 
-            if(this.isVisible() && this.isListening()) {
+            if(this.isVisible()) {
                 p = this.hitCanvas.context._context.getImageData(pos.x | 0, pos.y | 0, 1, 1).data;
+
                 // this indicates that a hit pixel may have been found
                 if(p[3] === 255) {
                     colorKey = Kinetic.Util._rgbToHex(p[0], p[1], p[2]);
@@ -40,15 +41,16 @@
                         pixel: p
                     };
                 }
-                // if no shape mapped to that pixel, return pixel array
-                else if(p[0] > 0 || p[1] > 0 || p[2] > 0 || p[3] > 0) {
+                else {
+                    // if no shape mapped to that pixel, just return the pixel array
                     return {
                         pixel: p
                     };
                 }
             }
-
-            return null;
+            else {
+                return null;
+            }
         },
         drawScene: function(canvas) {
             canvas = canvas || this.getCanvas();

@@ -132,7 +132,7 @@ suite('Layer', function() {
 
         assert.equal(layer.getIntersection(300, 100).shape.getId(), 'greenCircle', 'shape should be greenCircle');
         assert.equal(layer.getIntersection(380, 100).shape.getId(), 'redCircle', 'shape should be redCircle');
-        assert.equal(layer.getIntersection(100, 100), null, 'shape should be null');
+        assert.equal(layer.getIntersection(100, 100).shape, null, 'shape should be null');
 
 
     });
