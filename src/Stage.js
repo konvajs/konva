@@ -42,10 +42,10 @@
         UNDERSCORE = '_',
         CONTAINER = 'container',
         EMPTY_STRING = '',
-        EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND, MOUSEOVER];
+        EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND, MOUSEOVER],
 
-    // cached variables
-    eventsLength = EVENTS.length;
+        // cached variables
+        eventsLength = EVENTS.length;
 
     function addEvent(ctx, eventName) {
       ctx.content.addEventListener(eventName, function(evt) {
