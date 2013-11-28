@@ -2,7 +2,28 @@
     // constants
     var HASH = '#',
         BEFORE_DRAW ='beforeDraw',
-        DRAW = 'draw';
+        DRAW = 'draw',
+
+        /*
+         * 2 - 3 - 4
+         * |       |
+         * 1 - 0   5
+         *         |
+         * 8 - 7 - 6     
+         */
+        INTERSECTION_OFFSETS = [
+            {x:  0, y:  0}, // 0
+            {x: -1, y:  0}, // 1
+            {x: -1, y: -1}, // 2
+            {x:  0, y: -1}, // 3
+            {x:  1, y: -1}, // 4
+            {x:  1, y:  0}, // 5
+            {x:  1, y:  1}, // 6
+            {x:  0, y:  1}, // 7
+            {x: -1, y:  1}  // 8
+        ],
+        INTERSECTION_OFFSETS_LEN = INTERSECTION_OFFSETS.length;
+
 
     Kinetic.Util.addMethods(Kinetic.Layer, {
         ___init: function(config) {
@@ -19,37 +40,44 @@
             }
         },
         /**
-         * get visible intersection object that contains shape and pixel data. This is the preferred
+         * get visible intersection shape. This is the preferred
          * method for determining if a point intersects a shape or not
          * @method
          * @memberof Kinetic.Layer.prototype
-         * @param {Object} pos point object
+         * @param {Kinetic.Shape} shape
          */
         getIntersection: function() {
             var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments)),
-                p, colorKey, shape;
+                shape, i, intersectionOffset;
 
             if(this.isVisible()) {
-                p = this.hitCanvas.context._context.getImageData(pos.x | 0, pos.y | 0, 1, 1).data;
-
-                // this indicates that a hit pixel may have been found
-                if(p[3] === 255) {
-                    colorKey = Kinetic.Util._rgbToHex(p[0], p[1], p[2]);
-                    shape = Kinetic.shapes[HASH + colorKey];
-                    return {
-                        shape: shape,
-                        pixel: p
-                    };
-                }
-                else {
-                    // if no shape mapped to that pixel, just return the pixel array
-                    return {
-                        pixel: p
-                    };
+                for (i=0; i<INTERSECTION_OFFSETS_LEN; i++) {
+                    intersectionOffset = INTERSECTION_OFFSETS[i];
+                    shape = this._getIntersection({
+                        x: pos.x + intersectionOffset.x,
+                        y: pos.y + intersectionOffset.y
+                    });
+                    if (shape) {
+                        return shape;
+                    }
                 }
             }
             else {
                 return null;
+            }
+        },
+        _getIntersection: function(pos) {
+            var p = this.hitCanvas.context._context.getImageData(pos.x, pos.y, 1, 1).data,
+                colorKey, shape;
+
+            // this indicates that a hit pixel may have been found
+            if(p[3] === 255) {
+                colorKey = Kinetic.Util._rgbToHex(p[0], p[1], p[2]);
+                shape = Kinetic.shapes[HASH + colorKey];
+                return shape;
+            }
+            else {
+                return null
             }
         },
         drawScene: function(canvas) {

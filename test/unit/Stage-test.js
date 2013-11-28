@@ -141,7 +141,7 @@ suite('Stage', function() {
     });
 
     // ======================================================
-    test('stage getAllIntersections()', function() {
+    test('stage getIntersection()', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();
 
@@ -169,9 +169,53 @@ suite('Stage', function() {
         layer.add(greenCircle);
         stage.add(layer);
 
-        assert.equal(stage.getIntersection(300, 100).shape.getId(), 'greenCircle', 'shape should be greenCircle');
-        assert.equal(stage.getIntersection(380, 100).shape.getId(), 'redCircle', 'shape should be redCircle');
-        assert.equal(stage.getIntersection(100, 100).shape, null, 'shape should be null');
+        assert.equal(stage.getIntersection(300, 100).getId(), 'greenCircle', 'shape should be greenCircle');
+        assert.equal(stage.getIntersection(380, 100).getId(), 'redCircle', 'shape should be redCircle');
+        assert.equal(stage.getIntersection(100, 100), null, 'shape should be null');
+
+
+    });
+
+    // ======================================================
+    test('stage getIntersection() edge detection', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+
+        var redCircle = new Kinetic.Circle({
+            x: 380,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            id: 'redCircle'
+        });
+
+        var greenCircle = new Kinetic.Circle({
+            x: 300,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black',
+            id: 'greenCircle'
+        });
+
+        stage.on('contentMousemove', function() {
+            var pos = stage.getPointerPosition();
+            var shape = stage.getIntersection(pos);
+            if (!shape){
+                //console.log(pos);
+            }
+        });
+
+        layer.add(redCircle);
+        layer.add(greenCircle);
+        stage.add(layer);
+
+        assert.equal(stage.getIntersection(370, 93).getId(), 'greenCircle', 'shape should be greenCircle');
+        assert.equal(stage.getIntersection(371, 93).getId(), 'greenCircle', 'shape should be greenCircle');
+        assert.equal(stage.getIntersection(372, 93).getId(), 'redCircle', 'shape should be greenCircle');
 
 
     });

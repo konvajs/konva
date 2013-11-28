@@ -42,7 +42,7 @@
         UNDERSCORE = '_',
         CONTAINER = 'container',
         EMPTY_STRING = '',
-        EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND, MOUSEOVER],
+        EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND, MOUSEOVER];
 
     // cached variables
     eventsLength = EVENTS.length;
@@ -250,24 +250,24 @@
             this.toDataURL(config);
         },
         /**
-         * get visible intersection object that contains shape and pixel data. This is the preferred
+         * get visible intersection shape. This is the preferred
          *  method for determining if a point intersects a shape or not
          * @method
          * @memberof Kinetic.Stage.prototype
-         * @param {Object} pos point object
+         * @param {Kinetic.Shape} shape
          */
         getIntersection: function() {
             var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments)),
                 layers = this.getChildren(),
                 len = layers.length,
                 end = len - 1,
-                n, obj;
+                n, shape;
 
             for(n = end; n >= 0; n--) {
-                obj = layers[n].getIntersection(pos);
-                if (obj) {
-                    return obj;
-                }
+                shape = layers[n].getIntersection(pos);
+                if (shape) {
+                    return shape;
+                } 
             }
 
             return null;
@@ -355,11 +355,10 @@
         _mousemove: function(evt) {
             this._setPointerPosition(evt);
             var dd = Kinetic.DD,
-                obj = this.getIntersection(this.getPointerPosition()),
-                shape = obj && obj.shape ? obj.shape : undefined;
+                shape = this.getIntersection(this.getPointerPosition());
 
             if(shape && shape.isListening()) {
-                if(!Kinetic.isDragging() && obj.pixel[3] === 255 && (!this.targetShape || this.targetShape._id !== shape._id)) {
+                if(!Kinetic.isDragging() && (!this.targetShape || this.targetShape._id !== shape._id)) {
                     if(this.targetShape) {
                         this.targetShape._fireAndBubble(MOUSEOUT, evt, shape);
                         this.targetShape._fireAndBubble(MOUSELEAVE, evt, shape);
@@ -400,8 +399,7 @@
         },
         _mousedown: function(evt) {
             this._setPointerPosition(evt);
-            var obj = this.getIntersection(this.getPointerPosition()),
-                shape = obj && obj.shape ? obj.shape : undefined;
+            var shape = this.getIntersection(this.getPointerPosition());
 
             Kinetic.listenClickTap = true;
 
@@ -422,8 +420,7 @@
         _mouseup: function(evt) {
             this._setPointerPosition(evt);
             var that = this,
-                obj = this.getIntersection(this.getPointerPosition()),
-                shape = obj && obj.shape ? obj.shape : undefined,
+                shape = this.getIntersection(this.getPointerPosition()),
                 fireDblClick = false;
 
             if(Kinetic.inDblClickWindow) {
@@ -469,8 +466,7 @@
         },
         _touchstart: function(evt) {
             this._setPointerPosition(evt);
-            var obj = this.getIntersection(this.getPointerPosition()),
-                shape = obj && obj.shape ? obj.shape : undefined;
+            var shape = this.getIntersection(this.getPointerPosition());
 
             Kinetic.listenClickTap = true;
 
@@ -489,8 +485,7 @@
         _touchend: function(evt) {
             this._setPointerPosition(evt);
             var that = this,
-                obj = this.getIntersection(this.getPointerPosition()),
-                shape = obj && obj.shape ? obj.shape : undefined,
+                shape = this.getIntersection(this.getPointerPosition());
                 fireDblClick = false;
 
                 if(Kinetic.inDblClickWindow) {
@@ -534,8 +529,7 @@
         _touchmove: function(evt) {
             this._setPointerPosition(evt);
             var dd = Kinetic.DD,
-                obj = this.getIntersection(this.getPointerPosition()),
-                shape = obj && obj.shape ? obj.shape : undefined;
+                shape = this.getIntersection(this.getPointerPosition());
 
             if (shape && shape.isListening()) {
                 shape._fireAndBubble(TOUCHMOVE, evt);
