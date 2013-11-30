@@ -18,7 +18,8 @@ suite('Line', function() {
             strokeWidth: 20,
             lineCap: 'round',
             lineJoin: 'round',
-            draggable: true
+            draggable: true,
+            tension: 0
         });
 
         layer.add(line);

@@ -1,10 +1,10 @@
 suite('Spline', function() {
     // ======================================================
-    test('add spline', function() {
+    test('add splines', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();
 
-        var line1 = new Kinetic.Spline({
+        var line1 = new Kinetic.Line({
             points: [{
                 x: 73,
                 y: 160
@@ -26,7 +26,7 @@ suite('Spline', function() {
             tension: 1
         });
 
-        var line2 = new Kinetic.Spline({
+        var line2 = new Kinetic.Line({
             points: [{
                 x: 73,
                 y: 160
@@ -45,7 +45,7 @@ suite('Spline', function() {
             tension: 1
         });
 
-        var line3 = new Kinetic.Spline({
+        var line3 = new Kinetic.Line({
             points: [{
                 x: 73,
                 y: 160
@@ -66,14 +66,12 @@ suite('Spline', function() {
         layer.add(line3);
         stage.add(layer);
 
-        assert.equal(line1.getClassName(), 'Spline');
+        assert.equal(line1.getClassName(), 'Line');
 
         var trace = layer.getContext().getTrace();
 
         //console.log(trace);
         assert.equal(trace, 'clearRect(0,0,578,200);save();lineJoin=round;transform(1,0,0,1,0,0);beginPath();moveTo(73,160);quadraticCurveTo(74.006,54.77,340,23);bezierCurveTo(501.006,3.77,519.038,68.068,500,109);quadraticCurveTo(479.038,154.068,300,109);lineCap=round;lineWidth=10;strokeStyle=blue;stroke();restore();save();lineJoin=round;transform(1,0,0,1,0,0);beginPath();moveTo(73,160);quadraticCurveTo(74.006,54.77,340,23);quadraticCurveTo(501.006,3.77,500,109);lineCap=round;lineWidth=10;strokeStyle=red;stroke();restore();save();lineJoin=round;transform(1,0,0,1,0,0);beginPath();moveTo(73,160);lineTo(340,23);lineCap=round;lineWidth=10;strokeStyle=green;stroke();restore();');
-
-
     });
 
     // ======================================================
@@ -81,7 +79,7 @@ suite('Spline', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();
 
-        var spline = new Kinetic.Spline({
+        var spline = new Kinetic.Line({
             points: [{
                 x: 73,
                 y: 160
@@ -107,7 +105,7 @@ suite('Spline', function() {
         layer.add(spline);
         stage.add(layer);
 
-        assert.equal(spline.allPoints.length, 6);
+        assert.equal(spline.getTensionPoints().length, 6);
 
         spline.setPoints([{
             x: 73,
@@ -120,7 +118,7 @@ suite('Spline', function() {
             y: 109
         }]);
 
-        assert.equal(spline.allPoints.length, 3);
+        assert.equal(spline.getTensionPoints().length, 3);
 
         layer.draw();
 
@@ -132,7 +130,7 @@ suite('Spline', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();
 
-        var spline = new Kinetic.Spline({
+        var spline = new Kinetic.Line({
             points: [{
                 x: 73,
                 y: 160
@@ -175,7 +173,7 @@ suite('Spline', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();
 
-        var line = new Kinetic.Spline({
+        var line = new Kinetic.Line({
             points: [
                 73, 160,
                 340, 23,
@@ -201,7 +199,7 @@ suite('Spline', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();
 
-        var line = new Kinetic.Spline({
+        var line = new Kinetic.Line({
             points: [{
                 x: 73,
                 y: 160
@@ -234,7 +232,7 @@ suite('Spline', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();
 
-        var line = new Kinetic.Spline({
+        var line = new Kinetic.Line({
             points: [
                 [73, 160],
                 [340, 23],

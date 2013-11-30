@@ -24,16 +24,17 @@ suite('Polygon', function() {
             y: 93
         }];
 
-        var poly = new Kinetic.Polygon({
+        var poly = new Kinetic.Line({
             points: points,
             fill: 'green',
             stroke: 'blue',
-            strokeWidth: 5
+            strokeWidth: 5,
+            closed: true
         });
 
         layer.add(poly);
         stage.add(layer);
         
-        assert.equal(poly.getClassName(), 'Polygon');
+        assert.equal(poly.getClassName(), 'Line');
     });
 });

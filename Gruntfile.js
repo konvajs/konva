@@ -22,11 +22,8 @@ module.exports = function(grunt) {
     'src/shapes/Ellipse.js',
     'src/shapes/Wedge.js', 
     'src/shapes/Image.js', 
-    'src/shapes/Polygon.js', 
     'src/shapes/Text.js', 
     'src/shapes/Line.js', 
-    'src/shapes/Spline.js', 
-    'src/shapes/Blob.js', 
     'src/shapes/Sprite.js',
 
     // plugins

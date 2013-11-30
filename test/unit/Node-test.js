@@ -912,12 +912,13 @@ suite('Node', function() {
             y: 93
         }];
 
-        var poly = new Kinetic.Polygon({
+        var poly = new Kinetic.Line({
             points: points,
             fill: 'green',
             stroke: 'blue',
             strokeWidth: 5,
-            draggable: true
+            draggable: true,
+            closed: true
         });
 
         group.add(poly);
