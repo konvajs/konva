@@ -49,8 +49,8 @@ module.exports = function(grunt) {
     'src/filters/Noise.js',
     'src/filters/Pixelate.js',
     'src/filters/Polar.js',
-    'src/filters/Threshold.js'
-
+    'src/filters/Threshold.js',
+    'src/filters/Sepia.js'
   ];
 
   // Project configuration.
