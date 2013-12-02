@@ -271,56 +271,21 @@
      * @returns {ImageObject}
      */
 
-    Kinetic.Factory.addBoxGetterSetter(Kinetic.Image, 'crop');
+    Kinetic.Factory.addGetterSetter(Kinetic.Image, 'crop');
     /**
      * set crop
      * @method
      * @name setCrop
      * @memberof Kinetic.Image.prototype
-     * @param {Object|Array}
+     * @param {Object} crop {x: x, y: y, width: width, height: height}
      * @example
-     * // set crop x, y, width and height with an array<br>
-     * image.setCrop([20, 20, 100, 100]);<br><br>
-     *
-     * // set crop x, y, width and height with an object<br>
+     * // set crop x, y, width and height<br>
      * image.setCrop({<br>
      *   x: 20,<br>
      *   y: 20,<br>
      *   width: 20,<br>
      *   height: 20<br>
      * });
-     */
-
-     /**
-     * set cropX
-     * @method
-     * @name setCropX
-     * @memberof Kinetic.Image.prototype
-     * @param {Number} x
-     */
-
-     /**
-     * set cropY
-     * @name setCropY
-     * @method
-     * @memberof Kinetic.Image.prototype
-     * @param {Number} y
-     */
-
-     /**
-     * set cropWidth
-     * @name setCropWidth
-     * @method
-     * @memberof Kinetic.Image.prototype
-     * @param {Number} width
-     */
-
-     /**
-     * set cropHeight
-     * @name setCropHeight
-     * @method
-     * @memberof Kinetic.Image.prototype
-     * @param {Number} height
      */
 
     /**
@@ -331,12 +296,30 @@
      * @returns {Object}
      */
 
+     Kinetic.Factory.addComponentGetterSetter(Kinetic.Image, 'crop', 'x', 0);
+     /**
+     * set crop x
+     * @method
+     * @name setCropX
+     * @memberof Kinetic.Image.prototype
+     * @param {Number} x
+     */
+
     /**
      * get crop x
      * @name getCropX
      * @method
      * @memberof Kinetic.Image.prototype
      * @returns {Number}
+     */
+
+     Kinetic.Factory.addComponentGetterSetter(Kinetic.Image, 'crop', 'y', 0);
+     /**
+     * set crop y
+     * @name setCropY
+     * @method
+     * @memberof Kinetic.Image.prototype
+     * @param {Number} y
      */
 
     /**
@@ -347,12 +330,30 @@
      * @returns {Number}
      */
 
+     Kinetic.Factory.addComponentGetterSetter(Kinetic.Image, 'crop', 'width', 0);
+     /**
+     * set cropWidth
+     * @name setCropWidth
+     * @method
+     * @memberof Kinetic.Image.prototype
+     * @param {Number} width
+     */
+
     /**
      * get crop width
      * @name getCropWidth
      * @method
      * @memberof Kinetic.Image.prototype
      * @returns {Number}
+     */
+
+     Kinetic.Factory.addComponentGetterSetter(Kinetic.Image, 'crop', 'height', 0);
+     /**
+     * set cropHeight
+     * @name setCropHeight
+     * @method
+     * @memberof Kinetic.Image.prototype
+     * @param {Number} height
      */
 
     /**
