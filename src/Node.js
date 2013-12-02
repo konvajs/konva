@@ -1128,7 +1128,7 @@
             }
         },
         _fireBeforeChangeEvent: function(attr, oldVal, newVal) {
-            this._fire(BEFORE + Kinetic.Util._capitalize(attr) + CHANGE, {
+            this._fire([BEFORE, Kinetic.Util._capitalize(attr), CHANGE].join(EMPTY_STRING), {
                 oldVal: oldVal,
                 newVal: newVal
             });
@@ -1171,7 +1171,8 @@
             var oldVal;
             if(val !== undefined) {
                 oldVal = this.attrs[key];
-                this._fireBeforeChangeEvent(key, oldVal, val);
+                // NOTE: before events removed to improve performance
+                //this._fireBeforeChangeEvent(key, oldVal, val);
                 this.attrs[key] = val;
                 this._fireChangeEvent(key, oldVal, val);
             }
