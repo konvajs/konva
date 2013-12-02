@@ -690,6 +690,9 @@
             }
             return retObj;
         },
+        cloneArray: function(arr) {
+            return arr.slice(0);
+        },
         _degToRad: function(deg) {
             return deg * PI_OVER_DEG180;
         },
@@ -732,39 +735,31 @@
             constructor.prototype[key] = methods[key];
           }
         },
-        _getControlPoints: function(p0, p1, p2, t) {
-            var x0 = p0.x;
-            var y0 = p0.y;
-            var x1 = p1.x;
-            var y1 = p1.y;
-            var x2 = p2.x;
-            var y2 = p2.y;
-            var d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
-            var d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-            var fa = t * d01 / (d01 + d12);
-            var fb = t * d12 / (d01 + d12);
-            var p1x = x1 - fa * (x2 - x0);
-            var p1y = y1 - fa * (y2 - y0);
-            var p2x = x1 + fb * (x2 - x0);
-            var p2y = y1 + fb * (y2 - y0);
-            return [{
-                x: p1x,
-                y: p1y
-            }, {
-                x: p2x,
-                y: p2y
-            }];
+       _getControlPoints: function(x0, y0, x1, y1, x2, y2, t) {
+            var d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)),
+                d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)),
+                fa = t * d01 / (d01 + d12),
+                fb = t * d12 / (d01 + d12),
+                p1x = x1 - fa * (x2 - x0),
+                p1y = y1 - fa * (y2 - y0),
+                p2x = x1 + fb * (x2 - x0),
+                p2y = y1 + fb * (y2 - y0);
+
+            return [p1x ,p1y, p2x, p2y];
         },
-        _expandPoints: function(points, tension) {
-            var length = points.length,
+        _expandPoints: function(p, tension) {
+            var len = p.length,
                 allPoints = [],
                 n, cp;
 
-            for(n = 1; n < length - 1; n++) {
-                cp = Kinetic.Util._getControlPoints(points[n - 1], points[n], points[n + 1], tension);
+            for (n=2; n<len-2; n+=2) {
+                cp = Kinetic.Util._getControlPoints(p[n-2], p[n-1], p[n], p[n+1], p[n+2], p[n+3], tension);
                 allPoints.push(cp[0]);
-                allPoints.push(points[n]);
                 allPoints.push(cp[1]);
+                allPoints.push(p[n]);
+                allPoints.push(p[n+1]);
+                allPoints.push(cp[2]);
+                allPoints.push(cp[3]);
             }
 
             return allPoints;
