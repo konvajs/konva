@@ -42,29 +42,21 @@
         Y = 'y';
 
     Kinetic.Factory = {
-        addGetterSetter: function() {
-            var constructor = arguments[0],
-                baseAttr = arguments[1],
-                util = Kinetic.Util,
-                def, component, index;
+        addGetterSetter: function(constructor, baseAttr, def) {
+            var util = Kinetic.Util
 
-            // base method
-            if (arguments.length <= 3) {
-                def = arguments[2];
-                if (util._isArray(def)) {
-                    def = util.cloneArray(def);
-                }
-                this.addGetter(constructor, baseAttr, def);
-                this.addSetter(constructor, baseAttr);
+            if (util._isArray(def)) {
+                def = util.cloneArray(def);
             }
-            // component method
-            else {
-                component = arguments[2];
-                index = arguments[3];
-                def = arguments[4];
-                this.addComponentGetter(constructor, baseAttr, component, index, def);
-                this.addComponentSetter(constructor, baseAttr, component, index);
+            else if (util._isObject(def)) {
+                def = util.cloneObject(def);
             }
+            this.addGetter(constructor, baseAttr, def);
+            this.addSetter(constructor, baseAttr);
+        },
+        addComponentGetterSetter: function(constructor, baseAttr, component, def) {
+            this.addComponentGetter(constructor, baseAttr, component, def);
+            this.addComponentSetter(constructor, baseAttr, component);
         },
         addGetter: function(constructor, baseAttr, def) {
             var method = GET + Kinetic.Util._capitalize(baseAttr);
@@ -81,20 +73,20 @@
                 this._setAttr(baseAttr, val);   
             };
         },
-        addComponentGetter: function(constructor, baseAttr, component, index, def) {
+        addComponentGetter: function(constructor, baseAttr, component, def) {
             var method = GET + Kinetic.Util._capitalize(baseAttr) + Kinetic.Util._capitalize(component);
 
             constructor.prototype[method] = function() {
                 var base = this.attrs[baseAttr],
-                    val = base && base[index];
+                    val = base && base[component];
                 return val === undefined ? def : val;
             };
         },
-        addComponentSetter: function(constructor, baseAttr, component, index) {
+        addComponentSetter: function(constructor, baseAttr, component) {
             var method = SET + Kinetic.Util._capitalize(baseAttr) + Kinetic.Util._capitalize(component);
 
             constructor.prototype[method] = function(val) {
-                this._setComponentAttr(baseAttr, index, val);   
+                this._setComponentAttr(baseAttr, component, val);   
             };
         },
 
