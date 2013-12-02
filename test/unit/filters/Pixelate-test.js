@@ -64,4 +64,49 @@ suite('Pixelate', function () {
         done();
     });
 
+
+    // ======================================================
+    test('tween pixelate', function(done) {
+        var stage = addStage();
+
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+            darth.setFilter(Kinetic.Filters.Pixelate);
+            darth.setPixelWidth(16);
+            darth.setPixelHeight(16);
+            layer.draw();
+
+            var tween = new Kinetic.Tween({
+              node: darth, 
+              duration: 3.0,
+              pixelWidth: 1,
+              pixelHeight: 1,
+              easing: Kinetic.Easings.EaseInOut
+            });
+        
+            darth.on('mouseover', function() {
+              tween.play();
+            });
+      
+            darth.on('mouseout', function() {
+              tween.reverse();
+            });
+
+            done();
+
+        };
+        imageObj.src = 'assets/lion.png';
+    });
 });

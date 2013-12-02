@@ -18,8 +18,8 @@
 
   var Pixelate = function (src, dst, opt) {
 
-    var xBinSize = opt.pixelWidth || 8,
-      yBinSize = opt.pixelHeight || 8;
+    var xBinSize = Math.ceil(opt.pixelWidth) || 8,
+      yBinSize = Math.ceil(opt.pixelHeight) || 8;
 
     var xSize = src.width,
       ySize = src.height,
@@ -85,6 +85,50 @@
     }
     
   };
-  
-  Kinetic.Filters.Pixelate = Kinetic.Util._FilterWrapSingleBuffer(Pixelate);
+
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'pixelWidth', 8);
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'pixelHeight', 8);
+
+  Kinetic.Filters.Pixelate = function(src,dst,opt){
+    if( this === Kinetic.Filters ){
+      Pixelate(src, dst||src, opt );
+    }else{
+      Pixelate.call(this, src, dst||src, opt || {
+        pixelWidth: this.getPixelWidth(),
+        pixelHeight: this.getPixelHeight()
+      });
+    }
+  };//Kinetic.Util._FilterWrapSingleBuffer(Pixelate);
+
+    /**
+    * get filter pixel width.  Returns the width of a pixelated pixel. Must be
+    * an integer greater than 0. A value of 4 means a pixel in the filtered
+    * image is as wide as 4 pixels in the original.
+    * @name getPixelWidth
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
+
+    /**
+    * set filter pixel width.
+    * @name setPixelWidth
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
+
+    /**
+    * get filter pixel height.  Returns the height of a pixelated pixel. Must be
+    * an integer greater than 0. A value of 4 means a pixel in the filtered
+    * image is as tall as 4 pixels in the original.
+    * @name getPixelHeight
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
+
+    /**
+    * set filter pixel height.
+    * @name setPixelHeight
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
 })();
