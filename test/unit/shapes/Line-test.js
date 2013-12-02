@@ -97,7 +97,7 @@ suite('Line', function() {
             dashArray: [30, 10, 0, 10, 10, 20],
             shadowColor: '#aaa',
             shadowBlur: 10,
-            shadowOffset: [20, 20]
+            shadowOffset: {x:20, y:20}
             //opacity: 0.2
         });
 
@@ -125,7 +125,7 @@ suite('Line', function() {
             lineJoin: 'round',
             shadowColor: 'black',
             shadowBlur: 20,
-            shadowOffset: 10,
+            shadowOffset: {x: 10, y: 10},
             shadowOpacity: 0.5,
             draggable: true
         });
