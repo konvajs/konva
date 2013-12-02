@@ -139,20 +139,87 @@
 
   };
 
-  Kinetic.Filters.BlurX = Kinetic.Util._FilterWrapSingleBuffer(BlurX);
-  Kinetic.Filters.BlurY = Kinetic.Util._FilterWrapSingleBuffer(BlurY);
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'blurWidth', 5);
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'blurHeight', 5);
+
+  Kinetic.Filters.BlurX = function(src,dst,opt){
+    if( this === Kinetic.Filters ){
+      BlurX(src, dst||src, opt );
+    }else{
+      BlurX.call(this, src, dst||src, opt || {
+        blurWidth: this.getBlurWidth()
+      });
+    }
+  };
+  Kinetic.Filters.BlurY = function(src,dst,opt){
+    if( this === Kinetic.Filters ){
+      BlurY(src, dst||src, opt );
+    }else{
+      BlurY.call(this, src, dst||src, opt || {
+        blurHeight: this.getBlurHeight()
+      });
+    }
+  };
+
+    /**
+    * get filter blur width.  Returns the width of a blurred pixel. Must be
+    * an integer greater than 0. 
+    * @name getBlurWidth
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
+
+    /**
+    * set filter blur width.
+    * @name setBlurWidth
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
+
+    /**
+    * get filter blur height.  Returns the height of a blurred pixel. Must be
+    * an integer greater than 0. 
+    * @name getBlurHeight
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
+
+    /**
+    * set filter blur height.
+    * @name setBlurHeight
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
 
   Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterRadius', 5);
 
   Kinetic.Filters.Blur  = Kinetic.Util._FilterWrapSingleBuffer(function(src,dst,opt){
-    opt = opt || {
-      blurWidth: this.getFilterRadius(),
-      blurHeight: this.getFilterRadius()
-    };
-    Kinetic.Filters.BlurX(src,src,opt);
-    Kinetic.Filters.BlurY(src,dst,opt);
-    // Move the destination to the source
-    //Kinetic.Util._FilterReplaceBuffer(dst,src);
+    if( this === Kinetic.Filters ){
+      BlurX(src, src, opt );
+      BlurY(src, dst||src, opt );
+    }else{
+      opt = opt || {
+        blurHeight: this.getFilterRadius(),
+        blurWidth: this.getFilterRadius()
+      };
+      BlurX.call(this, src, src, opt);
+      BlurY.call(this, src, dst||src, opt);
+    }
   });
+
+    /**
+    * get filter radius.  Returns the radius of a blurred pixel. The blur
+    * is applied horzontally and vertically.
+    * @name getFilterRadius
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
+
+    /**
+    * set filter radius.
+    * @name setFilterRadius
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
   
 })();
