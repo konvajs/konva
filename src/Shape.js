@@ -933,31 +933,34 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addPointGetterSetter(Kinetic.Shape, 'fillPatternOffset', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternOffset', {x:0, y:0});
 
     /**
      * set fill pattern offset
      * @name setFillPatternOffset
      * @method
      * @memberof Kinetic.Shape.prototype
-     * @param {Number|Array|Object} offset
+     * @param {Object} offset
+     * @param {Number} offset.x
+     * @param {Number} offset.y
      * @example
-     * // set x and y<br>
-     * shape.setFillPatternOffset(20, 40);<br><br>
-     *
-     * // set x only <br>
+     * // set x and y <br>
      * shape.setFillPatternOffset({<br>
      *   x: 20<br>
-     * });<br><br>
-     *
-     * // set x and y using an array<br>
-     * shape.setFillPatternOffset([20, 40]);<br><br>
-     *
-     * // set x and y to the same value<br>
-     * shape.setFillPatternOffset(5);
+     *   y: 10
+     * });
      */
 
-     /**
+    /**
+     * get fill pattern offset
+     * @name getFillPatternOffset
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @returns {Object}
+     */
+
+    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillPatternOffset', 'x', 0);
+    /**
      * set fill pattern offset x
      * @name setFillPatternOffsetX
      * @method
@@ -965,7 +968,15 @@
      * @param {Number} x
      */
 
-     /**
+    /**
+     * get fill pattern offset x
+     * @name getFillPatternOffsetX
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     */
+
+    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillPatternOffset', 'y', 0);
+    /**
      * set fill pattern offset y
      * @name setFillPatternOffsetY
      * @method
@@ -973,52 +984,41 @@
      * @param {Number} y
      */
 
-     /**
-     * get fill pattern offset
-     * @name getFillPatternOffset
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     */
-
-     /**
-     * get fill pattern offset x
-     * @name getFillPatternOffsetX
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     */
-
-     /**
+    /**
      * get fill pattern offset y
      * @name getFillPatternOffsetY
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addPointGetterSetter(Kinetic.Shape, 'fillPatternScale', 1);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternScale', {x: 1, y:1});
 
     /**
      * set fill pattern scale
      * @name setFillPatternScale
      * @method
      * @memberof Kinetic.Shape.prototype
-     * @param {Number} scale
+     * @param {Object} scale
+     * @param {Number} scale.x
+     * @param {Number} scale.y
      * @example
-     * // set x and y to the same value<br>
-     * shape.setFillPatternScale(5);<br><br>
-     *
-     * // set x and y<br>
-     * shape.setFillPatternScale(20, 40);<br><br>
-     *
-     * // set x only <br>
+     * // set x and y <br>
      * shape.setFillPatternScale({<br>
      *   x: 20<br>
-     * });<br><br>
-     *
-     * // set x and y using an array<br>
-     * shape.setFillPatternScale([20, 40]);
+     *   y: 10
+     * });
      */
 
-     /**
+    /**
+     * get fill pattern scale
+     * @name getFillPatternScale
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @returns {Object}
+     */
+
+    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillPatternScale', 'x', 0);
+    /**
      * set fill pattern scale x
      * @name setFillPatternScaleX
      * @method
@@ -1026,7 +1026,16 @@
      * @param {Number} x
      */
 
-     /**
+    /**
+     * get fill pattern scale x
+     * @name getFillPatternScaleX
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @returns {Number}
+     */
+
+    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillPatternScale', 'y', 0);
+    /**
      * set fill pattern scale y
      * @name setFillPatternScaleY
      * @method
@@ -1034,52 +1043,42 @@
      * @param {Number} y
      */
 
-     /**
-     * get fill pattern scale
-     * @name getFillPatternScale
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     */
-
-     /**
-     * get fill pattern scale x
-     * @name getFillPatternScaleX
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     */
-
-     /**
+    /**
      * get fill pattern scale y
      * @name getFillPatternScaleY
      * @method
      * @memberof Kinetic.Shape.prototype
+     * @returns {Number}
      */
 
-    Kinetic.Factory.addPointGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPoint', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPoint', {x:0, y:0});
 
     /**
      * set fill linear gradient start point
      * @name setFillLinearGradientStartPoint
      * @method
      * @memberof Kinetic.Shape.prototype
-     * @param {Number|Array|Object} startPoint
+     * @param {Object} startPoint
+     * @param {Number} startPoint.x
+     * @param {Number} startPoint.y
      * @example
-     * // set x and y<br>
-     * shape.setFillLinearGradientStartPoint(20, 40);<br><br>
-     *
-     * // set x only <br>
+     * // set x and y <br>
      * shape.setFillLinearGradientStartPoint({<br>
      *   x: 20<br>
-     * });<br><br>
-     *
-     * // set x and y using an array<br>
-     * shape.setFillLinearGradientStartPoint([20, 40]);<br><br>
-     *
-     * // set x and y to the same value<br>
-     * shape.setFillLinearGradientStartPoint(5);
+     *   y: 10
+     * });
      */
 
-     /**
+    /**
+     * get fill linear gradient start point
+     * @name getFillLinearGradientStartPoint
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @returns {Object}
+     */
+
+    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPoint', 'x', 0);
+    /**
      * set fill linear gradient start point x
      * @name setFillLinearGradientStartPointX
      * @method
@@ -1087,7 +1086,16 @@
      * @param {Number} x
      */
 
-     /**
+    /**
+     * get fill linear gradient start point x
+     * @name getFillLinearGradientStartPointX
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @returns {Number}
+     */
+
+    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPoint', 'y', 0);
+    /**
      * set fill linear gradient start point y
      * @name setFillLinearGradientStartPointY
      * @method
@@ -1095,52 +1103,41 @@
      * @param {Number} y
      */
 
-     /**
-     * get fill linear gradient start point
-     * @name getFillLinearGradientStartPoint
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     */
-
-     /**
-     * get fill linear gradient start point x
-     * @name getFillLinearGradientStartPointX
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     */
-
-     /**
+    /**
      * get fill linear gradient start point y
      * @name getFillLinearGradientStartPointY
      * @method
      * @memberof Kinetic.Shape.prototype
+     * @returns {Number}
      */
 
-    Kinetic.Factory.addPointGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPoint', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPoint', {x: 0, y: 0});
 
     /**
      * set fill linear gradient end point
      * @name setFillLinearGradientEndPoint
      * @method
      * @memberof Kinetic.Shape.prototype
-     * @param {Number|Array|Object} endPoint
+     * @param {Object} endPoint
      * @example
-     * // set x and y<br>
-     * shape.setFillLinearGradientEndPoint(20, 40);<br><br>
-     *
      * // set x only <br>
      * shape.setFillLinearGradientEndPoint({<br>
      *   x: 20<br>
-     * });<br><br>
-     *
-     * // set x and y using an array<br>
-     * shape.setFillLinearGradientEndPoint([20, 40]);<br><br>
-     *
-     * // set x and y to the same value<br>
-     * shape.setFillLinearGradientEndPoint(5);
+     *   y: 10
+     * });
      */
 
-     /**
+    /**
+     * get fill linear gradient end point
+     * @name getFillLinearGradientEndPoint
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @returns {Object}
+     */
+
+    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPoint', 'x', 0);
+
+    /**
      * set fill linear gradient end point x
      * @name setFillLinearGradientEndPointX
      * @method
@@ -1148,7 +1145,17 @@
      * @param {Number} x
      */
 
-     /**
+    /**
+     * get fill linear gradient end point x
+     * @name getFillLinearGradientEndPointX
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @returns {Number}
+     */
+
+    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPoint', 'y', 0);
+
+    /**
      * set fill linear gradient end point y
      * @name setFillLinearGradientEndPointY
      * @method
@@ -1156,25 +1163,12 @@
      * @param {Number} y
      */
 
-     /**
-     * get fill linear gradient end point
-     * @name getFillLinearGradientEndPoint
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     */
-
-     /**
-     * get fill linear gradient end point x
-     * @name getFillLinearGradientEndPointX
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     */
-
-     /**
+    /**
      * get fill linear gradient end point y
      * @name getFillLinearGradientEndPointY
      * @method
      * @memberof Kinetic.Shape.prototype
+     * @returns {Number}
      */
 
     Kinetic.Factory.addPointGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', 0);
@@ -1322,6 +1316,7 @@
      * @name getShadowOffset
      * @method
      * @memberof Kinetic.Shape.prototype
+     * @returns {Object}
      */
 
      Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'shadowOffset', 'x', 0);

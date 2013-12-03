@@ -1,4 +1,4 @@
-suite('Shape-test', function() {
+suite('Shape', function() {
 
     // ======================================================
     test('shape color components', function() {
@@ -191,8 +191,8 @@ suite('Shape-test', function() {
                 fillPatternImage: imageObj,
                 fillPatternX: -20,
                 fillPatternY: -30,
-                fillPatternScale: 0.5,
-                fillPatternOffset: [219, 150],
+                fillPatternScale: {x: 0.5, y:0.5},
+                fillPatternOffset: {x: 219, y: 150},
                 fillPatternRotation: Math.PI * 0.5,
                 fillPatternRepeat: 'no-repeat',
 
@@ -223,12 +223,12 @@ suite('Shape-test', function() {
 
             assert.equal(star.getFillPatternRotation(), Math.PI, 'star fill rotation should be Math.PI');
 
-            star.setFillPatternScale(1);
+            star.setFillPatternScale({x:1, y:1});
 
             assert.equal(star.getFillPatternScale().x, 1, 'star fill scale x should be 1');
             assert.equal(star.getFillPatternScale().y, 1, 'star fill scale y should be 1');
 
-            star.setFillPatternOffset([100, 120]);
+            star.setFillPatternOffset({x:100, y:120});
 
             assert.equal(star.getFillPatternOffset().x, 100, 'star fill offset x should be 100');
             assert.equal(star.getFillPatternOffset().y, 120, 'star fill offset y should be 120');
@@ -301,7 +301,7 @@ suite('Shape-test', function() {
             circle.setFill(null);
             circle.setFillPatternImage(imageObj);
             circle.setFillPatternRepeat('no-repeat');
-            circle.setFillPatternOffset([-200, -70]);
+            circle.setFillPatternOffset({x:-200, y:-70});
 
             assert.notEqual(circle.getFillPatternImage(), undefined, 'circle fill image should be defined');
             assert.equal(circle.getFillPatternRepeat(), 'no-repeat', 'circle fill repeat should be no-repeat');
@@ -309,14 +309,14 @@ suite('Shape-test', function() {
             assert.equal(circle.getFillPatternOffset().y, -70, 'circle fill offset y should be -70');
 
             circle.setFillPatternImage(null);
-            circle.setFillLinearGradientStartPoint(-35);
-            circle.setFillLinearGradientEndPoint(35);
+            circle.setFillLinearGradientStartPoint({x:-35,y:-35});
+            circle.setFillLinearGradientEndPoint({x:35,y:35});
             circle.setFillLinearGradientColorStops([0, 'red', 1, 'blue']);
 
             circle.setFillLinearGradientStartPoint(null);
             circle.setFillPatternImage(imageObj);
             circle.setFillPatternRepeat('repeat');
-            circle.setFillPatternOffset(0);
+            circle.setFillPatternOffset({x:0,y:0});
 
             layer.draw();
 
@@ -338,7 +338,7 @@ suite('Shape-test', function() {
             strokeWidth: 4,
             shadowColor: 'black',
             shadowBlur: 10,
-            shadowOffset: 10,
+            shadowOffset: {x:10, y:10},
             dashArray: [10, 10],
             scaleX: 3
         });
@@ -403,7 +403,7 @@ suite('Shape-test', function() {
       opacity: 0.5,
       shadowColor: 'black',
       shadowBlur: 10,
-      shadowOffset: 10,
+      shadowOffset: {x:10, y:10},
       shadowOpacity: 0.5
     });
 
@@ -436,7 +436,7 @@ suite('Shape-test', function() {
       opacity: 0.5,
       shadowColor: 'black',
       shadowBlur: 10,
-      shadowOffset: 10,
+      shadowOffset: {x:10, y:10},
       shadowOpacity: 0.5
     });
 
@@ -468,7 +468,7 @@ suite('Shape-test', function() {
       opacity: 0.5,
       shadowColor: 'black',
       shadowBlur: 10,
-      shadowOffset: 10,
+      shadowOffset: {x:10, y:10},
       shadowOpacity: 0.5,
       draggable: true
     });

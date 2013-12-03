@@ -71,6 +71,7 @@
 
             constructor.prototype[method] = function(val) {
                 this._setAttr(baseAttr, val);   
+                return this;
             };
         },
         addComponentGetter: function(constructor, baseAttr, component, def) {
@@ -87,6 +88,7 @@
 
             constructor.prototype[method] = function(val) {
                 this._setComponentAttr(baseAttr, component, val);   
+                return this;
             };
         },
 
