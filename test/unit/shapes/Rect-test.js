@@ -15,8 +15,6 @@ suite('Rect', function(){
       stroke: 'blue'
     });
 
-    console.log(rect)
-
     layer.add(rect);
     stage.add(layer);
 

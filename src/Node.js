@@ -633,7 +633,7 @@
                 y += changeY;
             }
 
-            this.setPosition(x, y);
+            this.setPosition({x:x, y:y});
             return this;
         },
         _eachAncestorReverse: function(func, includeSelf) {

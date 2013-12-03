@@ -226,8 +226,8 @@
             this.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
         },
         _clip: function(container) {
-            var clipX = container.getClipX() || 0,
-                clipY = container.getClipY() || 0,
+            var clipX = container.getClipX(),
+                clipY = container.getClipY(),
                 clipWidth = container.getClipWidth(),
                 clipHeight = container.getClipHeight();
 

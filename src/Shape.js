@@ -106,14 +106,13 @@
          *  because it performs much better
          * @method
          * @memberof Kinetic.Shape.prototype
-         * @param {Object} point point can be an object containing
-         *  an x and y property, or it can be an array with two elements
-         *  in which the first element is the x component and the second
-         *  element is the y component
+         * @param {Object} point 
+         * @param {Number} point.x
+         * @param {Number} point.y
+         * @returns {Boolean}
          */
-        intersects: function() {
-            var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments)),
-                stage = this.getStage(),
+        intersects: function(pos) {
+            var stage = this.getStage(),
                 bufferHitCanvas = stage.bufferHitCanvas,
                 p;
 

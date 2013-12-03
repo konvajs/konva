@@ -218,19 +218,18 @@
          * @method
          * @memberof Kinetic.Container.prototype
          * @param {Object} pos
+         * @param {Number} pos.x
+         * @param {Number} pos.y
+         * @returns {Array} array of shapes
          */
-        getAllIntersections: function() {
-            var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments));
+        getAllIntersections: function(pos) {
             var arr = [];
-            var shapes = this.find('Shape');
 
-            var len = shapes.length;
-            for(var n = 0; n < len; n++) {
-                var shape = shapes[n];
+            this.find('Shape').each(function(shape) {
                 if(shape.isVisible() && shape.intersects(pos)) {
                     arr.push(shape);
                 }
-            }
+            });
 
             return arr;
         },
@@ -297,19 +296,16 @@
     Kinetic.Container.prototype.get = Kinetic.Container.prototype.find;
 
     // add getters setters
-    Kinetic.Factory.addBoxGetterSetter(Kinetic.Container, 'clip');
+    Kinetic.Factory.addGetterSetter(Kinetic.Container, 'clip');
 
     /**
      * set clip
      * @method
      * @name setClip
      * @memberof Kinetic.Container.prototype
-     * @param {Object|Array}
+     * @param {Object} clip {x:x, y:y, width:width, height:height}
      * @example
-     * // set clip x, y, width and height with an array<br>
-     * image.setClip([20, 20, 100, 100]);<br><br>
-     *
-     * // set clip x, y, width and height with an object<br>
+     * // set clip x, y, width and height<br>
      * image.setClip({<br>
      *   x: 20,<br>
      *   y: 20,<br>
@@ -318,44 +314,21 @@
      * });
      */
 
-     /**
-     * set clipX
-     * @method
-     * @name setClipX
-     * @memberof Kinetic.Container.prototype
-     * @param {Number} x
-     */
-
-     /**
-     * set clipY
-     * @name setClipY
-     * @method
-     * @memberof Kinetic.Container.prototype
-     * @param {Number} y
-     */
-
-     /**
-     * set clipWidth
-     * @name setClipWidth
-     * @method
-     * @memberof Kinetic.Container.prototype
-     * @param {Number} width
-     */
-
-     /**
-     * set clipHeight
-     * @name setClipHeight
-     * @method
-     * @memberof Kinetic.Container.prototype
-     * @param {Number} height
-     */
-
     /**
      * get clip
      * @name getClip
      * @method
      * @memberof Kinetic.Container.prototype
-     * @return {Object}
+     * @returns {Object}
+     */
+
+    Kinetic.Factory.addComponentGetterSetter(Kinetic.Container, 'clip', 'x', 0);
+     /**
+     * set clip x
+     * @method
+     * @name setClipX
+     * @memberof Kinetic.Container.prototype
+     * @param {Number} x
      */
 
     /**
@@ -363,6 +336,16 @@
      * @name getClipX
      * @method
      * @memberof Kinetic.Container.prototype
+     * @returns {Number}
+     */
+
+     Kinetic.Factory.addComponentGetterSetter(Kinetic.Container, 'clip', 'y', 0);
+     /**
+     * set clip y
+     * @name setClipY
+     * @method
+     * @memberof Kinetic.Container.prototype
+     * @param {Number} y
      */
 
     /**
@@ -370,6 +353,16 @@
      * @name getClipY
      * @method
      * @memberof Kinetic.Container.prototype
+     * @returns {Number}
+     */
+
+     Kinetic.Factory.addComponentGetterSetter(Kinetic.Container, 'clip', 'width', 0);
+     /**
+     * set clip width
+     * @name setClipWidth
+     * @method
+     * @memberof Kinetic.Container.prototype
+     * @param {Number} width
      */
 
     /**
@@ -377,6 +370,16 @@
      * @name getClipWidth
      * @method
      * @memberof Kinetic.Container.prototype
+     * @returns {Number}
+     */
+
+     Kinetic.Factory.addComponentGetterSetter(Kinetic.Container, 'clip', 'height', 0);
+     /**
+     * set clip height
+     * @name setClipHeight
+     * @method
+     * @memberof Kinetic.Container.prototype
+     * @param {Number} height
      */
 
     /**
@@ -384,6 +387,6 @@
      * @name getClipHeight
      * @method
      * @memberof Kinetic.Container.prototype
+     * @returns {Number}
      */
-
 })();

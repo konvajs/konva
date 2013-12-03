@@ -4,7 +4,7 @@ suite('Container', function() {
     test('clip', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer({
-            clip: [0, 0, stage.getWidth() / 2, 100]
+            clip: {x:0, y:0, width:stage.getWidth() / 2, height:100}
         });
         var group = new Kinetic.Group();
         var circle = new Kinetic.Circle({

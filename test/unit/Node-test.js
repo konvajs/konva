@@ -68,7 +68,7 @@ suite('Node', function() {
 
         assert.equal(circle.getFill(), 'red');
 
-        circle.setAttr('position', 5, 6);
+        circle.setAttr('position', {x: 5, y: 6});
 
         assert.equal(circle.getX(), 5);
         assert.equal(circle.getY(), 6);
@@ -574,7 +574,7 @@ suite('Node', function() {
             width: 200,
             height: 50,
             fill: 'blue',
-            shadowOffset: [10, 10],
+            shadowOffset: {x: 10, y: 10},
         });
 
         var circle = new Kinetic.Circle({
@@ -608,9 +608,9 @@ suite('Node', function() {
             radiusChanged++;
         });
 
-        circle.setRadius(70, 20);
+        circle.setRadius(70);
 
-        rect.setSize(210);
+        rect.setSize({width: 210, height: 210});
         rect.setShadowOffset({
             x: 20
         });
@@ -776,7 +776,7 @@ suite('Node', function() {
         assert.equal(rect.getScale().y, 0.5);
         assert.equal(rect.getRotation(), 20 * Math.PI / 180);
 
-        rect.setScale(2, 0.3);
+        rect.setScale({x:2, y:0.3});
         assert.equal(rect.getScale().x, 2);
         assert.equal(rect.getScale().y, 0.3);
 
@@ -1131,7 +1131,7 @@ suite('Node', function() {
         assert.equal(rect.getOffset().x, 40);
         assert.equal(rect.getOffset().y, 20);
 
-        rect.setOffset(80, 40);
+        rect.setOffset({x:80, y:40});
 
         assert.equal(rect.getOffsetX(), 80);
         assert.equal(rect.getOffsetY(), 40);
@@ -1203,7 +1203,7 @@ suite('Node', function() {
         layer.add(rect);
         stage.add(layer);
 
-        rect.setShadowOffset([1, 2]);
+        rect.setShadowOffset({x:1, y:2});
         assert.equal(rect.getShadowOffset().x, 1);
         assert.equal(rect.getShadowOffset().y, 2);
         // make sure we still have the other properties
@@ -1218,16 +1218,12 @@ suite('Node', function() {
         assert.equal(rect.getShadowOffset().y, 4);
 
         // test partial setting
-        rect.setShadowOffset({
-            x: 5
-        });
+        rect.setShadowOffsetX(5);
         assert.equal(rect.getShadowOffset().x, 5);
         assert.equal(rect.getShadowOffset().y, 4);
 
         // test partial setting
-        rect.setShadowOffset({
-            y: 6
-        });
+        rect.setShadowOffsetY(6);
         assert.equal(rect.getShadowOffset().x, 5);
         assert.equal(rect.getShadowOffset().y, 6);
 
@@ -1248,11 +1244,11 @@ suite('Node', function() {
         layer.add(rect);
         stage.add(layer);
 
-        rect.setOffset(1, 2);
+        rect.setOffset({x:1, y: 2});
         assert.equal(rect.getOffset().x, 1);
         assert.equal(rect.getOffset().y, 2);
 
-        rect.setOffset([3, 4]);
+        rect.setOffset({x:3, y:4});
         assert.equal(rect.getOffset().x, 3);
         assert.equal(rect.getOffset().y, 4);
 
@@ -1263,15 +1259,11 @@ suite('Node', function() {
         assert.equal(rect.getOffset().x, 5);
         assert.equal(rect.getOffset().y, 6);
 
-        rect.setOffset({
-            x: 7
-        });
+        rect.setOffsetX(7);
         assert.equal(rect.getOffset().x, 7);
         assert.equal(rect.getOffset().y, 6);
 
-        rect.setOffset({
-            y: 8
-        });
+        rect.setOffsetY(8);
         assert.equal(rect.getOffset().x, 7);
         assert.equal(rect.getOffset().y, 8);
 
@@ -1292,11 +1284,11 @@ suite('Node', function() {
         layer.add(rect);
         stage.add(layer);
 
-        rect.setPosition(1, 2);
+        rect.setPosition({x:1, y:2});
         assert.equal(rect.getPosition().x, 1);
         assert.equal(rect.getPosition().y, 2);
 
-        rect.setPosition([3, 4]);
+        rect.setPosition({x:3, y:4});
         assert.equal(rect.getPosition().x, 3);
         assert.equal(rect.getPosition().y, 4);
 
@@ -1307,19 +1299,15 @@ suite('Node', function() {
         assert.equal(rect.getPosition().x, 5);
         assert.equal(rect.getPosition().y, 6);
 
-        rect.setPosition({
-            x: 7
-        });
+        rect.setX(7);
         assert.equal(rect.getPosition().x, 7);
         assert.equal(rect.getPosition().y, 6);
 
-        rect.setPosition({
-            y: 8
-        });
+        rect.setY(8);
         assert.equal(rect.getPosition().x, 7);
         assert.equal(rect.getPosition().y, 8);
 
-        rect.move(10);
+        rect.move({x: 10, y: 10});
         assert.equal(rect.getPosition().x, 17);
         assert.equal(rect.getPosition().y, 18);
 

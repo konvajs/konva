@@ -44,11 +44,13 @@
          * method for determining if a point intersects a shape or not
          * @method
          * @memberof Kinetic.Layer.prototype
-         * @param {Kinetic.Shape|null} shape
+         * @param {Object} pos
+         * @param {Number} pos.x
+         * @param {Number} pos.y
+         * @returns {Kinetic.Shape}
          */
-        getIntersection: function() {
-            var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments)),
-                obj, i, intersectionOffset, shape;
+        getIntersection: function(pos) {
+            var obj, i, intersectionOffset, shape;
 
             if(this.isVisible()) {
                 for (i=0; i<INTERSECTION_OFFSETS_LEN; i++) {
