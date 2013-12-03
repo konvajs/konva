@@ -153,17 +153,21 @@
          * clear scene and hit canvas contexts tied to the layer
          * @method
          * @memberof Kinetic.Node.prototype
-         * @param {Array|Object} [bounds]
+         * @param {Object} [bounds]
+         * @param {Number} [bounds.x]
+         * @param {Number} [bounds.y]
+         * @param {Number} [bounds.width]
+         * @param {Number} [bounds.height]
          * @example
          * layer.clear();<br>
          * layer.clear(0, 0, 100, 100);
          */
-        clear: function() {
+        clear: function(bounds) {
             var context = this.getContext(),
                 hitContext = this.getHitCanvas().getContext();
 
-            context.clear.apply(context, arguments);
-            hitContext.clear.apply(hitContext, arguments);
+            context.clear(bounds);
+            hitContext.clear(bounds);
             return this;
         },
         // extend Node.prototype.setVisible

@@ -188,16 +188,18 @@
          * clear canvas
          * @method
          * @memberof Kinetic.Context.prototype
+         * @param {Object} [bounds]
+         * @param {Number} [bounds.x]
+         * @param {Number} [bounds.y]
+         * @param {Number} [bounds.width]
+         * @param {Number} [bounds.height]
          */
-        clear: function() {
-            var args = [].slice.call(arguments),
-                canvas = this.getCanvas(),
+        clear: function(bounds) {
+            var canvas = this.getCanvas(),
                 pos, size;
             
-            if (args.length) {
-                pos = Kinetic.Util._getXY(args);
-                size = Kinetic.Util._getSize(args);
-                this.clearRect(pos.x || 0, pos.y || 0, size.width, size.height);
+            if (bounds) {
+                this.clearRect(bounds.x || 0, bounds.y || 0, bounds.width || 0, bounds.height || 0);
             }
             else {
                 this.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
