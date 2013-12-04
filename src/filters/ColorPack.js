@@ -70,7 +70,69 @@
 
   };
 
-  Kinetic.Filters.HSV = Kinetic.Util._FilterWrapSingleBuffer(HSV);
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterHue', 0);
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterSaturation', 1);
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterValue', 1);
+
+  Kinetic.Filters.HSV = function(src,dst,opt){
+    if( this === Kinetic.Filters ){
+      HSV(src, dst||src, opt );
+    }else{
+      HSV.call(this, src, dst||src, opt || {
+        hue: this.getFilterHue(),
+        saturation: this.getFilterSaturation(),
+        value: this.getFilterValue()
+      });
+    }
+  };
+
+    /**
+    * get filter hue.  Returns the hue shift for the HSV filter.
+    * 0 is no change, 359 is the maximum shift.
+    * @name getFilterHue
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
+
+    /**
+    * set filter hue.  Sets the hue shift for the HSV filter.
+    * 0 is no change, 359 is the maximum shift.
+    * @name setFilterHue
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
+
+    /**
+    * get filter saturation.  Returns the saturation scale for the HSV
+    * filter. 1 is no change, 0.5 halves the saturation, 2.0 doubles, etc..
+    * @name getFilterSaturation
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
+
+    /**
+    * set filter saturation.  Set the saturation scale for the HSV
+    * filter. 1 is no change, 0.5 halves the saturation, 2.0 doubles, etc..
+    * @name setFilterSaturation
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
+
+    /**
+    * get filter value.  Returns the value scale for the HSV
+    * filter. 1 is no change, 0.5 halves the value, 2.0 doubles, etc..
+    * @name getFilterValue
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
+
+    /**
+    * set filter value.  Set the value scale for the HSV
+    * filter. 1 is no change, 0.5 halves the value, 2.0 doubles, etc..
+    * @name setFilterValue
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
 
 })();
 

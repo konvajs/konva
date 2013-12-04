@@ -224,4 +224,46 @@ suite('Flip', function () {
         done();
     });
 
+    // ======================================================
+    test('on image', function(done) {
+        var stage = addStage();
+
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            
+            var layer = new Kinetic.Layer();
+            var xFlip = new Kinetic.Image({
+                x: 160,
+                y: 10,
+                image: imageObj,
+                draggable: true,
+                filter: Kinetic.Filters.FlipX
+            });
+            var yFlip = new Kinetic.Image({
+                x: 320,
+                y: 10,
+                image: imageObj,
+                draggable: true,
+                filter: Kinetic.Filters.FlipY
+            });
+            var noFlip = new Kinetic.Image({
+                x: 0,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(noFlip);
+            layer.add(xFlip);
+            layer.add(yFlip);
+            stage.add(layer);
+
+            layer.draw();
+
+            done();
+        };
+        imageObj.src = 'assets/lion.png';
+
+    });
+
 });

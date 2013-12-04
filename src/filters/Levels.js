@@ -16,7 +16,7 @@
    */
 
   var Levels = function (src, dst, opt) {
-    var nLevels = opt.quantizationLevels || 2;
+    var nLevels = Math.round(opt.quantizationLevels || 2);
     var srcPixels = src.data,
       dstPixels = dst.data,
       nPixels = srcPixels.length,
@@ -27,5 +27,31 @@
     }
   };
 
-  Kinetic.Filters.Levels = Kinetic.Util._FilterWrapSingleBuffer(Levels);
+  Kinetic.Filters.Levels = function(src,dst,opt){
+    if( this === Kinetic.Filters ){
+      Levels(src, dst||src, opt );
+    }else{
+      Levels.call(this, src, dst||src, {
+        quantizationLevels: this.getQuantizationLevels()
+      });
+    }
+  };
+
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'quantizationLevels', 4);
+
+    /**
+    * get quantization levels.  Returns the number of unique levels for each color
+    * channel. 2 is the minimum, 255 is the maximum. For Kinetic.Filters.Levels
+    * @name getQuantizationLevels
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
+
+    /**
+    * get quantization levels.  Sets the number of unique levels for each color
+    * channel. 2 is the minimum, 255 is the maximum. For Kinetic.Filters.Levels
+    * @name setQuantizationLevels
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
 })();

@@ -1,6 +1,6 @@
 suite('Color Stretch', function () {
     // ======================================================
-    test('enhancing colors', function (done) {
+    test('enhancing colors on layer', function (done) {
         var stage = addStage();
 
         var shapesLayer = new Kinetic.Layer();
@@ -45,5 +45,39 @@ suite('Color Stretch', function () {
         stage.add(shapesLayer);
 
         done();
+    });
+
+    // ======================================================
+    test('on image', function(done) {
+        var stage = addStage();
+
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            
+            var layer = new Kinetic.Layer();
+            var filt = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+            var orig = new Kinetic.Image({
+                x: 200,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(filt);
+            layer.add(orig);
+            stage.add(layer);
+
+            filt.setFilter(Kinetic.Filters.ColorStretch);
+            layer.draw();
+
+            done();
+        };
+        imageObj.src = 'assets/bamoon.jpg';
+
     });
 });

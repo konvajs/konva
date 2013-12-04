@@ -16,7 +16,10 @@
    */
 
   var Threshold = function (src, dst, opt) {
-    var level = opt.thresholdLevel || 128;
+    var level = 128;
+    if( opt.hasOwnProperty ){
+      level = opt.thresholdLevel;
+    }
     var srcPixels = src.data,
       dstPixels = dst.data,
       nPixels = srcPixels.length,
@@ -30,5 +33,29 @@
     }
   };
 
-  Kinetic.Filters.Threshold = Kinetic.Util._FilterWrapSingleBuffer(Threshold);
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'thresholdLevel', 128);
+
+  Kinetic.Filters.Threshold = function(src,dst,opt){
+    if( this === Kinetic.Filters ){
+      Threshold(src, dst||src, opt );
+    }else{
+      Threshold.call(this, src, dst||src, opt || {
+        thresholdLevel: this.getThresholdLevel()
+      });
+    }
+  };
+
+    /**
+    * get threshold level.  Returns the level which divides the color channel (0-255).
+    * @name getThresholdLevel
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
+
+    /**
+    * set threshold level.  Sets the level which divides the color channel (0-255).
+    * @name setThresholdLevel
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
 })();
