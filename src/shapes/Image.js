@@ -43,7 +43,7 @@
         drawFunc: function(context) {
             var width = this.getWidth(), 
                 height = this.getHeight(), 
-                crop,
+                crop, cropWidth, cropHeight,
                 params, 
                 image;
 
@@ -65,13 +65,11 @@
                 image = this.getImage();
 
                 if (image) {
-                    crop = this.getCrop();
-                    if (crop) {
-                        crop.x = crop.x || 0;
-                        crop.y = crop.y || 0;
-                        crop.width = crop.width || image.width - crop.x;
-                        crop.height = crop.height || image.height - crop.y;
-                        params = [image, crop.x, crop.y, crop.width, crop.height, 0, 0, width, height];
+                    crop = this.getCrop(),
+                    cropWidth = crop.width;
+                    cropHeight = crop.height;
+                    if (cropWidth && cropHeight) {
+                        params = [image, crop.x, crop.y, cropWidth, cropHeight, 0, 0, width, height];
                     } else {
                         params = [image, 0, 0, width, height];
                     }
@@ -111,12 +109,12 @@
                 width = this.getWidth(),
                 height = this.getHeight(),
                 filter = this.getFilter(),
-                crop = this.getCrop() || {},
+                crop = this.getCrop(),
                 filterCanvas, context, imageData;
 
             // Determine the region we are cropping
-            crop.x = crop.x || 0;
-            crop.y = crop.y || 0;
+            crop.x = crop.x;
+            crop.y = crop.y;
             crop.width = crop.width || width - crop.x;
             crop.height = crop.height || height - crop.y;
 
@@ -347,7 +345,7 @@
      * @returns {Number}
      */
 
-     Kinetic.Factory.addGetterSetter(Kinetic.Image, 'cropHheight', 0);
+     Kinetic.Factory.addGetterSetter(Kinetic.Image, 'cropHeight', 0);
      /**
      * set cropHeight
      * @name setCropHeight

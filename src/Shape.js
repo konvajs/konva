@@ -610,6 +610,66 @@
      * @memberof Kinetic.Shape.prototype
      */
 
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Shape, 'shadowOffset');
+
+    /**
+     * set shadow offset
+     * @name setShadowOffset
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Object} offset
+     * @param {Number} offset.x
+     * @param {Number} offset.y
+     * @example
+     * // set x and y<br>
+     * shape.setShadowOffset({<br>
+     *   x: 20<br>
+     *   y: 10
+     * });
+     */
+
+    /**
+     * get shadow offset
+     * @name getShadowOffset
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @returns {Object}
+     */
+
+     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowOffsetX', 0);
+
+     /**
+     * set shadow offset x
+     * @name setShadowOffsetX
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Number} x
+     */
+
+     /**
+     * get shadow offset x
+     * @name getShadowOffsetX
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     */
+
+     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowOffsetY', 0);
+
+     /**
+     * set shadow offset y
+     * @name setShadowOffsetY
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Number} y
+     */
+
+     /**
+     * get shadow offset y
+     * @name getShadowOffsetY
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     */
+     
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternImage');
 
     /**
@@ -1283,66 +1343,6 @@
     /**
      * get fill radial gradient end point y
      * @name getFillRadialGradientEndPointY
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     */
-
-    Kinetic.Factory.addPointGetterSetter(Kinetic.Shape, 'shadowOffset');
-
-    /**
-     * set shadow offset
-     * @name setShadowOffset
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Object} offset
-     * @param {Number} offset.x
-     * @param {Number} offset.y
-     * @example
-     * // set x and y<br>
-     * shape.setShadowOffset({<br>
-     *   x: 20<br>
-     *   y: 10
-     * });
-     */
-
-    /**
-     * get shadow offset
-     * @name getShadowOffset
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Object}
-     */
-
-     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowOffsetX', 0);
-
-     /**
-     * set shadow offset x
-     * @name setShadowOffsetX
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Number} x
-     */
-
-     /**
-     * get shadow offset x
-     * @name getShadowOffsetX
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     */
-
-     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowOffsetY', 0);
-
-     /**
-     * set shadow offset y
-     * @name setShadowOffsetY
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Number} y
-     */
-
-     /**
-     * get shadow offset y
-     * @name getShadowOffsetY
      * @method
      * @memberof Kinetic.Shape.prototype
      */

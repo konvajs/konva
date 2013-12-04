@@ -94,14 +94,14 @@
 
         // box
         addBoxGetterSetter: function(constructor, attr) {
-            this.addPointGetter(constructor, attr);
-            this.addPointSetter(constructor, attr);
+            this.addBoxGetter(constructor, attr);
+            this.addBoxSetter(constructor, attr);
         },
         addBoxGetter: function(constructor, attr) {
             var method = GET + Kinetic.Util._capitalize(attr),
-                getX = method + UPPER_X,
-                getY = method + UPPER_Y,
-                getWidth = method + UPPER_WIDTH,
+                getX =      method + UPPER_X,
+                getY =      method + UPPER_Y,
+                getWidth =  method + UPPER_WIDTH,
                 getHeight = method + UPPER_HEIGHT;
 
             constructor.prototype[method] = function() {  
@@ -115,10 +115,10 @@
         },
         addBoxSetter: function(constructor, attr) {
             var method = SET + Kinetic.Util._capitalize(attr),
-                setX = SET + method + UPPER_X,
-                setY = SET + method + UPPER_Y,
-                setWidth = SET + method + UPPER_WIDTH,
-                setHeight = SET + method + UPPER_HEIGHT;
+                setX =      method + UPPER_X,
+                setY =      method + UPPER_Y,
+                setWidth =  method + UPPER_WIDTH,
+                setHeight = method + UPPER_HEIGHT;
 
             constructor.prototype[method] = function(val) {
                 this[setX](val.x);
