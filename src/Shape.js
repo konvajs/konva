@@ -818,7 +818,7 @@
      * @param {Array} colorStops
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartRadius');
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartRadius', 0);
 
     /**
      * set fill radial gradient start radius
@@ -835,7 +835,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientEndRadius');
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientEndRadius', 0);
 
     /**
      * set fill radial gradient end radius
@@ -1217,7 +1217,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', 0);
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', 0);
 
     /**
      * set fill radial gradient start point

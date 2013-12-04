@@ -478,12 +478,12 @@
         },
         _fillRadialGradient: function(shape) {
             var start = shape.getFillRadialGradientStartPoint(),
-            end = shape.getFillRadialGradientEndPoint(),
-            startRadius = shape.getFillRadialGradientStartRadius(),
-            endRadius = shape.getFillRadialGradientEndRadius(),
-            colorStops = shape.getFillRadialGradientColorStops(),
-            grd = this.createRadialGradient(start.x, start.y, startRadius, end.x, end.y, endRadius);
-
+                end = shape.getFillRadialGradientEndPoint(),
+                startRadius = shape.getFillRadialGradientStartRadius(),
+                endRadius = shape.getFillRadialGradientEndRadius(),
+                colorStops = shape.getFillRadialGradientColorStops(),  
+                grd = this.createRadialGradient(start.x, start.y, startRadius, end.x, end.y, endRadius);
+           
             // build color stops
             for(var n = 0; n < colorStops.length; n += 2) {
                 grd.addColorStop(colorStops[n], colorStops[n + 1]);
