@@ -296,7 +296,7 @@
     Kinetic.Container.prototype.get = Kinetic.Container.prototype.find;
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Container, 'clip');
+    Kinetic.Factory.addBoxGetterSetter(Kinetic.Container, 'clip');
 
     /**
      * set clip
@@ -322,7 +322,7 @@
      * @returns {Object}
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Container, 'clip', 'x', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Container, 'clipX', 0);
      /**
      * set clip x
      * @method
@@ -339,7 +339,7 @@
      * @returns {Number}
      */
 
-     Kinetic.Factory.addComponentGetterSetter(Kinetic.Container, 'clip', 'y', 0);
+     Kinetic.Factory.addGetterSetter(Kinetic.Container, 'clipY', 0);
      /**
      * set clip y
      * @name setClipY
@@ -356,7 +356,7 @@
      * @returns {Number}
      */
 
-     Kinetic.Factory.addComponentGetterSetter(Kinetic.Container, 'clip', 'width', 0);
+     Kinetic.Factory.addGetterSetter(Kinetic.Container, 'clipWidth', 0);
      /**
      * set clip width
      * @name setClipWidth
@@ -373,7 +373,7 @@
      * @returns {Number}
      */
 
-     Kinetic.Factory.addComponentGetterSetter(Kinetic.Container, 'clip', 'height', 0);
+     Kinetic.Factory.addGetterSetter(Kinetic.Container, 'clipHeight', 0);
      /**
      * set clip height
      * @name setClipHeight

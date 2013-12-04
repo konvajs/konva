@@ -42,90 +42,94 @@
         Y = 'y';
 
     Kinetic.Factory = {
-        addGetterSetter: function(constructor, baseAttr, def) {
-            this.addGetter(constructor, baseAttr, def);
-            this.addSetter(constructor, baseAttr);
+        addGetterSetter: function(constructor, attr, def) {
+            this.addGetter(constructor, attr, def);
+            this.addSetter(constructor, attr);
         },
-        addComponentGetterSetter: function(constructor, baseAttr, component, def) {
-            this.addComponentGetter(constructor, baseAttr, component, def);
-            this.addComponentSetter(constructor, baseAttr, component);
-        },
-        addGetter: function(constructor, baseAttr, def) {
-            var method = GET + Kinetic.Util._capitalize(baseAttr);
-                // if default function is not defined, create a default default function
-                if (!def) {
-                    def = function(){};
-                }
+        addGetter: function(constructor, attr, def) {
+            var method = GET + Kinetic.Util._capitalize(attr);
 
             constructor.prototype[method] = function() {
-                var val = this.attrs[baseAttr];
-                return val === undefined ? def() : val;
-            };
-        },
-        addSetter: function(constructor, baseAttr) {
-            var method = SET + Kinetic.Util._capitalize(baseAttr);
-
-            constructor.prototype[method] = function(val) {
-                this._setAttr(baseAttr, val);   
-                return this;
-            };
-        },
-        addComponentGetter: function(constructor, baseAttr, component, def) {
-            var method = GET + Kinetic.Util._capitalize(baseAttr) + Kinetic.Util._capitalize(component);
-
-            constructor.prototype[method] = function() {
-                var base = this.attrs[baseAttr],
-                    val = base && base[component];
+                var val = this.attrs[attr];
                 return val === undefined ? def : val;
             };
         },
-        addComponentSetter: function(constructor, baseAttr, component) {
-            var method = SET + Kinetic.Util._capitalize(baseAttr) + Kinetic.Util._capitalize(component);
+        addSetter: function(constructor, attr) {
+            var method = SET + Kinetic.Util._capitalize(attr);
 
             constructor.prototype[method] = function(val) {
-                this._setComponentAttr(baseAttr, component, val);   
+                this._setAttr(attr, val);   
                 return this;
             };
         },
 
-
-
-
-
-        // ------------------------------- old methods to be deprecated -----------------------------------
-
-
-
-        addPointGetterSetter: function(constructor, attr, def) {
-            this.addPointGetter(constructor, attr, def);
+        // point
+        addPointGetterSetter: function(constructor, attr) {
+            this.addPointGetter(constructor, attr);
             this.addPointSetter(constructor, attr);
-
-            // add invdividual component getters and setters
-            this.addGetter(constructor, attr + UPPER_X, def);
-            this.addGetter(constructor, attr + UPPER_Y, def);
-            this.addSetter(constructor, attr + UPPER_X);
-            this.addSetter(constructor, attr + UPPER_Y);
         },
-        addBoxGetterSetter: function(constructor, attr, def) {
-            this.addBoxGetter(constructor, attr, def);
-            this.addBoxSetter(constructor, attr);
+        addPointGetter: function(constructor, attr) {
+            var method = GET + Kinetic.Util._capitalize(attr),
+                getX = method + UPPER_X,
+                getY = method + UPPER_Y;
 
-            // add invdividual component getters and setters
-            this.addGetter(constructor, attr + UPPER_X, def);
-            this.addGetter(constructor, attr + UPPER_Y, def);
-            this.addGetter(constructor, attr + UPPER_WIDTH, def);
-            this.addGetter(constructor, attr + UPPER_HEIGHT, def);
+            constructor.prototype[method] = function() {  
+                return {
+                    x: this[getX](),
+                    y: this[getY]()
+                };
+            };  
+        },
+        addPointSetter: function(constructor, attr) {
+            var method = SET + Kinetic.Util._capitalize(attr),
+                setX = method + UPPER_X,
+                setY = method + UPPER_Y;
 
-            this.addSetter(constructor, attr + UPPER_X);
-            this.addSetter(constructor, attr + UPPER_Y);
-            this.addSetter(constructor, attr + UPPER_WIDTH);
-            this.addSetter(constructor, attr + UPPER_HEIGHT);
+            constructor.prototype[method] = function(val) {
+                this[setX](val.x);
+                this[setY](val.y);
+                return this;
+            }; 
         },
-        addPointsGetterSetter: function(constructor, attr) {
-            this.addPointsGetter(constructor, attr);
-            this.addPointsSetter(constructor, attr);
-            this.addPointAdder(constructor, attr);
+
+        // box
+        addBoxGetterSetter: function(constructor, attr) {
+            this.addPointGetter(constructor, attr);
+            this.addPointSetter(constructor, attr);
         },
+        addBoxGetter: function(constructor, attr) {
+            var method = GET + Kinetic.Util._capitalize(attr),
+                getX = method + UPPER_X,
+                getY = method + UPPER_Y,
+                getWidth = method + UPPER_WIDTH,
+                getHeight = method + UPPER_HEIGHT;
+
+            constructor.prototype[method] = function() {  
+                return {
+                    x: this[getX](),
+                    y: this[getY](),
+                    width: this[getWidth](),
+                    height: this[getHeight]()
+                };
+            };  
+        },
+        addBoxSetter: function(constructor, attr) {
+            var method = SET + Kinetic.Util._capitalize(attr),
+                setX = SET + method + UPPER_X,
+                setY = SET + method + UPPER_Y,
+                setWidth = SET + method + UPPER_WIDTH,
+                setHeight = SET + method + UPPER_HEIGHT;
+
+            constructor.prototype[method] = function(val) {
+                this[setX](val.x);
+                this[setY](val.y);
+                this[setWidth](val.width);
+                this[setHeight](val.height);
+                return this;
+            }; 
+        },
+
+
         addRotationGetterSetter: function(constructor, attr, def) {
             this.addRotationGetter(constructor, attr, def);
             this.addRotationSetter(constructor, attr);
@@ -162,42 +166,7 @@
                 return this[prefix + RGB]()[c];
             };
         },
-        addPointsGetter: function(constructor, attr) {
-            var that = this,
-                method = GET + Kinetic.Util._capitalize(attr);
 
-            constructor.prototype[method] = function() {
-                var val = this.attrs[attr];
-                return val === undefined ? [] : val;
-            };
-        },
-
-        addPointGetter: function(constructor, attr) {
-            var that = this,
-                baseMethod = GET + Kinetic.Util._capitalize(attr);
-
-            constructor.prototype[baseMethod] = function() {
-                var that = this;
-                return {
-                    x: that[baseMethod + UPPER_X](),
-                    y: that[baseMethod + UPPER_Y]()
-                };
-            };
-        },
-        addBoxGetter: function(constructor, attr) {
-            var that = this,
-                baseMethod = GET + Kinetic.Util._capitalize(attr);
-
-            constructor.prototype[baseMethod] = function() {
-                var that = this;
-                return {
-                    x: that[baseMethod + UPPER_X](),
-                    y: that[baseMethod + UPPER_Y](),
-                    width: that[baseMethod + UPPER_WIDTH](),
-                    height: that[baseMethod + UPPER_HEIGHT]()
-                };
-            };
-        },
         addRotationGetter: function(constructor, attr, def) {
             var that = this,
                 method = GET + Kinetic.Util._capitalize(attr);
@@ -242,74 +211,7 @@
                 this[prefix + RGB](obj);
             };
         },
-        addPointsSetter: function(constructor, attr) {
-            var method = SET + Kinetic.Util._capitalize(attr);
-            constructor.prototype[method] = function(val) {
-                var points = Kinetic.Util._getPoints(val);
-                this._setAttr('points', points);
-            };
-        },
 
-        addPointSetter: function(constructor, attr) {
-            var that = this,
-                baseMethod = SET + Kinetic.Util._capitalize(attr);
-
-            constructor.prototype[baseMethod] = function() {
-                var pos = Kinetic.Util._getXY([].slice.call(arguments)),
-                    oldVal = this.attrs[attr],
-                    x = 0,
-                    y = 0;
-
-                if (pos) {
-                  x = pos.x;
-                  y = pos.y;
-
-                  this._fireBeforeChangeEvent(attr, oldVal, pos);
-                  if (x !== undefined) {
-                    this[baseMethod + UPPER_X](x);
-                  }
-                  if (y !== undefined) {
-                    this[baseMethod + UPPER_Y](y);
-                  }
-                  this._fireChangeEvent(attr, oldVal, pos);
-                }
-            };
-        },
-        addBoxSetter: function(constructor, attr) {
-            var that = this,
-                baseMethod = SET + Kinetic.Util._capitalize(attr);
-
-            constructor.prototype[baseMethod] = function() {
-                var config = [].slice.call(arguments),
-                    pos = Kinetic.Util._getXY(config),
-                    size = Kinetic.Util._getSize(config),
-                    both = Kinetic.Util._merge(pos, size),
-                    oldVal = this.attrs[attr],
-                    x, y, width, height;
-
-                if (both) {
-                  x = both.x;
-                  y = both.y;
-                  width = both.width;
-                  height = both.height;
-
-                  this._fireBeforeChangeEvent(attr, oldVal, both);
-                  if (x !== undefined) {
-                    this[baseMethod + UPPER_X](x);
-                  }
-                  if (y !== undefined) {
-                    this[baseMethod + UPPER_Y](y);
-                  }
-                  if (width !== undefined) {
-                    this[baseMethod + UPPER_WIDTH](width);
-                  }
-                  if (height !== undefined) {
-                    this[baseMethod + UPPER_HEIGHT](height);
-                  }
-                  this._fireChangeEvent(attr, oldVal, both);
-                }
-            };
-        },
         addRotationSetter: function(constructor, attr) {
             var that = this,
                 method = SET + Kinetic.Util._capitalize(attr);
@@ -321,23 +223,6 @@
             // degrees
             constructor.prototype[method + DEG] = function(deg) {
                 this._setAttr(attr, Kinetic.Util._degToRad(deg));
-            };
-        },
-
-        // add adders
-        addPointAdder: function(constructor, attr) {
-            var that = this,
-                baseMethod = ADD + Kinetic.Util._removeLastLetter(Kinetic.Util._capitalize(attr));
-
-            constructor.prototype[baseMethod] = function() {
-                var pos = Kinetic.Util._getXY([].slice.call(arguments)),
-                    oldVal = this.attrs[attr];
-
-                if (pos) {
-                  this._fireBeforeChangeEvent(attr, oldVal, pos);
-                  this.attrs[attr].push(pos);
-                  this._fireChangeEvent(attr, oldVal, pos);
-                }
             };
         }
     };

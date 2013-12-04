@@ -62,9 +62,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addRotationGetterSetter(Kinetic.Wedge, 'angle', function() {
-        return 0;
-    });
+    Kinetic.Factory.addRotationGetterSetter(Kinetic.Wedge, 'angle', 0);
 
     /**
      * set angle
@@ -98,9 +96,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Wedge, 'clockwise', function() {
-        return false;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Wedge, 'clockwise', false);
 
     /**
      * set clockwise draw direction.  If set to true, the wedge will be drawn clockwise

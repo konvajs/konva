@@ -314,9 +314,7 @@
     Kinetic.Util.extend(Kinetic.Text, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontFamily', function() {
-        return 'Arial';
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontFamily', 'Arial');
 
     /**
      * set font family
@@ -334,9 +332,7 @@
      * @returns {String}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontSize', function() {
-        return 12;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontSize', 12);
 
     /**
      * set font size in pixels
@@ -354,9 +350,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontStyle', function() {
-        return NORMAL;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontStyle', NORMAL);
 
     /**
      * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
@@ -374,9 +368,7 @@
      * @returns {String}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'padding', function() {
-        return 0;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'padding', 0);
 
     /**
      * set padding
@@ -394,9 +386,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'align', function() {
-        return LEFT;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'align', LEFT);
 
     /**
      * set horizontal align of text
@@ -414,9 +404,7 @@
      * @returns {String}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'lineHeight', function() {
-        return 1;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'lineHeight', 1);
 
     /**
      * set line height
@@ -434,9 +422,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'wrap', function() {
-        return WORD;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'wrap', WORD);
 
     /**
      * set wrap
@@ -454,9 +440,7 @@
      * @returns {String}
      */
 
-    Kinetic.Factory.addGetter(Kinetic.Text, TEXT, function() {
-        return EMPTY_STRING;
-    });
+    Kinetic.Factory.addGetter(Kinetic.Text, TEXT, EMPTY_STRING);
 
     /**
      * get text

@@ -1296,9 +1296,7 @@
     };
     // add getters setters
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'x', function() {
-        return 0;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'x', 0);
 
     /**
      * set x position
@@ -1315,9 +1313,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'y', function() {
-        return 0;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'y', 0);
 
     /**
      * set y position
@@ -1334,9 +1330,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'opacity', function() {
-        return 1;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'opacity', 1);
 
     /**
      * set opacity.  Opacity values range from 0 to 1.
@@ -1405,9 +1399,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'scale', function() {
-        return {x: 1, y: 1};
-    });
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'scale');
 
     /**
      * set scale
@@ -1432,7 +1424,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Node, 'scale', 'x', 1);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'scaleX', 1);
     /**
      * set scale x
      * @name setScaleX
@@ -1448,7 +1440,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Node, 'scale', 'y', 1);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'scaleY', 1);
     /**
      * set scale y
      * @name setScaleY
@@ -1464,9 +1456,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'skew', function() {
-        return {x: 0, y: 0};
-    });
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'skew');
 
     /**
      * set skew
@@ -1492,7 +1482,7 @@
      * @returns {Object}
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Node, 'skew', 'x', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'skewX', 0);
     /**
      * set skew x
      * @name setSkewX
@@ -1509,7 +1499,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Node, 'skew', 'y', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'skewY', 0);
     /**
      * set skew y
      * @name setSkewY
@@ -1526,9 +1516,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'offset', function() {
-        return {x: 0, y: 0};
-    });
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'offset');
 
     /**
      * set offset.  A node's offset defines the position and rotation point
@@ -1553,7 +1541,7 @@
      * @returns {Object}
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Node, 'offset', 'x', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'offsetX', 0);
     /**
      * set offset x
      * @name setOffsetX
@@ -1570,7 +1558,7 @@
      * @returns {Number}
      */
 
-     Kinetic.Factory.addComponentGetterSetter(Kinetic.Node, 'offset', 'y', 0);
+     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'offsetY', 0);
     /**
      * set offset y
      * @name setOffsetY
@@ -1587,9 +1575,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addSetter(Kinetic.Node, 'width', function() {
-        return 0;
-    });
+    Kinetic.Factory.addSetter(Kinetic.Node, 'width', 0);
 
     /**
      * set width
@@ -1599,9 +1585,7 @@
      * @param {Number} width
      */
 
-    Kinetic.Factory.addSetter(Kinetic.Node, 'height', function() {
-        return 0;
-    });
+    Kinetic.Factory.addSetter(Kinetic.Node, 'height', 0);
 
     /**
      * set height
@@ -1611,9 +1595,7 @@
      * @param {Number} height
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'listening', function() {
-        return true;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'listening', true);
 
     /**
      * listen or don't listen to events
@@ -1630,9 +1612,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'visible', function() {
-        return true;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'visible', true);
 
     /**
      * set visible

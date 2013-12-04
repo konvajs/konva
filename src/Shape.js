@@ -710,7 +710,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternX');
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternX', 0);
 
     /**
      * set fill pattern x
@@ -727,7 +727,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternY');
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternY', 0);
 
     /**
      * set fill pattern y
@@ -830,9 +830,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillEnabled', function() {
-        return true;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillEnabled', true);
 
     /**
      * set fill enabled
@@ -849,9 +847,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeEnabled', function() {
-        return true;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeEnabled', true);
 
     /**
      * set stroke enabled
@@ -868,9 +864,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowEnabled', function() {
-        return true;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowEnabled', true);
 
     /**
      * set shadow enabled
@@ -887,9 +881,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'dashArrayEnabled', function() {
-        return true;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'dashArrayEnabled', true);
 
     /**
      * set dash array enabled
@@ -906,9 +898,24 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPriority', function() {
-        return 'color';
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeScaleEnabled', true);
+
+     /**
+     * set stroke scale enabled
+     * @name setStrokeScaleEnabled
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Boolean} enabled
+     */
+
+     /**
+     * get stroke scale enabled
+     * @name getStrokeScaleEnabled
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPriority', 'color');
 
     /**
      * set fill priority
@@ -926,28 +933,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeScaleEnabled', function() {
-        return true;
-    });
-
-     /**
-     * set stroke scale enabled
-     * @name setStrokeScaleEnabled
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Boolean} enabled
-     */
-
-     /**
-     * get stroke scale enabled
-     * @name getStrokeScaleEnabled
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     */
-
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternOffset', function() {
-        return {x: 0, y: 0};
-    });
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Shape, 'fillPatternOffset');
 
     /**
      * set fill pattern offset
@@ -973,7 +959,7 @@
      * @returns {Object}
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillPatternOffset', 'x', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternOffsetX', 0);
     /**
      * set fill pattern offset x
      * @name setFillPatternOffsetX
@@ -989,7 +975,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillPatternOffset', 'y', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternOffsetY', 0);
     /**
      * set fill pattern offset y
      * @name setFillPatternOffsetY
@@ -1005,9 +991,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternScale', function() {
-        return {x: 1, y: 1};
-    });
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Shape, 'fillPatternScale');
 
     /**
      * set fill pattern scale
@@ -1033,7 +1017,7 @@
      * @returns {Object}
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillPatternScale', 'x', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternScaleX', 0);
     /**
      * set fill pattern scale x
      * @name setFillPatternScaleX
@@ -1050,7 +1034,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillPatternScale', 'y', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternScaleY', 0);
     /**
      * set fill pattern scale y
      * @name setFillPatternScaleY
@@ -1067,9 +1051,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPoint', function() {
-        return {x: 0, y: 0};
-    });
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPoint');
 
     /**
      * set fill linear gradient start point
@@ -1095,7 +1077,7 @@
      * @returns {Object}
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPoint', 'x', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPointX', 0);
     /**
      * set fill linear gradient start point x
      * @name setFillLinearGradientStartPointX
@@ -1112,7 +1094,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPoint', 'y', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPointY', 0);
     /**
      * set fill linear gradient start point y
      * @name setFillLinearGradientStartPointY
@@ -1129,9 +1111,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPoint', function() {
-        return {x: 0, y: 0};
-    });
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPoint');
 
     /**
      * set fill linear gradient end point
@@ -1155,7 +1135,7 @@
      * @returns {Object}
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPoint', 'x', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPointX', 0);
 
     /**
      * set fill linear gradient end point x
@@ -1173,7 +1153,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPoint', 'y', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPointY', 0);
 
     /**
      * set fill linear gradient end point y
@@ -1191,9 +1171,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', function() {
-        return {x: 0, y: 0};
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', ['x', 'y']);
 
     /**
      * set fill radial gradient start point
@@ -1219,7 +1197,7 @@
      * @returns {Object}
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', 'x', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPointX', 0);
     /**
      * set fill radial gradient start point x
      * @name setFillRadialGradientStartPointX
@@ -1235,7 +1213,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-     Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', 'y', 0);
+     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPointY', 0);
     /**
      * set fill radial gradient start point y
      * @name setFillRadialGradientStartPointY
@@ -1251,9 +1229,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPoint', function() {
-        return {x: 0, y: 0};
-    });
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPoint');
 
     /**
      * set fill radial gradient end point
@@ -1279,7 +1255,7 @@
      * @returns {Object}
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPoint', 'x', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPointX', 0);
      /**
      * set fill radial gradient end point x
      * @name setFillRadialGradientEndPointX
@@ -1295,7 +1271,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPoint', 'y', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPointY', 0);
     /**
      * set fill radial gradient end point y
      * @name setFillRadialGradientEndPointY
@@ -1311,9 +1287,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowOffset', function() {
-        return {x: 0, y: 0};
-    });
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Shape, 'shadowOffset');
 
     /**
      * set shadow offset
@@ -1339,7 +1313,7 @@
      * @returns {Object}
      */
 
-     Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'shadowOffset', 'x', 0);
+     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowOffsetX', 0);
 
      /**
      * set shadow offset x
@@ -1356,7 +1330,7 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-     Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'shadowOffset', 'y', 0);
+     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowOffsetY', 0);
 
      /**
      * set shadow offset y

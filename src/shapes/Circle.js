@@ -69,9 +69,7 @@
     Kinetic.Util.extend(Kinetic.Circle, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Circle, 'radius', function() {
-        return 0;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Circle, 'radius', 0);
 
     /**
      * set radius
