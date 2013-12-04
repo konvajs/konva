@@ -1397,7 +1397,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'scale');
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'scale', 1);
 
     /**
      * set scale
@@ -1422,7 +1422,6 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'scaleX', 1);
     /**
      * set scale x
      * @name setScaleX
@@ -1438,7 +1437,6 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'scaleY', 1);
     /**
      * set scale y
      * @name setScaleY
@@ -1454,7 +1452,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'skew');
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'skew', 0);
 
     /**
      * set skew
@@ -1480,7 +1478,6 @@
      * @returns {Object}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'skewX', 0);
     /**
      * set skew x
      * @name setSkewX
@@ -1497,7 +1494,6 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'skewY', 0);
     /**
      * set skew y
      * @name setSkewY
@@ -1514,7 +1510,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'offset');
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'offset', 0);
 
     /**
      * set offset.  A node's offset defines the position and rotation point
@@ -1539,7 +1535,6 @@
      * @returns {Object}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'offsetX', 0);
     /**
      * set offset x
      * @name setOffsetX
@@ -1556,7 +1551,6 @@
      * @returns {Number}
      */
 
-     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'offsetY', 0);
     /**
      * set offset y
      * @name setOffsetY

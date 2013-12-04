@@ -61,7 +61,7 @@
     Kinetic.Util.extend(Kinetic.Ellipse, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Factory.addPointGetterSetter(Kinetic.Ellipse, 'radius');
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Ellipse, 'radius', 0);
 
     /**
      * set radius
@@ -80,7 +80,6 @@
      * @memberof Kinetic.Ellipse.prototype
      * @returns {Object}
      */
-    Kinetic.Factory.addGetterSetter(Kinetic.Ellipse, 'radiusX', 0);
 
     /**
      * set radius x
@@ -97,8 +96,6 @@
      * @memberof Kinetic.Ellipse.prototype
      * @returns {Number}
      */
-
-    Kinetic.Factory.addGetterSetter(Kinetic.Ellipse, 'radiusY', 0);
 
     /**
      * set radius y

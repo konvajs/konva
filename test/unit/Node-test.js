@@ -336,7 +336,7 @@ suite('Node', function() {
     });
 
     // ======================================================
-    test.only('test offset attr change', function() {
+    test('test offset attr change', function() {
         /*
          * the premise of this test to make sure that only
          * root level attributes trigger an attr change event.
