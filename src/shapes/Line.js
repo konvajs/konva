@@ -139,7 +139,9 @@
     Kinetic.Util.extend(Kinetic.Line, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Line, 'closed', false);
+    Kinetic.Factory.addGetterSetter(Kinetic.Line, 'closed', function() {
+        return false;
+    });
 
     /**
      * get closed
@@ -157,7 +159,9 @@
      * @param {Boolean} closed
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Line, 'tension', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Line, 'tension', function() {
+        return 0;
+    });
 
     /**
      * get tension

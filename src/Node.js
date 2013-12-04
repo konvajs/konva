@@ -1183,10 +1183,11 @@
                 oldVal = this.attrs[key];
 
                 if (!oldVal) {
-                    this.attrs[key] = [];
+                    // set value to default value using getAttr
+                    this.attrs[key] = this.getAttr(key);
                 }
                 
-                this._fireBeforeChangeEvent(key, oldVal, val);
+                //this._fireBeforeChangeEvent(key, oldVal, val);
                 this.attrs[key][component] = val;
                 this._fireChangeEvent(key, oldVal, val);
             }
@@ -1295,7 +1296,9 @@
     };
     // add getters setters
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'x', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'x', function() {
+        return 0;
+    });
 
     /**
      * set x position
@@ -1312,7 +1315,9 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'y', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'y', function() {
+        return 0;
+    });
 
     /**
      * set y position
@@ -1329,7 +1334,9 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'opacity', 1);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'opacity', function() {
+        return 1;
+    });
 
     /**
      * set opacity.  Opacity values range from 0 to 1.
@@ -1398,7 +1405,9 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'scale', {x: 1, y: 1});
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'scale', function() {
+        return {x: 1, y: 1};
+    });
 
     /**
      * set scale
@@ -1455,32 +1464,36 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'skew', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'skew', function() {
+        return {x: 0, y: 0};
+    });
 
     /**
      * set skew
      * @name setSkew
-     * @param {Number} x
-     * @param {Number} y
+     * @param {Object} skew
+     * @param {Number} skew.x
+     * @param {Number} skew.y
      * @method
      * @memberof Kinetic.Node.prototype
      * @example
-     * // set x and y<br>
-     * shape.setSkew(20, 40);<br><br>
-     *
-     * // set x only <br>
+     * // set x and y <br>
      * shape.setSkew({<br>
      *   x: 20<br>
-     * });<br><br>
-     *
-     * // set x and y using an array<br>
-     * shape.setSkew([20, 40]);<br><br>
-     *
-     * // set x and y to the same value<br>
-     * shape.setSkew(5);
+     *   y: 10
+     * });
      */
 
-     /**
+    /**
+     * get skew
+     * @name getSkew
+     * @method
+     * @memberof Kinetic.Node.prototype
+     * @returns {Object}
+     */
+
+    Kinetic.Factory.addComponentGetterSetter(Kinetic.Node, 'skew', 'x', 0);
+    /**
      * set skew x
      * @name setSkewX
      * @param {Number} x
@@ -1488,7 +1501,16 @@
      * @memberof Kinetic.Node.prototype
      */
 
-     /**
+    /**
+     * get skew x
+     * @name getSkewX
+     * @method
+     * @memberof Kinetic.Node.prototype
+     * @returns {Number}
+     */
+
+    Kinetic.Factory.addComponentGetterSetter(Kinetic.Node, 'skew', 'y', 0);
+    /**
      * set skew y
      * @name setSkewY
      * @param {Number} y
@@ -1497,27 +1519,16 @@
      */
 
     /**
-     * get skew
-     * @name getSkew
-     * @method
-     * @memberof Kinetic.Node.prototype
-     */
-
-     /**
-     * get skew x
-     * @name getSkewX
-     * @method
-     * @memberof Kinetic.Node.prototype
-     */
-
-     /**
      * get skew y
      * @name getSkewY
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'offset', {x: 0, y: 0});
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'offset', function() {
+        return {x: 0, y: 0};
+    });
 
     /**
      * set offset.  A node's offset defines the position and rotation point
@@ -1576,7 +1587,9 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addSetter(Kinetic.Node, 'width');
+    Kinetic.Factory.addSetter(Kinetic.Node, 'width', function() {
+        return 0;
+    });
 
     /**
      * set width
@@ -1586,7 +1599,9 @@
      * @param {Number} width
      */
 
-    Kinetic.Factory.addSetter(Kinetic.Node, 'height');
+    Kinetic.Factory.addSetter(Kinetic.Node, 'height', function() {
+        return 0;
+    });
 
     /**
      * set height
@@ -1596,7 +1611,9 @@
      * @param {Number} height
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'listening', true);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'listening', function() {
+        return true;
+    });
 
     /**
      * listen or don't listen to events
@@ -1613,7 +1630,9 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'visible', true);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'visible', function() {
+        return true;
+    });
 
     /**
      * set visible

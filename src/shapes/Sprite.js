@@ -227,7 +227,9 @@
      * @returns {ImageObject}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'index', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'index', function() {
+        return 0;
+    });
 
     /**
      * set animation frame index
@@ -245,7 +247,9 @@
      * @returns {Integer}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'frameRate', 17);
+    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'frameRate', function() {
+        return 17;
+    });
 
     /**
      * set frame rate in frames / second.  Default is 17 frames per second.  Increase this number to make the sprite

@@ -43,14 +43,6 @@
 
     Kinetic.Factory = {
         addGetterSetter: function(constructor, baseAttr, def) {
-            var util = Kinetic.Util
-
-            if (util._isArray(def)) {
-                def = util.cloneArray(def);
-            }
-            else if (util._isObject(def)) {
-                def = util.cloneObject(def);
-            }
             this.addGetter(constructor, baseAttr, def);
             this.addSetter(constructor, baseAttr);
         },
@@ -60,10 +52,14 @@
         },
         addGetter: function(constructor, baseAttr, def) {
             var method = GET + Kinetic.Util._capitalize(baseAttr);
+                // if default function is not defined, create a default default function
+                if (!def) {
+                    def = function(){};
+                }
 
             constructor.prototype[method] = function() {
                 var val = this.attrs[baseAttr];
-                return val === undefined ? def : val;
+                return val === undefined ? def() : val;
             };
         },
         addSetter: function(constructor, baseAttr) {

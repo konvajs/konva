@@ -830,7 +830,9 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillEnabled', true);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillEnabled', function() {
+        return true;
+    });
 
     /**
      * set fill enabled
@@ -847,7 +849,9 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeEnabled', true);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeEnabled', function() {
+        return true;
+    });
 
     /**
      * set stroke enabled
@@ -864,7 +868,9 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowEnabled', true);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowEnabled', function() {
+        return true;
+    });
 
     /**
      * set shadow enabled
@@ -881,7 +887,9 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'dashArrayEnabled', true);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'dashArrayEnabled', function() {
+        return true;
+    });
 
     /**
      * set dash array enabled
@@ -898,7 +906,9 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPriority', 'color');
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPriority', function() {
+        return 'color';
+    });
 
     /**
      * set fill priority
@@ -916,7 +926,9 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeScaleEnabled', true);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeScaleEnabled', function() {
+        return true;
+    });
 
      /**
      * set stroke scale enabled
@@ -933,7 +945,9 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternOffset', {x:0, y:0});
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternOffset', function() {
+        return {x: 0, y: 0};
+    });
 
     /**
      * set fill pattern offset
@@ -991,7 +1005,9 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternScale', {x: 1, y:1});
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternScale', function() {
+        return {x: 1, y: 1};
+    });
 
     /**
      * set fill pattern scale
@@ -1051,7 +1067,9 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPoint', {x:0, y:0});
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPoint', function() {
+        return {x: 0, y: 0};
+    });
 
     /**
      * set fill linear gradient start point
@@ -1111,7 +1129,9 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPoint', {x: 0, y: 0});
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPoint', function() {
+        return {x: 0, y: 0};
+    });
 
     /**
      * set fill linear gradient end point
@@ -1171,7 +1191,9 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', {x: 0, y: 0});
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', function() {
+        return {x: 0, y: 0};
+    });
 
     /**
      * set fill radial gradient start point
@@ -1229,7 +1251,9 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPoint', {x: 0, y: 0});
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPoint', function() {
+        return {x: 0, y: 0};
+    });
 
     /**
      * set fill radial gradient end point
@@ -1287,7 +1311,9 @@
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowOffset', {x: 0, y: 0});
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowOffset', function() {
+        return {x: 0, y: 0};
+    });
 
     /**
      * set shadow offset

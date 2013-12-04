@@ -18,6 +18,8 @@ suite('Rect', function(){
     layer.add(rect);
     stage.add(layer);
 
+    console.log(rect);
+
     assert.equal(rect.getX(), 100);
     assert.equal(rect.getY(), 50);
 

@@ -57,7 +57,9 @@
 
     Kinetic.Util.extend(Kinetic.Rect, Kinetic.Shape);
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Rect, 'cornerRadius', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Rect, 'cornerRadius', function() {
+        return 0;
+    });
 
     /**
      * set corner radius
