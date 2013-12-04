@@ -11,12 +11,12 @@
    * @param {Object} opt
    * @param {Number} [opt.noiseAmount] The amount of noise to add. Between 0 and 255.
    *  Each channel of each pixel will change by a random amount
-   *  between +- amount/2. Default is 32.
+   *  between +- amount/2. Default is 0.
    * @param {Number} [opt.affectAlpha] 1 to add noise to the alpha channel.
    *  Default is 0.
    */
   var Noise = function (src, dst, opt) {
-    var amount = opt.noiseAmount || 32,
+    var amount = opt.noiseAmount || 0,
       affectAlpha = opt.affectAlpha || 0;
     var srcPixels = src.data,
       dstPixels = dst.data,
@@ -40,5 +40,30 @@
     }
   };
 
-  Kinetic.Filters.Noise = Kinetic.Util._FilterWrapSingleBuffer(Noise);
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'noiseAmount', 32);
+
+  Kinetic.Filters.Noise = function(src,dst,opt){
+    if( this === Kinetic.Filters ){
+      Noise(src, dst||src, opt );
+    }else{
+      Noise.call(this, src, dst||src, opt || {
+        noiseAmount: this.getNoiseAmount()
+      });
+    }
+  };
+
+    /**
+    * get noise amount.  Returns the amount of noise. Between 0 and 255.
+    * @name getNoiseAmount
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
+
+    /**
+    * set noise amount.  Sets the amount of noise. Between 0 and 255.
+    * @name setNoiseAmount
+    * @method
+    * @memberof Kinetic.Image.prototype
+    */
+
 })();

@@ -73,7 +73,20 @@
     }
   };
 
-  Kinetic.Filters.MirrorX = Kinetic.Util._FilterWrapSingleBuffer(MirrorX);
-  Kinetic.Filters.MirrorY = Kinetic.Util._FilterWrapSingleBuffer(MirrorY);
+  Kinetic.Filters.MirrorX = function(src,dst,opt){
+    if( this === Kinetic.Filters ){
+      MirrorX(src, dst||src, opt );
+    }else{
+      MirrorX.call(this, src, dst||src, opt);
+    }
+  };
+
+  Kinetic.Filters.MirrorY = function(src,dst,opt){
+    if( this === Kinetic.Filters ){
+      MirrorY(src, dst||src, opt );
+    }else{
+      MirrorY.call(this, src, dst||src, opt);
+    }
+  };
 
 })();
