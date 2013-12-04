@@ -16,16 +16,27 @@
     var srcPixels = src.data,
       dstPixels = dst.data,
       xSize = src.width,
+      xEnd = Math.ceil(0.5*xSize),
       ySize = src.height,
-      i, m, x, y;
-    for (x = 0; x < xSize; x += 1) {
+      i, m, x, y, r,g,b,a;
+    for (x = 0; x < xEnd; x += 1) {
       for (y = 0; y < ySize; y += 1) {
         i = (y * xSize + x) * 4; // original 
         m = (y * xSize + (xSize-1) - x) * 4; // flipped
+        // Instead of copying each row from the source to the destiation
+        // swap rows - this let's us achive a full flip in a single buffer
+        r = srcPixels[m + 0];
+        g = srcPixels[m + 1];
+        b = srcPixels[m + 2];
+        a = srcPixels[m + 3];
         dstPixels[m + 0] = srcPixels[i + 0];
         dstPixels[m + 1] = srcPixels[i + 1];
         dstPixels[m + 2] = srcPixels[i + 2];
         dstPixels[m + 3] = srcPixels[i + 3];
+        dstPixels[i + 0] = r;
+        dstPixels[i + 1] = g;
+        dstPixels[i + 2] = b;
+        dstPixels[i + 3] = a;
       }
     }
   };
@@ -47,19 +58,44 @@
       dstPixels = dst.data,
       xSize = src.width,
       ySize = src.height,
-      i, m, x, y;
+      yEnd = Math.ceil(0.5*ySize),
+      i, m, x, y, r,g,b,a;
     for (x = 0; x < xSize; x += 1) {
-      for (y = 0; y < ySize; y += 1) {
+      for (y = 0; y < yEnd; y += 1) {
         i = (y * xSize + x) * 4; // original 
         m = ((ySize-1 - y) * xSize + x) * 4; // flipped
+        // Instead of copying each row from the source to the destiation
+        // swap rows - this let's us achive a full flip in a single buffer
+        r = srcPixels[m + 0];
+        g = srcPixels[m + 1];
+        b = srcPixels[m + 2];
+        a = srcPixels[m + 3];
         dstPixels[m + 0] = srcPixels[i + 0];
         dstPixels[m + 1] = srcPixels[i + 1];
         dstPixels[m + 2] = srcPixels[i + 2];
         dstPixels[m + 3] = srcPixels[i + 3];
+        dstPixels[i + 0] = r;
+        dstPixels[i + 1] = g;
+        dstPixels[i + 2] = b;
+        dstPixels[i + 3] = a;
       }
     }
   };
 
-  Kinetic.Filters.FlipX = Kinetic.Util._FilterWrapSingleBuffer(FlipX);
-  Kinetic.Filters.FlipY = Kinetic.Util._FilterWrapSingleBuffer(FlipY);
+  Kinetic.Filters.FlipX = function(src,dst,opt){
+    if( this === Kinetic.Filters ){
+      FlipX(src, dst||src, opt );
+    }else{
+      FlipX.call(this, src, dst||src, opt);
+    }
+  };
+
+  Kinetic.Filters.FlipY = function(src,dst,opt){
+    if( this === Kinetic.Filters ){
+      FlipY(src, dst||src, opt );
+    }else{
+      FlipY.call(this, src, dst||src, opt);
+    }
+  };
+
 })();
