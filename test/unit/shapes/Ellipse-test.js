@@ -7,7 +7,7 @@ suite('Ellipse', function(){
       var ellipse = new Kinetic.Ellipse({
           x: stage.getWidth() / 2,
           y: stage.getHeight() / 2,
-          radius: [70, 35],
+          radius: {x:70, y:35},
           fill: 'green',
           stroke: 'black',
           strokeWidth: 8

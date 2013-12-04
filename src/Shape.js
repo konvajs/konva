@@ -1171,31 +1171,34 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addPointGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', {x: 0, y: 0});
 
     /**
      * set fill radial gradient start point
      * @name setFillRadialGradientStartPoint
      * @method
      * @memberof Kinetic.Shape.prototype
-     * @param {Number|Array|Object} startPoint
+     * @param {Object} startPoint
+     * @param {Number} startPoint.x
+     * @param {Number} startPoint.y
      * @example
-     * // set x and y<br>
-     * shape.setFillRadialGradientStartPoint(20, 40);<br><br>
-     *
-     * // set x only <br>
+     * // set x and y <br>
      * shape.setFillRadialGradientStartPoint({<br>
      *   x: 20<br>
-     * });<br><br>
-     *
-     * // set x and y using an array<br>
-     * shape.setFillRadialGradientStartPoint([20, 40]);<br><br>
-     *
-     * // set x and y to the same value<br>
-     * shape.setFillRadialGradientStartPoint(5);
+     *   y: 10
+     * });
      */
 
-     /**
+    /**
+     * get fill radial gradient start point
+     * @name getFillRadialGradientStartPoint
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @returns {Object}
+     */
+
+    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', 'x', 0);
+    /**
      * set fill radial gradient start point x
      * @name setFillRadialGradientStartPointX
      * @method
@@ -1203,7 +1206,15 @@
      * @param {Number} x
      */
 
-     /**
+    /**
+     * get fill radial gradient start point x
+     * @name getFillRadialGradientStartPointX
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     */
+
+     Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', 'y', 0);
+    /**
      * set fill radial gradient start point y
      * @name setFillRadialGradientStartPointY
      * @method
@@ -1211,51 +1222,40 @@
      * @param {Number} y
      */
 
-     /**
-     * get fill radial gradient start point
-     * @name getFillRadialGradientStartPoint
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     */
-
-     /**
-     * get fill radial gradient start point x
-     * @name getFillRadialGradientStartPointX
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     */
-
-     /**
+    /**
      * get fill radial gradient start point y
      * @name getFillRadialGradientStartPointY
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-    Kinetic.Factory.addPointGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPoint', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPoint', {x: 0, y: 0});
 
     /**
      * set fill radial gradient end point
      * @name setFillRadialGradientEndPoint
      * @method
      * @memberof Kinetic.Shape.prototype
-     * @param {Number|Array|Object} endPoint
+     * @param {Object} endPoint
+     * @param {Number} endPoint.x
+     * @param {Number} endPoint.y
      * @example
-     * // set x and y<br>
-     * shape.setFillRadialGradientEndPoint(20, 40);<br><br>
-     *
-     * // set x only <br>
+     * // set x and y <br>
      * shape.setFillRadialGradientEndPoint({<br>
      *   x: 20<br>
-     * });<br><br>
-     *
-     * // set x and y using an array<br>
-     * shape.setFillRadialGradientEndPoint([20, 40]);<br><br>
-     *
-     * // set x and y to the same value<br>
-     * shape.setFillRadialGradientEndPoint(5);
+     *   y: 10
+     * });
      */
 
+    /**
+     * get fill radial gradient end point
+     * @name getFillRadialGradientEndPoint
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @returns {Object}
+     */
+
+    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPoint', 'x', 0);
      /**
      * set fill radial gradient end point x
      * @name setFillRadialGradientEndPointX
@@ -1264,29 +1264,23 @@
      * @param {Number} x
      */
 
-     /**
-     * set fill radial gradient end point y
-     * @name setFillRadialGradientEndPointY
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Number} y
-     */
-
-     /**
-     * get fill radial gradient end point
-     * @name getFillRadialGradientEndPoint
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     */
-
-     /**
+    /**
      * get fill radial gradient end point x
      * @name getFillRadialGradientEndPointX
      * @method
      * @memberof Kinetic.Shape.prototype
      */
 
-     /**
+    Kinetic.Factory.addComponentGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPoint', 'y', 0);
+    /**
+     * set fill radial gradient end point y
+     * @name setFillRadialGradientEndPointY
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Number} y
+     */ 
+     
+    /**
      * get fill radial gradient end point y
      * @name getFillRadialGradientEndPointY
      * @method

@@ -53,8 +53,8 @@ suite('Circle', function(){
               y: stage.getHeight() / 2,
               radius: 70,
               fillPatternImage: imageObj,
-              fillPatternOffset: -5,
-              fillPatternScale: 0.7,
+              fillPatternOffset: {x: -5, y: -5},
+              fillPatternScale: {x: 0.7, y: 0.7},
               stroke: 'black',
               strokeWidth: 4,
               name: 'myCircle',
@@ -68,7 +68,7 @@ suite('Circle', function(){
           assert.equal(circle.getFillPatternOffset().x, -5);
           assert.equal(circle.getFillPatternOffset().y, -5);
 
-          circle.setFillPatternOffset(1, 2);
+          circle.setFillPatternOffset({x:1, y:2});
           assert.equal(circle.getFillPatternOffset().x, 1);
           assert.equal(circle.getFillPatternOffset().y, 2);
 
@@ -95,9 +95,9 @@ suite('Circle', function(){
           x: stage.getWidth() / 2,
           y: stage.getHeight() / 2,
           radius: 70,
-          fillRadialGradientStartPoint: -20,
+          fillRadialGradientStartPoint: {x: -20, y: -20},
           fillRadialGradientStartRadius: 0,
-          fillRadialGradientEndPoint: -60,
+          fillRadialGradientEndPoint: {x: -60, y: -60},
           fillRadialGradientEndRadius: 130,
           fillRadialGradientColorStops: [0, 'red', 0.2, 'yellow', 1, 'blue'],
           name: 'myCircle',
@@ -131,8 +131,8 @@ suite('Circle', function(){
           x: stage.getWidth() / 2,
           y: stage.getHeight() / 2,
           radius: 70,
-          fillLinearGradientStartPoint: -35,
-          fillLinearGradientEndPoint: 35,
+          fillLinearGradientStartPoint: {x:-35,y:-35},
+          fillLinearGradientEndPoint: {x:35,y:35},
           fillLinearGradientColorStops: [0, 'red', 1, 'blue'],
           stroke: 'black',
           strokeWidth: 4,
