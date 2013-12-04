@@ -303,31 +303,6 @@
             return ancestors;
         },
         /**
-         * set attr
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @param {String} attr
-         * #param {*} val
-         * @example
-         * node.setAttr('x', 5);
-         */
-        setAttr: function() {
-            var args = Array.prototype.slice.call(arguments),
-                attr = args[0],
-                method = SET + Kinetic.Util._capitalize(attr),
-                func = this[method];
-
-            args.shift();
-            if(Kinetic.Util._isFunction(func)) {
-                func.apply(this, args);
-            }
-            // otherwise set directly
-            else {
-                this.attrs[attr] = args[0];
-            }
-            return this;
-        },
-        /**
          * get attrs object literal
          * @method
          * @memberof Kinetic.Node.prototype
@@ -1167,12 +1142,35 @@
             this._setAttr(NAME, name);
             return this;
         },
+        /**
+         * set attr
+         * @method
+         * @memberof Kinetic.Node.prototype
+         * @param {String} attr
+         * #param {*} val
+         * @example
+         * node.setAttr('x', 5);
+         */
+        setAttr: function() {
+            var args = Array.prototype.slice.call(arguments),
+                attr = args[0],
+                val = args[1],
+                method = SET + Kinetic.Util._capitalize(attr),
+                func = this[method];
+
+            if(Kinetic.Util._isFunction(func)) {
+                func.call(this, val);
+            }
+            // otherwise set directly
+            else {
+                this._setAttr(attr, val);
+            }
+            return this;
+        },
         _setAttr: function(key, val) {
             var oldVal;
             if(val !== undefined) {
                 oldVal = this.attrs[key];
-                // NOTE: before events removed to improve performance
-                //this._fireBeforeChangeEvent(key, oldVal, val);
                 this.attrs[key] = val;
                 this._fireChangeEvent(key, oldVal, val);
             }

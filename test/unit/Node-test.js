@@ -336,7 +336,7 @@ suite('Node', function() {
     });
 
     // ======================================================
-    test('test offset attr change', function() {
+    test.only('test offset attr change', function() {
         /*
          * the premise of this test to make sure that only
          * root level attributes trigger an attr change event.
@@ -352,9 +352,9 @@ suite('Node', function() {
             width: 200,
             height: 50,
             fill: 'blue',
-            offset: [10, 10],
+            offset: {x:10, y:10},
             shadowColor: 'black',
-            shadowOffset: [20, 20]
+            shadowOffset: {x:20, y:20}
         });
 
         layer.add(rect);
@@ -367,7 +367,7 @@ suite('Node', function() {
             offsetChange = true;
         });
 
-        rect.setOffset(1, 2);
+        rect.setOffset({x:1, y:2});
 
         assert.equal(offsetChange, true);
     });
@@ -1405,8 +1405,6 @@ suite('Node', function() {
             fill: 'red',
             scaleX: 2
         });
-
-        console.log(rect4);
 
         var rect5 = new Kinetic.Rect({
             x: 200,

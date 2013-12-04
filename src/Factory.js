@@ -88,6 +88,7 @@
             constructor.prototype[method] = function(val) {
                 this[setX](val.x);
                 this[setY](val.y);
+          
                 return this;
             }; 
         },
