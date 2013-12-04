@@ -90,6 +90,12 @@
 
   };
 
-  Kinetic.Filters.ColorStretch = Kinetic.Util._FilterWrapSingleBuffer(ColorStretch);
+  Kinetic.Filters.ColorStretch = function(src,dst,opt){
+    if( this === Kinetic.Filters ){
+      ColorStretch(src, dst||src, opt );
+    }else{
+      ColorStretch.call(this, src, dst||src, opt);
+    }
+  };
 
 })();

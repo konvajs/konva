@@ -70,8 +70,6 @@
 
   };
 
-  Kinetic.Filters.HSV = Kinetic.Util._FilterWrapSingleBuffer(HSV);
-
   Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterHue', 0);
   Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterSaturation', 1);
   Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterValue', 1);
