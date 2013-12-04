@@ -18,8 +18,6 @@ suite('Image', function(){
               draggable: true
           });
 
-          console.log(darth);
-
           layer.add(darth);
           stage.add(layer);
 

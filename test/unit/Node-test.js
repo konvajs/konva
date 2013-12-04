@@ -1507,7 +1507,7 @@ suite('Node', function() {
         //console.log(rect.getAbsoluteTransform().getTranslation())
 
         stage.rotate(Math.PI / 3);
-        stage.setScale(0.5);
+        stage.setScale({x:0.5, y:0.5});
 
         stage.draw();
 
@@ -1561,7 +1561,7 @@ suite('Node', function() {
             name: 'groupName',
             id: 'groupId',
             rotationDeg: 45,
-            offset: [side / 2, side / 2],
+            offset: {x:side / 2, y:side / 2},
             x: diagonal / 2,
             y: diagonal / 2
         });
@@ -1850,9 +1850,9 @@ suite('Node', function() {
         layer.add(group);
         stage.add(layer);
 
-        circle.setPosition(100, 0);
-        group.setPosition(100, 0);
-        layer.setPosition(100, 0);
+        circle.setPosition({x:100, y:0});
+        group.setPosition({x: 100, y: 0});
+        layer.setPosition({x: 100, y: 0});
 
         // test relative positions
         assert.equal(circle.getPosition().x, 100);

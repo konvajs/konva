@@ -225,9 +225,7 @@
      * @memberof Kinetic.Node.prototype
      */
 
-    Kinetic.Factory.addGetter(Kinetic.Node, 'draggable', function() {
-        return false;
-    });
+    Kinetic.Factory.addGetter(Kinetic.Node, 'draggable', false);
 
      /**
      * get draggable

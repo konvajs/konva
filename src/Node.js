@@ -538,7 +538,7 @@
                 y: this.attrs.y + it.getTranslation().y
             };
 
-            this.setPosition(pos.x, pos.y);
+            this.setPosition({x:pos.x, y:pos.y});
             this._setTransform(trans);
             return this;
         },
