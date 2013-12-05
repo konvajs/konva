@@ -66,7 +66,7 @@
           for (var i = 0; i < circles.length; i++) {
             var x = Math.random() * width;
             var y = Math.random() * height;
-            circles[i].setPosition(x, y);
+            circles[i].setPosition({x: x, y: y});
           }
           lastTime = time;
 

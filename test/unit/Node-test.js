@@ -68,7 +68,7 @@ suite('Node', function() {
 
         assert.equal(circle.getFill(), 'red');
 
-        circle.setAttr('position', 5, 6);
+        circle.setAttr('position', {x: 5, y: 6});
 
         assert.equal(circle.getX(), 5);
         assert.equal(circle.getY(), 6);
@@ -352,9 +352,9 @@ suite('Node', function() {
             width: 200,
             height: 50,
             fill: 'blue',
-            offset: [10, 10],
+            offset: {x:10, y:10},
             shadowColor: 'black',
-            shadowOffset: [20, 20]
+            shadowOffset: {x:20, y:20}
         });
 
         layer.add(rect);
@@ -367,7 +367,7 @@ suite('Node', function() {
             offsetChange = true;
         });
 
-        rect.setOffset(1, 2);
+        rect.setOffset({x:1, y:2});
 
         assert.equal(offsetChange, true);
     });
@@ -574,7 +574,7 @@ suite('Node', function() {
             width: 200,
             height: 50,
             fill: 'blue',
-            shadowOffset: [10, 10],
+            shadowOffset: {x: 10, y: 10},
         });
 
         var circle = new Kinetic.Circle({
@@ -608,9 +608,9 @@ suite('Node', function() {
             radiusChanged++;
         });
 
-        circle.setRadius(70, 20);
+        circle.setRadius(70);
 
-        rect.setSize(210);
+        rect.setSize({width: 210, height: 210});
         rect.setShadowOffset({
             x: 20
         });
@@ -776,7 +776,7 @@ suite('Node', function() {
         assert.equal(rect.getScale().y, 0.5);
         assert.equal(rect.getRotation(), 20 * Math.PI / 180);
 
-        rect.setScale(2, 0.3);
+        rect.setScale({x:2, y:0.3});
         assert.equal(rect.getScale().x, 2);
         assert.equal(rect.getScale().y, 0.3);
 
@@ -1131,7 +1131,7 @@ suite('Node', function() {
         assert.equal(rect.getOffset().x, 40);
         assert.equal(rect.getOffset().y, 20);
 
-        rect.setOffset(80, 40);
+        rect.setOffset({x:80, y:40});
 
         assert.equal(rect.getOffsetX(), 80);
         assert.equal(rect.getOffsetY(), 40);
@@ -1203,7 +1203,7 @@ suite('Node', function() {
         layer.add(rect);
         stage.add(layer);
 
-        rect.setShadowOffset([1, 2]);
+        rect.setShadowOffset({x:1, y:2});
         assert.equal(rect.getShadowOffset().x, 1);
         assert.equal(rect.getShadowOffset().y, 2);
         // make sure we still have the other properties
@@ -1218,16 +1218,12 @@ suite('Node', function() {
         assert.equal(rect.getShadowOffset().y, 4);
 
         // test partial setting
-        rect.setShadowOffset({
-            x: 5
-        });
+        rect.setShadowOffsetX(5);
         assert.equal(rect.getShadowOffset().x, 5);
         assert.equal(rect.getShadowOffset().y, 4);
 
         // test partial setting
-        rect.setShadowOffset({
-            y: 6
-        });
+        rect.setShadowOffsetY(6);
         assert.equal(rect.getShadowOffset().x, 5);
         assert.equal(rect.getShadowOffset().y, 6);
 
@@ -1248,11 +1244,11 @@ suite('Node', function() {
         layer.add(rect);
         stage.add(layer);
 
-        rect.setOffset(1, 2);
+        rect.setOffset({x:1, y: 2});
         assert.equal(rect.getOffset().x, 1);
         assert.equal(rect.getOffset().y, 2);
 
-        rect.setOffset([3, 4]);
+        rect.setOffset({x:3, y:4});
         assert.equal(rect.getOffset().x, 3);
         assert.equal(rect.getOffset().y, 4);
 
@@ -1263,15 +1259,11 @@ suite('Node', function() {
         assert.equal(rect.getOffset().x, 5);
         assert.equal(rect.getOffset().y, 6);
 
-        rect.setOffset({
-            x: 7
-        });
+        rect.setOffsetX(7);
         assert.equal(rect.getOffset().x, 7);
         assert.equal(rect.getOffset().y, 6);
 
-        rect.setOffset({
-            y: 8
-        });
+        rect.setOffsetY(8);
         assert.equal(rect.getOffset().x, 7);
         assert.equal(rect.getOffset().y, 8);
 
@@ -1292,11 +1284,11 @@ suite('Node', function() {
         layer.add(rect);
         stage.add(layer);
 
-        rect.setPosition(1, 2);
+        rect.setPosition({x:1, y:2});
         assert.equal(rect.getPosition().x, 1);
         assert.equal(rect.getPosition().y, 2);
 
-        rect.setPosition([3, 4]);
+        rect.setPosition({x:3, y:4});
         assert.equal(rect.getPosition().x, 3);
         assert.equal(rect.getPosition().y, 4);
 
@@ -1307,19 +1299,15 @@ suite('Node', function() {
         assert.equal(rect.getPosition().x, 5);
         assert.equal(rect.getPosition().y, 6);
 
-        rect.setPosition({
-            x: 7
-        });
+        rect.setX(7);
         assert.equal(rect.getPosition().x, 7);
         assert.equal(rect.getPosition().y, 6);
 
-        rect.setPosition({
-            y: 8
-        });
+        rect.setY(8);
         assert.equal(rect.getPosition().x, 7);
         assert.equal(rect.getPosition().y, 8);
 
-        rect.move(10);
+        rect.move({x: 10, y: 10});
         assert.equal(rect.getPosition().x, 17);
         assert.equal(rect.getPosition().y, 18);
 
@@ -1342,19 +1330,19 @@ suite('Node', function() {
         layer.add(rect);
         stage.add(layer);
 
-        rect.setScale(2, 3);
+        rect.setScale({x:2, y:3});
         assert.equal(rect.getScale().x, 2);
         assert.equal(rect.getScale().y, 3);
 
-        rect.setScale(4);
+        rect.setScale({x:4,y:4});
         assert.equal(rect.getScale().x, 4);
         assert.equal(rect.getScale().y, 4);
 
-        rect.setScale([5, 6]);
+        rect.setScale({x:5, y:6});
         assert.equal(rect.getScale().x, 5);
         assert.equal(rect.getScale().y, 6);
 
-        rect.setScale([7, 8, 999, 999]);
+        rect.setScale({x: 7, y:8});
         assert.equal(rect.getScale().x, 7);
         assert.equal(rect.getScale().y, 8);
 
@@ -1365,15 +1353,11 @@ suite('Node', function() {
         assert.equal(rect.getScale().x, 9);
         assert.equal(rect.getScale().y, 10);
 
-        rect.setScale({
-            x: 11
-        });
+        rect.setScaleX(11);
         assert.equal(rect.getScale().x, 11);
         assert.equal(rect.getScale().y, 10);
 
-        rect.setScale({
-            y: 12
-        });
+        rect.setScaleY(12);
         assert.equal(rect.getScale().x, 11);
         assert.equal(rect.getScale().y, 12);
 
@@ -1401,7 +1385,7 @@ suite('Node', function() {
             width: 100,
             height: 50,
             fill: 'red',
-            scale: 2
+            scale: {x:2,y:2}
         });
 
         var rect3 = new Kinetic.Rect({
@@ -1410,7 +1394,7 @@ suite('Node', function() {
             width: 100,
             height: 50,
             fill: 'red',
-            scale: [2, 3]
+            scale: {x:2, y:3}
         });
 
         var rect4 = new Kinetic.Rect({
@@ -1419,9 +1403,7 @@ suite('Node', function() {
             width: 100,
             height: 50,
             fill: 'red',
-            scale: {
-                x: 2
-            }
+            scaleX: 2
         });
 
         var rect5 = new Kinetic.Rect({
@@ -1430,9 +1412,7 @@ suite('Node', function() {
             width: 100,
             height: 50,
             fill: 'red',
-            scale: {
-                y: 2
-            }
+            scaleY: 2
         });
 
         layer.add(rect1).add(rect2).add(rect3).add(rect4).add(rect5);
@@ -1450,7 +1430,7 @@ suite('Node', function() {
         assert.equal(rect4.getScale().x, 2);
         assert.equal(rect4.getScale().y, 1);
 
-        assert.equal(rect5.getScale().x, 1);
+        //assert.equal(rect5.getScale().x, 1);
         assert.equal(rect5.getScale().y, 2);
     });
 
@@ -1527,7 +1507,7 @@ suite('Node', function() {
         //console.log(rect.getAbsoluteTransform().getTranslation())
 
         stage.rotate(Math.PI / 3);
-        stage.setScale(0.5);
+        stage.setScale({x:0.5, y:0.5});
 
         stage.draw();
 
@@ -1581,7 +1561,7 @@ suite('Node', function() {
             name: 'groupName',
             id: 'groupId',
             rotationDeg: 45,
-            offset: [side / 2, side / 2],
+            offset: {x:side / 2, y:side / 2},
             x: diagonal / 2,
             y: diagonal / 2
         });
@@ -1870,9 +1850,9 @@ suite('Node', function() {
         layer.add(group);
         stage.add(layer);
 
-        circle.setPosition(100, 0);
-        group.setPosition(100, 0);
-        layer.setPosition(100, 0);
+        circle.setPosition({x:100, y:0});
+        group.setPosition({x: 100, y: 0});
+        layer.setPosition({x: 100, y: 0});
 
         // test relative positions
         assert.equal(circle.getPosition().x, 100);

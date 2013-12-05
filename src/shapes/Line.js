@@ -43,31 +43,30 @@
                 tp, len, n, point;
 
             context.beginPath();
-            context.moveTo(points[0].x, points[0].y);
+            context.moveTo(points[0], points[1]);
 
             // tension
-            if(tension !== 0 && length > 2) {
+            if(tension !== 0 && length > 4) {
                 tp = this.getTensionPoints();
                 len = tp.length;
-                n = closed ? 0 : 2;
+                n = closed ? 0 : 4;
 
                 if (!closed) {
-                    context.quadraticCurveTo(tp[0].x, tp[0].y, tp[1].x, tp[1].y);
+                    context.quadraticCurveTo(tp[0], tp[1], tp[2], tp[3]);
                 }
 
-                while(n < len - 1) {
-                    context.bezierCurveTo(tp[n].x, tp[n++].y, tp[n].x, tp[n++].y, tp[n].x, tp[n++].y);
+                while(n < len - 2) {
+                    context.bezierCurveTo(tp[n++], tp[n++], tp[n++], tp[n++], tp[n++], tp[n++]);
                 }
 
                 if (!closed) {
-                    context.quadraticCurveTo(tp[len - 1].x, tp[len - 1].y, points[length - 1].x, points[length - 1].y);
+                    context.quadraticCurveTo(tp[len-2], tp[len-1], points[length-2], points[length-1]);
                 }
             }
             // no tension
             else {
-                for(n = 1; n < length; n++) {
-                    point = points[n];
-                    context.lineTo(point.x, point.y);
+                for(n = 2; n < length; n+=2) {
+                    context.lineTo(points[n], points[n+1]);
                 }
             }
 
@@ -93,25 +92,48 @@
             }
         },
         _getTensionPointsClosed: function() {
-            var points = this.getPoints(),
-                length = points.length,
+            var p = this.getPoints(),
+                len = p.length,
                 tension = this.getTension(),
                 util = Kinetic.Util,
-                firstControlPoints = util._getControlPoints(points[length - 1], points[0], points[1], tension),
-                lastControlPoints = util._getControlPoints(points[length - 2], points[length - 1], points[0], tension),
-                tensionPoints = Kinetic.Util._expandPoints(points, tension);
-
-            // prepend control point
-            tensionPoints.unshift(firstControlPoints[1]);
-
-            // append cp, point, cp, cp, first point
-            tensionPoints.push(lastControlPoints[0]);
-            tensionPoints.push(points[length - 1]);
-            tensionPoints.push(lastControlPoints[1]);
-            tensionPoints.push(firstControlPoints[0]);
-            tensionPoints.push(points[0]);
-
-            return tensionPoints;
+                firstControlPoints = util._getControlPoints(
+                    p[len-2],
+                    p[len-1], 
+                    p[0], 
+                    p[1], 
+                    p[2], 
+                    p[3],
+                    tension
+                ),
+                lastControlPoints = util._getControlPoints(
+                    p[len-4], 
+                    p[len-3], 
+                    p[len-2], 
+                    p[len-1], 
+                    p[0], 
+                    p[1],
+                    tension
+                ),
+                middle = Kinetic.Util._expandPoints(p, tension),
+                tp = [
+                        firstControlPoints[2], 
+                        firstControlPoints[3]
+                    ]
+                    .concat(middle)
+                    .concat([
+                        lastControlPoints[0],
+                        lastControlPoints[1],
+                        p[len-2],
+                        p[len-1],
+                        lastControlPoints[2],
+                        lastControlPoints[3],
+                        firstControlPoints[0],
+                        firstControlPoints[1],
+                        p[0],
+                        p[1]
+                    ]);
+                    
+            return tp;
         }
     };
     Kinetic.Util.extend(Kinetic.Line, Kinetic.Shape);
@@ -153,7 +175,7 @@
      * @param {Number} tension
      */
 
-    Kinetic.Factory.addPointsGetterSetter(Kinetic.Line, 'points');
+    Kinetic.Factory.addGetterSetter(Kinetic.Line, 'points');
     /**
      * get points array
      * @name getPoints

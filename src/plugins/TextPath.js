@@ -315,7 +315,7 @@
     Kinetic.Util.extend(Kinetic.TextPath, Kinetic.Shape);
 
     // add setters and getters
-    Kinetic.Factory.addGetterSetter(Kinetic.TextPath, 'fontFamily', CALIBRI);
+    Kinetic.Factory.addGetterSetter(Kinetic.TextPath, 'fontFamily', 'Arial');
 
     /**
      * set font family

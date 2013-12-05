@@ -119,7 +119,7 @@ suite('Path', function() {
             strokeWidth: 2,
             shadowColor: 'maroon',
             shadowBlur: 2,
-            shadowOffset: [10, 10],
+            shadowOffset: {x:10, y:10},
             shadowOpacity: 0.5,
             draggable: true
         });

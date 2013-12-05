@@ -45,7 +45,7 @@ suite('Rect', function(){
       stroke: 'blue',
       shadowColor: 'red',
       shadowBlur: 10,
-      shadowOffset: 5,
+      shadowOffset: {x: 5, y: 5},
       shadowOpacity: 0.5,
       opacity: 0.4,
       cornerRadius: 5
@@ -82,10 +82,8 @@ suite('Rect', function(){
           fill: 'green',
           stroke: 'black',
           strokeWidth: 4,
-          offset: {
-              x: 50
-          },
-          scale: [2, 2],
+          offset: {x: 50, y: 0},
+          scale: {x: 2, y: 2},
           cornerRadius: 15,
           draggable: true
       });

@@ -361,191 +361,6 @@
             return retArr;
         },
         /*
-         * The argument can be:
-         * - an integer (will be applied to both x and y)
-         * - an array of one integer (will be applied to both x and y)
-         * - an array of two integers (contains x and y)
-         * - an array of four integers (contains x, y, width, and height)
-         * - an object with x and y properties
-         * - an array of one element which is an array of integers
-         * - an array of one element of an object
-         */
-        _getXY: function(arg) {
-            if(this._isNumber(arg)) {
-                return {
-                    x: arg,
-                    y: arg
-                };
-            }
-            else if(this._isArray(arg)) {
-                // if arg is an array of one element
-                if(arg.length === 1) {
-                    var val = arg[0];
-                    // if arg is an array of one element which is a number
-                    if(this._isNumber(val)) {
-                        return {
-                            x: val,
-                            y: val
-                        };
-                    }
-                    // if arg is an array of one element which is an array
-                    else if(this._isArray(val)) {
-                        return {
-                            x: val[0],
-                            y: val[1]
-                        };
-                    }
-                    // if arg is an array of one element which is an object
-                    else if(this._isObject(val)) {
-                        return val;
-                    }
-                }
-                // if arg is an array of two or more elements
-                else if(arg.length >= 2) {
-                    return {
-                        x: arg[0],
-                        y: arg[1]
-                    };
-                }
-            }
-            // if arg is an object return the object
-            else if(this._isObject(arg)) {
-                return arg;
-            }
-
-            // default
-            return null;
-        },
-        /*
-         * The argument can be:
-         * - an integer (will be applied to both width and height)
-         * - an array of one integer (will be applied to both width and height)
-         * - an array of two integers (contains width and height)
-         * - an array of four integers (contains x, y, width, and height)
-         * - an object with width and height properties
-         * - an array of one element which is an array of integers
-         * - an array of one element of an object
-         */
-        _getSize: function(arg) {
-            if(this._isNumber(arg)) {
-                return {
-                    width: arg,
-                    height: arg
-                };
-            }
-            else if(this._isArray(arg)) {
-                // if arg is an array of one element
-                if(arg.length === 1) {
-                    var val = arg[0];
-                    // if arg is an array of one element which is a number
-                    if(this._isNumber(val)) {
-                        return {
-                            width: val,
-                            height: val
-                        };
-                    }
-                    // if arg is an array of one element which is an array
-                    else if(this._isArray(val)) {
-                        /*
-                         * if arg is an array of one element which is an
-                         * array of four elements
-                         */
-                        if(val.length >= 4) {
-                            return {
-                                width: val[2],
-                                height: val[3]
-                            };
-                        }
-                        /*
-                         * if arg is an array of one element which is an
-                         * array of two elements
-                         */
-                        else if(val.length >= 2) {
-                            return {
-                                width: val[0],
-                                height: val[1]
-                            };
-                        }
-                    }
-                    // if arg is an array of one element which is an object
-                    else if(this._isObject(val)) {
-                        return val;
-                    }
-                }
-                // if arg is an array of four elements
-                else if(arg.length >= 4) {
-                    return {
-                        width: arg[2],
-                        height: arg[3]
-                    };
-                }
-                // if arg is an array of two elements
-                else if(arg.length >= 2) {
-                    return {
-                        width: arg[0],
-                        height: arg[1]
-                    };
-                }
-            }
-            // if arg is an object return the object
-            else if(this._isObject(arg)) {
-                return arg;
-            }
-
-            // default
-            return null;
-        },
-        /*
-         * arg will be an array of numbers or
-         *  an array of point arrays or
-         *  an array of point objects
-         */
-        _getPoints: function(arg) {
-            var arr = [],
-                n, len;
-
-            if(arg === undefined) {
-                return [];
-            }
-
-            len = arg.length;
-
-            // an array of arrays
-            if(this._isArray(arg[0])) {
-                /*
-                 * convert array of arrays into an array
-                 * of objects containing x, y
-                 */
-                for(n = 0; n < len; n++) {
-                    arr.push({
-                        x: arg[n][0],
-                        y: arg[n][1]
-                    });
-                }
-
-                return arr;
-            }
-            // an array of objects
-            if(this._isObject(arg[0])) {
-                return arg;
-            }
-            // an array of integers
-            else {
-                /*
-                 * convert array of numbers into an array
-                 * of objects containing x, y
-                 */
-                for(n = 0; n < len; n += 2) {
-                    arr.push({
-                        x: arg[n],
-                        y: arg[n + 1]
-                    });
-                }
-
-                return arr;
-            }
-        },
-        /*
          * arg can be an image object or image data
          */
         _getImage: function(arg, callback) {
@@ -677,8 +492,7 @@
             }
             return retObj;
         },
-        // deep object clone
-        _clone: function(obj) {
+        cloneObject: function(obj) {
             var retObj = {};
             for(var key in obj) {
                 if(this._isObject(obj[key])) {
@@ -689,6 +503,9 @@
                 }
             }
             return retObj;
+        },
+        cloneArray: function(arr) {
+            return arr.slice(0);
         },
         _degToRad: function(deg) {
             return deg * PI_OVER_DEG180;
@@ -732,39 +549,31 @@
             constructor.prototype[key] = methods[key];
           }
         },
-        _getControlPoints: function(p0, p1, p2, t) {
-            var x0 = p0.x;
-            var y0 = p0.y;
-            var x1 = p1.x;
-            var y1 = p1.y;
-            var x2 = p2.x;
-            var y2 = p2.y;
-            var d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
-            var d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-            var fa = t * d01 / (d01 + d12);
-            var fb = t * d12 / (d01 + d12);
-            var p1x = x1 - fa * (x2 - x0);
-            var p1y = y1 - fa * (y2 - y0);
-            var p2x = x1 + fb * (x2 - x0);
-            var p2y = y1 + fb * (y2 - y0);
-            return [{
-                x: p1x,
-                y: p1y
-            }, {
-                x: p2x,
-                y: p2y
-            }];
+       _getControlPoints: function(x0, y0, x1, y1, x2, y2, t) {
+            var d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)),
+                d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)),
+                fa = t * d01 / (d01 + d12),
+                fb = t * d12 / (d01 + d12),
+                p1x = x1 - fa * (x2 - x0),
+                p1y = y1 - fa * (y2 - y0),
+                p2x = x1 + fb * (x2 - x0),
+                p2y = y1 + fb * (y2 - y0);
+
+            return [p1x ,p1y, p2x, p2y];
         },
-        _expandPoints: function(points, tension) {
-            var length = points.length,
+        _expandPoints: function(p, tension) {
+            var len = p.length,
                 allPoints = [],
                 n, cp;
 
-            for(n = 1; n < length - 1; n++) {
-                cp = Kinetic.Util._getControlPoints(points[n - 1], points[n], points[n + 1], tension);
+            for (n=2; n<len-2; n+=2) {
+                cp = Kinetic.Util._getControlPoints(p[n-2], p[n-1], p[n], p[n+1], p[n+2], p[n+3], tension);
                 allPoints.push(cp[0]);
-                allPoints.push(points[n]);
                 allPoints.push(cp[1]);
+                allPoints.push(p[n]);
+                allPoints.push(p[n+1]);
+                allPoints.push(cp[2]);
+                allPoints.push(cp[3]);
             }
 
             return allPoints;

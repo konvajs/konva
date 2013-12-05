@@ -5,19 +5,7 @@ suite('Spline', function() {
         var layer = new Kinetic.Layer();
 
         var line1 = new Kinetic.Line({
-            points: [{
-                x: 73,
-                y: 160
-            }, {
-                x: 340,
-                y: 23
-            }, {
-                x: 500,
-                y: 109
-            }, {
-                x: 300,
-                y: 109
-            }],
+            points: [73,160,340,23,500,109,300,109],
             stroke: 'blue',
             strokeWidth: 10,
             lineCap: 'round',
@@ -27,16 +15,7 @@ suite('Spline', function() {
         });
 
         var line2 = new Kinetic.Line({
-            points: [{
-                x: 73,
-                y: 160
-            }, {
-                x: 340,
-                y: 23
-            }, {
-                x: 500,
-                y: 109
-            }],
+            points: [73,160,340,23,500,109],
             stroke: 'red',
             strokeWidth: 10,
             lineCap: 'round',
@@ -46,13 +25,7 @@ suite('Spline', function() {
         });
 
         var line3 = new Kinetic.Line({
-            points: [{
-                x: 73,
-                y: 160
-            }, {
-                x: 340,
-                y: 23
-            }],
+            points: [73,160,340,23],
             stroke: 'green',
             strokeWidth: 10,
             lineCap: 'round',
@@ -80,19 +53,7 @@ suite('Spline', function() {
         var layer = new Kinetic.Layer();
 
         var spline = new Kinetic.Line({
-            points: [{
-                x: 73,
-                y: 160
-            }, {
-                x: 340,
-                y: 23
-            }, {
-                x: 500,
-                y: 109
-            }, {
-                x: 300,
-                y: 109
-            }],
+            points: [73,160,340,23,500,109,300,109],
             stroke: 'blue',
             strokeWidth: 10,
             lineCap: 'round',
@@ -105,20 +66,11 @@ suite('Spline', function() {
         layer.add(spline);
         stage.add(layer);
 
+        assert.equal(spline.getTensionPoints().length, 12);
+
+        spline.setPoints([73,160,340,23,500,109]);
+
         assert.equal(spline.getTensionPoints().length, 6);
-
-        spline.setPoints([{
-            x: 73,
-            y: 160
-        }, {
-            x: 340,
-            y: 23
-        }, {
-            x: 500,
-            y: 109
-        }]);
-
-        assert.equal(spline.getTensionPoints().length, 3);
 
         layer.draw();
 
@@ -131,19 +83,7 @@ suite('Spline', function() {
         var layer = new Kinetic.Layer();
 
         var spline = new Kinetic.Line({
-            points: [{
-                x: 73,
-                y: 160
-            }, {
-                x: 340,
-                y: 23
-            }, {
-                x: 500,
-                y: 109
-            }, {
-                x: 300,
-                y: 109
-            }],
+            points: [73,160,340,23,500,109,300,109],
             stroke: 'blue',
             strokeWidth: 10,
             lineCap: 'round',
@@ -156,100 +96,15 @@ suite('Spline', function() {
         layer.add(spline);
         stage.add(layer);
 
-        assert.equal(spline.getPoints().length, 4);
+        assert.equal(spline.getPoints().length, 8);
 
-        spline.addPoint({
-            x: 300,
-            y: 200
-        });
+        var points = spline.getPoints();
+        points.push(300);
+        points.push(200);
+        spline.clearCache();
 
-        assert.equal(spline.getPoints().length, 5);
+        assert.equal(spline.getPoints().length, 10);
 
         layer.draw();
-    });
-
-    // ======================================================
-    test('create from points represented as a flat array', function() {
-        var stage = addStage();
-        var layer = new Kinetic.Layer();
-
-        var line = new Kinetic.Line({
-            points: [
-                73, 160,
-                340, 23,
-                500, 109,
-                300, 109
-            ],
-            stroke: 'blue',
-            strokeWidth: 10,
-            lineCap: 'round',
-            lineJoin: 'round',
-            draggable: true,
-            tension: 1
-        });
-
-        layer.add(line);
-        stage.add(layer);
-
-        assert.equal(line.getPoints().length, 4);
-    });
-
-    // ======================================================
-    test('create from points represented as an array of objects', function() {
-        var stage = addStage();
-        var layer = new Kinetic.Layer();
-
-        var line = new Kinetic.Line({
-            points: [{
-                x: 73,
-                y: 160
-            }, {
-                x: 340,
-                y: 23
-            }, {
-                x: 500,
-                y: 109
-            }, {
-                x: 300,
-                y: 109
-            }],
-            stroke: 'blue',
-            strokeWidth: 10,
-            lineCap: 'round',
-            lineJoin: 'round',
-            draggable: true,
-            tension: 1
-        });
-
-        layer.add(line);
-        stage.add(layer);
-
-        assert.equal(line.getPoints().length, 4);
-    });
-
-    // ======================================================
-    test('create from points represented as an array of arrays', function() {
-        var stage = addStage();
-        var layer = new Kinetic.Layer();
-
-        var line = new Kinetic.Line({
-            points: [
-                [73, 160],
-                [340, 23],
-                [500, 109],
-                [300, 109]
-            ],
-            stroke: 'blue',
-            strokeWidth: 10,
-            lineCap: 'round',
-            lineJoin: 'round',
-            draggable: true,
-            tension: 1
-        });
-
-        layer.add(line);
-        stage.add(layer);
-
-        assert.equal(line.getPoints().length, 4);
     });
 });

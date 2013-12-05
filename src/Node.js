@@ -303,31 +303,6 @@
             return ancestors;
         },
         /**
-         * set attr
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @param {String} attr
-         * #param {*} val
-         * @example
-         * node.setAttr('x', 5);
-         */
-        setAttr: function() {
-            var args = Array.prototype.slice.call(arguments),
-                attr = args[0],
-                method = SET + Kinetic.Util._capitalize(attr),
-                func = this[method];
-
-            args.shift();
-            if(Kinetic.Util._isFunction(func)) {
-                func.apply(this, args);
-            }
-            // otherwise set directly
-            else {
-                this.attrs[attr] = args[0];
-            }
-            return this;
-        },
-        /**
          * get attrs object literal
          * @method
          * @memberof Kinetic.Node.prototype
@@ -492,25 +467,17 @@
          * set node position relative to parent
          * @method
          * @memberof Kinetic.Node.prototype
-         * @param {Number} x
-         * @param {Number} y
+         * @param {Object} pos
+         * @param {Number} pos.x
+         * @param {Nubmer} pos.y
          * @example
-         * // set x and y<br>
-         * node.setPosition(5, 10);<br><br>
-         *
-         * // set x only<br>
+         * // set x and <br>
          * node.setPosition({<br>
          *   x: 5<br>
-         * });<br><br>
-         *
-         * // set x and y using an array<br>
-         * node.setPosition([5, 10]);<br><br>
-         *
-         * // set both x and y to 5<br>
-         * node.setPosition(5);
+         *   y: 10
+         * });
          */
-        setPosition: function() {
-            var pos = Kinetic.Util._getXY([].slice.call(arguments));
+        setPosition: function(pos) {
             this.setX(pos.x);
             this.setY(pos.y);
             return this;
@@ -547,12 +514,12 @@
          * set absolute position
          * @method
          * @memberof Kinetic.Node.prototype
-         * @param {Number} x
-         * @param {Number} y
+         * @param {Object} pos
+         * @param {Number} pos.x
+         * @param {Number} pos.y
          */
-        setAbsolutePosition: function() {
-            var pos = Kinetic.Util._getXY([].slice.call(arguments)),
-                trans = this._clearTransform(),
+        setAbsolutePosition: function(pos) {
+            var trans = this._clearTransform(),
                 it;
 
             // don't clear translation
@@ -571,7 +538,7 @@
                 y: this.attrs.y + it.getTranslation().y
             };
 
-            this.setPosition(pos.x, pos.y);
+            this.setPosition({x:pos.x, y:pos.y});
             this._setTransform(trans);
             return this;
         },
@@ -617,31 +584,31 @@
          * move node by an amount relative to its current position
          * @method
          * @memberof Kinetic.Node.prototype
-         * @param {Number} x
-         * @param {Number} y
+         * @param {Object} change
+         * @param {Number} change.x
+         * @param {Number} change.y
          * @example
          * // move node in x direction by 1px and y direction by 2px<br>
-         * node.move(1, 2);<br><br>
-         *
-         * // move node in x direction by 1px<br>
          * node.move({<br>
-         *   x: 1<br>
+         *   x: 1,<br>
+         *   y: 2)<br>
          * });
          */
-        move: function() {
-            var pos = Kinetic.Util._getXY([].slice.call(arguments)),
+        move: function(change) {
+            var changeX = change.x,
+                changeY = change.y,
                 x = this.getX(),
                 y = this.getY();
 
-            if(pos.x !== undefined) {
-                x += pos.x;
+            if(changeX !== undefined) {
+                x += changeX;
             }
 
-            if(pos.y !== undefined) {
-                y += pos.y;
+            if(changeY !== undefined) {
+                y += changeY;
             }
 
-            this.setPosition(x, y);
+            this.setPosition({x:x, y:y});
             return this;
         },
         _eachAncestorReverse: function(func, includeSelf) {
@@ -1060,12 +1027,11 @@
          * set size
          * @method
          * @memberof Kinetic.Node.prototype
+         * @param {Object} size
          * @param {Number} width
          * @param {Number} height
          */
-        setSize: function() {
-            // set stage dimensions
-            var size = Kinetic.Util._getSize(Array.prototype.slice.call(arguments));
+        setSize: function(size) {
             this.setWidth(size.width);
             this.setHeight(size.height);
             return this;
@@ -1137,7 +1103,7 @@
             }
         },
         _fireBeforeChangeEvent: function(attr, oldVal, newVal) {
-            this._fire(BEFORE + Kinetic.Util._capitalize(attr) + CHANGE, {
+            this._fire([BEFORE, Kinetic.Util._capitalize(attr), CHANGE].join(EMPTY_STRING), {
                 oldVal: oldVal,
                 newVal: newVal
             });
@@ -1176,12 +1142,51 @@
             this._setAttr(NAME, name);
             return this;
         },
+        /**
+         * set attr
+         * @method
+         * @memberof Kinetic.Node.prototype
+         * @param {String} attr
+         * #param {*} val
+         * @example
+         * node.setAttr('x', 5);
+         */
+        setAttr: function() {
+            var args = Array.prototype.slice.call(arguments),
+                attr = args[0],
+                val = args[1],
+                method = SET + Kinetic.Util._capitalize(attr),
+                func = this[method];
+
+            if(Kinetic.Util._isFunction(func)) {
+                func.call(this, val);
+            }
+            // otherwise set directly
+            else {
+                this._setAttr(attr, val);
+            }
+            return this;
+        },
         _setAttr: function(key, val) {
             var oldVal;
             if(val !== undefined) {
                 oldVal = this.attrs[key];
-                this._fireBeforeChangeEvent(key, oldVal, val);
                 this.attrs[key] = val;
+                this._fireChangeEvent(key, oldVal, val);
+            }
+        },
+       _setComponentAttr: function(key, component, val) {
+            var oldVal;
+            if(val !== undefined) {
+                oldVal = this.attrs[key];
+
+                if (!oldVal) {
+                    // set value to default value using getAttr
+                    this.attrs[key] = this.getAttr(key);
+                }
+                
+                //this._fireBeforeChangeEvent(key, oldVal, val);
+                this.attrs[key][component] = val;
                 this._fireChangeEvent(key, oldVal, val);
             }
         },
@@ -1397,39 +1402,17 @@
     /**
      * set scale
      * @name setScale
-     * @param {Number} scale
+     * @param {Object} scale
+     * @param {Number} scale.x
+     * @param {Number} scale.y
      * @method
      * @memberof Kinetic.Node.prototype
      * @example
-     * // set x and y to the same value<br>
-     * shape.setScale(5);<br><br>
-     *
-     * // set x and y<br>
-     * shape.setScale(20, 40);<br><br>
-     *
-     * // set x only <br>
+     * // set x and y <br>
      * shape.setScale({<br>
      *   x: 20<br>
-     * });<br><br>
-     *
-     * // set x and y using an array<br>
-     * shape.setScale([20, 40]);
-     */
-
-     /**
-     * set scale x
-     * @name setScaleX
-     * @param {Number} x
-     * @method
-     * @memberof Kinetic.Node.prototype
-     */
-
-     /**
-     * set scale y
-     * @name setScaleY
-     * @param {Number} y
-     * @method
-     * @memberof Kinetic.Node.prototype
+     *   y: 10<br>
+     * });
      */
 
     /**
@@ -1439,14 +1422,30 @@
      * @memberof Kinetic.Node.prototype
      */
 
-     /**
+    /**
+     * set scale x
+     * @name setScaleX
+     * @param {Number} x
+     * @method
+     * @memberof Kinetic.Node.prototype
+     */
+
+    /**
      * get scale x
      * @name getScaleX
      * @method
      * @memberof Kinetic.Node.prototype
      */
 
-     /**
+    /**
+     * set scale y
+     * @name setScaleY
+     * @param {Number} y
+     * @method
+     * @memberof Kinetic.Node.prototype
+     */
+
+    /**
      * get scale y
      * @name getScaleY
      * @method
@@ -1458,27 +1457,28 @@
     /**
      * set skew
      * @name setSkew
-     * @param {Number} x
-     * @param {Number} y
+     * @param {Object} skew
+     * @param {Number} skew.x
+     * @param {Number} skew.y
      * @method
      * @memberof Kinetic.Node.prototype
      * @example
-     * // set x and y<br>
-     * shape.setSkew(20, 40);<br><br>
-     *
-     * // set x only <br>
+     * // set x and y <br>
      * shape.setSkew({<br>
      *   x: 20<br>
-     * });<br><br>
-     *
-     * // set x and y using an array<br>
-     * shape.setSkew([20, 40]);<br><br>
-     *
-     * // set x and y to the same value<br>
-     * shape.setSkew(5);
+     *   y: 10
+     * });
      */
 
-     /**
+    /**
+     * get skew
+     * @name getSkew
+     * @method
+     * @memberof Kinetic.Node.prototype
+     * @returns {Object}
+     */
+
+    /**
      * set skew x
      * @name setSkewX
      * @param {Number} x
@@ -1486,7 +1486,15 @@
      * @memberof Kinetic.Node.prototype
      */
 
-     /**
+    /**
+     * get skew x
+     * @name getSkewX
+     * @method
+     * @memberof Kinetic.Node.prototype
+     * @returns {Number}
+     */
+
+    /**
      * set skew y
      * @name setSkewY
      * @param {Number} y
@@ -1495,24 +1503,11 @@
      */
 
     /**
-     * get skew
-     * @name getSkew
-     * @method
-     * @memberof Kinetic.Node.prototype
-     */
-
-     /**
-     * get skew x
-     * @name getSkewX
-     * @method
-     * @memberof Kinetic.Node.prototype
-     */
-
-     /**
      * get skew y
      * @name getSkewY
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Number}
      */
 
     Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'offset', 0);
@@ -1525,22 +1520,22 @@
      * @param {Number} x
      * @param {Number} y
      * @example
-     * // set x and y<br>
-     * shape.setOffset(20, 40);<br><br>
-     *
-     * // set x only <br>
+     * // set x and y <br>
      * shape.setOffset({<br>
      *   x: 20<br>
+     *   y: 10<br>
      * });<br><br>
-     *
-     * // set x and y using an array<br>
-     * shape.setOffset([20, 40]);<br><br>
-     *
-     * // set x and y to the same value<br>
-     * shape.setOffset(5);
      */
 
-     /**
+    /**
+     * get offset
+     * @name getOffset
+     * @method
+     * @memberof Kinetic.Node.prototype
+     * @returns {Object}
+     */
+
+    /**
      * set offset x
      * @name setOffsetX
      * @method
@@ -1548,7 +1543,15 @@
      * @param {Number} x
      */
 
-     /**
+    /**
+     * get offset x
+     * @name getOffsetX
+     * @method
+     * @memberof Kinetic.Node.prototype
+     * @returns {Number}
+     */
+
+    /**
      * set offset y
      * @name setOffsetY
      * @method
@@ -1557,27 +1560,14 @@
      */
 
     /**
-     * get offset
-     * @name getOffset
-     * @method
-     * @memberof Kinetic.Node.prototype
-     */
-
-     /**
-     * get offset x
-     * @name getOffsetX
-     * @method
-     * @memberof Kinetic.Node.prototype
-     */
-
-     /**
      * get offset y
      * @name getOffsetY
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Number}
      */
 
-    Kinetic.Factory.addSetter(Kinetic.Node, 'width');
+    Kinetic.Factory.addSetter(Kinetic.Node, 'width', 0);
 
     /**
      * set width
@@ -1587,7 +1577,7 @@
      * @param {Number} width
      */
 
-    Kinetic.Factory.addSetter(Kinetic.Node, 'height');
+    Kinetic.Factory.addSetter(Kinetic.Node, 'height', 0);
 
     /**
      * set height

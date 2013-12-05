@@ -5,19 +5,7 @@ suite('Blob', function(){
         var layer = new Kinetic.Layer();
 
         var blob = new Kinetic.Line({
-            points: [{
-                x: 73,
-                y: 140
-            }, {
-                x: 340,
-                y: 23
-            }, {
-                x: 500,
-                y: 109
-            }, {
-                x: 300,
-                y: 170
-            }],
+            points: [73,140,340,23,500,109,300,170],
             stroke: 'blue',
             strokeWidth: 10,
             draggable: true,
@@ -51,19 +39,7 @@ suite('Blob', function(){
 
         var blob = new Kinetic.Line({
             tension: 0.8,
-            points: [{
-                x: 73,
-                y: 140
-            }, {
-                x: 340,
-                y: 23
-            }, {
-                x: 500,
-                y: 109
-            }, {
-                x: 300,
-                y: 170
-            }],
+            points: [73,140,340,23,500,109,300,170],
             stroke: 'blue',
             strokeWidth: 10,
             draggable: true,
@@ -75,7 +51,7 @@ suite('Blob', function(){
         layer.add(blob);
         stage.add(layer);
 
-        assert.equal(stage.find('Line')[0].getPoints().length, 4);
+        assert.equal(stage.find('Line')[0].getPoints().length, 8);
 
     });
 
@@ -85,19 +61,7 @@ suite('Blob', function(){
         var layer = new Kinetic.Layer();
 
         var blob = new Kinetic.Line({
-            points: [{
-                x: 73,
-                y: 140
-            }, {
-                x: 340,
-                y: 23
-            }, {
-                x: 500,
-                y: 109
-            }, {
-                x: 300,
-                y: 170
-            }],
+            points: [73,140,340,23,500,109,300,170],
             stroke: 'blue',
             strokeWidth: 10,
             draggable: true,

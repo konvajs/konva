@@ -1,4 +1,4 @@
- (function() {
+(function() {
     // CONSTANTS
     var ABSOLUTE_OPACITY = 'absoluteOpacity',
         ABSOLUTE_TRANSFORM = 'absoluteTransform',
@@ -204,8 +204,7 @@
         addPointsSetter: function(constructor, attr) {
             var method = SET + Kinetic.Util._capitalize(attr);
             constructor.prototype[method] = function(val) {
-                var points = Kinetic.Util._getPoints(val);
-                this._setAttr('points', points);
+                this._setAttr('points', val);
             };
         },
         addSetter: function(constructor, attr) {
@@ -219,9 +218,8 @@
             var that = this,
                 baseMethod = SET + Kinetic.Util._capitalize(attr);
 
-            constructor.prototype[baseMethod] = function() {
-                var pos = Kinetic.Util._getXY([].slice.call(arguments)),
-                    oldVal = this.attrs[attr],
+            constructor.prototype[baseMethod] = function(pos) {
+                var oldVal = this.attrs[attr],
                     x = 0,
                     y = 0;
 
@@ -229,7 +227,6 @@
                   x = pos.x;
                   y = pos.y;
 
-                  this._fireBeforeChangeEvent(attr, oldVal, pos);
                   if (x !== undefined) {
                     this[baseMethod + UPPER_X](x);
                   }
@@ -244,21 +241,16 @@
             var that = this,
                 baseMethod = SET + Kinetic.Util._capitalize(attr);
 
-            constructor.prototype[baseMethod] = function() {
-                var config = [].slice.call(arguments),
-                    pos = Kinetic.Util._getXY(config),
-                    size = Kinetic.Util._getSize(config),
-                    both = Kinetic.Util._merge(pos, size),
-                    oldVal = this.attrs[attr],
+            constructor.prototype[baseMethod] = function(box) {
+                var oldVal = this.attrs[attr],
                     x, y, width, height;
 
-                if (both) {
-                  x = both.x;
-                  y = both.y;
-                  width = both.width;
-                  height = both.height;
+                if (box) {
+                  x = box.x;
+                  y = box.y;
+                  width = box.width;
+                  height = box.height;
 
-                  this._fireBeforeChangeEvent(attr, oldVal, both);
                   if (x !== undefined) {
                     this[baseMethod + UPPER_X](x);
                   }
@@ -271,7 +263,7 @@
                   if (height !== undefined) {
                     this[baseMethod + UPPER_HEIGHT](height);
                   }
-                  this._fireChangeEvent(attr, oldVal, both);
+                  this._fireChangeEvent(attr, oldVal, box);
                 }
             };
         },
@@ -294,12 +286,10 @@
             var that = this,
                 baseMethod = ADD + Kinetic.Util._removeLastLetter(Kinetic.Util._capitalize(attr));
 
-            constructor.prototype[baseMethod] = function() {
-                var pos = Kinetic.Util._getXY([].slice.call(arguments)),
-                    oldVal = this.attrs[attr];
+            constructor.prototype[baseMethod] = function(pos) {
+                var oldVal = this.attrs[attr];
 
                 if (pos) {
-                  this._fireBeforeChangeEvent(attr, oldVal, pos);
                   this.attrs[attr].push(pos);
                   this._fireChangeEvent(attr, oldVal, pos);
                 }

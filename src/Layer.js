@@ -44,11 +44,13 @@
          * method for determining if a point intersects a shape or not
          * @method
          * @memberof Kinetic.Layer.prototype
-         * @param {Kinetic.Shape|null} shape
+         * @param {Object} pos
+         * @param {Number} pos.x
+         * @param {Number} pos.y
+         * @returns {Kinetic.Shape}
          */
-        getIntersection: function() {
-            var pos = Kinetic.Util._getXY(Array.prototype.slice.call(arguments)),
-                obj, i, intersectionOffset, shape;
+        getIntersection: function(pos) {
+            var obj, i, intersectionOffset, shape;
 
             if(this.isVisible()) {
                 for (i=0; i<INTERSECTION_OFFSETS_LEN; i++) {
@@ -151,17 +153,21 @@
          * clear scene and hit canvas contexts tied to the layer
          * @method
          * @memberof Kinetic.Node.prototype
-         * @param {Array|Object} [bounds]
+         * @param {Object} [bounds]
+         * @param {Number} [bounds.x]
+         * @param {Number} [bounds.y]
+         * @param {Number} [bounds.width]
+         * @param {Number} [bounds.height]
          * @example
          * layer.clear();<br>
          * layer.clear(0, 0, 100, 100);
          */
-        clear: function() {
+        clear: function(bounds) {
             var context = this.getContext(),
                 hitContext = this.getHitCanvas().getContext();
 
-            context.clear.apply(context, arguments);
-            hitContext.clear.apply(hitContext, arguments);
+            context.clear(bounds);
+            hitContext.clear(bounds);
             return this;
         },
         // extend Node.prototype.setVisible
@@ -262,7 +268,9 @@
     Kinetic.Util.extend(Kinetic.Layer, Kinetic.Container);
 
     // add getters and setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Layer, 'clearBeforeDraw', true);
+    Kinetic.Factory.addGetterSetter(Kinetic.Layer, 'clearBeforeDraw', function() {
+        return true;
+    });
 
     /**
      * set flag which determines if the layer is cleared or not

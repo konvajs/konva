@@ -188,16 +188,18 @@
          * clear canvas
          * @method
          * @memberof Kinetic.Context.prototype
+         * @param {Object} [bounds]
+         * @param {Number} [bounds.x]
+         * @param {Number} [bounds.y]
+         * @param {Number} [bounds.width]
+         * @param {Number} [bounds.height]
          */
-        clear: function() {
-            var args = [].slice.call(arguments),
-                canvas = this.getCanvas(),
+        clear: function(bounds) {
+            var canvas = this.getCanvas(),
                 pos, size;
             
-            if (args.length) {
-                pos = Kinetic.Util._getXY(args);
-                size = Kinetic.Util._getSize(args);
-                this.clearRect(pos.x || 0, pos.y || 0, size.width, size.height);
+            if (bounds) {
+                this.clearRect(bounds.x || 0, bounds.y || 0, bounds.width || 0, bounds.height || 0);
             }
             else {
                 this.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -226,8 +228,8 @@
             this.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
         },
         _clip: function(container) {
-            var clipX = container.getClipX() || 0,
-                clipY = container.getClipY() || 0,
+            var clipX = container.getClipX(),
+                clipY = container.getClipY(),
                 clipWidth = container.getClipWidth(),
                 clipHeight = container.getClipHeight();
 
@@ -476,12 +478,12 @@
         },
         _fillRadialGradient: function(shape) {
             var start = shape.getFillRadialGradientStartPoint(),
-            end = shape.getFillRadialGradientEndPoint(),
-            startRadius = shape.getFillRadialGradientStartRadius(),
-            endRadius = shape.getFillRadialGradientEndRadius(),
-            colorStops = shape.getFillRadialGradientColorStops(),
-            grd = this.createRadialGradient(start.x, start.y, startRadius, end.x, end.y, endRadius);
-
+                end = shape.getFillRadialGradientEndPoint(),
+                startRadius = shape.getFillRadialGradientStartRadius(),
+                endRadius = shape.getFillRadialGradientEndRadius(),
+                colorStops = shape.getFillRadialGradientColorStops(),  
+                grd = this.createRadialGradient(start.x, start.y, startRadius, end.x, end.y, endRadius);
+           
             // build color stops
             for(var n = 0; n < colorStops.length; n += 2) {
                 grd.addColorStop(colorStops[n], colorStops[n + 1]);

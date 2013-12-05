@@ -88,7 +88,7 @@ suite('Layer', function() {
         layer.add(circle);
         stage.add(layer);
 
-        layer.clear(100, 100, 100, 100);
+        layer.clear({x:100, y:100, width: 100, height:100});
 
         var trace = layer.getContext().getTrace();
         //console.log(trace);
@@ -130,9 +130,9 @@ suite('Layer', function() {
         layer.add(greenCircle);
         stage.add(layer);
 
-        assert.equal(layer.getIntersection(300, 100).getId(), 'greenCircle', 'shape should be greenCircle');
-        assert.equal(layer.getIntersection(380, 100).getId(), 'redCircle', 'shape should be redCircle');
-        assert.equal(layer.getIntersection(100, 100), null, 'shape should be null');
+        assert.equal(layer.getIntersection({x:300, y:100}).getId(), 'greenCircle', 'shape should be greenCircle');
+        assert.equal(layer.getIntersection({x:380, y:100}).getId(), 'redCircle', 'shape should be redCircle');
+        assert.equal(layer.getIntersection({x:100, y:100}), null, 'shape should be null');
 
 
     });
@@ -186,7 +186,7 @@ suite('Layer', function() {
         stage.add(layer);
 
         for(var n = 0; n < 20; n++) {
-            circle.move(10, 0);
+            circle.move({x:10, y:0});
             layer.draw();
         }
 

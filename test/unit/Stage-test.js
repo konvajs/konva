@@ -91,10 +91,10 @@ suite('Stage', function() {
 
         assert.equal(stage.getSize().width, 578);
         assert.equal(stage.getSize().height, 200);
-        stage.setSize(1, 2);
+        stage.setSize({width:1, height:2});
         assert.equal(stage.getSize().width, 1);
         assert.equal(stage.getSize().height, 2);
-        stage.setSize(3);
+        stage.setSize({width: 3, height: 3});
         assert.equal(stage.getSize().width, 3);
         assert.equal(stage.getSize().height, 3);
         stage.setSize({
@@ -103,27 +103,23 @@ suite('Stage', function() {
         });
         assert.equal(stage.getSize().width, 4);
         assert.equal(stage.getSize().height, 5);
-        stage.setSize({
-            width: 6
-        });
+        stage.setWidth(6);
         assert.equal(stage.getSize().width, 6);
         assert.equal(stage.getSize().height, 5);
-        stage.setSize({
-            height: 7
-        });
+        stage.setHeight(7);
         assert.equal(stage.getSize().width, 6);
         assert.equal(stage.getSize().height, 7);
-        stage.setSize([8, 9]);
+        stage.setSize({width: 8, height: 9});
         assert.equal(stage.getSize().width, 8);
         assert.equal(stage.getSize().height, 9);
-        stage.setSize([1, 1, 10, 11]);
+        stage.setSize({width:10, height:11});
         assert.equal(stage.getSize().width, 10);
         assert.equal(stage.getSize().height, 11);
 
         layer.add(circle);
         stage.add(layer);
 
-        stage.setSize(333, 155);
+        stage.setSize({width:333, height:155});
 
         assert.equal(stage.getSize().width, 333);
         assert.equal(stage.getSize().height, 155);
@@ -169,9 +165,9 @@ suite('Stage', function() {
         layer.add(greenCircle);
         stage.add(layer);
 
-        assert.equal(stage.getIntersection(300, 100).getId(), 'greenCircle', 'shape should be greenCircle');
-        assert.equal(stage.getIntersection(380, 100).getId(), 'redCircle', 'shape should be redCircle');
-        assert.equal(stage.getIntersection(100, 100), null, 'shape should be null');
+        assert.equal(stage.getIntersection({x:300, y:100}).getId(), 'greenCircle', 'shape should be greenCircle');
+        assert.equal(stage.getIntersection({x:380, y:100}).getId(), 'redCircle', 'shape should be redCircle');
+        assert.equal(stage.getIntersection({x:100, y:100}), null, 'shape should be null');
 
 
     });
@@ -213,10 +209,10 @@ suite('Stage', function() {
         layer.add(greenCircle);
         stage.add(layer);
 
-        assert.equal(stage.getIntersection(370, 93).getId(), 'greenCircle', 'shape should be greenCircle');
+        assert.equal(stage.getIntersection({x:370, y:93}).getId(), 'greenCircle', 'shape should be greenCircle');
         // TODO: this passes in the browser but fails in phantomjs.  no idea why.
         //assert.equal(stage.getIntersection(371, 93).getId(), 'greenCircle', 'shape should be greenCircle');
-        assert.equal(stage.getIntersection(372, 93).getId(), 'redCircle', 'shape should be redCircle');
+        assert.equal(stage.getIntersection({x:372, y:93}).getId(), 'redCircle', 'shape should be redCircle');
 
         //console.log(layer.hitCanvas.context._context.getImageData(1, 1, 1, 1).data)
 
@@ -253,50 +249,50 @@ suite('Stage', function() {
         stage.add(layer);
 
         // test individual shapes
-        assert.equal(stage.getAllIntersections(266, 114).length, 1, '17) getAllIntersections should return one shape');
-        assert.equal(stage.getAllIntersections(266, 114)[0].getId(), 'greenCircle', '19) first intersection should be greenCircle');
+        assert.equal(stage.getAllIntersections({x: 266, y:114}).length, 1, '17) getAllIntersections should return one shape');
+        assert.equal(stage.getAllIntersections({x: 266, y:114})[0].getId(), 'greenCircle', '19) first intersection should be greenCircle');
 
-        assert.equal(stage.getAllIntersections(414, 115).length, 1, '18) getAllIntersections should return one shape');
-        assert.equal(stage.getAllIntersections(414, 115)[0].getId(), 'redCircle', '20) first intersection should be redCircle');
+        assert.equal(stage.getAllIntersections({x: 414, y:115}).length, 1, '18) getAllIntersections should return one shape');
+        assert.equal(stage.getAllIntersections({x: 414, y:115})[0].getId(), 'redCircle', '20) first intersection should be redCircle');
 
-        assert.equal(stage.getAllIntersections(350, 118).length, 2, '1) getAllIntersections should return two shapes');
-        assert.equal(stage.getAllIntersections(350, 118)[0].getId(), 'redCircle', '2) first intersection should be redCircle');
-        assert.equal(stage.getAllIntersections(350, 118)[1].getId(), 'greenCircle', '3) second intersection should be greenCircle');
+        assert.equal(stage.getAllIntersections({x: 350, y:118}).length, 2, '1) getAllIntersections should return two shapes');
+        assert.equal(stage.getAllIntersections({x: 350, y:118})[0].getId(), 'redCircle', '2) first intersection should be redCircle');
+        assert.equal(stage.getAllIntersections({x: 350, y:118})[1].getId(), 'greenCircle', '3) second intersection should be greenCircle');
 
         // hide green circle.  make sure only red circle is in result set
         greenCircle.hide();
         layer.draw();
 
-        assert.equal(stage.getAllIntersections(350, 118).length, 1, '4) getAllIntersections should return one shape');
-        assert.equal(stage.getAllIntersections(350, 118)[0].getId(), 'redCircle', '5) first intersection should be redCircle');
+        assert.equal(stage.getAllIntersections({x: 350, y:118}).length, 1, '4) getAllIntersections should return one shape');
+        assert.equal(stage.getAllIntersections({x: 350, y:118})[0].getId(), 'redCircle', '5) first intersection should be redCircle');
 
         // show green circle again.  make sure both circles are in result set
         greenCircle.show();
         layer.draw();
 
-        assert.equal(stage.getAllIntersections(350, 118).length, 2, '6) getAllIntersections should return two shapes');
-        assert.equal(stage.getAllIntersections(350, 118)[0].getId(), 'redCircle', '7) first intersection should be redCircle');
-        assert.equal(stage.getAllIntersections(350, 118)[1].getId(), 'greenCircle', '8) second intersection should be greenCircle');
+        assert.equal(stage.getAllIntersections({x: 350, y:118}).length, 2, '6) getAllIntersections should return two shapes');
+        assert.equal(stage.getAllIntersections({x: 350, y:118})[0].getId(), 'redCircle', '7) first intersection should be redCircle');
+        assert.equal(stage.getAllIntersections({x: 350, y:118})[1].getId(), 'greenCircle', '8) second intersection should be greenCircle');
 
         // hide red circle.  make sure only green circle is in result set
         redCircle.hide();
         layer.draw();
 
-        assert.equal(stage.getAllIntersections(350, 118).length, 1, '9) getAllIntersections should return one shape');
-        assert.equal(stage.getAllIntersections(350, 118)[0].getId(), 'greenCircle', '10) first intersection should be greenCircle');
+        assert.equal(stage.getAllIntersections({x: 350, y:118}).length, 1, '9) getAllIntersections should return one shape');
+        assert.equal(stage.getAllIntersections({x: 350, y:118})[0].getId(), 'greenCircle', '10) first intersection should be greenCircle');
 
         // show red circle again.  make sure both circles are in result set
         redCircle.show();
         layer.draw();
 
-        assert.equal(stage.getAllIntersections(350, 118).length, 2, '11) getAllIntersections should return two shapes');
-        assert.equal(stage.getAllIntersections(350, 118)[0].getId(), 'redCircle', '12) first intersection should be redCircle');
-        assert.equal(stage.getAllIntersections(350, 118)[1].getId(), 'greenCircle', '13) second intersection should be greenCircle');
+        assert.equal(stage.getAllIntersections({x: 350, y:118}).length, 2, '11) getAllIntersections should return two shapes');
+        assert.equal(stage.getAllIntersections({x: 350, y:118})[0].getId(), 'redCircle', '12) first intersection should be redCircle');
+        assert.equal(stage.getAllIntersections({x: 350, y:118})[1].getId(), 'greenCircle', '13) second intersection should be greenCircle');
 
         // test from layer
-        assert.equal(layer.getAllIntersections(350, 118).length, 2, '14) getAllIntersections should return two shapes');
-        assert.equal(layer.getAllIntersections(350, 118)[0].getId(), 'redCircle', '15) first intersection should be redCircle');
-        assert.equal(layer.getAllIntersections(350, 118)[1].getId(), 'greenCircle', '16) second intersection should be greenCircle');
+        assert.equal(layer.getAllIntersections({x: 350, y:118}).length, 2, '14) getAllIntersections should return two shapes');
+        assert.equal(layer.getAllIntersections({x: 350, y:118})[0].getId(), 'redCircle', '15) first intersection should be redCircle');
+        assert.equal(layer.getAllIntersections({x: 350, y:118})[1].getId(), 'greenCircle', '16) second intersection should be greenCircle');
 
     });
 
@@ -316,7 +312,7 @@ suite('Stage', function() {
         layer.add(circle);
         stage.add(layer);
 
-        stage.setScale(0.5);
+        stage.setScale({x:0.5, y:0.5});
 
         assert.equal(stage.getScale().x, 0.5, 'stage scale x should be 0.5');
         assert.equal(stage.getScale().y, 0.5, 'stage scale y should be 0.5');
@@ -336,7 +332,7 @@ suite('Stage', function() {
             strokeWidth: 4
         });
 
-        stage.setScale(0.5);
+        stage.setScale({x:0.5, y:0.5});
 
         assert.equal(stage.getScale().x, 0.5, 'stage scale x should be 0.5');
         assert.equal(stage.getScale().y, 0.5, 'stage scale y should be 0.5');

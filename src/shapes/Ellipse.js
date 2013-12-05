@@ -68,13 +68,9 @@
      * @name setRadius
      * @method
      * @memberof Kinetic.Ellipse.prototype
-     * @param {Object|Array} radius
-     *  radius can be a number, in which the ellipse becomes a circle,
-     *  it can be an object with an x and y component, or it
-     *  can be an array in which the first element is the x component
-     *  and the second element is the y component.  The x component
-     *  defines the horizontal radius and the y component
-     *  defines the vertical radius
+     * @param {Object} radius
+     * @param {Number} radius.x
+     * @param {Number} radius.y
      */
 
     /**
@@ -83,5 +79,37 @@
      * @method
      * @memberof Kinetic.Ellipse.prototype
      * @returns {Object}
+     */
+
+    /**
+     * set radius x
+     * @name setRadiusX
+     * @method
+     * @memberof Kinetic.Ellipse.prototype
+     * @param {Number} x
+     */
+
+    /**
+     * get radius x
+     * @name getRadiusX
+     * @method
+     * @memberof Kinetic.Ellipse.prototype
+     * @returns {Number}
+     */
+
+    /**
+     * set radius y
+     * @name setRadiusY
+     * @method
+     * @memberof Kinetic.Ellipse.prototype
+     * @param {Number} y
+     */
+
+    /**
+     * get radius y
+     * @name getRadiusY
+     * @method
+     * @memberof Kinetic.Ellipse.prototype
+     * @returns {Number}
      */
 })();
