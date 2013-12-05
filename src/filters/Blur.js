@@ -1,225 +1,375 @@
-(function () {
+/*
+ the Gauss filter
+ master repo: https://github.com/pavelpower/kineticjsGaussFilter/
+*/
+(function() {
+    /*
 
-  /**
-   * BlurX Filter. Blurs the image in the X direction (horizontally). It
-   *  performs w*h pixel reads, and w*h pixel writes.
-   * @function
-   * @author ippo615
-   * @memberof Kinetic.Filters
-   * @param {ImageData} src, the source image data (what will be transformed)
-   * @param {ImageData} dst, the destination image data (where it will be saved)
-   * @param {Object} opt
-   * @param {Number} [opt.blurWidth] how many neighboring pixels to will affect the
-   *  blurred pixel, default: 5
-   */
+     StackBlur - a fast almost Gaussian Blur For Canvas
 
-  var BlurX = function(src,dst,opt){
+     Version:   0.5
+     Author:    Mario Klingemann
+     Contact:   mario@quasimondo.com
+     Website:   http://www.quasimondo.com/StackBlurForCanvas
+     Twitter:   @quasimondo
 
-    var srcPixels = src.data,
-      dstPixels = dst.data,
-      xSize = src.width,
-      ySize = src.height,
-      i, m, x, y, k, tmp, r=0,g=0,b=0,a=0;
+     In case you find this class useful - especially in commercial projects -
+     I am not totally unhappy for a small donation to my PayPal account
+     mario@quasimondo.de
 
-    // DONT USE: kSize = opt.blurWidth || 5;
-    // HINT: consider when (opt.blurWidth = 0)
-    var kSize = 5;
-    if( opt.hasOwnProperty('blurWidth') ){
-      kSize = Math.round( Math.abs(opt.blurWidth) )+1;
+     Or support me on flattr:
+     https://flattr.com/thing/72791/StackBlur-a-fast-almost-Gaussian-Blur-Effect-for-CanvasJavascript
+
+     Copyright (c) 2010 Mario Klingemann
+
+     Permission is hereby granted, free of charge, to any person
+     obtaining a copy of this software and associated documentation
+     files (the "Software"), to deal in the Software without
+     restriction, including without limitation the rights to use,
+     copy, modify, merge, publish, distribute, sublicense, and/or sell
+     copies of the Software, and to permit persons to whom the
+     Software is furnished to do so, subject to the following
+     conditions:
+
+     The above copyright notice and this permission notice shall be
+     included in all copies or substantial portions of the Software.
+
+     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+     OTHER DEALINGS IN THE SOFTWARE.
+     */
+
+    function BlurStack() {
+        this.r = 0;
+        this.g = 0;
+        this.b = 0;
+        this.a = 0;
+        this.next = null;
     }
-    var kMid = Math.floor(kSize/2);
 
-    //console.info('Blur Width: '+kSize);
-    //console.info('Blur Middle: '+kMid);
+    var mul_table = [
+        512,512,456,512,328,456,335,512,405,328,271,456,388,335,292,512,
+        454,405,364,328,298,271,496,456,420,388,360,335,312,292,273,512,
+        482,454,428,405,383,364,345,328,312,298,284,271,259,496,475,456,
+        437,420,404,388,374,360,347,335,323,312,302,292,282,273,265,512,
+        497,482,468,454,441,428,417,405,394,383,373,364,354,345,337,328,
+        320,312,305,298,291,284,278,271,265,259,507,496,485,475,465,456,
+        446,437,428,420,412,404,396,388,381,374,367,360,354,347,341,335,
+        329,323,318,312,307,302,297,292,287,282,278,273,269,265,261,512,
+        505,497,489,482,475,468,461,454,447,441,435,428,422,417,411,405,
+        399,394,389,383,378,373,368,364,359,354,350,345,341,337,332,328,
+        324,320,316,312,309,305,301,298,294,291,287,284,281,278,274,271,
+        268,265,262,259,257,507,501,496,491,485,480,475,470,465,460,456,
+        451,446,442,437,433,428,424,420,416,412,408,404,400,396,392,388,
+        385,381,377,374,370,367,363,360,357,354,350,347,344,341,338,335,
+        332,329,326,323,320,318,315,312,310,307,304,302,299,297,294,292,
+        289,287,285,282,280,278,275,273,271,269,267,265,263,261,259];
 
-    var xEnd = xSize - kMid;
+    var shg_table = [
+        9, 11, 12, 13, 13, 14, 14, 15, 15, 15, 15, 16, 16, 16, 16, 17,
+        17, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19,
+        19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 20, 20, 20,
+        20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 21,
+        21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21,
+        21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22, 22, 22, 22, 22, 22,
+        22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22,
+        22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 22, 23,
+        23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+        23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+        23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23, 23,
+        23, 23, 23, 23, 23, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+        24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+        24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+        24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24,
+        24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24 ];
 
-    for (y = 0; y < ySize; y += 1) {
-      r=0;g=0;b=0;a=0;
-      for (x=-kMid; x<kMid; x+=1 ){
-        // Add the new
-        //if( y === 0 ){ console.info('Loading pixel at: '+((x+xSize)%xSize) ); }
-        i = (y * xSize + (x+xSize)%xSize ) * 4;
-        r += srcPixels[i+0];
-        g += srcPixels[i+1];
-        b += srcPixels[i+2];
-        a += srcPixels[i+3];
+    function filterGaussBlurRGBA( imageData, radius) {
+
+        var pixels = imageData.data,
+            width = imageData.width,
+            height = imageData.height;
+
+        var x, y, i, p, yp, yi, yw, r_sum, g_sum, b_sum, a_sum,
+            r_out_sum, g_out_sum, b_out_sum, a_out_sum,
+            r_in_sum, g_in_sum, b_in_sum, a_in_sum,
+            pr, pg, pb, pa, rbs;
+
+        var div = radius + radius + 1,
+            widthMinus1  = width - 1,
+            heightMinus1 = height - 1,
+            radiusPlus1  = radius + 1,
+            sumFactor = radiusPlus1 * ( radiusPlus1 + 1 ) / 2,
+            stackStart = new BlurStack(),
+            stackEnd = null,
+            stack = stackStart,
+            stackIn = null,
+            stackOut = null,
+            mul_sum = mul_table[radius],
+            shg_sum = shg_table[radius];
+
+        for ( i = 1; i < div; i++ ) {
+            stack = stack.next = new BlurStack();
+            if ( i == radiusPlus1 ) stackEnd = stack;
+        }
+
+        stack.next = stackStart;
+
+        yw = yi = 0;
+
+        for ( y = 0; y < height; y++ )
+        {
+            r_in_sum = g_in_sum = b_in_sum = a_in_sum = r_sum = g_sum = b_sum = a_sum = 0;
+
+            r_out_sum = radiusPlus1 * ( pr = pixels[yi] );
+            g_out_sum = radiusPlus1 * ( pg = pixels[yi+1] );
+            b_out_sum = radiusPlus1 * ( pb = pixels[yi+2] );
+            a_out_sum = radiusPlus1 * ( pa = pixels[yi+3] );
+
+            r_sum += sumFactor * pr;
+            g_sum += sumFactor * pg;
+            b_sum += sumFactor * pb;
+            a_sum += sumFactor * pa;
+
+            stack = stackStart;
+
+            for( i = 0; i < radiusPlus1; i++ )
+            {
+                stack.r = pr;
+                stack.g = pg;
+                stack.b = pb;
+                stack.a = pa;
+                stack = stack.next;
+            }
+
+            for( i = 1; i < radiusPlus1; i++ )
+            {
+                p = yi + (( widthMinus1 < i ? widthMinus1 : i ) << 2 );
+                r_sum += ( stack.r = ( pr = pixels[p])) * ( rbs = radiusPlus1 - i );
+                g_sum += ( stack.g = ( pg = pixels[p+1])) * rbs;
+                b_sum += ( stack.b = ( pb = pixels[p+2])) * rbs;
+                a_sum += ( stack.a = ( pa = pixels[p+3])) * rbs;
+
+                r_in_sum += pr;
+                g_in_sum += pg;
+                b_in_sum += pb;
+                a_in_sum += pa;
+
+                stack = stack.next;
+            }
+
+
+            stackIn = stackStart;
+            stackOut = stackEnd;
+            for ( x = 0; x < width; x++ )
+            {
+                pixels[yi+3] = pa = (a_sum * mul_sum) >> shg_sum;
+                if ( pa !== 0 )
+                {
+                    pa = 255 / pa;
+                    pixels[yi]   = ((r_sum * mul_sum) >> shg_sum) * pa;
+                    pixels[yi+1] = ((g_sum * mul_sum) >> shg_sum) * pa;
+                    pixels[yi+2] = ((b_sum * mul_sum) >> shg_sum) * pa;
+                } else {
+                    pixels[yi] = pixels[yi+1] = pixels[yi+2] = 0;
+                }
+
+                r_sum -= r_out_sum;
+                g_sum -= g_out_sum;
+                b_sum -= b_out_sum;
+                a_sum -= a_out_sum;
+
+                r_out_sum -= stackIn.r;
+                g_out_sum -= stackIn.g;
+                b_out_sum -= stackIn.b;
+                a_out_sum -= stackIn.a;
+
+                p =  ( yw + ( ( p = x + radius + 1 ) < widthMinus1 ? p : widthMinus1 ) ) << 2;
+
+                r_in_sum += ( stackIn.r = pixels[p]);
+                g_in_sum += ( stackIn.g = pixels[p+1]);
+                b_in_sum += ( stackIn.b = pixels[p+2]);
+                a_in_sum += ( stackIn.a = pixels[p+3]);
+
+                r_sum += r_in_sum;
+                g_sum += g_in_sum;
+                b_sum += b_in_sum;
+                a_sum += a_in_sum;
+
+                stackIn = stackIn.next;
+
+                r_out_sum += ( pr = stackOut.r );
+                g_out_sum += ( pg = stackOut.g );
+                b_out_sum += ( pb = stackOut.b );
+                a_out_sum += ( pa = stackOut.a );
+
+                r_in_sum -= pr;
+                g_in_sum -= pg;
+                b_in_sum -= pb;
+                a_in_sum -= pa;
+
+                stackOut = stackOut.next;
+
+                yi += 4;
+            }
+            yw += width;
+        }
+
+
+        for ( x = 0; x < width; x++ )
+        {
+            g_in_sum = b_in_sum = a_in_sum = r_in_sum = g_sum = b_sum = a_sum = r_sum = 0;
+
+            yi = x << 2;
+            r_out_sum = radiusPlus1 * ( pr = pixels[yi]);
+            g_out_sum = radiusPlus1 * ( pg = pixels[yi+1]);
+            b_out_sum = radiusPlus1 * ( pb = pixels[yi+2]);
+            a_out_sum = radiusPlus1 * ( pa = pixels[yi+3]);
+
+            r_sum += sumFactor * pr;
+            g_sum += sumFactor * pg;
+            b_sum += sumFactor * pb;
+            a_sum += sumFactor * pa;
+
+            stack = stackStart;
+
+            for( i = 0; i < radiusPlus1; i++ )
+            {
+                stack.r = pr;
+                stack.g = pg;
+                stack.b = pb;
+                stack.a = pa;
+                stack = stack.next;
+            }
+
+            yp = width;
+
+            for( i = 1; i <= radius; i++ )
+            {
+                yi = ( yp + x ) << 2;
+
+                r_sum += ( stack.r = ( pr = pixels[yi])) * ( rbs = radiusPlus1 - i );
+                g_sum += ( stack.g = ( pg = pixels[yi+1])) * rbs;
+                b_sum += ( stack.b = ( pb = pixels[yi+2])) * rbs;
+                a_sum += ( stack.a = ( pa = pixels[yi+3])) * rbs;
+
+                r_in_sum += pr;
+                g_in_sum += pg;
+                b_in_sum += pb;
+                a_in_sum += pa;
+
+                stack = stack.next;
+
+                if( i < heightMinus1 )
+                {
+                    yp += width;
+                }
+            }
+
+            yi = x;
+            stackIn = stackStart;
+            stackOut = stackEnd;
+            for ( y = 0; y < height; y++ )
+            {
+                p = yi << 2;
+                pixels[p+3] = pa = (a_sum * mul_sum) >> shg_sum;
+                if ( pa > 0 )
+                {
+                    pa = 255 / pa;
+                    pixels[p]   = ((r_sum * mul_sum) >> shg_sum ) * pa;
+                    pixels[p+1] = ((g_sum * mul_sum) >> shg_sum ) * pa;
+                    pixels[p+2] = ((b_sum * mul_sum) >> shg_sum ) * pa;
+                } else {
+                    pixels[p] = pixels[p+1] = pixels[p+2] = 0;
+                }
+
+                r_sum -= r_out_sum;
+                g_sum -= g_out_sum;
+                b_sum -= b_out_sum;
+                a_sum -= a_out_sum;
+
+                r_out_sum -= stackIn.r;
+                g_out_sum -= stackIn.g;
+                b_out_sum -= stackIn.b;
+                a_out_sum -= stackIn.a;
+
+                p = ( x + (( ( p = y + radiusPlus1) < heightMinus1 ? p : heightMinus1 ) * width )) << 2;
+
+                r_sum += ( r_in_sum += ( stackIn.r = pixels[p]));
+                g_sum += ( g_in_sum += ( stackIn.g = pixels[p+1]));
+                b_sum += ( b_in_sum += ( stackIn.b = pixels[p+2]));
+                a_sum += ( a_in_sum += ( stackIn.a = pixels[p+3]));
+
+                stackIn = stackIn.next;
+
+                r_out_sum += ( pr = stackOut.r );
+                g_out_sum += ( pg = stackOut.g );
+                b_out_sum += ( pb = stackOut.b );
+                a_out_sum += ( pa = stackOut.a );
+
+                r_in_sum -= pr;
+                g_in_sum -= pg;
+                b_in_sum -= pb;
+                a_in_sum -= pa;
+
+                stackOut = stackOut.next;
+
+                yi += width;
+            }
+        }
+    }
+
+    /**
+     * Blur Filter
+     * @function
+     * @memberof Kinetic.Filters
+     * @param {Object} imageData
+     */
+
+    var Blur = function(src,dst,opt){
+        var radius = opt.filterRadius | 0;
+
+        // If a different desntination image data is supplied
+        // copy the source and perform the blur on the destination
+        var i;
+        if( dst !== src ){
+            i = src.data.length;
+            while( i-- ){
+                dst.data[i] = src.data[i];
+            }
+        }
+
+        if( radius > 0 ){
+            filterGaussBlurRGBA(dst,radius);
+        }
+    };
+    Kinetic.Filters.Blur = function(src,dst,opt){
+      if( this === Kinetic.Filters ){
+        Blur(src, dst||src, opt );
+      }else{
+        Blur.call(this, src, dst||src, opt || {
+          filterRadius: this.getFilterRadius()
+        });
       }
+    };
 
-      for (x = 0; x < xSize; x += 1) {
-        //if( y === 0 ){ console.info('Added pixel at: '+(x+kMid)); }
-        //if( y === 0 ){ console.info('Recorded pixel at: '+x); }
-        //if( y === 0 ){ console.info('Removed pixel at: '+((x-kMid+xSize)%xSize) ); }
-        // Add the new
-        i = (y * xSize + (x+kMid)%xSize ) * 4;
-        r += srcPixels[i+0];
-        g += srcPixels[i+1];
-        b += srcPixels[i+2];
-        a += srcPixels[i+3];
-        // Store the result
-        i = (y * xSize + x) * 4;
-        dstPixels[i+0] = r/kSize;
-        dstPixels[i+1] = g/kSize;
-        dstPixels[i+2] = b/kSize;
-        dstPixels[i+3] = a/kSize;
-        // Subtract the old
-        i = (y * xSize + (x-kMid+xSize)%xSize ) * 4;
-        r -= srcPixels[i+0];
-        g -= srcPixels[i+1];
-        b -= srcPixels[i+2];
-        a -= srcPixels[i+3];
-      }
-
-    }
-
-  };
-
-  /**
-   * BlurY Filter. Blurs the image in the Y direction (vertically). It
-   *  performs w*h pixel reads, and w*h pixel writes.
-   * @function
-   * @author ippo615
-   * @memberof Kinetic.Filters
-   * @param {ImageData} src, the source image data (what will be transformed)
-   * @param {ImageData} dst, the destination image data (where it will be saved)
-   * @param {Object} opt
-   * @param {Number} [opt.blurHeight] how many neighboring pixels to will affect the
-   *  blurred pixel, default: 5
-   */
-
-  var BlurY = function(src,dst,opt){
-
-    var srcPixels = src.data,
-      dstPixels = dst.data,
-      xSize = src.width,
-      ySize = src.height,
-      i, m, x, y, k, tmp, r=0,g=0,b=0,a=0;
-
-    var kSize = 5;
-    if( opt.hasOwnProperty('blurHeight') ){
-      kSize = Math.round( Math.abs(opt.blurHeight) )+1;
-    }
-    var kMid = Math.floor(kSize/2);
-
-    var yEnd = ySize - kMid;
-
-    for (x = 0; x < xSize; x += 1) {
-      r=0;g=0;b=0;a=0;
-      for (y=-kMid; y<kMid; y+=1 ){
-        // Add the new
-        i = ((y+ySize)%ySize * xSize + x ) * 4;
-        r += srcPixels[i+0];
-        g += srcPixels[i+1];
-        b += srcPixels[i+2];
-        a += srcPixels[i+3];
-      }
-
-      for (y = 0; y < ySize; y += 1) {
-        // Add the new
-        i = ((y+kMid+ySize)%ySize * xSize + x ) * 4;
-        r += srcPixels[i+0];
-        g += srcPixels[i+1];
-        b += srcPixels[i+2];
-        a += srcPixels[i+3];
-        // Store the result
-        i = (y * xSize + x) * 4;
-        dstPixels[i+0] = r/kSize;
-        dstPixels[i+1] = g/kSize;
-        dstPixels[i+2] = b/kSize;
-        dstPixels[i+3] = a/kSize;
-        // Subtract the old
-        i = ((y-kMid+ySize)%ySize * xSize + x ) * 4;
-        r -= srcPixels[i+0];
-        g -= srcPixels[i+1];
-        b -= srcPixels[i+2];
-        a -= srcPixels[i+3];
-      }
-
-    }
-
-  };
-
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'blurWidth', 5);
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'blurHeight', 5);
-
-  Kinetic.Filters.BlurX = function(src,dst,opt){
-    if( this === Kinetic.Filters ){
-      BlurX(src, dst||src, opt );
-    }else{
-      BlurX.call(this, src, dst||src, opt || {
-        blurWidth: this.getBlurWidth()
-      });
-    }
-  };
-  Kinetic.Filters.BlurY = function(src,dst,opt){
-    if( this === Kinetic.Filters ){
-      BlurY(src, dst||src, opt );
-    }else{
-      BlurY.call(this, src, dst||src, opt || {
-        blurHeight: this.getBlurHeight()
-      });
-    }
-  };
+    Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterRadius', 0);
 
     /**
-    * get filter blur width.  Returns the width of a blurred pixel. Must be
-    * an integer greater than 0. 
-    * @name getBlurWidth
-    * @method
-    * @memberof Kinetic.Image.prototype
-    */
-
-    /**
-    * set filter blur width.
-    * @name setBlurWidth
-    * @method
-    * @memberof Kinetic.Image.prototype
-    */
-
-    /**
-    * get filter blur height.  Returns the height of a blurred pixel. Must be
-    * an integer greater than 0. 
-    * @name getBlurHeight
-    * @method
-    * @memberof Kinetic.Image.prototype
-    */
-
-    /**
-    * set filter blur height.
-    * @name setBlurHeight
-    * @method
-    * @memberof Kinetic.Image.prototype
-    */
-
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterRadius', 5);
-
-  Kinetic.Filters.Blur  = Kinetic.Util._FilterWrapSingleBuffer(function(src,dst,opt){
-    if( this === Kinetic.Filters ){
-      BlurX(src, src, opt );
-      BlurY(src, dst||src, opt );
-    }else{
-      opt = opt || {
-        blurHeight: this.getFilterRadius(),
-        blurWidth: this.getFilterRadius()
-      };
-      BlurX.call(this, src, src, opt);
-      BlurY.call(this, src, dst||src, opt);
-    }
-  });
-
-    /**
-    * get filter radius.  Returns the radius of a blurred pixel. The blur
-    * is applied horzontally and vertically.
+    * get filter radius.  Returns the radius for Gaussian blur filter.
     * @name getFilterRadius
     * @method
     * @memberof Kinetic.Image.prototype
     */
 
     /**
-    * set filter radius.
+    * get filter radius.  Set the radius for Gaussian blur filter.
     * @name setFilterRadius
     * @method
     * @memberof Kinetic.Image.prototype
     */
-  
 })();
