@@ -98,7 +98,7 @@
         pixelHeight: this.getPixelHeight()
       });
     }
-  };//Kinetic.Util._FilterWrapSingleBuffer(Pixelate);
+  };
 
     /**
     * get filter pixel width.  Returns the width of a pixelated pixel. Must be

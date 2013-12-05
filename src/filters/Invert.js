@@ -26,5 +26,11 @@
     }
   };
 
-  Kinetic.Filters.Invert = Kinetic.Util._FilterWrapSingleBuffer(Invert);
+  Kinetic.Filters.Invert = function(src,dst,opt){
+    if( this === Kinetic.Filters ){
+      Invert(src, dst||src, opt );
+    }else{
+      Invert.call(this, src, dst||src, {} );
+    }
+  };
 })();
