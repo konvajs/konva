@@ -1,53 +1,5 @@
 Test.Modules.Tween = {
-    'tween spline': function(containerId) {
-        var stage = new Kinetic.Stage({
-            container: containerId,
-            width: 578,
-            height: 200
-        });
-        var layer = new Kinetic.Layer();
 
-        var spline = new Kinetic.Spline({
-            points: [
-                73, 160,
-                340, 23,
-                500, 109,
-                300, 109
-            ],
-            stroke: 'blue',
-            strokeWidth: 10,
-            lineCap: 'round',
-            lineJoin: 'round',
-            draggable: true,
-            tension: 1
-        });
-
-        layer.add(spline);
-        stage.add(layer);
-
-        var tween = new Kinetic.Tween({
-            node: spline,
-            duration: 1,
-           //x: 100,
-
-            points: [
-                200, 160,
-                200, 23,
-                500, 109,
-                100, 10
-            ],
-            easing: Kinetic.Easings.BackEaseOut
-        });
-
-        stage.getContent().addEventListener('mouseover', function() {
-          tween.play();
-        });
-
-        stage.getContent().addEventListener('mouseout', function() {
-          tween.reverse();
-        });
-
-    },
     'tween clipping region': function(containerId) {
         var stage = new Kinetic.Stage({
             container: containerId,
