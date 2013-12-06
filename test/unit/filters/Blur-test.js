@@ -189,19 +189,17 @@ suite('Blur', function() {
     });
 
     // ======================================================
-    test('fast blur', function (done) {
+    test('half layer gaussian blur', function (done) {
         var stage = addStage();
 
         var shapesLayer = new Kinetic.Layer();
 
         // The important line!
         shapesLayer.on('draw', function () {
-          var BLURAMOUNT = 10;
-          var imageData = this.getContext().getImageData(0,0,this.getCanvas().width,this.getCanvas().height);
+          var imageData = this.getContext().getImageData(0,0,this.getCanvas().width/2,this.getCanvas().height);
           var scratchData = this.getContext().createImageData(imageData); // only size copied
-          Kinetic.Filters.BlurX(imageData,scratchData,{blurWidth:BLURAMOUNT});
-          Kinetic.Filters.BlurY(scratchData,imageData,{blurHeight:BLURAMOUNT});
-          this.getContext().putImageData(imageData,0,0);
+          Kinetic.Filters.Blur(imageData,scratchData,{filterRadius:24});
+          this.getContext().putImageData(scratchData,0,0);
         });
 
         var triangle = new Kinetic.RegularPolygon({

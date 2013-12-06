@@ -39,6 +39,7 @@ module.exports = function(grunt) {
     'src/filters/Brighten.js', 
     'src/filters/Invert.js', 
     'src/filters/Blur.js', 
+    'src/filters/QuickBlur.js', 
     'src/filters/Mask.js',
     'src/filters/ColorPack.js',
     'src/filters/ConvolvePack.js',

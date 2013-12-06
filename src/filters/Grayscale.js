@@ -25,6 +25,12 @@
     }
   };
 
-  Kinetic.Filters.Grayscale = Kinetic.Util._FilterWrapSingleBuffer(Grayscale);
+  Kinetic.Filters.Grayscale = function(src,dst,opt){
+    if( this === Kinetic.Filters ){
+      Grayscale(src, dst||src, opt );
+    }else{
+      Grayscale.call(this, src, dst||src, {} );
+    }
+  };
 
 })();
