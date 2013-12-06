@@ -1354,4 +1354,43 @@ suite('Container', function() {
 
         layer.draw();
     });
+
+  // ======================================================
+  test.only('Kinetic.enableNestedTransforms flag', function(){
+    var stage = addStage();
+
+    var layer = new Kinetic.Layer();
+
+    var rect = new Kinetic.Rect({
+      x: 100,
+      y: 50,
+      width: 100,
+      height: 50,
+      fill: 'green',
+      stroke: 'blue'
+    });
+
+    layer.add(rect);
+    stage.add(layer);
+
+    assert.equal(rect.getX(), 100);
+    assert.equal(rect.getY(), 50);
+
+    var trace = layer.getContext().getTrace();
+    //console.log(trace);
+    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=2;strokeStyle=blue;stroke();restore();');
+
+    var relaxedTrace = layer.getContext().getTrace(true);
+    //console.log(relaxedTrace);
+    assert.equal(relaxedTrace, 'clearRect();save();transform();beginPath();rect();closePath();fillStyle;fill();lineWidth;strokeStyle;stroke();restore();');
+  
+    assert.equal(stage._enableNestedTransforms, false, 'enableNestedTransforms should be false');
+
+    // changing any container transform property should permanately set the _enableNestedTransforms flag to true
+    layer.setX(1);
+    layer.setX(0);
+
+    assert.equal(stage._enableNestedTransforms, true, 'enableNestedTransforms should be true');
+
+  });
 });

@@ -42,7 +42,7 @@
         X = 'x',
         Y = 'y',
 
-        transformChangeStr = [
+        TRANSFORM_CHANGE_STR = [
             'xChange.kinetic',
             'yChange.kinetic',
             'scaleXChange.kinetic',
@@ -64,7 +64,7 @@
             this.setAttrs(config);
 
             // event bindings for cache handling
-            this.on(transformChangeStr, function() {
+            this.on(TRANSFORM_CHANGE_STR, function() {
                 this._clearCache(TRANSFORM);
                 that._clearSelfAndChildrenCache(ABSOLUTE_TRANSFORM);
             });
@@ -1251,7 +1251,6 @@
          * @memberof Kinetic.Node.prototype
          */
         getTransform: function() {
-            //return this._getTransform();
             return this._getCache(TRANSFORM, this._getTransform);
         }
     });
