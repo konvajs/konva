@@ -64,28 +64,48 @@ suite('Color Pack', function() {
     // ======================================================
     test('colorize transparancy', function(done) {
         var stage = addStage();
+        var layer = new Kinetic.Layer();
 
-        var imageObj = new Image();
-        imageObj.onload = function() {
+        var colors = [
+            [255,0,0],
+            [255,128,0],
+            [255,255,0],
+            [0,255,0],
+            [0,255,128],
+            [0,255,255],
+            [0,0,255],
+            [128,0,255],
+            [255,0,255],
+            [0,0,0],
+            [128,128,128],
+            [255,255,255]
+        ];
+        var i,l = colors.length;
+        var nAdded = 0;
+        for( i=0; i<l; i+=1 ){
+            var imageObj = new Image();
+            imageObj.onload = (function(color,x){ return function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
-                x: 10,
-                y: 10,
-                image: imageObj,
-                draggable: true
-            });
+                var darth = new Kinetic.Image({
+                    x: x,
+                    y: 32,
+                    image: imageObj,
+                    draggable: true
+                });
+                layer.add(darth);
 
-            layer.add(darth);
-            stage.add(layer);
+                darth.setFilter(Kinetic.Filters.Colorize);
+                darth.setFilterColorizeColor(color);
 
-            darth.setFilter(Kinetic.Filters.Colorize);
-            darth.setFilterColorizeColor([0,128,255]);
-            layer.draw();
-
-            done();
-        };
-        imageObj.src = 'assets/lion.png';
+                nAdded += 1;
+                if( nAdded >= l ){
+                    stage.add(layer);
+                    layer.draw();
+                    done();
+                }
+            };})(colors[i],-64+i/l*stage.getWidth());
+            imageObj.src = 'assets/lion.png';
+        }
 
     });
 
