@@ -86,6 +86,7 @@
     }
   };
 
+  // For compatibility with older hue shift stuff
   Kinetic.Filters.ShiftHue = function(src,dst,opt){
     if( this === Kinetic.Filters ){
       HSV(src, dst||src, opt );
@@ -98,65 +99,65 @@
 
   Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterHueShiftDeg', 0);
 
-    /**
-    * get filter hue.  Returns the hue shift for the HSV filter.
-    * 0 is no change, 359 is the maximum shift.
-    * @name getFilterHue
-    * @method
-    * @memberof Kinetic.Image.prototype
-    */
+  /**
+   * get filter hue.  Returns the hue shift for the HSV filter.
+   * 0 is no change, 359 is the maximum shift.
+   * @name getFilterHue
+   * @method
+   * @memberof Kinetic.Image.prototype
+   */
 
-    /**
-    * set filter hue.  Sets the hue shift for the HSV filter.
-    * 0 is no change, 359 is the maximum shift.
-    * @name setFilterHue
-    * @method
-    * @memberof Kinetic.Image.prototype
-    */
+  /**
+   * set filter hue.  Sets the hue shift for the HSV filter.
+   * 0 is no change, 359 is the maximum shift.
+   * @name setFilterHue
+   * @method
+   * @memberof Kinetic.Image.prototype
+   */
 
-    /**
-    * get filter saturation.  Returns the saturation scale for the HSV
-    * filter. 1 is no change, 0.5 halves the saturation, 2.0 doubles, etc..
-    * @name getFilterSaturation
-    * @method
-    * @memberof Kinetic.Image.prototype
-    */
+  /**
+   * get filter saturation.  Returns the saturation scale for the HSV
+   * filter. 1 is no change, 0.5 halves the saturation, 2.0 doubles, etc..
+   * @name getFilterSaturation
+   * @method
+   * @memberof Kinetic.Image.prototype
+   */
 
-    /**
-    * set filter saturation.  Set the saturation scale for the HSV
-    * filter. 1 is no change, 0.5 halves the saturation, 2.0 doubles, etc..
-    * @name setFilterSaturation
-    * @method
-    * @memberof Kinetic.Image.prototype
-    */
+  /**
+   * set filter saturation.  Set the saturation scale for the HSV
+   * filter. 1 is no change, 0.5 halves the saturation, 2.0 doubles, etc..
+   * @name setFilterSaturation
+   * @method
+   * @memberof Kinetic.Image.prototype
+   */
 
-    /**
-    * get filter value.  Returns the value scale for the HSV
-    * filter. 1 is no change, 0.5 halves the value, 2.0 doubles, etc..
-    * @name getFilterValue
-    * @method
-    * @memberof Kinetic.Image.prototype
-    */
+  /**
+   * get filter value.  Returns the value scale for the HSV
+   * filter. 1 is no change, 0.5 halves the value, 2.0 doubles, etc..
+   * @name getFilterValue
+   * @method
+   * @memberof Kinetic.Image.prototype
+   */
 
-    /**
-    * set filter value.  Set the value scale for the HSV
-    * filter. 1 is no change, 0.5 halves the value, 2.0 doubles, etc..
-    * @name setFilterValue
-    * @method
-    * @memberof Kinetic.Image.prototype
-    */
-
-
+  /**
+   * set filter value.  Set the value scale for the HSV
+   * filter. 1 is no change, 0.5 halves the value, 2.0 doubles, etc..
+   * @name setFilterValue
+   * @method
+   * @memberof Kinetic.Image.prototype
+   */
 
 
-    /**
-     * Colorize Filter.
-     *  colorizes the image so that it is just varying shades of the specified color
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
-     * @author ippo615
-     */
+
+
+  /**
+   * Colorize Filter.
+   *  colorizes the image so that it is just varying shades of the specified color
+   * @function
+   * @memberof Kinetic.Filters
+   * @param {Object} imageData
+   * @author ippo615
+   */
   var Colorize = function (src, dst, opt) {
     var srcPixels = src.data,
       dstPixels = dst.data,
@@ -183,21 +184,19 @@
     }
   };
 
-    Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterColorizeColor', [255,0,0] );
-    /**
-     * Gets the colorizing color.
-     * @name getFilterColorizeColor
-     * @method
-     * @memberof Kinetic.Image.prototype
-     */
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterColorizeColor', [255,0,0] );
+  /**
+   * Gets the colorizing color.
+   * @name getFilterColorizeColor
+   * @method
+   * @memberof Kinetic.Image.prototype
+   */
 
-    /**
-     * Gets the colorizing color. Should be an array [r,g,b] ie [255,0,128].
-     *  note that white [255,255,255] black [0,0,0] and greys [r,r,r] get treated as red.
-     * @name setFilterColorizeColor
-     * @method
-     * @memberof Kinetic.Image.prototype
-     */
+  /**
+   * Sets the colorizing color. Should be an array [r,g,b] ie [255,0,128] is a magenta color.
+   * @name setFilterColorizeColor
+   * @method
+   * @memberof Kinetic.Image.prototype
+   */
 
 })();
-
