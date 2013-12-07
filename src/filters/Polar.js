@@ -2,7 +2,8 @@
 
   /**
    * ToPolar Filter. Converts image data to polar coordinates. Performs 
-   *  w*h*4 pixel reads and w*h pixel writes.
+   *  w*h*4 pixel reads and w*h pixel writes. The r axis is placed along
+   *  what would be the y axis and the theta axis along the x axis.
    * @function
    * @author ippo615
    * @memberof Kinetic.Filters
@@ -32,7 +33,7 @@
     rad = Math.sqrt( x*x + y*y );
     rMax = (rad > rMax)?rad:rMax;
 
-    // We'll be uisng x as the radius, and y as the angle (theta=t)
+    // We'll be uisng y as the radius, and x as the angle (theta=t)
     var rSize = ySize,
       tSize = xSize,
       radius, theta;
