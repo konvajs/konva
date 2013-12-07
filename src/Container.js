@@ -1,8 +1,28 @@
 (function() {
+    var SPACE = '',
+        TRANSFORM_CHANGE_STR = [
+        'xChange.kinetic',
+        'yChange.kinetic',
+        'scaleXChange.kinetic',
+        'scaleYChange.kinetic',
+        'skewXChange.kinetic',
+        'skewYChange.kinetic',
+        'rotationChange.kinetic',
+        'offsetXChange.kinetic',
+        'offsetYChange.kinetic'
+    ].join(SPACE);
+
     Kinetic.Util.addMethods(Kinetic.Container, {
         __init: function(config) {
             this.children = new Kinetic.Collection();
             Kinetic.Node.call(this, config);
+
+            this.on(TRANSFORM_CHANGE_STR, function() {
+                var stage = this.getStage();
+                if (stage) {
+                    stage._enableNestedTransforms = true;
+                }
+            });
         },
         /**
          * returns a {@link Kinetic.Collection} of direct descendant nodes

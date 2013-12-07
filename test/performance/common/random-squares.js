@@ -97,8 +97,7 @@
               _context.closePath();
               _context.fillStyle = 'red';
               _context.fill();
-            },
-            listening: false
+            }
           });
      
         } else {

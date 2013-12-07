@@ -224,7 +224,15 @@
             }
         },
         _applyAncestorTransforms: function(shape) {
-            var m = shape.getAbsoluteTransform().getMatrix();
+            var stage = shape.getStage(),
+                m;
+
+            if (stage && stage._enableNestedTransforms) {
+                m = shape.getAbsoluteTransform().getMatrix();
+            }
+            else {
+                m = shape.getTransform().getMatrix();
+            }
             this.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
         },
         _clip: function(container) {

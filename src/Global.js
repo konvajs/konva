@@ -42,7 +42,7 @@ var Kinetic = {};
         shapes: {},
         listenClickTap: false,
         inDblClickWindow: false,
-        
+
         // configurations
         enableTrace: false,
         traceArrMax: 100,

@@ -103,16 +103,10 @@
             start = node.getAttr(key);
 
             if (Kinetic.Util._isArray(end)) {
-                end = Kinetic.Util._getPoints(end);
                 diff = [];
                 len = end.length;
                 for (n=0; n<len; n++) {
-                    startVal = start[n];
-                    endVal = end[n];
-                    diff.push({
-                        x: endVal.x - startVal.x,
-                        y: endVal.y - startVal.y
-                    });
+                    diff.push(end[n] - start[n]);
                 }
 
             }
@@ -140,12 +134,7 @@
                     newVal = [];
                     len = start.length;
                     for (n=0; n<len; n++) {
-                        startVal = start[n];
-                        diffVal = diff[n];
-                        newVal.push({
-                            x: startVal.x + (diffVal.x * i),
-                            y: startVal.y + (diffVal.y * i)
-                        });
+                        newVal.push(start[n] + (diff[n] * i));
                     }
                 }
                 else {

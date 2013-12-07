@@ -61,6 +61,7 @@
             this._id = Kinetic.idCounter++;
             this._buildDOM();
             this._bindContentEvents();
+            this._enableNestedTransforms = false;
             Kinetic.stages.push(this);
         },
         _validateAdd: function(child) {

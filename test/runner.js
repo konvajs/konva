@@ -7,6 +7,17 @@ var assert = chai.assert,
     assertionCount = 0,
     assertions = document.createElement('em');
 
+window.requestAnimFrame = (function(callback){
+  return window.requestAnimationFrame ||
+  window.webkitRequestAnimationFrame ||
+  window.mozRequestAnimationFrame ||
+  window.oRequestAnimationFrame ||
+  window.msRequestAnimationFrame ||
+  function(callback){
+      window.setTimeout(callback, 1000 / 30);
+  };
+})();
+      
 function init() {
   // assert extenders so that we can count assertions
   assert = function() {
@@ -38,12 +49,36 @@ function init() {
       mochaStats.appendChild(li);
     }
   }
+
+  addStats();
 }
 
 
 
 
 Kinetic.enableTrace = true;
+
+function addStats() {
+    stats = new Stats();
+    stats.setMode(0);
+    stats.domElement.style.position = 'fixed';
+    stats.domElement.style.left = '0px';
+    stats.domElement.style.top = '0px';
+    document.getElementsByTagName('body')[0].appendChild( stats.domElement );
+
+
+    function animate(lastTime){
+      stats.begin();
+
+      requestAnimFrame(function(){
+        stats.end();
+        animate(lastTime);
+      });
+    }
+
+    animate();
+}
+
 
 
 function addStage() {
