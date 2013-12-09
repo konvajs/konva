@@ -189,6 +189,7 @@
                     b = obj && obj.b !== undefined ? obj.b | 0 : this.getAttr(attr + UPPER_B);
 
                 this._setAttr(attr, HASH + Kinetic.Util._rgbToHex(r, g, b));
+                return this;
             };
         },
 
@@ -199,19 +200,22 @@
                 var obj = {};
                 obj[c] = val;
                 this[prefix + RGB](obj);
+                return this;
             };
         },
         addPointsSetter: function(constructor, attr) {
             var method = SET + Kinetic.Util._capitalize(attr);
             constructor.prototype[method] = function(val) {
                 this._setAttr('points', val);
+                return this;
             };
         },
         addSetter: function(constructor, attr) {
             var method = SET + Kinetic.Util._capitalize(attr);
 
             constructor.prototype[method] = function(val) {
-                this._setAttr(attr, val);   
+                this._setAttr(attr, val); 
+                return this;  
             };
         },
         addPointSetter: function(constructor, attr) {
@@ -235,6 +239,8 @@
                   }
                   this._fireChangeEvent(attr, oldVal, pos);
                 }
+
+                return this;
             };
         },
         addBoxSetter: function(constructor, attr) {
@@ -265,6 +271,8 @@
                   }
                   this._fireChangeEvent(attr, oldVal, box);
                 }
+
+                return this;
             };
         },
         addRotationSetter: function(constructor, attr) {
@@ -274,25 +282,12 @@
             // radians
             constructor.prototype[method] = function(val) {
                 this._setAttr(attr, val);
+                return this;
             };
             // degrees
             constructor.prototype[method + DEG] = function(deg) {
                 this._setAttr(attr, Kinetic.Util._degToRad(deg));
-            };
-        },
-
-        // add adders
-        addPointAdder: function(constructor, attr) {
-            var that = this,
-                baseMethod = ADD + Kinetic.Util._removeLastLetter(Kinetic.Util._capitalize(attr));
-
-            constructor.prototype[baseMethod] = function(pos) {
-                var oldVal = this.attrs[attr];
-
-                if (pos) {
-                  this.attrs[attr].push(pos);
-                  this._fireChangeEvent(attr, oldVal, pos);
-                }
+                return this;
             };
         }
     };

@@ -84,11 +84,13 @@
         * clear cached variables
         * @method
         * @memberof Kinetic.Node.prototype
+        * @returns {Kinetic.Node}
         * @example
         * node.clearCache();
         */
         clearCache: function() {
             this.cache = {};
+            return this;
         },
         _clearCache: function(attr){
             delete this.cache[attr];
@@ -146,6 +148,7 @@
          * @memberof Kinetic.Node.prototype
          * @param {String} evtStr e.g. 'click', 'mousedown touchstart', 'mousedown.foo touchstart.foo'
          * @param {Function} handler The handler function is passed an event object
+         * @returns {Kinetic.Node}
          * @example
          * // add click listener<br>
          * node.on('click', function() {<br>
@@ -222,6 +225,7 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {String} evtStr e.g. 'click', 'mousedown touchstart', '.foobar'
+         * @returns {Kinetic.Node}
          * @example
          * // remove listener<br>
          * node.off('click');<br><br>
@@ -260,6 +264,7 @@
          * remove self from parent, but don't destroy
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Kinetic.Node}
          * @example
          * node.remove();
          */
@@ -301,6 +306,7 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {String} attr
+         * @returns {Integer|String|Object|Array}
          * @example
          * var x = node.getAttr('x');
          */
@@ -318,6 +324,7 @@
         * get ancestors
         * @method
         * @memberof Kinetic.Node.prototype
+        * @returns {Kinetic.Collection}
         * @example
         * shape.getAncestors().each(function(node) {
         *   console.log(node.getId());
@@ -338,6 +345,7 @@
          * get attrs object literal
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Object}
          */
         getAttrs: function() {
             return this.attrs || {};
@@ -347,6 +355,7 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {Object} config object containing key value pairs
+         * @returns {Kinetic.Node}
          * @example
          * node.setAttrs({<br>
          *   x: 5,<br>
@@ -437,6 +446,7 @@
          *  is invisible, this means that the node is also invisible
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Boolean}
          */
         isVisible: function() {
           return this._getCache(VISIBLE, this._isVisible);
@@ -454,6 +464,7 @@
          * show node
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Kinetic.Node}
          */
         show: function() {
             this.setVisible(true);
@@ -463,6 +474,7 @@
          * hide node.  Hidden nodes are no longer detectable
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Kinetic.Node}
          */
         hide: function() {
             this.setVisible(false);
@@ -472,6 +484,7 @@
          * get zIndex relative to the node's siblings who share the same parent
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Integer}
          */
         getZIndex: function() {
             return this.index || 0;
@@ -481,6 +494,7 @@
          *  and ancestor indices
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Integer}
          */
         getAbsoluteZIndex: function() {
             var level = this.getLevel(),
@@ -520,6 +534,7 @@
          *  be >= 2
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Integer}
          */
         getLevel: function() {
             var level = 0,
@@ -538,6 +553,7 @@
          * @param {Object} pos
          * @param {Number} pos.x
          * @param {Nubmer} pos.y
+         * @returns {Kinetic.Node}
          * @example
          * // set x and <br>
          * node.setPosition({<br>
@@ -554,6 +570,7 @@
          * get node position relative to parent
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Object}
          */
         getPosition: function() {
             return {
@@ -565,6 +582,7 @@
          * get absolute position relative to the top left corner of the stage container div
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Object}
          */
         getAbsolutePosition: function() {
             var absoluteMatrix = this.getAbsoluteTransform().getMatrix(),
@@ -585,6 +603,7 @@
          * @param {Object} pos
          * @param {Number} pos.x
          * @param {Number} pos.y
+         * @returns {Kinetic.Node}
          */
         setAbsolutePosition: function(pos) {
             var trans = this._clearTransform(),
@@ -655,6 +674,7 @@
          * @param {Object} change
          * @param {Number} change.x
          * @param {Number} change.y
+         * @returns {Kinetic.Node}
          * @example
          * // move node in x direction by 1px and y direction by 2px<br>
          * node.move({<br>
@@ -703,6 +723,7 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {Number} theta
+         * @returns {Kinetic.Node}
          */
         rotate: function(theta) {
             this.setRotation(this.getRotation() + theta);
@@ -713,6 +734,7 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {Number} deg
+         * @returns {Kinetic.Node}
          */
         rotateDeg: function(deg) {
             this.setRotation(this.getRotation() + Kinetic.Util._degToRad(deg));
@@ -722,6 +744,7 @@
          * move node to the top of its siblings
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Boolean}
          */
         moveToTop: function() {
             var index = this.index;
@@ -734,6 +757,7 @@
          * move node up
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Boolean}
          */
         moveUp: function() {
             var index = this.index,
@@ -750,6 +774,7 @@
          * move node down
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Boolean}
          */
         moveDown: function() {
             var index = this.index;
@@ -765,6 +790,7 @@
          * move node to the bottom of its siblings
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Boolean}
          */
         moveToBottom: function() {
             var index = this.index;
@@ -781,6 +807,7 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {Integer} zIndex
+         * @returns {Kinetic.Node}
          */
         setZIndex: function(zIndex) {
             var index = this.index;
@@ -793,6 +820,7 @@
          * get absolute opacity
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Number}
          */
         getAbsoluteOpacity: function() {
             return this._getCache(ABSOLUTE_OPACITY, this._getAbsoluteOpacity);
@@ -809,6 +837,7 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {Container} newContainer
+         * @returns {Kinetic.Node}
          * @example
          * // move node from current layer into layer2<br>
          * node.moveTo(layer2);
@@ -822,6 +851,7 @@
          * convert Node into an object for serialization.  Returns an object.
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Object}
          */
         toObject: function() {
             var type = Kinetic.Util,
@@ -850,6 +880,7 @@
          * convert Node into a JSON string.  Returns a JSON string.
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {String}}
          */
         toJSON: function() {
             return JSON.stringify(this.toObject());
@@ -858,6 +889,7 @@
          * get parent container
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Kinetic.Node}
          */
         getParent: function() {
             return this.parent;
@@ -866,6 +898,7 @@
          * get layer ancestor
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Kinetic.Layer}
          */
         getLayer: function() {
             var parent = this.getParent();
@@ -875,6 +908,7 @@
          * get stage ancestor
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Kinetic.Stage}
          */
         getStage: function() {
             return this._getCache(STAGE, this._getStage);
@@ -896,6 +930,7 @@
          * @param {EventObject} evt event object
          * @param {Boolean} bubble setting the value to false, or leaving it undefined, will result in the event
          *  not bubbling.  Setting the value to true will result in the event bubbling.
+         * @returns {Kinetic.Node}
          * @example
          * // manually fire click event<br>
          * node.fire('click');<br><br>
@@ -927,6 +962,7 @@
          *  account its ancestor transforms
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Kinetic.Transform}
          */
         getAbsoluteTransform: function() {
             return this._getCache(ABSOLUTE_TRANSFORM, this._getAbsoluteTransform);
@@ -941,6 +977,15 @@
                 am.multiply(m);
             }, true);
             return am;
+        },
+        /**
+         * get transform of the node
+         * @method
+         * @memberof Kinetic.Node.prototype
+         * @returns {Kinetic.Transform}
+         */
+        getTransform: function() {
+            return this._getCache(TRANSFORM, this._getTransform);
         },
         _getTransform: function() {
             var m = new Kinetic.Transform(),
@@ -979,6 +1024,7 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {Object} attrs override attrs
+         * @returns {Kinetic.Node}
          * @example
          * // simple clone<br>
          * var clone = node.clone();<br><br>
@@ -1035,6 +1081,7 @@
          * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
          *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
          *  is very high quality
+         * @returns {String}
          */
         toDataURL: function(config) {
             config = config || {};
@@ -1079,6 +1126,7 @@
          * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
          *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
          *  is very high quality
+         * @returns {Image}
          * @example
          * var image = node.toImage({<br>
          *   callback: function(img) {<br>
@@ -1098,6 +1146,7 @@
          * @param {Object} size
          * @param {Number} width
          * @param {Number} height
+         * @returns {Kinetic.Node}
          */
         setSize: function(size) {
             this.setWidth(size.width);
@@ -1108,6 +1157,7 @@
          * get size
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Object}
          */
         getSize: function() {
             return {
@@ -1119,6 +1169,7 @@
          * get width
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Integer}
          */
         getWidth: function() {
             return this.attrs.width || 0;
@@ -1127,6 +1178,7 @@
          * get height
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Integer}
          */
         getHeight: function() {
             return this.attrs.height || 0;
@@ -1135,6 +1187,7 @@
          * get class name, which may return Stage, Layer, Group, or shape class names like Rect, Circle, Text, etc.
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {String}
          */
         getClassName: function() {
             return this.className || this.nodeType;
@@ -1143,6 +1196,7 @@
          * get the node type, which may return Stage, Layer, Group, or Node
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {String}
          */
         getType: function() {
             return this.nodeType;
@@ -1187,6 +1241,7 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {String} id
+         * @returns {Kinetic.Node}
          */
         setId: function(id) {
             var oldId = this.getId();
@@ -1201,6 +1256,7 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {String} name
+         * @returns {Kinetic.Node}
          */
         setName: function(name) {
             var oldName = this.getName();
@@ -1215,7 +1271,8 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {String} attr
-         * #param {*} val
+         * @param {*} val
+         * @returns {Kinetic.Node}
          * @example
          * node.setAttr('x', 5);
          */
@@ -1297,26 +1354,15 @@
             }
         },
         /**
-         * draw both scene and hit graphs.  If the node being drawn is the stage, all of the layers will be cleared and redra
+         * draw both scene and hit graphs.  If the node being drawn is the stage, all of the layers will be cleared and redrawn
          * @method
          * @memberof Kinetic.Node.prototype
-         *  the scene renderer
+         * @returns {Kinetic.Node}
          */
         draw: function() {
             this.drawScene();
             this.drawHit();
             return this;
-        },
-        isDraggable: function() {
-            return false;
-        },
-        /**
-         * get transform of the node
-         * @method
-         * @memberof Kinetic.Node.prototype
-         */
-        getTransform: function() {
-            return this._getCache(TRANSFORM, this._getTransform);
         }
     });
 
@@ -1366,6 +1412,7 @@
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} x
+     * @returns {Kinetic.Node}
      */
 
     /**
@@ -1373,6 +1420,7 @@
      * @name getX
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Object}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'y', 0);
@@ -1383,6 +1431,7 @@
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} y
+     * @returns {Kinetic.Node}
      */
 
     /**
@@ -1390,6 +1439,7 @@
      * @name getY
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Integer}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'opacity', 1);
@@ -1402,6 +1452,7 @@
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Object} opacity
+     * @returns {Kinetic.Node}
      */
 
     /**
@@ -1409,6 +1460,7 @@
      * @name getOpacity
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Number}
      */
 
     Kinetic.Factory.addGetter(Kinetic.Node, 'name');
@@ -1418,6 +1470,7 @@
      * @name getName
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {String}
      */
 
     Kinetic.Factory.addGetter(Kinetic.Node, 'id');
@@ -1427,6 +1480,7 @@
      * @name getId
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {String}
      */
 
     Kinetic.Factory.addRotationGetterSetter(Kinetic.Node, 'rotation', 0);
@@ -1437,6 +1491,7 @@
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} theta
+     * @returns {Kinetic.Node}
      */
 
     /**
@@ -1445,6 +1500,7 @@
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} deg
+     * @returns {Kinetic.Node}
      */
 
     /**
@@ -1452,6 +1508,7 @@
      * @name getRotationDeg
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Number}
      */
 
     /**
@@ -1459,6 +1516,7 @@
      * @name getRotation
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Number}
      */
 
     Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'scale', 1);
@@ -1471,6 +1529,7 @@
      * @param {Number} scale.y
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Kinetic.Node}
      * @example
      * // set x and y <br>
      * shape.setScale({<br>
@@ -1484,6 +1543,7 @@
      * @name getScale
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Object}
      */
 
     /**
@@ -1492,6 +1552,7 @@
      * @param {Number} x
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Kinetic.Node}
      */
 
     /**
@@ -1499,6 +1560,7 @@
      * @name getScaleX
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Number}
      */
 
     /**
@@ -1507,6 +1569,7 @@
      * @param {Number} y
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Kinetic.Node}
      */
 
     /**
@@ -1514,6 +1577,7 @@
      * @name getScaleY
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Integer}
      */
 
     Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'skew', 0);
@@ -1526,6 +1590,7 @@
      * @param {Number} skew.y
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Kinetic.Node}
      * @example
      * // set x and y <br>
      * shape.setSkew({<br>
@@ -1548,6 +1613,7 @@
      * @param {Number} x
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Kinetic.Node}
      */
 
     /**
@@ -1564,6 +1630,7 @@
      * @param {Number} y
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Kinetic.Node}
      */
 
     /**
@@ -1583,6 +1650,7 @@
      * @memberof Kinetic.Node.prototype
      * @param {Number} x
      * @param {Number} y
+     * @returns {Kinetic.Node}
      * @example
      * // set x and y <br>
      * shape.setOffset({<br>
@@ -1605,6 +1673,7 @@
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} x
+     * @returns {Kinetic.Node}
      */
 
     /**
@@ -1621,6 +1690,7 @@
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} y
+     * @returns {Kinetic.Node}
      */
 
     /**
@@ -1639,6 +1709,7 @@
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} width
+     * @returns {Kinetic.Node}
      */
 
     Kinetic.Factory.addSetter(Kinetic.Node, 'height', 0);
@@ -1649,6 +1720,7 @@
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} height
+     * @returns {Kinetic.Node}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'listening', 'inherit');
@@ -1659,6 +1731,7 @@
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Boolean|String} listening
+     * @returns {Kinetic.Node}
      */
 
     /**
@@ -1677,6 +1750,7 @@
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Boolean} visible
+     * @returns {Kinetic.Node}
      */
 
     /**
@@ -1685,6 +1759,7 @@
      * @name getVisible
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Boolean}
      */
 
     Kinetic.Collection.mapMethods([
