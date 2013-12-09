@@ -2,18 +2,12 @@
     // CONSTANTS
     var ABSOLUTE_OPACITY = 'absoluteOpacity',
         ABSOLUTE_TRANSFORM = 'absoluteTransform',
-        ADD = 'add',
-        B = 'b',
         BEFORE = 'before',
-        BLACK = 'black',
         CHANGE = 'Change',
         CHILDREN = 'children',
-        DEG = 'Deg',
         DOT = '.',
         EMPTY_STRING = '',
-        G = 'g',
         GET = 'get',
-        HASH = '#',
         ID = 'id',
         KINETIC = 'kinetic',
         LISTENING = 'listening',
@@ -21,27 +15,13 @@
         MOUSEENTER = 'mouseenter',
         MOUSELEAVE = 'mouseleave',
         NAME = 'name',
-        OFF = 'off',
-        ON = 'on',
-        PRIVATE_GET = '_get',
-        R = 'r',
-        RGB = 'RGB',
         SET = 'set',
         SHAPE = 'Shape',
         SPACE = ' ',
         STAGE = 'stage',
         TRANSFORM = 'transform',
-        UPPER_B = 'B',
-        UPPER_G = 'G',
-        UPPER_HEIGHT = 'Height',
-        UPPER_R = 'R',
         UPPER_STAGE = 'Stage',
-        UPPER_WIDTH = 'Width',
-        UPPER_X = 'X',
-        UPPER_Y = 'Y',
         VISIBLE = 'visible',
-        X = 'x',
-        Y = 'y',
 
         TRANSFORM_CHANGE_STR = [
             'xChange.kinetic',
@@ -112,12 +92,11 @@
          * method to clear self and children cache
          */
         _clearSelfAndDescendantCache: function(attr) {
-            var that = this;
             this._clearCache(attr);
 
             if (this.children) {
                 this.getChildren().each(function(node) {
-                  node._clearSelfAndDescendantCache(attr);
+                    node._clearSelfAndDescendantCache(attr);
                 });
             }
         },
@@ -239,7 +218,7 @@
         off: function(evtStr) {
             var events = evtStr.split(SPACE),
                 len = events.length,
-                n, i, t, event, parts, baseEvent, name;
+                n, t, event, parts, baseEvent, name;
 
             for(n = 0; n < len; n++) {
                 event = events[n];
@@ -405,7 +384,7 @@
          * @returns {Boolean}
          */
         isListening: function() {
-          return this._getCache(LISTENING, this._isListening);
+            return this._getCache(LISTENING, this._isListening);
         },
         _isListening: function() {
             var listening = this.getListening(),
@@ -449,7 +428,7 @@
          * @returns {Boolean}
          */
         isVisible: function() {
-          return this._getCache(VISIBLE, this._isVisible);
+            return this._getCache(VISIBLE, this._isVisible);
         },
         _isVisible: function() {
             var visible = this.getVisible(),
@@ -867,7 +846,7 @@
                 if (!type._isFunction(val) && !type._isElement(val) && !(type._isObject(val) && type._hasMethods(val))) {
                     getter = this[GET + Kinetic.Util._capitalize(key)];
                     defaultValue = getter ? getter.call({attrs: {}}) : null;
-                    if (defaultValue != val) {
+                    if (defaultValue !== val) {
                         obj.attrs[key] = val;
                     }
                 }
@@ -1300,7 +1279,7 @@
                 this._fireChangeEvent(key, oldVal, val);
             }
         },
-       _setComponentAttr: function(key, component, val) {
+        _setComponentAttr: function(key, component, val) {
             var oldVal;
             if(val !== undefined) {
                 oldVal = this.attrs[key];
