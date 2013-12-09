@@ -101,6 +101,13 @@
             }
         },
         /*
+         * the default isDraggable method returns false.
+         * if the DragAndDrop module is included, this is overwritten
+         */
+        isDraggable: function() {
+            return false;
+        },
+        /*
          * when the logic for a cached result depends on descendant propagation, use this
          * method to clear self and ancestor cache
          */
