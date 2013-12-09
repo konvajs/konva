@@ -70,7 +70,7 @@ suite('Manual', function() {
                 100, 10
             ],
             easing: Kinetic.Easings.BackEaseOut,
-            yoyo: true
+            yoyo: false
         });
 
         // stage.getContent().addEventListener('mouseover', function() {

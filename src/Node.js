@@ -17,6 +17,7 @@
         ID = 'id',
         KINETIC = 'kinetic',
         LISTENING = 'listening',
+        //LISTENING_ENABLED = 'listeningEnabled',
         MOUSEENTER = 'mouseenter',
         MOUSELEAVE = 'mouseleave',
         NAME = 'name',
@@ -62,20 +63,21 @@
             this.attrs = {};
             this.cache = {};
             this.setAttrs(config);
+            //this._listeningEnabled = false;
 
             // event bindings for cache handling
             this.on(TRANSFORM_CHANGE_STR, function() {
                 this._clearCache(TRANSFORM);
-                that._clearSelfAndChildrenCache(ABSOLUTE_TRANSFORM);
+                that._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
             });
             this.on('visibleChange.kinetic', function() {
-                that._clearSelfAndChildrenCache(VISIBLE);
+                that._clearSelfAndDescendantCache(VISIBLE);
             });
             this.on('listeningChange.kinetic', function() {
-                that._clearSelfAndChildrenCache(LISTENING);
+                that._clearSelfAndDescendantCache(LISTENING);
             });
             this.on('opacityChange.kinetic', function() {
-                that._clearSelfAndChildrenCache(ABSOLUTE_OPACITY);
+                that._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
             });
         },
         /**
@@ -103,16 +105,34 @@
 
             return this.cache[attr];     
         },
-        _clearSelfAndChildrenCache: function(attr) {
+        /*
+         * when the logic for a cached result depends on ancestor propagation, use this
+         * method to clear self and children cache
+         */
+        _clearSelfAndDescendantCache: function(attr) {
             var that = this;
             this._clearCache(attr);
 
             if (this.children) {
                 this.getChildren().each(function(node) {
-                  node._clearSelfAndChildrenCache(attr);
+                  node._clearSelfAndDescendantCache(attr);
                 });
             }
         },
+        /*
+         * when the logic for a cached result depends on descendant propagation, use this
+         * method to clear self and ancestor cache
+         */
+         /*
+        _clearSelfAndAncestorCache: function(attr) {
+            var parent = this.getParent();
+
+            this._clearCache(attr);
+            if (parent) {
+                parent._clearSelfAndAncestorCache(attr);
+            }
+        },
+        */
         /**
          * bind events to the node. KineticJS supports mouseover, mousemove,
          *  mouseout, mouseenter, mouseleave, mousedown, mouseup, click, dblclick, touchstart, touchmove,
@@ -177,7 +197,19 @@
                     name: name,
                     handler: handler
                 });
+
+                // NOTE: this flag is set to true when any event handler is added, even non
+                // mouse or touch gesture events.  This improves performance for most
+                // cases where users aren't using events, but is still very light weight.  
+                // To ensure perfect accuracy, devs can explicitly set listening to false.
+                /*
+                if (name !== KINETIC) {
+                    this._listeningEnabled = true;
+                    this._clearSelfAndAncestorCache(LISTENING_ENABLED);
+                }
+                */
             }
+
             return this;
         },
         /**
@@ -241,12 +273,12 @@
             }
 
             // every cached attr that is calculated via node tree
-            // treversal must be cleared when removing a node
-            this._clearSelfAndChildrenCache(STAGE);
-            this._clearSelfAndChildrenCache(ABSOLUTE_TRANSFORM);
-            this._clearSelfAndChildrenCache(VISIBLE);
-            this._clearSelfAndChildrenCache(LISTENING);
-            this._clearSelfAndChildrenCache(ABSOLUTE_OPACITY);
+            // traversal must be cleared when removing a node
+            this._clearSelfAndDescendantCache(STAGE);
+            this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
+            this._clearSelfAndDescendantCache(VISIBLE);
+            this._clearSelfAndDescendantCache(LISTENING);
+            this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
 
             return this;
         },
@@ -345,11 +377,23 @@
             return this;
         },
         /**
-         * determine if node is listening for events.  The node is listening only
-         *  if it's listening and all of its ancestors are listening.  If an ancestor
-         *  is listening, this means that the node is also listening
+         * determine if node is listening for events by taking into account ancestors.
+         *
+         * Parent    | Self      | isListening
+         * listening | listening | 
+         * ----------+-----------+------------
+         * T         | T         | T 
+         * T         | F         | F
+         * F         | T         | T 
+         * F         | F         | F
+         * ----------+-----------+------------
+         * T         | I         | T
+         * F         | I         | F
+         * I         | I         | T
+         *
          * @method
          * @memberof Kinetic.Node.prototype
+         * @returns {Boolean}
          */
         isListening: function() {
           return this._getCache(LISTENING, this._isListening);
@@ -358,10 +402,34 @@
             var listening = this.getListening(),
                 parent = this.getParent();
 
-            if(listening && parent && !parent.isListening()) {
-                return false;
+            // the following conditions are a simplification of the truth table above.
+            // please modify carefully
+            if (listening === 'inherit') {
+                if (parent) {
+                    return parent.isListening();
+                }
+                else {
+                    return true;
+                }
             }
-            return listening;
+            else {
+                return listening;
+            }
+        },
+        /**
+         * determine if listening is enabled by taking into account descendants.  If self or any children
+         * have _isListeningEnabled set to true, than self also has listening enabled.
+         * @method
+         * @memberof Kinetic.Node.prototype
+         * @returns {Boolean}
+         */
+         /*
+        isListeningEnabled: function() {
+          return this._getCache(LISTENING_ENABLED, this._isListeningEnabled);
+        },
+        */
+        shouldDrawHit: function() {
+            return  Kinetic.enableHitGraph && /*this.isListeningEnabled() &&*/ this.isListening() && this.isVisible() && !Kinetic.isDragging();
         },
         /**
          * determine if node is visible or not.  Node is visible only
@@ -550,7 +618,7 @@
             }
 
             this._clearCache(TRANSFORM);
-            this._clearSelfAndChildrenCache(ABSOLUTE_TRANSFORM);
+            this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
         },
         _clearTransform: function() {
             var trans = {
@@ -576,7 +644,7 @@
             this.attrs.skewY = 0;
 
             this._clearCache(TRANSFORM);
-            this._clearSelfAndChildrenCache(ABSOLUTE_TRANSFORM);
+            this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
 
             return trans;
         },
@@ -1239,9 +1307,6 @@
             this.drawHit();
             return this;
         },
-        shouldDrawHit: function() {
-            return this.isListening() && this.isVisible() && !Kinetic.isDragging();
-        },
         isDraggable: function() {
             return false;
         },
@@ -1586,21 +1651,22 @@
      * @param {Number} height
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'listening', true);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'listening', 'inherit');
 
     /**
-     * listen or don't listen to events
+     * listen or don't listen to events.  can be true, false, or 'inherit'
      * @name setListening
      * @method
      * @memberof Kinetic.Node.prototype
-     * @param {Boolean} listening
+     * @param {Boolean|String} listening
      */
 
     /**
-     * determine if node is listening or not.  Node can be listening even if its ancestors
-     *  are not listening
+     * determine if node is listening or not.
+     * @name getListening
      * @method
      * @memberof Kinetic.Node.prototype
+     * @returns {Boolean|String}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'visible', true);

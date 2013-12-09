@@ -222,10 +222,14 @@ suite('Node', function() {
         stage.add(layer);
 
         // listening cache
+        
+        // prime the cache
+        circle.isListening();
+
         assert.equal(circle.cache.listening, true);
         circle.setListening(false);
         assert.equal(circle.cache.listening, undefined);
-        layer.draw();
+        circle.isListening();
         assert.equal(circle.cache.listening, false);
 
     });
@@ -303,8 +307,8 @@ suite('Node', function() {
         layer.add(rect).add(rect2);
         stage.add(layer);
 
-        assert.equal(rect.getListening(), true);
-        // test alias
+        assert.equal(rect.getListening(), 'inherit');
+
         assert.equal(rect.isListening(), true);
         rect.setListening(false);
         assert.equal(rect.getListening(), false);
@@ -1645,17 +1649,26 @@ suite('Node', function() {
         rect.setListening(false);
         assert.equal(rect.isListening(), false);
 
-        rect.setListening(true);
+        rect.setListening('inherit');
         assert.equal(rect.isListening(), true);
 
         layer.setListening(false);
+
         assert.equal(rect.isListening(), false);
 
         layer.setListening(true);
         assert.equal(rect.isListening(), true);
 
+        // even though we set stage listening to false, since the layer
+        // listening is set to try, rect listening will be true
         stage.setListening(false);
+        assert.equal(rect.isListening(), true);
+
+        // setting layer listening to inherit means that the layer listening
+        // will inherit the stage listening, which is false
+        layer.setListening('inherit');
         assert.equal(rect.isListening(), false);
+
     });
 
     // ======================================================
@@ -2605,4 +2618,40 @@ suite('Node', function() {
         // TODO: stage hide() fails.  also need to find a good way to test this
 
     });
+
+  // ======================================================
+  test('Kinetic.enableHitGraph, listening, & shouldDrawHit', function(){
+    var stage = addStage();
+
+    var layer = new Kinetic.Layer();
+
+    var rect = new Kinetic.Rect({
+      x: 100,
+      y: 50,
+      width: 100,
+      height: 50,
+      fill: 'green',
+      stroke: 'blue'
+    });
+
+    layer.add(rect);
+    stage.add(layer);
+
+
+    // test enableHitGraph default
+    assert.equal(Kinetic.enableHitGraph, true);
+
+    assert.equal(rect.isListening(), true);
+    assert.equal(rect.shouldDrawHit(), true);
+
+    // disable hit graph
+    Kinetic.enableHitGraph = false;
+
+    assert.equal(rect.isListening(), true);
+    assert.equal(rect.shouldDrawHit(), false);
+
+    // set the flag back for future tests
+    Kinetic.enableHitGraph = true;
+
+  });
 });

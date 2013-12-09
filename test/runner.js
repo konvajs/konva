@@ -17,7 +17,7 @@ window.requestAnimFrame = (function(callback){
       window.setTimeout(callback, 1000 / 30);
   };
 })();
-      
+
 function init() {
   // assert extenders so that we can count assertions
   assert = function() {
@@ -50,7 +50,7 @@ function init() {
     }
   }
 
-  addStats();
+  //addStats();
 }
 
 

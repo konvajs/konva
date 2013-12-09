@@ -1,5 +1,5 @@
 (function() {
-    var SPACE = '',
+    var SPACE = ' ',
         TRANSFORM_CHANGE_STR = [
         'xChange.kinetic',
         'yChange.kinetic',
@@ -291,6 +291,7 @@
                 hitCanvas;
 
             if(this.shouldDrawHit()) {
+
                 if (hasClip) {
                     hitCanvas = this.getLayer().hitCanvas;
                     hitCanvas.getContext()._clip(this);
@@ -309,6 +310,24 @@
 
             return this;
         }
+        /*
+        _isListeningEnabled: function() {
+            var ret;
+
+            if (this._listeningEnabled) {
+                return true;
+            }
+            else {
+                ret = false;
+                this.children.each(function(child) {
+                    if (child.isListeningEnabled()) {
+                        ret = true;
+                    }
+                });
+                return ret;
+            }
+        }
+        */
     });
 
     Kinetic.Util.extend(Kinetic.Container, Kinetic.Node);

@@ -174,6 +174,12 @@
                 }
             });
         }
+
+        // listening is required for drag and drop
+        /*
+        this._listeningEnabled = true;
+        this._clearSelfAndAncestorCache('listeningEnabled');
+        */
     };
 
     Kinetic.Node.prototype._dragChange = function() {

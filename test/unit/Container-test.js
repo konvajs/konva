@@ -1356,7 +1356,7 @@ suite('Container', function() {
     });
 
   // ======================================================
-  test('Kinetic.enableNestedTransforms flag', function(){
+  test('stage._enableNestedTransforms flag', function(){
     var stage = addStage();
 
     var layer = new Kinetic.Layer();
