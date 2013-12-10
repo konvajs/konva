@@ -44,7 +44,7 @@
               colorIndex = 0;
             }
 
-            var shape = make_shape(color);
+            var shape = make_shape('red');
             circlesLayer.add(shape);
             circles.push(shape);
           }());
@@ -66,7 +66,12 @@
           for (var i = 0; i < circles.length; i++) {
             var x = Math.random() * width;
             var y = Math.random() * height;
+            if (VERSION === 'new') {
             circles[i].setPosition({x: x, y: y});
+            }
+            else {
+              circles[i].setPosition(x, y);
+            }
           }
           lastTime = time;
 
@@ -80,14 +85,14 @@
       function make_shape(color) {
         if (VERSION === 'new') {
      
-          return new Kinetic.Rect({
-            fill: color,
-            width: 10,
-            height: 10
-          });
+          // return new Kinetic.Rect({
+          //   fill: color,
+          //   width: 10,
+          //   height: 10
+          // });
       
  
-    /*
+    
           return new Kinetic.Shape({
             drawFunc: function(context) {
               var _context = context._context;
@@ -98,7 +103,7 @@
               _context.fill();
             }
           });
-      */
+   
      
         } else {
           return new Kinetic.Shape(function(){
@@ -117,8 +122,8 @@
         if (VERSION === 'new') {
           stage = new Kinetic.Stage({
             container: "container",
-            width: 578,
-            height: 200,
+            width: width,
+            height: height,
             nestedTransformsEnabled: false
           });
           circlesLayer = new Kinetic.Layer({
