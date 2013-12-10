@@ -642,6 +642,26 @@
                 baseEvent = types[n];
                 this.content.addEventListener(baseEvent, handler, false);
             }
+        },
+        /**
+         * enable nested transforms
+         * @method
+         * @memberof Kinetic.Stage.prototype
+         * @returns {Node}
+         */
+        enableNestedTransforms: function() {
+            this.setNestedTransformsEnabled(true);
+            return this;
+        },
+        /**
+         * disable nested transforms
+         * @method
+         * @memberof Kinetic.Stage.prototype
+         * @returns {Node}
+         */
+        disableNestedTransforms: function() {
+            this.setNestedTransformsEnabled(false);
+            return this;
         }
     });
     Kinetic.Util.extend(Kinetic.Stage, Kinetic.Container);
@@ -655,4 +675,25 @@
      * @method
      * @memberof Kinetic.Stage.prototype
      */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Stage, 'nestedTransformsEnabled', true);
+
+    /**
+     * enable/disable nested transforms
+     * @name setNestedTransformsEnabled
+     * @method
+     * @memberof Kinetic.Stage.prototype
+     * @param {Boolean} enabled
+     * @returns {Node}
+     */
+
+    /**
+     * determine if nested transforms are enabled
+     * @name getNestedTransformsEnabled
+     * @method
+     * @memberof Kinetic.Stage.prototype
+     * @returns {Boolean}
+     */
+
+     Kinetic.Stage.prototype.isNestedTransformsEnabled = Kinetic.Stage.prototype.getNestedTransformsEnabled;
 })();

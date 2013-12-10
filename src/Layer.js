@@ -314,17 +314,16 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Layer, 'hitGraphEnabled', true);
 
     /**
-     * enable / disable hit graph
+     * enable/disable hit graph
      * @name setHitGraphEnabled
      * @method
      * @memberof Kinetic.Layer.prototype
-     * @param {Boolean} enable
+     * @param {Boolean} enabled
      * @returns {Node}
      */
 
     /**
-     * get flag which determines if the layer is cleared or not
-     *  before drawing
+     * determine if hit graph is enabled
      * @name getHitGraphEnabled
      * @method
      * @memberof Kinetic.Layer.prototype

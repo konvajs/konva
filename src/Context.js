@@ -227,7 +227,7 @@
             var stage = shape.getStage(),
                 m;
 
-            if (stage && stage._enableNestedTransforms) {
+            if (stage && stage.isNestedTransformsEnabled()) {
                 m = shape.getAbsoluteTransform().getMatrix();
             }
             else {

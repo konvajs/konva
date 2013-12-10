@@ -118,7 +118,8 @@
           stage = new Kinetic.Stage({
             container: "container",
             width: 578,
-            height: 200
+            height: 200,
+            nestedTransformsEnabled: false
           });
           circlesLayer = new Kinetic.Layer({
             hitGraphEnabled: false
