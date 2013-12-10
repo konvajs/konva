@@ -296,11 +296,6 @@
                 this.setDrawHitFunc(this.drawHitFunc);
             }
         }
-        /*
-        _isListeningEnabled: function() {
-            return this._listeningEnabled;
-        },
-        */
     });
     Kinetic.Util.extend(Kinetic.Shape, Kinetic.Node);
 

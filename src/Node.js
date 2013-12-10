@@ -43,7 +43,6 @@
             this.attrs = {};
             this.cache = {};
             this.setAttrs(config);
-            //this._listeningEnabled = false;
 
             // event bindings for cache handling
             this.on(TRANSFORM_CHANGE_STR, function() {
@@ -418,13 +417,8 @@
          * @memberof Kinetic.Node.prototype
          * @returns {Boolean}
          */
-         /*
-        isListeningEnabled: function() {
-          return this._getCache(LISTENING_ENABLED, this._isListeningEnabled);
-        },
-        */
         shouldDrawHit: function() {
-            return  Kinetic.enableHitGraph && /*this.isListeningEnabled() &&*/ this.isListening() && this.isVisible() && !Kinetic.isDragging();
+            return  this.isListening() && this.isVisible() && !Kinetic.isDragging();
         },
         /**
          * determine if node is visible or not.  Node is visible only

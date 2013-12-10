@@ -48,7 +48,6 @@ var Kinetic = {};
         traceArrMax: 100,
         dblClickWindow: 400,
         pixelRatio: undefined,
-        enableHitGraph: true,
 
         // user agent  
         UA: (function() {

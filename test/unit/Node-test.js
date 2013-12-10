@@ -2620,7 +2620,7 @@ suite('Node', function() {
     });
 
   // ======================================================
-  test('Kinetic.enableHitGraph, listening, & shouldDrawHit', function(){
+  test('listening, & shouldDrawHit', function(){
     var stage = addStage();
 
     var layer = new Kinetic.Layer();
@@ -2638,20 +2638,16 @@ suite('Node', function() {
     stage.add(layer);
 
 
-    // test enableHitGraph default
-    assert.equal(Kinetic.enableHitGraph, true);
 
     assert.equal(rect.isListening(), true);
     assert.equal(rect.shouldDrawHit(), true);
 
-    // disable hit graph
-    Kinetic.enableHitGraph = false;
+    rect.setListening(false);
 
-    assert.equal(rect.isListening(), true);
+
+    assert.equal(rect.isListening(), false);
     assert.equal(rect.shouldDrawHit(), false);
 
-    // set the flag back for future tests
-    Kinetic.enableHitGraph = true;
 
   });
 });
