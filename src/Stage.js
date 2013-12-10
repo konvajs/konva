@@ -82,6 +82,9 @@
             this._setAttr(CONTAINER, container);
             return this;
         },
+        shouldDrawHit: function() {
+            return true;
+        },
         draw: function() {
             Kinetic.Node.prototype.draw.call(this);
             return this;

@@ -418,7 +418,8 @@
          * @returns {Boolean}
          */
         shouldDrawHit: function() {
-            return  this.isListening() && this.isVisible() && !Kinetic.isDragging();
+            var layer = this.getLayer();
+            return  layer && layer.isHitGraphEnabled() && this.isListening() && this.isVisible() && !Kinetic.isDragging();
         },
         /**
          * determine if node is visible or not.  Node is visible only

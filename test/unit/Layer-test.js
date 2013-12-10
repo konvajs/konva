@@ -261,4 +261,35 @@ suite('Layer', function() {
            quality: 1
         });
     });
+
+    // ======================================================
+    test('hit graph enable disable', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'red',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        assert.equal(layer.isHitGraphEnabled(), true);
+        assert.equal(layer.shouldDrawHit(), true);
+
+        layer.disableHitGraph();
+
+        assert.equal(layer.isHitGraphEnabled(), false);
+        assert.equal(layer.shouldDrawHit(), false);  
+
+        layer.enableHitGraph();
+
+        assert.equal(layer.isHitGraphEnabled(), true);
+        assert.equal(layer.shouldDrawHit(), true);
+    });
 });

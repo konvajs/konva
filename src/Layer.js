@@ -263,22 +263,43 @@
         },
         getStage: function() {
             return this.parent;
+        },
+        /**
+         * enable hit graph
+         * @name enableHitGraph
+         * @method
+         * @memberof Kinetic.Layer.prototype
+         * @returns {Node}
+         */
+        enableHitGraph: function() {
+            this.setHitGraphEnabled(true);
+            return this;
+        },
+        /**
+         * disable hit graph
+         * @name enableHitGraph
+         * @method
+         * @memberof Kinetic.Layer.prototype
+         * @returns {Node}
+         */
+        disableHitGraph: function() {
+            this.setHitGraphEnabled(false);
+            return this;
         }
     });
     Kinetic.Util.extend(Kinetic.Layer, Kinetic.Container);
 
     // add getters and setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Layer, 'clearBeforeDraw', function() {
-        return true;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Layer, 'clearBeforeDraw', true);
 
     /**
      * set flag which determines if the layer is cleared or not
      *  before drawing
      * @name setClearBeforeDraw
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Kinetic.Layer.prototype
      * @param {Boolean} clearBeforeDraw
+     * @returns {Node}
      */
 
     /**
@@ -286,6 +307,29 @@
      *  before drawing
      * @name getClearBeforeDraw
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Kinetic.Layer.prototype
+     * @returns {Boolean}
      */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Layer, 'hitGraphEnabled', true);
+
+    /**
+     * enable / disable hit graph
+     * @name setHitGraphEnabled
+     * @method
+     * @memberof Kinetic.Layer.prototype
+     * @param {Boolean} enable
+     * @returns {Node}
+     */
+
+    /**
+     * get flag which determines if the layer is cleared or not
+     *  before drawing
+     * @name getHitGraphEnabled
+     * @method
+     * @memberof Kinetic.Layer.prototype
+     * @returns {Boolean}
+     */
+
+     Kinetic.Layer.prototype.isHitGraphEnabled = Kinetic.Layer.prototype.getHitGraphEnabled;
 })();

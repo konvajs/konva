@@ -79,16 +79,15 @@
 
       function make_shape(color) {
         if (VERSION === 'new') {
-      /*
+     
           return new Kinetic.Rect({
             fill: color,
             width: 10,
-            height: 10,
-            listening: false
+            height: 10
           });
-      */
+      
  
-    
+    /*
           return new Kinetic.Shape({
             drawFunc: function(context) {
               var _context = context._context;
@@ -99,6 +98,7 @@
               _context.fill();
             }
           });
+      */
      
         } else {
           return new Kinetic.Shape(function(){
@@ -120,7 +120,9 @@
             width: 578,
             height: 200
           });
-          circlesLayer = new Kinetic.Layer();
+          circlesLayer = new Kinetic.Layer({
+            hitGraphEnabled: false
+          });
         } else {
           stage = new Kinetic.Stage("container", width, height);
           circlesLayer = new Kinetic.Layer();
