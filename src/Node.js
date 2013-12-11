@@ -411,20 +411,20 @@
             }
         },
         /**
-         * determine if listening is enabled by taking into account descendants.  If self or any children
-         * have _isListeningEnabled set to true, than self also has listening enabled.
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Boolean}
-         */
-        shouldDrawHit: function() {
-            var layer = this.getLayer();
-            return  layer && layer.isHitGraphEnabled() && this.isListening() && this.isVisible() && !Kinetic.isDragging();
-        },
-        /**
-         * determine if node is visible or not.  Node is visible only
-         *  if it's visible and all of its ancestors are visible.  If an ancestor
-         *  is invisible, this means that the node is also invisible
+         * determine if node is visible by taking into account ancestors.
+         *
+         * Parent    | Self      | isVisible
+         * visible   | visible   | 
+         * ----------+-----------+------------
+         * T         | T         | T 
+         * T         | F         | F
+         * F         | T         | T 
+         * F         | F         | F
+         * ----------+-----------+------------
+         * T         | I         | T
+         * F         | I         | F
+         * I         | I         | T
+
          * @method
          * @memberof Kinetic.Node.prototype
          * @returns {Boolean}
@@ -436,10 +436,30 @@
             var visible = this.getVisible(),
                 parent = this.getParent();
 
-            if(visible && parent && !parent.isVisible()) {
-                return false;
+            // the following conditions are a simplification of the truth table above.
+            // please modify carefully
+            if (visible === 'inherit') {
+                if (parent) {
+                    return parent.isVisible();
+                }
+                else {
+                    return true;
+                }
             }
-            return visible;
+            else {
+                return visible;
+            }
+        },
+        /**
+         * determine if listening is enabled by taking into account descendants.  If self or any children
+         * have _isListeningEnabled set to true, than self also has listening enabled.
+         * @method
+         * @memberof Kinetic.Node.prototype
+         * @returns {Boolean}
+         */
+        shouldDrawHit: function() {
+            var layer = this.getLayer();
+            return  layer && layer.isHitGraphEnabled() && this.isListening() && this.isVisible() && !Kinetic.isDragging();
         },
         /**
          * show node
@@ -1747,7 +1767,7 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'listening', 'inherit');
 
     /**
-     * listen or don't listen to events.  can be true, false, or 'inherit'
+     * listen or don't listen to events.  Can be "inherit", true, or false.  The default is "inherit".
      * @name setListening
      * @method
      * @memberof Kinetic.Node.prototype
@@ -1763,10 +1783,10 @@
      * @returns {Boolean|String}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'visible', true);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'visible', 'inherit');
 
     /**
-     * set visible
+     * set visible.  Can be "inherit", true, or false.  The default is "inherit".
      * @name setVisible
      * @method
      * @memberof Kinetic.Node.prototype

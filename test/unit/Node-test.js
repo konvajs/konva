@@ -2718,4 +2718,72 @@ suite('Node', function() {
 
 
   });
+
+
+    // ======================================================
+  test('isVisible', function(){
+    var stage = addStage();
+    var layer = new Kinetic.Layer();
+    var group = new Kinetic.Group();
+    var circle = new Kinetic.Circle({
+        x: 100,
+        y: 100,
+        radius: 70,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 4,
+        name: 'myCircle',
+        draggable: true
+    });
+
+    group.add(circle);
+    layer.add(group);
+    stage.add(layer);
+
+    assert.equal(stage.isVisible(), true);
+    assert.equal(layer.isVisible(), true);
+    assert.equal(circle.isVisible(), true);
+
+    stage.setVisible(false);
+
+    assert.equal(stage.isVisible(), false);
+    assert.equal(layer.isVisible(), false);
+    assert.equal(circle.isVisible(), false);
+
+    stage.setVisible('inherit');
+    layer.setVisible(false);
+
+    assert.equal(stage.isVisible(), true);
+    assert.equal(layer.isVisible(), false);
+    assert.equal(circle.isVisible(), false);
+
+    layer.setVisible('inherit');
+    circle.setVisible(false);
+
+    assert.equal(stage.isVisible(), true);
+    assert.equal(layer.isVisible(), true);
+    assert.equal(circle.isVisible(), false);
+
+    circle.setVisible('inherit');
+    stage.setVisible(true);
+
+    assert.equal(stage.isVisible(), true);
+    assert.equal(layer.isVisible(), true);
+    assert.equal(circle.isVisible(), true);
+
+    stage.setVisible('inherit');
+    layer.setVisible(true);
+
+    assert.equal(stage.isVisible(), true);
+    assert.equal(layer.isVisible(), true);
+    assert.equal(circle.isVisible(), true);
+
+    layer.setVisible('inherit');
+    circle.setVisible(true);
+
+    assert.equal(stage.isVisible(), true);
+    assert.equal(layer.isVisible(), true);
+    assert.equal(circle.isVisible(), true);
+
+  });
 });
