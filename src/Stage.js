@@ -427,6 +427,7 @@
             this._setPointerPosition(evt);
             var that = this,
                 shape = this.getIntersection(this.getPointerPosition()),
+                clickStartShape = this.clickStartShape,
                 fireDblClick = false;
 
             if(Kinetic.inDblClickWindow) {
@@ -445,7 +446,7 @@
                 shape._fireAndBubble(MOUSEUP, evt);
 
                 // detect if click or double click occurred
-                if(Kinetic.listenClickTap && shape._id === this.clickStartShape._id) {
+                if(Kinetic.listenClickTap && clickStartShape && clickStartShape._id === shape._id) {
                     shape._fireAndBubble(CLICK, evt);
 
                     if(fireDblClick) {
