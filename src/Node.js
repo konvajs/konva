@@ -1344,6 +1344,46 @@
             this.drawScene();
             this.drawHit();
             return this;
+        },
+        /**
+         * enable ancestor transforms
+         * @method
+         * @memberof Kinetic.Node.prototype
+         * @returns {Node}
+         */
+        enableAncestorTransforms: function() {
+            this.setAncestorTransformsEnabled(true);
+            return this;
+        },
+        /**
+         * disable ancestor transforms
+         * @method
+         * @memberof Kinetic.Node.prototype
+         * @returns {Node}
+         */
+        disableAncestorTransforms: function() {
+            this.setAncestorTransformsEnabled(false);
+            return this;
+        },
+        /**
+         * enable transforms
+         * @method
+         * @memberof Kinetic.Node.prototype
+         * @returns {Node}
+         */
+        enableTransforms: function() {
+            this.setTransformsEnabled(true);
+            return this;
+        },
+        /**
+         * disable transforms
+         * @method
+         * @memberof Kinetic.Node.prototype
+         * @returns {Node}
+         */
+        disableTransforms: function() {
+            this.setTransformsEnabled(false);
+            return this;
         }
     });
 
@@ -1742,6 +1782,48 @@
      * @memberof Kinetic.Node.prototype
      * @returns {Boolean}
      */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'ancestorTransformsEnabled', true);
+
+    /**
+     * enable/disable ancestor transforms
+     * @name setAncestorTransformsEnabled
+     * @method
+     * @memberof Kinetic.Node.prototype
+     * @param {Boolean} enabled
+     * @returns {Node}
+     */
+
+    /**
+     * determine if ancestor transforms are enabled
+     * @name getAncestorTransformsEnabled
+     * @method
+     * @memberof Kinetic.Node.prototype
+     * @returns {Boolean}
+     */
+
+    Kinetic.Node.prototype.isAncestorTransformsEnabled = Kinetic.Node.prototype.getAncestorTransformsEnabled;
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'transformsEnabled', true);
+
+    /**
+     * enable/disable transforms
+     * @name setTransformsEnabled
+     * @method
+     * @memberof Kinetic.Node.prototype
+     * @param {Boolean} enabled
+     * @returns {Node}
+     */
+
+    /**
+     * determine if transforms are enabled
+     * @name getTransformsEnabled
+     * @method
+     * @memberof Kinetic.Node.prototype
+     * @returns {Boolean}
+     */
+
+    Kinetic.Node.prototype.isTransformsEnabled = Kinetic.Node.prototype.getTransformsEnabled;
 
     Kinetic.Collection.mapMethods([
         'on',

@@ -85,24 +85,25 @@
       function make_shape(color) {
         if (VERSION === 'new') {
      
-          // return new Kinetic.Rect({
-          //   fill: color,
-          //   width: 10,
-          //   height: 10
-          // });
+          return new Kinetic.Rect({
+            fill: color,
+            width: 10,
+            height: 10,
+            transformsEnabled: false
+          });
       
  
     
-          return new Kinetic.Shape({
-            drawFunc: function(context) {
-              var _context = context._context;
-              _context.beginPath();
-              _context.rect(0, 0, 10, 10);
-              _context.closePath();
-              _context.fillStyle = 'red';
-              _context.fill();
-            }
-          });
+          // return new Kinetic.Shape({
+          //   drawFunc: function(context) {
+          //     var _context = context._context;
+          //     _context.beginPath();
+          //     _context.rect(0, 0, 10, 10);
+          //     _context.closePath();
+          //     _context.fillStyle = 'red';
+          //     _context.fill();
+          //   }
+          // });
    
      
         } else {

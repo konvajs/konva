@@ -224,16 +224,24 @@
             }
         },
         _applyAncestorTransforms: function(shape) {
-            var stage = shape.getStage(),
-                m;
+            var m;
 
-            if (stage && stage.isNestedTransformsEnabled()) {
-                m = shape.getAbsoluteTransform().getMatrix();
+            if (shape.isTransformsEnabled()) {
+                if (shape.isAncestorTransformsEnabled()) {
+                    // poor performance
+                    m = shape.getAbsoluteTransform().getMatrix();
+                }
+                else {
+                    // better performance
+                    m = shape.getTransform().getMatrix();
+                }
+                this.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }
             else {
-                m = shape.getTransform().getMatrix();
+                // best performance
+                this.translate(shape.getX(), shape.getY());
             }
-            this.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+            
         },
         _clip: function(container) {
             var clipX = container.getClipX(),
