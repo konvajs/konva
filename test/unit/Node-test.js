@@ -2651,41 +2651,8 @@ suite('Node', function() {
 
   });
 
-  // ======================================================
-  test('ancestorTransformEnabled', function(){
-    var stage = addStage();
-    var layer = new Kinetic.Layer();
-    var group = new Kinetic.Group();
-    var circle = new Kinetic.Circle({
-        x: 100,
-        y: 100,
-        radius: 70,
-        fill: 'green',
-        stroke: 'black',
-        strokeWidth: 4,
-        name: 'myCircle',
-        draggable: true
-    });
-
-    group.add(circle);
-    layer.add(group);
-    stage.add(layer);
-
-    assert.equal(circle.isAncestorTransformsEnabled(), true);
-
-    circle.disableAncestorTransforms();
-
-    assert.equal(circle.isAncestorTransformsEnabled(), false);
-
-    circle.enableAncestorTransforms();
-
-    assert.equal(circle.isAncestorTransformsEnabled(), true);
-
-
-  });
-
     // ======================================================
-  test('transformEnabled', function(){
+  test('transformEnabled methods', function(){
     var stage = addStage();
     var layer = new Kinetic.Layer();
     var group = new Kinetic.Group();
@@ -2719,6 +2686,58 @@ suite('Node', function() {
 
   });
 
+    // ======================================================
+  test('transformEnabled context tracing', function(){
+    var stage = addStage();
+
+    stage.setX(100);
+
+    var layer = new Kinetic.Layer({
+        x: 100
+    });
+    var group = new Kinetic.Group({
+        x: 100
+    });
+    var circle = new Kinetic.Circle({
+        x: 100,
+        y: 100,
+        radius: 40,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 4,
+        name: 'myCircle',
+        draggable: true
+    });
+
+    group.add(circle);
+    layer.add(group);
+    stage.add(layer);
+    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,400,100);beginPath();arc(0,0,40,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
+
+    stage.disableTransforms();
+    layer.getContext().clearTrace();
+    stage.draw();
+    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,300,100);beginPath();arc(0,0,40,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
+
+    layer.disableTransforms();
+    layer.getContext().clearTrace();
+    stage.draw();
+    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,200,100);beginPath();arc(0,0,40,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
+
+    group.disableTransforms();
+    layer.getContext().clearTrace();
+    stage.draw();
+    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,40,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
+
+    // disabling a shape transform disables all transforms but x and y.  In this case, the Kinetic.Context uses translate instead of transform
+    circle.disableTransforms();
+    layer.getContext().clearTrace();
+    stage.draw();
+    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();translate(100,100);beginPath();arc(0,0,40,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
+
+    //console.log(layer.getContext().getTrace());
+
+  });
 
     // ======================================================
   test('isVisible', function(){

@@ -32,7 +32,8 @@
             'skewYChange.kinetic',
             'rotationChange.kinetic',
             'offsetXChange.kinetic',
-            'offsetYChange.kinetic'
+            'offsetYChange.kinetic',
+            'transformsEnabledChange.kinetic'
         ].join(SPACE);
 
     Kinetic.Util.addMethods(Kinetic.Node, {
@@ -974,8 +975,10 @@
                 m;
 
             this._eachAncestorReverse(function(node) {
-                m = node.getTransform();
-                am.multiply(m);
+                if (node.isTransformsEnabled()) { 
+                    m = node.getTransform();
+                    am.multiply(m);
+                }
             }, true);
             return am;
         },
@@ -1363,26 +1366,6 @@
         draw: function() {
             this.drawScene();
             this.drawHit();
-            return this;
-        },
-        /**
-         * enable ancestor transforms
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Node}
-         */
-        enableAncestorTransforms: function() {
-            this.setAncestorTransformsEnabled(true);
-            return this;
-        },
-        /**
-         * disable ancestor transforms
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Node}
-         */
-        disableAncestorTransforms: function() {
-            this.setAncestorTransformsEnabled(false);
             return this;
         },
         /**
@@ -1802,27 +1785,6 @@
      * @memberof Kinetic.Node.prototype
      * @returns {Boolean}
      */
-
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'ancestorTransformsEnabled', true);
-
-    /**
-     * enable/disable ancestor transforms
-     * @name setAncestorTransformsEnabled
-     * @method
-     * @memberof Kinetic.Node.prototype
-     * @param {Boolean} enabled
-     * @returns {Node}
-     */
-
-    /**
-     * determine if ancestor transforms are enabled
-     * @name getAncestorTransformsEnabled
-     * @method
-     * @memberof Kinetic.Node.prototype
-     * @returns {Boolean}
-     */
-
-    Kinetic.Node.prototype.isAncestorTransformsEnabled = Kinetic.Node.prototype.getAncestorTransformsEnabled;
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'transformsEnabled', true);
 

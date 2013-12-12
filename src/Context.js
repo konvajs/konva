@@ -227,14 +227,7 @@
             var m;
 
             if (shape.isTransformsEnabled()) {
-                if (shape.isAncestorTransformsEnabled()) {
-                    // poor performance
-                    m = shape.getAbsoluteTransform().getMatrix();
-                }
-                else {
-                    // better performance
-                    m = shape.getTransform().getMatrix();
-                }
+                m = shape.getAbsoluteTransform().getMatrix();
                 this.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }
             else {
