@@ -32,8 +32,9 @@
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = 'Ring';
+            this.setDrawFunc(this._drawFunc);
         },
-        drawFunc: function(context) {
+        _drawFunc: function(context) {
             context.beginPath();
             context.arc(0, 0, this.getInnerRadius(), 0, PIx2, false);
             context.moveTo(this.getOuterRadius(), 0);

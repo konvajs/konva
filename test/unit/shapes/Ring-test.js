@@ -11,7 +11,8 @@ suite('Ring', function() {
           outerRadius: 90,
           fill: 'green',
           stroke: 'black',
-          strokeWidth: 4
+          strokeWidth: 4,
+          draggable: true
       });
       layer.add(ring);
       stage.add(layer);
