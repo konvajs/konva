@@ -21,8 +21,9 @@
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = ELLIPSE;
+            this.setDrawFunc(this._drawFunc);
         },
-        drawFunc: function(context) {
+        _drawFunc: function(context) {
             var r = this.getRadius();
 
             context.beginPath();

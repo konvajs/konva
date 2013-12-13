@@ -34,8 +34,10 @@
             this.on('pointsChange.kinetic tensionChange.kinetic closedChange.kinetic', function() {
                 this._clearCache('tensionPoints');
             });
+
+            this.setDrawFunc(this._drawFunc);
         },
-        drawFunc: function(context) {
+        _drawFunc: function(context) {
             var points = this.getPoints(),
                 length = points.length,
                 tension = this.getTension(),

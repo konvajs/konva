@@ -86,8 +86,10 @@
             }
 
             this._setTextData();
+            this.setDrawFunc(this._drawFunc);
+            this.setDrawHitFunc(this._drawHitFunc);
         },
-        drawFunc: function(context) {
+        _drawFunc: function(context) {
             var p = this.getPadding(),
                 textHeight = this.getTextHeight(),
                 lineHeightPx = this.getLineHeight() * textHeight,
@@ -125,7 +127,7 @@
             }
             context.restore();
         },
-        drawHitFunc: function(context) {
+        _drawHitFunc: function(context) {
             var width = this.getWidth(),
                 height = this.getHeight();
 

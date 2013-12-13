@@ -35,8 +35,10 @@
             this.on('dataChange.kinetic', function () {
                 that.dataArray = Kinetic.Path.parsePathData(this.getData());
             });
+
+            this.setDrawFunc(this._drawFunc);
         },
-        drawFunc: function (context) {
+        _drawFunc: function (context) {
             var ca = this.dataArray,
                 closedPath = false;
 

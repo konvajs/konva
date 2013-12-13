@@ -46,20 +46,26 @@
         addGetterSetter: function(constructor, attr, def) {
             this.addGetter(constructor, attr, def);
             this.addSetter(constructor, attr);
+            this.addOverloadedGetterSetter(constructor, attr);
         },
         addPointGetterSetter: function(constructor, attr, def) {
             this.addPointGetter(constructor, attr, def);
             this.addPointSetter(constructor, attr);
+            this.addOverloadedGetterSetter(constructor, attr);
 
             // add invdividual component getters and setters
             this.addGetter(constructor, attr + UPPER_X, def);
             this.addGetter(constructor, attr + UPPER_Y, def);
             this.addSetter(constructor, attr + UPPER_X);
             this.addSetter(constructor, attr + UPPER_Y);
+
+            this.addOverloadedGetterSetter(constructor, attr + UPPER_X);
+            this.addOverloadedGetterSetter(constructor, attr + UPPER_Y);
         },
         addBoxGetterSetter: function(constructor, attr, def) {
             this.addBoxGetter(constructor, attr, def);
             this.addBoxSetter(constructor, attr);
+            this.addOverloadedGetterSetter(constructor, attr);
 
             // add invdividual component getters and setters
             this.addGetter(constructor, attr + UPPER_X, def);
@@ -71,19 +77,27 @@
             this.addSetter(constructor, attr + UPPER_Y);
             this.addSetter(constructor, attr + UPPER_WIDTH);
             this.addSetter(constructor, attr + UPPER_HEIGHT);
+
+            this.addOverloadedGetterSetter(constructor, attr + UPPER_X);
+            this.addOverloadedGetterSetter(constructor, attr + UPPER_Y);
+            this.addOverloadedGetterSetter(constructor, attr + UPPER_WIDTH);
+            this.addOverloadedGetterSetter(constructor, attr + UPPER_HEIGHT);
         },
         addPointsGetterSetter: function(constructor, attr) {
             this.addPointsGetter(constructor, attr);
             this.addPointsSetter(constructor, attr);
-            this.addPointAdder(constructor, attr);
+            this.addOverloadedGetterSetter(constructor, attr);
         },
         addRotationGetterSetter: function(constructor, attr, def) {
             this.addRotationGetter(constructor, attr, def);
             this.addRotationSetter(constructor, attr);
+            this.addOverloadedGetterSetter(constructor, attr);
+            this.addOverloadedGetterSetter(constructor, attr + DEG);
         },
         addColorGetterSetter: function(constructor, attr) {
             this.addGetter(constructor, attr);
             this.addSetter(constructor, attr);
+            this.addOverloadedGetterSetter(constructor, attr);
 
             // component getters
             this.addColorRGBGetter(constructor, attr);
@@ -96,6 +110,11 @@
             this.addColorComponentSetter(constructor, attr, R);
             this.addColorComponentSetter(constructor, attr, G);
             this.addColorComponentSetter(constructor, attr, B);
+
+            this.addOverloadedGetterSetter(constructor, attr + RGB);
+            this.addOverloadedGetterSetter(constructor, attr + UPPER_R);
+            this.addOverloadedGetterSetter(constructor, attr + UPPER_G);
+            this.addOverloadedGetterSetter(constructor, attr + UPPER_B);
         },
 
         // getter adders
@@ -276,8 +295,7 @@
             };
         },
         addRotationSetter: function(constructor, attr) {
-            var that = this,
-                method = SET + Kinetic.Util._capitalize(attr);
+            var method = SET + Kinetic.Util._capitalize(attr);
 
             // radians
             constructor.prototype[method] = function(val) {
@@ -289,6 +307,24 @@
                 this._setAttr(attr, Kinetic.Util._degToRad(deg));
                 return this;
             };
+        },
+        addOverloadedGetterSetter: function(constructor, attr) {
+            var that = this,
+                capitalizedAttr = Kinetic.Util._capitalize(attr),
+                setter = SET + capitalizedAttr,
+                getter = GET + capitalizedAttr;
+
+            constructor.prototype[attr] = function() {
+                // setting
+                if (arguments.length) {
+                    this[setter](arguments[0]);
+                    return this;
+                }
+                // getting
+                else {
+                    return this[getter]();
+                }
+            }
         }
     };
 })();

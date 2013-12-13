@@ -77,13 +77,15 @@
             this.className = 'Sprite';
 
             this.anim = new Kinetic.Animation();
-            var that = this;
             this.on('animationChange.kinetic', function() {
                 // reset index when animation changes
-                that.setIndex(0);
+                this.setIndex(0);
             });
+
+            this.setDrawFunc(this._drawFunc);
+            this.setDrawHitFunc(this._drawHitFunc);
         },
-        drawFunc: function(context) {
+        _drawFunc: function(context) {
             var anim = this.getAnimation(),
                 index = this.getIndex(),
                 f = this.getAnimations()[anim][index],
@@ -93,7 +95,7 @@
                 context.drawImage(image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
             }
         },
-        drawHitFunc: function(context) {
+        _drawHitFunc: function(context) {
             var anim = this.getAnimation(),
                 index = this.getIndex(),
                 f = this.getAnimations()[anim][index];

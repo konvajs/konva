@@ -36,11 +36,13 @@
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = IMAGE;
+            this.setDrawFunc(this._drawFunc);
+            this.setDrawHitFunc(this._drawHitFunc);
         },
         _useBufferCanvas: function() {
             return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasStroke();
         },
-        drawFunc: function(context) {
+        _drawFunc: function(context) {
             var width = this.getWidth(), 
                 height = this.getHeight(), 
                 crop, cropWidth, cropHeight,
@@ -85,7 +87,7 @@
                 context.drawImage.apply(context, params);
             }
         },
-        drawHitFunc: function(context) {
+        _drawHitFunc: function(context) {
             var width = this.getWidth(), 
                 height = this.getHeight(), 
                 imageHitRegion = this.imageHitRegion;

@@ -2805,4 +2805,90 @@ suite('Node', function() {
     assert.equal(circle.isVisible(), true);
 
   });
+
+  test('overloaders', function(){
+    var stage = addStage();
+    var layer = new Kinetic.Layer();
+    var group = new Kinetic.Group();
+    var circle = new Kinetic.Circle({
+        x: 100,
+        y: 100,
+        radius: 70,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 4,
+        name: 'myCircle',
+        draggable: true
+    });
+
+    group.add(circle);
+    layer.add(group);
+    stage.add(layer);
+
+    circle.x(1);
+    assert.equal(circle.x(), 1);
+
+    circle.y(2);
+    assert.equal(circle.y(), 2);
+
+    circle.opacity(0.5);
+    assert.equal(circle.opacity(), 0.5);
+
+    circle.name('foo');
+    assert.equal(circle.name(), 'foo'); 
+
+    circle.id('bar');
+    assert.equal(circle.id(), 'bar'); 
+
+    circle.rotation(2);
+    assert.equal(circle.rotation(), 2);
+
+    circle.rotationDeg(3);
+    assert.equal(Math.round(circle.rotationDeg()), 3);
+
+    circle.scale({x: 2, y: 2});
+    assert.equal(circle.scale().x, 2);
+    assert.equal(circle.scale().y, 2);
+
+    circle.scaleX(5);
+    assert.equal(circle.scaleX(), 5);
+
+    circle.scaleY(8);
+    assert.equal(circle.scaleY(), 8);
+
+    circle.skew({x: 2, y: 2});
+    assert.equal(circle.skew().x, 2);
+    assert.equal(circle.skew().y, 2);
+
+    circle.skewX(5);
+    assert.equal(circle.skewX(), 5);
+
+    circle.skewY(8);
+    assert.equal(circle.skewY(), 8);
+
+    circle.offset({x: 2, y: 2});
+    assert.equal(circle.offset().x, 2);
+    assert.equal(circle.offset().y, 2);
+
+    circle.offsetX(5);
+    assert.equal(circle.offsetX(), 5);
+
+    circle.offsetY(8);
+    assert.equal(circle.offsetY(), 8);
+
+    circle.width(23);
+    assert.equal(circle.width(), 23); 
+
+    circle.height(11);
+    assert.equal(circle.height(), 11); 
+
+    circle.listening(false);
+    assert.equal(circle.listening(), false);
+
+    circle.visible(false);
+    assert.equal(circle.visible(), false); 
+
+    circle.transformsEnabled(false);
+    assert.equal(circle.transformsEnabled(), false);  
+  });
 });

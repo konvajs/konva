@@ -40,8 +40,9 @@
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = CIRCLE;
+            this.setDrawFunc(this._drawFunc);
         },
-        drawFunc: function(context) {
+        _drawFunc: function(context) {
             context.beginPath();
             context.arc(0, 0, this.getRadius(), 0, PIx2, false);
             context.closePath();

@@ -43,8 +43,6 @@
             // call super constructor
             Kinetic.Node.call(this, config);
 
-            this._setDrawFuncs();
-
             this.on('shadowColorChange.kinetic shadowBlurChange.kinetic shadowOffsetChange.kinetic shadowOpacityChange.kinetic shadowEnabledChanged.kinetic', _clearHasShadowCache);
         },
         hasChildren: function() {
@@ -301,14 +299,6 @@
                 context.restore();
             }
             return this;
-        },
-        _setDrawFuncs: function() {
-            if(!this.attrs.drawFunc && this.drawFunc) {
-                this.setDrawFunc(this.drawFunc);
-            }
-            if(!this.attrs.drawHitFunc && this.drawHitFunc) {
-                this.setDrawHitFunc(this.drawHitFunc);
-            }
         }
     });
     Kinetic.Util.extend(Kinetic.Shape, Kinetic.Node);

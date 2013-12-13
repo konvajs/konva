@@ -1488,6 +1488,7 @@
      */
 
     Kinetic.Factory.addGetter(Kinetic.Node, 'name');
+    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'name');
 
      /**
      * get name
@@ -1498,6 +1499,7 @@
      */
 
     Kinetic.Factory.addGetter(Kinetic.Node, 'id');
+    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'id');
 
     /**
      * get id
@@ -1726,6 +1728,7 @@
      */
 
     Kinetic.Factory.addSetter(Kinetic.Node, 'width', 0);
+    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'width');
 
     /**
      * set width
@@ -1737,6 +1740,7 @@
      */
 
     Kinetic.Factory.addSetter(Kinetic.Node, 'height', 0);
+    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'height');
 
     /**
      * set height
