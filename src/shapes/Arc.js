@@ -1,6 +1,6 @@
 (function() {
     /**
-     * AnnularSection constructor
+     * Arc constructor
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
@@ -12,8 +12,8 @@
      * @@shapeParams
      * @@nodeParams
      * @example
-     * // draw a AnnularSection that's pointing downwards<br>
-     * var AnnularSection = new Kinetic.AnnularSection({<br>
+     * // draw a Arc that's pointing downwards<br>
+     * var Arc = new Kinetic.Arc({<br>
      *   innerRadius: 40,<br>
      *   outerRadius: 80,<br>
      *   fill: 'red',<br>
@@ -23,15 +23,15 @@
      *   rotationDeg: -120<br>
      * });
      */
-    Kinetic.AnnularSection = function(config) {
+    Kinetic.Arc = function(config) {
         this.___init(config);
     };
 
-    Kinetic.AnnularSection.prototype = {
+    Kinetic.Arc.prototype = {
         ___init: function(config) {
             // call super constructor
             Kinetic.Shape.call(this, config);
-            this.className = 'AnnularSection';
+            this.className = 'Arc';
         },
         drawFunc: function(context) {
             context.beginPath();
@@ -41,10 +41,10 @@
             context.fillStrokeShape(this);
         }
     };
-    Kinetic.Util.extend(Kinetic.AnnularSection, Kinetic.Shape);
+    Kinetic.Util.extend(Kinetic.Arc, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.AnnularSection, 'innerRadius', function() {
+    Kinetic.Factory.addGetterSetter(Kinetic.Arc, 'innerRadius', function() {
         return 0;
     });
 
@@ -52,7 +52,7 @@
      * set innerRadius
      * @name setInnerRadius
      * @method
-     * @memberof Kinetic.AnnularSection.prototype
+     * @memberof Kinetic.Arc.prototype
      * @param {Number} innerRadius
      */
 
@@ -60,11 +60,11 @@
      * get innerRadius
      * @name getInnerRadius
      * @method
-     * @memberof Kinetic.AnnularSection.prototype
+     * @memberof Kinetic.Arc.prototype
      * @returns {Number}
      */
      
-    Kinetic.Factory.addGetterSetter(Kinetic.AnnularSection, 'outerRadius', function() {
+    Kinetic.Factory.addGetterSetter(Kinetic.Arc, 'outerRadius', function() {
         return 0;
     });
 
@@ -72,7 +72,7 @@
      * set outerRadius
      * @name setOuterRadius
      * @method
-     * @memberof Kinetic.AnnularSection.prototype
+     * @memberof Kinetic.Arc.prototype
      * @param {Number} innerRadius
      */
 
@@ -80,17 +80,17 @@
      * get outerRadius
      * @name getOuterRadius
      * @method
-     * @memberof Kinetic.AnnularSection.prototype
+     * @memberof Kinetic.Arc.prototype
      * @returns {Number}
      */
 
-    Kinetic.Factory.addRotationGetterSetter(Kinetic.AnnularSection, 'angle', 0);
+    Kinetic.Factory.addRotationGetterSetter(Kinetic.Arc, 'angle', 0);
 
     /**
      * set angle
      * @name setAngle
      * @method
-     * @memberof Kinetic.AnnularSection.prototype
+     * @memberof Kinetic.Arc.prototype
      * @param {Number} angle
      */
 
@@ -98,7 +98,7 @@
      * set angle in degrees
      * @name setAngleDeg
      * @method
-     * @memberof Kinetic.AnnularSection.prototype
+     * @memberof Kinetic.Arc.prototype
      * @param {Number} angleDeg
      */
 
@@ -106,7 +106,7 @@
      * get angle
      * @name getAngle
      * @method
-     * @memberof Kinetic.AnnularSection.prototype
+     * @memberof Kinetic.Arc.prototype
      * @returns {Number}
      */
 
@@ -114,18 +114,18 @@
      * get angle in degrees
      * @name getAngleDeg
      * @method
-     * @memberof Kinetic.AnnularSection.prototype
+     * @memberof Kinetic.Arc.prototype
      * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.AnnularSection, 'clockwise', false);
+    Kinetic.Factory.addGetterSetter(Kinetic.Arc, 'clockwise', false);
 
     /**
-     * set clockwise draw direction.  If set to true, the AnnularSection will be drawn clockwise
-     *  If set to false, the AnnularSection will be drawn anti-clockwise.  The default is false.
+     * set clockwise draw direction.  If set to true, the Arc will be drawn clockwise
+     *  If set to false, the Arc will be drawn anti-clockwise.  The default is false.
      * @name setClockwise
      * @method
-     * @memberof Kinetic.AnnularSection.prototype
+     * @memberof Kinetic.Arc.prototype
      * @param {Boolean} clockwise
      */
 
@@ -133,7 +133,7 @@
      * get clockwise
      * @name getClockwise
      * @method
-     * @memberof Kinetic.AnnularSection.prototype
+     * @memberof Kinetic.Arc.prototype
      * @returns {Boolean}
      */
 })();

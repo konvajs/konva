@@ -1,9 +1,9 @@
 suite('AnnularSection', function() {
     // ======================================================
-    test('add annular section', function() {
+    test('add arc', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();
-        var annularsection = new Kinetic.AnnularSection({
+        var arc = new Kinetic.Arc({
             x: 100,
             y: 100,
             innerRadius: 50,
@@ -12,14 +12,14 @@ suite('AnnularSection', function() {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            name: 'myAnnularSection',
+            name: 'myArc',
             draggable: true
         });
 
-        layer.add(annularsection);
+        layer.add(arc);
         stage.add(layer);
 
-        assert.equal(annularsection.getClassName(), 'AnnularSection');
+        assert.equal(arc.getClassName(), 'Arc');
 
         var trace = layer.getContext().getTrace();
         //console.log(trace);
@@ -30,7 +30,7 @@ suite('AnnularSection', function() {
     test('set annular section angle using degrees', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();
-        var annularsection = new Kinetic.AnnularSection({
+        var arc = new Kinetic.Arc({
             x: 100,
             y: 100,
             innerRadius: 50,
@@ -39,14 +39,14 @@ suite('AnnularSection', function() {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            name: 'myAnnularSection',
+            name: 'myArc',
             draggable: true,
             lineJoin: 'round'
         });
 
-        layer.add(annularsection);
+        layer.add(arc);
         stage.add(layer);
 
-        assert.equal(annularsection.getAngle(), Math.PI / 2);
+        assert.equal(arc.getAngle(), Math.PI / 2);
     });
 });
