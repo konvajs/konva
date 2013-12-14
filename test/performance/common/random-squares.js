@@ -1,3 +1,5 @@
+      console.log('test')
+
       var stage;
       var circlesLayer;
       var circles;
@@ -67,7 +69,7 @@
             var x = Math.random() * width;
             var y = Math.random() * height;
             if (VERSION === 'new') {
-            circles[i].setPosition({x: x, y: y});
+            circles[i].position({x: x, y: y});
             }
             else {
               circles[i].setPosition(x, y);

@@ -548,32 +548,11 @@
             }
             return level;
         },
-        /**
-         * set node position relative to parent
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @param {Object} pos
-         * @param {Number} pos.x
-         * @param {Nubmer} pos.y
-         * @returns {Kinetic.Node}
-         * @example
-         * // set x and <br>
-         * node.setPosition({<br>
-         *   x: 5<br>
-         *   y: 10
-         * });
-         */
         setPosition: function(pos) {
             this.setX(pos.x);
             this.setY(pos.y);
             return this;
         },
-        /**
-         * get node position relative to parent
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Object}
-         */
         getPosition: function() {
             return {
                 x: this.getX(),
@@ -1255,13 +1234,6 @@
             this._setAttr(ID, id);
             return this;
         },
-        /**
-         * set name
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @param {String} name
-         * @returns {Kinetic.Node}
-         */
         setName: function(name) {
             var oldName = this.getName();
 
@@ -1427,183 +1399,198 @@
         return no;
     };
     // add getters setters
+    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'position');
+    /**
+     * get or set node position relative to parent
+     * @name position
+     * @method
+     * @memberof Kinetic.Node.prototype
+     * @param {Object} pos
+     * @param {Number} pos.x
+     * @param {Nubmer} pos.y
+     * @returns {Object}
+     * @example
+     * // get position<br>
+     * var position = node.position();<br><br>
+     *
+     * // set position<br>
+     * node.position({<br>
+     *   x: 5<br>
+     *   y: 10
+     * });
+     */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'x', 0);
 
     /**
-     * set x position
-     * @name setX
+     * get or set x position
+     * @name x
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} x
-     * @returns {Kinetic.Node}
-     */
-
-    /**
-     * get x position
-     * @name getX
-     * @method
-     * @memberof Kinetic.Node.prototype
      * @returns {Object}
+     * @example
+     * // get x<br>
+     * var x = node.x();<br><br>
+     *
+     * // set x<br>
+     * node.x(5);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'y', 0);
 
     /**
-     * set y position
-     * @name setY
+     * get or set y position
+     * @name y
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} y
-     * @returns {Kinetic.Node}
-     */
-
-    /**
-     * get y position
-     * @name getY
-     * @method
-     * @memberof Kinetic.Node.prototype
      * @returns {Integer}
+     * @example
+     * // get y<br>
+     * var y = node.y();<br><br>
+     *
+     * // set y<br>
+     * node.y(5);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'opacity', 1);
 
     /**
-     * set opacity.  Opacity values range from 0 to 1.
+     * get or set opacity.  Opacity values range from 0 to 1.
      *  A node with an opacity of 0 is fully transparent, and a node
      *  with an opacity of 1 is fully opaque
-     * @name setOpacity
+     * @name opacity
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Object} opacity
-     * @returns {Kinetic.Node}
-     */
-
-    /**
-     * get opacity.
-     * @name getOpacity
-     * @method
-     * @memberof Kinetic.Node.prototype
      * @returns {Number}
+     * @example
+     * // get opacity<br>
+     * var opacity = node.opacity();<br><br>
+     *
+     * // set opacity<br>
+     * node.opacity(0.5);
      */
 
     Kinetic.Factory.addGetter(Kinetic.Node, 'name');
     Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'name');
 
-     /**
-     * get name
-     * @name getName
+    /**
+     * set name
+     * @name name
      * @method
      * @memberof Kinetic.Node.prototype
+     * @param {String} name
      * @returns {String}
+     * @example
+     * // get name<br>
+     * var name = node.name();<br><br>
+     *
+     * // set name<br>
+     * node.name('foo');
      */
 
     Kinetic.Factory.addGetter(Kinetic.Node, 'id');
     Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'id');
 
     /**
-     * get id
-     * @name getId
+     * set id
+     * @name id
      * @method
      * @memberof Kinetic.Node.prototype
+     * @param {String} id
      * @returns {String}
+     * @example
+     * // get id<br>
+     * var name = node.id();<br><br>
+     *
+     * // set id<br>
+     * node.id('foo');
      */
 
     Kinetic.Factory.addRotationGetterSetter(Kinetic.Node, 'rotation', 0);
 
     /**
-     * set rotation in radians
-     * @name setRotation
+     * get or set rotation in radians
+     * @name rotation
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} theta
-     * @returns {Kinetic.Node}
+     * @returns {Number}
+     * @example
+     * // get rotation in radians<br>
+     * var rotation = node.rotation();<br><br>
+     *
+     * // set rotation in radians<br>
+     * node.rotation(Math.PI / 2);
      */
 
     /**
-     * set rotation in degrees
-     * @name setRotationDeg
+     * get or set rotation in degrees
+     * @name rotationDeg
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} deg
-     * @returns {Kinetic.Node}
-     */
-
-    /**
-     * get rotation in degrees
-     * @name getRotationDeg
-     * @method
-     * @memberof Kinetic.Node.prototype
      * @returns {Number}
-     */
-
-    /**
-     * get rotation in radians
-     * @name getRotation
-     * @method
-     * @memberof Kinetic.Node.prototype
-     * @returns {Number}
+     * @example
+     * // get rotation in degrees<br>
+     * var rotationDeg = node.rotationDeg();<br><br>
+     *
+     * // set rotation in degrees<br>
+     * node.rotationDeg(45);
      */
 
     Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'scale', 1);
 
     /**
-     * set scale
-     * @name setScale
+     * get or set scale
+     * @name scale
      * @param {Object} scale
      * @param {Number} scale.x
      * @param {Number} scale.y
      * @method
      * @memberof Kinetic.Node.prototype
-     * @returns {Kinetic.Node}
+     * @returns {Object}
      * @example
-     * // set x and y <br>
-     * shape.setScale({<br>
-     *   x: 20<br>
-     *   y: 10<br>
+     * // get scale<br>
+     * var scale = node.scale();<br><br>
+     *
+     * // set scale <br>
+     * shape.scale({<br>
+     *   x: 2<br>
+     *   y: 3<br>
      * });
      */
 
     /**
-     * get scale
-     * @name getScale
-     * @method
-     * @memberof Kinetic.Node.prototype
-     * @returns {Object}
-     */
-
-    /**
-     * set scale x
-     * @name setScaleX
+     * get or set scale x
+     * @name scaleX
      * @param {Number} x
      * @method
      * @memberof Kinetic.Node.prototype
-     * @returns {Kinetic.Node}
-     */
-
-    /**
-     * get scale x
-     * @name getScaleX
-     * @method
-     * @memberof Kinetic.Node.prototype
      * @returns {Number}
+     * @example
+     * // get scale x<br>
+     * var scaleX = node.scaleX();<br><br>
+     *
+     * // set scale x<br>
+     * node.scaleX(2);
      */
 
     /**
-     * set scale y
-     * @name setScaleY
+     * get or set scale y
+     * @name scaleY
      * @param {Number} y
      * @method
      * @memberof Kinetic.Node.prototype
-     * @returns {Kinetic.Node}
-     */
-
-    /**
-     * get scale y
-     * @name getScaleY
-     * @method
-     * @memberof Kinetic.Node.prototype
-     * @returns {Integer}
+     * @returns {Number}
+     * @example
+     * // get scale y<br>
+     * var scaleY = node.scaleY();<br><br>
+     *
+     * // set scale y<br>
+     * node.scaleY(2);
      */
 
     Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'skew', 0);

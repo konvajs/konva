@@ -2890,5 +2890,9 @@ suite('Node', function() {
 
     circle.transformsEnabled(false);
     assert.equal(circle.transformsEnabled(), false);  
+
+    circle.position({x: 6, y: 8});
+    assert.equal(circle.position().x, 6);
+    assert.equal(circle.position().y, 8);
   });
 });

@@ -483,4 +483,65 @@ suite('Shape', function() {
     assert.equal(trace, 'clearRect(0,0,578,200);save();save();globalAlpha=0.25;shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;drawImage([object HTMLCanvasElement],0,0);restore();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0);restore();');
 
   });
+
+  // ======================================================
+  test('overloaded getters and setters', function(){
+    var stage = addStage();
+
+    var layer = new Kinetic.Layer();
+
+    var rect = new Kinetic.Rect({
+      x: 100,
+      y: 50,
+      width: 100,
+      height: 50,
+      fill: 'green',
+      stroke: 'red',
+      strokeWidth: 20,
+      draggable: true
+    });
+
+    layer.add(rect);
+    stage.add(layer);
+
+    rect.stroke('blue');
+    assert.equal(rect.stroke(), 'blue');
+
+    rect.strokeR(255);
+    assert.equal(rect.strokeR(), 255);
+
+    rect.strokeG(20);
+    assert.equal(rect.strokeG(), 20);
+
+    rect.strokeB(30);
+    assert.equal(rect.strokeB(), 30);
+
+    rect.strokeRGB({r: 1, g: 2, b: 3});
+    assert.equal(rect.strokeRGB().r, 1);
+    assert.equal(rect.strokeRGB().g, 2);
+    assert.equal(rect.strokeRGB().b, 3);
+
+    rect.lineJoin('bevel');
+    assert.equal(rect.lineJoin(), 'bevel');
+
+    rect.lineCap('square');
+    assert.equal(rect.lineCap(), 'square');
+
+    rect.strokeWidth(8);
+    assert.equal(rect.strokeWidth(), 8);
+
+    rect.drawFunc('function');
+    assert.equal(rect.drawFunc(), 'function');
+
+    rect.drawHitFunc('function');
+    assert.equal(rect.drawHitFunc(), 'function');
+
+    rect.dashArray([1]);
+    assert.equal(rect.dashArray()[0], 1);
+
+    // NOTE: skipping the rest because it would take hours to test all possible methods.  
+    // This should hopefully be enough to test Factor overloaded methods
+
+
+  });
 });
