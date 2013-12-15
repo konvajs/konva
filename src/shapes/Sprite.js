@@ -126,13 +126,7 @@
             this.anim.setLayers(layer);
 
             this.interval = setInterval(function() {
-                var index = that.getIndex();
                 that._updateIndex();
-                if(that.afterFrameFunc && index === that.afterFrameIndex) {
-                    that.afterFrameFunc();
-                    delete that.afterFrameFunc;
-                    delete that.afterFrameIndex;
-                }
             }, 1000 / this.getFrameRate());
 
             this.anim.start();
@@ -145,17 +139,6 @@
         stop: function() {
             this.anim.stop();
             clearInterval(this.interval);
-        },
-        /**
-         * set after frame event handler
-         * @method
-         * @memberof Kinetic.Sprite.prototype
-         * @param {Integer} index frame index
-         * @param {Function} func function to be executed after frame has been drawn
-         */
-        afterFrame: function(index, func) {
-            this.afterFrameIndex = index;
-            this.afterFrameFunc = func;
         },
         _updateIndex: function() {
             var index = this.getIndex(),

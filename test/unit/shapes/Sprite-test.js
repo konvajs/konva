@@ -108,9 +108,10 @@ suite('Sprite', function() {
             // kick once
             setTimeout(function() {
                 sprite.setAnimation('kicking');
-
-                sprite.afterFrame(5, function() {
-                    sprite.setAnimation('standing');
+                sprite.on('indexChange', function(evt) {
+                    if (evt.newVal === 0 && this.getAnimation() === 'kicking') {
+                        sprite.setAnimation('standing');
+                    }
                 });
             }, 2000);
             setTimeout(function() {
