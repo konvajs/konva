@@ -8,6 +8,7 @@
             y: 0
         },
         node: null,
+        distance: 1,
 
         // methods
         _drag: function(evt) {
@@ -15,6 +16,19 @@
                 node = dd.node;
 
             if(node) {
+               if(!dd.isDragging) {
+                    var pos = node.getStage().getPointerPosition();
+                    var dragDistance = node.getAttr('dragDistance') || dd.distance;
+                    var distance = Math.max(
+                        Math.abs(pos.x - dd.startPointerPos.x),
+                        Math.abs(pos.y - dd.startPointerPos.y)
+                    );
+
+                    if (distance < dragDistance) {
+                        return;
+                    }
+                }
+
                 node._setDragPosition(evt);
 
                 if(!dd.isDragging) {
@@ -83,6 +97,7 @@
             }
 
             dd.node = this;
+            dd.startPointerPos = pos;
             dd.offset.x = pos.x - ap.x;
             dd.offset.y = pos.y - ap.y;
             dd.anim.setLayers(layer || this.getLayers());
