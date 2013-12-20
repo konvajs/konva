@@ -42,7 +42,7 @@
             this._id = Kinetic.idCounter++;
             this.eventListeners = {};
             this.attrs = {};
-            this.cache = {};
+            this._cache = {};
             this.setAttrs(config);
 
             // event bindings for cache handling
@@ -60,32 +60,18 @@
                 that._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
             });
         },
-        /**
-        * clear cached variables
-        * @method
-        * @memberof Kinetic.Node.prototype
-        * @returns {Kinetic.Node}
-        * @example
-        * node.clearCache();
-        */
-        clearCache: function() {
-            this.cache = {};
-            return this;
-        },
         _clearCache: function(attr){
-            delete this.cache[attr];
+            delete this._cache[attr];
         },
         _getCache: function(attr, privateGetter){
-            var cache = this.cache[attr];
-
-
+            var cache = this._cache[attr];
 
             // if not cached, we need to set it using the private getter method.
             if (cache === undefined) {
-                this.cache[attr] = privateGetter.call(this);
+                this._cache[attr] = privateGetter.call(this);
             }
 
-            return this.cache[attr];     
+            return this._cache[attr];     
         },
         /*
          * when the logic for a cached result depends on ancestor propagation, use this
@@ -100,6 +86,46 @@
                 });
             }
         },
+        /**
+        * clear cached canvas
+        * @method
+        * @memberof Kinetic.Node.prototype
+        * @returns {Kinetic.Node}
+        * @example
+        * node.clearCache();
+        */
+        clearCache: function() {
+            this._cache = {};
+            return this;
+        },
+        /**
+        * cache node to improve drawing performance.
+        * NOTE: if you have filters applied to your node, your shape is already cached.
+        * explicitly calling cache() will override your filters.
+        * @method
+        * @memberof Kinetic.Node.prototype
+        * @returns {Kinetic.Node}
+        * @example
+        * node.cache();
+        */
+        cache: function(box) {
+            var sceneCanvasCache = new Kinetic.SceneCanvas({
+                pixelRatio: 1,
+                width: box.width,
+                height: box.height
+            });
+            var hitCanvasCache = new Kinetic.HitCanvas({
+                pixelRatio: 1,
+                width: box.width,
+                height: box.height
+            });
+
+            this.drawScene(sceneCanvasCache);
+            this.drawHit(hitCanvasCache);
+
+            this._cache.sceneCanvas = sceneCanvasCache;
+            this._cache.hitCanvas = hitCanvasCache;
+        },
         /*
          * the default isDraggable method returns false.
          * if the DragAndDrop module is included, this is overwritten
@@ -107,20 +133,6 @@
         isDraggable: function() {
             return false;
         },
-        /*
-         * when the logic for a cached result depends on descendant propagation, use this
-         * method to clear self and ancestor cache
-         */
-         /*
-        _clearSelfAndAncestorCache: function(attr) {
-            var parent = this.getParent();
-
-            this._clearCache(attr);
-            if (parent) {
-                parent._clearSelfAndAncestorCache(attr);
-            }
-        },
-        */
         /**
          * bind events to the node. KineticJS supports mouseover, mousemove,
          *  mouseout, mouseenter, mouseleave, mousedown, mouseup, click, dblclick, touchstart, touchmove,
@@ -954,7 +966,7 @@
                 m;
 
             this._eachAncestorReverse(function(node) {
-                if (node.isTransformsEnabled()) { 
+                if (node.transformsEnabled() === 'all') { 
                     m = node.getTransform();
                     am.multiply(m);
                 }
@@ -1338,26 +1350,6 @@
         draw: function() {
             this.drawScene();
             this.drawHit();
-            return this;
-        },
-        /**
-         * enable transforms
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Node}
-         */
-        enableTransforms: function() {
-            this.setTransformsEnabled(true);
-            return this;
-        },
-        /**
-         * disable transforms
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Node}
-         */
-        disableTransforms: function() {
-            this.setTransformsEnabled(false);
             return this;
         }
     });
@@ -1777,26 +1769,17 @@
      * @returns {Boolean}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'transformsEnabled', true);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'transformsEnabled', 'all');
 
     /**
-     * enable/disable transforms
-     * @name setTransformsEnabled
+     * get/set transforms that are enabled.  Can be "all", "none", or "position".  The default
+     *  is "all"
+     * @name transformsEnabled
      * @method
      * @memberof Kinetic.Node.prototype
-     * @param {Boolean} enabled
-     * @returns {Node}
+     * @param {String} enabled
+     * @returns {String}
      */
-
-    /**
-     * determine if transforms are enabled
-     * @name getTransformsEnabled
-     * @method
-     * @memberof Kinetic.Node.prototype
-     * @returns {Boolean}
-     */
-
-    Kinetic.Node.prototype.isTransformsEnabled = Kinetic.Node.prototype.getTransformsEnabled;
 
     Kinetic.Collection.mapMethods([
         'on',

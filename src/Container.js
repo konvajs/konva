@@ -243,9 +243,9 @@
                 clip = this.getClipWidth() && this.getClipHeight(),
                 children, n, len;
 
-            if (!canvas && layer) {
-                canvas = layer.getCanvas();
-            }
+            // if (!canvas && layer) {
+            //     canvas = layer.getCanvas();
+            // }
 
             if(this.isVisible()) {
                 if (clip) {

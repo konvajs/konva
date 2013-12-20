@@ -114,17 +114,17 @@ suite('Node', function() {
             strokeWidth: 4
         });
 
-        assert.equal(circle.cache.transform, undefined);
+        assert.equal(circle._cache.transform, undefined);
 
         layer.add(circle);
         stage.add(layer);
 
         // transform cache
-        assert.notEqual(circle.cache.transform, undefined);
+        assert.notEqual(circle._cache.transform, undefined);
         circle.setX(100);
-        assert.equal(circle.cache.transform, undefined);
+        assert.equal(circle._cache.transform, undefined);
         layer.draw();
-        assert.notEqual(circle.cache.transform, undefined);
+        assert.notEqual(circle._cache.transform, undefined);
     });
 
     // ======================================================
@@ -143,15 +143,15 @@ suite('Node', function() {
         stage.add(layer);
 
         // visible cache
-        assert.equal(circle.cache.visible, true);
+        assert.equal(circle._cache.visible, true);
         circle.hide();
-        assert.equal(circle.cache.visible, undefined);
+        assert.equal(circle._cache.visible, undefined);
         stage.draw();
-        assert.equal(circle.cache.visible, false);
+        assert.equal(circle._cache.visible, false);
         circle.show();
-        assert.equal(circle.cache.visible, undefined);
+        assert.equal(circle._cache.visible, undefined);
         layer.draw();
-        assert.equal(circle.cache.visible, true);
+        assert.equal(circle._cache.visible, true);
 
     });
 
@@ -171,14 +171,14 @@ suite('Node', function() {
         stage.add(layer);
 
         // shadow cache
-        assert.equal(circle.cache.hasShadow, false);
+        assert.equal(circle._cache.hasShadow, false);
         circle.setShadowColor('red');
         circle.setShadowOffset(10);
-        assert.equal(circle.cache.hasShadow, undefined);
+        assert.equal(circle._cache.hasShadow, undefined);
         layer.draw();
-        assert.equal(circle.cache.hasShadow, true);
+        assert.equal(circle._cache.hasShadow, true);
         layer.draw();
-        assert.equal(circle.cache.hasShadow, true);
+        assert.equal(circle._cache.hasShadow, true);
 
     });
 
@@ -198,11 +198,11 @@ suite('Node', function() {
         stage.add(layer);
 
         // opacity cache
-        assert.equal(circle.cache.absoluteOpacity, 1);
+        assert.equal(circle._cache.absoluteOpacity, 1);
         circle.setOpacity(0.5);
-        assert.equal(circle.cache.absoluteOpacity, undefined);
+        assert.equal(circle._cache.absoluteOpacity, undefined);
         layer.draw();
-        assert.equal(circle.cache.absoluteOpacity, 0.5);
+        assert.equal(circle._cache.absoluteOpacity, 0.5);
 
     });
 
@@ -226,11 +226,11 @@ suite('Node', function() {
         // prime the cache
         circle.isListening();
 
-        assert.equal(circle.cache.listening, true);
+        assert.equal(circle._cache.listening, true);
         circle.setListening(false);
-        assert.equal(circle.cache.listening, undefined);
+        assert.equal(circle._cache.listening, undefined);
         circle.isListening();
-        assert.equal(circle.cache.listening, false);
+        assert.equal(circle._cache.listening, false);
 
     });
 
@@ -251,7 +251,7 @@ suite('Node', function() {
 
         // stage cache
         var st = circle.getStage();
-        assert.equal(circle.cache.stage._id, stage._id);
+        assert.equal(circle._cache.stage._id, stage._id);
 
     });
 
@@ -2671,17 +2671,13 @@ suite('Node', function() {
     layer.add(group);
     stage.add(layer);
 
-    assert.equal(circle.isTransformsEnabled(), true);
+    assert.equal(circle.transformsEnabled(), 'all');
 
-    circle.disableTransforms();
-
-    assert.equal(circle.isTransformsEnabled(), false);
+    circle.transformsEnabled('position');
+    assert.equal(circle.transformsEnabled(), 'position');
 
     layer.draw();
 
-    circle.enableTransforms();
-
-    assert.equal(circle.isTransformsEnabled(), true);
 
 
   });
@@ -2714,23 +2710,23 @@ suite('Node', function() {
     stage.add(layer);
     assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,400,100);beginPath();arc(0,0,40,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
 
-    stage.disableTransforms();
+    stage.transformsEnabled('none');
     layer.getContext().clearTrace();
     stage.draw();
     assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,300,100);beginPath();arc(0,0,40,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
 
-    layer.disableTransforms();
+    layer.transformsEnabled('none');
     layer.getContext().clearTrace();
     stage.draw();
     assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,200,100);beginPath();arc(0,0,40,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
 
-    group.disableTransforms();
+    group.transformsEnabled('none');
     layer.getContext().clearTrace();
     stage.draw();
     assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,40,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
 
     // disabling a shape transform disables all transforms but x and y.  In this case, the Kinetic.Context uses translate instead of transform
-    circle.disableTransforms();
+    circle.transformsEnabled('position');
     layer.getContext().clearTrace();
     stage.draw();
     assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();translate(100,100);beginPath();arc(0,0,40,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
@@ -2894,5 +2890,50 @@ suite('Node', function() {
     circle.position({x: 6, y: 8});
     assert.equal(circle.position().x, 6);
     assert.equal(circle.position().y, 8);
+  });
+
+  test('cache shape', function(){
+    var stage = addStage();
+    var layer = new Kinetic.Layer();
+    var group = new Kinetic.Group();
+    var circle = new Kinetic.Circle({
+        x: 100,
+        y: 100,
+        radius: 70,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 4,
+        name: 'myCircle',
+        draggable: true
+    });
+
+    group.add(circle);
+    layer.add(group);
+    stage.add(layer);
+
+    console.log('-- before cache')
+
+    assert.equal(circle._cache['sceneCanvas'], undefined);
+    assert.equal(circle._cache['hitCanvas'], undefined);
+
+    circle.cache({
+        width: 100,
+        height: 100
+    });
+
+    assert.notEqual(circle._cache['sceneCanvas'], undefined);
+    assert.notEqual(circle._cache['hitCanvas'], undefined);
+
+    
+    layer.draw();
+
+
+    document.body.appendChild(circle._cache.sceneCanvas._canvas);
+    document.body.appendChild(circle._cache.hitCanvas._canvas);
+
+
+    console.log(layer.getContext().getTrace());
+
+
   });
 });

@@ -236,68 +236,84 @@
             var canvas = can || this.getLayer().getCanvas(),
                 context = canvas.getContext(),
                 drawFunc = this.getDrawFunc(),
+                cachedSceneCanvas = this._cache.sceneCanvas;
+
+            if(this.isVisible()) { 
+                context.save();
+                // if cache is available
+                if (cachedSceneCanvas) {
+                    context.drawImage(cachedSceneCanvas._canvas, 0, 0);
+                }
+                else if (drawFunc) {
+                    this._drawScene(context);
+                }
+                context.restore();
+            } 
+
+            return this;   
+        },
+        _drawScene: function(context) {
+            var drawFunc = this.getDrawFunc(),
                 hasShadow = this.hasShadow(),
                 stage, bufferCanvas, bufferContext;
 
-            if(drawFunc && this.isVisible()) { 
-                // if buffer canvas is needed
-                if (this._useBufferCanvas()) {
-                    stage = this.getStage();
-                    bufferCanvas = stage.bufferCanvas;
-                    bufferContext = bufferCanvas.getContext();
-                    bufferContext.clear();
-                    bufferContext.save();
-                    bufferContext._applyLineJoin(this);
-                    bufferContext._applyAncestorTransforms(this);
-                    drawFunc.call(this, bufferContext);
-                    bufferContext.restore();
+            // if buffer canvas is needed
+            if (this._useBufferCanvas()) {
+                stage = this.getStage();
+                bufferCanvas = stage.bufferCanvas;
+                bufferContext = bufferCanvas.getContext();
+                bufferContext.clear();
+                bufferContext.save();
+                bufferContext._applyLineJoin(this);
+                bufferContext._applyAncestorTransforms(this);
+                drawFunc.call(this, bufferContext);
+                bufferContext.restore();
 
+                if (hasShadow) {
                     context.save();
-                    if (hasShadow) {
-                        context.save();
-                        context._applyShadow(this);
-                        context.drawImage(bufferCanvas._canvas, 0, 0); 
-                        context.restore();
-                    }
-
-                    context._applyOpacity(this);
-                    context.drawImage(bufferCanvas._canvas, 0, 0);
+                    context._applyShadow(this);
+                    context.drawImage(bufferCanvas._canvas, 0, 0); 
                     context.restore();
                 }
-                // if buffer canvas is not needed
-                else {
-                    context.save();
-                    context._applyLineJoin(this);
-                    context._applyAncestorTransforms(this);
 
-                    if (hasShadow) {
-                        context.save();
-                        context._applyShadow(this);
-                        drawFunc.call(this, context);
-                        context.restore();
-                    }   
-
-                    context._applyOpacity(this);
-                    drawFunc.call(this, context);
-                    context.restore();
-                }
+                context._applyOpacity(this);
+                context.drawImage(bufferCanvas._canvas, 0, 0);
             }
-
-            return this;
-        },
-        drawHit: function() {
-            var attrs = this.getAttrs(),
-                drawFunc = attrs.drawHitFunc || attrs.drawFunc,
-                canvas = this.getLayer().hitCanvas,
-                context = canvas.getContext();
-
-            if(drawFunc && this.shouldDrawHit()) {
-                context.save();
+            // if buffer canvas is not needed
+            else {
                 context._applyLineJoin(this);
                 context._applyAncestorTransforms(this);
+
+                if (hasShadow) {
+                    context.save();
+                    context._applyShadow(this);
+                    drawFunc.call(this, context);
+                    context.restore();
+                }   
+
+                context._applyOpacity(this);
                 drawFunc.call(this, context);
+            }
+        },
+        drawHit: function(can) {
+            var canvas = can || this.getLayer().hitCanvas,
+                context = canvas.getContext(),
+                drawFunc = this.getDrawHitFunc() || this.getDrawFunc(),
+                cachedHitCanvas = this._cache.hitCanvas;
+
+            if(this.shouldDrawHit()) {
+                context.save();
+                if (cachedHitCanvas) {
+                    context.drawImage(cachedHitCanvas._canvas, 0, 0); 
+                }
+                else if (drawFunc) {
+                    context._applyLineJoin(this);
+                    context._applyAncestorTransforms(this);
+                    drawFunc.call(this, context);   
+                }
                 context.restore();
             }
+
             return this;
         }
     });

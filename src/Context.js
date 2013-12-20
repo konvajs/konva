@@ -224,14 +224,15 @@
             }
         },
         _applyAncestorTransforms: function(shape) {
-            var m;
+            var transformsEnabled = shape.getTransformsEnabled(),
+                m;
 
-            if (shape.isTransformsEnabled()) {
+            if (transformsEnabled === 'all') {
                 m = shape.getAbsoluteTransform().getMatrix();
                 this.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }
-            else {
-                // best performance
+            else if (transformsEnabled === 'position') {
+                // best performance for position only transforms
                 this.translate(shape.getX(), shape.getY());
             }
             
