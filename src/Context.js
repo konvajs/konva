@@ -223,7 +223,7 @@
                 this.setAttr('lineJoin', lineJoin);
             }
         },
-        _applyAncestorTransforms: function(shape) {
+        _applyTransform: function(shape) {
             var transformsEnabled = shape.getTransformsEnabled(),
                 m;
 
@@ -234,8 +234,7 @@
             else if (transformsEnabled === 'position') {
                 // best performance for position only transforms
                 this.translate(shape.getX(), shape.getY());
-            }
-            
+            }  
         },
         _clip: function(container) {
             var clipX = container.getClipX(),
@@ -244,7 +243,7 @@
                 clipHeight = container.getClipHeight();
 
             this.save();
-            this._applyAncestorTransforms(container);
+            this._applyTransform(container);
             this.beginPath();
             this.rect(clipX, clipY, clipWidth, clipHeight);
             this.clip();

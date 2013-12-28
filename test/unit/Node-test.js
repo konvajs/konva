@@ -2897,8 +2897,8 @@ suite('Node', function() {
     var layer = new Kinetic.Layer();
     var group = new Kinetic.Group();
     var circle = new Kinetic.Circle({
-        x: 100,
-        y: 100,
+        x: 70,
+        y: 70,
         radius: 70,
         fill: 'green',
         stroke: 'black',
@@ -2911,29 +2911,48 @@ suite('Node', function() {
     layer.add(group);
     stage.add(layer);
 
-    console.log('-- before cache')
-
-    assert.equal(circle._cache['sceneCanvas'], undefined);
-    assert.equal(circle._cache['hitCanvas'], undefined);
+    assert.equal(circle._cache.canvas, undefined);
 
     circle.cache({
-        width: 100,
-        height: 100
+        x: -74,
+        y: -74,
+        width: 148,
+        height: 148
     });
 
-    assert.notEqual(circle._cache['sceneCanvas'], undefined);
-    assert.notEqual(circle._cache['hitCanvas'], undefined);
+    assert.notEqual(circle._cache.canvas.scene, undefined);
+    assert.notEqual(circle._cache.canvas.hit, undefined);
+    assert.equal(circle._cache.canvas.x, -74);
+    assert.equal(circle._cache.canvas.y, -74);
+
 
     
     layer.draw();
 
 
-    document.body.appendChild(circle._cache.sceneCanvas._canvas);
-    document.body.appendChild(circle._cache.hitCanvas._canvas);
+    //document.body.appendChild(circle._cache.canvas.scene._canvas);
+    // document.body.appendChild(circle._cache.canvas.hit._canvas);
+
+    showHit(layer)
 
 
-    console.log(layer.getContext().getTrace());
+    //console.log(layer.getContext().getTrace());
 
+    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,70,70);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,-4,-4);drawImage([object HTMLCanvasElement],0,0);restore();');
 
+    // setTimeout(function() {
+    //     console.log('draw')
+    //     layer.draw();
+    // }, 1000)
+
+    // setTimeout(function() {
+    //     console.log('draw')
+    //     layer.draw();
+    // }, 2000)
+
+    // setTimeout(function() {
+    //     console.log('draw')
+    //     layer.draw();
+    // }, 3000)
   });
 });

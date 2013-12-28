@@ -109,22 +109,39 @@
         * node.cache();
         */
         cache: function(box) {
-            var sceneCanvasCache = new Kinetic.SceneCanvas({
-                pixelRatio: 1,
-                width: box.width,
-                height: box.height
-            });
-            var hitCanvasCache = new Kinetic.HitCanvas({
-                pixelRatio: 1,
-                width: box.width,
-                height: box.height
-            });
+            var x = box.x || 0,
+                y = box.y || 0,
+                sceneCanvasCache = new Kinetic.SceneCanvas({
+                    pixelRatio: 1,
+                    width: box.width,
+                    height: box.height
+                }),
+                hitCanvasCache = new Kinetic.HitCanvas({
+                    pixelRatio: 1,
+                    width: box.width,
+                    height: box.height
+                }),
+                origTransEnabled = this.transformsEnabled(),
+                origX = this.x(),
+                origY = this.y();
+
+            this.transformsEnabled('position');
+            this.x(x * -1);
+            this.y(y * -1);
 
             this.drawScene(sceneCanvasCache);
             this.drawHit(hitCanvasCache);
 
-            this._cache.sceneCanvas = sceneCanvasCache;
-            this._cache.hitCanvas = hitCanvasCache;
+            this.x(origX);
+            this.y(origY);
+            this.transformsEnabled(origTransEnabled);
+
+            this._cache.canvas = {
+                scene: sceneCanvasCache,
+                hit: hitCanvasCache,
+                x: x,
+                y: y
+            };
         },
         /*
          * the default isDraggable method returns false.
@@ -599,14 +616,14 @@
          * @returns {Kinetic.Node}
          */
         setAbsolutePosition: function(pos) {
-            var trans = this._clearTransform(),
+            var origTrans = this._clearTransform(),
                 it;
 
             // don't clear translation
-            this.attrs.x = trans.x;
-            this.attrs.y = trans.y;
-            delete trans.x;
-            delete trans.y;
+            this.attrs.x = origTrans.x;
+            this.attrs.y = origTrans.y;
+            delete origTrans.x;
+            delete origTrans.y;
 
             // unravel transform
             it = this.getAbsoluteTransform();
@@ -619,7 +636,8 @@
             };
 
             this.setPosition({x:pos.x, y:pos.y});
-            this._setTransform(trans);
+            this._setTransform(origTrans);
+
             return this;
         },
         _setTransform: function(trans) {
@@ -658,6 +676,7 @@
             this._clearCache(TRANSFORM);
             this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
 
+            // return original transform
             return trans;
         },
         /**
@@ -984,6 +1003,7 @@
         },
         _getTransform: function() {
             var m = new Kinetic.Transform(),
+                cachedCanvas = this._cache.canvas,
                 x = this.getX(),
                 y = this.getY(),
                 rotation = this.getRotation(),
@@ -993,6 +1013,16 @@
                 skewY = this.getSkewY(),
                 offsetX = this.getOffsetX(),
                 offsetY = this.getOffsetY();
+
+            // NOTE: the cached canvas offsets must be handled in this method
+            // because there are situations where we need to access the original 
+            // offset positions, i.e. setAbsolutePosition() and drag and drop
+            if (cachedCanvas) {
+                offsetX -= cachedCanvas.x;
+            }
+            if (cachedCanvas) {
+                offsetY -= cachedCanvas.y;
+            }
 
             if(x !== 0 || y !== 0) {
                 m.translate(x, y);
@@ -1649,61 +1679,36 @@
     Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'offset', 0);
 
     /**
-     * set offset.  A node's offset defines the position and rotation point
-     * @name setOffset
+     * get/set offset.  A node's offset defines the position and rotation point
      * @method
      * @memberof Kinetic.Node.prototype
-     * @param {Number} x
-     * @param {Number} y
-     * @returns {Kinetic.Node}
+     * @param {Object} offset
+     * @param {Number} offset.x
+     * @param {Number} offset.y
+     * @returns {Object}
      * @example
      * // set x and y <br>
-     * shape.setOffset({<br>
+     * shape.offset({<br>
      *   x: 20<br>
      *   y: 10<br>
      * });<br><br>
      */
 
     /**
-     * get offset
-     * @name getOffset
-     * @method
-     * @memberof Kinetic.Node.prototype
-     * @returns {Object}
-     */
-
-    /**
-     * set offset x
-     * @name setOffsetX
-     * @method
+     * get/set offset x
+     * @name offsetX
      * @memberof Kinetic.Node.prototype
      * @param {Number} x
-     * @returns {Kinetic.Node}
+     * @returns {Integer}
      */
 
     /**
-     * get offset x
-     * @name getOffsetX
-     * @method
-     * @memberof Kinetic.Node.prototype
-     * @returns {Number}
-     */
-
-    /**
-     * set offset y
-     * @name setOffsetY
+     * get/set offset y
+     * @name offsetY
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} y
-     * @returns {Kinetic.Node}
-     */
-
-    /**
-     * get offset y
-     * @name getOffsetY
-     * @method
-     * @memberof Kinetic.Node.prototype
-     * @returns {Number}
+     * @returns {Integer}
      */
 
     Kinetic.Factory.addSetter(Kinetic.Node, 'width', 0);
