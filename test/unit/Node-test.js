@@ -2940,19 +2940,8 @@ suite('Node', function() {
 
     assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,70,70);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,-4,-4);drawImage([object HTMLCanvasElement],0,0);restore();');
 
-    // setTimeout(function() {
-    //     console.log('draw')
-    //     layer.draw();
-    // }, 1000)
+    //console.log(circle._cache.canvas.scene.getContext().getTrace());
 
-    // setTimeout(function() {
-    //     console.log('draw')
-    //     layer.draw();
-    // }, 2000)
-
-    // setTimeout(function() {
-    //     console.log('draw')
-    //     layer.draw();
-    // }, 3000)
+    assert.equal(circle._cache.canvas.scene.getContext().getTrace(), 'save();translate(74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
   });
 });

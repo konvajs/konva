@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      canvas {
+        border: 1px solid #9C9898;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+
+    <script src="../../dist/kinetic-dev.js"></script>
+    <script src="../lib/stats.js"></script>
+    <script src="../setStats.js"></script>
+
+    <script>
+
+
+
+      var stage = new Kinetic.Stage({
+        container: 'container',
+        width: 500,
+        height: 500
+      });
+      var layer = new Kinetic.Layer();
+
+      var star = new Kinetic.Star({
+          x: 250,
+          y: 250,
+          innerRadius: 100,
+          outerRadius: 200,
+          numPoints: 500,
+          fill: 'yellow',
+          stroke: 'black',
+          strokeWidth: 4,
+          name: 'myCircle',
+          draggable: true
+      });
+
+      layer.add(star);
+      stage.add(layer);
+
+      var anim = new Kinetic.Animation(function() {
+        stats.begin();
+        star.rotate(0.1);
+      }, layer);
+
+      anim.start();
+
+    </script>
+  </body>
+</html>
