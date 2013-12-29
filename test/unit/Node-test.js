@@ -2944,4 +2944,64 @@ suite('Node', function() {
 
     assert.equal(circle._cache.canvas.scene.getContext().getTrace(), 'save();translate(74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
   });
+
+  test('cache group', function(){
+    var stage = addStage();
+    var layer = new Kinetic.Layer();
+    var group = new Kinetic.Group({
+        x: 100,
+        y: 100,
+        draggable: true
+    });
+    var top = new Kinetic.Circle({
+        x: 0,
+        y: -70,
+        radius: 30,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 4
+    });
+    var right = new Kinetic.Circle({
+        x: 70,
+        y: 0,
+        radius: 30,
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 4
+    });
+    var bottom = new Kinetic.Circle({
+        x: 0,
+        y: 70,
+        radius: 30,
+        fill: 'blue',
+        stroke: 'black',
+        strokeWidth: 4
+    });
+    var left = new Kinetic.Circle({
+        x: -70,
+        y: 0,
+        radius: 30,
+        fill: 'yellow',
+        stroke: 'black',
+        strokeWidth: 4
+    });
+
+    group.add(top).add(right).add(bottom).add(left);
+    layer.add(group);
+    stage.add(layer);
+
+    assert.equal(group._cache.canvas, undefined);
+
+    group.cache({
+        width: 100,
+        height: 100
+    });
+
+    assert.notEqual(group._cache.canvas.scene, undefined);
+    assert.notEqual(group._cache.canvas.hit, undefined);
+
+    layer.draw();
+
+
+  });
 });

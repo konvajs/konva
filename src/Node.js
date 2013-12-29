@@ -61,7 +61,12 @@
             });
         },
         _clearCache: function(attr){
-            delete this._cache[attr];
+            if (attr) {
+                delete this._cache[attr];
+            }
+            else {
+                this._cache = {};   
+            }
         },
         _getCache: function(attr, privateGetter){
             var cache = this._cache[attr];
@@ -94,9 +99,8 @@
         * @example
         * node.clearCache();
         */
-        clearCache: function() {
-            this._cache = {};
-            return this;
+        clearCache: function(attr) {
+            delete this._cache.canvas;
         },
         /**
         * cache node to improve drawing performance.
@@ -482,7 +486,7 @@
         },
         /**
          * determine if listening is enabled by taking into account descendants.  If self or any children
-         * have _isListeningEnabled set to true, than self also has listening enabled.
+         * have _isListeningEnabled set to true, then self also has listening enabled.
          * @method
          * @memberof Kinetic.Node.prototype
          * @returns {Boolean}

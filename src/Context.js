@@ -236,22 +236,6 @@
                 this.translate(shape.getX(), shape.getY());
             }  
         },
-        _clip: function(container) {
-            var clipX = container.getClipX(),
-                clipY = container.getClipY(),
-                clipWidth = container.getClipWidth(),
-                clipHeight = container.getClipHeight();
-
-            this.save();
-            this._applyTransform(container);
-            this.beginPath();
-            this.rect(clipX, clipY, clipWidth, clipHeight);
-            this.clip();
-            this.reset();
-            container._drawChildren(this.getCanvas());
-            this.restore();
-        },
-
         setAttr: function(attr, val) {
             this._context[attr] = val;
         },

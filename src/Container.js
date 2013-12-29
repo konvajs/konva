@@ -238,57 +238,45 @@
                 child.index = n;
             });
         },
-        drawScene: function(canvas) {
-            var layer = this.getLayer(),
-                clip = this.getClipWidth() && this.getClipHeight(),
-                children, n, len;
-
-            // if (!canvas && layer) {
-            //     canvas = layer.getCanvas();
-            // }
-
-            if(this.isVisible()) {
-                if (clip) {
-                    canvas.getContext()._clip(this);
-                }
-                else {
-                    this._drawChildren(canvas);
-                }
+        drawScene: function(can) {
+            if (this.isVisible()) {
+                this._draw(can, 'drawScene');
             }
-
             return this;
         },
-        _drawChildren: function(canvas) {
+        drawHit: function(can) {
+            if (this.shouldDrawHit()) {
+                this._draw(can, 'drawHit');
+            }
+            return this;
+        },
+        _draw: function(can, method) {
+            var clipWidth = this.getClipWidth(),
+                clipHeight = this.getClipHeight(),
+                hasClip = clipWidth && clipHeight,
+                canvas, context, clipX, clipY;
+
+            if (hasClip) {
+                canvas = can || this.getLayer().hitCanvas;
+                context = canvas.getContext();
+                clipX = this.getClipX();
+                clipY = this.getClipY();
+
+                context.save();
+                context._applyTransform(this);
+                context.beginPath();
+                context.rect(clipX, clipY, clipWidth, clipHeight);
+                context.clip();
+                context.reset();   
+            }
+
             this.children.each(function(child) {
-                child.drawScene(canvas);
+                child[method](canvas);
             });
-        },
-        drawHit: function() {
-            var hasClip = this.getClipWidth() && this.getClipHeight() && this.nodeType !== 'Stage',
-                n = 0,
-                len = 0,
-                children = [],
-                hitCanvas;
 
-            if(this.shouldDrawHit()) {
-
-                if (hasClip) {
-                    hitCanvas = this.getLayer().hitCanvas;
-                    hitCanvas.getContext()._clip(this);
-                }
-
-                children = this.children;
-                len = children.length;
-
-                for(n = 0; n < len; n++) {
-                    children[n].drawHit();
-                }
-                if (hasClip) {
-                    hitCanvas.getContext()._context.restore();
-                }
+            if (hasClip) {
+                context.restore();
             }
-
-            return this;
         }
     });
 
