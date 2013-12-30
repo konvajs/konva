@@ -146,6 +146,8 @@
                 x: x,
                 y: y
             };
+
+            return this;
         },
         /*
          * the default isDraggable method returns false.
@@ -601,12 +603,11 @@
         getAbsolutePosition: function() {
             var absoluteMatrix = this.getAbsoluteTransform().getMatrix(),
                 absoluteTransform = new Kinetic.Transform(),
-                o = this.getOffset();
+                offset = this.offset();
 
             // clone the matrix array
             absoluteTransform.m = absoluteMatrix.slice();
-
-            absoluteTransform.translate(o.x, o.y);
+            absoluteTransform.translate(offset.x, offset.y);
 
             return absoluteTransform.getTranslation();
         },
@@ -1012,7 +1013,6 @@
         },
         _getTransform: function() {
             var m = new Kinetic.Transform(),
-                cachedCanvas = this._cache.canvas,
                 x = this.getX(),
                 y = this.getY(),
                 rotation = this.getRotation(),
@@ -1022,16 +1022,6 @@
                 skewY = this.getSkewY(),
                 offsetX = this.getOffsetX(),
                 offsetY = this.getOffsetY();
-
-            // NOTE: the cached canvas offsets must be handled in this method
-            // because there are situations where we need to access the original 
-            // offset positions, i.e. setAbsolutePosition() and drag and drop
-            if (cachedCanvas) {
-                offsetX -= cachedCanvas.x;
-            }
-            if (cachedCanvas) {
-                offsetY -= cachedCanvas.y;
-            }
 
             if(x !== 0 || y !== 0) {
                 m.translate(x, y);
