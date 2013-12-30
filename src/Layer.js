@@ -96,8 +96,9 @@
                 return {};
             }
         },
-        drawScene: function(canvas) {
-            canvas = canvas || this.getCanvas();
+        drawScene: function(can) {
+            var layer = this.getLayer(),
+                canvas = can || (layer && layer.getCanvas());
 
             this._fire(BEFORE_DRAW, {
                 node: this
@@ -115,14 +116,15 @@
 
             return this;
         },
-        drawHit: function() {
-            var layer = this.getLayer();
+        drawHit: function(can) {
+            var layer = this.getLayer(),
+                canvas = can || (layer && layer.hitCanvas);
 
             if(layer && layer.getClearBeforeDraw()) {
                 layer.getHitCanvas().getContext().clear();
             }
 
-            Kinetic.Container.prototype.drawHit.call(this);
+            Kinetic.Container.prototype.drawHit.call(this, canvas);
             return this;
         },
         /**

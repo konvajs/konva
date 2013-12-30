@@ -3014,6 +3014,76 @@ suite('Node', function() {
 
     assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,30);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,170,100);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=red;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,100,170);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,30,100);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=yellow;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);drawImage([object HTMLCanvasElement],0,0);restore();clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);drawImage([object HTMLCanvasElement],0,0);restore();');
 
+    showHit(layer);
+  });
+
+  test('cache layer', function(){
+    var stage = addStage();
+    var layer = new Kinetic.Layer({
+        x: 100,
+        y: 100,
+        draggable: true
+    });
+    var group = new Kinetic.Group();
+    var top = new Kinetic.Circle({
+        x: 0,
+        y: -70,
+        radius: 30,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 4
+    });
+    var right = new Kinetic.Circle({
+        x: 70,
+        y: 0,
+        radius: 30,
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 4
+    });
+    var bottom = new Kinetic.Circle({
+        x: 0,
+        y: 70,
+        radius: 30,
+        fill: 'blue',
+        stroke: 'black',
+        strokeWidth: 4
+    });
+    var left = new Kinetic.Circle({
+        x: -70,
+        y: 0,
+        radius: 30,
+        fill: 'yellow',
+        stroke: 'black',
+        strokeWidth: 4
+    });
+
+    group.add(top).add(right).add(bottom).add(left);
+    layer.add(group);
+    stage.add(layer);
+
+    assert.equal(layer._cache.canvas, undefined);
+
+    layer.cache({
+        width: 80,
+        height: 80
+    });
+
+    assert.notEqual(layer._cache.canvas.scene, undefined);
+    assert.notEqual(layer._cache.canvas.hit, undefined);
+
+
+    layer.draw();
+    layer.draw();
+
+    //console.log(layer.getContext().getTrace());
+    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,30);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,170,100);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=red;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,100,170);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,30,100);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=yellow;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);drawImage([object HTMLCanvasElement],0,0);restore();clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);drawImage([object HTMLCanvasElement],0,0);restore();');
+
+
+    // make sure that the hit graph is also rendered after caching the layer
+    assert.equal(layer.hitCanvas.getContext().getTrace(true), 'clearRect();save();transform();beginPath();arc();closePath();save();fillStyle;fill();restore();lineWidth;strokeStyle;stroke();restore();save();transform();beginPath();arc();closePath();save();fillStyle;fill();restore();lineWidth;strokeStyle;stroke();restore();save();transform();beginPath();arc();closePath();save();fillStyle;fill();restore();lineWidth;strokeStyle;stroke();restore();save();transform();beginPath();arc();closePath();save();fillStyle;fill();restore();lineWidth;strokeStyle;stroke();restore();clearRect();clearRect();save();transform();drawImage();restore();clearRect();save();transform();drawImage();restore();');
+
+    showHit(layer);
 
   });
 });
