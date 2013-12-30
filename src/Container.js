@@ -265,7 +265,7 @@
                 clipWidth = this.getClipWidth(),
                 clipHeight = this.getClipHeight(),
                 hasClip = clipWidth && clipHeight,
-                context, clipX, clipY;
+                clipX, clipY;
 
             if (hasClip) {
                 clipX = this.getClipX();

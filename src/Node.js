@@ -984,17 +984,22 @@
             return this._getCache(ABSOLUTE_TRANSFORM, this._getAbsoluteTransform);
         },
         _getAbsoluteTransform: function() {
-            // absolute transform
-            var am = new Kinetic.Transform(),
-                m;
+            var at = new Kinetic.Transform(),
+                transformsEnabled, trans;
 
+            // start with stage and traverse downwards to self
             this._eachAncestorReverse(function(node) {
-                if (node.transformsEnabled() === 'all') { 
-                    m = node.getTransform();
-                    am.multiply(m);
+                transformsEnabled = node.transformsEnabled();
+                trans = node.getTransform();
+
+                if (transformsEnabled === 'all') { 
+                    at.multiply(trans);
+                }
+                else if (transformsEnabled === 'position') {
+                    at.translate(node.x(), node.y());
                 }
             }, true);
-            return am;
+            return at;
         },
         /**
          * get transform of the node

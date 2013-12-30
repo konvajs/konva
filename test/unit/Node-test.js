@@ -3017,6 +3017,81 @@ suite('Node', function() {
     showHit(layer);
   });
 
+  test.only('cache transformed group', function(){
+    var stage = addStage();
+    var layer = new Kinetic.Layer();
+    var group = new Kinetic.Group({
+        x: 100,
+        y: 100,
+        draggable: true,
+        rotationDeg: 20,
+        scaleX: 2,
+        scaleY: 2
+    });
+    var top = new Kinetic.Circle({
+        x: 0,
+        y: -70,
+        radius: 50,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 4
+    });
+    var right = new Kinetic.Circle({
+        x: 70,
+        y: 0,
+        radius: 30,
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 4
+    });
+    var bottom = new Kinetic.Circle({
+        x: 0,
+        y: 70,
+        radius: 30,
+        fill: 'blue',
+        stroke: 'black',
+        strokeWidth: 4
+    });
+    var left = new Kinetic.Circle({
+        x: -70,
+        y: 0,
+        radius: 30,
+        fill: 'yellow',
+        stroke: 'black',
+        strokeWidth: 4
+    });
+
+    group.add(top).add(right).add(bottom).add(left);
+    layer.add(group);
+    stage.add(layer);
+
+    //console.log('---before cache')
+
+    group.cache({
+        x: -104,
+        y: -104,
+        width: 208,
+        height: 208
+    });
+
+    //console.log('---before first draw')
+    layer.draw();
+
+    
+
+    //document.body.appendChild(group._cache.canvas.scene._canvas);
+
+    //console.log('---before second draw')
+    layer.draw();
+
+
+    //console.log(layer.getContext().getTrace())
+
+    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1.879,0.684,-0.684,1.879,147.883,-31.557);beginPath();arc(0,0,50,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1.879,0.684,-0.684,1.879,231.557,147.883);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=red;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1.879,0.684,-0.684,1.879,52.117,231.557);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1.879,0.684,-0.684,1.879,-31.557,52.117);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=yellow;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1.879,0.684,-0.684,1.879,-24.316,-166.596);drawImage([object HTMLCanvasElement],0,0);restore();clearRect(0,0,578,200);save();transform(1.879,0.684,-0.684,1.879,-24.316,-166.596);drawImage([object HTMLCanvasElement],0,0);restore();');
+
+    showHit(layer);
+  });
+
   test('cache layer', function(){
     var stage = addStage();
     var layer = new Kinetic.Layer({
