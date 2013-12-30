@@ -2990,17 +2990,29 @@ suite('Node', function() {
     layer.add(group);
     stage.add(layer);
 
+    //console.log('---before cache')
+
     assert.equal(group._cache.canvas, undefined);
 
     group.cache({
-        width: 100,
-        height: 100
+        width: 80,
+        height: 80
     });
 
     assert.notEqual(group._cache.canvas.scene, undefined);
     assert.notEqual(group._cache.canvas.hit, undefined);
 
+    //console.log('---before first draw')
     layer.draw();
+
+    //console.log(layer.getContext().getTrace())
+
+    //document.body.appendChild(group._cache.canvas.scene._canvas);
+
+    //console.log('---before second draw')
+    layer.draw();
+
+    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,30);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,170,100);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=red;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,100,170);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,30,100);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=yellow;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);drawImage([object HTMLCanvasElement],0,0);restore();clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);drawImage([object HTMLCanvasElement],0,0);restore();');
 
 
   });
