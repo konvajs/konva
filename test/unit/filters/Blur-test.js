@@ -43,7 +43,7 @@ suite('Blur', function() {
 
     });
 
-  test.only('blur group', function(){
+  test('blur group', function(){
     var stage = addStage();
     var layer = new Kinetic.Layer();
     var group = new Kinetic.Group({

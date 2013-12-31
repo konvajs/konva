@@ -6,7 +6,7 @@
      * @param {Object} imageData
      */
     Kinetic.Filters.Brighten = function(imageData) {
-        var brightness = this.getFilterBrightness();
+        var brightness = this.brightness() * 255;
         var data = imageData.data;
         for(var i = 0; i < data.length; i += 4) {
             // red
@@ -20,17 +20,13 @@
 
     Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'brightness', 0);
     /**
-    * get filter brightness.  The brightness is a number between -255 and 255.&nbsp; Positive values 
-    *  increase the brightness and negative values decrease the brightness, making the image darker
-    * @name getFilterBrightness
+    * get/set filter brightness.  The brightness is a number between -1 and 1.&nbsp; Positive values 
+    *  brighten the node and negative values darken it.
+    * @name brightness
     * @method
     * @memberof Kinetic.Image.prototype
+    * @param {Number} brightness value between -1 and 1
+    * @returns {Number}
     */
 
-    /**
-    * set filter brightness
-    * @name setFilterBrightness
-    * @method
-    * @memberof Kinetic.Image.prototype
-    */
 })();

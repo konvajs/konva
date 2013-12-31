@@ -17,11 +17,12 @@ suite('Brighten', function() {
             layer.add(darth);
             stage.add(layer);
 
-            darth.setFilter(Kinetic.Filters.Brighten);
-            darth.setFilterBrightness(100);
+            darth.cache();
+            darth.filters([Kinetic.Filters.Brighten]);
+            darth.brightness(0.3);
             layer.draw();
 
-            assert.equal(darth.getFilterBrightness(), 100);
+            assert.equal(darth.brightness(), 0.3);
 
             done();
         };
@@ -47,14 +48,15 @@ suite('Brighten', function() {
             layer.add(darth);
             stage.add(layer);
 
-            darth.setFilter(Kinetic.Filters.Brighten);
-            darth.setFilterBrightness(100);
+            darth.cache();
+            darth.filters([Kinetic.Filters.Brighten]);
+            darth.brightness(0.3);
             layer.draw();
 
             var tween = new Kinetic.Tween({
               node: darth, 
               duration: 2.0,
-              filterBrightness: 0,
+              brightness: 0,
               easing: Kinetic.Easings.EaseInOut
             });
         
@@ -91,11 +93,12 @@ suite('Brighten', function() {
             layer.add(darth);
             stage.add(layer);
 
-            darth.setFilter(Kinetic.Filters.Brighten);
-            darth.setFilterBrightness(-50);
+            darth.cache();
+            darth.filters([Kinetic.Filters.Brighten]);
+            darth.brightness(-0.3);
             layer.draw();
 
-            assert.equal(darth.getFilterBrightness(), -50);
+            assert.equal(darth.brightness(), -0.3);
 
             done();
 
@@ -121,14 +124,15 @@ suite('Brighten', function() {
             layer.add(darth);
             stage.add(layer);
 
-            darth.setFilter(Kinetic.Filters.Brighten);
-            darth.setFilterBrightness(100);
+            darth.cache();
+            darth.filters([Kinetic.Filters.Brighten]);
+            darth.brightness(0.3);
             layer.draw();
 
             var tween = new Kinetic.Tween({
               node: darth, 
               duration: 2.0,
-              filterBrightness: -100,
+              brightness: -0.3,
               easing: Kinetic.Easings.EaseInOut
             });
         
