@@ -45,36 +45,18 @@
         _drawFunc: function(context) {
             var width = this.getWidth(), 
                 height = this.getHeight(), 
-                crop, cropWidth, cropHeight,
-                params, 
-                image;
+                image = this.getImage(),
+                crop, cropWidth, cropHeight, params;
 
-            //TODO: this logic needs to hook int othe new caching system
-
-            // if a filter is set, and the filter needs to be updated, reapply
-            if (this.getFilter() && this._applyFilter) {
-                this.applyFilter();
-                this._applyFilter = false;
-            }
-
-            // NOTE: this.filterCanvas may be set by the above code block
-            // In that case, cropping is already applied.
-            if (this.filterCanvas) {
-                image = this.filterCanvas._canvas;
-                params = [image, 0, 0, width, height];
-            }
-            else {
-                image = this.getImage();
-
-                if (image) {
-                    crop = this.getCrop(),
-                    cropWidth = crop.width;
-                    cropHeight = crop.height;
-                    if (cropWidth && cropHeight) {
-                        params = [image, crop.x, crop.y, cropWidth, cropHeight, 0, 0, width, height];
-                    } else {
-                        params = [image, 0, 0, width, height];
-                    }
+            if (image) {
+                crop = this.getCrop(),
+                cropWidth = crop.width;
+                cropHeight = crop.height;
+                if (cropWidth && cropHeight) {
+                    params = [image, crop.x, crop.y, cropWidth, cropHeight, 0, 0, width, height];
+                } 
+                else {
+                    params = [image, 0, 0, width, height];
                 }
             }
 
@@ -105,59 +87,6 @@
                 context.closePath();
                 context.fillStrokeShape(this);
             }
-        },
-        applyFilter: function() {
-            var image = this.getImage(),
-                width = this.getWidth(),
-                height = this.getHeight(),
-                filter = this.getFilter(),
-                crop = this.getCrop(),
-                filterCanvas, context, imageData;
-
-            // Determine the region we are cropping
-            crop.x = crop.x;
-            crop.y = crop.y;
-            crop.width = crop.width || width - crop.x;
-            crop.height = crop.height || height - crop.y;
-
-            // Make a filterCanvas the same size as the cropped image
-            if (this.filterCanvas &&
-                this.filterCanvas.getWidth() === crop.width &&
-                this.filterCanvas.getHeight() === crop.height) {
-                filterCanvas = this.filterCanvas;
-                filterCanvas.getContext().clear();
-            }
-            else {
-                filterCanvas = this.filterCanvas = new Kinetic.SceneCanvas({
-                    width: crop.width, 
-                    height: crop.height,
-                    pixelRatio: 1
-                });
-            }
-
-            context = filterCanvas.getContext();
-
-            try {
-                // Crop the image onto the filterCanvas then apply
-                // the filter to the filterCanvas
-                context.drawImage(image, crop.x, crop.y, crop.width, crop.height, 0,0,crop.width, crop.height);
-                imageData = context.getImageData(0, 0, crop.width, crop.height);
-                filter.call(this, imageData);
-                context.putImageData(imageData, 0, 0);
-            }
-            catch(e) {
-                this.clearFilter();
-                Kinetic.Util.warn('Unable to apply filter. ' + e.message);
-            }
-        },
-        /**
-         * clear filter
-         * @method
-         * @memberof Kinetic.Image.prototype
-         */
-        clearFilter: function() {
-            this.filterCanvas = null;
-            this._applyFilter = false;
         },
         /**
          * create image hit region which enables more accurate hit detection mapping of the image
@@ -227,30 +156,9 @@
         getHeight: function() {
             var image = this.getImage();
             return this.attrs.height || (image ? image.height : 0);
-        },
-        destroy: function(){
-            Kinetic.Shape.prototype.destroy.call(this);
-            delete this.filterCanvas;
-            delete this.attrs;
-            return this;
         }
     };
     Kinetic.Util.extend(Kinetic.Image, Kinetic.Shape);
-
-
-    Kinetic.Factory.addFilterGetterSetter = function(constructor, attr, def) {
-        this.addGetter(constructor, attr, def);
-        this.addFilterSetter(constructor, attr);
-    };
-
-    Kinetic.Factory.addFilterSetter = function(constructor, attr) {
-        var method = SET + Kinetic.Util._capitalize(attr);
-
-        constructor.prototype[method] = function(val) {
-            this._setAttr(attr, val);
-            this._applyFilter = true;
-        };
-    };
 
     // add getters setters
     Kinetic.Factory.addGetterSetter(Kinetic.Image, 'image');
@@ -362,23 +270,5 @@
      * @method
      * @memberof Kinetic.Image.prototype
      * @returns {Number}
-     */
-
-    Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filter');
-
-     /**
-     * set filter
-     * @name setFilter
-     * @method
-     * @memberof Kinetic.Image.prototype
-     * @param {Function} filter
-     */
-
-    /**
-     * get filter
-     * @name getFilter
-     * @method
-     * @memberof Kinetic.Image.prototype
-     * @returns {Function}
      */
 })();

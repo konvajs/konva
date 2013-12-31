@@ -236,19 +236,16 @@
             var canvas = can || this.getLayer().getCanvas(),
                 context = canvas.getContext(),
                 cachedCanvas = this._cache.canvas,
-                cachedSceneCanvas = cachedCanvas && cachedCanvas.scene,
                 drawFunc = this.getDrawFunc(),
                 hasShadow = this.hasShadow(),
                 stage, bufferCanvas, bufferContext;
 
             if(this.isVisible()) { 
-                context.save();
-
-                if (cachedSceneCanvas) {
-                    context._applyTransform(this);
-                    context.drawImage(cachedSceneCanvas._canvas, 0, 0);
+                if (cachedCanvas) {
+                    this._drawCachedSceneCanvas(context);
                 }
                 else if (drawFunc) {
+                    context.save();
                     // if buffer canvas is needed
                     if (this._useBufferCanvas()) {
                         stage = this.getStage();
@@ -286,10 +283,9 @@
 
                         context._applyOpacity(this);
                         drawFunc.call(this, context);
-                    }    
+                    }   
+                    context.restore(); 
                 }
-
-                context.restore();
             }
 
             return this;
@@ -302,18 +298,22 @@
                 cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
             if(this.shouldDrawHit()) {
-                context.save();
+                
                 if (cachedHitCanvas) {
+                    context.save();
                     context._applyTransform(this);
                     context.drawImage(cachedHitCanvas._canvas, 0, 0); 
+                    context.restore();
                 }
                 else if (drawFunc) {
+                    context.save();
                     context._applyLineJoin(this);
                     context._applyTransform(this);
                    
                     drawFunc.call(this, context);   
+                    context.restore();
                 }
-                context.restore();
+                
             }
 
             return this;

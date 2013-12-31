@@ -43,6 +43,7 @@
             this.eventListeners = {};
             this.attrs = {};
             this._cache = {};
+            this._filterUpToDate = false;
             this.setAttrs(config);
 
             // event bindings for cache handling
@@ -112,18 +113,25 @@
         * @example
         * node.cache();
         */
-        cache: function(box) {
-            var x = box.x || 0,
+        cache: function(b) {
+            var box = b || {},
+                x = box.x || 0,
                 y = box.y || 0,
+                width = box.width || this.width(),
+                height = box.height || this.height(),
                 sceneCanvasCache = new Kinetic.SceneCanvas({
                     pixelRatio: 1,
-                    width: box.width,
-                    height: box.height
+                    width: width,
+                    height: height
+                }),
+                filterCanvasCache = new Kinetic.SceneCanvas({
+                    pixelRatio: 1,
+                    width: width,
+                    height: height
                 }),
                 hitCanvasCache = new Kinetic.HitCanvas({
-                    pixelRatio: 1,
-                    width: box.width,
-                    height: box.height
+                    width: width,
+                    height: height
                 }),
                 origTransEnabled = this.transformsEnabled(),
                 origX = this.x(),
@@ -142,12 +150,55 @@
 
             this._cache.canvas = {
                 scene: sceneCanvasCache,
+                filter: filterCanvasCache,
                 hit: hitCanvasCache,
                 x: x,
                 y: y
             };
 
             return this;
+        },
+        _drawCachedSceneCanvas: function(context) {
+            var filters = this.filters(),
+                cachedCanvas = this._cache.canvas,
+                sceneCanvas = cachedCanvas.scene,
+                filterCanvas = cachedCanvas.filter,
+                filterContext = filterCanvas.getContext(),
+                len, imageData, n, filter;
+
+            context.save();
+            context._applyTransform(this);
+
+            if (filters) {
+                if (!this._filterUpToDate) {
+                    try {
+                        len = filters.length;
+                        filterContext.clear();
+                        // copy cached canvas onto filter context
+                        filterContext.drawImage(sceneCanvas._canvas, 0, 0);
+                        imageData = filterContext.getImageData(0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
+
+                        // apply filters to filter context
+                        for (n=0; n<len; n++) {
+                            filter = filters[n];
+                            filter.call(this, imageData);
+                            filterContext.putImageData(imageData, 0, 0);
+                        }
+                    }
+                    catch(e) {
+                        Kinetic.Util.warn('Unable to apply filter. ' + e.message);
+                    }
+
+                    this._filterUpToDate = true;
+                }
+
+                context.drawImage(filterCanvas._canvas, 0, 0); 
+            }
+            else {
+                context.drawImage(sceneCanvas._canvas, 0, 0); 
+            }
+
+            context.restore();
         },
         /*
          * the default isDraggable method returns false.
@@ -1751,6 +1802,23 @@
      * @method
      * @memberof Kinetic.Node.prototype
      * @returns {Boolean|String}
+     */
+
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'filters');
+    /**
+     * get/set filters
+     * @name filters
+     * @method
+     * @memberof Kinetic.Node.prototype
+     * @param {Array} filters array of filters
+     * @returns {Array}
+     * @example
+     * // set a single filter<br>
+     * node.filters([Kinetic.Filters.Blur]);<br><br>
+     *
+     * // get filters<br>
+     * var filters = node.filters();
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'visible', 'inherit');

@@ -241,26 +241,41 @@
         drawScene: function(can) {
             var layer = this.getLayer(),
                 canvas = can || (layer && layer.getCanvas()),
+                context = canvas && canvas.getContext(),
                 cachedCanvas = this._cache.canvas,
                 cachedSceneCanvas = cachedCanvas && cachedCanvas.scene;
 
             if (this.isVisible()) {
-                this._draw(canvas, cachedSceneCanvas, 'drawScene');
+                if (cachedSceneCanvas) {
+                    this._drawCachedSceneCanvas(context);
+                }
+                else {
+                    this._drawChildren(canvas, 'drawScene');
+                }
             }
             return this;
         },
         drawHit: function(can) {
             var layer = this.getLayer(),
                 canvas = can || (layer && layer.hitCanvas),
+                context = canvas && canvas.getContext(),
                 cachedCanvas = this._cache.canvas,
                 cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
             if (this.shouldDrawHit()) {
-                this._draw(canvas, cachedHitCanvas, 'drawHit');
+                if (cachedHitCanvas) {
+                    context.save();
+                    context._applyTransform(this);
+                    context.drawImage(cachedHitCanvas._canvas, 0, 0); 
+                    context.restore(); 
+                }
+                else {
+                    this._drawChildren(canvas, 'drawHit');
+                }
             }
             return this;
         },
-        _draw: function(canvas, cachedCanvas, drawMethod) {
+        _drawChildren: function(canvas, drawMethod) {
             var context = canvas && canvas.getContext(),
                 clipWidth = this.getClipWidth(),
                 clipHeight = this.getClipHeight(),
@@ -279,17 +294,9 @@
                 context.reset();   
             }
 
-            if (cachedCanvas) {
-                context.save();
-                context._applyTransform(this);
-                context.drawImage(cachedCanvas._canvas, 0, 0); 
-                context.restore();
-            }
-            else {
-                this.children.each(function(child) {
-                    child[drawMethod](canvas);
-                });
-            }
+            this.children.each(function(child) {
+                child[drawMethod](canvas);
+            });
 
             if (hasClip) {
                 context.restore();

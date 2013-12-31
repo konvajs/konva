@@ -352,24 +352,19 @@
         Blur(src, dst||src, opt );
       }else{
         Blur.call(this, src, dst||src, opt || {
-          filterRadius: this.getFilterRadius()
+          filterRadius: this.blurRadius()
         });
       }
     };
 
-    Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterRadius', 0);
+    Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'blurRadius', 0);
 
     /**
-    * get filter radius.  Returns the radius for Gaussian blur filter.
-    * @name getFilterRadius
+    * get/set blur radius
+    * @name blurRadius
     * @method
     * @memberof Kinetic.Image.prototype
-    */
-
-    /**
-    * get filter radius.  Set the radius for Gaussian blur filter.
-    * @name setFilterRadius
-    * @method
-    * @memberof Kinetic.Image.prototype
+    * @param {Integer} radius
+    * @returns {Integer}
     */
 })();

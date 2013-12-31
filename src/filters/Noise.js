@@ -40,7 +40,7 @@
     }
   };
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'noiseAmount', 32);
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'noise', 32);
 
   Kinetic.Filters.Noise = function(src,dst,opt){
     if( this === Kinetic.Filters ){

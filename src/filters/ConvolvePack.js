@@ -68,7 +68,7 @@
         return kernel;
     };
 
-    Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterAmount', 50);
+    Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'convoltion', 50);
     /**
      * get the current filter amount
      * @name getFilterAmount

@@ -111,10 +111,16 @@
             this.addColorComponentSetter(constructor, attr, G);
             this.addColorComponentSetter(constructor, attr, B);
 
+            // overloaders
             this.addOverloadedGetterSetter(constructor, attr + RGB);
             this.addOverloadedGetterSetter(constructor, attr + UPPER_R);
             this.addOverloadedGetterSetter(constructor, attr + UPPER_G);
             this.addOverloadedGetterSetter(constructor, attr + UPPER_B);
+        },
+        addFilterGetterSetter: function(constructor, attr, def) {
+            this.addGetter(constructor, attr, def);
+            this.addFilterSetter(constructor, attr);
+            this.addOverloadedGetterSetter(constructor, attr);
         },
 
         // getter adders
@@ -234,6 +240,15 @@
 
             constructor.prototype[method] = function(val) {
                 this._setAttr(attr, val); 
+                return this;  
+            };
+        },
+        addFilterSetter: function(constructor, attr) {
+            var method = SET + Kinetic.Util._capitalize(attr);
+
+            constructor.prototype[method] = function(val) {
+                this._setAttr(attr, val); 
+                this._filterUpToDate = false;
                 return this;  
             };
         },

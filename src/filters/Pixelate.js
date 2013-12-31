@@ -86,16 +86,15 @@
     
   };
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'pixelWidth', 8);
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'pixelHeight', 8);
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'pixelationSize', 8);
 
   Kinetic.Filters.Pixelate = function(src,dst,opt){
     if( this === Kinetic.Filters ){
       Pixelate(src, dst||src, opt );
     }else{
       Pixelate.call(this, src, dst||src, opt || {
-        pixelWidth: this.getPixelWidth(),
-        pixelHeight: this.getPixelHeight()
+        pixelWidth: this.pixelationSize(),
+        pixelHeight: this.pixelationSize()
       });
     }
   };

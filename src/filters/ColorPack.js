@@ -70,9 +70,9 @@
 
   };
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterHue', 0);
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterSaturation', 1);
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterValue', 1);
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'hue', 0);
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'saturation', 1);
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'value', 1);
 
   Kinetic.Filters.HSV = function(src,dst,opt){
     if( this === Kinetic.Filters ){
@@ -97,7 +97,7 @@
     }
   };
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterHueShiftDeg', 0);
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'hueShiftDeg', 0);
 
   /**
    * get filter hue.  Returns the hue shift for the HSV filter.
@@ -184,7 +184,7 @@
     }
   };
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterColorizeColor', [255,0,0] );
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'colorizeColor', [255,0,0] );
   /**
    * Gets the colorizing color.
    * @name getFilterColorizeColor

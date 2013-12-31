@@ -37,7 +37,7 @@
     }
   };
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'quantizationLevels', 4);
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'quantizationLevels', 4);
 
     /**
     * get quantization levels.  Returns the number of unique levels for each color

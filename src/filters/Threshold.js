@@ -33,7 +33,7 @@
     }
   };
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'thresholdLevel', 128);
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'threshold', 128);
 
   Kinetic.Filters.Threshold = function(src,dst,opt){
     if( this === Kinetic.Filters ){

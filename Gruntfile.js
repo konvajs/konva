@@ -1,12 +1,33 @@
 module.exports = function(grunt) {
   var sourceFiles = [
-    // core / anim + tween + dd
+    // core
     'src/Global.js', 
     'src/Util.js', 
     'src/Canvas.js',
     'src/Context.js',
     'src/Factory.js',
     'src/Node.js', 
+
+    // filters
+    'src/filters/FilterWrapper.js', 
+    'src/filters/Grayscale.js', 
+    'src/filters/Brighten.js', 
+    'src/filters/Invert.js', 
+    'src/filters/Blur.js', 
+    'src/filters/Mask.js',
+    'src/filters/ColorPack.js',
+    'src/filters/ConvolvePack.js',
+    'src/filters/ColorStretch.js',
+    'src/filters/Flip.js',
+    'src/filters/Levels.js',
+    'src/filters/Mirror.js',
+    'src/filters/Noise.js',
+    'src/filters/Pixelate.js',
+    'src/filters/Polar.js',
+    'src/filters/Threshold.js',
+    'src/filters/Sepia.js',
+
+    // core
     'src/Animation.js', 
     'src/Tween.js', 
     'src/DragAndDrop.js', 
@@ -33,27 +54,7 @@ module.exports = function(grunt) {
     'src/plugins/TextPath.js', 
     'src/plugins/RegularPolygon.js', 
     'src/plugins/Star.js', 
-    'src/plugins/Label.js',
-
-    // filters
-    'src/filters/FilterWrapper.js', 
-    'src/filters/Grayscale.js', 
-    'src/filters/Brighten.js', 
-    'src/filters/Invert.js', 
-    'src/filters/Blur.js', 
-    'src/filters/QuickBlur.js', 
-    'src/filters/Mask.js',
-    'src/filters/ColorPack.js',
-    'src/filters/ConvolvePack.js',
-    'src/filters/ColorStretch.js',
-    'src/filters/Flip.js',
-    'src/filters/Levels.js',
-    'src/filters/Mirror.js',
-    'src/filters/Noise.js',
-    'src/filters/Pixelate.js',
-    'src/filters/Polar.js',
-    'src/filters/Threshold.js',
-    'src/filters/Sepia.js'
+    'src/plugins/Label.js'
   ];
 
   // Project configuration.

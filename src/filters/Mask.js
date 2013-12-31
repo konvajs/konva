@@ -191,7 +191,7 @@
 		return idata;
 	};
 
-	Kinetic.Factory.addFilterGetterSetter(Kinetic.Image, 'filterThreshold', 0);
+	Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'threshold', 0);
 
 	//threshold The RGB euclidian distance threshold (default : 10) 
 
