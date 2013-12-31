@@ -3083,28 +3083,18 @@ suite('Node', function() {
     group.offsetX(104).offsetY(104);
 
     //console.log('--after cache');
-
     //console.log(group.getAbsoluteTransform().getTranslation())
     //console.log(group.getAbsolutePosition());
-
     //console.log('---before first draw')
     layer.draw();
 
-    
-
     //document.body.appendChild(group._cache.canvas.scene._canvas);
-
     //console.log('---before second draw')
     layer.draw();
 
-
     //console.log(layer.getContext().getTrace())
-
-    //assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1.879,0.684,-0.684,1.879,147.883,-31.557);beginPath();arc(0,0,50,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1.879,0.684,-0.684,1.879,231.557,147.883);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=red;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1.879,0.684,-0.684,1.879,52.117,231.557);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1.879,0.684,-0.684,1.879,-31.557,52.117);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=yellow;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1.879,0.684,-0.684,1.879,-24.316,-166.596);drawImage([object HTMLCanvasElement],0,0);restore();clearRect(0,0,578,200);save();transform(1.879,0.684,-0.684,1.879,-24.316,-166.596);drawImage([object HTMLCanvasElement],0,0);restore();');
-
+    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1.879,0.684,-0.684,1.879,147.883,-31.557);beginPath();arc(0,0,50,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1.879,0.684,-0.684,1.879,231.557,147.883);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=red;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1.879,0.684,-0.684,1.879,52.117,231.557);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1.879,0.684,-0.684,1.879,-31.557,52.117);beginPath();arc(0,0,30,0,6.283,false);closePath();fillStyle=yellow;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1.879,0.684,-0.684,1.879,-24.316,-166.596);drawImage([object HTMLCanvasElement],0,0);restore();clearRect(0,0,578,200);save();transform(1.879,0.684,-0.684,1.879,-24.316,-166.596);drawImage([object HTMLCanvasElement],0,0);restore();');
     showHit(layer);
-
-    
   });
 
   test('cache layer', function(){
