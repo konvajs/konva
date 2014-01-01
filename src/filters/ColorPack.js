@@ -79,9 +79,9 @@
       HSV(src, dst||src, opt );
     }else{
       HSV.call(this, src, dst||src, opt || {
-        hue: this.getFilterHue(),
-        saturation: this.getFilterSaturation(),
-        value: this.getFilterValue()
+        hue: this.hue(),
+        saturation: this.saturation(),
+        value: this.value()
       });
     }
   };
@@ -92,7 +92,7 @@
       HSV(src, dst||src, opt );
     }else{
       HSV.call(this, src, dst||src, opt || {
-        hue: this.getFilterHueShiftDeg()
+        hue: this.hueShiftDeg()
       });
     }
   };
@@ -179,12 +179,12 @@
       Colorize(src, dst||src, opt );
     }else{
       Colorize.call(this, src, dst||src, opt || {
-        colorizeColor: this.getFilterColorizeColor()
+        colorizeColor: this.color()
       });
     }
   };
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'colorizeColor', [255,0,0] );
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'color', [255,0,0] );
   /**
    * Gets the colorizing color.
    * @name getFilterColorizeColor

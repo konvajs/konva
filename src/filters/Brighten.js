@@ -6,9 +6,12 @@
      * @param {Object} imageData
      */
     Kinetic.Filters.Brighten = function(imageData) {
-        var brightness = this.brightness() * 255;
-        var data = imageData.data;
-        for(var i = 0; i < data.length; i += 4) {
+        var brightness = this.brightness() * 255,
+            data = imageData.data,
+            len = data.length,
+            i;
+
+        for(i = 0; i < len; i += 4) {
             // red
             data[i] += brightness;
             // green

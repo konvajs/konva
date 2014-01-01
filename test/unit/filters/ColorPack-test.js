@@ -1,6 +1,6 @@
-suite('Color Pack', function() {
+suite('ColorPack', function() {
     // ======================================================
-    test('colorize basic', function(done) {
+    test.only('colorize basic', function(done) {
         var stage = addStage();
 
         var imageObj = new Image();
@@ -17,8 +17,9 @@ suite('Color Pack', function() {
             layer.add(darth);
             stage.add(layer);
 
-            darth.setFilter(Kinetic.Filters.Colorize);
-            darth.setFilterColorizeColor([255,0,128]);
+            darth.cache();
+            darth.filters([Kinetic.Filters.Colorize]);
+            darth.color([255,0,128]);
             layer.draw();
 
             // Assert fails even though '[255,0,128] = [255,0,128]'
@@ -49,8 +50,9 @@ suite('Color Pack', function() {
             layer.add(darth);
             stage.add(layer);
 
-            darth.setFilter(Kinetic.Filters.Colorize);
-            darth.setFilterColorizeColor([0,255,0]);
+            darth.cache();
+            darth.filters([Kinetic.Filters.Colorize]);
+            darth.color([0,255,0]);
             layer.draw();
 
             // assert.equal(darth.getFilterColorizeColor(), [0,255,0]);
@@ -94,8 +96,9 @@ suite('Color Pack', function() {
                 });
                 layer.add(darth);
 
-                darth.setFilter(Kinetic.Filters.Colorize);
-                darth.setFilterColorizeColor(color);
+                darth.cache();
+                darth.filters([Kinetic.Filters.Colorize]);
+                darth.color(color);
 
                 nAdded += 1;
                 if( nAdded >= l ){
@@ -111,7 +114,7 @@ suite('Color Pack', function() {
 
 
     // ======================================================
-    test('hue shift tween transparancy', function(done) {
+    test.only('hue shift tween transparancy', function(done) {
         var stage = addStage();
 
         var imageObj = new Image();
@@ -128,14 +131,15 @@ suite('Color Pack', function() {
             layer.add(darth);
             stage.add(layer);
 
-            darth.setFilter(Kinetic.Filters.HSV);
-            darth.setFilterHue(360);
+            darth.cache();
+            darth.filters([Kinetic.Filters.HSV]);
+            darth.hue(360);
             layer.draw();
 
             var tween = new Kinetic.Tween({
               node: darth, 
               duration: 5.0,
-              filterHue: 0,
+              hue: 0,
               easing: Kinetic.Easings.EaseInOut
             });
         
