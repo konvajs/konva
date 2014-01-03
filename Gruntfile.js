@@ -17,7 +17,7 @@ module.exports = function(grunt) {
     'src/filters/Mask.js',
     'src/filters/ColorPack.js',
     'src/filters/ConvolvePack.js',
-    'src/filters/ColorStretch.js',
+    'src/filters/Enhance.js',
     'src/filters/Flip.js',
     'src/filters/Levels.js',
     'src/filters/Mirror.js',
