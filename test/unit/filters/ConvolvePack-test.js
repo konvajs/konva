@@ -16,7 +16,7 @@ suite('Convolve Pack', function() {
 
             layer.add(darth);
             stage.add(layer);
-            darth.setFilter(Kinetic.Filters.Emboss);
+            darth.filters([Kinetic.Filters.Emboss]);
             darth.setFilterAmount(50);
             layer.draw();
 

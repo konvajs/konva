@@ -161,17 +161,14 @@
 	
 	/**
 	 * Mask Filter
-	 *
-	 * Only crop unicolor background images for instance
-	 *
 	 * @function
 	 * @memberof Kinetic.Filters
 	 * @param {Object} imageData
 	 */
 	Kinetic.Filters.Mask = function(idata) {
 		// Detect pixels close to the background color
-		var threshold = this.getFilterThreshold(),
-                    mask = backgroundMask(idata, threshold);
+		var threshold = this.threshold(),
+        mask = backgroundMask(idata, threshold);
 		if (mask) {
 			// Erode
 			mask = erodeMask(mask, idata.width, idata.height);
@@ -192,7 +189,4 @@
 	};
 
 	Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'threshold', 0);
-
-	//threshold The RGB euclidian distance threshold (default : 10) 
-
 })();

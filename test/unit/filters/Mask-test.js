@@ -27,8 +27,9 @@ suite('Mask', function() {
             layer.add(filtered);
             stage.add(layer);
 
-            filtered.setFilter(Kinetic.Filters.Mask);
-            filtered.setFilterThreshold(10);
+            filtered.cache();
+            filtered.filters([Kinetic.Filters.Mask]);
+            filtered.threshold(10);
 
             layer.draw();
 
