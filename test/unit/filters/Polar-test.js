@@ -1,4 +1,4 @@
-suite('Polar Coordinates', function () {
+suite('Polar', function () {
     // ======================================================
     test('to polar', function (done) {
         var stage = addStage();
