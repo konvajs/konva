@@ -585,7 +585,7 @@
          * @returns {Integer}
          */
         getAbsoluteZIndex: function() {
-            var level = this.getLevel(),
+            var depth = this.getDepth(),
                 that = this,
                 index = 0,
                 nodes, len, n, child;
@@ -606,7 +606,7 @@
                     }
                 }
 
-                if(nodes.length > 0 && nodes[0].getLevel() <= level) {
+                if(nodes.length > 0 && nodes[0].getDepth() <= depth) {
                     addChildren(nodes);
                 }
             }
@@ -617,22 +617,22 @@
             return index;
         },
         /**
-         * get node level in node tree.  Returns an integer.<br><br>
-         *  e.g. Stage level will always be 0.  Layers will always be 1.  Groups and Shapes will always
+         * get node depth in node tree.  Returns an integer.<br><br>
+         *  e.g. Stage depth will always be 0.  Layers will always be 1.  Groups and Shapes will always
          *  be >= 2
          * @method
          * @memberof Kinetic.Node.prototype
          * @returns {Integer}
          */
-        getLevel: function() {
-            var level = 0,
+        getDepth: function() {
+            var depth = 0,
                 parent = this.parent;
 
             while(parent) {
-                level++;
+                depth++;
                 parent = parent.parent;
             }
-            return level;
+            return depth;
         },
         setPosition: function(pos) {
             this.setX(pos.x);
