@@ -1,8 +1,7 @@
 (function () {
 
   /**
-   * Noise Filter. Randomly adds or substracts to the color channels.
-   *  Performs w*h pixel reads and w*h pixel writes.
+   * Noise Filter. Randomly adds or substracts to the color channels
    * @function
    * @memberof Kinetic.Filters
    * @param {Object} imagedata
@@ -25,14 +24,11 @@
   Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'noise', 0.2);
 
   /**
-  * get/set noise amount.  Returns the amount of noise. Between 0 and 1.
+  * get/set noise amount.  Must be a value between 0 and 1
   * @name noise
   * @method
   * @memberof Kinetic.Node.prototype
   * @param {Number} noise
   * @returns {Number}
   */
-
-
-
 })();

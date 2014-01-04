@@ -4,9 +4,9 @@
    * Pixelate Filter. Averages groups of pixels and redraws
    *  them as larger pixels
    * @function
-   * @author ippo615
    * @memberof Kinetic.Filters
    * @param {Object} imageData
+   * @author ippo615
    */
 
   Kinetic.Filters.Pixelate = function (imageData) {

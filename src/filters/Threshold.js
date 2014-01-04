@@ -24,10 +24,10 @@
   Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'threshold', 0.5);
 
   /**
-  * get/set threshold.  Value between 0 and 1
+  * get/set threshold.  Must be a value between 0 and 1
   * @name threshold
   * @method
-  * @memberof Kinetic.Image.prototype
+  * @memberof Kinetic.Node.prototype
   * @param {Number} threshold
   * @returns {Number}
   */

@@ -25,14 +25,12 @@
 
   Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'level', 0.5);
 
-    /**
-    * get/set levels.  Must be a number between 0 and 1
-    * @name level
-    * @method
-    * @memberof Kinetic.Node.prototype
-    * @param {Number} level between 0 and 1
-    * @returns {Number}
-    */
-
-
+  /**
+  * get/set levels.  Must be a number between 0 and 1
+  * @name level
+  * @method
+  * @memberof Kinetic.Node.prototype
+  * @param {Number} level between 0 and 1
+  * @returns {Number}
+  */
 })();
