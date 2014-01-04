@@ -9,7 +9,6 @@
      * @author Jacob Seidelin <jseidelin@nihilogic.dk>
      * @license MPL v1.1 [http://www.pixastic.com/lib/license.txt]
      */
-     
     Kinetic.Filters.Sepia = function (imageData) {
         var data = imageData.data,
             w = imageData.width,
@@ -38,6 +37,4 @@
             } while (--x);
         } while (--y);
     };
-
-
 })();

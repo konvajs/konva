@@ -24,7 +24,7 @@
     Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'brightness', 0);
     /**
     * get/set filter brightness.  The brightness is a number between -1 and 1.&nbsp; Positive values 
-    *  brighten the node and negative values darken it.
+    *  brighten the pixels and negative values darken them.
     * @name brightness
     * @method
     * @memberof Kinetic.Image.prototype
