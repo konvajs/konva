@@ -19,7 +19,7 @@ module.exports = function(grunt) {
     'src/filters/HSV.js',
     'src/filters/ConvolvePack.js',
     'src/filters/Enhance.js',
-    'src/filters/Levels.js',
+    'src/filters/Posterize.js',
     'src/filters/Noise.js',
     'src/filters/Pixelate.js',
     'src/filters/Polar.js',

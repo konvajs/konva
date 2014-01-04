@@ -1,4 +1,4 @@
-suite('Levels', function () {
+suite('Posterize', function () {
 
     // ======================================================
     test('on image tween', function(done) {
@@ -19,14 +19,14 @@ suite('Levels', function () {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Levels]);
-            darth.level(0.2);
+            darth.filters([Kinetic.Filters.Posterize]);
+            darth.levels(0.2);
             layer.draw();
 
             var tween = new Kinetic.Tween({
               node: darth, 
               duration: 1.0,
-              level: 0,
+              levels: 0,
               easing: Kinetic.Easings.Linear
             });
         
