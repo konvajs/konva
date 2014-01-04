@@ -1,4 +1,4 @@
-suite('Convolve Pack', function() {
+suite('ConvolvePack', function() {
 
     // ======================================================
     test('emboss', function(done) {
@@ -16,8 +16,9 @@ suite('Convolve Pack', function() {
 
             layer.add(darth);
             stage.add(layer);
+            darth.cache();
             darth.filters([Kinetic.Filters.Emboss]);
-            darth.setFilterAmount(50);
+            darth.filterAmount(100);
             layer.draw();
 
             var tween = new Kinetic.Tween({
@@ -38,8 +39,8 @@ suite('Convolve Pack', function() {
             done();
 
         };
-        //imageObj.src = 'assets/darth-vader.jpg';
-        imageObj.src = 'assets/lion.png';
+        imageObj.src = 'assets/darth-vader.jpg';
+        //imageObj.src = 'assets/lion.png';
 
     });
 
@@ -59,8 +60,9 @@ suite('Convolve Pack', function() {
 
             layer.add(darth);
             stage.add(layer);
-            darth.setFilter(Kinetic.Filters.Edge);
-            darth.setFilterAmount(50);
+            darth.cache();
+            darth.filters([Kinetic.Filters.Edge]);
+            darth.setFilterAmount(100);
             layer.draw();
 
             var tween = new Kinetic.Tween({
@@ -102,8 +104,9 @@ suite('Convolve Pack', function() {
 
             layer.add(darth);
             stage.add(layer);
-            darth.setFilter(Kinetic.Filters.UnsharpMask);
-            darth.setFilterAmount(50);
+            darth.cache();
+            darth.filters([Kinetic.Filters.UnsharpMask]);
+            darth.setFilterAmount(100);
             layer.draw();
 
             var tween = new Kinetic.Tween({
@@ -145,8 +148,9 @@ suite('Convolve Pack', function() {
 
             layer.add(darth);
             stage.add(layer);
-            darth.setFilter(Kinetic.Filters.SoftBlur);
-            darth.setFilterAmount(50);
+            darth.cache();
+            darth.filters([Kinetic.Filters.SoftBlur]);
+            darth.setFilterAmount(100);
             layer.draw();
 
             var tween = new Kinetic.Tween({
