@@ -343,7 +343,7 @@
     * get/set blur radius
     * @name blurRadius
     * @method
-    * @memberof Kinetic.Image.prototype
+    * @memberof Kinetic.Node.prototype
     * @param {Integer} radius
     * @returns {Integer}
     */

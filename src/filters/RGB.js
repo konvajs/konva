@@ -24,9 +24,6 @@
   };
 
   Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'red', 255);
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'green', 0);
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'blue', 0);
-
   /**
   * get/set filter red value
   * @name red
@@ -36,6 +33,7 @@
   * @returns {Integer}
   */
 
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'green', 0);
   /**
   * get/set filter green value
   * @name green
@@ -45,6 +43,7 @@
   * @returns {Integer}
   */
 
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'blue', 0);
   /**
   * get/set filter blue value
   * @name blue

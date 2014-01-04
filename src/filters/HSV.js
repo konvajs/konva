@@ -1,33 +1,20 @@
 (function () {
 
   /**
-   * HSV Filter. Adjusts the hue, saturation and value of an image.
-   *  Performs w*h pixel reads and w*h pixel writes.
+   * HSV Filter. Adjusts the hue, saturation and value
    * @function
-   * @author ippo615
    * @memberof Kinetic.Filters
-   * @param {ImageData} src, the source image data (what will be transformed)
-   * @param {ImageData} dst, the destination image data (where it will be saved)
-   * @param {Object} opt
-   * @param {Number} [opt.hue] amount to shift to the hue (in degrees)
-   *  0 represents no shift, while 360 is the maximum. Default: 0
-   * @param {Number} [opt.saturation] amount to scale the saturation.
-   *  1 means no change, 0.5 halves (more gray), 2.0 doubles
-   *  (more color), etc... Default is 1.
-   * @param {Number} [opt.value] amount to scale the value.
-   *  1 means no change, 0.5 halves (darker), 2.0 doubles (lighter), etc..
-   *  Default is 1.
+   * @param {Object} imageData
+   * @author ippo615
    */
 
-  var HSV = function (src, dst, opt) {
-    var srcPixels = src.data,
-      dstPixels = dst.data,
-      nPixels = srcPixels.length,
-      i;
-
-    var v = opt.value || 1,
-      s = opt.saturation || 1,
-      h = Math.abs((opt.hue || 0) + 360) % 360;
+  Kinetic.Filters.HSV = function (imageData) {
+    var data = imageData.data,
+        nPixels = data.length,
+        v = this.value(),
+        s = this.saturation(),
+        h = Math.abs((this.hue()) + 360) % 360,
+        i;
 
     // Basis for the technique used:
     // http://beesbuzz.biz/code/hsv_color_transforms.php
@@ -57,47 +44,20 @@
     var r,g,b,a;
 
     for (i = 0; i < nPixels; i += 4) {
-      r = srcPixels[i+0];
-      g = srcPixels[i+1];
-      b = srcPixels[i+2];
-      a = srcPixels[i+3];
+      r = data[i+0];
+      g = data[i+1];
+      b = data[i+2];
+      a = data[i+3];
 
-      dstPixels[i+0] = rr*r + rg*g + rb*b;
-      dstPixels[i+1] = gr*r + gg*g + gb*b;
-      dstPixels[i+2] = br*r + bg*g + bb*b;
-      dstPixels[i+3] = a; // alpha
+      data[i+0] = rr*r + rg*g + rb*b;
+      data[i+1] = gr*r + gg*g + gb*b;
+      data[i+2] = br*r + bg*g + bb*b;
+      data[i+3] = a; // alpha
     }
 
-  };
-
-  Kinetic.Filters.HSV = function(src,dst,opt){
-    if( this === Kinetic.Filters ){
-      HSV(src, dst||src, opt );
-    }else{
-      HSV.call(this, src, dst||src, opt || {
-        hue: this.hue(),
-        saturation: this.saturation(),
-        value: this.value()
-      });
-    }
-  };
-
-  // For compatibility with older hue shift stuff
-  Kinetic.Filters.ShiftHue = function(src,dst,opt){
-    if( this === Kinetic.Filters ){
-      HSV(src, dst||src, opt );
-    }else{
-      HSV.call(this, src, dst||src, opt || {
-        hue: this.hueShiftDeg()
-      });
-    }
   };
 
   Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'hue', 0);
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'hueShift', 0);
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'saturation', 1);
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'value', 1);
-  
   /**
   * get/set hsv hue in degrees
   * @name hue
@@ -107,15 +67,7 @@
   * @returns {Number}
   */
 
-  /**
-  * get/set hsv hueShift in degrees
-  * @name hueShift
-  * @method
-  * @memberof Kinetic.Node.prototype
-  * @param {Number} hue value between 0 and 359
-  * @returns {Number}
-  */
-
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'saturation', 1);
   /**
   * get/set hsv saturation
   * @name saturation
@@ -125,6 +77,7 @@
   * @returns {Number}
   */
 
+  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'value', 1);
   /**
   * get/set hsv value
   * @name value
