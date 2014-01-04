@@ -17,7 +17,7 @@ module.exports = function(grunt) {
     'src/filters/Mask.js',
     'src/filters/RGB.js',
     'src/filters/HSV.js',
-    'src/filters/ConvolvePack.js',
+    'src/filters/Emboss.js',
     'src/filters/Enhance.js',
     'src/filters/Posterize.js',
     'src/filters/Noise.js',
