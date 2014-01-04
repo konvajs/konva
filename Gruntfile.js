@@ -25,6 +25,7 @@ module.exports = function(grunt) {
     'src/filters/Polar.js',
     'src/filters/Threshold.js',
     'src/filters/Sepia.js',
+    'src/filters/Solarize.js',
 
     // core
     'src/Animation.js', 
