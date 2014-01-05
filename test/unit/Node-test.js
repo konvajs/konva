@@ -340,11 +340,11 @@ suite('Node', function() {
     });
 
     // ======================================================
-    test('test offset attr change', function() {
+    test('test center attr change', function() {
         /*
          * the premise of this test to make sure that only
          * root level attributes trigger an attr change event.
-         * for this test, we have two offset properties.  one
+         * for this test, we have two center properties.  one
          * is in the root level, and the other is inside the shadow
          * object
          */
@@ -356,7 +356,7 @@ suite('Node', function() {
             width: 200,
             height: 50,
             fill: 'blue',
-            offset: {x:10, y:10},
+            center: {x:10, y:10},
             shadowColor: 'black',
             shadowOffset: {x:20, y:20}
         });
@@ -364,16 +364,16 @@ suite('Node', function() {
         layer.add(rect);
         stage.add(layer);
 
-        var offsetChange = false;
+        var centerChange = false;
         var shadowOffsetChange = false;
 
-        rect.on('offsetChange', function(val) {
-            offsetChange = true;
+        rect.on('centerChange', function(val) {
+            centerChange = true;
         });
 
-        rect.setOffset({x:1, y:2});
+        rect.center({x:1, y:2});
 
-        assert.equal(offsetChange, true);
+        assert.equal(centerChange, true);
     });
 
     // ======================================================
@@ -410,9 +410,11 @@ suite('Node', function() {
             width: 200,
             height: 50,
             fill: 'blue',
-            offset: [10, 10],
+            centerX: 10,
+            centerY: 10,
             shadowColor: 'black',
-            shadowOffset: [20, 20],
+            shadowOffsetX: 20,
+            shadowOffsetY: 20,
             draggable: true,
             name: 'myRect'
         });
@@ -478,7 +480,8 @@ suite('Node', function() {
             width: 200,
             height: 50,
             fill: 'red',
-            offset: [10, 10],
+            centerX: 10,
+            centerY: 10,
             shadowColor: 'black',
             shadowOffset: [20, 20],
             name: 'myRect',
@@ -1045,7 +1048,7 @@ suite('Node', function() {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            offset: {
+            center: {
                 x: 0,
                 y: 0
             },
@@ -1120,7 +1123,7 @@ suite('Node', function() {
             width: 100,
             height: 50,
             stroke: 'blue',
-            offset: {
+            center: {
                 x: 40,
                 y: 20
             }
@@ -1129,19 +1132,19 @@ suite('Node', function() {
         layer.add(rect);
         stage.add(layer);
 
-        assert.equal(rect.getOffsetX(), 40);
-        assert.equal(rect.getOffsetY(), 20);
+        assert.equal(rect.centerX(), 40);
+        assert.equal(rect.centerY(), 20);
 
-        assert.equal(rect.getOffset().x, 40);
-        assert.equal(rect.getOffset().y, 20);
+        assert.equal(rect.center().x, 40);
+        assert.equal(rect.center().y, 20);
 
-        rect.setOffset({x:80, y:40});
+        rect.center({x:80, y:40});
 
-        assert.equal(rect.getOffsetX(), 80);
-        assert.equal(rect.getOffsetY(), 40);
+        assert.equal(rect.centerX(), 80);
+        assert.equal(rect.centerY(), 40);
 
-        assert.equal(rect.getOffset().x, 80);
-        assert.equal(rect.getOffset().y, 40);
+        assert.equal(rect.center().x, 80);
+        assert.equal(rect.center().y, 40);
 
     });
 
@@ -1234,7 +1237,7 @@ suite('Node', function() {
     });
 
     // ======================================================
-    test('test setOffset', function() {
+    test('test center', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();
         var rect = new Kinetic.Rect({
@@ -1248,28 +1251,28 @@ suite('Node', function() {
         layer.add(rect);
         stage.add(layer);
 
-        rect.setOffset({x:1, y: 2});
-        assert.equal(rect.getOffset().x, 1);
-        assert.equal(rect.getOffset().y, 2);
+        rect.center({x:1, y: 2});
+        assert.equal(rect.center().x, 1);
+        assert.equal(rect.center().y, 2);
 
-        rect.setOffset({x:3, y:4});
-        assert.equal(rect.getOffset().x, 3);
-        assert.equal(rect.getOffset().y, 4);
+        rect.center({x:3, y:4});
+        assert.equal(rect.center().x, 3);
+        assert.equal(rect.center().y, 4);
 
-        rect.setOffset({
+        rect.center({
             x: 5,
             y: 6
         });
-        assert.equal(rect.getOffset().x, 5);
-        assert.equal(rect.getOffset().y, 6);
+        assert.equal(rect.center().x, 5);
+        assert.equal(rect.center().y, 6);
 
-        rect.setOffsetX(7);
-        assert.equal(rect.getOffset().x, 7);
-        assert.equal(rect.getOffset().y, 6);
+        rect.centerX(7);
+        assert.equal(rect.center().x, 7);
+        assert.equal(rect.center().y, 6);
 
-        rect.setOffsetY(8);
-        assert.equal(rect.getOffset().x, 7);
-        assert.equal(rect.getOffset().y, 8);
+        rect.centerY(8);
+        assert.equal(rect.center().x, 7);
+        assert.equal(rect.center().y, 8);
 
     });
 
@@ -1535,8 +1538,8 @@ suite('Node', function() {
             stroke: 'black',
             strokeWidth: 4,
             draggable: true,
-            offsetX: 30,
-            offsetY: 30
+            centerX: 30,
+            centerY: 30
             //rotationDeg: 60
             //rotationDeg: Math.PI / 3
         });
@@ -1566,7 +1569,7 @@ suite('Node', function() {
             name: 'groupName',
             id: 'groupId',
             rotationDeg: 45,
-            offset: {x:side / 2, y:side / 2},
+            center: {x:side / 2, y:side / 2},
             x: diagonal / 2,
             y: diagonal / 2
         });
@@ -1617,7 +1620,7 @@ suite('Node', function() {
                 x: 2,
                 y: 1
             },
-            offset: {
+            center: {
                 x: 50,
                 y: 25
             }
@@ -2239,7 +2242,7 @@ suite('Node', function() {
                 x: 200,
                 y: 60,
                 image: imageObj,
-                offset: {
+                center: {
                     x: 50,
                     y: imageObj.height / 2
                 },
@@ -2248,7 +2251,7 @@ suite('Node', function() {
 
             layer.add(darth);
             stage.add(layer);
-            var json = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"x":200,"y":60,"offsetX":50,"offsetY":150,"id":"darth"},"className":"Image"}]}]}';
+            var json = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"x":200,"y":60,"centerX":50,"centerY":150,"id":"darth"},"className":"Image"}]}]}';
 
             assert.equal(stage.toJSON(), json);
 
@@ -2262,7 +2265,7 @@ suite('Node', function() {
         var imageObj = new Image();
         var container = addContainer();
         imageObj.onload = function() {
-            var json = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"x":200,"y":60,"offsetX":50,"offsetY":150,"id":"darth"},"className":"Image"}]}]}';
+            var json = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"x":200,"y":60,"centerX":50,"centerY":150,"id":"darth"},"className":"Image"}]}]}';
             var stage = Kinetic.Node.create(json, container);
 
             assert.equal(stage.toJSON(), json);
@@ -2863,15 +2866,15 @@ suite('Node', function() {
     circle.skewY(8);
     assert.equal(circle.skewY(), 8);
 
-    circle.offset({x: 2, y: 2});
-    assert.equal(circle.offset().x, 2);
-    assert.equal(circle.offset().y, 2);
+    circle.center({x: 2, y: 2});
+    assert.equal(circle.center().x, 2);
+    assert.equal(circle.center().y, 2);
 
-    circle.offsetX(5);
-    assert.equal(circle.offsetX(), 5);
+    circle.centerX(5);
+    assert.equal(circle.centerX(), 5);
 
-    circle.offsetY(8);
-    assert.equal(circle.offsetY(), 8);
+    circle.centerY(8);
+    assert.equal(circle.centerY(), 8);
 
     circle.width(23);
     assert.equal(circle.width(), 23); 
@@ -2919,7 +2922,7 @@ suite('Node', function() {
         y: -74,
         width: 148,
         height: 148
-    }).offset({
+    }).center({
         x: 74,
         y: 74
     });
@@ -3080,7 +3083,7 @@ suite('Node', function() {
         height: 208
     });
 
-    group.offsetX(104).offsetY(104);
+    group.centerX(104).centerY(104);
 
     //console.log('--after cache');
     //console.log(group.getAbsoluteTransform().getTranslation())

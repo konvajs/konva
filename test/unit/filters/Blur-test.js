@@ -95,7 +95,7 @@ suite('Blur', function() {
         height: 300
     });
 
-    group.offset({
+    group.center({
       x: 150, 
       y: 150
     });

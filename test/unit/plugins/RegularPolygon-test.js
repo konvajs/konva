@@ -14,7 +14,7 @@ suite('RegularPolygon', function() {
             stroke: 'blue',
             strokeWidth: 5,
             name: 'foobar',
-            offset: {
+            center: {
                 x: 0,
                 y: -50
             }
