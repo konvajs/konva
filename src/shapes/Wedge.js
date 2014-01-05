@@ -30,9 +30,9 @@
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = 'Wedge';
-            this.setDrawFunc(this._drawFunc);
+            this.sceneFunc(this._sceneFunc);
         },
-        _drawFunc: function(context) {
+        _sceneFunc: function(context) {
             context.beginPath();
             context.arc(0, 0, this.getRadius(), 0, this.getAngle(), this.getClockwise());
             context.lineTo(0, 0);

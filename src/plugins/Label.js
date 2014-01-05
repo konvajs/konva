@@ -174,9 +174,9 @@
         ___init: function(config) {
             Kinetic.Shape.call(this, config);
             this.className = 'Tag';
-            this.setDrawFunc(this._drawFunc);
+            this.sceneFunc(this._sceneFunc);
         },
-        _drawFunc: function(context) {
+        _sceneFunc: function(context) {
             var width = this.getWidth(),
                 height = this.getHeight(),
                 pointerDirection = this.getPointerDirection(),

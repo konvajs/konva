@@ -35,9 +35,9 @@
                 this._clearCache('tensionPoints');
             });
 
-            this.setDrawFunc(this._drawFunc);
+            this.sceneFunc(this._sceneFunc);
         },
-        _drawFunc: function(context) {
+        _sceneFunc: function(context) {
             var points = this.getPoints(),
                 length = points.length,
                 tension = this.getTension(),

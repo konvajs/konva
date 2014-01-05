@@ -82,10 +82,10 @@
                 this.setIndex(0);
             });
 
-            this.setDrawFunc(this._drawFunc);
-            this.setDrawHitFunc(this._drawHitFunc);
+            this.sceneFunc(this._sceneFunc);
+            this.hitFunc(this._hitFunc);
         },
-        _drawFunc: function(context) {
+        _sceneFunc: function(context) {
             var anim = this.getAnimation(),
                 index = this.getIndex(),
                 f = this.getAnimations()[anim][index],
@@ -95,7 +95,7 @@
                 context.drawImage(image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
             }
         },
-        _drawHitFunc: function(context) {
+        _hitFunc: function(context) {
             var anim = this.getAnimation(),
                 index = this.getIndex(),
                 f = this.getAnimations()[anim][index];

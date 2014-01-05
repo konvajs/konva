@@ -2221,7 +2221,7 @@ suite('Node', function() {
         var stage = Kinetic.Node.create(json, container);
 
         stage.find('#myTriangle').each(function(node) {
-            node.setDrawFunc(drawTriangle);
+            node.sceneFunc(drawTriangle);
         });
 
         stage.draw();

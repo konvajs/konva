@@ -25,9 +25,9 @@
         ___init: function(config) {
             Kinetic.Shape.call(this, config);
             this.className = 'Rect';
-            this.setDrawFunc(this._drawFunc);
+            this.sceneFunc(this._sceneFunc);
         },
-        _drawFunc: function(context) {
+        _sceneFunc: function(context) {
             var cornerRadius = this.getCornerRadius(),
                 width = this.getWidth(),
                 height = this.getHeight();

@@ -530,11 +530,11 @@ suite('Shape', function() {
     rect.strokeWidth(8);
     assert.equal(rect.strokeWidth(), 8);
 
-    rect.drawFunc('function');
-    assert.equal(rect.drawFunc(), 'function');
+    rect.sceneFunc('function');
+    assert.equal(rect.sceneFunc(), 'function');
 
-    rect.drawHitFunc('function');
-    assert.equal(rect.drawHitFunc(), 'function');
+    rect.hitFunc('function');
+    assert.equal(rect.hitFunc(), 'function');
 
     rect.dashArray([1]);
     assert.equal(rect.dashArray()[0], 1);

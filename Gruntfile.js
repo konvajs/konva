@@ -8,8 +8,7 @@ module.exports = function(grunt) {
     'src/Factory.js',
     'src/Node.js', 
 
-    // filters
-    'src/filters/FilterWrapper.js', 
+    // filters 
     'src/filters/Grayscale.js', 
     'src/filters/Brighten.js', 
     'src/filters/Invert.js', 
@@ -22,12 +21,13 @@ module.exports = function(grunt) {
     'src/filters/Posterize.js',
     'src/filters/Noise.js',
     'src/filters/Pixelate.js',
-    'src/filters/Polar.js',
     'src/filters/Threshold.js',
     'src/filters/Sepia.js',
     'src/filters/Solarize.js',
     'src/filters/Ripple.js',
-
+    //'src/filters/FilterWrapper.js',
+    //'src/filters/Polar.js',
+    
     // core
     'src/Animation.js', 
     'src/Tween.js', 

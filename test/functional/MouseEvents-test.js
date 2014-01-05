@@ -933,7 +933,7 @@ suite('MouseEvents', function() {
             strokeWidth: 4,
             fill: 'red',
             stroke: 'black',
-            drawHitFunc: function(context) {
+            hitFunc: function(context) {
                 var _context = context._context;
 
                 _context.beginPath();
@@ -990,7 +990,7 @@ suite('MouseEvents', function() {
 
         // set drawBufferFunc with setter
 
-        circle.setDrawHitFunc(function(context) {
+        circle.hitFunc(function(context) {
             var _context = context._context;
             _context.beginPath();
             _context.arc(0, 0, this.getRadius() - 50, 0, Math.PI * 2, true);

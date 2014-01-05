@@ -36,9 +36,9 @@
                 that.dataArray = Kinetic.Path.parsePathData(this.getData());
             });
 
-            this.setDrawFunc(this._drawFunc);
+            this.sceneFunc(this._sceneFunc);
         },
-        _drawFunc: function (context) {
+        _sceneFunc: function(context) {
             var ca = this.dataArray,
                 closedPath = false;
 

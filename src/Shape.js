@@ -236,7 +236,7 @@
             var canvas = can || this.getLayer().getCanvas(),
                 context = canvas.getContext(),
                 cachedCanvas = this._cache.canvas,
-                drawFunc = this.getDrawFunc(),
+                drawFunc = this.sceneFunc(),
                 hasShadow = this.hasShadow(),
                 stage, bufferCanvas, bufferContext;
 
@@ -293,7 +293,7 @@
         drawHit: function(can) {
             var canvas = can || this.getLayer().hitCanvas,
                 context = canvas.getContext(),
-                drawFunc = this.getDrawHitFunc() || this.getDrawFunc(),
+                drawFunc = this.hitFunc() || this.sceneFunc(),
                 cachedCanvas = this._cache.canvas,
                 cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
@@ -475,7 +475,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'drawFunc');
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'sceneFunc');
 
     /**
      * set draw function
@@ -494,7 +494,7 @@
      * @returns {Function}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'drawHitFunc');
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'hitFunc');
 
     /**
      * set draw hit function used for hit detection
