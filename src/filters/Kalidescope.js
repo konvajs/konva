@@ -223,16 +223,18 @@
   var tempCanvas = document.createElement('canvas');
 
   /*
-   * Ripple Filter. 
+   * Kalidescope Filter. 
    * @function
    * @author ippo615
    * @memberof Kinetic.Filters
    */
-  Kinetic.Filters.Ripple = function(imageData){
+  Kinetic.Filters.Kalidescope = function(imageData){
     var xSize = imageData.width,
         ySize = imageData.height;
-    var rippleSize = Math.ceil( this.rippleSize() || 5 );
-    var rippleOffset = this.rippleOffset() || 0;
+    var nCopies = Math.round( this.kalidescopeSides() );
+    var size = Math.round( this.kalidescopeSides() );
+    var offset = this.kalidescopeOffset() || 0;
+    if( nCopies < 1 ){return;}
 
     // Work with our shared buffer canvas
     tempCanvas.width = xSize;
@@ -246,36 +248,37 @@
     });
 
     // Copy/repeat a section along the r axis for effect
-    //var nCopies = 8;
-    //var sectionHeight = Math.floor(ySize/nCopies);
-    var nCopies = Math.ceil(ySize/rippleSize);
-    var sectionHeight = rippleSize;
-    var x,y,yoff,i, r,g,b,a, srcPos, dstPos;
-    for( x=0; x<xSize; x+=1 ){
-      for( y=0; y<sectionHeight; y+=1 ){
-        yoff = Math.round(y+rippleOffset) % ySize;
-        srcPos = (xSize*yoff+x)*4;
+    //var sectionSize = size; //Math.floor(xSize/nCopies);
+    //var nCopies = xSize/sectionSize;
+    var sectionSize = Math.ceil(xSize/nCopies);
+    var x,y,xoff,i, r,g,b,a, srcPos, dstPos;
+
+    // Copy the offset region to 0
+    for( y=0; y<ySize; y+=1 ){
+      for( x=0; x<sectionSize; x+=1 ){
+        xoff = Math.round(x+offset)%xSize;
+        srcPos = (xSize*y+xoff)*4;
         r = scratchData.data[srcPos+0];
         g = scratchData.data[srcPos+1];
         b = scratchData.data[srcPos+2];
         a = scratchData.data[srcPos+3];
-        dstPos = (xSize*(y)+x)*4;
+        dstPos = (xSize*y+x)*4;
         scratchData.data[dstPos+0] = r;
         scratchData.data[dstPos+1] = g;
         scratchData.data[dstPos+2] = b;
         scratchData.data[dstPos+3] = a;
       }
     }
-    for( x=0; x<xSize; x+=1 ){
-      for( y=0; y<sectionHeight; y+=1 ){
-        yoff = Math.round(y+rippleOffset) % ySize;
+    // Perform the actual effect
+    for( y=0; y<ySize; y+=1 ){
+      for( x=0; x<sectionSize; x+=1 ){
         srcPos = (xSize*y+x)*4;
         r = scratchData.data[srcPos+0];
         g = scratchData.data[srcPos+1];
         b = scratchData.data[srcPos+2];
         a = scratchData.data[srcPos+3];
         for( i=1; i<nCopies; i+=1 ){
-          dstPos = (xSize*(sectionHeight*i+y)+x)*4;
+          dstPos = (xSize*y+x+sectionSize*i)*4;
           scratchData.data[dstPos+0] = r;
           scratchData.data[dstPos+1] = g;
           scratchData.data[dstPos+2] = b;
@@ -285,24 +288,24 @@
     }
 
     // Convert back from polar coordinates
-    FromPolar(scratchData,imageData,{});
+    FromPolar(scratchData,imageData,{polarRotation:0});
   };
 
-    Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'rippleSize', 16);
-    Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'rippleOffset', 0);
+    Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'kalidescopeSides', 5);
+    Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'kalidescopeOffset', 0);
 
     /**
-    * get/set ripple size
-    * @name rippleSize
+    * get/set kalidescope side
+    * @name kalidescopeSides
     * @method
     * @memberof Kinetic.Node.prototype
-    * @param {Integer} radius
+    * @param {Integer} number of sides
     * @returns {Integer}
     */
 
     /**
-    * get/set ripple offset
-    * @name rippleOffset
+    * get/set kalidescope offset
+    * @name kalidescopeOffset
     * @method
     * @memberof Kinetic.Node.prototype
     * @param {Integer} offset
