@@ -27,6 +27,7 @@ module.exports = function(grunt) {
     'src/filters/Sepia.js',
     'src/filters/Solarize.js',
     'src/filters/Ripple.js',
+    'src/filters/Kalidescope.js',
 
     // core
     'src/Animation.js', 
