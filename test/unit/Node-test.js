@@ -2948,7 +2948,7 @@ suite('Node', function() {
     assert.equal(circle._cache.canvas.scene.getContext().getTrace(), 'save();translate(74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
   });
 
-  test.only('show cache border', function(){
+  test('show cache border', function(){
     var stage = addStage();
     var layer = new Kinetic.Layer();
     var group = new Kinetic.Group();
