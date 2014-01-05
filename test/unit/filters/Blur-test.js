@@ -277,4 +277,43 @@ suite('Blur', function() {
         };
         imageObj.src = 'assets/lion.png';
     });
+
+    // ======================================================
+    test('blur hit region', function(done) {
+        var stage = addStage();
+
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            
+            var layer = new Kinetic.Layer();
+            darth = new Kinetic.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(darth);
+            stage.add(layer);
+
+            darth.cache();
+            darth.filters([Kinetic.Filters.Blur]);
+            darth.blurRadius(20);
+            darth.drawHitFromCache(100);
+            layer.draw();
+
+            showCanvas(darth._cache.canvas.hit._canvas);
+
+            //console.log(darth._cache.canvas.hit.getContext().getTrace(true));
+
+            assert.equal(darth._cache.canvas.hit.getContext().getTrace(true), 'save();translate();beginPath();rect();closePath();save();fillStyle;fill();restore();restore();clearRect();getImageData();putImageData();');
+
+
+
+            done();
+
+        };
+        imageObj.src = 'assets/lion.png';
+    });
+
 });

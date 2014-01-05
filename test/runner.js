@@ -102,6 +102,11 @@ function addContainer() {
   return container;
 }
 
+function showCanvas(canvas) {
+  canvas.style.position = 'relative';
+
+  kineticContainer.appendChild(canvas);
+}
 function showHit(layer) {
   var canvas = layer.hitCanvas._canvas;
   canvas.style.position = 'relative';

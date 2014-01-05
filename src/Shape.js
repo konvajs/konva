@@ -319,14 +319,18 @@
         * draw hit graph using the cached scene canvas
         * @method
         * @memberof Kinetic.Shape.prototype
+        * @param {Integer} alphaThreshold alpha channel threshold that determines whether or not
+        *  a pixel should be drawn onto the hit graph.  Must be a value between 0 and 255.  
+        *  The default is 0
         * @returns {Kinetic.Shape}
         * @example
         * shape.cache();
         * shape.drawHitFromCache();
         */
-        drawHitFromCache: function() {
-            var cachedCanvas = this._cache.canvas,
-                sceneCanvas = cachedCanvas.scene,
+        drawHitFromCache: function(alphaThreshold) {
+            var threshold = alphaThreshold || 0,
+                cachedCanvas = this._cache.canvas,
+                sceneCanvas = this._getCachedSceneCanvas(),
                 sceneContext = sceneCanvas.getContext(),
                 hitCanvas = cachedCanvas.hit,
                 hitContext = hitCanvas.getContext(),
@@ -347,11 +351,11 @@
                 // replace non transparent pixels with color key
                 for(i = 0; i < len; i += 4) {
                     alpha = sceneData[i + 3];
-                    if (alpha > 0) {
+                    if (alpha > threshold) {
                         hitData[i] = rgbColorKey.r;
                         hitData[i + 1] = rgbColorKey.g;
                         hitData[i + 2] = rgbColorKey.b;
-                        hitData[i + 3] = alpha;
+                        hitData[i + 3] = 255;
                     }
                 }
 
