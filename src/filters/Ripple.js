@@ -248,7 +248,7 @@
     // Copy/repeat a section along the r axis for effect
     //var nCopies = 8;
     //var sectionHeight = Math.floor(ySize/nCopies);
-    var nCopies = Math.floor(ySize/rippleSize);
+    var nCopies = Math.ceil(ySize/rippleSize);
     var sectionHeight = rippleSize;
     var x,y,yoff,i, r,g,b,a, srcPos, dstPos;
     for( x=0; x<xSize; x+=1 ){
@@ -259,8 +259,23 @@
         g = scratchData.data[srcPos+1];
         b = scratchData.data[srcPos+2];
         a = scratchData.data[srcPos+3];
+        dstPos = (xSize*(y)+x)*4;
+        scratchData.data[dstPos+0] = r;
+        scratchData.data[dstPos+1] = g;
+        scratchData.data[dstPos+2] = b;
+        scratchData.data[dstPos+3] = a;
+      }
+    }
+    for( x=0; x<xSize; x+=1 ){
+      for( y=0; y<sectionHeight; y+=1 ){
+        yoff = Math.round(y+rippleOffset) % ySize;
+        srcPos = (xSize*y+x)*4;
+        r = scratchData.data[srcPos+0];
+        g = scratchData.data[srcPos+1];
+        b = scratchData.data[srcPos+2];
+        a = scratchData.data[srcPos+3];
         for( i=1; i<nCopies; i+=1 ){
-          dstPos = (xSize*(sectionHeight*i+yoff)+x)*4;
+          dstPos = (xSize*(sectionHeight*i+y)+x)*4;
           scratchData.data[dstPos+0] = r;
           scratchData.data[dstPos+1] = g;
           scratchData.data[dstPos+2] = b;
