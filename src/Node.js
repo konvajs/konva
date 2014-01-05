@@ -100,24 +100,34 @@
         * @example
         * node.clearCache();
         */
-        clearCache: function(attr) {
+        clearCache: function() {
             delete this._cache.canvas;
+            this._filterUpToDate = false;
+            return this;
         },
         /**
         * cache node to improve drawing performance, apply filters, or create more accurate
         *  hit regions
         * @method
         * @memberof Kinetic.Node.prototype
+        * @param {Object} config
+        * @param {Number} [config.x]
+        * @param {Number} [config.y]
+        * @param {Number} [config.width]
+        * @param {Number} [config.height]
+        * @param {Boolean} [config.showBorder] when set to true, a red border will be drawn around the cached
+        *  region for debugging purposes
         * @returns {Kinetic.Node}
         * @example
         * node.cache();
         */
-        cache: function(b) {
-            var box = b || {},
-                x = box.x || 0,
-                y = box.y || 0,
-                width = box.width || this.width(),
-                height = box.height || this.height(),
+        cache: function(config) {
+            var conf = config || {},
+                x = conf.x || 0,
+                y = conf.y || 0,
+                width = conf.width || this.width(),
+                height = conf.height || this.height(),
+                showBorder = conf.showBorder || false,
                 cachedSceneCanvas = new Kinetic.SceneCanvas({
                     pixelRatio: 1,
                     width: width,
@@ -134,7 +144,10 @@
                 }),
                 origTransEnabled = this.transformsEnabled(),
                 origX = this.x(),
-                origY = this.y();
+                origY = this.y(),
+                sceneContext;
+
+            this.clearCache();
 
             this.transformsEnabled('position');
             this.x(x * -1);
@@ -142,6 +155,20 @@
 
             this.drawScene(cachedSceneCanvas);
             this.drawHit(cachedHitCanvas);
+
+            // this will draw a red border around the cached box for
+            // debugging purposes
+            if (showBorder) {
+                sceneContext = cachedSceneCanvas.getContext();
+                sceneContext.save();
+                sceneContext.beginPath();
+                sceneContext.rect(0, 0, width, height);
+                sceneContext.closePath();
+                sceneContext.setAttr('strokeStyle', 'red');
+                sceneContext.setAttr('lineWidth', 5);
+                sceneContext.stroke();
+                sceneContext.restore();
+            }
 
             this.x(origX);
             this.y(origY);

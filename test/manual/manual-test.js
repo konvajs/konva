@@ -83,4 +83,69 @@ suite('Manual', function() {
 
         tween.play();
     });
+
+    // ======================================================
+    test('blur and tween spline', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+
+        var spline = new Kinetic.Line({
+            points: [
+                73, 160,
+                340, 23,
+                500, 109,
+                300, 109
+            ],
+            stroke: 'blue',
+            strokeWidth: 10,
+            lineCap: 'round',
+            lineJoin: 'round',
+            draggable: true,
+            tension: 1
+        });
+
+        layer.add(spline);
+        stage.add(layer);
+
+        spline.cache({
+            width: stage.width(),
+            height: stage.height()
+        });
+
+        spline.filters([Kinetic.Filters.Blur]).blurRadius(40);
+        layer.draw();
+
+        layer.on('beforeDraw', function() {
+            spline.cache({
+                width: stage.width(),
+                height: stage.height()
+            });
+        });
+
+        var tween = new Kinetic.Tween({
+            node: spline,
+            duration: 2,
+           //x: 100,
+
+            points: [
+                200, 160,
+                200, 23,
+                500, 109,
+                100, 10
+            ],
+            blurRadius: 0,
+            easing: Kinetic.Easings.BackEaseOut,
+            yoyo: false
+        });
+
+        // stage.getContent().addEventListener('mouseover', function() {
+        //   tween.play();
+        // });
+
+        // stage.getContent().addEventListener('mouseout', function() {
+        //   tween.reverse();
+        // });
+
+        tween.play();
+    });
 });

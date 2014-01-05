@@ -2901,8 +2901,8 @@ suite('Node', function() {
     var layer = new Kinetic.Layer();
     var group = new Kinetic.Group();
     var circle = new Kinetic.Circle({
-        x: 70,
-        y: 70,
+        x: 74,
+        y: 74,
         radius: 70,
         fill: 'green',
         stroke: 'black',
@@ -2940,12 +2940,59 @@ suite('Node', function() {
 
 
     //console.log(layer.getContext().getTrace());
-
-    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,70,70);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,-4,-4);drawImage([object HTMLCanvasElement],0,0);restore();');
+                                                 
+    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);drawImage([object HTMLCanvasElement],0,0);restore();');
 
     //console.log(circle._cache.canvas.scene.getContext().getTrace());
 
     assert.equal(circle._cache.canvas.scene.getContext().getTrace(), 'save();translate(74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
+  });
+
+  test.only('show cache border', function(){
+    var stage = addStage();
+    var layer = new Kinetic.Layer();
+    var group = new Kinetic.Group();
+    var circle = new Kinetic.Circle({
+        x: 74,
+        y: 74,
+        radius: 70,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 4,
+        name: 'myCircle',
+        draggable: true
+    });
+
+    group.add(circle);
+    layer.add(group);
+    stage.add(layer);
+
+    assert.equal(circle._cache.canvas, undefined);
+
+    circle.cache({
+        x: -74,
+        y: -74,
+        width: 148,
+        height: 148,
+        showBorder: true
+    }).center({
+        x: 74,
+        y: 74
+    });
+
+    assert.notEqual(circle._cache.canvas.scene, undefined);
+    assert.notEqual(circle._cache.canvas.hit, undefined);
+
+    layer.draw();
+
+
+    showHit(layer);
+
+
+    //console.log(circle._cache.canvas.scene.getContext().getTrace());
+
+    // make sure the border rectangle was drawn onto the cached scene canvas
+    assert.equal(circle._cache.canvas.scene.getContext().getTrace(),'save();translate(74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();beginPath();rect(0,0,148,148);closePath();strokeStyle=red;lineWidth=5;stroke();restore();');
   });
 
   test('cache group', function(){
