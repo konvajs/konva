@@ -119,7 +119,28 @@
         *  region for debugging purposes
         * @returns {Kinetic.Node}
         * @example
-        * node.cache();
+        * // cache a shape with the x,y position of the bounding box at the center and<br>
+        * // the width and height of the bounding box equal to the width and height of<br>
+        * // the shape obtained from shape.width() and shape.height()<br>
+        * image.cache();<br><br>
+        *
+        * // cache a node and define the bounding box position and size<br>
+        * node.cache({<br>
+        *   x: -30,<br>
+        *   y: -30,<br>
+        *   width: 100,<br>
+        *   height: 200<br>
+        * });<br><br>
+        *
+        * // cache a node and show a red border around the bounding box<br>
+        * // for debugging purposes<br>
+        * node.cache({<br>
+        *   x: -30,<br>
+        *   y: -30,<br>
+        *   width: 100,<br>
+        *   height: 200,<br>
+        *   showBorder: true<br>
+        * });
         */
         cache: function(config) {
             var conf = config || {},
@@ -1504,10 +1525,13 @@
 
         return no;
     };
-    // add getters setters
+
+
+    // =========================== add getters setters ===========================
+
     Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'position');
     /**
-     * get or set node position relative to parent
+     * get/set node position relative to parent
      * @name position
      * @method
      * @memberof Kinetic.Node.prototype
@@ -1529,7 +1553,7 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'x', 0);
 
     /**
-     * get or set x position
+     * get/set x position
      * @name x
      * @method
      * @memberof Kinetic.Node.prototype
@@ -1546,7 +1570,7 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'y', 0);
 
     /**
-     * get or set y position
+     * get/set y position
      * @name y
      * @method
      * @memberof Kinetic.Node.prototype
@@ -1563,7 +1587,7 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'opacity', 1);
 
     /**
-     * get or set opacity.  Opacity values range from 0 to 1.
+     * get/set opacity.  Opacity values range from 0 to 1.
      *  A node with an opacity of 0 is fully transparent, and a node
      *  with an opacity of 1 is fully opaque
      * @name opacity
@@ -1583,7 +1607,7 @@
     Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'name');
 
     /**
-     * set name
+     * get/set name
      * @name name
      * @method
      * @memberof Kinetic.Node.prototype
@@ -1601,7 +1625,7 @@
     Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'id');
 
     /**
-     * set id
+     * get/set id
      * @name id
      * @method
      * @memberof Kinetic.Node.prototype
@@ -1618,11 +1642,11 @@
     Kinetic.Factory.addRotationGetterSetter(Kinetic.Node, 'rotation', 0);
 
     /**
-     * get or set rotation in radians
+     * get/set rotation in radians
      * @name rotation
      * @method
      * @memberof Kinetic.Node.prototype
-     * @param {Number} theta
+     * @param {Number} rotation
      * @returns {Number}
      * @example
      * // get rotation in radians<br>
@@ -1633,11 +1657,11 @@
      */
 
     /**
-     * get or set rotation in degrees
+     * get/set rotation in degrees
      * @name rotationDeg
      * @method
      * @memberof Kinetic.Node.prototype
-     * @param {Number} deg
+     * @param {Number} rotationDeg
      * @returns {Number}
      * @example
      * // get rotation in degrees<br>
@@ -1650,7 +1674,7 @@
     Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'scale', 1);
 
     /**
-     * get or set scale
+     * get/set scale
      * @name scale
      * @param {Object} scale
      * @param {Number} scale.x
@@ -1670,7 +1694,7 @@
      */
 
     /**
-     * get or set scale x
+     * get/set scale x
      * @name scaleX
      * @param {Number} x
      * @method
@@ -1685,7 +1709,7 @@
      */
 
     /**
-     * get or set scale y
+     * get/set scale y
      * @name scaleY
      * @param {Number} y
      * @method
@@ -1702,62 +1726,53 @@
     Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'skew', 0);
 
     /**
-     * set skew
-     * @name setSkew
+     * get/set skew
+     * @name skew
      * @param {Object} skew
      * @param {Number} skew.x
      * @param {Number} skew.y
      * @method
      * @memberof Kinetic.Node.prototype
-     * @returns {Kinetic.Node}
+     * @returns {Object}
      * @example
-     * // set x and y <br>
-     * shape.setSkew({<br>
+     * // get skew<br>
+     * var skew = node.skew();<br><br>
+     *
+     * // set skew <br>
+     * node.skew({<br>
      *   x: 20<br>
      *   y: 10
      * });
      */
 
     /**
-     * get skew
-     * @name getSkew
-     * @method
-     * @memberof Kinetic.Node.prototype
-     * @returns {Object}
-     */
-
-    /**
-     * set skew x
-     * @name setSkewX
+     * get/set skew x
+     * @name skewX
      * @param {Number} x
      * @method
      * @memberof Kinetic.Node.prototype
-     * @returns {Kinetic.Node}
-     */
-
-    /**
-     * get skew x
-     * @name getSkewX
-     * @method
-     * @memberof Kinetic.Node.prototype
      * @returns {Number}
+     * @example
+     * // get skew x<br>
+     * var skewX = node.skewX();<br><br>
+     *
+     * // set skew x<br>
+     * node.skewX(3);
      */
 
     /**
-     * set skew y
-     * @name setSkewY
+     * get/set skew y
+     * @name skewY
      * @param {Number} y
      * @method
      * @memberof Kinetic.Node.prototype
-     * @returns {Kinetic.Node}
-     */
-
-    /**
-     * get skew y
-     * @name getSkewY
-     * @method
-     * @memberof Kinetic.Node.prototype
      * @returns {Number}
+     * @example
+     * // get skew y<br>
+     * var skewY = node.skewY();<br><br>
+     *
+     * // set skew y<br>
+     * node.skewY(3);
      */
 
     Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'center', 0);
@@ -1771,11 +1786,14 @@
      * @param {Number} center.y
      * @returns {Object}
      * @example
-     * // set x and y <br>
-     * shape.center({<br>
+     * // get center<br>
+     * var center = node.center();<br><br>
+     *
+     * // set center<br>
+     * node.center({<br>
      *   x: 20<br>
      *   y: 10<br>
-     * });<br><br>
+     * });
      */
 
     /**
@@ -1783,7 +1801,13 @@
      * @name centerX
      * @memberof Kinetic.Node.prototype
      * @param {Number} x
-     * @returns {Integer}
+     * @returns {Number}
+     * @example
+     * // get center x<br>
+     * var centerX = node.centerX();<br><br>
+     *
+     * // set center x<br>
+     * node.centerX(3);
      */
 
     /**
@@ -1792,87 +1816,119 @@
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} y
-     * @returns {Integer}
+     * @returns {Number}
+     * @example
+     * // get center y<br>
+     * var centerY = node.centerY();<br><br>
+     *
+     * // set center y<br>
+     * node.centerY(3);
      */
 
     Kinetic.Factory.addSetter(Kinetic.Node, 'width', 0);
     Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'width');
-
     /**
-     * set width
-     * @name setWidth
+     * get/set width
+     * @name width
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} width
-     * @returns {Kinetic.Node}
+     * @returns {Number}
+     * @example
+     * // get width<br>
+     * var width = node.width();<br><br>
+     *
+     * // set width<br>
+     * node.width(100);
      */
 
     Kinetic.Factory.addSetter(Kinetic.Node, 'height', 0);
     Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'height');
-
     /**
-     * set height
-     * @name setHeight
+     * get/set height
+     * @name height
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} height
-     * @returns {Kinetic.Node}
+     * @returns {Number}
+     * @example
+     * // get height<br>
+     * var height = node.height();<br><br>
+     *
+     * // set height<br>
+     * node.height(100);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'listening', 'inherit');
-
     /**
-     * listen or don't listen to events.  Can be "inherit", true, or false.  The default is "inherit".
-     * @name setListening
+     * get/set listenig attr.  If you need to determine if a node is listening or not
+     *   by taking into account its parents, use the isListening() method  
+     * @name listening
      * @method
      * @memberof Kinetic.Node.prototype
-     * @param {Boolean|String} listening
-     * @returns {Kinetic.Node}
-     */
-
-    /**
-     * determine if node is listening or not.
-     * @name getListening
-     * @method
-     * @memberof Kinetic.Node.prototype
+     * @param {Boolean|String} listening Can be "inherit", true, or false.  The default is "inherit".
      * @returns {Boolean|String}
+     * @example
+     * // get listening attr<br>
+     * var listening = node.listening();<br><br>
+     *
+     * // stop listening for events<br>
+     * node.listening(false);<br><br>
+     *
+     * // listen for events<br>
+     * node.listening(true);<br><br>
+     *
+     * // listen to events according to the parent<br>
+     * node.listening('inherit');
      */
-
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'filters');
     /**
-     * get/set filters
+     * get/set filters.  Filters are applied to cached canvases
      * @name filters
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Array} filters array of filters
      * @returns {Array}
      * @example
+     * // get filters<br>
+     * var filters = node.filters();<br><br>
+     *
      * // set a single filter<br>
+     * node.cache();<br>
      * node.filters([Kinetic.Filters.Blur]);<br><br>
      *
-     * // get filters<br>
-     * var filters = node.filters();
+     * // set multiple filters<br>
+     * node.cache();<br>
+     * node.filters([<br>
+     *   Kinetic.Filters.Blur,<br>
+     *   Kinetic.Filters.Sepia,<br>
+     *   Kinetic.Filters.Invert
+     * ]);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'visible', 'inherit');
-
     /**
-     * set visible.  Can be "inherit", true, or false.  The default is "inherit".
-     * @name setVisible
+     * get/set visible attr.  Can be "inherit", true, or false.  The default is "inherit".
+     *   If you need to determine if a node is visible or not
+     *   by taking into account its parents, use the isVisible() method  
+     * @name visible
      * @method
      * @memberof Kinetic.Node.prototype
-     * @param {Boolean} visible
-     * @returns {Kinetic.Node}
-     */
-
-    /**
-     * get visible property for the node.  If you need to determine if the node is actually visible,
-     * use the isVisible() method because it takes ancestors into account
-     * @name getVisible
-     * @method
-     * @memberof Kinetic.Node.prototype
-     * @returns {Boolean}
+     * @param {Boolean|String} visible
+     * @returns {Boolean|String}
+     * @example
+     * // get visible attr<br>
+     * var visible = node.visible();<br><br>
+     *
+     * // make invisible<br>
+     * node.visible(false);<br><br>
+     *
+     * // make visible<br>
+     * node.visible(true);<br><br>
+     *
+     * // make visible according to the parent<br>
+     * node.visible('inherit');
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'transformsEnabled', 'all');
@@ -1885,6 +1941,12 @@
      * @memberof Kinetic.Node.prototype
      * @param {String} enabled
      * @returns {String}
+     * @example
+     * // enable position transform only to improve draw performance<br>
+     * node.transformsEnabled('position');<br><br>
+     *
+     * // enable all transforms<br>
+     * node.transformsEnabled('all');
      */
 
     Kinetic.Collection.mapMethods([
