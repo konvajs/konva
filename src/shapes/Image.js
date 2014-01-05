@@ -36,13 +36,13 @@
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = IMAGE;
-            this.setDrawFunc(this._drawFunc);
-            this.setDrawHitFunc(this._drawHitFunc);
+            this.sceneFunc(this._sceneFunc);
+            this.hitFunc(this._hitFunc);
         },
         _useBufferCanvas: function() {
             return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasStroke();
         },
-        _drawFunc: function(context) {
+        _sceneFunc: function(context) {
             var width = this.getWidth(), 
                 height = this.getHeight(), 
                 image = this.getImage(),
@@ -69,85 +69,14 @@
                 context.drawImage.apply(context, params);
             }
         },
-        _drawHitFunc: function(context) {
+        _hitFunc: function(context) {
             var width = this.getWidth(), 
-                height = this.getHeight(), 
-                imageHitRegion = this.imageHitRegion;
+                height = this.getHeight();
 
-            if(imageHitRegion) {
-                context.drawImage(imageHitRegion, 0, 0);
-                context.beginPath();
-                context.rect(0, 0, width, height);
-                context.closePath();
-                context.strokeShape(this);
-            }
-            else {
-                context.beginPath();
-                context.rect(0, 0, width, height);
-                context.closePath();
-                context.fillStrokeShape(this);
-            }
-        },
-        /**
-         * create image hit region which enables more accurate hit detection mapping of the image
-         *  by avoiding event detections for transparent pixels
-         * @method
-         * @memberof Kinetic.Image.prototype
-         * @param {Function} [callback] callback function to be called once
-         *  the image hit region has been created
-         * @example
-         * image.createImageHitRegion(function() {<br>
-         *   layer.drawHit();<br>
-         * });
-         */
-        createImageHitRegion: function(callback) {
-            var that = this,
-                width = this.getWidth(),
-                height = this.getHeight(),
-                canvas = new Kinetic.SceneCanvas({
-                    width: width,
-                    height: height,
-                    pixelRatio: 1
-                }),
-                _context = canvas.getContext()._context,
-                image = this.getImage(),
-                imageData, data, rgbColorKey, i, len;
-
-            _context.drawImage(image, 0, 0);
-
-            try {
-                imageData = _context.getImageData(0, 0, width, height);
-                data = imageData.data;
-                len = data.length;
-                rgbColorKey = Kinetic.Util._hexToRgb(this.colorKey);
-
-                // replace non transparent pixels with color key
-                for(i = 0; i < len; i += 4) {
-                    if (data[i + 3] > 0) {
-                        data[i] = rgbColorKey.r;
-                        data[i + 1] = rgbColorKey.g;
-                        data[i + 2] = rgbColorKey.b;
-                    }
-                }
-
-                Kinetic.Util._getImage(imageData, function(imageObj) {
-                    that.imageHitRegion = imageObj;
-                    if(callback) {
-                        callback();
-                    }
-                });
-            }
-            catch(e) {
-                Kinetic.Util.warn('Unable to create image hit region. ' + e.message);
-            }
-        },
-        /**
-         * clear image hit region
-         * @method
-         * @memberof Kinetic.Image.prototype
-         */
-        clearImageHitRegion: function() {
-            delete this.imageHitRegion;
+            context.beginPath();
+            context.rect(0, 0, width, height);
+            context.closePath();
+            context.fillStrokeShape(this);
         },
         getWidth: function() {
             var image = this.getImage();

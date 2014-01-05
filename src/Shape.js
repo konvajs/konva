@@ -236,7 +236,7 @@
             var canvas = can || this.getLayer().getCanvas(),
                 context = canvas.getContext(),
                 cachedCanvas = this._cache.canvas,
-                drawFunc = this.getDrawFunc(),
+                drawFunc = this.sceneFunc(),
                 hasShadow = this.hasShadow(),
                 stage, bufferCanvas, bufferContext;
 
@@ -293,17 +293,14 @@
         drawHit: function(can) {
             var canvas = can || this.getLayer().hitCanvas,
                 context = canvas.getContext(),
-                drawFunc = this.getDrawHitFunc() || this.getDrawFunc(),
+                drawFunc = this.hitFunc() || this.sceneFunc(),
                 cachedCanvas = this._cache.canvas,
                 cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
             if(this.shouldDrawHit()) {
                 
                 if (cachedHitCanvas) {
-                    context.save();
-                    context._applyTransform(this);
-                    context.drawImage(cachedHitCanvas._canvas, 0, 0); 
-                    context.restore();
+                    this._drawCachedHitCanvas(context);
                 }
                 else if (drawFunc) {
                     context.save();
@@ -317,7 +314,59 @@
             }
 
             return this;
-        }
+        },
+        /**
+        * draw hit graph using the cached scene canvas
+        * @method
+        * @memberof Kinetic.Shape.prototype
+        * @param {Integer} alphaThreshold alpha channel threshold that determines whether or not
+        *  a pixel should be drawn onto the hit graph.  Must be a value between 0 and 255.  
+        *  The default is 0
+        * @returns {Kinetic.Shape}
+        * @example
+        * shape.cache();
+        * shape.drawHitFromCache();
+        */
+        drawHitFromCache: function(alphaThreshold) {
+            var threshold = alphaThreshold || 0,
+                cachedCanvas = this._cache.canvas,
+                sceneCanvas = this._getCachedSceneCanvas(),
+                sceneContext = sceneCanvas.getContext(),
+                hitCanvas = cachedCanvas.hit,
+                hitContext = hitCanvas.getContext(),
+                width = sceneCanvas.getWidth(),
+                height = sceneCanvas.getHeight(),
+                sceneImageData, sceneData, hitImageData, hitData, len, rgbColorKey, i, alpha;
+
+            hitContext.clear();
+
+            //try {
+                sceneImageData = sceneContext.getImageData(0, 0, width, height);
+                sceneData = sceneImageData.data;
+                hitImageData = hitContext.getImageData(0, 0, width, height);
+                hitData = hitImageData.data;
+                len = sceneData.length;
+                rgbColorKey = Kinetic.Util._hexToRgb(this.colorKey);
+
+                // replace non transparent pixels with color key
+                for(i = 0; i < len; i += 4) {
+                    alpha = sceneData[i + 3];
+                    if (alpha > threshold) {
+                        hitData[i] = rgbColorKey.r;
+                        hitData[i + 1] = rgbColorKey.g;
+                        hitData[i + 2] = rgbColorKey.b;
+                        hitData[i + 3] = 255;
+                    }
+                }
+
+                hitContext.putImageData(hitImageData, 0, 0);
+            // }
+            // catch(e) {
+            //     Kinetic.Util.warn('Unable to draw hit graph from cached scene canvas. ' + e.message);
+            // }
+
+            return this;
+        },
     });
     Kinetic.Util.extend(Kinetic.Shape, Kinetic.Node);
 
@@ -475,7 +524,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'drawFunc');
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'sceneFunc');
 
     /**
      * set draw function
@@ -494,7 +543,7 @@
      * @returns {Function}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'drawHitFunc');
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'hitFunc');
 
     /**
      * set draw hit function used for hit detection

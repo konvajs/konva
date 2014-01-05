@@ -31,8 +31,8 @@
             'skewXChange.kinetic',
             'skewYChange.kinetic',
             'rotationChange.kinetic',
-            'offsetXChange.kinetic',
-            'offsetYChange.kinetic',
+            'centerXChange.kinetic',
+            'centerYChange.kinetic',
             'transformsEnabledChange.kinetic'
         ].join(SPACE);
 
@@ -104,9 +104,8 @@
             delete this._cache.canvas;
         },
         /**
-        * cache node to improve drawing performance.
-        * NOTE: if you have filters applied to your node, your shape is already cached.
-        * explicitly calling cache() will override your filters.
+        * cache node to improve drawing performance, apply filters, or create more accurate
+        *  hit regions
         * @method
         * @memberof Kinetic.Node.prototype
         * @returns {Kinetic.Node}
@@ -119,17 +118,17 @@
                 y = box.y || 0,
                 width = box.width || this.width(),
                 height = box.height || this.height(),
-                sceneCanvasCache = new Kinetic.SceneCanvas({
+                cachedSceneCanvas = new Kinetic.SceneCanvas({
                     pixelRatio: 1,
                     width: width,
                     height: height
                 }),
-                filterCanvasCache = new Kinetic.SceneCanvas({
+                cachedFilterCanvas = new Kinetic.SceneCanvas({
                     pixelRatio: 1,
                     width: width,
                     height: height
                 }),
-                hitCanvasCache = new Kinetic.HitCanvas({
+                cachedHitCanvas = new Kinetic.HitCanvas({
                     width: width,
                     height: height
                 }),
@@ -141,33 +140,34 @@
             this.x(x * -1);
             this.y(y * -1);
 
-            this.drawScene(sceneCanvasCache);
-            this.drawHit(hitCanvasCache);
+            this.drawScene(cachedSceneCanvas);
+            this.drawHit(cachedHitCanvas);
 
             this.x(origX);
             this.y(origY);
             this.transformsEnabled(origTransEnabled);
 
             this._cache.canvas = {
-                scene: sceneCanvasCache,
-                filter: filterCanvasCache,
-                hit: hitCanvasCache,
-                x: x,
-                y: y
+                scene: cachedSceneCanvas,
+                filter: cachedFilterCanvas,
+                hit: cachedHitCanvas
             };
 
             return this;
         },
         _drawCachedSceneCanvas: function(context) {
+            context.save();
+            context._applyTransform(this);
+            context.drawImage(this._getCachedSceneCanvas()._canvas, 0, 0);
+            context.restore();
+        },
+        _getCachedSceneCanvas: function() {
             var filters = this.filters(),
                 cachedCanvas = this._cache.canvas,
                 sceneCanvas = cachedCanvas.scene,
                 filterCanvas = cachedCanvas.filter,
                 filterContext = filterCanvas.getContext(),
                 len, imageData, n, filter;
-
-            context.save();
-            context._applyTransform(this);
 
             if (filters) {
                 if (!this._filterUpToDate) {
@@ -192,13 +192,20 @@
                     this._filterUpToDate = true;
                 }
 
-                context.drawImage(filterCanvas._canvas, 0, 0); 
+                return filterCanvas;
             }
             else {
-                context.drawImage(sceneCanvas._canvas, 0, 0); 
+                return sceneCanvas;
             }
+        },
+        _drawCachedHitCanvas: function(context) {
+            var cachedCanvas = this._cache.canvas,
+                hitCanvas = cachedCanvas.hit;
 
-            context.restore();
+            context.save();
+            context._applyTransform(this);
+            context.drawImage(hitCanvas._canvas, 0, 0); 
+            context.restore(); 
         },
         /*
          * the default isDraggable method returns false.
@@ -654,11 +661,11 @@
         getAbsolutePosition: function() {
             var absoluteMatrix = this.getAbsoluteTransform().getMatrix(),
                 absoluteTransform = new Kinetic.Transform(),
-                offset = this.offset();
+                center = this.center();
 
             // clone the matrix array
             absoluteTransform.m = absoluteMatrix.slice();
-            absoluteTransform.translate(offset.x, offset.y);
+            absoluteTransform.translate(center.x, center.y);
 
             return absoluteTransform.getTranslation();
         },
@@ -713,8 +720,8 @@
                 rotation: this.getRotation(),
                 scaleX: this.getScaleX(),
                 scaleY: this.getScaleY(),
-                offsetX: this.getOffsetX(),
-                offsetY: this.getOffsetY(),
+                centerX: this.getCenterX(),
+                centerY: this.getCenterY(),
                 skewX: this.getSkewX(),
                 skewY: this.getSkewY()
             };
@@ -724,8 +731,8 @@
             this.attrs.rotation = 0;
             this.attrs.scaleX = 1;
             this.attrs.scaleY = 1;
-            this.attrs.offsetX = 0;
-            this.attrs.offsetY = 0;
+            this.attrs.centerX = 0;
+            this.attrs.centerY = 0;
             this.attrs.skewX = 0;
             this.attrs.skewY = 0;
 
@@ -1071,8 +1078,8 @@
                 scaleY = this.getScaleY(),
                 skewX = this.getSkewX(),
                 skewY = this.getSkewY(),
-                offsetX = this.getOffsetX(),
-                offsetY = this.getOffsetY();
+                centerX = this.getCenterX(),
+                centerY = this.getCenterY();
 
             if(x !== 0 || y !== 0) {
                 m.translate(x, y);
@@ -1086,8 +1093,8 @@
             if(scaleX !== 1 || scaleY !== 1) {
                 m.scale(scaleX, scaleY);
             }
-            if(offsetX !== 0 || offsetY !== 0) {
-                m.translate(-1 * offsetX, -1 * offsetY);
+            if(centerX !== 0 || centerY !== 0) {
+                m.translate(-1 * centerX, -1 * centerY);
             }
 
             return m;
@@ -1726,35 +1733,35 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'offset', 0);
+    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'center', 0);
 
     /**
-     * get/set offset.  A node's offset defines the position and rotation point
+     * get/set center.  A node's center defines the position and rotation point
      * @method
      * @memberof Kinetic.Node.prototype
-     * @param {Object} offset
-     * @param {Number} offset.x
-     * @param {Number} offset.y
+     * @param {Object} center
+     * @param {Number} center.x
+     * @param {Number} center.y
      * @returns {Object}
      * @example
      * // set x and y <br>
-     * shape.offset({<br>
+     * shape.center({<br>
      *   x: 20<br>
      *   y: 10<br>
      * });<br><br>
      */
 
     /**
-     * get/set offset x
-     * @name offsetX
+     * get/set center x
+     * @name centerX
      * @memberof Kinetic.Node.prototype
      * @param {Number} x
      * @returns {Integer}
      */
 
     /**
-     * get/set offset y
-     * @name offsetY
+     * get/set center y
+     * @name centerY
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} y

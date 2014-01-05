@@ -65,9 +65,9 @@
             // update text data for certain attr changes
             this.on('textChange.kinetic textStroke.kinetic textStrokeWidth.kinetic', that._setTextData);
             that._setTextData();
-            this.setDrawFunc(this._drawFunc);
+            this.sceneFunc(this._sceneFunc);
         },
-        _drawFunc: function(context) {
+        _sceneFunc: function(context) {
             context.setAttr('font', this._getContextFont());
             context.setAttr('textBaseline', 'middle');
             context.setAttr('textAlign', 'left');

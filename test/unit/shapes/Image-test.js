@@ -13,7 +13,7 @@ suite('Image', function(){
               image: imageObj,
               width: 100,
               height: 100,
-              offset: {x: 50, y: 30},
+              center: {x: 50, y: 30},
               crop: {x: 135, y: 7, width: 167, height: 134},
               draggable: true
           });
@@ -31,8 +31,8 @@ suite('Image', function(){
           assert.equal(darth.getY(), 60);
           assert.equal(darth.getWidth(), 100);
           assert.equal(darth.getHeight(), 100);
-          assert.equal(darth.getOffset().x, 50);
-          assert.equal(darth.getOffset().y, 30);
+          assert.equal(darth.center().x, 50);
+          assert.equal(darth.center().y, 30);
           assert.equal(Kinetic.Util._isElement(darth.getImage()), true);
 
           var crop = null;
@@ -88,7 +88,8 @@ suite('Image', function(){
               image: imageObj,
               width: 100,
               height: 100,
-              offset: [50, 30],
+              centerX: 50,
+              centerY: 30,
               crop: {x: 135, y: 7, width: 167, height: 134},
               draggable: true
           });
@@ -173,55 +174,6 @@ suite('Image', function(){
   });
 
   // ======================================================
-  test('create image hit region', function(done) {
-      var imageObj = new Image();
-
-      var stage = addStage();
-      var layer = new Kinetic.Layer();
-
-      imageObj.onload = function() {
-
-          var lion = new Kinetic.Image({
-              x: 200,
-              y: 40,
-              image: imageObj,
-              draggable: true,
-              shadowColor: 'black',
-              shadowBlur: 10,
-              shadowOffset: 20,
-              shadowOpacity: 0.2
-          });
-
-          // override color key with black
-          lion.colorKey = '#000000';
-          Kinetic.shapes['#000000'] = lion;
-
-          layer.add(lion);
-
-          lion.createImageHitRegion(function() {
-              stage.add(layer);
-              layer.drawHit();
-
-              var trace = layer.hitCanvas.getContext().getTrace();
-              //console.log(trace);
-              //assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,200,40);drawImage([object HTMLImageElement],0,0,144,139);beginPath();rect(0,0,144,139);closePath();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,200,40);drawImage([object HTMLImageElement],0,0,144,139);beginPath();rect(0,0,144,139);closePath();restore();');
-
-              var hitTrace = layer.hitCanvas.getContext().getTrace();
-              //console.log(hitTrace);
-              //assert.equal(hitTrace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,200,40);drawImage([object HTMLImageElement],0,0,144,139);beginPath();rect(0,0,144,139);closePath();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,200,40);drawImage([object HTMLImageElement],0,0,144,139);beginPath();rect(0,0,144,139);closePath();restore();');
-
-              done();  
-
-          });
-      };
-      imageObj.src = 'assets/lion.png';
-
-      showHit(layer);
-
-      layer.hitCanvas._canvas.style.border='2px solid black';
-  });
-
-  // ======================================================
   test('image with svg source', function(done) {
       var imageObj = new Image();
 
@@ -301,7 +253,7 @@ suite('Image', function(){
               image: imageObj,
               width: 100,
               height: 100,
-              offset: {x: 50, y:30},
+              center: {x: 50, y:30},
               draggable: true,
               opacity: 0.5,
               shadowColor: 'black',
@@ -336,7 +288,7 @@ suite('Image', function(){
               image: imageObj,
               width: 100,
               height: 100,
-              offset: {x: 50, y: 30},
+              center: {x: 50, y: 30},
               draggable: true,
               opacity: 0.5,
               shadowColor: 'black',

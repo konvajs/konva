@@ -32,9 +32,9 @@
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = 'Arc';
-            this.setDrawFunc(this._drawFunc);
+            this.sceneFunc(this._sceneFunc);
         },
-        _drawFunc: function(context) {
+        _sceneFunc: function(context) {
             context.beginPath();
             context.arc(0, 0, this.getOuterRadius(), 0, this.getAngle(), this.getClockwise());
             context.arc(0, 0, this.getInnerRadius(), this.getAngle(), 0, !this.getClockwise());

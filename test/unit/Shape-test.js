@@ -530,11 +530,11 @@ suite('Shape', function() {
     rect.strokeWidth(8);
     assert.equal(rect.strokeWidth(), 8);
 
-    rect.drawFunc('function');
-    assert.equal(rect.drawFunc(), 'function');
+    rect.sceneFunc('function');
+    assert.equal(rect.sceneFunc(), 'function');
 
-    rect.drawHitFunc('function');
-    assert.equal(rect.drawHitFunc(), 'function');
+    rect.hitFunc('function');
+    assert.equal(rect.hitFunc(), 'function');
 
     rect.dashArray([1]);
     assert.equal(rect.dashArray()[0], 1);
@@ -544,4 +544,56 @@ suite('Shape', function() {
 
 
   });
+
+  // ======================================================
+  test('create image hit region', function(done) {
+      var imageObj = new Image();
+
+      var stage = addStage();
+      var layer = new Kinetic.Layer();
+
+      imageObj.onload = function() {
+
+          var lion = new Kinetic.Image({
+              x: 200,
+              y: 40,
+              image: imageObj,
+              draggable: true,
+              shadowColor: 'black',
+              shadowBlur: 10,
+              shadowOffset: 20,
+              shadowOpacity: 0.2
+          });
+
+          // override color key with black
+          lion.colorKey = '#000000';
+          Kinetic.shapes['#000000'] = lion;
+
+          layer.add(lion);
+
+          stage.add(layer);
+
+          lion.cache();
+
+
+          //document.body.appendChild(lion._cache.canvas.hit._canvas);
+
+
+          lion.drawHitFromCache();
+
+
+          layer.draw();
+
+
+          done();
+
+
+      };
+      imageObj.src = 'assets/lion.png';
+
+      showHit(layer);
+
+      layer.hitCanvas._canvas.style.border='2px solid black';
+  });
+
 });
