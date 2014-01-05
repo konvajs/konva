@@ -104,9 +104,8 @@
             delete this._cache.canvas;
         },
         /**
-        * cache node to improve drawing performance.
-        * NOTE: if you have filters applied to your node, your shape is already cached.
-        * explicitly calling cache() will override your filters.
+        * cache node to improve drawing performance, apply filters, or create more accurate
+        *  hit regions
         * @method
         * @memberof Kinetic.Node.prototype
         * @returns {Kinetic.Node}
@@ -119,17 +118,17 @@
                 y = box.y || 0,
                 width = box.width || this.width(),
                 height = box.height || this.height(),
-                sceneCanvasCache = new Kinetic.SceneCanvas({
+                cachedSceneCanvas = new Kinetic.SceneCanvas({
                     pixelRatio: 1,
                     width: width,
                     height: height
                 }),
-                filterCanvasCache = new Kinetic.SceneCanvas({
+                cachedFilterCanvas = new Kinetic.SceneCanvas({
                     pixelRatio: 1,
                     width: width,
                     height: height
                 }),
-                hitCanvasCache = new Kinetic.HitCanvas({
+                cachedHitCanvas = new Kinetic.HitCanvas({
                     width: width,
                     height: height
                 }),
@@ -141,33 +140,34 @@
             this.x(x * -1);
             this.y(y * -1);
 
-            this.drawScene(sceneCanvasCache);
-            this.drawHit(hitCanvasCache);
+            this.drawScene(cachedSceneCanvas);
+            this.drawHit(cachedHitCanvas);
 
             this.x(origX);
             this.y(origY);
             this.transformsEnabled(origTransEnabled);
 
             this._cache.canvas = {
-                scene: sceneCanvasCache,
-                filter: filterCanvasCache,
-                hit: hitCanvasCache,
-                x: x,
-                y: y
+                scene: cachedSceneCanvas,
+                filter: cachedFilterCanvas,
+                hit: cachedHitCanvas
             };
 
             return this;
         },
         _drawCachedSceneCanvas: function(context) {
+            context.save();
+            context._applyTransform(this);
+            context.drawImage(this._getCachedSceneCanvas()._canvas, 0, 0);
+            context.restore();
+        },
+        _getCachedSceneCanvas: function() {
             var filters = this.filters(),
                 cachedCanvas = this._cache.canvas,
                 sceneCanvas = cachedCanvas.scene,
                 filterCanvas = cachedCanvas.filter,
                 filterContext = filterCanvas.getContext(),
                 len, imageData, n, filter;
-
-            context.save();
-            context._applyTransform(this);
 
             if (filters) {
                 if (!this._filterUpToDate) {
@@ -192,13 +192,20 @@
                     this._filterUpToDate = true;
                 }
 
-                context.drawImage(filterCanvas._canvas, 0, 0); 
+                return filterCanvas;
             }
             else {
-                context.drawImage(sceneCanvas._canvas, 0, 0); 
+                return sceneCanvas;
             }
+        },
+        _drawCachedHitCanvas: function(context) {
+            var cachedCanvas = this._cache.canvas,
+                hitCanvas = cachedCanvas.hit;
 
-            context.restore();
+            context.save();
+            context._applyTransform(this);
+            context.drawImage(hitCanvas._canvas, 0, 0); 
+            context.restore(); 
         },
         /*
          * the default isDraggable method returns false.

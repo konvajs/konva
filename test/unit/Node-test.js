@@ -2929,11 +2929,7 @@ suite('Node', function() {
 
     assert.notEqual(circle._cache.canvas.scene, undefined);
     assert.notEqual(circle._cache.canvas.hit, undefined);
-    assert.equal(circle._cache.canvas.x, -74);
-    assert.equal(circle._cache.canvas.y, -74);
 
-
-    
     layer.draw();
 
 

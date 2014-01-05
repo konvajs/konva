@@ -264,10 +264,7 @@
 
             if (this.shouldDrawHit()) {
                 if (cachedHitCanvas) {
-                    context.save();
-                    context._applyTransform(this);
-                    context.drawImage(cachedHitCanvas._canvas, 0, 0); 
-                    context.restore(); 
+                    this._drawCachedHitCanvas(context);
                 }
                 else {
                     this._drawChildren(canvas, 'drawHit');

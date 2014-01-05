@@ -105,14 +105,14 @@ suite('Blur', function() {
 
     layer.draw();
 
-    //document.body.appendChild(group._cache.canvas.scene._canvas);
+    //document.body.appendChild(group._cache.canvas.hit._canvas);
 
 
 
 
 
 
-    showHit(layer);
+    //showHit(layer);
   });
 
     // ======================================================
