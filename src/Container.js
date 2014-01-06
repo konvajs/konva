@@ -307,16 +307,23 @@
 
     // add getters setters
     Kinetic.Factory.addBoxGetterSetter(Kinetic.Container, 'clip');
-
     /**
-     * set clip
+     * get/set clip
      * @method
-     * @name setClip
+     * @name clip
      * @memberof Kinetic.Container.prototype
-     * @param {Object} clip {x:x, y:y, width:width, height:height}
+     * @param {Object} clip
+     * @param {Number} clip.x
+     * @param {Number} clip.y
+     * @param {Number} clip.width
+     * @param {Number} clip.height
+     * @returns {Object}
      * @example
-     * // set clip x, y, width and height<br>
-     * image.setClip({<br>
+     * // get clip<br>
+     * var clip = container.clip();<br><br>
+     *
+     * // set clip<br>
+     * container.setClip({<br>
      *   x: 20,<br>
      *   y: 20,<br>
      *   width: 20,<br>
@@ -325,78 +332,62 @@
      */
 
     /**
-     * get clip
-     * @name getClip
+     * get/set clip x
+     * @name clipX
      * @method
-     * @memberof Kinetic.Container.prototype
-     * @returns {Object}
-     */
-
-    Kinetic.Factory.addGetterSetter(Kinetic.Container, 'clipX', 0);
-     /**
-     * set clip x
-     * @method
-     * @name setClipX
      * @memberof Kinetic.Container.prototype
      * @param {Number} x
+     * @returns {Number}
+     * @example
+     * // get clip x<br>
+     * var clipX = container.clipX();<br><br>
+     *
+     * // set clip x<br>
+     * container.clipX(10);
      */
 
     /**
-     * get clip x
-     * @name getClipX
-     * @method
-     * @memberof Kinetic.Container.prototype
-     * @returns {Number}
-     */
-
-     Kinetic.Factory.addGetterSetter(Kinetic.Container, 'clipY', 0);
-     /**
-     * set clip y
-     * @name setClipY
+     * get/set clip y
+     * @name clipY
      * @method
      * @memberof Kinetic.Container.prototype
      * @param {Number} y
+     * @returns {Number}
+     * @example
+     * // get clip y<br>
+     * var clipY = container.clipY();<br><br>
+     *
+     * // set clip y<br>
+     * container.clipY(10);
      */
 
     /**
-     * get clip y
-     * @name getClipY
-     * @method
-     * @memberof Kinetic.Container.prototype
-     * @returns {Number}
-     */
-
-     Kinetic.Factory.addGetterSetter(Kinetic.Container, 'clipWidth', 0);
-     /**
-     * set clip width
-     * @name setClipWidth
+     * get/set clip width
+     * @name clipWidth
      * @method
      * @memberof Kinetic.Container.prototype
      * @param {Number} width
+     * @returns {Number}
+     * @example
+     * // get clip width<br>
+     * var clipWidth = container.clipWidth();<br><br>
+     *
+     * // set clip width<br>
+     * container.clipWidth(100);
      */
 
     /**
-     * get clip width
-     * @name getClipWidth
-     * @method
-     * @memberof Kinetic.Container.prototype
-     * @returns {Number}
-     */
-
-     Kinetic.Factory.addGetterSetter(Kinetic.Container, 'clipHeight', 0);
-     /**
-     * set clip height
-     * @name setClipHeight
+     * get/set clip height
+     * @name clipHeight
      * @method
      * @memberof Kinetic.Container.prototype
      * @param {Number} height
-     */
-
-    /**
-     * get clip height
-     * @name getClipHeight
-     * @method
-     * @memberof Kinetic.Container.prototype
      * @returns {Number}
+     * @example
+     * // get clip height<br>
+     * var clipHeight = container.clipHeight();<br><br>
+     *
+     * // set clip height<br>
+     * container.clipHeight(100);
      */
 })();

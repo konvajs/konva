@@ -649,12 +649,17 @@
 
     // add getters and setters
     Kinetic.Factory.addGetter(Kinetic.Stage, 'container');
+    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Stage, 'container');
 
     /**
      * get container DOM element
-     * @name getContainer
+     * @name container
      * @method
      * @memberof Kinetic.Stage.prototype
+     * @returns {DomElement} container
+     * @example
+     * // get container<br>
+     * var container = stage.container();
      */
 
 })();

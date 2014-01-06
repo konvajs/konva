@@ -293,43 +293,44 @@
 
     // add getters and setters
     Kinetic.Factory.addGetterSetter(Kinetic.Layer, 'clearBeforeDraw', true);
-
     /**
-     * set flag which determines if the layer is cleared or not
+     * get/set clearBeforeDraw flag which determines if the layer is cleared or not
      *  before drawing
-     * @name setClearBeforeDraw
+     * @name clearBeforeDraw
      * @method
      * @memberof Kinetic.Layer.prototype
      * @param {Boolean} clearBeforeDraw
-     * @returns {Node}
-     */
-
-    /**
-     * get flag which determines if the layer is cleared or not
-     *  before drawing
-     * @name getClearBeforeDraw
-     * @method
-     * @memberof Kinetic.Layer.prototype
      * @returns {Boolean}
+     * @example
+     * // get clearBeforeDraw flag<br>
+     * var clearBeforeDraw = layer.clearBeforeDraw();<br><br>
+     *
+     * // disable clear before draw<br>
+     * layer.clearBeforeDraw(false);<br><br>
+     *
+     * // enable clear before draw<br>
+     * layer.clearBeforeDraw(true);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Layer, 'hitGraphEnabled', true);
-
     /**
-     * enable/disable hit graph
-     * @name setHitGraphEnabled
+     * get/set hitGraphEnabled flag.  Disabling the hit graph will greatly increase
+     *  draw performance because the hit graph will not be redrawn each time the layer is
+     *  drawn.  This, however, also disables mouse/touch event detection
+     * @name hitGraphEnabled
      * @method
      * @memberof Kinetic.Layer.prototype
      * @param {Boolean} enabled
-     * @returns {Node}
-     */
-
-    /**
-     * determine if hit graph is enabled
-     * @name getHitGraphEnabled
-     * @method
-     * @memberof Kinetic.Layer.prototype
      * @returns {Boolean}
+     * @example
+     * // get hitGraphEnabled flag<br>
+     * var hitGraphEnabled = layer.hitGraphEnabled();<br><br>
+     *
+     * // disable hit graph<br>
+     * layer.hitGraphEnabled(false);<br><br>
+     *
+     * // enable hit graph<br>
+     * layer.hitGraphEnabled(true);
      */
 
      Kinetic.Layer.prototype.isHitGraphEnabled = Kinetic.Layer.prototype.getHitGraphEnabled;
