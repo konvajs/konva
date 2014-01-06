@@ -351,7 +351,7 @@ suite('Shape', function() {
         assert.equal(circle.getShadowEnabled(), true, 'shadowEnabled should be true');
         assert.equal(circle.getDashArrayEnabled(), true, 'dashArrayEnabled should be true');
 
-        circle.disableStrokeScale();
+        circle.strokeScaleEnabled(false);
         assert.equal(circle.getStrokeScaleEnabled(), false);
 
         layer.draw();
@@ -359,31 +359,31 @@ suite('Shape', function() {
         //console.log(trace);
         assert.equal(trace, 'clearRect(0,0,578,200);save();save();shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;drawImage([object HTMLCanvasElement],0,0);restore();drawImage([object HTMLCanvasElement],0,0);restore();clearRect(0,0,578,200);save();save();shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;drawImage([object HTMLCanvasElement],0,0);restore();drawImage([object HTMLCanvasElement],0,0);restore();');
 
-        circle.disableFill();
+        circle.fillEnabled(false);
         assert.equal(circle.getFillEnabled(), false, 'fillEnabled should be false');
 
 
-        circle.disableStroke();
+        circle.strokeEnabled(false);
         assert.equal(circle.getStrokeEnabled(), false, 'strokeEnabled should be false');
 
-        circle.disableShadow();
+        circle.shadowEnabled(false);
         assert.equal(circle.getShadowEnabled(), false, 'shadowEnabled should be false');
 
-        circle.disableDashArray();
+        circle.dashArrayEnabled(false);
         assert.equal(circle.getDashArrayEnabled(), false, 'dashArrayEnabled should be false');
 
         // re-enable
 
-        circle.enableDashArray();
+        circle.dashArrayEnabled(true);
         assert.equal(circle.getDashArrayEnabled(), true, 'dashArrayEnabled should be true');
 
-        circle.enableShadow();
+        circle.shadowEnabled(true);
         assert.equal(circle.getShadowEnabled(), true, 'shadowEnabled should be true');
 
-        circle.enableStroke();
+        circle.strokeEnabled(true);
         assert.equal(circle.getStrokeEnabled(), true, 'strokeEnabled should be true');
 
-        circle.enableFill();
+        circle.fillEnabled(true);
         assert.equal(circle.getFillEnabled(), true, 'fillEnabled should be true');
 
     });
