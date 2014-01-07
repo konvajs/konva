@@ -1404,7 +1404,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addRotationGetterSetter(Kinetic.Shape, 'fillPatternRotation', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternRotation', 0);
 
     /**
      * set fill pattern rotation in radians

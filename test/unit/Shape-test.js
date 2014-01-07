@@ -193,7 +193,7 @@ suite('Shape', function() {
                 fillPatternY: -30,
                 fillPatternScale: {x: 0.5, y:0.5},
                 fillPatternOffset: {x: 219, y: 150},
-                fillPatternRotation: Math.PI * 0.5,
+                fillPatternRotation: 90,
                 fillPatternRepeat: 'no-repeat',
 
                 stroke: 'blue',
@@ -217,11 +217,11 @@ suite('Shape', function() {
             assert.equal(star.getFillPatternScale().y, 0.5, 'star fill scale y should be 0.5');
             assert.equal(star.getFillPatternOffset().x, 219, 'star fill offset x should be 219');
             assert.equal(star.getFillPatternOffset().y, 150, 'star fill offset y should be 150');
-            assert.equal(star.getFillPatternRotation(), Math.PI * 0.5, 'star fill rotation should be Math.PI * 0.5');
+            assert.equal(star.getFillPatternRotation(), 90, 'star fill rotation should be 90');
 
-            star.setFillPatternRotationDeg(180);
+            star.setFillPatternRotation(180);
 
-            assert.equal(star.getFillPatternRotation(), Math.PI, 'star fill rotation should be Math.PI');
+            assert.equal(star.getFillPatternRotation(), 180, 'star fill rotation should be 180');
 
             star.setFillPatternScale({x:1, y:1});
 

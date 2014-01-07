@@ -88,12 +88,6 @@
             this.addPointsSetter(constructor, attr);
             this.addOverloadedGetterSetter(constructor, attr);
         },
-        addRotationGetterSetter: function(constructor, attr, def) {
-            this.addRotationGetter(constructor, attr, def);
-            this.addRotationSetter(constructor, attr);
-            this.addOverloadedGetterSetter(constructor, attr);
-            this.addOverloadedGetterSetter(constructor, attr + DEG);
-        },
         addColorGetterSetter: function(constructor, attr) {
             this.addGetter(constructor, attr);
             this.addSetter(constructor, attr);
@@ -180,27 +174,6 @@
                     width: that[baseMethod + UPPER_WIDTH](),
                     height: that[baseMethod + UPPER_HEIGHT]()
                 };
-            };
-        },
-        addRotationGetter: function(constructor, attr, def) {
-            var that = this,
-                method = GET + Kinetic.Util._capitalize(attr);
-
-            // radians
-            constructor.prototype[method] = function() {
-                var val = this.attrs[attr];
-                if (val === undefined) {
-                    val = def;
-                }
-                return val;
-            };
-            // degrees
-            constructor.prototype[method + DEG] = function() {
-                var val = this.attrs[attr];
-                if (val === undefined) {
-                    val = def;
-                }
-                return Kinetic.Util._radToDeg(val);
             };
         },
 
@@ -306,20 +279,6 @@
                   this._fireChangeEvent(attr, oldVal, box);
                 }
 
-                return this;
-            };
-        },
-        addRotationSetter: function(constructor, attr) {
-            var method = SET + Kinetic.Util._capitalize(attr);
-
-            // radians
-            constructor.prototype[method] = function(val) {
-                this._setAttr(attr, val);
-                return this;
-            };
-            // degrees
-            constructor.prototype[method + DEG] = function(deg) {
-                this._setAttr(attr, Kinetic.Util._degToRad(deg));
                 return this;
             };
         },

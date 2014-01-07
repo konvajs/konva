@@ -842,7 +842,7 @@
             }
         },
         /**
-         * rotate node by an amount in radians relative to its current rotation
+         * rotate node by an amount in degrees relative to its current rotation
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {Number} theta
@@ -850,17 +850,6 @@
          */
         rotate: function(theta) {
             this.setRotation(this.getRotation() + theta);
-            return this;
-        },
-        /**
-         * rotate node by an amount in degrees relative to its current rotation
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @param {Number} deg
-         * @returns {Kinetic.Node}
-         */
-        rotateDeg: function(deg) {
-            this.setRotation(this.getRotation() + Kinetic.Util._degToRad(deg));
             return this;
         },
         /**
@@ -1121,7 +1110,7 @@
             var m = new Kinetic.Transform(),
                 x = this.getX(),
                 y = this.getY(),
-                rotation = this.getRotation(),
+                rotation = this.getRotation() * Math.PI / 180,
                 scaleX = this.getScaleX(),
                 scaleY = this.getScaleY(),
                 skewX = this.getSkewX(),
@@ -1639,36 +1628,21 @@
      * node.id('foo');
      */
 
-    Kinetic.Factory.addRotationGetterSetter(Kinetic.Node, 'rotation', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'rotation', 0);
 
     /**
-     * get/set rotation in radians
+     * get/set rotation in degrees
      * @name rotation
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} rotation
      * @returns {Number}
      * @example
-     * // get rotation in radians<br>
+     * // get rotation in degrees<br>
      * var rotation = node.rotation();<br><br>
      *
-     * // set rotation in radians<br>
-     * node.rotation(Math.PI / 2);
-     */
-
-    /**
-     * get/set rotation in degrees
-     * @name rotationDeg
-     * @method
-     * @memberof Kinetic.Node.prototype
-     * @param {Number} rotationDeg
-     * @returns {Number}
-     * @example
-     * // get rotation in degrees<br>
-     * var rotationDeg = node.rotationDeg();<br><br>
-     *
      * // set rotation in degrees<br>
-     * node.rotationDeg(45);
+     * node.rotation(45);
      */
 
     Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'scale', 1);

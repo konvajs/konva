@@ -712,14 +712,14 @@ suite('Node', function() {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            rotationDeg: 10
+            rotation: 10
         });
 
-        assert.equal(rect.getRotationDeg(), 10);
-        rect.setRotationDeg(20);
-        assert.equal(rect.getRotationDeg(), 20);
-        rect.rotateDeg(20);
-        assert.equal(rect.getRotationDeg(), 40);
+        assert.equal(rect.rotation(), 10);
+        rect.rotation(20);
+        assert.equal(rect.rotation(), 20);
+        rect.rotate(20);
+        assert.equal(rect.rotation(), 40);
 
         layer.add(rect);
         stage.add(layer);
@@ -774,14 +774,14 @@ suite('Node', function() {
                 x: 0.5,
                 y: 0.5
             },
-            rotation: 20 * Math.PI / 180
+            rotation: 20
         });
 
         assert.equal(rect.getPosition().x, 200);
         assert.equal(rect.getPosition().y, 100);
         assert.equal(rect.getScale().x, 0.5);
         assert.equal(rect.getScale().y, 0.5);
-        assert.equal(rect.getRotation(), 20 * Math.PI / 180);
+        assert.equal(rect.getRotation(), 20);
 
         rect.setScale({x:2, y:0.3});
         assert.equal(rect.getScale().x, 2);
@@ -1160,14 +1160,14 @@ suite('Node', function() {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            rotationDeg: 10
+            rotation: 10
         });
 
-        assert.equal(rect.getRotationDeg(), 10);
-        rect.setRotationDeg(20);
-        assert.equal(rect.getRotationDeg(), 20);
-        rect.rotateDeg(20);
-        assert.equal(rect.getRotationDeg(), 40);
+        assert.equal(rect.rotation(), 10);
+        rect.rotation(20);
+        assert.equal(rect.rotation(), 20);
+        rect.rotate(20);
+        assert.equal(rect.rotation(), 40);
 
         layer.add(rect);
         stage.add(layer);
@@ -1513,7 +1513,7 @@ suite('Node', function() {
 
         //console.log(rect.getAbsoluteTransform().getTranslation())
 
-        stage.rotate(Math.PI / 3);
+        stage.rotate(180 / 3);
         stage.setScale({x:0.5, y:0.5});
 
         stage.draw();
@@ -1568,7 +1568,7 @@ suite('Node', function() {
         var group = new Kinetic.Group({
             name: 'groupName',
             id: 'groupId',
-            rotationDeg: 45,
+            rotation: 45,
             center: {x:side / 2, y:side / 2},
             x: diagonal / 2,
             y: diagonal / 2
@@ -1895,7 +1895,7 @@ suite('Node', function() {
         });
         var group = new Kinetic.Group({
             x: 100,
-            rotationDeg: 90
+            rotation: 90
         });
 
         var rect = new Kinetic.Rect({
@@ -2843,9 +2843,6 @@ suite('Node', function() {
     circle.rotation(2);
     assert.equal(circle.rotation(), 2);
 
-    circle.rotationDeg(3);
-    assert.equal(Math.round(circle.rotationDeg()), 3);
-
     circle.scale({x: 2, y: 2});
     assert.equal(circle.scale().x, 2);
     assert.equal(circle.scale().y, 2);
@@ -3074,7 +3071,7 @@ suite('Node', function() {
         x: 100,
         y: 100,
         draggable: true,
-        rotationDeg: 20,
+        rotation: 20,
         scaleX: 2,
         scaleY: 2
     });

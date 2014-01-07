@@ -34,7 +34,7 @@
         },
         _sceneFunc: function(context) {
             context.beginPath();
-            context.arc(0, 0, this.getRadius(), 0, this.getAngle(), this.getClockwise());
+            context.arc(0, 0, this.getRadius(), 0, this.getAngle() * Math.PI / 180, this.getClockwise());
             context.lineTo(0, 0);
             context.closePath();
             context.fillStrokeShape(this);
@@ -43,9 +43,7 @@
     Kinetic.Util.extend(Kinetic.Wedge, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Wedge, 'radius', function() {
-        return 0;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Wedge, 'radius', 0);
 
     /**
      * set radius
@@ -63,7 +61,7 @@
      * @returns {Number}
      */
 
-    Kinetic.Factory.addRotationGetterSetter(Kinetic.Wedge, 'angle', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Wedge, 'angle', 0);
 
     /**
      * set angle
