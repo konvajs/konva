@@ -19,18 +19,18 @@ suite('Kaleidoscope', function() {
 
             darth.cache();
             darth.filters([Kinetic.Filters.Kaleidoscope]);
-            darth.kaleidoscopeSides(9);
+            darth.kaleidoscopePower(2);
 
-            assert.equal(darth.kaleidoscopeSides(), 9);
+            assert.equal(darth.kaleidoscopePower(), 2);
             assert.equal(darth._filterUpToDate, false);
 
             layer.draw();
 
             assert.equal(darth._filterUpToDate, true);
             
-            darth.kaleidoscopeSides(16);
+            darth.kaleidoscopePower(3);
 
-            assert.equal(darth.kaleidoscopeSides(), 16);
+            assert.equal(darth.kaleidoscopePower(), 3);
             assert.equal(darth._filterUpToDate, false);
 
             layer.draw();
@@ -44,7 +44,7 @@ suite('Kaleidoscope', function() {
     });
 
     // ======================================================
-    test('tween offset', function(done) {
+    test('tween angle', function(done) {
         var stage = addStage();
 
         var imageObj = new Image();
@@ -63,15 +63,14 @@ suite('Kaleidoscope', function() {
 
             darth.cache();
             darth.filters([Kinetic.Filters.Kaleidoscope]);
-            darth.kaleidoscopeSides(5);
-            darth.kaleidoscopeOffset(0);
+            darth.kaleidoscopePower(3);
+            darth.kaleidoscopeAngle(0);
             layer.draw();
 
             var tween = new Kinetic.Tween({
               node: darth, 
-              duration: 4.0,
-              kaleidoscopeOffset: 64,
-              //rippleSize: 64,
+              duration: 10.0,
+              kaleidoscopeAngle: 720,
               easing: Kinetic.Easings.EaseInOut
             });
         
@@ -90,7 +89,7 @@ suite('Kaleidoscope', function() {
     });
 
     // ======================================================
-    test('tween sides', function(done) {
+    test('tween power', function(done) {
         var stage = addStage();
 
         var imageObj = new Image();
@@ -109,15 +108,15 @@ suite('Kaleidoscope', function() {
 
             darth.cache();
             darth.filters([Kinetic.Filters.Kaleidoscope]);
-            darth.kaleidoscopeSides(1);
-            darth.kaleidoscopeOffset(0);
+            darth.kaleidoscopePower(0);
+            darth.kaleidoscopeAngle(0);
             layer.draw();
 
             var tween = new Kinetic.Tween({
               node: darth, 
               duration: 2.0,
-              kaleidoscopeSides: 32,
-              easing: Kinetic.Easings.EaseInOut
+              kaleidoscopePower: 8,
+              easing: Kinetic.EasingsEaseInOut
             });
         
             darth.on('mouseover', function() {
@@ -131,7 +130,7 @@ suite('Kaleidoscope', function() {
             done();
 
         };
-        imageObj.src = 'assets/cropped-darth.jpg';
+        imageObj.src = 'assets/lion.png';
     });
 
 });

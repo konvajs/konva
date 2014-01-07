@@ -231,10 +231,11 @@
   Kinetic.Filters.Kaleidoscope = function(imageData){
     var xSize = imageData.width,
         ySize = imageData.height;
-    var nCopies = Math.round( this.kaleidoscopeSides() );
-    var size = Math.round( this.kaleidoscopeSides() );
-    var offset = this.kaleidoscopeOffset() || 0;
-    if( nCopies < 1 ){return;}
+    var power = Math.round( this.kaleidoscopePower() );
+    var angle = Math.round( this.kaleidoscopeAngle() );
+    var offset = Math.floor(xSize*(angle%360)/360);
+
+    if( power < 1 ){return;}
 
     // Work with our shared buffer canvas
     tempCanvas.width = xSize;
@@ -247,15 +248,29 @@
       polarCenterY:ySize/2
     });
 
-    // Copy/repeat a section along the r axis for effect
-    //var sectionSize = size; //Math.floor(xSize/nCopies);
-    //var nCopies = xSize/sectionSize;
-    var sectionSize = Math.ceil(xSize/nCopies);
-    var x,y,xoff,i, r,g,b,a, srcPos, dstPos;
+    // Determine how big each section will be, if it's too small 
+    // make it bigger
+    var minSectionSize = xSize / Math.pow(2,power);
+    while( minSectionSize <= 8){
+      minSectionSize = minSectionSize*2;
+      power -= 1;
+    }
+    minSectionSize = Math.ceil(minSectionSize);
+    var sectionSize = minSectionSize;
 
     // Copy the offset region to 0
+    // Depending on the size of filter and location of the offset we may need
+    // to copy the section backwards to prevent it from rewriting itself
+    var xStart = 0,
+        xEnd = sectionSize,
+        xDelta = 1;
+    if( offset+minSectionSize > xSize ){
+      xStart = sectionSize;
+      xEnd = 0;
+      xDelta = -1;
+    }
     for( y=0; y<ySize; y+=1 ){
-      for( x=0; x<sectionSize; x+=1 ){
+      for( x=xStart; x !== xEnd; x+=xDelta ){
         xoff = Math.round(x+offset)%xSize;
         srcPos = (xSize*y+xoff)*4;
         r = scratchData.data[srcPos+0];
@@ -269,21 +284,25 @@
         scratchData.data[dstPos+3] = a;
       }
     }
+
     // Perform the actual effect
+    var x,y,xoff,i, r,g,b,a, srcPos, dstPos;
     for( y=0; y<ySize; y+=1 ){
-      for( x=0; x<sectionSize; x+=1 ){
-        srcPos = (xSize*y+x)*4;
-        r = scratchData.data[srcPos+0];
-        g = scratchData.data[srcPos+1];
-        b = scratchData.data[srcPos+2];
-        a = scratchData.data[srcPos+3];
-        for( i=1; i<nCopies; i+=1 ){
-          dstPos = (xSize*y+x+sectionSize*i)*4;
+      sectionSize = Math.floor( minSectionSize );
+      for( i=0; i<power; i+=1 ){
+        for( x=0; x<sectionSize+1; x+=1 ){
+          srcPos = (xSize*y+x)*4;
+          r = scratchData.data[srcPos+0];
+          g = scratchData.data[srcPos+1];
+          b = scratchData.data[srcPos+2];
+          a = scratchData.data[srcPos+3];
+          dstPos = (xSize*y+sectionSize*2-x-1)*4;
           scratchData.data[dstPos+0] = r;
           scratchData.data[dstPos+1] = g;
           scratchData.data[dstPos+2] = b;
           scratchData.data[dstPos+3] = a;
         }
+        sectionSize *= 2;
       }
     }
 
@@ -291,24 +310,24 @@
     FromPolar(scratchData,imageData,{polarRotation:0});
   };
 
-    Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'kaleidoscopeSides', 5);
-    Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'kaleidoscopeOffset', 0);
+    Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'kaleidoscopePower', 2);
+    Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'kaleidoscopeAngle', 0);
 
     /**
-    * get/set kaleidoscope side
-    * @name kaleidoscopeSides
+    * get/set kaleidoscope power
+    * @name kaleidoscopePower
     * @method
     * @memberof Kinetic.Node.prototype
-    * @param {Integer} number of sides
+    * @param {Integer} power of kaleidoscope
     * @returns {Integer}
     */
 
     /**
-    * get/set kaleidoscope offset
-    * @name kaleidoscopeOffset
+    * get/set kaleidoscope angle
+    * @name kaleidoscopeAngle
     * @method
     * @memberof Kinetic.Node.prototype
-    * @param {Integer} offset
+    * @param {Integer} degrees
     * @returns {Integer}
     */
 })();
