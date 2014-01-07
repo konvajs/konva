@@ -4,8 +4,7 @@
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
-     * @param {Number} config.angle
-     * @param {Number} config.angleDeg angle in degrees
+     * @param {Number} config.angle in degrees
      * @param {Number} config.innerRadius
      * @param {Number} config.outerRadius
      * @param {Boolean} [config.clockwise]
@@ -13,13 +12,13 @@
      * @@nodeParams
      * @example
      * // draw a Arc that's pointing downwards<br>
-     * var Arc = new Kinetic.Arc({<br>
+     * var arc = new Kinetic.Arc({<br>
      *   innerRadius: 40,<br>
      *   outerRadius: 80,<br>
      *   fill: 'red',<br>
      *   stroke: 'black'<br>
      *   strokeWidth: 5,<br>
-     *   angleDeg: 60,<br>
+     *   angle: 60,<br>
      *   rotationDeg: -120<br>
      * });
      */

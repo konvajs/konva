@@ -12,56 +12,35 @@
      * @@shapeParams
      * @@nodeParams
      * @example
-     * var animations = {<br>
-     *   idle: [{<br>
-     *     x: 2,<br>
-     *     y: 2,<br>
-     *     width: 70,<br>
-     *     height: 119<br>
-     *   }, {<br>
-     *     x: 71,<br>
-     *     y: 2,<br>
-     *     width: 74,<br>
-     *     height: 119<br>
-     *   }, {<br>
-     *     x: 146,<br>
-     *     y: 2,<br>
-     *     width: 81,<br>
-     *     height: 119<br>
-     *   }, {<br>
-     *     x: 226,<br>
-     *     y: 2,<br>
-     *     width: 76,<br>
-     *     height: 119<br>
-     *   }],<br>
-     *   punch: [{<br>
-     *     x: 2,<br>
-     *     y: 138,<br>
-     *     width: 74,<br>
-     *     height: 122<br>
-     *   }, {<br>
-     *     x: 76,<br>
-     *     y: 138,<br>
-     *     width: 84,<br>
-     *     height: 122<br>
-     *   }, {<br>
-     *     x: 346,<br>
-     *     y: 138,<br>
-     *     width: 120,<br>
-     *     height: 122<br>
-     *   }]<br>
-     * };<br><br>
-     *
      * var imageObj = new Image();<br>
      * imageObj.onload = function() {<br>
      *   var sprite = new Kinetic.Sprite({<br>
      *     x: 200,<br>
      *     y: 100,<br>
      *     image: imageObj,<br>
-     *     animation: 'idle',<br>
-     *     animations: animations,<br>
+     *     animation: 'standing',<br>
+     *     animations: {<br>
+     *       standing: [<br>
+     *         // x, y, width, height (6 frames)<br>
+     *         0, 0, 49, 109,<br>
+     *         52, 0, 49, 109,<br>
+     *         105, 0, 49, 109,<br>
+     *         158, 0, 49, 109,<br>
+     *         210, 0, 49, 109,<br>
+     *         262, 0, 49, 109<br>
+     *       ],<br>
+     *       kicking: [<br>
+     *         // x, y, width, height (6 frames)<br>
+     *         0, 109, 45, 98,<br>
+     *         45, 109, 45, 98,<br>
+     *         95, 109, 63, 98,<br>
+     *         156, 109, 70, 98,<br>
+     *         229, 109, 60, 98,<br>
+     *         287, 109, 41, 98<br>
+     *       ]<br>          
+     *     },<br>
      *     frameRate: 7,<br>
-     *     index: 0<br>
+     *     frameIndex: 0<br>
      *   });<br>
      * };<br>
      * imageObj.src = '/path/to/image.jpg'
@@ -79,7 +58,7 @@
             this.anim = new Kinetic.Animation();
             this.on('animationChange.kinetic', function() {
                 // reset index when animation changes
-                this.setIndex(0);
+                this.frameIndex(0);
             });
 
             this.sceneFunc(this._sceneFunc);
@@ -87,21 +66,29 @@
         },
         _sceneFunc: function(context) {
             var anim = this.getAnimation(),
-                index = this.getIndex(),
-                f = this.getAnimations()[anim][index],
+                index = this.frameIndex(),
+                ix4 = index * 4,
+                set = this.getAnimations()[anim],
+                x =      set[ix4 + 0],
+                y =      set[ix4 + 1],
+                width =  set[ix4 + 2],
+                height = set[ix4 + 3],
                 image = this.getImage();
 
             if(image) {
-                context.drawImage(image, f.x, f.y, f.width, f.height, 0, 0, f.width, f.height);
+                context.drawImage(image, x, y, width, height, 0, 0, width, height);
             }
         },
         _hitFunc: function(context) {
             var anim = this.getAnimation(),
-                index = this.getIndex(),
-                f = this.getAnimations()[anim][index];
+                index = this.frameIndex(),
+                ix4 = index * 4,
+                set = this.getAnimations()[anim],
+                width =  set[ix4 + 2],
+                height = set[ix4 + 3];
 
             context.beginPath();
-            context.rect(0, 0, f.width, f.height);
+            context.rect(0, 0, width, height);
             context.closePath();
             context.fillShape(this);
         },
@@ -141,17 +128,17 @@
             clearInterval(this.interval);
         },
         _updateIndex: function() {
-            var index = this.getIndex(),
+            var index = this.frameIndex(),
                 animation = this.getAnimation(),
                 animations = this.getAnimations(),
                 anim = animations[animation],
-                len = anim.length;
+                len = anim.length / 4;
 
             if(index < len - 1) {
-                this.setIndex(index + 1);
+                this.frameIndex(index + 1);
             }
             else {
-                this.setIndex(0);
+                this.frameIndex(0);
             }
         }
     };
@@ -161,92 +148,106 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'animation');
 
     /**
-     * set animation key
-     * @name setAnimation
+     * get/set animation key
+     * @name animation
      * @method
      * @memberof Kinetic.Sprite.prototype
      * @param {String} anim animation key
-     */
-
-     /**
-     * get animation key
-     * @name getAnimation
-     * @method
-     * @memberof Kinetic.Sprite.prototype
      * @returns {String}
+     * @example
+     * // get animation key<br>
+     * var animation = sprite.animation();<br><br>
+     *
+     * // set animation key<br>
+     * sprite.animation('kicking');
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'animations');
 
     /**
-     * set animations map
-     * @name setAnimations
+     * get/set animations map
+     * @name animations
      * @method
      * @memberof Kinetic.Sprite.prototype
      * @param {Object} animations
-     */
-
-     /**
-     * get animations map
-     * @name getAnimations
-     * @method
-     * @memberof Kinetic.Sprite.prototype
      * @returns {Object}
+     * @example
+     * // get animations map<br>
+     * var animations = sprite.animations();<br><br>
+     * 
+     * // set animations map<br>
+     * sprite.animations({<br>
+     *   standing: [<br>
+     *     // x, y, width, height (6 frames)<br>
+     *     0, 0, 49, 109,<br>
+     *     52, 0, 49, 109,<br>
+     *     105, 0, 49, 109,<br>
+     *     158, 0, 49, 109,<br>
+     *     210, 0, 49, 109,<br>
+     *     262, 0, 49, 109<br>
+     *   ],<br>
+     *   kicking: [<br>
+     *     // x, y, width, height (6 frames)<br>
+     *     0, 109, 45, 98,<br>
+     *     45, 109, 45, 98,<br>
+     *     95, 109, 63, 98,<br>
+     *     156, 109, 70, 98,<br>
+     *     229, 109, 60, 98,<br>
+     *     287, 109, 41, 98<br>
+     *   ]<br>          
+     * });
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'image');
 
     /**
-     * set image
-     * @name setImage
+     * get/set image
+     * @name image
      * @method
      * @memberof Kinetic.Sprite.prototype
      * @param {Image} image
+     * @returns {Image}
+     * @example
+     * // get image
+     * var image = sprite.image();<br><br>
+     *
+     * // set image<br>
+     * sprite.image(imageObj);
      */
 
-     /**
-     * get image
-     * @name getImage
-     * @method
-     * @memberof Kinetic.Sprite.prototype
-     * @returns {ImageObject}
-     */
-
-    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'index', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'frameIndex', 0);
 
     /**
-     * set animation frame index
-     * @name setIndex
+     * set/set animation frame index
+     * @name frameIndex
      * @method
      * @memberof Kinetic.Sprite.prototype
-     * @param {Integer} index frame index
-     */
-
-     /**
-     * get animation frame index
-     * @name getIndex
-     * @method
-     * @memberof Kinetic.Sprite.prototype
+     * @param {Integer} frameIndex
      * @returns {Integer}
+     * @example
+     * // get animation frame index<br>
+     * var frameIndex = sprite.frameIndex();<br><br>
+     *
+     * // set animation frame index<br>
+     * sprite.frameIndex(3);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'frameRate', 17);
 
     /**
-     * set frame rate in frames / second.  Default is 17 frames per second.  Increase this number to make the sprite
+     * get/set frame rate in frames per second.  Increase this number to make the sprite
      *  animation run faster, and decrease the number to make the sprite animation run slower
-     * @name setFrameRate
+     *  The default is 17 frames per second
+     * @name frameRate
      * @method
      * @memberof Kinetic.Sprite.prototype
      * @param {Integer} frameRate
+     * @returns {Integer}
+     * @example
+     * // get frame rate<br>
+     * var frameRate = sprite.frameRate();<br><br>
+     *
+     * // set frame rate to 2 frames per second<br>
+     * sprite.frameRate(2);
      */
-
-     /**
-     * get frame rate
-     * @name getFrameRate
-     * @method
-     * @memberof Kinetic.Sprite.prototype
-     * @returns {Number}
-     */
-
 })();

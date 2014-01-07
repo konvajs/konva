@@ -7,15 +7,14 @@
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
-     * @param {Number} config.angle
-     * @param {Number} config.angleDeg angle in degrees
+     * @param {Number} config.angle in degrees
      * @param {Number} config.innerRadius
      * @param {Number} config.outerRadius
      * @param {Boolean} [config.clockwise]
      * @@shapeParams
      * @@nodeParams
      * @example
-     * var Ring = new Kinetic.Ring({<br>
+     * var ring = new Kinetic.Ring({<br>
      *   innerRadius: 40,<br>
      *   outerRadius: 80,<br>
      *   fill: 'red',<br>
@@ -69,19 +68,18 @@
     });
 
     /**
-     * set innerRadius
-     * @name setInnerRadius
+     * get/set innerRadius
+     * @name innerRadius
      * @method
      * @memberof Kinetic.Ring.prototype
      * @param {Number} innerRadius
-     */
-
-     /**
-     * get innerRadius
-     * @name getInnerRadius
-     * @method
-     * @memberof Kinetic.Ring.prototype
      * @returns {Number}
+     * @example
+     * // get inner radius<br>
+     * var innerRadius = ring.innerRadius();<br><br>
+     *
+     * // set inner radius<br>
+     * ring.innerRadius(20);
      */
      
     Kinetic.Factory.addGetterSetter(Kinetic.Ring, 'outerRadius', function() {
@@ -89,18 +87,17 @@
     });
 
     /**
-     * set outerRadius
-     * @name setOuterRadius
+     * get/set outerRadius
+     * @name outerRadius
      * @method
      * @memberof Kinetic.Ring.prototype
-     * @param {Number} innerRadius
-     */
-
-     /**
-     * get outerRadius
-     * @name getOuterRadius
-     * @method
-     * @memberof Kinetic.Ring.prototype
+     * @param {Number} outerRadius
      * @returns {Number}
+     * @example
+     * // get outer radius<br>
+     * var outerRadius = ring.outerRadius();<br><br>
+     *
+     * // set outer radius<br>
+     * ring.outerRadius(20);
      */
 })();

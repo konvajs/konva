@@ -6,9 +6,10 @@
      * @memberof Kinetic
      * @augments Kinetic.Shape
      * @param {Object} config
-     * @param {Array} config.points can be a flattened array of points, an array of point arrays, or an array of point objects.
-     *  e.g. [0,1,2,3], [[0,1],[2,3]] and [{x:0,y:1},{x:2,y:3}] are equivalent
-     * @param {Number} [config.tension] default value is 1.  Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
+     * @param {Array} config.points
+     * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
+     *   The default is 0
+     * @param {Boolean} [config.closed] defines whether or not the line shape is closed, creating a polygon or blob 
      * @@shapeParams
      * @@nodeParams
      * @example
@@ -144,54 +145,57 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Line, 'closed', false);
 
     /**
-     * get closed
-     * @name getClosed
-     * @method
-     * @memberof Kinetic.Line.prototype
-     * @returns {Boolean}
-     */
-
-    /**
-     * set closed
-     * @name setClosed
+     * get/set closed flag.  The default is false
+     * @name closed
      * @method
      * @memberof Kinetic.Line.prototype
      * @param {Boolean} closed
+     * @returns {Boolean}
+     * @example
+     * // get closed flag<br>
+     * var closed = line.closed();<br><br>
+     *
+     * // close the shape<br>
+     * line.closed(true);<br><br>
+     *
+     * // open the shape<br>
+     * line.closed(false);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Line, 'tension', 0);
 
     /**
-     * get tension
-     * @name getTension
+     * get/set tension
+     * @name tension
      * @method
      * @memberof Kinetic.Line.prototype
+     * @param {Number} Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
+     *   The default is 0
      * @returns {Number}
-     */
-
-    /**
-     * set tension
-     * @name setTension
-     * @method
-     * @memberof Kinetic.Line.prototype
-     * @param {Number} tension
+     * @example
+     * // get tension<br>
+     * var tension = line.tension();<br><br>
+     *
+     * // set tension<br>
+     * line.tension(3);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Line, 'points');
     /**
-     * get points array
-     * @name getPoints
+     * get/set points array
+     * @name points
      * @method
      * @memberof Kinetic.Line.prototype
+     * @param {Array} points
      * @returns {Array}
-     */
-
-    /**
-     * set points array
-     * @name setPoints
-     * @method
-     * @memberof Kinetic.Line.prototype
-     * @param {Array} can be an array of point objects or an array
-     *  of Numbers.  e.g. [{x:1,y:2},{x:3,y:4}] or [1,2,3,4]
+     * @example
+     * // get points<br>
+     * var points = line.points();<br><br>
+     *
+     * // set points<br>
+     * line.points([10, 20, 30, 40, 50, 60]);<br><br>
+     *
+     * // push a new point<br>
+     * line.points(line.points().concat([70, 80]));
      */
 })();
