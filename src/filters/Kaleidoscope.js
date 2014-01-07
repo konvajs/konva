@@ -314,20 +314,20 @@
     Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'kaleidoscopeAngle', 0);
 
     /**
-    * get/set kaleidoscope side
-    * @name kaleidoscopeSides
+    * get/set kaleidoscope power
+    * @name kaleidoscopePower
     * @method
     * @memberof Kinetic.Node.prototype
-    * @param {Integer} number of sides
+    * @param {Integer} power of kaleidoscope
     * @returns {Integer}
     */
 
     /**
-    * get/set kaleidoscope offset
-    * @name kaleidoscopeOffset
+    * get/set kaleidoscope angle
+    * @name kaleidoscopeAngle
     * @method
     * @memberof Kinetic.Node.prototype
-    * @param {Integer} offset
+    * @param {Integer} degrees
     * @returns {Integer}
     */
 })();
