@@ -75,10 +75,10 @@
      * @param {Number} outerRadius
      * @returns {Number}
      * @example
-     * // get outer radius
-     * var outerRadius = arc.outerRadius();
+     * // get outer radius<br>
+     * var outerRadius = arc.outerRadius();<br><br>
      *
-     * // set outer radius
+     * // set outer radius<br>
      * arc.outerRadius(20);
      */
 
@@ -92,10 +92,10 @@
      * @param {Number} angle
      * @returns {Number}
      * @example
-     * // get angle
-     * var angle = arc.angle();
+     * // get angle<br>
+     * var angle = arc.angle();<br><br>
      *
-     * // set angle
+     * // set angle<br>
      * arc.angle(20);
      */
 
@@ -109,13 +109,13 @@
      * @param {Number} clockwise
      * @returns {Number}
      * @example
-     * // get clockwise flag
-     * var clockwise = arc.clockwise();
+     * // get clockwise flag<br>
+     * var clockwise = arc.clockwise();<br><br>
      *
-     * // draw arc counter-clockwise
-     * arc.clockwise(false);
+     * // draw arc counter-clockwise<br>
+     * arc.clockwise(false);<br><br>
      *
-     * // draw arc clockwise
+     * // draw arc clockwise<br>
      * arc.clockwise(true);
      */
 })();

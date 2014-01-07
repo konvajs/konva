@@ -110,18 +110,22 @@
 
     Kinetic.Factory.addBoxGetterSetter(Kinetic.Image, 'crop', 0);
     /**
-     * set crop
+     * get/set crop
      * @method
-     * @name setCrop
+     * @name crop
      * @memberof Kinetic.Image.prototype
      * @param {Object} crop 
      * @param {Number} crop.x
      * @param {Number} crop.y
      * @param {Number} crop.width
      * @param {Number} crop.height
+     * @returns {Object}
      * @example
-     * // set crop x, y, width and height<br>
-     * image.setCrop({<br>
+     * // get crop<br>
+     * var crop = image.crop();<br><br>
+     *
+     * // set crop<br>
+     * image.crop({<br>
      *   x: 20,<br>
      *   y: 20,<br>
      *   width: 20,<br>
@@ -129,75 +133,63 @@
      * });
      */
 
-    /**
-     * get crop
-     * @name getCrop
-     * @method
-     * @memberof Kinetic.Image.prototype
-     * @returns {Object}
-     */
-
      /**
-     * set crop x
+     * get/set crop x
      * @method
-     * @name setCropX
+     * @name cropX
      * @memberof Kinetic.Image.prototype
      * @param {Number} x
-     */
-
-    /**
-     * get crop x
-     * @name getCropX
-     * @method
-     * @memberof Kinetic.Image.prototype
      * @returns {Number}
+     * @example
+     * // get crop x<br>
+     * var cropX = image.cropX();<br><br>
+     *
+     * // set crop x<br>
+     * image.cropX(20);
      */
 
      /**
-     * set crop y
-     * @name setCropY
+     * get/set crop y
+     * @name cropY
      * @method
      * @memberof Kinetic.Image.prototype
      * @param {Number} y
-     */
-
-    /**
-     * get crop y
-     * @name getCropY
-     * @method
-     * @memberof Kinetic.Image.prototype
      * @returns {Number}
+     * @example
+     * // get crop y<br>
+     * var cropY = image.cropY();<br><br>
+     *
+     * // set crop y<br>
+     * image.cropY(20);
      */
 
      /**
-     * set cropWidth
-     * @name setCropWidth
+     * get/set crop width
+     * @name cropWidth
      * @method
      * @memberof Kinetic.Image.prototype
      * @param {Number} width
-     */
-
-    /**
-     * get crop width
-     * @name getCropWidth
-     * @method
-     * @memberof Kinetic.Image.prototype
      * @returns {Number}
+     * @example
+     * // get crop width<br>
+     * var cropWidth = image.cropWidth();<br><br>
+     *
+     * // set crop width<br>
+     * image.cropWidth(20);
      */
 
      /**
-     * set cropHeight
-     * @name setCropHeight
+     * get/set crop height
+     * @name cropHeight
      * @method
      * @memberof Kinetic.Image.prototype
      * @param {Number} height
-     */
-
-    /**
-     * get crop height
-     * @name getCropHeight
-     * @method
-     * @memberof Kinetic.Image.prototype
      * @returns {Number}
+     * @example
+     * // get crop height<br>
+     * var cropHeight = image.cropHeight();<br><br>
+     *
+     * // set crop height<br>
+     * image.cropHeight(20);
      */
 })();

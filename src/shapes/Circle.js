@@ -13,22 +13,12 @@
      * @@shapeParams
      * @@nodeParams
      * @example
-     * // create simple circle
+     * // create circle
      * var circle = new Kinetic.Circle({<br>
      *   radius: 40,<br>
      *   fill: 'red',<br>
      *   stroke: 'black'<br>
      *   strokeWidth: 5<br>
-     * });<br><br>
-     *
-     * // create ellipse<br>
-     * var circle = new Kinetic.Circle({<br>
-     *   radius: 5,<br>
-     *   fill: 'red',<br>
-     *   stroke: 'black'<br>
-     *   strokeWidth: 5,<br>
-     *   scaleX: 2,<br>
-     *   strokeScaleEnabled: false<br>
      * });
      */
     Kinetic.Circle = function(config) {
@@ -73,18 +63,17 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Circle, 'radius', 0);
 
     /**
-     * set radius
-     * @name setRadius
+     * get/set radius
+     * @name radius
      * @method
      * @memberof Kinetic.Circle.prototype
      * @param {Number} radius
-     */
-
-    /**
-     * get radius
-     * @name getRadius
-     * @method
-     * @memberof Kinetic.Circle.prototype
      * @returns {Number}
+     * @example
+     * // get radius<br>
+     * var radius = circle.radius();<br><br>
+     *
+     * // set radius<br>
+     * circle.radius(10);<br>
      */
 })();
