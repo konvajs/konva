@@ -210,19 +210,24 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'dragBoundFunc');
 
     /**
-     * set drag bound function.  This is used to override the default
+     * get/set drag bound function.  This is used to override the default
      *  drag and drop position
-     * @name setDragBoundFunc
+     * @name dragBoundFunc
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Function} dragBoundFunc
-     */
-
-    /**
-     * get dragBoundFunc
-     * @name getDragBoundFunc
-     * @method
-     * @memberof Kinetic.Node.prototype
+     * @returns {Function}
+     * @example
+     * // get drag bound function<br>
+     * var dragBoundFunc = node.dragBoundFunc();<br><br>
+     *
+     * // create vertical drag and drop<br>
+     * node.dragBoundFunc(function(){<br>
+     *   return {<br>
+     *     x: this.getAbsolutePosition().x,<br>
+     *     y: pos.y<br>
+     *   };<br>
+     * });
      */
 
     Kinetic.Factory.addGetter(Kinetic.Node, 'draggable', false);
@@ -236,13 +241,13 @@
      * @param {Boolean} draggable
      * @returns {Boolean}
      * @example
-     * // get draggable flag
-     * var draggable = node.draggable();
+     * // get draggable flag<br>
+     * var draggable = node.draggable();<br><br>
      *
-     * // enable drag and drop
-     * node.draggable(true);
+     * // enable drag and drop<br>
+     * node.draggable(true);<br><br>
      *
-     * // disable drag and drop
+     * // disable drag and drop<br>
      * node.draggable(false);
      */
 
