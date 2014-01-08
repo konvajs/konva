@@ -4,8 +4,7 @@
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
-     * @param {Number} config.angle
-     * @param {Number} config.angleDeg angle in degrees
+     * @param {Number} config.angle in degrees
      * @param {Number} config.radius
      * @param {Boolean} [config.clockwise]
      * @@shapeParams
@@ -46,71 +45,54 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Wedge, 'radius', 0);
 
     /**
-     * set radius
-     * @name setRadius
+     * get/set radius
+     * @name radius
      * @method
      * @memberof Kinetic.Wedge.prototype
      * @param {Number} radius
-     */
-
-     /**
-     * get radius
-     * @name getRadius
-     * @method
-     * @memberof Kinetic.Wedge.prototype
      * @returns {Number}
+     * @example
+     * // get radius<br>
+     * var radius = wedge.radius();<br><br>
+     *
+     * // set radius<br>
+     * wedge.radius(10);<br>
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Wedge, 'angle', 0);
 
     /**
-     * set angle
-     * @name setAngle
+     * get/set angle in degrees
+     * @name angle
      * @method
      * @memberof Kinetic.Wedge.prototype
      * @param {Number} angle
-     */
-
-     /**
-     * set angle in degrees
-     * @name setAngleDeg
-     * @method
-     * @memberof Kinetic.Wedge.prototype
-     * @param {Number} angleDeg
-     */
-
-     /**
-     * get angle
-     * @name getAngle
-     * @method
-     * @memberof Kinetic.Wedge.prototype
      * @returns {Number}
-     */
-
-     /**
-     * get angle in degrees
-     * @name getAngleDeg
-     * @method
-     * @memberof Kinetic.Wedge.prototype
-     * @returns {Number}
+     * @example
+     * // get angle<br>
+     * var angle = wedge.angle();<br><br>
+     *
+     * // set angle<br>
+     * wedge.angle(20);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Wedge, 'clockwise', false);
 
     /**
-     * set clockwise draw direction.  If set to true, the wedge will be drawn clockwise
-     *  If set to false, the wedge will be drawn anti-clockwise.  The default is false.
-     * @name setClockwise
+     * get/set clockwise flag
+     * @name clockwise
      * @method
      * @memberof Kinetic.Wedge.prototype
-     * @param {Boolean} clockwise
-     */
-
-    /**
-     * get clockwise
-     * @name getClockwise
-     * @method
-     * @memberof Kinetic.Wedge.prototype
-     * @returns {Boolean}
+     * @param {Number} clockwise
+     * @returns {Number}
+     * @example
+     * // get clockwise flag<br>
+     * var clockwise = wedge.clockwise();<br><br>
+     *
+     * // draw wedge counter-clockwise<br>
+     * wedge.clockwise(false);<br><br>
+     *
+     * // draw wedge clockwise<br>
+     * wedge.clockwise(true);
      */
 })();

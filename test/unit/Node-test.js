@@ -523,7 +523,7 @@ suite('Node', function() {
         assert.equal(clone.getY(), 0);
         assert.equal(clone.getDraggable(), true);
         // test alias
-        assert.equal(clone.isDraggable(), true);
+        assert.equal(clone.draggable(), true);
         assert.equal(clone.getName(), 'groupClone');
 
         assert.equal(group.getChildren().length, 2);

@@ -120,12 +120,6 @@
         dd._endDragAfter(evt);
     };
 
-    /**
-     * set draggable
-     * @method
-     * @memberof Kinetic.Node.prototype
-     * @param {String} draggable
-     */
     Kinetic.Node.prototype.setDraggable = function(draggable) {
         this._setAttr('draggable', draggable);
         this._dragChange();
@@ -232,22 +226,25 @@
      */
 
     Kinetic.Factory.addGetter(Kinetic.Node, 'draggable', false);
+    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'draggable');
 
      /**
-     * get draggable
-     * @name getDraggable
+     * get/set draggable flag
+     * @name draggable
      * @method
      * @memberof Kinetic.Node.prototype
+     * @param {Boolean} draggable
+     * @returns {Boolean}
+     * @example
+     * // get draggable flag
+     * var draggable = node.draggable();
+     *
+     * // enable drag and drop
+     * node.draggable(true);
+     *
+     * // disable drag and drop
+     * node.draggable(false);
      */
-
-    /**
-     * alias of getDraggable()
-     * @name isDraggable
-     * @method
-     * @memberof Kinetic.Node.prototype
-     */
-
-    Kinetic.Node.prototype.isDraggable = Kinetic.Node.prototype.getDraggable;
 
     var html = document.documentElement;
     html.addEventListener('mouseup', Kinetic.DD._endDragBefore, true);

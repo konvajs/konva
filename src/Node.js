@@ -255,13 +255,6 @@
             context.drawImage(hitCanvas._canvas, 0, 0); 
             context.restore(); 
         },
-        /*
-         * the default isDraggable method returns false.
-         * if the DragAndDrop module is included, this is overwritten
-         */
-        isDraggable: function() {
-            return false;
-        },
         /**
          * bind events to the node. KineticJS supports mouseover, mousemove,
          *  mouseout, mouseenter, mouseleave, mousedown, mouseup, click, dblclick, touchstart, touchmove,

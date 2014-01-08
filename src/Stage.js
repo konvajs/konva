@@ -659,7 +659,12 @@
      * @returns {DomElement} container
      * @example
      * // get container<br>
-     * var container = stage.container();
+     * var container = stage.container();<br><br>
+     * 
+     * // set container<br>
+     * var container = document.createElement('div');<br>
+     * body.appendChild(container);<br>
+     * stage.container(container);
      */
 
 })();

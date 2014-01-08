@@ -240,7 +240,7 @@
 
             hitContext.clear();
 
-            //try {
+            try {
                 sceneImageData = sceneContext.getImageData(0, 0, width, height);
                 sceneData = sceneImageData.data;
                 hitImageData = hitContext.getImageData(0, 0, width, height);
@@ -260,10 +260,10 @@
                 }
 
                 hitContext.putImageData(hitImageData, 0, 0);
-            // }
-            // catch(e) {
-            //     Kinetic.Util.warn('Unable to draw hit graph from cached scene canvas. ' + e.message);
-            // }
+            }
+            catch(e) {
+                Kinetic.Util.warn('Unable to draw hit graph from cached scene canvas. ' + e.message);
+            }
 
             return this;
         },

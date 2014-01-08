@@ -7,7 +7,7 @@
      * @param {Object} config
      * @param {String} config.animation animation key
      * @param {Object} config.animations animation map
-     * @param {Integer} [config.index] animation index
+     * @param {Integer} [config.frameIndex] animation frame index
      * @param {Image} config.image image object
      * @@shapeParams
      * @@nodeParams
