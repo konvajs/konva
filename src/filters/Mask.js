@@ -188,5 +188,5 @@
 		return imageData;
 	};
 
-	Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'threshold', 0);
+	Kinetic.Factory.addGetterSetter(Kinetic.Node, 'threshold', 0);
 })();

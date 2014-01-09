@@ -57,7 +57,7 @@
 
   };
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'hue', 0);
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'hue', 0, function() {this._filterUpToDate = false;});
   /**
   * get/set hsv hue in degrees
   * @name hue
@@ -67,7 +67,7 @@
   * @returns {Number}
   */
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'saturation', 1);
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'saturation', 1, function() {this._filterUpToDate = false;});
   /**
   * get/set hsv saturation
   * @name saturation
@@ -77,7 +77,7 @@
   * @returns {Number}
   */
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'value', 1);
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'value', 1, function() {this._filterUpToDate = false;});
   /**
   * get/set hsv value
   * @name value

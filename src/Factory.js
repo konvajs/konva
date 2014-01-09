@@ -42,9 +42,9 @@
         Y = 'y';
 
     Kinetic.Factory = {
-        addGetterSetter: function(constructor, attr, def) {
+        addGetterSetter: function(constructor, attr, def, afterFunc) {
             this.addGetter(constructor, attr, def);
-            this.addSetter(constructor, attr);
+            this.addSetter(constructor, attr, afterFunc);
             this.addOverloadedGetterSetter(constructor, attr);
         },
         addGetter: function(constructor, attr, def) {
@@ -56,15 +56,18 @@
                 return val === undefined ? def : val;
             };
         },
-        addSetter: function(constructor, attr) {
+        addSetter: function(constructor, attr, afterFunc) {
             var method = SET + Kinetic.Util._capitalize(attr);
 
             constructor.prototype[method] = function(val) {
                 this._setAttr(attr, val); 
+                if (afterFunc) {
+                    afterFunc.call(this);
+                }
                 return this;  
             };
         },
-        addComponentsGetterSetter: function(constructor, attr, components) {
+        addComponentsGetterSetter: function(constructor, attr, components, afterFunc) {
             var len = components.length,
                 capitalize = Kinetic.Util._capitalize,
                 getter = GET + capitalize(attr), 
@@ -92,6 +95,10 @@
                     this._setAttr(attr + capitalize(key), val[key]); 
                 }
 
+                if (afterFunc) {
+                    afterFunc.call(this);
+                }
+                    
                 this._fireChangeEvent(attr, oldVal, val);
                 
                 return this;  
@@ -197,16 +204,6 @@
                 obj[c] = val;
                 this[prefix + RGB](obj);
                 return this;
-            };
-        },
-
-        addFilterSetter: function(constructor, attr) {
-            var method = SET + Kinetic.Util._capitalize(attr);
-
-            constructor.prototype[method] = function(val) {
-                this._setAttr(attr, val); 
-                this._filterUpToDate = false;
-                return this;  
             };
         }
     };

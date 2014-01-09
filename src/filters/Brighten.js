@@ -21,7 +21,7 @@
         }
     };
 
-    Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'brightness', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'brightness', 0, function() {this._filterUpToDate = false;});
     /**
     * get/set filter brightness.  The brightness is a number between -1 and 1.&nbsp; Positive values 
     *  brighten the pixels and negative values darken them.

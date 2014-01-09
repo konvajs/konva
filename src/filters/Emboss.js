@@ -123,7 +123,7 @@
       } while (--y);
   };
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'embossStrength', 0.5);
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossStrength', 0.5, function() {this._filterUpToDate = false;});
   /**
   * get/set emboss strength
   * @name embossStrength
@@ -133,7 +133,7 @@
   * @returns {Number}
   */
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'embossWhiteLevel', 0.5);
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossWhiteLevel', 0.5, function() {this._filterUpToDate = false;});
   /**
   * get/set emboss white level
   * @name embossWhiteLevel
@@ -143,7 +143,7 @@
   * @returns {Number}
   */
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'embossDirection', 'top-left');
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossDirection', 'top-left', function() {this._filterUpToDate = false;});
   /**
   * get/set emboss direction
   * @name embossDirection
@@ -154,7 +154,7 @@
   * @returns {String}
   */
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'embossBlend', false);
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossBlend', false, function() {this._filterUpToDate = false;});
   /**
   * get/set emboss blend
   * @name embossBlend

@@ -105,7 +105,7 @@
     }
   };
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'enhance', 0);
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'enhance', 0, function() {this._filterUpToDate = false;});
 
     /**
     * get/set enhance

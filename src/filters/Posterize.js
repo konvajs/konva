@@ -23,7 +23,7 @@
     }
   };
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'levels', 0.5);
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'levels', 0.5, function() {this._filterUpToDate = false;});
 
   /**
   * get/set levels.  Must be a number between 0 and 1

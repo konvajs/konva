@@ -24,7 +24,6 @@ module.exports = function(grunt) {
     'src/filters/Threshold.js',
     'src/filters/Sepia.js',
     'src/filters/Solarize.js',
-    //'src/filters/Ripple.js',
     'src/filters/Kaleidoscope.js',
     
     // core

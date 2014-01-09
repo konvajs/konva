@@ -76,7 +76,7 @@
     
   };
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'pixelSize', 8);
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'pixelSize', 8, function() {this._filterUpToDate = false;});
 
   /**
   * get/set pixel size

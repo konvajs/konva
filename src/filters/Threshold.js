@@ -21,7 +21,7 @@
     }
   };
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'threshold', 0.5);
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'threshold', 0.5, function() {this._filterUpToDate = false;});
 
   /**
   * get/set threshold.  Must be a value between 0 and 1

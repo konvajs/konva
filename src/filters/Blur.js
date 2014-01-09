@@ -337,7 +337,7 @@
         }
     };
 
-    Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'blurRadius', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'blurRadius', 0, function() {this._filterUpToDate = false;});
 
     /**
     * get/set blur radius

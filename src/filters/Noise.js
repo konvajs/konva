@@ -21,7 +21,7 @@
       }
   };
 
-  Kinetic.Factory.addFilterGetterSetter(Kinetic.Node, 'noise', 0.2);
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'noise', 0.2, function() {this._filterUpToDate = false;});
 
   /**
   * get/set noise amount.  Must be a value between 0 and 1
