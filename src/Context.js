@@ -424,7 +424,8 @@
 
     Kinetic.SceneContext.prototype = {
         _fillColor: function(shape) {
-            var fill = shape.getFill();
+            var fill = shape.fill()   
+                || Kinetic.Util._rgbToHex(shape.fillRed(), shape.fillGreen(), shape.fillBlue());
 
             this.setAttr('fillStyle', fill);
             shape._fillFunc(this);
@@ -485,7 +486,7 @@
             this.fill();
         },
         _fill: function(shape) {
-            var hasColor = shape.getFill(),
+            var hasColor = shape.fill() || shape.fillRed() || shape.fillGreen() || shape.fillBlue(),
                 hasPattern = shape.getFillPatternImage(),
                 hasLinearGradient = shape.getFillLinearGradientColorStops(),
                 hasRadialGradient = shape.getFillRadialGradientColorStops(),
@@ -519,9 +520,7 @@
             }
         },
         _stroke: function(shape) {
-            var stroke = shape.getStroke(),
-                strokeWidth = shape.getStrokeWidth(),
-                dashArray = shape.getDashArray(),
+            var dashArray = shape.getDashArray(),
                 strokeScaleEnabled = shape.getStrokeScaleEnabled();
 
             if(shape.hasStroke()) {
@@ -530,14 +529,15 @@
                     this.setTransform(1, 0, 0, 1, 0, 0);
                 }
 
-                /////////////////////
                 this._applyLineCap(shape);
                 if(dashArray && shape.getDashArrayEnabled()) {
                     this.setLineDash(dashArray);
                 }
 
-                this.setAttr('lineWidth', strokeWidth || 2);
-                this.setAttr('strokeStyle', stroke || 'black');
+                this.setAttr('lineWidth', shape.strokeWidth());
+                this.setAttr('strokeStyle', shape.stroke() 
+                    || Kinetic.Util._rgbToHex(shape.strokeRed(), shape.strokeGreen(), shape.strokeBlue()));
+
                 shape._strokeFunc(this);
                 
                 if (!strokeScaleEnabled) {
@@ -581,12 +581,9 @@
             this.restore();
         },
         _stroke: function(shape) {
-            var stroke = shape.getStroke(),
-                strokeWidth = shape.getStrokeWidth();
-
-            if(stroke || strokeWidth) {
+            if(shape.hasStroke()) {
                 this._applyLineCap(shape);
-                this.setAttr('lineWidth', strokeWidth || 2);
+                this.setAttr('lineWidth', shape.strokeWidth());
                 this.setAttr('strokeStyle', shape.colorKey);
                 shape._strokeFuncHit(this);
             }

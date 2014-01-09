@@ -293,6 +293,8 @@ suite('Blur', function() {
                 draggable: true
             });
 
+            //console.log(darth.hasStroke())
+
             layer.add(darth);
             stage.add(layer);
 
@@ -304,7 +306,7 @@ suite('Blur', function() {
 
             showCanvas(darth._cache.canvas.hit._canvas);
 
-            //console.log(darth._cache.canvas.hit.getContext().getTrace(true));
+            //console.log(darth._cache.canvas.hit.getContext().getTrace());
 
             assert.equal(darth._cache.canvas.hit.getContext().getTrace(true), 'save();translate();beginPath();rect();closePath();save();fillStyle;fill();restore();restore();clearRect();getImageData();putImageData();');
 

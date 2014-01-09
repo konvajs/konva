@@ -97,7 +97,7 @@
          * @returns {Boolean}
          */
         hasStroke: function() {
-            return !!(this.getStroke() || this.getStrokeWidth());
+            return !!(this.stroke() || this.strokeRed() || this.strokeGreen() || this.strokeBlue());
         },
         _get: function(selector) {
             return this.className === selector || this.nodeType === selector ? [this] : [];
@@ -271,7 +271,7 @@
     Kinetic.Util.extend(Kinetic.Shape, Kinetic.Node);
 
     // add getters and setters
-    Kinetic.Factory.addColorGetterSetter(Kinetic.Shape, 'stroke');
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'stroke');
 
     /**
      * set stroke color
@@ -365,6 +365,29 @@
      * @returns {Integer}
      */
 
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeRed', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeGreen', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeBlue', 0);
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeWidth', 2);
+
+    /**
+     * set stroke width
+     * @name setStrokeWidth
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Number} strokeWidth
+     * @returns {Kineitc.Shape}
+     */
+
+     /**
+     * get stroke width
+     * @name getStrokeWidth
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @returns {Number}
+     */
+
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'lineJoin');
 
     /**
@@ -403,25 +426,6 @@
      * @method
      * @memberof Kinetic.Shape.prototype
      * @returns {String}
-     */
-
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeWidth');
-
-    /**
-     * set stroke width
-     * @name setStrokeWidth
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Number} strokeWidth
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * get stroke width
-     * @name getStrokeWidth
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Number}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'sceneFunc');
@@ -488,7 +492,7 @@
      * @returns {Array}
      */
 
-    Kinetic.Factory.addColorGetterSetter(Kinetic.Shape, 'shadowColor');
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowColor');
 
     /**
      * set shadow color
@@ -580,6 +584,10 @@
      * @memberof Kinetic.Shape.prototype
      * @returns {String}
      */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowColorRed');
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowColorGreen');
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowColorBlue');
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowBlur');
 
@@ -704,7 +712,7 @@
      * @returns {Image}
      */
 
-    Kinetic.Factory.addColorGetterSetter(Kinetic.Shape, 'fill');
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fill');
 
     /**
      * set fill color
@@ -796,6 +804,10 @@
      * @memberof Kinetic.Shape.prototype
      * @returns {Number}
      */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRed', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillGreen', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillBlue', 0);
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternX', 0);
 

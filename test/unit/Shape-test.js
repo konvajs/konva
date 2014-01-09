@@ -9,67 +9,45 @@ suite('Shape', function() {
             y: 90,
             width: 100,
             height: 50,
-            fill: 'green',
-            stroke: 'red'
-
+            fillGreen: 128,
+            strokeRed: 255,
+            draggable: true
         });
 
         layer.add(rect);
         stage.add(layer);
 
-        // test component getters
-        assert.equal(rect.getFillRGB().r, 0, 'rect fill RGB.r should be 0');
-        assert.equal(rect.getFillRGB().g, 128, 'rect fill RGB.g should be 128');
-        assert.equal(rect.getFillRGB().b, 0, 'rect fill RGB.b should be 0');
+        assert.equal(rect.getFillRed(), 0, 'rect fill r should be 0');
+        assert.equal(rect.getFillGreen(), 128, 'rect fill g should be 128');
+        assert.equal(rect.getFillBlue(), 0, 'rect fill b should be 0');
 
-        assert.equal(rect.getFillR(), 0, 'rect fill r should be 0');
-        assert.equal(rect.getFillG(), 128, 'rect fill g should be 128');
-        assert.equal(rect.getFillB(), 0, 'rect fill b should be 0');
+        assert.equal(rect.getStrokeRed(), 255, 'rect stroke r should be 255');
+        assert.equal(rect.getStrokeGreen(), 0, 'rect stroke g should be 0');
+        assert.equal(rect.getStrokeBlue(), 0, 'rect stroke b should be 0');
 
-        assert.equal(rect.getStrokeR(), 255, 'rect stroke r should be 255');
-        assert.equal(rect.getStrokeG(), 0, 'rect stroke g should be 0');
-        assert.equal(rect.getStrokeB(), 0, 'rect stroke b should be 0');
+        rect.fillRed(130);
+        assert.equal(rect.fillRed(), 130, 'rect fill r should be 130');
 
-        rect.setFill('#008000');
-        rect.setStroke('#ff0000');
+        rect.fillGreen(140);
+        assert.equal(rect.fillGreen(), 140, 'rect fill g should be 140');
 
-        assert.equal(rect.getFillR(), 0, 'rect fill r should be 0');
-        assert.equal(rect.getFillG(), 128, 'rect fill g should be 128');
-        assert.equal(rect.getFillB(), 0, 'rect fill b should be 0');
+        rect.fillBlue(150);
+        assert.equal(rect.fillBlue(), 150, 'rect fill b should be 150');
 
-        assert.equal(rect.getStrokeR(), 255, 'rect stroke r should be 255');
-        assert.equal(rect.getStrokeG(), 0, 'rect stroke g should be 0');
-        assert.equal(rect.getStrokeB(), 0, 'rect stroke b should be 0');
+        rect.fillRed(0);
+        rect.fillGreen(128);
+        rect.fillBlue(0);
 
-        rect.setFill('rgb(0,128,0)');
-        rect.setStroke('rgb(255, 0, 0)');
+        // var tween = new Kinetic.Tween({
+        //     node: rect,
+        //     fillGreen: 0,
+        //     fillRed: 255,
+        //     duration: 2
+        // });
 
-        assert.equal(rect.getFillR(), 0, 'rect fill r should be 0');
-        assert.equal(rect.getFillG(), 128, 'rect fill g should be 128');
-        assert.equal(rect.getFillB(), 0, 'rect fill b should be 0');
+        // tween.play();
 
-        assert.equal(rect.getStrokeR(), 255, 'rect stroke r should be 255');
-        assert.equal(rect.getStrokeG(), 0, 'rect stroke g should be 0');
-        assert.equal(rect.getStrokeB(), 0, 'rect stroke b should be 0');
-
-        // test setters
-        rect.setFillRGB({
-            r: 100,
-            b: 200
-        });
-
-        assert.equal(rect.getFillR(), 100, 'rect fill r should be 100');
-        assert.equal(rect.getFillG(), 128, 'rect fill g should be 128');
-        assert.equal(rect.getFillB(), 200, 'rect fill b should be 200');
-
-        rect.setFillR(130);
-        assert.equal(rect.getFillR(), 130, 'rect fill r should be 130');
-
-        rect.setFillG(140);
-        assert.equal(rect.getFillG(), 140, 'rect fill g should be 140');
-
-        rect.setFillB(150);
-        assert.equal(rect.getFillB(), 150, 'rect fill b should be 150');
+        layer.draw();
     });
 
     // ======================================================
@@ -507,19 +485,14 @@ suite('Shape', function() {
     rect.stroke('blue');
     assert.equal(rect.stroke(), 'blue');
 
-    rect.strokeR(255);
-    assert.equal(rect.strokeR(), 255);
+    rect.strokeRed(255);
+    assert.equal(rect.strokeRed(), 255);
 
-    rect.strokeG(20);
-    assert.equal(rect.strokeG(), 20);
+    rect.strokeGreen(20);
+    assert.equal(rect.strokeGreen(), 20);
 
-    rect.strokeB(30);
-    assert.equal(rect.strokeB(), 30);
-
-    rect.strokeRGB({r: 1, g: 2, b: 3});
-    assert.equal(rect.strokeRGB().r, 1);
-    assert.equal(rect.strokeRGB().g, 2);
-    assert.equal(rect.strokeRGB().b, 3);
+    rect.strokeBlue(30);
+    assert.equal(rect.strokeBlue(), 30);
 
     rect.lineJoin('bevel');
     assert.equal(rect.lineJoin(), 'bevel');

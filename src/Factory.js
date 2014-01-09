@@ -98,7 +98,7 @@
                 if (afterFunc) {
                     afterFunc.call(this);
                 }
-                    
+
                 this._fireChangeEvent(attr, oldVal, val);
                 
                 return this;  
@@ -123,88 +123,6 @@
                     return this[getter]();
                 }
             }
-        },
-
-
-
-
-
-
-
-
-
-
-
-
-        addColorGetterSetter: function(constructor, attr) {
-            this.addGetter(constructor, attr);
-            this.addSetter(constructor, attr);
-            this.addOverloadedGetterSetter(constructor, attr);
-
-            // component getters
-            this.addColorRGBGetter(constructor, attr);
-            this.addColorComponentGetter(constructor, attr, R);
-            this.addColorComponentGetter(constructor, attr, G);
-            this.addColorComponentGetter(constructor, attr, B);
-
-            // component setters
-            this.addColorRGBSetter(constructor, attr);
-            this.addColorComponentSetter(constructor, attr, R);
-            this.addColorComponentSetter(constructor, attr, G);
-            this.addColorComponentSetter(constructor, attr, B);
-
-            // overloaders
-            this.addOverloadedGetterSetter(constructor, attr + RGB);
-            this.addOverloadedGetterSetter(constructor, attr + UPPER_R);
-            this.addOverloadedGetterSetter(constructor, attr + UPPER_G);
-            this.addOverloadedGetterSetter(constructor, attr + UPPER_B);
-        },
-        addFilterGetterSetter: function(constructor, attr, def) {
-            this.addGetter(constructor, attr, def);
-            this.addFilterSetter(constructor, attr);
-            this.addOverloadedGetterSetter(constructor, attr);
-        },
-
-        // getter adders
-        addColorRGBGetter: function(constructor, attr) {
-            var method = GET + Kinetic.Util._capitalize(attr) + RGB;
-            constructor.prototype[method] = function() {
-                return Kinetic.Util.getRGB(this.attrs[attr]);
-            };
-        },
-
-        addColorComponentGetter: function(constructor, attr, c) {
-            var prefix = GET + Kinetic.Util._capitalize(attr),
-                method = prefix + Kinetic.Util._capitalize(c);
-            constructor.prototype[method] = function() {
-                return this[prefix + RGB]()[c];
-            };
-        },
-
-
-        // setter adders
-        addColorRGBSetter: function(constructor, attr) {
-            var method = SET + Kinetic.Util._capitalize(attr) + RGB;
-
-            constructor.prototype[method] = function(obj) {
-                var r = obj && obj.r !== undefined ? obj.r | 0 : this.getAttr(attr + UPPER_R),
-                    g = obj && obj.g !== undefined ? obj.g | 0 : this.getAttr(attr + UPPER_G),
-                    b = obj && obj.b !== undefined ? obj.b | 0 : this.getAttr(attr + UPPER_B);
-
-                this._setAttr(attr, HASH + Kinetic.Util._rgbToHex(r, g, b));
-                return this;
-            };
-        },
-
-        addColorComponentSetter: function(constructor, attr, c) {
-            var prefix = SET + Kinetic.Util._capitalize(attr),
-                method = prefix + Kinetic.Util._capitalize(c);
-            constructor.prototype[method] = function(val) {
-                var obj = {};
-                obj[c] = val;
-                this[prefix + RGB](obj);
-                return this;
-            };
         }
     };
 })();
