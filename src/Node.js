@@ -1638,7 +1638,7 @@
      * node.rotation(45);
      */
 
-    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'scale', 1);
+    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Node, 'scale', ['x', 'y']);
 
     /**
      * get/set scale
@@ -1660,6 +1660,8 @@
      * });
      */
 
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'scaleX', 1);
+
     /**
      * get/set scale x
      * @name scaleX
@@ -1674,6 +1676,8 @@
      * // set scale x<br>
      * node.scaleX(2);
      */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'scaleY', 1);
 
     /**
      * get/set scale y
@@ -1690,7 +1694,7 @@
      * node.scaleY(2);
      */
 
-    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'skew', 0);
+    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Node, 'skew', ['x', 'y']);
 
     /**
      * get/set skew
@@ -1712,6 +1716,8 @@
      * });
      */
 
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'skewX', 0);
+
     /**
      * get/set skew x
      * @name skewX
@@ -1726,6 +1732,8 @@
      * // set skew x<br>
      * node.skewX(3);
      */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'skewY', 0);
 
     /**
      * get/set skew y
@@ -1742,7 +1750,7 @@
      * node.skewY(3);
      */
 
-    Kinetic.Factory.addPointGetterSetter(Kinetic.Node, 'center', 0);
+    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Node, 'center', ['x', 'y']);
 
     /**
      * get/set center.  A node's center defines the position and rotation point
@@ -1763,6 +1771,8 @@
      * });
      */
 
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'centerX', 0);
+
     /**
      * get/set center x
      * @name centerX
@@ -1776,6 +1786,8 @@
      * // set center x<br>
      * node.centerX(3);
      */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'centerY', 0);
 
     /**
      * get/set center y

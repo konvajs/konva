@@ -37,6 +37,7 @@ suite('Image', function(){
 
           var crop = null;
           crop = darth.getCrop();
+
           assert.equal(crop.x, 135);
           assert.equal(crop.y, 7);
           assert.equal(crop.width, 167);
