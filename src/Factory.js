@@ -42,9 +42,9 @@
         Y = 'y';
 
     Kinetic.Factory = {
-        addGetterSetter: function(constructor, attr, def, afterFunc) {
+        addGetterSetter: function(constructor, attr, def, validator) {
             this.addGetter(constructor, attr, def);
-            this.addSetter(constructor, attr, afterFunc);
+            this.addSetter(constructor, attr, validator);
             this.addOverloadedGetterSetter(constructor, attr);
         },
         addGetter: function(constructor, attr, def) {
@@ -56,18 +56,19 @@
                 return val === undefined ? def : val;
             };
         },
-        addSetter: function(constructor, attr, afterFunc) {
+        addSetter: function(constructor, attr, validator) {
             var method = SET + Kinetic.Util._capitalize(attr);
 
             constructor.prototype[method] = function(val) {
-                this._setAttr(attr, val); 
-                if (afterFunc) {
-                    afterFunc.call(this);
+                if (validator) {
+                    val = validator.call(this, val);
                 }
+
+                this._setAttr(attr, val); 
                 return this;  
             };
         },
-        addComponentsGetterSetter: function(constructor, attr, components, afterFunc) {
+        addComponentsGetterSetter: function(constructor, attr, components, validator) {
             var len = components.length,
                 capitalize = Kinetic.Util._capitalize,
                 getter = GET + capitalize(attr), 
@@ -91,12 +92,12 @@
                 var oldVal = this.attrs[attr],
                     key;
 
-                for (key in val) {
-                    this._setAttr(attr + capitalize(key), val[key]); 
+                if (validator) {
+                    val = validator.call(this, val);
                 }
 
-                if (afterFunc) {
-                    afterFunc.call(this);
+                for (key in val) {
+                    this._setAttr(attr + capitalize(key), val[key]); 
                 }
 
                 this._fireChangeEvent(attr, oldVal, val);

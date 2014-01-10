@@ -310,8 +310,8 @@
     FromPolar(scratchData,imageData,{polarRotation:0});
   };
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'kaleidoscopePower', 2, function() {this._filterUpToDate = false;});
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'kaleidoscopeAngle', 0, function() {this._filterUpToDate = false;});
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'kaleidoscopePower', 2, function(val) {this._filterUpToDate = false;return val;});
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'kaleidoscopeAngle', 0, function(val) {this._filterUpToDate = false;return val;});
 
     /**
     * get/set kaleidoscope power

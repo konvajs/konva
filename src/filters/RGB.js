@@ -23,7 +23,18 @@
     }
   };
 
-  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'red', 255, function() {this._filterUpToDate = false;});
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'red', 0, function(val) {
+      this._filterUpToDate = false;
+      if (val > 255) {
+          return 255;
+      }
+      else if (val < 0) {
+          return 0;
+      }
+      else {
+          return Math.round(val);
+      }
+  });
   /**
   * get/set filter red value
   * @name red
@@ -33,7 +44,18 @@
   * @returns {Integer}
   */
 
-  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'green', 0, function() {this._filterUpToDate = false;});
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'green', 0, function(val) {
+      this._filterUpToDate = false;
+      if (val > 255) {
+          return 255;
+      }
+      else if (val < 0) {
+          return 0;
+      }
+      else {
+          return Math.round(val);
+      }
+  });
   /**
   * get/set filter green value
   * @name green
@@ -43,7 +65,18 @@
   * @returns {Integer}
   */
 
-  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'blue', 0, function() {this._filterUpToDate = false;});
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'blue', 0, function(val) {
+      this._filterUpToDate = false;
+      if (val > 255) {
+          return 255;
+      }
+      else if (val < 0) {
+          return 0;
+      }
+      else {
+          return Math.round(val);
+      }
+  });
   /**
   * get/set filter blue value
   * @name blue

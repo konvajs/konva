@@ -433,7 +433,8 @@
      * text.wrap('word');
      */
 
-    Kinetic.Factory.addGetter(Kinetic.Text, TEXT, EMPTY_STRING);
+    Kinetic.Factory.addGetter(Kinetic.Text, 'text', EMPTY_STRING);
+    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Text, 'text');
 
     /**
      * get/set text

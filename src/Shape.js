@@ -297,7 +297,17 @@
      * shape.stroke('rgba(0,255,0,0.5');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeRed', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeRed', 0, function(val) {
+        if (val > 255) {
+            return 255;
+        }
+        else if (val < 0) {
+            return 0;
+        }
+        else {
+            return Math.round(val);
+        }
+    });
 
     /**
      * get/set stroke red component
@@ -314,7 +324,17 @@
      * shape.strokeRed(0);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeGreen', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeGreen', 0, function(val) {
+        if (val > 255) {
+            return 255;
+        }
+        else if (val < 0) {
+            return 0;
+        }
+        else {
+            return Math.round(val);
+        }
+    });
 
     /**
      * get/set stroke green component
@@ -331,7 +351,17 @@
      * shape.strokeGreen(255);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeBlue', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeBlue', 0, function(val) {
+        if (val > 255) {
+            return 255;
+        }
+        else if (val < 0) {
+            return 0;
+        }
+        else {
+            return Math.round(val);
+        }
+    });
 
     /**
      * get/set stroke blue component
@@ -490,7 +520,17 @@
      * shape.shadowColor('rgba(0,255,0,0.5');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowRed', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowRed', 0, function(val) {
+        if (val > 255) {
+            return 255;
+        }
+        else if (val < 0) {
+            return 0;
+        }
+        else {
+            return Math.round(val);
+        }
+    });
 
     /**
      * get/set shadow red component
@@ -507,7 +547,17 @@
      * shape.shadowRed(0);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowGreen', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowGreen', 0, function(val) {
+        if (val > 255) {
+            return 255;
+        }
+        else if (val < 0) {
+            return 0;
+        }
+        else {
+            return Math.round(val);
+        }
+    });
 
     /**
      * get/set shadow green component
@@ -524,7 +574,17 @@
      * shape.shadowGreen(255);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowBlue', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowBlue', 0, function(val) {
+        if (val > 255) {
+            return 255;
+        }
+        else if (val < 0) {
+            return 0;
+        }
+        else {
+            return Math.round(val);
+        }
+    });
 
     /**
      * get/set shadow blue component
@@ -678,7 +738,17 @@
      * shape.fill('rgba(0,255,0,0.5');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRed', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRed', 0, function(val) {
+        if (val > 255) {
+            return 255;
+        }
+        else if (val < 0) {
+            return 0;
+        }
+        else {
+            return Math.round(val);
+        }
+    });
 
     /**
      * get/set fill red component
@@ -695,7 +765,17 @@
      * shape.fillRed(0);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillGreen', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillGreen', 0, function(val) {
+        if (val > 255) {
+            return 255;
+        }
+        else if (val < 0) {
+            return 0;
+        }
+        else {
+            return Math.round(val);
+        }
+    });
 
     /**
      * get/set fill green component
@@ -712,7 +792,17 @@
      * shape.fillGreen(255);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillBlue', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillBlue', 0, function(val) {
+        if (val > 255) {
+            return 255;
+        }
+        else if (val < 0) {
+            return 0;
+        }
+        else {
+            return Math.round(val);
+        }
+    });
 
     /**
      * get/set fill blue component
