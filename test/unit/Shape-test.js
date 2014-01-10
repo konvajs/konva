@@ -317,7 +317,7 @@ suite('Shape', function() {
             shadowColor: 'black',
             shadowBlur: 10,
             shadowOffset: {x:10, y:10},
-            dashArray: [10, 10],
+            dash: [10, 10],
             scaleX: 3
         });
         layer.add(circle);
@@ -327,7 +327,7 @@ suite('Shape', function() {
         assert.equal(circle.getFillEnabled(), true, 'fillEnabled should be true');
         assert.equal(circle.getStrokeEnabled(), true, 'strokeEnabled should be true');
         assert.equal(circle.getShadowEnabled(), true, 'shadowEnabled should be true');
-        assert.equal(circle.getDashArrayEnabled(), true, 'dashArrayEnabled should be true');
+        assert.equal(circle.dashEnabled(), true, 'dashEnabled should be true');
 
         circle.strokeScaleEnabled(false);
         assert.equal(circle.getStrokeScaleEnabled(), false);
@@ -347,13 +347,13 @@ suite('Shape', function() {
         circle.shadowEnabled(false);
         assert.equal(circle.getShadowEnabled(), false, 'shadowEnabled should be false');
 
-        circle.dashArrayEnabled(false);
-        assert.equal(circle.getDashArrayEnabled(), false, 'dashArrayEnabled should be false');
+        circle.dashEnabled(false);
+        assert.equal(circle.dashEnabled(), false, 'dashEnabled should be false');
 
         // re-enable
 
-        circle.dashArrayEnabled(true);
-        assert.equal(circle.getDashArrayEnabled(), true, 'dashArrayEnabled should be true');
+        circle.dashEnabled(true);
+        assert.equal(circle.getDashEnabled(), true, 'dashEnabled should be true');
 
         circle.shadowEnabled(true);
         assert.equal(circle.getShadowEnabled(), true, 'shadowEnabled should be true');
@@ -509,8 +509,8 @@ suite('Shape', function() {
     rect.hitFunc('function');
     assert.equal(rect.hitFunc(), 'function');
 
-    rect.dashArray([1]);
-    assert.equal(rect.dashArray()[0], 1);
+    rect.dash([1]);
+    assert.equal(rect.dash()[0], 1);
 
     // NOTE: skipping the rest because it would take hours to test all possible methods.  
     // This should hopefully be enough to test Factor overloaded methods

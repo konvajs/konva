@@ -94,7 +94,7 @@ suite('Line', function() {
             lineCap: 'round',
             lineJoin: 'round',
             draggable: true,
-            dashArray: [30, 10, 0, 10, 10, 20],
+            dash: [30, 10, 0, 10, 10, 20],
             shadowColor: '#aaa',
             shadowBlur: 10,
             shadowOffset: {x:20, y:20}
@@ -104,9 +104,9 @@ suite('Line', function() {
         layer.add(line);
         stage.add(layer);
 
-        assert.equal(line.getDashArray().length, 6);
-        line.setDashArray([10, 10]);
-        assert.equal(line.getDashArray().length, 2);
+        assert.equal(line.dash().length, 6);
+        line.dash([10, 10]);
+        assert.equal(line.dash().length, 2);
 
         assert.equal(line.getPoints().length, 8);
 

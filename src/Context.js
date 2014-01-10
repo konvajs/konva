@@ -520,7 +520,7 @@
             }
         },
         _stroke: function(shape) {
-            var dashArray = shape.getDashArray(),
+            var dash = shape.dash(),
                 strokeScaleEnabled = shape.getStrokeScaleEnabled();
 
             if(shape.hasStroke()) {
@@ -530,8 +530,8 @@
                 }
 
                 this._applyLineCap(shape);
-                if(dashArray && shape.getDashArrayEnabled()) {
-                    this.setLineDash(dashArray);
+                if(dash && shape.dashEnabled()) {
+                    this.setLineDash(dash);
                 }
 
                 this.setAttr('lineWidth', shape.strokeWidth());

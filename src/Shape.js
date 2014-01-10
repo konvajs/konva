@@ -274,223 +274,195 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'stroke');
 
     /**
-     * set stroke color
-     * @name setStroke
+     * get/set stroke color
+     * @name stroke
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {String} color
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * set stroke color with an object literal
-     * @name setStrokeRGB
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Obect} color requires an object literal containing an r, g, and b component
-     * @returns {Kineitc.Shape}
+     * @returns {String}
      * @example
-     * shape.setStrokeRGB({<br>
-     *   r: 200,<br>
-     *   g: 50,<br>
-     *   b: 100<br>
-     * });
-     */
-
-     /**
-     * set stroke color red component
-     * @name setStrokeR
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Integer} red
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * set stroke color green component
-     * @name setStrokeG
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Integer} green
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * set stroke color blue component
-     * @name setStrokeB
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Integer} blue
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * get stroke color
-     * @name getStroke
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {String} color
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * get stroke color as an object literal
-     * @name getStrokeRGB
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Object}
-     */
-
-     /**
-     * get stroke color red component
-     * @name getStrokeR
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Integer}
-     */
-
-     /**
-     * get stroke color green component
-     * @name getStrokeG
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Integer}
-     */
-
-     /**
-     * get stroke color blue component
-     * @name getStrokeB
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Integer}
+     * // get stroke color
+     * var stroke = shape.stroke();
+     *
+     * // set stroke color with color string
+     * shape.stroke('green');
+     *
+     * // set stroke color with hex
+     * shape.stroke('#00ff00');
+     *
+     * // set stroke color with rgb
+     * shape.stroke('rgb(0,255,0)');
+     *
+     * // set stroke color with rgba and make it 50% opaque
+     * shape.stroke('rgba(0,255,0,0.5');
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeRed', 0);
+
+    /**
+     * get/set stroke red component
+     * @name strokeRed
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Integer} red
+     * @returns {Integer}
+     * @example
+     * // get stroke red component
+     * var strokeRed = shape.strokeRed();
+     *
+     * // set stroke red component
+     * shape.strokeRed(0);
+     */
+
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeGreen', 0);
+
+    /**
+     * get/set stroke green component
+     * @name strokeGreen
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Integer} green
+     * @returns {Integer}
+     * @example
+     * // get stroke green component
+     * var strokeGreen = shape.strokeGreen();
+     *
+     * // set stroke green component
+     * shape.strokeGreen(255);
+     */
+
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeBlue', 0);
+
+    /**
+     * get/set stroke blue component
+     * @name strokeBlue
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Integer} blue
+     * @returns {Integer}
+     * @example
+     * // get stroke blue component
+     * var strokeBlue = shape.strokeBlue();
+     *
+     * // set stroke blue component
+     * shape.strokeBlue(0);
+     */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeWidth', 2);
 
     /**
-     * set stroke width
-     * @name setStrokeWidth
+     * get/set stroke width
+     * @name strokeWidth
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number} strokeWidth
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * get stroke width
-     * @name getStrokeWidth
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Number}
+     * @example
+     * // get stroke width
+     * var strokeWidth = shape.strokeWidth();
+     *
+     * // set stroke width
+     * shape.strokeWidth();
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'lineJoin');
 
     /**
-     * set line join
-     * @name setLineJoin
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {String} lineJoin.  Can be miter, round, or bevel.  The
+     * get/set line join.  Can be miter, round, or bevel.  The
      *  default is miter
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * get line join
-     * @name getLineJoin
+     * @name lineJoin
      * @method
      * @memberof Kinetic.Shape.prototype
+     * @param {String} lineJoin
      * @returns {String}
+     * @example
+     * // get line join
+     * var lineJoin = shape.lineJoin();
+     *
+     * // set line join
+     * shape.lineJoin('round');
      */
-
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'lineCap');
 
     /**
-     * set line cap.  Can be butt, round, or square
-     * @name setLineCap
+     * get/set line cap.  Can be butt, round, or square
+     * @name lineCap
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {String} lineCap
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * get line cap
-     * @name getLineCap
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {String}
+     * @example
+     * // get line cap
+     * var lineCap = shape.lineCap();
+     *
+     * // set line cap
+     * shape.lineCap('round');
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'sceneFunc');
 
     /**
-     * set draw function
-     * @name setDrawFunc
+     * get/set scene draw function
+     * @name sceneFunc
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Function} drawFunc drawing function
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * get draw function
-     * @name getDrawFunc
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Function}
+     * @example
+     * // get scene draw function
+     * var sceneFunc = shape.sceneFunc();
+     *
+     * // set scene draw function
+     * shape.sceneFunc(function(context) {
+     *   context.beginPath();
+     *   context.rect(0, 0, this.width(), this.height());
+     *   context.closePath();
+     *   context.fillStrokeShape(this);
+     * });
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'hitFunc');
 
     /**
-     * set draw hit function used for hit detection
-     * @name setDrawHitFunc
+     * get/set hit draw function
+     * @name hitFunc
      * @method
      * @memberof Kinetic.Shape.prototype
-     * @param {Function} drawHitFunc drawing function used for hit detection
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * get draw hit function
-     * @name getDrawHitFunc
-     * @method
-     * @memberof Kinetic.Shape.prototype
+     * @param {Function} drawFunc drawing function
      * @returns {Function}
+     * @example
+     * // get hit draw function
+     * var hitFunc = shape.hitFunc();
+     *
+     * // set hit draw function
+     * shape.hitFunc(function(context) {
+     *   context.beginPath();
+     *   context.rect(0, 0, this.width(), this.height());
+     *   context.closePath();
+     *   context.fillStrokeShape(this);
+     * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'dashArray');
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'dash');
 
     /**
-     * set dash array for stroke.
-     * @name setDashArray
+     * get/set dash array for stroke.
+     * @name dash
      * @method
      * @memberof Kinetic.Shape.prototype
-     * @param {Array} dashArray
+     * @param {Array} dash
+     * @returns {Array}
      * @example
-     *  // stroke dashes will be 10px long and 5 pixels apart<br>
-     *  line.setDashArray([10, 5]);<br><br>
+     *  // apply dashed stroke that is 10px long and 5 pixels apart<br>
+     *  line.dash([10, 5]);<br><br>
      *  
-     *  // stroke dashes will be be made up of alternating dashed<br> 
+     *  // apply dashed stroke that is made up of alternating dashed<br> 
      *  // lines that are 10px long and 20px apart, and dots that have<br> 
      *  // a radius of 5px and are 20px apart<br>
-     *  line.setDashArray([10, 20, 0.001, 20]);
+     *  line.dash([10, 20, 0.001, 20]);
      */
 
-     /**
-     * get dash array
-     * @name getDashArray
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Array}
-     */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowColor');
 
@@ -999,7 +971,7 @@
      * @returns {Boolean}
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'dashArrayEnabled', true);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'dashEnabled', true);
 
     /**
      * set dash array enabled
