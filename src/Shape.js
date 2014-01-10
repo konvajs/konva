@@ -467,319 +467,269 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowColor');
 
     /**
-     * set shadow color
-     * @name setShadowColor
+     * get/set shadow color
+     * @name shadowColor
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {String} color
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * set shadow color with an object literal
-     * @name setShadowColorRGB
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Obect} color requires an object literal containing an r, g, and b component
-     * @returns {Kineitc.Shape}
+     * @returns {String}
      * @example
-     * shape.setShadowRGB({<br>
-     *   r: 200,<br>
-     *   g: 50,<br>
-     *   b: 100<br>
-     * });
+     * // get shadow color
+     * var shadow = shape.shadowColor();
+     *
+     * // set shadow color with color string
+     * shape.shadowColor('green');
+     *
+     * // set shadow color with hex
+     * shape.shadowColor('#00ff00');
+     *
+     * // set shadow color with rgb
+     * shape.shadowColor('rgb(0,255,0)');
+     *
+     * // set shadow color with rgba and make it 50% opaque
+     * shape.shadowColor('rgba(0,255,0,0.5');
      */
 
-     /**
-     * set shadow color red component
-     * @name setShadowColorR
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowRed', 0);
+
+    /**
+     * get/set shadow red component
+     * @name shadowRed
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Integer} red
-     * @returns {Kineitc.Shape}
+     * @returns {Integer}
+     * @example
+     * // get shadow red component
+     * var shadowRed = shape.shadowRed();
+     *
+     * // set shadow red component
+     * shape.shadowRed(0);
      */
 
-     /**
-     * set shadow color green component
-     * @name setShadowColorG
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowGreen', 0);
+
+    /**
+     * get/set shadow green component
+     * @name shadowGreen
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Integer} green
-     * @returns {Kineitc.Shape}
+     * @returns {Integer}
+     * @example
+     * // get shadow green component
+     * var shadowGreen = shape.shadowGreen();
+     *
+     * // set shadow green component
+     * shape.shadowGreen(255);
      */
 
-     /**
-     * set shadow color blue component
-     * @name setShadowColorB
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowBlue', 0);
+
+    /**
+     * get/set shadow blue component
+     * @name shadowBlue
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Integer} blue
-     * @returns {Kineitc.Shape}
+     * @returns {Integer}
+     * @example
+     * // get shadow blue component
+     * var shadowBlue = shape.shadowBlue();
+     *
+     * // set shadow blue component
+     * shape.shadowBlue(0);
      */
-
-     /**
-     * get shadow color
-     * @name getShadowColor
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {String}
-     */
-
-     /**
-     * get shadow color as an object literal
-     * @name getShadowColorRGB
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Object}
-     */
-
-     /**
-     * get shadow color red component
-     * @name getShadowColorR
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {String}
-     */
-
-     /**
-     * get shadow color green component
-     * @name getShadowColorG
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {String}
-     */
-
-     /**
-     * get shadow color blue component
-     * @name getShadowColorB
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {String}
-     */
-
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowColorRed');
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowColorGreen');
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowColorBlue');
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowBlur');
 
     /**
-     * set shadow blur
-     * @name setShadowBlur
+     * get/set shadow blur
+     * @name shadowBlur
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number} blur
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * get shadow blur
-     * @name getShadowBlur
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Number}
+     * @example
+     * // get shadow blur
+     * var shadowBlur = shape.shadowBlur();
+     *
+     * // set shadow blur
+     * shape.shadowBlur(10);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowOpacity');
 
     /**
-     * set shadow opacity
-     * @name setShadowOpacity
+     * get/set shadow opacity.  must be a value between 0 and 1
+     * @name shadowOpacity
      * @method
      * @memberof Kinetic.Shape.prototype
-     * @param {Number} opacity must be a value between 0 and 1
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * get shadow opacity
-     * @name getShadowOpacity
-     * @method
-     * @memberof Kinetic.Shape.prototype
+     * @param {Number} opacity
      * @returns {Number}
+     * @example
+     * // get shadow opacity
+     * var shadowOpacity = shape.shadowOpacity();
+     *
+     * // set shadow opacity
+     * shape.shadowOpacity(0.5);
      */
 
     Kinetic.Factory.addComponentsGetterSetter(Kinetic.Shape, 'shadowOffset', ['x', 'y']);
 
     /**
-     * set shadow offset
-     * @name setShadowOffset
+     * get/set shadow offset
+     * @name shadowOffset
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Object} offset
      * @param {Number} offset.x
      * @param {Number} offset.y
-     * @returns {Kineitc.Shape}
+     * @returns {Object}
      * @example
-     * // set x and y<br>
-     * shape.setShadowOffset({<br>
-     *   x: 20<br>
+     * // get shadow offset
+     * var shadowOffset = shape.shadowOffset();
+     *
+     * // set shadow offset
+     * shape.shadowOffset({
+     *   x: 20
      *   y: 10
      * });
-     */
-
-    
-    /**
-     * get shadow offset
-     * @name getShadowOffset
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Object}
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowOffsetX', 0);
 
      /**
-     * set shadow offset x
-     * @name setShadowOffsetX
+     * get/set shadow offset x
+     * @name shadowOffsetX
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number} x
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * get shadow offset x
-     * @name getShadowOffsetX
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Number}
+     * @example
+     * // get shadow offset x
+     * var shadowOffsetX = shape.shadowOffsetX();
+     *
+     * // set shadow offset x
+     * shape.shadowOffsetX(5);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowOffsetY', 0);
 
      /**
-     * set shadow offset y
-     * @name setShadowOffsetY
+     * get/set shadow offset y
+     * @name shadowOffsetY
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number} y
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * get shadow offset y
-     * @name getShadowOffsetY
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Number}
+     * @example
+     * // get shadow offset yx
+     * var shadowOffsetY = shape.shadowOffsetY();
+     *
+     * // set shadow offset y
+     * shape.shadowOffsetY(5);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternImage');
 
     /**
-     * set fill pattern image
-     * @name setFillPatternImage
+     * get/set fill pattern image
+     * @name fillPatternImage
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Image} image object
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * get fill pattern image
-     * @name getFillPatternImage
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Image}
+     * @example
+     * // get fill pattern image
+     * var fillPatternImage = shape.fillPatternImage();
+     *
+     * // set fill pattern image
+     * var imageObj = new Image();
+     * imageObj.onload = function() {
+     *   shape.fillPatternImage(imageObj);
+     * };
+     * imageObj.src = 'path/to/image/jpg';
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fill');
 
     /**
-     * set fill color
-     * @name setFill
+     * get/set fill color
+     * @name fill
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {String} color
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * set fill color with an object literal
-     * @name setFillRGB
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Obect} color requires an object literal containing an r, g, and b component
-     * @returns {Kineitc.Shape}
-     * @example
-     * shape.setFillRGB({<br>
-     *   r: 200,<br>
-     *   g: 50,<br>
-     *   b: 100<br>
-     * });
-     */
-
-     /**
-     * set fill color red component
-     * @name setFillR
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Integer} red
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * set fill color green component
-     * @name setFillG
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Integer} green
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * set fill color blue component
-     * @name setFillB
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Integer} blue
-     * @returns {Kineitc.Shape}
-     */
-
-     /**
-     * get fill color
-     * @name getFill
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {String}
-     */
-
-     /**
-     * get fill color as an object literal
-     * @name getFillRGB
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Object}
-     */
-
-     /**
-     * get fill color red component
-     * @name getFillR
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Number}
-     */
-
-     /**
-     * get fill color green component
-     * @name getFillG
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Number}
-     */
-
-     /**
-     * get fill color blue component
-     * @name getFillB
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Number}
+     * @example
+     * // get fill color
+     * var fill = shape.fill();
+     *
+     * // set fill color with color string
+     * shape.fill('green');
+     *
+     * // set fill color with hex
+     * shape.fill('#00ff00');
+     *
+     * // set fill color with rgb
+     * shape.fill('rgb(0,255,0)');
+     *
+     * // set fill color with rgba and make it 50% opaque
+     * shape.fill('rgba(0,255,0,0.5');
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRed', 0);
+
+    /**
+     * get/set fill red component
+     * @name fillRed
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Integer} red
+     * @returns {Integer}
+     * @example
+     * // get fill red component
+     * var fillRed = shape.fillRed();
+     *
+     * // set fill red component
+     * shape.fillRed(0);
+     */
+
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillGreen', 0);
+
+    /**
+     * get/set fill green component
+     * @name fillGreen
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Integer} green
+     * @returns {Integer}
+     * @example
+     * // get fill green component
+     * var fillGreen = shape.fillGreen();
+     *
+     * // set fill green component
+     * shape.fillGreen(255);
+     */
+
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillBlue', 0);
+
+    /**
+     * get/set fill blue component
+     * @name fillBlue
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Integer} blue
+     * @returns {Integer}
+     * @example
+     * // get fill blue component
+     * var fillBlue = shape.fillBlue();
+     *
+     * // set fill blue component
+     * shape.fillBlue(0);
+     */
+
+
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternX', 0);
 
