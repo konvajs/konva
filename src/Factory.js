@@ -124,6 +124,13 @@
                     return this[getter]();
                 }
             }
+        },
+        backCompat: function(constructor, methods) {
+            var key;
+
+            for (key in methods) {
+                constructor.prototype[key] = constructor.prototype[methods[key]];
+            }
         }
     };
 })();

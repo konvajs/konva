@@ -95,4 +95,10 @@
      * // draw wedge clockwise<br>
      * wedge.clockwise(true);
      */
+
+    Kinetic.Factory.backCompat(Kinetic.Wedge, {
+        angleDeg: 'angle',
+        getAngleDeg: 'getAngle',
+        setAngleDeg: 'setAngle'
+    });
 })();

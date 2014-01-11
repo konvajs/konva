@@ -1486,4 +1486,17 @@
      * @returns {Number}
      */
 
+    Kinetic.Factory.backCompat(Kinetic.Shape, {
+        dashArray: 'dash',
+        getDashArray: 'getDash',
+        setDashArray: 'getDash',
+
+        drawFunc: 'sceneFunc',
+        getDrawFunc: 'getSceneFunc',
+        setDrawFunc: 'setSceneFunc',
+
+        drawHitFunc: 'hitFunc',
+        getDrawHitFunc: 'getHitFunc',
+        setDrawHitFunc: 'setHitFunc'
+    });
 })();

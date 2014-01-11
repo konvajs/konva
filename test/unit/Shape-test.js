@@ -569,4 +569,10 @@ suite('Shape', function() {
       layer.hitCanvas._canvas.style.border='2px solid black';
   });
 
+  test('back compat', function() {
+    assert.notEqual(Kinetic.Shape.prototype.dashArray, undefined);
+    assert.notEqual(Kinetic.Shape.prototype.setDashArray, undefined);
+    assert.notEqual(Kinetic.Shape.prototype.getDashArray, undefined);
+  });
+
 });

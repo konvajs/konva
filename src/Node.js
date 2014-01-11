@@ -132,14 +132,14 @@
         *   height: 200<br>
         * });<br><br>
         *
-        * // cache a node and show a red border around the bounding box<br>
+        * // cache a node and draw a red border around the bounding box<br>
         * // for debugging purposes<br>
         * node.cache({<br>
         *   x: -30,<br>
         *   y: -30,<br>
         *   width: 100,<br>
         *   height: 200,<br>
-        *   showBorder: true<br>
+        *   drawBorder: true<br>
         * });
         */
         cache: function(config) {
@@ -148,7 +148,7 @@
                 y = conf.y || 0,
                 width = conf.width || this.width(),
                 height = conf.height || this.height(),
-                showBorder = conf.showBorder || false,
+                drawBorder = conf.drawBorder || false,
                 cachedSceneCanvas = new Kinetic.SceneCanvas({
                     pixelRatio: 1,
                     width: width,
@@ -179,7 +179,7 @@
 
             // this will draw a red border around the cached box for
             // debugging purposes
-            if (showBorder) {
+            if (drawBorder) {
                 sceneContext = cachedSceneCanvas.getContext();
                 sceneContext.save();
                 sceneContext.beginPath();
@@ -1927,6 +1927,12 @@
      * // enable all transforms<br>
      * node.transformsEnabled('all');
      */
+
+    Kinetic.Factory.backCompat(Kinetic.Node, {
+        rotateDeg: 'rotate',
+        setRotationDeg: 'setRotation',
+        getRotationDeg: 'getRotation'
+    });
 
     Kinetic.Collection.mapMethods([
         'on',

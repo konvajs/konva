@@ -250,4 +250,10 @@
      * // set frame rate to 2 frames per second<br>
      * sprite.frameRate(2);
      */
+
+    Kinetic.Factory.backCompat(Kinetic.Sprite, {
+        index: 'frameIndex',
+        getIndex: 'getFrameIndex',
+        setIndex: 'setFrameIndex'
+    });
 })();

@@ -2884,7 +2884,7 @@ suite('Node', function() {
         y: -74,
         width: 148,
         height: 148,
-        showBorder: true
+        drawBorder: true
     }).offset({
         x: 74,
         y: 74
