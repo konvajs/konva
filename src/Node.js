@@ -1861,7 +1861,7 @@
      * node.listening('inherit');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'filters');
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'filters', undefined, function(val) {this._filterUpToDate = false;return val;});
     /**
      * get/set filters.  Filters are applied to cached canvases
      * @name filters
