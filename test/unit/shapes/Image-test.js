@@ -13,7 +13,7 @@ suite('Image', function(){
               image: imageObj,
               width: 100,
               height: 100,
-              center: {x: 50, y: 30},
+              offset: {x: 50, y: 30},
               crop: {x: 135, y: 7, width: 167, height: 134},
               draggable: true
           });
@@ -31,8 +31,8 @@ suite('Image', function(){
           assert.equal(darth.getY(), 60);
           assert.equal(darth.getWidth(), 100);
           assert.equal(darth.getHeight(), 100);
-          assert.equal(darth.center().x, 50);
-          assert.equal(darth.center().y, 30);
+          assert.equal(darth.offset().x, 50);
+          assert.equal(darth.offset().y, 30);
           assert.equal(Kinetic.Util._isElement(darth.getImage()), true);
 
           var crop = null;
@@ -89,8 +89,8 @@ suite('Image', function(){
               image: imageObj,
               width: 100,
               height: 100,
-              centerX: 50,
-              centerY: 30,
+              offsetX: 50,
+              offsetY: 30,
               crop: {x: 135, y: 7, width: 167, height: 134},
               draggable: true
           });
@@ -254,7 +254,7 @@ suite('Image', function(){
               image: imageObj,
               width: 100,
               height: 100,
-              center: {x: 50, y:30},
+              offset: {x: 50, y:30},
               draggable: true,
               opacity: 0.5,
               shadowColor: 'black',
@@ -289,7 +289,7 @@ suite('Image', function(){
               image: imageObj,
               width: 100,
               height: 100,
-              center: {x: 50, y: 30},
+              offset: {x: 50, y: 30},
               draggable: true,
               opacity: 0.5,
               shadowColor: 'black',

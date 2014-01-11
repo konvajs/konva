@@ -31,8 +31,8 @@
             'skewXChange.kinetic',
             'skewYChange.kinetic',
             'rotationChange.kinetic',
-            'centerXChange.kinetic',
-            'centerYChange.kinetic',
+            'offsetXChange.kinetic',
+            'offsetYChange.kinetic',
             'transformsEnabledChange.kinetic'
         ].join(SPACE);
 
@@ -702,11 +702,11 @@
         getAbsolutePosition: function() {
             var absoluteMatrix = this.getAbsoluteTransform().getMatrix(),
                 absoluteTransform = new Kinetic.Transform(),
-                center = this.center();
+                offset = this.offset();
 
             // clone the matrix array
             absoluteTransform.m = absoluteMatrix.slice();
-            absoluteTransform.translate(center.x, center.y);
+            absoluteTransform.translate(offset.x, offset.y);
 
             return absoluteTransform.getTranslation();
         },
@@ -761,8 +761,8 @@
                 rotation: this.getRotation(),
                 scaleX: this.getScaleX(),
                 scaleY: this.getScaleY(),
-                centerX: this.getCenterX(),
-                centerY: this.getCenterY(),
+                offsetX: this.getOffsetX(),
+                offsetY: this.getOffsetY(),
                 skewX: this.getSkewX(),
                 skewY: this.getSkewY()
             };
@@ -772,8 +772,8 @@
             this.attrs.rotation = 0;
             this.attrs.scaleX = 1;
             this.attrs.scaleY = 1;
-            this.attrs.centerX = 0;
-            this.attrs.centerY = 0;
+            this.attrs.offsetX = 0;
+            this.attrs.offsetY = 0;
             this.attrs.skewX = 0;
             this.attrs.skewY = 0;
 
@@ -1108,8 +1108,8 @@
                 scaleY = this.getScaleY(),
                 skewX = this.getSkewX(),
                 skewY = this.getSkewY(),
-                centerX = this.getCenterX(),
-                centerY = this.getCenterY();
+                offsetX = this.getOffsetX(),
+                offsetY = this.getOffsetY();
 
             if(x !== 0 || y !== 0) {
                 m.translate(x, y);
@@ -1123,8 +1123,8 @@
             if(scaleX !== 1 || scaleY !== 1) {
                 m.scale(scaleX, scaleY);
             }
-            if(centerX !== 0 || centerY !== 0) {
-                m.translate(-1 * centerX, -1 * centerY);
+            if(offsetX !== 0 || offsetY !== 0) {
+                m.translate(-1 * offsetX, -1 * offsetY);
             }
 
             return m;
@@ -1750,58 +1750,58 @@
      * node.skewY(3);
      */
 
-    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Node, 'center', ['x', 'y']);
+    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Node, 'offset', ['x', 'y']);
 
     /**
-     * get/set center.  A node's center defines the position and rotation point
+     * get/set offset.  Offsets the default position and rotation point
      * @method
      * @memberof Kinetic.Node.prototype
-     * @param {Object} center
-     * @param {Number} center.x
-     * @param {Number} center.y
+     * @param {Object} offset
+     * @param {Number} offset.x
+     * @param {Number} offset.y
      * @returns {Object}
      * @example
-     * // get center<br>
-     * var center = node.center();<br><br>
+     * // get offset<br>
+     * var offset = node.offset();<br><br>
      *
-     * // set center<br>
-     * node.center({<br>
+     * // set offset<br>
+     * node.offset({<br>
      *   x: 20<br>
      *   y: 10<br>
      * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'centerX', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'offsetX', 0);
 
     /**
-     * get/set center x
-     * @name centerX
+     * get/set offset x
+     * @name offsetX
      * @memberof Kinetic.Node.prototype
      * @param {Number} x
      * @returns {Number}
      * @example
-     * // get center x<br>
-     * var centerX = node.centerX();<br><br>
+     * // get offset x<br>
+     * var offsetX = node.offsetX();<br><br>
      *
-     * // set center x<br>
-     * node.centerX(3);
+     * // set offset x<br>
+     * node.offsetX(3);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'centerY', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'offsetY', 0);
 
     /**
-     * get/set center y
-     * @name centerY
+     * get/set offset y
+     * @name offsetY
      * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} y
      * @returns {Number}
      * @example
-     * // get center y<br>
-     * var centerY = node.centerY();<br><br>
+     * // get offset y<br>
+     * var offsetY = node.offsetY();<br><br>
      *
-     * // set center y<br>
-     * node.centerY(3);
+     * // set offset y<br>
+     * node.offsetY(3);
      */
 
     Kinetic.Factory.addSetter(Kinetic.Node, 'width', 0);
