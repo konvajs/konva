@@ -2858,6 +2858,42 @@ suite('Node', function() {
     assert.equal(circle._cache.canvas.scene.getContext().getTrace(), 'save();translate(74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
   });
 
+
+  test('cache shape thats larger than stage', function(){
+    var stage = addStage();
+    var layer = new Kinetic.Layer();
+    var group = new Kinetic.Group();
+    var circle = new Kinetic.Circle({
+        x: 74,
+        y: 74,
+        radius: 300,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 4,
+        name: 'myCircle',
+        draggable: true
+    });
+
+    group.add(circle);
+    layer.add(group);
+    stage.add(layer);
+
+    assert.equal(circle._cache.canvas, undefined);
+
+    circle.cache({
+        x: -304,
+        y: -304,
+        width: 608,
+        height: 608
+    }).offset({
+        x: 304,
+        y: 304
+    });
+    layer.draw();
+
+
+  });
+
   test('show cache border', function(){
     var stage = addStage();
     var layer = new Kinetic.Layer();
