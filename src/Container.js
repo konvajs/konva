@@ -16,6 +16,7 @@
          * determine if node has children
          * @method
          * @memberof Kinetic.Container.prototype
+         * @returns {Boolean}
          */
         hasChildren: function() {
             return this.getChildren().length > 0;
