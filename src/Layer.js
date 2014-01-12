@@ -130,7 +130,7 @@
         /**
          * get layer canvas
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Kinetic.Layer.prototype
          */
         getCanvas: function() {
             return this.canvas;
@@ -138,7 +138,7 @@
         /**
          * get layer hit canvas
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Kinetic.Layer.prototype
          */
         getHitCanvas: function() {
             return this.hitCanvas;
@@ -146,7 +146,7 @@
         /**
          * get layer canvas context
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Kinetic.Layer.prototype
          */
         getContext: function() {
             return this.getCanvas().getContext();
