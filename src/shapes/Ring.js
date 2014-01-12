@@ -7,7 +7,6 @@
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
-     * @param {Number} config.angle in degrees
      * @param {Number} config.innerRadius
      * @param {Number} config.outerRadius
      * @param {Boolean} [config.clockwise]
