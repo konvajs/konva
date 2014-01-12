@@ -831,10 +831,10 @@
      * @param {Number} x
      * @returns {Number}
      * @example
-     * // get fill pattern x
-     * var fillPatternX = shape.fillPatternX();
+     * // get fill pattern x<br>
+     * var fillPatternX = shape.fillPatternX();<br><br>
      * 
-     * // set fill pattern x
+     * // set fill pattern x<br>
      * shape.fillPatternX(20);
      */
 
@@ -848,10 +848,10 @@
      * @param {Number} y
      * @returns {Number}
      * @example
-     * // get fill pattern y
-     * var fillPatternY = shape.fillPatternY();
+     * // get fill pattern y<br>
+     * var fillPatternY = shape.fillPatternY();<br><br>
      * 
-     * // set fill pattern y
+     * // set fill pattern y<br>
      * shape.fillPatternY(20);
      */
 
@@ -865,11 +865,11 @@
      * @param {Array} colorStops
      * @returns {Array} colorStops
      * @example
-     * // get fill linear gradient color stops
-     * var colorStops = shape.fillLinearGradientColorStops();
+     * // get fill linear gradient color stops<br>
+     * var colorStops = shape.fillLinearGradientColorStops();<br><br>
      *
-     * // create a linear gradient that starts with red, changes to blue 
-     * // halfway through, and then changes to green
+     * // create a linear gradient that starts with red, changes to blue <br>
+     * // halfway through, and then changes to green<br>
      * shape.fillLinearGradientColorStops(0, 'red', 0.5, 'blue', 1, 'green');
      */
 
@@ -883,10 +883,10 @@
      * @param {Number} radius
      * @returns {Number}
      * @example
-     * // get radial gradient start radius
-     * var startRadius = shape.fillRadialGradientStartRadius();
+     * // get radial gradient start radius<br>
+     * var startRadius = shape.fillRadialGradientStartRadius();<br><br>
      *
-     * // set radial gradient start radius
+     * // set radial gradient start radius<br>
      * shape.fillRadialGradientStartRadius(0);
      */
 
@@ -900,10 +900,10 @@
      * @param {Number} radius
      * @returns {Number}
      * @example
-     * // get radial gradient end radius
-     * var endRadius = shape.fillRadialGradientEndRadius();
+     * // get radial gradient end radius<br>
+     * var endRadius = shape.fillRadialGradientEndRadius();<br><br>
      *
-     * // set radial gradient end radius
+     * // set radial gradient end radius<br>
      * shape.fillRadialGradientEndRadius(100);
      */
 
@@ -917,11 +917,11 @@
      * @param {Number} colorStops
      * @returns {Array}
      * @example
-     * // get fill radial gradient color stops
-     * var colorStops = shape.fillRadialGradientColorStops();
+     * // get fill radial gradient color stops<br>
+     * var colorStops = shape.fillRadialGradientColorStops();<br><br>
      *
-     * // create a radial gradient that starts with red, changes to blue 
-     * // halfway through, and then changes to green
+     * // create a radial gradient that starts with red, changes to blue <br>
+     * // halfway through, and then changes to green<br>
      * shape.fillRadialGradientColorStops(0, 'red', 0.5, 'blue', 1, 'green');
      */
 
@@ -935,547 +935,477 @@
      * @param {String} repeat
      * @returns {String}
      * @example
-     * // get fill pattern repeat
-     * var repeat = shape.fillPatternRepeat();
+     * // get fill pattern repeat<br>
+     * var repeat = shape.fillPatternRepeat();<br><br>
      *
-     * // repeat pattern in x direction only
-     * shape.fillPatternRepeat('repeat-x');
+     * // repeat pattern in x direction only<br>
+     * shape.fillPatternRepeat('repeat-x');<br><br>
      *
-     * // do not repeat the pattern
+     * // do not repeat the pattern<br>
      * shape.fillPatternRepeat('no repeat');
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillEnabled', true);
 
     /**
-     * set fill enabled
-     * @name setFillEnabled
+     * get/set fill enabled flag
+     * @name fillEnabled
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Boolean} enabled
-     * @returns {Kinetic.Shape}
-     */
-
-     /**
-     * get fill enabled
-     * @name getFillEnabled
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Boolean}
+     * @example
+     * // get fill enabled flag<br>
+     * var fillEnabled = shape.fillEnabled();<br><br>
+     *
+     * // disable fill<br>
+     * shape.fillEnabled(false);<br><br>
+     *
+     * // enable fill<br>
+     * shape.fillEnabled(true);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeEnabled', true);
 
     /**
-     * set stroke enabled
-     * @name setStrokeEnabled
+     * get/set stroke enabled flag
+     * @name strokeEnabled
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Boolean} enabled
-     * @returns {Kinetic.Shape}
-     */
-
-     /**
-     * get stroke enabled
-     * @name getStrokeEnabled
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Boolean}
+     * @example
+     * // get stroke enabled flag<br>
+     * var strokeEnabled = shape.strokeEnabled();<br><br>
+     *
+     * // disable stroke<br>
+     * shape.strokeEnabled(false);<br><br>
+     *
+     * // enable stroke<br>
+     * shape.strokeEnabled(true);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowEnabled', true);
 
     /**
-     * set shadow enabled
-     * @name setShadowEnabled
+     * get/set shadow enabled flag
+     * @name shadowEnabled
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Boolean} enabled
-     * @returns {Kinetic.Shape}
-     */
-
-     /**
-     * get shadow enabled
-     * @name getShadowEnabled
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Boolean}
+     * @example
+     * // get shadow enabled flag<br>
+     * var shadowEnabled = shape.shadowEnabled();<br><br>
+     *
+     * // disable shadow<br>
+     * shape.shadowEnabled(false);<br><br>
+     *
+     * // enable shadow<br>
+     * shape.shadowEnabled(true);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'dashEnabled', true);
 
     /**
-     * set dash array enabled
-     * @name setDashArrayEnabled
+     * get/set dash enabled flag
+     * @name dashEnabled
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Boolean} enabled
-     * @returns {Kinetic.Shape}
-     */
-
-     /**
-     * get dash array enabled
-     * @name getDashArrayEnabled
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Boolean}
+     * @example
+     * // get dash enabled flag<br>
+     * var dashEnabled = shape.dashEnabled();<br><br>
+     *
+     * // disable dash<br>
+     * shape.dashEnabled(false);<br><br>
+     *
+     * // enable dash<br>
+     * shape.dashEnabled(true);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeScaleEnabled', true);
 
-     /**
-     * set stroke scale enabled
-     * @name setStrokeScaleEnabled
+    /**
+     * get/set strokeScale enabled flag
+     * @name strokeScaleEnabled
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Boolean} enabled
-     * @returns {Kinetic.Shape}
-     */
-
-     /**
-     * get stroke scale enabled
-     * @name getStrokeScaleEnabled
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Boolean}
+     * @example
+     * // get stroke scale enabled flag<br>
+     * var strokeScaleEnabled = shape.strokeScaleEnabled();<br><br>
+     *
+     * // disable stroke scale<br>
+     * shape.strokeScaleEnabled(false);<br><br>
+     *
+     * // enable stroke scale<br>
+     * shape.strokeScaleEnabled(true);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPriority', 'color');
 
     /**
-     * set fill priority
-     * @name setFillPriority
+     * get/set fill priority.  can be color, pattern, linear-gradient, or radial-gradient.  The default is color.
+     *   This is handy if you want to toggle between different fill types.
+     * @name fillPriority
      * @method
      * @memberof Kinetic.Shape.prototype
-     * @param {Number} priority can be color, pattern, linear-gradient, or radial-gradient
-     *  The default is color.
-     * @returns {Kinetic.Shape}
-     */
-
-     /**
-     * get fill priority
-     * @name getFillPriority
-     * @method
-     * @memberof Kinetic.Shape.prototype
+     * @param {String} priority
      * @returns {String}
+     * @example
+     * // get fill priority<br>
+     * var fillPriority = shape.fillPriority();<br><br>
+     *
+     * // set fill priority<br>
+     * shape.fillPriority('linear-gradient');
      */
 
     Kinetic.Factory.addComponentsGetterSetter(Kinetic.Shape, 'fillPatternOffset', ['x', 'y']);
 
     /**
-     * set fill pattern offset
-     * @name setFillPatternOffset
+     * get/set fill pattern offset
+     * @name fillPatternOffset
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Object} offset
      * @param {Number} offset.x
      * @param {Number} offset.y
-     * @returns {Kinetic.Shape}
+     * @returns {Object}
      * @example
-     * // set x and y <br>
-     * shape.setFillPatternOffset({<br>
+     * // get fill pattern offset<br>
+     * var patternOffset = shape.fillPatternOffset();<br><br>
+     *
+     * // set fill pattern offset<br>
+     * shape.fillPatternOffset({<br>
      *   x: 20<br>
-     *   y: 10
+     *   y: 10<br>
      * });
      */
 
-    /**
-     * get fill pattern offset
-     * @name getFillPatternOffset
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Object}
-     */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternOffsetX', 0);
     /**
-     * set fill pattern offset x
-     * @name setFillPatternOffsetX
+     * get/set fill pattern offset x
+     * @name fillPatternOffsetX
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number} x
-     * @returns {Kinetic.Shape}
-     */
-
-    /**
-     * get fill pattern offset x
-     * @name getFillPatternOffsetX
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Number}
+     * @example
+     * // get fill pattern offset x<br>
+     * var patternOffsetX = shape.fillPatternOffsetX();<br><br>
+     *
+     * // set fill pattern offset x<br>
+     * shape.fillPatternOffsetX(20);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternOffsetY', 0);
     /**
-     * set fill pattern offset y
-     * @name setFillPatternOffsetY
+     * get/set fill pattern offset y
+     * @name fillPatternOffsetY
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number} y
-     * @returns {Kinetic.Shape}
-     */
-
-    /**
-     * get fill pattern offset y
-     * @name getFillPatternOffsetY
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Number}
+     * @example
+     * // get fill pattern offset y<br>
+     * var patternOffsetY = shape.fillPatternOffsetY();<br><br>
+     *
+     * // set fill pattern offset y<br>
+     * shape.fillPatternOffsetY(10);
      */
 
     Kinetic.Factory.addComponentsGetterSetter(Kinetic.Shape, 'fillPatternScale', ['x', 'y']);
 
     /**
-     * set fill pattern scale
-     * @name setFillPatternScale
+     * get/set fill pattern scale
+     * @name fillPatternScale
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Object} scale
      * @param {Number} scale.x
      * @param {Number} scale.y
-     * @returns {Kinetic.Shape}
+     * @returns {Object}
      * @example
-     * // set x and y <br>
-     * shape.setFillPatternScale({<br>
-     *   x: 20<br>
-     *   y: 10
+     * // get fill pattern scale<br>
+     * var patternScale = shape.fillPatternScale();<br><br>
+     *
+     * // set fill pattern scale<br>
+     * shape.fillPatternScale({<br>
+     *   x: 2<br>
+     *   y: 2<br>
      * });
      */
 
-    /**
-     * get fill pattern scale
-     * @name getFillPatternScale
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Object}
-     */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternScaleX', 1);
-
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternScaleX', 0);
     /**
-     * set fill pattern scale x
-     * @name setFillPatternScaleX
+     * get/set fill pattern scale x
+     * @name fillPatternScaleX
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number} x
-     * @returns {Kinetic.Shape}
-     */
-
-    /**
-     * get fill pattern scale x
-     * @name getFillPatternScaleX
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Number}
+     * @example
+     * // get fill pattern scale x<br>
+     * var patternScaleX = shape.fillPatternScaleX();<br><br>
+     *
+     * // set fill pattern scale x<br>
+     * shape.fillPatternScaleX(2);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternScaleY', 1);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternScaleY', 0);
     /**
-     * set fill pattern scale y
-     * @name setFillPatternScaleY
+     * get/set fill pattern scale y
+     * @name fillPatternScaleY
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number} y
-     * @returns {Kinetic.Shape}
-     */
-
-    /**
-     * get fill pattern scale y
-     * @name getFillPatternScaleY
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Number}
+     * @example
+     * // get fill pattern scale y<br>
+     * var patternScaleY = shape.fillPatternScaleY();<br><br>
+     *
+     * // set fill pattern scale y<br>
+     * shape.fillPatternScaleY(2);
      */
 
     Kinetic.Factory.addComponentsGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPoint', ['x', 'y']);
 
     /**
-     * set fill linear gradient start point
-     * @name setFillLinearGradientStartPoint
+     * get/set fill linear gradient start point
+     * @name fillLinearGradientStartPoint
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Object} startPoint
      * @param {Number} startPoint.x
      * @param {Number} startPoint.y
-     * @returns {Kinetic.Shape}
-     * @example
-     * // set x and y <br>
-     * shape.setFillLinearGradientStartPoint({<br>
-     *   x: 20<br>
-     *   y: 10
-     * });
-     */
-
-    /**
-     * get fill linear gradient start point
-     * @name getFillLinearGradientStartPoint
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Object}
+     * @example
+     * // get fill linear gradient start point<br>
+     * var startPoint = shape.fillLinearGradientStartPoint();<br><br>
+     *
+     * // set fill linear gradient start point<br>
+     * shape.fillLinearGradientStartPoint({<br>
+     *   x: 20<br>
+     *   y: 10<br>
+     * });
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPointX', 0);
     /**
-     * set fill linear gradient start point x
-     * @name setFillLinearGradientStartPointX
+     * get/set fill linear gradient start point x
+     * @name fillLinearGradientStartPointX
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number} x
-     * @returns {Kinetic.Shape}
-     */
-
-    /**
-     * get fill linear gradient start point x
-     * @name getFillLinearGradientStartPointX
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Number}
+     * @example
+     * // get fill linear gradient start point x<br>
+     * var startPointX = shape.fillLinearGradientStartPointX();<br><br>
+     *
+     * // set fill linear gradient start point x<br>
+     * shape.fillLinearGradientStartPointX(20);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPointY', 0);
     /**
-     * set fill linear gradient start point y
-     * @name setFillLinearGradientStartPointY
+     * get/set fill linear gradient start point y
+     * @name fillLinearGradientStartPointY
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number} y
-     * @returns {Kinetic.Shape}
-     */
-
-    /**
-     * get fill linear gradient start point y
-     * @name getFillLinearGradientStartPointY
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Number}
+     * @example
+     * // get fill linear gradient start point y<br>
+     * var startPointY = shape.fillLinearGradientStartPointY();<br><br>
+     *
+     * // set fill linear gradient start point y<br>
+     * shape.fillLinearGradientStartPointY(20);
      */
 
     Kinetic.Factory.addComponentsGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPoint', ['x', 'y']);
 
     /**
-     * set fill linear gradient end point
-     * @name setFillLinearGradientEndPoint
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Object} endPoint
-     * @returns {Kinetic.Shape}
-     * @example
-     * // set x only <br>
-     * shape.setFillLinearGradientEndPoint({<br>
-     *   x: 20<br>
-     *   y: 10
-     * });
-     */
-
-    /**
-     * get fill linear gradient end point
-     * @name getFillLinearGradientEndPoint
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Object}
-     */
-
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPointX', 0);
-    /**
-     * set fill linear gradient end point x
-     * @name setFillLinearGradientEndPointX
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Number} x
-     * @returns {Kinetic.Shape}
-     */
-
-    /**
-     * get fill linear gradient end point x
-     * @name getFillLinearGradientEndPointX
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Number}
-     */
-
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPointY', 0);
-    /**
-     * set fill linear gradient end point y
-     * @name setFillLinearGradientEndPointY
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Number} y
-     * @returns {Kinetic.Shape}
-     */
-
-    /**
-     * get fill linear gradient end point y
-     * @name getFillLinearGradientEndPointY
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Number}
-     */
-
-    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', ['x', 'y']);
-
-    /**
-     * set fill radial gradient start point
-     * @name setFillRadialGradientStartPoint
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Object} startPoint
-     * @param {Number} startPoint.x
-     * @param {Number} startPoint.y
-     * @returns {Kinetic.Shape}
-     * @example
-     * // set x and y <br>
-     * shape.setFillRadialGradientStartPoint({<br>
-     *   x: 20<br>
-     *   y: 10
-     * });
-     */
-
-    /**
-     * get fill radial gradient start point
-     * @name getFillRadialGradientStartPoint
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Object}
-     */
-
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPointX', 0);
-
-    /**
-     * set fill radial gradient start point x
-     * @name setFillRadialGradientStartPointX
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Number} x
-     * @returns {Kinetic.Shape}
-     */
-
-    /**
-     * get fill radial gradient start point x
-     * @name getFillRadialGradientStartPointX
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Number}
-     */
-
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPointY', 0);
-
-    /**
-     * set fill radial gradient start point y
-     * @name setFillRadialGradientStartPointY
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Number} y
-     * @returns {Kinetic.Shape}
-     */
-
-    /**
-     * get fill radial gradient start point y
-     * @name getFillRadialGradientStartPointY
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Number}
-     */
-
-    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPoint', ['x', 'y']);
-
-    /**
-     * set fill radial gradient end point
-     * @name setFillRadialGradientEndPoint
+     * get/set fill linear gradient end point
+     * @name fillLinearGradientEndPoint
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Object} endPoint
      * @param {Number} endPoint.x
      * @param {Number} endPoint.y
-     * @returns {Kinetic.Shape}
+     * @returns {Object}
      * @example
-     * // set x and y <br>
-     * shape.setFillRadialGradientEndPoint({<br>
+     * // get fill linear gradient end point<br>
+     * var endPoint = shape.fillLinearGradientEndPoint();<br><br>
+     *
+     * // set fill linear gradient end point<br>
+     * shape.fillLinearGradientEndPoint({<br>
      *   x: 20<br>
-     *   y: 10
+     *   y: 10<br>
      * });
      */
 
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPointX', 0);
     /**
-     * get fill radial gradient end point
-     * @name getFillRadialGradientEndPoint
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Object}
-     */
-
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPointX', 0);
-
-     /**
-     * set fill radial gradient end point x
-     * @name setFillRadialGradientEndPointX
+     * get/set fill linear gradient end point x
+     * @name fillLinearGradientEndPointX
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number} x
-     * @returns {Kinetic.Shape}
-     */
-
-    /**
-     * get fill radial gradient end point x
-     * @name getFillRadialGradientEndPointX
-     * @method
-     * @memberof Kinetic.Shape.prototype
      * @returns {Number}
+     * @example
+     * // get fill linear gradient end point x<br>
+     * var endPointX = shape.fillLinearGradientEndPointX();<br><br>
+     *
+     * // set fill linear gradient end point x<br>
+     * shape.fillLinearGradientEndPointX(20);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPointY', 0);
-
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPointY', 0);
     /**
-     * set fill radial gradient end point y
-     * @name setFillRadialGradientEndPointY
+     * get/set fill linear gradient end point y
+     * @name fillLinearGradientEndPointY
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number} y
-     * @returns {Kinetic.Shape}
-     */ 
-     
+     * @returns {Number}
+     * @example
+     * // get fill linear gradient end point y<br>
+     * var endPointY = shape.fillLinearGradientEndPointY();<br><br>
+     *
+     * // set fill linear gradient end point y<br>
+     * shape.fillLinearGradientEndPointY(20);
+     */
+
+    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', ['x', 'y']);
+
     /**
-     * get fill radial gradient end point y
-     * @name getFillRadialGradientEndPointY
+     * get/set fill radial gradient start point
+     * @name fillRadialGradientStartPoint
      * @method
      * @memberof Kinetic.Shape.prototype
+     * @param {Object} startPoint
+     * @param {Number} startPoint.x
+     * @param {Number} startPoint.y
+     * @returns {Object}
+     * @example
+     * // get fill radial gradient start point<br>
+     * var startPoint = shape.fillRadialGradientStartPoint();<br><br>
+     *
+     * // set fill radial gradient start point<br>
+     * shape.fillRadialGradientStartPoint({<br>
+     *   x: 20<br>
+     *   y: 10<br>
+     * });
+     */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPointX', 0);
+    /**
+     * get/set fill radial gradient start point x
+     * @name fillRadialGradientStartPointX
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Number} x
      * @returns {Number}
+     * @example
+     * // get fill radial gradient start point x<br>
+     * var startPointX = shape.fillRadialGradientStartPointX();<br><br>
+     *
+     * // set fill radial gradient start point x<br>
+     * shape.fillRadialGradientStartPointX(20);
+     */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPointY', 0);
+    /**
+     * get/set fill radial gradient start point y
+     * @name fillRadialGradientStartPointY
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Number} y
+     * @returns {Number}
+     * @example
+     * // get fill radial gradient start point y<br>
+     * var startPointY = shape.fillRadialGradientStartPointY();<br><br>
+     *
+     * // set fill radial gradient start point y<br>
+     * shape.fillRadialGradientStartPointY(20);
+     */
+
+    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPoint', ['x', 'y']);
+
+    /**
+     * get/set fill radial gradient end point
+     * @name fillRadialGradientEndPoint
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Object} endPoint
+     * @param {Number} endPoint.x
+     * @param {Number} endPoint.y
+     * @returns {Object}
+     * @example
+     * // get fill radial gradient end point<br>
+     * var endPoint = shape.fillRadialGradientEndPoint();<br><br>
+     *
+     * // set fill radial gradient end point<br>
+     * shape.fillRadialGradientEndPoint({<br>
+     *   x: 20<br>
+     *   y: 10<br>
+     * });
+     */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPointX', 0);
+    /**
+     * get/set fill radial gradient end point x
+     * @name fillRadialGradientEndPointX
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Number} x
+     * @returns {Number}
+     * @example
+     * // get fill radial gradient end point x<br>
+     * var endPointX = shape.fillRadialGradientEndPointX();<br><br>
+     *
+     * // set fill radial gradient end point x<br>
+     * shape.fillRadialGradientEndPointX(20);
+     */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPointY', 0);
+    /**
+     * get/set fill radial gradient end point y
+     * @name fillRadialGradientEndPointY
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Number} y
+     * @returns {Number}
+     * @example
+     * // get fill radial gradient end point y<br>
+     * var endPointY = shape.fillRadialGradientEndPointY();<br><br>
+     *
+     * // set fill radial gradient end point y<br>
+     * shape.fillRadialGradientEndPointY(20);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternRotation', 0);
 
     /**
-     * set fill pattern rotation in radians
-     * @name setFillPatternRotation
+     * get/set fill pattern rotation in degrees
+     * @name fillPatternRotation
      * @method
      * @memberof Kinetic.Shape.prototype
      * @param {Number} rotation
      * @returns {Kinetic.Shape}
+     * @example
+     * // get fill pattern rotation<br>
+     * var patternRotation = shape.fillPatternRotation();<br><br>
+     *
+     * // set fill pattern rotation<br>
+     * shape.fillPatternRotation(20);
      */
 
-    /**
-     * set fill pattern rotation in degrees
-     * @name setFillPatternRotationDeg
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @param {Number} rotationDeg
-     * @returns {Kinetic.Shape}
-     */
-
-    /**
-     * get fill pattern rotation in radians
-     * @name getFillPatternRotation
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Number}
-     */
-
-    /**
-     * get fill pattern rotation in degrees
-     * @name getFillPatternRotationDeg
-     * @method
-     * @memberof Kinetic.Shape.prototype
-     * @returns {Number}
-     */
 
     Kinetic.Factory.backCompat(Kinetic.Shape, {
         dashArray: 'dash',
