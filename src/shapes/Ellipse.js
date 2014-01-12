@@ -68,7 +68,7 @@
 
     /**
      * get/set radius
-     * @name setRadius
+     * @name radius
      * @method
      * @memberof Kinetic.Ellipse.prototype
      * @param {Object} radius
@@ -89,7 +89,7 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Ellipse, 'radiusX', 0);
     /**
      * get/set radius x
-     * @name setRadiusX
+     * @name radiusX
      * @method
      * @memberof Kinetic.Ellipse.prototype
      * @param {Number} x
@@ -105,7 +105,7 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Ellipse, 'radiusY', 0);
     /**
      * get/set radius y
-     * @name setRadiusY
+     * @name radiusY
      * @method
      * @memberof Kinetic.Ellipse.prototype
      * @param {Number} y
