@@ -87,6 +87,7 @@
          * @method
          * @memberof Kinetic.Container.prototype
          * @param {String} selector
+         * @returns {Collection}
          * @example
          * // select node with id foo<br>
          * var node = stage.find('#foo');<br><br>
