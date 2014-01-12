@@ -1032,8 +1032,8 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {String} eventType event type.  can be a regular event, like click, mouseover, or mouseout, or it can be a custom event, like myCustomEvent
-         * @param {EventObject} evt event object
-         * @param {Boolean} bubble setting the value to false, or leaving it undefined, will result in the event
+         * @param {EventObject} [evt] event object
+         * @param {Boolean} [bubble] setting the value to false, or leaving it undefined, will result in the event
          *  not bubbling.  Setting the value to true will result in the event bubbling.
          * @returns {Kinetic.Node}
          * @example
