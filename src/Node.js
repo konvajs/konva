@@ -1183,7 +1183,6 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {Object} config
-         * @param {Function} config.callback function executed when the composite has completed
          * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
          *  "image/png" is the default
          * @param {Number} [config.x] x position of canvas section
