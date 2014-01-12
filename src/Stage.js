@@ -157,6 +157,7 @@
          * get pointer position which can be a touch position or mouse position
          * @method
          * @memberof Kinetic.Stage.prototype
+         * @returns {Object}
          */
         getPointerPosition: function() {
             return this.pointerPos;
