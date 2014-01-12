@@ -1528,7 +1528,7 @@
      * // set position<br>
      * node.position({<br>
      *   x: 5<br>
-     *   y: 10
+     *   y: 10<br>
      * });
      */
 
@@ -1882,7 +1882,7 @@
      * node.filters([<br>
      *   Kinetic.Filters.Blur,<br>
      *   Kinetic.Filters.Sepia,<br>
-     *   Kinetic.Filters.Invert
+     *   Kinetic.Filters.Invert<br>
      * ]);
      */
 
