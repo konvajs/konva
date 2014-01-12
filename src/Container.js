@@ -56,6 +56,7 @@
          * @method
          * @memberof Kinetic.Container.prototype
          * @param {Node} child
+         * @returns {Container}
          */
         add: function(child) {
             var children = this.children;
