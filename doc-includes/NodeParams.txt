@@ -10,7 +10,6 @@
      * @param {Object} [config.scale] set scale
      * @param {Number} [config.scaleX] set scale x
      * @param {Number} [config.scaleY] set scale y
-     * @param {Number} [config.rotation] rotation in radians
      * @param {Number} [config.rotationDeg] rotation in degrees
      * @param {Object} [config.offset] offset from center point and rotation point
      * @param {Number} [config.offsetX] set offset x

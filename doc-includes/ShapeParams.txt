@@ -1,8 +1,7 @@
 @param {String} [config.fill] fill color
-     * @param {Object} [config.fillRGB] set fill color with an object literal containing an r, g, and b component
-     * @param {Integer} [config.fillR] set fill red component
-     * @param {Integer} [config.fillG] set fill green component
-     * @param {Integer} [config.fillB] set fill blue component
+     * @param {Integer} [config.fillRed] set fill red component
+     * @param {Integer} [config.fillGreen] set fill green component
+     * @param {Integer} [config.fillBlue] set fill blue component
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -34,10 +33,9 @@
      * @param {Boolean} [config.fillEnabled] flag which enables or disables the fill.  The default value is true
      * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
      * @param {String} [config.stroke] stroke color
-     * @param {Object} [config.strokeRGB] set stroke color with an object literal containing an r, g, and b component
-     * @param {Integer} [config.strokeR] set stroke red component
-     * @param {Integer} [config.strokeG] set stroke green component
-     * @param {Integer} [config.strokeB] set stroke blue component
+     * @param {Integer} [config.strokeRed] set stroke red component
+     * @param {Integer} [config.strokeGreen] set stroke green component
+     * @param {Integer} [config.strokeBlue] set stroke blue component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
@@ -46,10 +44,9 @@
      * @param {String} [config.lineCap] can be butt, round, or sqare.  The default
      *  is butt
      * @param {String} [config.shadowColor]
-     * @param {Object} [config.shadowColorRGB] set shadowColor color with an object literal containing an r, g, and b component
-     * @param {Integer} [config.shadowColorR] set shadowColor red component
-     * @param {Integer} [config.shadowColorG] set shadowColor green component
-     * @param {Integer} [config.shadowColorB] set shadowColor blue component
+     * @param {Integer} [config.shadowColorRed] set shadowColor red component
+     * @param {Integer} [config.shadowColorGreen] set shadowColor green component
+     * @param {Integer} [config.shadowColorBlue] set shadowColor blue component
      * @param {Number} [config.shadowBlur]
      * @param {Object} [config.shadowOffset]
      * @param {Number} [config.shadowOffsetX]
@@ -57,5 +54,5 @@
      * @param {Number} [config.shadowOpacity] shadow opacity.  Can be any real number
      *  between 0 and 1
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
-     * @param {Array} [config.dashArray]
-     * @param {Boolean} [config.dashArrayEnabled] flag which enables or disables the dashArray.  The default value is true
+     * @param {Array} [config.dash]
+     * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
