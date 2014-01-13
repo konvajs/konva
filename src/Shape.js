@@ -1141,7 +1141,7 @@
      */
 
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternScaleX', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternScaleX', 1);
     /**
      * get/set fill pattern scale x
      * @name fillPatternScaleX
@@ -1157,7 +1157,7 @@
      * shape.fillPatternScaleX(2);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternScaleY', 0);
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternScaleY', 1);
     /**
      * get/set fill pattern scale y
      * @name fillPatternScaleY

@@ -575,4 +575,45 @@ suite('Shape', function() {
     assert.notEqual(Kinetic.Shape.prototype.getDashArray, undefined);
   });
 
+  test('test defaults', function() {
+    var shape = new Kinetic.Shape();
+
+    assert.equal(shape.strokeRed(), 0);
+    assert.equal(shape.strokeGreen(), 0);
+    assert.equal(shape.strokeBlue(), 0);
+    assert.equal(shape.strokeWidth(), 2);
+    assert.equal(shape.shadowRed(), 0);
+    assert.equal(shape.shadowGreen(), 0);
+    assert.equal(shape.shadowBlue(), 0);
+    assert.equal(shape.shadowOffsetX(), 0);
+    assert.equal(shape.shadowOffsetY(), 0);
+    assert.equal(shape.fillRed(), 0);
+    assert.equal(shape.fillGreen(), 0);
+    assert.equal(shape.fillBlue(), 0);
+    assert.equal(shape.fillPatternX(), 0);
+    assert.equal(shape.fillPatternY(), 0);
+    assert.equal(shape.fillRadialGradientStartRadius(), 0);
+    assert.equal(shape.fillRadialGradientEndRadius(), 0);
+    assert.equal(shape.fillPatternRepeat(), 'repeat');
+    assert.equal(shape.fillEnabled(), true);
+    assert.equal(shape.strokeEnabled(), true);
+    assert.equal(shape.shadowEnabled(), true);
+    assert.equal(shape.dashEnabled(), true);
+    assert.equal(shape.strokeScaleEnabled(), true);
+    assert.equal(shape.fillPriority(), 'color');
+    assert.equal(shape.fillPatternOffsetX(), 0);
+    assert.equal(shape.fillPatternOffsetY(), 0);
+    assert.equal(shape.fillPatternScaleX(), 1);
+    assert.equal(shape.fillPatternScaleY(), 1);
+    assert.equal(shape.fillLinearGradientStartPointX(), 0);
+    assert.equal(shape.fillLinearGradientStartPointY(), 0);
+    assert.equal(shape.fillLinearGradientEndPointX(), 0);
+    assert.equal(shape.fillLinearGradientEndPointY(), 0);
+    assert.equal(shape.fillRadialGradientStartPointX(), 0);
+    assert.equal(shape.fillRadialGradientStartPointY(), 0);
+    assert.equal(shape.fillRadialGradientEndPointX(), 0);
+    assert.equal(shape.fillRadialGradientEndPointY(), 0);
+    assert.equal(shape.fillPatternRotation(), 0);
+  });
+
 });
