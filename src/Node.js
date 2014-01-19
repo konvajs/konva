@@ -168,6 +168,8 @@
                 origY = this.y(),
                 sceneContext;
 
+            cachedHitCanvas.isCache = true;
+
             this.clearCache();
 
             this.transformsEnabled('position');

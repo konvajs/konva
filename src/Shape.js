@@ -197,7 +197,7 @@
                 cachedCanvas = this._cache.canvas,
                 cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
-            if(this.shouldDrawHit()) {
+            if((canvas && canvas.isCache) || this.shouldDrawHit()) {
                 
                 if (cachedHitCanvas) {
                     this._drawCachedHitCanvas(context);
