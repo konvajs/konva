@@ -79,6 +79,8 @@
                     for(i = 0; i < len; i++) {
                         this[i][methodName].apply(this[i], args);
                     }
+
+                    return this;
                 };
             })(key);
         }

@@ -15,7 +15,7 @@ suite('Collection', function(){
     assert.notEqual(Kinetic.Collection.prototype.strokeWidth, undefined);
   });
 
-  test('add circle to stage', function(){
+  test.only('add circle to stage', function(){
     var stage = addStage();
     var layer = new Kinetic.Layer();
     var circle1 = new Kinetic.Circle({
@@ -45,12 +45,12 @@ suite('Collection', function(){
     layer.add(circle1).add(circle2);
     stage.add(layer);
 
-    layer.find('Circle').fill('blue');
+    layer.find('Circle').fill('blue').stroke('green');
     layer.draw();
 
     //console.log(layer.getContext().getTrace());
 
-    assert.equal(layer.getContext().getTrace(),'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,300,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=red;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,300,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
+    assert.equal(layer.getContext().getTrace(),'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,300,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=red;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=green;stroke();restore();save();transform(1,0,0,1,300,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=green;stroke();restore();');
 
 
   });
