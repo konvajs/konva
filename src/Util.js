@@ -399,6 +399,24 @@
                 callback(null);
             }
         },
+        _getRGBAString: function(obj) {
+            var red = obj.red || 0,
+                green = obj.green || 0,
+                blue = obj.blue || 0,
+                alpha = obj.alpha || 1;
+
+            return [
+                'rgba(',
+                red,
+                ',',
+                green,
+                ',',
+                blue,
+                ',',
+                alpha,
+                ')'
+            ].join(EMPTY_STRING);
+        },
         _rgbToHex: function(r, g, b) {
             return ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
         },

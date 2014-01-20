@@ -425,7 +425,12 @@
     Kinetic.SceneContext.prototype = {
         _fillColor: function(shape) {
             var fill = shape.fill()   
-                || Kinetic.Util._rgbToHex(shape.fillRed(), shape.fillGreen(), shape.fillBlue());
+                || Kinetic.Util._getRGBAString({
+                    red: shape.fillRed(), 
+                    green: shape.fillGreen(), 
+                    blue: shape.fillBlue(),
+                    alpha: shape.fillAlpha()
+                });
 
             this.setAttr('fillStyle', fill);
             shape._fillFunc(this);
@@ -536,7 +541,12 @@
 
                 this.setAttr('lineWidth', shape.strokeWidth());
                 this.setAttr('strokeStyle', shape.stroke() 
-                    || Kinetic.Util._rgbToHex(shape.strokeRed(), shape.strokeGreen(), shape.strokeBlue()));
+                    || Kinetic.Util._getRGBAString({
+                        red: shape.strokeRed(), 
+                        green: shape.strokeGreen(), 
+                        blue: shape.strokeBlue(),
+                        alpha: shape.strokeAlpha()
+                    }));
 
                 shape._strokeFunc(this);
                 

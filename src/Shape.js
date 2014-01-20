@@ -297,17 +297,7 @@
      * shape.stroke('rgba(0,255,0,0.5');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeRed', 0, function(val) {
-        if (val > 255) {
-            return 255;
-        }
-        else if (val < 0) {
-            return 0;
-        }
-        else {
-            return Math.round(val);
-        }
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeRed', 0, Kinetic.Validators.RGBComponent);
 
     /**
      * get/set stroke red component
@@ -324,17 +314,7 @@
      * shape.strokeRed(0);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeGreen', 0, function(val) {
-        if (val > 255) {
-            return 255;
-        }
-        else if (val < 0) {
-            return 0;
-        }
-        else {
-            return Math.round(val);
-        }
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeGreen', 0, Kinetic.Validators.RGBComponent);
 
     /**
      * get/set stroke green component
@@ -351,17 +331,7 @@
      * shape.strokeGreen(255);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeBlue', 0, function(val) {
-        if (val > 255) {
-            return 255;
-        }
-        else if (val < 0) {
-            return 0;
-        }
-        else {
-            return Math.round(val);
-        }
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeBlue', 0, Kinetic.Validators.RGBComponent);
 
     /**
      * get/set stroke blue component
@@ -376,6 +346,24 @@
      *
      * // set stroke blue component<br>
      * shape.strokeBlue(0);
+     */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeAlpha', 1, Kinetic.Validators.alphaComponent);
+
+    /**
+     * get/set stroke alpha component.  Alpha is a real number between 0 and 1.  The default
+     *  is 1.
+     * @name strokeAlpha
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Number} alpha
+     * @returns {Number}
+     * @example
+     * // get stroke alpha component<br>
+     * var strokeAlpha = shape.strokeAlpha();<br><br>
+     *
+     * // set stroke alpha component<br>
+     * shape.strokeAlpha(0.5);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeWidth', 2);
@@ -520,17 +508,7 @@
      * shape.shadowColor('rgba(0,255,0,0.5');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowRed', 0, function(val) {
-        if (val > 255) {
-            return 255;
-        }
-        else if (val < 0) {
-            return 0;
-        }
-        else {
-            return Math.round(val);
-        }
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowRed', 0, Kinetic.Validators.RGBComponent);
 
     /**
      * get/set shadow red component
@@ -547,17 +525,7 @@
      * shape.shadowRed(0);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowGreen', 0, function(val) {
-        if (val > 255) {
-            return 255;
-        }
-        else if (val < 0) {
-            return 0;
-        }
-        else {
-            return Math.round(val);
-        }
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowGreen', 0, Kinetic.Validators.RGBComponent);
 
     /**
      * get/set shadow green component
@@ -574,17 +542,7 @@
      * shape.shadowGreen(255);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowBlue', 0, function(val) {
-        if (val > 255) {
-            return 255;
-        }
-        else if (val < 0) {
-            return 0;
-        }
-        else {
-            return Math.round(val);
-        }
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowBlue', 0, Kinetic.Validators.RGBComponent);
 
     /**
      * get/set shadow blue component
@@ -601,6 +559,24 @@
      * shape.shadowBlue(0);
      */
 
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowAlpha', 1, Kinetic.Validators.alphaComponent);
+
+    /**
+     * get/set shadow alpha component.  Alpha is a real number between 0 and 1.  The default
+     *  is 1.
+     * @name shadowAlpha
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Number} alpha
+     * @returns {Number}
+     * @example
+     * // get shadow alpha component<br>
+     * var shadowAlpha = shape.shadowAlpha();<br><br>
+     *
+     * // set shadow alpha component<br>
+     * shape.shadowAlpha(0.5);
+     */
+     
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowBlur');
 
     /**
@@ -738,17 +714,7 @@
      * shape.fill('rgba(0,255,0,0.5');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRed', 0, function(val) {
-        if (val > 255) {
-            return 255;
-        }
-        else if (val < 0) {
-            return 0;
-        }
-        else {
-            return Math.round(val);
-        }
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRed', 0, Kinetic.Validators.RGBComponent);
 
     /**
      * get/set fill red component
@@ -765,17 +731,7 @@
      * shape.fillRed(0);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillGreen', 0, function(val) {
-        if (val > 255) {
-            return 255;
-        }
-        else if (val < 0) {
-            return 0;
-        }
-        else {
-            return Math.round(val);
-        }
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillGreen', 0, Kinetic.Validators.RGBComponent);
 
     /**
      * get/set fill green component
@@ -792,17 +748,7 @@
      * shape.fillGreen(255);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillBlue', 0, function(val) {
-        if (val > 255) {
-            return 255;
-        }
-        else if (val < 0) {
-            return 0;
-        }
-        else {
-            return Math.round(val);
-        }
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillBlue', 0, Kinetic.Validators.RGBComponent);
 
     /**
      * get/set fill blue component
@@ -819,6 +765,23 @@
      * shape.fillBlue(0);
      */
 
+    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillAlpha', 1, Kinetic.Validators.alphaComponent);
+
+    /**
+     * get/set fill alpha component.  Alpha is a real number between 0 and 1.  The default
+     *  is 1.
+     * @name fillAlpha
+     * @method
+     * @memberof Kinetic.Shape.prototype
+     * @param {Number} alpha
+     * @returns {Number}
+     * @example
+     * // get fill alpha component<br>
+     * var fillAlpha = shape.fillAlpha();<br><br>
+     *
+     * // set fill alpha component<br>
+     * shape.fillAlpha(0.5);
+     */
 
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternX', 0);

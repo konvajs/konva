@@ -42,12 +42,17 @@ suite('Shape', function() {
         //     node: rect,
         //     fillGreen: 0,
         //     fillRed: 255,
-        //     duration: 2
+        //     duration: 2,
+        //     fillAlpha: 0
         // });
 
         // tween.play();
 
+
+
         layer.draw();
+
+        //console.log(layer.getContext().getTrace());
     });
 
     // ======================================================
