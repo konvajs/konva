@@ -15,7 +15,7 @@ suite('Collection', function(){
     assert.notEqual(Kinetic.Collection.prototype.strokeWidth, undefined);
   });
 
-  test.only('add circle to stage', function(){
+  test('add circle to stage', function(){
     var stage = addStage();
     var layer = new Kinetic.Layer();
     var circle1 = new Kinetic.Circle({
