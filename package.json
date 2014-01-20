@@ -1,6 +1,6 @@
 {
   "name": "KineticJS",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "devDependencies": {
     "grunt-contrib-jshint": "0.5.4",
     "grunt-contrib-nodeunit": "0.1.2",
@@ -14,7 +14,8 @@
     "mocha-phantomjs": "3.1.2",
     "grunt-cli": "0.1.9",
     "grunt": "0.4.1",
-    "connect": "2.9.0"
+    "connect": "2.9.0",
+    "grunt-contrib-copy": "~0.5.0"
   },
   "readmeFilename": "README.md",
   "main": "Gruntfile.js",

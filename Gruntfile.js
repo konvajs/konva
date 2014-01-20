@@ -151,6 +151,18 @@ module.exports = function(grunt) {
           src: ['dist/kinetic-v<%= pkg.version %>.min.js'], 
           dest: 'dist/kinetic-v<%= pkg.version %>.min.js'
         }]
+      },
+      prod4: {
+        options: {
+          variables: {
+            version: '<%= pkg.version %>',
+          },
+          prefix: '@@'
+        },
+        files: [{
+          src: ['bower-template.json'], 
+          dest: 'bower.json'
+        }]
       }
     },
     uglify: {
@@ -171,6 +183,13 @@ module.exports = function(grunt) {
         laxbreak: true
       },
       all: ['src/**/*.js']
+    },
+    copy: {
+      prod: {
+        nonull: true,
+        src: 'dist/kinetic-v<%= pkg.version %>.min.js',
+        dest: 'kinetic-v<%= pkg.version %>.min.js',
+      },
     }
   };
 
@@ -191,10 +210,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   // Tasks
   grunt.registerTask('dev', ['clean', 'concat:dev', 'replace:dev']);
   grunt.registerTask('beta', ['clean', 'concat:beta', 'replace:beta']);
-  grunt.registerTask('full', ['clean', 'concat:prod', 'uglify', 'replace:prod1', 'replace:prod2', 'replace:prod3']);
+  grunt.registerTask('full', ['clean', 'concat:prod', 'uglify', 'replace:prod1', 'replace:prod2', 'replace:prod3', 'copy', 'replace:prod4']);
   grunt.registerTask('hint', ['clean', 'concat:dev', 'replace:dev', 'jshint']);
 };

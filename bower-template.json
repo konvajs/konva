@@ -1,6 +1,6 @@
 {
   "name": "KineticJS",
-  "version": "5.0.1",
+  "version": "@@version",
   "homepage": "http://kineticjs.com/",
   "authors": [
     "Eric Rowell"
@@ -18,5 +18,5 @@
     "test",
     "tests"
   ],
-  "main": "kinetic-v5.0.1.min.js"
+  "main": "kinetic-v@@version.min.js"
 }
