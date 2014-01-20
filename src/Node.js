@@ -1032,8 +1032,8 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {String} eventType event type.  can be a regular event, like click, mouseover, or mouseout, or it can be a custom event, like myCustomEvent
-         * @param {EventObject} evt event object
-         * @param {Boolean} bubble setting the value to false, or leaving it undefined, will result in the event
+         * @param {EventObject} [evt] event object
+         * @param {Boolean} [bubble] setting the value to false, or leaving it undefined, will result in the event
          *  not bubbling.  Setting the value to true will result in the event bubbling.
          * @returns {Kinetic.Node}
          * @example
@@ -1183,7 +1183,6 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {Object} config
-         * @param {Function} config.callback function executed when the composite has completed
          * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
          *  "image/png" is the default
          * @param {Number} [config.x] x position of canvas section
@@ -1238,7 +1237,6 @@
          * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
          *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
          *  is very high quality
-         * @returns {Image}
          * @example
          * var image = node.toImage({<br>
          *   callback: function(img) {<br>

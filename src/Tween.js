@@ -174,6 +174,7 @@
          * play
          * @method
          * @memberof Kinetic.Tween.prototype
+         * @returns {Tween}
          */
         play: function() {
             this.tween.play();
@@ -183,6 +184,7 @@
          * reverse
          * @method
          * @memberof Kinetic.Tween.prototype
+         * @returns {Tween}
          */
         reverse: function() {
             this.tween.reverse();
@@ -192,6 +194,7 @@
          * reset
          * @method
          * @memberof Kinetic.Tween.prototype
+         * @returns {Tween}
          */
         reset: function() {
             var node = this.node;
@@ -204,6 +207,7 @@
          * @method
          * @memberof Kinetic.Tween.prototype
          * @param {Integer} t time in seconds between 0 and the duration
+         * @returns {Tween}
          */
         seek: function(t) {
             var node = this.node;
@@ -215,6 +219,7 @@
          * pause
          * @method
          * @memberof Kinetic.Tween.prototype
+         * @returns {Tween}
          */
         pause: function() {
             this.tween.pause();
@@ -224,6 +229,7 @@
          * finish
          * @method
          * @memberof Kinetic.Tween.prototype
+         * @returns {Tween}
          */
         finish: function() {
             var node = this.node;

@@ -16,6 +16,7 @@
          * determine if node has children
          * @method
          * @memberof Kinetic.Container.prototype
+         * @returns {Boolean}
          */
         hasChildren: function() {
             return this.getChildren().length > 0;
@@ -56,6 +57,7 @@
          * @method
          * @memberof Kinetic.Container.prototype
          * @param {Node} child
+         * @returns {Container}
          */
         add: function(child) {
             var children = this.children;
@@ -86,6 +88,7 @@
          * @method
          * @memberof Kinetic.Container.prototype
          * @param {String} selector
+         * @returns {Collection}
          * @example
          * // select node with id foo<br>
          * var node = stage.find('#foo');<br><br>
