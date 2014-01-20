@@ -105,4 +105,6 @@
      * @method
      * @memberof Kinetic.Star.prototype
      */
+
+     Kinetic.Collection.mapMethods(Kinetic.Star);
 })();

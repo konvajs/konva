@@ -76,4 +76,6 @@
      * // set radius<br>
      * circle.radius(10);<br>
      */
+
+     Kinetic.Collection.mapMethods(Kinetic.Circle);
 })();

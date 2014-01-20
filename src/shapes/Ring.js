@@ -63,9 +63,7 @@
     Kinetic.Util.extend(Kinetic.Ring, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Ring, 'innerRadius', function() {
-        return 0;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Ring, 'innerRadius', 0);
 
     /**
      * get/set innerRadius
@@ -82,9 +80,7 @@
      * ring.innerRadius(20);
      */
      
-    Kinetic.Factory.addGetterSetter(Kinetic.Ring, 'outerRadius', function() {
-        return 0;
-    });
+    Kinetic.Factory.addGetterSetter(Kinetic.Ring, 'outerRadius', 0);
 
     /**
      * get/set outerRadius
@@ -100,4 +96,6 @@
      * // set outer radius<br>
      * ring.outerRadius(20);
      */
+
+     Kinetic.Collection.mapMethods(Kinetic.Ring);
 })();

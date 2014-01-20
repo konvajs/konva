@@ -279,17 +279,17 @@ suite('Layer', function() {
         layer.add(circle);
         stage.add(layer);
 
-        assert.equal(layer.isHitGraphEnabled(), true);
+        assert.equal(layer.hitGraphEnabled(), true);
         assert.equal(layer.shouldDrawHit(), true);
 
         layer.disableHitGraph();
 
-        assert.equal(layer.isHitGraphEnabled(), false);
+        assert.equal(layer.hitGraphEnabled(), false);
         assert.equal(layer.shouldDrawHit(), false);  
 
         layer.enableHitGraph();
 
-        assert.equal(layer.isHitGraphEnabled(), true);
+        assert.equal(layer.hitGraphEnabled(), true);
         assert.equal(layer.shouldDrawHit(), true);
     });
 });

@@ -256,4 +256,6 @@
         getIndex: 'getFrameIndex',
         setIndex: 'setFrameIndex'
     });
+
+    Kinetic.Collection.mapMethods(Kinetic.Sprite);
 })();

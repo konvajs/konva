@@ -101,4 +101,6 @@
         getAngleDeg: 'getAngle',
         setAngleDeg: 'setAngle'
     });
+
+    Kinetic.Collection.mapMethods(Kinetic.Wedge);
 })();

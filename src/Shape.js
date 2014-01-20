@@ -1420,4 +1420,6 @@
         getDrawHitFunc: 'getHitFunc',
         setDrawHitFunc: 'setHitFunc'
     });
+
+    Kinetic.Collection.mapMethods(Kinetic.Shape);
 })();

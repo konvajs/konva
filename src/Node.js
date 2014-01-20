@@ -594,7 +594,7 @@
          */
         shouldDrawHit: function() {
             var layer = this.getLayer();
-            return  layer && layer.isHitGraphEnabled() && this.isListening() && this.isVisible() && !Kinetic.isDragging();
+            return  layer && layer.hitGraphEnabled() && this.isListening() && this.isVisible() && !Kinetic.isDragging();
         },
         /**
          * show node
@@ -1934,21 +1934,5 @@
         getRotationDeg: 'getRotation'
     });
 
-    Kinetic.Collection.mapMethods([
-        'on',
-        'off',
-        'remove',
-        'destroy',
-        'show',
-        'hide',
-        'move',
-        'rotate',
-        'moveToTop',
-        'moveUp',
-        'moveDown',
-        'moveToBottom',
-        'moveTo',
-        'fire',
-        'draw'
-    ]);
+    Kinetic.Collection.mapMethods(Kinetic.Node);
 })();

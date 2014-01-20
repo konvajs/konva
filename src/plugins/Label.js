@@ -154,6 +154,8 @@
 
     Kinetic.Util.extend(Kinetic.Label, Kinetic.Group);
 
+    Kinetic.Collection.mapMethods(Kinetic.Label);
+
     /**
      * Tag constructor.&nbsp; A Tag can be configured
      *  to have a pointer element that points up, right, down, or left
@@ -291,4 +293,6 @@
      * @method
      * @memberof Kinetic.Tag.prototype
      */
+
+     Kinetic.Collection.mapMethods(Kinetic.Tag);
 })();

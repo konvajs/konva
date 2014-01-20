@@ -599,4 +599,6 @@
      * @method
      * @memberof Kinetic.Path.prototype
      */
+
+     Kinetic.Collection.mapMethods(Kinetic.Path);
 })();

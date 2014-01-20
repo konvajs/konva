@@ -198,4 +198,6 @@
      * // push a new point<br>
      * line.points(line.points().concat([70, 80]));
      */
+
+     Kinetic.Collection.mapMethods(Kinetic.Line);
 })();

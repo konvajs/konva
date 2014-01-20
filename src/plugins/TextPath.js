@@ -375,4 +375,6 @@
      * @method
      * @memberof Kinetic.TextPath.prototype
      */
+
+     Kinetic.Collection.mapMethods(Kinetic.TextPath);
 })();

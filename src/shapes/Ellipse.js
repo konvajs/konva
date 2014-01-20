@@ -118,4 +118,6 @@
      * ellipse.radiusY(200);
      */
 
+     Kinetic.Collection.mapMethods(Kinetic.Ellipse);
+
 })();

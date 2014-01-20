@@ -450,4 +450,6 @@
      * // set text<br>
      * text.text('Hello world!');
      */
+
+     Kinetic.Collection.mapMethods(Kinetic.Text);
 })();

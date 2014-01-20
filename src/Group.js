@@ -13,4 +13,6 @@
         }
     });
     Kinetic.Util.extend(Kinetic.Group, Kinetic.Container);
+
+    Kinetic.Collection.mapMethods(Kinetic.Group);
 })();

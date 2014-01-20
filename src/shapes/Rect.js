@@ -73,4 +73,6 @@
      * // set corner radius<br>
      * rect.cornerRadius(10);
      */
+
+     Kinetic.Collection.mapMethods(Kinetic.Rect);
 })();

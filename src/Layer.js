@@ -333,5 +333,5 @@
      * layer.hitGraphEnabled(true);
      */
 
-     Kinetic.Layer.prototype.isHitGraphEnabled = Kinetic.Layer.prototype.getHitGraphEnabled;
+     Kinetic.Collection.mapMethods(Kinetic.Layer);
 })();

@@ -394,4 +394,6 @@
      * // set clip height<br>
      * container.clipHeight(100);
      */
+
+     Kinetic.Collection.mapMethods(Kinetic.Container);
 })();

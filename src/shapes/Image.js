@@ -196,4 +196,6 @@
      * // set crop height<br>
      * image.cropHeight(20);
      */
+
+     Kinetic.Collection.mapMethods(Kinetic.Image);
 })();

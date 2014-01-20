@@ -117,4 +117,6 @@
      * // draw arc clockwise<br>
      * arc.clockwise(true);
      */
+
+     Kinetic.Collection.mapMethods(Kinetic.Arc);
 })();
