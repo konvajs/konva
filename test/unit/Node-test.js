@@ -3158,4 +3158,32 @@ suite('Node', function() {
     showHit(layer);
 
   });
+
+  test('stage.toObject() when stage contains an image', function(done){
+      var imageObj = new Image();
+      imageObj.onload = function() {
+          var stage = addStage();
+
+          var layer = new Kinetic.Layer();
+          darth = new Kinetic.Image({
+              x: 200,
+              y: 60,
+              image: imageObj,
+              width: 100,
+              height: 100,
+              offset: {x: 50, y: 30},
+              crop: {x: 135, y: 7, width: 167, height: 134},
+              draggable: true
+          });
+
+          layer.add(darth);
+          stage.add(layer);
+
+          assert.equal(stage.toObject().className, 'Stage');
+
+          done();
+
+      };
+      imageObj.src = 'assets/darth-vader.jpg';
+  });
 });

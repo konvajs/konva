@@ -971,7 +971,11 @@
                 val = attrs[key];
                 if (!type._isFunction(val) && !type._isElement(val) && !(type._isObject(val) && type._hasMethods(val))) {
                     getter = this[GET + Kinetic.Util._capitalize(key)];
-                    defaultValue = getter ? getter.call({attrs: {}}) : null;
+                    // remove attr value so that we can extract the default value from the getter
+                    delete attrs[key];
+                    defaultValue = getter ? getter.call(this) : null;
+                    // restore attr value
+                    attrs[key] = val;
                     if (defaultValue !== val) {
                         obj.attrs[key] = val;
                     }
