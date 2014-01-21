@@ -594,9 +594,10 @@
          * @memberof Kinetic.Node.prototype
          * @returns {Boolean}
          */
-        shouldDrawHit: function() {
+        shouldDrawHit: function(canvas) {
             var layer = this.getLayer();
-            return  layer && layer.hitGraphEnabled() && this.isListening() && this.isVisible() && !Kinetic.isDragging();
+            return  ((canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())) 
+                && this.isListening() && this.isVisible() && !Kinetic.isDragging();
         },
         /**
          * show node
