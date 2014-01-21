@@ -310,24 +310,24 @@
     FromPolar(scratchData,imageData,{polarRotation:0});
   };
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'kaleidoscopePower', 2, function(val) {this._filterUpToDate = false;return val;});
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'kaleidoscopeAngle', 0, function(val) {this._filterUpToDate = false;return val;});
+  /**
+  * get/set kaleidoscope power
+  * @name kaleidoscopePower
+  * @method
+  * @memberof Kinetic.Node.prototype
+  * @param {Integer} power of kaleidoscope
+  * @returns {Integer}
+  */
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'kaleidoscopePower', 2, null, Kinetic.Factory.afterSetFilter);
 
-    /**
-    * get/set kaleidoscope power
-    * @name kaleidoscopePower
-    * @method
-    * @memberof Kinetic.Node.prototype
-    * @param {Integer} power of kaleidoscope
-    * @returns {Integer}
-    */
+  /**
+  * get/set kaleidoscope angle
+  * @name kaleidoscopeAngle
+  * @method
+  * @memberof Kinetic.Node.prototype
+  * @param {Integer} degrees
+  * @returns {Integer}
+  */
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'kaleidoscopeAngle', 0, null, Kinetic.Factory.afterSetFilter);
 
-    /**
-    * get/set kaleidoscope angle
-    * @name kaleidoscopeAngle
-    * @method
-    * @memberof Kinetic.Node.prototype
-    * @param {Integer} degrees
-    * @returns {Integer}
-    */
 })();

@@ -65,18 +65,7 @@
   * @returns {Integer}
   */
 
-  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'blue', 0, function(val) {
-      this._filterUpToDate = false;
-      if (val > 255) {
-          return 255;
-      }
-      else if (val < 0) {
-          return 0;
-      }
-      else {
-          return Math.round(val);
-      }
-  });
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'blue', 0, Kinetic.Validators.RGBComponent, Kinetic.Factory.afterSetFilter);
   /**
   * get/set filter blue value
   * @name blue

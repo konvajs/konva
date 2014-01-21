@@ -42,9 +42,9 @@
         Y = 'y';
 
     Kinetic.Factory = {
-        addGetterSetter: function(constructor, attr, def, validator) {
+        addGetterSetter: function(constructor, attr, def, validator, after) {
             this.addGetter(constructor, attr, def);
-            this.addSetter(constructor, attr, validator);
+            this.addSetter(constructor, attr, validator, after);
             this.addOverloadedGetterSetter(constructor, attr);
         },
         addGetter: function(constructor, attr, def) {
@@ -56,7 +56,7 @@
                 return val === undefined ? def : val;
             };
         },
-        addSetter: function(constructor, attr, validator) {
+        addSetter: function(constructor, attr, validator, after) {
             var method = SET + Kinetic.Util._capitalize(attr);
 
             constructor.prototype[method] = function(val) {
@@ -64,11 +64,16 @@
                     val = validator.call(this, val);
                 }
 
-                this._setAttr(attr, val); 
+                this._setAttr(attr, val);
+
+                if (after) {
+                    after.call(this);
+                }
+
                 return this;  
             };
         },
-        addComponentsGetterSetter: function(constructor, attr, components, validator) {
+        addComponentsGetterSetter: function(constructor, attr, components, validator, after) {
             var len = components.length,
                 capitalize = Kinetic.Util._capitalize,
                 getter = GET + capitalize(attr), 
@@ -102,6 +107,10 @@
 
                 this._fireChangeEvent(attr, oldVal, val);
                 
+                if (after) {
+                    after.call(this);
+                }
+
                 return this;  
             };
 
@@ -131,6 +140,9 @@
             for (key in methods) {
                 constructor.prototype[key] = constructor.prototype[methods[key]];
             }
+        },
+        afterSetFilter: function() {
+            this._filterUpToDate = false;
         }
     };
 

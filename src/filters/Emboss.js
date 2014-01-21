@@ -123,7 +123,7 @@
       } while (--y);
   };
 
-  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossStrength', 0.5, function(val) {this._filterUpToDate = false;return val;});
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossStrength', 0.5, null, Kinetic.Factory.afterSetFilter);
   /**
   * get/set emboss strength
   * @name embossStrength
@@ -133,7 +133,7 @@
   * @returns {Number}
   */
 
-  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossWhiteLevel', 0.5, function(val) {this._filterUpToDate = false;return val;});
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossWhiteLevel', 0.5, null, Kinetic.Factory.afterSetFilter);
   /**
   * get/set emboss white level
   * @name embossWhiteLevel
@@ -143,7 +143,7 @@
   * @returns {Number}
   */
 
-  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossDirection', 'top-left', function(val) {this._filterUpToDate = false;return val;});
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossDirection', 'top-left', null, Kinetic.Factory.afterSetFilter);
   /**
   * get/set emboss direction
   * @name embossDirection
@@ -154,7 +154,7 @@
   * @returns {String}
   */
 
-  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossBlend', false, function(val) {this._filterUpToDate = false;return val;});
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossBlend', false, null, Kinetic.Factory.afterSetFilter);
   /**
   * get/set emboss blend
   * @name embossBlend
