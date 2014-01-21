@@ -2,29 +2,29 @@
      * @param {Integer} [config.fillRed] set fill red component
      * @param {Integer} [config.fillGreen] set fill green component
      * @param {Integer} [config.fillBlue] set fill blue component
+     * @param {Integer} [config.fillAlpha] set fill alpha component
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
-     * @param {Number|Array|Object} [config.fillPatternOffset] number, array with two elements, or object with x and y component
+     * @param {Object} [config.fillPatternOffset] object with x and y component
      * @param {Number} [config.fillPatternOffsetX] 
      * @param {Number} [config.fillPatternOffsetY] 
-     * @param {Number|Array|Object} [config.fillPatternScale] number, array with two elements, or object with x and y component
+     * @param {Object} [config.fillPatternScale] object with x and y component
      * @param {Number} [config.fillPatternScaleX]
      * @param {Number} [config.fillPatternScaleY]
      * @param {Number} [config.fillPatternRotation]
-     * @param {String} [config.fillPatternRepeat] can be 'repeat', 'repeat-x', 'repeat-y', or 'no-repeat'.  The default is 'no-repeat'
-     * @param {Number|Array|Object} [config.fillLinearGradientStartPoint] number, array with two elements, or object with x and y component
+     * @param {String} [config.fillPatternRepeat] can be "repeat", "repeat-x", "repeat-y", or "no-repeat".  The default is "no-repeat"
+     * @param {Object} [config.fillLinearGradientStartPoint] object with x and y component
      * @param {Number} [config.fillLinearGradientStartPointX]
      * @param {Number} [config.fillLinearGradientStartPointY]
-     * @param {Number|Array|Object} [config.fillLinearGradientEndPoint] number, array with two elements, or object with x and y component
-     * @param {Number|Array|Object} [config.fillLinearGradientEndPoint] number, array with two elements, or object with x and y component
+     * @param {Object} [config.fillLinearGradientEndPoint] object with x and y component
      * @param {Number} [config.fillLinearGradientEndPointX]
      * @param {Number} [config.fillLinearGradientEndPointY]
      * @param {Array} [config.fillLinearGradientColorStops] array of color stops
-     * @param {Number|Array|Object} [config.fillRadialGradientStartPoint] number, array with two elements, or object with x and y component
+     * @param {Object} [config.fillRadialGradientStartPoint] object with x and y component
      * @param {Number} [config.fillRadialGradientStartPointX]
      * @param {Number} [config.fillRadialGradientStartPointY]
-     * @param {Number|Array|Object} [config.fillRadialGradientEndPoint] number, array with two elements, or object with x and y component
+     * @param {Object} [config.fillRadialGradientEndPoint] object with x and y component
      * @param {Number} [config.fillRadialGradientEndPointX] 
      * @param {Number} [config.fillRadialGradientEndPointY] 
      * @param {Number} [config.fillRadialGradientStartRadius]
@@ -36,6 +36,7 @@
      * @param {Integer} [config.strokeRed] set stroke red component
      * @param {Integer} [config.strokeGreen] set stroke green component
      * @param {Integer} [config.strokeBlue] set stroke blue component
+     * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
@@ -44,11 +45,12 @@
      * @param {String} [config.lineCap] can be butt, round, or sqare.  The default
      *  is butt
      * @param {String} [config.shadowColor]
-     * @param {Integer} [config.shadowColorRed] set shadowColor red component
-     * @param {Integer} [config.shadowColorGreen] set shadowColor green component
-     * @param {Integer} [config.shadowColorBlue] set shadowColor blue component
+     * @param {Integer} [config.shadowColorRed] set shadow color red component
+     * @param {Integer} [config.shadowColorGreen] set shadow color green component
+     * @param {Integer} [config.shadowColorBlue] set shadow color blue component
+     * @param {Integer} [config.shadowColorAlpha] set shadow color alpha component
      * @param {Number} [config.shadowBlur]
-     * @param {Object} [config.shadowOffset]
+     * @param {Object} [config.shadowOffset] object with x and y component
      * @param {Number} [config.shadowOffsetX]
      * @param {Number} [config.shadowOffsetY]
      * @param {Number} [config.shadowOpacity] shadow opacity.  Can be any real number
