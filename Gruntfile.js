@@ -185,11 +185,16 @@ module.exports = function(grunt) {
       all: ['src/**/*.js']
     },
     copy: {
-      prod: {
+      prod1: {
         nonull: true,
         src: 'dist/kinetic-v<%= pkg.version %>.min.js',
-        dest: 'kinetic-v<%= pkg.version %>.min.js',
+        dest: 'kinetic.min.js',
       },
+      prod2: {
+        nonull: true,
+        src: 'dist/kinetic-v<%= pkg.version %>.js',
+        dest: 'kinetic.js',
+      }
     }
   };
 
@@ -215,6 +220,16 @@ module.exports = function(grunt) {
   // Tasks
   grunt.registerTask('dev', ['clean', 'concat:dev', 'replace:dev']);
   grunt.registerTask('beta', ['clean', 'concat:beta', 'replace:beta']);
-  grunt.registerTask('full', ['clean', 'concat:prod', 'uglify', 'replace:prod1', 'replace:prod2', 'replace:prod3', 'copy', 'replace:prod4']);
+  grunt.registerTask('full', [
+    'clean', 
+    'concat:prod', 
+    'uglify', 
+    'replace:prod1', 
+    'replace:prod2', 
+    'replace:prod3', 
+    'replace:prod4',
+    'copy:prod1', 
+    'copy:prod2'
+  ]);
   grunt.registerTask('hint', ['clean', 'concat:dev', 'replace:dev', 'jshint']);
 };
