@@ -362,35 +362,38 @@
         _mousemove: function(evt) {
             this._setPointerPosition(evt);
             var dd = Kinetic.DD,
+                shape;
+
+            if (!Kinetic.isDragging()) {
                 shape = this.getIntersection(this.getPointerPosition());
 
-            if(shape && shape.isListening()) {
-                if(!Kinetic.isDragging() && (!this.targetShape || this.targetShape._id !== shape._id)) {
-                    if(this.targetShape) {
-                        this.targetShape._fireAndBubble(MOUSEOUT, evt, shape);
-                        this.targetShape._fireAndBubble(MOUSELEAVE, evt, shape);
+                if(shape && shape.isListening()) {
+                    if(!this.targetShape || this.targetShape._id !== shape._id) {
+                        if(this.targetShape) {
+                            this.targetShape._fireAndBubble(MOUSEOUT, evt, shape);
+                            this.targetShape._fireAndBubble(MOUSELEAVE, evt, shape);
+                        }
+                        shape._fireAndBubble(MOUSEOVER, evt, this.targetShape);
+                        shape._fireAndBubble(MOUSEENTER, evt, this.targetShape);
+                        this.targetShape = shape;
                     }
-                    shape._fireAndBubble(MOUSEOVER, evt, this.targetShape);
-                    shape._fireAndBubble(MOUSEENTER, evt, this.targetShape);
-                    this.targetShape = shape;
+                    else {
+                        shape._fireAndBubble(MOUSEMOVE, evt);
+                    }
                 }
+                /*
+                 * if no shape was detected, clear target shape and try
+                 * to run mouseout from previous target shape
+                 */
                 else {
-                    shape._fireAndBubble(MOUSEMOVE, evt);
+                  if(this.targetShape) {
+                    this.targetShape._fireAndBubble(MOUSEOUT, evt);
+                    this.targetShape._fireAndBubble(MOUSELEAVE, evt);
+                    this.targetShape = null;
+                  }
                 }
             }
-            /*
-             * if no shape was detected, clear target shape and try
-             * to run mouseout from previous target shape
-             */
-            else {
-              if(this.targetShape && !Kinetic.isDragging()) {
-                this.targetShape._fireAndBubble(MOUSEOUT, evt);
-                this.targetShape._fireAndBubble(MOUSELEAVE, evt);
-                this.targetShape = null;
-              }
-
-            }
-
+            
             // content event
             this._fire(CONTENT_MOUSEMOVE, evt);
 
