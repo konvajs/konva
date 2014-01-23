@@ -18,5 +18,5 @@
     "test",
     "tests"
   ],
-  "main": "kinetic.min.js"
+  "main": "kinetic.js"
 }
