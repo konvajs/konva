@@ -131,6 +131,10 @@ suite('Shape', function() {
         shape.setShadowOpacity(0.5);
 
         assert.equal(shape.hasShadow(), true, 'shape should have a shadow because opacity is nonzero');
+
+        shape.setShadowEnabled(false);
+
+        assert.equal(shape.hasShadow(), false, 'shape should not have a shadow because it is not enabled');
     });
 
     // ======================================================
