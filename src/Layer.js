@@ -52,7 +52,7 @@
         getIntersection: function(pos) {
             var obj, i, intersectionOffset, shape;
 
-            if(this.isVisible()) {
+            if(this.hitGraphEnabled() && this.isVisible()) {
                 for (i=0; i<INTERSECTION_OFFSETS_LEN; i++) {
                     intersectionOffset = INTERSECTION_OFFSETS[i];
                     obj = this._getIntersection({
