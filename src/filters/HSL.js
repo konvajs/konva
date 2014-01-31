@@ -1,14 +1,6 @@
 (function () {
 
-  /**
-   * HSV Filter. Adjusts the hue, saturation and value
-   * @function
-   * @memberof Kinetic.Filters
-   * @param {Object} imageData
-   * @author ippo615
-   */
-
-  Kinetic.Filters.HSV = function (imageData) {
+  HSV = function (imageData) {
     var data = imageData.data,
         nPixels = data.length,
         v = Math.pow(2,this.value()),
@@ -87,4 +79,40 @@
   * @returns {Number}
   */
 
+  Kinetic.Factory.addGetterSetter(Kinetic.Node, 'luminance', 0, null, Kinetic.Factory.afterSetFilter);
+  /**
+  * get/set hsl luminance
+  * @name value
+  * @method
+  * @memberof Kinetic.Node.prototype
+  * @param {Number} value 0 is no change, -1.0 halves the value, 1.0 doubles, etc..
+  * @returns {Number}
+  */
+
+  /**
+   * HSL Filter. Adjusts the hue, saturation and luminance (or lightness)
+   * @function
+   * @memberof Kinetic.Filters
+   * @param {Object} imageData
+   * @author ippo615
+   */
+
+  Kinetic.Filters.HSL = function (imageData) {  
+    // Hue stays the same but saturation, value and brightness will be
+    // adjusted to match common photo-editing software's extreme values
+    var oldSaturation = this.saturation(),
+        oldBrightness = this.brightness(),
+        oldValue = this.value();
+
+    this.saturation(oldSaturation);
+    this.brightness(0.5*this.luminance());
+    this.value(0.0);
+
+    HSV.call(this,imageData);
+    Kinetic.Filters.Brighten.call(this,imageData);
+
+    this.saturation(oldSaturation);
+    this.brightness(oldBrightness);
+    this.value(oldValue);
+  };
 })();
