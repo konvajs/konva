@@ -86,6 +86,15 @@
             dd.offset.x = pos.x - ap.x;
             dd.offset.y = pos.y - ap.y;
             dd.anim.setLayers(layer || this.getLayers());
+
+            if (!dd.anim.func) {
+                dd.anim.func = function(frame) {
+                    var b = dd.anim.dirty;
+                    dd.anim.dirty = false;
+                    return b;
+                }
+            }
+
             dd.anim.start();
 
             this._setDragPosition();
@@ -106,6 +115,14 @@
         }
 
         this.setAbsolutePosition(newNodePos);
+
+        if (!this._lastPos ||
+            this._lastPos.x !== newNodePos.x ||
+            this._lastPos.y !== newNodePos.y) {
+            dd.anim.dirty = true;
+        }
+
+        this._lastPos = newNodePos;
     };
 
     /**
