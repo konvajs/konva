@@ -1,7 +1,11 @@
 (function() {
     Kinetic.DD = {
         // properties
-        anim: new Kinetic.Animation(),
+        anim: new Kinetic.Animation(function(frame) {
+                    var b = this.dirty;
+                    this.dirty = false;
+                    return b;
+                }),
         isDragging: false,
         offset: {
             x: 0,
@@ -86,15 +90,6 @@
             dd.offset.x = pos.x - ap.x;
             dd.offset.y = pos.y - ap.y;
             dd.anim.setLayers(layer || this.getLayers());
-
-            if (!dd.anim.func) {
-                dd.anim.func = function(frame) {
-                    var b = dd.anim.dirty;
-                    dd.anim.dirty = false;
-                    return b;
-                }
-            }
-
             dd.anim.start();
 
             this._setDragPosition();
