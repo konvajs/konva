@@ -48,53 +48,13 @@
       sin = Math.sin(theta*conversion);
       cos = Math.cos(theta*conversion);
       for( radius=0; radius<rSize; radius+=1 ){
-        x = xMid+rMax*radius/rSize*cos;
-        y = yMid+rMax*radius/rSize*sin;
-        if( x <= 1 ){ x = 1; }
-        if( x >= xSize-0.5 ){ x = xSize-1; }
-        if( y <= 1 ){ y = 1; }
-        if( y >= ySize-0.5 ){ y = ySize-1; }
-
-        // Interpolate x and y by going +-0.5 around the pixel's central point
-        // this gives us the 4 nearest pixels to our 1x1 non-aligned pixel.
-        // We average the vaules of those pixels based on how much of our
-        // non-aligned pixel overlaps each of them.
-        x1 = x - 0.5;
-        x2 = x + 0.5;
-        x1i = Math.floor(x1);
-        x2i = Math.floor(x2);
-        y1 = y - 0.5;
-        y2 = y + 0.5;
-        y1i = Math.floor(y1);
-        y2i = Math.floor(y2);
-
-        scale = (1-(x1-x1i))*(1-(y1-y1i));
-        i = (y1i*xSize + x1i)*4;
-        r = srcPixels[i+0]*scale;
-        g = srcPixels[i+1]*scale;
-        b = srcPixels[i+2]*scale;
-        a = srcPixels[i+3]*scale;
-
-        scale = (1-(x1-x1i))*(y2-y2i);
-        i = (y2i*xSize + x1i)*4;
-        r += srcPixels[i+0]*scale;
-        g += srcPixels[i+1]*scale;
-        b += srcPixels[i+2]*scale;
-        a += srcPixels[i+3]*scale;
-
-        scale = (x2-x2i)*(y2-y2i);
-        i = (y2i*xSize + x2i)*4;
-        r += srcPixels[i+0]*scale;
-        g += srcPixels[i+1]*scale;
-        b += srcPixels[i+2]*scale;
-        a += srcPixels[i+3]*scale;
-
-        scale = (x2-x2i)*(1-(y1-y1i));
-        i = (y1i*xSize + x2i)*4;
-        r += srcPixels[i+0]*scale;
-        g += srcPixels[i+1]*scale;
-        b += srcPixels[i+2]*scale;
-        a += srcPixels[i+3]*scale;
+        x = Math.floor(xMid+rMax*radius/rSize*cos);
+        y = Math.floor(yMid+rMax*radius/rSize*sin);
+        i = (y*xSize + x)*4;
+        r = srcPixels[i+0];
+        g = srcPixels[i+1];
+        b = srcPixels[i+2];
+        a = srcPixels[i+3];
 
         // Store it
         //i = (theta * xSize + radius) * 4;
@@ -163,47 +123,13 @@
         radius = Math.sqrt(dx*dx + dy*dy)*rSize/rMax;
         theta = (Math.atan2(dy,dx)*180/Math.PI + 360 + phaseShift)%360;
         theta = theta*tSize/360;
-
-        // Interpolate x and y by going +-0.5 around the pixel's central point
-        // this gives us the 4 nearest pixels to our 1x1 non-aligned pixel.
-        // We average the vaules of those pixels based on how much of our
-        // non-aligned pixel overlaps each of them.
-        x1 = theta - 0.5; 
-        x2 = theta + 0.5; 
-        x1i = Math.floor(x1);
-        x2i = Math.floor(x2);
-        y1 = radius - 0.5;
-        y2 = radius + 0.5;
-        y1i = Math.floor(y1);
-        y2i = Math.floor(y2);
-
-        scale = (1-(x1-x1i))*(1-(y1-y1i));
-        i = (y1i*xSize + x1i)*4;
-        r = srcPixels[i+0]*scale;
-        g = srcPixels[i+1]*scale;
-        b = srcPixels[i+2]*scale;
-        a = srcPixels[i+3]*scale;
-
-        scale = (1-(x1-x1i))*(y2-y2i);
-        i = (y2i*xSize + x1i)*4;
-        r += srcPixels[i+0]*scale;
-        g += srcPixels[i+1]*scale;
-        b += srcPixels[i+2]*scale;
-        a += srcPixels[i+3]*scale;
-
-        scale = (x2-x2i)*(y2-y2i);
-        i = (y2i*xSize + x2i)*4;
-        r += srcPixels[i+0]*scale;
-        g += srcPixels[i+1]*scale;
-        b += srcPixels[i+2]*scale;
-        a += srcPixels[i+3]*scale;
-
-        scale = (x2-x2i)*(1-(y1-y1i));
-        i = (y1i*xSize + x2i)*4;
-        r += srcPixels[i+0]*scale;
-        g += srcPixels[i+1]*scale;
-        b += srcPixels[i+2]*scale;
-        a += srcPixels[i+3]*scale;
+        x1 = Math.floor(theta);
+        y1 = Math.floor(radius);
+        i = (y1*xSize + x1)*4;
+        r = srcPixels[i+0];
+        g = srcPixels[i+1];
+        b = srcPixels[i+2];
+        a = srcPixels[i+3];
 
         // Store it
         i = (y*xSize + x)*4;
