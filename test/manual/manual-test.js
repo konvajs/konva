@@ -1,4 +1,80 @@
 suite('Manual', function() {
+
+    // ======================================================
+    test('oscillation animation', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+
+      var hexagon = new Kinetic.RegularPolygon({
+        x: stage.width()/2,
+        y: stage.height()/2,
+        sides: 6,
+        radius: 70,
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 4
+      });
+
+
+      // var hexagon = new Kinetic.Rect({
+      //   x: stage.width()/2,
+      //   y: stage.height()/2,
+      //   width: 100,
+      //   height: 50,
+      //   fill: 'red',
+      //   stroke: 'black',
+      //   strokeWidth: 4
+      // });
+
+      layer.add(hexagon);
+      stage.add(layer);
+
+      var amplitude = 150;
+      var period = 2000;
+      // in ms
+      var centerX = stage.width()/2;
+
+      var anim = new Kinetic.Animation(function(frame) {
+        hexagon.setX(amplitude * Math.sin(new Date().getTime() * 2 * Math.PI / period) + centerX);
+      }, layer);
+
+      anim.start();
+
+    });
+
+    // ======================================================
+    test('rotation animation', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+        var rect;
+
+        for (var n=0; n<100; n++) {
+            rect = new Kinetic.Rect({
+                x: Math.random() * 400,
+                y: Math.random() * 400,
+                width: 100,
+                height: 50,
+                fill: 'red',
+                stroke: 'black',
+                strokeWidth: 4
+            });
+
+            layer.add(rect);
+        }
+
+
+
+        stage.add(layer);
+
+        var velocity = 360; // 1 rev per second
+
+        var anim = new Kinetic.Animation(function(frame) {
+            layer.find('Rect').rotate(velocity * frame.timeDiff / 1000);
+        }, layer);
+
+        anim.start();
+    });
+
     // ======================================================
     test('tween node', function() {
         var stage = addStage();

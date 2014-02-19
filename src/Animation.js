@@ -1,6 +1,36 @@
 (function() {
     var BATCH_DRAW_STOP_TIME_DIFF = 500;
 
+    var now =(function() {
+      if (window.performance && window.performance.now) {
+        return function() {
+          return window.performance.now();
+        }
+      }
+      else {
+        return function() {
+          return new Date().getTime();
+        } 
+      }
+    })();
+
+    var RAF = (function() {
+        return window.requestAnimationFrame
+            || window.webkitRequestAnimationFrame
+            || window.mozRequestAnimationFrame
+            || window.oRequestAnimationFrame
+            || window.msRequestAnimationFrame
+            || FRAF;
+    })();
+
+    function FRAF(callback) {
+        window.setTimeout(callback, 1000 / 60);
+    }
+
+    function requestAnimFrame() {
+        return RAF.apply(window, arguments);
+    }
+    
     /**
      * Animation constructor.  A stage is used to contain multiple layers and handle
      * @constructor
@@ -24,13 +54,14 @@
      * anim.start();
      */
     Kinetic.Animation = function(func, layers) {
+        var Anim = Kinetic.Animation;
         this.func = func;
         this.setLayers(layers);
-        this.id = Kinetic.Animation.animIdCounter++;
+        this.id = Anim.animIdCounter++;
         this.frame = {
             time: 0,
             timeDiff: 0,
-            lastTime: new Date().getTime()
+            lastTime: now()
         };
     };
     /*
@@ -103,8 +134,12 @@
          * @memberof Kinetic.Animation.prototype
          */
         isRunning: function() {
-            var a = Kinetic.Animation, animations = a.animations;
-            for(var n = 0; n < animations.length; n++) {
+            var a = Kinetic.Animation, 
+                animations = a.animations,
+                len = animations.length,
+                n;
+
+            for(n = 0; n < len; n++) {
                 if(animations[n].id === this.id) {
                     return true;
                 }
@@ -117,10 +152,11 @@
          * @memberof Kinetic.Animation.prototype
          */
         start: function() {
+            var Anim = Kinetic.Animation;
             this.stop();
             this.frame.timeDiff = 0;
-            this.frame.lastTime = new Date().getTime();
-            Kinetic.Animation._addAnimation(this);
+            this.frame.lastTime = now();
+            Anim._addAnimation(this);
         },
         /**
          * stop animation
@@ -146,8 +182,12 @@
         this._handleAnimation();
     };
     Kinetic.Animation._removeAnimation = function(anim) {
-        var id = anim.id, animations = this.animations, len = animations.length;
-        for(var n = 0; n < len; n++) {
+        var id = anim.id, 
+            animations = this.animations, 
+            len = animations.length,
+            n;
+
+        for(n = 0; n < len; n++) {
             if(animations[n].id === id) {
                 this.animations.splice(n, 1);
                 break;
@@ -175,7 +215,7 @@
             layers = anim.layers;
             func = anim.func;
 
-            anim._updateFrameObject(new Date().getTime());
+            anim._updateFrameObject(now());
             layersLen = layers.length;
 
             for (i=0; i<layersLen; i++) {
@@ -196,15 +236,14 @@
         }
     };
     Kinetic.Animation._animationLoop = function() {
-        var that = this;
-        if(this.animations.length > 0) {
-            this._runFrames();
-            Kinetic.Animation.requestAnimFrame(function() {
-                that._animationLoop();
-            });
+        var Anim = Kinetic.Animation;
+
+        if(Anim.animations.length) {
+            requestAnimFrame(Anim._animationLoop);
+            Anim._runFrames();
         }
         else {
-            this.animRunning = false;
+            Anim.animRunning = false;
         }
     };
     Kinetic.Animation._handleAnimation = function() {
@@ -213,23 +252,6 @@
             this.animRunning = true;
             that._animationLoop();
         }
-    };
-    var RAF = (function() {
-        return window.requestAnimationFrame
-            || window.webkitRequestAnimationFrame
-            || window.mozRequestAnimationFrame
-            || window.oRequestAnimationFrame
-            || window.msRequestAnimationFrame
-            || FRAF;
-    })();
-
-    function FRAF(callback) {
-        window.setTimeout(callback, 1000 / 60);
-    }
-
-    Kinetic.Animation.requestAnimFrame = function(callback) {
-        var raf = Kinetic.isDragging ? FRAF : RAF;
-        raf(callback);
     };
 
     var moveTo = Kinetic.Node.prototype.moveTo;
@@ -243,17 +265,18 @@
      * @memberof Kinetic.Layer.prototype
      */
     Kinetic.Layer.prototype.batchDraw = function() {
-        var that = this;
+        var that = this,
+            Anim = Kinetic.Animation;
 
         if (!this.batchAnim) {
-            this.batchAnim = new Kinetic.Animation(function() {
-              if (that.lastBatchDrawTime && new Date().getTime() - that.lastBatchDrawTime > BATCH_DRAW_STOP_TIME_DIFF) {
+            this.batchAnim = new Anim(function() {
+              if (that.lastBatchDrawTime && now() - that.lastBatchDrawTime > BATCH_DRAW_STOP_TIME_DIFF) {
                 that.batchAnim.stop();
               }
             }, this);
         }
 
-        this.lastBatchDrawTime = new Date().getTime();
+        this.lastBatchDrawTime = now();
 
         if (!this.batchAnim.isRunning()) {
             this.draw();
