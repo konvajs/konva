@@ -380,6 +380,12 @@
             }
             return this;
         },
+        dispatchEvent: function(evt) {
+            this.fire(evt.type, evt);
+        },
+        addEventListener: function() {
+            this.on.apply(this, arguments);
+        },
         /**
          * remove self from parent, but don't destroy
          * @method
