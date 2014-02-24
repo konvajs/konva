@@ -45,10 +45,10 @@
      * @param {String} [config.lineCap] can be butt, round, or sqare.  The default
      *  is butt
      * @param {String} [config.shadowColor]
-     * @param {Integer} [config.shadowColorRed] set shadow color red component
-     * @param {Integer} [config.shadowColorGreen] set shadow color green component
-     * @param {Integer} [config.shadowColorBlue] set shadow color blue component
-     * @param {Integer} [config.shadowColorAlpha] set shadow color alpha component
+     * @param {Integer} [config.shadowRed] set shadow color red component
+     * @param {Integer} [config.shadowGreen] set shadow color green component
+     * @param {Integer} [config.shadowBlue] set shadow color blue component
+     * @param {Integer} [config.shadowAlpha] set shadow color alpha component
      * @param {Number} [config.shadowBlur]
      * @param {Object} [config.shadowOffset] object with x and y component
      * @param {Number} [config.shadowOffsetX]
