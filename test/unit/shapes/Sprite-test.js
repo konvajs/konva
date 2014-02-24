@@ -117,8 +117,8 @@ suite('Sprite', function() {
             setTimeout(function(){
                 sprite.frameRate(52);
                 assert.equal(sprite.anim.isRunning(), true);
-                // for this moment should thick 4 times
-                assert.equal(sprite.frameIndex(), 4);
+                // for this moment should tick more than 2 times
+                assert.equal(sprite.frameIndex() > 2, true);
                 done();
             }, 68);
 
