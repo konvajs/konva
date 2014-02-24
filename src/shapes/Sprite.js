@@ -61,15 +61,12 @@
                 this.frameIndex(0);
             });
             // smooth change for frameRate
-            var that = this;
             this.on('frameRateChange.kinetic', function() {
                 if (!this.anim.isRunning()) {
                     return;
                 }
                 clearInterval(this.interval);
-                this.interval = setInterval(function() {
-                    that._updateIndex();
-                }, 1000 / this.getFrameRate());
+                this._setInterval();
             });
 
             this.sceneFunc(this._sceneFunc);
@@ -106,13 +103,18 @@
         _useBufferCanvas: function() {
             return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasStroke();
         },
+        _setInterval: function() {
+            var that = this;
+            this.interval = setInterval(function() {
+                that._updateIndex();
+            }, 1000 / this.getFrameRate());
+        },
         /**
          * start sprite animation
          * @method
          * @memberof Kinetic.Sprite.prototype
          */
         start: function() {
-            var that = this;
             var layer = this.getLayer();
 
             /*
@@ -122,11 +124,7 @@
              *  redraw
              */
             this.anim.setLayers(layer);
-
-            this.interval = setInterval(function() {
-                that._updateIndex();
-            }, 1000 / this.getFrameRate());
-
+            this._setInterval();
             this.anim.start();
         },
         /**
