@@ -115,7 +115,7 @@
         * @param {Number} [config.y]
         * @param {Number} [config.width]
         * @param {Number} [config.height]
-        * @param {Boolean} [config.showBorder] when set to true, a red border will be drawn around the cached
+        * @param {Boolean} [config.drawBorder] when set to true, a red border will be drawn around the cached
         *  region for debugging purposes
         * @returns {Kinetic.Node}
         * @example
