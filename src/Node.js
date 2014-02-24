@@ -1258,8 +1258,8 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {Object} size
-         * @param {Number} width
-         * @param {Number} height
+         * @param {Number} size.width
+         * @param {Number} size.height
          * @returns {Kinetic.Node}
          */
         setSize: function(size) {
