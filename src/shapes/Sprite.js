@@ -60,6 +60,17 @@
                 // reset index when animation changes
                 this.frameIndex(0);
             });
+            // smooth change for frameRate
+            var that = this;
+            this.on('frameRateChange.kinetic', function() {
+                if (!this.anim.isRunning()) {
+                    return;
+                }
+                clearInterval(this.interval);
+                this.interval = setInterval(function() {
+                    that._updateIndex();
+                }, 1000 / this.getFrameRate());
+            });
 
             this.sceneFunc(this._sceneFunc);
             this.hitFunc(this._hitFunc);

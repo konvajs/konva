@@ -72,4 +72,60 @@ suite('Sprite', function() {
         };
         imageObj.src = 'assets/scorpion-sprite.png';
     });
+    test("can change frame rate on fly", function(done){
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = addStage();
+            var layer = new Kinetic.Layer();
+
+
+            var sprite = new Kinetic.Sprite({
+                x: 200,
+                y: 50,
+                image: imageObj,
+                animation: 'standing',
+                animations: {
+                    standing: [
+                        0, 0, 49, 109,
+                        52, 0, 49, 109,
+                        105, 0, 49, 109,
+                        158, 0, 49, 109,
+                        210, 0, 49, 109,
+                        262, 0, 49, 109
+                    ]           
+                },
+                frameRate: 50,
+                draggable: true,
+                shadowColor: 'black',
+                shadowBlur: 3,
+                shadowOffset: {x: 3, y:1},
+                shadowOpacity: 0.3
+            });
+
+            layer.add(sprite);
+            stage.add(layer);
+            assert.equal(sprite.frameRate(), 50);
+            setTimeout(function(){
+                sprite.frameRate(100);
+                assert.equal(sprite.frameRate(), 100);
+                // don't run animation after change frame rate
+                assert.equal(sprite.anim.isRunning(), false);
+
+                sprite.start();
+            }, 23);
+
+            setTimeout(function(){
+                sprite.frameRate(52);
+                assert.equal(sprite.anim.isRunning(), true);
+                // for this moment should thick 4 times
+                assert.equal(sprite.frameIndex(), 4);
+                done();
+            }, 68);
+
+
+            
+        };
+        imageObj.src = 'assets/scorpion-sprite.png';
+    });
+
 });
