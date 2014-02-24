@@ -154,7 +154,7 @@
         /**
          * clear scene and hit canvas contexts tied to the layer
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Kinetic.Layer.prototype
          * @param {Object} [bounds]
          * @param {Number} [bounds.x]
          * @param {Number} [bounds.y]
