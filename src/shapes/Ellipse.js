@@ -8,7 +8,7 @@
      * @constructor
      * @augments Kinetic.Shape
      * @param {Object} config
-     * @param {Number|Array|Object} config.radius defines x and y radius
+     * @param {Object} config.radius defines x and y radius
      * @@ShapeParams
      * @@NodeParams
      */
