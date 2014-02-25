@@ -67,6 +67,7 @@ suite('Text', function(){
             fontSize: 50,
             fontFamily: 'Calibri',
             fontStyle: 'normal',
+            fontVariant: 'normal',
             fill: '#888',
             stroke: '#333',
             align: 'right',
@@ -97,6 +98,7 @@ suite('Text', function(){
         assert.equal(text.getFontSize(), 50);
         assert.equal(text.getFontFamily(), 'Calibri');
         assert.equal(text.getFontStyle(), 'normal');
+        assert.equal(text.getFontVariant(), 'normal');
         assert.equal(text.getFill(), '#888');
         assert.equal(text.getStroke(), '#333');
         assert.equal(text.getAlign(), 'right');
@@ -117,6 +119,7 @@ suite('Text', function(){
         text.setFontSize(10);
         text.setFontFamily('Arial');
         text.setFontStyle('bold');
+        text.setFontVariant('small-caps');
         text.setFill('green');
         text.setStroke('yellow');
         text.setAlign('left');
@@ -132,6 +135,7 @@ suite('Text', function(){
         assert.equal(text.getFontSize(), 10);
         assert.equal(text.getFontFamily(), 'Arial');
         assert.equal(text.getFontStyle(), 'bold');
+        assert.equal(text.getFontVariant(), 'small-caps');
         assert.equal(text.getFill(), 'green');
         assert.equal(text.getStroke(), 'yellow');
         assert.equal(text.getAlign(), 'left');
