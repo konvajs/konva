@@ -1,4 +1,5 @@
 mocha.ui('tdd');
+mocha.setup("bdd");
 var assert = chai.assert,
     kineticContainer = document.getElementById('kinetic-container'),
     origAssertEqual = assert.equal,
