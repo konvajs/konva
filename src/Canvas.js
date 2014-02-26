@@ -86,10 +86,8 @@
          *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
          */
         setPixelRatio: function(pixelRatio) {
-            var width = this.getWidth() / this.pixelRatio,
-                height = this.getHeight() / this.pixelRatio;
             this.pixelRatio = pixelRatio;
-            this.setSize(width, height);
+            this.setSize(this.getWidth(), this.getHeight());
         },
         /**
          * set width
