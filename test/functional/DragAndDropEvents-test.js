@@ -1,6 +1,6 @@
 suite('DragAndDropEvents', function() {
     // ======================================================
-    test('test dragstart, dragmove, dragend', function() {
+    test('test dragstart, dragmove, dragend', function(done) {
         var stage = addStage();
 
         var layer = new Kinetic.Layer();
@@ -89,51 +89,55 @@ suite('DragAndDropEvents', function() {
         assert(!Kinetic.isDragging(), ' isDragging() should be false 5');
         assert(Kinetic.isDragReady(), ' isDragReady()) should be true 6');
 
-        stage._mousemove({
-            clientX: 100,
-            clientY: 98 + top
-        });
+        setTimeout(function() {
+            stage._mousemove({
+                clientX: 100,
+                clientY: 98 + top
+            });
 
-        assert(Kinetic.isDragging(), ' isDragging() should be true 7');
-        assert(Kinetic.isDragReady(), ' isDragReady()) should be true 8');
+            assert(Kinetic.isDragging(), ' isDragging() should be true 7');
+            assert(Kinetic.isDragReady(), ' isDragReady()) should be true 8');
 
-        assert(dragStart, 'dragstart event was not triggered 9');
-        //assert.equal(dragMove, 'dragmove event was not triggered');
-        assert(!dragEnd, 'dragend event should not have been triggered 10');
+            assert(dragStart, 'dragstart event was not triggered 9');
+            //assert.equal(dragMove, 'dragmove event was not triggered');
+            assert(!dragEnd, 'dragend event should not have been triggered 10');
 
-        Kinetic.DD._endDragBefore();
-        stage._mouseup({
-            clientX: 100,
-            clientY: 98 + top
-        });
-        Kinetic.DD._endDragAfter({dragEndNode:circle});
+            Kinetic.DD._endDragBefore();
+            stage._mouseup({
+                clientX: 100,
+                clientY: 98 + top
+            });
+            Kinetic.DD._endDragAfter({dragEndNode:circle});
 
-        assert(dragStart, 'dragstart event was not triggered 11');
-        assert(dragMove, 'dragmove event was not triggered 12');
-        assert(dragEnd, 'dragend event was not triggered 13');
+            assert(dragStart, 'dragstart event was not triggered 11');
+            assert(dragMove, 'dragmove event was not triggered 12');
+            assert(dragEnd, 'dragend event was not triggered 13');
 
-        assert.equal(events.toString(), 'mouseup,dragend', 'mouseup should occur before dragend 14');
-
-
-        assert(!Kinetic.isDragging(), ' isDragging() should be false 15');
-        assert(!Kinetic.isDragReady(), ' isDragReady()) should be false 16');
-
-        //console.log(greenCircle.getPosition());
-        //console.log(circle.getPosition());
+            assert.equal(events.toString(), 'mouseup,dragend', 'mouseup should occur before dragend 14');
 
 
+            assert(!Kinetic.isDragging(), ' isDragging() should be false 15');
+            assert(!Kinetic.isDragReady(), ' isDragReady()) should be false 16');
 
-        assert.equal(greenCircle.getX(), 40, 'green circle x should be 40');
-        assert.equal(greenCircle.getY(), 40, 'green circle y should be 40');
-        assert.equal(circle.getX(), 100, 'circle x should be 100');
-        assert.equal(circle.getY(), 100, 'circle y should be 100');
+            //console.log(greenCircle.getPosition());
+            //console.log(circle.getPosition());
 
-        showHit(layer);
+
+
+            assert.equal(greenCircle.getX(), 40, 'green circle x should be 40');
+            assert.equal(greenCircle.getY(), 40, 'green circle y should be 40');
+            assert.equal(circle.getX(), 100, 'circle x should be 100');
+            assert.equal(circle.getY(), 100, 'circle y should be 100');
+
+            showHit(layer);
+
+            done();
+        }, 20);
 
     });
 
     // ======================================================
-    test('destroy shape while dragging', function() {
+    test('destroy shape while dragging', function(done) {
         var stage = addStage();
         var layer = new Kinetic.Layer();
 
@@ -194,31 +198,33 @@ suite('DragAndDropEvents', function() {
 
         assert(!circle.isDragging(), 'circle should not be dragging');
 
-        stage._mousemove({
-            clientX: 100,
-            clientY: 98 + top
-        });
+        setTimeout(function() {
+            stage._mousemove({
+                clientX: 100,
+                clientY: 98 + top
+            });
 
 
-        assert(circle.isDragging(), 'circle should be dragging');
-        assert(!dragEnd, 'dragEnd should not have fired yet');
+            assert(circle.isDragging(), 'circle should be dragging');
+            assert(!dragEnd, 'dragEnd should not have fired yet');
 
-        // at this point, we are in drag and drop mode
+            // at this point, we are in drag and drop mode
 
 
-        // removing or destroying the circle should trigger dragend
-        circle.destroy();
-        layer.draw();
+            // removing or destroying the circle should trigger dragend
+            circle.destroy();
+            layer.draw();
 
-        assert(!circle.isDragging(), 'destroying circle should stop drag and drop');
-        assert(dragEnd, 'dragEnd should have fired');
-
+            assert(!circle.isDragging(), 'destroying circle should stop drag and drop');
+            assert(dragEnd, 'dragEnd should have fired');
+            done();
+        }, 20);
 
 
     });
 
     // ======================================================
-    test('click should not occur after drag and drop', function() {
+    test('click should not occur after drag and drop', function(done) {
         var stage = addStage();
         var layer = new Kinetic.Layer();
 
@@ -253,24 +259,28 @@ suite('DragAndDropEvents', function() {
             clientY: 40 + top
         });
 
-        stage._mousemove({
-            clientX: 100,
-            clientY: 100 + top
-        });
+        setTimeout(function() {
+            stage._mousemove({
+                clientX: 100,
+                clientY: 100 + top
+            });
 
-        Kinetic.DD._endDragBefore();
-        stage._mouseup({
-            clientX: 100,
-            clientY: 100 + top
-        });
-        Kinetic.DD._endDragAfter({dragEndNode:circle});
+            Kinetic.DD._endDragBefore();
+            stage._mouseup({
+                clientX: 100,
+                clientY: 100 + top
+            });
+            Kinetic.DD._endDragAfter({dragEndNode:circle});
 
-        assert(!clicked, 'click event should not have been fired');
+            assert(!clicked, 'click event should not have been fired');
+
+            done();
+        }, 20);
 
     });
 
     // ======================================================
-    test('cancel drag and drop by setting draggable to false', function() {
+    test('cancel drag and drop by setting draggable to false', function(done) {
         var stage = addStage();
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
@@ -316,24 +326,27 @@ suite('DragAndDropEvents', function() {
             clientY: 100 + top
         });
 
-        stage._mousemove({
-            clientX: 100,
-            clientY: 100 + top
-        });
+        setTimeout(function() {
+            stage._mousemove({
+                clientX: 100,
+                clientY: 100 + top
+            });
 
-        Kinetic.DD._endDragBefore();
-        stage._mouseup({
-            clientX: 100,
-            clientY: 100 + top
-        });
-        Kinetic.DD._endDragAfter({dragEndNode:circle});
+            Kinetic.DD._endDragBefore();
+            stage._mouseup({
+                clientX: 100,
+                clientY: 100 + top
+            });
+            Kinetic.DD._endDragAfter({dragEndNode:circle});
 
-        assert.equal(circle.getPosition().x, 380, 'circle x should be 380');
-        assert.equal(circle.getPosition().y, 100, 'circle y should be 100');
+            assert.equal(circle.getPosition().x, 380, 'circle x should be 380');
+            assert.equal(circle.getPosition().y, 100, 'circle y should be 100');
+            done();
+        }, 20);
     });
 
     // ======================================================
-    test('drag and drop layer', function() {
+    test('drag and drop layer', function(done) {
         var stage = addStage();
         var layer = new Kinetic.Layer({
             drawFunc: function() {
@@ -378,27 +391,31 @@ suite('DragAndDropEvents', function() {
             clientY: 96 + top
         });
 
-        stage._mousemove({
-            clientX: 210,
-            clientY: 109 + top
-        });
+        setTimeout(function() {
+            stage._mousemove({
+                clientX: 210,
+                clientY: 109 + top
+            });
 
-        Kinetic.DD._endDragBefore();
-        stage._mouseup({
-            clientX: 210,
-            clientY: 109 + top
-        });
-        Kinetic.DD._endDragAfter({dragEndNode:circle2});
+            Kinetic.DD._endDragBefore();
+            stage._mouseup({
+                clientX: 210,
+                clientY: 109 + top
+            });
+            Kinetic.DD._endDragAfter({dragEndNode:circle2});
 
-        //console.log(layer.getPosition())
+            //console.log(layer.getPosition())
 
-        assert.equal(layer.getX(), -189, 'layer x should be -189');
-        assert.equal(layer.getY(), 13, 'layer y should be 13');
+            assert.equal(layer.getX(), -189, 'layer x should be -189');
+            assert.equal(layer.getY(), 13, 'layer y should be 13');
+
+            done();
+        }, 20);
 
     });
 
     // ======================================================
-    test('drag and drop stage', function() {
+    test('drag and drop stage', function(done) {
           var container = document.createElement('div'),
               stage = new Kinetic.Stage({
                   container: container,
@@ -436,21 +453,24 @@ suite('DragAndDropEvents', function() {
             clientY: 100 + top
         });
 
-        stage._mousemove({
-            clientX: 300,
-            clientY: 110 + top
-        });
+        setTimeout(function() {
+            stage._mousemove({
+                clientX: 300,
+                clientY: 110 + top
+            });
 
-        Kinetic.DD._endDragBefore();
-        stage._mouseup({
-            clientX: 300,
-            clientY: 110 + top
-        });
-        Kinetic.DD._endDragAfter();
+            Kinetic.DD._endDragBefore();
+            stage._mouseup({
+                clientX: 300,
+                clientY: 110 + top
+            });
+            Kinetic.DD._endDragAfter();
 
-        assert.equal(stage.getX(), 300);
-        assert.equal(stage.getY(), 10);
+            assert.equal(stage.getX(), 300);
+            assert.equal(stage.getY(), 10);
 
+            done();
+        }, 20);
 
     });
 });
