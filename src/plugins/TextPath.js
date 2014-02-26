@@ -13,6 +13,7 @@
      * @param {String} [config.fontFamily] default is Calibri
      * @param {Number} [config.fontSize] default is 12
      * @param {String} [config.fontStyle] can be normal, bold, or italic.  Default is normal
+     * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
      * @param {String} config.text
      * @param {String} config.data SVG data string
      * @@shapeParams
@@ -363,6 +364,23 @@
      /**
      * get font style
      * @name getFontStyle
+     * @method
+     * @memberof Kinetic.TextPath.prototype
+     */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.TextPath, 'fontVariant', NORMAL);
+
+    /**
+     * set font variant.  Can be 'normal' or 'small-caps'.  'normal' is the default.
+     * @name setFontVariant
+     * @method
+     * @memberof Kinetic.TextPath.prototype
+     * @param {String} fontVariant
+     */
+
+    /**
+     * @get font variant
+     * @name getFontVariant
      * @method
      * @memberof Kinetic.TextPath.prototype
      */
