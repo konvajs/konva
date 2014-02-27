@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <title>KineticJS Memory leak test</title>
+    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+  </head>
+  <body>
+    Check memory before tests. Open console. Run "run()". See memory after.
+    <div id="container"></div>
+    <script src="../dist/kinetic-dev.js"></script>
+    <script>
+        var myWidth = 500;
+        var myHeigth = 500;
+
+        var myJson;
+        var stage;
+        var circleLayer;
+
+        function start() {
+            stage = new Kinetic.Stage({
+                container: 'container',
+                width: myWidth,
+                height: myHeigth
+            });
+
+            circleLayer = new Kinetic.Layer({
+                id: 'circleLayer'
+            });
+            stage.add(circleLayer);
+
+            generateCircle();
+
+            myJson = stage.toJSON();
+
+            for (var i = 0; i < 1000; i++) {
+                stage.destroy();
+                stage = Kinetic.Node.create(myJson, 'container');
+            }
+            console.log("done");
+        }
+
+        function generateCircle() {
+            var circle = new Kinetic.Circle({
+                x: stage.getWidth() / 2,
+                y: stage.getHeight() / 2,
+                radius: 30,
+                fill: 'red',
+                stroke: 'black',
+                strokeWidth: 7,
+
+                name: 'circle',
+                draggable: true
+            });
+            circleLayer.add(circle);
+            circleLayer.draw();
+        }
+    </script>
+  </body>
+</html>
