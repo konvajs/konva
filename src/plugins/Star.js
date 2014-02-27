@@ -34,8 +34,8 @@
             this.sceneFunc(this._sceneFunc);
         },
         _sceneFunc: function(context) {
-            var innerRadius = this.innerRadius(), 
-                outerRadius = this.outerRadius(), 
+            var innerRadius = this.innerRadius(),
+                outerRadius = this.outerRadius(),
                 numPoints = this.numPoints();
 
             context.beginPath();
@@ -106,5 +106,5 @@
      * @memberof Kinetic.Star.prototype
      */
 
-     Kinetic.Collection.mapMethods(Kinetic.Star);
+    Kinetic.Collection.mapMethods(Kinetic.Star);
 })();

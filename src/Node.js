@@ -66,7 +66,7 @@
                 delete this._cache[attr];
             }
             else {
-                this._cache = {};   
+                this._cache = {};
             }
         },
         _getCache: function(attr, privateGetter){
@@ -77,7 +77,7 @@
                 this._cache[attr] = privateGetter.call(this);
             }
 
-            return this._cache[attr];     
+            return this._cache[attr];
         },
         /*
          * when the logic for a cached result depends on ancestor propagation, use this
@@ -252,8 +252,8 @@
 
             context.save();
             context._applyTransform(this);
-            context.drawImage(hitCanvas._canvas, 0, 0); 
-            context.restore(); 
+            context.drawImage(hitCanvas._canvas, 0, 0);
+            context.restore();
         },
         /**
          * bind events to the node. KineticJS supports mouseover, mousemove,
@@ -1091,7 +1091,7 @@
                 transformsEnabled = node.transformsEnabled();
                 trans = node.getTransform();
 
-                if (transformsEnabled === 'all') { 
+                if (transformsEnabled === 'all') {
                     at.multiply(trans);
                 }
                 else if (transformsEnabled === 'position') {

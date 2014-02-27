@@ -7,7 +7,7 @@
             || context.mozBackingStorePixelRatio
             || context.msBackingStorePixelRatio
             || context.oBackingStorePixelRatio
-            || context.backingStorePixelRatio 
+            || context.backingStorePixelRatio
             || 1,
         _pixelRatio = devicePixelRatio / backingStoreRatio;
 

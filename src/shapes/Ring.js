@@ -96,5 +96,5 @@
      * ring.outerRadius(20);
      */
 
-     Kinetic.Collection.mapMethods(Kinetic.Ring);
+    Kinetic.Collection.mapMethods(Kinetic.Ring);
 })();

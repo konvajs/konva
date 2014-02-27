@@ -74,5 +74,5 @@
      * rect.cornerRadius(10);
      */
 
-     Kinetic.Collection.mapMethods(Kinetic.Rect);
+    Kinetic.Collection.mapMethods(Kinetic.Rect);
 })();

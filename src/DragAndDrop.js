@@ -32,7 +32,7 @@
                 nodeType, layer;
 
             if(node) {
-                nodeType = node.nodeType,
+                nodeType = node.nodeType;
                 layer = node.getLayer();
                 dd.anim.stop();
 
@@ -58,7 +58,7 @@
             var dragEndNode = evt.dragEndNode;
 
             if (evt && dragEndNode) {
-              dragEndNode.fire('dragend', evt, true);
+                dragEndNode.fire('dragend', evt, true);
             }
         }
     };

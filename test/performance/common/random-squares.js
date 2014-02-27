@@ -1,5 +1,3 @@
-      console.log('test')
-
       var stage;
       var circlesLayer;
       var circles;
@@ -9,7 +7,7 @@
 
       var VERSION = Kinetic.version === '4.7.4' || Kinetic.version === 'dev' ? 'new' : 'old';
 
-      window.requestAnimFrame = (function(callback){
+      window.requestAnimFrame = (function(){
         return window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
         window.mozRequestAnimationFrame ||
@@ -46,7 +44,7 @@
               colorIndex = 0;
             }
 
-            var shape = make_shape('red');
+            var shape = make_shape(color);
             circlesLayer.add(shape);
             circles.push(shape);
           }());
@@ -66,10 +64,10 @@
           var period = timeDiff/1000; //times per second, our period
 
           for (var i = 0; i < circles.length; i++) {
-            var x = Math.random() * width;
-            var y = Math.random() * height;
+            var x = Math.round(Math.random() * width);
+            var y = Math.round(Math.random() * height);
             if (VERSION === 'new') {
-            circles[i].position({x: x, y: y});
+              circles[i].setPosition({x: x, y: y});
             }
             else {
               circles[i].setPosition(x, y);
@@ -91,7 +89,8 @@
             fill: color,
             width: 10,
             height: 10,
-            transformsEnabled: false
+            transformsEnabled: "position",
+            listening : false
           });
       
  
@@ -102,7 +101,7 @@
           //     _context.beginPath();
           //     _context.rect(0, 0, 10, 10);
           //     _context.closePath();
-          //     _context.fillStyle = 'red';
+          //     _context.fillStyle = color;
           //     _context.fill();
           //   }
           // });
@@ -114,7 +113,7 @@
                 
                 context.beginPath();
                 context.rect(0, 0, 10, 10);
-                context.fillStyle = 'red';
+                context.fillStyle = color;
                 context.fill();
                 context.closePath();
             });

@@ -64,25 +64,25 @@
         return collection;
     };
 
+    // map one method by it's name
+    Kinetic.Collection._mapMethod = function(methodName) {
+        Kinetic.Collection.prototype[methodName] = function() {
+            var len = this.length,
+                i;
+
+            var args = [].slice.call(arguments);
+            for(i = 0; i < len; i++) {
+                this[i][methodName].apply(this[i], args);
+            }
+
+            return this;
+        };
+    };
+
     Kinetic.Collection.mapMethods = function(constructor) {
-        var prot = constructor.prototype,
-            key;
-
-        for(key in prot) {
-            // induce scope
-            (function(methodName) {
-                Kinetic.Collection.prototype[methodName] = function() {
-                    var len = this.length,
-                        i;
-
-                    args = [].slice.call(arguments);
-                    for(i = 0; i < len; i++) {
-                        this[i][methodName].apply(this[i], args);
-                    }
-
-                    return this;
-                };
-            })(key);
+        var prot = constructor.prototype;
+        for(var methodName in prot) {
+            Kinetic.Collection._mapMethod(methodName);
         }
     };
 
@@ -182,7 +182,7 @@
             this.m[1] = m12;
             this.m[2] = m21;
             this.m[3] = m22;
-         },
+        },
         /**
          * Transform multiplication
          * @method
@@ -365,7 +365,7 @@
          * arg can be an image object or image data
          */
         _getImage: function(arg, callback) {
-            var imageObj, canvas, context, dataUrl;
+            var imageObj, canvas;
 
             // if arg is null or undefined
             if(!arg) {
@@ -391,7 +391,7 @@
                 canvas = document.createElement(CANVAS);
                 canvas.width = arg.width;
                 canvas.height = arg.height;
-                _context = canvas.getContext(CONTEXT_2D);
+                var _context = canvas.getContext(CONTEXT_2D);
                 _context.putImageData(arg, 0, 0);
                 this._getImage(canvas.toDataURL(), callback);
             }
@@ -437,7 +437,7 @@
         getRandomColor: function() {
             var randColor = (Math.random() * 0xFFFFFF << 0).toString(16);
             while (randColor.length < 6) {
-              randColor = ZERO + randColor;
+                randColor = ZERO + randColor;
             }
             return HASH + randColor;
         },
@@ -466,37 +466,37 @@
          * var rgb = Kinetic.Util.getRGB('rgb(0,0,255)');
          */
         getRGB: function(color) {
-          var rgb;
-          // color string
-          if (color in COLORS) {
-            rgb = COLORS[color];
-            return {
-              r: rgb[0],
-              g: rgb[1],
-              b: rgb[2]
-            };
-          }
-          // hex
-          else if (color[0] === HASH) {
-            return this._hexToRgb(color.substring(1));
-          }
-          // rgb string
-          else if (color.substr(0, 4) === RGB_PAREN) {
-            rgb = RGB_REGEX.exec(color.replace(/ /g,''));
-            return {
-                r: parseInt(rgb[1], 10),
-                g: parseInt(rgb[2], 10),
-                b: parseInt(rgb[3], 10)
-            };
-          }
-          // default
-          else {
-            return {
-                r: 0,
-                g: 0,
-                b: 0
-            };
-          }
+            var rgb;
+            // color string
+            if (color in COLORS) {
+                rgb = COLORS[color];
+                return {
+                    r: rgb[0],
+                    g: rgb[1],
+                    b: rgb[2]
+                };
+            }
+            // hex
+            else if (color[0] === HASH) {
+                return this._hexToRgb(color.substring(1));
+            }
+            // rgb string
+            else if (color.substr(0, 4) === RGB_PAREN) {
+                rgb = RGB_REGEX.exec(color.replace(/ /g,''));
+                return {
+                    r: parseInt(rgb[1], 10),
+                    g: parseInt(rgb[2], 10),
+                    b: parseInt(rgb[3], 10)
+                };
+            }
+            // default
+            else {
+                return {
+                    r: 0,
+                    g: 0,
+                    b: 0
+                };
+            }
         },
         // o1 takes precedence over o2
         _merge: function(o1, o2) {
@@ -562,13 +562,13 @@
          * @param {Object} methods
          */
         addMethods: function(constructor, methods) {
-          var key;
+            var key;
 
-          for (key in methods) {
-            constructor.prototype[key] = methods[key];
-          }
+            for (key in methods) {
+                constructor.prototype[key] = methods[key];
+            }
         },
-       _getControlPoints: function(x0, y0, x1, y1, x2, y2, t) {
+        _getControlPoints: function(x0, y0, x1, y1, x2, y2, t) {
             var d01 = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2)),
                 d12 = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)),
                 fa = t * d01 / (d01 + d12),

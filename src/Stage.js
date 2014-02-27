@@ -1,3 +1,4 @@
+/*jshint unused:false */
 (function() {
     // CONSTANTS
     var STAGE = 'Stage',
@@ -48,9 +49,9 @@
         eventsLength = EVENTS.length;
 
     function addEvent(ctx, eventName) {
-      ctx.content.addEventListener(eventName, function(evt) {
-        ctx[UNDERSCORE + eventName](evt);
-      }, false);
+        ctx.content.addEventListener(eventName, function(evt) {
+            ctx[UNDERSCORE + eventName](evt);
+        }, false);
     }
 
     Kinetic.Util.addMethods(Kinetic.Stage, {
@@ -274,7 +275,7 @@
                 shape = layers[n].getIntersection(pos);
                 if (shape) {
                     return shape;
-                } 
+                }
             }
 
             return null;
@@ -336,11 +337,8 @@
             return this.getChildren();
         },
         _bindContentEvents: function() {
-            var that = this,
-                n;
-
-            for (n = 0; n < eventsLength; n++) {
-              addEvent(this, EVENTS[n]);
+            for (var n = 0; n < eventsLength; n++) {
+                addEvent(this, EVENTS[n]);
             }
         },
         _mouseover: function(evt) {
@@ -383,11 +381,11 @@
              * to run mouseout from previous target shape
              */
             else {
-              if(this.targetShape && !Kinetic.isDragging()) {
-                this.targetShape._fireAndBubble(MOUSEOUT, evt);
-                this.targetShape._fireAndBubble(MOUSELEAVE, evt);
-                this.targetShape = null;
-              }
+                if(this.targetShape && !Kinetic.isDragging()) {
+                    this.targetShape._fireAndBubble(MOUSEOUT, evt);
+                    this.targetShape._fireAndBubble(MOUSELEAVE, evt);
+                    this.targetShape = null;
+                }
 
             }
 
@@ -426,8 +424,7 @@
         },
         _mouseup: function(evt) {
             this._setPointerPosition(evt);
-            var that = this,
-                shape = this.getIntersection(this.getPointerPosition()),
+            var shape = this.getIntersection(this.getPointerPosition()),
                 clickStartShape = this.clickStartShape,
                 fireDblClick = false;
 
@@ -492,21 +489,20 @@
         },
         _touchend: function(evt) {
             this._setPointerPosition(evt);
-            var that = this,
-                shape = this.getIntersection(this.getPointerPosition());
+            var shape = this.getIntersection(this.getPointerPosition()),
                 fireDblClick = false;
 
-                if(Kinetic.inDblClickWindow) {
-                    fireDblClick = true;
-                    Kinetic.inDblClickWindow = false;
-                }
-                else {
-                    Kinetic.inDblClickWindow = true;
-                }
+            if(Kinetic.inDblClickWindow) {
+                fireDblClick = true;
+                Kinetic.inDblClickWindow = false;
+            }
+            else {
+                Kinetic.inDblClickWindow = true;
+            }
 
-                setTimeout(function() {
-                    Kinetic.inDblClickWindow = false;
-                }, Kinetic.dblClickWindow);
+            setTimeout(function() {
+                Kinetic.inDblClickWindow = false;
+            }, Kinetic.dblClickWindow);
 
             if (shape && shape.isListening()) {
                 shape._fireAndBubble(TOUCHEND, evt);
@@ -555,13 +551,13 @@
             }
         },
         _setPointerPosition: function(evt) {
-            var evt = evt ? evt : window.event,
-                contentPosition = this._getContentPosition(),
+            var contentPosition = this._getContentPosition(),
                 offsetX = evt.offsetX,
                 clientX = evt.clientX,
                 x = null,
                 y = null,
                 touch;
+            evt = evt ? evt : window.event;
 
             // touch events
             if(evt.touches !== undefined) {
@@ -572,7 +568,7 @@
 
                     // get the information for finger #1
                     x = touch.clientX - contentPosition.left;
-                    y = touch.clientY - contentPosition.top; 
+                    y = touch.clientY - contentPosition.top;
                 }
             }
             // mouse events

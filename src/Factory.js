@@ -1,3 +1,4 @@
+/*jshint unused:false */
 (function() {
     // CONSTANTS
     var ABSOLUTE_OPACITY = 'absoluteOpacity',
@@ -48,8 +49,7 @@
             this.addOverloadedGetterSetter(constructor, attr);
         },
         addGetter: function(constructor, attr, def) {
-            var that = this,
-                method = GET + Kinetic.Util._capitalize(attr);
+            var method = GET + Kinetic.Util._capitalize(attr);
 
             constructor.prototype[method] = function() {
                 var val = this.attrs[attr];
@@ -70,13 +70,13 @@
                     after.call(this);
                 }
 
-                return this;  
+                return this;
             };
         },
         addComponentsGetterSetter: function(constructor, attr, components, validator, after) {
             var len = components.length,
                 capitalize = Kinetic.Util._capitalize,
-                getter = GET + capitalize(attr), 
+                getter = GET + capitalize(attr),
                 setter = SET + capitalize(attr),
                 n, component;
 
@@ -102,7 +102,7 @@
                 }
 
                 for (key in val) {
-                    this._setAttr(attr + capitalize(key), val[key]); 
+                    this._setAttr(attr + capitalize(key), val[key]);
                 }
 
                 this._fireChangeEvent(attr, oldVal, val);
@@ -111,14 +111,13 @@
                     after.call(this);
                 }
 
-                return this;  
+                return this;
             };
 
             this.addOverloadedGetterSetter(constructor, attr);
         },
         addOverloadedGetterSetter: function(constructor, attr) {
-            var that = this,
-                capitalizedAttr = Kinetic.Util._capitalize(attr),
+            var capitalizedAttr = Kinetic.Util._capitalize(attr),
                 setter = SET + capitalizedAttr,
                 getter = GET + capitalizedAttr;
 
@@ -132,7 +131,7 @@
                 else {
                     return this[getter]();
                 }
-            }
+            };
         },
         backCompat: function(constructor, methods) {
             var key;

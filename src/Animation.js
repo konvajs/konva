@@ -2,16 +2,16 @@
     var BATCH_DRAW_STOP_TIME_DIFF = 500;
 
     var now =(function() {
-      if (window.performance && window.performance.now) {
-        return function() {
-          return window.performance.now();
+        if (window.performance && window.performance.now) {
+            return function() {
+                return window.performance.now();
+            };
         }
-      }
-      else {
-        return function() {
-          return new Date().getTime();
-        } 
-      }
+        else {
+            return function() {
+                return new Date().getTime();
+            };
+        }
     })();
 
     var RAF = (function() {
@@ -134,7 +134,7 @@
          * @memberof Kinetic.Animation.prototype
          */
         isRunning: function() {
-            var a = Kinetic.Animation, 
+            var a = Kinetic.Animation,
                 animations = a.animations,
                 len = animations.length,
                 n;
@@ -182,8 +182,8 @@
         this._handleAnimation();
     };
     Kinetic.Animation._removeAnimation = function(anim) {
-        var id = anim.id, 
-            animations = this.animations, 
+        var id = anim.id,
+            animations = this.animations,
             len = animations.length,
             n;
 
@@ -270,9 +270,9 @@
 
         if (!this.batchAnim) {
             this.batchAnim = new Anim(function() {
-              if (that.lastBatchDrawTime && now() - that.lastBatchDrawTime > BATCH_DRAW_STOP_TIME_DIFF) {
-                that.batchAnim.stop();
-              }
+                if (that.lastBatchDrawTime && now() - that.lastBatchDrawTime > BATCH_DRAW_STOP_TIME_DIFF) {
+                    that.batchAnim.stop();
+                }
             }, this);
         }
 

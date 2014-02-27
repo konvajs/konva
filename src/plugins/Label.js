@@ -107,15 +107,15 @@
         _sync: function() {
             var text = this.getText(),
                 tag = this.getTag(),
-                width, height, pointerDirection, pointerWidth, x, y;
+                width, height, pointerDirection, pointerWidth, x, y, pointerHeight;
 
             if (text && tag) {
-                width = text.getWidth(),
-                height = text.getHeight(),
-                pointerDirection = tag.getPointerDirection(),
-                pointerWidth = tag.getPointerWidth(),
-                pointerHeight = tag.getPointerHeight(),
-                x = 0,
+                width = text.getWidth();
+                height = text.getHeight();
+                pointerDirection = tag.getPointerDirection();
+                pointerWidth = tag.getPointerWidth();
+                pointerHeight = tag.getPointerHeight();
+                x = 0;
                 y = 0;
 
                 switch(pointerDirection) {
@@ -183,8 +183,8 @@
                 height = this.getHeight(),
                 pointerDirection = this.getPointerDirection(),
                 pointerWidth = this.getPointerWidth(),
-                pointerHeight = this.getPointerHeight(),
-                cornerRadius = this.getCornerRadius();
+                pointerHeight = this.getPointerHeight();
+                //cornerRadius = this.getCornerRadius();
 
             context.beginPath();
             context.moveTo(0,0);
@@ -294,5 +294,5 @@
      * @memberof Kinetic.Tag.prototype
      */
 
-     Kinetic.Collection.mapMethods(Kinetic.Tag);
+    Kinetic.Collection.mapMethods(Kinetic.Tag);
 })();

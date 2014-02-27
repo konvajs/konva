@@ -1,8 +1,7 @@
 (function() {
 
     // CONSTANTS
-    var IMAGE = 'Image',
-        SET = 'set';
+    var IMAGE = 'Image';
 
     /**
      * Image constructor
@@ -43,19 +42,18 @@
             return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasStroke();
         },
         _sceneFunc: function(context) {
-            var width = this.getWidth(), 
-                height = this.getHeight(), 
+            var width = this.getWidth(),
+                height = this.getHeight(),
                 image = this.getImage(),
                 crop, cropWidth, cropHeight, params;
 
             if (image) {
-                crop = this.getCrop(),
+                crop = this.getCrop();
                 cropWidth = crop.width;
                 cropHeight = crop.height;
                 if (cropWidth && cropHeight) {
                     params = [image, crop.x, crop.y, cropWidth, cropHeight, 0, 0, width, height];
-                } 
-                else {
+                } else {
                     params = [image, 0, 0, width, height];
                 }
             }
@@ -70,7 +68,7 @@
             }
         },
         _hitFunc: function(context) {
-            var width = this.getWidth(), 
+            var width = this.getWidth(),
                 height = this.getHeight();
 
             context.beginPath();
@@ -197,5 +195,5 @@
      * image.cropHeight(20);
      */
 
-     Kinetic.Collection.mapMethods(Kinetic.Image);
+    Kinetic.Collection.mapMethods(Kinetic.Image);
 })();

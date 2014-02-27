@@ -252,8 +252,8 @@
             return this;
         },
         remove: function() {
-            var stage = this.getStage(), 
-                canvas = this.getCanvas(), 
+            var stage = this.getStage(),
+                canvas = this.getCanvas(),
                 _canvas = canvas._canvas;
 
             Kinetic.Node.prototype.remove.call(this);
@@ -333,5 +333,5 @@
      * layer.hitGraphEnabled(true);
      */
 
-     Kinetic.Collection.mapMethods(Kinetic.Layer);
+    Kinetic.Collection.mapMethods(Kinetic.Layer);
 })();

@@ -118,5 +118,5 @@
      * arc.clockwise(true);
      */
 
-     Kinetic.Collection.mapMethods(Kinetic.Arc);
+    Kinetic.Collection.mapMethods(Kinetic.Arc);
 })();

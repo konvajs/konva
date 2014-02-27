@@ -28,7 +28,7 @@ suite('Sprite', function() {
                         156, 109, 70, 98,
                         229, 109, 60, 98,
                         287, 109, 41, 98
-                    ]              
+                    ]           
                 },
                 frameRate: 10,
                 draggable: true,
@@ -72,7 +72,7 @@ suite('Sprite', function() {
         };
         imageObj.src = 'assets/scorpion-sprite.png';
     });
-    test("can change frame rate on fly", function(done){
+    test('can change frame rate on fly', function(done){
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = addStage();
@@ -92,7 +92,7 @@ suite('Sprite', function() {
                         158, 0, 49, 109,
                         210, 0, 49, 109,
                         262, 0, 49, 109
-                    ]           
+                    ]
                 },
                 frameRate: 50,
                 draggable: true,
@@ -118,6 +118,7 @@ suite('Sprite', function() {
                 sprite.frameRate(52);
                 assert.equal(sprite.anim.isRunning(), true);
                 // for this moment should tick more than 2 times
+                // make sure that sprite is not restating after set frame rate
                 assert.equal(sprite.frameIndex() > 2, true);
                 done();
             }, 68);

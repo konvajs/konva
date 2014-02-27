@@ -85,5 +85,5 @@
      * @memberof Kinetic.RegularPolygon.prototype
      */
 
-     Kinetic.Collection.mapMethods(Kinetic.RegularPolygon);
+    Kinetic.Collection.mapMethods(Kinetic.RegularPolygon);
 })();

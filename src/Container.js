@@ -291,7 +291,7 @@
                 context.beginPath();
                 context.rect(clipX, clipY, clipWidth, clipHeight);
                 context.clip();
-                context.reset();   
+                context.reset();
             }
 
             this.children.each(function(child) {
@@ -398,5 +398,5 @@
      * container.clipHeight(100);
      */
 
-     Kinetic.Collection.mapMethods(Kinetic.Container);
+    Kinetic.Collection.mapMethods(Kinetic.Container);
 })();

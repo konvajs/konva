@@ -27,7 +27,6 @@
 
     Kinetic.Line.prototype = {
         ___init: function(config) {
-            var that = this;
             // call super constructor
             Kinetic.Shape.call(this, config);
             this.className = 'Line';
@@ -43,7 +42,7 @@
                 length = points.length,
                 tension = this.getTension(),
                 closed = this.getClosed(),
-                tp, len, n, point;
+                tp, len, n;
 
             context.beginPath();
             context.moveTo(points[0], points[1]);
@@ -76,19 +75,19 @@
             // closed e.g. polygons and blobs
             if (closed) {
                 context.closePath();
-                context.fillStrokeShape(this);   
+                context.fillStrokeShape(this);
             }
             // open e.g. lines and splines
             else {
                 context.strokeShape(this);
-            };
+            }
         },
         getTensionPoints: function() {
-            return this._getCache('tensionPoints', this._getTensionPoints); 
+            return this._getCache('tensionPoints', this._getTensionPoints);
         },
         _getTensionPoints: function() {
             if (this.getClosed()) {
-                return this._getTensionPointsClosed();  
+                return this._getTensionPointsClosed();
             }
             else {
                 return Kinetic.Util._expandPoints(this.getPoints(), this.getTension());
@@ -101,40 +100,40 @@
                 util = Kinetic.Util,
                 firstControlPoints = util._getControlPoints(
                     p[len-2],
-                    p[len-1], 
-                    p[0], 
-                    p[1], 
-                    p[2], 
+                    p[len-1],
+                    p[0],
+                    p[1],
+                    p[2],
                     p[3],
                     tension
                 ),
                 lastControlPoints = util._getControlPoints(
-                    p[len-4], 
-                    p[len-3], 
-                    p[len-2], 
-                    p[len-1], 
-                    p[0], 
+                    p[len-4],
+                    p[len-3],
+                    p[len-2],
+                    p[len-1],
+                    p[0],
                     p[1],
                     tension
                 ),
                 middle = Kinetic.Util._expandPoints(p, tension),
                 tp = [
-                        firstControlPoints[2], 
-                        firstControlPoints[3]
-                    ]
-                    .concat(middle)
-                    .concat([
-                        lastControlPoints[0],
-                        lastControlPoints[1],
-                        p[len-2],
-                        p[len-1],
-                        lastControlPoints[2],
-                        lastControlPoints[3],
-                        firstControlPoints[0],
-                        firstControlPoints[1],
-                        p[0],
-                        p[1]
-                    ]);
+                    firstControlPoints[2],
+                    firstControlPoints[3]
+                ]
+                .concat(middle)
+                .concat([
+                    lastControlPoints[0],
+                    lastControlPoints[1],
+                    p[len-2],
+                    p[len-1],
+                    lastControlPoints[2],
+                    lastControlPoints[3],
+                    firstControlPoints[0],
+                    firstControlPoints[1],
+                    p[0],
+                    p[1]
+                ]);
                     
             return tp;
         }
@@ -199,5 +198,5 @@
      * line.points(line.points().concat([70, 80]));
      */
 
-     Kinetic.Collection.mapMethods(Kinetic.Line);
+    Kinetic.Collection.mapMethods(Kinetic.Line);
 })();

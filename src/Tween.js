@@ -41,7 +41,7 @@
             duration = config.duration || 1,
             easing = config.easing || Kinetic.Easings.Linear,
             yoyo = !!config.yoyo,
-            key, tween, start, tweenId;
+            key;
 
         this.node = node;
         this._id = idCounter++;
@@ -90,7 +90,7 @@
         _addAttr: function(key, end) {
             var node = this.node,
                 nodeId = node._id,
-                start, diff, tweenId, n, len, startVal, endVal;
+                start, diff, tweenId, n, len;
 
             // remove conflict from tween map if it exists
             tweenId = Kinetic.Tween.tweens[nodeId][key];
@@ -123,7 +123,7 @@
         _tweenFunc: function(i) {
             var node = this.node,
                 attrs = Kinetic.Tween.attrs[node._id][this._id],
-                key, attr, start, diff, newVal, n, len, startVal, diffVal;
+                key, attr, start, diff, newVal, n, len;
 
             for (key in attrs) {
                 attr = attrs[key];
@@ -390,7 +390,7 @@
         * @function
         * @memberof Kinetic.Easings
         */
-        'BackEaseIn': function(t, b, c, d, a, p) {
+        'BackEaseIn': function(t, b, c, d) {
             var s = 1.70158;
             return c * (t /= d) * t * ((s + 1) * t - s) + b;
         },
@@ -399,7 +399,7 @@
         * @function
         * @memberof Kinetic.Easings
         */
-        'BackEaseOut': function(t, b, c, d, a, p) {
+        'BackEaseOut': function(t, b, c, d) {
             var s = 1.70158;
             return c * (( t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
         },
@@ -408,7 +408,7 @@
         * @function
         * @memberof Kinetic.Easings
         */
-        'BackEaseInOut': function(t, b, c, d, a, p) {
+        'BackEaseInOut': function(t, b, c, d) {
             var s = 1.70158;
             if((t /= d / 2) < 1) {
                 return c / 2 * (t * t * (((s *= (1.525)) + 1) * t - s)) + b;
