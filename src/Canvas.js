@@ -2,14 +2,21 @@
     // calculate pixel ratio
     var canvas = document.createElement('canvas'),
         context = canvas.getContext('2d'),
-        devicePixelRatio = window.devicePixelRatio || 1,
-        backingStoreRatio = context.webkitBackingStorePixelRatio
-            || context.mozBackingStorePixelRatio
-            || context.msBackingStorePixelRatio
-            || context.oBackingStorePixelRatio
-            || context.backingStorePixelRatio
-            || 1,
-        _pixelRatio = devicePixelRatio / backingStoreRatio;
+        // if using a mobile device, calculate the pixel ratio.  Otherwise, just use
+        // 1.  For desktop browsers, if the user has zoom enabled, it affects the pixel ratio
+        // and causes artifacts on the canvas.  As of 02/26/2014, there doesn't seem to be a way
+        // to reliably calculate the browser zoom for modern browsers, which is why we just set
+        // the pixel ratio to 1 for desktops
+        _pixelRatio = Kinetic.UA.mobile ? (function() {
+            var devicePixelRatio = window.devicePixelRatio || 1,
+            backingStoreRatio = context.webkitBackingStorePixelRatio
+                || context.mozBackingStorePixelRatio
+                || context.msBackingStorePixelRatio
+                || context.oBackingStorePixelRatio
+                || context.backingStorePixelRatio
+                || 1;
+            return devicePixelRatio / backingStoreRatio;
+        })() : 1;
 
     /**
      * Canvas Renderer constructor

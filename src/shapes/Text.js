@@ -18,7 +18,7 @@
         WORD = 'word',
         CHAR = 'char',
         NONE = 'none',
-        ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'align', 'lineHeight', 'text', 'width', 'height', 'wrap'],
+        ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'fontVariant', 'padding', 'align', 'lineHeight', 'text', 'width', 'height', 'wrap'],
 
         // cached variables
         attrChangeListLen = ATTR_CHANGE_LIST.length,
@@ -33,6 +33,7 @@
      * @param {String} [config.fontFamily] default is Arial
      * @param {Number} [config.fontSize] in pixels.  Default is 12
      * @param {String} [config.fontStyle] can be normal, bold, or italic.  Default is normal
+     * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
      * @param {String} config.text
      * @param {String} [config.align] can be left, center, or right
      * @param {Number} [config.padding]
@@ -193,7 +194,7 @@
             };
         },
         _getContextFont: function() {
-            return this.getFontStyle() + SPACE + this.getFontSize() + PX_SPACE + this.getFontFamily();
+            return this.getFontStyle() + SPACE + this.getFontVariant() + SPACE + this.getFontSize() + PX_SPACE + this.getFontFamily();
         },
         _addTextLine: function (line, width) {
             return this.textArr.push({text: line, width: width});
@@ -220,7 +221,7 @@
 
             this.textArr = [];
             dummyContext.save();
-            dummyContext.font = this.getFontStyle() + SPACE + fontSize + PX_SPACE + this.getFontFamily();
+            dummyContext.font = this._getContextFont();
             for (var i = 0, max = lines.length; i < max; ++i) {
                 var line = lines[i],
                     lineWidth = this._getTextWidth(line);
@@ -362,6 +363,23 @@
      *
      * // set font style<br>
      * text.fontStyle('bold');
+     */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontVariant', NORMAL);
+
+    /**
+     * set font variant.  Can be 'normal' or 'small-caps'.  'normal' is the default.
+     * @name fontVariant
+     * @method
+     * @memberof Kinetic.Text.prototype
+     * @param {String} fontVariant
+     * @returns {String}
+     * @example
+     * // get font variant<br>
+     * var fontVariant = text.fontVariant();<br><br>
+     *
+     * // set font variant<br>
+     * text.fontVariant('small-caps');
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Text, 'padding', 0);

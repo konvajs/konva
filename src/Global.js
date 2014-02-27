@@ -50,6 +50,7 @@ var Kinetic = {};
         traceArrMax: 100,
         dblClickWindow: 400,
         pixelRatio: undefined,
+        enableThrottling: true,
 
         // user agent  
         UA: (function() {
@@ -60,11 +61,17 @@ var Kinetic = {};
                 /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
                 /(msie) ([\w.]+)/.exec( ua ) ||
                 ua.indexOf('compatible') < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
-                [];
+                [],
+
+                // adding mobile flag as well
+                mobile = !!(navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i));
 
             return {
                 browser: match[ 1 ] || '',
-                version: match[ 2 ] || '0'
+                version: match[ 2 ] || '0',
+
+                // adding mobile flab
+                mobile: mobile
             };
         })(),
 

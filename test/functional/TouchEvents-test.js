@@ -92,7 +92,7 @@ suite('TouchEvents', function() {
 
 
     // ======================================================
-    test('touchstart touchend touchmove tap dbltap', function() {
+    test('touchstart touchend touchmove tap dbltap', function(done) {
         var stage = addStage();
         var layer = new Kinetic.Layer();
         var circle = new Kinetic.Circle({
@@ -215,20 +215,24 @@ suite('TouchEvents', function() {
         assert(tap, '11) tap should be true');
         assert(dbltap, '11) dbltap should be true');
 
-        // touchmove circle
-        stage._touchmove({
-            touches: [{
-                clientX: 290,
-                clientY: 100 + top,
-            }],
-            preventDefault: function() {
-            }
-        });
+        setTimeout(function() {
+            // touchmove circle
+            stage._touchmove({
+                touches: [{
+                    clientX: 290,
+                    clientY: 100 + top,
+                }],
+                preventDefault: function() {
+                }
+            });
 
-        assert(touchstart, '12) touchstart should be true');
-        assert(touchmove, '12) touchmove should be true');
-        assert(touchend, '12) touchend should be true');
-        assert(tap, '12) tap should be true');
-        assert(dbltap, '12) dbltap should be true');
+            assert(touchstart, '12) touchstart should be true');
+            assert(touchmove, '12) touchmove should be true');
+            assert(touchend, '12) touchend should be true');
+            assert(tap, '12) tap should be true');
+            assert(dbltap, '12) dbltap should be true');
+
+            done();
+        }, 17);
     });
 });
