@@ -208,7 +208,16 @@ module.exports = function(grunt) {
     },
     mocha_phantomjs: {
       all: ['test/runner.html']
-    }
+    },
+    watch: {
+      dev: {
+        files: ['src/**/*.js'],
+        tasks: ['dev'],
+        options: {
+          spawn: false,
+        },
+      },
+    },
   };
 
   
@@ -243,8 +252,19 @@ module.exports = function(grunt) {
     'shell:jsdoc',
   ]);
 
-  grunt.registerTask('hint', 'Check lint errors', ['clean', 'concat:dev', 'replace:dev', 'jshint']);
-  grunt.registerTask('tests', 'Run tests', ['dev', 'mocha_phantomjs']);
+  grunt.registerTask('lint', 'Check lint errors', ['jshint']);
+  grunt.registerTask('test', 'Run tests', ['dev', 'mocha_phantomjs']);
+
+  grunt.registerTask('server', 'run local server and create dev version', function() {
+
+    grunt.task.run('dev');
+    grunt.log.writeln('Tests server starts on http://localhost:8080/test/runner.html');
+    var connect = require('connect');
+    connect.createServer(
+        connect.static(__dirname)
+    ).listen(8080);
+    grunt.task.run('watch:dev');
+  });
 
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-replace');
@@ -254,4 +274,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-mocha-phantomjs');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 };
