@@ -367,6 +367,20 @@
             }
             return names.length > 0;
         },
+        createCanvasElement: function() {
+            var canvas;
+            if (Kinetic.Util.isBrowser()) {
+                canvas = document.createElement('canvas');
+            } else {
+                // nodejs way
+                canvas = new Kinetic._nodeCanvas(200,200);
+            }
+            canvas.style = canvas.style || {};
+            return canvas;
+        },
+        isBrowser: function() {
+            return (typeof exports !==  'object');
+        },
         _isInDocument: function(el) {
             while(el = el.parentNode) {
                 if(el == document) {

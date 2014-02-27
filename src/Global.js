@@ -31,7 +31,7 @@
  */
 /*jshint -W079, -W020*/
 var Kinetic = {};
-(function() {
+(function(root) {
     Kinetic = {
         // public
         version: '@@version',
@@ -54,7 +54,8 @@ var Kinetic = {};
 
         // user agent  
         UA: (function() {
-            var ua = navigator.userAgent.toLowerCase(),
+            var userAgent = (root.navigator && root.navigator.userAgent) || '';
+            var ua = userAgent.toLowerCase(),
                 // jQuery UA regex
                 match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
                 /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
@@ -64,7 +65,7 @@ var Kinetic = {};
                 [],
 
                 // adding mobile flag as well
-                mobile = !!(navigator.userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i));
+                mobile = !!(userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i));
 
             return {
                 browser: match[ 1 ] || '',
@@ -262,7 +263,7 @@ var Kinetic = {};
             }
         }
     };
-})();
+})(this);
 
 // Uses Node, AMD or browser globals to create a module.
 
@@ -286,15 +287,14 @@ var Kinetic = {};
         // Node. Does not work with strict CommonJS, but
         // only CommonJS-like enviroments that support module.exports,
         // like Node.
-        module.exports = factory();
+        var Canvas = require('canvas');
+        var KineticJS = factory();
+        Kinetic._nodeCanvas = Canvas;
+        module.exports = KineticJS;
     }
     else if( typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define(factory);
-    }
-    else {
-        // Browser globals (root is window)
-        root.returnExports = factory();
     }
 }(this, function() {
 

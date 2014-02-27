@@ -147,7 +147,7 @@
     //Kinetic.Filters.FromPolar = Kinetic.Util._FilterWrapDoubleBuffer(FromPolar);
 
     // create a temporary canvas for working - shared between multiple calls
-    var tempCanvas = document.createElement('canvas');
+    var tempCanvas = Kinetic.Util.createCanvasElement();
 
     /*
      * Kaleidoscope Filter. 

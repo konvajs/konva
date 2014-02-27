@@ -22,11 +22,14 @@
     "grunt-contrib-watch": "^0.5.3"
   },
   "readmeFilename": "README.md",
-  "main": "Gruntfile.js",
+  "main": "kinetic.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/ericdrowell/KineticJS.git"
   },
   "author": "Eric Rowell",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "canvas": "^1.1.3"
+  }
 }

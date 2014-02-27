@@ -32,12 +32,18 @@
             this.hitCanvas = new Kinetic.HitCanvas();
             // call super constructor
             Kinetic.Container.call(this, config);
+            if (!Kinetic.Util.isBrowser()) {
+                this.canvas.setSize(this.attrs.width, this.attrs.height);
+            }
         },
         _validateAdd: function(child) {
             var type = child.getType();
             if (type !== 'Group' && type !== 'Shape') {
                 Kinetic.Util.error('You may only add groups and shapes to a layer.');
             }
+        },
+        createPNGStream : function() {
+            return this.canvas._canvas.createPNGStream();
         },
         /**
          * get visible intersection shape. This is the preferred

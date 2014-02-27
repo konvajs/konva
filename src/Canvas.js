@@ -1,6 +1,6 @@
 (function() {
     // calculate pixel ratio
-    var canvas = document.createElement('canvas'),
+    var canvas = Kinetic.Util.createCanvasElement(),
         context = canvas.getContext('2d'),
         // if using a mobile device, calculate the pixel ratio.  Otherwise, just use
         // 1.  For desktop browsers, if the user has zoom enabled, it affects the pixel ratio
@@ -44,7 +44,7 @@
             var pixelRatio = config.pixelRatio || Kinetic.pixelRatio || _pixelRatio;
 
             this.pixelRatio = pixelRatio;
-            this._canvas = document.createElement('canvas');
+            this._canvas = Kinetic.Util.createCanvasElement();
 
             // set inline styles
             this._canvas.style.padding = 0;

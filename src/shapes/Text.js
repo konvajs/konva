@@ -1,7 +1,7 @@
 (function() {
     // constants
     var AUTO = 'auto',
-        CANVAS = 'canvas',
+        //CANVAS = 'canvas',
         CENTER = 'center',
         CHANGE_KINETIC = 'Change.kinetic',
         CONTEXT_2D = '2d',
@@ -22,7 +22,7 @@
 
         // cached variables
         attrChangeListLen = ATTR_CHANGE_LIST.length,
-        dummyContext = document.createElement(CANVAS).getContext(CONTEXT_2D);
+        dummyContext = Kinetic.Util.createCanvasElement().getContext(CONTEXT_2D);
 
     /**
      * Text constructor
