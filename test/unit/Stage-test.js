@@ -403,6 +403,7 @@ suite('Stage', function() {
         assert.equal(Kinetic.names.stageFalconName, undefined, 'stage should no longer be in names map');
         assert.equal(Kinetic.ids.circleFalconId, undefined, 'circle should no longer be in ids map');
         assert.equal(Kinetic.names.circleFalconName, undefined, 'circle should no longer be in names map');
+        assert.equal(Kinetic.stages.indexOf(stage) === -1, true, 'stage should not be in stages array');
 
 
     });

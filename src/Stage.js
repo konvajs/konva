@@ -153,6 +153,10 @@
             if(content && Kinetic.Util._isInDocument(content)) {
                 this.getContainer().removeChild(content);
             }
+            var index = Kinetic.stages.indexOf(this);
+            if (index > -1) {
+                Kinetic.stages.splice(index, 1);
+            }
         },
         /**
          * get pointer position which can be a touch position or mouse position
