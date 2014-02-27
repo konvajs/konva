@@ -28,8 +28,5 @@
     "url": "git://github.com/ericdrowell/KineticJS.git"
   },
   "author": "Eric Rowell",
-  "license": "MIT",
-  "dependencies": {
-    "canvas": "^1.1.3"
-  }
+  "license": "MIT"
 }
