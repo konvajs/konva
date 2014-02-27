@@ -15,13 +15,13 @@ If you add a file in the src directory, be sure to add the filename to the sourc
 KineticJS uses Mocha for testing. 
 
 * If you need run test only one time run `grunt test`.
-* While developing it is easy to use `grunt server` with watch task. Just run in in go to http://localhost:8080/test/runner.html. After src file change kinetic-dev.js will be automatically created, so you need just refresh test page.
+* While developing it is easy to use `grunt server` with watch task. Just run it and go to [http://localhost:8080/test/runner.html](http://localhost:8080/test/runner.html). After src file change kinetic-dev.js will be automatically created, so you just need refresh test the page.
 
 KineticJS is covered with hundreds of tests and well over a thousand assertions.  KineticJS uses TDD (test driven development) which means that every new feature or bug fix is accompanied with at least one new test. 
 
 #Generation documentation
 
-`grunt gen-doc`
+Run `grunt gen-doc` and see created 'documentation' folder.
 
 
 #Pull Requests
