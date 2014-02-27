@@ -1,0 +1,10 @@
+dist
+doc-includes
+jsdoc-master
+src
+test
+.travis.yml
+Gruntfile.js
+bower-template.js
+bower.json
+presentation-schedule.md
