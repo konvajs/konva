@@ -267,6 +267,7 @@
                                 }
                             }
                             this._addTextLine(match, matchWidth);
+                            textWidth = Math.max(textWidth, matchWidth);
                             currentHeightPx += lineHeightPx;
                             if (!shouldWrap ||
                                 (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx)) {
@@ -284,6 +285,7 @@
                                     // if it does, add the line and break out of the loop
                                     this._addTextLine(line, lineWidth);
                                     currentHeightPx += lineHeightPx;
+                                    textWidth = Math.max(textWidth, lineWidth);
                                     break;
                                 }
                             }
@@ -451,5 +453,5 @@
      * text.text('Hello world!');
      */
 
-     Kinetic.Collection.mapMethods(Kinetic.Text);
+    Kinetic.Collection.mapMethods(Kinetic.Text);
 })();

@@ -275,4 +275,19 @@ suite('Text', function(){
         assert(text.getHeight() > height, 'height should have increased');
 
     });
+    test('get text width', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+        stage.add(layer);
+        var text = new Kinetic.Text({
+            text : 'hello asd fasdf asdf asd fasdf asdfasd fa sds helloo',
+            fill : 'black',
+            width: 100
+        });
+
+        layer.add(text);
+        layer.draw();
+        assert.equal(text.getTextWidth() > 0 && text.getTextWidth() < 100, true);
+
+    });
 });
