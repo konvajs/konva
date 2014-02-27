@@ -30,7 +30,7 @@ And not published in npm.
 
 We are using (node-canvas)[https://github.com/LearnBoost/node-canvas] to create canvas element.
 
-* You have to install node-canvas depependencies (https://github.com/LearnBoost/node-canvas/wiki/_pages)[https://github.com/LearnBoost/node-canvas/wiki/_pages]
+* You have to install node-canvas dependencies (https://github.com/LearnBoost/node-canvas/wiki/_pages)[https://github.com/LearnBoost/node-canvas/wiki/_pages]
 * Run `npm install KineticJS`
 
 ###Example
