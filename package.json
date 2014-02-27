@@ -15,7 +15,10 @@
     "grunt-cli": "0.1.13",
     "grunt": "0.4.2",
     "connect": "2.13.0",
-    "grunt-contrib-copy": "~0.5.0"
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-shell": "^0.6.4",
+    "jsdoc": "^3.3.0-alpha4",
+    "grunt-mocha-phantomjs": "^0.4.2"
   },
   "readmeFilename": "README.md",
   "main": "Gruntfile.js",

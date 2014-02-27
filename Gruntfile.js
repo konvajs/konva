@@ -195,6 +195,19 @@ module.exports = function(grunt) {
         src: 'dist/kinetic-v<%= pkg.version %>.js',
         dest: 'kinetic.js',
       }
+    },
+    shell: {
+        jsdoc: {
+            options: {
+                stdout: true,
+                stderr : true,
+                failOnError : true
+            },
+            command: './node_modules/.bin/jsdoc ./dist/kinetic-v<%= pkg.version %>.js -d ./documentation'
+        }
+    },
+    mocha_phantomjs: {
+      all: ['test/runner.html']
     }
   };
 
@@ -209,18 +222,11 @@ module.exports = function(grunt) {
   
   grunt.initConfig(config);
 
-  // Load plugins
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-replace');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-copy');
 
   // Tasks
-  grunt.registerTask('dev', ['clean', 'concat:dev', 'replace:dev']);
-  grunt.registerTask('beta', ['clean', 'concat:beta', 'replace:beta']);
-  grunt.registerTask('full', [
+  grunt.registerTask('dev', 'Create dev version', ['clean', 'concat:dev', 'replace:dev']);
+  grunt.registerTask('beta', 'Create beta version', ['clean', 'concat:beta', 'replace:beta']);
+  grunt.registerTask('full', 'Build full version and create min files', [
     'clean',
     'concat:prod',
     'uglify',
@@ -231,5 +237,21 @@ module.exports = function(grunt) {
     'copy:prod1',
     'copy:prod2'
   ]);
-  grunt.registerTask('hint', ['clean', 'concat:dev', 'replace:dev', 'jshint']);
+
+  grunt.registerTask('gen-doc', 'Generate documentation to documentation folder', [
+    'full',
+    'shell:jsdoc',
+  ]);
+
+  grunt.registerTask('hint', 'Check lint errors', ['clean', 'concat:dev', 'replace:dev', 'jshint']);
+  grunt.registerTask('tests', 'Run tests', ['dev', 'mocha_phantomjs']);
+
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-replace');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-shell');
+  grunt.loadNpmTasks('grunt-mocha-phantomjs');
 };

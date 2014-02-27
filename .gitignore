@@ -3,6 +3,7 @@ analysis
 node_modules
 bower_components
 phantomjs.exe
+documentation
 
 # Numerous always-ignore extensions
 *.diff
