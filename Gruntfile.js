@@ -247,7 +247,7 @@ module.exports = function(grunt) {
     'copy:prod2'
   ]);
 
-  grunt.registerTask('gen-doc', 'Generate documentation to documentation folder', [
+  grunt.registerTask('docs', 'Generate documentation to documentation folder', [
     'full',
     'shell:jsdoc',
   ]);

@@ -21,7 +21,7 @@ KineticJS is covered with hundreds of tests and well over a thousand assertions.
 
 #Generation documentation
 
-Run `grunt gen-doc` and see created 'documentation' folder.
+Run `grunt docs` and see created 'documentation' folder.
 
 #NodeJS
 
