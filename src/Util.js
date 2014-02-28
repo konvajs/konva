@@ -368,13 +368,7 @@
             return names.length > 0;
         },
         createCanvasElement: function() {
-            var canvas;
-            if (Kinetic.Util.isBrowser()) {
-                canvas = document.createElement('canvas');
-            } else {
-                // nodejs way
-                canvas = new Kinetic._nodeCanvas(200,200);
-            }
+            var canvas = Kinetic.document.createElement('canvas');
             canvas.style = canvas.style || {};
             return canvas;
         },
@@ -383,7 +377,7 @@
         },
         _isInDocument: function(el) {
             while(el = el.parentNode) {
-                if(el == document) {
+                if(el == Kinetic.document) {
                     return true;
                 }
             }
@@ -427,7 +421,7 @@
 
             // if arg is a string, then it's a data url
             else if(this._isString(arg)) {
-                imageObj = new Image();
+                imageObj = new Kinetic.window.Image();
                 imageObj.onload = function() {
                     callback(imageObj);
                 };
@@ -436,7 +430,7 @@
 
             //if arg is an object that contains the data property, it's an image object
             else if(arg.data) {
-                canvas = document.createElement(CANVAS);
+                canvas = Kinetic.Util.createCanvasElement();
                 canvas.width = arg.width;
                 canvas.height = arg.height;
                 var _context = canvas.getContext(CONTEXT_2D);
@@ -591,7 +585,7 @@
              * IE9 on Windows7 64bit will throw a JS error
              * if we don't use window.console in the conditional
              */
-            if(window.console && console.warn) {
+            if(Kinetic.root.console && console.warn) {
                 console.warn(KINETIC_WARNING + str);
             }
         },

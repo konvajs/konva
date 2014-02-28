@@ -57,6 +57,8 @@
     Kinetic.Util.addMethods(Kinetic.Stage, {
         ___init: function(config) {
             this.nodeType = STAGE;
+            // default container id. usefull for nodejs
+            config.container = config.container || 'con';
             // call super constructor
             Kinetic.Container.call(this, config);
             this._id = Kinetic.idCounter++;
@@ -78,7 +80,7 @@
          */
         setContainer: function(container) {
             if( typeof container === STRING) {
-                container = document.getElementById(container);
+                container = Kinetic.document.getElementById(container);
             }
             this._setAttr(CONTAINER, container);
             return this;
@@ -217,7 +219,7 @@
             function drawLayer(n) {
                 var layer = layers[n],
                     layerUrl = layer.toDataURL(),
-                    imageObj = new Image();
+                    imageObj = new Kinetic.window.Image();
 
                 imageObj.onload = function() {
                     _context.drawImage(imageObj, 0, 0);
@@ -624,12 +626,11 @@
         },
         _buildDOM: function() {
             var container = this.getContainer();
-
             // clear content inside container
             container.innerHTML = EMPTY_STRING;
 
             // content
-            this.content = document.createElement(DIV);
+            this.content = Kinetic.document.createElement(DIV);
             this.content.style.position = RELATIVE;
             this.content.style.display = INLINE_BLOCK;
             this.content.className = KINETICJS_CONTENT;

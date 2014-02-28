@@ -254,11 +254,7 @@
      * node.draggable(false);
      */
 
-
-    if (!Kinetic.Util.isBrowser()) {
-        return;
-    }
-    var html = document.documentElement;
+    var html = Kinetic.document.documentElement;
     html.addEventListener('mouseup', Kinetic.DD._endDragBefore, true);
     html.addEventListener('touchend', Kinetic.DD._endDragBefore, true);
 
