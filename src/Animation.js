@@ -1,10 +1,10 @@
-(function(root) {
+(function() {
     var BATCH_DRAW_STOP_TIME_DIFF = 500;
 
     var now =(function() {
-        if (root.performance && root.performance.now) {
+        if (Kinetic.root.performance && Kinetic.root.performance.now) {
             return function() {
-                return root.performance.now();
+                return Kinetic.root.performance.now();
             };
         }
         else {
@@ -15,20 +15,20 @@
     })();
 
     var RAF = (function() {
-        return root.requestAnimationFrame
-            || root.webkitRequestAnimationFrame
-            || root.mozRequestAnimationFrame
-            || root.oRequestAnimationFrame
-            || root.msRequestAnimationFrame
+        return Kinetic.root.requestAnimationFrame
+            || Kinetic.root.webkitRequestAnimationFrame
+            || Kinetic.root.mozRequestAnimationFrame
+            || Kinetic.root.oRequestAnimationFrame
+            || Kinetic.root.msRequestAnimationFrame
             || FRAF;
     })();
 
     function FRAF(callback) {
-        root.setTimeout(callback, 1000 / 60);
+        Kinetic.root.setTimeout(callback, 1000 / 60);
     }
 
     function requestAnimFrame() {
-        return RAF.apply(root, arguments);
+        return RAF.apply(Kinetic.root, arguments);
     }
     
     /**
@@ -294,4 +294,4 @@
             layer.batchDraw();
         });
     };
-})(this);
+})((1,eval)('this'));

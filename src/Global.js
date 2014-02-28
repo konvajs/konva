@@ -288,15 +288,28 @@ var Kinetic = {};
         // only CommonJS-like enviroments that support module.exports,
         // like Node.
         var Canvas = require('canvas');
+        var jsdom = require('jsdom').jsdom;
+        var doc = jsdom('<!DOCTYPE html><html><head></head><body><div id="con"></div></body></html>');
+
         var KineticJS = factory();
+
+        Kinetic.document = doc;
+        Kinetic.window = Kinetic.document.createWindow();
+        Kinetic.window.Image = Canvas.Image;
+        Kinetic.root = root;
         Kinetic._nodeCanvas = Canvas;
         module.exports = KineticJS;
+        return;
     }
     else if( typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define(factory);
     }
-}(this, function() {
+    Kinetic.document = document;
+    Kinetic.window = window;
+    Kinetic.root = root;
+
+}((1, eval)('this'), function() {
 
     // Just return a value to define the module export.
     // This example returns an object, but the module
