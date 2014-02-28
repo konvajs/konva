@@ -380,7 +380,9 @@
             }
             return this;
         },
+        // some event aliases for third party integration like HammerJS 
         dispatchEvent: function(evt) {
+            evt.targetNode = this;
             this.fire(evt.type, evt);
         },
         addEventListener: function() {
