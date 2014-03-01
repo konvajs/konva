@@ -289,7 +289,7 @@ var Kinetic = {};
         // like Node.
         var Canvas = require('canvas');
         var jsdom = require('jsdom').jsdom;
-        var doc = jsdom('<!DOCTYPE html><html><head></head><body><div id="con"></div></body></html>');
+        var doc = jsdom('<!DOCTYPE html><html><head></head><body></body></html>');
 
         var KineticJS = factory();
 

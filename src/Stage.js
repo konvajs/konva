@@ -57,8 +57,6 @@
     Kinetic.Util.addMethods(Kinetic.Stage, {
         ___init: function(config) {
             this.nodeType = STAGE;
-            // default container id. usefull for nodejs
-            config.container = config.container || 'con';
             // call super constructor
             Kinetic.Container.call(this, config);
             this._id = Kinetic.idCounter++;
@@ -630,6 +628,14 @@
         },
         _buildDOM: function() {
             var container = this.getContainer();
+            if (!container) {
+                if (Kinetic.Util.isBrowser()) {
+                    throw 'Stage has not container. But container is required';
+                } else {
+                    // automatically create element for jsdom in nodejs env
+                container = Kinetic.document.createElement(DIV);
+                }
+            }
             // clear content inside container
             container.innerHTML = EMPTY_STRING;
 
