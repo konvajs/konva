@@ -860,6 +860,10 @@
          * @returns {Boolean}
          */
         moveToTop: function() {
+            if (!this.parent) {
+                Kinetic.Util.warn('Node has no parent. moveToTop function is ignored.');
+                return;
+            }
             var index = this.index;
             this.parent.children.splice(index, 1);
             this.parent.children.push(this);
@@ -873,6 +877,10 @@
          * @returns {Boolean}
          */
         moveUp: function() {
+            if (!this.parent) {
+                Kinetic.Util.warn('Node has no parent. moveUp function is ignored.');
+                return;
+            }
             var index = this.index,
                 len = this.parent.getChildren().length;
             if(index < len - 1) {
@@ -890,6 +898,10 @@
          * @returns {Boolean}
          */
         moveDown: function() {
+            if (!this.parent) {
+                Kinetic.Util.warn('Node has no parent. moveDown function is ignored.');
+                return;
+            }
             var index = this.index;
             if(index > 0) {
                 this.parent.children.splice(index, 1);
@@ -906,6 +918,10 @@
          * @returns {Boolean}
          */
         moveToBottom: function() {
+            if (!this.parent) {
+                Kinetic.Util.warn('Node has no parent. moveToBottom function is ignored.');
+                return;
+            }
             var index = this.index;
             if(index > 0) {
                 this.parent.children.splice(index, 1);
@@ -923,6 +939,10 @@
          * @returns {Kinetic.Node}
          */
         setZIndex: function(zIndex) {
+            if (!this.parent) {
+                Kinetic.Util.warn('Node has no parent. zIndex parameter is ignored.');
+                return;
+            }
             var index = this.index;
             this.parent.children.splice(index, 1);
             this.parent.children.splice(zIndex, 0, this);
