@@ -32,9 +32,6 @@
             this.hitCanvas = new Kinetic.HitCanvas();
             // call super constructor
             Kinetic.Container.call(this, config);
-            if (!Kinetic.Util.isBrowser()) {
-                this.canvas.setSize(this.attrs.width, this.attrs.height);
-            }
         },
         _validateAdd: function(child) {
             var type = child.getType();

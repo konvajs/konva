@@ -80,7 +80,11 @@
          */
         setContainer: function(container) {
             if( typeof container === STRING) {
+                var id = container;
                 container = Kinetic.document.getElementById(container);
+                if (!container) {
+                    throw 'Can not find container in document with id ' + id;
+                }
             }
             this._setAttr(CONTAINER, container);
             return this;
