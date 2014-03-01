@@ -1355,4 +1355,39 @@ suite('Container', function() {
         layer.draw();
     });
 
+    // ======================================================
+    test('add and moveTo should work same way (depend on parent)', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+        var greenGroup = new Kinetic.Group();
+        var blueGroup = new Kinetic.Group();
+
+        var bluecircle = new Kinetic.Circle({
+            x: 200,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'blue',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        bluecircle.moveTo(blueGroup);
+
+        layer.add(blueGroup);
+        layer.add(greenGroup);
+        stage.add(layer);
+
+        assert.equal(blueGroup.getChildren().length, 1, 'blue group should have only one children');
+        blueGroup.add(bluecircle);
+        assert.equal(blueGroup.getChildren().length, 1, 'blue group should have only one children after adding node twice');
+
+        greenGroup.add(bluecircle);
+        assert.equal(blueGroup.getChildren().length, 0, 'blue group should not have children');
+        assert.equal(greenGroup.getChildren().length, 1, 'green group should have only one children');
+
+
+
+        layer.draw();
+    });
+
 });
