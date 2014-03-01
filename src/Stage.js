@@ -351,6 +351,7 @@
         },
         _mouseover: function(evt) {
             if (!Kinetic.UA.mobile) {
+                this._setPointerPosition(evt);
                 this._fire(CONTENT_MOUSEOVER, evt);
             }
         },
@@ -369,7 +370,7 @@
                 this._fire(CONTENT_MOUSEOUT, evt);
             }
         },
-        _mousemove: Kinetic.Util._throttle(function(evt) {
+        _mousemove: function(evt) {
             if (!Kinetic.UA.mobile) {
                 this._setPointerPosition(evt);
                 var dd = Kinetic.DD,
@@ -415,7 +416,7 @@
             if (evt.preventDefault) {
                 evt.preventDefault();
             }
-        }, 17),
+        },
         _mousedown: function(evt) {
             if (!Kinetic.UA.mobile) {
                 this._setPointerPosition(evt);
@@ -549,7 +550,7 @@
 
             Kinetic.listenClickTap = false;
         },
-        _touchmove: Kinetic.Util._throttle(function(evt) {
+        _touchmove: function(evt) {
             this._setPointerPosition(evt);
             var dd = Kinetic.DD,
                 shape = this.getIntersection(this.getPointerPosition());
@@ -568,7 +569,7 @@
             if(dd) {
                 dd._drag(evt);
             }
-        }, 17),
+        },
         _setPointerPosition: function(evt) {
             var contentPosition = this._getContentPosition(),
                 offsetX = evt.offsetX,
