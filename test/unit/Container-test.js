@@ -1390,4 +1390,48 @@ suite('Container', function() {
         layer.draw();
     });
 
+    // ======================================================
+    test('getChildren may use filter function', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+
+        var circle1 = new Kinetic.Circle({
+            x: 200,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'blue',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+        var circle2 = circle1.clone();
+        group.add(circle1).add(circle2);
+
+        var rect = new Kinetic.Rect({
+            name : 'test'
+        });
+        group.add(rect);
+
+        var circles = group.getChildren(function(node){
+            return node.getClassName() === 'Circle';
+        });
+        assert.equal(circles.length, 2, 'group has two circle children');
+        assert.equal(circles.indexOf(circle1) > -1, true);
+        assert.equal(circles.indexOf(circle2) > -1, true);
+
+        var testName = group.getChildren(function(node){
+            return node.name() === 'test';
+        });
+
+        assert.equal(testName.length, 1, 'group has one children with test name');
+
+
+        layer.add(group);
+
+
+
+
+        layer.draw();
+    });
+
 });

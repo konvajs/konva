@@ -8,9 +8,29 @@
          * returns a {@link Kinetic.Collection} of direct descendant nodes
          * @method
          * @memberof Kinetic.Container.prototype
+         * @param {Function} [filterFunc] filter function
+         * @returns {Kinetic.Collection}
+         * @example
+         * // get all children<br>
+         * var children = layer.getChildren();<br><br>
+         *
+         * // get only circles<br>
+         * var circles = layer.getChildren(function(node){<br>
+         *    return node.getClassName() === 'Circle';<br>
+         * });
          */
-        getChildren: function() {
-            return this.children;
+        getChildren: function(predicate) {
+            if (!predicate) {
+                return this.children;
+            } else {
+                var results = new Kinetic.Collection();
+                this.children.each(function(child){
+                    if (predicate(child)) {
+                        results.push(child);
+                    }
+                });
+                return results;
+            }
         },
         /**
          * determine if node has children
