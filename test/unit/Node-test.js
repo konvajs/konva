@@ -416,7 +416,8 @@ suite('Node', function() {
             shadowOffsetX: 20,
             shadowOffsetY: 20,
             draggable: true,
-            name: 'myRect'
+            name: 'myRect',
+            id : 'myRect'
         });
 
         var clicks = [];
@@ -438,6 +439,8 @@ suite('Node', function() {
 
         assert.equal(rect.getShadowColor(), 'black');
         assert.equal(clone.getShadowColor(), 'black');
+
+        assert.equal(clone.id() == undefined, true, 'do not clone id');
 
         clone.setShadowColor('green');
 

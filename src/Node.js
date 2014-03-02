@@ -22,6 +22,7 @@
         TRANSFORM = 'transform',
         UPPER_STAGE = 'Stage',
         VISIBLE = 'visible',
+        CLONE_BLACK_LIST = ['id'],
 
         TRANSFORM_CHANGE_STR = [
             'xChange.kinetic',
@@ -35,6 +36,7 @@
             'offsetYChange.kinetic',
             'transformsEnabledChange.kinetic'
         ].join(SPACE);
+
 
     Kinetic.Util.addMethods(Kinetic.Node, {
         _init: function(config) {
@@ -1181,9 +1183,14 @@
         clone: function(obj) {
             // instantiate new node
             var className = this.getClassName(),
-                node = new Kinetic[className](this.attrs),
+                attrs = this.attrs,
                 key, allListeners, len, n, listener;
-
+            // filter black attrs
+            for (var i in CLONE_BLACK_LIST) {
+                var blockAttr = CLONE_BLACK_LIST[i];
+                delete attrs[blockAttr];
+            }
+            var node = new Kinetic[className](attrs);
             // copy over listeners
             for(key in this.eventListeners) {
                 allListeners = this.eventListeners[key];
