@@ -136,6 +136,15 @@
             this.anim.stop();
             clearInterval(this.interval);
         },
+        /**
+         * determine if animation of sprite is running or not.  returns true or false
+         * @method
+         * @memberof Kinetic.Animation.prototype
+         * @returns {Boolean}
+         */
+        isRunning: function() {
+            return this.anim.isRunning();
+        },
         _updateIndex: function() {
             var index = this.frameIndex(),
                 animation = this.getAnimation(),
