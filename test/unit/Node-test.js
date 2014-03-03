@@ -183,6 +183,30 @@ suite('Node', function() {
     });
 
     // ======================================================
+    test('has shadow', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 10,
+            y: stage.getHeight() / 3,
+            width: 100,
+            height: 100,
+            fill : "red",
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true
+        });
+        layer.add(rect);
+        stage.add(layer);
+        rect.shadowEnabled(true);
+        rect.shadowColor("grey");
+        assert.equal(rect.hasShadow(), true);
+        rect.shadowEnabled(false);
+        assert.equal(rect.hasShadow(), false);
+
+    });
+
+    // ======================================================
     test('opacity cache', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();
