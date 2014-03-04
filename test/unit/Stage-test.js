@@ -2,7 +2,7 @@ suite('Stage', function() {
 
     // ======================================================
     test('instantiate stage with id', function() {
-      var container = document.createElement('div');
+      var container = Kinetic.document.createElement('div');
       container.id = 'container';
 
       kineticContainer.appendChild(container);
@@ -21,7 +21,7 @@ suite('Stage', function() {
 
     // ======================================================
     test('test stage buffer canvas and hit buffer canvas', function() {
-      var container = document.createElement('div');
+      var container = Kinetic.document.createElement('div');
       container.id = 'container';
 
       kineticContainer.appendChild(container);
@@ -45,7 +45,7 @@ suite('Stage', function() {
 
     // ======================================================
     test('instantiate stage with dom element', function() {
-      var container = document.createElement('div');
+      var container = Kinetic.document.createElement('div');
 
       kineticContainer.appendChild(container);
 
@@ -58,8 +58,8 @@ suite('Stage', function() {
 
     // ======================================================
     test('stage instantiation should clear container', function() {
-        var container = document.createElement('div');
-        var dummy = document.createElement('p');
+        var container = Kinetic.document.createElement('div');
+        var dummy = Kinetic.document.createElement('p');
         
         container.appendChild(dummy);
         kineticContainer.appendChild(container);
@@ -365,7 +365,7 @@ suite('Stage', function() {
 
     // ======================================================
     test('destroy stage', function() {
-        var container = document.createElement('div');
+        var container = Kinetic.document.createElement('div');
 
         kineticContainer.appendChild(container);
 

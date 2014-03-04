@@ -255,15 +255,25 @@ module.exports = function(grunt) {
   grunt.registerTask('hint', 'Check hint errors', ['jshint']);
   grunt.registerTask('test', 'Run tests', ['dev', 'mocha_phantomjs']);
 
-  grunt.registerTask('server', 'run local server and create dev version', function() {
-
+  grunt.registerTask('node-test', 'Run tests in pure NodeJS environment', function(){
     grunt.task.run('dev');
-    grunt.log.writeln('Tests server starts on http://localhost:8080/test/runner.html');
+    grunt.task.run('_run-node-test');
+  });
+
+
+  grunt.registerTask('server', 'run local server and create dev version', function() {
+    grunt.task.run('dev');
     var connect = require('connect');
     connect.createServer(
         connect.static(__dirname)
     ).listen(8080);
     grunt.task.run('watch:dev');
+    grunt.log.writeln('Tests server starts on http://localhost:8080/test/runner.html');
+  });
+
+  // run pure node tests
+  grunt.registerTask('_run-node-test', function(){
+    require('./test/node-runner');
   });
 
   grunt.loadNpmTasks('grunt-contrib-concat');
