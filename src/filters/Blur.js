@@ -334,7 +334,7 @@
      * @param {Object} imageData
      */
     Kinetic.Filters.Blur = function(imageData) {
-        var radius = this.blurRadius() | 0;
+        var radius = Math.round(this.blurRadius());
 
         if (radius > 0) {
             filterGaussBlurRGBA(imageData, radius);
