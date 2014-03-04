@@ -25,8 +25,8 @@ Run `grunt docs` and see created 'documentation' folder.
 
 #NodeJS
 
-Support of NodeJS is in alpha state!
-And not published in npm.
+Support of NodeJS is experimental!
+And package is not published in npm yet.
 
 We are using (node-canvas)[https://github.com/LearnBoost/node-canvas] to create canvas element.
 
@@ -34,37 +34,8 @@ We are using (node-canvas)[https://github.com/LearnBoost/node-canvas] to create 
 * Run `npm install KineticJS`
 
 ###Example
-```javascript
-var fs = require('fs'),
-    Kinetic = require('KineticJS');
 
-var layer = new Kinetic.Layer({
-    width : 200,
-    height : 200
-});
-
-var rect = new Kinetic.Rect({
-    width : 100,
-    height : 100,
-    x : 50,
-    y : 50,
-    fill : 'green'
-});
-var text = new Kinetic.Text({
-    text : 'Generated inside node js',
-    x : 20,
-    y : 20,
-    fill : 'black'
-});
-layer.add(rect).add(text);
-layer.draw();
-
-var stream = layer.createPNGStream();
-var file = fs.createWriteStream(__dirname + '/helloworld.png');
-stream.on('data', function(chunk) {
-  file.write(chunk);
-});
-```
+See file `nodejs-demo.js`.
 
 #Pull Requests
 I'd be happy to review any pull requests that may better the KineticJS project, in particular if you have a bug fix, enhancement, or a new shape (see `src/shapes` for examples).  Before doing so, please first make sure that all of the tests pass (`grunt test`). 

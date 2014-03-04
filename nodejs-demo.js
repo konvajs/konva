@@ -1,6 +1,8 @@
 var fs = require('fs'),
     Kinetic = require('./dist/kinetic-dev');
 
+
+// Create stage. Container parameter is not required in NodeJS.
 var stage = new Kinetic.Stage({
     width : 100,
     height : 100
@@ -36,26 +38,27 @@ var tween = new Kinetic.Tween({
 });
 tween.play();
 
+// After tween we want to convert stage to dataURL
 setTimeout(function(){
     stage.toDataURL({
         callback: function(data){
-            // adding image to stage
+            // Then add result to stage
             var img = new Kinetic.window.Image();
             img.onload = function() {
                 var image = new Kinetic.Image({
                     image : img,
-                    x : 10
+                    x : 10,
+                    y : 50
                 });
                 layer.add(image);
                 layer.draw();
-                // save stage to disk
+                // save stage image as file
                 stage.toDataURL({
                     callback: function(data){
-                        console.log(1);
-                        var base64Data = data.replace(/^data:image\/png;base64,/,"");
-
-                        fs.writeFile("out.png", base64Data, 'base64', function(err) {
-                           console.log(err);
+                        var base64Data = data.replace(/^data:image\/png;base64,/, '');
+                        fs.writeFile('out.png', base64Data, 'base64', function(err) {
+                           err && console.log(err);
+                           console.log('See out.png');
                         });
                     }
                 });
