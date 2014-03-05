@@ -105,8 +105,8 @@
      * @name clockwise
      * @method
      * @memberof Kinetic.Arc.prototype
-     * @param {Number} clockwise
-     * @returns {Number}
+     * @param {Boolean} clockwise
+     * @returns {Boolean}
      * @example
      * // get clockwise flag<br>
      * var clockwise = arc.clockwise();<br><br>
