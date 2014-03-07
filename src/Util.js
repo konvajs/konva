@@ -557,7 +557,7 @@
             var retObj = {};
             for(var key in obj) {
                 if(this._isObject(obj[key])) {
-                    retObj[key] = this._clone(obj[key]);
+                    retObj[key] = this.cloneObject(obj[key]);
                 }
                 else {
                     retObj[key] = obj[key];

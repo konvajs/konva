@@ -145,6 +145,14 @@
             }
             return this;
         },
+        clone: function(obj) {
+            if (!obj) {
+                obj = {};
+            }
+            obj.container = Kinetic.document.createElement(DIV);
+            
+            return Kinetic.Container.prototype.clone.call(this, obj);
+        },
         /**
          * remove stage
          * @method
@@ -634,7 +642,7 @@
                     throw 'Stage has not container. But container is required';
                 } else {
                     // automatically create element for jsdom in nodejs env
-                container = Kinetic.document.createElement(DIV);
+                    container = Kinetic.document.createElement(DIV);
                 }
             }
             // clear content inside container

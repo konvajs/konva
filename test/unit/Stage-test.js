@@ -74,6 +74,19 @@ suite('Stage', function() {
     });
 
     // ======================================================
+    test('test stage cloning', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+        stage.add(layer);
+
+        var stageClone = stage.clone();
+        assert.notEqual(stage.getContainer(), stageClone.getContainer(), 'clone should be in different container');
+
+        assert.equal(stage.getContainer().childNodes[0].childNodes.length, 1, 'container should not have changes');
+
+    });
+
+    // ======================================================
     test('set stage size', function() {
         var stage = addStage();
 

@@ -1183,13 +1183,18 @@
         clone: function(obj) {
             // instantiate new node
             var className = this.getClassName(),
-                attrs = this.attrs,
+                attrs = Kinetic.Util.cloneObject(this.attrs),
                 key, allListeners, len, n, listener;
             // filter black attrs
             for (var i in CLONE_BLACK_LIST) {
                 var blockAttr = CLONE_BLACK_LIST[i];
                 delete attrs[blockAttr];
             }
+            // apply attr overrides
+            for (key in obj) {
+                attrs[key] = obj[key];
+            }
+
             var node = new Kinetic[className](attrs);
             // copy over listeners
             for(key in this.eventListeners) {
@@ -1210,9 +1215,6 @@
                     }
                 }
             }
-
-            // apply attr overrides
-            node.setAttrs(obj);
             return node;
         },
         /**

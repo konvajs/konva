@@ -425,6 +425,30 @@ suite('Node', function() {
     });
 
     // ======================================================
+    test('clone - check reference', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+
+        var line = new Kinetic.Line({
+            x: 0,
+            y: 0,
+            stroke : 'red',
+            points : [0, 0, 10, 10]
+        });
+
+        var clone = line.clone({
+            stroke: 'green',
+            points : [10, 10, 20, 20, 30, 30]
+        });
+
+        layer.add(clone);
+        stage.add(layer);
+
+        assert.equal(line.points().length, 4);
+        assert.equal(clone.points().length, 6);
+    });
+
+    // ======================================================
     test('complex clone', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();
