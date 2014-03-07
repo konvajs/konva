@@ -429,4 +429,73 @@ suite('Stage', function() {
         //console.log(stage.getStage());
     });
 
+    // ======================================================
+    // #838
+    test('test drag and click', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 50,
+            y: 50,
+            width: 50,
+            height: 50,
+            fill: 'red',
+            draggable: true
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        rect.on('dblclick', function() {
+            assert(false, 'double click fired');
+        });
+
+        var top = stage.content.getBoundingClientRect().top,
+            clientY = 60 + top;
+
+        // simulate dragging
+        stage._mousedown({
+            clientX: 60,
+            clientY: clientY
+        });
+
+        stage._mousemove({
+            clientX: 61,
+            clientY: clientY
+        });
+
+        stage._mousemove({
+            clientX: 62,
+            clientY: clientY
+        });
+
+        stage._mousemove({
+            clientX: 63,
+            clientY: clientY
+        });
+
+        stage._mousemove({
+            clientX: 64,
+            clientY: clientY
+        });
+
+        Kinetic.DD._endDragBefore();
+        stage._mouseup({
+            clientX: 65,
+            clientY: clientY
+        });
+        Kinetic.DD._endDragAfter({dragEndNode:rect});
+
+        // simulate click
+        stage._mousedown({
+            clientX: 66,
+            clientY: clientY
+        });
+
+        stage._mouseup({
+            clientX: 66,
+            clientY: clientY
+        });
+    })
+
 });
