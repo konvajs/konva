@@ -130,7 +130,7 @@
             delete Kinetic.shapes[this.colorKey];
         },
         _useBufferCanvas: function() {
-            return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke();
+            return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke() && this.getStage();
         },
         drawScene: function(can) {
             var canvas = can || this.getLayer().getCanvas(),
