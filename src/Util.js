@@ -559,7 +559,9 @@
                 if(this._isObject(obj[key])) {
                     retObj[key] = this.cloneObject(obj[key]);
                 }
-                else {
+                else if (this._isArray(obj[key])) {
+                    retObj[key] = this.cloneArray(obj[key]);
+                } else {
                     retObj[key] = obj[key];
                 }
             }

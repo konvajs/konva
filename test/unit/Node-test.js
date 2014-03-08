@@ -437,15 +437,14 @@ suite('Node', function() {
         });
 
         var clone = line.clone({
-            stroke: 'green',
-            points : [10, 10, 20, 20, 30, 30]
+            stroke: 'green'
         });
 
         layer.add(clone);
         stage.add(layer);
 
-        assert.equal(line.points().length, 4);
-        assert.equal(clone.points().length, 6);
+        assert.equal(line.points() === clone.points(), false);
+        assert.equal(clone.points().toString(), '0,0,10,10');
     });
 
     // ======================================================
