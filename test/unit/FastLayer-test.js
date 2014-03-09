@@ -1,7 +1,7 @@
 suite('FastLayer', function() {
 
     // ======================================================
-    test('basic render', function() {
+    test.only('basic render', function() {
         var stage = addStage();
 
         var layer = new Kinetic.FastLayer();
