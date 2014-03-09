@@ -177,6 +177,22 @@ var Kinetic = {};
         },
 
         /**
+         * FastLayer constructor.  Layers are tied to their own canvas element and are used
+         * to contain groups or shapes
+         * @constructor
+         * @memberof Kinetic
+         * @augments Kinetic.Container
+         * @param {Object} config
+         * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
+         * to clear the canvas before each layer draw.  The default value is true.
+         * @example
+         * var layer = new Kinetic.FastLayer();
+         */
+        FastLayer: function(config) {
+            this.___init(config);
+        },
+
+        /**
          * Group constructor.  Groups are used to contain shapes or other groups.
          * @constructor
          * @memberof Kinetic

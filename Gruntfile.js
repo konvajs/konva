@@ -35,6 +35,7 @@ module.exports = function(grunt) {
     'src/Shape.js',
     'src/Stage.js',
     'src/Layer.js',
+    'src/FastLayer.js',
     'src/Group.js',
 
     // shapes

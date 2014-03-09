@@ -270,7 +270,7 @@ suite('Layer', function() {
         var circle = new Kinetic.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
-            radius: 70,
+            radius: 70, 
             fill: 'red',
             stroke: 'black',
             strokeWidth: 4
