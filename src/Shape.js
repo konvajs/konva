@@ -133,7 +133,8 @@
             return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke() && this.getStage();
         },
         drawScene: function(can) {
-            var canvas = can || this.getLayer().getCanvas(),
+            var layer = this.getLayer(),
+                canvas = can || layer.getCanvas(),
                 context = canvas.getContext(),
                 cachedCanvas = this._cache.canvas,
                 drawFunc = this.sceneFunc(),
@@ -154,7 +155,7 @@
                         bufferContext.clear();
                         bufferContext.save();
                         bufferContext._applyLineJoin(this);
-                        bufferContext._applyTransform(this);
+                        layer._applyTransform(this, bufferContext);
                      
                         drawFunc.call(this, bufferContext);
                         bufferContext.restore();
@@ -172,7 +173,7 @@
                     // if buffer canvas is not needed
                     else {
                         context._applyLineJoin(this);
-                        context._applyTransform(this);
+                        layer._applyTransform(this, context);
                
                         if (hasShadow) {
                             context.save();
@@ -191,7 +192,8 @@
             return this;
         },
         drawHit: function(can) {
-            var canvas = can || this.getLayer().hitCanvas,
+            var layer = this.getLayer(),
+                canvas = can || layer.hitCanvas,
                 context = canvas.getContext(),
                 drawFunc = this.hitFunc() || this.sceneFunc(),
                 cachedCanvas = this._cache.canvas,
@@ -205,7 +207,7 @@
                 else if (drawFunc) {
                     context.save();
                     context._applyLineJoin(this);
-                    context._applyTransform(this);
+                    layer._applyTransform(this, context);
                    
                     drawFunc.call(this, context);
                     context.restore();

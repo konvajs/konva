@@ -222,19 +222,6 @@
                 this.setAttr('lineJoin', lineJoin);
             }
         },
-        _applyTransform: function(shape) {
-            var transformsEnabled = shape.getTransformsEnabled(),
-                m;
-
-            if (transformsEnabled === 'all') {
-                m = shape.getAbsoluteTransform().getMatrix();
-                this.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
-            }
-            else if (transformsEnabled === 'position') {
-                // best performance for position only transforms
-                this.translate(shape.getX(), shape.getY());
-            }
-        },
         setAttr: function(attr, val) {
             this._context[attr] = val;
         },

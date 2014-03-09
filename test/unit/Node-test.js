@@ -2601,90 +2601,6 @@ suite('Node', function() {
   });
 
     // ======================================================
-  test('transformEnabled methods', function(){
-    var stage = addStage();
-    var layer = new Kinetic.Layer();
-    var group = new Kinetic.Group();
-    var circle = new Kinetic.Circle({
-        x: 100,
-        y: 100,
-        radius: 70,
-        fill: 'green',
-        stroke: 'black',
-        strokeWidth: 4,
-        name: 'myCircle',
-        draggable: true
-    });
-
-    group.add(circle);
-    layer.add(group);
-    stage.add(layer);
-
-    assert.equal(circle.transformsEnabled(), 'all');
-
-    circle.transformsEnabled('position');
-    assert.equal(circle.transformsEnabled(), 'position');
-
-    layer.draw();
-
-
-
-  });
-
-    // ======================================================
-  test('transformEnabled context tracing', function(){
-    var stage = addStage();
-
-    stage.setX(100);
-
-    var layer = new Kinetic.Layer({
-        x: 100
-    });
-    var group = new Kinetic.Group({
-        x: 100
-    });
-    var circle = new Kinetic.Circle({
-        x: 100,
-        y: 100,
-        radius: 40,
-        fill: 'green',
-        stroke: 'black',
-        strokeWidth: 4,
-        name: 'myCircle',
-        draggable: true
-    });
-
-    group.add(circle);
-    layer.add(group);
-    stage.add(layer);
-    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,400,100);beginPath();arc(0,0,40,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
-
-    stage.transformsEnabled('none');
-    layer.getContext().clearTrace();
-    stage.draw();
-    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,300,100);beginPath();arc(0,0,40,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
-
-    layer.transformsEnabled('none');
-    layer.getContext().clearTrace();
-    stage.draw();
-    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,200,100);beginPath();arc(0,0,40,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
-
-    group.transformsEnabled('none');
-    layer.getContext().clearTrace();
-    stage.draw();
-    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,40,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
-
-    // disabling a shape transform disables all transforms but x and y.  In this case, the Kinetic.Context uses translate instead of transform
-    circle.transformsEnabled('position');
-    layer.getContext().clearTrace();
-    stage.draw();
-    assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();translate(100,100);beginPath();arc(0,0,40,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
-
-    //console.log(layer.getContext().getTrace());
-
-  });
-
-    // ======================================================
   test('isVisible', function(){
     var stage = addStage();
     var layer = new Kinetic.Layer();
@@ -2887,7 +2803,7 @@ suite('Node', function() {
 
     //console.log(circle._cache.canvas.scene.getContext().getTrace());
 
-    assert.equal(circle._cache.canvas.scene.getContext().getTrace(), 'save();translate(74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
+    assert.equal(circle._cache.canvas.scene.getContext().getTrace(), 'save();transform(1,0,0,1,74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
   });
 
 
@@ -2970,7 +2886,7 @@ suite('Node', function() {
     //console.log(circle._cache.canvas.scene.getContext().getTrace());
 
     // make sure the border rectangle was drawn onto the cached scene canvas
-    assert.equal(circle._cache.canvas.scene.getContext().getTrace(),'save();translate(74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();beginPath();rect(0,0,148,148);closePath();strokeStyle=red;lineWidth=5;stroke();restore();');
+    assert.equal(circle._cache.canvas.scene.getContext().getTrace(),'save();transform(1,0,0,1,74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();beginPath();rect(0,0,148,148);closePath();strokeStyle=red;lineWidth=5;stroke();restore();');
   });
 
   test('cache group', function(){

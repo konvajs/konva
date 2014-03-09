@@ -171,9 +171,13 @@
 
             this.clearCache();
 
-            this.transformsEnabled('position');
+            // TODO: removing transformsEnabled property because it's weird.
+            // need to find another way to handle this
+            
+            //this.transformsEnabled('position');
             this.x(x * -1);
             this.y(y * -1);
+            
 
             this.drawScene(cachedSceneCanvas);
             this.drawHit(cachedHitCanvas);
@@ -192,9 +196,11 @@
                 sceneContext.restore();
             }
 
+            
             this.x(origX);
             this.y(origY);
-            this.transformsEnabled(origTransEnabled);
+            //this.transformsEnabled(origTransEnabled);
+            
 
             this._cache.canvas = {
                 scene: cachedSceneCanvas,
@@ -206,7 +212,7 @@
         },
         _drawCachedSceneCanvas: function(context) {
             context.save();
-            context._applyTransform(this);
+            this.getLayer()._applyTransform(this, context);
             context.drawImage(this._getCachedSceneCanvas()._canvas, 0, 0);
             context.restore();
         },
@@ -252,7 +258,7 @@
                 hitCanvas = cachedCanvas.hit;
 
             context.save();
-            context._applyTransform(this);
+            this.getLayer()._applyTransform(this, context);
             context.drawImage(hitCanvas._canvas, 0, 0);
             context.restore();
         },
