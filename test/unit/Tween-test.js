@@ -63,7 +63,7 @@ suite('Tween', function() {
     });
 
     // ======================================================
-    test('tween node', function() {
+    test('tween node 2', function() {
         var stage = addStage();
 
         var layer = new Kinetic.Layer();
