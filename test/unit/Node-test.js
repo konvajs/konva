@@ -1094,31 +1094,6 @@ suite('Node', function() {
     });
 
     // ======================================================
-    test('rotation in degrees', function() {
-        var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
-            x: 200,
-            y: 100,
-            width: 100,
-            height: 50,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4,
-            rotation: 10
-        });
-
-        assert.equal(rect.rotation(), 10);
-        rect.rotation(20);
-        assert.equal(rect.rotation(), 20);
-        rect.rotate(20);
-        assert.equal(rect.rotation(), 40);
-
-        layer.add(rect);
-        stage.add(layer);
-    });
-
-    // ======================================================
     test('get shape name', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();
