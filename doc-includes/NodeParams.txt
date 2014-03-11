@@ -16,4 +16,5 @@
      * @param {Number} [config.offsetY] set offset y
      * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
      *  the entire stage by dragging any portion of the stage
+     * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
