@@ -50,6 +50,7 @@ var Kinetic = {};
         traceArrMax: 100,
         dblClickWindow: 400,
         pixelRatio: undefined,
+        dragDistance : 0,
         enableThrottling: true,
 
         // user agent  

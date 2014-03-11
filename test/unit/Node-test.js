@@ -1524,6 +1524,38 @@ suite('Node', function() {
     });
 
     // ======================================================
+    test('test dragDistance', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+        var rect1 = new Kinetic.Rect({
+            x: 1,
+            y: 2,
+            width: 100,
+            height: 50,
+            fill: 'red'
+        });
+
+        var group = new Kinetic.Group({
+            dragDistance : 2
+        });
+
+        var rect2 = new Kinetic.Rect({
+            x: 3,
+            width: 100,
+            height: 50,
+            fill: 'red'
+        });
+        group.add(rect2);
+
+        layer.add(rect1).add(group);
+        stage.add(layer);
+
+        assert.equal(rect1.dragDistance(), 0);
+        assert.equal(group.dragDistance(), 2);
+        assert.equal(rect2.dragDistance(), 2);
+    });
+
+    // ======================================================
     test('translate, rotate, scale shape', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();

@@ -280,6 +280,57 @@ suite('DragAndDropEvents', function() {
     });
 
     // ======================================================
+    test('drag and drop distance', function(done) {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: 40,
+            y: 40,
+            radius: 20,
+            strokeWidth: 4,
+            fill: 'green',
+            stroke: 'black',
+            draggable: true
+        });
+
+
+        layer.add(circle);
+        stage.add(layer);
+        circle.dragDistance(4);
+        var top = stage.content.getBoundingClientRect().top;
+
+        stage._mousedown({
+            clientX: 40,
+            clientY: 40 + top
+        });
+
+        setTimeout(function() {
+            stage._mousemove({
+                clientX: 40,
+                clientY: 42 + top
+            });
+            assert(!circle.isDragging(), 'still not dragging');
+            stage._mousemove({
+                clientX: 40,
+                clientY: 45 + top
+            });
+            assert(circle.isDragging(), 'now circle is dragging');
+            Kinetic.DD._endDragBefore();
+            stage._mouseup({
+                clientX: 41,
+                clientY: 45 + top
+            });
+            Kinetic.DD._endDragAfter({dragEndNode:circle});
+
+            
+
+            done();
+        }, 20);
+
+    });
+
+    // ======================================================
     test('cancel drag and drop by setting draggable to false', function(done) {
         var stage = addStage();
         var layer = new Kinetic.Layer();

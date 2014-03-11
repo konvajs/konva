@@ -8,7 +8,6 @@
             y: 0
         },
         node: null,
-        distance: 1,
 
         // methods
         _drag: function(evt) {
@@ -18,7 +17,7 @@
             if(node) {
                if(!dd.isDragging) {
                     var pos = node.getStage().getPointerPosition();
-                    var dragDistance = node.getAttr('dragDistance') || dd.distance;
+                    var dragDistance = node.dragDistance();
                     var distance = Math.max(
                         Math.abs(pos.x - dd.startPointerPos.x),
                         Math.abs(pos.y - dd.startPointerPos.y)
