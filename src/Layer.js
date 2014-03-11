@@ -123,6 +123,13 @@
 
             return this;
         },
+        // the apply transform method is handled by the Layer and FastLayer class
+        // because it is up to the layer to decide if an absolute or relative transform
+        // should be used
+        _applyTransform: function(shape, context) {
+            var m = shape.getAbsoluteTransform().getMatrix();
+            context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+        },
         drawHit: function(can) {
             var layer = this.getLayer(),
                 canvas = can || (layer && layer.hitCanvas);
@@ -172,11 +179,8 @@
          * layer.clear(0, 0, 100, 100);
          */
         clear: function(bounds) {
-            var context = this.getContext(),
-                hitContext = this.getHitCanvas().getContext();
-
-            context.clear(bounds);
-            hitContext.clear(bounds);
+            this.getContext().clear(bounds);
+            this.getHitCanvas().getContext().clear(bounds);
             return this;
         },
         // extend Node.prototype.setVisible

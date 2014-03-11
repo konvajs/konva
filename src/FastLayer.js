@@ -33,22 +33,25 @@
             var layer = this.getLayer(),
                 canvas = can || (layer && layer.getCanvas());
 
-            this._fire(BEFORE_DRAW, {
-                node: this
-            });
-
             if(this.getClearBeforeDraw()) {
                 canvas.getContext().clear();
             }
             
             Kinetic.Container.prototype.drawScene.call(this, canvas);
 
-            this._fire(DRAW, {
-                node: this
-            });
-
             return this;
         },
+        // the apply transform method is handled by the Layer and FastLayer class
+        // because it is up to the layer to decide if an absolute or relative transform
+        // should be used
+        _applyTransform: function(shape, context) {
+            var m = shape.getTransform().getMatrix();
+            context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+        },
+        draw: function() {
+            this.drawScene();
+            return this;
+        },  
         /**
          * get layer canvas
          * @method
@@ -79,11 +82,7 @@
          * layer.clear(0, 0, 100, 100);
          */
         clear: function(bounds) {
-            var context = this.getContext(),
-                hitContext = this.getHitCanvas().getContext();
-
-            context.clear(bounds);
-            hitContext.clear(bounds);
+            this.getContext().clear(bounds);
             return this;
         },
         // extend Node.prototype.setVisible
@@ -91,11 +90,9 @@
             Kinetic.Node.prototype.setVisible.call(this, visible);
             if(visible) {
                 this.getCanvas()._canvas.style.display = 'block';
-                this.hitCanvas._canvas.style.display = 'block';
             }
             else {
                 this.getCanvas()._canvas.style.display = 'none';
-                this.hitCanvas._canvas.style.display = 'none';
             }
             return this;
         },

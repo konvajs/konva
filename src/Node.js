@@ -150,6 +150,7 @@
                 width = conf.width || this.width(),
                 height = conf.height || this.height(),
                 drawBorder = conf.drawBorder || false,
+                layer = this.getLayer(),
                 cachedSceneCanvas = new Kinetic.SceneCanvas({
                     pixelRatio: 1,
                     width: width,
@@ -171,9 +172,10 @@
 
             this.clearCache();
 
-            this.transformsEnabled('position');
-            this.x(x * -1);
-            this.y(y * -1);
+            var layerApplyTrans = layer._applyTransform;
+            layer._applyTransform = function(shape, context) {
+                context.translate(x * -1, y * -1);
+            };
 
             this.drawScene(cachedSceneCanvas);
             this.drawHit(cachedHitCanvas);
@@ -192,9 +194,9 @@
                 sceneContext.restore();
             }
 
-            this.x(origX);
-            this.y(origY);
-            this.transformsEnabled(origTransEnabled);
+            // set the _applyTransform method back to the original
+            layer._applyTransform = layerApplyTrans;
+            
 
             this._cache.canvas = {
                 scene: cachedSceneCanvas,
@@ -206,7 +208,7 @@
         },
         _drawCachedSceneCanvas: function(context) {
             context.save();
-            context._applyTransform(this);
+            this.getLayer()._applyTransform(this, context);
             context.drawImage(this._getCachedSceneCanvas()._canvas, 0, 0);
             context.restore();
         },
@@ -252,7 +254,7 @@
                 hitCanvas = cachedCanvas.hit;
 
             context.save();
-            context._applyTransform(this);
+            this.getLayer()._applyTransform(this, context);
             context.drawImage(hitCanvas._canvas, 0, 0);
             context.restore();
         },

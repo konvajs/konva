@@ -309,18 +309,19 @@
             return this;
         },
         _drawChildren: function(canvas, drawMethod) {
-            var context = canvas && canvas.getContext(),
+            var layer = this.getLayer(),
+                context = canvas && canvas.getContext(),
                 clipWidth = this.getClipWidth(),
                 clipHeight = this.getClipHeight(),
                 hasClip = clipWidth && clipHeight,
                 clipX, clipY;
 
-            if (hasClip) {
+            if (hasClip && layer) {
                 clipX = this.getClipX();
                 clipY = this.getClipY();
 
                 context.save();
-                context._applyTransform(this);
+                layer._applyTransform(this, context);
                 context.beginPath();
                 context.rect(clipX, clipY, clipWidth, clipHeight);
                 context.clip();
