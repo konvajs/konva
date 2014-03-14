@@ -429,4 +429,13 @@ suite('Stage', function() {
         //console.log(stage.getStage());
     });
 
+    test('add multiple layers to stage', function() {
+        var stage = addStage();
+        var layer1 = new Kinetic.Layer();
+        var layer2 = new Kinetic.Layer();
+        var layer3 = new Kinetic.Layer();
+        stage.add(layer1, layer2, layer3);
+        assert.equal(stage.getLayers().length, 3, 'stage has exactly three layers');
+    });
+
 });
