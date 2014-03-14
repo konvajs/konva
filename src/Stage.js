@@ -321,12 +321,20 @@
             }
         },
         /**
-         * add layer to stage
+         * add layer or layers to stage
          * @method
          * @memberof Kinetic.Stage.prototype
          * @param {Kinetic.Layer} layer
+         * @param {...*} args Additional layers
+         * @example
+         * stage.add(layer1, layer2, layer3);
          */
-        add: function(layer) {
+        add: function(layer, args) {
+            if (arguments.length > 1) {
+                for (var i = 0; i < arguments.length; i++) {
+                    this.add(arguments[i]);
+                }
+            }
             Kinetic.Container.prototype.add.call(this, layer);
             layer._setCanvasSize(this.width(), this.height());
 
