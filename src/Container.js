@@ -86,17 +86,17 @@
          * Add node or nodes to container.
          * @method
          * @memberof Kinetic.Container.prototype
-         * @param {Node} child
-         * @param {...*} args Additional children
+         * @param {...Kinetic.Node} child
          * @returns {Container}
          * @example
          * layer.add(shape1, shape2, shape3);
          */
-        add: function(child, args) {
+        add: function(child) {
             if (arguments.length > 1) {
                 for (var i = 0; i < arguments.length; i++) {
                     this.add(arguments[i]);
                 }
+                return;
             }
             if (child.getParent()) {
                 child.moveTo(this);
