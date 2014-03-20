@@ -597,7 +597,7 @@
             // touch events
             if(evt.touches !== undefined) {
                 // currently, only handle one finger
-                if (evt.touches.length === 1) {
+                if (evt.touches.length > 0) {
 
                     touch = evt.touches[0];
 
