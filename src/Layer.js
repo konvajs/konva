@@ -26,12 +26,12 @@
 
 
     Kinetic.Util.addMethods(Kinetic.Layer, {
-        ___init: function(config) {
+        ____init: function(config) {
             this.nodeType = 'Layer';
             this.canvas = new Kinetic.SceneCanvas();
             this.hitCanvas = new Kinetic.HitCanvas();
             // call super constructor
-            Kinetic.Container.call(this, config);
+            Kinetic.BaseLayer.call(this, config);
         },
         _setCanvasSize: function(width, height) {
             this.canvas.setSize(width, height);
@@ -42,9 +42,6 @@
             if (type !== 'Group' && type !== 'Shape') {
                 Kinetic.Util.error('You may only add groups and shapes to a layer.');
             }
-        },
-        createPNGStream : function() {
-            return this.canvas._canvas.createPNGStream();
         },
         /**
          * get visible intersection shape. This is the preferred
@@ -142,30 +139,6 @@
             return this;
         },
         /**
-         * get layer canvas
-         * @method
-         * @memberof Kinetic.Layer.prototype
-         */
-        getCanvas: function() {
-            return this.canvas;
-        },
-        /**
-         * get layer hit canvas
-         * @method
-         * @memberof Kinetic.Layer.prototype
-         */
-        getHitCanvas: function() {
-            return this.hitCanvas;
-        },
-        /**
-         * get layer canvas context
-         * @method
-         * @memberof Kinetic.Layer.prototype
-         */
-        getContext: function() {
-            return this.getCanvas().getContext();
-        },
-        /**
          * clear scene and hit canvas contexts tied to the layer
          * @method
          * @memberof Kinetic.Layer.prototype
@@ -196,87 +169,6 @@
             }
             return this;
         },
-        // extend Node.prototype.setZIndex
-        setZIndex: function(index) {
-            Kinetic.Node.prototype.setZIndex.call(this, index);
-            var stage = this.getStage();
-            if(stage) {
-                stage.content.removeChild(this.getCanvas()._canvas);
-
-                if(index < stage.getChildren().length - 1) {
-                    stage.content.insertBefore(this.getCanvas()._canvas, stage.getChildren()[index + 1].getCanvas()._canvas);
-                }
-                else {
-                    stage.content.appendChild(this.getCanvas()._canvas);
-                }
-            }
-            return this;
-        },
-        // extend Node.prototype.moveToTop
-        moveToTop: function() {
-            Kinetic.Node.prototype.moveToTop.call(this);
-            var stage = this.getStage();
-            if(stage) {
-                stage.content.removeChild(this.getCanvas()._canvas);
-                stage.content.appendChild(this.getCanvas()._canvas);
-            }
-        },
-        // extend Node.prototype.moveUp
-        moveUp: function() {
-            if(Kinetic.Node.prototype.moveUp.call(this)) {
-                var stage = this.getStage();
-                if(stage) {
-                    stage.content.removeChild(this.getCanvas()._canvas);
-
-                    if(this.index < stage.getChildren().length - 1) {
-                        stage.content.insertBefore(this.getCanvas()._canvas, stage.getChildren()[this.index + 1].getCanvas()._canvas);
-                    }
-                    else {
-                        stage.content.appendChild(this.getCanvas()._canvas);
-                    }
-                }
-            }
-        },
-        // extend Node.prototype.moveDown
-        moveDown: function() {
-            if(Kinetic.Node.prototype.moveDown.call(this)) {
-                var stage = this.getStage();
-                if(stage) {
-                    var children = stage.getChildren();
-                    stage.content.removeChild(this.getCanvas()._canvas);
-                    stage.content.insertBefore(this.getCanvas()._canvas, children[this.index + 1].getCanvas()._canvas);
-                }
-            }
-        },
-        // extend Node.prototype.moveToBottom
-        moveToBottom: function() {
-            if(Kinetic.Node.prototype.moveToBottom.call(this)) {
-                var stage = this.getStage();
-                if(stage) {
-                    var children = stage.getChildren();
-                    stage.content.removeChild(this.getCanvas()._canvas);
-                    stage.content.insertBefore(this.getCanvas()._canvas, children[1].getCanvas()._canvas);
-                }
-            }
-        },
-        getLayer: function() {
-            return this;
-        },
-        remove: function() {
-            var stage = this.getStage(),
-                canvas = this.getCanvas(),
-                _canvas = canvas._canvas;
-
-            Kinetic.Node.prototype.remove.call(this);
-
-            if(stage && _canvas && Kinetic.Util._isInDocument(_canvas)) {
-                stage.content.removeChild(_canvas);
-            }
-            return this;
-        },
-        getStage: function() {
-            return this.parent;
-        },
         /**
          * enable hit graph
          * @name enableHitGraph
@@ -300,28 +192,7 @@
             return this;
         }
     });
-    Kinetic.Util.extend(Kinetic.Layer, Kinetic.Container);
-
-    // add getters and setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Layer, 'clearBeforeDraw', true);
-    /**
-     * get/set clearBeforeDraw flag which determines if the layer is cleared or not
-     *  before drawing
-     * @name clearBeforeDraw
-     * @method
-     * @memberof Kinetic.Layer.prototype
-     * @param {Boolean} clearBeforeDraw
-     * @returns {Boolean}
-     * @example
-     * // get clearBeforeDraw flag<br>
-     * var clearBeforeDraw = layer.clearBeforeDraw();<br><br>
-     *
-     * // disable clear before draw<br>
-     * layer.clearBeforeDraw(false);<br><br>
-     *
-     * // enable clear before draw<br>
-     * layer.clearBeforeDraw(true);
-     */
+    Kinetic.Util.extend(Kinetic.Layer, Kinetic.BaseLayer);
 
     Kinetic.Factory.addGetterSetter(Kinetic.Layer, 'hitGraphEnabled', true);
     /**

@@ -160,6 +160,23 @@ var Kinetic = {};
         },
 
         /**
+         * BaseLayer constructor. 
+         * @constructor
+         * @memberof Kinetic
+         * @augments Kinetic.Container
+         * @param {Object} config
+         * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
+         * to clear the canvas before each layer draw.  The default value is true.
+         * @@nodeParams
+         * @@containerParams
+         * @example
+         * var layer = new Kinetic.Layer();
+         */
+        BaseLayer: function(config) {
+            this.___init(config);
+        },
+
+        /**
          * Layer constructor.  Layers are tied to their own canvas element and are used
          * to contain groups or shapes
          * @constructor
@@ -174,7 +191,7 @@ var Kinetic = {};
          * var layer = new Kinetic.Layer();
          */
         Layer: function(config) {
-            this.___init(config);
+            this.____init(config);
         },
 
         /**
@@ -190,7 +207,7 @@ var Kinetic = {};
          * var layer = new Kinetic.FastLayer();
          */
         FastLayer: function(config) {
-            this.___init(config);
+            this.____init(config);
         },
 
         /**

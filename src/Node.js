@@ -284,7 +284,7 @@
          *
          * // get the target node<br>
          * node.on('click', function(evt) {<br>
-         *   console.log(evt.targetNode);<br>
+         *   console.log(evt.target);<br>
          * });<br><br>
          *
          * // stop event propagation<br>
@@ -300,6 +300,17 @@
          * // namespace listener<br>
          * node.on('click.foo', function() {<br>
          *   console.log('you clicked/touched me!');<br>
+         * });<br><br>
+         *
+         * // get the event type<br>
+         * node.on('click tap', function(evt) {<br>
+         *   var eventType = evt.type;<br>
+         * });<br><br>
+         *
+         * // for change events, get the old and new val<br>
+         * node.on('xChange', function(evt) {<br>
+         *   var oldVal = evt.oldVal;<br>
+         *   var newVal = evt.newVal;<br>
          * });
          */
         on: function(evtStr, handler) {
@@ -389,7 +400,8 @@
         },
         // some event aliases for third party integration like HammerJS 
         dispatchEvent: function(evt) {
-            evt.targetNode = this;
+            evt.target = this;
+            evt.type = evt.evt.type;
             this.fire(evt.type, evt);
         },
         addEventListener: function() {
@@ -1295,26 +1307,11 @@
                 config.callback(img);
             });
         },
-        /**
-         * set size
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @param {Object} size
-         * @param {Number} size.width
-         * @param {Number} size.height
-         * @returns {Kinetic.Node}
-         */
         setSize: function(size) {
             this.setWidth(size.width);
             this.setHeight(size.height);
             return this;
         },
-        /**
-         * get size
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Object}
-         */
         getSize: function() {
             return {
                 width: this.getWidth(),
@@ -1390,12 +1387,6 @@
                 }
             }
         },
-        _fireBeforeChangeEvent: function(attr, oldVal, newVal) {
-            this._fire([BEFORE, Kinetic.Util._capitalize(attr), CHANGE].join(EMPTY_STRING), {
-                oldVal: oldVal,
-                newVal: newVal
-            });
-        },
         _fireChangeEvent: function(attr, oldVal, newVal) {
             this._fire(attr + CHANGE, {
                 oldVal: oldVal,
@@ -1469,7 +1460,6 @@
                     this.attrs[key] = this.getAttr(key);
                 }
                 
-                //this._fireBeforeChangeEvent(key, oldVal, val);
                 this.attrs[key][component] = val;
                 this._fireChangeEvent(key, oldVal, val);
             }
@@ -1478,7 +1468,7 @@
             var okayToRun = true;
 
             if(evt && this.nodeType === SHAPE) {
-                evt.targetNode = this;
+                evt.target = this;
             }
 
             if(eventType === MOUSEENTER && compareShape && this._id === compareShape._id) {
@@ -1505,6 +1495,8 @@
         _fire: function(eventType, evt) {
             var events = this.eventListeners[eventType],
                 i;
+
+            evt.type = eventType;
 
             if (events) {
                 for(i = 0; i < events.length; i++) {
@@ -2001,6 +1993,31 @@
      * // enable all transforms<br>
      * node.transformsEnabled('all');
      */
+
+
+
+    /**
+     * get/set node size
+     * @name size
+     * @method
+     * @memberof Kinetic.Node.prototype
+     * @param {Object} size
+     * @param {Number} size.width
+     * @param {Number} size.height
+     * @returns {Object}
+     * @example
+     * // get node size<br>
+     * var size = node.size();<br>
+     * var x = size.x;<br>
+     * var y = size.y;<br><br>
+     *
+     * // set size<br>
+     * node.size({<br>
+     *   width: 100,<br>
+     *   height: 200<br>
+     * });
+     */
+    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'size');
 
     Kinetic.Factory.backCompat(Kinetic.Node, {
         rotateDeg: 'rotate',

@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      canvas {
+        border: 1px solid #9C9898;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <button id="rebuild">Destroy / Rebuild</button>
+
+    <script src="../../dist/kinetic-dev.js"></script>
+
+    <script>
+      var text; 
+
+      function addText() {
+        text = new Kinetic.Text({
+          x: 250,
+          y: 150,
+          text: 'Simple Text',
+          fontSize: 30,
+          fontFamily: 'Calibri',
+          fill: 'green'        
+        });
+
+        layer.add(text);
+        layer.draw();
+
+        console.log('built')
+      }
+
+      var stage = new Kinetic.Stage({
+        container: 'container',
+        width: 500,
+        height: 300
+      });
+      var layer = new Kinetic.Layer();
+
+      stage.add(layer);
+
+      addText();
+
+      document.getElementById('rebuild').addEventListener('click', function() {
+        text.destroy();
+        console.log('destroyed');
+        addText();
+      });
+
+
+
+    </script>
+  </body>
+</html>

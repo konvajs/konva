@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      canvas {
+        border: 1px solid #9C9898;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <button id="rebuild">Destroy / Rebuild</button>
+
+    <script src="../../dist/kinetic-dev.js"></script>
+
+    <script>
+      var star;
+
+      function addStar() {
+        star = new Kinetic.Star({
+            x: 250,
+            y: 150,
+            innerRadius: 30,
+            outerRadius: 75,
+            numPoints: 5,
+            fill: 'yellow',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle',
+            draggable: true
+        });
+
+        layer.add(star);
+        layer.draw();
+
+        console.log('built')
+      }
+
+      var stage = new Kinetic.Stage({
+        container: 'container',
+        width: 500,
+        height: 300
+      });
+      var layer = new Kinetic.Layer();
+
+      stage.add(layer);
+
+      addStar();
+
+      document.getElementById('rebuild').addEventListener('click', function() {
+        star.destroy();
+        console.log('destroyed');
+        addStar();
+      });
+
+
+
+    </script>
+  </body>
+</html>
