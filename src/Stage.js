@@ -684,6 +684,7 @@
             }
         },
         // currently cache function is now working for stage, because stage has no its own canvas element
+        // TODO: may be it is better to cache all children layers?
         cache: function() {
             Kinetic.Util.warn('Cache function is not allowed for stage. You may use cache only for layers, groups and shapes.');
             return;

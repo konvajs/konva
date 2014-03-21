@@ -398,14 +398,20 @@
             }
             return this;
         },
-        // some event aliases for third party integration like HammerJS 
+        // some event aliases for third party integration like HammerJS
         dispatchEvent: function(evt) {
-            evt.target = this;
-            evt.type = evt.evt.type;
-            this.fire(evt.type, evt);
+            var e = {
+              target: this,
+              type: evt.type,
+              evt: evt
+            };
+            this.fire(evt.type, e);
         },
-        addEventListener: function() {
-            this.on.apply(this, arguments);
+        addEventListener: function(type, handler) {
+            // we to pass native event to handler
+            this.on(type, function(evt){
+                handler.call(this, evt.evt);
+            });
         },
         /**
          * remove self from parent, but don't destroy
