@@ -881,7 +881,8 @@ suite('MouseEvents', function() {
             radius: 70,
             strokeWidth: 4,
             fill: 'red',
-            stroke: 'black'
+            stroke: 'black',
+            id: 'myCircle'
         });
 
         var group1 = new Kinetic.Group();
@@ -919,7 +920,9 @@ suite('MouseEvents', function() {
             e.push('group2');
         });
         layer.on('click', function(evt) {
-            console.log(evt)
+            //console.log(evt)
+            assert.equal(evt.target.id(), 'myCircle');
+            assert.equal(evt.type, 'click');
             e.push('layer');
         });
         stage.on('click', function(evt) {
