@@ -918,10 +918,11 @@ suite('MouseEvents', function() {
         group2.on('click', function() {
             e.push('group2');
         });
-        layer.on('click', function() {
+        layer.on('click', function(evt) {
+            console.log(evt)
             e.push('layer');
         });
-        stage.on('click', function() {
+        stage.on('click', function(evt) {
             e.push('stage');
         });
         // click on circle
