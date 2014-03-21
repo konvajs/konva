@@ -48,7 +48,7 @@
 
         this.anim = new Kinetic.Animation(function() {
             that.tween.onEnterFrame();
-        }, node.getLayer() || node.getLayers());
+        }, node.getLayer());
 
         this.tween = new Tween(key, function(i) {
             that._tweenFunc(i);
@@ -199,7 +199,6 @@
         reset: function() {
             var node = this.node;
             this.tween.reset();
-            (node.getLayer() || node.getLayers()).draw();
             return this;
         },
         /**
@@ -212,7 +211,6 @@
         seek: function(t) {
             var node = this.node;
             this.tween.seek(t * 1000);
-            (node.getLayer() || node.getLayers()).draw();
             return this;
         },
         /**
@@ -234,7 +232,6 @@
         finish: function() {
             var node = this.node;
             this.tween.finish();
-            (node.getLayer() || node.getLayers()).draw();
             return this;
         },
         /**

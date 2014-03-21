@@ -1295,26 +1295,11 @@
                 config.callback(img);
             });
         },
-        /**
-         * set size
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @param {Object} size
-         * @param {Number} size.width
-         * @param {Number} size.height
-         * @returns {Kinetic.Node}
-         */
         setSize: function(size) {
             this.setWidth(size.width);
             this.setHeight(size.height);
             return this;
         },
-        /**
-         * get size
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Object}
-         */
         getSize: function() {
             return {
                 width: this.getWidth(),
@@ -2001,6 +1986,31 @@
      * // enable all transforms<br>
      * node.transformsEnabled('all');
      */
+
+
+
+    /**
+     * get/set node size
+     * @name size
+     * @method
+     * @memberof Kinetic.Node.prototype
+     * @param {Object} size
+     * @param {Number} size.width
+     * @param {Number} size.height
+     * @returns {Object}
+     * @example
+     * // get node size<br>
+     * var size = node.size();<br>
+     * var x = size.x;<br>
+     * var y = size.y;<br><br>
+     *
+     * // set size<br>
+     * node.size({<br>
+     *   width: 100,<br>
+     *   height: 200<br>
+     * });
+     */
+    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'size');
 
     Kinetic.Factory.backCompat(Kinetic.Node, {
         rotateDeg: 'rotate',

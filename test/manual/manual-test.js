@@ -98,7 +98,7 @@ suite('Manual', function() {
             duration: 1,
             x: 400,
             y: 30,
-            rotation: Math.PI * 2,
+            rotation: 90,
             opacity: 1,
             strokeWidth: 6,
             scaleX: 1.5

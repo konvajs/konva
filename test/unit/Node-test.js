@@ -2759,6 +2759,11 @@ suite('Node', function() {
     circle.position({x: 6, y: 8});
     assert.equal(circle.position().x, 6);
     assert.equal(circle.position().y, 8);
+
+    // because the height was set to 11, the width
+    // is also 11 because the node is a circle
+    assert.equal(circle.size().width, 11);
+    assert.equal(circle.size().height, 11);
   });
 
   test('cache shape', function(){
