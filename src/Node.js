@@ -1154,7 +1154,7 @@
             var m = new Kinetic.Transform(),
                 x = this.getX(),
                 y = this.getY(),
-                rotation = this.getRotation() * Math.PI / 180,
+                rotation = Kinetic.getAngle(this.getRotation()),
                 scaleX = this.getScaleX(),
                 scaleY = this.getScaleY(),
                 skewX = this.getSkewX(),

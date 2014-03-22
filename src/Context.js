@@ -428,7 +428,7 @@
                 fillPatternX = shape.getFillPatternX(),
                 fillPatternY = shape.getFillPatternY(),
                 fillPatternScale = shape.getFillPatternScale(),
-                fillPatternRotation = shape.getFillPatternRotation(),
+                fillPatternRotation = Kinetic.getAngle(shape.getFillPatternRotation()),
                 fillPatternOffset = shape.getFillPatternOffset(),
                 fillPatternRepeat = shape.getFillPatternRepeat();
 

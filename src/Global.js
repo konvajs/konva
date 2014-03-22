@@ -32,6 +32,8 @@
 /*jshint -W079, -W020*/
 var Kinetic = {};
 (function(root) {
+    var PI_OVER_180 = Math.PI / 180;
+
     Kinetic = {
         // public
         version: '@@version',
@@ -51,7 +53,7 @@ var Kinetic = {};
         dblClickWindow: 400,
         pixelRatio: undefined,
         dragDistance : 0,
-        enableThrottling: true,
+        angleDeg: true,
 
         // user agent  
         UA: (function() {
@@ -295,6 +297,9 @@ var Kinetic = {};
                     }
                 }
             }
+        },
+        getAngle: function(angle) {
+            return this.angleDeg ? angle * PI_OVER_180 : angle;
         }
     };
 })(this);

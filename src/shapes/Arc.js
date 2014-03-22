@@ -1,4 +1,6 @@
 (function() {
+    var PI_OVER_180 = Math.PI / 180;
+
     /**
      * Arc constructor
      * @constructor
@@ -34,7 +36,7 @@
             this.sceneFunc(this._sceneFunc);
         },
         _sceneFunc: function(context) {
-            var angle = this.angle() * Math.PI / 180,
+            var angle = Kinetic.getAngle(this.angle()),
                 clockwise = this.clockwise();
 
             context.beginPath();

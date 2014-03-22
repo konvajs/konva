@@ -33,7 +33,7 @@
         },
         _sceneFunc: function(context) {
             context.beginPath();
-            context.arc(0, 0, this.getRadius(), 0, this.getAngle() * Math.PI / 180, this.getClockwise());
+            context.arc(0, 0, this.getRadius(), 0, Kinetic.getAngle(this.getAngle()), this.getClockwise());
             context.lineTo(0, 0);
             context.closePath();
             context.fillStrokeShape(this);
