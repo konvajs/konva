@@ -200,7 +200,7 @@
                 sceneContext.stroke();
                 sceneContext.restore();
             }
-            
+
             this.drawScene(cachedSceneCanvas, this);
             this.drawHit(cachedHitCanvas, this);
 
@@ -1534,9 +1534,9 @@
          * @memberof Kinetic.Node.prototype
          * @returns {Kinetic.Node}
          */
-        draw: function(top) {
-            this.drawScene(top);
-            this.drawHit(top);
+        draw: function() {
+            this.drawScene();
+            this.drawHit();
             return this;
         }
     });
