@@ -282,7 +282,7 @@
                 child.index = n;
             });
         },
-        drawScene: function(can) {
+        drawScene: function(can, top) {
             var layer = this.getLayer(),
                 canvas = can || (layer && layer.getCanvas()),
                 context = canvas && canvas.getContext(),
@@ -294,12 +294,12 @@
                     this._drawCachedSceneCanvas(context);
                 }
                 else {
-                    this._drawChildren(canvas, 'drawScene');
+                    this._drawChildren(canvas, 'drawScene', top);
                 }
             }
             return this;
         },
-        drawHit: function(can) {
+        drawHit: function(can, top) {
             var layer = this.getLayer(),
                 canvas = can || (layer && layer.hitCanvas),
                 context = canvas && canvas.getContext(),
@@ -311,12 +311,12 @@
                     this._drawCachedHitCanvas(context);
                 }
                 else {
-                    this._drawChildren(canvas, 'drawHit');
+                    this._drawChildren(canvas, 'drawHit', top);
                 }
             }
             return this;
         },
-        _drawChildren: function(canvas, drawMethod) {
+        _drawChildren: function(canvas, drawMethod, top) {
             var layer = this.getLayer(),
                 context = canvas && canvas.getContext(),
                 clipWidth = this.getClipWidth(),
@@ -337,7 +337,7 @@
             }
 
             this.children.each(function(child) {
-                child[drawMethod](canvas);
+                child[drawMethod](canvas, top);
             });
 
             if (hasClip) {

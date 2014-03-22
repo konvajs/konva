@@ -172,22 +172,25 @@
                 origTransEnabled = this.transformsEnabled(),
                 origX = this.x(),
                 origY = this.y(),
-                sceneContext;
+                sceneContext = cachedSceneCanvas.getContext(),
+                hitContext = cachedHitCanvas.getContext();
 
             this.clearCache();
+   
+            sceneContext.save();
+            hitContext.save();
 
-            var layerApplyTrans = layer._applyTransform;
-            layer._applyTransform = function(shape, context) {
-                context.translate(x * -1, y * -1);
-            };
+            sceneContext.translate(x * -1, y * -1);
+            hitContext.translate(x * -1, y * -1);
 
-            this.drawScene(cachedSceneCanvas);
-            this.drawHit(cachedHitCanvas);
+            if (this.nodeType === 'Shape') {
+                sceneContext.translate(this.x() * -1, this.y() * -1);
+                hitContext.translate(this.x() * -1, this.y() * -1);        
+            }
 
             // this will draw a red border around the cached box for
             // debugging purposes
-            if (drawBorder) {
-                sceneContext = cachedSceneCanvas.getContext();
+            if (drawBorder) {        
                 sceneContext.save();
                 sceneContext.beginPath();
                 sceneContext.rect(0, 0, width, height);
@@ -197,10 +200,12 @@
                 sceneContext.stroke();
                 sceneContext.restore();
             }
-
-            // set the _applyTransform method back to the original
-            layer._applyTransform = layerApplyTrans;
             
+            this.drawScene(cachedSceneCanvas, this);
+            this.drawHit(cachedHitCanvas, this);
+
+            sceneContext.restore();
+            hitContext.restore();
 
             this._cache.canvas = {
                 scene: cachedSceneCanvas,
@@ -848,16 +853,22 @@
             this.setPosition({x:x, y:y});
             return this;
         },
-        _eachAncestorReverse: function(func, includeSelf) {
+        _eachAncestorReverse: function(func, top) {
             var family = [],
                 parent = this.getParent(),
                 len, n;
 
-            // build family by traversing ancestors
-            if(includeSelf) {
-                family.unshift(this);
+            // if top node is defined, and this node is top node,
+            // there's no need to build a family tree.  just execute
+            // func with this because it will be the only node
+            if (top && top._id === this._id) {
+                func(this);
+                return true;
             }
-            while(parent) {
+
+            family.unshift(this);
+
+            while(parent && (!top || parent._id !== top._id)) {
                 family.unshift(parent);
                 parent = parent.parent;
             }
@@ -1126,10 +1137,17 @@
          * @memberof Kinetic.Node.prototype
          * @returns {Kinetic.Transform}
          */
-        getAbsoluteTransform: function() {
-            return this._getCache(ABSOLUTE_TRANSFORM, this._getAbsoluteTransform);
+        getAbsoluteTransform: function(top) {
+            // if using an argument, we can't cache the result.
+            if (top) {
+                return this._getAbsoluteTransform(top); 
+            }
+            // if no argument, we can cache the result
+            else {
+                return this._getCache(ABSOLUTE_TRANSFORM, this._getAbsoluteTransform);
+            }
         },
-        _getAbsoluteTransform: function() {
+        _getAbsoluteTransform: function(top) {
             var at = new Kinetic.Transform(),
                 transformsEnabled, trans;
 
@@ -1144,7 +1162,7 @@
                 else if (transformsEnabled === 'position') {
                     at.translate(node.x(), node.y());
                 }
-            }, true);
+            }, top);
             return at;
         },
         /**
@@ -1516,9 +1534,9 @@
          * @memberof Kinetic.Node.prototype
          * @returns {Kinetic.Node}
          */
-        draw: function() {
-            this.drawScene();
-            this.drawHit();
+        draw: function(top) {
+            this.drawScene(top);
+            this.drawHit(top);
             return this;
         }
     });

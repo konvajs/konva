@@ -132,7 +132,7 @@
         _useBufferCanvas: function() {
             return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke() && this.getStage();
         },
-        drawScene: function(can) {
+        drawScene: function(can, top) {
             var layer = this.getLayer(),
                 canvas = can || layer.getCanvas(),
                 context = canvas.getContext(),
@@ -155,7 +155,7 @@
                         bufferContext.clear();
                         bufferContext.save();
                         bufferContext._applyLineJoin(this);
-                        layer._applyTransform(this, bufferContext);
+                        layer._applyTransform(this, bufferContext, top);
                      
                         drawFunc.call(this, bufferContext);
                         bufferContext.restore();
@@ -173,7 +173,7 @@
                     // if buffer canvas is not needed
                     else {
                         context._applyLineJoin(this);
-                        layer._applyTransform(this, context);
+                        layer._applyTransform(this, context, top);
                
                         if (hasShadow) {
                             context.save();
@@ -191,7 +191,7 @@
 
             return this;
         },
-        drawHit: function(can) {
+        drawHit: function(can, top) {
             var layer = this.getLayer(),
                 canvas = can || layer.hitCanvas,
                 context = canvas.getContext(),
@@ -207,7 +207,7 @@
                 else if (drawFunc) {
                     context.save();
                     context._applyLineJoin(this);
-                    layer._applyTransform(this, context);
+                    layer._applyTransform(this, context, top);
                    
                     drawFunc.call(this, context);
                     context.restore();

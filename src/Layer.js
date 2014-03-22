@@ -100,7 +100,7 @@
                 return {};
             }
         },
-        drawScene: function(can) {
+        drawScene: function(can, top) {
             var layer = this.getLayer(),
                 canvas = can || (layer && layer.getCanvas());
 
@@ -112,7 +112,7 @@
                 canvas.getContext().clear();
             }
             
-            Kinetic.Container.prototype.drawScene.call(this, canvas);
+            Kinetic.Container.prototype.drawScene.call(this, canvas, top);
 
             this._fire(DRAW, {
                 node: this
@@ -123,11 +123,11 @@
         // the apply transform method is handled by the Layer and FastLayer class
         // because it is up to the layer to decide if an absolute or relative transform
         // should be used
-        _applyTransform: function(shape, context) {
-            var m = shape.getAbsoluteTransform().getMatrix();
+        _applyTransform: function(shape, context, top) {
+            var m = shape.getAbsoluteTransform(top).getMatrix();
             context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
         },
-        drawHit: function(can) {
+        drawHit: function(can, top) {
             var layer = this.getLayer(),
                 canvas = can || (layer && layer.hitCanvas);
 
@@ -135,7 +135,7 @@
                 layer.getHitCanvas().getContext().clear();
             }
 
-            Kinetic.Container.prototype.drawHit.call(this, canvas);
+            Kinetic.Container.prototype.drawHit.call(this, canvas, top);
             return this;
         },
         /**

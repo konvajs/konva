@@ -2860,7 +2860,7 @@ suite('Node', function() {
     showHit(layer)
                                         
     assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,124,124);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,50,50);drawImage([object HTMLCanvasElement],0,0);restore();');
-    assert.equal(circle._cache.canvas.scene.getContext().getTrace(), 'save();translate(74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
+    assert.equal(circle._cache.canvas.scene.getContext().getTrace(), 'save();translate(74,74);translate(-74,-74);save();transform(1,0,0,1,74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();restore();');
   });
 
   test('cache shape thats larger than stage', function(){
