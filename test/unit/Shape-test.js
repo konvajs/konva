@@ -624,5 +624,46 @@ suite('Shape', function() {
     assert.equal(shape.fillRadialGradientEndPointY(), 0);
     assert.equal(shape.fillPatternRotation(), 0);
   });
+    
+    // ======================================================
+    test.skip('hit graph when shape cached before adding to Layer', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 290,
+            y: 111,
+            width : 50,
+            height : 50,
+            fill : 'black'
+        });
+        rect.cache();
 
+        var click = false;
+
+        rect.on('click', function() {
+            click = true;
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        var top = stage.content.getBoundingClientRect().top;
+
+        showHit(layer);
+
+        stage._mousedown({
+            clientX: 300,
+            clientY: 120 + top
+        });
+
+        Kinetic.DD._endDragBefore();
+        stage._mouseup({
+            clientX: 300,
+            clientY: 120 + top
+        });
+        Kinetic.DD._endDragAfter({dragEndNode:rect});
+
+        //TODO: can't get this to pass
+        assert.equal(click, true, 'click event should have been fired when mousing down and then up on rect');
+    });
 });
