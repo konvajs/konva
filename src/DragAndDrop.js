@@ -29,14 +29,21 @@
                 }
 
                 node._setDragPosition(evt);
-
                 if(!dd.isDragging) {
                     dd.isDragging = true;
-                    node.fire('dragstart', evt, true);
+                    node.fire('dragstart', {
+                        type : 'dragstart',
+                        target : node,
+                        evt : evt
+                    }, true);
                 }
 
                 // execute ondragmove if defined
-                node.fire('dragmove', evt, true);
+                node.fire('dragmove', {
+                    type : 'dragmove',
+                    target : node,
+                    evt : evt
+                }, true);
             }
         },
         _endDragBefore: function(evt) {
@@ -71,7 +78,11 @@
             var dragEndNode = evt.dragEndNode;
 
             if (evt && dragEndNode) {
-                dragEndNode.fire('dragend', evt, true);
+                dragEndNode.fire('dragend', {
+                    type : 'dragend',
+                    target : dragEndNode,
+                    evt : evt
+                }, true);
             }
         }
     };

@@ -312,6 +312,11 @@
          *   var eventType = evt.type;<br>
          * });<br><br>
          *
+         * // get native event object<br>
+         * node.on('click tap', function(evt) {<br>
+         *   var nativeEvent = evt.evt;<br>
+         * });<br><br>
+         *
          * // for change events, get the old and new val<br>
          * node.on('xChange', function(evt) {<br>
          *   var oldVal = evt.oldVal;<br>
