@@ -180,14 +180,6 @@
             sceneContext.save();
             hitContext.save();
 
-            sceneContext.translate(x * -1, y * -1);
-            hitContext.translate(x * -1, y * -1);
-
-            if (this.nodeType === 'Shape') {
-                sceneContext.translate(this.x() * -1, this.y() * -1);
-                hitContext.translate(this.x() * -1, this.y() * -1);        
-            }
-
             // this will draw a red border around the cached box for
             // debugging purposes
             if (drawBorder) {        
@@ -199,6 +191,14 @@
                 sceneContext.setAttr('lineWidth', 5);
                 sceneContext.stroke();
                 sceneContext.restore();
+            }
+
+            sceneContext.translate(x * -1, y * -1);
+            hitContext.translate(x * -1, y * -1);
+
+            if (this.nodeType === 'Shape') {
+                sceneContext.translate(this.x() * -1, this.y() * -1);
+                hitContext.translate(this.x() * -1, this.y() * -1);        
             }
 
             this.drawScene(cachedSceneCanvas, this);
