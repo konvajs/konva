@@ -105,23 +105,49 @@
     /**
      * Transform constructor
      * @constructor
+     * @param {Array} Optional six-element matrix
      * @memberof Kinetic
      */
-    Kinetic.Transform = function() {
-        this.m = [1, 0, 0, 1, 0, 0];
+    Kinetic.Transform = function(m) {
+        this.m = (m && m.slice()) || [1, 0, 0, 1, 0, 0];
     };
 
     Kinetic.Transform.prototype = {
+        /**
+         * Copy Kinetic.Transform object
+         * @method
+         * @memberof Kinetic.Transform.prototype
+         * @returns {Kinetic.Transform}
+         */
+        copy: function() {
+            return new Kinetic.Transform(this.m);
+        },
+        /**
+         * Transform point
+         * @method
+         * @memberof Kinetic.Transform.prototype
+         * @param {Object} 2D point(x, y)
+         * @returns {Object} 2D point(x, y)
+         */
+        point: function(p) {
+            var m = this.m;
+            return {
+                x: m[0] * p.x + m[2] * p.y + m[4],
+                y: m[1] * p.x + m[3] * p.y + m[5]
+            };
+        },
         /**
          * Apply translation
          * @method
          * @memberof Kinetic.Transform.prototype
          * @param {Number} x
          * @param {Number} y
+         * @returns {Kinetic.Transform}
          */
         translate: function(x, y) {
             this.m[4] += this.m[0] * x + this.m[2] * y;
             this.m[5] += this.m[1] * x + this.m[3] * y;
+            return this;
         },
         /**
          * Apply scale
@@ -129,18 +155,21 @@
          * @memberof Kinetic.Transform.prototype
          * @param {Number} sx
          * @param {Number} sy
+         * @returns {Kinetic.Transform}
          */
         scale: function(sx, sy) {
             this.m[0] *= sx;
             this.m[1] *= sx;
             this.m[2] *= sy;
             this.m[3] *= sy;
+            return this;
         },
         /**
          * Apply rotation
          * @method
          * @memberof Kinetic.Transform.prototype
          * @param {Number} rad  Angle in radians
+         * @returns {Kinetic.Transform}
          */
         rotate: function(rad) {
             var c = Math.cos(rad);
@@ -153,6 +182,7 @@
             this.m[1] = m12;
             this.m[2] = m21;
             this.m[3] = m22;
+            return this;
         },
         /**
          * Returns the translation
@@ -172,6 +202,7 @@
          * @memberof Kinetic.Transform.prototype
          * @param {Number} sx
          * @param {Number} sy
+         * @returns {Kinetic.Transform}
          */
         skew: function(sx, sy) {
             var m11 = this.m[0] + this.m[2] * sy;
@@ -182,12 +213,14 @@
             this.m[1] = m12;
             this.m[2] = m21;
             this.m[3] = m22;
-        },
+            return this;
+         },
         /**
          * Transform multiplication
          * @method
          * @memberof Kinetic.Transform.prototype
          * @param {Kinetic.Transform} matrix
+         * @returns {Kinetic.Transform}
          */
         multiply: function(matrix) {
             var m11 = this.m[0] * matrix.m[0] + this.m[2] * matrix.m[1];
@@ -205,11 +238,13 @@
             this.m[3] = m22;
             this.m[4] = dx;
             this.m[5] = dy;
+            return this;
         },
         /**
          * Invert the matrix
          * @method
          * @memberof Kinetic.Transform.prototype
+         * @returns {Kinetic.Transform}
          */
         invert: function() {
             var d = 1 / (this.m[0] * this.m[3] - this.m[1] * this.m[2]);
@@ -225,6 +260,7 @@
             this.m[3] = m3;
             this.m[4] = m4;
             this.m[5] = m5;
+            return this;
         },
         /**
          * return matrix
@@ -238,6 +274,7 @@
          * set to absolute position via translation
          * @method
          * @memberof Kinetic.Transform.prototype
+         * @returns {Kinetic.Transform}
          * @author ericdrowell
          */
         setAbsolutePosition: function(x, y) {
@@ -250,7 +287,7 @@
                 yt = ((m0 * (y - m5)) - (m1 * (x - m4))) / ((m0 * m3) - (m1 * m2)),
                 xt = (x - m4 - (m2 * yt)) / m0;
 
-            this.translate(xt, yt);
+            return this.translate(xt, yt);
         }
     };
 
