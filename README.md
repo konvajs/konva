@@ -21,12 +21,11 @@ KineticJS is covered with hundreds of tests and well over a thousand assertions.
 
 #Generation documentation
 
-Run `grunt docs` and see created 'documentation' folder.
+Run `grunt docs` which will build the documentation files and place them in the docs folder.
 
 #NodeJS
 
-Support of NodeJS is experimental!
-And package is not published in npm yet.
+Support of NodeJS is experimental.An nmp package is not yet published.
 
 We are using (node-canvas)[https://github.com/LearnBoost/node-canvas] to create canvas element.
 
