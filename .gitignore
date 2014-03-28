@@ -4,6 +4,7 @@ node_modules
 bower_components
 phantomjs.exe
 docs
+jsdoc-template
 test/sandbox.html
 
 # Numerous always-ignore extensions
