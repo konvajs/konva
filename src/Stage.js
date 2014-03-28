@@ -154,7 +154,7 @@
             return Kinetic.Container.prototype.clone.call(this, obj);
         },
         /**
-         * remove stage
+         * destroy stage
          * @method
          * @memberof Kinetic.Stage.prototype
          */
@@ -690,20 +690,6 @@
             return;
         },
         clearCache : function() {
-        },
-        removeChildren : function() {
-            Kinetic.Container.prototype.removeChildren.call(this);
-            // clear all canvases
-            while (this.content.firstChild) {
-                this.content.removeChild(this.content.firstChild);
-            }
-        },
-        destroyChildren : function() {
-            Kinetic.Container.prototype.destroyChildren.call(this);
-            // clear all canvases
-            while (this.content.firstChild) {
-                this.content.removeChild(this.content.firstChild);
-            }
         }
     });
     Kinetic.Util.extend(Kinetic.Stage, Kinetic.Container);
