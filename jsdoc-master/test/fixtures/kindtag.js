@@ -1,2 +1,0 @@
-/** @kind function */
-var x;
