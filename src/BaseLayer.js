@@ -116,14 +116,12 @@
             return this;
         },
         remove: function() {
-            var stage = this.getStage(),
-                canvas = this.getCanvas(),
-                _canvas = canvas._canvas;
+            var _canvas = this.getCanvas()._canvas;
 
             Kinetic.Node.prototype.remove.call(this);
 
-            if(stage && _canvas && Kinetic.Util._isInDocument(_canvas)) {
-                stage.content.removeChild(_canvas);
+            if(_canvas && _canvas.parentNode && Kinetic.Util._isInDocument(_canvas)) {
+                _canvas.parentNode.removeChild(_canvas);
             }
             return this;
         },

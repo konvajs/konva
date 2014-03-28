@@ -1,10 +1,10 @@
 
 /*
- * KineticJS JavaScript Framework v5.0.2
+ * KineticJS JavaScript Framework v5.1.0
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-03-26
+ * Date: 2014-03-27
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -36,7 +36,7 @@ var Kinetic = {};
 
     Kinetic = {
         // public
-        version: '5.0.2',
+        version: '5.1.0',
 
         // private
         stages: [],
@@ -2353,14 +2353,6 @@ var Kinetic = {};
             sceneContext.save();
             hitContext.save();
 
-            sceneContext.translate(x * -1, y * -1);
-            hitContext.translate(x * -1, y * -1);
-
-            if (this.nodeType === 'Shape') {
-                sceneContext.translate(this.x() * -1, this.y() * -1);
-                hitContext.translate(this.x() * -1, this.y() * -1);        
-            }
-
             // this will draw a red border around the cached box for
             // debugging purposes
             if (drawBorder) {        
@@ -2372,6 +2364,14 @@ var Kinetic = {};
                 sceneContext.setAttr('lineWidth', 5);
                 sceneContext.stroke();
                 sceneContext.restore();
+            }
+
+            sceneContext.translate(x * -1, y * -1);
+            hitContext.translate(x * -1, y * -1);
+
+            if (this.nodeType === 'Shape') {
+                sceneContext.translate(this.x() * -1, this.y() * -1);
+                hitContext.translate(this.x() * -1, this.y() * -1);        
             }
 
             this.drawScene(cachedSceneCanvas, this);
@@ -2483,6 +2483,11 @@ var Kinetic = {};
          * // get the event type<br>
          * node.on('click tap', function(evt) {<br>
          *   var eventType = evt.type;<br>
+         * });<br><br>
+         *
+         * // get native event object<br>
+         * node.on('click tap', function(evt) {<br>
+         *   var nativeEvent = evt.evt;<br>
          * });<br><br>
          *
          * // for change events, get the old and new val<br>
@@ -6858,14 +6863,21 @@ var Kinetic = {};
                 }
 
                 node._setDragPosition(evt);
-
                 if(!dd.isDragging) {
                     dd.isDragging = true;
-                    node.fire('dragstart', evt, true);
+                    node.fire('dragstart', {
+                        type : 'dragstart',
+                        target : node,
+                        evt : evt
+                    }, true);
                 }
 
                 // execute ondragmove if defined
-                node.fire('dragmove', evt, true);
+                node.fire('dragmove', {
+                    type : 'dragmove',
+                    target : node,
+                    evt : evt
+                }, true);
             }
         },
         _endDragBefore: function(evt) {
@@ -6900,7 +6912,11 @@ var Kinetic = {};
             var dragEndNode = evt.dragEndNode;
 
             if (evt && dragEndNode) {
-                dragEndNode.fire('dragend', evt, true);
+                dragEndNode.fire('dragend', {
+                    type : 'dragend',
+                    target : dragEndNode,
+                    evt : evt
+                }, true);
             }
         }
     };
@@ -9631,6 +9647,20 @@ var Kinetic = {};
             return;
         },
         clearCache : function() {
+        },
+        removeChildren : function() {
+            Kinetic.Container.prototype.removeChildren.call(this);
+            // clear all canvases
+            while (this.content.firstChild) {
+                this.content.removeChild(this.content.firstChild);
+            }
+        },
+        destroyChildren : function() {
+            Kinetic.Container.prototype.destroyChildren.call(this);
+            // clear all canvases
+            while (this.content.firstChild) {
+                this.content.removeChild(this.content.firstChild);
+            }
         }
     });
     Kinetic.Util.extend(Kinetic.Stage, Kinetic.Container);
@@ -9774,14 +9804,12 @@ var Kinetic = {};
             return this;
         },
         remove: function() {
-            var stage = this.getStage(),
-                canvas = this.getCanvas(),
-                _canvas = canvas._canvas;
+            var _canvas = this.getCanvas()._canvas;
 
             Kinetic.Node.prototype.remove.call(this);
 
-            if(stage && _canvas && Kinetic.Util._isInDocument(_canvas)) {
-                stage.content.removeChild(_canvas);
+            if(_canvas && _canvas.parentNode && Kinetic.Util._isInDocument(_canvas)) {
+                _canvas.parentNode.removeChild(_canvas);
             }
             return this;
         },
