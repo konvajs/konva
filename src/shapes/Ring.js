@@ -13,12 +13,12 @@
      * @@shapeParams
      * @@nodeParams
      * @example
-     * var ring = new Kinetic.Ring({<br>
-     *   innerRadius: 40,<br>
-     *   outerRadius: 80,<br>
-     *   fill: 'red',<br>
-     *   stroke: 'black',<br>
-     *   strokeWidth: 5<br>
+     * var ring = new Kinetic.Ring({
+     *   innerRadius: 40,
+     *   outerRadius: 80,
+     *   fill: 'red',
+     *   stroke: 'black',
+     *   strokeWidth: 5
      * });
      */
     Kinetic.Ring = function(config) {
@@ -72,10 +72,10 @@
      * @param {Number} innerRadius
      * @returns {Number}
      * @example
-     * // get inner radius<br>
-     * var innerRadius = ring.innerRadius();<br><br>
+     * // get inner radius
+     * var innerRadius = ring.innerRadius();
      *
-     * // set inner radius<br>
+     * // set inner radius
      * ring.innerRadius(20);
      */
      
@@ -89,10 +89,10 @@
      * @param {Number} outerRadius
      * @returns {Number}
      * @example
-     * // get outer radius<br>
-     * var outerRadius = ring.outerRadius();<br><br>
+     * // get outer radius
+     * var outerRadius = ring.outerRadius();
      *
-     * // set outer radius<br>
+     * // set outer radius
      * ring.outerRadius(20);
      */
 

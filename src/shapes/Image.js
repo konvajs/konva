@@ -14,16 +14,16 @@
      * @@shapeParams
      * @@nodeParams
      * @example
-     * var imageObj = new Image();<br>
-     * imageObj.onload = function() {<br>
-     *   var image = new Kinetic.Image({<br>
-     *     x: 200,<br>
-     *     y: 50,<br>
-     *     image: imageObj,<br>
-     *     width: 100,<br>
-     *     height: 100<br>
-     *   });<br>
-     * };<br>
+     * var imageObj = new Image();
+     * imageObj.onload = function() {
+     *   var image = new Kinetic.Image({
+     *     x: 200,
+     *     y: 50,
+     *     image: imageObj,
+     *     width: 100,
+     *     height: 100
+     *   });
+     * };
      * imageObj.src = '/path/to/image.jpg'
      */
     Kinetic.Image = function(config) {
@@ -119,15 +119,15 @@
      * @param {Number} crop.height
      * @returns {Object}
      * @example
-     * // get crop<br>
-     * var crop = image.crop();<br><br>
+     * // get crop
+     * var crop = image.crop();
      *
-     * // set crop<br>
-     * image.crop({<br>
-     *   x: 20,<br>
-     *   y: 20,<br>
-     *   width: 20,<br>
-     *   height: 20<br>
+     * // set crop
+     * image.crop({
+     *   x: 20,
+     *   y: 20,
+     *   width: 20,
+     *   height: 20
      * });
      */
 
@@ -140,10 +140,10 @@
      * @param {Number} x
      * @returns {Number}
      * @example
-     * // get crop x<br>
-     * var cropX = image.cropX();<br><br>
+     * // get crop x
+     * var cropX = image.cropX();
      *
-     * // set crop x<br>
+     * // set crop x
      * image.cropX(20);
      */
 
@@ -156,10 +156,10 @@
      * @param {Number} y
      * @returns {Number}
      * @example
-     * // get crop y<br>
-     * var cropY = image.cropY();<br><br>
+     * // get crop y
+     * var cropY = image.cropY();
      *
-     * // set crop y<br>
+     * // set crop y
      * image.cropY(20);
      */
 
@@ -172,10 +172,10 @@
      * @param {Number} width
      * @returns {Number}
      * @example
-     * // get crop width<br>
-     * var cropWidth = image.cropWidth();<br><br>
+     * // get crop width
+     * var cropWidth = image.cropWidth();
      *
-     * // set crop width<br>
+     * // set crop width
      * image.cropWidth(20);
      */
 
@@ -188,10 +188,10 @@
      * @param {Number} height
      * @returns {Number}
      * @example
-     * // get crop height<br>
-     * var cropHeight = image.cropHeight();<br><br>
+     * // get crop height
+     * var cropHeight = image.cropHeight();
      *
-     * // set crop height<br>
+     * // set crop height
      * image.cropHeight(20);
      */
 

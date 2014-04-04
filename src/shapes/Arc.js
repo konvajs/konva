@@ -13,15 +13,15 @@
      * @@shapeParams
      * @@nodeParams
      * @example
-     * // draw a Arc that's pointing downwards<br>
-     * var arc = new Kinetic.Arc({<br>
-     *   innerRadius: 40,<br>
-     *   outerRadius: 80,<br>
-     *   fill: 'red',<br>
-     *   stroke: 'black'<br>
-     *   strokeWidth: 5,<br>
-     *   angle: 60,<br>
-     *   rotationDeg: -120<br>
+     * // draw a Arc that's pointing downwards
+     * var arc = new Kinetic.Arc({
+     *   innerRadius: 40,
+     *   outerRadius: 80,
+     *   fill: 'red',
+     *   stroke: 'black'
+     *   strokeWidth: 5,
+     *   angle: 60,
+     *   rotationDeg: -120
      * });
      */
     Kinetic.Arc = function(config) {
@@ -76,10 +76,10 @@
      * @param {Number} outerRadius
      * @returns {Number}
      * @example
-     * // get outer radius<br>
-     * var outerRadius = arc.outerRadius();<br><br>
+     * // get outer radius
+     * var outerRadius = arc.outerRadius();
      *
-     * // set outer radius<br>
+     * // set outer radius
      * arc.outerRadius(20);
      */
 
@@ -93,10 +93,10 @@
      * @param {Number} angle
      * @returns {Number}
      * @example
-     * // get angle<br>
-     * var angle = arc.angle();<br><br>
+     * // get angle
+     * var angle = arc.angle();
      *
-     * // set angle<br>
+     * // set angle
      * arc.angle(20);
      */
 
@@ -110,13 +110,13 @@
      * @param {Boolean} clockwise
      * @returns {Boolean}
      * @example
-     * // get clockwise flag<br>
-     * var clockwise = arc.clockwise();<br><br>
+     * // get clockwise flag
+     * var clockwise = arc.clockwise();
      *
-     * // draw arc counter-clockwise<br>
-     * arc.clockwise(false);<br><br>
+     * // draw arc counter-clockwise
+     * arc.clockwise(false);
      *
-     * // draw arc clockwise<br>
+     * // draw arc clockwise
      * arc.clockwise(true);
      */
 

@@ -246,15 +246,15 @@
      * @param {Function} dragBoundFunc
      * @returns {Function}
      * @example
-     * // get drag bound function<br>
-     * var dragBoundFunc = node.dragBoundFunc();<br><br>
+     * // get drag bound function
+     * var dragBoundFunc = node.dragBoundFunc();
      *
-     * // create vertical drag and drop<br>
-     * node.dragBoundFunc(function(){<br>
-     *   return {<br>
-     *     x: this.getAbsolutePosition().x,<br>
-     *     y: pos.y<br>
-     *   };<br>
+     * // create vertical drag and drop
+     * node.dragBoundFunc(function(){
+     *   return {
+     *     x: this.getAbsolutePosition().x,
+     *     y: pos.y
+     *   };
      * });
      */
 
@@ -269,13 +269,13 @@
      * @param {Boolean} draggable
      * @returns {Boolean}
      * @example
-     * // get draggable flag<br>
-     * var draggable = node.draggable();<br><br>
+     * // get draggable flag
+     * var draggable = node.draggable();
      *
-     * // enable drag and drop<br>
-     * node.draggable(true);<br><br>
+     * // enable drag and drop
+     * node.draggable(true);
      *
-     * // disable drag and drop<br>
+     * // disable drag and drop
      * node.draggable(false);
      */
 

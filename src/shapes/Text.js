@@ -44,13 +44,13 @@
      * @@shapeParams
      * @@nodeParams
      * @example
-     * var text = new Kinetic.Text({<br>
-     *   x: 10,<br>
-     *   y: 15,<br>
-     *   text: 'Simple Text',<br>
-     *   fontSize: 30,<br>
-     *   fontFamily: 'Calibri',<br>
-     *   fill: 'green'<br>
+     * var text = new Kinetic.Text({
+     *   x: 10,
+     *   y: 15,
+     *   text: 'Simple Text',
+     *   fontSize: 30,
+     *   fontFamily: 'Calibri',
+     *   fill: 'green'
      * });
      */
     Kinetic.Text = function(config) {
@@ -324,10 +324,10 @@
      * @param {String} fontFamily
      * @returns {String}
      * @example
-     * // get font family<br>
-     * var fontFamily = text.fontFamily();<br><br><br>
+     * // get font family
+     * var fontFamily = text.fontFamily();
      *
-     * // set font family<br>
+     * // set font family
      * text.fontFamily('Arial');
      */
 
@@ -341,10 +341,10 @@
      * @param {Number} fontSize
      * @returns {Number}
      * @example
-     * // get font size<br>
-     * var fontSize = text.fontSize();<br><br>
+     * // get font size
+     * var fontSize = text.fontSize();
      *
-     * // set font size to 22px<br>
+     * // set font size to 22px
      * text.fontSize(22);
      */
 
@@ -358,10 +358,10 @@
      * @param {String} fontStyle
      * @returns {String}
      * @example
-     * // get font style<br>
-     * var fontStyle = text.fontStyle();<br><br>
+     * // get font style
+     * var fontStyle = text.fontStyle();
      *
-     * // set font style<br>
+     * // set font style
      * text.fontStyle('bold');
      */
 
@@ -375,10 +375,10 @@
      * @param {String} fontVariant
      * @returns {String}
      * @example
-     * // get font variant<br>
-     * var fontVariant = text.fontVariant();<br><br>
+     * // get font variant
+     * var fontVariant = text.fontVariant();
      *
-     * // set font variant<br>
+     * // set font variant
      * text.fontVariant('small-caps');
      */
 
@@ -392,10 +392,10 @@
      * @param {Number} padding
      * @returns {Number}
      * @example
-     * // get padding<br>
-     * var padding = text.padding();<br><br>
+     * // get padding
+     * var padding = text.padding();
      * 
-     * // set padding to 10 pixels<br>
+     * // set padding to 10 pixels
      * text.padding(10);
      */
 
@@ -409,13 +409,13 @@
      * @param {String} align
      * @returns {String}
      * @example
-     * // get text align<br>
-     * var align = text.align();<br><br>
+     * // get text align
+     * var align = text.align();
      *
-     * // center text<br>
-     * text.align('center');<br><br>
+     * // center text
+     * text.align('center');
      *
-     * // align text to right<br>
+     * // align text to right
      * text.align('right');
      */
 
@@ -429,10 +429,10 @@
      * @param {Number} lineHeight
      * @returns {Number}
      * @example 
-     * // get line height<br>
-     * var lineHeight = text.lineHeight();<br><br><br>
+     * // get line height
+     * var lineHeight = text.lineHeight();
      *
-     * // set the line height<br>
+     * // set the line height
      * text.lineHeight(2);
      */
 
@@ -446,10 +446,10 @@
      * @param {String} wrap
      * @returns {String}
      * @example
-     * // get wrap<br>
-     * var wrap = text.wrap();<br><br>
+     * // get wrap
+     * var wrap = text.wrap();
      *
-     * // set wrap<br>
+     * // set wrap
      * text.wrap('word');
      */
 
@@ -464,10 +464,10 @@
      * @param {String} text
      * @returns {String}
      * @example
-     * // get text<br>
-     * var text = text.text();<br><br>
+     * // get text
+     * var text = text.text();
      * 
-     * // set text<br>
+     * // set text
      * text.text('Hello world!');
      */
 

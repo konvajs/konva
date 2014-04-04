@@ -20,34 +20,34 @@
      * @@nodeParams
      * @example
      * // create label
-     * var label = new Kinetic.Label({<br>
-     *   x: 100,<br>
-     *   y: 100, <br>
-     *   draggable: true<br>
-     * });<br><br>
+     * var label = new Kinetic.Label({
+     *   x: 100,
+     *   y: 100, 
+     *   draggable: true
+     * });
      *
-     * // add a tag to the label<br>
-     * label.add(new Kinetic.Tag({<br>
-     *   fill: '#bbb',<br>
-     *   stroke: '#333',<br>
-     *   shadowColor: 'black',<br>
-     *   shadowBlur: 10,<br>
-     *   shadowOffset: [10, 10],<br>
-     *   shadowOpacity: 0.2,<br>
-     *   lineJoin: 'round',<br>
-     *   pointerDirection: 'up',<br>
-     *   pointerWidth: 20,<br>
-     *   pointerHeight: 20,<br>
-     *   cornerRadius: 5<br>
-     * }));<br><br>
+     * // add a tag to the label
+     * label.add(new Kinetic.Tag({
+     *   fill: '#bbb',
+     *   stroke: '#333',
+     *   shadowColor: 'black',
+     *   shadowBlur: 10,
+     *   shadowOffset: [10, 10],
+     *   shadowOpacity: 0.2,
+     *   lineJoin: 'round',
+     *   pointerDirection: 'up',
+     *   pointerWidth: 20,
+     *   pointerHeight: 20,
+     *   cornerRadius: 5
+     * }));
      *
-     * // add text to the label<br>
-     * label.add(new Kinetic.Text({<br>
-     *   text: 'Hello World!',<br>
-     *   fontSize: 50,<br>
-     *   lineHeight: 1.2,<br>
-     *   padding: 10,<br>
-     *   fill: 'green'<br>
+     * // add text to the label
+     * label.add(new Kinetic.Text({
+     *   text: 'Hello World!',
+     *   fontSize: 50,
+     *   lineHeight: 1.2,
+     *   padding: 10,
+     *   fill: 'green'
      *  }));
      */
     Kinetic.Label = function(config) {

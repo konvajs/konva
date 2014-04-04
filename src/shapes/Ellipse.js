@@ -12,12 +12,12 @@
      * @@ShapeParams
      * @@NodeParams
      * @example
-     * var ellipse = new Kinetic.Ellipse({<br>
-     *   radius : {<br>
-     *     x : 50,<br>
-     *     y : 50<br>
-     *   },<br>
-     *   fill: 'red'<br>
+     * var ellipse = new Kinetic.Ellipse({
+     *   radius : {
+     *     x : 50,
+     *     y : 50
+     *   },
+     *   fill: 'red'
      * });
      */
     Kinetic.Ellipse = function(config) {
@@ -84,13 +84,13 @@
      * @param {Number} radius.y
      * @returns {Object}
      * @example
-     * // get radius<br>
-     * var radius = ellipse.radius();<br><br>
+     * // get radius
+     * var radius = ellipse.radius();
      * 
-     * // set radius<br>
-     * ellipse.radius({<br>
-     *   x: 200,<br>
-     *   y: 100<br>
+     * // set radius
+     * ellipse.radius({
+     *   x: 200,
+     *   y: 100
      * });
      */
 
@@ -103,10 +103,10 @@
      * @param {Number} x
      * @returns {Number}
      * @example
-     * // get radius x<br>
-     * var radiusX = ellipse.radiusX();<br><br>
+     * // get radius x
+     * var radiusX = ellipse.radiusX();
      * 
-     * // set radius x<br>
+     * // set radius x
      * ellipse.radiusX(200);
      */
 
@@ -119,10 +119,10 @@
      * @param {Number} y
      * @returns {Number}
      * @example
-     * // get radius y<br>
-     * var radiusY = ellipse.radiusY();<br><br>
+     * // get radius y
+     * var radiusY = ellipse.radiusY();
      * 
-     * // set radius y<br>
+     * // set radius y
      * ellipse.radiusY(200);
      */
 

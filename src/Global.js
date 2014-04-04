@@ -108,19 +108,19 @@ var Kinetic = {};
          * @@shapeParams
          * @@nodeParams
          * @example
-         * var customShape = new Kinetic.Shape({<br>
-         *   x: 5,<br>
-         *   y: 10,<br>
-         *   fill: 'red',<br>
-         *   // a Kinetic.Canvas renderer is passed into the drawFunc function<br>
-         *   drawFunc: function(context) {<br>
-         *     context.beginPath();<br>
-         *     context.moveTo(200, 50);<br>
-         *     context.lineTo(420, 80);<br>
-         *     context.quadraticCurveTo(300, 100, 260, 170);<br>
-         *     context.closePath();<br>
-         *     context.fillStrokeShape(this);<br>
-         *   }<br>
+         * var customShape = new Kinetic.Shape({
+         *   x: 5,
+         *   y: 10,
+         *   fill: 'red',
+         *   // a Kinetic.Canvas renderer is passed into the drawFunc function
+         *   drawFunc: function(context) {
+         *     context.beginPath();
+         *     context.moveTo(200, 50);
+         *     context.lineTo(420, 80);
+         *     context.quadraticCurveTo(300, 100, 260, 170);
+         *     context.closePath();
+         *     context.fillStrokeShape(this);
+         *   }
          *});
          */
         Shape: function(config) {
@@ -151,10 +151,10 @@ var Kinetic = {};
          * @@nodeParams
          * @@containerParams
          * @example
-         * var stage = new Kinetic.Stage({<br>
-         *   width: 500,<br>
-         *   height: 800,<br>
-         *   container: 'containerId'<br>
+         * var stage = new Kinetic.Stage({
+         *   width: 500,
+         *   height: 800,
+         *   container: 'containerId'
          * });
          */
         Stage: function(config) {

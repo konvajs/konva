@@ -43,13 +43,13 @@
      * @param {Kinetic.Layer|Array} [layers] layer(s) to be redrawn on each animation frame. Can be a layer, an array of layers, or null.
      *  Not specifying a node will result in no redraw.
      * @example
-     * // move a node to the right at 50 pixels / second<br>
-     * var velocity = 50;<br><br>
+     * // move a node to the right at 50 pixels / second
+     * var velocity = 50;
      *
-     * var anim = new Kinetic.Animation(function(frame) {<br>
-     *   var dist = velocity * (frame.timeDiff / 1000);<br>
-     *   node.move(dist, 0);<br>
-     * }, layer);<br><br>
+     * var anim = new Kinetic.Animation(function(frame) {
+     *   var dist = velocity * (frame.timeDiff / 1000);
+     *   node.move(dist, 0);
+     * }, layer);
      *
      * anim.start();
      */

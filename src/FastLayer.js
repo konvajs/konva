@@ -61,7 +61,7 @@
          * @param {Number} [bounds.width]
          * @param {Number} [bounds.height]
          * @example
-         * layer.clear();<br>
+         * layer.clear();
          * layer.clear(0, 0, 100, 100);
          */
         clear: function(bounds) {

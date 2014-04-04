@@ -21,17 +21,17 @@
      * @memberof Kinetic
      * @example
      * // instantiate new tween which fully rotates a node in 1 second
-     * var tween = new Kinetic.Tween({<br>
-     *   node: node,<br>
-     *   rotationDeg: 360,<br>
-     *   duration: 1,<br>
-     *   easing: Kinetic.Easings.EaseInOut<br>
-     * });<br><br>
+     * var tween = new Kinetic.Tween({
+     *   node: node,
+     *   rotationDeg: 360,
+     *   duration: 1,
+     *   easing: Kinetic.Easings.EaseInOut
+     * });
      *
-     * // play tween<br>
-     * tween.play();<br><br>
+     * // play tween
+     * tween.play();
      *
-     * // pause tween<br>
+     * // pause tween
      * tween.pause();
      */
     Kinetic.Tween = function(config) {

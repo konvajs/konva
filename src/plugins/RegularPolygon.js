@@ -10,14 +10,14 @@
      * @@shapeParams
      * @@nodeParams
      * @example
-     * var hexagon = new Kinetic.RegularPolygon({<br>
-     *   x: 100,<br>
-     *   y: 200,<br>
-     *   sides: 6,<br>
-     *   radius: 70,<br>
-     *   fill: 'red',<br>
-     *   stroke: 'black',<br>
-     *   strokeWidth: 4<br>
+     * var hexagon = new Kinetic.RegularPolygon({
+     *   x: 100,
+     *   y: 200,
+     *   sides: 6,
+     *   radius: 70,
+     *   fill: 'red',
+     *   stroke: 'black',
+     *   strokeWidth: 4
      * });
      */
     Kinetic.RegularPolygon = function(config) {

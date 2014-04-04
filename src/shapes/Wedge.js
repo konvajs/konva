@@ -10,14 +10,14 @@
      * @@shapeParams
      * @@nodeParams
      * @example
-     * // draw a wedge that's pointing downwards<br>
-     * var wedge = new Kinetic.Wedge({<br>
-     *   radius: 40,<br>
-     *   fill: 'red',<br>
-     *   stroke: 'black'<br>
-     *   strokeWidth: 5,<br>
-     *   angleDeg: 60,<br>
-     *   rotationDeg: -120<br>
+     * // draw a wedge that's pointing downwards
+     * var wedge = new Kinetic.Wedge({
+     *   radius: 40,
+     *   fill: 'red',
+     *   stroke: 'black'
+     *   strokeWidth: 5,
+     *   angleDeg: 60,
+     *   rotationDeg: -120
      * });
      */
     Kinetic.Wedge = function(config) {
@@ -52,11 +52,11 @@
      * @param {Number} radius
      * @returns {Number}
      * @example
-     * // get radius<br>
-     * var radius = wedge.radius();<br><br>
+     * // get radius
+     * var radius = wedge.radius();
      *
-     * // set radius<br>
-     * wedge.radius(10);<br>
+     * // set radius
+     * wedge.radius(10);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Wedge, 'angle', 0);
@@ -69,10 +69,10 @@
      * @param {Number} angle
      * @returns {Number}
      * @example
-     * // get angle<br>
-     * var angle = wedge.angle();<br><br>
+     * // get angle
+     * var angle = wedge.angle();
      *
-     * // set angle<br>
+     * // set angle
      * wedge.angle(20);
      */
 
@@ -86,13 +86,13 @@
      * @param {Number} clockwise
      * @returns {Number}
      * @example
-     * // get clockwise flag<br>
-     * var clockwise = wedge.clockwise();<br><br>
+     * // get clockwise flag
+     * var clockwise = wedge.clockwise();
      *
-     * // draw wedge counter-clockwise<br>
-     * wedge.clockwise(false);<br><br>
+     * // draw wedge counter-clockwise
+     * wedge.clockwise(false);
      *
-     * // draw wedge clockwise<br>
+     * // draw wedge clockwise
      * wedge.clockwise(true);
      */
 

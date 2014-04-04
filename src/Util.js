@@ -23,8 +23,8 @@
      * @param {Function} func
      * @example
      * // get all nodes with name foo inside layer, and set x to 10 for each
-     * layer.get('.foo').each(function(shape, n) {<br>
-     *   shape.setX(10);<br>
+     * layer.get('.foo').each(function(shape, n) {
+     *   shape.setX(10);
      * });
      */
     Kinetic.Collection.prototype.each = function(func) {
@@ -539,9 +539,9 @@
          * @memberof Kinetic.Util.prototype
          * @param {String} color
          * @example
-         * // each of the following examples return {r:0, g:0, b:255}<br>
-         * var rgb = Kinetic.Util.getRGB('blue');<br>
-         * var rgb = Kinetic.Util.getRGB('#0000ff');<br>
+         * // each of the following examples return {r:0, g:0, b:255}
+         * var rgb = Kinetic.Util.getRGB('blue');
+         * var rgb = Kinetic.Util.getRGB('#0000ff');
          * var rgb = Kinetic.Util.getRGB('rgb(0,0,255)');
          */
         getRGB: function(color) {

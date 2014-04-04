@@ -41,7 +41,7 @@
          * @param {Number} [bounds.width]
          * @param {Number} [bounds.height]
          * @example
-         * layer.clear();<br>
+         * layer.clear();
          * layer.clear(0, 0, 100, 100);
          */
         clear: function(bounds) {
@@ -142,13 +142,13 @@
      * @param {Boolean} clearBeforeDraw
      * @returns {Boolean}
      * @example
-     * // get clearBeforeDraw flag<br>
-     * var clearBeforeDraw = layer.clearBeforeDraw();<br><br>
+     * // get clearBeforeDraw flag
+     * var clearBeforeDraw = layer.clearBeforeDraw();
      *
-     * // disable clear before draw<br>
-     * layer.clearBeforeDraw(false);<br><br>
+     * // disable clear before draw
+     * layer.clearBeforeDraw(false);
      *
-     * // enable clear before draw<br>
+     * // enable clear before draw
      * layer.clearBeforeDraw(true);
      */
 

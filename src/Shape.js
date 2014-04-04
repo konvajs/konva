@@ -283,19 +283,19 @@
      * @param {String} color
      * @returns {String}
      * @example
-     * // get stroke color<br>
-     * var stroke = shape.stroke();<br><br>
+     * // get stroke color
+     * var stroke = shape.stroke();
      *
-     * // set stroke color with color string<br>
-     * shape.stroke('green');<br><br>
+     * // set stroke color with color string
+     * shape.stroke('green');
      *
-     * // set stroke color with hex<br>
-     * shape.stroke('#00ff00');<br><br>
+     * // set stroke color with hex
+     * shape.stroke('#00ff00');
      *
-     * // set stroke color with rgb<br>
-     * shape.stroke('rgb(0,255,0)');<br><br>
+     * // set stroke color with rgb
+     * shape.stroke('rgb(0,255,0)');
      *
-     * // set stroke color with rgba and make it 50% opaque<br>
+     * // set stroke color with rgba and make it 50% opaque
      * shape.stroke('rgba(0,255,0,0.5');
      */
 
@@ -309,10 +309,10 @@
      * @param {Integer} red
      * @returns {Integer}
      * @example
-     * // get stroke red component<br>
-     * var strokeRed = shape.strokeRed();<br><br>
+     * // get stroke red component
+     * var strokeRed = shape.strokeRed();
      *
-     * // set stroke red component<br>
+     * // set stroke red component
      * shape.strokeRed(0);
      */
 
@@ -326,10 +326,10 @@
      * @param {Integer} green
      * @returns {Integer}
      * @example
-     * // get stroke green component<br>
-     * var strokeGreen = shape.strokeGreen();<br><br>
+     * // get stroke green component
+     * var strokeGreen = shape.strokeGreen();
      *
-     * // set stroke green component<br>
+     * // set stroke green component
      * shape.strokeGreen(255);
      */
 
@@ -343,10 +343,10 @@
      * @param {Integer} blue
      * @returns {Integer}
      * @example
-     * // get stroke blue component<br>
-     * var strokeBlue = shape.strokeBlue();<br><br>
+     * // get stroke blue component
+     * var strokeBlue = shape.strokeBlue();
      *
-     * // set stroke blue component<br>
+     * // set stroke blue component
      * shape.strokeBlue(0);
      */
 
@@ -361,10 +361,10 @@
      * @param {Number} alpha
      * @returns {Number}
      * @example
-     * // get stroke alpha component<br>
-     * var strokeAlpha = shape.strokeAlpha();<br><br>
+     * // get stroke alpha component
+     * var strokeAlpha = shape.strokeAlpha();
      *
-     * // set stroke alpha component<br>
+     * // set stroke alpha component
      * shape.strokeAlpha(0.5);
      */
 
@@ -378,10 +378,10 @@
      * @param {Number} strokeWidth
      * @returns {Number}
      * @example
-     * // get stroke width<br>
-     * var strokeWidth = shape.strokeWidth();<br><br>
+     * // get stroke width
+     * var strokeWidth = shape.strokeWidth();
      *
-     * // set stroke width<br>
+     * // set stroke width
      * shape.strokeWidth();
      */
 
@@ -396,10 +396,10 @@
      * @param {String} lineJoin
      * @returns {String}
      * @example
-     * // get line join<br>
-     * var lineJoin = shape.lineJoin();<br><br>
+     * // get line join
+     * var lineJoin = shape.lineJoin();
      *
-     * // set line join<br>
+     * // set line join
      * shape.lineJoin('round');
      */
 
@@ -413,10 +413,10 @@
      * @param {String} lineCap
      * @returns {String}
      * @example
-     * // get line cap<br>
-     * var lineCap = shape.lineCap();<br><br>
+     * // get line cap
+     * var lineCap = shape.lineCap();
      *
-     * // set line cap<br>
+     * // set line cap
      * shape.lineCap('round');
      */
 
@@ -430,15 +430,15 @@
      * @param {Function} drawFunc drawing function
      * @returns {Function}
      * @example
-     * // get scene draw function<br>
-     * var sceneFunc = shape.sceneFunc();<br><br>
+     * // get scene draw function
+     * var sceneFunc = shape.sceneFunc();
      *
-     * // set scene draw function<br>
-     * shape.sceneFunc(function(context) {<br>
-     *   context.beginPath();<br>
-     *   context.rect(0, 0, this.width(), this.height());<br>
-     *   context.closePath();<br>
-     *   context.fillStrokeShape(this);<br>
+     * // set scene draw function
+     * shape.sceneFunc(function(context) {
+     *   context.beginPath();
+     *   context.rect(0, 0, this.width(), this.height());
+     *   context.closePath();
+     *   context.fillStrokeShape(this);
      * });
      */
 
@@ -452,15 +452,15 @@
      * @param {Function} drawFunc drawing function
      * @returns {Function}
      * @example
-     * // get hit draw function<br>
-     * var hitFunc = shape.hitFunc();<br><br>
+     * // get hit draw function
+     * var hitFunc = shape.hitFunc();
      *
-     * // set hit draw function<br>
-     * shape.hitFunc(function(context) {<br>
-     *   context.beginPath();<br>
-     *   context.rect(0, 0, this.width(), this.height());<br>
-     *   context.closePath();<br>
-     *   context.fillStrokeShape(this);<br>
+     * // set hit draw function
+     * shape.hitFunc(function(context) {
+     *   context.beginPath();
+     *   context.rect(0, 0, this.width(), this.height());
+     *   context.closePath();
+     *   context.fillStrokeShape(this);
      * });
      */
 
@@ -474,12 +474,12 @@
      * @param {Array} dash
      * @returns {Array}
      * @example
-     *  // apply dashed stroke that is 10px long and 5 pixels apart<br>
-     *  line.dash([10, 5]);<br><br>
+     *  // apply dashed stroke that is 10px long and 5 pixels apart
+     *  line.dash([10, 5]);
      *  
-     *  // apply dashed stroke that is made up of alternating dashed<br> 
-     *  // lines that are 10px long and 20px apart, and dots that have<br> 
-     *  // a radius of 5px and are 20px apart<br>
+     *  // apply dashed stroke that is made up of alternating dashed 
+     *  // lines that are 10px long and 20px apart, and dots that have 
+     *  // a radius of 5px and are 20px apart
      *  line.dash([10, 20, 0.001, 20]);
      */
 
@@ -494,19 +494,19 @@
      * @param {String} color
      * @returns {String}
      * @example
-     * // get shadow color<br>
-     * var shadow = shape.shadowColor();<br><br>
+     * // get shadow color
+     * var shadow = shape.shadowColor();
      *
-     * // set shadow color with color string<br>
-     * shape.shadowColor('green');<br><br>
+     * // set shadow color with color string
+     * shape.shadowColor('green');
      *
-     * // set shadow color with hex<br>
-     * shape.shadowColor('#00ff00');<br><br>
+     * // set shadow color with hex
+     * shape.shadowColor('#00ff00');
      *
-     * // set shadow color with rgb<br>
-     * shape.shadowColor('rgb(0,255,0)');<br><br>
+     * // set shadow color with rgb
+     * shape.shadowColor('rgb(0,255,0)');
      *
-     * // set shadow color with rgba and make it 50% opaque<br>
+     * // set shadow color with rgba and make it 50% opaque
      * shape.shadowColor('rgba(0,255,0,0.5');
      */
 
@@ -520,10 +520,10 @@
      * @param {Integer} red
      * @returns {Integer}
      * @example
-     * // get shadow red component<br>
-     * var shadowRed = shape.shadowRed();<br><br>
+     * // get shadow red component
+     * var shadowRed = shape.shadowRed();
      *
-     * // set shadow red component<br>
+     * // set shadow red component
      * shape.shadowRed(0);
      */
 
@@ -537,10 +537,10 @@
      * @param {Integer} green
      * @returns {Integer}
      * @example
-     * // get shadow green component<br>
-     * var shadowGreen = shape.shadowGreen();<br><br>
+     * // get shadow green component
+     * var shadowGreen = shape.shadowGreen();
      *
-     * // set shadow green component<br>
+     * // set shadow green component
      * shape.shadowGreen(255);
      */
 
@@ -554,10 +554,10 @@
      * @param {Integer} blue
      * @returns {Integer}
      * @example
-     * // get shadow blue component<br>
-     * var shadowBlue = shape.shadowBlue();<br><br>
+     * // get shadow blue component
+     * var shadowBlue = shape.shadowBlue();
      *
-     * // set shadow blue component<br>
+     * // set shadow blue component
      * shape.shadowBlue(0);
      */
 
@@ -572,10 +572,10 @@
      * @param {Number} alpha
      * @returns {Number}
      * @example
-     * // get shadow alpha component<br>
-     * var shadowAlpha = shape.shadowAlpha();<br><br>
+     * // get shadow alpha component
+     * var shadowAlpha = shape.shadowAlpha();
      *
-     * // set shadow alpha component<br>
+     * // set shadow alpha component
      * shape.shadowAlpha(0.5);
      */
      
@@ -589,10 +589,10 @@
      * @param {Number} blur
      * @returns {Number}
      * @example
-     * // get shadow blur<br>
-     * var shadowBlur = shape.shadowBlur();<br><br>
+     * // get shadow blur
+     * var shadowBlur = shape.shadowBlur();
      *
-     * // set shadow blur<br>
+     * // set shadow blur
      * shape.shadowBlur(10);
      */
 
@@ -606,10 +606,10 @@
      * @param {Number} opacity
      * @returns {Number}
      * @example
-     * // get shadow opacity<br>
-     * var shadowOpacity = shape.shadowOpacity();<br><br>
+     * // get shadow opacity
+     * var shadowOpacity = shape.shadowOpacity();
      *
-     * // set shadow opacity<br>
+     * // set shadow opacity
      * shape.shadowOpacity(0.5);
      */
 
@@ -625,13 +625,13 @@
      * @param {Number} offset.y
      * @returns {Object}
      * @example
-     * // get shadow offset<br>
-     * var shadowOffset = shape.shadowOffset();<br><br>
+     * // get shadow offset
+     * var shadowOffset = shape.shadowOffset();
      *
-     * // set shadow offset<br>
-     * shape.shadowOffset({<br>
-     *   x: 20<br>
-     *   y: 10<br>
+     * // set shadow offset
+     * shape.shadowOffset({
+     *   x: 20
+     *   y: 10
      * });
      */
 
@@ -645,10 +645,10 @@
      * @param {Number} x
      * @returns {Number}
      * @example
-     * // get shadow offset x<br>
-     * var shadowOffsetX = shape.shadowOffsetX();<br><br>
+     * // get shadow offset x
+     * var shadowOffsetX = shape.shadowOffsetX();
      *
-     * // set shadow offset x<br>
+     * // set shadow offset x
      * shape.shadowOffsetX(5);
      */
 
@@ -662,10 +662,10 @@
      * @param {Number} y
      * @returns {Number}
      * @example
-     * // get shadow offset y<br>
-     * var shadowOffsetY = shape.shadowOffsetY();<br><br>
+     * // get shadow offset y
+     * var shadowOffsetY = shape.shadowOffsetY();
      *
-     * // set shadow offset y<br>
+     * // set shadow offset y
      * shape.shadowOffsetY(5);
      */
 
@@ -679,14 +679,14 @@
      * @param {Image} image object
      * @returns {Image}
      * @example
-     * // get fill pattern image<br>
-     * var fillPatternImage = shape.fillPatternImage();<br><br>
+     * // get fill pattern image
+     * var fillPatternImage = shape.fillPatternImage();
      *
-     * // set fill pattern image<br>
-     * var imageObj = new Image();<br>
-     * imageObj.onload = function() {<br>
-     *   shape.fillPatternImage(imageObj);<br>
-     * };<br>
+     * // set fill pattern image
+     * var imageObj = new Image();
+     * imageObj.onload = function() {
+     *   shape.fillPatternImage(imageObj);
+     * };
      * imageObj.src = 'path/to/image/jpg';
      */
 
@@ -700,19 +700,19 @@
      * @param {String} color
      * @returns {String}
      * @example
-     * // get fill color<br>
-     * var fill = shape.fill();<br><br>
+     * // get fill color
+     * var fill = shape.fill();
      *
-     * // set fill color with color string<br>
-     * shape.fill('green');<br><br>
+     * // set fill color with color string
+     * shape.fill('green');
      *
-     * // set fill color with hex<br>
-     * shape.fill('#00ff00');<br><br>
+     * // set fill color with hex
+     * shape.fill('#00ff00');
      *
-     * // set fill color with rgb<br>
-     * shape.fill('rgb(0,255,0)');<br><br>
+     * // set fill color with rgb
+     * shape.fill('rgb(0,255,0)');
      *
-     * // set fill color with rgba and make it 50% opaque<br>
+     * // set fill color with rgba and make it 50% opaque
      * shape.fill('rgba(0,255,0,0.5');
      */
 
@@ -726,10 +726,10 @@
      * @param {Integer} red
      * @returns {Integer}
      * @example
-     * // get fill red component<br>
-     * var fillRed = shape.fillRed();<br><br>
+     * // get fill red component
+     * var fillRed = shape.fillRed();
      *
-     * // set fill red component<br>
+     * // set fill red component
      * shape.fillRed(0);
      */
 
@@ -743,10 +743,10 @@
      * @param {Integer} green
      * @returns {Integer}
      * @example
-     * // get fill green component<br>
-     * var fillGreen = shape.fillGreen();<br><br>
+     * // get fill green component
+     * var fillGreen = shape.fillGreen();
      *
-     * // set fill green component<br>
+     * // set fill green component
      * shape.fillGreen(255);
      */
 
@@ -760,10 +760,10 @@
      * @param {Integer} blue
      * @returns {Integer}
      * @example
-     * // get fill blue component<br>
-     * var fillBlue = shape.fillBlue();<br><br>
+     * // get fill blue component
+     * var fillBlue = shape.fillBlue();
      *
-     * // set fill blue component<br>
+     * // set fill blue component
      * shape.fillBlue(0);
      */
 
@@ -778,10 +778,10 @@
      * @param {Number} alpha
      * @returns {Number}
      * @example
-     * // get fill alpha component<br>
-     * var fillAlpha = shape.fillAlpha();<br><br>
+     * // get fill alpha component
+     * var fillAlpha = shape.fillAlpha();
      *
-     * // set fill alpha component<br>
+     * // set fill alpha component
      * shape.fillAlpha(0.5);
      */
 
@@ -796,10 +796,10 @@
      * @param {Number} x
      * @returns {Number}
      * @example
-     * // get fill pattern x<br>
-     * var fillPatternX = shape.fillPatternX();<br><br>
+     * // get fill pattern x
+     * var fillPatternX = shape.fillPatternX();
      * 
-     * // set fill pattern x<br>
+     * // set fill pattern x
      * shape.fillPatternX(20);
      */
 
@@ -813,10 +813,10 @@
      * @param {Number} y
      * @returns {Number}
      * @example
-     * // get fill pattern y<br>
-     * var fillPatternY = shape.fillPatternY();<br><br>
+     * // get fill pattern y
+     * var fillPatternY = shape.fillPatternY();
      * 
-     * // set fill pattern y<br>
+     * // set fill pattern y
      * shape.fillPatternY(20);
      */
 
@@ -830,11 +830,11 @@
      * @param {Array} colorStops
      * @returns {Array} colorStops
      * @example
-     * // get fill linear gradient color stops<br>
-     * var colorStops = shape.fillLinearGradientColorStops();<br><br>
+     * // get fill linear gradient color stops
+     * var colorStops = shape.fillLinearGradientColorStops();
      *
-     * // create a linear gradient that starts with red, changes to blue <br>
-     * // halfway through, and then changes to green<br>
+     * // create a linear gradient that starts with red, changes to blue 
+     * // halfway through, and then changes to green
      * shape.fillLinearGradientColorStops(0, 'red', 0.5, 'blue', 1, 'green');
      */
 
@@ -848,10 +848,10 @@
      * @param {Number} radius
      * @returns {Number}
      * @example
-     * // get radial gradient start radius<br>
-     * var startRadius = shape.fillRadialGradientStartRadius();<br><br>
+     * // get radial gradient start radius
+     * var startRadius = shape.fillRadialGradientStartRadius();
      *
-     * // set radial gradient start radius<br>
+     * // set radial gradient start radius
      * shape.fillRadialGradientStartRadius(0);
      */
 
@@ -865,10 +865,10 @@
      * @param {Number} radius
      * @returns {Number}
      * @example
-     * // get radial gradient end radius<br>
-     * var endRadius = shape.fillRadialGradientEndRadius();<br><br>
+     * // get radial gradient end radius
+     * var endRadius = shape.fillRadialGradientEndRadius();
      *
-     * // set radial gradient end radius<br>
+     * // set radial gradient end radius
      * shape.fillRadialGradientEndRadius(100);
      */
 
@@ -882,11 +882,11 @@
      * @param {Number} colorStops
      * @returns {Array}
      * @example
-     * // get fill radial gradient color stops<br>
-     * var colorStops = shape.fillRadialGradientColorStops();<br><br>
+     * // get fill radial gradient color stops
+     * var colorStops = shape.fillRadialGradientColorStops();
      *
-     * // create a radial gradient that starts with red, changes to blue <br>
-     * // halfway through, and then changes to green<br>
+     * // create a radial gradient that starts with red, changes to blue 
+     * // halfway through, and then changes to green
      * shape.fillRadialGradientColorStops(0, 'red', 0.5, 'blue', 1, 'green');
      */
 
@@ -900,13 +900,13 @@
      * @param {String} repeat
      * @returns {String}
      * @example
-     * // get fill pattern repeat<br>
-     * var repeat = shape.fillPatternRepeat();<br><br>
+     * // get fill pattern repeat
+     * var repeat = shape.fillPatternRepeat();
      *
-     * // repeat pattern in x direction only<br>
-     * shape.fillPatternRepeat('repeat-x');<br><br>
+     * // repeat pattern in x direction only
+     * shape.fillPatternRepeat('repeat-x');
      *
-     * // do not repeat the pattern<br>
+     * // do not repeat the pattern
      * shape.fillPatternRepeat('no repeat');
      */
 
@@ -920,13 +920,13 @@
      * @param {Boolean} enabled
      * @returns {Boolean}
      * @example
-     * // get fill enabled flag<br>
-     * var fillEnabled = shape.fillEnabled();<br><br>
+     * // get fill enabled flag
+     * var fillEnabled = shape.fillEnabled();
      *
-     * // disable fill<br>
-     * shape.fillEnabled(false);<br><br>
+     * // disable fill
+     * shape.fillEnabled(false);
      *
-     * // enable fill<br>
+     * // enable fill
      * shape.fillEnabled(true);
      */
 
@@ -940,13 +940,13 @@
      * @param {Boolean} enabled
      * @returns {Boolean}
      * @example
-     * // get stroke enabled flag<br>
-     * var strokeEnabled = shape.strokeEnabled();<br><br>
+     * // get stroke enabled flag
+     * var strokeEnabled = shape.strokeEnabled();
      *
-     * // disable stroke<br>
-     * shape.strokeEnabled(false);<br><br>
+     * // disable stroke
+     * shape.strokeEnabled(false);
      *
-     * // enable stroke<br>
+     * // enable stroke
      * shape.strokeEnabled(true);
      */
 
@@ -960,13 +960,13 @@
      * @param {Boolean} enabled
      * @returns {Boolean}
      * @example
-     * // get shadow enabled flag<br>
-     * var shadowEnabled = shape.shadowEnabled();<br><br>
+     * // get shadow enabled flag
+     * var shadowEnabled = shape.shadowEnabled();
      *
-     * // disable shadow<br>
-     * shape.shadowEnabled(false);<br><br>
+     * // disable shadow
+     * shape.shadowEnabled(false);
      *
-     * // enable shadow<br>
+     * // enable shadow
      * shape.shadowEnabled(true);
      */
 
@@ -980,13 +980,13 @@
      * @param {Boolean} enabled
      * @returns {Boolean}
      * @example
-     * // get dash enabled flag<br>
-     * var dashEnabled = shape.dashEnabled();<br><br>
+     * // get dash enabled flag
+     * var dashEnabled = shape.dashEnabled();
      *
-     * // disable dash<br>
-     * shape.dashEnabled(false);<br><br>
+     * // disable dash
+     * shape.dashEnabled(false);
      *
-     * // enable dash<br>
+     * // enable dash
      * shape.dashEnabled(true);
      */
 
@@ -1000,13 +1000,13 @@
      * @param {Boolean} enabled
      * @returns {Boolean}
      * @example
-     * // get stroke scale enabled flag<br>
-     * var strokeScaleEnabled = shape.strokeScaleEnabled();<br><br>
+     * // get stroke scale enabled flag
+     * var strokeScaleEnabled = shape.strokeScaleEnabled();
      *
-     * // disable stroke scale<br>
-     * shape.strokeScaleEnabled(false);<br><br>
+     * // disable stroke scale
+     * shape.strokeScaleEnabled(false);
      *
-     * // enable stroke scale<br>
+     * // enable stroke scale
      * shape.strokeScaleEnabled(true);
      */
 
@@ -1021,10 +1021,10 @@
      * @param {String} priority
      * @returns {String}
      * @example
-     * // get fill priority<br>
-     * var fillPriority = shape.fillPriority();<br><br>
+     * // get fill priority
+     * var fillPriority = shape.fillPriority();
      *
-     * // set fill priority<br>
+     * // set fill priority
      * shape.fillPriority('linear-gradient');
      */
 
@@ -1040,13 +1040,13 @@
      * @param {Number} offset.y
      * @returns {Object}
      * @example
-     * // get fill pattern offset<br>
-     * var patternOffset = shape.fillPatternOffset();<br><br>
+     * // get fill pattern offset
+     * var patternOffset = shape.fillPatternOffset();
      *
-     * // set fill pattern offset<br>
-     * shape.fillPatternOffset({<br>
-     *   x: 20<br>
-     *   y: 10<br>
+     * // set fill pattern offset
+     * shape.fillPatternOffset({
+     *   x: 20
+     *   y: 10
      * });
      */
 
@@ -1060,10 +1060,10 @@
      * @param {Number} x
      * @returns {Number}
      * @example
-     * // get fill pattern offset x<br>
-     * var patternOffsetX = shape.fillPatternOffsetX();<br><br>
+     * // get fill pattern offset x
+     * var patternOffsetX = shape.fillPatternOffsetX();
      *
-     * // set fill pattern offset x<br>
+     * // set fill pattern offset x
      * shape.fillPatternOffsetX(20);
      */
 
@@ -1076,10 +1076,10 @@
      * @param {Number} y
      * @returns {Number}
      * @example
-     * // get fill pattern offset y<br>
-     * var patternOffsetY = shape.fillPatternOffsetY();<br><br>
+     * // get fill pattern offset y
+     * var patternOffsetY = shape.fillPatternOffsetY();
      *
-     * // set fill pattern offset y<br>
+     * // set fill pattern offset y
      * shape.fillPatternOffsetY(10);
      */
 
@@ -1095,13 +1095,13 @@
      * @param {Number} scale.y
      * @returns {Object}
      * @example
-     * // get fill pattern scale<br>
-     * var patternScale = shape.fillPatternScale();<br><br>
+     * // get fill pattern scale
+     * var patternScale = shape.fillPatternScale();
      *
-     * // set fill pattern scale<br>
-     * shape.fillPatternScale({<br>
-     *   x: 2<br>
-     *   y: 2<br>
+     * // set fill pattern scale
+     * shape.fillPatternScale({
+     *   x: 2
+     *   y: 2
      * });
      */
 
@@ -1115,10 +1115,10 @@
      * @param {Number} x
      * @returns {Number}
      * @example
-     * // get fill pattern scale x<br>
-     * var patternScaleX = shape.fillPatternScaleX();<br><br>
+     * // get fill pattern scale x
+     * var patternScaleX = shape.fillPatternScaleX();
      *
-     * // set fill pattern scale x<br>
+     * // set fill pattern scale x
      * shape.fillPatternScaleX(2);
      */
 
@@ -1131,10 +1131,10 @@
      * @param {Number} y
      * @returns {Number}
      * @example
-     * // get fill pattern scale y<br>
-     * var patternScaleY = shape.fillPatternScaleY();<br><br>
+     * // get fill pattern scale y
+     * var patternScaleY = shape.fillPatternScaleY();
      *
-     * // set fill pattern scale y<br>
+     * // set fill pattern scale y
      * shape.fillPatternScaleY(2);
      */
 
@@ -1150,13 +1150,13 @@
      * @param {Number} startPoint.y
      * @returns {Object}
      * @example
-     * // get fill linear gradient start point<br>
-     * var startPoint = shape.fillLinearGradientStartPoint();<br><br>
+     * // get fill linear gradient start point
+     * var startPoint = shape.fillLinearGradientStartPoint();
      *
-     * // set fill linear gradient start point<br>
-     * shape.fillLinearGradientStartPoint({<br>
-     *   x: 20<br>
-     *   y: 10<br>
+     * // set fill linear gradient start point
+     * shape.fillLinearGradientStartPoint({
+     *   x: 20
+     *   y: 10
      * });
      */
 
@@ -1169,10 +1169,10 @@
      * @param {Number} x
      * @returns {Number}
      * @example
-     * // get fill linear gradient start point x<br>
-     * var startPointX = shape.fillLinearGradientStartPointX();<br><br>
+     * // get fill linear gradient start point x
+     * var startPointX = shape.fillLinearGradientStartPointX();
      *
-     * // set fill linear gradient start point x<br>
+     * // set fill linear gradient start point x
      * shape.fillLinearGradientStartPointX(20);
      */
 
@@ -1185,10 +1185,10 @@
      * @param {Number} y
      * @returns {Number}
      * @example
-     * // get fill linear gradient start point y<br>
-     * var startPointY = shape.fillLinearGradientStartPointY();<br><br>
+     * // get fill linear gradient start point y
+     * var startPointY = shape.fillLinearGradientStartPointY();
      *
-     * // set fill linear gradient start point y<br>
+     * // set fill linear gradient start point y
      * shape.fillLinearGradientStartPointY(20);
      */
 
@@ -1204,13 +1204,13 @@
      * @param {Number} endPoint.y
      * @returns {Object}
      * @example
-     * // get fill linear gradient end point<br>
-     * var endPoint = shape.fillLinearGradientEndPoint();<br><br>
+     * // get fill linear gradient end point
+     * var endPoint = shape.fillLinearGradientEndPoint();
      *
-     * // set fill linear gradient end point<br>
-     * shape.fillLinearGradientEndPoint({<br>
-     *   x: 20<br>
-     *   y: 10<br>
+     * // set fill linear gradient end point
+     * shape.fillLinearGradientEndPoint({
+     *   x: 20
+     *   y: 10
      * });
      */
 
@@ -1223,10 +1223,10 @@
      * @param {Number} x
      * @returns {Number}
      * @example
-     * // get fill linear gradient end point x<br>
-     * var endPointX = shape.fillLinearGradientEndPointX();<br><br>
+     * // get fill linear gradient end point x
+     * var endPointX = shape.fillLinearGradientEndPointX();
      *
-     * // set fill linear gradient end point x<br>
+     * // set fill linear gradient end point x
      * shape.fillLinearGradientEndPointX(20);
      */
 
@@ -1239,10 +1239,10 @@
      * @param {Number} y
      * @returns {Number}
      * @example
-     * // get fill linear gradient end point y<br>
-     * var endPointY = shape.fillLinearGradientEndPointY();<br><br>
+     * // get fill linear gradient end point y
+     * var endPointY = shape.fillLinearGradientEndPointY();
      *
-     * // set fill linear gradient end point y<br>
+     * // set fill linear gradient end point y
      * shape.fillLinearGradientEndPointY(20);
      */
 
@@ -1258,13 +1258,13 @@
      * @param {Number} startPoint.y
      * @returns {Object}
      * @example
-     * // get fill radial gradient start point<br>
-     * var startPoint = shape.fillRadialGradientStartPoint();<br><br>
+     * // get fill radial gradient start point
+     * var startPoint = shape.fillRadialGradientStartPoint();
      *
-     * // set fill radial gradient start point<br>
-     * shape.fillRadialGradientStartPoint({<br>
-     *   x: 20<br>
-     *   y: 10<br>
+     * // set fill radial gradient start point
+     * shape.fillRadialGradientStartPoint({
+     *   x: 20
+     *   y: 10
      * });
      */
 
@@ -1277,10 +1277,10 @@
      * @param {Number} x
      * @returns {Number}
      * @example
-     * // get fill radial gradient start point x<br>
-     * var startPointX = shape.fillRadialGradientStartPointX();<br><br>
+     * // get fill radial gradient start point x
+     * var startPointX = shape.fillRadialGradientStartPointX();
      *
-     * // set fill radial gradient start point x<br>
+     * // set fill radial gradient start point x
      * shape.fillRadialGradientStartPointX(20);
      */
 
@@ -1293,10 +1293,10 @@
      * @param {Number} y
      * @returns {Number}
      * @example
-     * // get fill radial gradient start point y<br>
-     * var startPointY = shape.fillRadialGradientStartPointY();<br><br>
+     * // get fill radial gradient start point y
+     * var startPointY = shape.fillRadialGradientStartPointY();
      *
-     * // set fill radial gradient start point y<br>
+     * // set fill radial gradient start point y
      * shape.fillRadialGradientStartPointY(20);
      */
 
@@ -1312,13 +1312,13 @@
      * @param {Number} endPoint.y
      * @returns {Object}
      * @example
-     * // get fill radial gradient end point<br>
-     * var endPoint = shape.fillRadialGradientEndPoint();<br><br>
+     * // get fill radial gradient end point
+     * var endPoint = shape.fillRadialGradientEndPoint();
      *
-     * // set fill radial gradient end point<br>
-     * shape.fillRadialGradientEndPoint({<br>
-     *   x: 20<br>
-     *   y: 10<br>
+     * // set fill radial gradient end point
+     * shape.fillRadialGradientEndPoint({
+     *   x: 20
+     *   y: 10
      * });
      */
 
@@ -1331,10 +1331,10 @@
      * @param {Number} x
      * @returns {Number}
      * @example
-     * // get fill radial gradient end point x<br>
-     * var endPointX = shape.fillRadialGradientEndPointX();<br><br>
+     * // get fill radial gradient end point x
+     * var endPointX = shape.fillRadialGradientEndPointX();
      *
-     * // set fill radial gradient end point x<br>
+     * // set fill radial gradient end point x
      * shape.fillRadialGradientEndPointX(20);
      */
 
@@ -1347,10 +1347,10 @@
      * @param {Number} y
      * @returns {Number}
      * @example
-     * // get fill radial gradient end point y<br>
-     * var endPointY = shape.fillRadialGradientEndPointY();<br><br>
+     * // get fill radial gradient end point y
+     * var endPointY = shape.fillRadialGradientEndPointY();
      *
-     * // set fill radial gradient end point y<br>
+     * // set fill radial gradient end point y
      * shape.fillRadialGradientEndPointY(20);
      */
 
@@ -1364,10 +1364,10 @@
      * @param {Number} rotation
      * @returns {Kinetic.Shape}
      * @example
-     * // get fill pattern rotation<br>
-     * var patternRotation = shape.fillPatternRotation();<br><br>
+     * // get fill pattern rotation
+     * var patternRotation = shape.fillPatternRotation();
      *
-     * // set fill pattern rotation<br>
+     * // set fill pattern rotation
      * shape.fillPatternRotation(20);
      */
 

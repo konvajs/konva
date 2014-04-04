@@ -14,11 +14,11 @@
      * @@nodeParams
      * @example
      * // create circle
-     * var circle = new Kinetic.Circle({<br>
-     *   radius: 40,<br>
-     *   fill: 'red',<br>
-     *   stroke: 'black'<br>
-     *   strokeWidth: 5<br>
+     * var circle = new Kinetic.Circle({
+     *   radius: 40,
+     *   fill: 'red',
+     *   stroke: 'black'
+     *   strokeWidth: 5
      * });
      */
     Kinetic.Circle = function(config) {
@@ -70,11 +70,11 @@
      * @param {Number} radius
      * @returns {Number}
      * @example
-     * // get radius<br>
-     * var radius = circle.radius();<br><br>
+     * // get radius
+     * var radius = circle.radius();
      *
-     * // set radius<br>
-     * circle.radius(10);<br>
+     * // set radius
+     * circle.radius(10);
      */
 
     Kinetic.Collection.mapMethods(Kinetic.Circle);

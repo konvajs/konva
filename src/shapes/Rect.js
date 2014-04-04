@@ -9,12 +9,12 @@
      * @@shapeParams
      * @@nodeParams
      * @example
-     * var rect = new Kinetic.Rect({<br>
-     *   width: 100,<br>
-     *   height: 50,<br>
-     *   fill: 'red',<br>
-     *   stroke: 'black',<br>
-     *   strokeWidth: 5<br>
+     * var rect = new Kinetic.Rect({
+     *   width: 100,
+     *   height: 50,
+     *   fill: 'red',
+     *   stroke: 'black',
+     *   strokeWidth: 5
      * });
      */
     Kinetic.Rect = function(config) {
@@ -67,10 +67,10 @@
      * @param {Number} cornerRadius
      * @returns {Number}
      * @example
-     * // get corner radius<br>
-     * var cornerRadius = rect.cornerRadius();<br><br>
+     * // get corner radius
+     * var cornerRadius = rect.cornerRadius();
      * 
-     * // set corner radius<br>
+     * // set corner radius
      * rect.cornerRadius(10);
      */
 

@@ -148,7 +148,7 @@
          * @param {Number} [bounds.width]
          * @param {Number} [bounds.height]
          * @example
-         * layer.clear();<br>
+         * layer.clear();
          * layer.clear(0, 0, 100, 100);
          */
         clear: function(bounds) {
@@ -205,13 +205,13 @@
      * @param {Boolean} enabled
      * @returns {Boolean}
      * @example
-     * // get hitGraphEnabled flag<br>
-     * var hitGraphEnabled = layer.hitGraphEnabled();<br><br>
+     * // get hitGraphEnabled flag
+     * var hitGraphEnabled = layer.hitGraphEnabled();
      *
-     * // disable hit graph<br>
-     * layer.hitGraphEnabled(false);<br><br>
+     * // disable hit graph
+     * layer.hitGraphEnabled(false);
      *
-     * // enable hit graph<br>
+     * // enable hit graph
      * layer.hitGraphEnabled(true);
      */
 

@@ -11,12 +11,12 @@
          * @param {Function} [filterFunc] filter function
          * @returns {Kinetic.Collection}
          * @example
-         * // get all children<br>
-         * var children = layer.getChildren();<br><br>
+         * // get all children
+         * var children = layer.getChildren();
          *
-         * // get only circles<br>
-         * var circles = layer.getChildren(function(node){<br>
-         *    return node.getClassName() === 'Circle';<br>
+         * // get only circles
+         * var circles = layer.getChildren(function(node){
+         *    return node.getClassName() === 'Circle';
          * });
          */
         getChildren: function(predicate) {
@@ -131,19 +131,19 @@
          * @param {String} selector
          * @returns {Collection}
          * @example
-         * // select node with id foo<br>
-         * var node = stage.find('#foo');<br><br>
+         * // select node with id foo
+         * var node = stage.find('#foo');
          *
-         * // select nodes with name bar inside layer<br>
-         * var nodes = layer.find('.bar');<br><br>
+         * // select nodes with name bar inside layer
+         * var nodes = layer.find('.bar');
          *
-         * // select all groups inside layer<br>
-         * var nodes = layer.find('Group');<br><br>
+         * // select all groups inside layer
+         * var nodes = layer.find('Group');
          *
-         * // select all rectangles inside layer<br>
-         * var nodes = layer.find('Rect');<br><br>
+         * // select all rectangles inside layer
+         * var nodes = layer.find('Rect');
          *
-         * // select node with an id of foo or a name of bar inside layer<br>
+         * // select node with an id of foo or a name of bar inside layer
          * var nodes = layer.find('#foo, .bar');
          */
         find: function(selector) {
@@ -364,15 +364,15 @@
      * @param {Number} clip.height
      * @returns {Object}
      * @example
-     * // get clip<br>
-     * var clip = container.clip();<br><br>
+     * // get clip
+     * var clip = container.clip();
      *
-     * // set clip<br>
-     * container.setClip({<br>
-     *   x: 20,<br>
-     *   y: 20,<br>
-     *   width: 20,<br>
-     *   height: 20<br>
+     * // set clip
+     * container.setClip({
+     *   x: 20,
+     *   y: 20,
+     *   width: 20,
+     *   height: 20
      * });
      */
 
@@ -385,10 +385,10 @@
      * @param {Number} x
      * @returns {Number}
      * @example
-     * // get clip x<br>
-     * var clipX = container.clipX();<br><br>
+     * // get clip x
+     * var clipX = container.clipX();
      *
-     * // set clip x<br>
+     * // set clip x
      * container.clipX(10);
      */
 
@@ -401,10 +401,10 @@
      * @param {Number} y
      * @returns {Number}
      * @example
-     * // get clip y<br>
-     * var clipY = container.clipY();<br><br>
+     * // get clip y
+     * var clipY = container.clipY();
      *
-     * // set clip y<br>
+     * // set clip y
      * container.clipY(10);
      */
 
@@ -417,10 +417,10 @@
      * @param {Number} width
      * @returns {Number}
      * @example
-     * // get clip width<br>
-     * var clipWidth = container.clipWidth();<br><br>
+     * // get clip width
+     * var clipWidth = container.clipWidth();
      *
-     * // set clip width<br>
+     * // set clip width
      * container.clipWidth(100);
      */
 
@@ -433,10 +433,10 @@
      * @param {Number} height
      * @returns {Number}
      * @example
-     * // get clip height<br>
-     * var clipHeight = container.clipHeight();<br><br>
+     * // get clip height
+     * var clipHeight = container.clipHeight();
      *
-     * // set clip height<br>
+     * // set clip height
      * container.clipHeight(100);
      */
 
