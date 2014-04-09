@@ -180,7 +180,7 @@ var Kinetic = {};
 
         /**
          * Layer constructor.  Layers are tied to their own canvas element and are used
-         * to contain groups or shapes
+         * to contain groups or shapes.
          * @constructor
          * @memberof Kinetic
          * @augments Kinetic.Container
@@ -197,14 +197,18 @@ var Kinetic = {};
         },
 
         /**
-         * FastLayer constructor.  Layers are tied to their own canvas element and are used
-         * to contain groups or shapes
+         * FastLayer constructor. Layers are tied to their own canvas element and are used
+         * to contain shapes only.  If you don't need node nesting, mouse and touch interactions,
+         * or event pub/sub, you should use FastLayer instead of Layer to create your layers.
+         * It renders about 2x faster than normal layers.
          * @constructor
          * @memberof Kinetic
          * @augments Kinetic.Container
          * @param {Object} config
          * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
          * to clear the canvas before each layer draw.  The default value is true.
+         * @@nodeParams
+         * @@containerParams
          * @example
          * var layer = new Kinetic.FastLayer();
          */
