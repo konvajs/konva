@@ -127,6 +127,9 @@
         },
         getStage: function() {
             return this.parent;
+        },
+        setSize : function(width, height) {
+            this.canvas.setSize(width, height);
         }
     });
     Kinetic.Util.extend(Kinetic.BaseLayer, Kinetic.Container);

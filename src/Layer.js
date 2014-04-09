@@ -190,6 +190,10 @@
         disableHitGraph: function() {
             this.setHitGraphEnabled(false);
             return this;
+        },
+        setSize : function(width, height) {
+            Kinetic.BaseLayer.prototype.setSize.call(this, width, height);
+            this.hitCanvas.setSize(width, height);
         }
     });
     Kinetic.Util.extend(Kinetic.Layer, Kinetic.BaseLayer);

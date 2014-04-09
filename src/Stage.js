@@ -314,8 +314,7 @@
                 // set layer dimensions
                 for(n = 0; n < len; n++) {
                     layer = layers[n];
-                    layer.getCanvas().setSize(width, height);
-                    layer.hitCanvas.setSize(width, height);
+                    layer.setSize(width, height);
                     layer.draw();
                 }
             }
