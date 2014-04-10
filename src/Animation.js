@@ -262,9 +262,9 @@
     /**
      * batch draw
      * @method
-     * @memberof Kinetic.Layer.prototype
+     * @memberof Kinetic.Base.prototype
      */
-    Kinetic.Layer.prototype.batchDraw = function() {
+    Kinetic.BaseLayer.prototype.batchDraw = function() {
         var that = this,
             Anim = Kinetic.Animation;
 
