@@ -27,7 +27,7 @@
     *  brighten the pixels and negative values darken them.
     * @name brightness
     * @method
-    * @memberof Kinetic.Image.prototype
+    * @memberof Kinetic.Node.prototype
     * @param {Number} brightness value between -1 and 1
     * @returns {Number}
     */

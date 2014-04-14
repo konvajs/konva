@@ -51,8 +51,36 @@ var Kinetic = {};
         enableTrace: false,
         traceArrMax: 100,
         dblClickWindow: 400,
+        /**
+         * Global pixel ratio configuration. KineticJS automatically detect pixel ratio of current device.
+         * But you may override such property, if you want to use your value.
+         * @property
+         * @default undefined
+         * @memberof Kinetic
+         * @example
+         * Kinetic.pixelRatio = 1;
+         */
         pixelRatio: undefined,
+        /**
+         * Drag distance property. If you start to drag a node you may want to wait until pointer is moved to some distance from start point,
+         * only then start dragging.
+         * @property
+         * @default 0
+         * @memberof Kinetic
+         * @example
+         * Kinetic.dragDistance = 10;
+         */
         dragDistance : 0,
+        /**
+         * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
+         * @property
+         * @default true
+         * @memberof Kinetic
+         * @example
+         * node.rotation(45); // 45 degrees
+         * Kinetic.angleDeg = false;
+         * node.rotation(Math.PI / 2); // PI/2 radian
+         */
         angleDeg: true,
 
         // user agent  
