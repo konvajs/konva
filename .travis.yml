@@ -7,5 +7,4 @@ branches:
 before_script:
   - npm install
 script: 
-  - grunt dev
-  - mocha-phantomjs test/runner.html
+  - grunt test

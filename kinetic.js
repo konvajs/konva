@@ -1,10 +1,10 @@
 
 /*
- * KineticJS JavaScript Framework v5.1.0
+ * KineticJS JavaScript Framework v5.1.1
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-04-03
+ * Date: 2014-04-14
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -36,7 +36,7 @@ var Kinetic = {};
 
     Kinetic = {
         // public
-        version: '5.1.0',
+        version: '5.1.1',
 
         // private
         stages: [],
@@ -51,8 +51,36 @@ var Kinetic = {};
         enableTrace: false,
         traceArrMax: 100,
         dblClickWindow: 400,
+        /**
+         * Global pixel ratio configuration. KineticJS automatically detect pixel ratio of current device.
+         * But you may override such property, if you want to use your value.
+         * @property
+         * @default undefined
+         * @memberof Kinetic
+         * @example
+         * Kinetic.pixelRatio = 1;
+         */
         pixelRatio: undefined,
+        /**
+         * Drag distance property. If you start to drag a node you may want to wait until pointer is moved to some distance from start point,
+         * only then start dragging.
+         * @property
+         * @default 0
+         * @memberof Kinetic
+         * @example
+         * Kinetic.dragDistance = 10;
+         */
         dragDistance : 0,
+        /**
+         * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
+         * @property
+         * @default true
+         * @memberof Kinetic
+         * @example
+         * node.rotation(45); // 45 degrees
+         * Kinetic.angleDeg = false;
+         * node.rotation(Math.PI / 2); // PI/2 radian
+         */
         angleDeg: true,
 
         // user agent  
@@ -337,7 +365,7 @@ var Kinetic = {};
 
         /**
          * Layer constructor.  Layers are tied to their own canvas element and are used
-         * to contain groups or shapes
+         * to contain groups or shapes.
          * @constructor
          * @memberof Kinetic
          * @augments Kinetic.Container
@@ -374,14 +402,38 @@ var Kinetic = {};
         },
 
         /**
-         * FastLayer constructor.  Layers are tied to their own canvas element and are used
-         * to contain groups or shapes
+         * FastLayer constructor. Layers are tied to their own canvas element and are used
+         * to contain shapes only.  If you don't need node nesting, mouse and touch interactions,
+         * or event pub/sub, you should use FastLayer instead of Layer to create your layers.
+         * It renders about 2x faster than normal layers.
          * @constructor
          * @memberof Kinetic
          * @augments Kinetic.Container
          * @param {Object} config
          * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
          * to clear the canvas before each layer draw.  The default value is true.
+         * @param {Number} [config.x]
+     * @param {Number} [config.y]
+     * @param {Number} [config.width]
+     * @param {Number} [config.height]
+     * @param {Boolean} [config.visible]
+     * @param {Boolean} [config.listening] whether or not the node is listening for events
+     * @param {String} [config.id] unique id
+     * @param {String} [config.name] non-unique name
+     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+     * @param {Object} [config.scale] set scale
+     * @param {Number} [config.scaleX] set scale x
+     * @param {Number} [config.scaleY] set scale y
+     * @param {Number} [config.rotation] rotation in degrees
+     * @param {Object} [config.offset] offset from center point and rotation point
+     * @param {Number} [config.offsetX] set offset x
+     * @param {Number} [config.offsetY] set offset y
+     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
+     *  the entire stage by dragging any portion of the stage
+     * @param {Number} [config.dragDistance]
+     * @param {Function} [config.dragBoundFunc]
+         * @param {Function} [config.clipFunc] clipping function
+
          * @example
          * var layer = new Kinetic.FastLayer();
          */
@@ -4318,7 +4370,7 @@ var Kinetic = {};
     *  brighten the pixels and negative values darken them.
     * @name brightness
     * @method
-    * @memberof Kinetic.Image.prototype
+    * @memberof Kinetic.Node.prototype
     * @param {Number} brightness value between -1 and 1
     * @returns {Number}
     */
@@ -6238,9 +6290,9 @@ var Kinetic = {};
     /**
      * batch draw
      * @method
-     * @memberof Kinetic.Layer.prototype
+     * @memberof Kinetic.Base.prototype
      */
-    Kinetic.Layer.prototype.batchDraw = function() {
+    Kinetic.BaseLayer.prototype.batchDraw = function() {
         var that = this,
             Anim = Kinetic.Animation;
 
@@ -9308,8 +9360,7 @@ var Kinetic = {};
                 // set layer dimensions
                 for(n = 0; n < len; n++) {
                     layer = layers[n];
-                    layer.getCanvas().setSize(width, height);
-                    layer.hitCanvas.setSize(width, height);
+                    layer.setSize(width, height);
                     layer.draw();
                 }
             }
@@ -9838,6 +9889,9 @@ var Kinetic = {};
         },
         getStage: function() {
             return this.parent;
+        },
+        setSize : function(width, height) {
+            this.canvas.setSize(width, height);
         }
     });
     Kinetic.Util.extend(Kinetic.BaseLayer, Kinetic.Container);
@@ -10057,6 +10111,10 @@ var Kinetic = {};
         disableHitGraph: function() {
             this.setHitGraphEnabled(false);
             return this;
+        },
+        setSize : function(width, height) {
+            Kinetic.BaseLayer.prototype.setSize.call(this, width, height);
+            this.hitCanvas.setSize(width, height);
         }
     });
     Kinetic.Util.extend(Kinetic.Layer, Kinetic.BaseLayer);

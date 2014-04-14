@@ -1,6 +1,6 @@
 {
   "name": "KineticJS",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "devDependencies": {
     "grunt-contrib-jshint": "0.8.0",
     "grunt-contrib-nodeunit": "0.3.2",
@@ -20,6 +20,15 @@
     "grunt-mocha-phantomjs": "~0.4.2",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-shell": "~0.6.4"
+  },
+  "keywords": [
+    "canvas",
+    "animations",
+    "graphic",
+    "html5"
+  ],
+  "bugs": {
+    "url": "https://github.com/ericdrowell/KineticJS/issues"
   },
   "readmeFilename": "README.md",
   "main": "kinetic.js",
