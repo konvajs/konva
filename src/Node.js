@@ -418,10 +418,13 @@
             this.fire(evt.type, e);
         },
         addEventListener: function(type, handler) {
-            // we to pass native event to handler
+            // we have to pass native event to handler
             this.on(type, function(evt){
                 handler.call(this, evt.evt);
             });
+        },
+        removeEventListener : function(type) {
+            this.off(type);
         },
         /**
          * remove self from parent, but don't destroy

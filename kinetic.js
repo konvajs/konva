@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-04-14
+ * Date: 2014-04-15
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -2680,10 +2680,13 @@ var Kinetic = {};
             this.fire(evt.type, e);
         },
         addEventListener: function(type, handler) {
-            // we to pass native event to handler
+            // we have to pass native event to handler
             this.on(type, function(evt){
                 handler.call(this, evt.evt);
             });
+        },
+        removeEventListener : function(type) {
+            this.off(type);
         },
         /**
          * remove self from parent, but don't destroy
