@@ -5,9 +5,14 @@
      *  than n different values for that channel. This is also applied
      *  to the alpha channel.
      * @function
+     * @name Posterize
      * @author ippo615
      * @memberof Kinetic.Filters
      * @param {Object} imageData
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Posterize]);
+     * node.levels(0.8);
      */
 
     Kinetic.Filters.Posterize = function (imageData) {
@@ -26,7 +31,7 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'levels', 0.5, null, Kinetic.Factory.afterSetFilter);
 
     /**
-    * get/set levels.  Must be a number between 0 and 1
+    * get/set levels.  Must be a number between 0 and 1.  Use with {@link Kinetic.Filters.Posterize} filter.
     * @name levels
     * @method
     * @memberof Kinetic.Node.prototype

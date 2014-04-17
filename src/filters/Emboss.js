@@ -1,12 +1,19 @@
 (function () {
     /**
-     * Emboss Filter
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
+     * Emboss Filter.
      * Pixastic Lib - Emboss filter - v0.1.0
      * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
      * License: [http://www.pixastic.com/lib/license.txt]
+     * @function
+     * @memberof Kinetic.Filters
+     * @param {Object} imageData
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Emboss]);
+     * node.embossStrength(0.8);
+     * node.embossWhiteLevel(0.3);
+     * node.embossDirection('right');
+     * node.embossBlend(true);
      */
     Kinetic.Filters.Emboss = function (imageData) {
 
@@ -132,7 +139,7 @@
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossStrength', 0.5, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set emboss strength
+    * get/set emboss strength. Use with {@link Kinetic.Filters.Emboss} filter.
     * @name embossStrength
     * @method
     * @memberof Kinetic.Node.prototype
@@ -142,7 +149,7 @@
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossWhiteLevel', 0.5, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set emboss white level
+    * get/set emboss white level. Use with {@link Kinetic.Filters.Emboss} filter.
     * @name embossWhiteLevel
     * @method
     * @memberof Kinetic.Node.prototype
@@ -152,7 +159,7 @@
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossDirection', 'top-left', null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set emboss direction
+    * get/set emboss direction. Use with {@link Kinetic.Filters.Emboss} filter.
     * @name embossDirection
     * @method
     * @memberof Kinetic.Node.prototype
@@ -163,7 +170,7 @@
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossBlend', false, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set emboss blend
+    * get/set emboss blend. Use with {@link Kinetic.Filters.Emboss} filter.
     * @name embossBlend
     * @method
     * @memberof Kinetic.Node.prototype

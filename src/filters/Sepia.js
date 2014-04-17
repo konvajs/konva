@@ -4,10 +4,14 @@
      * Based on: Pixastic Lib - Sepia filter - v0.1.0
      * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
      * @function
+     * @name Sepia
      * @memberof Kinetic.Filters
      * @param {Object} imageData
      * @author Jacob Seidelin <jseidelin@nihilogic.dk>
      * @license MPL v1.1 [http://www.pixastic.com/lib/license.txt]
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Sepia]);
      */
     Kinetic.Filters.Sepia = function (imageData) {
         var data = imageData.data,

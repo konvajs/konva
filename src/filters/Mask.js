@@ -162,8 +162,13 @@
 	/**
 	 * Mask Filter
 	 * @function
+	 * @name Mask
 	 * @memberof Kinetic.Filters
 	 * @param {Object} imageData
+	 * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Mask]);
+     * node.threshold(0.1);
 	 */
 	Kinetic.Filters.Mask = function(imageData) {
 		// Detect pixels close to the background color

@@ -4,9 +4,14 @@
      * Pixelate Filter. Averages groups of pixels and redraws
      *  them as larger pixels
      * @function
+     * @name Pixelate
      * @memberof Kinetic.Filters
      * @param {Object} imageData
      * @author ippo615
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Pixelate]);
+     * node.pixelSize(10);
      */
 
     Kinetic.Filters.Pixelate = function (imageData) {
@@ -78,7 +83,7 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'pixelSize', 8, null, Kinetic.Factory.afterSetFilter);
 
     /**
-    * get/set pixel size
+    * get/set pixel size. Use with {@link Kinetic.Filters.Pixelate} filter.
     * @name pixelSize
     * @method
     * @memberof Kinetic.Node.prototype

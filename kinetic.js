@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-04-15
+ * Date: 2014-04-18
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -4323,11 +4323,14 @@ var Kinetic = {};
 })();
 ;(function() {
     /**
-     * Grayscale Filter
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
-     */
+    * Grayscale Filter
+    * @function
+    * @memberof Kinetic.Filters
+    * @param {Object} imageData
+    * @example
+    * node.cache();
+    * node.filters([Kinetic.Filters.Grayscale]);
+    */
     Kinetic.Filters.Grayscale = function(imageData) {
         var data = imageData.data,
             len = data.length,
@@ -4350,6 +4353,10 @@ var Kinetic = {};
      * @function
      * @memberof Kinetic.Filters
      * @param {Object} imageData
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Brighten]);
+     * node.brightness(0.8);
      */
     Kinetic.Filters.Brighten = function(imageData) {
         var brightness = this.brightness() * 255,
@@ -4370,7 +4377,7 @@ var Kinetic = {};
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'brightness', 0, null, Kinetic.Factory.afterSetFilter);
     /**
     * get/set filter brightness.  The brightness is a number between -1 and 1.&nbsp; Positive values 
-    *  brighten the pixels and negative values darken them.
+    *  brighten the pixels and negative values darken them. Use with {@link Kinetic.Filters.Brighten} filter.
     * @name brightness
     * @method
     * @memberof Kinetic.Node.prototype
@@ -4381,11 +4388,14 @@ var Kinetic = {};
 })();
 ;(function() {
     /**
-     * Invert Filter
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
-     */
+    * Invert Filter
+    * @function
+    * @memberof Kinetic.Filters
+    * @param {Object} imageData
+    * @example
+    * node.cache();
+    * node.filters([Kinetic.Filters.Invert]);
+    */
     Kinetic.Filters.Invert = function(imageData) {
         var data = imageData.data,
             len = data.length,
@@ -4732,10 +4742,15 @@ var Kinetic = {};
     /**
      * Blur Filter
      * @function
+     * @name Blur
      * @memberof Kinetic.Filters
      * @param {Object} imageData
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Blur]);
+     * node.blurRadius(10);
      */
-    Kinetic.Filters.Blur = function(imageData) {
+    Kinetic.Filters.Blur = function Blur(imageData) {
         var radius = Math.round(this.blurRadius());
 
         if (radius > 0) {
@@ -4746,7 +4761,7 @@ var Kinetic = {};
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'blurRadius', 0, null, Kinetic.Factory.afterSetFilter);
 
     /**
-    * get/set blur radius
+    * get/set blur radius. Use with {@link Kinetic.Filters.Blur} filter
     * @name blurRadius
     * @method
     * @memberof Kinetic.Node.prototype
@@ -4917,8 +4932,13 @@ var Kinetic = {};
 	/**
 	 * Mask Filter
 	 * @function
+	 * @name Mask
 	 * @memberof Kinetic.Filters
 	 * @param {Object} imageData
+	 * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Mask]);
+     * node.threshold(0.1);
 	 */
 	Kinetic.Filters.Mask = function(imageData) {
 		// Detect pixels close to the background color
@@ -4949,9 +4969,15 @@ var Kinetic = {};
     /**
      * RGB Filter
      * @function
+     * @name RGB
      * @memberof Kinetic.Filters
      * @param {Object} imageData
      * @author ippo615
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.RGB]);
+     * node.blue(120);
+     * node.green(200);
      */
     Kinetic.Filters.RGB = function (imageData) {
         var data = imageData.data,
@@ -4983,7 +5009,7 @@ var Kinetic = {};
         }
     });
     /**
-    * get/set filter red value
+    * get/set filter red value. Use with {@link Kinetic.Filters.RGB} filter.
     * @name red
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5004,7 +5030,7 @@ var Kinetic = {};
         }
     });
     /**
-    * get/set filter green value
+    * get/set filter green value. Use with {@link Kinetic.Filters.RGB} filter.
     * @name green
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5014,7 +5040,7 @@ var Kinetic = {};
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'blue', 0, Kinetic.Validators.RGBComponent, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set filter blue value
+    * get/set filter blue value. Use with {@link Kinetic.Filters.RGB} filter.
     * @name blue
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5027,9 +5053,13 @@ var Kinetic = {};
     /**
     * HSV Filter. Adjusts the hue, saturation and value
     * @function
+    * name HSV
     * @memberof Kinetic.Filters
     * @param {Object} imageData
     * @author ippo615
+    * @example
+    * image.filters([Kinetic.Filters.HSV]);
+    * image.value(200);
     */
 
     Kinetic.Filters.HSV = function (imageData) {
@@ -5083,7 +5113,7 @@ var Kinetic = {};
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'hue', 0, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set hsv hue in degrees
+    * get/set hsv hue in degrees. Use with {@link Kinetic.Filters.HSV} or {@link Kinetic.Filters.HSL} filter.
     * @name hue
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5093,7 +5123,7 @@ var Kinetic = {};
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'saturation', 0, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set hsv saturation
+    * get/set hsv saturation. Use with {@link Kinetic.Filters.HSV} or {@link Kinetic.Filters.HSL} filter.
     * @name saturation
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5103,7 +5133,7 @@ var Kinetic = {};
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'value', 0, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set hsv value
+    * get/set hsv value. Use with {@link Kinetic.Filters.HSV} filter.
     * @name value
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5116,7 +5146,7 @@ var Kinetic = {};
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'hue', 0, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set hsv hue in degrees
+    * get/set hsv hue in degrees. Use with {@link Kinetic.Filters.HSV} or {@link Kinetic.Filters.HSL} filter.
     * @name hue
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5126,7 +5156,7 @@ var Kinetic = {};
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'saturation', 0, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set hsv saturation
+    * get/set hsv saturation. Use with {@link Kinetic.Filters.HSV} or {@link Kinetic.Filters.HSL} filter.
     * @name saturation
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5136,7 +5166,7 @@ var Kinetic = {};
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'luminance', 0, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set hsl luminance
+    * get/set hsl luminance. Use with {@link Kinetic.Filters.HSL} filter.
     * @name value
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5150,6 +5180,9 @@ var Kinetic = {};
     * @memberof Kinetic.Filters
     * @param {Object} imageData
     * @author ippo615
+    * @example
+    * image.filters([Kinetic.Filters.HSL]);
+    * image.luminance(200);
     */
 
     Kinetic.Filters.HSL = function (imageData) {
@@ -5203,13 +5236,20 @@ var Kinetic = {};
 })();
 ;(function () {
     /**
-     * Emboss Filter
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
+     * Emboss Filter.
      * Pixastic Lib - Emboss filter - v0.1.0
      * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
      * License: [http://www.pixastic.com/lib/license.txt]
+     * @function
+     * @memberof Kinetic.Filters
+     * @param {Object} imageData
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Emboss]);
+     * node.embossStrength(0.8);
+     * node.embossWhiteLevel(0.3);
+     * node.embossDirection('right');
+     * node.embossBlend(true);
      */
     Kinetic.Filters.Emboss = function (imageData) {
 
@@ -5335,7 +5375,7 @@ var Kinetic = {};
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossStrength', 0.5, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set emboss strength
+    * get/set emboss strength. Use with {@link Kinetic.Filters.Emboss} filter.
     * @name embossStrength
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5345,7 +5385,7 @@ var Kinetic = {};
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossWhiteLevel', 0.5, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set emboss white level
+    * get/set emboss white level. Use with {@link Kinetic.Filters.Emboss} filter.
     * @name embossWhiteLevel
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5355,7 +5395,7 @@ var Kinetic = {};
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossDirection', 'top-left', null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set emboss direction
+    * get/set emboss direction. Use with {@link Kinetic.Filters.Emboss} filter.
     * @name embossDirection
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5366,7 +5406,7 @@ var Kinetic = {};
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossBlend', false, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set emboss blend
+    * get/set emboss blend. Use with {@link Kinetic.Filters.Emboss} filter.
     * @name embossBlend
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5404,9 +5444,14 @@ var Kinetic = {};
     *  possible range (ie 0-255). Performs w*h pixel reads and w*h pixel
     *  writes.
     * @function
+    * @name Enhance
     * @memberof Kinetic.Filters
     * @param {Object} imageData
     * @author ippo615
+    * @example
+    * node.cache();
+    * node.filters([Kinetic.Filters.Enhance]);
+    * node.enhance(0.4);
     */
     Kinetic.Filters.Enhance = function (imageData) {
         var data = imageData.data,
@@ -5486,7 +5531,7 @@ var Kinetic = {};
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'enhance', 0, null, Kinetic.Factory.afterSetFilter);
 
     /**
-    * get/set enhance
+    * get/set enhance. Use with {@link Kinetic.Filters.Enhance} filter.
     * @name enhance
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5501,9 +5546,14 @@ var Kinetic = {};
      *  than n different values for that channel. This is also applied
      *  to the alpha channel.
      * @function
+     * @name Posterize
      * @author ippo615
      * @memberof Kinetic.Filters
      * @param {Object} imageData
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Posterize]);
+     * node.levels(0.8);
      */
 
     Kinetic.Filters.Posterize = function (imageData) {
@@ -5522,7 +5572,7 @@ var Kinetic = {};
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'levels', 0.5, null, Kinetic.Factory.afterSetFilter);
 
     /**
-    * get/set levels.  Must be a number between 0 and 1
+    * get/set levels.  Must be a number between 0 and 1.  Use with {@link Kinetic.Filters.Posterize} filter.
     * @name levels
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5534,9 +5584,14 @@ var Kinetic = {};
     /**
      * Noise Filter. Randomly adds or substracts to the color channels
      * @function
+     * @name Noise
      * @memberof Kinetic.Filters
      * @param {Object} imagedata
      * @author ippo615
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Noise]);
+     * node.noise(0.8);
      */
     Kinetic.Filters.Noise = function (imageData) {
         var amount = this.noise() * 255,
@@ -5555,7 +5610,7 @@ var Kinetic = {};
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'noise', 0.2, null, Kinetic.Factory.afterSetFilter);
 
     /**
-    * get/set noise amount.  Must be a value between 0 and 1
+    * get/set noise amount.  Must be a value between 0 and 1. Use with {@link Kinetic.Filters.Noise} filter.
     * @name noise
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5569,9 +5624,14 @@ var Kinetic = {};
      * Pixelate Filter. Averages groups of pixels and redraws
      *  them as larger pixels
      * @function
+     * @name Pixelate
      * @memberof Kinetic.Filters
      * @param {Object} imageData
      * @author ippo615
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Pixelate]);
+     * node.pixelSize(10);
      */
 
     Kinetic.Filters.Pixelate = function (imageData) {
@@ -5643,7 +5703,7 @@ var Kinetic = {};
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'pixelSize', 8, null, Kinetic.Factory.afterSetFilter);
 
     /**
-    * get/set pixel size
+    * get/set pixel size. Use with {@link Kinetic.Filters.Pixelate} filter.
     * @name pixelSize
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5657,9 +5717,14 @@ var Kinetic = {};
      *  the max and any value below the mid point to the min.
      *  This affects the alpha channel.
      * @function
+     * @name Threshold
      * @memberof Kinetic.Filters
      * @param {Object} imageData
      * @author ippo615
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Threshold]);
+     * node.threshold(0.1);
      */
 
     Kinetic.Filters.Threshold = function (imageData) {
@@ -5676,7 +5741,7 @@ var Kinetic = {};
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'threshold', 0.5, null, Kinetic.Factory.afterSetFilter);
 
     /**
-    * get/set threshold.  Must be a value between 0 and 1
+    * get/set threshold.  Must be a value between 0 and 1. Use with {@link Kinetic.Filters.Threshold} or {@link Kinetic.Filters.Mask} filter.
     * @name threshold
     * @method
     * @memberof Kinetic.Node.prototype
@@ -5689,10 +5754,14 @@ var Kinetic = {};
      * Based on: Pixastic Lib - Sepia filter - v0.1.0
      * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
      * @function
+     * @name Sepia
      * @memberof Kinetic.Filters
      * @param {Object} imageData
      * @author Jacob Seidelin <jseidelin@nihilogic.dk>
      * @license MPL v1.1 [http://www.pixastic.com/lib/license.txt]
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Sepia]);
      */
     Kinetic.Filters.Sepia = function (imageData) {
         var data = imageData.data,
@@ -5726,12 +5795,16 @@ var Kinetic = {};
 ;(function () {
     /**
      * Solarize Filter
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
      * Pixastic Lib - Solarize filter - v0.1.0
      * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
      * License: [http://www.pixastic.com/lib/license.txt]
+     * @function
+     * @name Solarize
+     * @memberof Kinetic.Filters
+     * @param {Object} imageData
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Solarize]);
      */
     Kinetic.Filters.Solarize = function (imageData) {
         var data = imageData.data,
@@ -5922,8 +5995,14 @@ var Kinetic = {};
     /*
      * Kaleidoscope Filter. 
      * @function
+     * @name Kaleidoscope
      * @author ippo615
      * @memberof Kinetic.Filters
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Kaleidoscope]);
+     * node.kaleidoscopePower(3);
+     * node.kaleidoscopeAngle(45);
      */
     Kinetic.Filters.Kaleidoscope = function(imageData){
         var xSize = imageData.width,
@@ -6009,7 +6088,7 @@ var Kinetic = {};
     };
 
     /**
-    * get/set kaleidoscope power
+    * get/set kaleidoscope power. Use with {@link Kinetic.Filters.Kaleidoscope} filter.
     * @name kaleidoscopePower
     * @method
     * @memberof Kinetic.Node.prototype
@@ -6019,7 +6098,7 @@ var Kinetic = {};
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'kaleidoscopePower', 2, null, Kinetic.Factory.afterSetFilter);
 
     /**
-    * get/set kaleidoscope angle
+    * get/set kaleidoscope angle. Use with {@link Kinetic.Filters.Kaleidoscope} filter.
     * @name kaleidoscopeAngle
     * @method
     * @memberof Kinetic.Node.prototype

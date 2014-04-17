@@ -152,8 +152,14 @@
     /*
      * Kaleidoscope Filter. 
      * @function
+     * @name Kaleidoscope
      * @author ippo615
      * @memberof Kinetic.Filters
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Kaleidoscope]);
+     * node.kaleidoscopePower(3);
+     * node.kaleidoscopeAngle(45);
      */
     Kinetic.Filters.Kaleidoscope = function(imageData){
         var xSize = imageData.width,
@@ -239,7 +245,7 @@
     };
 
     /**
-    * get/set kaleidoscope power
+    * get/set kaleidoscope power. Use with {@link Kinetic.Filters.Kaleidoscope} filter.
     * @name kaleidoscopePower
     * @method
     * @memberof Kinetic.Node.prototype
@@ -249,7 +255,7 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'kaleidoscopePower', 2, null, Kinetic.Factory.afterSetFilter);
 
     /**
-    * get/set kaleidoscope angle
+    * get/set kaleidoscope angle. Use with {@link Kinetic.Filters.Kaleidoscope} filter.
     * @name kaleidoscopeAngle
     * @method
     * @memberof Kinetic.Node.prototype

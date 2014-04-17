@@ -2,9 +2,15 @@
     /**
      * RGB Filter
      * @function
+     * @name RGB
      * @memberof Kinetic.Filters
      * @param {Object} imageData
      * @author ippo615
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.RGB]);
+     * node.blue(120);
+     * node.green(200);
      */
     Kinetic.Filters.RGB = function (imageData) {
         var data = imageData.data,
@@ -36,7 +42,7 @@
         }
     });
     /**
-    * get/set filter red value
+    * get/set filter red value. Use with {@link Kinetic.Filters.RGB} filter.
     * @name red
     * @method
     * @memberof Kinetic.Node.prototype
@@ -57,7 +63,7 @@
         }
     });
     /**
-    * get/set filter green value
+    * get/set filter green value. Use with {@link Kinetic.Filters.RGB} filter.
     * @name green
     * @method
     * @memberof Kinetic.Node.prototype
@@ -67,7 +73,7 @@
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'blue', 0, Kinetic.Validators.RGBComponent, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set filter blue value
+    * get/set filter blue value. Use with {@link Kinetic.Filters.RGB} filter.
     * @name blue
     * @method
     * @memberof Kinetic.Node.prototype

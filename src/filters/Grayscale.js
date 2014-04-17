@@ -1,10 +1,13 @@
 (function() {
     /**
-     * Grayscale Filter
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
-     */
+    * Grayscale Filter
+    * @function
+    * @memberof Kinetic.Filters
+    * @param {Object} imageData
+    * @example
+    * node.cache();
+    * node.filters([Kinetic.Filters.Grayscale]);
+    */
     Kinetic.Filters.Grayscale = function(imageData) {
         var data = imageData.data,
             len = data.length,

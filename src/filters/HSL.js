@@ -2,7 +2,7 @@
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'hue', 0, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set hsv hue in degrees
+    * get/set hsv hue in degrees. Use with {@link Kinetic.Filters.HSV} or {@link Kinetic.Filters.HSL} filter.
     * @name hue
     * @method
     * @memberof Kinetic.Node.prototype
@@ -12,7 +12,7 @@
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'saturation', 0, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set hsv saturation
+    * get/set hsv saturation. Use with {@link Kinetic.Filters.HSV} or {@link Kinetic.Filters.HSL} filter.
     * @name saturation
     * @method
     * @memberof Kinetic.Node.prototype
@@ -22,7 +22,7 @@
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'luminance', 0, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set hsl luminance
+    * get/set hsl luminance. Use with {@link Kinetic.Filters.HSL} filter.
     * @name value
     * @method
     * @memberof Kinetic.Node.prototype
@@ -36,6 +36,9 @@
     * @memberof Kinetic.Filters
     * @param {Object} imageData
     * @author ippo615
+    * @example
+    * image.filters([Kinetic.Filters.HSL]);
+    * image.luminance(200);
     */
 
     Kinetic.Filters.HSL = function (imageData) {

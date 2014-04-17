@@ -330,10 +330,15 @@
     /**
      * Blur Filter
      * @function
+     * @name Blur
      * @memberof Kinetic.Filters
      * @param {Object} imageData
+     * @example
+     * node.cache();
+     * node.filters([Kinetic.Filters.Blur]);
+     * node.blurRadius(10);
      */
-    Kinetic.Filters.Blur = function(imageData) {
+    Kinetic.Filters.Blur = function Blur(imageData) {
         var radius = Math.round(this.blurRadius());
 
         if (radius > 0) {
@@ -344,7 +349,7 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'blurRadius', 0, null, Kinetic.Factory.afterSetFilter);
 
     /**
-    * get/set blur radius
+    * get/set blur radius. Use with {@link Kinetic.Filters.Blur} filter
     * @name blurRadius
     * @method
     * @memberof Kinetic.Node.prototype

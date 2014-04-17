@@ -26,9 +26,14 @@
     *  possible range (ie 0-255). Performs w*h pixel reads and w*h pixel
     *  writes.
     * @function
+    * @name Enhance
     * @memberof Kinetic.Filters
     * @param {Object} imageData
     * @author ippo615
+    * @example
+    * node.cache();
+    * node.filters([Kinetic.Filters.Enhance]);
+    * node.enhance(0.4);
     */
     Kinetic.Filters.Enhance = function (imageData) {
         var data = imageData.data,
@@ -108,7 +113,7 @@
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'enhance', 0, null, Kinetic.Factory.afterSetFilter);
 
     /**
-    * get/set enhance
+    * get/set enhance. Use with {@link Kinetic.Filters.Enhance} filter.
     * @name enhance
     * @method
     * @memberof Kinetic.Node.prototype

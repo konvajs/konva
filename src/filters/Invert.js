@@ -1,10 +1,13 @@
 (function() {
     /**
-     * Invert Filter
-     * @function
-     * @memberof Kinetic.Filters
-     * @param {Object} imageData
-     */
+    * Invert Filter
+    * @function
+    * @memberof Kinetic.Filters
+    * @param {Object} imageData
+    * @example
+    * node.cache();
+    * node.filters([Kinetic.Filters.Invert]);
+    */
     Kinetic.Filters.Invert = function(imageData) {
         var data = imageData.data,
             len = data.length,

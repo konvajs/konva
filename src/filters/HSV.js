@@ -3,9 +3,13 @@
     /**
     * HSV Filter. Adjusts the hue, saturation and value
     * @function
+    * @name HSV
     * @memberof Kinetic.Filters
     * @param {Object} imageData
     * @author ippo615
+    * @example
+    * image.filters([Kinetic.Filters.HSV]);
+    * image.value(200);
     */
 
     Kinetic.Filters.HSV = function (imageData) {
@@ -59,7 +63,7 @@
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'hue', 0, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set hsv hue in degrees
+    * get/set hsv hue in degrees. Use with {@link Kinetic.Filters.HSV} or {@link Kinetic.Filters.HSL} filter.
     * @name hue
     * @method
     * @memberof Kinetic.Node.prototype
@@ -69,7 +73,7 @@
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'saturation', 0, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set hsv saturation
+    * get/set hsv saturation. Use with {@link Kinetic.Filters.HSV} or {@link Kinetic.Filters.HSL} filter.
     * @name saturation
     * @method
     * @memberof Kinetic.Node.prototype
@@ -79,7 +83,7 @@
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'value', 0, null, Kinetic.Factory.afterSetFilter);
     /**
-    * get/set hsv value
+    * get/set hsv value. Use with {@link Kinetic.Filters.HSV} filter.
     * @name value
     * @method
     * @memberof Kinetic.Node.prototype
