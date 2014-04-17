@@ -31,12 +31,15 @@ Run `grunt docs` which will build the documentation files and place them in the 
 
 #NodeJS
 
-Support of NodeJS is experimental.An nmp package is not yet published.
+Support of NodeJS is experimental.
 
-We are using (node-canvas)[https://github.com/LearnBoost/node-canvas] to create canvas element.
+We are using [node-canvas](https://github.com/LearnBoost/node-canvas) to create canvas element.
 
-* You have to install node-canvas dependencies (https://github.com/LearnBoost/node-canvas/wiki/_pages)[https://github.com/LearnBoost/node-canvas/wiki/_pages]
-* Run `npm install KineticJS`
+### Instalation
+
+1. Install node-canvas [https://github.com/LearnBoost/node-canvas/wiki/_pages](https://github.com/LearnBoost/node-canvas/wiki/_pages)
+2. `npm install jsdom`
+3. `npm install kinetic`
 
 ###Example
 
