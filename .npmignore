@@ -6,6 +6,8 @@ docs
 test
 .travis.yml
 Gruntfile.js
-bower-template.js
+bower-template.json
 bower.json
 presentation-schedule.md
+*.sublime-project
+*.sublime-workspace

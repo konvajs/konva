@@ -2,7 +2,7 @@
 
 Hi all! I will be taking a 3 month break from KineticJS (until July 2014) to focus on other endeavors.  KineticJS is in a great state right now (v5.1.0).  Please continue to file any issues that you may find, or submit pull requests.  They will eventually be addressed.
 
-#Installation
+# Setuping dev environment
 
 Before doing all dev stuff make sure you have node installed. After that, run `npm install --dev` in the main directory to install the node module dependencies.
 
@@ -35,7 +35,7 @@ Support of NodeJS is experimental.
 
 We are using [node-canvas](https://github.com/LearnBoost/node-canvas) to create canvas element.
 
-### Instalation
+###Installation
 
 1. Install node-canvas [https://github.com/LearnBoost/node-canvas/wiki/_pages](https://github.com/LearnBoost/node-canvas/wiki/_pages)
 2. `npm install jsdom`
