@@ -57,20 +57,36 @@
             var obj, i, intersectionOffset, shape;
 
             if(this.hitGraphEnabled() && this.isVisible()) {
-                for (i=0; i<INTERSECTION_OFFSETS_LEN; i++) {
-                    intersectionOffset = INTERSECTION_OFFSETS[i];
-                    obj = this._getIntersection({
-                        x: pos.x + intersectionOffset.x,
-                        y: pos.y + intersectionOffset.y
-                    });
-                    shape = obj.shape;
-                    if (shape) {
-                        return shape;
+                // in some cases antialiased area may be bigger than 1px
+                // it is possible if we will cache node, then scale it a lot
+                // TODO: check { 0; 0 } point before loop, and remove it from INTERSECTION_OFFSETS.
+                var spiralSearchDistance = 1;
+                var continueSearch = false;
+                while (true) {
+                    for (i=0; i<INTERSECTION_OFFSETS_LEN; i++) {
+                        intersectionOffset = INTERSECTION_OFFSETS[i];
+                        obj = this._getIntersection({
+                            x: pos.x + intersectionOffset.x * spiralSearchDistance,
+                            y: pos.y + intersectionOffset.y * spiralSearchDistance
+                        });
+                        shape = obj.shape;
+                        if (shape) {
+                            return shape;
+                        }
+                        // we should continue search if we found antialiased pixel
+                        // that means our node somewhere very close
+                        else if (obj.antialiased) {
+                            continueSearch = true;
+                        }
                     }
-                    else if (!obj.antialiased) {
-                        return null;
+                    // if no shape, and no antialiased pixel, we should end searching 
+                    if (!continueSearch) {
+                        return;
+                    } else {
+                        spiralSearchDistance += 1;
                     }
                 }
+                
             }
             else {
                 return null;

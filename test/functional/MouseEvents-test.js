@@ -676,6 +676,7 @@ suite('MouseEvents', function() {
 
         greenCircle.on('mousedown', function() {
             greenCircleMousedowns++;
+
         });
 
         stage._mousedown({
@@ -709,6 +710,46 @@ suite('MouseEvents', function() {
 
         //assert.equal(groupMousedowns, 4, 'groupMousedowns should be 4');
         assert.equal(greenCircleMousedowns, 2, 'greenCircleMousedowns should be 2');
+    });
+
+    // ======================================================
+    test('test mousedown events with antialiasing', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+        var group = new Kinetic.Group();
+
+        var greenCircle = new Kinetic.Circle({
+            x: 50,
+            y: 50,
+            radius: 50,
+            fill: 'green',
+            name: 'green'
+        });
+
+        var groupMousedowns = 0;
+        group.add(greenCircle);
+        layer.add(group);
+
+        group.cache({
+            width : stage.width(),
+            height : stage.height()
+        });
+        group.scale({
+            x : 5,
+            y : 5
+        });
+        group.on('mousedown', function() {
+            groupMousedowns++;
+        })
+        stage.add(layer);
+        layer.draw();
+
+        var top = stage.content.getBoundingClientRect().top;
+        stage._mousedown({
+            clientX: 135,
+            clientY: 30 + top
+        });
+        assert.equal(groupMousedowns, 1, 'groupMousedowns should be 1');
     });
 
     // ======================================================

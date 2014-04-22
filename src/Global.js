@@ -235,7 +235,6 @@ var Kinetic = {};
          * @param {Object} config
          * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
          * to clear the canvas before each layer draw.  The default value is true.
-         * @@nodeParams
          * @@containerParams
          * @example
          * var layer = new Kinetic.FastLayer();

@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-04-18
+ * Date: 2014-04-22
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -412,26 +412,6 @@ var Kinetic = {};
          * @param {Object} config
          * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
          * to clear the canvas before each layer draw.  The default value is true.
-         * @param {Number} [config.x]
-     * @param {Number} [config.y]
-     * @param {Number} [config.width]
-     * @param {Number} [config.height]
-     * @param {Boolean} [config.visible]
-     * @param {Boolean} [config.listening] whether or not the node is listening for events
-     * @param {String} [config.id] unique id
-     * @param {String} [config.name] non-unique name
-     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
-     * @param {Object} [config.scale] set scale
-     * @param {Number} [config.scaleX] set scale x
-     * @param {Number} [config.scaleY] set scale y
-     * @param {Number} [config.rotation] rotation in degrees
-     * @param {Object} [config.offset] offset from center point and rotation point
-     * @param {Number} [config.offsetX] set offset x
-     * @param {Number} [config.offsetY] set offset y
-     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
-     *  the entire stage by dragging any portion of the stage
-     * @param {Number} [config.dragDistance]
-     * @param {Function} [config.dragBoundFunc]
          * @param {Function} [config.clipFunc] clipping function
 
          * @example
@@ -5053,7 +5033,7 @@ var Kinetic = {};
     /**
     * HSV Filter. Adjusts the hue, saturation and value
     * @function
-    * name HSV
+    * @name HSV
     * @memberof Kinetic.Filters
     * @param {Object} imageData
     * @author ippo615
@@ -10060,20 +10040,36 @@ var Kinetic = {};
             var obj, i, intersectionOffset, shape;
 
             if(this.hitGraphEnabled() && this.isVisible()) {
-                for (i=0; i<INTERSECTION_OFFSETS_LEN; i++) {
-                    intersectionOffset = INTERSECTION_OFFSETS[i];
-                    obj = this._getIntersection({
-                        x: pos.x + intersectionOffset.x,
-                        y: pos.y + intersectionOffset.y
-                    });
-                    shape = obj.shape;
-                    if (shape) {
-                        return shape;
+                // in some cases antialiased area may be bigger than 1px
+                // it is possible if we will cache node, then scale it a lot
+                // TODO: check { 0; 0 } point before loop, and remove it from INTERSECTION_OFFSETS.
+                var spiralSearchDistance = 1;
+                var continueSearch = false;
+                while (true) {
+                    for (i=0; i<INTERSECTION_OFFSETS_LEN; i++) {
+                        intersectionOffset = INTERSECTION_OFFSETS[i];
+                        obj = this._getIntersection({
+                            x: pos.x + intersectionOffset.x * spiralSearchDistance,
+                            y: pos.y + intersectionOffset.y * spiralSearchDistance
+                        });
+                        shape = obj.shape;
+                        if (shape) {
+                            return shape;
+                        }
+                        // we should continue search if we found antialiased pixel
+                        // that means our node somewhere very close
+                        else if (obj.antialiased) {
+                            continueSearch = true;
+                        }
                     }
-                    else if (!obj.antialiased) {
-                        return null;
+                    // if no shape, and no antialiased pixel, we should end searching 
+                    if (!continueSearch) {
+                        return;
+                    } else {
+                        spiralSearchDistance += 1;
                     }
                 }
+                
             }
             else {
                 return null;
