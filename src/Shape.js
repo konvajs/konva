@@ -99,9 +99,6 @@
         hasStroke: function() {
             return !!(this.stroke() || this.strokeRed() || this.strokeGreen() || this.strokeBlue());
         },
-        _get: function(selector) {
-            return this.className === selector || this.nodeType === selector ? [this] : [];
-        },
         /**
          * determines if point is in the shape, regardless if other shapes are on top of it.  Note: because
          *  this method clears a temporary canvas and then redraws the shape, it performs very poorly if executed many times

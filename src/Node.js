@@ -1397,7 +1397,7 @@
             }
         },
         _get: function(selector) {
-            return this.nodeType === selector ? [this] : [];
+            return this.className === selector || this.nodeType === selector ? [this] : [];
         },
         _off: function(type, name) {
             var evtListeners = this.eventListeners[type],

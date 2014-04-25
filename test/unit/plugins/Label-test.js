@@ -80,4 +80,31 @@ suite('Label', function() {
         layer.add(label);
         stage.add(layer);
     });
+
+    test('find label class', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+
+        var label = new Kinetic.Label({
+            x: 100,
+            y: 100,
+        });
+
+        // add a tag to the label
+        label.add(new Kinetic.Tag({
+            fill: '#bbb'
+        }));
+
+        // add text to the label
+        label.add(new Kinetic.Text({
+            text: 'Test Label',
+            fill: 'green'
+        }));
+
+        layer.add(label);
+        stage.add(layer);
+
+        assert.equal(stage.find('Label')[0], label);
+    });
+
 });

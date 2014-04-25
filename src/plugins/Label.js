@@ -58,9 +58,9 @@
         ____init: function(config) {
             var that = this;
 
-            this.className = LABEL;
             Kinetic.Group.call(this, config);
-
+            this.className = LABEL;
+            
             this.on('add.kinetic', function(evt) {
                 that._addListeners(evt.child);
                 that._sync();
