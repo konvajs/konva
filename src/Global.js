@@ -379,7 +379,7 @@ var Kinetic = {};
     Kinetic.window = window;
     Kinetic.root = root;
 
-}((1, eval)('this'), function() {
+}(this, function() {
 
     // Just return a value to define the module export.
     // This example returns an object, but the module

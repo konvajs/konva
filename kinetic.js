@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-04-22
+ * Date: 2014-04-26
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -577,7 +577,7 @@ var Kinetic = {};
     Kinetic.window = window;
     Kinetic.root = root;
 
-}((1, eval)('this'), function() {
+}(this, function() {
 
     // Just return a value to define the module export.
     // This example returns an object, but the module
@@ -3639,7 +3639,7 @@ var Kinetic = {};
             }
         },
         _get: function(selector) {
-            return this.nodeType === selector ? [this] : [];
+            return this.className === selector || this.nodeType === selector ? [this] : [];
         },
         _off: function(type, name) {
             var evtListeners = this.eventListeners[type],
@@ -6114,7 +6114,7 @@ var Kinetic = {};
     })();
 
     function FRAF(callback) {
-        Kinetic.root.setTimeout(callback, 1000 / 60);
+        setTimeout(callback, 1000 / 60);
     }
 
     function requestAnimFrame() {
@@ -6384,7 +6384,7 @@ var Kinetic = {};
             layer.batchDraw();
         });
     };
-})((1,eval)('this'));;(function() {
+})(this);;(function() {
     var blacklist = {
         node: 1,
         duration: 1,
@@ -7816,9 +7816,6 @@ var Kinetic = {};
          */
         hasStroke: function() {
             return !!(this.stroke() || this.strokeRed() || this.strokeGreen() || this.strokeBlue());
-        },
-        _get: function(selector) {
-            return this.className === selector || this.nodeType === selector ? [this] : [];
         },
         /**
          * determines if point is in the shape, regardless if other shapes are on top of it.  Note: because
@@ -14424,9 +14421,9 @@ var Kinetic = {};
         ____init: function(config) {
             var that = this;
 
-            this.className = LABEL;
             Kinetic.Group.call(this, config);
-
+            this.className = LABEL;
+            
             this.on('add.kinetic', function(evt) {
                 that._addListeners(evt.child);
                 that._sync();

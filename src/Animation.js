@@ -24,7 +24,7 @@
     })();
 
     function FRAF(callback) {
-        Kinetic.root.setTimeout(callback, 1000 / 60);
+        setTimeout(callback, 1000 / 60);
     }
 
     function requestAnimFrame() {
@@ -294,4 +294,4 @@
             layer.batchDraw();
         });
     };
-})((1,eval)('this'));
+})(this);
