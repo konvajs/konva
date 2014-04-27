@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-04-26
+ * Date: 2014-04-27
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -7870,7 +7870,10 @@ var Kinetic = {};
                         bufferContext.clear();
                         bufferContext.save();
                         bufferContext._applyLineJoin(this);
-                        layer._applyTransform(this, bufferContext, top);
+                        // layer might be undefined if we are using cache before adding to layer
+                        if (layer) {
+                            layer._applyTransform(this, bufferContext, top);
+                        }
                      
                         drawFunc.call(this, bufferContext);
                         bufferContext.restore();
@@ -7888,7 +7891,10 @@ var Kinetic = {};
                     // if buffer canvas is not needed
                     else {
                         context._applyLineJoin(this);
-                        layer._applyTransform(this, context, top);
+                        // layer might be undefined if we are using cache before adding to layer
+                        if (layer) {
+                            layer._applyTransform(this, context, top);
+                        }
                
                         if (hasShadow) {
                             context.save();

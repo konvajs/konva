@@ -2813,6 +2813,41 @@ suite('Node', function() {
     //assert.equal(circle._cache.canvas.scene.getContext().getTrace(), 'save();translate(74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
   });
 
+  test('cache shape before adding to layer', function(){
+    var stage = addStage();
+    var layer = new Kinetic.Layer();
+    var circle = new Kinetic.Circle({
+        x: 74,
+        y: 74,
+        radius: 70,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 4,
+        name: 'myCircle',
+        draggable: true
+    });
+    assert.equal(circle._cache.canvas, undefined);
+    circle.cache({
+        x: -74,
+        y: -74,
+        width: 148,
+        height: 148
+    }).offset({
+        x: 74,
+        y: 74
+    });
+
+    stage.add(layer);
+
+
+    assert(circle._cache.canvas.scene);
+    assert(circle._cache.canvas.hit);
+
+    layer.add(circle);
+    layer.draw();                                        
+    assert.equal(layer.canvas.getContext().getTrace(), 'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);drawImage([object HTMLCanvasElement],0,0);restore();');
+  });
+
 
   test('cache shape inside transformed group', function(){
     var stage = addStage();

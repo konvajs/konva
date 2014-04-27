@@ -152,7 +152,10 @@
                         bufferContext.clear();
                         bufferContext.save();
                         bufferContext._applyLineJoin(this);
-                        layer._applyTransform(this, bufferContext, top);
+                        // layer might be undefined if we are using cache before adding to layer
+                        if (layer) {
+                            layer._applyTransform(this, bufferContext, top);
+                        }
                      
                         drawFunc.call(this, bufferContext);
                         bufferContext.restore();
@@ -170,7 +173,10 @@
                     // if buffer canvas is not needed
                     else {
                         context._applyLineJoin(this);
-                        layer._applyTransform(this, context, top);
+                        // layer might be undefined if we are using cache before adding to layer
+                        if (layer) {
+                            layer._applyTransform(this, context, top);
+                        }
                
                         if (hasShadow) {
                             context.save();
