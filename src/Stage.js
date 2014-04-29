@@ -385,6 +385,10 @@
             }
         },
         _mousemove: function(evt) {
+            // workaround fake mousemove event in chrome browser https://code.google.com/p/chromium/issues/detail?id=161464
+            if ((typeof evt.webkitMovementX !== 'undefined' || typeof evt.webkitMovementY !== 'undefined') && evt.webkitMovementY === 0 && evt.webkitMovementX === 0) {
+                return;
+            }
             if (!Kinetic.UA.mobile) {
                 this._setPointerPosition(evt);
                 var dd = Kinetic.DD,

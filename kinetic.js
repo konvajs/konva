@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-04-27
+ * Date: 2014-04-29
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -9496,6 +9496,10 @@ var Kinetic = {};
             }
         },
         _mousemove: function(evt) {
+            // workaround fake mousemove event in chrome browser https://code.google.com/p/chromium/issues/detail?id=161464
+            if ((typeof evt.webkitMovementX !== 'undefined' || typeof evt.webkitMovementY !== 'undefined') && evt.webkitMovementY === 0 && evt.webkitMovementX === 0) {
+                return;
+            }
             if (!Kinetic.UA.mobile) {
                 this._setPointerPosition(evt);
                 var dd = Kinetic.DD,
