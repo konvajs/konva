@@ -460,17 +460,20 @@
         _mouseup: function(evt) {
             if (!Kinetic.UA.mobile) {
                 this._setPointerPosition(evt);
-                var that = this,
-                    shape = this.getIntersection(this.getPointerPosition()),
+                var shape = this.getIntersection(this.getPointerPosition()),
                     clickStartShape = this.clickStartShape,
-                    fireDblClick = false;
+                    fireDblClick = false,
+                    dd = Kinetic.DD;
 
                 if(Kinetic.inDblClickWindow) {
                     fireDblClick = true;
                     Kinetic.inDblClickWindow = false;
                 }
-                else {
+                // don't set inDblClickWindow after dragging
+                else if (!dd || !dd.justDragged) {
                     Kinetic.inDblClickWindow = true;
+                } else if (dd) {
+                    dd.justDragged = false;
                 }
 
                 setTimeout(function() {

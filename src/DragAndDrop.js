@@ -3,6 +3,7 @@
         // properties
         anim: new Kinetic.Animation(),
         isDragging: false,
+        justDragged: false,
         offset: {
             x: 0,
             y: 0
@@ -60,6 +61,7 @@
                 // operation actually started.
                 if(dd.isDragging) {
                     dd.isDragging = false;
+                    dd.justDragged = true;
                     Kinetic.listenClickTap = false;
 
                     if (evt) {
