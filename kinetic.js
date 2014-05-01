@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-04-29
+ * Date: 2014-05-01
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -6129,7 +6129,8 @@ var Kinetic = {};
      *  timeDiff, lastTime, time, and frameRate properties.  The timeDiff property is the number of milliseconds that have passed
      *  since the last animation frame.  The lastTime property is time in milliseconds that elapsed from the moment the animation started
      *  to the last animation frame.  The time property is the time in milliseconds that ellapsed from the moment the animation started
-     *  to the current animation frame.  The frameRate property is the current frame rate in frames / second
+     *  to the current animation frame.  The frameRate property is the current frame rate in frames / second. Return false from function,
+     *  if you don't need to redraw layer/layers on some frames.
      * @param {Kinetic.Layer|Array} [layers] layer(s) to be redrawn on each animation frame. Can be a layer, an array of layers, or null.
      *  Not specifying a node will result in no redraw.
      * @example
@@ -6300,6 +6301,7 @@ var Kinetic = {};
          * WARNING: don't cache animations.length because it could change while
          * the for loop is running, causing a JS error
          */
+        var needRedraw = false;
         for(n = 0; n < animations.length; n++) {
             anim = animations[n];
             layers = anim.layers;
@@ -6317,12 +6319,15 @@ var Kinetic = {};
 
             // if animation object has a function, execute it
             if(func) {
-                func.call(anim, anim.frame);
+                // allow anim bypassing drawing
+                needRedraw  = (func.call(anim, anim.frame) !== false) || needRedraw;
             }
         }
 
-        for(key in layerHash) {
-            layerHash[key].draw();
+        if (needRedraw) {
+            for(key in layerHash) {
+                layerHash[key].draw();
+            } 
         }
     };
     Kinetic.Animation._animationLoop = function() {
@@ -6384,7 +6389,8 @@ var Kinetic = {};
             layer.batchDraw();
         });
     };
-})(this);;(function() {
+})(this);
+;(function() {
     var blacklist = {
         node: 1,
         duration: 1,
@@ -6986,8 +6992,13 @@ var Kinetic = {};
 ;(function() {
     Kinetic.DD = {
         // properties
-        anim: new Kinetic.Animation(),
+        anim: new Kinetic.Animation(function(frame) {
+                    var b = this.dirty;
+                    this.dirty = false;
+                    return b;
+                }),
         isDragging: false,
+        justDragged: false,
         offset: {
             x: 0,
             y: 0
@@ -7045,6 +7056,7 @@ var Kinetic = {};
                 // operation actually started.
                 if(dd.isDragging) {
                     dd.isDragging = false;
+                    dd.justDragged = true;
                     Kinetic.listenClickTap = false;
 
                     if (evt) {
@@ -7119,6 +7131,14 @@ var Kinetic = {};
         }
 
         this.setAbsolutePosition(newNodePos);
+
+        if (!this._lastPos ||
+            this._lastPos.x !== newNodePos.x ||
+            this._lastPos.y !== newNodePos.y) {
+            dd.anim.dirty = true;
+        }
+
+        this._lastPos = newNodePos;
     };
 
     /**
@@ -9571,17 +9591,20 @@ var Kinetic = {};
         _mouseup: function(evt) {
             if (!Kinetic.UA.mobile) {
                 this._setPointerPosition(evt);
-                var that = this,
-                    shape = this.getIntersection(this.getPointerPosition()),
+                var shape = this.getIntersection(this.getPointerPosition()),
                     clickStartShape = this.clickStartShape,
-                    fireDblClick = false;
+                    fireDblClick = false,
+                    dd = Kinetic.DD;
 
                 if(Kinetic.inDblClickWindow) {
                     fireDblClick = true;
                     Kinetic.inDblClickWindow = false;
                 }
-                else {
+                // don't set inDblClickWindow after dragging
+                else if (!dd || !dd.justDragged) {
                     Kinetic.inDblClickWindow = true;
+                } else if (dd) {
+                    dd.justDragged = false;
                 }
 
                 setTimeout(function() {
