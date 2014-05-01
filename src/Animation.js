@@ -39,7 +39,8 @@
      *  timeDiff, lastTime, time, and frameRate properties.  The timeDiff property is the number of milliseconds that have passed
      *  since the last animation frame.  The lastTime property is time in milliseconds that elapsed from the moment the animation started
      *  to the last animation frame.  The time property is the time in milliseconds that ellapsed from the moment the animation started
-     *  to the current animation frame.  The frameRate property is the current frame rate in frames / second
+     *  to the current animation frame.  The frameRate property is the current frame rate in frames / second. Return false from function,
+     *  if you don't need to redraw layer/layers on some frames.
      * @param {Kinetic.Layer|Array} [layers] layer(s) to be redrawn on each animation frame. Can be a layer, an array of layers, or null.
      *  Not specifying a node will result in no redraw.
      * @example
@@ -210,6 +211,7 @@
          * WARNING: don't cache animations.length because it could change while
          * the for loop is running, causing a JS error
          */
+        var needRedraw = false;
         for(n = 0; n < animations.length; n++) {
             anim = animations[n];
             layers = anim.layers;
@@ -228,14 +230,14 @@
             // if animation object has a function, execute it
             if(func) {
                 // allow anim bypassing drawing
-                if (false === func.call(anim, anim.frame)) {
-                    return;
-                }
+                needRedraw  = (func.call(anim, anim.frame) !== false) || needRedraw;
             }
         }
 
-        for(key in layerHash) {
-            layerHash[key].draw();
+        if (needRedraw) {
+            for(key in layerHash) {
+                layerHash[key].draw();
+            } 
         }
     };
     Kinetic.Animation._animationLoop = function() {
