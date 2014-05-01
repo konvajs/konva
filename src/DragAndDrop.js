@@ -1,7 +1,11 @@
 (function() {
     Kinetic.DD = {
         // properties
-        anim: new Kinetic.Animation(),
+        anim: new Kinetic.Animation(function(frame) {
+                    var b = this.dirty;
+                    this.dirty = false;
+                    return b;
+                }),
         isDragging: false,
         justDragged: false,
         offset: {
@@ -136,6 +140,14 @@
         }
 
         this.setAbsolutePosition(newNodePos);
+
+        if (!this._lastPos ||
+            this._lastPos.x !== newNodePos.x ||
+            this._lastPos.y !== newNodePos.y) {
+            dd.anim.dirty = true;
+        }
+
+        this._lastPos = newNodePos;
     };
 
     /**

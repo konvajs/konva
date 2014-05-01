@@ -227,7 +227,10 @@
 
             // if animation object has a function, execute it
             if(func) {
-                func.call(anim, anim.frame);
+                // allow anim bypassing drawing
+                if (false === func.call(anim, anim.frame)) {
+                    return;
+                }
             }
         }
 
