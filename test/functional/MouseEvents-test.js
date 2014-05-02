@@ -740,7 +740,7 @@ suite('MouseEvents', function() {
         });
         group.on('mousedown', function() {
             groupMousedowns++;
-        })
+        });
         stage.add(layer);
         layer.draw();
 
@@ -909,6 +909,152 @@ suite('MouseEvents', function() {
                 }, 20);
             }, 20);
         }, 20);
+
+    });
+
+    // ======================================================
+    test('test mouseleave with multiple groups', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer({
+            id : 'layer'
+        });
+
+        var rect1 = new Kinetic.Rect({
+            x:0,
+            y:0,
+            width: 100,
+            height: 100,
+            fill: 'red',
+            id : 'redRect'
+        });
+
+        var rect2 = new Kinetic.Rect({
+            x:50,
+            y:0,
+            width: 70,
+            height: 70,
+            rotationDeg: 45,
+            fill: 'green',
+            id : 'greenRect'
+        });
+
+        var group = new Kinetic.Group({
+            id : 'group1'
+        });
+        var group2 = new Kinetic.Group({
+            id : 'group2'
+        });
+        group.add(rect1);
+        group2.add(rect2);
+        group.add(group2);
+        layer.add(group);
+        stage.add(layer);
+        layer.draw();
+
+        var groupMouseenter = 0;
+        var groupMouseleave = 0;
+        var groupMouseover = 0;
+        var groupMouseout = 0;
+
+        var group2Mouseleave = 0;
+        var group2Mouseenter = 0;
+        var group2Mouseover = 0;
+        var group2Mouseout = 0;
+
+
+        group.on('mouseenter', function() {
+            groupMouseenter +=1;
+        });
+        group.on('mouseleave', function() {
+            groupMouseleave +=1;
+        });
+        group.on('mouseover', function() {
+            groupMouseover +=1;
+        });
+        group.on('mouseout', function() {
+            groupMouseout +=1;
+        });
+
+
+        group2.on('mouseenter', function() {
+            group2Mouseenter +=1;
+        });
+        group2.on('mouseleave', function() {
+            group2Mouseleave +=1;
+        });
+        group2.on('mouseover', function() {
+            group2Mouseover +=1;
+        });
+        group2.on('mouseout', function() {
+            group2Mouseout +=1;
+        });
+        
+        var top = stage.content.getBoundingClientRect().top;
+
+        stage._mousemove({
+            clientX: 10,
+            clientY: 10 + top
+        });
+        assert.equal(groupMouseenter, 1, 'move1 : group mouseenter should trigger');
+        assert.equal(group2Mouseenter, 0, 'move1 : group2 mouseenter should not trigger');
+
+        assert.equal(groupMouseleave, 0, 'move1 : group mouseleave should not trigger');
+        assert.equal(group2Mouseleave, 0, 'move1 : group2 mouseleave should not trigger');
+
+        assert.equal(groupMouseover, 1, 'move1 : group mouseover should trigger');
+        assert.equal(group2Mouseover, 0, 'move1 : group2 mouseover should not trigger');
+
+        assert.equal(groupMouseout, 0, 'move1 : group mouseout should not trigger');
+        assert.equal(group2Mouseout, 0, 'move1 : group2 mouseout should not trigger');
+
+        stage._mousemove({
+            clientX: 50,
+            clientY: 50 + top
+        });
+        assert.equal(groupMouseenter, 1, 'move2 : group mouseenter should not trigger');
+        assert.equal(group2Mouseenter, 1, 'move2 : group2 mouseenter should trigger');
+
+        assert.equal(groupMouseleave, 0, 'move2 : group mouseleave should not trigger');
+        assert.equal(group2Mouseleave, 0, 'move2 : group2 mouseleave should not trigger');
+
+        assert.equal(groupMouseover, 2, 'move2 : group mouseover should trigger');
+        assert.equal(group2Mouseover, 1, 'move2 : group2 mouseover should trigger');
+
+        assert.equal(groupMouseout, 1, 'move2 : group mouseout should trigger');
+        assert.equal(group2Mouseout, 0, 'move2 : group2 mouseout should not trigger');
+
+        stage._mousemove({
+            clientX: 10,
+            clientY: 10 + top
+        });
+        assert.equal(groupMouseenter, 1, 'move3 : group mouseenter should not trigger');
+        assert.equal(group2Mouseenter, 1, 'move3 : group2 mouseenter should not trigger');
+
+        assert.equal(groupMouseleave, 0, 'move3 : group mouseleave should not trigger');
+        assert.equal(group2Mouseleave, 1, 'move3 : group2 mouseleave should trigger');
+
+        assert.equal(groupMouseover, 3, 'move3 : group mouseover should trigger');
+        assert.equal(group2Mouseover, 1, 'move3 : group2 mouseover should trigger');
+
+        assert.equal(groupMouseout, 2, 'move3 : group mouseout should trigger');
+        assert.equal(group2Mouseout, 1, 'move3 : group2 mouseout should trigger');
+
+        stage._mousemove({
+            clientX: 50,
+            clientY: 50 + top
+        });
+
+        assert.equal(groupMouseenter, 1, 'move4 : mouseenter should not trigger');
+        assert.equal(group2Mouseenter, 2, 'move4 : group2 mouseenter should trigger');
+
+        assert.equal(groupMouseleave, 0, 'move4 : group mouseleave should not trigger');
+        assert.equal(group2Mouseleave, 1, 'move4 : group2 mouseleave should not trigger');
+
+        assert.equal(groupMouseover, 4, 'move1 : group mouseover should trigger');
+        assert.equal(group2Mouseover, 2, 'move1 : group2 mouseover should trigger');
+
+        assert.equal(groupMouseout, 3, 'move4 : group mouseout should trigger');
+        assert.equal(group2Mouseout, 1, 'move4 : group2 mouseout should not trigger');
 
     });
 
