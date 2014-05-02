@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-05-01
+ * Date: 2014-05-02
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -3745,18 +3745,18 @@ var Kinetic = {};
                 evt.target = this;
             }
 
-            if(eventType === MOUSEENTER && compareShape && this._id === compareShape._id) {
+            if(eventType === MOUSEENTER && compareShape && (this._id === compareShape._id || (this.isAncestorOf && this.isAncestorOf(compareShape)))) {
                 okayToRun = false;
             }
-            else if(eventType === MOUSELEAVE && compareShape && this._id === compareShape._id) {
+            else if(eventType === MOUSELEAVE && compareShape && (this._id === compareShape._id || (this.isAncestorOf && this.isAncestorOf(compareShape)))) {
                 okayToRun = false;
             }
-
             if(okayToRun) {
                 this._fire(eventType, evt);
 
                 // simulate event bubbling
-                if(evt && !evt.cancelBubble && this.parent) {
+                var stopBubble = (eventType === MOUSEENTER || eventType === MOUSELEAVE) && ((compareShape && compareShape.isAncestorOf && compareShape.isAncestorOf(this)) || !!(compareShape && compareShape.isAncestorOf));
+                if(evt && !evt.cancelBubble && this.parent && (!stopBubble)) {
                     if(compareShape && compareShape.parent) {
                         this._fireAndBubble.call(this.parent, eventType, evt, compareShape.parent);
                     }
