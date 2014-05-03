@@ -590,6 +590,9 @@
             }
             if(dd) {
                 dd._drag(evt);
+                if (Kinetic.isDragging()) {
+                    evt.preventDefault();
+                }
             }
         },
         _setPointerPosition: function(evt) {
