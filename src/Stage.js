@@ -389,11 +389,14 @@
             if ((typeof evt.webkitMovementX !== 'undefined' || typeof evt.webkitMovementY !== 'undefined') && evt.webkitMovementY === 0 && evt.webkitMovementX === 0) {
                 return;
             }
-            if (!Kinetic.UA.mobile) {
-                this._setPointerPosition(evt);
-                var dd = Kinetic.DD,
-                    shape = this.getIntersection(this.getPointerPosition());
+            if (Kinetic.UA.mobile) {
+                return;
+            }
+            this._setPointerPosition(evt);
+            var dd = Kinetic.DD, shape;
 
+            if (!Kinetic.isDragging()) {
+                shape = this.getIntersection(this.getPointerPosition());
                 if(shape && shape.isListening()) {
                     if(!Kinetic.isDragging() && (!this.targetShape || this.targetShape._id !== shape._id)) {
                         if(this.targetShape) {
@@ -423,10 +426,9 @@
 
                 // content event
                 this._fire(CONTENT_MOUSEMOVE, {evt: evt});
-
-                if(dd) {
-                    dd._drag(evt);
-                }
+            }
+            if(dd) {
+                dd._drag(evt);
             }
 
             // always call preventDefault for desktop events because some browsers
@@ -574,19 +576,18 @@
         _touchmove: function(evt) {
             this._setPointerPosition(evt);
             var dd = Kinetic.DD,
+                shape;
+            if (!Kinetic.isDragging()) {
                 shape = this.getIntersection(this.getPointerPosition());
-
-            if (shape && shape.isListening()) {
-                shape._fireAndBubble(TOUCHMOVE, {evt: evt});
-
-                // only call preventDefault if the shape is listening for events
-                if (shape.isListening() && evt.preventDefault) {
-                    evt.preventDefault();
+                if (shape && shape.isListening()) {
+                    shape._fireAndBubble(TOUCHMOVE, {evt: evt});
+                    // only call preventDefault if the shape is listening for events
+                    if (shape.isListening() && evt.preventDefault) {
+                        evt.preventDefault();
+                    }
                 }
+                this._fire(CONTENT_TOUCHMOVE, {evt: evt});
             }
-            this._fire(CONTENT_TOUCHMOVE, {evt: evt});
-
-            // start drag and drop
             if(dd) {
                 dd._drag(evt);
             }
