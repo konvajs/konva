@@ -210,7 +210,9 @@
                 else if (drawFunc) {
                     context.save();
                     context._applyLineJoin(this);
-                    layer._applyTransform(this, context, top);
+                    if (layer) {
+                        layer._applyTransform(this, context, top);
+                    }
                    
                     drawFunc.call(this, context);
                     context.restore();

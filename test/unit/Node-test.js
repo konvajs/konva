@@ -2806,7 +2806,7 @@ suite('Node', function() {
     //document.body.appendChild(circle._cache.canvas.scene._canvas);
     // document.body.appendChild(circle._cache.canvas.hit._canvas);
 
-    showHit(layer)
+    showHit(layer);
                                         
     //assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);drawImage([object HTMLCanvasElement],0,0);restore();');
 
@@ -2816,6 +2816,7 @@ suite('Node', function() {
   test('cache shape before adding to layer', function(){
     var stage = addStage();
     var layer = new Kinetic.Layer();
+    var group = new Kinetic.Group();
     var circle = new Kinetic.Circle({
         x: 74,
         y: 74,
@@ -2826,6 +2827,7 @@ suite('Node', function() {
         name: 'myCircle',
         draggable: true
     });
+    group.add(circle);
     assert.equal(circle._cache.canvas, undefined);
     circle.cache({
         x: -74,
@@ -2837,14 +2839,18 @@ suite('Node', function() {
         y: 74
     });
 
-    stage.add(layer);
-
+    stage.add(layer);   
 
     assert(circle._cache.canvas.scene);
     assert(circle._cache.canvas.hit);
 
-    layer.add(circle);
-    layer.draw();                                        
+    layer.add(group);
+    layer.draw();
+    var hitShape = stage.getIntersection({
+        x : 74,
+        y : 74
+    });
+    assert.equal(hitShape, circle, 'should draw hit if cached before adding to layer');
     assert.equal(layer.canvas.getContext().getTrace(), 'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);drawImage([object HTMLCanvasElement],0,0);restore();');
   });
 
