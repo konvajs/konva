@@ -39,29 +39,30 @@
             this.hitFunc(this._hitFunc);
         },
         _useBufferCanvas: function() {
-            return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasStroke();
+            return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasStroke() && this.getStage();
         },
         _sceneFunc: function(context) {
             var width = this.getWidth(),
                 height = this.getHeight(),
                 image = this.getImage(),
-                crop, cropWidth, cropHeight, params;
+                cropWidth, cropHeight, params;
 
             if (image) {
-                crop = this.getCrop();
-                cropWidth = crop.width;
-                cropHeight = crop.height;
+                cropWidth = this.getCropWidth();
+                cropHeight = this.getCropHeight();
                 if (cropWidth && cropHeight) {
-                    params = [image, crop.x, crop.y, cropWidth, cropHeight, 0, 0, width, height];
+                    params = [image, this.getCropX(), this.getCropY(), cropWidth, cropHeight, 0, 0, width, height];
                 } else {
                     params = [image, 0, 0, width, height];
                 }
             }
 
-            context.beginPath();
-            context.rect(0, 0, width, height);
-            context.closePath();
-            context.fillStrokeShape(this);
+            if (this.hasFill() || this.hasStroke() || this.hasShadow()) {
+                context.beginPath();
+                context.rect(0, 0, width, height);
+                context.closePath();
+                context.fillStrokeShape(this);
+            }
 
             if (image) {
                 context.drawImage.apply(context, params);

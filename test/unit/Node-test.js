@@ -2825,7 +2825,8 @@ suite('Node', function() {
         stroke: 'black',
         strokeWidth: 4,
         name: 'myCircle',
-        draggable: true
+        draggable: true,
+        shadowBlur : 10,
     });
     group.add(circle);
     assert.equal(circle._cache.canvas, undefined);

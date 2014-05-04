@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-05-03
+ * Date: 2014-05-05
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -2417,6 +2417,8 @@ var Kinetic = {};
                 sceneContext = cachedSceneCanvas.getContext(),
                 hitContext = cachedHitCanvas.getContext();
 
+            cachedHitCanvas.isCache = true;
+
             this.clearCache();
    
             sceneContext.save();
@@ -2438,7 +2440,8 @@ var Kinetic = {};
             sceneContext.translate(x * -1, y * -1);
             hitContext.translate(x * -1, y * -1);
 
-            if (this.nodeType === 'Shape') {
+            // don't need to translate canvas if shape is not added to layer
+            if (this.nodeType === 'Shape' && layer) {
                 sceneContext.translate(this.x() * -1, this.y() * -1);
                 hitContext.translate(this.x() * -1, this.y() * -1);        
             }
@@ -2880,9 +2883,10 @@ var Kinetic = {};
          * @memberof Kinetic.Node.prototype
          * @returns {Boolean}
          */
-        shouldDrawHit: function() {
+        shouldDrawHit: function(canvas) {
             var layer = this.getLayer();
-            return  layer && layer.hitGraphEnabled() && this.isListening() && this.isVisible() && !Kinetic.isDragging();
+            return  ((canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())) 
+                && this.isListening() && this.isVisible() && !Kinetic.isDragging();
         },
         /**
          * show node
@@ -7600,7 +7604,7 @@ var Kinetic = {};
                 cachedCanvas = this._cache.canvas,
                 cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
-            if (this.shouldDrawHit()) {
+            if (this.shouldDrawHit(canvas)) {
                 if (cachedHitCanvas) {
                     this._drawCachedHitCanvas(context);
                 }
@@ -7940,7 +7944,7 @@ var Kinetic = {};
                 cachedCanvas = this._cache.canvas,
                 cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
-            if(this.shouldDrawHit()) {
+            if(this.shouldDrawHit(canvas)) {
                 
                 if (cachedHitCanvas) {
                     this._drawCachedHitCanvas(context);
@@ -7948,7 +7952,9 @@ var Kinetic = {};
                 else if (drawFunc) {
                     context.save();
                     context._applyLineJoin(this);
-                    layer._applyTransform(this, context, top);
+                    if (layer) {
+                        layer._applyTransform(this, context, top);
+                    }
                    
                     drawFunc.call(this, context);
                     context.restore();
@@ -11486,29 +11492,30 @@ var Kinetic = {};
             this.hitFunc(this._hitFunc);
         },
         _useBufferCanvas: function() {
-            return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasStroke();
+            return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasStroke() && this.getStage();
         },
         _sceneFunc: function(context) {
             var width = this.getWidth(),
                 height = this.getHeight(),
                 image = this.getImage(),
-                crop, cropWidth, cropHeight, params;
+                cropWidth, cropHeight, params;
 
             if (image) {
-                crop = this.getCrop();
-                cropWidth = crop.width;
-                cropHeight = crop.height;
+                cropWidth = this.getCropWidth();
+                cropHeight = this.getCropHeight();
                 if (cropWidth && cropHeight) {
-                    params = [image, crop.x, crop.y, cropWidth, cropHeight, 0, 0, width, height];
+                    params = [image, this.getCropX(), this.getCropY(), cropWidth, cropHeight, 0, 0, width, height];
                 } else {
                     params = [image, 0, 0, width, height];
                 }
             }
 
-            context.beginPath();
-            context.rect(0, 0, width, height);
-            context.closePath();
-            context.fillStrokeShape(this);
+            if (this.hasFill() || this.hasStroke() || this.hasShadow()) {
+                context.beginPath();
+                context.rect(0, 0, width, height);
+                context.closePath();
+                context.fillStrokeShape(this);
+            }
 
             if (image) {
                 context.drawImage.apply(context, params);
