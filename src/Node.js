@@ -175,6 +175,8 @@
                 sceneContext = cachedSceneCanvas.getContext(),
                 hitContext = cachedHitCanvas.getContext();
 
+            cachedHitCanvas.isCache = true;
+
             this.clearCache();
    
             sceneContext.save();
@@ -196,7 +198,8 @@
             sceneContext.translate(x * -1, y * -1);
             hitContext.translate(x * -1, y * -1);
 
-            if (this.nodeType === 'Shape') {
+            // don't need to translate canvas if shape is not added to layer
+            if (this.nodeType === 'Shape' && layer) {
                 sceneContext.translate(this.x() * -1, this.y() * -1);
                 hitContext.translate(this.x() * -1, this.y() * -1);        
             }
@@ -638,9 +641,10 @@
          * @memberof Kinetic.Node.prototype
          * @returns {Boolean}
          */
-        shouldDrawHit: function() {
+        shouldDrawHit: function(canvas) {
             var layer = this.getLayer();
-            return  layer && layer.hitGraphEnabled() && this.isListening() && this.isVisible() && !Kinetic.isDragging();
+            return  ((canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())) 
+                && this.isListening() && this.isVisible() && !Kinetic.isDragging();
         },
         /**
          * show node

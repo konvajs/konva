@@ -202,7 +202,7 @@
                 cachedCanvas = this._cache.canvas,
                 cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
-            if(this.shouldDrawHit()) {
+            if(this.shouldDrawHit(canvas)) {
                 
                 if (cachedHitCanvas) {
                     this._drawCachedHitCanvas(context);
@@ -210,7 +210,9 @@
                 else if (drawFunc) {
                     context.save();
                     context._applyLineJoin(this);
-                    layer._applyTransform(this, context, top);
+                    if (layer) {
+                        layer._applyTransform(this, context, top);
+                    }
                    
                     drawFunc.call(this, context);
                     context.restore();
