@@ -562,10 +562,8 @@ var Kinetic = {};
             // Node. Does not work with strict CommonJS, but
             // only CommonJS-like enviroments that support module.exports,
             // like Node.
-
-            // We break the names to trick the browserify compiler
-            var Canvas = require('can'+'vas');
-            var jsdom = require('js'+'dom').jsdom;
+            var Canvas = require('canvas');
+            var jsdom = require('jsdom').jsdom;
             var doc = jsdom('<!DOCTYPE html><html><head></head><body></body></html>');
 
             Kinetic.document = doc;
