@@ -2607,6 +2607,70 @@ suite('Node', function() {
 
   });
 
+  // ======================================================
+  test('group, listening, & shouldDrawHit', function(){
+    var stage = addStage();
+
+    var layer = new Kinetic.Layer({
+        listening : false
+    });
+    stage.add(layer);
+
+    var group = new Kinetic.Group({
+        listening : false
+    });
+    layer.add(group);
+
+    var rect = new Kinetic.Rect({
+      x: 100,
+      y: 50,
+      width: 100,
+      height: 50,
+      fill: 'green',
+      stroke: 'blue',
+      listening : true
+    });
+    group.add(rect);
+
+    assert.equal(rect.isListening(), true);
+    assert.equal(rect.shouldDrawHit(), true);
+
+    assert.equal(group.isListening(), false);
+    assert.equal(group.shouldDrawHit(), true, 'hit graph for group');
+
+    assert.equal(layer.isListening(), false);
+    assert.equal(layer.shouldDrawHit(), true, 'hit graph for layer');
+
+    var layerClick = 0;
+    var groupClick = 0;
+    var rectClick = 0;
+
+    rect.on('click', function() {
+        rectClick += 1;
+    });
+    group.on('click', function() {
+        groupClick += 1;
+    });
+    layer.on('click', function() {
+        layerClick += 1;
+    });
+
+    var top = stage.content.getBoundingClientRect().top;
+    stage._mousedown({
+        clientX: 291,
+        clientY: 112 + top
+    });
+    Kinetic.DD._endDragBefore();
+    stage._mouseup({
+        clientX: 291,
+        clientY: 112 + top
+    });
+
+    assert.equal(rectClick, 1, 'click on rectange');
+    assert.equal(groupClick, 0, 'no click on group');
+    assert.equal(layerClick, 0, 'no click on layer');
+  });
+
     // ======================================================
   test('isVisible', function(){
     var stage = addStage();
