@@ -552,20 +552,29 @@ var Kinetic = {};
 // if the module has no dependencies, the above pattern can be simplified to
 ( function(root, factory) {
     if( typeof exports === 'object') {
-        // Node. Does not work with strict CommonJS, but
-        // only CommonJS-like enviroments that support module.exports,
-        // like Node.
-        var Canvas = require('canvas');
-        var jsdom = require('jsdom').jsdom;
-        var doc = jsdom('<!DOCTYPE html><html><head></head><body></body></html>');
-
         var KineticJS = factory();
 
-        Kinetic.document = doc;
-        Kinetic.window = Kinetic.document.createWindow();
-        Kinetic.window.Image = Canvas.Image;
+        // runtime-check for browserify
+        if(global.window === global) {
+            Kinetic.document = global.document;
+            Kinetic.window = global;
+        } else {
+            // Node. Does not work with strict CommonJS, but
+            // only CommonJS-like enviroments that support module.exports,
+            // like Node.
+
+            // We break the names to trick the browserify compiler
+            var Canvas = require('can'+'vas');
+            var jsdom = require('js'+'dom').jsdom;
+            var doc = jsdom('<!DOCTYPE html><html><head></head><body></body></html>');
+
+            Kinetic.document = doc;
+            Kinetic.window = Kinetic.document.createWindow();
+            Kinetic.window.Image = Canvas.Image;
+            Kinetic._nodeCanvas = Canvas;
+        }
+
         Kinetic.root = root;
-        Kinetic._nodeCanvas = Canvas;
         module.exports = KineticJS;
         return;
     }
