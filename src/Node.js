@@ -1518,7 +1518,7 @@
 
                 // simulate event bubbling
                 var stopBubble = (eventType === MOUSEENTER || eventType === MOUSELEAVE) && ((compareShape && compareShape.isAncestorOf && compareShape.isAncestorOf(this)) || !!(compareShape && compareShape.isAncestorOf));
-                if(evt && !evt.cancelBubble && this.parent && (!stopBubble)) {
+                if(evt && !evt.cancelBubble && this.parent && this.parent.isListening() && (!stopBubble)) {
                     if(compareShape && compareShape.parent) {
                         this._fireAndBubble.call(this.parent, eventType, evt, compareShape.parent);
                     }

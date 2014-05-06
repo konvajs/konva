@@ -2631,6 +2631,9 @@ suite('Node', function() {
       listening : true
     });
     group.add(rect);
+    layer.draw();
+
+    showHit(layer);
 
     assert.equal(rect.isListening(), true);
     assert.equal(rect.shouldDrawHit(), true);
@@ -2657,13 +2660,13 @@ suite('Node', function() {
 
     var top = stage.content.getBoundingClientRect().top;
     stage._mousedown({
-        clientX: 291,
-        clientY: 112 + top
+        clientX: 150,
+        clientY: 75 + top
     });
     Kinetic.DD._endDragBefore();
     stage._mouseup({
-        clientX: 291,
-        clientY: 112 + top
+        clientX: 150,
+        clientY: 75 + top
     });
 
     assert.equal(rectClick, 1, 'click on rectange');
