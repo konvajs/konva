@@ -4,7 +4,7 @@ Hi all! I will be taking a 3 month break from KineticJS (until July 2014) to foc
 
 #Installation
 
-* `bower install kinetic`
+* `bower install kineticjs`
 * `npm install kinetic` - for Browserify. For nodejs you have to install some [dependencies](#NodeJS)
 
 ###NodeJS
