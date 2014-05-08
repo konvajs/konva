@@ -141,9 +141,8 @@
 
         this.setAbsolutePosition(newNodePos);
 
-        if (!this._lastPos ||
-            this._lastPos.x !== newNodePos.x ||
-            this._lastPos.y !== newNodePos.y) {
+        if (this._lastPos && this._lastPos.x === newNodePos.x &&
+            this._lastPos.y === newNodePos.y) {
             dd.anim.dirty = true;
         }
 
