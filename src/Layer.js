@@ -92,10 +92,31 @@
                 return null;
             }
         },
+		_getImageData: function(x, y) {
+			var width = this.hitCanvas.width,
+				height = this.hitCanvas.height;
+
+			if (width && height && !this.imageData) {
+				this.imageData = this.hitCanvas.context._context.getImageData(0, 0, this.hitCanvas.width, this.hitCanvas.height);
+			}
+
+			if (this.imageData && typeof x === 'number' && typeof y === 'number') {
+				var index = (y * width ) + x;
+
+				return [
+					this.imageData.data[4 * index + 0] , // Red value
+					this.imageData.data[4 * index + 1], // Green value
+					this.imageData.data[4 * index + 2], // Blue value
+					this.imageData.data[4 * index + 3] // Alpha val
+				];
+			}
+
+			return this.imageData || null;
+		},
         _getIntersection: function(pos) {
-            var p = this.hitCanvas.context._context.getImageData(pos.x, pos.y, 1, 1).data,
-                p3 = p[3],
-                colorKey, shape;
+			var p = this._getImageData(pos.x, pos.y),
+				p3 = p[3],
+				colorKey, shape;
 
             // fully opaque pixel
             if(p3 === 255) {
