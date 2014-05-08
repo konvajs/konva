@@ -235,6 +235,10 @@ var Kinetic = {};
          * @param {Object} config
          * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
          * to clear the canvas before each layer draw.  The default value is true.
+         * @param {Boolean} [config.visible]
+         * @param {String} [config.id] unique id
+         * @param {String} [config.name] non-unique name
+         * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
          * @@containerParams
          * @example
          * var layer = new Kinetic.FastLayer();

@@ -27,7 +27,6 @@
                         Math.abs(pos.x - dd.startPointerPos.x),
                         Math.abs(pos.y - dd.startPointerPos.y)
                     );
-
                     if (distance < dragDistance) {
                         return;
                     }
@@ -138,11 +137,10 @@
         if(dbf !== undefined) {
             newNodePos = dbf.call(this, newNodePos, evt);
         }
-
         this.setAbsolutePosition(newNodePos);
 
-        if (this._lastPos && this._lastPos.x === newNodePos.x &&
-            this._lastPos.y === newNodePos.y) {
+        if (!this._lastPos || this._lastPos.x !== newNodePos.x ||
+            this._lastPos.y !== newNodePos.y) {
             dd.anim.dirty = true;
         }
 
