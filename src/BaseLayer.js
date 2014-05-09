@@ -47,7 +47,6 @@
         clear: function(bounds) {
             this.getContext().clear(bounds);
             this.getHitCanvas().getContext().clear(bounds);
-			this.imageData = null;
             return this;
         },
         // extend Node.prototype.setZIndex
