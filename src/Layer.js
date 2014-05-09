@@ -92,31 +92,34 @@
                 return null;
             }
         },
-		_getImageData: function(x, y) {
-			var width = this.hitCanvas.width || 1,
-				height = this.hitCanvas.height || 1;
+        /**
+         * Get ImageData.data array for an individual pixel on the hit canvas.
+         * Data is cached as getImageData is an expensive method to call often.
+         *
+         * @param {Number} x
+         * @param {Number} x
+         * @returns {Array} One-dimensional array containing the data in the RGBA order, with integer values between 0 and 255
+         */
+        _getImageData: function(x, y) {
+            var width = this.hitCanvas.width || 1,
+                height = this.hitCanvas.height || 1,
+                index = (y * width ) + x;
 
-			if (!this.imageData) {
-				this.imageData = this.hitCanvas.context._context.getImageData(0, 0, width, height);
-			}
+            if (!this.imageData) {
+                this.imageData = this.hitCanvas.context._context.getImageData(0, 0, width, height);
+            }
 
-			if (this.imageData && typeof x === 'number' && typeof y === 'number') {
-				var index = (y * width ) + x;
-
-				return [
-					this.imageData.data[4 * index + 0] , // Red value
-					this.imageData.data[4 * index + 1], // Green value
-					this.imageData.data[4 * index + 2], // Blue value
-					this.imageData.data[4 * index + 3] // Alpha val
-				];
-			}
-
-			return this.imageData || null;
-		},
+            return [
+                this.imageData.data[4 * index + 0] , // Red
+                this.imageData.data[4 * index + 1], // Green
+                this.imageData.data[4 * index + 2], // Blue
+                this.imageData.data[4 * index + 3] // Alpha
+            ];
+        },
         _getIntersection: function(pos) {
-			var p = this._getImageData(pos.x, pos.y),
-				p3 = p[3],
-				colorKey, shape;
+            var p = this._getImageData(pos.x, pos.y),
+                p3 = p[3],
+                colorKey, shape;
 
             // fully opaque pixel
             if(p3 === 255) {
@@ -173,7 +176,7 @@
             }
 
             Kinetic.Container.prototype.drawHit.call(this, canvas, top);
-			this.imageData = null;
+            this.imageData = null; // Clear imageData cache
             return this;
         },
         /**
@@ -192,6 +195,7 @@
         clear: function(bounds) {
             this.getContext().clear(bounds);
             this.getHitCanvas().getContext().clear(bounds);
+            this.imageData = null; // Clear imageData cache
             return this;
         },
         // extend Node.prototype.setVisible
