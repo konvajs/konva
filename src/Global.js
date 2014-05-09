@@ -177,7 +177,6 @@ var Kinetic = {};
          * @param {Object} config
          * @param {String|DomElement} config.container Container id or DOM element
          * @@nodeParams
-         * @@containerParams
          * @example
          * var stage = new Kinetic.Stage({
          *   width: 500,
