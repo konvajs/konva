@@ -306,7 +306,7 @@
                 cachedCanvas = this._cache.canvas,
                 cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
-            if (this.shouldDrawHit()) {
+            if (this.shouldDrawHit(canvas)) {
                 if (cachedHitCanvas) {
                     this._drawCachedHitCanvas(context);
                 }
@@ -343,6 +343,11 @@
             if (hasClip) {
                 context.restore();
             }
+        },
+        shouldDrawHit: function(canvas) {
+            var layer = this.getLayer();
+            return  ((canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())) 
+                && this.isVisible() && !Kinetic.isDragging();
         }
     });
 

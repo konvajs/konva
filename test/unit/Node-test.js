@@ -2607,6 +2607,73 @@ suite('Node', function() {
 
   });
 
+  // ======================================================
+  test('group, listening, & shouldDrawHit', function(){
+    var stage = addStage();
+
+    var layer = new Kinetic.Layer({
+        listening : false
+    });
+    stage.add(layer);
+
+    var group = new Kinetic.Group({
+        listening : false
+    });
+    layer.add(group);
+
+    var rect = new Kinetic.Rect({
+      x: 100,
+      y: 50,
+      width: 100,
+      height: 50,
+      fill: 'green',
+      stroke: 'blue',
+      listening : true
+    });
+    group.add(rect);
+    layer.draw();
+
+    showHit(layer);
+
+    assert.equal(rect.isListening(), true);
+    assert.equal(rect.shouldDrawHit(), true);
+
+    assert.equal(group.isListening(), false);
+    assert.equal(group.shouldDrawHit(), true, 'hit graph for group');
+
+    assert.equal(layer.isListening(), false);
+    assert.equal(layer.shouldDrawHit(), true, 'hit graph for layer');
+
+    var layerClick = 0;
+    var groupClick = 0;
+    var rectClick = 0;
+
+    rect.on('click', function() {
+        rectClick += 1;
+    });
+    group.on('click', function() {
+        groupClick += 1;
+    });
+    layer.on('click', function() {
+        layerClick += 1;
+    });
+
+    var top = stage.content.getBoundingClientRect().top;
+    stage._mousedown({
+        clientX: 150,
+        clientY: 75 + top
+    });
+    Kinetic.DD._endDragBefore();
+    stage._mouseup({
+        clientX: 150,
+        clientY: 75 + top
+    });
+
+    assert.equal(rectClick, 1, 'click on rectange');
+    assert.equal(groupClick, 0, 'no click on group');
+    assert.equal(layerClick, 0, 'no click on layer');
+  });
+
     // ======================================================
   test('isVisible', function(){
     var stage = addStage();
@@ -2806,7 +2873,7 @@ suite('Node', function() {
     //document.body.appendChild(circle._cache.canvas.scene._canvas);
     // document.body.appendChild(circle._cache.canvas.hit._canvas);
 
-    showHit(layer)
+    showHit(layer);
                                         
     //assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);drawImage([object HTMLCanvasElement],0,0);restore();');
 
@@ -2816,6 +2883,7 @@ suite('Node', function() {
   test('cache shape before adding to layer', function(){
     var stage = addStage();
     var layer = new Kinetic.Layer();
+    var group = new Kinetic.Group();
     var circle = new Kinetic.Circle({
         x: 74,
         y: 74,
@@ -2824,8 +2892,10 @@ suite('Node', function() {
         stroke: 'black',
         strokeWidth: 4,
         name: 'myCircle',
-        draggable: true
+        draggable: true,
+        shadowBlur : 10,
     });
+    group.add(circle);
     assert.equal(circle._cache.canvas, undefined);
     circle.cache({
         x: -74,
@@ -2837,14 +2907,18 @@ suite('Node', function() {
         y: 74
     });
 
-    stage.add(layer);
-
+    stage.add(layer);   
 
     assert(circle._cache.canvas.scene);
     assert(circle._cache.canvas.hit);
 
-    layer.add(circle);
-    layer.draw();                                        
+    layer.add(group);
+    layer.draw();
+    var hitShape = stage.getIntersection({
+        x : 74,
+        y : 74
+    });
+    assert.equal(hitShape, circle, 'should draw hit if cached before adding to layer');
     assert.equal(layer.canvas.getContext().getTrace(), 'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);drawImage([object HTMLCanvasElement],0,0);restore();');
   });
 

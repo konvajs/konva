@@ -198,7 +198,7 @@
         },
         /**
          * disable hit graph
-         * @name enableHitGraph
+         * @name disableHitGraph
          * @method
          * @memberof Kinetic.Layer.prototype
          * @returns {Node}

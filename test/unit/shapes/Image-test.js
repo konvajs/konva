@@ -102,7 +102,7 @@ suite('Image', function(){
           var trace = layer.getContext().getTrace();
           //console.log(trace);
 
-          assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);beginPath();rect(0,0,100,100);closePath();drawImage([object HTMLImageElement],135,7,167,134,0,0,100,100);restore();clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);beginPath();rect(0,0,100,200);closePath();drawImage([object HTMLImageElement],135,7,167,134,0,0,100,200);restore();clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);beginPath();rect(0,0,100,100);closePath();drawImage([object HTMLImageElement],135,7,167,134,0,0,100,100);restore();');
+          assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);drawImage([object HTMLImageElement],135,7,167,134,0,0,100,100);restore();clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);drawImage([object HTMLImageElement],135,7,167,134,0,0,100,200);restore();clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);drawImage([object HTMLImageElement],135,7,167,134,0,0,100,100);restore();');
 
           done();
 
