@@ -93,11 +93,11 @@
             }
         },
 		_getImageData: function(x, y) {
-			var width = this.hitCanvas.width,
-				height = this.hitCanvas.height;
+			var width = this.hitCanvas.width || 1,
+				height = this.hitCanvas.height || 1;
 
-			if (width && height && !this.imageData) {
-				this.imageData = this.hitCanvas.context._context.getImageData(0, 0, this.hitCanvas.width, this.hitCanvas.height);
+			if (!this.imageData) {
+				this.imageData = this.hitCanvas.context._context.getImageData(0, 0, width, height);
 			}
 
 			if (this.imageData && typeof x === 'number' && typeof y === 'number') {
@@ -173,6 +173,7 @@
             }
 
             Kinetic.Container.prototype.drawHit.call(this, canvas, top);
+			this.imageData = null;
             return this;
         },
         /**
