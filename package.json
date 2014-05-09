@@ -27,6 +27,10 @@
     "graphic",
     "html5"
   ],
+  "browser": {
+    "canvas": false,
+    "jsdom": false
+  },
   "bugs": {
     "url": "https://github.com/ericdrowell/KineticJS/issues"
   },
