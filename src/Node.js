@@ -643,7 +643,7 @@
          */
         shouldDrawHit: function(canvas) {
             var layer = this.getLayer();
-            return  ((canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())) 
+            return  (canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())
                 && this.isListening() && this.isVisible() && !Kinetic.isDragging();
         },
         /**
