@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-05-05
+ * Date: 2014-05-09
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -279,7 +279,11 @@ var Kinetic = {};
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-         * @param {Function} [config.clipFunc] clipping function
+         * * @param {Object} [config.clip] set clip
+     * @param {Number} [config.clipX] set clip x
+     * @param {Number} [config.clipY] set clip y
+     * @param {Number} [config.clipWidth] set clip width
+     * @param {Number} [config.clipHeight] set clip height
 
          */
         Container: function(config) {
@@ -313,8 +317,6 @@ var Kinetic = {};
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-         * @param {Function} [config.clipFunc] clipping function
-
          * @example
          * var stage = new Kinetic.Stage({
          *   width: 500,
@@ -354,7 +356,11 @@ var Kinetic = {};
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-         * @param {Function} [config.clipFunc] clipping function
+         * * @param {Object} [config.clip] set clip
+     * @param {Number} [config.clipX] set clip x
+     * @param {Number} [config.clipY] set clip y
+     * @param {Number} [config.clipWidth] set clip width
+     * @param {Number} [config.clipHeight] set clip height
 
          * @example
          * var layer = new Kinetic.Layer();
@@ -392,7 +398,11 @@ var Kinetic = {};
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-         * @param {Function} [config.clipFunc] clipping function
+         * * @param {Object} [config.clip] set clip
+     * @param {Number} [config.clipX] set clip x
+     * @param {Number} [config.clipY] set clip y
+     * @param {Number} [config.clipWidth] set clip width
+     * @param {Number} [config.clipHeight] set clip height
 
          * @example
          * var layer = new Kinetic.Layer();
@@ -412,7 +422,15 @@ var Kinetic = {};
          * @param {Object} config
          * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
          * to clear the canvas before each layer draw.  The default value is true.
-         * @param {Function} [config.clipFunc] clipping function
+         * @param {Boolean} [config.visible]
+         * @param {String} [config.id] unique id
+         * @param {String} [config.name] non-unique name
+         * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+         * * @param {Object} [config.clip] set clip
+     * @param {Number} [config.clipX] set clip x
+     * @param {Number} [config.clipY] set clip y
+     * @param {Number} [config.clipWidth] set clip width
+     * @param {Number} [config.clipHeight] set clip height
 
          * @example
          * var layer = new Kinetic.FastLayer();
@@ -447,7 +465,11 @@ var Kinetic = {};
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-         * @param {Function} [config.clipFunc] clipping function
+         * * @param {Object} [config.clip] set clip
+     * @param {Number} [config.clipX] set clip x
+     * @param {Number} [config.clipY] set clip y
+     * @param {Number} [config.clipWidth] set clip width
+     * @param {Number} [config.clipHeight] set clip height
 
          * @example
          * var group = new Kinetic.Group();
@@ -552,20 +574,26 @@ var Kinetic = {};
 // if the module has no dependencies, the above pattern can be simplified to
 ( function(root, factory) {
     if( typeof exports === 'object') {
-        // Node. Does not work with strict CommonJS, but
-        // only CommonJS-like enviroments that support module.exports,
-        // like Node.
-        var Canvas = require('canvas');
-        var jsdom = require('jsdom').jsdom;
-        var doc = jsdom('<!DOCTYPE html><html><head></head><body></body></html>');
-
         var KineticJS = factory();
+        // runtime-check for browserify
+        if(global.window === global) {
+            Kinetic.document = global.document;
+            Kinetic.window = global;
+        } else {
+            // Node. Does not work with strict CommonJS, but
+            // only CommonJS-like enviroments that support module.exports,
+            // like Node.
+            var Canvas = require('canvas');
+            var jsdom = require('jsdom').jsdom;
+            var doc = jsdom('<!DOCTYPE html><html><head></head><body></body></html>');
 
-        Kinetic.document = doc;
-        Kinetic.window = Kinetic.document.createWindow();
-        Kinetic.window.Image = Canvas.Image;
+            Kinetic.document = doc;
+            Kinetic.window = Kinetic.document.createWindow();
+            Kinetic.window.Image = Canvas.Image;
+            Kinetic._nodeCanvas = Canvas;
+        }
+
         Kinetic.root = root;
-        Kinetic._nodeCanvas = Canvas;
         module.exports = KineticJS;
         return;
     }
@@ -3760,7 +3788,7 @@ var Kinetic = {};
 
                 // simulate event bubbling
                 var stopBubble = (eventType === MOUSEENTER || eventType === MOUSELEAVE) && ((compareShape && compareShape.isAncestorOf && compareShape.isAncestorOf(this)) || !!(compareShape && compareShape.isAncestorOf));
-                if(evt && !evt.cancelBubble && this.parent && (!stopBubble)) {
+                if(evt && !evt.cancelBubble && this.parent && this.parent.isListening() && (!stopBubble)) {
                     if(compareShape && compareShape.parent) {
                         this._fireAndBubble.call(this.parent, eventType, evt, compareShape.parent);
                     }
@@ -7022,7 +7050,6 @@ var Kinetic = {};
                         Math.abs(pos.x - dd.startPointerPos.x),
                         Math.abs(pos.y - dd.startPointerPos.y)
                     );
-
                     if (distance < dragDistance) {
                         return;
                     }
@@ -7133,11 +7160,9 @@ var Kinetic = {};
         if(dbf !== undefined) {
             newNodePos = dbf.call(this, newNodePos, evt);
         }
-
         this.setAbsolutePosition(newNodePos);
 
-        if (!this._lastPos ||
-            this._lastPos.x !== newNodePos.x ||
+        if (!this._lastPos || this._lastPos.x !== newNodePos.x ||
             this._lastPos.y !== newNodePos.y) {
             dd.anim.dirty = true;
         }
@@ -7641,6 +7666,11 @@ var Kinetic = {};
             if (hasClip) {
                 context.restore();
             }
+        },
+        shouldDrawHit: function(canvas) {
+            var layer = this.getLayer();
+            return  ((canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())) 
+                && this.isVisible() && !Kinetic.isDragging();
         }
     });
 
@@ -10221,7 +10251,7 @@ var Kinetic = {};
         },
         /**
          * disable hit graph
-         * @name enableHitGraph
+         * @name disableHitGraph
          * @method
          * @memberof Kinetic.Layer.prototype
          * @returns {Node}

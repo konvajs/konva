@@ -177,7 +177,6 @@ var Kinetic = {};
          * @param {Object} config
          * @param {String|DomElement} config.container Container id or DOM element
          * @@nodeParams
-         * @@containerParams
          * @example
          * var stage = new Kinetic.Stage({
          *   width: 500,
@@ -358,20 +357,26 @@ var Kinetic = {};
 // if the module has no dependencies, the above pattern can be simplified to
 ( function(root, factory) {
     if( typeof exports === 'object') {
-        // Node. Does not work with strict CommonJS, but
-        // only CommonJS-like enviroments that support module.exports,
-        // like Node.
-        var Canvas = require('canvas');
-        var jsdom = require('jsdom').jsdom;
-        var doc = jsdom('<!DOCTYPE html><html><head></head><body></body></html>');
-
         var KineticJS = factory();
+        // runtime-check for browserify
+        if(global.window === global) {
+            Kinetic.document = global.document;
+            Kinetic.window = global;
+        } else {
+            // Node. Does not work with strict CommonJS, but
+            // only CommonJS-like enviroments that support module.exports,
+            // like Node.
+            var Canvas = require('canvas');
+            var jsdom = require('jsdom').jsdom;
+            var doc = jsdom('<!DOCTYPE html><html><head></head><body></body></html>');
 
-        Kinetic.document = doc;
-        Kinetic.window = Kinetic.document.createWindow();
-        Kinetic.window.Image = Canvas.Image;
+            Kinetic.document = doc;
+            Kinetic.window = Kinetic.document.createWindow();
+            Kinetic.window.Image = Canvas.Image;
+            Kinetic._nodeCanvas = Canvas;
+        }
+
         Kinetic.root = root;
-        Kinetic._nodeCanvas = Canvas;
         module.exports = KineticJS;
         return;
     }
