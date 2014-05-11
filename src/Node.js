@@ -199,7 +199,7 @@
             hitContext.translate(x * -1, y * -1);
 
             // don't need to translate canvas if shape is not added to layer
-            if (this.nodeType === 'Shape' && layer) {
+            if (this.nodeType === 'Shape') {
                 sceneContext.translate(this.x() * -1, this.y() * -1);
                 hitContext.translate(this.x() * -1, this.y() * -1);        
             }

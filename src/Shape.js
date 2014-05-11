@@ -155,6 +155,9 @@
                         // layer might be undefined if we are using cache before adding to layer
                         if (layer) {
                             layer._applyTransform(this, bufferContext, top);
+                        } else {
+                            var m = this.getAbsoluteTransform(top).getMatrix();
+                            context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                         }
                      
                         drawFunc.call(this, bufferContext);
@@ -176,6 +179,9 @@
                         // layer might be undefined if we are using cache before adding to layer
                         if (layer) {
                             layer._applyTransform(this, context, top);
+                        } else {
+                            var m = this.getAbsoluteTransform(top).getMatrix();
+                            context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                         }
                
                         if (hasShadow) {
@@ -212,6 +218,9 @@
                     context._applyLineJoin(this);
                     if (layer) {
                         layer._applyTransform(this, context, top);
+                    } else {
+                        var m = this.getAbsoluteTransform(top).getMatrix();
+                        context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                     }
                    
                     drawFunc.call(this, context);

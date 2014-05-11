@@ -2883,42 +2883,53 @@ suite('Node', function() {
   test('cache shape before adding to layer', function(){
     var stage = addStage();
     var layer = new Kinetic.Layer();
-    var group = new Kinetic.Group();
-    var circle = new Kinetic.Circle({
-        x: 74,
-        y: 74,
-        radius: 70,
+    var group = new Kinetic.Group({
+        x : 0,
+        y : 0
+    });
+    var rect = new Kinetic.Rect({
+        x: 35,
+        y: 35,
+        width: 50,
+        height : 50,
         fill: 'green',
         stroke: 'black',
         strokeWidth: 4,
         name: 'myCircle',
+        offsetX : 25,
+        offsetY: 25,
+        rotation : 45,
         draggable: true,
-        shadowBlur : 10,
     });
-    group.add(circle);
-    assert.equal(circle._cache.canvas, undefined);
-    circle.cache({
-        x: -74,
-        y: -74,
+    group.add(rect);
+    
+
+    assert.equal(rect._cache.canvas, undefined);
+    group.cache({
+        x: 0,
+        y: 0,
         width: 148,
         height: 148
-    }).offset({
-        x: 74,
-        y: 74
     });
-
     stage.add(layer);   
 
-    assert(circle._cache.canvas.scene);
-    assert(circle._cache.canvas.hit);
+    assert(group._cache.canvas.scene);
+    assert(group._cache.canvas.hit);
 
+    
     layer.add(group);
     layer.draw();
-    var hitShape = stage.getIntersection({
-        x : 74,
-        y : 74
+    var shape = stage.getIntersection({
+        x : 5,
+        y : 5
     });
-    assert.equal(hitShape, circle, 'should draw hit if cached before adding to layer');
+    assert(!shape, 'no shape (rotate applied)');
+    shape = stage.getIntersection({
+        x : 35,
+        y : 35
+    });
+    assert.equal(shape, rect, 'rect found');
+
     assert.equal(layer.canvas.getContext().getTrace(), 'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);drawImage([object HTMLCanvasElement],0,0);restore();');
   });
 
