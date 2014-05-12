@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-05-09
+ * Date: 2014-05-12
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -2469,7 +2469,7 @@ var Kinetic = {};
             hitContext.translate(x * -1, y * -1);
 
             // don't need to translate canvas if shape is not added to layer
-            if (this.nodeType === 'Shape' && layer) {
+            if (this.nodeType === 'Shape') {
                 sceneContext.translate(this.x() * -1, this.y() * -1);
                 hitContext.translate(this.x() * -1, this.y() * -1);        
             }
@@ -2491,6 +2491,7 @@ var Kinetic = {};
         _drawCachedSceneCanvas: function(context) {
             context.save();
             this.getLayer()._applyTransform(this, context);
+            context._applyOpacity(this);
             context.drawImage(this._getCachedSceneCanvas()._canvas, 0, 0);
             context.restore();
         },
@@ -2913,7 +2914,7 @@ var Kinetic = {};
          */
         shouldDrawHit: function(canvas) {
             var layer = this.getLayer();
-            return  ((canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())) 
+            return  (canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())
                 && this.isListening() && this.isVisible() && !Kinetic.isDragging();
         },
         /**
@@ -7669,7 +7670,7 @@ var Kinetic = {};
         },
         shouldDrawHit: function(canvas) {
             var layer = this.getLayer();
-            return  ((canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())) 
+            return  (canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())
                 && this.isVisible() && !Kinetic.isDragging();
         }
     });
@@ -7927,6 +7928,9 @@ var Kinetic = {};
                         // layer might be undefined if we are using cache before adding to layer
                         if (layer) {
                             layer._applyTransform(this, bufferContext, top);
+                        } else {
+                            var m = this.getAbsoluteTransform(top).getMatrix();
+                            context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                         }
                      
                         drawFunc.call(this, bufferContext);
@@ -7948,6 +7952,9 @@ var Kinetic = {};
                         // layer might be undefined if we are using cache before adding to layer
                         if (layer) {
                             layer._applyTransform(this, context, top);
+                        } else {
+                            var m = this.getAbsoluteTransform(top).getMatrix();
+                            context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                         }
                
                         if (hasShadow) {
@@ -7984,6 +7991,9 @@ var Kinetic = {};
                     context._applyLineJoin(this);
                     if (layer) {
                         layer._applyTransform(this, context, top);
+                    } else {
+                        var m = this.getAbsoluteTransform(top).getMatrix();
+                        context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                     }
                    
                     drawFunc.call(this, context);

@@ -221,6 +221,7 @@
         _drawCachedSceneCanvas: function(context) {
             context.save();
             this.getLayer()._applyTransform(this, context);
+            context._applyOpacity(this);
             context.drawImage(this._getCachedSceneCanvas()._canvas, 0, 0);
             context.restore();
         },
