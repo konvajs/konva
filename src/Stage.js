@@ -385,6 +385,12 @@
             }
         },
         _mousemove: function(evt) {
+        
+            // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
+            if (Kinetic.UA.ieMobile) {
+                return _touchmove(evt);
+            }
+            
             // workaround fake mousemove event in chrome browser https://code.google.com/p/chromium/issues/detail?id=161464
             if ((typeof evt.webkitMovementX !== 'undefined' || typeof evt.webkitMovementY !== 'undefined') && evt.webkitMovementY === 0 && evt.webkitMovementX === 0) {
                 return;
@@ -438,6 +444,12 @@
             }
         },
         _mousedown: function(evt) {
+        
+            // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event       
+            if (Kinetic.UA.ieMobile) {
+                return _touchstart(evt);
+            }
+            
             if (!Kinetic.UA.mobile) {
                 this._setPointerPosition(evt);
                 var shape = this.getIntersection(this.getPointerPosition());
@@ -460,6 +472,11 @@
             }
         },
         _mouseup: function(evt) {
+        
+            // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event       
+            if (Kinetic.UA.ieMobile) {
+                return _touchend(evt);
+            }       
             if (!Kinetic.UA.mobile) {
                 this._setPointerPosition(evt);
                 var shape = this.getIntersection(this.getPointerPosition()),
@@ -623,8 +640,8 @@
                     x = offsetX;
                     y = evt.offsetY;
                 }
-                // we unforunately have to use UA detection here because accessing
-                // the layerX or layerY properties in newer veresions of Chrome
+                // we unfortunately have to use UA detection here because accessing
+                // the layerX or layerY properties in newer versions of Chrome
                 // throws a JS warning.  layerX and layerY are required for FF
                 // when the container is transformed via CSS.
                 else if (Kinetic.UA.browser === 'mozilla') {

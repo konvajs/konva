@@ -83,29 +83,7 @@ var Kinetic = {};
          */
         angleDeg: true,
 
-        // user agent  
-        UA: (function() {
-            var userAgent = (root.navigator && root.navigator.userAgent) || '';
-            var ua = userAgent.toLowerCase(),
-                // jQuery UA regex
-                match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
-                /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
-                /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
-                /(msie) ([\w.]+)/.exec( ua ) ||
-                ua.indexOf('compatible') < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
-                [],
 
-                // adding mobile flag as well
-                mobile = !!(userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i));
-
-            return {
-                browser: match[ 1 ] || '',
-                version: match[ 2 ] || '0',
-
-                // adding mobile flab
-                mobile: mobile
-            };
-        })(),
 
         /**
          * @namespace Filters
@@ -334,8 +312,36 @@ var Kinetic = {};
         },
         getAngle: function(angle) {
             return this.angleDeg ? angle * PI_OVER_180 : angle;
-        }
+        },
+        _parseUA: function(userAgent) {
+            var ua = userAgent.toLowerCase(),
+                // jQuery UA regex
+                match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
+                /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
+                /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
+                /(msie) ([\w.]+)/.exec( ua ) ||
+                ua.indexOf('compatible') < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
+                [],
+
+                // adding mobile flag as well
+                mobile = !!(userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i)),
+                ieMobile = !!(userAgent.match(/IEMobile/i));
+                
+            return {
+                browser: match[ 1 ] || '',
+                version: match[ 2 ] || '0',
+
+                // adding mobile flab
+                mobile: mobile,
+                ieMobile: ieMobile  // If this is true (i.e., WP8), then Kinetic touch events are executed instead of equivalent Kinetic mouse events
+            };      
+        }, 
+        // user agent  
+        UA: undefined
     };
+
+    Kinetic.UA = Kinetic._parseUA((root.navigator && root.navigator.userAgent) || '');
+    
 })(this);
 
 // Uses Node, AMD or browser globals to create a module.
