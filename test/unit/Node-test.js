@@ -1761,6 +1761,20 @@ suite('Node', function() {
         assert.equal(circle.eventListeners['click'], undefined);
         assert.equal(circle.eventListeners['touch'], undefined);
 
+
+        //  test remove all events
+        circle.on('click.kinetic', function() {
+        });
+        circle.on('click', function() {
+        });
+        circle.on('boo', function() {
+        });
+        assert.equal(circle.eventListeners['click'].length, 2);
+        assert.equal(circle.eventListeners['boo'].length, 1);
+        circle.off();
+        assert.equal(circle.eventListeners['boo'], undefined);
+        // should not remove kinetic listeners
+        assert.equal(circle.eventListeners['click'].length, 1);
         stage.add(layer);
         layer.add(circle);
         layer.draw();
