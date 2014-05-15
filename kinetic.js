@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-05-12
+ * Date: 2014-05-15
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -2659,10 +2659,16 @@ var Kinetic = {};
          * node.off('click.foo');
          */
         off: function(evtStr) {
-            var events = evtStr.split(SPACE),
+            var events = (evtStr || '').split(SPACE),
                 len = events.length,
                 n, t, event, parts, baseEvent, name;
 
+            if (!evtStr) {
+                // remove all events
+                for(t in this.eventListeners) {
+                    this._off(t);
+                }
+            }
             for(n = 0; n < len; n++) {
                 event = events[n];
                 parts = event.split(DOT);
