@@ -64,6 +64,71 @@ suite('DragAndDrop', function() {
 
         layer.add(circle);
         stage.add(layer);
+    });
 
+    // ======================================================
+    test('right click is not for dragging', function() {
+         var stage = addStage();
+
+        var top = stage.content.getBoundingClientRect().top;
+
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle',
+            draggable: true
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        stage._mousedown({
+            clientX: 291,
+            clientY: 112 + top,
+        });
+
+        stage._mousemove({
+            clientX: 311,
+            clientY: 112 + top,
+        });
+
+        assert(circle.isDragging(), 'dragging is ok');
+
+        Kinetic.DD._endDragBefore();
+        stage._mouseup({
+            clientX: 291,
+            clientY: 112 + top
+        });
+        Kinetic.DD._endDragAfter({dragEndNode:circle});
+
+
+        
+        stage._mousedown({
+            clientX: 291,
+            clientY: 112 + top,
+            button: 2
+        });
+
+        stage._mousemove({
+            clientX: 311,
+            clientY: 112 + top,
+            button: 2
+        });
+
+        assert(circle.isDragging() === false, 'no dragging with right click');
+
+        Kinetic.DD._endDragBefore();
+        stage._mouseup({
+            clientX: 291,
+            clientY: 112 + top,
+            button: 2
+        });
+        Kinetic.DD._endDragAfter({dragEndNode:circle});
     });
 });

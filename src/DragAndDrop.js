@@ -185,7 +185,7 @@
      */
     Kinetic.Node.prototype.isDragging = function() {
         var dd = Kinetic.DD;
-        return dd.node && dd.node._id === this._id && dd.isDragging;
+        return !!(dd.node && dd.node._id === this._id && dd.isDragging);
     };
 
     Kinetic.Node.prototype._listenDrag = function() {
@@ -202,6 +202,10 @@
         }
         else {
             this.on('mousedown.kinetic touchstart.kinetic', function(evt) {
+                // ignore right and middle buttons
+                if (evt.evt.button === 1 || evt.evt.button === 2) {
+                    return;
+                }
                 if(!Kinetic.DD.node) {
                     that.startDrag(evt);
                 }
