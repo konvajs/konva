@@ -49,6 +49,9 @@
             this.getHitCanvas().getContext().clear(bounds);
             return this;
         },
+        clearHitCache: function() {
+            this._hitImageData = undefined;
+        },
         // extend Node.prototype.setZIndex
         setZIndex: function(index) {
             Kinetic.Node.prototype.setZIndex.call(this, index);

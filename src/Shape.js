@@ -210,7 +210,7 @@
 
             if(this.shouldDrawHit(canvas)) {
                 if (layer) {
-                    layer.imageData = null; // Clear getImageData cache
+                    layer.clearHitCache();
                 }
                 if (cachedHitCanvas) {
                     this._drawCachedHitCanvas(context);

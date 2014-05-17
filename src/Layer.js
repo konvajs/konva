@@ -92,28 +92,20 @@
                 return null;
             }
         },
-        /**
-         * Get ImageData.data array for an individual pixel on the hit canvas.
-         * Data is cached as getImageData is an expensive method to call often.
-         *
-         * @param {Number} x
-         * @param {Number} x
-         * @returns {Array} One-dimensional array containing the data in the RGBA order, with integer values between 0 and 255
-         */
         _getImageData: function(x, y) {
             var width = this.hitCanvas.width || 1,
                 height = this.hitCanvas.height || 1,
                 index = (y * width ) + x;
 
-            if (!this.imageData) {
-                this.imageData = this.hitCanvas.context._context.getImageData(0, 0, width, height);
+            if (!this._hitImageData) {
+                this._hitImageData = this.hitCanvas.context.getImageData(0, 0, width, height);
             }
 
             return [
-                this.imageData.data[4 * index + 0] , // Red
-                this.imageData.data[4 * index + 1], // Green
-                this.imageData.data[4 * index + 2], // Blue
-                this.imageData.data[4 * index + 3] // Alpha
+                this._hitImageData.data[4 * index + 0] , // Red
+                this._hitImageData.data[4 * index + 1], // Green
+                this._hitImageData.data[4 * index + 2], // Blue
+                this._hitImageData.data[4 * index + 3] // Alpha
             ];
         },
         _getIntersection: function(pos) {
