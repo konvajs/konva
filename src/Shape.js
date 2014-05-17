@@ -209,7 +209,9 @@
                 cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
             if(this.shouldDrawHit(canvas)) {
-                
+                if (layer) {
+                    layer.imageData = null; // Clear getImageData cache
+                }
                 if (cachedHitCanvas) {
                     this._drawCachedHitCanvas(context);
                 }
