@@ -176,7 +176,6 @@
             }
 
             Kinetic.Container.prototype.drawHit.call(this, canvas, top);
-            this.imageData = null; // Clear imageData cache
             return this;
         },
         /**
@@ -195,7 +194,7 @@
         clear: function(bounds) {
             this.getContext().clear(bounds);
             this.getHitCanvas().getContext().clear(bounds);
-            this.imageData = null; // Clear imageData cache
+            this.imageData = null; // Clear getImageData cache
             return this;
         },
         // extend Node.prototype.setVisible
