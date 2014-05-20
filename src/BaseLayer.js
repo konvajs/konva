@@ -133,6 +133,42 @@
         },
         setSize : function(width, height) {
             this.canvas.setSize(width, height);
+        },
+        /**
+         * get/set width of layer.getter return width of stage. setter doing nothing.
+         * if you want change width use `stage.width(value);`
+         * @name width
+         * @method
+         * @memberof Kinetic.BaseLayer.prototype
+         * @returns {Number}
+         * @example
+         * var width = layer.width();
+         */
+        getWidth : function() {
+            if (this.parent) {
+                return this.parent.getWidth();
+            }
+        },
+        setWidth : function() {
+            Kinetic.Util.warn('Can not change with of layer. Use "stage.width(value)" function instead.');
+        },
+        /**
+         * get/set height of layer.getter return height of stage. setter doing nothing.
+         * if you want change height use `stage.height(value);`
+         * @name height
+         * @method
+         * @memberof Kinetic.BaseLayer.prototype
+         * @returns {Number}
+         * @example
+         * var height = layer.height();
+         */
+        getHeight : function() {
+            if (this.parent) {
+                return this.parent.getHeight();
+            }
+        },
+        setHeight : function() {
+            Kinetic.Util.warn('Can not change with of layer. Use "stage.width(value)" function instead.');
         }
     });
     Kinetic.Util.extend(Kinetic.BaseLayer, Kinetic.Container);
