@@ -58,6 +58,7 @@ function init() {
 
 
 Kinetic.enableTrace = true;
+Kinetic.showWarnings = false;
 
 function addStats() {
     stats = new Stats();

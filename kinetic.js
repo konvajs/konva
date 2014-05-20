@@ -82,6 +82,15 @@ var Kinetic = {};
          * node.rotation(Math.PI / 2); // PI/2 radian
          */
         angleDeg: true,
+         /**
+         * Show different warnings about errors or wrong API usage
+         * @property
+         * @default true
+         * @memberof Kinetic
+         * @example
+         * Kinetic.showWarnings = false;
+         */
+        showWarnings : true,
 
 
 
@@ -1244,7 +1253,7 @@ var Kinetic = {};
              * IE9 on Windows7 64bit will throw a JS error
              * if we don't use window.console in the conditional
              */
-            if(Kinetic.root.console && console.warn) {
+            if(Kinetic.root.console && console.warn && Kinetic.showWarnings) {
                 console.warn(KINETIC_WARNING + str);
             }
         },

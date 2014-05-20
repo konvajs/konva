@@ -624,7 +624,7 @@
              * IE9 on Windows7 64bit will throw a JS error
              * if we don't use window.console in the conditional
              */
-            if(Kinetic.root.console && console.warn) {
+            if(Kinetic.root.console && console.warn && Kinetic.showWarnings) {
                 console.warn(KINETIC_WARNING + str);
             }
         },
