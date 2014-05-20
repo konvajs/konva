@@ -1361,21 +1361,9 @@
                 height: this.getHeight()
             };
         },
-        /**
-         * get width
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Integer}
-         */
         getWidth: function() {
             return this.attrs.width || 0;
         },
-        /**
-         * get height
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Integer}
-         */
         getHeight: function() {
             return this.attrs.height || 0;
         },
@@ -1436,13 +1424,6 @@
                 newVal: newVal
             });
         },
-        /**
-         * set id
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @param {String} id
-         * @returns {Kinetic.Node}
-         */
         setId: function(id) {
             var oldId = this.getId();
 

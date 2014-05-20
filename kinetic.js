@@ -361,7 +361,7 @@ var Kinetic = {};
          * to contain groups or shapes.
          * @constructor
          * @memberof Kinetic
-         * @augments Kinetic.Container
+         * @augments Kinetic.BaseLayer
          * @param {Object} config
          * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
          * to clear the canvas before each layer draw.  The default value is true.
@@ -405,7 +405,7 @@ var Kinetic = {};
          * It renders about 2x faster than normal layers.
          * @constructor
          * @memberof Kinetic
-         * @augments Kinetic.Container
+         * @augments Kinetic.BaseLayer
          * @param {Object} config
          * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
          * to clear the canvas before each layer draw.  The default value is true.
@@ -3646,21 +3646,9 @@ var Kinetic = {};
                 height: this.getHeight()
             };
         },
-        /**
-         * get width
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Integer}
-         */
         getWidth: function() {
             return this.attrs.width || 0;
         },
-        /**
-         * get height
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Integer}
-         */
         getHeight: function() {
             return this.attrs.height || 0;
         },
@@ -3721,13 +3709,6 @@ var Kinetic = {};
                 newVal: newVal
             });
         },
-        /**
-         * set id
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @param {String} id
-         * @returns {Kinetic.Node}
-         */
         setId: function(id) {
             var oldId = this.getId();
 

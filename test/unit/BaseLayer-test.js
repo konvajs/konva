@@ -1,7 +1,7 @@
 suite('BaseLayer', function() {
 
     // ======================================================
-    test.only('width and height', function() {
+    test('width and height', function() {
         var stage = addStage();
 
         var layer = new Kinetic.FastLayer();
