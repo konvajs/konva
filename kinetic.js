@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-05-12
+ * Date: 2014-05-20
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -82,30 +82,17 @@ var Kinetic = {};
          * node.rotation(Math.PI / 2); // PI/2 radian
          */
         angleDeg: true,
+         /**
+         * Show different warnings about errors or wrong API usage
+         * @property
+         * @default true
+         * @memberof Kinetic
+         * @example
+         * Kinetic.showWarnings = false;
+         */
+        showWarnings : true,
 
-        // user agent  
-        UA: (function() {
-            var userAgent = (root.navigator && root.navigator.userAgent) || '';
-            var ua = userAgent.toLowerCase(),
-                // jQuery UA regex
-                match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
-                /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
-                /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
-                /(msie) ([\w.]+)/.exec( ua ) ||
-                ua.indexOf('compatible') < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
-                [],
 
-                // adding mobile flag as well
-                mobile = !!(userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i));
-
-            return {
-                browser: match[ 1 ] || '',
-                version: match[ 2 ] || '0',
-
-                // adding mobile flab
-                mobile: mobile
-            };
-        })(),
 
         /**
          * @namespace Filters
@@ -374,7 +361,7 @@ var Kinetic = {};
          * to contain groups or shapes.
          * @constructor
          * @memberof Kinetic
-         * @augments Kinetic.Container
+         * @augments Kinetic.BaseLayer
          * @param {Object} config
          * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
          * to clear the canvas before each layer draw.  The default value is true.
@@ -418,7 +405,7 @@ var Kinetic = {};
          * It renders about 2x faster than normal layers.
          * @constructor
          * @memberof Kinetic
-         * @augments Kinetic.Container
+         * @augments Kinetic.BaseLayer
          * @param {Object} config
          * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
          * to clear the canvas before each layer draw.  The default value is true.
@@ -551,8 +538,36 @@ var Kinetic = {};
         },
         getAngle: function(angle) {
             return this.angleDeg ? angle * PI_OVER_180 : angle;
-        }
+        },
+        _parseUA: function(userAgent) {
+            var ua = userAgent.toLowerCase(),
+                // jQuery UA regex
+                match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
+                /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
+                /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
+                /(msie) ([\w.]+)/.exec( ua ) ||
+                ua.indexOf('compatible') < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
+                [],
+
+                // adding mobile flag as well
+                mobile = !!(userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i)),
+                ieMobile = !!(userAgent.match(/IEMobile/i));
+                
+            return {
+                browser: match[ 1 ] || '',
+                version: match[ 2 ] || '0',
+
+                // adding mobile flab
+                mobile: mobile,
+                ieMobile: ieMobile  // If this is true (i.e., WP8), then Kinetic touch events are executed instead of equivalent Kinetic mouse events
+            };      
+        }, 
+        // user agent  
+        UA: undefined
     };
+
+    Kinetic.UA = Kinetic._parseUA((root.navigator && root.navigator.userAgent) || '');
+    
 })(this);
 
 // Uses Node, AMD or browser globals to create a module.
@@ -1238,7 +1253,7 @@ var Kinetic = {};
              * IE9 on Windows7 64bit will throw a JS error
              * if we don't use window.console in the conditional
              */
-            if(Kinetic.root.console && console.warn) {
+            if(Kinetic.root.console && console.warn && Kinetic.showWarnings) {
                 console.warn(KINETIC_WARNING + str);
             }
         },
@@ -2659,10 +2674,16 @@ var Kinetic = {};
          * node.off('click.foo');
          */
         off: function(evtStr) {
-            var events = evtStr.split(SPACE),
+            var events = (evtStr || '').split(SPACE),
                 len = events.length,
                 n, t, event, parts, baseEvent, name;
 
+            if (!evtStr) {
+                // remove all events
+                for(t in this.eventListeners) {
+                    this._off(t);
+                }
+            }
             for(n = 0; n < len; n++) {
                 event = events[n];
                 parts = event.split(DOT);
@@ -3625,21 +3646,9 @@ var Kinetic = {};
                 height: this.getHeight()
             };
         },
-        /**
-         * get width
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Integer}
-         */
         getWidth: function() {
             return this.attrs.width || 0;
         },
-        /**
-         * get height
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Integer}
-         */
         getHeight: function() {
             return this.attrs.height || 0;
         },
@@ -3700,13 +3709,6 @@ var Kinetic = {};
                 newVal: newVal
             });
         },
-        /**
-         * set id
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @param {String} id
-         * @returns {Kinetic.Node}
-         */
         setId: function(id) {
             var oldId = this.getId();
 
@@ -7209,7 +7211,7 @@ var Kinetic = {};
      */
     Kinetic.Node.prototype.isDragging = function() {
         var dd = Kinetic.DD;
-        return dd.node && dd.node._id === this._id && dd.isDragging;
+        return !!(dd.node && dd.node._id === this._id && dd.isDragging);
     };
 
     Kinetic.Node.prototype._listenDrag = function() {
@@ -7226,6 +7228,10 @@ var Kinetic = {};
         }
         else {
             this.on('mousedown.kinetic touchstart.kinetic', function(evt) {
+                // ignore right and middle buttons
+                if (evt.evt.button === 1 || evt.evt.button === 2) {
+                    return;
+                }
                 if(!Kinetic.DD.node) {
                     that.startDrag(evt);
                 }
@@ -7631,6 +7637,9 @@ var Kinetic = {};
                 cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
             if (this.shouldDrawHit(canvas)) {
+                if (layer) {
+                    layer.clearHitCache();
+                }
                 if (cachedHitCanvas) {
                     this._drawCachedHitCanvas(context);
                 }
@@ -7982,7 +7991,9 @@ var Kinetic = {};
                 cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
             if(this.shouldDrawHit(canvas)) {
-                
+                if (layer) {
+                    layer.clearHitCache();
+                }
                 if (cachedHitCanvas) {
                     this._drawCachedHitCanvas(context);
                 }
@@ -9562,6 +9573,12 @@ var Kinetic = {};
             }
         },
         _mousemove: function(evt) {
+        
+            // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
+            if (Kinetic.UA.ieMobile) {
+                return _touchmove(evt);
+            }
+            
             // workaround fake mousemove event in chrome browser https://code.google.com/p/chromium/issues/detail?id=161464
             if ((typeof evt.webkitMovementX !== 'undefined' || typeof evt.webkitMovementY !== 'undefined') && evt.webkitMovementY === 0 && evt.webkitMovementX === 0) {
                 return;
@@ -9615,6 +9632,12 @@ var Kinetic = {};
             }
         },
         _mousedown: function(evt) {
+        
+            // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event       
+            if (Kinetic.UA.ieMobile) {
+                return _touchstart(evt);
+            }
+            
             if (!Kinetic.UA.mobile) {
                 this._setPointerPosition(evt);
                 var shape = this.getIntersection(this.getPointerPosition());
@@ -9637,6 +9660,11 @@ var Kinetic = {};
             }
         },
         _mouseup: function(evt) {
+        
+            // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event       
+            if (Kinetic.UA.ieMobile) {
+                return _touchend(evt);
+            }       
             if (!Kinetic.UA.mobile) {
                 this._setPointerPosition(evt);
                 var shape = this.getIntersection(this.getPointerPosition()),
@@ -9800,8 +9828,8 @@ var Kinetic = {};
                     x = offsetX;
                     y = evt.offsetY;
                 }
-                // we unforunately have to use UA detection here because accessing
-                // the layerX or layerY properties in newer veresions of Chrome
+                // we unfortunately have to use UA detection here because accessing
+                // the layerX or layerY properties in newer versions of Chrome
                 // throws a JS warning.  layerX and layerY are required for FF
                 // when the container is transformed via CSS.
                 else if (Kinetic.UA.browser === 'mozilla') {
@@ -9953,6 +9981,9 @@ var Kinetic = {};
             this.getHitCanvas().getContext().clear(bounds);
             return this;
         },
+        clearHitCache: function() {
+            this._hitImageData = undefined;
+        },
         // extend Node.prototype.setZIndex
         setZIndex: function(index) {
             Kinetic.Node.prototype.setZIndex.call(this, index);
@@ -10034,6 +10065,42 @@ var Kinetic = {};
         },
         setSize : function(width, height) {
             this.canvas.setSize(width, height);
+        },
+        /**
+         * get/set width of layer.getter return width of stage. setter doing nothing.
+         * if you want change width use `stage.width(value);`
+         * @name width
+         * @method
+         * @memberof Kinetic.BaseLayer.prototype
+         * @returns {Number}
+         * @example
+         * var width = layer.width();
+         */
+        getWidth : function() {
+            if (this.parent) {
+                return this.parent.getWidth();
+            }
+        },
+        setWidth : function() {
+            Kinetic.Util.warn('Can not change with of layer. Use "stage.width(value)" function instead.');
+        },
+        /**
+         * get/set height of layer.getter return height of stage. setter doing nothing.
+         * if you want change height use `stage.height(value);`
+         * @name height
+         * @method
+         * @memberof Kinetic.BaseLayer.prototype
+         * @returns {Number}
+         * @example
+         * var height = layer.height();
+         */
+        getHeight : function() {
+            if (this.parent) {
+                return this.parent.getHeight();
+            }
+        },
+        setHeight : function() {
+            Kinetic.Util.warn('Can not change with of layer. Use "stage.width(value)" function instead.');
         }
     });
     Kinetic.Util.extend(Kinetic.BaseLayer, Kinetic.Container);
@@ -10155,8 +10222,24 @@ var Kinetic = {};
                 return null;
             }
         },
+        _getImageData: function(x, y) {
+            var width = this.hitCanvas.width || 1,
+                height = this.hitCanvas.height || 1,
+                index = (y * width ) + x;
+
+            if (!this._hitImageData) {
+                this._hitImageData = this.hitCanvas.context.getImageData(0, 0, width, height);
+            }
+
+            return [
+                this._hitImageData.data[4 * index + 0] , // Red
+                this._hitImageData.data[4 * index + 1], // Green
+                this._hitImageData.data[4 * index + 2], // Blue
+                this._hitImageData.data[4 * index + 3] // Alpha
+            ];
+        },
         _getIntersection: function(pos) {
-            var p = this.hitCanvas.context._context.getImageData(pos.x, pos.y, 1, 1).data,
+            var p = this._getImageData(pos.x, pos.y),
                 p3 = p[3],
                 colorKey, shape;
 
@@ -10233,6 +10316,7 @@ var Kinetic = {};
         clear: function(bounds) {
             this.getContext().clear(bounds);
             this.getHitCanvas().getContext().clear(bounds);
+            this.imageData = null; // Clear getImageData cache
             return this;
         },
         // extend Node.prototype.setVisible

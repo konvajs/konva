@@ -389,10 +389,16 @@
          * node.off('click.foo');
          */
         off: function(evtStr) {
-            var events = evtStr.split(SPACE),
+            var events = (evtStr || '').split(SPACE),
                 len = events.length,
                 n, t, event, parts, baseEvent, name;
 
+            if (!evtStr) {
+                // remove all events
+                for(t in this.eventListeners) {
+                    this._off(t);
+                }
+            }
             for(n = 0; n < len; n++) {
                 event = events[n];
                 parts = event.split(DOT);
@@ -1355,21 +1361,9 @@
                 height: this.getHeight()
             };
         },
-        /**
-         * get width
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Integer}
-         */
         getWidth: function() {
             return this.attrs.width || 0;
         },
-        /**
-         * get height
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Integer}
-         */
         getHeight: function() {
             return this.attrs.height || 0;
         },
@@ -1430,13 +1424,6 @@
                 newVal: newVal
             });
         },
-        /**
-         * set id
-         * @method
-         * @memberof Kinetic.Node.prototype
-         * @param {String} id
-         * @returns {Kinetic.Node}
-         */
         setId: function(id) {
             var oldId = this.getId();
 

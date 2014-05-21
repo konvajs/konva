@@ -82,6 +82,15 @@ var Kinetic = {};
          * node.rotation(Math.PI / 2); // PI/2 radian
          */
         angleDeg: true,
+         /**
+         * Show different warnings about errors or wrong API usage
+         * @property
+         * @default true
+         * @memberof Kinetic
+         * @example
+         * Kinetic.showWarnings = false;
+         */
+        showWarnings : true,
 
 
 
@@ -188,7 +197,7 @@ var Kinetic = {};
          * to contain groups or shapes.
          * @constructor
          * @memberof Kinetic
-         * @augments Kinetic.Container
+         * @augments Kinetic.BaseLayer
          * @param {Object} config
          * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
          * to clear the canvas before each layer draw.  The default value is true.
@@ -208,7 +217,7 @@ var Kinetic = {};
          * It renders about 2x faster than normal layers.
          * @constructor
          * @memberof Kinetic
-         * @augments Kinetic.Container
+         * @augments Kinetic.BaseLayer
          * @param {Object} config
          * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
          * to clear the canvas before each layer draw.  The default value is true.

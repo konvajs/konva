@@ -92,8 +92,24 @@
                 return null;
             }
         },
+        _getImageData: function(x, y) {
+            var width = this.hitCanvas.width || 1,
+                height = this.hitCanvas.height || 1,
+                index = (y * width ) + x;
+
+            if (!this._hitImageData) {
+                this._hitImageData = this.hitCanvas.context.getImageData(0, 0, width, height);
+            }
+
+            return [
+                this._hitImageData.data[4 * index + 0] , // Red
+                this._hitImageData.data[4 * index + 1], // Green
+                this._hitImageData.data[4 * index + 2], // Blue
+                this._hitImageData.data[4 * index + 3] // Alpha
+            ];
+        },
         _getIntersection: function(pos) {
-            var p = this.hitCanvas.context._context.getImageData(pos.x, pos.y, 1, 1).data,
+            var p = this._getImageData(pos.x, pos.y),
                 p3 = p[3],
                 colorKey, shape;
 
@@ -170,6 +186,7 @@
         clear: function(bounds) {
             this.getContext().clear(bounds);
             this.getHitCanvas().getContext().clear(bounds);
+            this.imageData = null; // Clear getImageData cache
             return this;
         },
         // extend Node.prototype.setVisible
