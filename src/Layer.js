@@ -95,7 +95,7 @@
         _getImageData: function(x, y) {
             var width = this.hitCanvas.width || 1,
                 height = this.hitCanvas.height || 1,
-                index = (y * width ) + x;
+                index = (Math.round(y) * width ) + Math.round(x);
 
             if (!this._hitImageData) {
                 this._hitImageData = this.hitCanvas.context.getImageData(0, 0, width, height);
