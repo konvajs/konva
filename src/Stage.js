@@ -388,7 +388,7 @@
         
             // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
             if (Kinetic.UA.ieMobile) {
-                return _touchmove(evt);
+                return this._touchmove(evt);
             }
             
             // workaround fake mousemove event in chrome browser https://code.google.com/p/chromium/issues/detail?id=161464
@@ -447,7 +447,7 @@
         
             // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event       
             if (Kinetic.UA.ieMobile) {
-                return _touchstart(evt);
+                return this._touchstart(evt);
             }
             
             if (!Kinetic.UA.mobile) {
@@ -475,7 +475,7 @@
         
             // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event       
             if (Kinetic.UA.ieMobile) {
-                return _touchend(evt);
+                return this._touchend(evt);
             }       
             if (!Kinetic.UA.mobile) {
                 this._setPointerPosition(evt);
