@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-05-20
+ * Date: 2014-05-22
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -10239,7 +10239,7 @@ var Kinetic = {};
             ];
         },
         _getIntersection: function(pos) {
-            var p = this._getImageData(pos.x, pos.y),
+            var p = this.hitCanvas.context.getImageData(pos.x, pos.y, 1, 1).data,
                 p3 = p[3],
                 colorKey, shape;
 

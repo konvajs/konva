@@ -294,7 +294,7 @@ suite('Layer', function() {
     });
 
     // ======================================================
-    test('hit graph caching', function() {
+    test.skip('hit graph caching', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();
         var originGetImageData = layer.getHitCanvas().getContext().getImageData;
