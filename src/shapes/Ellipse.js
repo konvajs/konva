@@ -32,9 +32,8 @@
             this.sceneFunc(this._sceneFunc);
         },
         _sceneFunc: function(context) {
-            var r = this.getRadius(),
-                rx = r.x,
-                ry = r.y;
+            var rx = this.getRadiusX(),
+                ry = this.getRadiusY();
 
             context.beginPath();
             context.save();
@@ -48,11 +47,11 @@
         },
         // implements Shape.prototype.getWidth()
         getWidth: function() {
-            return this.getRadius().x * 2;
+            return this.getRadiusX() * 2;
         },
         // implements Shape.prototype.getHeight()
         getHeight: function() {
-            return this.getRadius().y * 2;
+            return this.getRadiusY() * 2;
         },
         // implements Shape.prototype.setWidth()
         setWidth: function(width) {
