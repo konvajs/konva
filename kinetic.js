@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-05-29
+ * Date: 2014-06-10
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -10082,7 +10082,7 @@ var Kinetic = {};
             }
         },
         setWidth : function() {
-            Kinetic.Util.warn('Can not change with of layer. Use "stage.width(value)" function instead.');
+            Kinetic.Util.warn('Can not change width of layer. Use "stage.width(value)" function instead.');
         },
         /**
          * get/set height of layer.getter return height of stage. setter doing nothing.
@@ -10100,7 +10100,7 @@ var Kinetic = {};
             }
         },
         setHeight : function() {
-            Kinetic.Util.warn('Can not change with of layer. Use "stage.width(value)" function instead.');
+            Kinetic.Util.warn('Can not change height of layer. Use "stage.height(value)" function instead.');
         }
     });
     Kinetic.Util.extend(Kinetic.BaseLayer, Kinetic.Container);

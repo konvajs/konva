@@ -150,7 +150,7 @@
             }
         },
         setWidth : function() {
-            Kinetic.Util.warn('Can not change with of layer. Use "stage.width(value)" function instead.');
+            Kinetic.Util.warn('Can not change width of layer. Use "stage.width(value)" function instead.');
         },
         /**
          * get/set height of layer.getter return height of stage. setter doing nothing.
@@ -168,7 +168,7 @@
             }
         },
         setHeight : function() {
-            Kinetic.Util.warn('Can not change with of layer. Use "stage.width(value)" function instead.');
+            Kinetic.Util.warn('Can not change height of layer. Use "stage.height(value)" function instead.');
         }
     });
     Kinetic.Util.extend(Kinetic.BaseLayer, Kinetic.Container);
