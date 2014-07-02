@@ -184,7 +184,7 @@
                 pointerDirection = this.getPointerDirection(),
                 pointerWidth = this.getPointerWidth(),
                 pointerHeight = this.getPointerHeight();
-                //cornerRadius = this.getCornerRadius();
+                cornerRadius = this.getCornerRadius();
 
             context.beginPath();
             context.moveTo(0,0);
@@ -195,28 +195,48 @@
                 context.lineTo((width + pointerWidth)/2, 0);
             }
 
-            context.lineTo(width, 0);
-
+            if(!cornerRadius) {
+                context.lineTo(width, 0);
+            } else {
+                context.lineTo(width - cornerRadius, 0);
+                context.arc(width - cornerRadius, cornerRadius, cornerRadius, Math.PI * 3 / 2, 0, false);
+            }
+            
             if (pointerDirection === RIGHT) {
                 context.lineTo(width, (height - pointerHeight)/2);
                 context.lineTo(width + pointerWidth, height/2);
                 context.lineTo(width, (height + pointerHeight)/2);
             }
-
-            context.lineTo(width, height);
+            
+            if(!cornerRadius) {
+                context.lineTo(width, height);
+            } else {
+                context.lineTo(width, height - cornerRadius);
+                context.arc(width - cornerRadius, height - cornerRadius, cornerRadius, 0, Math.PI / 2, false);
+            }
 
             if (pointerDirection === DOWN) {
                 context.lineTo((width + pointerWidth)/2, height);
                 context.lineTo(width/2, height + pointerHeight);
                 context.lineTo((width - pointerWidth)/2, height);
             }
-
-            context.lineTo(0, height);
+            
+            if(!cornerRadius) {
+                context.lineTo(0, height);
+            } else {
+                context.lineTo(cornerRadius, height);
+                context.arc(cornerRadius, height - cornerRadius, cornerRadius, Math.PI / 2, Math.PI, false);
+            }
 
             if (pointerDirection === LEFT) {
                 context.lineTo(0, (height + pointerHeight)/2);
                 context.lineTo(-1 * pointerWidth, height/2);
                 context.lineTo(0, (height - pointerHeight)/2);
+            }
+            
+            if(cornerRadius) {
+                context.lineTo(0, cornerRadius);
+                context.arc(cornerRadius, cornerRadius, cornerRadius, Math.PI, Math.PI * 3 / 2, false);
             }
 
             context.closePath();
