@@ -406,7 +406,11 @@
         },
         createCanvasElement: function() {
             var canvas = Kinetic.document.createElement('canvas');
-            canvas.style = canvas.style || {};
+            // on some environments canvas.style is readonly
+            try {
+                canvas.style = canvas.style || {};
+            } catch (e) {
+            }
             return canvas;
         },
         isBrowser: function() {
