@@ -673,7 +673,7 @@
             var container = this.getContainer();
             if (!container) {
                 if (Kinetic.Util.isBrowser()) {
-                    throw 'Stage has not container. But container is required';
+                    throw 'Stage has no container. A container is required.';
                 } else {
                     // automatically create element for jsdom in nodejs env
                     container = Kinetic.document.createElement(DIV);
