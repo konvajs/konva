@@ -49,18 +49,28 @@
         // implements Shape.prototype.setWidth()
         setWidth: function(width) {
             Kinetic.Node.prototype.setWidth.call(this, width);
-            this.setRadius(width / 2);
+            if (this.radius() !== width / 2) {
+                this.setRadius(width / 2);
+            }
         },
         // implements Shape.prototype.setHeight()
         setHeight: function(height) {
             Kinetic.Node.prototype.setHeight.call(this, height);
-            this.setRadius(height / 2);
+            if (this.radius() !== height / 2) {
+                this.setRadius(height / 2);
+            }
+        },
+        setRadius : function(val) {
+            this._setAttr('radius', val);
+            this.setWidth(val * 2);
+            this.setHeight(val * 2);
         }
     };
     Kinetic.Util.extend(Kinetic.Circle, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Circle, 'radius', 0);
+    Kinetic.Factory.addGetter(Kinetic.Circle, 'radius', 0);
+    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Circle, 'radius');
 
     /**
      * get/set radius
