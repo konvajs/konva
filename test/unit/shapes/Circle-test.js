@@ -172,7 +172,7 @@ suite('Circle', function(){
   });
 
   // ======================================================
-  test('set fill after instantiation', function() {
+  test('attrs sync', function() {
       var stage = addStage();
       var layer = new Kinetic.Layer();
       var circle = new Kinetic.Circle({
@@ -201,7 +201,7 @@ suite('Circle', function(){
   });
 
   // ======================================================
-  test('attrs sync', function() {
+  test('set fill after instantiation', function() {
       var stage = addStage();
       var layer = new Kinetic.Layer();
       var circle = new Kinetic.Circle({
