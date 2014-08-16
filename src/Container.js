@@ -100,7 +100,7 @@
             }
             if (child.getParent()) {
                 child.moveTo(this);
-                return;
+                return this;
             }
             var children = this.children;
             this._validateAdd(child);
