@@ -1027,8 +1027,11 @@
          * node.moveTo(layer2);
          */
         moveTo: function(newContainer) {
-            Kinetic.Node.prototype.remove.call(this);
-            newContainer.add(this);
+            // do nothing if new container is already parent
+            if (this.getParent() !== newContainer) {
+                this.remove();
+                newContainer.add(this);
+            }
             return this;
         },
         /**
