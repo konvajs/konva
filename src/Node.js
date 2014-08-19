@@ -1027,8 +1027,10 @@
          * node.moveTo(layer2);
          */
         moveTo: function(newContainer) {
-            Kinetic.Node.prototype.remove.call(this);
-            newContainer.add(this);
+            if (this.getParent() !== newContainer) {
+                this.remove();
+                newContainer.add(this);
+            }
             return this;
         },
         /**
