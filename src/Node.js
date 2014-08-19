@@ -1027,6 +1027,7 @@
          * node.moveTo(layer2);
          */
         moveTo: function(newContainer) {
+            // do nothing if new container is already parent
             if (this.getParent() !== newContainer) {
                 this.remove();
                 newContainer.add(this);
