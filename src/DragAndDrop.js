@@ -1,11 +1,11 @@
 (function() {
     Kinetic.DD = {
         // properties
-        anim: new Kinetic.Animation(function(frame) {
-                    var b = this.dirty;
-                    this.dirty = false;
-                    return b;
-                }),
+        anim: new Kinetic.Animation(function() {
+            var b = this.dirty;
+            this.dirty = false;
+            return b;
+        }),
         isDragging: false,
         justDragged: false,
         offset: {

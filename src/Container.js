@@ -19,13 +19,13 @@
          *    return node.getClassName() === 'Circle';
          * });
          */
-        getChildren: function(predicate) {
-            if (!predicate) {
+        getChildren: function(filterFunc) {
+            if (!filterFunc) {
                 return this.children;
             } else {
                 var results = new Kinetic.Collection();
                 this.children.each(function(child){
-                    if (predicate(child)) {
+                    if (filterFunc(child)) {
                         results.push(child);
                     }
                 });

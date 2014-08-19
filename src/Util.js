@@ -105,7 +105,7 @@
     /**
      * Transform constructor
      * @constructor
-     * @param {Array} Optional six-element matrix
+     * @param {Array} [m] Optional six-element matrix
      * @memberof Kinetic
      */
     Kinetic.Transform = function(m) {
@@ -126,14 +126,14 @@
          * Transform point
          * @method
          * @memberof Kinetic.Transform.prototype
-         * @param {Object} 2D point(x, y)
+         * @param {Object} point 2D point(x, y)
          * @returns {Object} 2D point(x, y)
          */
-        point: function(p) {
+        point: function(point) {
             var m = this.m;
             return {
-                x: m[0] * p.x + m[2] * p.y + m[4],
-                y: m[1] * p.x + m[3] * p.y + m[5]
+                x: m[0] * point.x + m[2] * point.y + m[4],
+                y: m[1] * point.x + m[3] * point.y + m[5]
             };
         },
         /**
@@ -292,8 +292,7 @@
     };
 
     // CONSTANTS
-    var CANVAS = 'canvas',
-        CONTEXT_2D = '2d',
+    var CONTEXT_2D = '2d',
         OBJECT_ARRAY = '[object Array]',
         OBJECT_NUMBER = '[object Number]',
         OBJECT_STRING = '[object String]',
@@ -361,11 +360,11 @@
         // as much as it can, without ever going more than once per `wait` duration;
         // but if you'd like to disable the execution on the leading edge, pass
         // `{leading: false}`. To disable execution on the trailing edge, ditto.
-        _throttle: function(func, wait, options) {
+        _throttle: function(func, wait, opts) {
             var context, args, result;
             var timeout = null;
             var previous = 0;
-            options || (options = {});
+            var options = opts || {};
             var later = function() {
                 previous = options.leading === false ? 0 : new Date().getTime();
                 timeout = null;
@@ -374,7 +373,9 @@
             };
             return function() {
                 var now = new Date().getTime();
-                if (!previous && options.leading === false) previous = now;
+                if (!previous && options.leading === false) {
+                    previous = now;
+                }
                 var remaining = wait - (now - previous);
                 context = this;
                 args = arguments;

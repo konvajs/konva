@@ -23,14 +23,15 @@
      * @constructor
      * @abstract
      * @memberof Kinetic
-     * @param {Number} width
-     * @param {Number} height
-     * @param {Number} pixelRatio KineticJS automatically handles pixel ratio adustments in order to render crisp drawings 
+     * @param {Object} config
+     * @param {Number} config.width
+     * @param {Number} config.height
+     * @param {Number} config.pixelRatio KineticJS automatically handles pixel ratio adjustments in order to render crisp drawings
      *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
      *  of 1.  Some high end tablets and phones, like iPhones and iPads (not the mini) have a device pixel ratio 
      *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel 
      *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
-     *  specificed, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
+     *  specified, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
      *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
      */
     Kinetic.Canvas = function(config) {
@@ -39,9 +40,9 @@
 
     Kinetic.Canvas.prototype = {
         init: function(config) {
-            config = config || {};
+            var conf = config || {};
 
-            var pixelRatio = config.pixelRatio || Kinetic.pixelRatio || _pixelRatio;
+            var pixelRatio = conf.pixelRatio || Kinetic.pixelRatio || _pixelRatio;
 
             this.pixelRatio = pixelRatio;
             this._canvas = Kinetic.Util.createCanvasElement();
@@ -167,11 +168,11 @@
     };
 
     Kinetic.SceneCanvas = function(config) {
-        config = config || {};
-        var width = config.width || 0,
-            height = config.height || 0;
+        var conf = config || {};
+        var width = conf.width || 0,
+            height = conf.height || 0;
 
-        Kinetic.Canvas.call(this, config);
+        Kinetic.Canvas.call(this, conf);
         this.context = new Kinetic.SceneContext(this);
         this.setSize(width, height);
     };
@@ -195,11 +196,11 @@
     Kinetic.Util.extend(Kinetic.SceneCanvas, Kinetic.Canvas);
 
     Kinetic.HitCanvas = function(config) {
-        config = config || {};
-        var width = config.width || 0,
-            height = config.height || 0;
+        var conf = config || {};
+        var width = conf.width || 0,
+            height = conf.height || 0;
             
-        Kinetic.Canvas.call(this, config);
+        Kinetic.Canvas.call(this, conf);
         this.context = new Kinetic.HitContext(this);
         this.setSize(width, height);
     };

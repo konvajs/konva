@@ -21,9 +21,7 @@
         TOUCHMOVE = 'touchmove',
 
         CONTENT_MOUSEOUT = 'contentMouseout',
-        CONTENT_MOUSELEAVE = 'contentMouseleave',
         CONTENT_MOUSEOVER = 'contentMouseover',
-        CONTENT_MOUSEENTER = 'contentMouseenter',
         CONTENT_MOUSEMOVE = 'contentMousemove',
         CONTENT_MOUSEDOWN = 'contentMousedown',
         CONTENT_MOUSEUP = 'contentMouseup',
@@ -31,7 +29,6 @@
         CONTENT_DBL_CLICK = 'contentDblclick',
         CONTENT_TOUCHSTART = 'contentTouchstart',
         CONTENT_TOUCHEND = 'contentTouchend',
-        CONTENT_TAP = 'contentTap',
         CONTENT_DBL_TAP = 'contentDbltap',
         CONTENT_TOUCHMOVE = 'contentTouchmove',
 
@@ -476,7 +473,7 @@
             // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event       
             if (Kinetic.UA.ieMobile) {
                 return this._touchend(evt);
-            }       
+            }
             if (!Kinetic.UA.mobile) {
                 this._setPointerPosition(evt);
                 var shape = this.getIntersection(this.getPointerPosition()),
@@ -714,7 +711,6 @@
         // TODO: may be it is better to cache all children layers?
         cache: function() {
             Kinetic.Util.warn('Cache function is not allowed for stage. You may use cache only for layers, groups and shapes.');
-            return;
         },
         clearCache : function() {
         }

@@ -1,6 +1,4 @@
 (function() {
-    var PI_OVER_180 = Math.PI / 180;
-
     /**
      * Arc constructor
      * @constructor

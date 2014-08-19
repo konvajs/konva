@@ -1,46 +1,9 @@
 /*jshint unused:false */
 (function() {
     // CONSTANTS
-    var ABSOLUTE_OPACITY = 'absoluteOpacity',
-        ABSOLUTE_TRANSFORM = 'absoluteTransform',
-        ADD = 'add',
-        B = 'b',
-        BEFORE = 'before',
-        BLACK = 'black',
-        CHANGE = 'Change',
-        CHILDREN = 'children',
-        DEG = 'Deg',
-        DOT = '.',
-        EMPTY_STRING = '',
-        G = 'g',
-        GET = 'get',
-        HASH = '#',
-        ID = 'id',
-        KINETIC = 'kinetic',
-        LISTENING = 'listening',
-        MOUSEENTER = 'mouseenter',
-        MOUSELEAVE = 'mouseleave',
-        NAME = 'name',
-        OFF = 'off',
-        ON = 'on',
-        PRIVATE_GET = '_get',
-        R = 'r',
+    var GET = 'get',
         RGB = 'RGB',
-        SET = 'set',
-        SHAPE = 'Shape',
-        SPACE = ' ',
-        STAGE = 'Stage',
-        TRANSFORM = 'transform',
-        UPPER_B = 'B',
-        UPPER_G = 'G',
-        UPPER_HEIGHT = 'Height',
-        UPPER_R = 'R',
-        UPPER_WIDTH = 'Width',
-        UPPER_X = 'X',
-        UPPER_Y = 'Y',
-        VISIBLE = 'visible',
-        X = 'x',
-        Y = 'y';
+        SET = 'set';
 
     Kinetic.Factory = {
         addGetterSetter: function(constructor, attr, def, validator, after) {
@@ -146,14 +109,15 @@
     };
 
     Kinetic.Validators = {
+        /**
+         * @return {number}
+         */
         RGBComponent: function(val) {
             if (val > 255) {
                 return 255;
-            }
-            else if (val < 0) {
+            } else if (val < 0) {
                 return 0;
-            }
-            else {
+            } else {
                 return Math.round(val);
             }
         },

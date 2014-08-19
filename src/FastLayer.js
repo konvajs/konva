@@ -1,8 +1,4 @@
 (function() {
-    // constants
-    var HASH = '#',
-        BEFORE_DRAW ='beforeDraw',
-        DRAW = 'draw';
 
     Kinetic.Util.addMethods(Kinetic.FastLayer, {
         ____init: function(config) {
@@ -50,7 +46,7 @@
         draw: function() {
             this.drawScene();
             return this;
-        },  
+        },
         /**
          * clear scene and hit canvas contexts tied to the layer
          * @method

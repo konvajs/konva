@@ -111,14 +111,14 @@
          * @param {Number} point.y
          * @returns {Boolean}
          */
-        intersects: function(pos) {
+        intersects: function(point) {
             var stage = this.getStage(),
                 bufferHitCanvas = stage.bufferHitCanvas,
                 p;
 
             bufferHitCanvas.getContext().clear();
             this.drawScene(bufferHitCanvas);
-            p = bufferHitCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
+            p = bufferHitCanvas.context.getImageData(Math.round(point.x), Math.round(point.y), 1, 1).data;
             return p[3] > 0;
         },
         // extends Node.prototype.destroy 
@@ -180,8 +180,8 @@
                         if (layer) {
                             layer._applyTransform(this, context, top);
                         } else {
-                            var m = this.getAbsoluteTransform(top).getMatrix();
-                            context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+                            var o = this.getAbsoluteTransform(top).getMatrix();
+                            context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
                         }
                
                         if (hasShadow) {
@@ -284,7 +284,7 @@
             }
 
             return this;
-        },
+        }
     });
     Kinetic.Util.extend(Kinetic.Shape, Kinetic.Node);
 

@@ -9,7 +9,7 @@
      * @memberof Kinetic
      * @augments Kinetic.Shape
      * @param {Object} config
-     * @param {ImageObject} config.image
+     * @param {Image} config.image
      * @param {Object} [config.crop]
      * @@shapeParams
      * @@nodeParams
@@ -96,7 +96,7 @@
      * @name setImage
      * @method
      * @memberof Kinetic.Image.prototype
-     * @param {ImageObject} image
+     * @param {Image} image
      */
 
     /**
@@ -104,7 +104,7 @@
      * @name getImage
      * @method
      * @memberof Kinetic.Image.prototype
-     * @returns {ImageObject}
+     * @returns {Image}
      */
 
     Kinetic.Factory.addComponentsGetterSetter(Kinetic.Image, 'crop', ['x', 'y', 'width', 'height']);

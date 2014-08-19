@@ -5,7 +5,7 @@
      * @function
      * @name Noise
      * @memberof Kinetic.Filters
-     * @param {Object} imagedata
+     * @param {Object} imageData
      * @author ippo615
      * @example
      * node.cache();

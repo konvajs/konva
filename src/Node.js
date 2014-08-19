@@ -2,7 +2,6 @@
     // CONSTANTS
     var ABSOLUTE_OPACITY = 'absoluteOpacity',
         ABSOLUTE_TRANSFORM = 'absoluteTransform',
-        BEFORE = 'before',
         CHANGE = 'Change',
         CHILDREN = 'children',
         DOT = '.',
@@ -149,8 +148,8 @@
                 y = conf.y || 0,
                 width = conf.width || this.width(),
                 height = conf.height || this.height(),
-                drawBorder = conf.drawBorder || false,
-                layer = this.getLayer();
+                drawBorder = conf.drawBorder || false;
+
             if (width === 0 || height === 0) {
                 Kinetic.Util.warn('Width or height of caching configuration equals 0. Cache is ignored.');
                 return;
@@ -169,9 +168,6 @@
                     width: width,
                     height: height
                 }),
-                origTransEnabled = this.transformsEnabled(),
-                origX = this.x(),
-                origY = this.y(),
                 sceneContext = cachedSceneCanvas.getContext(),
                 hitContext = cachedHitCanvas.getContext();
 
@@ -184,7 +180,7 @@
 
             // this will draw a red border around the cached box for
             // debugging purposes
-            if (drawBorder) {        
+            if (drawBorder) {
                 sceneContext.save();
                 sceneContext.beginPath();
                 sceneContext.rect(0, 0, width, height);
@@ -201,7 +197,7 @@
             // don't need to translate canvas if shape is not added to layer
             if (this.nodeType === 'Shape') {
                 sceneContext.translate(this.x() * -1, this.y() * -1);
-                hitContext.translate(this.x() * -1, this.y() * -1);        
+                hitContext.translate(this.x() * -1, this.y() * -1);
             }
 
             this.drawScene(cachedSceneCanvas, this);
@@ -1119,7 +1115,7 @@
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {String} eventType event type.  can be a regular event, like click, mouseover, or mouseout, or it can be a custom event, like myCustomEvent
-         * @param {EventObject} [evt] event object
+         * @param {Event} [evt] event object
          * @param {Boolean} [bubble] setting the value to false, or leaving it undefined, will result in the event
          *  not bubbling.  Setting the value to true will result in the event bubbling.
          * @returns {Kinetic.Node}
@@ -1159,7 +1155,7 @@
         getAbsoluteTransform: function(top) {
             // if using an argument, we can't cache the result.
             if (top) {
-                return this._getAbsoluteTransform(top); 
+                return this._getAbsoluteTransform(top);
             }
             // if no argument, we can cache the result
             else {
@@ -1229,7 +1225,7 @@
          *  for another node
          * @method
          * @memberof Kinetic.Node.prototype
-         * @param {Object} attrs override attrs
+         * @param {Object} obj override attrs
          * @returns {Kinetic.Node}
          * @example
          * // simple clone
@@ -1450,11 +1446,8 @@
          * @example
          * node.setAttr('x', 5);
          */
-        setAttr: function() {
-            var args = Array.prototype.slice.call(arguments),
-                attr = args[0],
-                val = args[1],
-                method = SET + Kinetic.Util._capitalize(attr),
+        setAttr: function(attr, val) {
+            var method = SET + Kinetic.Util._capitalize(attr),
                 func = this[method];
 
             if(Kinetic.Util._isFunction(func)) {
@@ -1550,8 +1543,8 @@
      *  and setImage() methods
      * @method
      * @memberof Kinetic.Node
-     * @param {String} JSON string
-     * @param {DomElement} [container] optional container dom element used only if you're
+     * @param {String} json
+     * @param {Element} [container] optional container dom element used only if you're
      *  creating a stage node
      */
     Kinetic.Node.create = function(json, container) {
@@ -1589,7 +1582,7 @@
      * @memberof Kinetic.Node.prototype
      * @param {Object} pos
      * @param {Number} pos.x
-     * @param {Nubmer} pos.y
+     * @param {Number} pos.y
      * @returns {Object}
      * @example
      * // get position

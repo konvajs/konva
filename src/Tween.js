@@ -197,7 +197,6 @@
          * @returns {Tween}
          */
         reset: function() {
-            var node = this.node;
             this.tween.reset();
             return this;
         },
@@ -209,7 +208,6 @@
          * @returns {Tween}
          */
         seek: function(t) {
-            var node = this.node;
             this.tween.seek(t * 1000);
             return this;
         },
@@ -230,7 +228,6 @@
          * @returns {Tween}
          */
         finish: function() {
-            var node = this.node;
             this.tween.finish();
             return this;
         },

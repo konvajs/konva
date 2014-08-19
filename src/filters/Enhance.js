@@ -41,7 +41,6 @@
             rMin = data[0], rMax = rMin, r,
             gMin = data[1], gMax = gMin, g,
             bMin = data[2], bMax = bMin, b,
-            aMin = data[3], aMax = aMin,
             i;
 
         // If we are not enhancing anything - don't do any computation
@@ -68,12 +67,10 @@
         if( rMax === rMin ){ rMax = 255; rMin = 0; }
         if( gMax === gMin ){ gMax = 255; gMin = 0; }
         if( bMax === bMin ){ bMax = 255; bMin = 0; }
-        if( aMax === aMin ){ aMax = 255; aMin = 0; }
 
         var rMid, rGoalMax,rGoalMin,
             gMid, gGoalMax,gGoalMin,
-            bMid, bGoalMax,aGoalMin,
-            aMid, aGoalMax,bGoalMin;
+            bMid, bGoalMax,bGoalMin;
 
         // If the enhancement is positive - stretch the histogram 
         if ( enhanceAmount > 0 ){
@@ -83,8 +80,6 @@
             gGoalMin = gMin - enhanceAmount*(gMin-0);
             bGoalMax = bMax + enhanceAmount*(255-bMax);
             bGoalMin = bMin - enhanceAmount*(bMin-0);
-            aGoalMax = aMax + enhanceAmount*(255-aMax);
-            aGoalMin = aMin - enhanceAmount*(aMin-0);
         // If the enhancement is negative - compress the histogram
         } else {
             rMid = (rMax + rMin)*0.5;
@@ -96,9 +91,6 @@
             bMid = (bMax + bMin)*0.5;
             bGoalMax = bMax + enhanceAmount*(bMax-bMid);
             bGoalMin = bMin + enhanceAmount*(bMin-bMid);
-            aMid = (aMax + aMin)*0.5;
-            aGoalMax = aMax + enhanceAmount*(aMax-aMid);
-            aGoalMin = aMin + enhanceAmount*(aMin-aMid);
         }
 
         // Pass 2 - remap everything, except the alpha

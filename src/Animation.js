@@ -237,7 +237,7 @@
         if (needRedraw) {
             for(key in layerHash) {
                 layerHash[key].draw();
-            } 
+            }
         }
     };
     Kinetic.Animation._animationLoop = function() {
