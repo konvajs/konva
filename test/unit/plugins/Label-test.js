@@ -40,11 +40,7 @@ suite('Label', function() {
         stage.add(layer);
 
 
-        var beforeTextWidth = label.getText().getWidth();
-
         label.getText().setFontSize(100);
-
-        var afterTextWidth = label.getText().getWidth();
 
         label.getText().setFontSize(50);
 
@@ -56,13 +52,10 @@ suite('Label', function() {
         assert.equal(label.getType(), 'Group');
         assert.equal(label.getClassName(), 'Label');
 
-        var json = label.toJSON();
-        //console.log(json);
 
         // use relaxed trace because  text can be a slightly different size in different browsers,
         // resulting in slightly different tag dimensions
         var relaxedTrace = layer.getContext().getTrace(true);
-        //console.log(relaxedTrace);
 
         assert.equal(relaxedTrace, 'clearRect();save();save();globalAlpha;shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;drawImage();restore();drawImage();restore();save();transform();font;textBaseline;textAlign;save();translate();translate();save();fillStyle;fillText();restore();translate();restore();restore();clearRect();save();save();globalAlpha;shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;drawImage();restore();drawImage();restore();save();transform();font;textBaseline;textAlign;save();translate();translate();save();fillStyle;fillText();restore();translate();restore();restore();');
 
@@ -87,7 +80,7 @@ suite('Label', function() {
 
         var label = new Kinetic.Label({
             x: 100,
-            y: 100,
+            y: 100
         });
 
         // add a tag to the label
