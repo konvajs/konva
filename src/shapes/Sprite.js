@@ -55,10 +55,20 @@
             Kinetic.Shape.call(this, config);
             this.className = 'Sprite';
 
-            this.anim = new Kinetic.Animation();
+            this._updated = true;
+            var that = this;
+            this.anim = new Kinetic.Animation(function() {
+                // if we don't need to redraw layer we should return false
+                var updated = that._updated;
+                that._updated = false;
+                return updated;
+            });
             this.on('animationChange.kinetic', function() {
                 // reset index when animation changes
                 this.frameIndex(0);
+            });
+            this.on('frameIndexChange.kinetic', function() {
+                this._updated = true;
             });
             // smooth change for frameRate
             this.on('frameRateChange.kinetic', function() {

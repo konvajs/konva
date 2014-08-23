@@ -73,6 +73,128 @@ suite('Sprite', function() {
         imageObj.src = 'assets/scorpion-sprite.png';
     });
 
+    // ======================================================
+    test('don`t update layer too many times', function(done) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = addStage();
+            var layer = new Kinetic.Layer();
+
+
+            var sprite = new Kinetic.Sprite({
+                x: 200,
+                y: 50,
+                image: imageObj,
+                animation: 'standing',
+                animations: {
+                    standing: [
+                        0, 0, 49, 109,
+                        52, 0, 49, 109,
+                        105, 0, 49, 109,
+                        158, 0, 49, 109,
+                        210, 0, 49, 109,
+                        262, 0, 49, 109
+                    ]
+                },
+                frameRate: 5,
+                draggable: true,
+                shadowColor: 'black',
+                shadowBlur: 3,
+                shadowOffset: {x: 3, y:1},
+                shadowOpacity: 0.3
+            });
+
+            layer.add(sprite);
+            stage.add(layer);
+
+            var oldDraw = layer.draw;
+            var updateCount = 0;
+            layer.draw = function() {
+                updateCount++;
+                oldDraw.call(layer);
+            };
+
+            sprite.start();
+            setTimeout(function() {
+                sprite.stop();
+                assert.equal(updateCount < 7, true);
+                done();
+            }, 1000);
+
+
+        };
+        imageObj.src = 'assets/scorpion-sprite.png';
+    });
+
+    // ======================================================
+    test('don`t update layer too many times 2', function(done) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = addStage();
+            var layer = new Kinetic.Layer();
+
+
+            var sprite = new Kinetic.Sprite({
+                x: 200,
+                y: 50,
+                image: imageObj,
+                animation: 'standing',
+                animations: {
+                    standing: [
+                        0, 0, 49, 109,
+                        52, 0, 49, 109,
+                        105, 0, 49, 109,
+                        158, 0, 49, 109,
+                        210, 0, 49, 109,
+                        262, 0, 49, 109
+                    ]
+                },
+                frameRate: 5
+            });
+
+            var sprite2 = new Kinetic.Sprite({
+                x: 200,
+                y: 50,
+                image: imageObj,
+                animation: 'standing',
+                animations: {
+                    standing: [
+                        0, 0, 49, 109,
+                        52, 0, 49, 109,
+                        105, 0, 49, 109,
+                        158, 0, 49, 109,
+                        210, 0, 49, 109,
+                        262, 0, 49, 109
+                    ]
+                },
+                frameRate: 20
+            });
+
+            layer.add(sprite).add(sprite2);
+            stage.add(layer);
+
+            var oldDraw = layer.draw;
+            var updateCount = 0;
+            layer.draw = function() {
+                updateCount++;
+                oldDraw.call(layer);
+            };
+
+            sprite.start();
+            sprite2.start();
+            setTimeout(function() {
+                sprite.stop();
+                sprite2.stop();
+                assert.equal(updateCount > 15, true);
+                assert.equal(updateCount < 27, true);
+                done();
+            }, 1000);
+
+
+        };
+        imageObj.src = 'assets/scorpion-sprite.png';
+    });
+
     test('check is sprite running', function(done){
         var imageObj = new Image();
         imageObj.onload = function() {

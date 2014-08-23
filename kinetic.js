@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-06-10
+ * Date: 2014-08-23
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -283,7 +283,7 @@ var Kinetic = {};
          * @memberof Kinetic
          * @augments Kinetic.Container
          * @param {Object} config
-         * @param {String|DomElement} config.container Container id or DOM element
+         * @param {String|Element} config.container Container id or DOM element
          * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
@@ -475,12 +475,10 @@ var Kinetic = {};
 
             // if DD is not included with the build, then
             // drag and drop is not even possible
-            if (!dd) {
-                return false;
-            }
-            // if DD is included with the build
-            else {
+            if (dd) {
                 return dd.isDragging;
+            } else {
+                return false;
             }
         },
         /**
@@ -494,12 +492,10 @@ var Kinetic = {};
 
             // if DD is not included with the build, then
             // drag and drop is not even possible
-            if (!dd) {
-                return false;
-            }
-            // if DD is included with the build
-            else {
+            if (dd) {
                 return !!dd.node;
+            } else {
+                return false;
             }
         },
         _addId: function(node, id) {
@@ -560,8 +556,8 @@ var Kinetic = {};
                 // adding mobile flab
                 mobile: mobile,
                 ieMobile: ieMobile  // If this is true (i.e., WP8), then Kinetic touch events are executed instead of equivalent Kinetic mouse events
-            };      
-        }, 
+            };
+        },
         // user agent  
         UA: undefined
     };
@@ -600,9 +596,8 @@ var Kinetic = {};
             // like Node.
             var Canvas = require('canvas');
             var jsdom = require('jsdom').jsdom;
-            var doc = jsdom('<!DOCTYPE html><html><head></head><body></body></html>');
 
-            Kinetic.document = doc;
+            Kinetic.document = jsdom('<!DOCTYPE html><html><head></head><body></body></html>');
             Kinetic.window = Kinetic.document.createWindow();
             Kinetic.window.Image = Canvas.Image;
             Kinetic._nodeCanvas = Canvas;
@@ -734,7 +729,7 @@ var Kinetic = {};
     /**
      * Transform constructor
      * @constructor
-     * @param {Array} Optional six-element matrix
+     * @param {Array} [m] Optional six-element matrix
      * @memberof Kinetic
      */
     Kinetic.Transform = function(m) {
@@ -755,14 +750,14 @@ var Kinetic = {};
          * Transform point
          * @method
          * @memberof Kinetic.Transform.prototype
-         * @param {Object} 2D point(x, y)
+         * @param {Object} point 2D point(x, y)
          * @returns {Object} 2D point(x, y)
          */
-        point: function(p) {
+        point: function(point) {
             var m = this.m;
             return {
-                x: m[0] * p.x + m[2] * p.y + m[4],
-                y: m[1] * p.x + m[3] * p.y + m[5]
+                x: m[0] * point.x + m[2] * point.y + m[4],
+                y: m[1] * point.x + m[3] * point.y + m[5]
             };
         },
         /**
@@ -921,8 +916,7 @@ var Kinetic = {};
     };
 
     // CONSTANTS
-    var CANVAS = 'canvas',
-        CONTEXT_2D = '2d',
+    var CONTEXT_2D = '2d',
         OBJECT_ARRAY = '[object Array]',
         OBJECT_NUMBER = '[object Number]',
         OBJECT_STRING = '[object String]',
@@ -990,11 +984,11 @@ var Kinetic = {};
         // as much as it can, without ever going more than once per `wait` duration;
         // but if you'd like to disable the execution on the leading edge, pass
         // `{leading: false}`. To disable execution on the trailing edge, ditto.
-        _throttle: function(func, wait, options) {
+        _throttle: function(func, wait, opts) {
             var context, args, result;
             var timeout = null;
             var previous = 0;
-            options || (options = {});
+            var options = opts || {};
             var later = function() {
                 previous = options.leading === false ? 0 : new Date().getTime();
                 timeout = null;
@@ -1003,7 +997,9 @@ var Kinetic = {};
             };
             return function() {
                 var now = new Date().getTime();
-                if (!previous && options.leading === false) previous = now;
+                if (!previous && options.leading === false) {
+                    previous = now;
+                }
                 var remaining = wait - (now - previous);
                 context = this;
                 args = arguments;
@@ -1035,7 +1031,11 @@ var Kinetic = {};
         },
         createCanvasElement: function() {
             var canvas = Kinetic.document.createElement('canvas');
-            canvas.style = canvas.style || {};
+            // on some environments canvas.style is readonly
+            try {
+                canvas.style = canvas.style || {};
+            } catch (e) {
+            }
             return canvas;
         },
         isBrowser: function() {
@@ -1337,14 +1337,15 @@ var Kinetic = {};
      * @constructor
      * @abstract
      * @memberof Kinetic
-     * @param {Number} width
-     * @param {Number} height
-     * @param {Number} pixelRatio KineticJS automatically handles pixel ratio adustments in order to render crisp drawings 
+     * @param {Object} config
+     * @param {Number} config.width
+     * @param {Number} config.height
+     * @param {Number} config.pixelRatio KineticJS automatically handles pixel ratio adjustments in order to render crisp drawings
      *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
      *  of 1.  Some high end tablets and phones, like iPhones and iPads (not the mini) have a device pixel ratio 
      *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel 
      *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
-     *  specificed, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
+     *  specified, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
      *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
      */
     Kinetic.Canvas = function(config) {
@@ -1353,9 +1354,9 @@ var Kinetic = {};
 
     Kinetic.Canvas.prototype = {
         init: function(config) {
-            config = config || {};
+            var conf = config || {};
 
-            var pixelRatio = config.pixelRatio || Kinetic.pixelRatio || _pixelRatio;
+            var pixelRatio = conf.pixelRatio || Kinetic.pixelRatio || _pixelRatio;
 
             this.pixelRatio = pixelRatio;
             this._canvas = Kinetic.Util.createCanvasElement();
@@ -1481,11 +1482,11 @@ var Kinetic = {};
     };
 
     Kinetic.SceneCanvas = function(config) {
-        config = config || {};
-        var width = config.width || 0,
-            height = config.height || 0;
+        var conf = config || {};
+        var width = conf.width || 0,
+            height = conf.height || 0;
 
-        Kinetic.Canvas.call(this, config);
+        Kinetic.Canvas.call(this, conf);
         this.context = new Kinetic.SceneContext(this);
         this.setSize(width, height);
     };
@@ -1509,11 +1510,11 @@ var Kinetic = {};
     Kinetic.Util.extend(Kinetic.SceneCanvas, Kinetic.Canvas);
 
     Kinetic.HitCanvas = function(config) {
-        config = config || {};
-        var width = config.width || 0,
-            height = config.height || 0;
+        var conf = config || {};
+        var width = conf.width || 0,
+            height = conf.height || 0;
             
-        Kinetic.Canvas.call(this, config);
+        Kinetic.Canvas.call(this, conf);
         this.context = new Kinetic.HitContext(this);
         this.setSize(width, height);
     };
@@ -2114,46 +2115,9 @@ var Kinetic = {};
 ;/*jshint unused:false */
 (function() {
     // CONSTANTS
-    var ABSOLUTE_OPACITY = 'absoluteOpacity',
-        ABSOLUTE_TRANSFORM = 'absoluteTransform',
-        ADD = 'add',
-        B = 'b',
-        BEFORE = 'before',
-        BLACK = 'black',
-        CHANGE = 'Change',
-        CHILDREN = 'children',
-        DEG = 'Deg',
-        DOT = '.',
-        EMPTY_STRING = '',
-        G = 'g',
-        GET = 'get',
-        HASH = '#',
-        ID = 'id',
-        KINETIC = 'kinetic',
-        LISTENING = 'listening',
-        MOUSEENTER = 'mouseenter',
-        MOUSELEAVE = 'mouseleave',
-        NAME = 'name',
-        OFF = 'off',
-        ON = 'on',
-        PRIVATE_GET = '_get',
-        R = 'r',
+    var GET = 'get',
         RGB = 'RGB',
-        SET = 'set',
-        SHAPE = 'Shape',
-        SPACE = ' ',
-        STAGE = 'Stage',
-        TRANSFORM = 'transform',
-        UPPER_B = 'B',
-        UPPER_G = 'G',
-        UPPER_HEIGHT = 'Height',
-        UPPER_R = 'R',
-        UPPER_WIDTH = 'Width',
-        UPPER_X = 'X',
-        UPPER_Y = 'Y',
-        VISIBLE = 'visible',
-        X = 'x',
-        Y = 'y';
+        SET = 'set';
 
     Kinetic.Factory = {
         addGetterSetter: function(constructor, attr, def, validator, after) {
@@ -2259,14 +2223,15 @@ var Kinetic = {};
     };
 
     Kinetic.Validators = {
+        /**
+         * @return {number}
+         */
         RGBComponent: function(val) {
             if (val > 255) {
                 return 255;
-            }
-            else if (val < 0) {
+            } else if (val < 0) {
                 return 0;
-            }
-            else {
+            } else {
                 return Math.round(val);
             }
         },
@@ -2287,7 +2252,6 @@ var Kinetic = {};
     // CONSTANTS
     var ABSOLUTE_OPACITY = 'absoluteOpacity',
         ABSOLUTE_TRANSFORM = 'absoluteTransform',
-        BEFORE = 'before',
         CHANGE = 'Change',
         CHILDREN = 'children',
         DOT = '.',
@@ -2434,8 +2398,8 @@ var Kinetic = {};
                 y = conf.y || 0,
                 width = conf.width || this.width(),
                 height = conf.height || this.height(),
-                drawBorder = conf.drawBorder || false,
-                layer = this.getLayer();
+                drawBorder = conf.drawBorder || false;
+
             if (width === 0 || height === 0) {
                 Kinetic.Util.warn('Width or height of caching configuration equals 0. Cache is ignored.');
                 return;
@@ -2454,9 +2418,6 @@ var Kinetic = {};
                     width: width,
                     height: height
                 }),
-                origTransEnabled = this.transformsEnabled(),
-                origX = this.x(),
-                origY = this.y(),
                 sceneContext = cachedSceneCanvas.getContext(),
                 hitContext = cachedHitCanvas.getContext();
 
@@ -2469,7 +2430,7 @@ var Kinetic = {};
 
             // this will draw a red border around the cached box for
             // debugging purposes
-            if (drawBorder) {        
+            if (drawBorder) {
                 sceneContext.save();
                 sceneContext.beginPath();
                 sceneContext.rect(0, 0, width, height);
@@ -2486,7 +2447,7 @@ var Kinetic = {};
             // don't need to translate canvas if shape is not added to layer
             if (this.nodeType === 'Shape') {
                 sceneContext.translate(this.x() * -1, this.y() * -1);
-                hitContext.translate(this.x() * -1, this.y() * -1);        
+                hitContext.translate(this.x() * -1, this.y() * -1);
             }
 
             this.drawScene(cachedSceneCanvas, this);
@@ -3316,8 +3277,11 @@ var Kinetic = {};
          * node.moveTo(layer2);
          */
         moveTo: function(newContainer) {
-            Kinetic.Node.prototype.remove.call(this);
-            newContainer.add(this);
+            // do nothing if new container is already parent
+            if (this.getParent() !== newContainer) {
+                this.remove();
+                newContainer.add(this);
+            }
             return this;
         },
         /**
@@ -3404,7 +3368,7 @@ var Kinetic = {};
          * @method
          * @memberof Kinetic.Node.prototype
          * @param {String} eventType event type.  can be a regular event, like click, mouseover, or mouseout, or it can be a custom event, like myCustomEvent
-         * @param {EventObject} [evt] event object
+         * @param {Event} [evt] event object
          * @param {Boolean} [bubble] setting the value to false, or leaving it undefined, will result in the event
          *  not bubbling.  Setting the value to true will result in the event bubbling.
          * @returns {Kinetic.Node}
@@ -3444,7 +3408,7 @@ var Kinetic = {};
         getAbsoluteTransform: function(top) {
             // if using an argument, we can't cache the result.
             if (top) {
-                return this._getAbsoluteTransform(top); 
+                return this._getAbsoluteTransform(top);
             }
             // if no argument, we can cache the result
             else {
@@ -3514,7 +3478,7 @@ var Kinetic = {};
          *  for another node
          * @method
          * @memberof Kinetic.Node.prototype
-         * @param {Object} attrs override attrs
+         * @param {Object} obj override attrs
          * @returns {Kinetic.Node}
          * @example
          * // simple clone
@@ -3735,11 +3699,8 @@ var Kinetic = {};
          * @example
          * node.setAttr('x', 5);
          */
-        setAttr: function() {
-            var args = Array.prototype.slice.call(arguments),
-                attr = args[0],
-                val = args[1],
-                method = SET + Kinetic.Util._capitalize(attr),
+        setAttr: function(attr, val) {
+            var method = SET + Kinetic.Util._capitalize(attr),
                 func = this[method];
 
             if(Kinetic.Util._isFunction(func)) {
@@ -3835,8 +3796,8 @@ var Kinetic = {};
      *  and setImage() methods
      * @method
      * @memberof Kinetic.Node
-     * @param {String} JSON string
-     * @param {DomElement} [container] optional container dom element used only if you're
+     * @param {String} json
+     * @param {Element} [container] optional container dom element used only if you're
      *  creating a stage node
      */
     Kinetic.Node.create = function(json, container) {
@@ -3874,7 +3835,7 @@ var Kinetic = {};
      * @memberof Kinetic.Node.prototype
      * @param {Object} pos
      * @param {Number} pos.x
-     * @param {Nubmer} pos.y
+     * @param {Number} pos.y
      * @returns {Object}
      * @example
      * // get position
@@ -5474,7 +5435,6 @@ var Kinetic = {};
             rMin = data[0], rMax = rMin, r,
             gMin = data[1], gMax = gMin, g,
             bMin = data[2], bMax = bMin, b,
-            aMin = data[3], aMax = aMin,
             i;
 
         // If we are not enhancing anything - don't do any computation
@@ -5501,12 +5461,10 @@ var Kinetic = {};
         if( rMax === rMin ){ rMax = 255; rMin = 0; }
         if( gMax === gMin ){ gMax = 255; gMin = 0; }
         if( bMax === bMin ){ bMax = 255; bMin = 0; }
-        if( aMax === aMin ){ aMax = 255; aMin = 0; }
 
         var rMid, rGoalMax,rGoalMin,
             gMid, gGoalMax,gGoalMin,
-            bMid, bGoalMax,aGoalMin,
-            aMid, aGoalMax,bGoalMin;
+            bMid, bGoalMax,bGoalMin;
 
         // If the enhancement is positive - stretch the histogram 
         if ( enhanceAmount > 0 ){
@@ -5516,8 +5474,6 @@ var Kinetic = {};
             gGoalMin = gMin - enhanceAmount*(gMin-0);
             bGoalMax = bMax + enhanceAmount*(255-bMax);
             bGoalMin = bMin - enhanceAmount*(bMin-0);
-            aGoalMax = aMax + enhanceAmount*(255-aMax);
-            aGoalMin = aMin - enhanceAmount*(aMin-0);
         // If the enhancement is negative - compress the histogram
         } else {
             rMid = (rMax + rMin)*0.5;
@@ -5529,9 +5485,6 @@ var Kinetic = {};
             bMid = (bMax + bMin)*0.5;
             bGoalMax = bMax + enhanceAmount*(bMax-bMid);
             bGoalMin = bMin + enhanceAmount*(bMin-bMid);
-            aMid = (aMax + aMin)*0.5;
-            aGoalMax = aMax + enhanceAmount*(aMax-aMid);
-            aGoalMin = aMin + enhanceAmount*(aMin-aMid);
         }
 
         // Pass 2 - remap everything, except the alpha
@@ -5601,7 +5554,7 @@ var Kinetic = {};
      * @function
      * @name Noise
      * @memberof Kinetic.Filters
-     * @param {Object} imagedata
+     * @param {Object} imageData
      * @author ippo615
      * @example
      * node.cache();
@@ -6322,9 +6275,9 @@ var Kinetic = {};
     };
 
     Kinetic.Animation._runFrames = function() {
-        var layerHash = {},
+        var layerHash,
             animations = this.animations,
-            anim, layers, func, n, i, layersLen, layer, key;
+            anim, layers, func, n, i, layersLen, layer, key, needRedraw;
         /*
          * loop through all animations and execute animation
          *  function.  if the animation object has specified node,
@@ -6336,8 +6289,8 @@ var Kinetic = {};
          * WARNING: don't cache animations.length because it could change while
          * the for loop is running, causing a JS error
          */
-        var needRedraw = false;
         for(n = 0; n < animations.length; n++) {
+            layerHash = {};
             anim = animations[n];
             layers = anim.layers;
             func = anim.func;
@@ -6345,24 +6298,27 @@ var Kinetic = {};
             anim._updateFrameObject(now());
             layersLen = layers.length;
 
-            for (i=0; i<layersLen; i++) {
-                layer = layers[i];
-                if(layer._id !== undefined) {
-                    layerHash[layer._id] = layer;
-                }
-            }
+
 
             // if animation object has a function, execute it
-            if(func) {
+            if (func) {
                 // allow anim bypassing drawing
-                needRedraw  = (func.call(anim, anim.frame) !== false) || needRedraw;
+                needRedraw = (func.call(anim, anim.frame) !== false);
+            }
+
+            if (needRedraw) {
+                for (i = 0; i < layersLen; i++) {
+                    layer = layers[i];
+                    if (layer._id !== undefined) {
+                        layerHash[layer._id] = layer;
+                    }
+                }
             }
         }
-
         if (needRedraw) {
-            for(key in layerHash) {
+            for (key in layerHash) {
                 layerHash[key].draw();
-            } 
+            }
         }
     };
     Kinetic.Animation._animationLoop = function() {
@@ -6624,7 +6580,6 @@ var Kinetic = {};
          * @returns {Tween}
          */
         reset: function() {
-            var node = this.node;
             this.tween.reset();
             return this;
         },
@@ -6636,7 +6591,6 @@ var Kinetic = {};
          * @returns {Tween}
          */
         seek: function(t) {
-            var node = this.node;
             this.tween.seek(t * 1000);
             return this;
         },
@@ -6657,7 +6611,6 @@ var Kinetic = {};
          * @returns {Tween}
          */
         finish: function() {
-            var node = this.node;
             this.tween.finish();
             return this;
         },
@@ -7027,11 +6980,11 @@ var Kinetic = {};
 ;(function() {
     Kinetic.DD = {
         // properties
-        anim: new Kinetic.Animation(function(frame) {
-                    var b = this.dirty;
-                    this.dirty = false;
-                    return b;
-                }),
+        anim: new Kinetic.Animation(function() {
+            var b = this.dirty;
+            this.dirty = false;
+            return b;
+        }),
         isDragging: false,
         justDragged: false,
         offset: {
@@ -7349,13 +7302,13 @@ var Kinetic = {};
          *    return node.getClassName() === 'Circle';
          * });
          */
-        getChildren: function(predicate) {
-            if (!predicate) {
+        getChildren: function(filterFunc) {
+            if (!filterFunc) {
                 return this.children;
             } else {
                 var results = new Kinetic.Collection();
                 this.children.each(function(child){
-                    if (predicate(child)) {
+                    if (filterFunc(child)) {
                         results.push(child);
                     }
                 });
@@ -7426,11 +7379,11 @@ var Kinetic = {};
                 for (var i = 0; i < arguments.length; i++) {
                     this.add(arguments[i]);
                 }
-                return;
+                return this;
             }
             if (child.getParent()) {
                 child.moveTo(this);
-                return;
+                return this;
             }
             var children = this.children;
             this._validateAdd(child);
@@ -7893,14 +7846,14 @@ var Kinetic = {};
          * @param {Number} point.y
          * @returns {Boolean}
          */
-        intersects: function(pos) {
+        intersects: function(point) {
             var stage = this.getStage(),
                 bufferHitCanvas = stage.bufferHitCanvas,
                 p;
 
             bufferHitCanvas.getContext().clear();
             this.drawScene(bufferHitCanvas);
-            p = bufferHitCanvas.context.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
+            p = bufferHitCanvas.context.getImageData(Math.round(point.x), Math.round(point.y), 1, 1).data;
             return p[3] > 0;
         },
         // extends Node.prototype.destroy 
@@ -7962,8 +7915,8 @@ var Kinetic = {};
                         if (layer) {
                             layer._applyTransform(this, context, top);
                         } else {
-                            var m = this.getAbsoluteTransform(top).getMatrix();
-                            context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+                            var o = this.getAbsoluteTransform(top).getMatrix();
+                            context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
                         }
                
                         if (hasShadow) {
@@ -8066,7 +8019,7 @@ var Kinetic = {};
             }
 
             return this;
-        },
+        }
     });
     Kinetic.Util.extend(Kinetic.Shape, Kinetic.Node);
 
@@ -9209,9 +9162,7 @@ var Kinetic = {};
         TOUCHMOVE = 'touchmove',
 
         CONTENT_MOUSEOUT = 'contentMouseout',
-        CONTENT_MOUSELEAVE = 'contentMouseleave',
         CONTENT_MOUSEOVER = 'contentMouseover',
-        CONTENT_MOUSEENTER = 'contentMouseenter',
         CONTENT_MOUSEMOVE = 'contentMousemove',
         CONTENT_MOUSEDOWN = 'contentMousedown',
         CONTENT_MOUSEUP = 'contentMouseup',
@@ -9219,7 +9170,6 @@ var Kinetic = {};
         CONTENT_DBL_CLICK = 'contentDblclick',
         CONTENT_TOUCHSTART = 'contentTouchstart',
         CONTENT_TOUCHEND = 'contentTouchend',
-        CONTENT_TAP = 'contentTap',
         CONTENT_DBL_TAP = 'contentDbltap',
         CONTENT_TOUCHMOVE = 'contentTouchmove',
 
@@ -9664,7 +9614,7 @@ var Kinetic = {};
             // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event       
             if (Kinetic.UA.ieMobile) {
                 return this._touchend(evt);
-            }       
+            }
             if (!Kinetic.UA.mobile) {
                 this._setPointerPosition(evt);
                 var shape = this.getIntersection(this.getPointerPosition()),
@@ -9861,7 +9811,7 @@ var Kinetic = {};
             var container = this.getContainer();
             if (!container) {
                 if (Kinetic.Util.isBrowser()) {
-                    throw 'Stage has not container. But container is required';
+                    throw 'Stage has no container. A container is required.';
                 } else {
                     // automatically create element for jsdom in nodejs env
                     container = Kinetic.document.createElement(DIV);
@@ -9902,7 +9852,6 @@ var Kinetic = {};
         // TODO: may be it is better to cache all children layers?
         cache: function() {
             Kinetic.Util.warn('Cache function is not allowed for stage. You may use cache only for layers, groups and shapes.');
-            return;
         },
         clearCache : function() {
         }
@@ -10210,15 +10159,13 @@ var Kinetic = {};
                         }
                     }
                     // if no shape, and no antialiased pixel, we should end searching 
-                    if (!continueSearch) {
-                        return;
-                    } else {
+                    if (continueSearch) {
                         spiralSearchDistance += 1;
+                    } else {
+                        return;
                     }
                 }
-                
-            }
-            else {
+            } else {
                 return null;
             }
         },
@@ -10337,7 +10284,7 @@ var Kinetic = {};
          * @name enableHitGraph
          * @method
          * @memberof Kinetic.Layer.prototype
-         * @returns {Node}
+         * @returns {Layer}
          */
         enableHitGraph: function() {
             this.setHitGraphEnabled(true);
@@ -10348,7 +10295,7 @@ var Kinetic = {};
          * @name disableHitGraph
          * @method
          * @memberof Kinetic.Layer.prototype
-         * @returns {Node}
+         * @returns {Layer}
          */
         disableHitGraph: function() {
             this.setHitGraphEnabled(false);
@@ -10381,14 +10328,9 @@ var Kinetic = {};
      * // enable hit graph
      * layer.hitGraphEnabled(true);
      */
-
     Kinetic.Collection.mapMethods(Kinetic.Layer);
 })();
 ;(function() {
-    // constants
-    var HASH = '#',
-        BEFORE_DRAW ='beforeDraw',
-        DRAW = 'draw';
 
     Kinetic.Util.addMethods(Kinetic.FastLayer, {
         ____init: function(config) {
@@ -10436,7 +10378,7 @@ var Kinetic = {};
         draw: function() {
             this.drawScene();
             return this;
-        },  
+        },
         /**
          * clear scene and hit canvas contexts tied to the layer
          * @method
@@ -10773,18 +10715,28 @@ var Kinetic = {};
         // implements Shape.prototype.setWidth()
         setWidth: function(width) {
             Kinetic.Node.prototype.setWidth.call(this, width);
-            this.setRadius(width / 2);
+            if (this.radius() !== width / 2) {
+                this.setRadius(width / 2);
+            }
         },
         // implements Shape.prototype.setHeight()
         setHeight: function(height) {
             Kinetic.Node.prototype.setHeight.call(this, height);
-            this.setRadius(height / 2);
+            if (this.radius() !== height / 2) {
+                this.setRadius(height / 2);
+            }
+        },
+        setRadius : function(val) {
+            this._setAttr('radius', val);
+            this.setWidth(val * 2);
+            this.setHeight(val * 2);
         }
     };
     Kinetic.Util.extend(Kinetic.Circle, Kinetic.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Circle, 'radius', 0);
+    Kinetic.Factory.addGetter(Kinetic.Circle, 'radius', 0);
+    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Circle, 'radius');
 
     /**
      * get/set radius
@@ -11063,12 +11015,21 @@ var Kinetic = {};
         // implements Shape.prototype.setWidth()
         setWidth: function(width) {
             Kinetic.Node.prototype.setWidth.call(this, width);
-            this.setOuterRadius(width / 2);
+            if (this.outerRadius() !== width / 2) {
+                this.setOuterRadius(width / 2);
+            }
         },
         // implements Shape.prototype.setHeight()
         setHeight: function(height) {
             Kinetic.Node.prototype.setHeight.call(this, height);
-            this.setOuterRadius(height / 2);
+            if (this.outerRadius() !== height / 2) {
+                this.setOuterRadius(height / 2);
+            }
+        },
+        setOuterRadius : function(val) {
+            this._setAttr('outerRadius', val);
+            this.setWidth(val * 2);
+            this.setHeight(val * 2);
         }
     };
     Kinetic.Util.extend(Kinetic.Ring, Kinetic.Shape);
@@ -11091,7 +11052,8 @@ var Kinetic = {};
      * ring.innerRadius(20);
      */
      
-    Kinetic.Factory.addGetterSetter(Kinetic.Ring, 'outerRadius', 0);
+    Kinetic.Factory.addGetter(Kinetic.Ring, 'outerRadius', 0);
+    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Ring, 'outerRadius');
 
     /**
      * get/set outerRadius
@@ -11295,8 +11257,6 @@ var Kinetic = {};
     Kinetic.Collection.mapMethods(Kinetic.Wedge);
 })();
 ;(function() {
-    var PI_OVER_180 = Math.PI / 180;
-
     /**
      * Arc constructor
      * @constructor
@@ -11507,7 +11467,7 @@ var Kinetic = {};
      * @memberof Kinetic
      * @augments Kinetic.Shape
      * @param {Object} config
-     * @param {ImageObject} config.image
+     * @param {Image} config.image
      * @param {Object} [config.crop]
      * @param {String} [config.fill] fill color
      * @param {Integer} [config.fillRed] set fill red component
@@ -11672,7 +11632,7 @@ var Kinetic = {};
      * @name setImage
      * @method
      * @memberof Kinetic.Image.prototype
-     * @param {ImageObject} image
+     * @param {Image} image
      */
 
     /**
@@ -11680,7 +11640,7 @@ var Kinetic = {};
      * @name getImage
      * @method
      * @memberof Kinetic.Image.prototype
-     * @returns {ImageObject}
+     * @returns {Image}
      */
 
     Kinetic.Factory.addComponentsGetterSetter(Kinetic.Image, 'crop', ['x', 'y', 'width', 'height']);
@@ -12741,10 +12701,20 @@ var Kinetic = {};
             Kinetic.Shape.call(this, config);
             this.className = 'Sprite';
 
-            this.anim = new Kinetic.Animation();
+            this._updated = true;
+            var that = this;
+            this.anim = new Kinetic.Animation(function() {
+                // if we don't need to redraw layer we should return false
+                var updated = that._updated;
+                that._updated = false;
+                return updated;
+            });
             this.on('animationChange.kinetic', function() {
                 // reset index when animation changes
                 this.frameIndex(0);
+            });
+            this.on('frameIndexChange.kinetic', function() {
+                this._updated = true;
             });
             // smooth change for frameRate
             this.on('frameRateChange.kinetic', function() {
@@ -14714,7 +14684,7 @@ var Kinetic = {};
                 pointerDirection = this.getPointerDirection(),
                 pointerWidth = this.getPointerWidth(),
                 pointerHeight = this.getPointerHeight();
-                //cornerRadius = this.getCornerRadius();
+                cornerRadius = this.getCornerRadius();
 
             context.beginPath();
             context.moveTo(0,0);
@@ -14725,28 +14695,48 @@ var Kinetic = {};
                 context.lineTo((width + pointerWidth)/2, 0);
             }
 
-            context.lineTo(width, 0);
-
+            if(!cornerRadius) {
+                context.lineTo(width, 0);
+            } else {
+                context.lineTo(width - cornerRadius, 0);
+                context.arc(width - cornerRadius, cornerRadius, cornerRadius, Math.PI * 3 / 2, 0, false);
+            }
+            
             if (pointerDirection === RIGHT) {
                 context.lineTo(width, (height - pointerHeight)/2);
                 context.lineTo(width + pointerWidth, height/2);
                 context.lineTo(width, (height + pointerHeight)/2);
             }
-
-            context.lineTo(width, height);
+            
+            if(!cornerRadius) {
+                context.lineTo(width, height);
+            } else {
+                context.lineTo(width, height - cornerRadius);
+                context.arc(width - cornerRadius, height - cornerRadius, cornerRadius, 0, Math.PI / 2, false);
+            }
 
             if (pointerDirection === DOWN) {
                 context.lineTo((width + pointerWidth)/2, height);
                 context.lineTo(width/2, height + pointerHeight);
                 context.lineTo((width - pointerWidth)/2, height);
             }
-
-            context.lineTo(0, height);
+            
+            if(!cornerRadius) {
+                context.lineTo(0, height);
+            } else {
+                context.lineTo(cornerRadius, height);
+                context.arc(cornerRadius, height - cornerRadius, cornerRadius, Math.PI / 2, Math.PI, false);
+            }
 
             if (pointerDirection === LEFT) {
                 context.lineTo(0, (height + pointerHeight)/2);
                 context.lineTo(-1 * pointerWidth, height/2);
                 context.lineTo(0, (height - pointerHeight)/2);
+            }
+            
+            if(cornerRadius) {
+                context.lineTo(0, cornerRadius);
+                context.arc(cornerRadius, cornerRadius, cornerRadius, Math.PI, Math.PI * 3 / 2, false);
             }
 
             context.closePath();
