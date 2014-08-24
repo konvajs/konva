@@ -269,7 +269,7 @@
         },
         /**
          * bind events to the node. KineticJS supports mouseover, mousemove,
-         *  mouseout, mouseenter, mouseleave, mousedown, mouseup, click, dblclick, touchstart, touchmove,
+         *  mouseout, mouseenter, mouseleave, mousedown, mouseup, mousewheel, click, dblclick, touchstart, touchmove,
          *  touchend, tap, dbltap, dragstart, dragmove, and dragend events. The Kinetic Stage supports
          *  contentMouseover, contentMousemove, contentMouseout, contentMousedown, contentMouseup,
          *  contentClick, contentDblclick, contentTouchstart, contentTouchmove, contentTouchend, contentTap,
