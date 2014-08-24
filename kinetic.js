@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-08-23
+ * Date: 2014-08-24
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -2519,7 +2519,7 @@ var Kinetic = {};
         },
         /**
          * bind events to the node. KineticJS supports mouseover, mousemove,
-         *  mouseout, mouseenter, mouseleave, mousedown, mouseup, click, dblclick, touchstart, touchmove,
+         *  mouseout, mouseenter, mouseleave, mousedown, mouseup, mousewheel, click, dblclick, touchstart, touchmove,
          *  touchend, tap, dbltap, dragstart, dragmove, and dragend events. The Kinetic Stage supports
          *  contentMouseover, contentMousemove, contentMouseout, contentMousedown, contentMouseup,
          *  contentClick, contentDblclick, contentTouchstart, contentTouchmove, contentTouchend, contentTap,
@@ -9160,6 +9160,9 @@ var Kinetic = {};
         TAP = 'tap',
         DBL_TAP = 'dbltap',
         TOUCHMOVE = 'touchmove',
+        DOMMOUSESCROLL = 'DOMMouseScroll',
+        MOUSEWHEEL = 'mousewheel',
+        WHEEL = 'wheel',
 
         CONTENT_MOUSEOUT = 'contentMouseout',
         CONTENT_MOUSEOVER = 'contentMouseover',
@@ -9181,7 +9184,7 @@ var Kinetic = {};
         UNDERSCORE = '_',
         CONTAINER = 'container',
         EMPTY_STRING = '',
-        EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND, MOUSEOVER],
+        EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND, MOUSEOVER, DOMMOUSESCROLL, MOUSEWHEEL, WHEEL],
 
         // cached variables
         eventsLength = EVENTS.length;
@@ -9750,6 +9753,20 @@ var Kinetic = {};
                 }
             }
         },
+        _DOMMouseScroll: function(evt) {
+            this._mousewheel(evt);
+        },
+        _mousewheel: function(evt) {
+            this._setPointerPosition(evt);
+            var shape = this.getIntersection(this.getPointerPosition());
+
+            if (shape && shape.isListening()) {
+                shape._fireAndBubble(MOUSEWHEEL, {evt: evt});
+            }
+        },
+        _wheel: function(evt) {
+            this._mousewheel(evt);
+        },
         _setPointerPosition: function(evt) {
             var contentPosition = this._getContentPosition(),
                 offsetX = evt.offsetX,
@@ -10245,6 +10262,7 @@ var Kinetic = {};
             }
 
             Kinetic.Container.prototype.drawHit.call(this, canvas, top);
+            this.imageData = null; // Clear imageData cache
             return this;
         },
         /**
