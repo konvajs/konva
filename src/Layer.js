@@ -166,6 +166,7 @@
             }
 
             Kinetic.Container.prototype.drawHit.call(this, canvas, top);
+            this.imageData = null; // Clear imageData cache
             return this;
         },
         /**

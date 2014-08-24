@@ -19,6 +19,9 @@
         TAP = 'tap',
         DBL_TAP = 'dbltap',
         TOUCHMOVE = 'touchmove',
+        DOMMOUSESCROLL = 'DOMMouseScroll',
+        MOUSEWHEEL = 'mousewheel',
+        WHEEL = 'wheel',
 
         CONTENT_MOUSEOUT = 'contentMouseout',
         CONTENT_MOUSEOVER = 'contentMouseover',
@@ -40,7 +43,7 @@
         UNDERSCORE = '_',
         CONTAINER = 'container',
         EMPTY_STRING = '',
-        EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND, MOUSEOVER],
+        EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND, MOUSEOVER, DOMMOUSESCROLL, MOUSEWHEEL, WHEEL],
 
         // cached variables
         eventsLength = EVENTS.length;
@@ -608,6 +611,20 @@
                     evt.preventDefault();
                 }
             }
+        },
+        _DOMMouseScroll: function(evt) {
+            this._mousewheel(evt);
+        },
+        _mousewheel: function(evt) {
+            this._setPointerPosition(evt);
+            var shape = this.getIntersection(this.getPointerPosition());
+
+            if (shape && shape.isListening()) {
+                shape._fireAndBubble(MOUSEWHEEL, {evt: evt});
+            }
+        },
+        _wheel: function(evt) {
+            this._mousewheel(evt);
         },
         _setPointerPosition: function(evt) {
             var contentPosition = this._getContentPosition(),
