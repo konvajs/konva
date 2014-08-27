@@ -42,7 +42,7 @@ KineticJS uses Mocha for testing.
 
 KineticJS is covered with hundreds of tests and well over a thousand assertions.  KineticJS uses TDD (test driven development) which means that every new feature or bug fix is accompanied with at least one new test. 
 
-##Generation documentation
+##Generate documentation
 
 Run `grunt docs` which will build the documentation files and place them in the docs folder.
 
