@@ -6,6 +6,26 @@ suite('Global', function() {
     });
 
     // ======================================================
+    test('_addName', function() {
+        Kinetic._addName("node1", "single");
+        assert.equal(Kinetic.names.single[0], "node1");
+
+        Kinetic._addName("node2", "double item");
+        assert.equal(Kinetic.names.double[0], "node2");
+        assert.equal(Kinetic.names.item[0], "node2");
+
+        Kinetic._addName("node3", "  extra   spaces  ");
+        assert.equal(Kinetic.names.extra[0], "node3");
+        assert.equal(Kinetic.names.spaces[0], "node3");
+
+        Kinetic._addName("node4", "another item");
+        assert.equal(Kinetic.names.another[0], "node4");
+        assert.equal(Kinetic.names.item.length, 2);
+        assert.equal(Kinetic.names.item[0], "node2");
+        assert.equal(Kinetic.names.item[1], "node4");
+    });
+
+    // ======================================================
     test('getAngle()', function() {
         // test that default angleDeg is true
         assert.equal(Kinetic.angleDeg, true);
