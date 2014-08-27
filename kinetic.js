@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-08-24
+ * Date: 2014-08-27
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -14834,3 +14834,208 @@ var Kinetic = {};
 
     Kinetic.Collection.mapMethods(Kinetic.Tag);
 })();
+;(function() {
+    /**
+     * Arrow constructor
+     * @constructor
+     * @memberof Kinetic
+     * @augments Kinetic.Shape
+     * @param {Object} config
+     * @param {Array} config.points
+     * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
+     *   The default is 0
+     * @param {Number} config.pointerLength
+     * @param {Number} config.pointerWidth
+     * @param {String} [config.fill] fill color
+     * @param {Integer} [config.fillRed] set fill red component
+     * @param {Integer} [config.fillGreen] set fill green component
+     * @param {Integer} [config.fillBlue] set fill blue component
+     * @param {Integer} [config.fillAlpha] set fill alpha component
+     * @param {Image} [config.fillPatternImage] fill pattern image
+     * @param {Number} [config.fillPatternX]
+     * @param {Number} [config.fillPatternY]
+     * @param {Object} [config.fillPatternOffset] object with x and y component
+     * @param {Number} [config.fillPatternOffsetX] 
+     * @param {Number} [config.fillPatternOffsetY] 
+     * @param {Object} [config.fillPatternScale] object with x and y component
+     * @param {Number} [config.fillPatternScaleX]
+     * @param {Number} [config.fillPatternScaleY]
+     * @param {Number} [config.fillPatternRotation]
+     * @param {String} [config.fillPatternRepeat] can be "repeat", "repeat-x", "repeat-y", or "no-repeat".  The default is "no-repeat"
+     * @param {Object} [config.fillLinearGradientStartPoint] object with x and y component
+     * @param {Number} [config.fillLinearGradientStartPointX]
+     * @param {Number} [config.fillLinearGradientStartPointY]
+     * @param {Object} [config.fillLinearGradientEndPoint] object with x and y component
+     * @param {Number} [config.fillLinearGradientEndPointX]
+     * @param {Number} [config.fillLinearGradientEndPointY]
+     * @param {Array} [config.fillLinearGradientColorStops] array of color stops
+     * @param {Object} [config.fillRadialGradientStartPoint] object with x and y component
+     * @param {Number} [config.fillRadialGradientStartPointX]
+     * @param {Number} [config.fillRadialGradientStartPointY]
+     * @param {Object} [config.fillRadialGradientEndPoint] object with x and y component
+     * @param {Number} [config.fillRadialGradientEndPointX] 
+     * @param {Number} [config.fillRadialGradientEndPointY] 
+     * @param {Number} [config.fillRadialGradientStartRadius]
+     * @param {Number} [config.fillRadialGradientEndRadius]
+     * @param {Array} [config.fillRadialGradientColorStops] array of color stops
+     * @param {Boolean} [config.fillEnabled] flag which enables or disables the fill.  The default value is true
+     * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
+     * @param {String} [config.stroke] stroke color
+     * @param {Integer} [config.strokeRed] set stroke red component
+     * @param {Integer} [config.strokeGreen] set stroke green component
+     * @param {Integer} [config.strokeBlue] set stroke blue component
+     * @param {Integer} [config.strokeAlpha] set stroke alpha component
+     * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
+     * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
+     * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
+     *  is miter
+     * @param {String} [config.lineCap] can be butt, round, or sqare.  The default
+     *  is butt
+     * @param {String} [config.shadowColor]
+     * @param {Integer} [config.shadowRed] set shadow color red component
+     * @param {Integer} [config.shadowGreen] set shadow color green component
+     * @param {Integer} [config.shadowBlue] set shadow color blue component
+     * @param {Integer} [config.shadowAlpha] set shadow color alpha component
+     * @param {Number} [config.shadowBlur]
+     * @param {Object} [config.shadowOffset] object with x and y component
+     * @param {Number} [config.shadowOffsetX]
+     * @param {Number} [config.shadowOffsetY]
+     * @param {Number} [config.shadowOpacity] shadow opacity.  Can be any real number
+     *  between 0 and 1
+     * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
+     * @param {Array} [config.dash]
+     * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
+     * @param {Number} [config.x]
+     * @param {Number} [config.y]
+     * @param {Number} [config.width]
+     * @param {Number} [config.height]
+     * @param {Boolean} [config.visible]
+     * @param {Boolean} [config.listening] whether or not the node is listening for events
+     * @param {String} [config.id] unique id
+     * @param {String} [config.name] non-unique name
+     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+     * @param {Object} [config.scale] set scale
+     * @param {Number} [config.scaleX] set scale x
+     * @param {Number} [config.scaleY] set scale y
+     * @param {Number} [config.rotation] rotation in degrees
+     * @param {Object} [config.offset] offset from center point and rotation point
+     * @param {Number} [config.offsetX] set offset x
+     * @param {Number} [config.offsetY] set offset y
+     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
+     *  the entire stage by dragging any portion of the stage
+     * @param {Number} [config.dragDistance]
+     * @param {Function} [config.dragBoundFunc]
+     * @example
+     * var line = new Kinetic.Line({
+     *   points: [73, 70, 340, 23, 450, 60, 500, 20],
+     *   stroke: 'red',
+     *   tension: 1,
+     *   pointerLength : 10,
+     *   pointerWidth : 12
+     * });
+     */
+    Kinetic.Arrow = function(config) {
+        this.____init(config);
+    };
+
+    Kinetic.Arrow.prototype = {
+        ____init : function(config) {
+            // call super constructor
+            Kinetic.Line.call(this, config);
+            this.className = 'Arrow';
+        },
+        _sceneFunc : function(ctx) {
+            var PI2 = Math.PI * 2;
+            var points = this.points();
+            var n = points.length;
+            var dx = points[n-2] - points[n-4];
+            var dy = points[n-1] - points[n-3];
+            var radians = (Math.atan2(dy, dx) + PI2) % PI2;
+            var length = this.pointerLength();
+            var width = this.pointerWidth();
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.translate(points[n-2], points[n-1]);
+            ctx.rotate(radians);
+            ctx.moveTo(0, 0);
+            ctx.lineTo(-length, width / 2);
+            ctx.lineTo(-length, -width / 2);
+            ctx.closePath();
+            ctx.restore();
+
+            if (this.pointerAtBeginning()) {
+                ctx.save();
+                ctx.translate(points[0], points[1]);
+                dx = points[2] - points[0];
+                dy = points[3] - points[1];
+                ctx.rotate((Math.atan2(-dy, -dx) + PI2) % PI2);
+                ctx.moveTo(0, 0);
+                ctx.lineTo(-10, 6);
+                ctx.lineTo(-10, -6);
+                ctx.closePath();
+                ctx.restore();
+            }
+
+            ctx.fillStrokeShape(this);
+            Kinetic.Line.prototype._sceneFunc.apply(this, arguments);
+        }
+    };
+
+    Kinetic.Util.extend(Kinetic.Arrow, Kinetic.Line);
+    /**
+     * get/set pointerLength
+     * @name pointerLength
+     * @method
+     * @memberof Kinetic.Arrow.prototype
+     * @param {Number} Length of pointer of arrow.
+     *   The default is 10.
+     * @returns {Number}
+     * @example
+     * // get tension
+     * var pointerLength = line.pointerLength();
+     *
+     * // set tension
+     * line.pointerLength(15);
+     */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Arrow, 'pointerLength', 10);
+    /**
+     * get/set pointerWidth
+     * @name pointerWidth
+     * @method
+     * @memberof Kinetic.Arrow.prototype
+     * @param {Number} Width of pointer of arrow.
+     *   The default is 10.
+     * @returns {Number}
+     * @example
+     * // get tension
+     * var pointerWidth = line.pointerWidth();
+     *
+     * // set tension
+     * line.pointerWidth(15);
+     */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Arrow, 'pointerWidth', 10);
+    /**
+     * get/set pointerAtBeginning
+     * @name pointerAtBeginning
+     * @method
+     * @memberof Kinetic.Arrow.prototype
+     * @param {Number} Should pointer displayed at beginning of arrow.
+     *   The default is false.
+     * @returns {Boolean}
+     * @example
+     * // get tension
+     * var pointerAtBeginning = line.pointerAtBeginning();
+     *
+     * // set tension
+     * line.pointerAtBeginning(true);
+     */
+
+    Kinetic.Factory.addGetterSetter(Kinetic.Arrow, 'pointerAtBeginning', false);
+    Kinetic.Collection.mapMethods(Kinetic.Arrow);
+
+})();
+

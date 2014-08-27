@@ -56,7 +56,8 @@ module.exports = function(grunt) {
     'src/plugins/TextPath.js',
     'src/plugins/RegularPolygon.js',
     'src/plugins/Star.js',
-    'src/plugins/Label.js'
+    'src/plugins/Label.js',
+    'src/plugins/Arrow.js'
   ];
 
   // Project configuration.
