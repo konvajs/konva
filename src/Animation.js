@@ -197,7 +197,7 @@
     };
 
     Kinetic.Animation._runFrames = function() {
-        var layerHash,
+        var layerHash = {},
             animations = this.animations,
             anim, layers, func, n, i, layersLen, layer, key, needRedraw;
         /*
@@ -211,36 +211,36 @@
          * WARNING: don't cache animations.length because it could change while
          * the for loop is running, causing a JS error
          */
+
         for(n = 0; n < animations.length; n++) {
-            layerHash = {};
             anim = animations[n];
             layers = anim.layers;
             func = anim.func;
 
+
             anim._updateFrameObject(now());
             layersLen = layers.length;
-
-
 
             // if animation object has a function, execute it
             if (func) {
                 // allow anim bypassing drawing
                 needRedraw = (func.call(anim, anim.frame) !== false);
+            } else {
+                needRedraw = true;
             }
-
             if (needRedraw) {
                 for (i = 0; i < layersLen; i++) {
                     layer = layers[i];
+
                     if (layer._id !== undefined) {
                         layerHash[layer._id] = layer;
                     }
                 }
             }
         }
-        if (needRedraw) {
-            for (key in layerHash) {
-                layerHash[key].draw();
-            }
+
+        for (key in layerHash) {
+            layerHash[key].draw();
         }
     };
     Kinetic.Animation._animationLoop = function() {
