@@ -6431,7 +6431,7 @@ var Kinetic = {};
 
         this.anim = new Kinetic.Animation(function() {
             that.tween.onEnterFrame();
-        }, node.getLayer());
+        }, node.getLayer() || ((node instanceof Kinetic.Stage) ? node.getLayers() : null));
 
         this.tween = new Tween(key, function(i) {
             that._tweenFunc(i);
