@@ -765,6 +765,71 @@ suite('Container', function() {
     });
 
     // ======================================================
+    test('test find() selector by adding shapes with multiple names', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer({
+            name: 'layerName',
+            id: 'layerId'
+        });
+        var group = new Kinetic.Group({
+            name: 'groupName',
+            id: 'groupId'
+        });
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 20,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            name: 'red rectangle',
+            id: 'rectId'
+        });
+        var circle = new Kinetic.Circle({
+            x: 50,
+            y: 50,
+            radius: 20,
+            fill: 'red',
+            name: 'red circle',
+            id: 'circleId'
+        });
+
+        group.add(rect);
+        group.add(circle);
+        layer.add(group);
+        stage.add(layer);
+
+        assert.equal(stage.find('.rectangle')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(stage.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(layer.find('.rectangle')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(layer.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(group.find('.rectangle')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(group.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+
+        assert.equal(stage.find('.circle')[0].attrs.id, 'circleId', 'problem with shape name selector');
+        assert.equal(stage.find('#circleId')[0].attrs.id, 'circleId', 'problem with shape id selector');
+        assert.equal(layer.find('.circle')[0].attrs.id, 'circleId', 'problem with shape name selector');
+        assert.equal(layer.find('#circleId')[0].attrs.id, 'circleId', 'problem with shape id selector');
+        assert.equal(group.find('.circle')[0].attrs.id, 'circleId', 'problem with shape name selector');
+        assert.equal(group.find('#circleId')[0].attrs.id, 'circleId', 'problem with shape id selector');
+
+        assert.equal(stage.find('.red')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(stage.find('.red')[1].attrs.id, 'circleId', 'problem with shape name selector');
+        assert.equal(layer.find('.red')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(layer.find('.red')[1].attrs.id, 'circleId', 'problem with shape name selector');
+        assert.equal(group.find('.red')[0].attrs.id, 'rectId', 'problem with shape name selector');
+        assert.equal(group.find('.red')[1].attrs.id, 'circleId', 'problem with shape name selector');
+
+        assert.equal(stage.find('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(stage.find('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
+        assert.equal(layer.find('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
+        assert.equal(layer.find('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
+
+        assert.equal(stage.find('.layerName')[0].attrs.id, 'layerId', 'problem with layer name selector');
+        assert.equal(stage.find('#layerId')[0].attrs.id, 'layerId', 'problem with layer id selector');
+    });
+
+
+    // ======================================================
     test('test find() selector by adding shape, then group, then layer', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer({
