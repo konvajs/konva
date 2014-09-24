@@ -798,34 +798,25 @@ suite('Container', function() {
         layer.add(group);
         stage.add(layer);
 
-        assert.equal(stage.find('.rectangle')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(stage.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
-        assert.equal(layer.find('.rectangle')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(layer.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
-        assert.equal(group.find('.rectangle')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(group.find('#rectId')[0].attrs.id, 'rectId', 'problem with shape id selector');
+        assert.equal(stage.find('.rectangle')[0], rect, 'problem with shape name selector');
+        assert.equal(layer.find('.rectangle')[0], rect, 'problem with shape name selector');
+        assert.equal(group.find('.rectangle')[0], rect, 'problem with shape name selector');
 
-        assert.equal(stage.find('.circle')[0].attrs.id, 'circleId', 'problem with shape name selector');
-        assert.equal(stage.find('#circleId')[0].attrs.id, 'circleId', 'problem with shape id selector');
-        assert.equal(layer.find('.circle')[0].attrs.id, 'circleId', 'problem with shape name selector');
-        assert.equal(layer.find('#circleId')[0].attrs.id, 'circleId', 'problem with shape id selector');
-        assert.equal(group.find('.circle')[0].attrs.id, 'circleId', 'problem with shape name selector');
-        assert.equal(group.find('#circleId')[0].attrs.id, 'circleId', 'problem with shape id selector');
+        assert.equal(stage.find('.circle')[0], circle, 'problem with shape name selector');
+        assert.equal(layer.find('.circle')[0], circle, 'problem with shape name selector');
+        assert.equal(group.find('.circle')[0], circle, 'problem with shape name selector');
 
-        assert.equal(stage.find('.red')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(stage.find('.red')[1].attrs.id, 'circleId', 'problem with shape name selector');
-        assert.equal(layer.find('.red')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(layer.find('.red')[1].attrs.id, 'circleId', 'problem with shape name selector');
-        assert.equal(group.find('.red')[0].attrs.id, 'rectId', 'problem with shape name selector');
-        assert.equal(group.find('.red')[1].attrs.id, 'circleId', 'problem with shape name selector');
+        assert.equal(stage.find('.red')[0], rect, 'problem with shape name selector');
+        assert.equal(stage.find('.red')[1], circle, 'problem with shape name selector');
+        assert.equal(layer.find('.red')[0], rect, 'problem with shape name selector');
+        assert.equal(layer.find('.red')[1], circle, 'problem with shape name selector');
+        assert.equal(group.find('.red')[0], rect, 'problem with shape name selector');
+        assert.equal(group.find('.red')[1], circle, 'problem with shape name selector');
 
-        assert.equal(stage.find('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
-        assert.equal(stage.find('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
-        assert.equal(layer.find('.groupName')[0].attrs.id, 'groupId', 'problem with group name selector');
-        assert.equal(layer.find('#groupId')[0].attrs.id, 'groupId', 'problem with group id selector');
+        assert.equal(stage.find('.groupName')[0], group, 'problem with group name selector');
+        assert.equal(layer.find('.groupName')[0], group, 'problem with group name selector');
 
-        assert.equal(stage.find('.layerName')[0].attrs.id, 'layerId', 'problem with layer name selector');
-        assert.equal(stage.find('#layerId')[0].attrs.id, 'layerId', 'problem with layer id selector');
+        assert.equal(stage.find('.layerName')[0], layer, 'problem with layer name selector');
     });
 
 
