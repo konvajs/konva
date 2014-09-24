@@ -765,6 +765,62 @@ suite('Container', function() {
     });
 
     // ======================================================
+    test('test find() selector by adding shapes with multiple names', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer({
+            name: 'layerName',
+            id: 'layerId'
+        });
+        var group = new Kinetic.Group({
+            name: 'groupName',
+            id: 'groupId'
+        });
+        var rect = new Kinetic.Rect({
+            x: 200,
+            y: 20,
+            width: 100,
+            height: 50,
+            fill: 'red',
+            name: 'red rectangle',
+            id: 'rectId'
+        });
+        var circle = new Kinetic.Circle({
+            x: 50,
+            y: 50,
+            radius: 20,
+            fill: 'red',
+            name: 'red circle',
+            id: 'circleId'
+        });
+
+        group.add(rect);
+        group.add(circle);
+        layer.add(group);
+        stage.add(layer);
+
+        assert.equal(stage.find('.rectangle')[0], rect, 'problem with shape name selector');
+        assert.equal(layer.find('.rectangle')[0], rect, 'problem with shape name selector');
+        assert.equal(group.find('.rectangle')[0], rect, 'problem with shape name selector');
+
+        assert.equal(stage.find('.circle')[0], circle, 'problem with shape name selector');
+        assert.equal(layer.find('.circle')[0], circle, 'problem with shape name selector');
+        assert.equal(group.find('.circle')[0], circle, 'problem with shape name selector');
+
+        assert.equal(stage.find('.red')[0], rect, 'problem with shape name selector');
+        assert.equal(stage.find('.red')[1], circle, 'problem with shape name selector');
+        assert.equal(layer.find('.red')[0], rect, 'problem with shape name selector');
+        assert.equal(layer.find('.red')[1], circle, 'problem with shape name selector');
+        assert.equal(group.find('.red')[0], rect, 'problem with shape name selector');
+        assert.equal(group.find('.red')[1], circle, 'problem with shape name selector');
+
+        assert.equal(stage.find('.groupName')[0], group, 'problem with group name selector');
+        assert.equal(layer.find('.groupName')[0], group, 'problem with group name selector');
+
+        assert.equal(stage.find('.layerName')[0], layer, 'problem with layer name selector');
+    });
+
+
+    // ======================================================
     test('test find() selector by adding shape, then group, then layer', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer({

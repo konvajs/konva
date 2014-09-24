@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-09-23
+ * Date: 2014-09-24
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -510,10 +510,15 @@ var Kinetic = {};
         },
         _addName: function(node, name) {
             if(name !== undefined) {
-                if(this.names[name] === undefined) {
-                    this.names[name] = [];
+                var names = name.split(/\W+/g);
+                for(var n = 0; n < names.length; n++) {
+                    if (names[n]) {
+                        if(this.names[names[n]] === undefined) {
+                            this.names[names[n]] = [];
+                        }
+                        this.names[names[n]].push(node);
+                    }
                 }
-                this.names[name].push(node);
             }
         },
         _removeName: function(name, _id) {
@@ -3917,6 +3922,9 @@ var Kinetic = {};
      *
      * // set name
      * node.name('foo');
+     *
+     * // also node may have multiple names (as css classes)
+     * node.name('foo bar');
      */
 
     Kinetic.Factory.addGetter(Kinetic.Node, 'id');

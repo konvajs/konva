@@ -1667,6 +1667,9 @@
      *
      * // set name
      * node.name('foo');
+     *
+     * // also node may have multiple names (as css classes)
+     * node.name('foo bar');
      */
 
     Kinetic.Factory.addGetter(Kinetic.Node, 'id');
