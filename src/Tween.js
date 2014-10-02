@@ -38,11 +38,18 @@
         var that = this,
             node = config.node,
             nodeId = node._id,
-            duration = config.duration || 1,
+            duration,
             easing = config.easing || Kinetic.Easings.Linear,
             yoyo = !!config.yoyo,
             key;
 
+        if (typeof config.duration === 'undefined') {
+            duration = 1;
+        } else if (config.duration === 0) {  // zero is bad value for duration
+            duration = 0.001;
+        } else {
+            duration = config.duration;
+        }
         this.node = node;
         this._id = idCounter++;
 

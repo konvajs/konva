@@ -102,4 +102,42 @@ suite('Tween', function() {
 
 
     });
+
+    // ======================================================
+    test('zero duration', function(done) {
+        var stage = addStage();
+
+        var layer = new Kinetic.Layer();
+
+        var circle = new Kinetic.Circle({
+            x: 100,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'blue',
+            strokeWidth: 4
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+
+        var tween = new Kinetic.Tween({
+            node: circle,
+            duration: 0,
+            x: 200,
+            y: 100
+        });
+        tween.play();
+
+
+        setTimeout(function(){
+            "use strict";
+            assert.equal(circle.x(), 200);
+            assert.equal(circle.y(), 100);
+            done();
+        }, 60);
+
+    });
+
 });

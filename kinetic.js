@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-09-24
+ * Date: 2014-10-02
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -6429,11 +6429,18 @@ var Kinetic = {};
         var that = this,
             node = config.node,
             nodeId = node._id,
-            duration = config.duration || 1,
+            duration,
             easing = config.easing || Kinetic.Easings.Linear,
             yoyo = !!config.yoyo,
             key;
 
+        if (typeof config.duration === 'undefined') {
+            duration = 1;
+        } else if (config.duration === 0) {  // zero is bad value for duration
+            duration = 0.001;
+        } else {
+            duration = config.duration;
+        }
         this.node = node;
         this._id = idCounter++;
 
