@@ -163,7 +163,7 @@
                         drawFunc.call(this, bufferContext);
                         bufferContext.restore();
 
-                        if (hasShadow) {
+                        if (hasShadow && !canvas.hitCanvas) {
                             context.save();
                             context._applyShadow(this);
                             context.drawImage(bufferCanvas._canvas, 0, 0);
@@ -184,7 +184,7 @@
                             context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
                         }
                
-                        if (hasShadow) {
+                        if (hasShadow && !canvas.hitCanvas) {
                             context.save();
                             context._applyShadow(this);
                             drawFunc.call(this, context);

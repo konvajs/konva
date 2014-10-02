@@ -1522,6 +1522,7 @@ var Kinetic = {};
         Kinetic.Canvas.call(this, conf);
         this.context = new Kinetic.HitContext(this);
         this.setSize(width, height);
+        this.hitCanvas = true;
     };
     Kinetic.Util.extend(Kinetic.HitCanvas, Kinetic.Canvas);
 
@@ -7913,7 +7914,7 @@ var Kinetic = {};
                         drawFunc.call(this, bufferContext);
                         bufferContext.restore();
 
-                        if (hasShadow) {
+                        if (hasShadow && !canvas.hitCanvas) {
                             context.save();
                             context._applyShadow(this);
                             context.drawImage(bufferCanvas._canvas, 0, 0);
@@ -7934,7 +7935,7 @@ var Kinetic = {};
                             context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
                         }
                
-                        if (hasShadow) {
+                        if (hasShadow && !canvas.hitCanvas) {
                             context.save();
                             context._applyShadow(this);
                             drawFunc.call(this, context);

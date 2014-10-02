@@ -203,6 +203,7 @@
         Kinetic.Canvas.call(this, conf);
         this.context = new Kinetic.HitContext(this);
         this.setSize(width, height);
+        this.hitCanvas = true;
     };
     Kinetic.Util.extend(Kinetic.HitCanvas, Kinetic.Canvas);
 

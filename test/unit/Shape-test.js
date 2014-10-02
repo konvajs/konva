@@ -471,6 +471,29 @@ suite('Shape', function() {
 
   });
 
+    // ======================================================
+    test('shape intersect with shadow', function(){
+        var stage = addStage();
+
+        var layer = new Kinetic.Layer();
+
+        var rect = new Kinetic.Rect({
+            fill: '#ff0000',
+            x: 50,
+            y: 50,
+            width: 200,
+            height: 200,
+            draggable: true,
+            shadowColor: '#000' // if all shadow properties removed, works fine
+        });
+        layer.add(rect);
+        stage.add(layer);
+
+        //error here
+        assert.equal(rect.intersects({x:52,y:52}), true);
+        assert.equal(rect.intersects({x:45,y:45}), false);
+    });
+
   // ======================================================
   test('overloaded getters and setters', function(){
     var stage = addStage();
