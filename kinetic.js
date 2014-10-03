@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-10-02
+ * Date: 2014-10-03
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
@@ -54,7 +54,7 @@ var Kinetic = {};
         /**
          * Global pixel ratio configuration. KineticJS automatically detect pixel ratio of current device.
          * But you may override such property, if you want to use your value.
-         * @property
+         * @property pixelRatio
          * @default undefined
          * @memberof Kinetic
          * @example
@@ -64,7 +64,7 @@ var Kinetic = {};
         /**
          * Drag distance property. If you start to drag a node you may want to wait until pointer is moved to some distance from start point,
          * only then start dragging.
-         * @property
+         * @property dragDistance
          * @default 0
          * @memberof Kinetic
          * @example
@@ -73,7 +73,7 @@ var Kinetic = {};
         dragDistance : 0,
         /**
          * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
-         * @property
+         * @property angleDeg
          * @default true
          * @memberof Kinetic
          * @example
@@ -84,7 +84,7 @@ var Kinetic = {};
         angleDeg: true,
          /**
          * Show different warnings about errors or wrong API usage
-         * @property
+         * @property showWarnings
          * @default true
          * @memberof Kinetic
          * @example
@@ -14717,7 +14717,7 @@ var Kinetic = {};
                 height = this.getHeight(),
                 pointerDirection = this.getPointerDirection(),
                 pointerWidth = this.getPointerWidth(),
-                pointerHeight = this.getPointerHeight();
+                pointerHeight = this.getPointerHeight(),
                 cornerRadius = this.getCornerRadius();
 
             context.beginPath();

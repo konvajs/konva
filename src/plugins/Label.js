@@ -183,7 +183,7 @@
                 height = this.getHeight(),
                 pointerDirection = this.getPointerDirection(),
                 pointerWidth = this.getPointerWidth(),
-                pointerHeight = this.getPointerHeight();
+                pointerHeight = this.getPointerHeight(),
                 cornerRadius = this.getCornerRadius();
 
             context.beginPath();
