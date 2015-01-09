@@ -1,3 +1,5 @@
+![div](https://raw.githubusercontent.com/lavrton/KineticJS/master/resources/logo.png)
+
 #KineticJS
 
 [![npm version](https://badge.fury.io/js/kinetic.svg)](http://badge.fury.io/js/kinetic) [![bower version](https://badge.fury.io/bo/kinetic.svg)](http://badge.fury.io/bo/kinetic)
