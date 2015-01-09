@@ -7,7 +7,9 @@ Greetings fellow webonauts! KineticJS is an HTML5 Canvas JavaScript framework th
 
 You can draw things onto the stage, add event listeners to them, move them, scale them, and rotate them independently from other shapes to support high performance animations, even if your application uses thousands of shapes. Served hot with a side of awesomeness.
 
-Go to [http://lavrton.github.io/KineticJS/](http://lavrton.github.io/KineticJS/) for tutorials and documentation.
+* **Visit:** The [GitHub page](http://lavrton.github.io/KineticJS/) and follow on [Twitter](https://twitter.com/lavrton)
+* **Discover:** [Tutorials](http://lavrton.github.io/KineticJS/Getting_Started.html)
+* **Learn:** [API Documentation](http://lavrton.github.io/KineticJS/api/), [StackOverflow](http://stackoverflow.com/questions/tagged/kineticjs)
 
 #Installation
 
