@@ -1,11 +1,19 @@
+#KineticJS
+
+[![Build Status](https://travis-ci.org/lavrton/KineticJS.png)](https://travis-ci.org/lavrton/KineticJS) [![npm version](https://badge.fury.io/js/kinetic.svg)](http://badge.fury.io/js/kinetic) 
+
+Greetings fellow webonauts! KineticJS is an HTML5 Canvas JavaScript framework that enables high performance animations, transitions, node nesting, layering, filtering, caching, event handling for desktop and mobile applications, and much more.
+
+You can draw things onto the stage, add event listeners to them, move them, scale them, and rotate them independently from other shapes to support high performance animations, even if your application uses thousands of shapes. Served hot with a side of awesomeness.
+
+Go to [http://lavrton.github.io/KineticJS/](http://lavrton.github.io/KineticJS/) for tutorial and documentation.
+
 #Installation
 
 * `bower install kineticjs`
 * `npm install kinetic` - for Browserify. For nodejs you have to install some [dependencies](#NodeJS)
 
 ###NodeJS
-
-Support of NodeJS is experimental.
 
 We are using [node-canvas](https://github.com/LearnBoost/node-canvas) to create canvas element.
 
@@ -14,6 +22,10 @@ We are using [node-canvas](https://github.com/LearnBoost/node-canvas) to create 
 3. `npm install kinetic`
 
 See file `nodejs-demo.js` for example.
+
+#Change log
+
+See [CHANGELOG.md](https://github.com/lavrton/KineticJS/blob/master/CHANGELOG.md).
 
 #Dev environment
 
@@ -28,8 +40,6 @@ To build a development version of the framework, run `grunt dev`. To run a full 
 If you add a file in the src directory, be sure to add the filename to the sourceFiles array variable in Gruntfile.js.
 
 ##Testing
-
-[![Build Status](https://travis-ci.org/lavrton/KineticJS.png)](https://travis-ci.org/lavrton/KineticJS)
 
 KineticJS uses Mocha for testing. 
 
