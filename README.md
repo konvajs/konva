@@ -2,11 +2,12 @@
 
 [![npm version](https://badge.fury.io/js/kinetic.svg)](http://badge.fury.io/js/kinetic) [![bower version](https://badge.fury.io/bo/kinetic.svg)](http://badge.fury.io/bo/kinetic)
 [![Build Status](https://travis-ci.org/lavrton/KineticJS.png)](https://travis-ci.org/lavrton/KineticJS)  [![Code Climate](https://codeclimate.com/github/lavrton/KineticJS/badges/gpa.svg)](https://codeclimate.com/github/lavrton/KineticJS)
+
 Greetings fellow webonauts! KineticJS is an HTML5 Canvas JavaScript framework that enables high performance animations, transitions, node nesting, layering, filtering, caching, event handling for desktop and mobile applications, and much more.
 
 You can draw things onto the stage, add event listeners to them, move them, scale them, and rotate them independently from other shapes to support high performance animations, even if your application uses thousands of shapes. Served hot with a side of awesomeness.
 
-Go to [http://lavrton.github.io/KineticJS/](http://lavrton.github.io/KineticJS/) for tutorial and documentation.
+Go to [http://lavrton.github.io/KineticJS/](http://lavrton.github.io/KineticJS/) for tutorials and documentation.
 
 #Installation
 
