@@ -32,14 +32,14 @@
     "jsdom": false
   },
   "bugs": {
-    "url": "https://github.com/ericdrowell/KineticJS/issues"
+    "url": "https://github.com/lavrton/KineticJS/issues"
   },
   "readmeFilename": "README.md",
   "main": "kinetic.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/ericdrowell/KineticJS.git"
+    "url": "git://github.com/lavrton/KineticJS.git"
   },
-  "author": "Eric Rowell",
+  "author": "Anton Lavrenov",
   "license": "MIT"
 }

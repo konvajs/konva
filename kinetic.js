@@ -4,7 +4,7 @@
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2014-10-03
+ * Date: 2015-01-09
  *
  * Copyright (C) 2011 - 2013 by Eric Rowell
  *
