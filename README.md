@@ -26,7 +26,7 @@ We are using [node-canvas](https://github.com/LearnBoost/node-canvas) to create 
 2. `npm install jsdom`
 3. `npm install kinetic`
 
-See file `nodejs-demo.js` for example.
+See file `resources/nodejs-demo.js` for example.
 
 #Change log
 

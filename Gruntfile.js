@@ -157,7 +157,7 @@ module.exports = function(grunt) {
           dest: 'dist/kinetic-v<%= pkg.version %>.min.js'
         }]
       },
-      prod4: {
+      updateBower: {
         options: {
           variables: {
             version: '<%= pkg.version %>'
@@ -165,7 +165,7 @@ module.exports = function(grunt) {
           prefix: '@@'
         },
         files: [{
-          src: ['bower-template.json'],
+          src: ['resources/bower-template.json'],
           dest: 'bower.json'
         }]
       }
@@ -191,12 +191,12 @@ module.exports = function(grunt) {
       prod1: {
         nonull: true,
         src: 'dist/kinetic-v<%= pkg.version %>.min.js',
-        dest: 'kinetic.min.js',
+        dest: 'kinetic.min.js'
       },
       prod2: {
         nonull: true,
         src: 'dist/kinetic-v<%= pkg.version %>.js',
-        dest: 'kinetic.js',
+        dest: 'kinetic.js'
       }
     },
     shell: {
@@ -217,10 +217,10 @@ module.exports = function(grunt) {
         files: ['src/**/*.js'],
         tasks: ['dev'],
         options: {
-          spawn: false,
-        },
-      },
-    },
+          spawn: false
+        }
+      }
+    }
   };
 
   
@@ -245,14 +245,14 @@ module.exports = function(grunt) {
     'replace:prod1',
     'replace:prod2',
     'replace:prod3',
-    'replace:prod4',
+    'replace:updateBower',
     'copy:prod1',
     'copy:prod2'
   ]);
 
   grunt.registerTask('docs', 'Generate docs', [
     'full',
-    'shell:jsdoc',
+    'shell:jsdoc'
   ]);
 
   grunt.registerTask('hint', 'Check hint errors', ['jshint']);
