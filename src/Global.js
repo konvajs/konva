@@ -1,12 +1,12 @@
 
 /*
  * KineticJS JavaScript Framework v@@version
- * http://www.kineticjs.com/
- * Copyright 2013, Eric Rowell
+ * http://lavrton.github.io/KineticJS/
  * Licensed under the MIT or GPL Version 2 licenses.
  * Date: @@date
  *
- * Copyright (C) 2011 - 2013 by Eric Rowell
+ * Original work Copyright (C) 2011 - 2013 by Eric Rowell
+ * Modified work Copyright 2015 Anton Lavrenov
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

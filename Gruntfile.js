@@ -87,9 +87,9 @@ module.exports = function(grunt) {
           variables: {
             version: 'dev',
             date: '<%= grunt.template.today("yyyy-mm-dd") %>',
-            nodeParams: '<%= grunt.file.read("doc-includes/NodeParams.txt") %>',
-            containerParams: '<%= grunt.file.read("doc-includes/ContainerParams.txt") %>',
-            shapeParams: '<%= grunt.file.read("doc-includes/ShapeParams.txt") %>'
+            nodeParams: '<%= grunt.file.read("resources/doc-includes/NodeParams.txt") %>',
+            containerParams: '<%= grunt.file.read("resources/doc-includes/ContainerParams.txt") %>',
+            shapeParams: '<%= grunt.file.read("resources/doc-includes/ShapeParams.txt") %>'
           },
           prefix: '@@'
         },
@@ -104,9 +104,9 @@ module.exports = function(grunt) {
           variables: {
             version: '<%= pkg.version %>-beta',
             date: '<%= grunt.template.today("yyyy-mm-dd") %>',
-            nodeParams: '<%= grunt.file.read("doc-includes/NodeParams.txt") %>',
-            containerParams: '<%= grunt.file.read("doc-includes/ContainerParams.txt") %>',
-            shapeParams: '<%= grunt.file.read("doc-includes/ShapeParams.txt") %>'
+            nodeParams: '<%= grunt.file.read("resources/doc-includes/NodeParams.txt") %>',
+            containerParams: '<%= grunt.file.read("resources/doc-includes/ContainerParams.txt") %>',
+            shapeParams: '<%= grunt.file.read("resources/doc-includes/ShapeParams.txt") %>'
           },
           prefix: '@@'
         },
@@ -121,9 +121,9 @@ module.exports = function(grunt) {
           variables: {
             version: '<%= pkg.version %>',
             date: '<%= grunt.template.today("yyyy-mm-dd") %>',
-            nodeParams: '<%= grunt.file.read("doc-includes/NodeParams.txt") %>',
-            containerParams: '<%= grunt.file.read("doc-includes/ContainerParams.txt") %>',
-            shapeParams: '<%= grunt.file.read("doc-includes/ShapeParams.txt") %>'
+            nodeParams: '<%= grunt.file.read("resources/doc-includes/NodeParams.txt") %>',
+            containerParams: '<%= grunt.file.read("resources/doc-includes/ContainerParams.txt") %>',
+            shapeParams: '<%= grunt.file.read("resources/doc-includes/ShapeParams.txt") %>'
           },
           prefix: '@@'
         },
@@ -136,7 +136,7 @@ module.exports = function(grunt) {
       prod2: {
         options: {
           variables: {
-            version: '<%= pkg.version %>',
+            version: '<%= pkg.version %>'
           },
           prefix: '@@'
         },
@@ -148,7 +148,7 @@ module.exports = function(grunt) {
       prod3: {
         options: {
           variables: {
-            version: '<%= pkg.version %>',
+            version: '<%= pkg.version %>'
           },
           prefix: '@@'
         },
@@ -160,7 +160,7 @@ module.exports = function(grunt) {
       prod4: {
         options: {
           variables: {
-            version: '<%= pkg.version %>',
+            version: '<%= pkg.version %>'
           },
           prefix: '@@'
         },
@@ -172,7 +172,7 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
-        banner: '/*! KineticJS v<%= pkg.version %> <%= grunt.template.today("yyyy-mm-dd") %> http://www.kineticjs.com by Eric Rowell @ericdrowell - MIT License https://github.com/ericdrowell/KineticJS/wiki/License*/\n'
+        banner: '/*! KineticJS v<%= pkg.version %> <%= grunt.template.today("yyyy-mm-dd") %> http://lavrton.github.io/KineticJS/ by Eric Rowell @ericdrowell, Anton Lavrenov @lavrton - MIT License https://github.com/lavrton/KineticJS/wiki/License*/\n'
       },
       build: {
         files: {
