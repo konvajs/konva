@@ -1,6 +1,6 @@
 
 /*
- * KineticJS JavaScript Framework v5.1.1
+ * KineticJS JavaScript Framework v5.1.9
  * http://www.kineticjs.com/
  * Copyright 2013, Eric Rowell
  * Licensed under the MIT or GPL Version 2 licenses.
@@ -36,7 +36,7 @@ var Kinetic = {};
 
     Kinetic = {
         // public
-        version: '5.1.1',
+        version: '5.1.9',
 
         // private
         stages: [],

@@ -1,7 +1,3 @@
-#Hiatus
-
-Hi all! I will be taking a 3 month break from KineticJS (until July 2014) to focus on other endeavors.  KineticJS is in a great state right now (v5.1.0).  Please continue to file any issues that you may find, or submit pull requests.  They will eventually be addressed.
-
 #Installation
 
 * `bower install kineticjs`
@@ -33,7 +29,7 @@ If you add a file in the src directory, be sure to add the filename to the sourc
 
 ##Testing
 
-[![Build Status](https://travis-ci.org/ericdrowell/KineticJS.png)](https://travis-ci.org/ericdrowell/KineticJS)
+[![Build Status](https://travis-ci.org/lavrton/KineticJS.png)](https://travis-ci.org/lavrton/KineticJS)
 
 KineticJS uses Mocha for testing. 
 
