@@ -17,6 +17,7 @@ You can draw things onto the stage, add event listeners to them, move them, scal
 
 * `bower install kinetic`
 * `npm install kinetic` - for Browserify. For nodejs you have to install some [dependencies](#nodejs)
+* CDN: [https://cdnjs.com/libraries/kineticjs](https://cdnjs.com/libraries/kineticjs)
 
 ###NodeJS
 
