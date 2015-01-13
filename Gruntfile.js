@@ -220,6 +220,16 @@ module.exports = function(grunt) {
           spawn: false
         }
       }
+    },
+    jsdoc : {
+      dist : {
+        src: ['README.md', './src/**/*.js'],
+        options: {
+          destination: 'homedocs',
+          template : './node_modules/grunt-jsdoc/node_modules/ink-docstrap/template',
+          configure : './resources/jsdoc.conf.json'
+        }
+      }
     }
   };
 
@@ -255,6 +265,11 @@ module.exports = function(grunt) {
     'shell:jsdoc'
   ]);
 
+  grunt.registerTask('homedocs', 'Generate docs for homepage', [
+    'full',
+    'jsdoc'
+  ]);
+
   grunt.registerTask('hint', 'Check hint errors', ['jshint']);
   grunt.registerTask('test', 'Run tests', ['dev', 'mocha_phantomjs']);
 
@@ -288,4 +303,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-mocha-phantomjs');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-jsdoc');
 };

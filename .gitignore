@@ -5,6 +5,7 @@ node_modules
 bower_components
 phantomjs.exe
 docs
+homedocs
 jsdoc-template
 test/sandbox.html
 
