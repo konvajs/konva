@@ -265,7 +265,7 @@
      * var dragBoundFunc = node.dragBoundFunc();
      *
      * // create vertical drag and drop
-     * node.dragBoundFunc(function(){
+     * node.dragBoundFunc(function(pos){
      *   return {
      *     x: this.getAbsolutePosition().x,
      *     y: pos.y
