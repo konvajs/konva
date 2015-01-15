@@ -1,9 +1,9 @@
 
 /*
- * KineticJS JavaScript Framework v5.1.9
+ * KineticJS JavaScript Framework v5.1.10
  * http://lavrton.github.io/KineticJS/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2015-01-09
+ * Date: 2015-01-15
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell
  * Modified work Copyright 2015 Anton Lavrenov
@@ -36,7 +36,7 @@ var Kinetic = {};
 
     Kinetic = {
         // public
-        version: '5.1.9',
+        version: '5.1.10',
 
         // private
         stages: [],
@@ -510,13 +510,15 @@ var Kinetic = {};
         },
         _addName: function(node, name) {
             if(name !== undefined) {
-                var names = name.split(/\W+/g);
+
+                var names = name.split(/\s/g);
                 for(var n = 0; n < names.length; n++) {
-                    if (names[n]) {
-                        if(this.names[names[n]] === undefined) {
-                            this.names[names[n]] = [];
+                    var subname = names[n];
+                    if (subname) {
+                        if(this.names[subname] === undefined) {
+                            this.names[subname] = [];
                         }
-                        this.names[names[n]].push(node);
+                        this.names[subname].push(node);
                     }
                 }
             }
@@ -7260,7 +7262,7 @@ var Kinetic = {};
      * var dragBoundFunc = node.dragBoundFunc();
      *
      * // create vertical drag and drop
-     * node.dragBoundFunc(function(){
+     * node.dragBoundFunc(function(pos){
      *   return {
      *     x: this.getAbsolutePosition().x,
      *     y: pos.y
