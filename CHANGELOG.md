@@ -1,3 +1,8 @@
+## 5.1.10
+
+* Bug Fixes
+    * working "this-example" as name for nodes
+
 ## 5.1.9 2014-01-09
    * Bug Fixes
       * Correct stage resizing with `FastLayer`

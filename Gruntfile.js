@@ -225,7 +225,7 @@ module.exports = function(grunt) {
       dist : {
         src: ['README.md', './src/**/*.js'],
         options: {
-          destination: 'homedocs',
+          destination: 'api',
           template : './node_modules/grunt-jsdoc/node_modules/ink-docstrap/template',
           configure : './resources/jsdoc.conf.json'
         }
@@ -265,8 +265,7 @@ module.exports = function(grunt) {
     'shell:jsdoc'
   ]);
 
-  grunt.registerTask('homedocs', 'Generate docs for homepage', [
-    'full',
+  grunt.registerTask('api', 'Generate docs for homepage', [
     'jsdoc'
   ]);
 

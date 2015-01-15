@@ -7,6 +7,7 @@ phantomjs.exe
 docs
 homedocs
 jsdoc-template
+api
 test/sandbox.html
 
 # Numerous always-ignore extensions
