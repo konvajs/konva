@@ -281,10 +281,22 @@ module.exports = function(grunt) {
 
   grunt.registerTask('server', 'run local server and create dev version', function() {
     grunt.task.run('dev');
-    var connect = require('connect');
-    connect.createServer(
-        connect.static(__dirname)
-    ).listen(8080);
+
+    var finalhandler = require('finalhandler');
+    var http = require('http');
+    var serveStatic = require('serve-static');
+
+    var serve = serveStatic(__dirname, {'index': ['index.html', 'index.htm']});
+
+    // Create server
+        var server = http.createServer(function(req, res){
+          var done = finalhandler(req, res);
+          serve(req, res, done);
+        });
+
+    // Listen
+    server.listen(8080);
+
     grunt.task.run('watch:dev');
     grunt.log.writeln('Tests server starts on http://localhost:8080/test/runner.html');
   });
