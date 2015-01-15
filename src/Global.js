@@ -293,13 +293,15 @@ var Kinetic = {};
         },
         _addName: function(node, name) {
             if(name !== undefined) {
-                var names = name.split(/\W+/g);
+
+                var names = name.split(/\s/g);
                 for(var n = 0; n < names.length; n++) {
-                    if (names[n]) {
-                        if(this.names[names[n]] === undefined) {
-                            this.names[names[n]] = [];
+                    var subname = names[n];
+                    if (subname) {
+                        if(this.names[subname] === undefined) {
+                            this.names[subname] = [];
                         }
-                        this.names[names[n]].push(node);
+                        this.names[subname].push(node);
                     }
                 }
             }

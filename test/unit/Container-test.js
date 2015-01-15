@@ -207,6 +207,29 @@ suite('Container', function() {
     });
 
     // ======================================================
+    test('select shape by name with "-" char', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+
+        var rect = new Kinetic.Rect({
+            x: 300,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'purple',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'bounding-box'
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        var node = stage.find('.bounding-box')[0];
+        assert.equal(node, rect);
+    });
+
+    // ======================================================
     test('select shapes with multiple selectors', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer({
