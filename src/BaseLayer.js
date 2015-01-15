@@ -42,7 +42,12 @@
          * @param {Number} [bounds.height]
          * @example
          * layer.clear();
-         * layer.clear(0, 0, 100, 100);
+         * layer.clear({
+         *   x : 0,
+         *   y : 0,
+         *   width : 100,
+         *   height : 100
+         * });
          */
         clear: function(bounds) {
             this.getContext().clear(bounds);
