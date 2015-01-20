@@ -5,7 +5,6 @@ suite('Line', function() {
         var layer = new Kinetic.Layer();
 
         var line = new Kinetic.Line({
-            points: [73,160,340,23],
             stroke: 'blue',
             strokeWidth: 20,
             lineCap: 'round',

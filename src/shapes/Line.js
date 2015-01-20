@@ -44,6 +44,10 @@
                 closed = this.getClosed(),
                 tp, len, n;
 
+            if (!length) {
+                return;
+            }
+
             context.beginPath();
             context.moveTo(points[0], points[1]);
 
@@ -179,7 +183,7 @@
      * line.tension(3);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Line, 'points');
+    Kinetic.Factory.addGetterSetter(Kinetic.Line, 'points', []);
     /**
      * get/set points array
      * @name points
