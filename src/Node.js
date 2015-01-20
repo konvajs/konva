@@ -348,17 +348,6 @@
                     name: name,
                     handler: handler
                 });
-
-                // NOTE: this flag is set to true when any event handler is added, even non
-                // mouse or touch gesture events.  This improves performance for most
-                // cases where users aren't using events, but is still very light weight.  
-                // To ensure perfect accuracy, devs can explicitly set listening to false.
-                /*
-                if (name !== KINETIC) {
-                    this._listeningEnabled = true;
-                    this._clearSelfAndAncestorCache(LISTENING_ENABLED);
-                }
-                */
             }
 
             return this;
@@ -1845,6 +1834,7 @@
     /**
      * get/set offset x
      * @name offsetX
+     * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} x
      * @returns {Number}
@@ -1857,26 +1847,6 @@
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'offsetY', 0);
-
-    /**
-     * get/set drag distance
-     * @name dragDistance
-     * @memberof Kinetic.Node.prototype
-     * @param {Number} distance
-     * @returns {Number}
-     * @example
-     * // get drag distance
-     * var dragDistance = node.dragDistance();
-     *
-     * // set distance
-     * // node starts dragging only if pointer moved more then 3 pixels
-     * node.dragDistance(3);
-     * // or set globally
-     * Kinetic.dragDistance = 3;
-     */
-
-    Kinetic.Factory.addSetter(Kinetic.Node, 'dragDistance');
-    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'dragDistance');
 
     /**
      * get/set offset y
@@ -1892,6 +1862,28 @@
      * // set offset y
      * node.offsetY(3);
      */
+
+    Kinetic.Factory.addSetter(Kinetic.Node, 'dragDistance');
+    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'dragDistance');
+
+    /**
+     * get/set drag distance
+     * @name dragDistance
+     * @method
+     * @memberof Kinetic.Node.prototype
+     * @param {Number} distance
+     * @returns {Number}
+     * @example
+     * // get drag distance
+     * var dragDistance = node.dragDistance();
+     *
+     * // set distance
+     * // node starts dragging only if pointer moved more then 3 pixels
+     * node.dragDistance(3);
+     * // or set globally
+     * Kinetic.dragDistance = 3;
+     */
+
 
     Kinetic.Factory.addSetter(Kinetic.Node, 'width', 0);
     Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'width');

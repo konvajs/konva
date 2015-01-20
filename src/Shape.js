@@ -730,6 +730,9 @@
      *
      * // set fill color with rgba and make it 50% opaque
      * shape.fill('rgba(0,255,0,0.5');
+     *
+     * // shape without fill
+     * shape.fill(null);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRed', 0, Kinetic.Validators.RGBComponent);

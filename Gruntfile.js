@@ -223,7 +223,7 @@ module.exports = function(grunt) {
     },
     jsdoc : {
       dist : {
-        src: ['README.md', './src/**/*.js'],
+        src: ['README.md', './dist/kinetic-v<%= pkg.version %>.js'],
         options: {
           destination: 'api',
           template : './node_modules/grunt-jsdoc/node_modules/ink-docstrap/template',
@@ -266,6 +266,7 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('api', 'Generate docs for homepage', [
+    'full',
     'jsdoc'
   ]);
 
