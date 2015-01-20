@@ -1,6 +1,4 @@
 suite('Util', function(){
-  var util;
-
   test('get()', function(){
     assert.equal(Kinetic.Util.get(1, 2), 1);
     assert.equal(Kinetic.Util.get(undefined, 2), 2);

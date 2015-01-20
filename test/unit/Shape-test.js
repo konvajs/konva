@@ -689,4 +689,12 @@ suite('Shape', function() {
         //TODO: can't get this to pass
         assert.equal(click, true, 'click event should have been fired when mousing down and then up on rect');
     });
+
+    test('class inherince', function() {
+        var rect = new Kinetic.Rect();
+        assert.equal(rect instanceof Kinetic.Rect, true);
+        assert.equal(rect instanceof Kinetic.Shape, true);
+        assert.equal(rect instanceof Kinetic.Node, true);
+
+    });
 });

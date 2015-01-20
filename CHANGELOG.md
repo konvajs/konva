@@ -3,8 +3,10 @@
 * Bug Fixes
     * working "this-example" as name for nodes
     * Kinetic.Text() with no config throws exception
+    * Kinetic.Line() with no config throws exception
 * Enhancements
-    * `black` is default fill for shapes
+    * `black` is default fill for text
+    * true class extending. Now `rect instanceOf Kinetic.Shape` will return true
 
 ## 5.1.9 2014-01-09
 

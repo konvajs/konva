@@ -3,7 +3,7 @@
  * KineticJS JavaScript Framework v5.1.10
  * http://lavrton.github.io/KineticJS/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2015-01-15
+ * Date: 2015-01-20
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell
  * Modified work Copyright 2015 Anton Lavrenov
@@ -1264,12 +1264,19 @@ var Kinetic = {};
                 console.warn(KINETIC_WARNING + str);
             }
         },
-        extend: function(c1, c2) {
-            for(var key in c2.prototype) {
-                if(!( key in c1.prototype)) {
-                    c1.prototype[key] = c2.prototype[key];
+        extend: function(child, parent) {
+                function ctor() {
+                    this.constructor = child;
                 }
-            }
+                ctor.prototype = parent.prototype;
+                var old_proto = child.prototype;
+                child.prototype = new ctor();
+                for (var key in old_proto) {
+                    if (old_proto.hasOwnProperty(key)) {
+                        child.prototype[key] = old_proto[key];
+                    }
+                }
+                child.__super__ = parent.prototype;
         },
         /**
          * adds methods to a constructor prototype
@@ -2606,17 +2613,6 @@ var Kinetic = {};
                     name: name,
                     handler: handler
                 });
-
-                // NOTE: this flag is set to true when any event handler is added, even non
-                // mouse or touch gesture events.  This improves performance for most
-                // cases where users aren't using events, but is still very light weight.  
-                // To ensure perfect accuracy, devs can explicitly set listening to false.
-                /*
-                if (name !== KINETIC) {
-                    this._listeningEnabled = true;
-                    this._clearSelfAndAncestorCache(LISTENING_ENABLED);
-                }
-                */
             }
 
             return this;
@@ -2797,7 +2793,7 @@ var Kinetic = {};
 
             if(config) {
                 for(key in config) {
-                    if (key === CHILDREN) {
+                    if (key === CHILDREN || config[key] instanceof Kinetic.Node) {
 
                     }
                     else {
@@ -4103,6 +4099,7 @@ var Kinetic = {};
     /**
      * get/set offset x
      * @name offsetX
+     * @method
      * @memberof Kinetic.Node.prototype
      * @param {Number} x
      * @returns {Number}
@@ -4115,26 +4112,6 @@ var Kinetic = {};
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Node, 'offsetY', 0);
-
-    /**
-     * get/set drag distance
-     * @name dragDistance
-     * @memberof Kinetic.Node.prototype
-     * @param {Number} distance
-     * @returns {Number}
-     * @example
-     * // get drag distance
-     * var dragDistance = node.dragDistance();
-     *
-     * // set distance
-     * // node starts dragging only if pointer moved more then 3 pixels
-     * node.dragDistance(3);
-     * // or set globally
-     * Kinetic.dragDistance = 3;
-     */
-
-    Kinetic.Factory.addSetter(Kinetic.Node, 'dragDistance');
-    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'dragDistance');
 
     /**
      * get/set offset y
@@ -4150,6 +4127,28 @@ var Kinetic = {};
      * // set offset y
      * node.offsetY(3);
      */
+
+    Kinetic.Factory.addSetter(Kinetic.Node, 'dragDistance');
+    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'dragDistance');
+
+    /**
+     * get/set drag distance
+     * @name dragDistance
+     * @method
+     * @memberof Kinetic.Node.prototype
+     * @param {Number} distance
+     * @returns {Number}
+     * @example
+     * // get drag distance
+     * var dragDistance = node.dragDistance();
+     *
+     * // set distance
+     * // node starts dragging only if pointer moved more then 3 pixels
+     * node.dragDistance(3);
+     * // or set globally
+     * Kinetic.dragDistance = 3;
+     */
+
 
     Kinetic.Factory.addSetter(Kinetic.Node, 'width', 0);
     Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'width');
@@ -8483,6 +8482,9 @@ var Kinetic = {};
      *
      * // set fill color with rgba and make it 50% opaque
      * shape.fill('rgba(0,255,0,0.5');
+     *
+     * // shape without fill
+     * shape.fill(null);
      */
 
     Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRed', 0, Kinetic.Validators.RGBComponent);
@@ -9958,7 +9960,12 @@ var Kinetic = {};
          * @param {Number} [bounds.height]
          * @example
          * layer.clear();
-         * layer.clear(0, 0, 100, 100);
+         * layer.clear({
+         *   x : 0,
+         *   y : 0,
+         *   width : 100,
+         *   height : 100
+         * });
          */
         clear: function(bounds) {
             this.getContext().clear(bounds);
@@ -10294,7 +10301,12 @@ var Kinetic = {};
          * @param {Number} [bounds.height]
          * @example
          * layer.clear();
-         * layer.clear(0, 0, 100, 100);
+         * layer.clear({
+         *   x : 0,
+         *   y : 0,
+         *   width : 100,
+         *   height : 100
+         * });
          */
         clear: function(bounds) {
             this.getContext().clear(bounds);
@@ -10426,7 +10438,12 @@ var Kinetic = {};
          * @param {Number} [bounds.height]
          * @example
          * layer.clear();
-         * layer.clear(0, 0, 100, 100);
+         * layer.clear({
+         *   x : 0,
+         *   y : 0,
+         *   width : 100,
+         *   height : 100
+         * });
          */
         clear: function(bounds) {
             this.getContext().clear(bounds);
@@ -11915,7 +11932,8 @@ var Kinetic = {};
 
     Kinetic.Text.prototype = {
         ___init: function(config) {
-            var that = this;
+            config = config || {};
+            config.fill = config.fill || 'black';
 
             if (config.width === undefined) {
                 config.width = AUTO;
@@ -11933,7 +11951,7 @@ var Kinetic = {};
 
             // update text data for certain attr changes
             for(var n = 0; n < attrChangeListLen; n++) {
-                this.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, that._setTextData);
+                this.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, this._setTextData);
             }
 
             this._setTextData();
@@ -12447,6 +12465,10 @@ var Kinetic = {};
                 closed = this.getClosed(),
                 tp, len, n;
 
+            if (!length) {
+                return;
+            }
+
             context.beginPath();
             context.moveTo(points[0], points[1]);
 
@@ -12582,7 +12604,7 @@ var Kinetic = {};
      * line.tension(3);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Line, 'points');
+    Kinetic.Factory.addGetterSetter(Kinetic.Line, 'points', []);
     /**
      * get/set points array
      * @name points

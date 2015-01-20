@@ -633,12 +633,19 @@
                 console.warn(KINETIC_WARNING + str);
             }
         },
-        extend: function(c1, c2) {
-            for(var key in c2.prototype) {
-                if(!( key in c1.prototype)) {
-                    c1.prototype[key] = c2.prototype[key];
+        extend: function(child, parent) {
+                function ctor() {
+                    this.constructor = child;
                 }
-            }
+                ctor.prototype = parent.prototype;
+                var old_proto = child.prototype;
+                child.prototype = new ctor();
+                for (var key in old_proto) {
+                    if (old_proto.hasOwnProperty(key)) {
+                        child.prototype[key] = old_proto[key];
+                    }
+                }
+                child.__super__ = parent.prototype;
         },
         /**
          * adds methods to a constructor prototype
