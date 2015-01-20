@@ -7,7 +7,7 @@ suite('Image', function(){
           var stage = addStage();
 
           var layer = new Kinetic.Layer();
-          darth = new Kinetic.Image({
+          var darth = new Kinetic.Image({
               x: 200,
               y: 60,
               image: imageObj,

@@ -65,7 +65,8 @@
 
     Kinetic.Text.prototype = {
         ___init: function(config) {
-            var that = this;
+            config = config || {};
+            config.fill = config.fill || 'black';
 
             if (config.width === undefined) {
                 config.width = AUTO;
@@ -83,7 +84,7 @@
 
             // update text data for certain attr changes
             for(var n = 0; n < attrChangeListLen; n++) {
-                this.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, that._setTextData);
+                this.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, this._setTextData);
             }
 
             this._setTextData();

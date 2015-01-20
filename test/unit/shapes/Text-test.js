@@ -1,5 +1,18 @@
+'use strict';
+
 suite('Text', function(){
     // ======================================================
+    test('text with empty config is allowed', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+
+        stage.add(layer);
+        var text = new Kinetic.Text();
+
+        layer.add(text);
+        layer.draw();
+    });
+
     test('add text with shadows', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();
@@ -293,5 +306,10 @@ suite('Text', function(){
         layer.draw();
         assert.equal(text.getTextWidth() > 0 && text.getTextWidth() < 100, true);
 
+    });
+
+    test('default text color should be black', function() {
+        var text = new Kinetic.Text();
+        assert.equal(text.fill(), 'black');
     });
 });
