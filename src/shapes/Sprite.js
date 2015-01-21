@@ -87,6 +87,7 @@
                 index = this.frameIndex(),
                 ix4 = index * 4,
                 set = this.getAnimations()[anim],
+                offsets = this.frameOffsets(),
                 x =      set[ix4 + 0],
                 y =      set[ix4 + 1],
                 width =  set[ix4 + 2],
@@ -94,7 +95,13 @@
                 image = this.getImage();
 
             if(image) {
-                context.drawImage(image, x, y, width, height, 0, 0, width, height);
+                if (offsets) {
+                    var offset = offsets[anim],
+                    ix2 = index * 2;
+                    context.drawImage(image, x, y, width, height, offset[ix2 + 0], offset[ix2 + 1], width, height);
+                } else {
+                    context.drawImage(image, x, y, width, height, 0, 0, width, height);
+                }
             }
         },
         _hitFunc: function(context) {
@@ -102,11 +109,18 @@
                 index = this.frameIndex(),
                 ix4 = index * 4,
                 set = this.getAnimations()[anim],
+                offsets = this.frameOffsets(),
                 width =  set[ix4 + 2],
                 height = set[ix4 + 3];
 
             context.beginPath();
-            context.rect(0, 0, width, height);
+            if (offsets) {
+                var offset = offsets[anim];
+                var ix2 = index * 2;
+                context.rect(offset[ix2 + 0], offset[ix2 + 1], width, height);
+            } else {
+                context.rect(0, 0, width, height);
+            }
             context.closePath();
             context.fillShape(this);
         },
@@ -226,6 +240,42 @@
      * });
      */
 
+    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'frameOffsets');
+
+    /**
+    * get/set offsets map
+    * @name offsets
+    * @method
+    * @memberof Kinetic.Sprite.prototype
+    * @param {Object} offsets
+    * @returns {Object}
+    * @example
+    * // get offsets map
+    * var offsets = sprite.offsets();
+    *
+    * // set offsets map
+    * sprite.offsets({
+    *   standing: [
+    *     // x, y (6 frames)
+    *     0, 0,
+    *     0, 0,
+    *     5, 0,
+    *     0, 0,
+    *     0, 3,
+    *     2, 0
+    *   ],
+    *   kicking: [
+    *     // x, y (6 frames)
+    *     0, 5,
+    *     5, 0,
+    *     10, 0,
+    *     0, 0,
+    *     2, 1,
+    *     0, 0
+    *   ]
+    * });
+    */
+ 
     Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'image');
 
     /**
