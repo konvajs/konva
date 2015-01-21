@@ -111,6 +111,11 @@
                 child: child
             });
 
+            // if node under drag we need to update drag animation
+            if (child.isDragging()) {
+                Kinetic.DD.anim.setLayers(child.getLayer());
+            }
+
             // chainable
             return this;
         },

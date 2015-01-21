@@ -8,6 +8,7 @@
     * `black` is default fill for text
     * true class extending. Now `rect instanceOf Kinetic.Shape` will return true
     * while dragging you can redraw layer that is not under drag. hit graph will be updated in this case
+    * now you can move object that is dragging into another layer.
 
 ## 5.1.9 2014-01-09
 

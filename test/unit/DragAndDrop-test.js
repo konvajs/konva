@@ -215,4 +215,88 @@ suite('DragAndDrop', function() {
         Kinetic.DD._endDragAfter({dragEndNode:circle});
 
     });
+
+    // ======================================================
+    test.only('it is possible to change layer while dragging', function() {
+        var stage = addStage();
+
+        var top = stage.content.getBoundingClientRect().top;
+
+        var startDragLayer = new Kinetic.Layer();
+        stage.add(startDragLayer);
+
+        var endDragLayer = new Kinetic.Layer();
+        stage.add(endDragLayer);
+
+        var circle = new Kinetic.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle',
+            draggable: true
+        });
+
+        startDragLayer.add(circle);
+        startDragLayer.draw();
+
+        var rect = new Kinetic.Rect({
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle',
+            width : 50,
+            height : 50,
+            draggable: true
+        });
+        endDragLayer.add(rect);
+        endDragLayer.draw();
+
+        stage._mousedown({
+            clientX: stage.width() / 2,
+            clientY: stage.height() / 2 + top
+        });
+
+
+        stage._mousemove({
+            clientX: stage.width() / 2 + 5,
+            clientY: stage.height() / 2 + top
+        });
+
+        // change layer while dragging circle
+        circle.moveTo(endDragLayer);
+        // move rectange for test hit update
+        rect.moveTo(startDragLayer);
+        startDragLayer.draw();
+
+        assert.equal(Kinetic.DD.anim.getLayers()[0], endDragLayer, 'drag layer should be switched');
+
+
+        var shape = startDragLayer.getIntersection({
+            x : 2,
+            y : 2
+        });
+        assert.equal(shape, rect, 'rect is detected');
+
+        assert(circle.isDragging(), 'dragging is ok');
+
+        endDragLayer.draw();
+        shape = endDragLayer.getIntersection({
+            x : stage.width() / 2,
+            y : stage.height() / 2
+        });
+        // as endDragLayer under dragging we should not able to detect intersect
+        assert.equal(!!shape, false, 'circle is not detected');
+
+
+        Kinetic.DD._endDragBefore();
+        stage._mouseup({
+            clientX: 291,
+            clientY: 112 + top
+        });
+        Kinetic.DD._endDragAfter({dragEndNode:circle});
+
+    });
 });
