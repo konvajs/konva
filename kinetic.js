@@ -3,7 +3,7 @@
  * KineticJS JavaScript Framework v5.1.10
  * http://lavrton.github.io/KineticJS/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2015-01-20
+ * Date: 2015-01-21
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell
  * Modified work Copyright 2015 Anton Lavrenov
@@ -2901,7 +2901,7 @@ var Kinetic = {};
         shouldDrawHit: function(canvas) {
             var layer = this.getLayer();
             return  (canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())
-                && this.isListening() && this.isVisible() && !Kinetic.isDragging();
+                && this.isListening() && this.isVisible();
         },
         /**
          * show node
@@ -7649,8 +7649,10 @@ var Kinetic = {};
         },
         shouldDrawHit: function(canvas) {
             var layer = this.getLayer();
+            var dd = Kinetic.DD;
+            var layerUnderDrag = dd && Kinetic.isDragging() && (Kinetic.DD.anim.getLayers().indexOf(layer) !== -1);
             return  (canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())
-                && this.isVisible() && !Kinetic.isDragging();
+                && this.isVisible() && !layerUnderDrag;
         }
     });
 
