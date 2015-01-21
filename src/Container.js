@@ -349,8 +349,10 @@
         },
         shouldDrawHit: function(canvas) {
             var layer = this.getLayer();
+            var dd = Kinetic.DD;
+            var layerUnderDrag = dd && Kinetic.isDragging() && (Kinetic.DD.anim.getLayers().indexOf(layer) !== -1);
             return  (canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())
-                && this.isVisible() && !Kinetic.isDragging();
+                && this.isVisible() && !layerUnderDrag;
         }
     });
 
