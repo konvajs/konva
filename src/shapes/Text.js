@@ -104,8 +104,13 @@
             context.setAttr('textBaseline', MIDDLE);
             context.setAttr('textAlign', LEFT);
             context.save();
-            context.translate(p, 0);
-            context.translate(0, p + textHeight / 2);
+            if (p) {
+                context.translate(p, 0);
+                context.translate(0, p + textHeight / 2);
+            } else {
+                context.translate(0, textHeight / 2);
+            }
+
 
             // draw text lines
             for(n = 0; n < textArrLen; n++) {

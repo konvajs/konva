@@ -517,7 +517,7 @@
                 strokeScaleEnabled = shape.getStrokeScaleEnabled();
 
             if(shape.hasStroke()) {
-                if (!strokeScaleEnabled) {
+                if (!strokeScaleEnabled && !(shape instanceof Kinetic.Text)) {
                     this.save();
                     this.setTransform(1, 0, 0, 1, 0, 0);
                 }

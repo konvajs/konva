@@ -2055,7 +2055,7 @@ var Kinetic = {};
                 strokeScaleEnabled = shape.getStrokeScaleEnabled();
 
             if(shape.hasStroke()) {
-                if (!strokeScaleEnabled) {
+                if (!strokeScaleEnabled && !(shape instanceof Kinetic.Text)) {
                     this.save();
                     this.setTransform(1, 0, 0, 1, 0, 0);
                 }
@@ -10611,6 +10611,7 @@ var Kinetic = {};
             }
             else {
                 // arcTo would be nicer, but browser support is patchy (Opera)
+                cornerRadius = Math.min(cornerRadius, width / 2, height / 2);
                 context.moveTo(cornerRadius, 0);
                 context.lineTo(width - cornerRadius, 0);
                 context.arc(width - cornerRadius, cornerRadius, cornerRadius, Math.PI * 3 / 2, 0, false);
@@ -11978,8 +11979,13 @@ var Kinetic = {};
             context.setAttr('textBaseline', MIDDLE);
             context.setAttr('textAlign', LEFT);
             context.save();
-            context.translate(p, 0);
-            context.translate(0, p + textHeight / 2);
+            if (p) {
+                context.translate(p, 0);
+                context.translate(0, p + textHeight / 2);
+            } else {
+                context.translate(0, textHeight / 2);
+            }
+
 
             // draw text lines
             for(n = 0; n < textArrLen; n++) {

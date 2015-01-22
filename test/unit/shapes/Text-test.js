@@ -313,5 +313,36 @@ suite('Text', function(){
         assert.equal(text.fill(), 'black');
     });
 
+    test('text with stoke and strokeScaleEnabled', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+
+        var text = new Kinetic.Text({
+            fontSize: 50,
+            y : 50,
+            x : 50,
+            fill: 'black',
+            text: 'text',
+            stroke : 'red',
+            strokeScaleEnabled: false,
+            strokeWidth:2,
+            scaleX : 2
+        });
+        layer.add(text);
+        stage.add(layer);
+
+        var canvas = createCanvas();
+        var context = canvas.getContext('2d');
+        context.translate(50, 50);
+        context.lineWidth = 2;
+        context.font = '50px Arial';
+        context.strokeStyle = 'red';
+        context.scale(2, 1);
+        context.textBaseline = 'middle';
+        context.fillText('text', 0, 25);
+        context.strokeText('text', 0, 25);
+        compareLayerAndCanvas(layer, canvas);
+    });
+
 
 });

@@ -57,7 +57,7 @@ suite('Label', function() {
         // resulting in slightly different tag dimensions
         var relaxedTrace = layer.getContext().getTrace(true);
 
-        assert.equal(relaxedTrace, 'clearRect();save();save();globalAlpha;shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;drawImage();restore();drawImage();restore();save();transform();font;textBaseline;textAlign;save();translate();translate();save();fillStyle;fillText();restore();translate();restore();restore();clearRect();save();save();globalAlpha;shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;drawImage();restore();drawImage();restore();save();transform();font;textBaseline;textAlign;save();translate();translate();save();fillStyle;fillText();restore();translate();restore();restore();');
+        assert.equal(relaxedTrace, 'clearRect();save();save();globalAlpha;shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;drawImage();restore();drawImage();restore();save();transform();font;textBaseline;textAlign;save();translate();save();fillStyle;fillText();restore();translate();restore();restore();clearRect();save();save();globalAlpha;shadowColor;shadowBlur;shadowOffsetX;shadowOffsetY;drawImage();restore();drawImage();restore();save();transform();font;textBaseline;textAlign;save();translate();save();fillStyle;fillText();restore();translate();restore();restore();');
 
     });
 
