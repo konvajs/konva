@@ -1,7 +1,7 @@
 ## 5.2.1
 
 * Bug Fixes
-
+    * `strokeScaleEnabled = false` is disabled for text as I can not find way to implement this
 * Enhancements
     * `cornerRadius` of Rect is limited by `width/2` and `height/2`
 

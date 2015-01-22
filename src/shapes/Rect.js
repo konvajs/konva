@@ -38,8 +38,7 @@
             if(!cornerRadius) {
                 // simple rect - don't bother doing all that complicated maths stuff.
                 context.rect(0, 0, width, height);
-            }
-            else {
+            } else {
                 // arcTo would be nicer, but browser support is patchy (Opera)
                 cornerRadius = Math.min(cornerRadius, width / 2, height / 2);
                 context.moveTo(cornerRadius, 0);

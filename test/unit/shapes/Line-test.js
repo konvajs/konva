@@ -138,4 +138,50 @@ suite('Line', function() {
         assert.equal(trace, 'clearRect(0,0,578,200);save();lineJoin=round;transform(1,0,0,1,0,0);save();globalAlpha=0.5;shadowColor=black;shadowBlur=20;shadowOffsetX=10;shadowOffsetY=10;beginPath();moveTo(73,160);lineTo(340,23);lineCap=round;lineWidth=20;strokeStyle=blue;stroke();restore();beginPath();moveTo(73,160);lineTo(340,23);lineCap=round;lineWidth=20;strokeStyle=blue;stroke();restore();');
 
     });
+
+    test('line hit test with strokeScaleEnabled = false', function() {
+        var stage = addStage();
+        var scale = 0.1;
+        var layer = new Kinetic.Layer();
+
+        var group = new Kinetic.Group({
+            scale: {
+                x :scale,
+                y : scale
+            }
+        });
+
+        var line1 = new Kinetic.Line({
+            points: [0, 0, 300, 0],
+            stroke: 'red',
+            strokeScaleEnabled: false,
+            strokeWidth: 10,
+            y : 0
+        });
+        group.add(line1);
+
+        var line2 = new Kinetic.Line({
+            points: [0, 0, 300, 0],
+            stroke: 'green',
+            strokeWidth: 40 / scale,
+            y : 60 / scale
+        });
+        group.add(line2);
+
+        layer.add(group);
+        stage.add(layer);
+        showHit(layer);
+
+        var shape = layer.getIntersection({
+            x : 10,
+            y : 60
+        });
+        assert.equal(shape, line2, 'second line detected');
+
+        shape = layer.getIntersection({
+            x : 10,
+            y : 4
+        });
+        assert.equal(shape, line1, 'first line detected');
+    });
 });

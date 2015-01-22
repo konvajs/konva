@@ -514,10 +514,11 @@
         },
         _stroke: function(shape) {
             var dash = shape.dash(),
-                strokeScaleEnabled = shape.getStrokeScaleEnabled();
+                // ignore strokeScaleEnabled for Text
+                strokeScaleEnabled = (shape.getStrokeScaleEnabled() || (shape instanceof Kinetic.Text));
 
             if(shape.hasStroke()) {
-                if (!strokeScaleEnabled && !(shape instanceof Kinetic.Text)) {
+                if (!strokeScaleEnabled) {
                     this.save();
                     this.setTransform(1, 0, 0, 1, 0, 0);
                 }
@@ -580,10 +581,19 @@
         },
         _stroke: function(shape) {
             if(shape.hasStroke()) {
+                // ignore strokeScaleEnabled for Text
+                var strokeScaleEnabled = (shape.getStrokeScaleEnabled() || (shape instanceof Kinetic.Text));
+                if (!strokeScaleEnabled) {
+                    this.save();
+                    this.setTransform(1, 0, 0, 1, 0, 0);
+                }
                 this._applyLineCap(shape);
                 this.setAttr('lineWidth', shape.strokeWidth());
                 this.setAttr('strokeStyle', shape.colorKey);
                 shape._strokeFuncHit(this);
+                if (!strokeScaleEnabled) {
+                    this.restore();
+                }
             }
         }
     };
