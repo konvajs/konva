@@ -1,14 +1,15 @@
-## 5.1.10
+## 5.2.0
 
 * Bug Fixes
     * working "this-example" as name for nodes
-    * Kinetic.Text() with no config throws exception
-    * Kinetic.Line() with no config throws exception
+    * Kinetic.Text() with no config don't throws exception
+    * Kinetic.Line() with no config don't throws exception
 * Enhancements
     * `black` is default fill for text
     * true class extending. Now `rect instanceOf Kinetic.Shape` will return true
     * while dragging you can redraw layer that is not under drag. hit graph will be updated in this case
     * now you can move object that is dragging into another layer.
+    * new `frameOffsets` attribute for `Kinetic.Sprite`
 
 ## 5.1.9 2014-01-09
 
