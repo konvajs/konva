@@ -217,7 +217,7 @@ suite('DragAndDrop', function() {
     });
 
     // ======================================================
-    test.only('it is possible to change layer while dragging', function() {
+    test('it is possible to change layer while dragging', function() {
         var stage = addStage();
 
         var top = stage.content.getBoundingClientRect().top;

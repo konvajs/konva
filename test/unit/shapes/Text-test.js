@@ -312,4 +312,6 @@ suite('Text', function(){
         var text = new Kinetic.Text();
         assert.equal(text.fill(), 'black');
     });
+
+
 });

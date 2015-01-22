@@ -82,8 +82,10 @@ suite('Rect', function(){
           fill: 'green',
           stroke: 'black',
           strokeWidth: 4,
-          center: {x: 50, y: 0},
-          scale: {x: 2, y: 2},
+          scale: {
+              x: 2,
+              y: 2
+          },
           cornerRadius: 15,
           draggable: true
       });
@@ -110,6 +112,18 @@ suite('Rect', function(){
 
       layer.add(rect);
       stage.add(layer);
+
+      var canvas = createCanvas();
+      var context = canvas.getContext('2d');
+      context.beginPath();
+      context.rect(200, 100, 100, 50);
+      context.fillStyle = 'blue';
+      context.fill();
+      context.lineWidth = 4;
+      context.strokeStyle = 'green';
+      context.stroke();
+
+      compareLayerAndCanvas(layer, canvas);
   });
 
   // ======================================================
@@ -127,22 +141,16 @@ suite('Rect', function(){
 
       layer.add(rect);
       stage.add(layer);
-  });
 
-  // ======================================================
-  test('use default stroke (stroke color should be black)', function() {
-      var stage = addStage();
-      var layer = new Kinetic.Layer();
-      var rect = new Kinetic.Rect({
-          x: 200,
-          y: 100,
-          width: 100,
-          height: 50,
-          strokeWidth: 4
-      });
+      var canvas = createCanvas();
+      var context = canvas.getContext('2d');
+      context.beginPath();
+      context.rect(200, 100, 100, 50);
+      context.lineWidth = 4;
+      context.strokeStyle = 'green';
+      context.stroke();
 
-      layer.add(rect);
-      stage.add(layer);
+      compareLayerAndCanvas(layer, canvas);
   });
 
   // ======================================================
@@ -159,6 +167,15 @@ suite('Rect', function(){
 
       layer.add(rect);
       stage.add(layer);
+
+      var canvas = createCanvas();
+      var context = canvas.getContext('2d');
+      context.beginPath();
+      context.rect(200, 100, 100, 50);
+      context.lineWidth = 2;
+      context.strokeStyle = 'blue';
+      context.stroke();
+      compareLayerAndCanvas(layer, canvas);
   });
 
 });

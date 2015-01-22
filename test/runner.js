@@ -92,8 +92,54 @@ function addStage() {
       });
 
   kineticContainer.appendChild(container);
-
   return stage;
+}
+
+function createCanvas() {
+    var canvas = document.createElement('canvas');
+    canvas.width = 578;
+    canvas.height = 200;
+    return canvas;
+}
+
+function get (element, content) {
+    element = document.createElement(element);
+    if (element && content) {
+        element.innerHTML = content;
+    }
+    return element;
+}
+
+function compareLayerAndCanvas(layer, canvas) {
+    var equal = imagediff.equal(layer.getCanvas()._canvas, canvas);
+    if (!equal) {
+        var
+            div     = get('div'),
+            b       = get('div', '<div>Expected:</div>'),
+            c       = get('div', '<div>Diff:</div>'),
+            diff    = imagediff.diff(layer.getCanvas()._canvas, canvas),
+            diffCanvas  = get('canvas'),
+            context;
+
+        diffCanvas.height = diff.height;
+        diffCanvas.width  = diff.width;
+
+        div.style.overflow = 'hidden';
+        b.style.float = 'left';
+        c.style.float = 'left';
+
+        context = diffCanvas.getContext('2d');
+        context.putImageData(diff, 0, 0);
+
+        b.appendChild(canvas);
+        c.appendChild(diffCanvas);
+
+        div.appendChild(b);
+        div.appendChild(c);
+        kineticContainer.appendChild(div);
+    }
+    assert.equal(equal, true);
+
 }
 
 function addContainer() {
