@@ -1,3 +1,10 @@
+## 5.2.1
+
+* Bug Fixes
+
+* Enhancements
+    * `cornerRadius` of Rect is limited by `width/2` and `height/2`
+
 ## 5.2.0 2014-01-22
 
 * Bug Fixes

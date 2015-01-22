@@ -178,4 +178,30 @@ suite('Rect', function(){
       compareLayerAndCanvas(layer, canvas);
   });
 
+    // ======================================================
+    test('limit corner radius', function() {
+        var stage = addStage();
+        var layer = new Kinetic.Layer();
+        var rect = new Kinetic.Rect({
+            x: 50,
+            y: 50,
+            width: 100,
+            height: 100,
+            fill: 'black',
+            cornerRadius : 100
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        // as corner radius is much bigger we should have circe in the result
+        var canvas = createCanvas();
+        var context = canvas.getContext('2d');
+        context.beginPath();
+        context.arc(100, 100, 50, 0, Math.PI * 2);
+        context.fillStyle = 'black';
+        context.fill();
+        compareLayerAndCanvas(layer, canvas);
+    });
+
 });

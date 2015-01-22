@@ -41,6 +41,7 @@
             }
             else {
                 // arcTo would be nicer, but browser support is patchy (Opera)
+                cornerRadius = Math.min(cornerRadius, width / 2, height / 2);
                 context.moveTo(cornerRadius, 0);
                 context.lineTo(width - cornerRadius, 0);
                 context.arc(width - cornerRadius, cornerRadius, cornerRadius, Math.PI * 3 / 2, 0, false);
