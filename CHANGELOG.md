@@ -1,4 +1,4 @@
-## 5.2.0
+## 5.2.0 2014-01-22
 
 * Bug Fixes
     * working "this-example" as name for nodes

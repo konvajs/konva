@@ -1,6 +1,14 @@
 {
   "name": "kinetic",
-  "version": "5.1.10",
+  "version": "5.2.0",
+  "author": "Eric Rowell",
+  "contributors" : [
+    {
+      "name" : "Anton Lavrenov",
+      "email" : "lavrton@gmail.com",
+      "url" : "https://twitter.com/lavrton"
+    }
+  ],
   "devDependencies": {
     "chai": "1.9.2",
     "finalhandler": "^0.3.3",
@@ -34,12 +42,12 @@
   "bugs": {
     "url": "https://github.com/lavrton/KineticJS/issues"
   },
+  "homepage" : "http://lavrton.github.io/KineticJS/",
   "readmeFilename": "README.md",
   "main": "kinetic.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/lavrton/KineticJS.git"
   },
-  "author": "Anton Lavrenov",
   "license": "MIT"
 }

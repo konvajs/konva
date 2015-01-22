@@ -1,12 +1,12 @@
 
 /*
- * KineticJS JavaScript Framework v5.1.10
+ * KineticJS JavaScript Framework v5.2.0
  * http://lavrton.github.io/KineticJS/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2015-01-21
+ * Date: 2015-01-22
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell
- * Modified work Copyright 2015 Anton Lavrenov
+ * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ var Kinetic = {};
 
     Kinetic = {
         // public
-        version: '5.1.10',
+        version: '5.2.0',
 
         // private
         stages: [],
