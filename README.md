@@ -9,7 +9,7 @@ KineticJS is an HTML5 Canvas JavaScript framework that enables high performance 
 
 You can draw things onto the stage, add event listeners to them, move them, scale them, and rotate them independently from other shapes to support high performance animations, even if your application uses thousands of shapes. Served hot with a side of awesomeness.
 
-This repository began as a GitHub fork of [ericdrowell/ericdrowell](https://github.com/ericdrowell/KineticJS).
+This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github.com/ericdrowell/KineticJS).
 
 * **Visit:** The [GitHub page](http://lavrton.github.io/KineticJS/) and follow on [Twitter](https://twitter.com/lavrton)
 * **Discover:** [Tutorials](http://lavrton.github.io/KineticJS/Getting_Started.html), [API Documentation](http://lavrton.github.io/KineticJS/api/Kinetic.html)
