@@ -2,6 +2,8 @@
 
 #KineticJS
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/konvajs/konva?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![npm version](https://badge.fury.io/js/kinetic.svg)](http://badge.fury.io/js/kinetic) [![bower version](https://badge.fury.io/bo/kinetic.svg)](http://badge.fury.io/bo/kinetic)
 [![Build Status](https://travis-ci.org/lavrton/KineticJS.png)](https://travis-ci.org/lavrton/KineticJS)  [![Code Climate](https://codeclimate.com/github/lavrton/KineticJS/badges/gpa.svg)](https://codeclimate.com/github/lavrton/KineticJS)
 
