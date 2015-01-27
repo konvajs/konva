@@ -1,12 +1,12 @@
 
 /*
- * KonvaJS JavaScript Framework v@@version
- * http://lavrton.github.io/KonvaJS/
+ * Konva JavaScript Framework v@@version
+ * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
  * Date: @@date
  *
- * Original work Copyright (C) 2011 - 2013 by Eric Rowell
- * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov
+ * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
+ * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

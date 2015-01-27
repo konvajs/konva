@@ -1,12 +1,12 @@
 
 /*
- * KonvaJS JavaScript Framework v5.2.0
- * http://lavrton.github.io/KonvaJS/
+ * Konva JavaScript Framework v5.2.0
+ * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
  * Date: 2015-01-27
  *
- * Original work Copyright (C) 2011 - 2013 by Eric Rowell
- * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov
+ * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
+ * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -7896,7 +7896,9 @@ var Konva = {};
             delete Konva.shapes[this.colorKey];
         },
         _useBufferCanvas: function() {
-            return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke() && this.getStage();
+//            return false;
+            return ((this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke()) ||
+               this.hasShadow() && (this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke() && this.getStage();
         },
         drawScene: function(can, top) {
             var layer = this.getLayer(),
@@ -7933,14 +7935,28 @@ var Konva = {};
                         bufferContext.restore();
 
                         if (hasShadow && !canvas.hitCanvas) {
-                            context.save();
-                            context._applyShadow(this);
+//                            if (this.getShadowBlur()) {
+//                                context.save();
+////                                bufferContext.clear();
+//                                var buffer2 = stage.bufferCanvas2;
+//                                buffer2.getContext()._applyShadow(this);
+//                                buffer2.getContext().drawImage(bufferCanvas._canvas);
+//                                buffer2.getContext().fill();
+////                                drawFunc.call(this, bufferContext);
+////                                context._applyOpacity(this);
+//                                context.drawImage(buffer2._canvas, 0, 0);
+//                                context.restore();
+//                            } else {
+                                context.save();
+                                context._applyShadow(this);
+                                context._applyOpacity(this);
+                                context.drawImage(bufferCanvas._canvas, 0, 0);
+                                context.restore();
+//                            }
+                        } else {
+                            context._applyOpacity(this);
                             context.drawImage(bufferCanvas._canvas, 0, 0);
-                            context.restore();
                         }
-
-                        context._applyOpacity(this);
-                        context.drawImage(bufferCanvas._canvas, 0, 0);
                     }
                     // if buffer canvas is not needed
                     else {
@@ -7952,7 +7968,7 @@ var Konva = {};
                             var o = this.getAbsoluteTransform(top).getMatrix();
                             context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
                         }
-               
+
                         if (hasShadow && !canvas.hitCanvas) {
                             context.save();
                             context._applyShadow(this);
@@ -7962,6 +7978,17 @@ var Konva = {};
 
                         context._applyOpacity(this);
                         drawFunc.call(this, context);
+
+//                        // clear stroke shadow
+//                        if (hasShadow && !canvas.hitCanvas) {
+//                            context.setAttr('shadowBlur', 0);
+//                            context.setAttr('shadowColor', 0);
+//                            context.setAttr('shadowOffsetX', 0);
+//                            context.setAttr('shadowOffsetY', 0);
+//                            context.stroke();
+//                        }
+
+
                     }
                     context.restore();
                 }
@@ -9216,7 +9243,7 @@ var Konva = {};
         DIV = 'div',
         RELATIVE = 'relative',
         INLINE_BLOCK = 'inline-block',
-        KINETICJS_CONTENT = 'konvajs-content',
+        KONVA_CONTENT = 'konvajs-content',
         SPACE = ' ',
         UNDERSCORE = '_',
         CONTAINER = 'container',
@@ -9487,6 +9514,7 @@ var Konva = {};
                 this.content.style.height = height + PX;
 
                 this.bufferCanvas.setSize(width, height);
+                this.bufferCanvas2.setSize(width, height);
                 this.bufferHitCanvas.setSize(width, height);
 
                 // set layer dimensions
@@ -9878,7 +9906,7 @@ var Konva = {};
             this.content = Konva.document.createElement(DIV);
             this.content.style.position = RELATIVE;
             this.content.style.display = INLINE_BLOCK;
-            this.content.className = KINETICJS_CONTENT;
+            this.content.className = KONVA_CONTENT;
             this.content.setAttribute('role', 'presentation');
             container.appendChild(this.content);
 
@@ -9886,6 +9914,9 @@ var Konva = {};
             // intermediate canvas before copying the result onto a scene canvas.
             // not setting it to 1 will result in an over compensation
             this.bufferCanvas = new Konva.SceneCanvas({
+                pixelRatio: 1
+            });
+            this.bufferCanvas2 = new Konva.SceneCanvas({
                 pixelRatio: 1
             });
             this.bufferHitCanvas = new Konva.HitCanvas();

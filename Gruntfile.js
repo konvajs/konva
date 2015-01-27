@@ -172,7 +172,7 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
-        banner: '/*! KonvaJS v<%= pkg.version %> <%= grunt.template.today("yyyy-mm-dd") %> http://lavrton.github.io/KonvaJS/ by Eric Rowell @ericdrowell, Anton Lavrenov @lavrton - MIT License https://github.com/lavrton/KonvaJS/wiki/License*/\n'
+        banner: '/*! Konva v<%= pkg.version %> <%= grunt.template.today("yyyy-mm-dd") %> http://konvajs.github.io/ by Anton Lavrenov @lavrton - MIT License https://github.com/konvajs/konva/wiki/License*/\n'
       },
       build: {
         files: {

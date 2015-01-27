@@ -10,9 +10,9 @@
 		"dateFormat"            : "ddd MMM Do YYYY",
 		"outputSourceFiles"     : true,
 		"outputSourcePath"      : true,
-		"systemName"            : "KonvaJS",
+		"systemName"            : "Konva",
 		"footer"                : "",
-		"copyright"             : "KonvaJS Copyright © 2015 The contributors to the KonvaJS project.",
+		"copyright"             : "Konva Copyright © 2015 The contributors to the Konva project.",
 		"navType"               : "vertical",
 		"theme"                 : "cosmo",
 		"linenums"              : true,
@@ -21,7 +21,7 @@
 		"highlightTutorialCode" : true,
 	  	"analytics" : {
 		  "ua" : "UA-54202824-2",
-		  "domain" : "http://lavrton.github.io/KonvaJS"
+		  "domain" : "http://konvajs.github.io"
 		}
 	},
 	"markdown"  : {

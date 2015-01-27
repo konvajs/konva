@@ -28,7 +28,7 @@
     * cache node before adding to layer
     * `intersects` function now works for shapes with shadow
 * Enhancements
-    * npm package. See https://github.com/ericdrowell/KonvaJS#installation
+    * npm package.
     * much better dragging performance
     * `browserify` support
     * applying opacity to cached node
