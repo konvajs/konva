@@ -6,8 +6,8 @@ suite('RGB', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -18,7 +18,7 @@ suite('RGB', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.RGB]);
+            darth.filters([Konva.Filters.RGB]);
             darth.red(255).green(0).blue(128);
             layer.draw();
 
@@ -38,8 +38,8 @@ suite('RGB', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -51,7 +51,7 @@ suite('RGB', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.RGB]);
+            darth.filters([Konva.Filters.RGB]);
             darth.red(0).green(255).blue(0);
             layer.draw();
 
@@ -66,7 +66,7 @@ suite('RGB', function() {
     // ======================================================
     test('colorize transparancy', function(done) {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
         var colors = [
             [255,0,0],
@@ -88,7 +88,7 @@ suite('RGB', function() {
             var imageObj = new Image();
             imageObj.onload = (function(color,x){ return function() {
             
-                var darth = new Kinetic.Image({
+                var darth = new Konva.Image({
                     x: x,
                     y: 32,
                     image: imageObj,
@@ -97,7 +97,7 @@ suite('RGB', function() {
                 layer.add(darth);
 
                 darth.cache();
-                darth.filters([Kinetic.Filters.RGB]);
+                darth.filters([Konva.Filters.RGB]);
                 darth.red(color[0]).green(color[1]).blue(color[2]);
 
                 nAdded += 1;

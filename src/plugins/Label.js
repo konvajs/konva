@@ -1,7 +1,7 @@
 (function() {
     // constants
     var ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'lineHeight', 'text'],
-        CHANGE_KINETIC = 'Change.kinetic',
+        CHANGE_KINETIC = 'Change.konva',
         NONE = 'none',
         UP = 'up',
         RIGHT = 'right',
@@ -15,19 +15,19 @@
     /**
      * Label constructor.&nbsp; Labels are groups that contain a Text and Tag shape
      * @constructor
-     * @memberof Kinetic
+     * @memberof Konva
      * @param {Object} config
      * @@nodeParams
      * @example
      * // create label
-     * var label = new Kinetic.Label({
+     * var label = new Konva.Label({
      *   x: 100,
      *   y: 100, 
      *   draggable: true
      * });
      *
      * // add a tag to the label
-     * label.add(new Kinetic.Tag({
+     * label.add(new Konva.Tag({
      *   fill: '#bbb',
      *   stroke: '#333',
      *   shadowColor: 'black',
@@ -42,7 +42,7 @@
      * }));
      *
      * // add text to the label
-     * label.add(new Kinetic.Text({
+     * label.add(new Konva.Text({
      *   text: 'Hello World!',
      *   fontSize: 50,
      *   lineHeight: 1.2,
@@ -50,18 +50,18 @@
      *   fill: 'green'
      *  }));
      */
-    Kinetic.Label = function(config) {
+    Konva.Label = function(config) {
         this.____init(config);
     };
 
-    Kinetic.Label.prototype = {
+    Konva.Label.prototype = {
         ____init: function(config) {
             var that = this;
 
-            Kinetic.Group.call(this, config);
+            Konva.Group.call(this, config);
             this.className = LABEL;
             
-            this.on('add.kinetic', function(evt) {
+            this.on('add.konva', function(evt) {
                 that._addListeners(evt.child);
                 that._sync();
             });
@@ -71,7 +71,7 @@
          * the text properties
          * @name getText
          * @method
-         * @memberof Kinetic.Label.prototype
+         * @memberof Konva.Label.prototype
          */
         getText: function() {
             return this.find('Text')[0];
@@ -81,7 +81,7 @@
          * the pointer properties and the corner radius
          * @name getTag
          * @method
-         * @memberof Kinetic.Label.prototype
+         * @memberof Konva.Label.prototype
          */
         getTag: function() {
             return this.find('Tag')[0];
@@ -152,15 +152,15 @@
         }
     };
 
-    Kinetic.Util.extend(Kinetic.Label, Kinetic.Group);
+    Konva.Util.extend(Konva.Label, Konva.Group);
 
-    Kinetic.Collection.mapMethods(Kinetic.Label);
+    Konva.Collection.mapMethods(Konva.Label);
 
     /**
      * Tag constructor.&nbsp; A Tag can be configured
      *  to have a pointer element that points up, right, down, or left
      * @constructor
-     * @memberof Kinetic
+     * @memberof Konva
      * @param {Object} config
      * @param {String} [config.pointerDirection] can be up, right, down, left, or none; the default
      *  is none.  When a pointer is present, the positioning of the label is relative to the tip of the pointer.
@@ -168,13 +168,13 @@
      * @param {Number} [config.pointerHeight]
      * @param {Number} [config.cornerRadius]
      */
-    Kinetic.Tag = function(config) {
+    Konva.Tag = function(config) {
         this.___init(config);
     };
 
-    Kinetic.Tag.prototype = {
+    Konva.Tag.prototype = {
         ___init: function(config) {
-            Kinetic.Shape.call(this, config);
+            Konva.Shape.call(this, config);
             this.className = 'Tag';
             this.sceneFunc(this._sceneFunc);
         },
@@ -244,14 +244,14 @@
         }
     };
 
-    Kinetic.Util.extend(Kinetic.Tag, Kinetic.Shape);
-    Kinetic.Factory.addGetterSetter(Kinetic.Tag, 'pointerDirection', NONE);
+    Konva.Util.extend(Konva.Tag, Konva.Shape);
+    Konva.Factory.addGetterSetter(Konva.Tag, 'pointerDirection', NONE);
 
     /**
      * set pointer Direction
      * @name setPointerDirection
      * @method
-     * @memberof Kinetic.Tag.prototype
+     * @memberof Konva.Tag.prototype
      * @param {String} pointerDirection can be up, right, down, left, or none.  The
      *  default is none
      */
@@ -260,16 +260,16 @@
      * get pointer Direction
      * @name getPointerDirection
      * @method
-     * @memberof Kinetic.Tag.prototype
+     * @memberof Konva.Tag.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Tag, 'pointerWidth', 0);
+    Konva.Factory.addGetterSetter(Konva.Tag, 'pointerWidth', 0);
 
     /**
      * set pointer width
      * @name setPointerWidth
      * @method
-     * @memberof Kinetic.Tag.prototype
+     * @memberof Konva.Tag.prototype
      * @param {Number} pointerWidth
      */
 
@@ -277,16 +277,16 @@
      * get pointer width
      * @name getPointerWidth
      * @method
-     * @memberof Kinetic.Tag.prototype
+     * @memberof Konva.Tag.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Tag, 'pointerHeight', 0);
+    Konva.Factory.addGetterSetter(Konva.Tag, 'pointerHeight', 0);
 
     /**
      * set pointer height
      * @name setPointerHeight
      * @method
-     * @memberof Kinetic.Tag.prototype
+     * @memberof Konva.Tag.prototype
      * @param {Number} pointerHeight
      */
 
@@ -294,16 +294,16 @@
      * get pointer height
      * @name getPointerHeight
      * @method
-     * @memberof Kinetic.Tag.prototype
+     * @memberof Konva.Tag.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Tag, 'cornerRadius', 0);
+    Konva.Factory.addGetterSetter(Konva.Tag, 'cornerRadius', 0);
 
     /**
      * set corner radius
      * @name setCornerRadius
      * @method
-     * @memberof Kinetic.Tag.prototype
+     * @memberof Konva.Tag.prototype
      * @param {Number} corner radius
      */
 
@@ -311,8 +311,8 @@
      * get corner radius
      * @name getCornerRadius
      * @method
-     * @memberof Kinetic.Tag.prototype
+     * @memberof Konva.Tag.prototype
      */
 
-    Kinetic.Collection.mapMethods(Kinetic.Tag);
+    Konva.Collection.mapMethods(Konva.Tag);
 })();

@@ -1,15 +1,15 @@
 (function() {
-    Kinetic.Util.addMethods(Kinetic.Container, {
+    Konva.Util.addMethods(Konva.Container, {
         __init: function(config) {
-            this.children = new Kinetic.Collection();
-            Kinetic.Node.call(this, config);
+            this.children = new Konva.Collection();
+            Konva.Node.call(this, config);
         },
         /**
-         * returns a {@link Kinetic.Collection} of direct descendant nodes
+         * returns a {@link Konva.Collection} of direct descendant nodes
          * @method
-         * @memberof Kinetic.Container.prototype
+         * @memberof Konva.Container.prototype
          * @param {Function} [filterFunc] filter function
-         * @returns {Kinetic.Collection}
+         * @returns {Konva.Collection}
          * @example
          * // get all children
          * var children = layer.getChildren();
@@ -23,7 +23,7 @@
             if (!filterFunc) {
                 return this.children;
             } else {
-                var results = new Kinetic.Collection();
+                var results = new Konva.Collection();
                 this.children.each(function(child){
                     if (filterFunc(child)) {
                         results.push(child);
@@ -35,7 +35,7 @@
         /**
          * determine if node has children
          * @method
-         * @memberof Kinetic.Container.prototype
+         * @memberof Konva.Container.prototype
          * @returns {Boolean}
          */
         hasChildren: function() {
@@ -44,10 +44,10 @@
         /**
          * remove all children
          * @method
-         * @memberof Kinetic.Container.prototype
+         * @memberof Konva.Container.prototype
          */
         removeChildren: function() {
-            var children = Kinetic.Collection.toCollection(this.children);
+            var children = Konva.Collection.toCollection(this.children);
             var child;
             for (var i = 0; i < children.length; i++) {
                 child = children[i];
@@ -60,16 +60,16 @@
                 child.remove();
             }
             children = null;
-            this.children = new Kinetic.Collection();
+            this.children = new Konva.Collection();
             return this;
         },
         /**
          * destroy all children
          * @method
-         * @memberof Kinetic.Container.prototype
+         * @memberof Konva.Container.prototype
          */
         destroyChildren: function() {
-           var children = Kinetic.Collection.toCollection(this.children);
+           var children = Konva.Collection.toCollection(this.children);
             var child;
             for (var i = 0; i < children.length; i++) {
                 child = children[i];
@@ -79,14 +79,14 @@
                 child.destroy();
             }
             children = null;
-            this.children = new Kinetic.Collection();
+            this.children = new Konva.Collection();
             return this;
         },
         /**
          * Add node or nodes to container.
          * @method
-         * @memberof Kinetic.Container.prototype
-         * @param {...Kinetic.Node} child
+         * @memberof Konva.Container.prototype
+         * @param {...Konva.Node} child
          * @returns {Container}
          * @example
          * layer.add(shape1, shape2, shape3);
@@ -113,7 +113,7 @@
 
             // if node under drag we need to update drag animation
             if (child.isDragging()) {
-                Kinetic.DD.anim.setLayers(child.getLayer());
+                Konva.DD.anim.setLayers(child.getLayer());
             }
 
             // chainable
@@ -125,14 +125,14 @@
                 this.destroyChildren();
             }
             // then destroy self
-            Kinetic.Node.prototype.destroy.call(this);
+            Konva.Node.prototype.destroy.call(this);
         },
         /**
-         * return a {@link Kinetic.Collection} of nodes that match the selector.  Use '#' for id selections
+         * return a {@link Konva.Collection} of nodes that match the selector.  Use '#' for id selections
          * and '.' for name selections.  You can also select by type or class name. Pass multiple selectors
          * separated by a space.
          * @method
-         * @memberof Kinetic.Container.prototype
+         * @memberof Konva.Container.prototype
          * @param {String} selector
          * @returns {Collection}
          * @example
@@ -182,10 +182,10 @@
                 }
             }
 
-            return Kinetic.Collection.toCollection(retArr);
+            return Konva.Collection.toCollection(retArr);
         },
         _getNodeById: function(key) {
-            var node = Kinetic.ids[key];
+            var node = Konva.ids[key];
 
             if(node !== undefined && this.isAncestorOf(node)) {
                 return node;
@@ -193,11 +193,11 @@
             return null;
         },
         _getNodesByName: function(key) {
-            var arr = Kinetic.names[key] || [];
+            var arr = Konva.names[key] || [];
             return this._getDescendants(arr);
         },
         _get: function(selector) {
-            var retArr = Kinetic.Node.prototype._get.call(this, selector);
+            var retArr = Konva.Node.prototype._get.call(this, selector);
             var children = this.getChildren();
             var len = children.length;
             for(var n = 0; n < len; n++) {
@@ -207,7 +207,7 @@
         },
         // extenders
         toObject: function() {
-            var obj = Kinetic.Node.prototype.toObject.call(this);
+            var obj = Konva.Node.prototype.toObject.call(this);
 
             obj.children = [];
 
@@ -236,8 +236,8 @@
          * determine if node is an ancestor
          * of descendant
          * @method
-         * @memberof Kinetic.Container.prototype
-         * @param {Kinetic.Node} node
+         * @memberof Konva.Container.prototype
+         * @param {Konva.Node} node
          */
         isAncestorOf: function(node) {
             var parent = node.getParent();
@@ -252,7 +252,7 @@
         },
         clone: function(obj) {
             // call super method
-            var node = Kinetic.Node.prototype.clone.call(this, obj);
+            var node = Konva.Node.prototype.clone.call(this, obj);
 
             this.getChildren().each(function(no) {
                 node.add(no.clone());
@@ -262,10 +262,10 @@
         /**
          * get all shapes that intersect a point.  Note: because this method must clear a temporary
          * canvas and redraw every shape inside the container, it should only be used for special sitations
-         * because it performs very poorly.  Please use the {@link Kinetic.Stage#getIntersection} method if at all possible
+         * because it performs very poorly.  Please use the {@link Konva.Stage#getIntersection} method if at all possible
          * because it performs much better
          * @method
-         * @memberof Kinetic.Container.prototype
+         * @memberof Konva.Container.prototype
          * @param {Object} pos
          * @param {Number} pos.x
          * @param {Number} pos.y
@@ -354,24 +354,24 @@
         },
         shouldDrawHit: function(canvas) {
             var layer = this.getLayer();
-            var dd = Kinetic.DD;
-            var layerUnderDrag = dd && Kinetic.isDragging() && (Kinetic.DD.anim.getLayers().indexOf(layer) !== -1);
+            var dd = Konva.DD;
+            var layerUnderDrag = dd && Konva.isDragging() && (Konva.DD.anim.getLayers().indexOf(layer) !== -1);
             return  (canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())
                 && this.isVisible() && !layerUnderDrag;
         }
     });
 
-    Kinetic.Util.extend(Kinetic.Container, Kinetic.Node);
+    Konva.Util.extend(Konva.Container, Konva.Node);
     // deprecated methods
-    Kinetic.Container.prototype.get = Kinetic.Container.prototype.find;
+    Konva.Container.prototype.get = Konva.Container.prototype.find;
 
     // add getters setters
-    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Container, 'clip', ['x', 'y', 'width', 'height']);
+    Konva.Factory.addComponentsGetterSetter(Konva.Container, 'clip', ['x', 'y', 'width', 'height']);
     /**
      * get/set clip
      * @method
      * @name clip
-     * @memberof Kinetic.Container.prototype
+     * @memberof Konva.Container.prototype
      * @param {Object} clip
      * @param {Number} clip.x
      * @param {Number} clip.y
@@ -391,12 +391,12 @@
      * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Container, 'clipX');
+    Konva.Factory.addGetterSetter(Konva.Container, 'clipX');
     /**
      * get/set clip x
      * @name clipX
      * @method
-     * @memberof Kinetic.Container.prototype
+     * @memberof Konva.Container.prototype
      * @param {Number} x
      * @returns {Number}
      * @example
@@ -407,12 +407,12 @@
      * container.clipX(10);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Container, 'clipY');
+    Konva.Factory.addGetterSetter(Konva.Container, 'clipY');
     /**
      * get/set clip y
      * @name clipY
      * @method
-     * @memberof Kinetic.Container.prototype
+     * @memberof Konva.Container.prototype
      * @param {Number} y
      * @returns {Number}
      * @example
@@ -423,12 +423,12 @@
      * container.clipY(10);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Container, 'clipWidth');
+    Konva.Factory.addGetterSetter(Konva.Container, 'clipWidth');
     /**
      * get/set clip width
      * @name clipWidth
      * @method
-     * @memberof Kinetic.Container.prototype
+     * @memberof Konva.Container.prototype
      * @param {Number} width
      * @returns {Number}
      * @example
@@ -439,12 +439,12 @@
      * container.clipWidth(100);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Container, 'clipHeight');
+    Konva.Factory.addGetterSetter(Konva.Container, 'clipHeight');
     /**
      * get/set clip height
      * @name clipHeight
      * @method
-     * @memberof Kinetic.Container.prototype
+     * @memberof Konva.Container.prototype
      * @param {Number} height
      * @returns {Number}
      * @example
@@ -455,5 +455,5 @@
      * container.clipHeight(100);
      */
 
-    Kinetic.Collection.mapMethods(Kinetic.Container);
+    Konva.Collection.mapMethods(Konva.Container);
 })();

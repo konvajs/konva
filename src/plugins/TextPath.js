@@ -7,8 +7,8 @@
      * Path constructor.
      * @author Jason Follas
      * @constructor
-     * @memberof Kinetic
-     * @augments Kinetic.Shape
+     * @memberof Konva
+     * @augments Konva.Shape
      * @param {Object} config
      * @param {String} [config.fontFamily] default is Calibri
      * @param {Number} [config.fontSize] default is 12
@@ -19,7 +19,7 @@
      * @@shapeParams
      * @@nodeParams
      * @example
-     * var textpath = new Kinetic.TextPath({
+     * var textpath = new Konva.TextPath({
      *   x: 100,
      *   y: 50,
      *   fill: '#333',
@@ -29,7 +29,7 @@
      *   data: 'M10,10 C0,0 10,150 100,100 S300,150 400,50'
      * });
      */
-    Kinetic.TextPath = function(config) {
+    Konva.TextPath = function(config) {
         this.___init(config);
     };
 
@@ -40,14 +40,14 @@
         context.strokeText(this.partialText, 0, 0);
     }
 
-    Kinetic.TextPath.prototype = {
+    Konva.TextPath.prototype = {
         ___init: function(config) {
             var that = this;
-            this.dummyCanvas = Kinetic.Util.createCanvasElement();
+            this.dummyCanvas = Konva.Util.createCanvasElement();
             this.dataArray = [];
 
             // call super constructor
-            Kinetic.Shape.call(this, config);
+            Konva.Shape.call(this, config);
 
             // overrides
             // TODO: shouldn't this be on the prototype?
@@ -58,13 +58,13 @@
             
             this.className = 'TextPath';
 
-            this.dataArray = Kinetic.Path.parsePathData(this.attrs.data);
-            this.on('dataChange.kinetic', function() {
-                that.dataArray = Kinetic.Path.parsePathData(this.attrs.data);
+            this.dataArray = Konva.Path.parsePathData(this.attrs.data);
+            this.on('dataChange.konva', function() {
+                that.dataArray = Konva.Path.parsePathData(this.attrs.data);
             });
 
             // update text data for certain attr changes
-            this.on('textChange.kinetic textStroke.kinetic textStrokeWidth.kinetic', that._setTextData);
+            this.on('textChange.konva textStroke.konva textStrokeWidth.konva', that._setTextData);
             that._setTextData();
             this.sceneFunc(this._sceneFunc);
         },
@@ -103,7 +103,7 @@
         /**
          * get text width in pixels
          * @method
-         * @memberof Kinetic.TextPath.prototype
+         * @memberof Konva.TextPath.prototype
          */
         getTextWidth: function() {
             return this.textWidth;
@@ -111,7 +111,7 @@
         /**
          * get text height in pixels
          * @method
-         * @memberof Kinetic.TextPath.prototype
+         * @memberof Konva.TextPath.prototype
          */
         getTextHeight: function() {
             return this.textHeight;
@@ -119,11 +119,11 @@
         /**
          * set text
          * @method
-         * @memberof Kinetic.TextPath.prototype
+         * @memberof Konva.TextPath.prototype
          * @param {String} text
          */
         setText: function(text) {
-            Kinetic.Text.prototype.setText.call(this, text);
+            Konva.Text.prototype.setText.call(this, text);
         },
         _getTextSize: function(text) {
             var dummyCanvas = this.dummyCanvas;
@@ -205,8 +205,8 @@
 
                     switch (pathCmd.command) {
                         case 'L':
-                            if(Kinetic.Path.getLineLength(p0.x, p0.y, pathCmd.points[0], pathCmd.points[1]) > glyphWidth) {
-                                p1 = Kinetic.Path.getPointOnLine(glyphWidth, p0.x, p0.y, pathCmd.points[0], pathCmd.points[1], p0.x, p0.y);
+                            if(Konva.Path.getLineLength(p0.x, p0.y, pathCmd.points[0], pathCmd.points[1]) > glyphWidth) {
+                                p1 = Konva.Path.getPointOnLine(glyphWidth, p0.x, p0.y, pathCmd.points[0], pathCmd.points[1], p0.x, p0.y);
                             }
                             else {
                                 pathCmd = undefined;
@@ -231,13 +231,13 @@
                                 currentT -= Math.PI / 360.0 * dTheta / Math.abs(dTheta);
                             }
 
-                            // Credit for bug fix: @therth https://github.com/ericdrowell/KineticJS/issues/249
+                            // Credit for bug fix: @therth https://github.com/ericdrowell/KonvaJS/issues/249
                             // Old code failed to render text along arc of this path: "M 50 50 a 150 50 0 0 1 250 50 l 50 0"
                             if(dTheta < 0 && currentT < end || dTheta >= 0 && currentT > end) {
                                 currentT = end;
                                 needNewSegment = true;
                             }
-                            p1 = Kinetic.Path.getPointOnEllipticalArc(pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3], currentT, pathCmd.points[6]);
+                            p1 = Konva.Path.getPointOnEllipticalArc(pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3], currentT, pathCmd.points[6]);
                             break;
                         case 'C':
                             if(currentT === 0) {
@@ -259,7 +259,7 @@
                                 currentT = 1.0;
                                 needNewSegment = true;
                             }
-                            p1 = Kinetic.Path.getPointOnCubicBezier(currentT, pathCmd.start.x, pathCmd.start.y, pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3], pathCmd.points[4], pathCmd.points[5]);
+                            p1 = Konva.Path.getPointOnCubicBezier(currentT, pathCmd.start.x, pathCmd.start.y, pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3], pathCmd.points[4], pathCmd.points[5]);
                             break;
                         case 'Q':
                             if(currentT === 0) {
@@ -276,13 +276,13 @@
                                 currentT = 1.0;
                                 needNewSegment = true;
                             }
-                            p1 = Kinetic.Path.getPointOnQuadraticBezier(currentT, pathCmd.start.x, pathCmd.start.y, pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3]);
+                            p1 = Konva.Path.getPointOnQuadraticBezier(currentT, pathCmd.start.x, pathCmd.start.y, pathCmd.points[0], pathCmd.points[1], pathCmd.points[2], pathCmd.points[3]);
                             break;
 
                     }
 
                     if(p1 !== undefined) {
-                        currLen = Kinetic.Path.getLineLength(p0.x, p0.y, p1.x, p1.y);
+                        currLen = Konva.Path.getLineLength(p0.x, p0.y, p1.x, p1.y);
                     }
 
                     if(needNewSegment) {
@@ -300,7 +300,7 @@
                     break;
                 }
 
-                var width = Kinetic.Path.getLineLength(p0.x, p0.y, p1.x, p1.y);
+                var width = Konva.Path.getLineLength(p0.x, p0.y, p1.x, p1.y);
 
                 // Note: Since glyphs are rendered one at a time, any kerning pair data built into the font will not be used.
                 // Can foresee having a rough pair table built in that the developer can override as needed.
@@ -308,7 +308,7 @@
                 var kern = 0;
                 // placeholder for future implementation
 
-                var midpoint = Kinetic.Path.getPointOnLine(kern + width / 2.0, p0.x, p0.y, p1.x, p1.y);
+                var midpoint = Konva.Path.getPointOnLine(kern + width / 2.0, p0.x, p0.y, p1.x, p1.y);
 
                 var rotation = Math.atan2((p1.y - p0.y), (p1.x - p0.x));
                 this.glyphInfo.push({
@@ -325,18 +325,18 @@
     };
 
     // map TextPath methods to Text
-    Kinetic.TextPath.prototype._getContextFont = Kinetic.Text.prototype._getContextFont;
+    Konva.TextPath.prototype._getContextFont = Konva.Text.prototype._getContextFont;
 
-    Kinetic.Util.extend(Kinetic.TextPath, Kinetic.Shape);
+    Konva.Util.extend(Konva.TextPath, Konva.Shape);
 
     // add setters and getters
-    Kinetic.Factory.addGetterSetter(Kinetic.TextPath, 'fontFamily', 'Arial');
+    Konva.Factory.addGetterSetter(Konva.TextPath, 'fontFamily', 'Arial');
 
     /**
      * set font family
      * @name setFontFamily
      * @method
-     * @memberof Kinetic.TextPath.prototype
+     * @memberof Konva.TextPath.prototype
      * @param {String} fontFamily
      */
 
@@ -344,16 +344,16 @@
      * get font family
      * @name getFontFamily
      * @method
-     * @memberof Kinetic.TextPath.prototype
+     * @memberof Konva.TextPath.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.TextPath, 'fontSize', 12);
+    Konva.Factory.addGetterSetter(Konva.TextPath, 'fontSize', 12);
 
     /**
      * set font size
      * @name setFontSize
      * @method
-     * @memberof Kinetic.TextPath.prototype
+     * @memberof Konva.TextPath.prototype
      * @param {int} fontSize
      */
 
@@ -361,16 +361,16 @@
      * get font size
      * @name getFontSize
      * @method
-     * @memberof Kinetic.TextPath.prototype
+     * @memberof Konva.TextPath.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.TextPath, 'fontStyle', NORMAL);
+    Konva.Factory.addGetterSetter(Konva.TextPath, 'fontStyle', NORMAL);
 
     /**
      * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
      * @name setFontStyle
      * @method
-     * @memberof Kinetic.TextPath.prototype
+     * @memberof Konva.TextPath.prototype
      * @param {String} fontStyle
      */
 
@@ -378,16 +378,16 @@
      * get font style
      * @name getFontStyle
      * @method
-     * @memberof Kinetic.TextPath.prototype
+     * @memberof Konva.TextPath.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.TextPath, 'fontVariant', NORMAL);
+    Konva.Factory.addGetterSetter(Konva.TextPath, 'fontVariant', NORMAL);
 
     /**
      * set font variant.  Can be 'normal' or 'small-caps'.  'normal' is the default.
      * @name setFontVariant
      * @method
-     * @memberof Kinetic.TextPath.prototype
+     * @memberof Konva.TextPath.prototype
      * @param {String} fontVariant
      */
 
@@ -395,17 +395,17 @@
      * @get font variant
      * @name getFontVariant
      * @method
-     * @memberof Kinetic.TextPath.prototype
+     * @memberof Konva.TextPath.prototype
      */
 
-    Kinetic.Factory.addGetter(Kinetic.TextPath, 'text', EMPTY_STRING);
+    Konva.Factory.addGetter(Konva.TextPath, 'text', EMPTY_STRING);
 
     /**
      * get text
      * @name getText
      * @method
-     * @memberof Kinetic.TextPath.prototype
+     * @memberof Konva.TextPath.prototype
      */
 
-    Kinetic.Collection.mapMethods(Kinetic.TextPath);
+    Konva.Collection.mapMethods(Konva.TextPath);
 })();

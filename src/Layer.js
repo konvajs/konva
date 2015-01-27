@@ -25,13 +25,13 @@
         INTERSECTION_OFFSETS_LEN = INTERSECTION_OFFSETS.length;
 
 
-    Kinetic.Util.addMethods(Kinetic.Layer, {
+    Konva.Util.addMethods(Konva.Layer, {
         ____init: function(config) {
             this.nodeType = 'Layer';
-            this.canvas = new Kinetic.SceneCanvas();
-            this.hitCanvas = new Kinetic.HitCanvas();
+            this.canvas = new Konva.SceneCanvas();
+            this.hitCanvas = new Konva.HitCanvas();
             // call super constructor
-            Kinetic.BaseLayer.call(this, config);
+            Konva.BaseLayer.call(this, config);
         },
         _setCanvasSize: function(width, height) {
             this.canvas.setSize(width, height);
@@ -40,18 +40,18 @@
         _validateAdd: function(child) {
             var type = child.getType();
             if (type !== 'Group' && type !== 'Shape') {
-                Kinetic.Util.error('You may only add groups and shapes to a layer.');
+                Konva.Util.error('You may only add groups and shapes to a layer.');
             }
         },
         /**
          * get visible intersection shape. This is the preferred
          * method for determining if a point intersects a shape or not
          * @method
-         * @memberof Kinetic.Layer.prototype
+         * @memberof Konva.Layer.prototype
          * @param {Object} pos
          * @param {Number} pos.x
          * @param {Number} pos.y
-         * @returns {Kinetic.Shape}
+         * @returns {Konva.Shape}
          */
         getIntersection: function(pos) {
             var obj, i, intersectionOffset, shape;
@@ -113,8 +113,8 @@
 
             // fully opaque pixel
             if(p3 === 255) {
-                colorKey = Kinetic.Util._rgbToHex(p[0], p[1], p[2]);
-                shape = Kinetic.shapes[HASH + colorKey];
+                colorKey = Konva.Util._rgbToHex(p[0], p[1], p[2]);
+                shape = Konva.shapes[HASH + colorKey];
                 return {
                     shape: shape
                 };
@@ -142,7 +142,7 @@
                 canvas.getContext().clear();
             }
             
-            Kinetic.Container.prototype.drawScene.call(this, canvas, top);
+            Konva.Container.prototype.drawScene.call(this, canvas, top);
 
             this._fire(DRAW, {
                 node: this
@@ -165,14 +165,14 @@
                 layer.getHitCanvas().getContext().clear();
             }
 
-            Kinetic.Container.prototype.drawHit.call(this, canvas, top);
+            Konva.Container.prototype.drawHit.call(this, canvas, top);
             this.imageData = null; // Clear imageData cache
             return this;
         },
         /**
          * clear scene and hit canvas contexts tied to the layer
          * @method
-         * @memberof Kinetic.Layer.prototype
+         * @memberof Konva.Layer.prototype
          * @param {Object} [bounds]
          * @param {Number} [bounds.x]
          * @param {Number} [bounds.y]
@@ -195,7 +195,7 @@
         },
         // extend Node.prototype.setVisible
         setVisible: function(visible) {
-            Kinetic.Node.prototype.setVisible.call(this, visible);
+            Konva.Node.prototype.setVisible.call(this, visible);
             if(visible) {
                 this.getCanvas()._canvas.style.display = 'block';
                 this.hitCanvas._canvas.style.display = 'block';
@@ -210,7 +210,7 @@
          * enable hit graph
          * @name enableHitGraph
          * @method
-         * @memberof Kinetic.Layer.prototype
+         * @memberof Konva.Layer.prototype
          * @returns {Layer}
          */
         enableHitGraph: function() {
@@ -221,7 +221,7 @@
          * disable hit graph
          * @name disableHitGraph
          * @method
-         * @memberof Kinetic.Layer.prototype
+         * @memberof Konva.Layer.prototype
          * @returns {Layer}
          */
         disableHitGraph: function() {
@@ -229,20 +229,20 @@
             return this;
         },
         setSize : function(width, height) {
-            Kinetic.BaseLayer.prototype.setSize.call(this, width, height);
+            Konva.BaseLayer.prototype.setSize.call(this, width, height);
             this.hitCanvas.setSize(width, height);
         }
     });
-    Kinetic.Util.extend(Kinetic.Layer, Kinetic.BaseLayer);
+    Konva.Util.extend(Konva.Layer, Konva.BaseLayer);
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Layer, 'hitGraphEnabled', true);
+    Konva.Factory.addGetterSetter(Konva.Layer, 'hitGraphEnabled', true);
     /**
      * get/set hitGraphEnabled flag.  Disabling the hit graph will greatly increase
      *  draw performance because the hit graph will not be redrawn each time the layer is
      *  drawn.  This, however, also disables mouse/touch event detection
      * @name hitGraphEnabled
      * @method
-     * @memberof Kinetic.Layer.prototype
+     * @memberof Konva.Layer.prototype
      * @param {Boolean} enabled
      * @returns {Boolean}
      * @example
@@ -255,5 +255,5 @@
      * // enable hit graph
      * layer.hitGraphEnabled(true);
      */
-    Kinetic.Collection.mapMethods(Kinetic.Layer);
+    Konva.Collection.mapMethods(Konva.Layer);
 })();

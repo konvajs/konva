@@ -2,9 +2,9 @@ suite('Arrow', function() {
     // ======================================================
     test('add arrow', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var arrow = new Kinetic.Arrow({
+        var arrow = new Konva.Arrow({
             points: [73,160, 340, 23],
             stroke: 'blue',
             fill : 'blue',

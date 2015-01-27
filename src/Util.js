@@ -1,11 +1,11 @@
 (function() {
     /**
      * Collection constructor.  Collection extends
-     *  Array.  This class is used in conjunction with {@link Kinetic.Container#get}
+     *  Array.  This class is used in conjunction with {@link Konva.Container#get}
      * @constructor
-     * @memberof Kinetic
+     * @memberof Konva
      */
-    Kinetic.Collection = function() {
+    Konva.Collection = function() {
         var args = [].slice.call(arguments), length = args.length, i = 0;
 
         this.length = length;
@@ -14,12 +14,12 @@
         }
         return this;
     };
-    Kinetic.Collection.prototype = [];
+    Konva.Collection.prototype = [];
     /**
      * iterate through node array and run a function for each node.
      *  The node and index is passed into the function
      * @method
-     * @memberof Kinetic.Collection.prototype
+     * @memberof Konva.Collection.prototype
      * @param {Function} func
      * @example
      * // get all nodes with name foo inside layer, and set x to 10 for each
@@ -27,7 +27,7 @@
      *   shape.setX(10);
      * });
      */
-    Kinetic.Collection.prototype.each = function(func) {
+    Konva.Collection.prototype.each = function(func) {
         for(var n = 0; n < this.length; n++) {
             func(this[n], n);
         }
@@ -35,9 +35,9 @@
     /**
      * convert collection into an array
      * @method
-     * @memberof Kinetic.Collection.prototype
+     * @memberof Konva.Collection.prototype
      */
-    Kinetic.Collection.prototype.toArray = function() {
+    Konva.Collection.prototype.toArray = function() {
         var arr = [],
             len = this.length,
             n;
@@ -50,11 +50,11 @@
     /**
      * convert array into a collection
      * @method
-     * @memberof Kinetic.Collection
+     * @memberof Konva.Collection
      * @param {Array} arr
      */
-    Kinetic.Collection.toCollection = function(arr) {
-        var collection = new Kinetic.Collection(),
+    Konva.Collection.toCollection = function(arr) {
+        var collection = new Konva.Collection(),
             len = arr.length,
             n;
 
@@ -65,8 +65,8 @@
     };
 
     // map one method by it's name
-    Kinetic.Collection._mapMethod = function(methodName) {
-        Kinetic.Collection.prototype[methodName] = function() {
+    Konva.Collection._mapMethod = function(methodName) {
+        Konva.Collection.prototype[methodName] = function() {
             var len = this.length,
                 i;
 
@@ -79,10 +79,10 @@
         };
     };
 
-    Kinetic.Collection.mapMethods = function(constructor) {
+    Konva.Collection.mapMethods = function(constructor) {
         var prot = constructor.prototype;
         for(var methodName in prot) {
-            Kinetic.Collection._mapMethod(methodName);
+            Konva.Collection._mapMethod(methodName);
         }
     };
 
@@ -98,7 +98,7 @@
 
     /*
     * The usage of this class was inspired by some of the work done by a forked
-    * project, KineticJS-Ext by Wappworks, which is based on Simon's Transform
+    * project, KonvaJS-Ext by Wappworks, which is based on Simon's Transform
     * class.  Modified by Eric Rowell
     */
 
@@ -106,26 +106,26 @@
      * Transform constructor
      * @constructor
      * @param {Array} [m] Optional six-element matrix
-     * @memberof Kinetic
+     * @memberof Konva
      */
-    Kinetic.Transform = function(m) {
+    Konva.Transform = function(m) {
         this.m = (m && m.slice()) || [1, 0, 0, 1, 0, 0];
     };
 
-    Kinetic.Transform.prototype = {
+    Konva.Transform.prototype = {
         /**
-         * Copy Kinetic.Transform object
+         * Copy Konva.Transform object
          * @method
-         * @memberof Kinetic.Transform.prototype
-         * @returns {Kinetic.Transform}
+         * @memberof Konva.Transform.prototype
+         * @returns {Konva.Transform}
          */
         copy: function() {
-            return new Kinetic.Transform(this.m);
+            return new Konva.Transform(this.m);
         },
         /**
          * Transform point
          * @method
-         * @memberof Kinetic.Transform.prototype
+         * @memberof Konva.Transform.prototype
          * @param {Object} point 2D point(x, y)
          * @returns {Object} 2D point(x, y)
          */
@@ -139,10 +139,10 @@
         /**
          * Apply translation
          * @method
-         * @memberof Kinetic.Transform.prototype
+         * @memberof Konva.Transform.prototype
          * @param {Number} x
          * @param {Number} y
-         * @returns {Kinetic.Transform}
+         * @returns {Konva.Transform}
          */
         translate: function(x, y) {
             this.m[4] += this.m[0] * x + this.m[2] * y;
@@ -152,10 +152,10 @@
         /**
          * Apply scale
          * @method
-         * @memberof Kinetic.Transform.prototype
+         * @memberof Konva.Transform.prototype
          * @param {Number} sx
          * @param {Number} sy
-         * @returns {Kinetic.Transform}
+         * @returns {Konva.Transform}
          */
         scale: function(sx, sy) {
             this.m[0] *= sx;
@@ -167,9 +167,9 @@
         /**
          * Apply rotation
          * @method
-         * @memberof Kinetic.Transform.prototype
+         * @memberof Konva.Transform.prototype
          * @param {Number} rad  Angle in radians
-         * @returns {Kinetic.Transform}
+         * @returns {Konva.Transform}
          */
         rotate: function(rad) {
             var c = Math.cos(rad);
@@ -187,7 +187,7 @@
         /**
          * Returns the translation
          * @method
-         * @memberof Kinetic.Transform.prototype
+         * @memberof Konva.Transform.prototype
          * @returns {Object} 2D point(x, y)
          */
         getTranslation: function() {
@@ -199,10 +199,10 @@
         /**
          * Apply skew
          * @method
-         * @memberof Kinetic.Transform.prototype
+         * @memberof Konva.Transform.prototype
          * @param {Number} sx
          * @param {Number} sy
-         * @returns {Kinetic.Transform}
+         * @returns {Konva.Transform}
          */
         skew: function(sx, sy) {
             var m11 = this.m[0] + this.m[2] * sy;
@@ -218,9 +218,9 @@
         /**
          * Transform multiplication
          * @method
-         * @memberof Kinetic.Transform.prototype
-         * @param {Kinetic.Transform} matrix
-         * @returns {Kinetic.Transform}
+         * @memberof Konva.Transform.prototype
+         * @param {Konva.Transform} matrix
+         * @returns {Konva.Transform}
          */
         multiply: function(matrix) {
             var m11 = this.m[0] * matrix.m[0] + this.m[2] * matrix.m[1];
@@ -243,8 +243,8 @@
         /**
          * Invert the matrix
          * @method
-         * @memberof Kinetic.Transform.prototype
-         * @returns {Kinetic.Transform}
+         * @memberof Konva.Transform.prototype
+         * @returns {Konva.Transform}
          */
         invert: function() {
             var d = 1 / (this.m[0] * this.m[3] - this.m[1] * this.m[2]);
@@ -265,7 +265,7 @@
         /**
          * return matrix
          * @method
-         * @memberof Kinetic.Transform.prototype
+         * @memberof Konva.Transform.prototype
          */
         getMatrix: function() {
             return this.m;
@@ -273,8 +273,8 @@
         /**
          * set to absolute position via translation
          * @method
-         * @memberof Kinetic.Transform.prototype
-         * @returns {Kinetic.Transform}
+         * @memberof Konva.Transform.prototype
+         * @returns {Konva.Transform}
          * @author ericdrowell
          */
         setAbsolutePosition: function(x, y) {
@@ -301,8 +301,8 @@
         HASH = '#',
         EMPTY_STRING = '',
         ZERO = '0',
-        KINETIC_WARNING = 'Kinetic warning: ',
-        KINETIC_ERROR = 'Kinetic error: ',
+        KINETIC_WARNING = 'Konva warning: ',
+        KINETIC_ERROR = 'Konva error: ',
         RGB_PAREN = 'rgb(',
         COLORS = {
             aqua: [0,255,255],
@@ -331,9 +331,9 @@
 
     /**
      * @namespace Util
-     * @memberof Kinetic
+     * @memberof Konva
      */
-    Kinetic.Util = {
+    Konva.Util = {
         /*
          * cherry-picked utilities from underscore.js
          */
@@ -406,7 +406,7 @@
             return names.length > 0;
         },
         createCanvasElement: function() {
-            var canvas = Kinetic.document.createElement('canvas');
+            var canvas = Konva.document.createElement('canvas');
             // on some environments canvas.style is readonly
             try {
                 canvas.style = canvas.style || {};
@@ -419,7 +419,7 @@
         },
         _isInDocument: function(el) {
             while(el = el.parentNode) {
-                if(el == Kinetic.document) {
+                if(el == Konva.document) {
                     return true;
                 }
             }
@@ -428,7 +428,7 @@
         _simplifyArray: function(arr) {
             var retArr = [],
                 len = arr.length,
-                util = Kinetic.Util,
+                util = Konva.Util,
                 n, val;
 
             for (n=0; n<len; n++) {
@@ -463,7 +463,7 @@
 
             // if arg is a string, then it's a data url
             else if(this._isString(arg)) {
-                imageObj = new Kinetic.window.Image();
+                imageObj = new Konva.window.Image();
                 imageObj.onload = function() {
                     callback(imageObj);
                 };
@@ -472,7 +472,7 @@
 
             //if arg is an object that contains the data property, it's an image object
             else if(arg.data) {
-                canvas = Kinetic.Util.createCanvasElement();
+                canvas = Konva.Util.createCanvasElement();
                 canvas.width = arg.width;
                 canvas.height = arg.height;
                 var _context = canvas.getContext(CONTEXT_2D);
@@ -516,7 +516,7 @@
         /**
          * return random hex color
          * @method
-         * @memberof Kinetic.Util.prototype
+         * @memberof Konva.Util.prototype
          */
         getRandomColor: function() {
             var randColor = (Math.random() * 0xFFFFFF << 0).toString(16);
@@ -528,7 +528,7 @@
         /**
          * return value with default fallback
          * @method
-         * @memberof Kinetic.Util.prototype
+         * @memberof Konva.Util.prototype
          */
         get: function(val, def) {
             if (val === undefined) {
@@ -541,13 +541,13 @@
         /**
          * get RGB components of a color
          * @method
-         * @memberof Kinetic.Util.prototype
+         * @memberof Konva.Util.prototype
          * @param {String} color
          * @example
          * // each of the following examples return {r:0, g:0, b:255}
-         * var rgb = Kinetic.Util.getRGB('blue');
-         * var rgb = Kinetic.Util.getRGB('#0000ff');
-         * var rgb = Kinetic.Util.getRGB('rgb(0,0,255)');
+         * var rgb = Konva.Util.getRGB('blue');
+         * var rgb = Konva.Util.getRGB('#0000ff');
+         * var rgb = Konva.Util.getRGB('rgb(0,0,255)');
          */
         getRGB: function(color) {
             var rgb;
@@ -629,7 +629,7 @@
              * IE9 on Windows7 64bit will throw a JS error
              * if we don't use window.console in the conditional
              */
-            if(Kinetic.root.console && console.warn && Kinetic.showWarnings) {
+            if(Konva.root.console && console.warn && Konva.showWarnings) {
                 console.warn(KINETIC_WARNING + str);
             }
         },
@@ -650,7 +650,7 @@
         /**
          * adds methods to a constructor prototype
          * @method
-         * @memberof Kinetic.Util.prototype
+         * @memberof Konva.Util.prototype
          * @param {Function} constructor
          * @param {Object} methods
          */
@@ -679,7 +679,7 @@
                 n, cp;
 
             for (n=2; n<len-2; n+=2) {
-                cp = Kinetic.Util._getControlPoints(p[n-2], p[n-1], p[n], p[n+1], p[n+2], p[n+3], tension);
+                cp = Konva.Util._getControlPoints(p[n-2], p[n-1], p[n], p[n+1], p[n+2], p[n+3], tension);
                 allPoints.push(cp[0]);
                 allPoints.push(cp[1]);
                 allPoints.push(p[n]);

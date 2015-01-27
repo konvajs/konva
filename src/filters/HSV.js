@@ -4,15 +4,15 @@
     * HSV Filter. Adjusts the hue, saturation and value
     * @function
     * @name HSV
-    * @memberof Kinetic.Filters
+    * @memberof Konva.Filters
     * @param {Object} imageData
     * @author ippo615
     * @example
-    * image.filters([Kinetic.Filters.HSV]);
+    * image.filters([Konva.Filters.HSV]);
     * image.value(200);
     */
 
-    Kinetic.Filters.HSV = function (imageData) {
+    Konva.Filters.HSV = function (imageData) {
         var data = imageData.data,
             nPixels = data.length,
             v = Math.pow(2,this.value()),
@@ -61,32 +61,32 @@
 
     };
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'hue', 0, null, Kinetic.Factory.afterSetFilter);
+    Konva.Factory.addGetterSetter(Konva.Node, 'hue', 0, null, Konva.Factory.afterSetFilter);
     /**
-    * get/set hsv hue in degrees. Use with {@link Kinetic.Filters.HSV} or {@link Kinetic.Filters.HSL} filter.
+    * get/set hsv hue in degrees. Use with {@link Konva.Filters.HSV} or {@link Konva.Filters.HSL} filter.
     * @name hue
     * @method
-    * @memberof Kinetic.Node.prototype
+    * @memberof Konva.Node.prototype
     * @param {Number} hue value between 0 and 359
     * @returns {Number}
     */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'saturation', 0, null, Kinetic.Factory.afterSetFilter);
+    Konva.Factory.addGetterSetter(Konva.Node, 'saturation', 0, null, Konva.Factory.afterSetFilter);
     /**
-    * get/set hsv saturation. Use with {@link Kinetic.Filters.HSV} or {@link Kinetic.Filters.HSL} filter.
+    * get/set hsv saturation. Use with {@link Konva.Filters.HSV} or {@link Konva.Filters.HSL} filter.
     * @name saturation
     * @method
-    * @memberof Kinetic.Node.prototype
+    * @memberof Konva.Node.prototype
     * @param {Number} saturation 0 is no change, -1.0 halves the saturation, 1.0 doubles, etc..
     * @returns {Number}
     */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'value', 0, null, Kinetic.Factory.afterSetFilter);
+    Konva.Factory.addGetterSetter(Konva.Node, 'value', 0, null, Konva.Factory.afterSetFilter);
     /**
-    * get/set hsv value. Use with {@link Kinetic.Filters.HSV} filter.
+    * get/set hsv value. Use with {@link Konva.Filters.HSV} filter.
     * @name value
     * @method
-    * @memberof Kinetic.Node.prototype
+    * @memberof Konva.Node.prototype
     * @param {Number} value 0 is no change, -1.0 halves the value, 1.0 doubles, etc..
     * @returns {Number}
     */

@@ -3,9 +3,9 @@ suite('Manual', function() {
     // ======================================================
     test('oscillation animation', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-      var hexagon = new Kinetic.RegularPolygon({
+      var hexagon = new Konva.RegularPolygon({
         x: stage.width()/2,
         y: stage.height()/2,
         sides: 6,
@@ -16,7 +16,7 @@ suite('Manual', function() {
       });
 
 
-      // var hexagon = new Kinetic.Rect({
+      // var hexagon = new Konva.Rect({
       //   x: stage.width()/2,
       //   y: stage.height()/2,
       //   width: 100,
@@ -34,7 +34,7 @@ suite('Manual', function() {
       // in ms
       var centerX = stage.width()/2;
 
-      var anim = new Kinetic.Animation(function(frame) {
+      var anim = new Konva.Animation(function(frame) {
         hexagon.setX(amplitude * Math.sin(new Date().getTime() * 2 * Math.PI / period) + centerX);
       }, layer);
 
@@ -45,11 +45,11 @@ suite('Manual', function() {
     // ======================================================
     test('rotation animation', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
         var rect;
 
         for (var n=0; n<100; n++) {
-            rect = new Kinetic.Rect({
+            rect = new Konva.Rect({
                 x: Math.random() * 400,
                 y: Math.random() * 400,
                 width: 100,
@@ -68,7 +68,7 @@ suite('Manual', function() {
 
         var velocity = 360; // 1 rev per second
 
-        var anim = new Kinetic.Animation(function(frame) {
+        var anim = new Konva.Animation(function(frame) {
             layer.find('Rect').rotate(velocity * frame.timeDiff / 1000);
         }, layer);
 
@@ -78,8 +78,8 @@ suite('Manual', function() {
     // ======================================================
     test('tween node', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 100,
             y: 100,
             width: 100,
@@ -93,7 +93,7 @@ suite('Manual', function() {
         layer.add(rect);
         stage.add(layer);
 
-        var tween = new Kinetic.Tween({
+        var tween = new Konva.Tween({
             node: rect, 
             duration: 1,
             x: 400,
@@ -114,9 +114,9 @@ suite('Manual', function() {
     // ======================================================
     test('tween spline', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var spline = new Kinetic.Line({
+        var spline = new Konva.Line({
             points: [
                 73, 160,
                 340, 23,
@@ -134,7 +134,7 @@ suite('Manual', function() {
         layer.add(spline);
         stage.add(layer);
 
-        var tween = new Kinetic.Tween({
+        var tween = new Konva.Tween({
             node: spline,
             duration: 1,
            //x: 100,
@@ -145,7 +145,7 @@ suite('Manual', function() {
                 500, 109,
                 100, 10
             ],
-            easing: Kinetic.Easings.BackEaseOut,
+            easing: Konva.Easings.BackEaseOut,
             yoyo: false
         });
 
@@ -163,9 +163,9 @@ suite('Manual', function() {
     // ======================================================
     test('blur and tween spline', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var spline = new Kinetic.Line({
+        var spline = new Konva.Line({
             points: [
                 73, 160,
                 340, 23,
@@ -188,7 +188,7 @@ suite('Manual', function() {
             height: stage.height()
         });
 
-        spline.filters([Kinetic.Filters.Blur]).blurRadius(40);
+        spline.filters([Konva.Filters.Blur]).blurRadius(40);
         layer.draw();
 
         layer.on('beforeDraw', function() {
@@ -198,7 +198,7 @@ suite('Manual', function() {
             });
         });
 
-        var tween = new Kinetic.Tween({
+        var tween = new Konva.Tween({
             node: spline,
             duration: 2,
            //x: 100,
@@ -210,7 +210,7 @@ suite('Manual', function() {
                 100, 10
             ],
             blurRadius: 0,
-            easing: Kinetic.Easings.BackEaseOut,
+            easing: Konva.Easings.BackEaseOut,
             yoyo: false
         });
 

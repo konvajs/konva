@@ -3,11 +3,11 @@ suite('Container', function() {
     // ======================================================
     test('clip', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             clip: {x:0, y:0, width:stage.getWidth() / 2, height:100}
         });
-        var group = new Kinetic.Group();
-        var circle = new Kinetic.Circle({
+        var group = new Konva.Group();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -27,9 +27,9 @@ suite('Container', function() {
     // ======================================================
     test('adder validation', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -124,9 +124,9 @@ suite('Container', function() {
     // ======================================================
     test('add layer then group then shape', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -146,9 +146,9 @@ suite('Container', function() {
     // ======================================================
     test('add shape then stage then layer', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -166,10 +166,10 @@ suite('Container', function() {
     // ======================================================
     test('select shape by id and name', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             id: 'myLayer'
         });
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -179,7 +179,7 @@ suite('Container', function() {
             id: 'myCircle'
         });
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 300,
             y: 100,
             width: 100,
@@ -209,9 +209,9 @@ suite('Container', function() {
     // ======================================================
     test('select shape by name with "-" char', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 300,
             y: 100,
             width: 100,
@@ -232,10 +232,10 @@ suite('Container', function() {
     // ======================================================
     test('select shapes with multiple selectors', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             id: 'myLayer'
         });
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -245,7 +245,7 @@ suite('Container', function() {
             id: 'myCircle'
         });
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 300,
             y: 100,
             width: 100,
@@ -275,8 +275,8 @@ suite('Container', function() {
     // ======================================================
     test('set x on an array of nodes', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -286,7 +286,7 @@ suite('Container', function() {
             name: 'myShape'
         });
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 300,
             y: 100,
             width: 100,
@@ -319,8 +319,8 @@ suite('Container', function() {
     // ======================================================
     test('set fill on array by Shape-selector', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -330,7 +330,7 @@ suite('Container', function() {
             name: 'myShape'
         });
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 300,
             y: 100,
             width: 100,
@@ -363,8 +363,8 @@ suite('Container', function() {
     // ======================================================
     test('add listener to an array of nodes', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -374,7 +374,7 @@ suite('Container', function() {
             name: 'myShape'
         });
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 300,
             y: 100,
             width: 100,
@@ -405,8 +405,8 @@ suite('Container', function() {
     // ======================================================
     test('test ids and names hashes', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -416,7 +416,7 @@ suite('Container', function() {
             id: 'myCircle3'
         });
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 300,
             y: 100,
             width: 100,
@@ -432,31 +432,31 @@ suite('Container', function() {
         stage.add(layer);
 
 
-        assert.equal(Kinetic.ids['myCircle3'].getId(), 'myCircle3', 'circle id not in ids hash');
-        assert.equal(Kinetic.names['myRect3'][0].getName(), 'myRect3', 'rect name not in names hash');
+        assert.equal(Konva.ids['myCircle3'].getId(), 'myCircle3', 'circle id not in ids hash');
+        assert.equal(Konva.names['myRect3'][0].getName(), 'myRect3', 'rect name not in names hash');
 
         circle.setId('newCircleId');
-        assert.notEqual(Kinetic.ids['newCircleId'], undefined, 'circle not in ids hash');
-        assert.equal(Kinetic.ids['myCircle3'], undefined, 'old circle id key is still in ids hash');
+        assert.notEqual(Konva.ids['newCircleId'], undefined, 'circle not in ids hash');
+        assert.equal(Konva.ids['myCircle3'], undefined, 'old circle id key is still in ids hash');
 
         rect.setName('newRectName');
-        assert.notEqual(Kinetic.names['newRectName'][0], undefined, 'new rect name not in names hash');
-        assert.equal(Kinetic.names['myRect3'], undefined, 'old rect name is still in names hash');
+        assert.notEqual(Konva.names['newRectName'][0], undefined, 'new rect name not in names hash');
+        assert.equal(Konva.names['myRect3'], undefined, 'old rect name is still in names hash');
     });
 
     // ======================================================
     test('add layer', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
         stage.add(layer);
     });
 
     // ======================================================
     test('remove all children from layer', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-        var circle1 = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
+        var circle1 = new Konva.Circle({
             x: 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -465,7 +465,7 @@ suite('Container', function() {
             strokeWidth: 4
         });
 
-        var circle2 = new Kinetic.Circle({
+        var circle2 = new Konva.Circle({
             x: 300,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -492,12 +492,12 @@ suite('Container', function() {
     // ======================================================
     test('destroy all children from layer', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             name: 'layerName',
             id: 'layerId'
         });
-        var group = new Kinetic.Group();
-        var circle1 = new Kinetic.Circle({
+        var group = new Konva.Group();
+        var circle1 = new Konva.Circle({
             x: 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -508,7 +508,7 @@ suite('Container', function() {
             id: 'circleId'
         });
 
-        var circle2 = new Kinetic.Circle({
+        var circle2 = new Konva.Circle({
             x: 300,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -524,25 +524,25 @@ suite('Container', function() {
 
         assert.equal(layer.children.length, 1, 'layer should have 1 children');
         assert.equal(group.children.length, 2, 'group should have 2 children');
-        assert(Kinetic.names.circleName.length > 0, 'circleName should be in names hash');
-        assert.equal(Kinetic.ids.circleId.getId(), 'circleId', 'layerId should be in ids hash');
+        assert(Konva.names.circleName.length > 0, 'circleName should be in names hash');
+        assert.equal(Konva.ids.circleId.getId(), 'circleId', 'layerId should be in ids hash');
 
         layer.destroyChildren();
         layer.draw();
 
         assert.equal(layer.children.length, 0, 'layer should have 0 children');
         assert.equal(group.children.length, 0, 'group should have 0 children');
-        assert.equal(Kinetic.names.circleName, undefined, 'circleName should not be in names hash');
-        assert.equal(Kinetic.ids.circleId, undefined, 'layerId should not be in ids hash');
+        assert.equal(Konva.names.circleName, undefined, 'circleName should not be in names hash');
+        assert.equal(Konva.ids.circleId, undefined, 'layerId should not be in ids hash');
     });
 
     // ======================================================
     test('add group', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -559,12 +559,12 @@ suite('Container', function() {
     // ======================================================
     test('create two groups, move first group', function() {
         var stage = addStage();
-        var greenLayer = new Kinetic.Layer();
-        var blueLayer = new Kinetic.Layer();
-        var greenGroup = new Kinetic.Group();
-        var blueGroup = new Kinetic.Group();
+        var greenLayer = new Konva.Layer();
+        var blueLayer = new Konva.Layer();
+        var greenGroup = new Konva.Group();
+        var blueGroup = new Konva.Group();
 
-        var greencircle = new Kinetic.Circle({
+        var greencircle = new Konva.Circle({
             x: stage.getWidth() / 2 - 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -574,7 +574,7 @@ suite('Container', function() {
             draggable: true
         });
 
-        var bluecircle = new Kinetic.Circle({
+        var bluecircle = new Konva.Circle({
             x: stage.getWidth() / 2 + 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -591,8 +591,8 @@ suite('Container', function() {
         stage.add(blueLayer);
 
         blueLayer.removeChildren();
-        var blueGroup2 = new Kinetic.Group();
-        var bluecircle2 = new Kinetic.Circle({
+        var blueGroup2 = new Konva.Group();
+        var bluecircle2 = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -610,11 +610,11 @@ suite('Container', function() {
     // ======================================================
     test('node type selector', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var fooLayer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
+        var layer = new Konva.Layer();
+        var fooLayer = new Konva.Layer();
+        var group = new Konva.Group();
 
-        var blue = new Kinetic.Rect({
+        var blue = new Konva.Rect({
             x: 200,
             y: 100,
             width: 100,
@@ -622,7 +622,7 @@ suite('Container', function() {
             fill: 'blue'
         });
 
-        var red = new Kinetic.Rect({
+        var red = new Konva.Rect({
             x: 250,
             y: 100,
             width: 100,
@@ -659,12 +659,12 @@ suite('Container', function() {
     // ======================================================
     test('node and shape type selector', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var layer2 = new Kinetic.Layer();
-        var fooLayer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
+        var layer = new Konva.Layer();
+        var layer2 = new Konva.Layer();
+        var fooLayer = new Konva.Layer();
+        var group = new Konva.Group();
 
-        var blue = new Kinetic.Rect({
+        var blue = new Konva.Rect({
             x: 100,
             y: 50,
             width: 100,
@@ -672,7 +672,7 @@ suite('Container', function() {
             fill: 'blue'
         });
 
-        var red = new Kinetic.Rect({
+        var red = new Konva.Rect({
             x: 150,
             y: 75,
             width: 100,
@@ -680,7 +680,7 @@ suite('Container', function() {
             fill: 'red'
         });
 
-        var green = new Kinetic.Rect({
+        var green = new Konva.Rect({
             x: 200,
             y: 100,
             width: 100,
@@ -688,21 +688,21 @@ suite('Container', function() {
             fill: 'green'
         });
 
-        var blueCircle = new Kinetic.Circle({
+        var blueCircle = new Konva.Circle({
             x: 350,
             y: 75,
             radius: 40,
             fill: 'blue'
         });
 
-        var redCircle = new Kinetic.Circle({
+        var redCircle = new Konva.Circle({
             x: 400,
             y: 125,
             radius: 40,
             fill: 'red'
         });
 
-        var textpath = new Kinetic.TextPath({
+        var textpath = new Konva.TextPath({
             y: 35,
             stroke: 'black',
             strokeWidth: 1,
@@ -713,7 +713,7 @@ suite('Container', function() {
             data: "M 10,10 300,150 550,150"
         });
 
-        var path = new Kinetic.Path({
+        var path = new Konva.Path({
             x: 200,
             y: -75,
             data: 'M200,100h100v50z',
@@ -726,7 +726,7 @@ suite('Container', function() {
             shadowOpacity: 0.5
         });
 
-        var poly = new Kinetic.RegularPolygon({
+        var poly = new Konva.RegularPolygon({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             sides: 5,
@@ -790,15 +790,15 @@ suite('Container', function() {
     // ======================================================
     test('test find() selector by adding shapes with multiple names', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             name: 'layerName',
             id: 'layerId'
         });
-        var group = new Kinetic.Group({
+        var group = new Konva.Group({
             name: 'groupName',
             id: 'groupId'
         });
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 200,
             y: 20,
             width: 100,
@@ -807,7 +807,7 @@ suite('Container', function() {
             name: 'red rectangle',
             id: 'rectId'
         });
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: 50,
             y: 50,
             radius: 20,
@@ -846,15 +846,15 @@ suite('Container', function() {
     // ======================================================
     test('test find() selector by adding shape, then group, then layer', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             name: 'layerName',
             id: 'layerId'
         });
-        var group = new Kinetic.Group({
+        var group = new Konva.Group({
             name: 'groupName',
             id: 'groupId'
         });
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 200,
             y: 20,
             width: 100,
@@ -889,15 +889,15 @@ suite('Container', function() {
     // ======================================================
     test('test find() selector by adding group, then shape, then layer', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             name: 'layerName',
             id: 'layerId'
         });
-        var group = new Kinetic.Group({
+        var group = new Konva.Group({
             name: 'groupName',
             id: 'groupId'
         });
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 200,
             y: 20,
             width: 100,
@@ -932,15 +932,15 @@ suite('Container', function() {
     // ======================================================
     test('test deprecated get() method', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             name: 'layerName',
             id: 'layerId'
         });
-        var group = new Kinetic.Group({
+        var group = new Konva.Group({
             name: 'groupName',
             id: 'groupId'
         });
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 200,
             y: 20,
             width: 100,
@@ -962,15 +962,15 @@ suite('Container', function() {
     // ======================================================
     test('test find() selector by adding group, then layer, then shape', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             name: 'layerName',
             id: 'layerId'
         });
-        var group = new Kinetic.Group({
+        var group = new Konva.Group({
             name: 'groupName',
             id: 'groupId'
         });
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 200,
             y: 20,
             width: 100,
@@ -1005,15 +1005,15 @@ suite('Container', function() {
     // ======================================================
     test('test find() selector by adding layer, then group, then shape', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             name: 'layerName',
             id: 'layerId'
         });
-        var group = new Kinetic.Group({
+        var group = new Konva.Group({
             name: 'groupName',
             id: 'groupId'
         });
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 200,
             y: 20,
             width: 100,
@@ -1050,8 +1050,8 @@ suite('Container', function() {
     // ======================================================
     test('add layer then shape', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1069,10 +1069,10 @@ suite('Container', function() {
     // ======================================================
     test('move blue layer on top of green layer with setZIndex', function() {
         var stage = addStage();
-        var blueLayer = new Kinetic.Layer();
-        var greenLayer = new Kinetic.Layer();
+        var blueLayer = new Konva.Layer();
+        var greenLayer = new Konva.Layer();
 
-        var bluecircle = new Kinetic.Circle({
+        var bluecircle = new Konva.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1081,7 +1081,7 @@ suite('Container', function() {
             strokeWidth: 4
         });
 
-        var greencircle = new Kinetic.Circle({
+        var greencircle = new Konva.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1107,10 +1107,10 @@ suite('Container', function() {
     // ======================================================
     test('move blue layer on top of green layer with moveToTop', function() {
         var stage = addStage();
-        var blueLayer = new Kinetic.Layer();
-        var greenLayer = new Kinetic.Layer();
+        var blueLayer = new Konva.Layer();
+        var greenLayer = new Konva.Layer();
 
-        var bluecircle = new Kinetic.Circle({
+        var bluecircle = new Konva.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1119,7 +1119,7 @@ suite('Container', function() {
             strokeWidth: 4
         });
 
-        var greencircle = new Kinetic.Circle({
+        var greencircle = new Konva.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1141,10 +1141,10 @@ suite('Container', function() {
     // ======================================================
     test('move green layer below blue layer with moveToBottom', function() {
         var stage = addStage();
-        var blueLayer = new Kinetic.Layer();
-        var greenLayer = new Kinetic.Layer();
+        var blueLayer = new Konva.Layer();
+        var greenLayer = new Konva.Layer();
 
-        var bluecircle = new Kinetic.Circle({
+        var bluecircle = new Konva.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1153,7 +1153,7 @@ suite('Container', function() {
             strokeWidth: 4
         });
 
-        var greencircle = new Kinetic.Circle({
+        var greencircle = new Konva.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1175,10 +1175,10 @@ suite('Container', function() {
     // ======================================================
     test('move green layer below blue layer with moveDown', function() {
         var stage = addStage();
-        var blueLayer = new Kinetic.Layer();
-        var greenLayer = new Kinetic.Layer();
+        var blueLayer = new Konva.Layer();
+        var greenLayer = new Konva.Layer();
 
-        var bluecircle = new Kinetic.Circle({
+        var bluecircle = new Konva.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1187,7 +1187,7 @@ suite('Container', function() {
             strokeWidth: 4
         });
 
-        var greencircle = new Kinetic.Circle({
+        var greencircle = new Konva.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1208,10 +1208,10 @@ suite('Container', function() {
     // ======================================================
     test('move blue layer above green layer with moveUp', function() {
         var stage = addStage();
-        var blueLayer = new Kinetic.Layer();
-        var greenLayer = new Kinetic.Layer();
+        var blueLayer = new Konva.Layer();
+        var greenLayer = new Konva.Layer();
 
-        var bluecircle = new Kinetic.Circle({
+        var bluecircle = new Konva.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1220,7 +1220,7 @@ suite('Container', function() {
             strokeWidth: 4
         });
 
-        var greencircle = new Kinetic.Circle({
+        var greencircle = new Konva.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1241,9 +1241,9 @@ suite('Container', function() {
     // ======================================================
     test('move blue circle on top of green circle with moveToTop', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var bluecircle = new Kinetic.Circle({
+        var bluecircle = new Konva.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1252,7 +1252,7 @@ suite('Container', function() {
             strokeWidth: 4
         });
 
-        var greencircle = new Kinetic.Circle({
+        var greencircle = new Konva.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1279,9 +1279,9 @@ suite('Container', function() {
     // ======================================================
     test('move green circle below blue circle with moveDown', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var bluecircle = new Kinetic.Circle({
+        var bluecircle = new Konva.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1290,7 +1290,7 @@ suite('Container', function() {
             strokeWidth: 4
         });
 
-        var greencircle = new Kinetic.Circle({
+        var greencircle = new Konva.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1317,9 +1317,9 @@ suite('Container', function() {
     // ======================================================
     test('layer layer when only one layer', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var bluecircle = new Kinetic.Circle({
+        var bluecircle = new Konva.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1351,11 +1351,11 @@ suite('Container', function() {
     // ======================================================
     test('move blue group on top of green group with moveToTop', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var greenGroup = new Kinetic.Group();
-        var blueGroup = new Kinetic.Group();
+        var layer = new Konva.Layer();
+        var greenGroup = new Konva.Group();
+        var blueGroup = new Konva.Group();
 
-        var bluecircle = new Kinetic.Circle({
+        var bluecircle = new Konva.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1364,7 +1364,7 @@ suite('Container', function() {
             strokeWidth: 4
         });
 
-        var greencircle = new Kinetic.Circle({
+        var greencircle = new Konva.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1394,11 +1394,11 @@ suite('Container', function() {
     // ======================================================
     test('move blue group on top of green group with moveUp', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var greenGroup = new Kinetic.Group();
-        var blueGroup = new Kinetic.Group();
+        var layer = new Konva.Layer();
+        var greenGroup = new Konva.Group();
+        var blueGroup = new Konva.Group();
 
-        var bluecircle = new Kinetic.Circle({
+        var bluecircle = new Konva.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1407,7 +1407,7 @@ suite('Container', function() {
             strokeWidth: 4
         });
 
-        var greencircle = new Kinetic.Circle({
+        var greencircle = new Konva.Circle({
             x: 280,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1437,11 +1437,11 @@ suite('Container', function() {
     // ======================================================
     test('add and moveTo should work same way (depend on parent)', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var greenGroup = new Kinetic.Group();
-        var blueGroup = new Kinetic.Group();
+        var layer = new Konva.Layer();
+        var greenGroup = new Konva.Group();
+        var blueGroup = new Konva.Group();
 
-        var bluecircle = new Kinetic.Circle({
+        var bluecircle = new Konva.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1472,10 +1472,10 @@ suite('Container', function() {
     // ======================================================
     test('getChildren may use filter function', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
 
-        var circle1 = new Kinetic.Circle({
+        var circle1 = new Konva.Circle({
             x: 200,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1486,7 +1486,7 @@ suite('Container', function() {
         var circle2 = circle1.clone();
         group.add(circle1).add(circle2);
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             name : 'test'
         });
         group.add(rect);
@@ -1511,20 +1511,20 @@ suite('Container', function() {
 
     test('add multiple nodes to container', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle1 = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle1 = new Konva.Circle({
             x: 0,
             y: 0,
             radius: 10,
             fill: 'red'
         });
-        var circle2 = new Kinetic.Circle({
+        var circle2 = new Konva.Circle({
             x: 0,
             y: 0,
             radius: 10,
             fill: 'white'
         });
-        var circle3 = new Kinetic.Circle({
+        var circle3 = new Konva.Circle({
             x: 0,
             y: 0,
             radius: 10,

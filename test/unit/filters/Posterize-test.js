@@ -7,8 +7,8 @@ suite('Posterize', function () {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -19,15 +19,15 @@ suite('Posterize', function () {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Posterize]);
+            darth.filters([Konva.Filters.Posterize]);
             darth.levels(0.2);
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: darth, 
               duration: 1.0,
               levels: 0,
-              easing: Kinetic.Easings.Linear
+              easing: Konva.Easings.Linear
             });
         
             darth.on('mouseover', function() {

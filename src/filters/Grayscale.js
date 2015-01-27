@@ -2,13 +2,13 @@
     /**
     * Grayscale Filter
     * @function
-    * @memberof Kinetic.Filters
+    * @memberof Konva.Filters
     * @param {Object} imageData
     * @example
     * node.cache();
-    * node.filters([Kinetic.Filters.Grayscale]);
+    * node.filters([Konva.Filters.Grayscale]);
     */
-    Kinetic.Filters.Grayscale = function(imageData) {
+    Konva.Filters.Grayscale = function(imageData) {
         var data = imageData.data,
             len = data.length,
             i, brightness;

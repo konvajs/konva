@@ -6,8 +6,8 @@ suite('Emboss', function() {
 
         var imageObj = new Image();
         imageObj.onload = function() {
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -17,18 +17,18 @@ suite('Emboss', function() {
             layer.add(darth);
             stage.add(layer);
             darth.cache();
-            darth.filters([Kinetic.Filters.Emboss]);
+            darth.filters([Konva.Filters.Emboss]);
             darth.embossStrength(0.5);
             darth.embossWhiteLevel(0.8);
             darth.embossDirection('top-right');
 
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: darth, 
               duration: 0.6,
               embossStrength: 10,
-              easing: Kinetic.Easings.EaseInOut
+              easing: Konva.Easings.EaseInOut
             });
         
             darth.on('mouseover', function() {
@@ -53,8 +53,8 @@ suite('Emboss', function() {
 
         var imageObj = new Image();
         imageObj.onload = function() {
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -64,18 +64,18 @@ suite('Emboss', function() {
             layer.add(darth);
             stage.add(layer);
             darth.cache();
-            darth.filters([Kinetic.Filters.Emboss]);
+            darth.filters([Konva.Filters.Emboss]);
             darth.embossStrength(0.5);
             darth.embossWhiteLevel(0.2);
             darth.embossBlend(true);
             
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: darth, 
               duration: 0.6,
               embossStrength: 10,
-              easing: Kinetic.Easings.EaseInOut
+              easing: Konva.Easings.EaseInOut
             });
         
             darth.on('mouseover', function() {

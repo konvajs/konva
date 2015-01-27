@@ -7,7 +7,7 @@
    *  what would be the y axis and the theta axis along the x axis.
    * @function
    * @author ippo615
-   * @memberof Kinetic.Filters
+   * @memberof Konva.Filters
    * @param {ImageData} src, the source image data (what will be transformed)
    * @param {ImageData} dst, the destination image data (where it will be saved)
    * @param {Object} opt
@@ -74,7 +74,7 @@
      *  Performs w*h*4 pixel reads and w*h pixel writes.
      * @function
      * @author ippo615
-     * @memberof Kinetic.Filters
+     * @memberof Konva.Filters
      * @param {ImageData} src, the source image data (what will be transformed)
      * @param {ImageData} dst, the destination image data (where it will be saved)
      * @param {Object} opt
@@ -143,25 +143,25 @@
 
     };
 
-    //Kinetic.Filters.ToPolar = Kinetic.Util._FilterWrapDoubleBuffer(ToPolar);
-    //Kinetic.Filters.FromPolar = Kinetic.Util._FilterWrapDoubleBuffer(FromPolar);
+    //Konva.Filters.ToPolar = Konva.Util._FilterWrapDoubleBuffer(ToPolar);
+    //Konva.Filters.FromPolar = Konva.Util._FilterWrapDoubleBuffer(FromPolar);
 
     // create a temporary canvas for working - shared between multiple calls
-    var tempCanvas = Kinetic.Util.createCanvasElement();
+    var tempCanvas = Konva.Util.createCanvasElement();
 
     /*
      * Kaleidoscope Filter. 
      * @function
      * @name Kaleidoscope
      * @author ippo615
-     * @memberof Kinetic.Filters
+     * @memberof Konva.Filters
      * @example
      * node.cache();
-     * node.filters([Kinetic.Filters.Kaleidoscope]);
+     * node.filters([Konva.Filters.Kaleidoscope]);
      * node.kaleidoscopePower(3);
      * node.kaleidoscopeAngle(45);
      */
-    Kinetic.Filters.Kaleidoscope = function(imageData){
+    Konva.Filters.Kaleidoscope = function(imageData){
         var xSize = imageData.width,
             ySize = imageData.height;
 
@@ -245,23 +245,23 @@
     };
 
     /**
-    * get/set kaleidoscope power. Use with {@link Kinetic.Filters.Kaleidoscope} filter.
+    * get/set kaleidoscope power. Use with {@link Konva.Filters.Kaleidoscope} filter.
     * @name kaleidoscopePower
     * @method
-    * @memberof Kinetic.Node.prototype
+    * @memberof Konva.Node.prototype
     * @param {Integer} power of kaleidoscope
     * @returns {Integer}
     */
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'kaleidoscopePower', 2, null, Kinetic.Factory.afterSetFilter);
+    Konva.Factory.addGetterSetter(Konva.Node, 'kaleidoscopePower', 2, null, Konva.Factory.afterSetFilter);
 
     /**
-    * get/set kaleidoscope angle. Use with {@link Kinetic.Filters.Kaleidoscope} filter.
+    * get/set kaleidoscope angle. Use with {@link Konva.Filters.Kaleidoscope} filter.
     * @name kaleidoscopeAngle
     * @method
-    * @memberof Kinetic.Node.prototype
+    * @memberof Konva.Node.prototype
     * @param {Integer} degrees
     * @returns {Integer}
     */
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'kaleidoscopeAngle', 0, null, Kinetic.Factory.afterSetFilter);
+    Konva.Factory.addGetterSetter(Konva.Node, 'kaleidoscopeAngle', 0, null, Konva.Factory.afterSetFilter);
 
 })();

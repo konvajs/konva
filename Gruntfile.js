@@ -70,15 +70,15 @@ module.exports = function(grunt) {
       },
       dev: {
         src: sourceFiles,
-        dest: 'dist/kinetic-dev.js'
+        dest: 'dist/konva-dev.js'
       },
       beta: {
         src: sourceFiles,
-        dest: 'dist/kinetic-v<%= pkg.version %>-beta.js'
+        dest: 'dist/konva-v<%= pkg.version %>-beta.js'
       },
       prod: {
         src: sourceFiles,
-        dest: 'dist/kinetic-v<%= pkg.version %>.js'
+        dest: 'dist/konva-v<%= pkg.version %>.js'
       }
     },
     replace: {
@@ -95,8 +95,8 @@ module.exports = function(grunt) {
         },
 
         files: [{
-          src: ['dist/kinetic-dev.js'],
-          dest: 'dist/kinetic-dev.js'
+          src: ['dist/konva-dev.js'],
+          dest: 'dist/konva-dev.js'
         }]
       },
       beta: {
@@ -112,8 +112,8 @@ module.exports = function(grunt) {
         },
 
         files: [{
-          src: ['dist/kinetic-v<%= pkg.version %>-beta.js'],
-          dest: 'dist/kinetic-v<%= pkg.version %>-beta.js'
+          src: ['dist/konva-v<%= pkg.version %>-beta.js'],
+          dest: 'dist/konva-v<%= pkg.version %>-beta.js'
         }]
       },
       prod1: {
@@ -129,8 +129,8 @@ module.exports = function(grunt) {
         },
 
         files: [{
-          src: ['dist/kinetic-v<%= pkg.version %>.js'],
-          dest: 'dist/kinetic-v<%= pkg.version %>.js'
+          src: ['dist/konva-v<%= pkg.version %>.js'],
+          dest: 'dist/konva-v<%= pkg.version %>.js'
         }]
       },
       prod2: {
@@ -141,8 +141,8 @@ module.exports = function(grunt) {
           prefix: '@@'
         },
         files: [{
-          src: ['dist/kinetic-Global-v<%= pkg.version %>.min.js'],
-          dest: 'dist/kinetic-Global-v<%= pkg.version %>.min.js'
+          src: ['dist/konva-Global-v<%= pkg.version %>.min.js'],
+          dest: 'dist/konva-Global-v<%= pkg.version %>.min.js'
         }]
       },
       prod3: {
@@ -153,8 +153,8 @@ module.exports = function(grunt) {
           prefix: '@@'
         },
         files: [{
-          src: ['dist/kinetic-v<%= pkg.version %>.min.js'],
-          dest: 'dist/kinetic-v<%= pkg.version %>.min.js'
+          src: ['dist/konva-v<%= pkg.version %>.min.js'],
+          dest: 'dist/konva-v<%= pkg.version %>.min.js'
         }]
       },
       updateBower: {
@@ -172,11 +172,11 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
-        banner: '/*! KineticJS v<%= pkg.version %> <%= grunt.template.today("yyyy-mm-dd") %> http://lavrton.github.io/KineticJS/ by Eric Rowell @ericdrowell, Anton Lavrenov @lavrton - MIT License https://github.com/lavrton/KineticJS/wiki/License*/\n'
+        banner: '/*! Konva v<%= pkg.version %> <%= grunt.template.today("yyyy-mm-dd") %> http://konvajs.github.io/ by Anton Lavrenov @lavrton - MIT License https://github.com/konvajs/konva/wiki/License*/\n'
       },
       build: {
         files: {
-          'dist/kinetic-v<%= pkg.version %>.min.js': 'dist/kinetic-v<%= pkg.version %>.js'
+          'dist/konva-v<%= pkg.version %>.min.js': 'dist/konva-v<%= pkg.version %>.js'
         }
       }
     },
@@ -190,13 +190,13 @@ module.exports = function(grunt) {
     copy: {
       prod1: {
         nonull: true,
-        src: 'dist/kinetic-v<%= pkg.version %>.min.js',
-        dest: 'kinetic.min.js'
+        src: 'dist/konva-v<%= pkg.version %>.min.js',
+        dest: 'konva.min.js'
       },
       prod2: {
         nonull: true,
-        src: 'dist/kinetic-v<%= pkg.version %>.js',
-        dest: 'kinetic.js'
+        src: 'dist/konva-v<%= pkg.version %>.js',
+        dest: 'konva.js'
       }
     },
     shell: {
@@ -206,7 +206,7 @@ module.exports = function(grunt) {
                 stderr : true,
                 failOnError : true
             },
-            command: './node_modules/.bin/jsdoc ./dist/kinetic-v<%= pkg.version %>.js -d ./docs'
+            command: './node_modules/.bin/jsdoc ./dist/konva-v<%= pkg.version %>.js -d ./docs'
         }
     },
     mocha_phantomjs: {
@@ -223,7 +223,7 @@ module.exports = function(grunt) {
     },
     jsdoc : {
       dist : {
-        src: ['README.md', './dist/kinetic-v<%= pkg.version %>.js'],
+        src: ['README.md', './dist/konva-v<%= pkg.version %>.js'],
         options: {
           destination: 'api',
           template : './node_modules/grunt-jsdoc/node_modules/ink-docstrap/template',
@@ -237,7 +237,7 @@ module.exports = function(grunt) {
   for (var n=0; n<sourceFiles.length; n++) {
     var inputFile = sourceFiles[n];
     var className = (inputFile.match(/[-_\w]+[.][\w]+$/i)[0]).replace('.js', '');
-    var outputFile = 'dist/kinetic-' + className + '-v<%= pkg.version %>.min.js';
+    var outputFile = 'dist/konva-' + className + '-v<%= pkg.version %>.min.js';
 
     config.uglify.build.files[outputFile] = [inputFile];
   }

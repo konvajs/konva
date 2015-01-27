@@ -4,9 +4,9 @@ suite('FastLayer', function() {
     test('basic render', function() {
         var stage = addStage();
 
-        var layer = new Kinetic.FastLayer();
+        var layer = new Konva.FastLayer();
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -23,9 +23,9 @@ suite('FastLayer', function() {
 
 test('cache shape on fast layer', function(){
     var stage = addStage();
-    var layer = new Kinetic.FastLayer();
+    var layer = new Konva.FastLayer();
 
-    var circle = new Kinetic.Circle({
+    var circle = new Konva.Circle({
         x: 74,
         y: 74,
         radius: 70,

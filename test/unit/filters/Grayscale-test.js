@@ -6,8 +6,8 @@ suite('Grayscale', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -18,7 +18,7 @@ suite('Grayscale', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Grayscale]);
+            darth.filters([Konva.Filters.Grayscale]);
             layer.draw();
 
             done();
@@ -34,8 +34,8 @@ suite('Grayscale', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -47,7 +47,7 @@ suite('Grayscale', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Grayscale]);
+            darth.filters([Konva.Filters.Grayscale]);
             layer.draw();
 
             done();
@@ -63,8 +63,8 @@ suite('Grayscale', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -75,7 +75,7 @@ suite('Grayscale', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Grayscale]);
+            darth.filters([Konva.Filters.Grayscale]);
             layer.draw();
 
             done();

@@ -11,7 +11,7 @@
   </head>
   <body>
     <div id='container'></div>
-    <script src='http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/kinetic-v5.1.0.min.js'></script>
+    <script src='http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/konva-v5.1.0.min.js'></script>
     <script src='http://code.jquery.com/jquery-1.11.0.min.js'></script>
     <script src='http://www.html5canvastutorials.com/lib/stats/stats.js'></script>
     <script defer='defer'>      
@@ -57,12 +57,12 @@
       var counter;
       
       function onReady() {
-          var stage = new Kinetic.Stage({
+          var stage = new Konva.Stage({
               container: 'container',
               width: width - 10,
               height: height - 10,
           });
-          layer = new Kinetic.FastLayer();
+          layer = new Konva.FastLayer();
           stage.add(layer);
           stats = new Stats();
           
@@ -106,7 +106,7 @@
       function _handleTextureLoaded (event) {
           for (var i = 0; i < startBunnyCount; i++) 
           {
-              var bunny = new Kinetic.Image({
+              var bunny = new Konva.Image({
                   image: wabbitTexture,
                   transformsEnabled: 'position',
                   hitGraphEnabled: false,
@@ -143,7 +143,7 @@
               
               for (var i = 0; i < amount; i++) 
               {
-                  var bunny = new Kinetic.Image({
+                  var bunny = new Konva.Image({
                       image: wabbitTexture,
                       transformsEnabled: 'position',
                       x : 0,

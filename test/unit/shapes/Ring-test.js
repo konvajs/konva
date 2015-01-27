@@ -3,8 +3,8 @@ suite('Ring', function() {
   // ======================================================
   test('add ring', function() {
       var stage = addStage();
-      var layer = new Kinetic.Layer();
-      var ring = new Kinetic.Ring({
+      var layer = new Konva.Layer();
+      var ring = new Konva.Ring({
           x: stage.getWidth() / 2,
           y: stage.getHeight() / 2,
           innerRadius: 50,
@@ -23,11 +23,11 @@ suite('Ring', function() {
    });
 
   // ======================================================
-  // test for https://github.com/ericdrowell/KineticJS/issues/987
+  // test for https://github.com/ericdrowell/KonvaJS/issues/987
   test('ring attrs sync', function() {
       var stage = addStage();
-      var layer = new Kinetic.Layer();
-      var ring = new Kinetic.Ring({
+      var layer = new Konva.Layer();
+      var ring = new Konva.Ring({
           name: 'ring',
           x: 30,
           y: 50,

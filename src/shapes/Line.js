@@ -3,8 +3,8 @@
      * Line constructor.&nbsp; Lines are defined by an array of points and
      *  a tension
      * @constructor
-     * @memberof Kinetic
-     * @augments Kinetic.Shape
+     * @memberof Konva
+     * @augments Konva.Shape
      * @param {Object} config
      * @param {Array} config.points
      * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
@@ -13,7 +13,7 @@
      * @@shapeParams
      * @@nodeParams
      * @example
-     * var line = new Kinetic.Line({
+     * var line = new Konva.Line({
      *   x: 100,
      *   y: 50,
      *   points: [73, 70, 340, 23, 450, 60, 500, 20],
@@ -21,17 +21,17 @@
      *   tension: 1
      * });
      */
-    Kinetic.Line = function(config) {
+    Konva.Line = function(config) {
         this.___init(config);
     };
 
-    Kinetic.Line.prototype = {
+    Konva.Line.prototype = {
         ___init: function(config) {
             // call super constructor
-            Kinetic.Shape.call(this, config);
+            Konva.Shape.call(this, config);
             this.className = 'Line';
 
-            this.on('pointsChange.kinetic tensionChange.kinetic closedChange.kinetic', function() {
+            this.on('pointsChange.konva tensionChange.konva closedChange.konva', function() {
                 this._clearCache('tensionPoints');
             });
 
@@ -94,14 +94,14 @@
                 return this._getTensionPointsClosed();
             }
             else {
-                return Kinetic.Util._expandPoints(this.getPoints(), this.getTension());
+                return Konva.Util._expandPoints(this.getPoints(), this.getTension());
             }
         },
         _getTensionPointsClosed: function() {
             var p = this.getPoints(),
                 len = p.length,
                 tension = this.getTension(),
-                util = Kinetic.Util,
+                util = Konva.Util,
                 firstControlPoints = util._getControlPoints(
                     p[len-2],
                     p[len-1],
@@ -120,7 +120,7 @@
                     p[1],
                     tension
                 ),
-                middle = Kinetic.Util._expandPoints(p, tension),
+                middle = Konva.Util._expandPoints(p, tension),
                 tp = [
                     firstControlPoints[2],
                     firstControlPoints[3]
@@ -142,16 +142,16 @@
             return tp;
         }
     };
-    Kinetic.Util.extend(Kinetic.Line, Kinetic.Shape);
+    Konva.Util.extend(Konva.Line, Konva.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Line, 'closed', false);
+    Konva.Factory.addGetterSetter(Konva.Line, 'closed', false);
 
     /**
      * get/set closed flag.  The default is false
      * @name closed
      * @method
-     * @memberof Kinetic.Line.prototype
+     * @memberof Konva.Line.prototype
      * @param {Boolean} closed
      * @returns {Boolean}
      * @example
@@ -165,13 +165,13 @@
      * line.closed(false);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Line, 'tension', 0);
+    Konva.Factory.addGetterSetter(Konva.Line, 'tension', 0);
 
     /**
      * get/set tension
      * @name tension
      * @method
-     * @memberof Kinetic.Line.prototype
+     * @memberof Konva.Line.prototype
      * @param {Number} Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
      *   The default is 0
      * @returns {Number}
@@ -183,12 +183,12 @@
      * line.tension(3);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Line, 'points', []);
+    Konva.Factory.addGetterSetter(Konva.Line, 'points', []);
     /**
      * get/set points array
      * @name points
      * @method
-     * @memberof Kinetic.Line.prototype
+     * @memberof Konva.Line.prototype
      * @param {Array} points
      * @returns {Array}
      * @example
@@ -202,5 +202,5 @@
      * line.points(line.points().concat([70, 80]));
      */
 
-    Kinetic.Collection.mapMethods(Kinetic.Line);
+    Konva.Collection.mapMethods(Konva.Line);
 })();

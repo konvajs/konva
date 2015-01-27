@@ -2,9 +2,9 @@
     var BATCH_DRAW_STOP_TIME_DIFF = 500;
 
     var now =(function() {
-        if (Kinetic.root.performance && Kinetic.root.performance.now) {
+        if (Konva.root.performance && Konva.root.performance.now) {
             return function() {
-                return Kinetic.root.performance.now();
+                return Konva.root.performance.now();
             };
         }
         else {
@@ -15,11 +15,11 @@
     })();
 
     var RAF = (function() {
-        return Kinetic.root.requestAnimationFrame
-            || Kinetic.root.webkitRequestAnimationFrame
-            || Kinetic.root.mozRequestAnimationFrame
-            || Kinetic.root.oRequestAnimationFrame
-            || Kinetic.root.msRequestAnimationFrame
+        return Konva.root.requestAnimationFrame
+            || Konva.root.webkitRequestAnimationFrame
+            || Konva.root.mozRequestAnimationFrame
+            || Konva.root.oRequestAnimationFrame
+            || Konva.root.msRequestAnimationFrame
             || FRAF;
     })();
 
@@ -28,34 +28,34 @@
     }
 
     function requestAnimFrame() {
-        return RAF.apply(Kinetic.root, arguments);
+        return RAF.apply(Konva.root, arguments);
     }
     
     /**
      * Animation constructor.  A stage is used to contain multiple layers and handle
      * @constructor
-     * @memberof Kinetic
+     * @memberof Konva
      * @param {Function} func function executed on each animation frame.  The function is passed a frame object, which contains
      *  timeDiff, lastTime, time, and frameRate properties.  The timeDiff property is the number of milliseconds that have passed
      *  since the last animation frame.  The lastTime property is time in milliseconds that elapsed from the moment the animation started
      *  to the last animation frame.  The time property is the time in milliseconds that ellapsed from the moment the animation started
      *  to the current animation frame.  The frameRate property is the current frame rate in frames / second. Return false from function,
      *  if you don't need to redraw layer/layers on some frames.
-     * @param {Kinetic.Layer|Array} [layers] layer(s) to be redrawn on each animation frame. Can be a layer, an array of layers, or null.
+     * @param {Konva.Layer|Array} [layers] layer(s) to be redrawn on each animation frame. Can be a layer, an array of layers, or null.
      *  Not specifying a node will result in no redraw.
      * @example
      * // move a node to the right at 50 pixels / second
      * var velocity = 50;
      *
-     * var anim = new Kinetic.Animation(function(frame) {
+     * var anim = new Konva.Animation(function(frame) {
      *   var dist = velocity * (frame.timeDiff / 1000);
      *   node.move(dist, 0);
      * }, layer);
      *
      * anim.start();
      */
-    Kinetic.Animation = function(func, layers) {
-        var Anim = Kinetic.Animation;
+    Konva.Animation = function(func, layers) {
+        var Anim = Konva.Animation;
         this.func = func;
         this.setLayers(layers);
         this.id = Anim.animIdCounter++;
@@ -68,12 +68,12 @@
     /*
      * Animation methods
      */
-    Kinetic.Animation.prototype = {
+    Konva.Animation.prototype = {
         /**
          * set layers to be redrawn on each animation frame
          * @method
-         * @memberof Kinetic.Animation.prototype
-         * @param {Kinetic.Layer|Array} [layers] layer(s) to be redrawn.&nbsp; Can be a layer, an array of layers, or null.  Not specifying a node will result in no redraw.
+         * @memberof Konva.Animation.prototype
+         * @param {Konva.Layer|Array} [layers] layer(s) to be redrawn.&nbsp; Can be a layer, an array of layers, or null.  Not specifying a node will result in no redraw.
          */
         setLayers: function(layers) {
             var lays = [];
@@ -82,7 +82,7 @@
                 lays = [];
             }
             // if passing in an array of Layers
-            // NOTE: layers could be an array or Kinetic.Collection.  for simplicity, I'm just inspecting
+            // NOTE: layers could be an array or Konva.Collection.  for simplicity, I'm just inspecting
             // the length property to check for both cases
             else if (layers.length > 0) {
                 lays = layers;
@@ -97,7 +97,7 @@
         /**
          * get layers
          * @method
-         * @memberof Kinetic.Animation.prototype
+         * @memberof Konva.Animation.prototype
          */
         getLayers: function() {
             return this.layers;
@@ -105,8 +105,8 @@
         /**
          * add layer.  Returns true if the layer was added, and false if it was not
          * @method
-         * @memberof Kinetic.Animation.prototype
-         * @param {Kinetic.Layer} layer
+         * @memberof Konva.Animation.prototype
+         * @param {Konva.Layer} layer
          */
         addLayer: function(layer) {
             var layers = this.layers,
@@ -132,10 +132,10 @@
         /**
          * determine if animation is running or not.  returns true or false
          * @method
-         * @memberof Kinetic.Animation.prototype
+         * @memberof Konva.Animation.prototype
          */
         isRunning: function() {
-            var a = Kinetic.Animation,
+            var a = Konva.Animation,
                 animations = a.animations,
                 len = animations.length,
                 n;
@@ -150,10 +150,10 @@
         /**
          * start animation
          * @method
-         * @memberof Kinetic.Animation.prototype
+         * @memberof Konva.Animation.prototype
          */
         start: function() {
-            var Anim = Kinetic.Animation;
+            var Anim = Konva.Animation;
             this.stop();
             this.frame.timeDiff = 0;
             this.frame.lastTime = now();
@@ -162,10 +162,10 @@
         /**
          * stop animation
          * @method
-         * @memberof Kinetic.Animation.prototype
+         * @memberof Konva.Animation.prototype
          */
         stop: function() {
-            Kinetic.Animation._removeAnimation(this);
+            Konva.Animation._removeAnimation(this);
         },
         _updateFrameObject: function(time) {
             this.frame.timeDiff = time - this.frame.lastTime;
@@ -174,15 +174,15 @@
             this.frame.frameRate = 1000 / this.frame.timeDiff;
         }
     };
-    Kinetic.Animation.animations = [];
-    Kinetic.Animation.animIdCounter = 0;
-    Kinetic.Animation.animRunning = false;
+    Konva.Animation.animations = [];
+    Konva.Animation.animIdCounter = 0;
+    Konva.Animation.animRunning = false;
 
-    Kinetic.Animation._addAnimation = function(anim) {
+    Konva.Animation._addAnimation = function(anim) {
         this.animations.push(anim);
         this._handleAnimation();
     };
-    Kinetic.Animation._removeAnimation = function(anim) {
+    Konva.Animation._removeAnimation = function(anim) {
         var id = anim.id,
             animations = this.animations,
             len = animations.length,
@@ -196,7 +196,7 @@
         }
     };
 
-    Kinetic.Animation._runFrames = function() {
+    Konva.Animation._runFrames = function() {
         var layerHash = {},
             animations = this.animations,
             anim, layers, func, n, i, layersLen, layer, key, needRedraw;
@@ -243,8 +243,8 @@
             layerHash[key].draw();
         }
     };
-    Kinetic.Animation._animationLoop = function() {
-        var Anim = Kinetic.Animation;
+    Konva.Animation._animationLoop = function() {
+        var Anim = Konva.Animation;
 
         if(Anim.animations.length) {
             requestAnimFrame(Anim._animationLoop);
@@ -254,7 +254,7 @@
             Anim.animRunning = false;
         }
     };
-    Kinetic.Animation._handleAnimation = function() {
+    Konva.Animation._handleAnimation = function() {
         var that = this;
         if(!this.animRunning) {
             this.animRunning = true;
@@ -262,19 +262,19 @@
         }
     };
 
-    var moveTo = Kinetic.Node.prototype.moveTo;
-    Kinetic.Node.prototype.moveTo = function(container) {
+    var moveTo = Konva.Node.prototype.moveTo;
+    Konva.Node.prototype.moveTo = function(container) {
         moveTo.call(this, container);
     };
 
     /**
      * batch draw
      * @method
-     * @memberof Kinetic.Base.prototype
+     * @memberof Konva.Base.prototype
      */
-    Kinetic.BaseLayer.prototype.batchDraw = function() {
+    Konva.BaseLayer.prototype.batchDraw = function() {
         var that = this,
-            Anim = Kinetic.Animation;
+            Anim = Konva.Animation;
 
         if (!this.batchAnim) {
             this.batchAnim = new Anim(function() {
@@ -295,9 +295,9 @@
     /**
      * batch draw
      * @method
-     * @memberof Kinetic.Stage.prototype
+     * @memberof Konva.Stage.prototype
      */
-    Kinetic.Stage.prototype.batchDraw = function() {
+    Konva.Stage.prototype.batchDraw = function() {
         this.getChildren().each(function(layer) {
             layer.batchDraw();
         });

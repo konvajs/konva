@@ -1,14 +1,7 @@
 {
-  "name": "kinetic",
+  "name": "konva",
   "version": "5.2.0",
-  "author": "Eric Rowell",
-  "contributors" : [
-    {
-      "name" : "Anton Lavrenov",
-      "email" : "lavrton@gmail.com",
-      "url" : "https://twitter.com/lavrton"
-    }
-  ],
+  "author": "Anton Lavrenov",
   "devDependencies": {
     "chai": "1.9.2",
     "finalhandler": "^0.3.3",
@@ -40,14 +33,14 @@
     "jsdom": false
   },
   "bugs": {
-    "url": "https://github.com/lavrton/KineticJS/issues"
+    "url": "https://github.com/konvajs/konva/issues"
   },
-  "homepage" : "http://lavrton.github.io/KineticJS/",
+  "homepage" : "http://konvajs.github.io/",
   "readmeFilename": "README.md",
-  "main": "kinetic.js",
+  "main": "konva.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/lavrton/KineticJS.git"
+    "url": "git://github.com/konvajs/konva.git"
   },
   "license": "MIT"
 }

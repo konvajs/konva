@@ -3,7 +3,7 @@
     var AUTO = 'auto',
         //CANVAS = 'canvas',
         CENTER = 'center',
-        CHANGE_KINETIC = 'Change.kinetic',
+        CHANGE_KINETIC = 'Change.konva',
         CONTEXT_2D = '2d',
         DASH = '-',
         EMPTY_STRING = '',
@@ -22,13 +22,13 @@
 
         // cached variables
         attrChangeListLen = ATTR_CHANGE_LIST.length,
-        dummyContext = Kinetic.Util.createCanvasElement().getContext(CONTEXT_2D);
+        dummyContext = Konva.Util.createCanvasElement().getContext(CONTEXT_2D);
 
     /**
      * Text constructor
      * @constructor
-     * @memberof Kinetic
-     * @augments Kinetic.Shape
+     * @memberof Konva
+     * @augments Konva.Shape
      * @param {Object} config
      * @param {String} [config.fontFamily] default is Arial
      * @param {Number} [config.fontSize] in pixels.  Default is 12
@@ -44,7 +44,7 @@
      * @@shapeParams
      * @@nodeParams
      * @example
-     * var text = new Kinetic.Text({
+     * var text = new Konva.Text({
      *   x: 10,
      *   y: 15,
      *   text: 'Simple Text',
@@ -53,7 +53,7 @@
      *   fill: 'green'
      * });
      */
-    Kinetic.Text = function(config) {
+    Konva.Text = function(config) {
         this.___init(config);
     };
     function _fillFunc(context) {
@@ -63,7 +63,7 @@
         context.strokeText(this.partialText, 0, 0);
     }
 
-    Kinetic.Text.prototype = {
+    Konva.Text.prototype = {
         ___init: function(config) {
             config = config || {};
             config.fill = config.fill || 'black';
@@ -76,7 +76,7 @@
             }
 
             // call super constructor
-            Kinetic.Shape.call(this, config);
+            Konva.Shape.call(this, config);
 
             this._fillFunc = _fillFunc;
             this._strokeFunc = _strokeFunc;
@@ -144,14 +144,14 @@
             context.fillStrokeShape(this);
         },
         setText: function(text) {
-            var str = Kinetic.Util._isString(text) ? text : text.toString();
+            var str = Konva.Util._isString(text) ? text : text.toString();
             this._setAttr(TEXT, str);
             return this;
         },
         /**
          * get width of text area, which includes padding
          * @method
-         * @memberof Kinetic.Text.prototype
+         * @memberof Konva.Text.prototype
          * @returns {Number}
          */
         getWidth: function() {
@@ -160,7 +160,7 @@
         /**
          * get the height of the text area, which takes into account multi-line text, line heights, and padding
          * @method
-         * @memberof Kinetic.Text.prototype
+         * @memberof Konva.Text.prototype
          * @returns {Number}
          */
         getHeight: function() {
@@ -169,7 +169,7 @@
         /**
          * get text width
          * @method
-         * @memberof Kinetic.Text.prototype
+         * @memberof Konva.Text.prototype
          * @returns {Number}
          */
         getTextWidth: function() {
@@ -178,7 +178,7 @@
         /**
          * get text height
          * @method
-         * @memberof Kinetic.Text.prototype
+         * @memberof Konva.Text.prototype
          * @returns {Number}
          */
         getTextHeight: function() {
@@ -317,16 +317,16 @@
             this.textWidth = textWidth;
         }
     };
-    Kinetic.Util.extend(Kinetic.Text, Kinetic.Shape);
+    Konva.Util.extend(Konva.Text, Konva.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontFamily', 'Arial');
+    Konva.Factory.addGetterSetter(Konva.Text, 'fontFamily', 'Arial');
 
     /**
      * get/set font family
      * @name fontFamily
      * @method
-     * @memberof Kinetic.Text.prototype
+     * @memberof Konva.Text.prototype
      * @param {String} fontFamily
      * @returns {String}
      * @example
@@ -337,13 +337,13 @@
      * text.fontFamily('Arial');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontSize', 12);
+    Konva.Factory.addGetterSetter(Konva.Text, 'fontSize', 12);
 
     /**
      * get/set font size in pixels
      * @name fontSize
      * @method
-     * @memberof Kinetic.Text.prototype
+     * @memberof Konva.Text.prototype
      * @param {Number} fontSize
      * @returns {Number}
      * @example
@@ -354,13 +354,13 @@
      * text.fontSize(22);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontStyle', NORMAL);
+    Konva.Factory.addGetterSetter(Konva.Text, 'fontStyle', NORMAL);
 
     /**
      * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
      * @name fontStyle
      * @method
-     * @memberof Kinetic.Text.prototype
+     * @memberof Konva.Text.prototype
      * @param {String} fontStyle
      * @returns {String}
      * @example
@@ -371,13 +371,13 @@
      * text.fontStyle('bold');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'fontVariant', NORMAL);
+    Konva.Factory.addGetterSetter(Konva.Text, 'fontVariant', NORMAL);
 
     /**
      * set font variant.  Can be 'normal' or 'small-caps'.  'normal' is the default.
      * @name fontVariant
      * @method
-     * @memberof Kinetic.Text.prototype
+     * @memberof Konva.Text.prototype
      * @param {String} fontVariant
      * @returns {String}
      * @example
@@ -388,13 +388,13 @@
      * text.fontVariant('small-caps');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'padding', 0);
+    Konva.Factory.addGetterSetter(Konva.Text, 'padding', 0);
 
     /**
      * set padding
      * @name padding
      * @method
-     * @memberof Kinetic.Text.prototype
+     * @memberof Konva.Text.prototype
      * @param {Number} padding
      * @returns {Number}
      * @example
@@ -405,13 +405,13 @@
      * text.padding(10);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'align', LEFT);
+    Konva.Factory.addGetterSetter(Konva.Text, 'align', LEFT);
 
     /**
      * get/set horizontal align of text.  Can be 'left', 'center', or 'right'
      * @name align
      * @method
-     * @memberof Kinetic.Text.prototype
+     * @memberof Konva.Text.prototype
      * @param {String} align
      * @returns {String}
      * @example
@@ -425,13 +425,13 @@
      * text.align('right');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'lineHeight', 1);
+    Konva.Factory.addGetterSetter(Konva.Text, 'lineHeight', 1);
 
     /**
      * get/set line height.  The default is 1.
      * @name lineHeight
      * @method
-     * @memberof Kinetic.Text.prototype
+     * @memberof Konva.Text.prototype
      * @param {Number} lineHeight
      * @returns {Number}
      * @example 
@@ -442,13 +442,13 @@
      * text.lineHeight(2);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Text, 'wrap', WORD);
+    Konva.Factory.addGetterSetter(Konva.Text, 'wrap', WORD);
 
     /**
      * get/set wrap.  Can be word, char, or none. Default is word.
      * @name wrap
      * @method
-     * @memberof Kinetic.Text.prototype
+     * @memberof Konva.Text.prototype
      * @param {String} wrap
      * @returns {String}
      * @example
@@ -459,14 +459,14 @@
      * text.wrap('word');
      */
 
-    Kinetic.Factory.addGetter(Kinetic.Text, 'text', EMPTY_STRING);
-    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Text, 'text');
+    Konva.Factory.addGetter(Konva.Text, 'text', EMPTY_STRING);
+    Konva.Factory.addOverloadedGetterSetter(Konva.Text, 'text');
 
     /**
      * get/set text
      * @name getText
      * @method
-     * @memberof Kinetic.Text.prototype
+     * @memberof Konva.Text.prototype
      * @param {String} text
      * @returns {String}
      * @example
@@ -477,5 +477,5 @@
      * text.text('Hello world!');
      */
 
-    Kinetic.Collection.mapMethods(Kinetic.Text);
+    Konva.Collection.mapMethods(Konva.Text);
 })();

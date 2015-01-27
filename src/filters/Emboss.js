@@ -5,17 +5,17 @@
      * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
      * License: [http://www.pixastic.com/lib/license.txt]
      * @function
-     * @memberof Kinetic.Filters
+     * @memberof Konva.Filters
      * @param {Object} imageData
      * @example
      * node.cache();
-     * node.filters([Kinetic.Filters.Emboss]);
+     * node.filters([Konva.Filters.Emboss]);
      * node.embossStrength(0.8);
      * node.embossWhiteLevel(0.3);
      * node.embossDirection('right');
      * node.embossBlend(true);
      */
-    Kinetic.Filters.Emboss = function (imageData) {
+    Konva.Filters.Emboss = function (imageData) {
 
         // pixastic strength is between 0 and 10.  I want it between 0 and 1
         // pixastic greyLevel is between 0 and 255.  I want it between 0 and 1.  Also,
@@ -137,43 +137,43 @@
         } while (--y);
     };
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossStrength', 0.5, null, Kinetic.Factory.afterSetFilter);
+    Konva.Factory.addGetterSetter(Konva.Node, 'embossStrength', 0.5, null, Konva.Factory.afterSetFilter);
     /**
-    * get/set emboss strength. Use with {@link Kinetic.Filters.Emboss} filter.
+    * get/set emboss strength. Use with {@link Konva.Filters.Emboss} filter.
     * @name embossStrength
     * @method
-    * @memberof Kinetic.Node.prototype
+    * @memberof Konva.Node.prototype
     * @param {Number} level between 0 and 1.  Default is 0.5
     * @returns {Number}
     */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossWhiteLevel', 0.5, null, Kinetic.Factory.afterSetFilter);
+    Konva.Factory.addGetterSetter(Konva.Node, 'embossWhiteLevel', 0.5, null, Konva.Factory.afterSetFilter);
     /**
-    * get/set emboss white level. Use with {@link Kinetic.Filters.Emboss} filter.
+    * get/set emboss white level. Use with {@link Konva.Filters.Emboss} filter.
     * @name embossWhiteLevel
     * @method
-    * @memberof Kinetic.Node.prototype
+    * @memberof Konva.Node.prototype
     * @param {Number} embossWhiteLevel between 0 and 1.  Default is 0.5
     * @returns {Number}
     */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossDirection', 'top-left', null, Kinetic.Factory.afterSetFilter);
+    Konva.Factory.addGetterSetter(Konva.Node, 'embossDirection', 'top-left', null, Konva.Factory.afterSetFilter);
     /**
-    * get/set emboss direction. Use with {@link Kinetic.Filters.Emboss} filter.
+    * get/set emboss direction. Use with {@link Konva.Filters.Emboss} filter.
     * @name embossDirection
     * @method
-    * @memberof Kinetic.Node.prototype
+    * @memberof Konva.Node.prototype
     * @param {String} embossDirection can be top-left, top, top-right, right, bottom-right, bottom, bottom-left or left
     *   The default is top-left
     * @returns {String}
     */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'embossBlend', false, null, Kinetic.Factory.afterSetFilter);
+    Konva.Factory.addGetterSetter(Konva.Node, 'embossBlend', false, null, Konva.Factory.afterSetFilter);
     /**
-    * get/set emboss blend. Use with {@link Kinetic.Filters.Emboss} filter.
+    * get/set emboss blend. Use with {@link Konva.Filters.Emboss} filter.
     * @name embossBlend
     * @method
-    * @memberof Kinetic.Node.prototype
+    * @memberof Konva.Node.prototype
     * @param {Boolean} embossBlend
     * @returns {Boolean}
     */

@@ -3,22 +3,22 @@ suite('Collection', function(){
 
   test('test collection method mapping', function(){
     // Node method
-    assert.notEqual(Kinetic.Collection.prototype.on, undefined);
+    assert.notEqual(Konva.Collection.prototype.on, undefined);
 
     // Layer method
-    assert.notEqual(Kinetic.Collection.prototype.getContext, undefined);
+    assert.notEqual(Konva.Collection.prototype.getContext, undefined);
 
     // Container method
-    assert.notEqual(Kinetic.Collection.prototype.hasChildren, undefined);
+    assert.notEqual(Konva.Collection.prototype.hasChildren, undefined);
 
     // Shape method
-    assert.notEqual(Kinetic.Collection.prototype.strokeWidth, undefined);
+    assert.notEqual(Konva.Collection.prototype.strokeWidth, undefined);
   });
 
   test('add circle to stage', function(){
     var stage = addStage();
-    var layer = new Kinetic.Layer();
-    var circle1 = new Kinetic.Circle({
+    var layer = new Konva.Layer();
+    var circle1 = new Konva.Circle({
         x: 100,
         y: 100,
         radius: 70,
@@ -30,7 +30,7 @@ suite('Collection', function(){
     });
 
 
-    var circle2 = new Kinetic.Circle({
+    var circle2 = new Konva.Circle({
         x:300,
         y: 100,
         radius: 70,

@@ -2,8 +2,8 @@ suite('Wedge', function() {
     // ======================================================
     test('add wedge', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var wedge = new Kinetic.Wedge({
+        var layer = new Konva.Layer();
+        var wedge = new Konva.Wedge({
             x: 100,
             y: 100,
             radius: 70,

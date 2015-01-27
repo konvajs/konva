@@ -7,8 +7,8 @@ suite('Noise', function () {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -19,15 +19,15 @@ suite('Noise', function () {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Noise]);
+            darth.filters([Konva.Filters.Noise]);
             darth.noise(1);
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: darth, 
               duration: 5.0,
               noise: 0,
-              easing: Kinetic.Easings.EaseInOut
+              easing: Konva.Easings.EaseInOut
             });
         
             darth.on('mouseover', function() {

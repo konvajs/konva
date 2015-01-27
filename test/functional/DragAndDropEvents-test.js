@@ -3,9 +3,9 @@ suite('DragAndDropEvents', function() {
     test('test dragstart, dragmove, dragend', function(done) {
         var stage = addStage();
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var greenCircle = new Kinetic.Circle({
+        var greenCircle = new Konva.Circle({
             x: 40,
             y: 40,
             radius: 20,
@@ -16,7 +16,7 @@ suite('DragAndDropEvents', function() {
         });
 
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -70,8 +70,8 @@ suite('DragAndDropEvents', function() {
         });
 
 
-        assert(!Kinetic.isDragging(), ' isDragging() should be false 1');
-        assert(!Kinetic.isDragReady(), ' isDragReady()) should be false 2');
+        assert(!Konva.isDragging(), ' isDragging() should be false 1');
+        assert(!Konva.isDragReady(), ' isDragReady()) should be false 2');
 
         /*
         * simulate drag and drop
@@ -86,8 +86,8 @@ suite('DragAndDropEvents', function() {
         //assert.equal(!dragMove, 'dragmove event should not have been triggered');
         assert(!dragEnd, 'dragend event should not have been triggered 4');
 
-        assert(!Kinetic.isDragging(), ' isDragging() should be false 5');
-        assert(Kinetic.isDragReady(), ' isDragReady()) should be true 6');
+        assert(!Konva.isDragging(), ' isDragging() should be false 5');
+        assert(Konva.isDragReady(), ' isDragReady()) should be true 6');
 
         setTimeout(function() {
             stage._mousemove({
@@ -95,19 +95,19 @@ suite('DragAndDropEvents', function() {
                 clientY: 98 + top
             });
 
-            assert(Kinetic.isDragging(), ' isDragging() should be true 7');
-            assert(Kinetic.isDragReady(), ' isDragReady()) should be true 8');
+            assert(Konva.isDragging(), ' isDragging() should be true 7');
+            assert(Konva.isDragReady(), ' isDragReady()) should be true 8');
 
             assert(dragStart, 'dragstart event was not triggered 9');
             //assert.equal(dragMove, 'dragmove event was not triggered');
             assert(!dragEnd, 'dragend event should not have been triggered 10');
 
-            Kinetic.DD._endDragBefore();
+            Konva.DD._endDragBefore();
             stage._mouseup({
                 clientX: 100,
                 clientY: 98 + top
             });
-            Kinetic.DD._endDragAfter({dragEndNode:circle});
+            Konva.DD._endDragAfter({dragEndNode:circle});
 
             assert(dragStart, 'dragstart event was not triggered 11');
             assert(dragMove, 'dragmove event was not triggered 12');
@@ -116,8 +116,8 @@ suite('DragAndDropEvents', function() {
             assert.equal(events.toString(), 'mouseup,dragend', 'mouseup should occur before dragend 14');
 
 
-            assert(!Kinetic.isDragging(), ' isDragging() should be false 15');
-            assert(!Kinetic.isDragReady(), ' isDragReady()) should be false 16');
+            assert(!Konva.isDragging(), ' isDragging() should be false 15');
+            assert(!Konva.isDragReady(), ' isDragReady()) should be false 16');
 
             //console.log(greenCircle.getPosition());
             //console.log(circle.getPosition());
@@ -139,9 +139,9 @@ suite('DragAndDropEvents', function() {
     // ======================================================
     test('destroy shape while dragging', function(done) {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var greenCircle = new Kinetic.Circle({
+        var greenCircle = new Konva.Circle({
             x: 40,
             y: 40,
             radius: 20,
@@ -152,7 +152,7 @@ suite('DragAndDropEvents', function() {
         });
 
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -187,8 +187,8 @@ suite('DragAndDropEvents', function() {
             events.push('mouseup');
         });
 
-        assert(!Kinetic.isDragging(), ' isDragging() should be false');
-        assert(!Kinetic.isDragReady(), ' isDragReady()) should be false');
+        assert(!Konva.isDragging(), ' isDragging() should be false');
+        assert(!Konva.isDragReady(), ' isDragReady()) should be false');
 
 
         stage._mousedown({
@@ -226,9 +226,9 @@ suite('DragAndDropEvents', function() {
     // ======================================================
     test('click should not occur after drag and drop', function(done) {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: 40,
             y: 40,
             radius: 20,
@@ -265,12 +265,12 @@ suite('DragAndDropEvents', function() {
                 clientY: 100 + top
             });
 
-            Kinetic.DD._endDragBefore();
+            Konva.DD._endDragBefore();
             stage._mouseup({
                 clientX: 100,
                 clientY: 100 + top
             });
-            Kinetic.DD._endDragAfter({dragEndNode:circle});
+            Konva.DD._endDragAfter({dragEndNode:circle});
 
             assert(!clicked, 'click event should not have been fired');
 
@@ -282,9 +282,9 @@ suite('DragAndDropEvents', function() {
     // ======================================================
     test('drag and drop distance', function(done) {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: 40,
             y: 40,
             radius: 20,
@@ -316,12 +316,12 @@ suite('DragAndDropEvents', function() {
                 clientY: 45 + top
             });
             assert(circle.isDragging(), 'now circle is dragging');
-            Kinetic.DD._endDragBefore();
+            Konva.DD._endDragBefore();
             stage._mouseup({
                 clientX: 41,
                 clientY: 45 + top
             });
-            Kinetic.DD._endDragAfter({dragEndNode:circle});
+            Konva.DD._endDragAfter({dragEndNode:circle});
 
             
 
@@ -333,8 +333,8 @@ suite('DragAndDropEvents', function() {
     // ======================================================
     test('cancel drag and drop by setting draggable to false', function(done) {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: 380,
             y: 100,
             radius: 70,
@@ -383,12 +383,12 @@ suite('DragAndDropEvents', function() {
                 clientY: 100 + top
             });
 
-            Kinetic.DD._endDragBefore();
+            Konva.DD._endDragBefore();
             stage._mouseup({
                 clientX: 100,
                 clientY: 100 + top
             });
-            Kinetic.DD._endDragAfter({dragEndNode:circle});
+            Konva.DD._endDragAfter({dragEndNode:circle});
 
             assert.equal(circle.getPosition().x, 380, 'circle x should be 380');
             assert.equal(circle.getPosition().y, 100, 'circle y should be 100');
@@ -399,7 +399,7 @@ suite('DragAndDropEvents', function() {
     // ======================================================
     test('drag and drop layer', function(done) {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             drawFunc: function() {
                 var context = this.getContext();
                 context.beginPath();
@@ -413,14 +413,14 @@ suite('DragAndDropEvents', function() {
             draggable: true
         });
 
-        var circle1 = new Kinetic.Circle({
+        var circle1 = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
             fill: 'red'
         });
 
-        var circle2 = new Kinetic.Circle({
+        var circle2 = new Konva.Circle({
             x: 400,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -448,12 +448,12 @@ suite('DragAndDropEvents', function() {
                 clientY: 109 + top
             });
 
-            Kinetic.DD._endDragBefore();
+            Konva.DD._endDragBefore();
             stage._mouseup({
                 clientX: 210,
                 clientY: 109 + top
             });
-            Kinetic.DD._endDragAfter({dragEndNode:circle2});
+            Konva.DD._endDragAfter({dragEndNode:circle2});
 
             //console.log(layer.getPosition())
 
@@ -468,20 +468,20 @@ suite('DragAndDropEvents', function() {
     // ======================================================
     test('drag and drop stage', function(done) {
           var container = document.createElement('div'),
-              stage = new Kinetic.Stage({
+              stage = new Konva.Stage({
                   container: container,
                   width: 578,
                   height: 200,
                   draggable: true
               });
 
-          kineticContainer.appendChild(container);
+          konvaContainer.appendChild(container);
 
         //stage.setDraggable(true);
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: 100,
             y: 100,
             radius: 70,
@@ -510,12 +510,12 @@ suite('DragAndDropEvents', function() {
                 clientY: 110 + top
             });
 
-            Kinetic.DD._endDragBefore();
+            Konva.DD._endDragBefore();
             stage._mouseup({
                 clientX: 300,
                 clientY: 110 + top
             });
-            Kinetic.DD._endDragAfter();
+            Konva.DD._endDragAfter();
 
             assert.equal(stage.getX(), 300);
             assert.equal(stage.getY(), 10);

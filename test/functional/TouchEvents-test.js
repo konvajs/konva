@@ -3,8 +3,8 @@ suite('TouchEvents', function() {
     // ======================================================
     test('stage content touch events', function() {
     var stage = addStage();
-    var layer = new Kinetic.Layer();
-    var circle = new Kinetic.Circle({
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({
         x: 100,
         y: 100,
         radius: 70,
@@ -94,8 +94,8 @@ suite('TouchEvents', function() {
     // ======================================================
     test('touchstart touchend touchmove tap dbltap', function(done) {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -149,7 +149,7 @@ suite('TouchEvents', function() {
         var top = stage.content.getBoundingClientRect().top;
 
         // reset inDoubleClickWindow
-        Kinetic.inDblClickWindow = false;
+        Konva.inDblClickWindow = false;
 
         // touchstart circle
         stage._touchstart({
@@ -175,7 +175,7 @@ suite('TouchEvents', function() {
         });
         // end drag is tied to document mouseup and touchend event
         // which can't be simulated.  call _endDrag manually
-        //Kinetic.DD._endDrag();
+        //Konva.DD._endDrag();
 
         assert(touchstart, '9) touchstart should be true');
         assert(!touchmove, '9) touchmove should be false');
@@ -207,7 +207,7 @@ suite('TouchEvents', function() {
         });
         // end drag is tied to document mouseup and touchend event
         // which can't be simulated.  call _endDrag manually
-        //Kinetic.DD._endDrag();
+        //Konva.DD._endDrag();
 
         assert(touchstart, '11) touchstart should be true');
         assert(!touchmove, '11) touchmove should be false');
