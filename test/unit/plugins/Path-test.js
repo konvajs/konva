@@ -113,7 +113,7 @@ suite('Path', function() {
         var layer = new Konva.Layer();
 
         var path = new Konva.Path({
-            data: 'm200,100,100,0,0,50,z',
+            data: 'm200,100,100,0,0,50,-100,0z',
             fill: '#fcc',
 //            stroke: '#333',
 //            strokeWidth: 2,
