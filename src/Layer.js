@@ -81,6 +81,7 @@
                     }
                     // if no shape, and no antialiased pixel, we should end searching 
                     if (continueSearch) {
+                        continueSearch = false;
                         spiralSearchDistance += 1;
                     } else {
                         return;
