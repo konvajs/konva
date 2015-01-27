@@ -1,12 +1,10 @@
-## 5.2.1
+## Rebranding release 2015-01-28 (Differents from last official KineticJS release)
 
 * Bug Fixes
     * `strokeScaleEnabled = false` is disabled for text as I can not find way to implement this
     * `strokeScaleEnabled = false` for Line now create correct hit graph
 * Enhancements
     * `cornerRadius` of Rect is limited by `width/2` and `height/2`
-
-## 5.2.0 2014-01-22
 
 * Bug Fixes
     * working "this-example" as name for nodes
@@ -18,8 +16,6 @@
     * while dragging you can redraw layer that is not under drag. hit graph will be updated in this case
     * now you can move object that is dragging into another layer.
     * new `frameOffsets` attribute for `Konva.Sprite`
-
-## 5.1.9 2014-01-09
 
 * Bug Fixes
     * Correct stage resizing with `FastLayer`

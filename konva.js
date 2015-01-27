@@ -1,9 +1,9 @@
 
 /*
- * Konva JavaScript Framework v5.2.0
+ * Konva JavaScript Framework v0.7.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2015-01-27
+ * Date: 2015-01-28
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -36,7 +36,7 @@ var Konva = {};
 
     Konva = {
         // public
-        version: '5.2.0',
+        version: '0.7.0',
 
         // private
         stages: [],
@@ -9514,7 +9514,7 @@ var Konva = {};
                 this.content.style.height = height + PX;
 
                 this.bufferCanvas.setSize(width, height);
-                this.bufferCanvas2.setSize(width, height);
+//                this.bufferCanvas2.setSize(width, height);
                 this.bufferHitCanvas.setSize(width, height);
 
                 // set layer dimensions
@@ -9916,9 +9916,9 @@ var Konva = {};
             this.bufferCanvas = new Konva.SceneCanvas({
                 pixelRatio: 1
             });
-            this.bufferCanvas2 = new Konva.SceneCanvas({
-                pixelRatio: 1
-            });
+//            this.bufferCanvas2 = new Konva.SceneCanvas({
+//                pixelRatio: 1
+//            });
             this.bufferHitCanvas = new Konva.HitCanvas();
 
             this._resizeDOM();

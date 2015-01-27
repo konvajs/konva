@@ -309,7 +309,7 @@
                 this.content.style.height = height + PX;
 
                 this.bufferCanvas.setSize(width, height);
-                this.bufferCanvas2.setSize(width, height);
+//                this.bufferCanvas2.setSize(width, height);
                 this.bufferHitCanvas.setSize(width, height);
 
                 // set layer dimensions
@@ -711,9 +711,9 @@
             this.bufferCanvas = new Konva.SceneCanvas({
                 pixelRatio: 1
             });
-            this.bufferCanvas2 = new Konva.SceneCanvas({
-                pixelRatio: 1
-            });
+//            this.bufferCanvas2 = new Konva.SceneCanvas({
+//                pixelRatio: 1
+//            });
             this.bufferHitCanvas = new Konva.HitCanvas();
 
             this._resizeDOM();
