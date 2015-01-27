@@ -1916,34 +1916,6 @@ suite('Node', function() {
     });
 
     // ======================================================
-    test('set shape opacity to 0.5', function() {
-        var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 20,
-            draggable: true
-        });
-
-        circle.setOpacity(0.5);
-        layer.add(circle);
-        stage.add(layer);
-
-        var sceneTrace = layer.getContext().getTrace();
-        //console.log(sceneTrace);
-
-        var bufferTrace = stage.bufferCanvas.getContext().getTrace();
-        //console.log(bufferTrace);
-
-        assert.equal(sceneTrace, 'clearRect(0,0,578,200);save();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0);restore();');
-        assert.equal(bufferTrace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=20;strokeStyle=black;stroke();restore();');
-    });
-
-    // ======================================================
     test('set shape opacity to 0.5 then back to 1', function() {
         var stage = addStage();
         var layer = new Kinetic.Layer();

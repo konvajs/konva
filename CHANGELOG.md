@@ -2,6 +2,7 @@
 
 * Bug Fixes
     * `strokeScaleEnabled = false` is disabled for text as I can not find way to implement this
+    * `strokeScaleEnabled = false` for Line now create correct hit graph
 * Enhancements
     * `cornerRadius` of Rect is limited by `width/2` and `height/2`
 

@@ -127,7 +127,9 @@
             delete Kinetic.shapes[this.colorKey];
         },
         _useBufferCanvas: function() {
-            return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke() && this.getStage();
+//            return false;
+            return ((this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke()) ||
+               this.hasShadow() && (this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke() && this.getStage();
         },
         drawScene: function(can, top) {
             var layer = this.getLayer(),
@@ -164,14 +166,28 @@
                         bufferContext.restore();
 
                         if (hasShadow && !canvas.hitCanvas) {
-                            context.save();
-                            context._applyShadow(this);
+//                            if (this.getShadowBlur()) {
+//                                context.save();
+////                                bufferContext.clear();
+//                                var buffer2 = stage.bufferCanvas2;
+//                                buffer2.getContext()._applyShadow(this);
+//                                buffer2.getContext().drawImage(bufferCanvas._canvas);
+//                                buffer2.getContext().fill();
+////                                drawFunc.call(this, bufferContext);
+////                                context._applyOpacity(this);
+//                                context.drawImage(buffer2._canvas, 0, 0);
+//                                context.restore();
+//                            } else {
+                                context.save();
+                                context._applyShadow(this);
+                                context._applyOpacity(this);
+                                context.drawImage(bufferCanvas._canvas, 0, 0);
+                                context.restore();
+//                            }
+                        } else {
+                            context._applyOpacity(this);
                             context.drawImage(bufferCanvas._canvas, 0, 0);
-                            context.restore();
                         }
-
-                        context._applyOpacity(this);
-                        context.drawImage(bufferCanvas._canvas, 0, 0);
                     }
                     // if buffer canvas is not needed
                     else {
@@ -183,7 +199,7 @@
                             var o = this.getAbsoluteTransform(top).getMatrix();
                             context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
                         }
-               
+
                         if (hasShadow && !canvas.hitCanvas) {
                             context.save();
                             context._applyShadow(this);
@@ -193,6 +209,17 @@
 
                         context._applyOpacity(this);
                         drawFunc.call(this, context);
+
+//                        // clear stroke shadow
+//                        if (hasShadow && !canvas.hitCanvas) {
+//                            context.setAttr('shadowBlur', 0);
+//                            context.setAttr('shadowColor', 0);
+//                            context.setAttr('shadowOffsetX', 0);
+//                            context.setAttr('shadowOffsetY', 0);
+//                            context.stroke();
+//                        }
+
+
                     }
                     context.restore();
                 }

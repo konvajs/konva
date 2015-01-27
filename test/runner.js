@@ -110,8 +110,8 @@ function get (element, content) {
     return element;
 }
 
-function compareLayerAndCanvas(layer, canvas) {
-    var equal = imagediff.equal(layer.getCanvas()._canvas, canvas);
+function compareLayerAndCanvas(layer, canvas, tol) {
+    var equal = imagediff.equal(layer.getCanvas()._canvas, canvas, tol);
     if (!equal) {
         var
             div     = get('div'),

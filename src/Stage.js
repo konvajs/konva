@@ -309,6 +309,7 @@
                 this.content.style.height = height + PX;
 
                 this.bufferCanvas.setSize(width, height);
+                this.bufferCanvas2.setSize(width, height);
                 this.bufferHitCanvas.setSize(width, height);
 
                 // set layer dimensions
@@ -708,6 +709,9 @@
             // intermediate canvas before copying the result onto a scene canvas.
             // not setting it to 1 will result in an over compensation
             this.bufferCanvas = new Kinetic.SceneCanvas({
+                pixelRatio: 1
+            });
+            this.bufferCanvas2 = new Kinetic.SceneCanvas({
                 pixelRatio: 1
             });
             this.bufferHitCanvas = new Kinetic.HitCanvas();

@@ -113,14 +113,14 @@ suite('Path', function() {
         var layer = new Kinetic.Layer();
 
         var path = new Kinetic.Path({
-            data: 'm200,100,100,0,0,50,z',
+            data: 'm200,100,100,0,0,50,-100,0z',
             fill: '#fcc',
-            stroke: '#333',
-            strokeWidth: 2,
+//            stroke: '#333',
+//            strokeWidth: 2,
             shadowColor: 'maroon',
             shadowBlur: 2,
             shadowOffset: {x:10, y:10},
-            shadowOpacity: 0.5,
+            shadowOpacity: 1,
             draggable: true
         });
 
@@ -138,15 +138,28 @@ suite('Path', function() {
 
         stage.add(layer);
 
-        assert.equal(path.getData(), 'm200,100,100,0,0,50,z');
-        assert.equal(path.dataArray.length, 4);
+        assert.equal(path.getData(), 'm200,100,100,0,0,50,-100,0z');
+        assert.equal(path.dataArray.length, 5);
 
         assert.equal(path.dataArray[1].command, 'L');
 
-        var trace = layer.getContext().getTrace();
-
-        //console.log(trace);
-        assert.equal(trace, 'clearRect(0,0,578,200);save();save();globalAlpha=0.5;shadowColor=maroon;shadowBlur=2;shadowOffsetX=10;shadowOffsetY=10;drawImage([object HTMLCanvasElement],0,0);restore();drawImage([object HTMLCanvasElement],0,0);restore();');
+        var canvas = createCanvas();
+        var context = canvas.getContext('2d');
+        // stroke
+        context.beginPath();
+        context.moveTo(200,100);
+        context.lineTo(300,100);
+        context.lineTo(300,150);
+        context.lineTo(200,150);
+        context.closePath();
+        context.fillStyle = '#fcc';
+        context.shadowColor = 'maroon';
+        context.shadowBlur = 2;
+        context.shadowOffsetX = 10;
+        context.shadowOffsetY = 10;
+        context.fill();
+//        context.stroke();
+        compareLayerAndCanvas(layer, canvas, 20);
     });
     
     // ======================================================

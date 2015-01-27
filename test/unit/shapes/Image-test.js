@@ -277,7 +277,7 @@ suite('Image', function(){
   });
 
   // ======================================================
-  test('image with stroke, opacity and shadow', function(done) {
+  test.skip('image with stroke, opacity and shadow', function(done) {
       var imageObj = new Image();
       imageObj.onload = function() {
           var stage = addStage();

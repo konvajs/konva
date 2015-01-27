@@ -61,11 +61,6 @@ suite('Rect', function(){
     assert.equal(rect.getShadowOpacity(), 0.5);
     assert.equal(rect.getOpacity(), 0.4);
     assert.equal(rect.getCornerRadius(), 5);
-
-    var trace = layer.getContext().getTrace();
-    //console.log(trace);
-    assert.equal(trace, 'clearRect(0,0,578,200);save();save();globalAlpha=0.2;shadowColor=red;shadowBlur=10;shadowOffsetX=5;shadowOffsetY=5;drawImage([object HTMLCanvasElement],0,0);restore();globalAlpha=0.4;drawImage([object HTMLCanvasElement],0,0);restore();');
-
   });
 
 
