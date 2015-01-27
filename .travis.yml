@@ -15,4 +15,4 @@ deploy:
     secure: rYqyBhn3K8tnt/XK6RFodBiIsIqwmUuPBEAOQxRt/elK4F7BVC+ba7/xgsvdFLP+Bqn4sS8b/YjfxUqm0lfxoph3qvvyKZ+qjuGCXBtvbY8EgGqX3FJKq/LJp8Vu4encCUOpI3PWXQEB+0OrC8ntKnBn1L1WP6lzDbRHj49e9ew=
   on:
     tags: true
-    repo: lavrton/KonvaJS
+    repo: konvajs/konva
