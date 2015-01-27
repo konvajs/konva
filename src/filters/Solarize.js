@@ -6,13 +6,13 @@
      * License: [http://www.pixastic.com/lib/license.txt]
      * @function
      * @name Solarize
-     * @memberof Kinetic.Filters
+     * @memberof Konva.Filters
      * @param {Object} imageData
      * @example
      * node.cache();
-     * node.filters([Kinetic.Filters.Solarize]);
+     * node.filters([Konva.Filters.Solarize]);
      */
-    Kinetic.Filters.Solarize = function (imageData) {
+    Konva.Filters.Solarize = function (imageData) {
         var data = imageData.data,
             w = imageData.width,
             h = imageData.height,

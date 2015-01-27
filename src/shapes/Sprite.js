@@ -2,8 +2,8 @@
     /**
      * Sprite constructor
      * @constructor
-     * @memberof Kinetic
-     * @augments Kinetic.Shape
+     * @memberof Konva
+     * @augments Konva.Shape
      * @param {Object} config
      * @param {String} config.animation animation key
      * @param {Object} config.animations animation map
@@ -14,7 +14,7 @@
      * @example
      * var imageObj = new Image();
      * imageObj.onload = function() {
-     *   var sprite = new Kinetic.Sprite({
+     *   var sprite = new Konva.Sprite({
      *     x: 200,
      *     y: 100,
      *     image: imageObj,
@@ -45,33 +45,33 @@
      * };
      * imageObj.src = '/path/to/image.jpg'
      */
-    Kinetic.Sprite = function(config) {
+    Konva.Sprite = function(config) {
         this.___init(config);
     };
 
-    Kinetic.Sprite.prototype = {
+    Konva.Sprite.prototype = {
         ___init: function(config) {
             // call super constructor
-            Kinetic.Shape.call(this, config);
+            Konva.Shape.call(this, config);
             this.className = 'Sprite';
 
             this._updated = true;
             var that = this;
-            this.anim = new Kinetic.Animation(function() {
+            this.anim = new Konva.Animation(function() {
                 // if we don't need to redraw layer we should return false
                 var updated = that._updated;
                 that._updated = false;
                 return updated;
             });
-            this.on('animationChange.kinetic', function() {
+            this.on('animationChange.konva', function() {
                 // reset index when animation changes
                 this.frameIndex(0);
             });
-            this.on('frameIndexChange.kinetic', function() {
+            this.on('frameIndexChange.konva', function() {
                 this._updated = true;
             });
             // smooth change for frameRate
-            this.on('frameRateChange.kinetic', function() {
+            this.on('frameRateChange.konva', function() {
                 if (!this.anim.isRunning()) {
                     return;
                 }
@@ -136,7 +136,7 @@
         /**
          * start sprite animation
          * @method
-         * @memberof Kinetic.Sprite.prototype
+         * @memberof Konva.Sprite.prototype
          */
         start: function() {
             var layer = this.getLayer();
@@ -154,7 +154,7 @@
         /**
          * stop sprite animation
          * @method
-         * @memberof Kinetic.Sprite.prototype
+         * @memberof Konva.Sprite.prototype
          */
         stop: function() {
             this.anim.stop();
@@ -163,7 +163,7 @@
         /**
          * determine if animation of sprite is running or not.  returns true or false
          * @method
-         * @memberof Kinetic.Animation.prototype
+         * @memberof Konva.Animation.prototype
          * @returns {Boolean}
          */
         isRunning: function() {
@@ -184,16 +184,16 @@
             }
         }
     };
-    Kinetic.Util.extend(Kinetic.Sprite, Kinetic.Shape);
+    Konva.Util.extend(Konva.Sprite, Konva.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'animation');
+    Konva.Factory.addGetterSetter(Konva.Sprite, 'animation');
 
     /**
      * get/set animation key
      * @name animation
      * @method
-     * @memberof Kinetic.Sprite.prototype
+     * @memberof Konva.Sprite.prototype
      * @param {String} anim animation key
      * @returns {String}
      * @example
@@ -204,13 +204,13 @@
      * sprite.animation('kicking');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'animations');
+    Konva.Factory.addGetterSetter(Konva.Sprite, 'animations');
 
     /**
      * get/set animations map
      * @name animations
      * @method
-     * @memberof Kinetic.Sprite.prototype
+     * @memberof Konva.Sprite.prototype
      * @param {Object} animations
      * @returns {Object}
      * @example
@@ -240,13 +240,13 @@
      * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'frameOffsets');
+    Konva.Factory.addGetterSetter(Konva.Sprite, 'frameOffsets');
 
     /**
     * get/set offsets map
     * @name offsets
     * @method
-    * @memberof Kinetic.Sprite.prototype
+    * @memberof Konva.Sprite.prototype
     * @param {Object} offsets
     * @returns {Object}
     * @example
@@ -276,13 +276,13 @@
     * });
     */
  
-    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'image');
+    Konva.Factory.addGetterSetter(Konva.Sprite, 'image');
 
     /**
      * get/set image
      * @name image
      * @method
-     * @memberof Kinetic.Sprite.prototype
+     * @memberof Konva.Sprite.prototype
      * @param {Image} image
      * @returns {Image}
      * @example
@@ -293,13 +293,13 @@
      * sprite.image(imageObj);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'frameIndex', 0);
+    Konva.Factory.addGetterSetter(Konva.Sprite, 'frameIndex', 0);
 
     /**
      * set/set animation frame index
      * @name frameIndex
      * @method
-     * @memberof Kinetic.Sprite.prototype
+     * @memberof Konva.Sprite.prototype
      * @param {Integer} frameIndex
      * @returns {Integer}
      * @example
@@ -310,7 +310,7 @@
      * sprite.frameIndex(3);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Sprite, 'frameRate', 17);
+    Konva.Factory.addGetterSetter(Konva.Sprite, 'frameRate', 17);
 
     /**
      * get/set frame rate in frames per second.  Increase this number to make the sprite
@@ -318,7 +318,7 @@
      *  The default is 17 frames per second
      * @name frameRate
      * @method
-     * @memberof Kinetic.Sprite.prototype
+     * @memberof Konva.Sprite.prototype
      * @param {Integer} frameRate
      * @returns {Integer}
      * @example
@@ -329,11 +329,11 @@
      * sprite.frameRate(2);
      */
 
-    Kinetic.Factory.backCompat(Kinetic.Sprite, {
+    Konva.Factory.backCompat(Konva.Sprite, {
         index: 'frameIndex',
         getIndex: 'getFrameIndex',
         setIndex: 'setFrameIndex'
     });
 
-    Kinetic.Collection.mapMethods(Kinetic.Sprite);
+    Konva.Collection.mapMethods(Konva.Sprite);
 })();

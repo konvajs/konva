@@ -1,7 +1,7 @@
 
 /*
- * KineticJS JavaScript Framework v@@version
- * http://lavrton.github.io/KineticJS/
+ * KonvaJS JavaScript Framework v@@version
+ * http://lavrton.github.io/KonvaJS/
  * Licensed under the MIT or GPL Version 2 licenses.
  * Date: @@date
  *
@@ -27,14 +27,14 @@
  * THE SOFTWARE.
  */
 /**
- * @namespace Kinetic
+ * @namespace Konva
  */
 /*jshint -W079, -W020*/
-var Kinetic = {};
+var Konva = {};
 (function(root) {
     var PI_OVER_180 = Math.PI / 180;
 
-    Kinetic = {
+    Konva = {
         // public
         version: '@@version',
 
@@ -52,13 +52,13 @@ var Kinetic = {};
         traceArrMax: 100,
         dblClickWindow: 400,
         /**
-         * Global pixel ratio configuration. KineticJS automatically detect pixel ratio of current device.
+         * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.
          * But you may override such property, if you want to use your value.
          * @property pixelRatio
          * @default undefined
-         * @memberof Kinetic
+         * @memberof Konva
          * @example
-         * Kinetic.pixelRatio = 1;
+         * Konva.pixelRatio = 1;
          */
         pixelRatio: undefined,
         /**
@@ -66,19 +66,19 @@ var Kinetic = {};
          * only then start dragging.
          * @property dragDistance
          * @default 0
-         * @memberof Kinetic
+         * @memberof Konva
          * @example
-         * Kinetic.dragDistance = 10;
+         * Konva.dragDistance = 10;
          */
         dragDistance : 0,
         /**
          * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
          * @property angleDeg
          * @default true
-         * @memberof Kinetic
+         * @memberof Konva
          * @example
          * node.rotation(45); // 45 degrees
-         * Kinetic.angleDeg = false;
+         * Konva.angleDeg = false;
          * node.rotation(Math.PI / 2); // PI/2 radian
          */
         angleDeg: true,
@@ -86,9 +86,9 @@ var Kinetic = {};
          * Show different warnings about errors or wrong API usage
          * @property showWarnings
          * @default true
-         * @memberof Kinetic
+         * @memberof Konva
          * @example
-         * Kinetic.showWarnings = false;
+         * Konva.showWarnings = false;
          */
         showWarnings : true,
 
@@ -96,7 +96,7 @@ var Kinetic = {};
 
         /**
          * @namespace Filters
-         * @memberof Kinetic
+         * @memberof Konva
          */
         Filters: {},
 
@@ -104,7 +104,7 @@ var Kinetic = {};
          * Node constructor. Nodes are entities that can be transformed, layered,
          * and have bound events. The stage, layers, groups, and shapes all extend Node.
          * @constructor
-         * @memberof Kinetic
+         * @memberof Konva
          * @abstract
          * @param {Object} config
          * @@nodeParams
@@ -117,17 +117,17 @@ var Kinetic = {};
          * Shape constructor.  Shapes are primitive objects such as rectangles,
          *  circles, text, lines, etc.
          * @constructor
-         * @memberof Kinetic
-         * @augments Kinetic.Node
+         * @memberof Konva
+         * @augments Konva.Node
          * @param {Object} config
          * @@shapeParams
          * @@nodeParams
          * @example
-         * var customShape = new Kinetic.Shape({
+         * var customShape = new Konva.Shape({
          *   x: 5,
          *   y: 10,
          *   fill: 'red',
-         *   // a Kinetic.Canvas renderer is passed into the drawFunc function
+         *   // a Konva.Canvas renderer is passed into the drawFunc function
          *   drawFunc: function(context) {
          *     context.beginPath();
          *     context.moveTo(200, 50);
@@ -145,8 +145,8 @@ var Kinetic = {};
         /**
          * Container constructor.&nbsp; Containers are used to contain nodes or other containers
          * @constructor
-         * @memberof Kinetic
-         * @augments Kinetic.Node
+         * @memberof Konva
+         * @augments Konva.Node
          * @abstract
          * @param {Object} config
          * @@nodeParams
@@ -159,13 +159,13 @@ var Kinetic = {};
         /**
          * Stage constructor.  A stage is used to contain multiple layers
          * @constructor
-         * @memberof Kinetic
-         * @augments Kinetic.Container
+         * @memberof Konva
+         * @augments Konva.Container
          * @param {Object} config
          * @param {String|Element} config.container Container id or DOM element
          * @@nodeParams
          * @example
-         * var stage = new Kinetic.Stage({
+         * var stage = new Konva.Stage({
          *   width: 500,
          *   height: 800,
          *   container: 'containerId'
@@ -178,15 +178,15 @@ var Kinetic = {};
         /**
          * BaseLayer constructor. 
          * @constructor
-         * @memberof Kinetic
-         * @augments Kinetic.Container
+         * @memberof Konva
+         * @augments Konva.Container
          * @param {Object} config
          * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
          * to clear the canvas before each layer draw.  The default value is true.
          * @@nodeParams
          * @@containerParams
          * @example
-         * var layer = new Kinetic.Layer();
+         * var layer = new Konva.Layer();
          */
         BaseLayer: function(config) {
             this.___init(config);
@@ -196,15 +196,15 @@ var Kinetic = {};
          * Layer constructor.  Layers are tied to their own canvas element and are used
          * to contain groups or shapes.
          * @constructor
-         * @memberof Kinetic
-         * @augments Kinetic.BaseLayer
+         * @memberof Konva
+         * @augments Konva.BaseLayer
          * @param {Object} config
          * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
          * to clear the canvas before each layer draw.  The default value is true.
          * @@nodeParams
          * @@containerParams
          * @example
-         * var layer = new Kinetic.Layer();
+         * var layer = new Konva.Layer();
          */
         Layer: function(config) {
             this.____init(config);
@@ -216,8 +216,8 @@ var Kinetic = {};
          * or event pub/sub, you should use FastLayer instead of Layer to create your layers.
          * It renders about 2x faster than normal layers.
          * @constructor
-         * @memberof Kinetic
-         * @augments Kinetic.BaseLayer
+         * @memberof Konva
+         * @augments Konva.BaseLayer
          * @param {Object} config
          * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
          * to clear the canvas before each layer draw.  The default value is true.
@@ -227,7 +227,7 @@ var Kinetic = {};
          * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
          * @@containerParams
          * @example
-         * var layer = new Kinetic.FastLayer();
+         * var layer = new Konva.FastLayer();
          */
         FastLayer: function(config) {
             this.____init(config);
@@ -236,13 +236,13 @@ var Kinetic = {};
         /**
          * Group constructor.  Groups are used to contain shapes or other groups.
          * @constructor
-         * @memberof Kinetic
-         * @augments Kinetic.Container
+         * @memberof Konva
+         * @augments Konva.Container
          * @param {Object} config
          * @@nodeParams
          * @@containerParams
          * @example
-         * var group = new Kinetic.Group();
+         * var group = new Konva.Group();
          */
         Group: function(config) {
             this.___init(config);
@@ -251,10 +251,10 @@ var Kinetic = {};
         /**
          * returns whether or not drag and drop is currently active
          * @method
-         * @memberof Kinetic
+         * @memberof Konva
          */
         isDragging: function() {
-            var dd = Kinetic.DD;
+            var dd = Konva.DD;
 
             // if DD is not included with the build, then
             // drag and drop is not even possible
@@ -268,10 +268,10 @@ var Kinetic = {};
         * returns whether or not a drag and drop operation is ready, but may
         *  not necessarily have started
         * @method
-        * @memberof Kinetic
+        * @memberof Konva
         */
         isDragReady: function() {
-            var dd = Kinetic.DD;
+            var dd = Konva.DD;
 
             // if DD is not included with the build, then
             // drag and drop is not even possible
@@ -345,14 +345,14 @@ var Kinetic = {};
 
                 // adding mobile flab
                 mobile: mobile,
-                ieMobile: ieMobile  // If this is true (i.e., WP8), then Kinetic touch events are executed instead of equivalent Kinetic mouse events
+                ieMobile: ieMobile  // If this is true (i.e., WP8), then Konva touch events are executed instead of equivalent Konva mouse events
             };
         },
         // user agent  
         UA: undefined
     };
 
-    Kinetic.UA = Kinetic._parseUA((root.navigator && root.navigator.userAgent) || '');
+    Konva.UA = Konva._parseUA((root.navigator && root.navigator.userAgent) || '');
     
 })(this);
 
@@ -375,11 +375,11 @@ var Kinetic = {};
 // if the module has no dependencies, the above pattern can be simplified to
 ( function(root, factory) {
     if( typeof exports === 'object') {
-        var KineticJS = factory();
+        var KonvaJS = factory();
         // runtime-check for browserify
         if(global.window === global) {
-            Kinetic.document = global.document;
-            Kinetic.window = global;
+            Konva.document = global.document;
+            Konva.window = global;
         } else {
             // Node. Does not work with strict CommonJS, but
             // only CommonJS-like enviroments that support module.exports,
@@ -387,28 +387,28 @@ var Kinetic = {};
             var Canvas = require('canvas');
             var jsdom = require('jsdom').jsdom;
 
-            Kinetic.document = jsdom('<!DOCTYPE html><html><head></head><body></body></html>');
-            Kinetic.window = Kinetic.document.createWindow();
-            Kinetic.window.Image = Canvas.Image;
-            Kinetic._nodeCanvas = Canvas;
+            Konva.document = jsdom('<!DOCTYPE html><html><head></head><body></body></html>');
+            Konva.window = Konva.document.createWindow();
+            Konva.window.Image = Canvas.Image;
+            Konva._nodeCanvas = Canvas;
         }
 
-        Kinetic.root = root;
-        module.exports = KineticJS;
+        Konva.root = root;
+        module.exports = KonvaJS;
         return;
     }
     else if( typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define(factory);
     }
-    Kinetic.document = document;
-    Kinetic.window = window;
-    Kinetic.root = root;
+    Konva.document = document;
+    Konva.window = window;
+    Konva.root = root;
 
 }(this, function() {
 
     // Just return a value to define the module export.
     // This example returns an object, but the module
     // can return a function as the exported value.
-    return Kinetic;
+    return Konva;
 }));

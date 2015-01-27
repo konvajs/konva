@@ -7,8 +7,8 @@ suite('Pixelate', function () {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            lion = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            lion = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -19,15 +19,15 @@ suite('Pixelate', function () {
             stage.add(layer);
 
             lion.cache();
-            lion.filters([Kinetic.Filters.Pixelate]);
+            lion.filters([Konva.Filters.Pixelate]);
             lion.pixelSize(16);
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: lion, 
               duration: 3.0,
               pixelSize: 1,
-              easing: Kinetic.Easings.EaseInOut
+              easing: Konva.Easings.EaseInOut
             });
         
             lion.on('mouseover', function() {

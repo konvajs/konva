@@ -18,7 +18,7 @@
         this._clearCache(HAS_SHADOW);
     }
 
-    Kinetic.Util.addMethods(Kinetic.Shape, {
+    Konva.Util.addMethods(Konva.Shape, {
         __init: function(config) {
             this.nodeType = 'Shape';
             this._fillFunc = _fillFunc;
@@ -27,11 +27,11 @@
             this._strokeFuncHit = _strokeFuncHit;
 
             // set colorKey
-            var shapes = Kinetic.shapes;
+            var shapes = Konva.shapes;
             var key;
 
             while(true) {
-                key = Kinetic.Util.getRandomColor();
+                key = Konva.Util.getRandomColor();
                 if(key && !( key in shapes)) {
                     break;
                 }
@@ -41,9 +41,9 @@
             shapes[key] = this;
 
             // call super constructor
-            Kinetic.Node.call(this, config);
+            Konva.Node.call(this, config);
 
-            this.on('shadowColorChange.kinetic shadowBlurChange.kinetic shadowOffsetChange.kinetic shadowOpacityChange.kinetic shadowEnabledChange.kinetic', _clearHasShadowCache);
+            this.on('shadowColorChange.konva shadowBlurChange.konva shadowOffsetChange.konva shadowOpacityChange.konva shadowEnabledChange.konva', _clearHasShadowCache);
         },
         hasChildren: function() {
             return false;
@@ -54,8 +54,8 @@
         /**
          * get canvas context tied to the layer
          * @method
-         * @memberof Kinetic.Shape.prototype
-         * @returns {Kinetic.Context}
+         * @memberof Konva.Shape.prototype
+         * @returns {Konva.Context}
          */
         getContext: function() {
             return this.getLayer().getContext();
@@ -63,8 +63,8 @@
         /**
          * get canvas renderer tied to the layer.  Note that this returns a canvas renderer, not a canvas element
          * @method
-         * @memberof Kinetic.Shape.prototype
-         * @returns {Kinetic.Canvas}
+         * @memberof Konva.Shape.prototype
+         * @returns {Konva.Canvas}
          */
         getCanvas: function() {
             return this.getLayer().getCanvas();
@@ -72,7 +72,7 @@
         /**
          * returns whether or not a shadow will be rendered
          * @method
-         * @memberof Kinetic.Shape.prototype
+         * @memberof Konva.Shape.prototype
          * @returns {Boolean}
          */
         hasShadow: function() {
@@ -84,7 +84,7 @@
         /**
          * returns whether or not the shape will be filled
          * @method
-         * @memberof Kinetic.Shape.prototype
+         * @memberof Konva.Shape.prototype
          * @returns {Boolean}
          */
         hasFill: function() {
@@ -93,7 +93,7 @@
         /**
          * returns whether or not the shape will be stroked
          * @method
-         * @memberof Kinetic.Shape.prototype
+         * @memberof Konva.Shape.prototype
          * @returns {Boolean}
          */
         hasStroke: function() {
@@ -102,10 +102,10 @@
         /**
          * determines if point is in the shape, regardless if other shapes are on top of it.  Note: because
          *  this method clears a temporary canvas and then redraws the shape, it performs very poorly if executed many times
-         *  consecutively.  Please use the {@link Kinetic.Stage#getIntersection} method if at all possible
+         *  consecutively.  Please use the {@link Konva.Stage#getIntersection} method if at all possible
          *  because it performs much better
          * @method
-         * @memberof Kinetic.Shape.prototype
+         * @memberof Konva.Shape.prototype
          * @param {Object} point 
          * @param {Number} point.x
          * @param {Number} point.y
@@ -123,8 +123,8 @@
         },
         // extends Node.prototype.destroy 
         destroy: function() {
-            Kinetic.Node.prototype.destroy.call(this);
-            delete Kinetic.shapes[this.colorKey];
+            Konva.Node.prototype.destroy.call(this);
+            delete Konva.shapes[this.colorKey];
         },
         _useBufferCanvas: function() {
             return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke() && this.getStage();
@@ -236,11 +236,11 @@
         /**
         * draw hit graph using the cached scene canvas
         * @method
-        * @memberof Kinetic.Shape.prototype
+        * @memberof Konva.Shape.prototype
         * @param {Integer} alphaThreshold alpha channel threshold that determines whether or not
         *  a pixel should be drawn onto the hit graph.  Must be a value between 0 and 255.  
         *  The default is 0
-        * @returns {Kinetic.Shape}
+        * @returns {Konva.Shape}
         * @example
         * shape.cache();
         * shape.drawHitFromCache();
@@ -264,7 +264,7 @@
                 hitImageData = hitContext.getImageData(0, 0, width, height);
                 hitData = hitImageData.data;
                 len = sceneData.length;
-                rgbColorKey = Kinetic.Util._hexToRgb(this.colorKey);
+                rgbColorKey = Konva.Util._hexToRgb(this.colorKey);
 
                 // replace non transparent pixels with color key
                 for(i = 0; i < len; i += 4) {
@@ -280,22 +280,22 @@
                 hitContext.putImageData(hitImageData, 0, 0);
             }
             catch(e) {
-                Kinetic.Util.warn('Unable to draw hit graph from cached scene canvas. ' + e.message);
+                Konva.Util.warn('Unable to draw hit graph from cached scene canvas. ' + e.message);
             }
 
             return this;
         }
     });
-    Kinetic.Util.extend(Kinetic.Shape, Kinetic.Node);
+    Konva.Util.extend(Konva.Shape, Konva.Node);
 
     // add getters and setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'stroke');
+    Konva.Factory.addGetterSetter(Konva.Shape, 'stroke');
 
     /**
      * get/set stroke color
      * @name stroke
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {String} color
      * @returns {String}
      * @example
@@ -315,13 +315,13 @@
      * shape.stroke('rgba(0,255,0,0.5');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeRed', 0, Kinetic.Validators.RGBComponent);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeRed', 0, Konva.Validators.RGBComponent);
 
     /**
      * get/set stroke red component
      * @name strokeRed
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Integer} red
      * @returns {Integer}
      * @example
@@ -332,13 +332,13 @@
      * shape.strokeRed(0);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeGreen', 0, Kinetic.Validators.RGBComponent);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeGreen', 0, Konva.Validators.RGBComponent);
 
     /**
      * get/set stroke green component
      * @name strokeGreen
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Integer} green
      * @returns {Integer}
      * @example
@@ -349,13 +349,13 @@
      * shape.strokeGreen(255);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeBlue', 0, Kinetic.Validators.RGBComponent);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeBlue', 0, Konva.Validators.RGBComponent);
 
     /**
      * get/set stroke blue component
      * @name strokeBlue
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Integer} blue
      * @returns {Integer}
      * @example
@@ -366,14 +366,14 @@
      * shape.strokeBlue(0);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeAlpha', 1, Kinetic.Validators.alphaComponent);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeAlpha', 1, Konva.Validators.alphaComponent);
 
     /**
      * get/set stroke alpha component.  Alpha is a real number between 0 and 1.  The default
      *  is 1.
      * @name strokeAlpha
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} alpha
      * @returns {Number}
      * @example
@@ -384,13 +384,13 @@
      * shape.strokeAlpha(0.5);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeWidth', 2);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeWidth', 2);
 
     /**
      * get/set stroke width
      * @name strokeWidth
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} strokeWidth
      * @returns {Number}
      * @example
@@ -401,14 +401,14 @@
      * shape.strokeWidth();
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'lineJoin');
+    Konva.Factory.addGetterSetter(Konva.Shape, 'lineJoin');
 
     /**
      * get/set line join.  Can be miter, round, or bevel.  The
      *  default is miter
      * @name lineJoin
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {String} lineJoin
      * @returns {String}
      * @example
@@ -419,13 +419,13 @@
      * shape.lineJoin('round');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'lineCap');
+    Konva.Factory.addGetterSetter(Konva.Shape, 'lineCap');
 
     /**
      * get/set line cap.  Can be butt, round, or square
      * @name lineCap
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {String} lineCap
      * @returns {String}
      * @example
@@ -436,13 +436,13 @@
      * shape.lineCap('round');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'sceneFunc');
+    Konva.Factory.addGetterSetter(Konva.Shape, 'sceneFunc');
 
     /**
      * get/set scene draw function
      * @name sceneFunc
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Function} drawFunc drawing function
      * @returns {Function}
      * @example
@@ -458,13 +458,13 @@
      * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'hitFunc');
+    Konva.Factory.addGetterSetter(Konva.Shape, 'hitFunc');
 
     /**
      * get/set hit draw function
      * @name hitFunc
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Function} drawFunc drawing function
      * @returns {Function}
      * @example
@@ -480,13 +480,13 @@
      * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'dash');
+    Konva.Factory.addGetterSetter(Konva.Shape, 'dash');
 
     /**
      * get/set dash array for stroke.
      * @name dash
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Array} dash
      * @returns {Array}
      * @example
@@ -500,13 +500,13 @@
      */
 
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowColor');
+    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowColor');
 
     /**
      * get/set shadow color
      * @name shadowColor
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {String} color
      * @returns {String}
      * @example
@@ -526,13 +526,13 @@
      * shape.shadowColor('rgba(0,255,0,0.5');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowRed', 0, Kinetic.Validators.RGBComponent);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowRed', 0, Konva.Validators.RGBComponent);
 
     /**
      * get/set shadow red component
      * @name shadowRed
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Integer} red
      * @returns {Integer}
      * @example
@@ -543,13 +543,13 @@
      * shape.shadowRed(0);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowGreen', 0, Kinetic.Validators.RGBComponent);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowGreen', 0, Konva.Validators.RGBComponent);
 
     /**
      * get/set shadow green component
      * @name shadowGreen
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Integer} green
      * @returns {Integer}
      * @example
@@ -560,13 +560,13 @@
      * shape.shadowGreen(255);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowBlue', 0, Kinetic.Validators.RGBComponent);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowBlue', 0, Konva.Validators.RGBComponent);
 
     /**
      * get/set shadow blue component
      * @name shadowBlue
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Integer} blue
      * @returns {Integer}
      * @example
@@ -577,14 +577,14 @@
      * shape.shadowBlue(0);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowAlpha', 1, Kinetic.Validators.alphaComponent);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowAlpha', 1, Konva.Validators.alphaComponent);
 
     /**
      * get/set shadow alpha component.  Alpha is a real number between 0 and 1.  The default
      *  is 1.
      * @name shadowAlpha
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} alpha
      * @returns {Number}
      * @example
@@ -595,13 +595,13 @@
      * shape.shadowAlpha(0.5);
      */
      
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowBlur');
+    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowBlur');
 
     /**
      * get/set shadow blur
      * @name shadowBlur
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} blur
      * @returns {Number}
      * @example
@@ -612,13 +612,13 @@
      * shape.shadowBlur(10);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowOpacity');
+    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowOpacity');
 
     /**
      * get/set shadow opacity.  must be a value between 0 and 1
      * @name shadowOpacity
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} opacity
      * @returns {Number}
      * @example
@@ -629,13 +629,13 @@
      * shape.shadowOpacity(0.5);
      */
 
-    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Shape, 'shadowOffset', ['x', 'y']);
+    Konva.Factory.addComponentsGetterSetter(Konva.Shape, 'shadowOffset', ['x', 'y']);
 
     /**
      * get/set shadow offset
      * @name shadowOffset
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Object} offset
      * @param {Number} offset.x
      * @param {Number} offset.y
@@ -651,13 +651,13 @@
      * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowOffsetX', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowOffsetX', 0);
 
      /**
      * get/set shadow offset x
      * @name shadowOffsetX
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} x
      * @returns {Number}
      * @example
@@ -668,13 +668,13 @@
      * shape.shadowOffsetX(5);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowOffsetY', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowOffsetY', 0);
 
      /**
      * get/set shadow offset y
      * @name shadowOffsetY
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} y
      * @returns {Number}
      * @example
@@ -685,13 +685,13 @@
      * shape.shadowOffsetY(5);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternImage');
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternImage');
 
     /**
      * get/set fill pattern image
      * @name fillPatternImage
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Image} image object
      * @returns {Image}
      * @example
@@ -706,13 +706,13 @@
      * imageObj.src = 'path/to/image/jpg';
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fill');
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fill');
 
     /**
      * get/set fill color
      * @name fill
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {String} color
      * @returns {String}
      * @example
@@ -735,13 +735,13 @@
      * shape.fill(null);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRed', 0, Kinetic.Validators.RGBComponent);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillRed', 0, Konva.Validators.RGBComponent);
 
     /**
      * get/set fill red component
      * @name fillRed
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Integer} red
      * @returns {Integer}
      * @example
@@ -752,13 +752,13 @@
      * shape.fillRed(0);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillGreen', 0, Kinetic.Validators.RGBComponent);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillGreen', 0, Konva.Validators.RGBComponent);
 
     /**
      * get/set fill green component
      * @name fillGreen
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Integer} green
      * @returns {Integer}
      * @example
@@ -769,13 +769,13 @@
      * shape.fillGreen(255);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillBlue', 0, Kinetic.Validators.RGBComponent);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillBlue', 0, Konva.Validators.RGBComponent);
 
     /**
      * get/set fill blue component
      * @name fillBlue
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Integer} blue
      * @returns {Integer}
      * @example
@@ -786,14 +786,14 @@
      * shape.fillBlue(0);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillAlpha', 1, Kinetic.Validators.alphaComponent);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillAlpha', 1, Konva.Validators.alphaComponent);
 
     /**
      * get/set fill alpha component.  Alpha is a real number between 0 and 1.  The default
      *  is 1.
      * @name fillAlpha
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} alpha
      * @returns {Number}
      * @example
@@ -805,13 +805,13 @@
      */
 
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternX', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternX', 0);
 
     /**
      * get/set fill pattern x
      * @name fillPatternX
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} x
      * @returns {Number}
      * @example
@@ -822,13 +822,13 @@
      * shape.fillPatternX(20);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternY', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternY', 0);
 
     /**
      * get/set fill pattern y
      * @name fillPatternY
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} y
      * @returns {Number}
      * @example
@@ -839,13 +839,13 @@
      * shape.fillPatternY(20);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientColorStops');
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillLinearGradientColorStops');
 
     /**
      * get/set fill linear gradient color stops
      * @name fillLinearGradientColorStops
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Array} colorStops
      * @returns {Array} colorStops
      * @example
@@ -857,13 +857,13 @@
      * shape.fillLinearGradientColorStops(0, 'red', 0.5, 'blue', 1, 'green');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartRadius', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillRadialGradientStartRadius', 0);
 
     /**
      * get/set fill radial gradient start radius
      * @name fillRadialGradientStartRadius
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} radius
      * @returns {Number}
      * @example
@@ -874,13 +874,13 @@
      * shape.fillRadialGradientStartRadius(0);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientEndRadius', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillRadialGradientEndRadius', 0);
 
     /**
      * get/set fill radial gradient end radius
      * @name fillRadialGradientEndRadius
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} radius
      * @returns {Number}
      * @example
@@ -891,13 +891,13 @@
      * shape.fillRadialGradientEndRadius(100);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientColorStops');
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillRadialGradientColorStops');
 
     /**
      * get/set fill radial gradient color stops
      * @name fillRadialGradientColorStops
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} colorStops
      * @returns {Array}
      * @example
@@ -909,13 +909,13 @@
      * shape.fillRadialGradientColorStops(0, 'red', 0.5, 'blue', 1, 'green');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternRepeat', 'repeat');
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternRepeat', 'repeat');
 
     /**
      * get/set fill pattern repeat.  Can be 'repeat', 'repeat-x', 'repeat-y', or 'no-repeat'.  The default is 'repeat'
      * @name fillPatternRepeat
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {String} repeat
      * @returns {String}
      * @example
@@ -929,13 +929,13 @@
      * shape.fillPatternRepeat('no repeat');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillEnabled', true);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillEnabled', true);
 
     /**
      * get/set fill enabled flag
      * @name fillEnabled
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Boolean} enabled
      * @returns {Boolean}
      * @example
@@ -949,13 +949,13 @@
      * shape.fillEnabled(true);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeEnabled', true);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeEnabled', true);
 
     /**
      * get/set stroke enabled flag
      * @name strokeEnabled
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Boolean} enabled
      * @returns {Boolean}
      * @example
@@ -969,13 +969,13 @@
      * shape.strokeEnabled(true);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'shadowEnabled', true);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowEnabled', true);
 
     /**
      * get/set shadow enabled flag
      * @name shadowEnabled
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Boolean} enabled
      * @returns {Boolean}
      * @example
@@ -989,13 +989,13 @@
      * shape.shadowEnabled(true);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'dashEnabled', true);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'dashEnabled', true);
 
     /**
      * get/set dash enabled flag
      * @name dashEnabled
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Boolean} enabled
      * @returns {Boolean}
      * @example
@@ -1009,13 +1009,13 @@
      * shape.dashEnabled(true);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'strokeScaleEnabled', true);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeScaleEnabled', true);
 
     /**
      * get/set strokeScale enabled flag
      * @name strokeScaleEnabled
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Boolean} enabled
      * @returns {Boolean}
      * @example
@@ -1029,14 +1029,14 @@
      * shape.strokeScaleEnabled(true);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPriority', 'color');
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillPriority', 'color');
 
     /**
      * get/set fill priority.  can be color, pattern, linear-gradient, or radial-gradient.  The default is color.
      *   This is handy if you want to toggle between different fill types.
      * @name fillPriority
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {String} priority
      * @returns {String}
      * @example
@@ -1047,13 +1047,13 @@
      * shape.fillPriority('linear-gradient');
      */
 
-    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Shape, 'fillPatternOffset', ['x', 'y']);
+    Konva.Factory.addComponentsGetterSetter(Konva.Shape, 'fillPatternOffset', ['x', 'y']);
 
     /**
      * get/set fill pattern offset
      * @name fillPatternOffset
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Object} offset
      * @param {Number} offset.x
      * @param {Number} offset.y
@@ -1070,12 +1070,12 @@
      */
 
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternOffsetX', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternOffsetX', 0);
     /**
      * get/set fill pattern offset x
      * @name fillPatternOffsetX
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} x
      * @returns {Number}
      * @example
@@ -1086,12 +1086,12 @@
      * shape.fillPatternOffsetX(20);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternOffsetY', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternOffsetY', 0);
     /**
      * get/set fill pattern offset y
      * @name fillPatternOffsetY
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} y
      * @returns {Number}
      * @example
@@ -1102,13 +1102,13 @@
      * shape.fillPatternOffsetY(10);
      */
 
-    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Shape, 'fillPatternScale', ['x', 'y']);
+    Konva.Factory.addComponentsGetterSetter(Konva.Shape, 'fillPatternScale', ['x', 'y']);
 
     /**
      * get/set fill pattern scale
      * @name fillPatternScale
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Object} scale
      * @param {Number} scale.x
      * @param {Number} scale.y
@@ -1125,12 +1125,12 @@
      */
 
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternScaleX', 1);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternScaleX', 1);
     /**
      * get/set fill pattern scale x
      * @name fillPatternScaleX
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} x
      * @returns {Number}
      * @example
@@ -1141,12 +1141,12 @@
      * shape.fillPatternScaleX(2);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternScaleY', 1);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternScaleY', 1);
     /**
      * get/set fill pattern scale y
      * @name fillPatternScaleY
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} y
      * @returns {Number}
      * @example
@@ -1157,13 +1157,13 @@
      * shape.fillPatternScaleY(2);
      */
 
-    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPoint', ['x', 'y']);
+    Konva.Factory.addComponentsGetterSetter(Konva.Shape, 'fillLinearGradientStartPoint', ['x', 'y']);
 
     /**
      * get/set fill linear gradient start point
      * @name fillLinearGradientStartPoint
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Object} startPoint
      * @param {Number} startPoint.x
      * @param {Number} startPoint.y
@@ -1179,12 +1179,12 @@
      * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPointX', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillLinearGradientStartPointX', 0);
     /**
      * get/set fill linear gradient start point x
      * @name fillLinearGradientStartPointX
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} x
      * @returns {Number}
      * @example
@@ -1195,12 +1195,12 @@
      * shape.fillLinearGradientStartPointX(20);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientStartPointY', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillLinearGradientStartPointY', 0);
     /**
      * get/set fill linear gradient start point y
      * @name fillLinearGradientStartPointY
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} y
      * @returns {Number}
      * @example
@@ -1211,13 +1211,13 @@
      * shape.fillLinearGradientStartPointY(20);
      */
 
-    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPoint', ['x', 'y']);
+    Konva.Factory.addComponentsGetterSetter(Konva.Shape, 'fillLinearGradientEndPoint', ['x', 'y']);
 
     /**
      * get/set fill linear gradient end point
      * @name fillLinearGradientEndPoint
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Object} endPoint
      * @param {Number} endPoint.x
      * @param {Number} endPoint.y
@@ -1233,12 +1233,12 @@
      * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPointX', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillLinearGradientEndPointX', 0);
     /**
      * get/set fill linear gradient end point x
      * @name fillLinearGradientEndPointX
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} x
      * @returns {Number}
      * @example
@@ -1249,12 +1249,12 @@
      * shape.fillLinearGradientEndPointX(20);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillLinearGradientEndPointY', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillLinearGradientEndPointY', 0);
     /**
      * get/set fill linear gradient end point y
      * @name fillLinearGradientEndPointY
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} y
      * @returns {Number}
      * @example
@@ -1265,13 +1265,13 @@
      * shape.fillLinearGradientEndPointY(20);
      */
 
-    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPoint', ['x', 'y']);
+    Konva.Factory.addComponentsGetterSetter(Konva.Shape, 'fillRadialGradientStartPoint', ['x', 'y']);
 
     /**
      * get/set fill radial gradient start point
      * @name fillRadialGradientStartPoint
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Object} startPoint
      * @param {Number} startPoint.x
      * @param {Number} startPoint.y
@@ -1287,12 +1287,12 @@
      * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPointX', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillRadialGradientStartPointX', 0);
     /**
      * get/set fill radial gradient start point x
      * @name fillRadialGradientStartPointX
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} x
      * @returns {Number}
      * @example
@@ -1303,12 +1303,12 @@
      * shape.fillRadialGradientStartPointX(20);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientStartPointY', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillRadialGradientStartPointY', 0);
     /**
      * get/set fill radial gradient start point y
      * @name fillRadialGradientStartPointY
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} y
      * @returns {Number}
      * @example
@@ -1319,13 +1319,13 @@
      * shape.fillRadialGradientStartPointY(20);
      */
 
-    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPoint', ['x', 'y']);
+    Konva.Factory.addComponentsGetterSetter(Konva.Shape, 'fillRadialGradientEndPoint', ['x', 'y']);
 
     /**
      * get/set fill radial gradient end point
      * @name fillRadialGradientEndPoint
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Object} endPoint
      * @param {Number} endPoint.x
      * @param {Number} endPoint.y
@@ -1341,12 +1341,12 @@
      * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPointX', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillRadialGradientEndPointX', 0);
     /**
      * get/set fill radial gradient end point x
      * @name fillRadialGradientEndPointX
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} x
      * @returns {Number}
      * @example
@@ -1357,12 +1357,12 @@
      * shape.fillRadialGradientEndPointX(20);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillRadialGradientEndPointY', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillRadialGradientEndPointY', 0);
     /**
      * get/set fill radial gradient end point y
      * @name fillRadialGradientEndPointY
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} y
      * @returns {Number}
      * @example
@@ -1373,15 +1373,15 @@
      * shape.fillRadialGradientEndPointY(20);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Shape, 'fillPatternRotation', 0);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternRotation', 0);
 
     /**
      * get/set fill pattern rotation in degrees
      * @name fillPatternRotation
      * @method
-     * @memberof Kinetic.Shape.prototype
+     * @memberof Konva.Shape.prototype
      * @param {Number} rotation
-     * @returns {Kinetic.Shape}
+     * @returns {Konva.Shape}
      * @example
      * // get fill pattern rotation
      * var patternRotation = shape.fillPatternRotation();
@@ -1391,7 +1391,7 @@
      */
 
 
-    Kinetic.Factory.backCompat(Kinetic.Shape, {
+    Konva.Factory.backCompat(Konva.Shape, {
         dashArray: 'dash',
         getDashArray: 'getDash',
         setDashArray: 'getDash',
@@ -1405,5 +1405,5 @@
         setDrawHitFunc: 'setHitFunc'
     });
 
-    Kinetic.Collection.mapMethods(Kinetic.Shape);
+    Konva.Collection.mapMethods(Konva.Shape);
 })();

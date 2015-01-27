@@ -6,14 +6,14 @@ suite('Enhance', function () {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            var filt = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            var filt = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
                 draggable: true
             });
-            var orig = new Kinetic.Image({
+            var orig = new Konva.Image({
                 x: 200,
                 y: 10,
                 image: imageObj,
@@ -26,7 +26,7 @@ suite('Enhance', function () {
 
             filt.cache();
             filt.enhance(1.0);
-            filt.filters([Kinetic.Filters.Enhance]);
+            filt.filters([Konva.Filters.Enhance]);
             layer.draw();
 
             done();
@@ -42,8 +42,8 @@ suite('Enhance', function () {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -54,15 +54,15 @@ suite('Enhance', function () {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Enhance]);
+            darth.filters([Konva.Filters.Enhance]);
             darth.enhance(-1);
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: darth, 
               duration: 2.0,
               enhance: 1.0,
-              easing: Kinetic.Easings.EaseInOut
+              easing: Konva.Easings.EaseInOut
             });
         
             darth.on('mouseover', function() {

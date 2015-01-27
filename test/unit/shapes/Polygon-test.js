@@ -2,10 +2,10 @@ suite('Polygon', function() {
     test('add polygon', function() {
         var stage = addStage();
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
         var points = [73,192,73,160,340,23,500,109,499,139,342,93];
         
-        var poly = new Kinetic.Line({
+        var poly = new Konva.Line({
             points: points,
             fill: 'green',
             stroke: 'blue',

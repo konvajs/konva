@@ -4,12 +4,12 @@ Konva is an HTML5 Canvas JavaScript framework that enables high performance anim
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/konvajs/konva?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-[![npm version](https://badge.fury.io/js/kinetic.svg)](http://badge.fury.io/js/kinetic) [![bower version](https://badge.fury.io/bo/kinetic.svg)](http://badge.fury.io/bo/kinetic)
-[![Build Status](https://travis-ci.org/lavrton/KineticJS.png)](https://travis-ci.org/lavrton/KineticJS)  [![Code Climate](https://codeclimate.com/github/lavrton/KineticJS/badges/gpa.svg)](https://codeclimate.com/github/lavrton/KineticJS)
+[![npm version](https://badge.fury.io/js/konva.svg)](http://badge.fury.io/js/konva) [![bower version](https://badge.fury.io/bo/konva.svg)](http://badge.fury.io/bo/konva)
+[![Build Status](https://travis-ci.org/lavrton/KonvaJS.png)](https://travis-ci.org/lavrton/KonvaJS)  [![Code Climate](https://codeclimate.com/github/lavrton/KonvaJS/badges/gpa.svg)](https://codeclimate.com/github/lavrton/KonvaJS)
 
 You can draw things onto the stage, add event listeners to them, move them, scale them, and rotate them independently from other shapes to support high performance animations, even if your application uses thousands of shapes. Served hot with a side of awesomeness.
 
-This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github.com/ericdrowell/KineticJS).
+This repository began as a GitHub fork of [ericdrowell/KonvaJS](https://github.com/ericdrowell/KonvaJS).
 
 * **Visit:** The [Home Page](http://konvajs.github.io/) and follow on [Twitter](https://twitter.com/lavrton)
 * **Discover:** [Tutorials](http://konvajs.github.io/docs), [API Documentation](http://konvajs.github.io/docs)
@@ -52,7 +52,7 @@ If you add a file in the src directory, be sure to add the filename to the sourc
 Konva uses Mocha for testing.
 
 * If you need run test only one time run `grunt test`.
-* While developing it is easy to use `grunt server` with watch task. Just run it and go to [http://localhost:8080/test/runner.html](http://localhost:8080/test/runner.html). After src file change kinetic-dev.js will be automatically created, so you just need refresh test the page.
+* While developing it is easy to use `grunt server` with watch task. Just run it and go to [http://localhost:8080/test/runner.html](http://localhost:8080/test/runner.html). After src file change konva-dev.js will be automatically created, so you just need refresh test the page.
 
 Konva is covered with hundreds of tests and well over a thousand assertions.
 Konva uses TDD (test driven development) which means that every new feature or bug fix is accompanied with at least one new test.

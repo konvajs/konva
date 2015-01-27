@@ -5,16 +5,16 @@
      *  them as larger pixels
      * @function
      * @name Pixelate
-     * @memberof Kinetic.Filters
+     * @memberof Konva.Filters
      * @param {Object} imageData
      * @author ippo615
      * @example
      * node.cache();
-     * node.filters([Kinetic.Filters.Pixelate]);
+     * node.filters([Konva.Filters.Pixelate]);
      * node.pixelSize(10);
      */
 
-    Kinetic.Filters.Pixelate = function (imageData) {
+    Konva.Filters.Pixelate = function (imageData) {
 
         var pixelSize = Math.ceil(this.pixelSize()),
             width = imageData.width,
@@ -80,13 +80,13 @@
       
     };
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'pixelSize', 8, null, Kinetic.Factory.afterSetFilter);
+    Konva.Factory.addGetterSetter(Konva.Node, 'pixelSize', 8, null, Konva.Factory.afterSetFilter);
 
     /**
-    * get/set pixel size. Use with {@link Kinetic.Filters.Pixelate} filter.
+    * get/set pixel size. Use with {@link Konva.Filters.Pixelate} filter.
     * @name pixelSize
     * @method
-    * @memberof Kinetic.Node.prototype
+    * @memberof Konva.Node.prototype
     * @param {Integer} pixelSize
     * @returns {Integer}
     */

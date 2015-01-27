@@ -5,7 +5,7 @@
       var width = 500;
       var height = 300;
 
-      var VERSION = Kinetic.version === 'dev' ? 'new' : 'old';
+      var VERSION = Konva.version === 'dev' ? 'new' : 'old';
 
       window.requestAnimFrame = (function(){
         return window.requestAnimationFrame ||
@@ -80,7 +80,7 @@
       }
 
       function make_shape(color) {
-        return new Kinetic.Rect({
+        return new Konva.Rect({
           fill: color,
           width: 10,
           height: 10
@@ -88,7 +88,7 @@
       }
 
       function make_stage() {
-        stage = new Kinetic.Stage({
+        stage = new Konva.Stage({
           container: "container",
           width: width,
           height: height
@@ -96,10 +96,10 @@
 
         if (VERSION === 'new') {
           console.log('create fast layer')
-          circlesLayer = new Kinetic.FastLayer();
+          circlesLayer = new Konva.FastLayer();
         } 
         else {
           console.log('create normal layer')
-          circlesLayer = new Kinetic.Layer();
+          circlesLayer = new Konva.Layer();
         }
       }

@@ -15,7 +15,7 @@
   "trailing" : true,
   "laxbreak" : true,
   "globals": { 
-    "Kinetic": false,
+    "Konva": false,
     "document": false,
     "window" : false,
     "navigator" : false,

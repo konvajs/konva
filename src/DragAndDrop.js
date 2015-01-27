@@ -1,7 +1,7 @@
 (function() {
-    Kinetic.DD = {
+    Konva.DD = {
         // properties
-        anim: new Kinetic.Animation(function() {
+        anim: new Konva.Animation(function() {
             var b = this.dirty;
             this.dirty = false;
             return b;
@@ -16,7 +16,7 @@
 
         // methods
         _drag: function(evt) {
-            var dd = Kinetic.DD,
+            var dd = Konva.DD,
                 node = dd.node;
 
             if(node) {
@@ -51,7 +51,7 @@
             }
         },
         _endDragBefore: function(evt) {
-            var dd = Kinetic.DD,
+            var dd = Konva.DD,
                 node = dd.node,
                 nodeType, layer;
 
@@ -65,7 +65,7 @@
                 if(dd.isDragging) {
                     dd.isDragging = false;
                     dd.justDragged = true;
-                    Kinetic.listenClickTap = false;
+                    Konva.listenClickTap = false;
 
                     if (evt) {
                         evt.dragEndNode = node;
@@ -97,10 +97,10 @@
     /**
      * initiate drag and drop
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      */
-    Kinetic.Node.prototype.startDrag = function() {
-        var dd = Kinetic.DD,
+    Konva.Node.prototype.startDrag = function() {
+        var dd = Konva.DD,
             stage = this.getStage(),
             layer = this.getLayer(),
             pos = stage.getPointerPosition(),
@@ -122,8 +122,8 @@
         }
     };
 
-    Kinetic.Node.prototype._setDragPosition = function(evt) {
-        var dd = Kinetic.DD,
+    Konva.Node.prototype._setDragPosition = function(evt) {
+        var dd = Konva.DD,
             pos = this.getStage().getPointerPosition(),
             dbf = this.getDragBoundFunc();
         if (!pos) {
@@ -150,24 +150,24 @@
     /**
      * stop drag and drop
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      */
-    Kinetic.Node.prototype.stopDrag = function() {
-        var dd = Kinetic.DD,
+    Konva.Node.prototype.stopDrag = function() {
+        var dd = Konva.DD,
             evt = {};
         dd._endDragBefore(evt);
         dd._endDragAfter(evt);
     };
 
-    Kinetic.Node.prototype.setDraggable = function(draggable) {
+    Konva.Node.prototype.setDraggable = function(draggable) {
         this._setAttr('draggable', draggable);
         this._dragChange();
     };
 
-    var origDestroy = Kinetic.Node.prototype.destroy;
+    var origDestroy = Konva.Node.prototype.destroy;
 
-    Kinetic.Node.prototype.destroy = function() {
-        var dd = Kinetic.DD;
+    Konva.Node.prototype.destroy = function() {
+        var dd = Konva.DD;
 
         // stop DD
         if(dd.node && dd.node._id === this._id) {
@@ -181,32 +181,32 @@
     /**
      * determine if node is currently in drag and drop mode
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      */
-    Kinetic.Node.prototype.isDragging = function() {
-        var dd = Kinetic.DD;
+    Konva.Node.prototype.isDragging = function() {
+        var dd = Konva.DD;
         return !!(dd.node && dd.node._id === this._id && dd.isDragging);
     };
 
-    Kinetic.Node.prototype._listenDrag = function() {
+    Konva.Node.prototype._listenDrag = function() {
         var that = this;
 
         this._dragCleanup();
 
         if (this.getClassName() === 'Stage') {
-            this.on('contentMousedown.kinetic contentTouchstart.kinetic', function(evt) {
-                if(!Kinetic.DD.node) {
+            this.on('contentMousedown.konva contentTouchstart.konva', function(evt) {
+                if(!Konva.DD.node) {
                     that.startDrag(evt);
                 }
             });
         }
         else {
-            this.on('mousedown.kinetic touchstart.kinetic', function(evt) {
+            this.on('mousedown.konva touchstart.konva', function(evt) {
                 // ignore right and middle buttons
                 if (evt.evt.button === 1 || evt.evt.button === 2) {
                     return;
                 }
-                if(!Kinetic.DD.node) {
+                if(!Konva.DD.node) {
                     that.startDrag(evt);
                 }
             });
@@ -219,7 +219,7 @@
         */
     };
 
-    Kinetic.Node.prototype._dragChange = function() {
+    Konva.Node.prototype._dragChange = function() {
         if(this.attrs.draggable) {
             this._listenDrag();
         }
@@ -233,31 +233,31 @@
              * drag and drop mode
              */
             var stage = this.getStage();
-            var dd = Kinetic.DD;
+            var dd = Konva.DD;
             if(stage && dd.node && dd.node._id === this._id) {
                 dd.node.stopDrag();
             }
         }
     };
 
-    Kinetic.Node.prototype._dragCleanup = function() {
+    Konva.Node.prototype._dragCleanup = function() {
         if (this.getClassName() === 'Stage') {
-            this.off('contentMousedown.kinetic');
-            this.off('contentTouchstart.kinetic');
+            this.off('contentMousedown.konva');
+            this.off('contentTouchstart.konva');
         } else {
-            this.off('mousedown.kinetic');
-            this.off('touchstart.kinetic');
+            this.off('mousedown.konva');
+            this.off('touchstart.konva');
         }
     };
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'dragBoundFunc');
+    Konva.Factory.addGetterSetter(Konva.Node, 'dragBoundFunc');
 
     /**
      * get/set drag bound function.  This is used to override the default
      *  drag and drop position
      * @name dragBoundFunc
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Function} dragBoundFunc
      * @returns {Function}
      * @example
@@ -273,14 +273,14 @@
      * });
      */
 
-    Kinetic.Factory.addGetter(Kinetic.Node, 'draggable', false);
-    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'draggable');
+    Konva.Factory.addGetter(Konva.Node, 'draggable', false);
+    Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'draggable');
 
      /**
      * get/set draggable flag
      * @name draggable
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Boolean} draggable
      * @returns {Boolean}
      * @example
@@ -294,11 +294,11 @@
      * node.draggable(false);
      */
 
-    var html = Kinetic.document.documentElement;
-    html.addEventListener('mouseup', Kinetic.DD._endDragBefore, true);
-    html.addEventListener('touchend', Kinetic.DD._endDragBefore, true);
+    var html = Konva.document.documentElement;
+    html.addEventListener('mouseup', Konva.DD._endDragBefore, true);
+    html.addEventListener('touchend', Konva.DD._endDragBefore, true);
 
-    html.addEventListener('mouseup', Kinetic.DD._endDragAfter, false);
-    html.addEventListener('touchend', Kinetic.DD._endDragAfter, false);
+    html.addEventListener('mouseup', Konva.DD._endDragAfter, false);
+    html.addEventListener('touchend', Konva.DD._endDragAfter, false);
 
 })();

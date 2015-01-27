@@ -1,8 +1,8 @@
 (function() {
-    Kinetic.Util.addMethods(Kinetic.BaseLayer, {
+    Konva.Util.addMethods(Konva.BaseLayer, {
         ___init: function(config) {
             this.nodeType = 'Layer';
-            Kinetic.Container.call(this, config);
+            Konva.Container.call(this, config);
         },
         createPNGStream : function() {
             return this.canvas._canvas.createPNGStream();
@@ -10,7 +10,7 @@
         /**
          * get layer canvas
          * @method
-         * @memberof Kinetic.BaseLayer.prototype
+         * @memberof Konva.BaseLayer.prototype
          */
         getCanvas: function() {
             return this.canvas;
@@ -18,7 +18,7 @@
         /**
          * get layer hit canvas
          * @method
-         * @memberof Kinetic.BaseLayer.prototype
+         * @memberof Konva.BaseLayer.prototype
          */
         getHitCanvas: function() {
             return this.hitCanvas;
@@ -26,7 +26,7 @@
         /**
          * get layer canvas context
          * @method
-         * @memberof Kinetic.BaseLayer.prototype
+         * @memberof Konva.BaseLayer.prototype
          */
         getContext: function() {
             return this.getCanvas().getContext();
@@ -34,7 +34,7 @@
         /**
          * clear scene and hit canvas contexts tied to the layer
          * @method
-         * @memberof Kinetic.BaseLayer.prototype
+         * @memberof Konva.BaseLayer.prototype
          * @param {Object} [bounds]
          * @param {Number} [bounds.x]
          * @param {Number} [bounds.y]
@@ -59,7 +59,7 @@
         },
         // extend Node.prototype.setZIndex
         setZIndex: function(index) {
-            Kinetic.Node.prototype.setZIndex.call(this, index);
+            Konva.Node.prototype.setZIndex.call(this, index);
             var stage = this.getStage();
             if(stage) {
                 stage.content.removeChild(this.getCanvas()._canvas);
@@ -75,7 +75,7 @@
         },
         // extend Node.prototype.moveToTop
         moveToTop: function() {
-            Kinetic.Node.prototype.moveToTop.call(this);
+            Konva.Node.prototype.moveToTop.call(this);
             var stage = this.getStage();
             if(stage) {
                 stage.content.removeChild(this.getCanvas()._canvas);
@@ -84,7 +84,7 @@
         },
         // extend Node.prototype.moveUp
         moveUp: function() {
-            if(Kinetic.Node.prototype.moveUp.call(this)) {
+            if(Konva.Node.prototype.moveUp.call(this)) {
                 var stage = this.getStage();
                 if(stage) {
                     stage.content.removeChild(this.getCanvas()._canvas);
@@ -100,7 +100,7 @@
         },
         // extend Node.prototype.moveDown
         moveDown: function() {
-            if(Kinetic.Node.prototype.moveDown.call(this)) {
+            if(Konva.Node.prototype.moveDown.call(this)) {
                 var stage = this.getStage();
                 if(stage) {
                     var children = stage.getChildren();
@@ -111,7 +111,7 @@
         },
         // extend Node.prototype.moveToBottom
         moveToBottom: function() {
-            if(Kinetic.Node.prototype.moveToBottom.call(this)) {
+            if(Konva.Node.prototype.moveToBottom.call(this)) {
                 var stage = this.getStage();
                 if(stage) {
                     var children = stage.getChildren();
@@ -126,9 +126,9 @@
         remove: function() {
             var _canvas = this.getCanvas()._canvas;
 
-            Kinetic.Node.prototype.remove.call(this);
+            Konva.Node.prototype.remove.call(this);
 
-            if(_canvas && _canvas.parentNode && Kinetic.Util._isInDocument(_canvas)) {
+            if(_canvas && _canvas.parentNode && Konva.Util._isInDocument(_canvas)) {
                 _canvas.parentNode.removeChild(_canvas);
             }
             return this;
@@ -144,7 +144,7 @@
          * if you want change width use `stage.width(value);`
          * @name width
          * @method
-         * @memberof Kinetic.BaseLayer.prototype
+         * @memberof Konva.BaseLayer.prototype
          * @returns {Number}
          * @example
          * var width = layer.width();
@@ -155,14 +155,14 @@
             }
         },
         setWidth : function() {
-            Kinetic.Util.warn('Can not change width of layer. Use "stage.width(value)" function instead.');
+            Konva.Util.warn('Can not change width of layer. Use "stage.width(value)" function instead.');
         },
         /**
          * get/set height of layer.getter return height of stage. setter doing nothing.
          * if you want change height use `stage.height(value);`
          * @name height
          * @method
-         * @memberof Kinetic.BaseLayer.prototype
+         * @memberof Konva.BaseLayer.prototype
          * @returns {Number}
          * @example
          * var height = layer.height();
@@ -173,19 +173,19 @@
             }
         },
         setHeight : function() {
-            Kinetic.Util.warn('Can not change height of layer. Use "stage.height(value)" function instead.');
+            Konva.Util.warn('Can not change height of layer. Use "stage.height(value)" function instead.');
         }
     });
-    Kinetic.Util.extend(Kinetic.BaseLayer, Kinetic.Container);
+    Konva.Util.extend(Konva.BaseLayer, Konva.Container);
 
     // add getters and setters
-    Kinetic.Factory.addGetterSetter(Kinetic.BaseLayer, 'clearBeforeDraw', true);
+    Konva.Factory.addGetterSetter(Konva.BaseLayer, 'clearBeforeDraw', true);
     /**
      * get/set clearBeforeDraw flag which determines if the layer is cleared or not
      *  before drawing
      * @name clearBeforeDraw
      * @method
-     * @memberof Kinetic.BaseLayer.prototype
+     * @memberof Konva.BaseLayer.prototype
      * @param {Boolean} clearBeforeDraw
      * @returns {Boolean}
      * @example
@@ -199,5 +199,5 @@
      * layer.clearBeforeDraw(true);
      */
 
-    Kinetic.Collection.mapMethods(Kinetic.BaseLayer);
+    Konva.Collection.mapMethods(Konva.BaseLayer);
 })();

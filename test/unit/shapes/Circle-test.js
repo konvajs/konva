@@ -3,9 +3,9 @@ suite('Circle', function(){
 
   test('add circle to stage', function(){
     var stage = addStage();
-    var layer = new Kinetic.Layer();
-    var group = new Kinetic.Group();
-    var circle = new Kinetic.Circle({
+    var layer = new Konva.Layer();
+    var group = new Konva.Group();
+    var circle = new Konva.Circle({
         x: 100,
         y: 100,
         radius: 70,
@@ -46,9 +46,9 @@ suite('Circle', function(){
       var imageObj = new Image();
       imageObj.onload = function() {
           var stage = addStage();
-          var layer = new Kinetic.Layer();
-          var group = new Kinetic.Group();
-          var circle = new Kinetic.Circle({
+          var layer = new Konva.Layer();
+          var group = new Konva.Group();
+          var circle = new Konva.Circle({
               x: stage.getWidth() / 2,
               y: stage.getHeight() / 2,
               radius: 70,
@@ -89,9 +89,9 @@ suite('Circle', function(){
   // ======================================================
   test('add circle with radial gradient fill', function() {
       var stage = addStage();
-      var layer = new Kinetic.Layer();
-      var group = new Kinetic.Group();
-      var circle = new Kinetic.Circle({
+      var layer = new Konva.Layer();
+      var group = new Konva.Group();
+      var circle = new Konva.Circle({
           x: stage.getWidth() / 2,
           y: stage.getHeight() / 2,
           radius: 70,
@@ -125,9 +125,9 @@ suite('Circle', function(){
   // ======================================================
   test('add shape with linear gradient fill', function() {
       var stage = addStage();
-      var layer = new Kinetic.Layer();
-      var group = new Kinetic.Group();
-      var circle = new Kinetic.Circle({
+      var layer = new Konva.Layer();
+      var group = new Konva.Group();
+      var circle = new Konva.Circle({
           x: stage.getWidth() / 2,
           y: stage.getHeight() / 2,
           radius: 70,
@@ -151,9 +151,9 @@ suite('Circle', function(){
   // ======================================================
   test('set opacity after instantiation', function() {
       var stage = addStage();
-      var layer = new Kinetic.Layer();
-      var group = new Kinetic.Group();
-      var circle = new Kinetic.Circle({
+      var layer = new Konva.Layer();
+      var group = new Konva.Group();
+      var circle = new Konva.Circle({
           x: stage.getWidth() / 2,
           y: stage.getHeight() / 2,
           radius: 70,
@@ -174,8 +174,8 @@ suite('Circle', function(){
   // ======================================================
   test('attrs sync', function() {
       var stage = addStage();
-      var layer = new Kinetic.Layer();
-      var circle = new Kinetic.Circle({
+      var layer = new Konva.Layer();
+      var circle = new Konva.Circle({
           x: stage.getWidth() / 2,
           y: stage.getHeight() / 2,
           radius: 70,
@@ -203,8 +203,8 @@ suite('Circle', function(){
   // ======================================================
   test('set fill after instantiation', function() {
       var stage = addStage();
-      var layer = new Kinetic.Layer();
-      var circle = new Kinetic.Circle({
+      var layer = new Konva.Layer();
+      var circle = new Konva.Circle({
           x: stage.getWidth() / 2,
           y: stage.getHeight() / 2,
           radius: 70,

@@ -46,18 +46,18 @@
      * Canvas Context constructor
      * @constructor
      * @abstract
-     * @memberof Kinetic
+     * @memberof Konva
      */
-    Kinetic.Context = function(canvas) {
+    Konva.Context = function(canvas) {
         this.init(canvas);
     };
 
-    Kinetic.Context.prototype = {
+    Konva.Context.prototype = {
         init: function(canvas) {
             this.canvas = canvas;
             this._context = canvas._canvas.getContext('2d');
 
-            if (Kinetic.enableTrace) {
+            if (Konva.enableTrace) {
                 this.traceArr = [];
                 this._enableTrace();
             }
@@ -65,8 +65,8 @@
         /**
          * fill shape
          * @method
-         * @memberof Kinetic.Context.prototype
-         * @param {Kinetic.Shape} shape
+         * @memberof Konva.Context.prototype
+         * @param {Konva.Shape} shape
          */
         fillShape: function(shape) {
             if(shape.getFillEnabled()) {
@@ -76,8 +76,8 @@
         /**
          * stroke shape
          * @method
-         * @memberof Kinetic.Context.prototype
-         * @param {Kinetic.Shape} shape
+         * @memberof Konva.Context.prototype
+         * @param {Konva.Shape} shape
          */
         strokeShape: function(shape) {
             if(shape.getStrokeEnabled()) {
@@ -87,8 +87,8 @@
         /**
          * fill then stroke
          * @method
-         * @memberof Kinetic.Context.prototype
-         * @param {Kinetic.Shape} shape
+         * @memberof Konva.Context.prototype
+         * @param {Konva.Shape} shape
          */
         fillStrokeShape: function(shape) {
             var fillEnabled = shape.getFillEnabled();
@@ -102,7 +102,7 @@
         /**
          * get context trace if trace is enabled
          * @method
-         * @memberof Kinetic.Context.prototype
+         * @memberof Konva.Context.prototype
          * @param {Boolean} relaxed if false, return strict context trace, which includes method names, method parameters
          *  properties, and property values.  If true, return relaxed context trace, which only returns method names and
          *  properites.
@@ -126,7 +126,7 @@
                         str += DOUBLE_PAREN;
                     }
                     else {
-                        if (Kinetic.Util._isArray(args[0])) {
+                        if (Konva.Util._isArray(args[0])) {
                             str += OPEN_PAREN_BRACKET + args.join(COMMA) + CLOSE_BRACKET_PAREN;
                         }
                         else {
@@ -150,7 +150,7 @@
         /**
          * clear trace if trace is enabled
          * @method
-         * @memberof Kinetic.Context.prototype
+         * @memberof Konva.Context.prototype
          */
         clearTrace: function() {
             this.traceArr = [];
@@ -162,14 +162,14 @@
             traceArr.push(str);
             len = traceArr.length;
 
-            if (len >= Kinetic.traceArrMax) {
+            if (len >= Konva.traceArrMax) {
                 traceArr.shift();
             }
         },
         /**
          * reset canvas context transform
          * @method
-         * @memberof Kinetic.Context.prototype
+         * @memberof Konva.Context.prototype
          */
         reset: function() {
             var pixelRatio = this.getCanvas().getPixelRatio();
@@ -178,8 +178,8 @@
         /**
          * get canvas
          * @method
-         * @memberof Kinetic.Context.prototype
-         * @returns {Kinetic.Canvas}
+         * @memberof Konva.Context.prototype
+         * @returns {Konva.Canvas}
          */
         getCanvas: function() {
             return this.canvas;
@@ -187,7 +187,7 @@
         /**
          * clear canvas
          * @method
-         * @memberof Kinetic.Context.prototype
+         * @memberof Konva.Context.prototype
          * @param {Object} [bounds]
          * @param {Number} [bounds.x]
          * @param {Number} [bounds.y]
@@ -369,7 +369,7 @@
         _enableTrace: function() {
             var that = this,
                 len = CONTEXT_METHODS.length,
-                _simplifyArray = Kinetic.Util._simplifyArray,
+                _simplifyArray = Konva.Util._simplifyArray,
                 origSetter = this.setAttr,
                 n, args;
 
@@ -406,14 +406,14 @@
         }
     };
 
-    Kinetic.SceneContext = function(canvas) {
-        Kinetic.Context.call(this, canvas);
+    Konva.SceneContext = function(canvas) {
+        Konva.Context.call(this, canvas);
     };
 
-    Kinetic.SceneContext.prototype = {
+    Konva.SceneContext.prototype = {
         _fillColor: function(shape) {
             var fill = shape.fill()
-                || Kinetic.Util._getRGBAString({
+                || Konva.Util._getRGBAString({
                     red: shape.fillRed(),
                     green: shape.fillGreen(),
                     blue: shape.fillBlue(),
@@ -428,7 +428,7 @@
                 fillPatternX = shape.getFillPatternX(),
                 fillPatternY = shape.getFillPatternY(),
                 fillPatternScale = shape.getFillPatternScale(),
-                fillPatternRotation = Kinetic.getAngle(shape.getFillPatternRotation()),
+                fillPatternRotation = Konva.getAngle(shape.getFillPatternRotation()),
                 fillPatternOffset = shape.getFillPatternOffset(),
                 fillPatternRepeat = shape.getFillPatternRepeat();
 
@@ -515,7 +515,7 @@
         _stroke: function(shape) {
             var dash = shape.dash(),
                 // ignore strokeScaleEnabled for Text
-                strokeScaleEnabled = (shape.getStrokeScaleEnabled() || (shape instanceof Kinetic.Text));
+                strokeScaleEnabled = (shape.getStrokeScaleEnabled() || (shape instanceof Konva.Text));
 
             if(shape.hasStroke()) {
                 if (!strokeScaleEnabled) {
@@ -530,7 +530,7 @@
 
                 this.setAttr('lineWidth', shape.strokeWidth());
                 this.setAttr('strokeStyle', shape.stroke()
-                    || Kinetic.Util._getRGBAString({
+                    || Konva.Util._getRGBAString({
                         red: shape.strokeRed(),
                         green: shape.strokeGreen(),
                         blue: shape.strokeBlue(),
@@ -545,7 +545,7 @@
             }
         },
         _applyShadow: function(shape) {
-            var util = Kinetic.Util,
+            var util = Konva.Util,
                 absOpacity = shape.getAbsoluteOpacity(),
                 color = util.get(shape.getShadowColor(), 'black'),
                 blur = util.get(shape.getShadowBlur(), 5),
@@ -566,13 +566,13 @@
         
         }
     };
-    Kinetic.Util.extend(Kinetic.SceneContext, Kinetic.Context);
+    Konva.Util.extend(Konva.SceneContext, Konva.Context);
 
-    Kinetic.HitContext = function(canvas) {
-        Kinetic.Context.call(this, canvas);
+    Konva.HitContext = function(canvas) {
+        Konva.Context.call(this, canvas);
     };
 
-    Kinetic.HitContext.prototype = {
+    Konva.HitContext.prototype = {
         _fill: function(shape) {
             this.save();
             this.setAttr('fillStyle', shape.colorKey);
@@ -582,7 +582,7 @@
         _stroke: function(shape) {
             if(shape.hasStroke()) {
                 // ignore strokeScaleEnabled for Text
-                var strokeScaleEnabled = (shape.getStrokeScaleEnabled() || (shape instanceof Kinetic.Text));
+                var strokeScaleEnabled = (shape.getStrokeScaleEnabled() || (shape instanceof Konva.Text));
                 if (!strokeScaleEnabled) {
                     this.save();
                     this.setTransform(1, 0, 0, 1, 0, 0);
@@ -597,5 +597,5 @@
             }
         }
     };
-    Kinetic.Util.extend(Kinetic.HitContext, Kinetic.Context);
+    Konva.Util.extend(Konva.HitContext, Konva.Context);
 })();

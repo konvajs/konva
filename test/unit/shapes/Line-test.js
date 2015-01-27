@@ -2,9 +2,9 @@ suite('Line', function() {
     // ======================================================
     test('add line', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var line = new Kinetic.Line({
+        var line = new Konva.Line({
             stroke: 'blue',
             strokeWidth: 20,
             lineCap: 'round',
@@ -34,9 +34,9 @@ suite('Line', function() {
     // ======================================================
     test('test default ponts array for two lines', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var line = new Kinetic.Line({
+        var line = new Konva.Line({
             stroke: 'blue',
             strokeWidth: 20,
             lineCap: 'round',
@@ -44,7 +44,7 @@ suite('Line', function() {
             draggable: true
         });
 
-        var redLine = new Kinetic.Line({
+        var redLine = new Konva.Line({
             x: 50,
             stroke: 'red',
             strokeWidth: 20,
@@ -67,7 +67,7 @@ suite('Line', function() {
     // ======================================================
     test('add dashed line', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
         /*
          var points = [{
@@ -85,7 +85,7 @@ suite('Line', function() {
          }];
          */
 
-        var line = new Kinetic.Line({
+        var line = new Konva.Line({
             points: [73, 160, 340, 23, 500, 109, 500, 180],
             stroke: 'blue',
 
@@ -114,9 +114,9 @@ suite('Line', function() {
    // ======================================================
     test('add line with shadow', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var line = new Kinetic.Line({
+        var line = new Konva.Line({
             points: [73,160,340,23],
             stroke: 'blue',
             strokeWidth: 20,
@@ -142,16 +142,16 @@ suite('Line', function() {
     test('line hit test with strokeScaleEnabled = false', function() {
         var stage = addStage();
         var scale = 0.1;
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var group = new Kinetic.Group({
+        var group = new Konva.Group({
             scale: {
                 x :scale,
                 y : scale
             }
         });
 
-        var line1 = new Kinetic.Line({
+        var line1 = new Konva.Line({
             points: [0, 0, 300, 0],
             stroke: 'red',
             strokeScaleEnabled: false,
@@ -160,7 +160,7 @@ suite('Line', function() {
         });
         group.add(line1);
 
-        var line2 = new Kinetic.Line({
+        var line2 = new Konva.Line({
             points: [0, 0, 300, 0],
             stroke: 'green',
             strokeWidth: 40 / scale,

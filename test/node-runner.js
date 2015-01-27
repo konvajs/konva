@@ -1,10 +1,10 @@
 var fs = require('fs'),
-    Kinetic = require('../dist/kinetic-dev');
+    Konva = require('../dist/konva-dev');
 
 
 
-global.Kinetic = Kinetic;
-Kinetic.enableTrace = true;
+global.Konva = Konva;
+Konva.enableTrace = true;
 
 // Config MINIMAL test environment
 global.suite = function(title, func) {
@@ -40,18 +40,18 @@ global.assert.notEqual = function(left, right){
 };
 
 global.addStage = function(){
-    return new Kinetic.Stage({
+    return new Konva.Stage({
           width: 578,
           height: 200
     });
 };
 
 // Some utils for testing
-global.kineticContainer = Kinetic.document.createElement('div');
-Kinetic.document.body.appendChild(kineticContainer);
+global.konvaContainer = Konva.document.createElement('div');
+Konva.document.body.appendChild(konvaContainer);
 global.showHit = global.addContainer = function(){
 };
-global.Image = Kinetic._nodeCanvas.Image;
+global.Image = Konva._nodeCanvas.Image;
 Image.prototype.style = {};
 eval(fs.readFileSync('./test/assets/tiger.js')+"");
 eval(fs.readFileSync('./test/assets/worldMap.js')+"");

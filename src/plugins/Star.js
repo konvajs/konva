@@ -2,8 +2,8 @@
     /**
      * Star constructor
      * @constructor
-     * @memberof Kinetic
-     * @augments Kinetic.Shape
+     * @memberof Konva
+     * @augments Konva.Shape
      * @param {Object} config
      * @param {Integer} config.numPoints
      * @param {Number} config.innerRadius
@@ -11,7 +11,7 @@
      * @@shapeParams
      * @@nodeParams
      * @example
-     * var star = new Kinetic.Star({
+     * var star = new Konva.Star({
      *   x: 100,
      *   y: 200,
      *   numPoints: 5,
@@ -22,14 +22,14 @@
      *   strokeWidth: 4
      * });
      */
-    Kinetic.Star = function(config) {
+    Konva.Star = function(config) {
         this.___init(config);
     };
 
-    Kinetic.Star.prototype = {
+    Konva.Star.prototype = {
         ___init: function(config) {
             // call super constructor
-            Kinetic.Shape.call(this, config);
+            Konva.Shape.call(this, config);
             this.className = 'Star';
             this.sceneFunc(this._sceneFunc);
         },
@@ -52,16 +52,16 @@
             context.fillStrokeShape(this);
         }
     };
-    Kinetic.Util.extend(Kinetic.Star, Kinetic.Shape);
+    Konva.Util.extend(Konva.Star, Konva.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Star, 'numPoints', 5);
+    Konva.Factory.addGetterSetter(Konva.Star, 'numPoints', 5);
 
     /**
      * set number of points
      * @name setNumPoints
      * @method
-     * @memberof Kinetic.Star.prototype
+     * @memberof Konva.Star.prototype
      * @param {Integer} points
      */
 
@@ -69,16 +69,16 @@
      * get number of points
      * @name getNumPoints
      * @method
-     * @memberof Kinetic.Star.prototype
+     * @memberof Konva.Star.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Star, 'innerRadius', 0);
+    Konva.Factory.addGetterSetter(Konva.Star, 'innerRadius', 0);
 
     /**
      * set inner radius
      * @name setInnerRadius
      * @method
-     * @memberof Kinetic.Star.prototype
+     * @memberof Konva.Star.prototype
      * @param {Number} radius
      */
 
@@ -86,16 +86,16 @@
      * get inner radius
      * @name getInnerRadius
      * @method
-     * @memberof Kinetic.Star.prototype
+     * @memberof Konva.Star.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Star, 'outerRadius', 0);
+    Konva.Factory.addGetterSetter(Konva.Star, 'outerRadius', 0);
 
     /**
      * set outer radius
      * @name setOuterRadius
      * @method
-     * @memberof Kinetic.Star.prototype
+     * @memberof Konva.Star.prototype
      * @param {Number} radius
      */
 
@@ -103,8 +103,8 @@
      * get outer radius
      * @name getOuterRadius
      * @method
-     * @memberof Kinetic.Star.prototype
+     * @memberof Konva.Star.prototype
      */
 
-    Kinetic.Collection.mapMethods(Kinetic.Star);
+    Konva.Collection.mapMethods(Konva.Star);
 })();

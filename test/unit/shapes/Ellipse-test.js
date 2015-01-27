@@ -3,8 +3,8 @@ suite('Ellipse', function(){
   // ======================================================
   test('add ellipse', function(){
       var stage = addStage();
-      var layer = new Kinetic.Layer();
-      var ellipse = new Kinetic.Ellipse({
+      var layer = new Konva.Layer();
+      var ellipse = new Konva.Ellipse({
           x: stage.getWidth() / 2,
           y: stage.getHeight() / 2,
           radius: {x:70, y:35},

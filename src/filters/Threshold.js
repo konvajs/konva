@@ -6,16 +6,16 @@
      *  This affects the alpha channel.
      * @function
      * @name Threshold
-     * @memberof Kinetic.Filters
+     * @memberof Konva.Filters
      * @param {Object} imageData
      * @author ippo615
      * @example
      * node.cache();
-     * node.filters([Kinetic.Filters.Threshold]);
+     * node.filters([Konva.Filters.Threshold]);
      * node.threshold(0.1);
      */
 
-    Kinetic.Filters.Threshold = function (imageData) {
+    Konva.Filters.Threshold = function (imageData) {
         var level = this.threshold() * 255,
             data = imageData.data,
             len = data.length,
@@ -26,13 +26,13 @@
         }
     };
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'threshold', 0.5, null, Kinetic.Factory.afterSetFilter);
+    Konva.Factory.addGetterSetter(Konva.Node, 'threshold', 0.5, null, Konva.Factory.afterSetFilter);
 
     /**
-    * get/set threshold.  Must be a value between 0 and 1. Use with {@link Kinetic.Filters.Threshold} or {@link Kinetic.Filters.Mask} filter.
+    * get/set threshold.  Must be a value between 0 and 1. Use with {@link Konva.Filters.Threshold} or {@link Konva.Filters.Mask} filter.
     * @name threshold
     * @method
-    * @memberof Kinetic.Node.prototype
+    * @memberof Konva.Node.prototype
     * @param {Number} threshold
     * @returns {Number}
     */

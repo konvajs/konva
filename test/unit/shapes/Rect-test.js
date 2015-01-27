@@ -4,9 +4,9 @@ suite('Rect', function(){
   test('add rect to stage', function(){
     var stage = addStage();
 
-    var layer = new Kinetic.Layer();
+    var layer = new Konva.Layer();
 
-    var rect = new Kinetic.Rect({
+    var rect = new Konva.Rect({
       x: 100,
       y: 50,
       width: 100,
@@ -34,9 +34,9 @@ suite('Rect', function(){
   test('add rect with shadow, corner radius, and opacity', function(){
     var stage = addStage();
 
-    var layer = new Kinetic.Layer();
+    var layer = new Konva.Layer();
 
-    var rect = new Kinetic.Rect({
+    var rect = new Konva.Rect({
       x: 100,
       y: 50,
       width: 100,
@@ -73,8 +73,8 @@ suite('Rect', function(){
   // ======================================================
   test('draw rect', function() {
       var stage = addStage();
-      var layer = new Kinetic.Layer();
-      var rect = new Kinetic.Rect({
+      var layer = new Konva.Layer();
+      var rect = new Konva.Rect({
           x: 200,
           y: 90,
           width: 100,
@@ -99,8 +99,8 @@ suite('Rect', function(){
   // ======================================================
   test('add fill stroke rect', function() {
       var stage = addStage();
-      var layer = new Kinetic.Layer();
-      var rect = new Kinetic.Rect({
+      var layer = new Konva.Layer();
+      var rect = new Konva.Rect({
           x: 200,
           y: 100,
           width: 100,
@@ -129,8 +129,8 @@ suite('Rect', function(){
   // ======================================================
   test('add stroke rect', function() {
       var stage = addStage();
-      var layer = new Kinetic.Layer();
-      var rect = new Kinetic.Rect({
+      var layer = new Konva.Layer();
+      var rect = new Konva.Rect({
           x: 200,
           y: 100,
           width: 100,
@@ -156,8 +156,8 @@ suite('Rect', function(){
   // ======================================================
   test('use default stroke width (stroke width should be 2)', function() {
       var stage = addStage();
-      var layer = new Kinetic.Layer();
-      var rect = new Kinetic.Rect({
+      var layer = new Konva.Layer();
+      var rect = new Konva.Rect({
           x: 200,
           y: 100,
           width: 100,
@@ -181,8 +181,8 @@ suite('Rect', function(){
     // ======================================================
     test('limit corner radius', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 50,
             y: 50,
             width: 100,

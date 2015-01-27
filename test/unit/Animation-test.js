@@ -2,8 +2,8 @@ suite('Animation', function() {
     // ======================================================
     test('test start and stop', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 200,
             y: 100,
             width: 100,
@@ -21,10 +21,10 @@ suite('Animation', function() {
         // in ms
         var centerX = stage.getWidth() / 2 - 100 / 2;
 
-        var anim = new Kinetic.Animation(function(frame) {
+        var anim = new Konva.Animation(function(frame) {
             rect.setX(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX);
         }, layer);
-        var a = Kinetic.Animation.animations;
+        var a = Konva.Animation.animations;
         var startLen = a.length;
 
         assert.equal(a.length, startLen, '1should be no animations running');
@@ -51,8 +51,8 @@ suite('Animation', function() {
     // ======================================================
     test('layer batch draw', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 200,
             y: 100,
             width: 100,
@@ -88,8 +88,8 @@ suite('Animation', function() {
     // ======================================================
     test('stage batch draw', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 200,
             y: 100,
             width: 100,

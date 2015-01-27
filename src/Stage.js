@@ -38,7 +38,7 @@
         DIV = 'div',
         RELATIVE = 'relative',
         INLINE_BLOCK = 'inline-block',
-        KINETICJS_CONTENT = 'kineticjs-content',
+        KINETICJS_CONTENT = 'konvajs-content',
         SPACE = ' ',
         UNDERSCORE = '_',
         CONTAINER = 'container',
@@ -54,32 +54,32 @@
         }, false);
     }
 
-    Kinetic.Util.addMethods(Kinetic.Stage, {
+    Konva.Util.addMethods(Konva.Stage, {
         ___init: function(config) {
             this.nodeType = STAGE;
             // call super constructor
-            Kinetic.Container.call(this, config);
-            this._id = Kinetic.idCounter++;
+            Konva.Container.call(this, config);
+            this._id = Konva.idCounter++;
             this._buildDOM();
             this._bindContentEvents();
             this._enableNestedTransforms = false;
-            Kinetic.stages.push(this);
+            Konva.stages.push(this);
         },
         _validateAdd: function(child) {
             if (child.getType() !== 'Layer') {
-                Kinetic.Util.error('You may only add layers to the stage.');
+                Konva.Util.error('You may only add layers to the stage.');
             }
         },
         /**
          * set container dom element which contains the stage wrapper div element
          * @method
-         * @memberof Kinetic.Stage.prototype
+         * @memberof Konva.Stage.prototype
          * @param {DomElement} container can pass in a dom element or id string
          */
         setContainer: function(container) {
             if( typeof container === STRING) {
                 var id = container;
-                container = Kinetic.document.getElementById(container);
+                container = Konva.document.getElementById(container);
                 if (!container) {
                     throw 'Can not find container in document with id ' + id;
                 }
@@ -91,49 +91,49 @@
             return true;
         },
         draw: function() {
-            Kinetic.Node.prototype.draw.call(this);
+            Konva.Node.prototype.draw.call(this);
             return this;
         },
         /**
          * draw layer scene graphs
          * @name draw
          * @method
-         * @memberof Kinetic.Stage.prototype
+         * @memberof Konva.Stage.prototype
          */
 
         /**
          * draw layer hit graphs
          * @name drawHit
          * @method
-         * @memberof Kinetic.Stage.prototype
+         * @memberof Konva.Stage.prototype
          */
 
         /**
          * set height
          * @method
-         * @memberof Kinetic.Stage.prototype
+         * @memberof Konva.Stage.prototype
          * @param {Number} height
          */
         setHeight: function(height) {
-            Kinetic.Node.prototype.setHeight.call(this, height);
+            Konva.Node.prototype.setHeight.call(this, height);
             this._resizeDOM();
             return this;
         },
         /**
          * set width
          * @method
-         * @memberof Kinetic.Stage.prototype
+         * @memberof Konva.Stage.prototype
          * @param {Number} width
          */
         setWidth: function(width) {
-            Kinetic.Node.prototype.setWidth.call(this, width);
+            Konva.Node.prototype.setWidth.call(this, width);
             this._resizeDOM();
             return this;
         },
         /**
          * clear all layers
          * @method
-         * @memberof Kinetic.Stage.prototype
+         * @memberof Konva.Stage.prototype
          */
         clear: function() {
             var layers = this.children,
@@ -149,31 +149,31 @@
             if (!obj) {
                 obj = {};
             }
-            obj.container = Kinetic.document.createElement(DIV);
+            obj.container = Konva.document.createElement(DIV);
             
-            return Kinetic.Container.prototype.clone.call(this, obj);
+            return Konva.Container.prototype.clone.call(this, obj);
         },
         /**
          * destroy stage
          * @method
-         * @memberof Kinetic.Stage.prototype
+         * @memberof Konva.Stage.prototype
          */
         destroy: function() {
             var content = this.content;
-            Kinetic.Container.prototype.destroy.call(this);
+            Konva.Container.prototype.destroy.call(this);
 
-            if(content && Kinetic.Util._isInDocument(content)) {
+            if(content && Konva.Util._isInDocument(content)) {
                 this.getContainer().removeChild(content);
             }
-            var index = Kinetic.stages.indexOf(this);
+            var index = Konva.stages.indexOf(this);
             if (index > -1) {
-                Kinetic.stages.splice(index, 1);
+                Konva.stages.splice(index, 1);
             }
         },
         /**
          * get pointer position which can be a touch position or mouse position
          * @method
-         * @memberof Kinetic.Stage.prototype
+         * @memberof Konva.Stage.prototype
          * @returns {Object}
          */
         getPointerPosition: function() {
@@ -184,9 +184,9 @@
         },
         /**
          * get stage content div element which has the
-         *  the class name "kineticjs-content"
+         *  the class name "konvajs-content"
          * @method
-         * @memberof Kinetic.Stage.prototype
+         * @memberof Konva.Stage.prototype
          */
         getContent: function() {
             return this.content;
@@ -194,7 +194,7 @@
         /**
          * Creates a composite data URL and requires a callback because the composite is generated asynchronously.
          * @method
-         * @memberof Kinetic.Stage.prototype
+         * @memberof Konva.Stage.prototype
          * @param {Object} config
          * @param {Function} config.callback function executed when the composite has completed
          * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
@@ -214,7 +214,7 @@
                 quality = config.quality || null,
                 x = config.x || 0,
                 y = config.y || 0,
-                canvas = new Kinetic.SceneCanvas({
+                canvas = new Konva.SceneCanvas({
                     width: config.width || this.getWidth(),
                     height: config.height || this.getHeight(),
                     pixelRatio: 1
@@ -229,7 +229,7 @@
             function drawLayer(n) {
                 var layer = layers[n],
                     layerUrl = layer.toDataURL(),
-                    imageObj = new Kinetic.window.Image();
+                    imageObj = new Konva.window.Image();
 
                 imageObj.onload = function() {
                     _context.drawImage(imageObj, 0, 0);
@@ -248,7 +248,7 @@
         /**
          * converts stage into an image.
          * @method
-         * @memberof Kinetic.Stage.prototype
+         * @memberof Konva.Stage.prototype
          * @param {Object} config
          * @param {Function} config.callback function executed when the composite has completed
          * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
@@ -265,7 +265,7 @@
             var cb = config.callback;
 
             config.callback = function(dataUrl) {
-                Kinetic.Util._getImage(dataUrl, function(img) {
+                Konva.Util._getImage(dataUrl, function(img) {
                     cb(img);
                 });
             };
@@ -275,11 +275,11 @@
          * get visible intersection shape. This is the preferred
          *  method for determining if a point intersects a shape or not
          * @method
-         * @memberof Kinetic.Stage.prototype
+         * @memberof Konva.Stage.prototype
          * @param {Object} pos
          * @param {Number} pos.x
          * @param {Number} pos.y
-         * @returns {Kinetic.Shape}
+         * @returns {Konva.Shape}
          */
         getIntersection: function(pos) {
             var layers = this.getChildren(),
@@ -322,8 +322,8 @@
         /**
          * add layer or layers to stage
          * @method
-         * @memberof Kinetic.Stage.prototype
-         * @param {...Kinetic.Layer} layer
+         * @memberof Konva.Stage.prototype
+         * @param {...Konva.Layer} layer
          * @example
          * stage.add(layer1, layer2, layer3);
          */
@@ -334,7 +334,7 @@
                 }
                 return;
             }
-            Kinetic.Container.prototype.add.call(this, layer);
+            Konva.Container.prototype.add.call(this, layer);
             layer._setCanvasSize(this.width(), this.height());
 
             // draw layer and append canvas to container
@@ -351,9 +351,9 @@
             return null;
         },
         /**
-         * returns a {@link Kinetic.Collection} of layers
+         * returns a {@link Konva.Collection} of layers
          * @method
-         * @memberof Kinetic.Stage.prototype
+         * @memberof Konva.Stage.prototype
          */
         getLayers: function() {
             return this.getChildren();
@@ -364,17 +364,17 @@
             }
         },
         _mouseover: function(evt) {
-            if (!Kinetic.UA.mobile) {
+            if (!Konva.UA.mobile) {
                 this._setPointerPosition(evt);
                 this._fire(CONTENT_MOUSEOVER, {evt: evt});
             }
         },
         _mouseout: function(evt) {
-            if (!Kinetic.UA.mobile) {
+            if (!Konva.UA.mobile) {
                 this._setPointerPosition(evt);
                 var targetShape = this.targetShape;
 
-                if(targetShape && !Kinetic.isDragging()) {
+                if(targetShape && !Konva.isDragging()) {
                     targetShape._fireAndBubble(MOUSEOUT, {evt: evt});
                     targetShape._fireAndBubble(MOUSELEAVE, {evt: evt});
                     this.targetShape = null;
@@ -387,7 +387,7 @@
         _mousemove: function(evt) {
         
             // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
-            if (Kinetic.UA.ieMobile) {
+            if (Konva.UA.ieMobile) {
                 return this._touchmove(evt);
             }
             
@@ -395,16 +395,16 @@
             if ((typeof evt.webkitMovementX !== 'undefined' || typeof evt.webkitMovementY !== 'undefined') && evt.webkitMovementY === 0 && evt.webkitMovementX === 0) {
                 return;
             }
-            if (Kinetic.UA.mobile) {
+            if (Konva.UA.mobile) {
                 return;
             }
             this._setPointerPosition(evt);
-            var dd = Kinetic.DD, shape;
+            var dd = Konva.DD, shape;
 
-            if (!Kinetic.isDragging()) {
+            if (!Konva.isDragging()) {
                 shape = this.getIntersection(this.getPointerPosition());
                 if(shape && shape.isListening()) {
-                    if(!Kinetic.isDragging() && (!this.targetShape || this.targetShape._id !== shape._id)) {
+                    if(!Konva.isDragging() && (!this.targetShape || this.targetShape._id !== shape._id)) {
                         if(this.targetShape) {
                             this.targetShape._fireAndBubble(MOUSEOUT, {evt: evt}, shape);
                             this.targetShape._fireAndBubble(MOUSELEAVE, {evt: evt}, shape);
@@ -422,7 +422,7 @@
                  * to run mouseout from previous target shape
                  */
                 else {
-                    if(this.targetShape && !Kinetic.isDragging()) {
+                    if(this.targetShape && !Konva.isDragging()) {
                         this.targetShape._fireAndBubble(MOUSEOUT, {evt: evt});
                         this.targetShape._fireAndBubble(MOUSELEAVE, {evt: evt});
                         this.targetShape = null;
@@ -446,15 +446,15 @@
         _mousedown: function(evt) {
         
             // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event       
-            if (Kinetic.UA.ieMobile) {
+            if (Konva.UA.ieMobile) {
                 return this._touchstart(evt);
             }
             
-            if (!Kinetic.UA.mobile) {
+            if (!Konva.UA.mobile) {
                 this._setPointerPosition(evt);
                 var shape = this.getIntersection(this.getPointerPosition());
 
-                Kinetic.listenClickTap = true;
+                Konva.listenClickTap = true;
 
                 if (shape && shape.isListening()) {
                     this.clickStartShape = shape;
@@ -474,36 +474,36 @@
         _mouseup: function(evt) {
         
             // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event       
-            if (Kinetic.UA.ieMobile) {
+            if (Konva.UA.ieMobile) {
                 return this._touchend(evt);
             }
-            if (!Kinetic.UA.mobile) {
+            if (!Konva.UA.mobile) {
                 this._setPointerPosition(evt);
                 var shape = this.getIntersection(this.getPointerPosition()),
                     clickStartShape = this.clickStartShape,
                     fireDblClick = false,
-                    dd = Kinetic.DD;
+                    dd = Konva.DD;
 
-                if(Kinetic.inDblClickWindow) {
+                if(Konva.inDblClickWindow) {
                     fireDblClick = true;
-                    Kinetic.inDblClickWindow = false;
+                    Konva.inDblClickWindow = false;
                 }
                 // don't set inDblClickWindow after dragging
                 else if (!dd || !dd.justDragged) {
-                    Kinetic.inDblClickWindow = true;
+                    Konva.inDblClickWindow = true;
                 } else if (dd) {
                     dd.justDragged = false;
                 }
 
                 setTimeout(function() {
-                    Kinetic.inDblClickWindow = false;
-                }, Kinetic.dblClickWindow);
+                    Konva.inDblClickWindow = false;
+                }, Konva.dblClickWindow);
 
                 if (shape && shape.isListening()) {
                     shape._fireAndBubble(MOUSEUP, {evt: evt});
 
                     // detect if click or double click occurred
-                    if(Kinetic.listenClickTap && clickStartShape && clickStartShape._id === shape._id) {
+                    if(Konva.listenClickTap && clickStartShape && clickStartShape._id === shape._id) {
                         shape._fireAndBubble(CLICK, {evt: evt});
 
                         if(fireDblClick) {
@@ -513,14 +513,14 @@
                 }
                 // content events
                 this._fire(CONTENT_MOUSEUP, {evt: evt});
-                if (Kinetic.listenClickTap) {
+                if (Konva.listenClickTap) {
                     this._fire(CONTENT_CLICK, {evt: evt});
                     if(fireDblClick) {
                         this._fire(CONTENT_DBL_CLICK, {evt: evt});
                     }
                 }
 
-                Kinetic.listenClickTap = false;
+                Konva.listenClickTap = false;
             }
 
             // always call preventDefault for desktop events because some browsers
@@ -533,7 +533,7 @@
             this._setPointerPosition(evt);
             var shape = this.getIntersection(this.getPointerPosition());
 
-            Kinetic.listenClickTap = true;
+            Konva.listenClickTap = true;
 
             if (shape && shape.isListening()) {
                 this.tapStartShape = shape;
@@ -552,23 +552,23 @@
             var shape = this.getIntersection(this.getPointerPosition()),
                 fireDblClick = false;
 
-            if(Kinetic.inDblClickWindow) {
+            if(Konva.inDblClickWindow) {
                 fireDblClick = true;
-                Kinetic.inDblClickWindow = false;
+                Konva.inDblClickWindow = false;
             }
             else {
-                Kinetic.inDblClickWindow = true;
+                Konva.inDblClickWindow = true;
             }
 
             setTimeout(function() {
-                Kinetic.inDblClickWindow = false;
-            }, Kinetic.dblClickWindow);
+                Konva.inDblClickWindow = false;
+            }, Konva.dblClickWindow);
 
             if (shape && shape.isListening()) {
                 shape._fireAndBubble(TOUCHEND, {evt: evt});
 
                 // detect if tap or double tap occurred
-                if(Kinetic.listenClickTap && shape._id === this.tapStartShape._id) {
+                if(Konva.listenClickTap && shape._id === this.tapStartShape._id) {
                     shape._fireAndBubble(TAP, {evt: evt});
 
                     if(fireDblClick) {
@@ -581,20 +581,20 @@
                 }
             }
             // content events
-            if (Kinetic.listenClickTap) {
+            if (Konva.listenClickTap) {
                 this._fire(CONTENT_TOUCHEND, {evt: evt});
                 if(fireDblClick) {
                     this._fire(CONTENT_DBL_TAP, {evt: evt});
                 }
             }
 
-            Kinetic.listenClickTap = false;
+            Konva.listenClickTap = false;
         },
         _touchmove: function(evt) {
             this._setPointerPosition(evt);
-            var dd = Kinetic.DD,
+            var dd = Konva.DD,
                 shape;
-            if (!Kinetic.isDragging()) {
+            if (!Konva.isDragging()) {
                 shape = this.getIntersection(this.getPointerPosition());
                 if (shape && shape.isListening()) {
                     shape._fireAndBubble(TOUCHMOVE, {evt: evt});
@@ -607,7 +607,7 @@
             }
             if(dd) {
                 dd._drag(evt);
-                if (Kinetic.isDragging()) {
+                if (Konva.isDragging()) {
                     evt.preventDefault();
                 }
             }
@@ -658,7 +658,7 @@
                 // the layerX or layerY properties in newer versions of Chrome
                 // throws a JS warning.  layerX and layerY are required for FF
                 // when the container is transformed via CSS.
-                else if (Kinetic.UA.browser === 'mozilla') {
+                else if (Konva.UA.browser === 'mozilla') {
                     x = evt.layerX;
                     y = evt.layerY;
                 }
@@ -686,18 +686,18 @@
         _buildDOM: function() {
             var container = this.getContainer();
             if (!container) {
-                if (Kinetic.Util.isBrowser()) {
+                if (Konva.Util.isBrowser()) {
                     throw 'Stage has no container. A container is required.';
                 } else {
                     // automatically create element for jsdom in nodejs env
-                    container = Kinetic.document.createElement(DIV);
+                    container = Konva.document.createElement(DIV);
                 }
             }
             // clear content inside container
             container.innerHTML = EMPTY_STRING;
 
             // content
-            this.content = Kinetic.document.createElement(DIV);
+            this.content = Konva.document.createElement(DIV);
             this.content.style.position = RELATIVE;
             this.content.style.display = INLINE_BLOCK;
             this.content.className = KINETICJS_CONTENT;
@@ -707,10 +707,10 @@
             // the buffer canvas pixel ratio must be 1 because it is used as an 
             // intermediate canvas before copying the result onto a scene canvas.
             // not setting it to 1 will result in an over compensation
-            this.bufferCanvas = new Kinetic.SceneCanvas({
+            this.bufferCanvas = new Konva.SceneCanvas({
                 pixelRatio: 1
             });
-            this.bufferHitCanvas = new Kinetic.HitCanvas();
+            this.bufferHitCanvas = new Konva.HitCanvas();
 
             this._resizeDOM();
         },
@@ -727,22 +727,22 @@
         // currently cache function is now working for stage, because stage has no its own canvas element
         // TODO: may be it is better to cache all children layers?
         cache: function() {
-            Kinetic.Util.warn('Cache function is not allowed for stage. You may use cache only for layers, groups and shapes.');
+            Konva.Util.warn('Cache function is not allowed for stage. You may use cache only for layers, groups and shapes.');
         },
         clearCache : function() {
         }
     });
-    Kinetic.Util.extend(Kinetic.Stage, Kinetic.Container);
+    Konva.Util.extend(Konva.Stage, Konva.Container);
 
     // add getters and setters
-    Kinetic.Factory.addGetter(Kinetic.Stage, 'container');
-    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Stage, 'container');
+    Konva.Factory.addGetter(Konva.Stage, 'container');
+    Konva.Factory.addOverloadedGetterSetter(Konva.Stage, 'container');
 
     /**
      * get container DOM element
      * @name container
      * @method
-     * @memberof Kinetic.Stage.prototype
+     * @memberof Konva.Stage.prototype
      * @returns {DomElement} container
      * @example
      * // get container

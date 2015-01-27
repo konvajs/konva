@@ -7,15 +7,15 @@
      * @function
      * @name Posterize
      * @author ippo615
-     * @memberof Kinetic.Filters
+     * @memberof Konva.Filters
      * @param {Object} imageData
      * @example
      * node.cache();
-     * node.filters([Kinetic.Filters.Posterize]);
+     * node.filters([Konva.Filters.Posterize]);
      * node.levels(0.8);
      */
 
-    Kinetic.Filters.Posterize = function (imageData) {
+    Konva.Filters.Posterize = function (imageData) {
         // level must be between 1 and 255
         var levels = Math.round(this.levels() * 254) + 1,
             data = imageData.data,
@@ -28,13 +28,13 @@
         }
     };
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'levels', 0.5, null, Kinetic.Factory.afterSetFilter);
+    Konva.Factory.addGetterSetter(Konva.Node, 'levels', 0.5, null, Konva.Factory.afterSetFilter);
 
     /**
-    * get/set levels.  Must be a number between 0 and 1.  Use with {@link Kinetic.Filters.Posterize} filter.
+    * get/set levels.  Must be a number between 0 and 1.  Use with {@link Konva.Filters.Posterize} filter.
     * @name levels
     * @method
-    * @memberof Kinetic.Node.prototype
+    * @memberof Konva.Node.prototype
     * @param {Number} level between 0 and 1
     * @returns {Number}
     */

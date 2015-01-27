@@ -2,9 +2,9 @@ suite('Blob', function(){
     // ======================================================
     test('add blob', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var blob = new Kinetic.Line({
+        var blob = new Konva.Line({
             points: [73,140,340,23,500,109,300,170],
             stroke: 'blue',
             strokeWidth: 10,
@@ -34,10 +34,10 @@ suite('Blob', function(){
     // ======================================================
     test('define tension first', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
 
-        var blob = new Kinetic.Line({
+        var blob = new Konva.Line({
             tension: 0.8,
             points: [73,140,340,23,500,109,300,170],
             stroke: 'blue',
@@ -56,11 +56,11 @@ suite('Blob', function(){
     });
 
     // ======================================================
-    test('check for kinetic event handlers', function() {
+    test('check for konva event handlers', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var blob = new Kinetic.Line({
+        var blob = new Konva.Line({
             points: [73,140,340,23,500,109,300,170],
             stroke: 'blue',
             strokeWidth: 10,
@@ -74,19 +74,19 @@ suite('Blob', function(){
 
         stage.add(layer);
 
-        assert.equal(blob.eventListeners.pointsChange[0].name, 'kinetic');
-        assert.equal(blob.eventListeners.tensionChange[0].name, 'kinetic');
+        assert.equal(blob.eventListeners.pointsChange[0].name, 'konva');
+        assert.equal(blob.eventListeners.tensionChange[0].name, 'konva');
 
-        // removing handlers should not remove kinetic specific handlers
+        // removing handlers should not remove konva specific handlers
         blob.off('pointsChange');
         blob.off('tensionChange');
 
-        assert.equal(blob.eventListeners.pointsChange[0].name, 'kinetic');
-        assert.equal(blob.eventListeners.tensionChange[0].name, 'kinetic');
+        assert.equal(blob.eventListeners.pointsChange[0].name, 'konva');
+        assert.equal(blob.eventListeners.tensionChange[0].name, 'konva');
 
         // you can force remove an event by adding the name
-        blob.off('pointsChange.kinetic');
-        blob.off('tensionChange.kinetic');
+        blob.off('pointsChange.konva');
+        blob.off('tensionChange.konva');
 
         assert.equal(blob.eventListeners.pointsChange, undefined);
         assert.equal(blob.eventListeners.tensionChange, undefined);

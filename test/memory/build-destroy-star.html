@@ -15,13 +15,13 @@
     <div id="container"></div>
     <button id="rebuild">Destroy / Rebuild</button>
 
-    <script src="../../dist/kinetic-dev.js"></script>
+    <script src="../../dist/konva-dev.js"></script>
 
     <script>
       var star;
 
       function addStar() {
-        star = new Kinetic.Star({
+        star = new Konva.Star({
             x: 250,
             y: 150,
             innerRadius: 30,
@@ -40,12 +40,12 @@
         console.log('built')
       }
 
-      var stage = new Kinetic.Stage({
+      var stage = new Konva.Stage({
         container: 'container',
         width: 500,
         height: 300
       });
-      var layer = new Kinetic.Layer();
+      var layer = new Konva.Layer();
 
       stage.add(layer);
 

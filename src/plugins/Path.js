@@ -3,14 +3,14 @@
      * Path constructor.
      * @author Jason Follas
      * @constructor
-     * @memberof Kinetic
-     * @augments Kinetic.Shape
+     * @memberof Konva
+     * @augments Konva.Shape
      * @param {Object} config
      * @param {String} config.data SVG data string
      * @@shapeParams
      * @@nodeParams
      * @example
-     * var path = new Kinetic.Path({
+     * var path = new Konva.Path({
      *   x: 240,
      *   y: 40,
      *   data: 'M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-17.185,4.352-22.33c7.451-5.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.821,23.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z',
@@ -18,22 +18,22 @@
      *   scale: 2
      * });
      */
-    Kinetic.Path = function (config) {
+    Konva.Path = function (config) {
         this.___init(config);
     };
 
-    Kinetic.Path.prototype = {
+    Konva.Path.prototype = {
         ___init: function (config) {
             this.dataArray = [];
             var that = this;
 
             // call super constructor
-            Kinetic.Shape.call(this, config);
+            Konva.Shape.call(this, config);
             this.className = 'Path';
 
-            this.dataArray = Kinetic.Path.parsePathData(this.getData());
-            this.on('dataChange.kinetic', function () {
-                that.dataArray = Kinetic.Path.parsePathData(this.getData());
+            this.dataArray = Konva.Path.parsePathData(this.getData());
+            this.on('dataChange.konva', function () {
+                that.dataArray = Konva.Path.parsePathData(this.getData());
             });
 
             this.sceneFunc(this._sceneFunc);
@@ -91,12 +91,12 @@
             }
         }
     };
-    Kinetic.Util.extend(Kinetic.Path, Kinetic.Shape);
+    Konva.Util.extend(Konva.Path, Konva.Shape);
 
-    Kinetic.Path.getLineLength = function(x1, y1, x2, y2) {
+    Konva.Path.getLineLength = function(x1, y1, x2, y2) {
         return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
     };
-    Kinetic.Path.getPointOnLine = function(dist, P1x, P1y, P2x, P2y, fromX, fromY) {
+    Konva.Path.getPointOnLine = function(dist, P1x, P1y, P2x, P2y, fromX, fromY) {
         if(fromX === undefined) {
             fromX = P1x;
         }
@@ -151,7 +151,7 @@
         return pt;
     };
 
-    Kinetic.Path.getPointOnCubicBezier = function(pct, P1x, P1y, P2x, P2y, P3x, P3y, P4x, P4y) {
+    Konva.Path.getPointOnCubicBezier = function(pct, P1x, P1y, P2x, P2y, P3x, P3y, P4x, P4y) {
         function CB1(t) {
             return t * t * t;
         }
@@ -172,7 +172,7 @@
             y: y
         };
     };
-    Kinetic.Path.getPointOnQuadraticBezier = function(pct, P1x, P1y, P2x, P2y, P3x, P3y) {
+    Konva.Path.getPointOnQuadraticBezier = function(pct, P1x, P1y, P2x, P2y, P3x, P3y) {
         function QB1(t) {
             return t * t;
         }
@@ -190,7 +190,7 @@
             y: y
         };
     };
-    Kinetic.Path.getPointOnEllipticalArc = function(cx, cy, rx, ry, theta, psi) {
+    Konva.Path.getPointOnEllipticalArc = function(cx, cy, rx, ry, theta, psi) {
         var cosPsi = Math.cos(psi), sinPsi = Math.sin(psi);
         var pt = {
             x: rx * Math.cos(theta),
@@ -207,7 +207,7 @@
      *  L data for the purpose of high performance Path
      *  rendering
      */
-    Kinetic.Path.parsePathData = function(data) {
+    Konva.Path.parsePathData = function(data) {
         // Path Data Segment must begin with a moveTo
         //m (x y)+  Relative moveTo (subsequent points are treated as lineTo)
         //M (x y)+  Absolute moveTo (subsequent points are treated as lineTo)
@@ -479,9 +479,9 @@
 
         return ca;
     };
-    Kinetic.Path.calcLength = function(x, y, cmd, points) {
+    Konva.Path.calcLength = function(x, y, cmd, points) {
         var len, p1, p2, t;
-        var path = Kinetic.Path;
+        var path = Konva.Path;
 
         switch (cmd) {
             case 'L':
@@ -543,7 +543,7 @@
 
         return 0;
     };
-    Kinetic.Path.convertEndpointToCenterParameterization = function(x1, y1, x2, y2, fa, fs, rx, ry, psiDeg) {
+    Konva.Path.convertEndpointToCenterParameterization = function(x1, y1, x2, y2, fa, fs, rx, ry, psiDeg) {
         // Derived from: http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
         var psi = psiDeg * (Math.PI / 180.0);
         var xp = Math.cos(psi) * (x1 - x2) / 2.0 + Math.sin(psi) * (y1 - y2) / 2.0;
@@ -600,7 +600,7 @@
         return [cx, cy, rx, ry, theta, dTheta, psi, fs];
     };
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Path, 'data');
+    Konva.Factory.addGetterSetter(Konva.Path, 'data');
 
     /**
      * set SVG path data string.  This method
@@ -609,7 +609,7 @@
      *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
      * @name setData
      * @method
-     * @memberof Kinetic.Path.prototype
+     * @memberof Konva.Path.prototype
      * @param {String} SVG path command string
      */
 
@@ -617,8 +617,8 @@
      * get SVG path data string
      * @name getData
      * @method
-     * @memberof Kinetic.Path.prototype
+     * @memberof Konva.Path.prototype
      */
 
-    Kinetic.Collection.mapMethods(Kinetic.Path);
+    Konva.Collection.mapMethods(Konva.Path);
 })();

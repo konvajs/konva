@@ -6,29 +6,29 @@
     /**
      * Circle constructor
      * @constructor
-     * @memberof Kinetic
-     * @augments Kinetic.Shape
+     * @memberof Konva
+     * @augments Konva.Shape
      * @param {Object} config
      * @param {Number} config.radius
      * @@shapeParams
      * @@nodeParams
      * @example
      * // create circle
-     * var circle = new Kinetic.Circle({
+     * var circle = new Konva.Circle({
      *   radius: 40,
      *   fill: 'red',
      *   stroke: 'black'
      *   strokeWidth: 5
      * });
      */
-    Kinetic.Circle = function(config) {
+    Konva.Circle = function(config) {
         this.___init(config);
     };
 
-    Kinetic.Circle.prototype = {
+    Konva.Circle.prototype = {
         ___init: function(config) {
             // call super constructor
-            Kinetic.Shape.call(this, config);
+            Konva.Shape.call(this, config);
             this.className = CIRCLE;
             this.sceneFunc(this._sceneFunc);
         },
@@ -48,14 +48,14 @@
         },
         // implements Shape.prototype.setWidth()
         setWidth: function(width) {
-            Kinetic.Node.prototype.setWidth.call(this, width);
+            Konva.Node.prototype.setWidth.call(this, width);
             if (this.radius() !== width / 2) {
                 this.setRadius(width / 2);
             }
         },
         // implements Shape.prototype.setHeight()
         setHeight: function(height) {
-            Kinetic.Node.prototype.setHeight.call(this, height);
+            Konva.Node.prototype.setHeight.call(this, height);
             if (this.radius() !== height / 2) {
                 this.setRadius(height / 2);
             }
@@ -66,17 +66,17 @@
             this.setHeight(val * 2);
         }
     };
-    Kinetic.Util.extend(Kinetic.Circle, Kinetic.Shape);
+    Konva.Util.extend(Konva.Circle, Konva.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetter(Kinetic.Circle, 'radius', 0);
-    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Circle, 'radius');
+    Konva.Factory.addGetter(Konva.Circle, 'radius', 0);
+    Konva.Factory.addOverloadedGetterSetter(Konva.Circle, 'radius');
 
     /**
      * get/set radius
      * @name radius
      * @method
-     * @memberof Kinetic.Circle.prototype
+     * @memberof Konva.Circle.prototype
      * @param {Number} radius
      * @returns {Number}
      * @example
@@ -87,5 +87,5 @@
      * circle.radius(10);
      */
 
-    Kinetic.Collection.mapMethods(Kinetic.Circle);
+    Konva.Collection.mapMethods(Konva.Circle);
 })();

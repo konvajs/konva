@@ -1,7 +1,7 @@
 mocha.ui('tdd');
 mocha.setup("bdd");
 var assert = chai.assert,
-    kineticContainer = document.getElementById('kinetic-container'),
+    konvaContainer = document.getElementById('konva-container'),
     origAssertEqual = assert.equal,
     origAssert = assert,
     origNotEqual = assert.notEqual,
@@ -57,8 +57,8 @@ function init() {
 
 
 
-Kinetic.enableTrace = true;
-Kinetic.showWarnings = false;
+Konva.enableTrace = true;
+Konva.showWarnings = false;
 
 function addStats() {
     stats = new Stats();
@@ -85,13 +85,13 @@ function addStats() {
 
 function addStage() {
   var container = document.createElement('div'),
-      stage = new Kinetic.Stage({
+      stage = new Konva.Stage({
           container: container,
           width: 578,
           height: 200
       });
 
-  kineticContainer.appendChild(container);
+  konvaContainer.appendChild(container);
   return stage;
 }
 
@@ -136,7 +136,7 @@ function compareLayerAndCanvas(layer, canvas) {
 
         div.appendChild(b);
         div.appendChild(c);
-        kineticContainer.appendChild(div);
+        konvaContainer.appendChild(div);
     }
     assert.equal(equal, true);
 
@@ -145,7 +145,7 @@ function compareLayerAndCanvas(layer, canvas) {
 function addContainer() {
   var container = document.createElement('div');
 
-  kineticContainer.appendChild(container);
+  konvaContainer.appendChild(container);
 
   return container;
 }
@@ -153,13 +153,13 @@ function addContainer() {
 function showCanvas(canvas) {
   canvas.style.position = 'relative';
 
-  kineticContainer.appendChild(canvas);
+  konvaContainer.appendChild(canvas);
 }
 function showHit(layer) {
   var canvas = layer.hitCanvas._canvas;
   canvas.style.position = 'relative';
 
-  kineticContainer.appendChild(canvas);
+  konvaContainer.appendChild(canvas);
 }
 
 beforeEach(function(){
@@ -167,13 +167,13 @@ beforeEach(function(){
         test = this.currentTest;
 
     title.innerHTML = test.parent.title + ' - ' + test.title;
-    title.className = 'kinetic-title';
-    kineticContainer.appendChild(title);
+    title.className = 'konva-title';
+    konvaContainer.appendChild(title);
 
     // resets
-    Kinetic.inDblClickWindow = false;
-    Kinetic.DD.isDragging = false;
-    Kinetic.DD.node = undefined;
+    Konva.inDblClickWindow = false;
+    Konva.DD.isDragging = false;
+    Konva.DD.node = undefined;
 });
 
 init();

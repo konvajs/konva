@@ -4,9 +4,9 @@ suite('Tween', function() {
     test('tween node', function(done) {
         var stage = addStage();
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -27,17 +27,17 @@ suite('Tween', function() {
         var tweens = 0;
         var attrs = 0;
 
-        for (var key in Kinetic.Tween.tweens) {
+        for (var key in Konva.Tween.tweens) {
             tweens++;
         }
-        for (var key in Kinetic.Tween.attrs) {
+        for (var key in Konva.Tween.attrs) {
             attrs++;
         }
 
         assert.equal(tweens, 0);
         assert.equal(attrs, 0);
 
-        var tween = new Kinetic.Tween({
+        var tween = new Konva.Tween({
             node: circle,
             duration: 0.2,
             x: 200,
@@ -47,18 +47,18 @@ suite('Tween', function() {
 
         var tweens = 0;
         var attrs = 0;
-        for (var key in Kinetic.Tween.tweens) {
+        for (var key in Konva.Tween.tweens) {
             tweens++;
         }
-        for (var key in Kinetic.Tween.attrs[circle._id][tween._id]) {
+        for (var key in Konva.Tween.attrs[circle._id][tween._id]) {
             attrs++;
         }
 
         assert.equal(tweens, 1);
         assert.equal(attrs, 2);
 
-        assert.notEqual(Kinetic.Tween.attrs[circle._id][tween._id].x, undefined);
-        assert.notEqual(Kinetic.Tween.attrs[circle._id][tween._id].y, undefined);
+        assert.notEqual(Konva.Tween.attrs[circle._id][tween._id].x, undefined);
+        assert.notEqual(Konva.Tween.attrs[circle._id][tween._id].y, undefined);
 
     });
 
@@ -66,9 +66,9 @@ suite('Tween', function() {
     test('destroy tween while tweening', function() {
         var stage = addStage();
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -81,7 +81,7 @@ suite('Tween', function() {
         stage.add(layer);
 
 
-        var tween = new Kinetic.Tween({
+        var tween = new Konva.Tween({
             node: circle,
             duration: 0.2,
             x: 200,
@@ -92,13 +92,13 @@ suite('Tween', function() {
         // tweenId = tweens.nodeId.attr
 
         assert.notEqual(tween._id, undefined);
-        assert.equal(Kinetic.Tween.tweens[circle._id].x, tween._id);
-        assert.notEqual(Kinetic.Tween.attrs[circle._id][tween._id], undefined);
+        assert.equal(Konva.Tween.tweens[circle._id].x, tween._id);
+        assert.notEqual(Konva.Tween.attrs[circle._id][tween._id], undefined);
 
         tween.destroy();
 
-        assert.equal(Kinetic.Tween.tweens[circle._id].x, undefined);
-        assert.equal(Kinetic.Tween.attrs[circle._id][tween._id], undefined);
+        assert.equal(Konva.Tween.tweens[circle._id].x, undefined);
+        assert.equal(Konva.Tween.attrs[circle._id][tween._id], undefined);
 
 
     });
@@ -107,9 +107,9 @@ suite('Tween', function() {
     test('zero duration', function(done) {
         var stage = addStage();
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -122,7 +122,7 @@ suite('Tween', function() {
         stage.add(layer);
 
 
-        var tween = new Kinetic.Tween({
+        var tween = new Konva.Tween({
             node: circle,
             duration: 0,
             x: 200,

@@ -2,7 +2,7 @@
     /**
      * Wedge constructor
      * @constructor
-     * @augments Kinetic.Shape
+     * @augments Konva.Shape
      * @param {Object} config
      * @param {Number} config.angle in degrees
      * @param {Number} config.radius
@@ -11,7 +11,7 @@
      * @@nodeParams
      * @example
      * // draw a wedge that's pointing downwards
-     * var wedge = new Kinetic.Wedge({
+     * var wedge = new Konva.Wedge({
      *   radius: 40,
      *   fill: 'red',
      *   stroke: 'black'
@@ -20,35 +20,35 @@
      *   rotationDeg: -120
      * });
      */
-    Kinetic.Wedge = function(config) {
+    Konva.Wedge = function(config) {
         this.___init(config);
     };
 
-    Kinetic.Wedge.prototype = {
+    Konva.Wedge.prototype = {
         ___init: function(config) {
             // call super constructor
-            Kinetic.Shape.call(this, config);
+            Konva.Shape.call(this, config);
             this.className = 'Wedge';
             this.sceneFunc(this._sceneFunc);
         },
         _sceneFunc: function(context) {
             context.beginPath();
-            context.arc(0, 0, this.getRadius(), 0, Kinetic.getAngle(this.getAngle()), this.getClockwise());
+            context.arc(0, 0, this.getRadius(), 0, Konva.getAngle(this.getAngle()), this.getClockwise());
             context.lineTo(0, 0);
             context.closePath();
             context.fillStrokeShape(this);
         }
     };
-    Kinetic.Util.extend(Kinetic.Wedge, Kinetic.Shape);
+    Konva.Util.extend(Konva.Wedge, Konva.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Wedge, 'radius', 0);
+    Konva.Factory.addGetterSetter(Konva.Wedge, 'radius', 0);
 
     /**
      * get/set radius
      * @name radius
      * @method
-     * @memberof Kinetic.Wedge.prototype
+     * @memberof Konva.Wedge.prototype
      * @param {Number} radius
      * @returns {Number}
      * @example
@@ -59,13 +59,13 @@
      * wedge.radius(10);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Wedge, 'angle', 0);
+    Konva.Factory.addGetterSetter(Konva.Wedge, 'angle', 0);
 
     /**
      * get/set angle in degrees
      * @name angle
      * @method
-     * @memberof Kinetic.Wedge.prototype
+     * @memberof Konva.Wedge.prototype
      * @param {Number} angle
      * @returns {Number}
      * @example
@@ -76,13 +76,13 @@
      * wedge.angle(20);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Wedge, 'clockwise', false);
+    Konva.Factory.addGetterSetter(Konva.Wedge, 'clockwise', false);
 
     /**
      * get/set clockwise flag
      * @name clockwise
      * @method
-     * @memberof Kinetic.Wedge.prototype
+     * @memberof Konva.Wedge.prototype
      * @param {Number} clockwise
      * @returns {Number}
      * @example
@@ -96,11 +96,11 @@
      * wedge.clockwise(true);
      */
 
-    Kinetic.Factory.backCompat(Kinetic.Wedge, {
+    Konva.Factory.backCompat(Konva.Wedge, {
         angleDeg: 'angle',
         getAngleDeg: 'getAngle',
         setAngleDeg: 'setAngle'
     });
 
-    Kinetic.Collection.mapMethods(Kinetic.Wedge);
+    Konva.Collection.mapMethods(Konva.Wedge);
 })();

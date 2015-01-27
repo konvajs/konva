@@ -6,8 +6,8 @@ suite('Filter Sepia', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -18,7 +18,7 @@ suite('Filter Sepia', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Sepia]);
+            darth.filters([Konva.Filters.Sepia]);
             layer.draw();
 
             done();
@@ -34,8 +34,8 @@ suite('Filter Sepia', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -48,7 +48,7 @@ suite('Filter Sepia', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Sepia]);
+            darth.filters([Konva.Filters.Sepia]);
             layer.draw();
 
             done();
@@ -64,8 +64,8 @@ suite('Filter Sepia', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -76,7 +76,7 @@ suite('Filter Sepia', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Sepia]);
+            darth.filters([Konva.Filters.Sepia]);
             layer.draw();
 
             done();

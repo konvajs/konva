@@ -1,23 +1,23 @@
 var fs = require('fs'),
-    Kinetic = require('./dist/kinetic-dev');
+    Konva = require('./dist/konva-dev');
 
 
 // Create stage. Container parameter is not required in NodeJS.
-var stage = new Kinetic.Stage({
+var stage = new Konva.Stage({
     width : 100,
     height : 100
 });
 
-var layer = new Kinetic.Layer();
+var layer = new Konva.Layer();
 stage.add(layer);
-var rect = new Kinetic.Rect({
+var rect = new Konva.Rect({
     width : 100,
     height : 100,
     x : 50,
     y : 50,
     fill : 'green'
 });
-var text = new Kinetic.Text({
+var text = new Konva.Text({
     text : 'Generated inside node js',
     x : 20,
     y : 20,
@@ -31,7 +31,7 @@ stage.setSize({
 });
 
 // check tween works
-var tween = new Kinetic.Tween({
+var tween = new Konva.Tween({
     node : rect,
     duration : 1,
     x : -50
@@ -43,9 +43,9 @@ setTimeout(function(){
     stage.toDataURL({
         callback: function(data){
             // Then add result to stage
-            var img = new Kinetic.window.Image();
+            var img = new Konva.window.Image();
             img.onload = function() {
-                var image = new Kinetic.Image({
+                var image = new Konva.Image({
                     image : img,
                     x : 10,
                     y : 50

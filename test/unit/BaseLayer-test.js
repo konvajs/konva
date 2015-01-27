@@ -4,7 +4,7 @@ suite('BaseLayer', function() {
     test('width and height', function() {
         var stage = addStage();
 
-        var layer = new Kinetic.FastLayer();
+        var layer = new Konva.FastLayer();
         assert.equal(layer.width(), undefined, 'while layer is not on stage width is undefined');
         assert.equal(layer.height(), undefined, 'while layer is not on stage height is undefined');
         

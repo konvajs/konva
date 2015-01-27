@@ -1,13 +1,13 @@
 (function() {
     // calculate pixel ratio
-    var canvas = Kinetic.Util.createCanvasElement(),
+    var canvas = Konva.Util.createCanvasElement(),
         context = canvas.getContext('2d'),
         // if using a mobile device, calculate the pixel ratio.  Otherwise, just use
         // 1.  For desktop browsers, if the user has zoom enabled, it affects the pixel ratio
         // and causes artifacts on the canvas.  As of 02/26/2014, there doesn't seem to be a way
         // to reliably calculate the browser zoom for modern browsers, which is why we just set
         // the pixel ratio to 1 for desktops
-        _pixelRatio = Kinetic.UA.mobile ? (function() {
+        _pixelRatio = Konva.UA.mobile ? (function() {
             var devicePixelRatio = window.devicePixelRatio || 1,
             backingStoreRatio = context.webkitBackingStorePixelRatio
                 || context.mozBackingStorePixelRatio
@@ -22,11 +22,11 @@
      * Canvas Renderer constructor
      * @constructor
      * @abstract
-     * @memberof Kinetic
+     * @memberof Konva
      * @param {Object} config
      * @param {Number} config.width
      * @param {Number} config.height
-     * @param {Number} config.pixelRatio KineticJS automatically handles pixel ratio adjustments in order to render crisp drawings
+     * @param {Number} config.pixelRatio KonvaJS automatically handles pixel ratio adjustments in order to render crisp drawings
      *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
      *  of 1.  Some high end tablets and phones, like iPhones and iPads (not the mini) have a device pixel ratio 
      *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel 
@@ -34,18 +34,18 @@
      *  specified, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
      *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
      */
-    Kinetic.Canvas = function(config) {
+    Konva.Canvas = function(config) {
         this.init(config);
     };
 
-    Kinetic.Canvas.prototype = {
+    Konva.Canvas.prototype = {
         init: function(config) {
             var conf = config || {};
 
-            var pixelRatio = conf.pixelRatio || Kinetic.pixelRatio || _pixelRatio;
+            var pixelRatio = conf.pixelRatio || Konva.pixelRatio || _pixelRatio;
 
             this.pixelRatio = pixelRatio;
-            this._canvas = Kinetic.Util.createCanvasElement();
+            this._canvas = Konva.Util.createCanvasElement();
 
             // set inline styles
             this._canvas.style.padding = 0;
@@ -59,7 +59,7 @@
         /**
          * get canvas context
          * @method
-         * @memberof Kinetic.Canvas.prototype
+         * @memberof Konva.Canvas.prototype
          * @returns {CanvasContext} context
          */
         getContext: function() {
@@ -68,7 +68,7 @@
         /**
          * get pixel ratio
          * @method
-         * @memberof Kinetic.Canvas.prototype
+         * @memberof Konva.Canvas.prototype
          * @returns {Number} pixel ratio
          */
         getPixelRatio: function() {
@@ -77,8 +77,8 @@
         /**
          * get pixel ratio
          * @method
-         * @memberof Kinetic.Canvas.prototype
-         * @param {Number} pixelRatio KineticJS automatically handles pixel ratio adustments in order to render crisp drawings 
+         * @memberof Konva.Canvas.prototype
+         * @param {Number} pixelRatio KonvaJS automatically handles pixel ratio adustments in order to render crisp drawings 
          *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
          *  of 1.  Some high end tablets and phones, like iPhones and iPads (not the mini) have a device pixel ratio 
          *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel 
@@ -93,7 +93,7 @@
         /**
          * set width
          * @method
-         * @memberof Kinetic.Canvas.prototype
+         * @memberof Konva.Canvas.prototype
          * @param {Number} width
          */
         setWidth: function(width) {
@@ -104,7 +104,7 @@
         /**
          * set height
          * @method
-         * @memberof Kinetic.Canvas.prototype
+         * @memberof Konva.Canvas.prototype
          * @param {Number} height
          */
         setHeight: function(height) {
@@ -115,7 +115,7 @@
         /**
          * get width
          * @method
-         * @memberof Kinetic.Canvas.prototype
+         * @memberof Konva.Canvas.prototype
          * @returns {Number} width
          */
         getWidth: function() {
@@ -124,7 +124,7 @@
         /**
          * get height
          * @method
-         * @memberof Kinetic.Canvas.prototype
+         * @memberof Konva.Canvas.prototype
          * @returns {Number} height
          */
         getHeight: function() {
@@ -133,7 +133,7 @@
         /**
          * set size
          * @method
-         * @memberof Kinetic.Canvas.prototype
+         * @memberof Konva.Canvas.prototype
          * @param {Number} width
          * @param {Number} height
          */
@@ -144,7 +144,7 @@
         /**
          * to data url
          * @method
-         * @memberof Kinetic.Canvas.prototype
+         * @memberof Konva.Canvas.prototype
          * @param {String} mimeType
          * @param {Number} quality between 0 and 1 for jpg mime types
          * @returns {String} data url string
@@ -160,51 +160,51 @@
                     return this._canvas.toDataURL();
                 }
                 catch(err) {
-                    Kinetic.Util.warn('Unable to get data URL. ' + err.message);
+                    Konva.Util.warn('Unable to get data URL. ' + err.message);
                     return '';
                 }
             }
         }
     };
 
-    Kinetic.SceneCanvas = function(config) {
+    Konva.SceneCanvas = function(config) {
         var conf = config || {};
         var width = conf.width || 0,
             height = conf.height || 0;
 
-        Kinetic.Canvas.call(this, conf);
-        this.context = new Kinetic.SceneContext(this);
+        Konva.Canvas.call(this, conf);
+        this.context = new Konva.SceneContext(this);
         this.setSize(width, height);
     };
 
-    Kinetic.SceneCanvas.prototype = {
+    Konva.SceneCanvas.prototype = {
         setWidth: function(width) {
             var pixelRatio = this.pixelRatio,
                 _context = this.getContext()._context;
 
-            Kinetic.Canvas.prototype.setWidth.call(this, width);
+            Konva.Canvas.prototype.setWidth.call(this, width);
             _context.scale(pixelRatio, pixelRatio);
         },
         setHeight: function(height) {
             var pixelRatio = this.pixelRatio,
                 _context = this.getContext()._context;
 
-            Kinetic.Canvas.prototype.setHeight.call(this, height);
+            Konva.Canvas.prototype.setHeight.call(this, height);
             _context.scale(pixelRatio, pixelRatio);
         }
     };
-    Kinetic.Util.extend(Kinetic.SceneCanvas, Kinetic.Canvas);
+    Konva.Util.extend(Konva.SceneCanvas, Konva.Canvas);
 
-    Kinetic.HitCanvas = function(config) {
+    Konva.HitCanvas = function(config) {
         var conf = config || {};
         var width = conf.width || 0,
             height = conf.height || 0;
             
-        Kinetic.Canvas.call(this, conf);
-        this.context = new Kinetic.HitContext(this);
+        Konva.Canvas.call(this, conf);
+        this.context = new Konva.HitContext(this);
         this.setSize(width, height);
         this.hitCanvas = true;
     };
-    Kinetic.Util.extend(Kinetic.HitCanvas, Kinetic.Canvas);
+    Konva.Util.extend(Konva.HitCanvas, Konva.Canvas);
 
 })();

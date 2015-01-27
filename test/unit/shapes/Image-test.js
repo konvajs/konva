@@ -6,8 +6,8 @@ suite('Image', function(){
       imageObj.onload = function() {
           var stage = addStage();
 
-          var layer = new Kinetic.Layer();
-          var darth = new Kinetic.Image({
+          var layer = new Konva.Layer();
+          var darth = new Konva.Image({
               x: 200,
               y: 60,
               image: imageObj,
@@ -33,7 +33,7 @@ suite('Image', function(){
           assert.equal(darth.getHeight(), 100);
           assert.equal(darth.offset().x, 50);
           assert.equal(darth.offset().y, 30);
-          assert.equal(Kinetic.Util._isElement(darth.getImage()), true);
+          assert.equal(Konva.Util._isElement(darth.getImage()), true);
 
           var crop = null;
           crop = darth.getCrop();
@@ -115,8 +115,8 @@ suite('Image', function(){
       var imageObj = new Image();
       imageObj.onload = function() {
           var stage = addStage();
-          var layer = new Kinetic.Layer();
-          darth = new Kinetic.Image({
+          var layer = new Konva.Layer();
+          darth = new Konva.Image({
               x: 200,
               y: 75,
               image: imageObj,
@@ -179,11 +179,11 @@ suite('Image', function(){
       var imageObj = new Image();
 
       var stage = addStage();
-      var layer = new Kinetic.Layer();
+      var layer = new Konva.Layer();
 
       imageObj.onload = function() {
 
-          var tiger = new Kinetic.Image({
+          var tiger = new Konva.Image({
               x: 0,
               y: 0,
               image: imageObj,
@@ -204,9 +204,9 @@ suite('Image', function(){
       var imageObj = new Image();
 
       var stage = addStage();
-      var layer = new Kinetic.Layer();
+      var layer = new Konva.Layer();
 
-      layer.add(new Kinetic.Line({
+      layer.add(new Konva.Line({
           points: [0,0,578,200],
           stroke: 'black',
           strokeWidth: 5
@@ -214,7 +214,7 @@ suite('Image', function(){
       
       imageObj.onload = function() {
 
-          var tiger = new Kinetic.Image({
+          var tiger = new Konva.Image({
               x: 0,
               y: 0,
               image: imageObj,
@@ -225,7 +225,7 @@ suite('Image', function(){
 
           layer.add(tiger);
           
-          layer.add(new Kinetic.Line({
+          layer.add(new Konva.Line({
               points: [578,0,0,200],
               stroke: 'blue',
               strokeWidth: 5
@@ -247,8 +247,8 @@ suite('Image', function(){
       imageObj.onload = function() {
           var stage = addStage();
 
-          var layer = new Kinetic.Layer();
-          darth = new Kinetic.Image({
+          var layer = new Konva.Layer();
+          darth = new Konva.Image({
               x: 200,
               y: 60,
               image: imageObj,
@@ -282,8 +282,8 @@ suite('Image', function(){
       imageObj.onload = function() {
           var stage = addStage();
 
-          var layer = new Kinetic.Layer();
-          darth = new Kinetic.Image({
+          var layer = new Konva.Layer();
+          darth = new Konva.Image({
               x: 200,
               y: 60,
               image: imageObj,

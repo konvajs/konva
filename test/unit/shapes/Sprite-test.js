@@ -4,10 +4,10 @@ suite('Sprite', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = addStage();
-            var layer = new Kinetic.Layer();
+            var layer = new Konva.Layer();
 
 
-            var sprite = new Kinetic.Sprite({
+            var sprite = new Konva.Sprite({
                 x: 200,
                 y: 50,
                 image: imageObj,
@@ -78,10 +78,10 @@ suite('Sprite', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = addStage();
-            var layer = new Kinetic.Layer();
+            var layer = new Konva.Layer();
 
 
-            var sprite = new Kinetic.Sprite({
+            var sprite = new Konva.Sprite({
                 x: 200,
                 y: 50,
                 image: imageObj,
@@ -131,10 +131,10 @@ suite('Sprite', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = addStage();
-            var layer = new Kinetic.Layer();
+            var layer = new Konva.Layer();
 
 
-            var sprite = new Kinetic.Sprite({
+            var sprite = new Konva.Sprite({
                 x: 200,
                 y: 50,
                 image: imageObj,
@@ -152,7 +152,7 @@ suite('Sprite', function() {
                 frameRate: 5
             });
 
-            var sprite2 = new Kinetic.Sprite({
+            var sprite2 = new Konva.Sprite({
                 x: 200,
                 y: 50,
                 image: imageObj,
@@ -199,10 +199,10 @@ suite('Sprite', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = addStage();
-            var layer = new Kinetic.Layer();
+            var layer = new Konva.Layer();
 
 
-            var sprite = new Kinetic.Sprite({
+            var sprite = new Konva.Sprite({
                 x: 200,
                 y: 50,
                 image: imageObj,
@@ -240,10 +240,10 @@ suite('Sprite', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = addStage();
-            var layer = new Kinetic.Layer();
+            var layer = new Konva.Layer();
 
 
-            var sprite = new Kinetic.Sprite({
+            var sprite = new Konva.Sprite({
                 x: 200,
                 y: 50,
                 image: imageObj,
