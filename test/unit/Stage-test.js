@@ -2,18 +2,18 @@ suite('Stage', function() {
 
     // ======================================================
     test('instantiate stage with id', function() {
-      var container = Kinetic.document.createElement('div');
+      var container = Konva.document.createElement('div');
       container.id = 'container';
 
-      kineticContainer.appendChild(container);
+      konvaContainer.appendChild(container);
 
-      var stage = new Kinetic.Stage({
+      var stage = new Konva.Stage({
           container: 'container',
           width: 578,
           height: 200
       });
 
-      assert.equal(stage.getContent().className, 'kineticjs-content');
+      assert.equal(stage.getContent().className, 'konvajs-content');
       assert.equal(stage.getContent().getAttribute('role'), 'presentation');
 
 
@@ -21,15 +21,15 @@ suite('Stage', function() {
 
     // ======================================================
     test('test stage buffer canvas and hit buffer canvas', function() {
-      var container = Kinetic.document.createElement('div');
+      var container = Konva.document.createElement('div');
       container.id = 'container';
 
-      kineticContainer.appendChild(container);
+      konvaContainer.appendChild(container);
 
       // simulate pixelRatio = 2
-      Kinetic.pixelRatio = 2;
+      Konva.pixelRatio = 2;
 
-      var stage = new Kinetic.Stage({
+      var stage = new Konva.Stage({
           container: 'container',
           width: 578,
           height: 200
@@ -40,16 +40,16 @@ suite('Stage', function() {
       assert.equal(stage.bufferHitCanvas.getPixelRatio(), 2);
 
       // reset
-      Kinetic.pixelRatio = 1;
+      Konva.pixelRatio = 1;
     });
 
     // ======================================================
     test('instantiate stage with dom element', function() {
-      var container = Kinetic.document.createElement('div');
+      var container = Konva.document.createElement('div');
 
-      kineticContainer.appendChild(container);
+      konvaContainer.appendChild(container);
 
-      var stage = new Kinetic.Stage({
+      var stage = new Konva.Stage({
           container: container,
           width: 578,
           height: 200
@@ -58,13 +58,13 @@ suite('Stage', function() {
 
     // ======================================================
     test('stage instantiation should clear container', function() {
-        var container = Kinetic.document.createElement('div');
-        var dummy = Kinetic.document.createElement('p');
+        var container = Konva.document.createElement('div');
+        var dummy = Konva.document.createElement('p');
         
         container.appendChild(dummy);
-        kineticContainer.appendChild(container);
+        konvaContainer.appendChild(container);
 
-        var stage = new Kinetic.Stage({
+        var stage = new Konva.Stage({
             container: container,
             width: 578,
             height: 200
@@ -76,7 +76,7 @@ suite('Stage', function() {
     // ======================================================
     test('test stage cloning', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
         stage.add(layer);
 
         var stageClone = stage.clone();
@@ -90,9 +90,9 @@ suite('Stage', function() {
     test('set stage size', function() {
         var stage = addStage();
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -146,15 +146,15 @@ suite('Stage', function() {
     test('get stage DOM', function() {
         var stage = addStage();
 
-        assert.equal(stage.getContent().className, 'kineticjs-content');
+        assert.equal(stage.getContent().className, 'konvajs-content');
     });
 
     // ======================================================
     test('stage getIntersection()', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var redCircle = new Kinetic.Circle({
+        var redCircle = new Konva.Circle({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -164,7 +164,7 @@ suite('Stage', function() {
             id: 'redCircle'
         });
 
-        var greenCircle = new Kinetic.Circle({
+        var greenCircle = new Konva.Circle({
             x: 300,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -188,9 +188,9 @@ suite('Stage', function() {
     // ======================================================
     test('stage getIntersection() edge detection', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var redCircle = new Kinetic.Circle({
+        var redCircle = new Konva.Circle({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -200,7 +200,7 @@ suite('Stage', function() {
             id: 'redCircle'
         });
 
-        var greenCircle = new Kinetic.Circle({
+        var greenCircle = new Konva.Circle({
             x: 300,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -235,9 +235,9 @@ suite('Stage', function() {
     // ======================================================
     test('test getAllIntersections', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var redCircle = new Kinetic.Circle({
+        var redCircle = new Konva.Circle({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -247,7 +247,7 @@ suite('Stage', function() {
             id: 'redCircle'
         });
 
-        var greenCircle = new Kinetic.Circle({
+        var greenCircle = new Konva.Circle({
             x: 300,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -312,8 +312,8 @@ suite('Stage', function() {
     // ======================================================
     test('scale stage after add layer', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -335,8 +335,8 @@ suite('Stage', function() {
     // ======================================================
     test('scale stage before add shape', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -357,8 +357,8 @@ suite('Stage', function() {
     // ======================================================
     test('remove stage', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -378,11 +378,11 @@ suite('Stage', function() {
 
     // ======================================================
     test('destroy stage', function() {
-        var container = Kinetic.document.createElement('div');
+        var container = Konva.document.createElement('div');
 
-        kineticContainer.appendChild(container);
+        konvaContainer.appendChild(container);
 
-        var stage = new Kinetic.Stage({
+        var stage = new Konva.Stage({
             container: container,
             width: 578,
             height: 200,
@@ -390,8 +390,8 @@ suite('Stage', function() {
             name: 'stageFalconName'
         });
 
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -405,18 +405,18 @@ suite('Stage', function() {
         layer.add(circle);
         stage.add(layer);
 
-        assert.equal(Kinetic.ids.stageFalconId._id, stage._id, 'stage id should be in global ids map');
-        assert.equal(Kinetic.names.stageFalconName[0]._id, stage._id, 'stage name should be in global names map');
-        assert.equal(Kinetic.ids.circleFalconId._id, circle._id, 'circle id should be in global ids map');
-        assert.equal(Kinetic.names.circleFalconName[0]._id, circle._id, 'circle name should be in global names map');
+        assert.equal(Konva.ids.stageFalconId._id, stage._id, 'stage id should be in global ids map');
+        assert.equal(Konva.names.stageFalconName[0]._id, stage._id, 'stage name should be in global names map');
+        assert.equal(Konva.ids.circleFalconId._id, circle._id, 'circle id should be in global ids map');
+        assert.equal(Konva.names.circleFalconName[0]._id, circle._id, 'circle name should be in global names map');
 
         stage.destroy();
 
-        assert.equal(Kinetic.ids.stageFalconId, undefined, 'stage should no longer be in ids map');
-        assert.equal(Kinetic.names.stageFalconName, undefined, 'stage should no longer be in names map');
-        assert.equal(Kinetic.ids.circleFalconId, undefined, 'circle should no longer be in ids map');
-        assert.equal(Kinetic.names.circleFalconName, undefined, 'circle should no longer be in names map');
-        assert.equal(Kinetic.stages.indexOf(stage) === -1, true, 'stage should not be in stages array');
+        assert.equal(Konva.ids.stageFalconId, undefined, 'stage should no longer be in ids map');
+        assert.equal(Konva.names.stageFalconName, undefined, 'stage should no longer be in names map');
+        assert.equal(Konva.ids.circleFalconId, undefined, 'circle should no longer be in ids map');
+        assert.equal(Konva.names.circleFalconName, undefined, 'circle should no longer be in names map');
+        assert.equal(Konva.stages.indexOf(stage) === -1, true, 'stage should not be in stages array');
 
 
     });
@@ -425,7 +425,7 @@ suite('Stage', function() {
     test('scale stage with no shapes', function() {
         var stage = addStage();
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
         stage.add(layer);
         stage.setScale(0.5);
@@ -444,17 +444,17 @@ suite('Stage', function() {
 
     test('add multiple layers to stage', function() {
         var stage = addStage();
-        var layer1 = new Kinetic.Layer();
-        var layer2 = new Kinetic.Layer();
-        var layer3 = new Kinetic.Layer();
+        var layer1 = new Konva.Layer();
+        var layer2 = new Konva.Layer();
+        var layer3 = new Konva.Layer();
         stage.add(layer1, layer2, layer3);
         assert.equal(stage.getLayers().length, 3, 'stage has exactly three layers');
     });
     // ======================================================
     test('test drag and click', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 50,
             y: 50,
             width: 50,
@@ -499,12 +499,12 @@ suite('Stage', function() {
             clientY: clientY
         });
 
-        Kinetic.DD._endDragBefore();
+        Konva.DD._endDragBefore();
         stage._mouseup({
             clientX: 65,
             clientY: clientY
         });
-        Kinetic.DD._endDragAfter({dragEndNode:rect});
+        Konva.DD._endDragAfter({dragEndNode:rect});
 
         // simulate click
         stage._mousedown({

@@ -6,13 +6,13 @@
     /**
      * Ellipse constructor
      * @constructor
-     * @augments Kinetic.Shape
+     * @augments Konva.Shape
      * @param {Object} config
      * @param {Object} config.radius defines x and y radius
      * @@ShapeParams
      * @@NodeParams
      * @example
-     * var ellipse = new Kinetic.Ellipse({
+     * var ellipse = new Konva.Ellipse({
      *   radius : {
      *     x : 50,
      *     y : 50
@@ -20,14 +20,14 @@
      *   fill: 'red'
      * });
      */
-    Kinetic.Ellipse = function(config) {
+    Konva.Ellipse = function(config) {
         this.___init(config);
     };
 
-    Kinetic.Ellipse.prototype = {
+    Konva.Ellipse.prototype = {
         ___init: function(config) {
             // call super constructor
-            Kinetic.Shape.call(this, config);
+            Konva.Shape.call(this, config);
             this.className = ELLIPSE;
             this.sceneFunc(this._sceneFunc);
         },
@@ -55,29 +55,29 @@
         },
         // implements Shape.prototype.setWidth()
         setWidth: function(width) {
-            Kinetic.Node.prototype.setWidth.call(this, width);
+            Konva.Node.prototype.setWidth.call(this, width);
             this.setRadius({
                 x: width / 2
             });
         },
         // implements Shape.prototype.setHeight()
         setHeight: function(height) {
-            Kinetic.Node.prototype.setHeight.call(this, height);
+            Konva.Node.prototype.setHeight.call(this, height);
             this.setRadius({
                 y: height / 2
             });
         }
     };
-    Kinetic.Util.extend(Kinetic.Ellipse, Kinetic.Shape);
+    Konva.Util.extend(Konva.Ellipse, Konva.Shape);
 
     // add getters setters
-    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Ellipse, 'radius', ['x', 'y']);
+    Konva.Factory.addComponentsGetterSetter(Konva.Ellipse, 'radius', ['x', 'y']);
 
     /**
      * get/set radius
      * @name radius
      * @method
-     * @memberof Kinetic.Ellipse.prototype
+     * @memberof Konva.Ellipse.prototype
      * @param {Object} radius
      * @param {Number} radius.x
      * @param {Number} radius.y
@@ -93,12 +93,12 @@
      * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Ellipse, 'radiusX', 0);
+    Konva.Factory.addGetterSetter(Konva.Ellipse, 'radiusX', 0);
     /**
      * get/set radius x
      * @name radiusX
      * @method
-     * @memberof Kinetic.Ellipse.prototype
+     * @memberof Konva.Ellipse.prototype
      * @param {Number} x
      * @returns {Number}
      * @example
@@ -109,12 +109,12 @@
      * ellipse.radiusX(200);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Ellipse, 'radiusY', 0);
+    Konva.Factory.addGetterSetter(Konva.Ellipse, 'radiusY', 0);
     /**
      * get/set radius y
      * @name radiusY
      * @method
-     * @memberof Kinetic.Ellipse.prototype
+     * @memberof Konva.Ellipse.prototype
      * @param {Number} y
      * @returns {Number}
      * @example
@@ -125,6 +125,6 @@
      * ellipse.radiusY(200);
      */
 
-    Kinetic.Collection.mapMethods(Kinetic.Ellipse);
+    Konva.Collection.mapMethods(Konva.Ellipse);
 
 })();

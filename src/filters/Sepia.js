@@ -5,15 +5,15 @@
      * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
      * @function
      * @name Sepia
-     * @memberof Kinetic.Filters
+     * @memberof Konva.Filters
      * @param {Object} imageData
      * @author Jacob Seidelin <jseidelin@nihilogic.dk>
      * @license MPL v1.1 [http://www.pixastic.com/lib/license.txt]
      * @example
      * node.cache();
-     * node.filters([Kinetic.Filters.Sepia]);
+     * node.filters([Konva.Filters.Sepia]);
      */
-    Kinetic.Filters.Sepia = function (imageData) {
+    Konva.Filters.Sepia = function (imageData) {
         var data = imageData.data,
             w = imageData.width,
             y = imageData.height,

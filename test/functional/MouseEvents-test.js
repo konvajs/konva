@@ -1,14 +1,14 @@
 suite('MouseEvents', function() {
 
     // NOTE: disable throttling so these tests can run synchronously
-    Kinetic.enableThrottling = false;
+    Konva.enableThrottling = false;
     
     // ======================================================
     test('stage content mouse events', function(done) {
 
     var stage = addStage();
-    var layer = new Kinetic.Layer();
-    var circle = new Kinetic.Circle({
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({
         x: 100,
         y: 100,
         radius: 70,
@@ -149,9 +149,9 @@ suite('MouseEvents', function() {
 
         var top = stage.content.getBoundingClientRect().top;
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -179,12 +179,12 @@ suite('MouseEvents', function() {
             clientY: 112 + top
         });
 
-        Kinetic.DD._endDragBefore();
+        Konva.DD._endDragBefore();
         stage._mouseup({
             clientX: 291,
             clientY: 112 + top
         });
-        Kinetic.DD._endDragAfter({dragEndNode:circle});
+        Konva.DD._endDragAfter({dragEndNode:circle});
     });
 
     // ======================================================
@@ -193,9 +193,9 @@ suite('MouseEvents', function() {
 
         var top = stage.content.getBoundingClientRect().top;
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -219,7 +219,7 @@ suite('MouseEvents', function() {
             clientX: 291,
             clientY: 112 + top
         });
-        Kinetic.DD._endDragBefore();
+        Konva.DD._endDragBefore();
         stage._mouseup({
             clientX: 291,
             clientY: 112 + top
@@ -232,7 +232,7 @@ suite('MouseEvents', function() {
             clientX: 291,
             clientY: 112 + top
         });
-        Kinetic.DD._endDragBefore();
+        Konva.DD._endDragBefore();
         stage._mouseup({
             clientX: 291,
             clientY: 112 + top
@@ -245,7 +245,7 @@ suite('MouseEvents', function() {
             clientX: 291,
             clientY: 112 + top
         });
-        Kinetic.DD._endDragBefore();
+        Konva.DD._endDragBefore();
         stage._mouseup({
             clientX: 291,
             clientY: 112 + top
@@ -257,7 +257,7 @@ suite('MouseEvents', function() {
     // ======================================================
     test('click mapping', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             drawFunc: function() {
                 var context = this.getContext();
                 context.beginPath();
@@ -270,14 +270,14 @@ suite('MouseEvents', function() {
             }
         });
 
-        var redCircle = new Kinetic.Circle({
+        var redCircle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
             fill: 'red'
         });
 
-        var greenCircle = new Kinetic.Circle({
+        var greenCircle = new Konva.Circle({
             x: 400,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -312,12 +312,12 @@ suite('MouseEvents', function() {
             clientY: 113 + top
         });
 
-        Kinetic.DD._endDragBefore();
+        Konva.DD._endDragBefore();
         stage._mouseup({
             clientX: 284,
             clientY: 113 + top
         });
-        Kinetic.DD._endDragAfter({dragEndNode:redCircle});
+        Konva.DD._endDragAfter({dragEndNode:redCircle});
 
         assert.equal(redClicks, 1, 'red circle should have 1 click');
         assert.equal(greenClicks, 0, 'green circle should have 0 clicks');
@@ -328,12 +328,12 @@ suite('MouseEvents', function() {
             clientY: 108 + top
         });
 
-        Kinetic.DD._endDragBefore();
+        Konva.DD._endDragBefore();
         stage._mouseup({
             clientX: 397,
             clientY: 108 + top
         });
-        Kinetic.DD._endDragAfter({dragEndNode:redCircle});
+        Konva.DD._endDragAfter({dragEndNode:redCircle});
 
         assert.equal(redClicks, 1, 'red circle should have 1 click');
         assert.equal(greenClicks, 1, 'green circle should have 1 click');
@@ -344,12 +344,12 @@ suite('MouseEvents', function() {
             clientY: 113 + top
         });
 
-        Kinetic.DD._endDragBefore();
+        Konva.DD._endDragBefore();
         stage._mouseup({
             clientX: 397,
             clientY: 108 + top
         });
-        Kinetic.DD._endDragAfter({dragEndNode:redCircle});
+        Konva.DD._endDragAfter({dragEndNode:redCircle});
 
         assert.equal(redClicks, 1, 'red circle should still have 1 click');
         assert.equal(greenClicks, 1, 'green circle should still have 1 click');
@@ -359,8 +359,8 @@ suite('MouseEvents', function() {
     // ======================================================
     test('text events', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var text = new Kinetic.Text({
+        var layer = new Konva.Layer();
+        var text = new Konva.Text({
             x: 290,
             y: 111,
             fontFamily: 'Calibri',
@@ -389,12 +389,12 @@ suite('MouseEvents', function() {
             clientY: 120 + top
         });
 
-        Kinetic.DD._endDragBefore();
+        Konva.DD._endDragBefore();
         stage._mouseup({
             clientX: 300,
             clientY: 120 + top
         });
-        Kinetic.DD._endDragAfter({dragEndNode:text});
+        Konva.DD._endDragAfter({dragEndNode:text});
 
         //TODO: can't get this to pass
         assert.equal(click, true, 'click event should have been fired when mousing down and then up on text');
@@ -404,10 +404,10 @@ suite('MouseEvents', function() {
     // ======================================================
     test('modify fill stroke and stroke width on hover with circle', function(done) {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             throttle: 999
         });
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -467,8 +467,8 @@ suite('MouseEvents', function() {
     // ======================================================
     test('mousedown mouseup mouseover mouseout mousemove click dblclick', function(done) {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -636,10 +636,10 @@ suite('MouseEvents', function() {
     // ======================================================
     test('test group mousedown events', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
 
-        var redCircle = new Kinetic.Circle({
+        var redCircle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 80,
@@ -649,7 +649,7 @@ suite('MouseEvents', function() {
             name: 'red'
         });
 
-        var greenCircle = new Kinetic.Circle({
+        var greenCircle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 40,
@@ -715,10 +715,10 @@ suite('MouseEvents', function() {
     // ======================================================
     test('test mousedown events with antialiasing', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
 
-        var greenCircle = new Kinetic.Circle({
+        var greenCircle = new Konva.Circle({
             x: 50,
             y: 50,
             radius: 50,
@@ -755,8 +755,8 @@ suite('MouseEvents', function() {
     // ======================================================
     test('group mouseenter events', function(done) {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group({
+        var layer = new Konva.Layer();
+        var group = new Konva.Group({
             name: 'group'
         });
 
@@ -767,7 +767,7 @@ suite('MouseEvents', function() {
         var groupMouseenters = 0;
         var groupMouseleaves = 0;
 
-        var redCircle = new Kinetic.Circle({
+        var redCircle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 80,
@@ -777,7 +777,7 @@ suite('MouseEvents', function() {
             name: 'red'
         });
 
-        var greenCircle = new Kinetic.Circle({
+        var greenCircle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 40,
@@ -915,11 +915,11 @@ suite('MouseEvents', function() {
     // ======================================================
     test('test mouseleave with multiple groups', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             id : 'layer'
         });
 
-        var rect1 = new Kinetic.Rect({
+        var rect1 = new Konva.Rect({
             x:0,
             y:0,
             width: 100,
@@ -928,7 +928,7 @@ suite('MouseEvents', function() {
             id : 'redRect'
         });
 
-        var rect2 = new Kinetic.Rect({
+        var rect2 = new Konva.Rect({
             x:50,
             y:0,
             width: 70,
@@ -938,10 +938,10 @@ suite('MouseEvents', function() {
             id : 'greenRect'
         });
 
-        var group = new Kinetic.Group({
+        var group = new Konva.Group({
             id : 'group1'
         });
-        var group2 = new Kinetic.Group({
+        var group2 = new Konva.Group({
             id : 'group2'
         });
         group.add(rect1);
@@ -1061,8 +1061,8 @@ suite('MouseEvents', function() {
     // ======================================================
     test('test event bubbling', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1072,8 +1072,8 @@ suite('MouseEvents', function() {
             id: 'myCircle'
         });
 
-        var group1 = new Kinetic.Group();
-        var group2 = new Kinetic.Group();
+        var group1 = new Konva.Group();
+        var group2 = new Konva.Group();
 
         /*
          *   stage
@@ -1120,12 +1120,12 @@ suite('MouseEvents', function() {
             clientX: 374,
             clientY: 114 + top
         });
-        Kinetic.DD._endDragBefore();
+        Konva.DD._endDragBefore();
         stage._mouseup({
             clientX: 374,
             clientY: 114 + top
         });
-        Kinetic.DD._endDragAfter({dragEndNode:circle});
+        Konva.DD._endDragAfter({dragEndNode:circle});
 
         assert.equal(e.toString(), 'circle,group1,group2,layer,stage', 'problem with event bubbling');
   
@@ -1134,8 +1134,8 @@ suite('MouseEvents', function() {
     // ======================================================
     test('test custom circle hit function', function(done) {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,

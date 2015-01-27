@@ -6,8 +6,8 @@ suite('Solarize', function() {
 
         var imageObj = new Image();
         imageObj.onload = function() {
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -17,7 +17,7 @@ suite('Solarize', function() {
             layer.add(darth);
             stage.add(layer);
             darth.cache();
-            darth.filters([Kinetic.Filters.Solarize]);
+            darth.filters([Konva.Filters.Solarize]);
 
 
             layer.draw();

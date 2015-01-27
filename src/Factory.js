@@ -5,14 +5,14 @@
         RGB = 'RGB',
         SET = 'set';
 
-    Kinetic.Factory = {
+    Konva.Factory = {
         addGetterSetter: function(constructor, attr, def, validator, after) {
             this.addGetter(constructor, attr, def);
             this.addSetter(constructor, attr, validator, after);
             this.addOverloadedGetterSetter(constructor, attr);
         },
         addGetter: function(constructor, attr, def) {
-            var method = GET + Kinetic.Util._capitalize(attr);
+            var method = GET + Konva.Util._capitalize(attr);
 
             constructor.prototype[method] = function() {
                 var val = this.attrs[attr];
@@ -20,7 +20,7 @@
             };
         },
         addSetter: function(constructor, attr, validator, after) {
-            var method = SET + Kinetic.Util._capitalize(attr);
+            var method = SET + Konva.Util._capitalize(attr);
 
             constructor.prototype[method] = function(val) {
                 if (validator) {
@@ -38,7 +38,7 @@
         },
         addComponentsGetterSetter: function(constructor, attr, components, validator, after) {
             var len = components.length,
-                capitalize = Kinetic.Util._capitalize,
+                capitalize = Konva.Util._capitalize,
                 getter = GET + capitalize(attr),
                 setter = SET + capitalize(attr),
                 n, component;
@@ -80,7 +80,7 @@
             this.addOverloadedGetterSetter(constructor, attr);
         },
         addOverloadedGetterSetter: function(constructor, attr) {
-            var capitalizedAttr = Kinetic.Util._capitalize(attr),
+            var capitalizedAttr = Konva.Util._capitalize(attr),
                 setter = SET + capitalizedAttr,
                 getter = GET + capitalizedAttr;
 
@@ -108,7 +108,7 @@
         }
     };
 
-    Kinetic.Validators = {
+    Konva.Validators = {
         /**
          * @return {number}
          */

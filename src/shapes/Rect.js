@@ -2,14 +2,14 @@
     /**
      * Rect constructor
      * @constructor
-     * @memberof Kinetic
-     * @augments Kinetic.Shape
+     * @memberof Konva
+     * @augments Konva.Shape
      * @param {Object} config
      * @param {Number} [config.cornerRadius]
      * @@shapeParams
      * @@nodeParams
      * @example
-     * var rect = new Kinetic.Rect({
+     * var rect = new Konva.Rect({
      *   width: 100,
      *   height: 50,
      *   fill: 'red',
@@ -17,13 +17,13 @@
      *   strokeWidth: 5
      * });
      */
-    Kinetic.Rect = function(config) {
+    Konva.Rect = function(config) {
         this.___init(config);
     };
 
-    Kinetic.Rect.prototype = {
+    Konva.Rect.prototype = {
         ___init: function(config) {
-            Kinetic.Shape.call(this, config);
+            Konva.Shape.call(this, config);
             this.className = 'Rect';
             this.sceneFunc(this._sceneFunc);
         },
@@ -56,14 +56,14 @@
         }
     };
 
-    Kinetic.Util.extend(Kinetic.Rect, Kinetic.Shape);
+    Konva.Util.extend(Konva.Rect, Konva.Shape);
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Rect, 'cornerRadius', 0);
+    Konva.Factory.addGetterSetter(Konva.Rect, 'cornerRadius', 0);
     /**
      * get/set corner radius
      * @name cornerRadius
      * @method
-     * @memberof Kinetic.Rect.prototype
+     * @memberof Konva.Rect.prototype
      * @param {Number} cornerRadius
      * @returns {Number}
      * @example
@@ -74,5 +74,5 @@
      * rect.cornerRadius(10);
      */
 
-    Kinetic.Collection.mapMethods(Kinetic.Rect);
+    Konva.Collection.mapMethods(Konva.Rect);
 })();

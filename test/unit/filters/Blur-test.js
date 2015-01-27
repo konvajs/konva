@@ -6,8 +6,8 @@ suite('Blur', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -18,7 +18,7 @@ suite('Blur', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Blur]);
+            darth.filters([Konva.Filters.Blur]);
             darth.blurRadius(10);
 
             assert.equal(darth.blurRadius(), 10);
@@ -45,13 +45,13 @@ suite('Blur', function() {
 
   test('blur group', function(){
     var stage = addStage();
-    var layer = new Kinetic.Layer();
-    var group = new Kinetic.Group({
+    var layer = new Konva.Layer();
+    var group = new Konva.Group({
         x: 100,
         y: 100,
         draggable: true
     });
-    var top = new Kinetic.Circle({
+    var top = new Konva.Circle({
         x: 0,
         y: -70,
         radius: 30,
@@ -59,7 +59,7 @@ suite('Blur', function() {
         stroke: 'black',
         strokeWidth: 4
     });
-    var right = new Kinetic.Circle({
+    var right = new Konva.Circle({
         x: 70,
         y: 0,
         radius: 30,
@@ -67,7 +67,7 @@ suite('Blur', function() {
         stroke: 'black',
         strokeWidth: 4
     });
-    var bottom = new Kinetic.Circle({
+    var bottom = new Konva.Circle({
         x: 0,
         y: 70,
         radius: 30,
@@ -75,7 +75,7 @@ suite('Blur', function() {
         stroke: 'black',
         strokeWidth: 4
     });
-    var left = new Kinetic.Circle({
+    var left = new Konva.Circle({
         x: -70,
         y: 0,
         radius: 30,
@@ -100,7 +100,7 @@ suite('Blur', function() {
       y: 150
     });
 
-    group.filters([Kinetic.Filters.Blur]);
+    group.filters([Konva.Filters.Blur]);
     group.blurRadius(20);
 
     layer.draw();
@@ -122,8 +122,8 @@ suite('Blur', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -134,15 +134,15 @@ suite('Blur', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Blur]);
+            darth.filters([Konva.Filters.Blur]);
             darth.blurRadius(100);
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: darth, 
               duration: 2.0,
               blurRadius: 0,
-              easing: Kinetic.Easings.EaseInOut
+              easing: Konva.Easings.EaseInOut
             });
         
             darth.on('mouseover', function() {
@@ -166,8 +166,8 @@ suite('Blur', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -179,7 +179,7 @@ suite('Blur', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Blur]);
+            darth.filters([Konva.Filters.Blur]);
             darth.blurRadius(10);
             layer.draw();
 
@@ -196,8 +196,8 @@ suite('Blur', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -209,15 +209,15 @@ suite('Blur', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Blur]);
+            darth.filters([Konva.Filters.Blur]);
             darth.blurRadius(100);
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: darth, 
               duration: 2.0,
               blurRadius: 0,
-              easing: Kinetic.Easings.EaseInOut
+              easing: Konva.Easings.EaseInOut
             });
         
             darth.on('mouseover', function() {
@@ -241,8 +241,8 @@ suite('Blur', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -253,15 +253,15 @@ suite('Blur', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Blur]);
+            darth.filters([Konva.Filters.Blur]);
             darth.blurRadius(100);
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: darth, 
               duration: 2.0,
               blurRadius: 0,
-              easing: Kinetic.Easings.EaseInOut
+              easing: Konva.Easings.EaseInOut
             });
         
             darth.on('mouseover', function() {
@@ -285,8 +285,8 @@ suite('Blur', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -299,7 +299,7 @@ suite('Blur', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Blur]);
+            darth.filters([Konva.Filters.Blur]);
             darth.blurRadius(20);
             darth.drawHitFromCache(100);
             layer.draw();

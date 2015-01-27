@@ -6,8 +6,8 @@
     /**
      * Image constructor
      * @constructor
-     * @memberof Kinetic
-     * @augments Kinetic.Shape
+     * @memberof Konva
+     * @augments Konva.Shape
      * @param {Object} config
      * @param {Image} config.image
      * @param {Object} [config.crop]
@@ -16,7 +16,7 @@
      * @example
      * var imageObj = new Image();
      * imageObj.onload = function() {
-     *   var image = new Kinetic.Image({
+     *   var image = new Konva.Image({
      *     x: 200,
      *     y: 50,
      *     image: imageObj,
@@ -26,14 +26,14 @@
      * };
      * imageObj.src = '/path/to/image.jpg'
      */
-    Kinetic.Image = function(config) {
+    Konva.Image = function(config) {
         this.___init(config);
     };
 
-    Kinetic.Image.prototype = {
+    Konva.Image.prototype = {
         ___init: function(config) {
             // call super constructor
-            Kinetic.Shape.call(this, config);
+            Konva.Shape.call(this, config);
             this.className = IMAGE;
             this.sceneFunc(this._sceneFunc);
             this.hitFunc(this._hitFunc);
@@ -86,16 +86,16 @@
             return this.attrs.height || (image ? image.height : 0);
         }
     };
-    Kinetic.Util.extend(Kinetic.Image, Kinetic.Shape);
+    Konva.Util.extend(Konva.Image, Konva.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Image, 'image');
+    Konva.Factory.addGetterSetter(Konva.Image, 'image');
 
     /**
      * set image
      * @name setImage
      * @method
-     * @memberof Kinetic.Image.prototype
+     * @memberof Konva.Image.prototype
      * @param {Image} image
      */
 
@@ -103,16 +103,16 @@
      * get image
      * @name getImage
      * @method
-     * @memberof Kinetic.Image.prototype
+     * @memberof Konva.Image.prototype
      * @returns {Image}
      */
 
-    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Image, 'crop', ['x', 'y', 'width', 'height']);
+    Konva.Factory.addComponentsGetterSetter(Konva.Image, 'crop', ['x', 'y', 'width', 'height']);
     /**
      * get/set crop
      * @method
      * @name crop
-     * @memberof Kinetic.Image.prototype
+     * @memberof Konva.Image.prototype
      * @param {Object} crop 
      * @param {Number} crop.x
      * @param {Number} crop.y
@@ -132,12 +132,12 @@
      * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Image, 'cropX', 0);
+    Konva.Factory.addGetterSetter(Konva.Image, 'cropX', 0);
     /**
      * get/set crop x
      * @method
      * @name cropX
-     * @memberof Kinetic.Image.prototype
+     * @memberof Konva.Image.prototype
      * @param {Number} x
      * @returns {Number}
      * @example
@@ -148,12 +148,12 @@
      * image.cropX(20);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Image, 'cropY', 0);
+    Konva.Factory.addGetterSetter(Konva.Image, 'cropY', 0);
     /**
      * get/set crop y
      * @name cropY
      * @method
-     * @memberof Kinetic.Image.prototype
+     * @memberof Konva.Image.prototype
      * @param {Number} y
      * @returns {Number}
      * @example
@@ -164,12 +164,12 @@
      * image.cropY(20);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Image, 'cropWidth', 0);
+    Konva.Factory.addGetterSetter(Konva.Image, 'cropWidth', 0);
     /**
      * get/set crop width
      * @name cropWidth
      * @method
-     * @memberof Kinetic.Image.prototype
+     * @memberof Konva.Image.prototype
      * @param {Number} width
      * @returns {Number}
      * @example
@@ -180,12 +180,12 @@
      * image.cropWidth(20);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Image, 'cropHeight', 0);
+    Konva.Factory.addGetterSetter(Konva.Image, 'cropHeight', 0);
     /**
      * get/set crop height
      * @name cropHeight
      * @method
-     * @memberof Kinetic.Image.prototype
+     * @memberof Konva.Image.prototype
      * @param {Number} height
      * @returns {Number}
      * @example
@@ -196,5 +196,5 @@
      * image.cropHeight(20);
      */
 
-    Kinetic.Collection.mapMethods(Kinetic.Image);
+    Konva.Collection.mapMethods(Konva.Image);
 })();

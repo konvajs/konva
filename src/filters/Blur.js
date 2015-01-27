@@ -1,6 +1,6 @@
 /*
  the Gauss filter
- master repo: https://github.com/pavelpower/kineticjsGaussFilter/
+ master repo: https://github.com/pavelpower/konvajsGaussFilter/
 */
 (function() {
     /*
@@ -331,14 +331,14 @@
      * Blur Filter
      * @function
      * @name Blur
-     * @memberof Kinetic.Filters
+     * @memberof Konva.Filters
      * @param {Object} imageData
      * @example
      * node.cache();
-     * node.filters([Kinetic.Filters.Blur]);
+     * node.filters([Konva.Filters.Blur]);
      * node.blurRadius(10);
      */
-    Kinetic.Filters.Blur = function Blur(imageData) {
+    Konva.Filters.Blur = function Blur(imageData) {
         var radius = Math.round(this.blurRadius());
 
         if (radius > 0) {
@@ -346,13 +346,13 @@
         }
     };
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'blurRadius', 0, null, Kinetic.Factory.afterSetFilter);
+    Konva.Factory.addGetterSetter(Konva.Node, 'blurRadius', 0, null, Konva.Factory.afterSetFilter);
 
     /**
-    * get/set blur radius. Use with {@link Kinetic.Filters.Blur} filter
+    * get/set blur radius. Use with {@link Konva.Filters.Blur} filter
     * @name blurRadius
     * @method
-    * @memberof Kinetic.Node.prototype
+    * @memberof Konva.Node.prototype
     * @param {Integer} radius
     * @returns {Integer}
     */

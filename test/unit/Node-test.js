@@ -3,9 +3,9 @@ suite('Node', function() {
     // ======================================================
     test('getType and getClassName', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -33,8 +33,8 @@ suite('Node', function() {
     // ======================================================
     test('get layer', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -51,8 +51,8 @@ suite('Node', function() {
     // ======================================================
     test('setAttr', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -82,8 +82,8 @@ suite('Node', function() {
     // ======================================================
     test('set shape and layer opacity to 0.5', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -104,8 +104,8 @@ suite('Node', function() {
     // ======================================================
     test('transform cache', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -130,8 +130,8 @@ suite('Node', function() {
     // ======================================================
     test('visible cache', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -158,8 +158,8 @@ suite('Node', function() {
     // ======================================================
     test('shadow cache', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -185,8 +185,8 @@ suite('Node', function() {
     // ======================================================
     test('has shadow', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 10,
             y: stage.getHeight() / 3,
             width: 100,
@@ -209,8 +209,8 @@ suite('Node', function() {
     // ======================================================
     test('opacity cache', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -233,8 +233,8 @@ suite('Node', function() {
     // ======================================================
     test('listening cache', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -261,8 +261,8 @@ suite('Node', function() {
     // ======================================================
     test('stage cache', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -282,16 +282,16 @@ suite('Node', function() {
     // ======================================================
     test('test pixel ratio toDataURL', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
         // override pixel ratio
 
-        layer.canvas = new Kinetic.SceneCanvas({
+        layer.canvas = new Konva.SceneCanvas({
            pixelRatio: 2
         });
         layer.canvas._canvas.style.position = 'absolute';
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -310,8 +310,8 @@ suite('Node', function() {
     // ======================================================
     test('listen and don\'t listen', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 50,
             y: 50,
             width: 200,
@@ -319,7 +319,7 @@ suite('Node', function() {
             fill: 'blue'
         });
 
-        var rect2 = new Kinetic.Rect({
+        var rect2 = new Konva.Rect({
             x: 200,
             y: 100,
             width: 200,
@@ -345,8 +345,8 @@ suite('Node', function() {
     // ======================================================
     test('listen and don\'t listen with one shape', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 50,
             y: 50,
             width: 200,
@@ -373,8 +373,8 @@ suite('Node', function() {
          * object
          */
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 50,
             y: 50,
             width: 200,
@@ -403,9 +403,9 @@ suite('Node', function() {
     // ======================================================
     test('simple clone', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 0,
             y: 0,
             width: 100,
@@ -427,9 +427,9 @@ suite('Node', function() {
     // ======================================================
     test('clone - check reference', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var line = new Kinetic.Line({
+        var line = new Konva.Line({
             x: 0,
             y: 0,
             stroke : 'red',
@@ -450,8 +450,8 @@ suite('Node', function() {
     // ======================================================
     test('complex clone', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 50,
             y: 50,
             width: 200,
@@ -517,14 +517,14 @@ suite('Node', function() {
     // ======================================================
     test('clone a group', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group({
+        var layer = new Konva.Layer();
+        var group = new Konva.Group({
             x: 50,
             draggable: true,
             name: 'myGroup'
         });
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 0,
             y: 50,
             width: 200,
@@ -537,7 +537,7 @@ suite('Node', function() {
             name: 'myRect',
             myAttr: 'group rect'
         });
-        var text = new Kinetic.Text({
+        var text = new Konva.Text({
             x: 0,
             y: 110,
             text: 'Some awesome text!',
@@ -624,8 +624,8 @@ suite('Node', function() {
     // ======================================================
     test('test on attr change', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 50,
             y: 50,
             width: 200,
@@ -634,7 +634,7 @@ suite('Node', function() {
             shadowOffset: {x: 10, y: 10},
         });
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 35,
@@ -681,8 +681,8 @@ suite('Node', function() {
     // ======================================================
     test('set shape, layer and stage opacity to 0.5', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -706,10 +706,10 @@ suite('Node', function() {
     test('hide show layer', function() {
         var stage = addStage();
 
-        var layer1 = new Kinetic.Layer();
-        var layer2 = new Kinetic.Layer();
+        var layer1 = new Konva.Layer();
+        var layer2 = new Konva.Layer();
 
-        var circle1 = new Kinetic.Circle({
+        var circle1 = new Konva.Circle({
             x: 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -717,7 +717,7 @@ suite('Node', function() {
             stroke: 'black',
             strokeWidth: 4
         });
-        var circle2 = new Kinetic.Circle({
+        var circle2 = new Konva.Circle({
             x: 150,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -753,8 +753,8 @@ suite('Node', function() {
     // ======================================================
     test('rotation in degrees', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 200,
             y: 100,
             width: 100,
@@ -778,8 +778,8 @@ suite('Node', function() {
     // ======================================================
     test('skew', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 200,
             y: 100,
             width: 100,
@@ -811,8 +811,8 @@ suite('Node', function() {
     // ======================================================
     test('init with position, scale, rotation, then change scale', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 200,
             y: 100,
             width: 100,
@@ -846,9 +846,9 @@ suite('Node', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = addStage();
-            var layer = new Kinetic.Layer();
+            var layer = new Konva.Layer();
 
-            var sprite = new Kinetic.Sprite({
+            var sprite = new Konva.Sprite({
                 x: 200,
                 y: 50,
                 image: imageObj,
@@ -892,12 +892,12 @@ suite('Node', function() {
     // ======================================================
     test('node caching', function(done) {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
 
         var points = [73, 250, 73, 160, 340, 23, 500, 109, 499, 139, 342, 93];
 
-        var poly = new Kinetic.Line({
+        var poly = new Konva.Line({
             points: points,
             fill: 'green',
             stroke: 'blue',
@@ -915,9 +915,9 @@ suite('Node', function() {
             height: 300,
             callback: function(imageObj) {
                 //document.body.appendChild(imageObj)
-                assert.equal(Kinetic.Util._isElement(imageObj), true);
+                assert.equal(Konva.Util._isElement(imageObj), true);
 
-                var cachedShape = new Kinetic.Image({
+                var cachedShape = new Konva.Image({
                     image: imageObj,
                     draggable: true,
                     stroke: 'red',
@@ -940,10 +940,10 @@ suite('Node', function() {
     test('hide group', function() {
         var stage = addStage();
 
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
 
-        var circle1 = new Kinetic.Circle({
+        var circle1 = new Konva.Circle({
             x: 100,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -951,7 +951,7 @@ suite('Node', function() {
             stroke: 'black',
             strokeWidth: 4
         });
-        var circle2 = new Kinetic.Circle({
+        var circle2 = new Konva.Circle({
             x: 150,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -985,8 +985,8 @@ suite('Node', function() {
     // ======================================================
     test('add shape with custom attr pointing to self', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1024,8 +1024,8 @@ suite('Node', function() {
     // ======================================================
     test('scale shape by half', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1042,8 +1042,8 @@ suite('Node', function() {
     // ======================================================
     test('scale shape by half then back to 1', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1061,8 +1061,8 @@ suite('Node', function() {
     // ======================================================
     test('set offset offset after instantiation', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 200,
             y: 100,
             width: 100,
@@ -1096,8 +1096,8 @@ suite('Node', function() {
     // ======================================================
     test('get shape name', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1116,8 +1116,8 @@ suite('Node', function() {
     // ======================================================
     test('test setting shadow offset', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 0,
             y: 0,
             width: 100,
@@ -1159,8 +1159,8 @@ suite('Node', function() {
     // ======================================================
     test('test offset', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 0,
             y: 0,
             width: 100,
@@ -1199,8 +1199,8 @@ suite('Node', function() {
     // ======================================================
     test('test setPosition and move', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 0,
             y: 0,
             width: 100,
@@ -1243,8 +1243,8 @@ suite('Node', function() {
     // ======================================================
     test('test setScale', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 200,
             y: 20,
             width: 100,
@@ -1293,8 +1293,8 @@ suite('Node', function() {
     // ======================================================
     test('test config scale', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect1 = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect1 = new Konva.Rect({
             x: 200,
             y: 20,
             width: 100,
@@ -1306,7 +1306,7 @@ suite('Node', function() {
             }
         });
 
-        var rect2 = new Kinetic.Rect({
+        var rect2 = new Konva.Rect({
             x: 200,
             y: 20,
             width: 100,
@@ -1315,7 +1315,7 @@ suite('Node', function() {
             scale: {x:2,y:2}
         });
 
-        var rect3 = new Kinetic.Rect({
+        var rect3 = new Konva.Rect({
             x: 200,
             y: 20,
             width: 100,
@@ -1324,7 +1324,7 @@ suite('Node', function() {
             scale: {x:2, y:3}
         });
 
-        var rect4 = new Kinetic.Rect({
+        var rect4 = new Konva.Rect({
             x: 200,
             y: 20,
             width: 100,
@@ -1333,7 +1333,7 @@ suite('Node', function() {
             scaleX: 2
         });
 
-        var rect5 = new Kinetic.Rect({
+        var rect5 = new Konva.Rect({
             x: 200,
             y: 20,
             width: 100,
@@ -1364,8 +1364,8 @@ suite('Node', function() {
     // ======================================================
     test('test config position', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect1 = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect1 = new Konva.Rect({
             x: 1,
             y: 2,
             width: 100,
@@ -1373,21 +1373,21 @@ suite('Node', function() {
             fill: 'red'
         });
 
-        var rect2 = new Kinetic.Rect({
+        var rect2 = new Konva.Rect({
             x: 3,
             width: 100,
             height: 50,
             fill: 'red'
         });
 
-        var rect3 = new Kinetic.Rect({
+        var rect3 = new Konva.Rect({
             y: 4,
             width: 100,
             height: 50,
             fill: 'red'
         });
 
-        var rect4 = new Kinetic.Rect({
+        var rect4 = new Konva.Rect({
             width: 100,
             height: 50,
             fill: 'red'
@@ -1412,8 +1412,8 @@ suite('Node', function() {
     // ======================================================
     test('test getPosition and getAbsolutePosition for shape inside transformed stage', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 200,
             y: 20,
             width: 100,
@@ -1448,8 +1448,8 @@ suite('Node', function() {
     // ======================================================
     test('test consecutive getAbsolutePositions()s when shape has offset', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 200,
             y: 20,
             width: 100,
@@ -1481,11 +1481,11 @@ suite('Node', function() {
         var diagonal = Math.sqrt(side * side * 2);
 
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             name: 'layerName',
             id: 'layerId'
         });
-        var group = new Kinetic.Group({
+        var group = new Konva.Group({
             name: 'groupName',
             id: 'groupId',
             rotation: 45,
@@ -1493,7 +1493,7 @@ suite('Node', function() {
             x: diagonal / 2,
             y: diagonal / 2
         });
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 0,
             y: 0,
             width: side,
@@ -1502,7 +1502,7 @@ suite('Node', function() {
             name: 'rectName',
             id: 'rectId'
         });
-        var marker = new Kinetic.Rect({
+        var marker = new Konva.Rect({
             x: side,
             y: 0,
             width: 1,
@@ -1526,8 +1526,8 @@ suite('Node', function() {
     // ======================================================
     test('test dragDistance', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect1 = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect1 = new Konva.Rect({
             x: 1,
             y: 2,
             width: 100,
@@ -1535,11 +1535,11 @@ suite('Node', function() {
             fill: 'red'
         });
 
-        var group = new Kinetic.Group({
+        var group = new Konva.Group({
             dragDistance : 2
         });
 
-        var rect2 = new Kinetic.Rect({
+        var rect2 = new Konva.Rect({
             x: 3,
             width: 100,
             height: 50,
@@ -1558,8 +1558,8 @@ suite('Node', function() {
     // ======================================================
     test('translate, rotate, scale shape', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Rect({
             x: 100,
             y: 100,
             rotationDeg: 20,
@@ -1585,8 +1585,8 @@ suite('Node', function() {
     // ======================================================
     test('test isListening', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 100,
             y: 100,
             rotationDeg: 20,
@@ -1630,8 +1630,8 @@ suite('Node', function() {
     // ======================================================
     test('test fire event', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1691,8 +1691,8 @@ suite('Node', function() {
     // ======================================================
     test('add remove event', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1763,7 +1763,7 @@ suite('Node', function() {
 
 
         //  test remove all events
-        circle.on('click.kinetic', function() {
+        circle.on('click.konva', function() {
         });
         circle.on('click', function() {
         });
@@ -1773,7 +1773,7 @@ suite('Node', function() {
         assert.equal(circle.eventListeners['boo'].length, 1);
         circle.off();
         assert.equal(circle.eventListeners['boo'], undefined);
-        // should not remove kinetic listeners
+        // should not remove konva listeners
         assert.equal(circle.eventListeners['click'].length, 1);
         stage.add(layer);
         layer.add(circle);
@@ -1783,8 +1783,8 @@ suite('Node', function() {
     // ======================================================
     test('simulate event bubble', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1817,10 +1817,10 @@ suite('Node', function() {
     // ======================================================
     test('move shape, group, and layer, and then get absolute position', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1853,18 +1853,18 @@ suite('Node', function() {
     // ======================================================
     test('scale layer, rotate group, position shape, and then get absolute position', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             scale: {
                 x: 2,
                 y: 2
             }
         });
-        var group = new Kinetic.Group({
+        var group = new Konva.Group({
             x: 100,
             rotation: 90
         });
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 50,
             y: 10,
             width: 100,
@@ -1889,8 +1889,8 @@ suite('Node', function() {
     // ======================================================
     test('hide show circle', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1916,10 +1916,37 @@ suite('Node', function() {
     });
 
     // ======================================================
+    test('set shape opacity to 0.5', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 20,
+            draggable: true
+        });
+
+        circle.setOpacity(0.5);
+        layer.add(circle);
+        stage.add(layer);
+
+        var sceneTrace = layer.getContext().getTrace();
+        //console.log(sceneTrace);
+
+        var bufferTrace = stage.bufferCanvas.getContext().getTrace();
+        //console.log(bufferTrace);
+
+        assert.equal(sceneTrace, 'clearRect(0,0,578,200);save();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0);restore();');
+        assert.equal(bufferTrace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=20;strokeStyle=black;stroke();restore();');
+    });
+
     test('set shape opacity to 0.5 then back to 1', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -1943,20 +1970,20 @@ suite('Node', function() {
     // ======================================================
     test('get absolute z index', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group1 = new Kinetic.Group();
-        var group2 = new Kinetic.Group();
-        var group3 = new Kinetic.Group();
-        var group4 = new Kinetic.Group();
+        var layer = new Konva.Layer();
+        var group1 = new Konva.Group();
+        var group2 = new Konva.Group();
+        var group3 = new Konva.Group();
+        var group4 = new Konva.Group();
 
-        var shape1 = new Kinetic.Circle({
+        var shape1 = new Konva.Circle({
             x: 150,
             y: stage.getHeight() / 2,
             radius: 40,
             fill: 'green'
         });
 
-        var shape2 = new Kinetic.Circle({
+        var shape2 = new Konva.Circle({
             x: 250,
             y: stage.getHeight() / 2,
             radius: 40,
@@ -2004,17 +2031,17 @@ suite('Node', function() {
     test('JPEG toDataURL() Not Hiding Lower Layers with Black', function(done) {
         var stage = addStage();
 
-        var layer1 = new Kinetic.Layer();
-        var layer2 = new Kinetic.Layer();
+        var layer1 = new Konva.Layer();
+        var layer2 = new Konva.Layer();
 
-        layer1.add(new Kinetic.Rect({
+        layer1.add(new Konva.Rect({
             x: 10,
             y: 10,
             width: 25,
             height: 15,
             fill: 'red'
         }));
-        layer2.add(new Kinetic.Rect({
+        layer2.add(new Konva.Rect({
             x: 50,
             y: 50,
             width: 15,
@@ -2033,7 +2060,7 @@ suite('Node', function() {
             callback: function(url) {
                 var imageObj = new Image();
                 imageObj.onload = function() {
-                    layer2.add(new Kinetic.Image({
+                    layer2.add(new Konva.Image({
                         x: 200,
                         y: 10,
                         image: imageObj
@@ -2049,9 +2076,9 @@ suite('Node', function() {
     // ======================================================
     test('serialize stage', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -2075,9 +2102,9 @@ suite('Node', function() {
     // ======================================================
     test('serialize shape', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -2103,7 +2130,7 @@ suite('Node', function() {
     test('load stage using json', function() {
         var container = addContainer();
         var json = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true},"className":"Shape"}]}]}]}';
-        var stage = Kinetic.Node.create(json, container);
+        var stage = Konva.Node.create(json, container);
 
         assert.equal(stage.toJSON(), json);
     });
@@ -2111,8 +2138,8 @@ suite('Node', function() {
     // ======================================================
     test('serialize stage with custom shape', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
 
         var drawTriangle = function(context) {
             context.beginPath();
@@ -2122,7 +2149,7 @@ suite('Node', function() {
             context.closePath();
             context.fillStrokeShape(this);
         };
-        var triangle = new Kinetic.Shape({
+        var triangle = new Konva.Shape({
             drawFunc: drawTriangle,
             fill: "#00D2FF",
             stroke: "black",
@@ -2159,7 +2186,7 @@ suite('Node', function() {
         };
         var json = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"className":"Shape"}]}]}]}';
 
-        var stage = Kinetic.Node.create(json, container);
+        var stage = Konva.Node.create(json, container);
 
         stage.find('#myTriangle').each(function(node) {
             node.sceneFunc(drawTriangle);
@@ -2175,8 +2202,8 @@ suite('Node', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = addStage();
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 200,
                 y: 60,
                 image: imageObj,
@@ -2204,7 +2231,7 @@ suite('Node', function() {
         var container = addContainer();
         imageObj.onload = function() {
             var json = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"x":200,"y":60,"offsetX":50,"offsetY":150,"id":"darth"},"className":"Image"}]}]}';
-            var stage = Kinetic.Node.create(json, container);
+            var stage = Konva.Node.create(json, container);
 
             assert.equal(stage.toJSON(), json);
             stage.find('#darth').each(function(node) {
@@ -2220,8 +2247,8 @@ suite('Node', function() {
     // ======================================================
     test('remove shape', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -2248,8 +2275,8 @@ suite('Node', function() {
     // ======================================================
     test('destroy shape', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -2276,8 +2303,8 @@ suite('Node', function() {
     // ======================================================
     test('destroy shape without adding its parent to stage', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -2300,10 +2327,10 @@ suite('Node', function() {
     // ======================================================
     test('destroy layer with shape', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             name: 'myLayer'
         });
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -2332,10 +2359,10 @@ suite('Node', function() {
     // ======================================================
     test('destroy stage with layer and shape', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             name: 'myLayer'
         });
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -2359,14 +2386,14 @@ suite('Node', function() {
     // ======================================================
     test('destroy group with shape', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer({
+        var layer = new Konva.Layer({
             name: 'myLayer'
         });
-        var group = new Kinetic.Group({
+        var group = new Konva.Group({
             name: 'myGroup'
         });
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -2396,7 +2423,7 @@ suite('Node', function() {
     // ======================================================
     test('destroy layer with no shapes', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
         stage.add(layer);
         layer.destroy();
 
@@ -2406,8 +2433,8 @@ suite('Node', function() {
     // ======================================================
     test('destroy shape multiple times', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var shape1 = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var shape1 = new Konva.Circle({
             x: 150,
             y: 100,
             radius: 50,
@@ -2415,7 +2442,7 @@ suite('Node', function() {
             name: 'myCircle'
         });
 
-        var shape2 = new Kinetic.Circle({
+        var shape2 = new Konva.Circle({
             x: 250,
             y: 100,
             radius: 50,
@@ -2441,10 +2468,10 @@ suite('Node', function() {
     // ======================================================
     test('remove layer multiple times', function() {
         var stage = addStage();
-        var layer1 = new Kinetic.Layer();
-        var layer2 = new Kinetic.Layer();
+        var layer1 = new Konva.Layer();
+        var layer2 = new Konva.Layer();
 
-        var shape1 = new Kinetic.Circle({
+        var shape1 = new Konva.Circle({
             x: 150,
             y: 100,
             radius: 50,
@@ -2452,7 +2479,7 @@ suite('Node', function() {
             name: 'myCircle'
         });
 
-        var shape2 = new Kinetic.Circle({
+        var shape2 = new Konva.Circle({
             x: 250,
             y: 100,
             radius: 50,
@@ -2479,8 +2506,8 @@ suite('Node', function() {
     // ======================================================
     test('destroy shape by id or name', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -2490,7 +2517,7 @@ suite('Node', function() {
             id: 'myCircle2'
         });
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 300,
             y: 100,
             width: 100,
@@ -2508,33 +2535,33 @@ suite('Node', function() {
         layer.add(rect);
         stage.add(layer);
 
-        assert.equal(Kinetic.ids.myCircle2._id, circle._id);
-        assert.equal(Kinetic.names.myRect2[0]._id, rect._id);
-        assert.equal(Kinetic.shapes[circleColorKey]._id, circle._id);
-        assert.equal(Kinetic.shapes[rectColorKey]._id, rect._id);
+        assert.equal(Konva.ids.myCircle2._id, circle._id);
+        assert.equal(Konva.names.myRect2[0]._id, rect._id);
+        assert.equal(Konva.shapes[circleColorKey]._id, circle._id);
+        assert.equal(Konva.shapes[rectColorKey]._id, rect._id);
 
         circle.destroy();
 
-        assert.equal(Kinetic.ids.myCircle2, undefined);
-        assert.equal(Kinetic.names.myRect2[0]._id, rect._id);
-        assert.equal(Kinetic.shapes[circleColorKey], undefined);
-        assert.equal(Kinetic.shapes[rectColorKey]._id, rect._id);
+        assert.equal(Konva.ids.myCircle2, undefined);
+        assert.equal(Konva.names.myRect2[0]._id, rect._id);
+        assert.equal(Konva.shapes[circleColorKey], undefined);
+        assert.equal(Konva.shapes[rectColorKey]._id, rect._id);
 
         rect.destroy();
 
-        assert.equal(Kinetic.ids.myCircle2, undefined);
-        assert.equal(Kinetic.names.myRect2, undefined);
-        assert.equal(Kinetic.shapes[circleColorKey], undefined);
-        assert.equal(Kinetic.shapes[rectColorKey], undefined);
+        assert.equal(Konva.ids.myCircle2, undefined);
+        assert.equal(Konva.names.myRect2, undefined);
+        assert.equal(Konva.shapes[circleColorKey], undefined);
+        assert.equal(Konva.shapes[rectColorKey], undefined);
     });
 
     // ======================================================
     test('hide stage', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var group = new Kinetic.Group();
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 200,
             y: 100,
             width: 100,
@@ -2565,9 +2592,9 @@ suite('Node', function() {
   test('listening, & shouldDrawHit', function(){
     var stage = addStage();
 
-    var layer = new Kinetic.Layer();
+    var layer = new Konva.Layer();
 
-    var rect = new Kinetic.Rect({
+    var rect = new Konva.Rect({
       x: 100,
       y: 50,
       width: 100,
@@ -2597,17 +2624,17 @@ suite('Node', function() {
   test('group, listening, & shouldDrawHit', function(){
     var stage = addStage();
 
-    var layer = new Kinetic.Layer({
+    var layer = new Konva.Layer({
         listening : false
     });
     stage.add(layer);
 
-    var group = new Kinetic.Group({
+    var group = new Konva.Group({
         listening : false
     });
     layer.add(group);
 
-    var rect = new Kinetic.Rect({
+    var rect = new Konva.Rect({
       x: 100,
       y: 50,
       width: 100,
@@ -2649,7 +2676,7 @@ suite('Node', function() {
         clientX: 150,
         clientY: 75 + top
     });
-    Kinetic.DD._endDragBefore();
+    Konva.DD._endDragBefore();
     stage._mouseup({
         clientX: 150,
         clientY: 75 + top
@@ -2663,9 +2690,9 @@ suite('Node', function() {
     // ======================================================
   test('isVisible', function(){
     var stage = addStage();
-    var layer = new Kinetic.Layer();
-    var group = new Kinetic.Group();
-    var circle = new Kinetic.Circle({
+    var layer = new Konva.Layer();
+    var group = new Konva.Group();
+    var circle = new Konva.Circle({
         x: 100,
         y: 100,
         radius: 70,
@@ -2729,9 +2756,9 @@ suite('Node', function() {
 
   test('overloaders', function(){
     var stage = addStage();
-    var layer = new Kinetic.Layer();
-    var group = new Kinetic.Group();
-    var circle = new Kinetic.Circle({
+    var layer = new Konva.Layer();
+    var group = new Konva.Group();
+    var circle = new Konva.Circle({
         x: 100,
         y: 100,
         radius: 70,
@@ -2821,9 +2848,9 @@ suite('Node', function() {
 
   test('cache shape', function(){
     var stage = addStage();
-    var layer = new Kinetic.Layer();
-    var group = new Kinetic.Group();
-    var circle = new Kinetic.Circle({
+    var layer = new Konva.Layer();
+    var group = new Konva.Group();
+    var circle = new Konva.Circle({
         x: 74,
         y: 74,
         radius: 70,
@@ -2868,12 +2895,12 @@ suite('Node', function() {
 
   test('cache shape before adding to layer', function(){
     var stage = addStage();
-    var layer = new Kinetic.Layer();
-    var group = new Kinetic.Group({
+    var layer = new Konva.Layer();
+    var group = new Konva.Group({
         x : 0,
         y : 0
     });
-    var rect = new Kinetic.Rect({
+    var rect = new Konva.Rect({
         x: 35,
         y: 35,
         width: 50,
@@ -2922,12 +2949,12 @@ suite('Node', function() {
 
   test('cache shape inside transformed group', function(){
     var stage = addStage();
-    var layer = new Kinetic.Layer();
-    var group = new Kinetic.Group({
+    var layer = new Konva.Layer();
+    var group = new Konva.Group({
         x: 50,
         y: 50
     });
-    var circle = new Kinetic.Circle({
+    var circle = new Konva.Circle({
         x: 74,
         y: 74,
         radius: 70,
@@ -2971,9 +2998,9 @@ suite('Node', function() {
 
   test('cache shape thats larger than stage', function(){
     var stage = addStage();
-    var layer = new Kinetic.Layer();
-    var group = new Kinetic.Group();
-    var circle = new Kinetic.Circle({
+    var layer = new Konva.Layer();
+    var group = new Konva.Group();
+    var circle = new Konva.Circle({
         x: 74,
         y: 74,
         radius: 300,
@@ -3006,9 +3033,9 @@ suite('Node', function() {
 
   test('show cache border', function(){
     var stage = addStage();
-    var layer = new Kinetic.Layer();
-    var group = new Kinetic.Group();
-    var circle = new Kinetic.Circle({
+    var layer = new Konva.Layer();
+    var group = new Konva.Group();
+    var circle = new Konva.Circle({
         x: 200,
         y: 74,
         radius: 70,
@@ -3053,13 +3080,13 @@ suite('Node', function() {
 
   test('cache group', function(){
     var stage = addStage();
-    var layer = new Kinetic.Layer();
-    var group = new Kinetic.Group({
+    var layer = new Konva.Layer();
+    var group = new Konva.Group({
         x: 100,
         y: 100,
         draggable: true
     });
-    var top = new Kinetic.Circle({
+    var top = new Konva.Circle({
         x: 0,
         y: -70,
         radius: 30,
@@ -3067,7 +3094,7 @@ suite('Node', function() {
         stroke: 'black',
         strokeWidth: 4
     });
-    var right = new Kinetic.Circle({
+    var right = new Konva.Circle({
         x: 70,
         y: 0,
         radius: 30,
@@ -3075,7 +3102,7 @@ suite('Node', function() {
         stroke: 'black',
         strokeWidth: 4
     });
-    var bottom = new Kinetic.Circle({
+    var bottom = new Konva.Circle({
         x: 0,
         y: 70,
         radius: 30,
@@ -3083,7 +3110,7 @@ suite('Node', function() {
         stroke: 'black',
         strokeWidth: 4
     });
-    var left = new Kinetic.Circle({
+    var left = new Konva.Circle({
         x: -70,
         y: 0,
         radius: 30,
@@ -3125,8 +3152,8 @@ suite('Node', function() {
 
   test('cache transformed group', function(){
     var stage = addStage();
-    var layer = new Kinetic.Layer();
-    var group = new Kinetic.Group({
+    var layer = new Konva.Layer();
+    var group = new Konva.Group({
         x: 100,
         y: 100,
         draggable: true,
@@ -3134,7 +3161,7 @@ suite('Node', function() {
         scaleX: 2,
         scaleY: 2
     });
-    var top = new Kinetic.Circle({
+    var top = new Konva.Circle({
         x: 0,
         y: -70,
         radius: 50,
@@ -3142,7 +3169,7 @@ suite('Node', function() {
         stroke: 'black',
         strokeWidth: 4
     });
-    var right = new Kinetic.Circle({
+    var right = new Konva.Circle({
         x: 70,
         y: 0,
         radius: 30,
@@ -3150,7 +3177,7 @@ suite('Node', function() {
         stroke: 'black',
         strokeWidth: 4
     });
-    var bottom = new Kinetic.Circle({
+    var bottom = new Konva.Circle({
         x: 0,
         y: 70,
         radius: 30,
@@ -3158,7 +3185,7 @@ suite('Node', function() {
         stroke: 'black',
         strokeWidth: 4
     });
-    var left = new Kinetic.Circle({
+    var left = new Konva.Circle({
         x: -70,
         y: 0,
         radius: 30,
@@ -3201,13 +3228,13 @@ suite('Node', function() {
 
   test('cache layer', function(){
     var stage = addStage();
-    var layer = new Kinetic.Layer({
+    var layer = new Konva.Layer({
         x: 100,
         y: 100,
         draggable: true
     });
-    var group = new Kinetic.Group();
-    var top = new Kinetic.Circle({
+    var group = new Konva.Group();
+    var top = new Konva.Circle({
         x: 0,
         y: -70,
         radius: 30,
@@ -3215,7 +3242,7 @@ suite('Node', function() {
         stroke: 'black',
         strokeWidth: 4
     });
-    var right = new Kinetic.Circle({
+    var right = new Konva.Circle({
         x: 70,
         y: 0,
         radius: 30,
@@ -3223,7 +3250,7 @@ suite('Node', function() {
         stroke: 'black',
         strokeWidth: 4
     });
-    var bottom = new Kinetic.Circle({
+    var bottom = new Konva.Circle({
         x: 0,
         y: 70,
         radius: 30,
@@ -3231,7 +3258,7 @@ suite('Node', function() {
         stroke: 'black',
         strokeWidth: 4
     });
-    var left = new Kinetic.Circle({
+    var left = new Konva.Circle({
         x: -70,
         y: 0,
         radius: 30,
@@ -3274,8 +3301,8 @@ suite('Node', function() {
       imageObj.onload = function() {
           var stage = addStage();
 
-          var layer = new Kinetic.Layer();
-          darth = new Kinetic.Image({
+          var layer = new Konva.Layer();
+          darth = new Konva.Image({
               x: 200,
               y: 60,
               image: imageObj,

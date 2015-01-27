@@ -2,15 +2,15 @@
     /**
      * RegularPolygon constructor.&nbsp; Examples include triangles, squares, pentagons, hexagons, etc.
      * @constructor
-     * @memberof Kinetic
-     * @augments Kinetic.Shape
+     * @memberof Konva
+     * @augments Konva.Shape
      * @param {Object} config
      * @param {Number} config.sides
      * @param {Number} config.radius
      * @@shapeParams
      * @@nodeParams
      * @example
-     * var hexagon = new Kinetic.RegularPolygon({
+     * var hexagon = new Konva.RegularPolygon({
      *   x: 100,
      *   y: 200,
      *   sides: 6,
@@ -20,14 +20,14 @@
      *   strokeWidth: 4
      * });
      */
-    Kinetic.RegularPolygon = function(config) {
+    Konva.RegularPolygon = function(config) {
         this.___init(config);
     };
 
-    Kinetic.RegularPolygon.prototype = {
+    Konva.RegularPolygon.prototype = {
         ___init: function(config) {
             // call super constructor
-            Kinetic.Shape.call(this, config);
+            Konva.Shape.call(this, config);
             this.className = 'RegularPolygon';
             this.sceneFunc(this._sceneFunc);
         },
@@ -48,16 +48,16 @@
             context.fillStrokeShape(this);
         }
     };
-    Kinetic.Util.extend(Kinetic.RegularPolygon, Kinetic.Shape);
+    Konva.Util.extend(Konva.RegularPolygon, Konva.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.RegularPolygon, 'radius', 0);
+    Konva.Factory.addGetterSetter(Konva.RegularPolygon, 'radius', 0);
 
     /**
      * set radius
      * @name setRadius
      * @method
-     * @memberof Kinetic.RegularPolygon.prototype
+     * @memberof Konva.RegularPolygon.prototype
      * @param {Number} radius
      */
 
@@ -65,16 +65,16 @@
      * get radius
      * @name getRadius
      * @method
-     * @memberof Kinetic.RegularPolygon.prototype
+     * @memberof Konva.RegularPolygon.prototype
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.RegularPolygon, 'sides', 0);
+    Konva.Factory.addGetterSetter(Konva.RegularPolygon, 'sides', 0);
 
     /**
      * set number of sides
      * @name setSides
      * @method
-     * @memberof Kinetic.RegularPolygon.prototype
+     * @memberof Konva.RegularPolygon.prototype
      * @param {int} sides
      */
 
@@ -82,8 +82,8 @@
      * get number of sides
      * @name getSides
      * @method
-     * @memberof Kinetic.RegularPolygon.prototype
+     * @memberof Konva.RegularPolygon.prototype
      */
 
-    Kinetic.Collection.mapMethods(Kinetic.RegularPolygon);
+    Konva.Collection.mapMethods(Konva.RegularPolygon);
 })();

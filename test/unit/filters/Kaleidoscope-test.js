@@ -6,8 +6,8 @@ suite('Kaleidoscope', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -18,7 +18,7 @@ suite('Kaleidoscope', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Kaleidoscope]);
+            darth.filters([Konva.Filters.Kaleidoscope]);
             darth.kaleidoscopePower(2);
 
             assert.equal(darth.kaleidoscopePower(), 2);
@@ -50,8 +50,8 @@ suite('Kaleidoscope', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -62,16 +62,16 @@ suite('Kaleidoscope', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Kaleidoscope]);
+            darth.filters([Konva.Filters.Kaleidoscope]);
             darth.kaleidoscopePower(3);
             darth.kaleidoscopeAngle(0);
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: darth, 
               duration: 10.0,
               kaleidoscopeAngle: 720,
-              easing: Kinetic.Easings.EaseInOut
+              easing: Konva.Easings.EaseInOut
             });
         
             darth.on('mouseover', function() {
@@ -95,8 +95,8 @@ suite('Kaleidoscope', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -107,16 +107,16 @@ suite('Kaleidoscope', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Kaleidoscope]);
+            darth.filters([Konva.Filters.Kaleidoscope]);
             darth.kaleidoscopePower(0);
             darth.kaleidoscopeAngle(0);
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: darth, 
               duration: 2.0,
               kaleidoscopePower: 8,
-              easing: Kinetic.EasingsEaseInOut
+              easing: Konva.EasingsEaseInOut
             });
         
             darth.on('mouseover', function() {

@@ -14,7 +14,7 @@
   <body>
     <div id="container"></div>
 
-    <script src="../../dist/kinetic-dev.js"></script>
+    <script src="../../dist/konva-dev.js"></script>
     <script src="../lib/stats.js"></script>
     <script src="../setStats.js"></script>
 
@@ -22,14 +22,14 @@
 
 
 
-      var stage = new Kinetic.Stage({
+      var stage = new Konva.Stage({
         container: 'container',
         width: 500,
         height: 500
       });
-      var layer = new Kinetic.Layer();
+      var layer = new Konva.Layer();
 
-      var star = new Kinetic.Star({
+      var star = new Konva.Star({
           x: 250,
           y: 250,
           innerRadius: 100,
@@ -45,7 +45,7 @@
       layer.add(star);
       stage.add(layer);
 
-      var anim = new Kinetic.Animation(function() {
+      var anim = new Konva.Animation(function() {
         stats.begin();
         star.rotate(0.1);
       }, layer);

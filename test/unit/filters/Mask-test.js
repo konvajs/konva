@@ -7,16 +7,16 @@ suite('Mask', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
 
-            var layer = new Kinetic.Layer({
+            var layer = new Konva.Layer({
                 throttle: 999
             });
-            var bamoon = new Kinetic.Image({
+            var bamoon = new Konva.Image({
                 x: 0,
                 y: 0,
                 image: imageObj,
                 draggable: true
             }),
-            filtered = new Kinetic.Image({
+            filtered = new Konva.Image({
                 x: 300,
                 y: 0,
                 image: imageObj,
@@ -28,7 +28,7 @@ suite('Mask', function() {
             stage.add(layer);
 
             filtered.cache();
-            filtered.filters([Kinetic.Filters.Mask]);
+            filtered.filters([Konva.Filters.Mask]);
             filtered.threshold(10);
 
             layer.draw();

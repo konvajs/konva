@@ -4,15 +4,15 @@
      * Noise Filter. Randomly adds or substracts to the color channels
      * @function
      * @name Noise
-     * @memberof Kinetic.Filters
+     * @memberof Konva.Filters
      * @param {Object} imageData
      * @author ippo615
      * @example
      * node.cache();
-     * node.filters([Kinetic.Filters.Noise]);
+     * node.filters([Konva.Filters.Noise]);
      * node.noise(0.8);
      */
-    Kinetic.Filters.Noise = function (imageData) {
+    Konva.Filters.Noise = function (imageData) {
         var amount = this.noise() * 255,
             data = imageData.data,
             nPixels = data.length,
@@ -26,13 +26,13 @@
         }
     };
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'noise', 0.2, null, Kinetic.Factory.afterSetFilter);
+    Konva.Factory.addGetterSetter(Konva.Node, 'noise', 0.2, null, Konva.Factory.afterSetFilter);
 
     /**
-    * get/set noise amount.  Must be a value between 0 and 1. Use with {@link Kinetic.Filters.Noise} filter.
+    * get/set noise amount.  Must be a value between 0 and 1. Use with {@link Konva.Filters.Noise} filter.
     * @name noise
     * @method
-    * @memberof Kinetic.Node.prototype
+    * @memberof Konva.Node.prototype
     * @param {Number} noise
     * @returns {Number}
     */

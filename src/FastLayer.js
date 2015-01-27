@@ -1,16 +1,16 @@
 (function() {
 
-    Kinetic.Util.addMethods(Kinetic.FastLayer, {
+    Konva.Util.addMethods(Konva.FastLayer, {
         ____init: function(config) {
             this.nodeType = 'Layer';
-            this.canvas = new Kinetic.SceneCanvas();
+            this.canvas = new Konva.SceneCanvas();
             // call super constructor
-            Kinetic.BaseLayer.call(this, config);
+            Konva.BaseLayer.call(this, config);
         },
         _validateAdd: function(child) {
             var type = child.getType();
             if (type !== 'Shape') {
-                Kinetic.Util.error('You may only add shapes to a fast layer.');
+                Konva.Util.error('You may only add shapes to a fast layer.');
             }
         },
         _setCanvasSize: function(width, height) {
@@ -30,7 +30,7 @@
                 canvas.getContext().clear();
             }
             
-            Kinetic.Container.prototype.drawScene.call(this, canvas);
+            Konva.Container.prototype.drawScene.call(this, canvas);
 
             return this;
         },
@@ -50,7 +50,7 @@
         /**
          * clear scene and hit canvas contexts tied to the layer
          * @method
-         * @memberof Kinetic.FastLayer.prototype
+         * @memberof Konva.FastLayer.prototype
          * @param {Object} [bounds]
          * @param {Number} [bounds.x]
          * @param {Number} [bounds.y]
@@ -71,7 +71,7 @@
         },
         // extend Node.prototype.setVisible
         setVisible: function(visible) {
-            Kinetic.Node.prototype.setVisible.call(this, visible);
+            Konva.Node.prototype.setVisible.call(this, visible);
             if(visible) {
                 this.getCanvas()._canvas.style.display = 'block';
             }
@@ -81,7 +81,7 @@
             return this;
         }
     });
-    Kinetic.Util.extend(Kinetic.FastLayer, Kinetic.BaseLayer);
+    Konva.Util.extend(Konva.FastLayer, Konva.BaseLayer);
 
-    Kinetic.Collection.mapMethods(Kinetic.FastLayer);
+    Konva.Collection.mapMethods(Konva.FastLayer);
 })();

@@ -6,8 +6,8 @@ suite('Brighten', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -18,7 +18,7 @@ suite('Brighten', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Brighten]);
+            darth.filters([Konva.Filters.Brighten]);
             darth.brightness(0.3);
             layer.draw();
 
@@ -37,8 +37,8 @@ suite('Brighten', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -49,15 +49,15 @@ suite('Brighten', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Brighten]);
+            darth.filters([Konva.Filters.Brighten]);
             darth.brightness(0.3);
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: darth, 
               duration: 2.0,
               brightness: 0,
-              easing: Kinetic.Easings.EaseInOut
+              easing: Konva.Easings.EaseInOut
             });
         
             darth.on('mouseover', function() {
@@ -81,8 +81,8 @@ suite('Brighten', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -94,7 +94,7 @@ suite('Brighten', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Brighten]);
+            darth.filters([Konva.Filters.Brighten]);
             darth.brightness(-0.3);
             layer.draw();
 
@@ -113,8 +113,8 @@ suite('Brighten', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -125,15 +125,15 @@ suite('Brighten', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.Brighten]);
+            darth.filters([Konva.Filters.Brighten]);
             darth.brightness(0.3);
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: darth, 
               duration: 2.0,
               brightness: -0.3,
-              easing: Kinetic.Easings.EaseInOut
+              easing: Konva.Easings.EaseInOut
             });
         
             darth.on('mouseover', function() {

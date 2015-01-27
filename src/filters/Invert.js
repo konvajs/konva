@@ -2,13 +2,13 @@
     /**
     * Invert Filter
     * @function
-    * @memberof Kinetic.Filters
+    * @memberof Konva.Filters
     * @param {Object} imageData
     * @example
     * node.cache();
-    * node.filters([Kinetic.Filters.Invert]);
+    * node.filters([Konva.Filters.Invert]);
     */
-    Kinetic.Filters.Invert = function(imageData) {
+    Konva.Filters.Invert = function(imageData) {
         var data = imageData.data,
             len = data.length,
             i;

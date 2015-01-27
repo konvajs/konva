@@ -16,16 +16,16 @@
     /**
      * Tween constructor.  Tweens enable you to animate a node between the current state and a new state.
      *  You can play, pause, reverse, seek, reset, and finish tweens.  By default, tweens are animated using
-     *  a linear easing.  For more tweening options, check out {@link Kinetic.Easings}
+     *  a linear easing.  For more tweening options, check out {@link Konva.Easings}
      * @constructor
-     * @memberof Kinetic
+     * @memberof Konva
      * @example
      * // instantiate new tween which fully rotates a node in 1 second
-     * var tween = new Kinetic.Tween({
+     * var tween = new Konva.Tween({
      *   node: node,
      *   rotationDeg: 360,
      *   duration: 1,
-     *   easing: Kinetic.Easings.EaseInOut
+     *   easing: Konva.Easings.EaseInOut
      * });
      *
      * // play tween
@@ -34,12 +34,12 @@
      * // pause tween
      * tween.pause();
      */
-    Kinetic.Tween = function(config) {
+    Konva.Tween = function(config) {
         var that = this,
             node = config.node,
             nodeId = node._id,
             duration,
-            easing = config.easing || Kinetic.Easings.Linear,
+            easing = config.easing || Konva.Easings.Linear,
             yoyo = !!config.yoyo,
             key;
 
@@ -53,9 +53,9 @@
         this.node = node;
         this._id = idCounter++;
 
-        this.anim = new Kinetic.Animation(function() {
+        this.anim = new Konva.Animation(function() {
             that.tween.onEnterFrame();
-        }, node.getLayer() || ((node instanceof Kinetic.Stage) ? node.getLayers() : null));
+        }, node.getLayer() || ((node instanceof Konva.Stage) ? node.getLayers() : null));
 
         this.tween = new Tween(key, function(i) {
             that._tweenFunc(i);
@@ -64,15 +64,15 @@
         this._addListeners();
 
         // init attrs map
-        if (!Kinetic.Tween.attrs[nodeId]) {
-            Kinetic.Tween.attrs[nodeId] = {};
+        if (!Konva.Tween.attrs[nodeId]) {
+            Konva.Tween.attrs[nodeId] = {};
         }
-        if (!Kinetic.Tween.attrs[nodeId][this._id]) {
-            Kinetic.Tween.attrs[nodeId][this._id] = {};
+        if (!Konva.Tween.attrs[nodeId][this._id]) {
+            Konva.Tween.attrs[nodeId][this._id] = {};
         }
         // init tweens map
-        if (!Kinetic.Tween.tweens[nodeId]) {
-            Kinetic.Tween.tweens[nodeId] = {};
+        if (!Konva.Tween.tweens[nodeId]) {
+            Konva.Tween.tweens[nodeId] = {};
         }
 
         for (key in config) {
@@ -89,27 +89,27 @@
     };
 
     // start/diff object = attrs.nodeId.tweenId.attr
-    Kinetic.Tween.attrs = {};
+    Konva.Tween.attrs = {};
     // tweenId = tweens.nodeId.attr
-    Kinetic.Tween.tweens = {};
+    Konva.Tween.tweens = {};
 
-    Kinetic.Tween.prototype = {
+    Konva.Tween.prototype = {
         _addAttr: function(key, end) {
             var node = this.node,
                 nodeId = node._id,
                 start, diff, tweenId, n, len;
 
             // remove conflict from tween map if it exists
-            tweenId = Kinetic.Tween.tweens[nodeId][key];
+            tweenId = Konva.Tween.tweens[nodeId][key];
 
             if (tweenId) {
-                delete Kinetic.Tween.attrs[nodeId][tweenId][key];
+                delete Konva.Tween.attrs[nodeId][tweenId][key];
             }
 
             // add to tween map
             start = node.getAttr(key);
 
-            if (Kinetic.Util._isArray(end)) {
+            if (Konva.Util._isArray(end)) {
                 diff = [];
                 len = end.length;
                 for (n=0; n<len; n++) {
@@ -121,15 +121,15 @@
                 diff = end - start;
             }
 
-            Kinetic.Tween.attrs[nodeId][this._id][key] = {
+            Konva.Tween.attrs[nodeId][this._id][key] = {
                 start: start,
                 diff: diff
             };
-            Kinetic.Tween.tweens[nodeId][key] = this._id;
+            Konva.Tween.tweens[nodeId][key] = this._id;
         },
         _tweenFunc: function(i) {
             var node = this.node,
-                attrs = Kinetic.Tween.attrs[node._id][this._id],
+                attrs = Konva.Tween.attrs[node._id][this._id],
                 key, attr, start, diff, newVal, n, len;
 
             for (key in attrs) {
@@ -137,7 +137,7 @@
                 start = attr.start;
                 diff = attr.diff;
 
-                if (Kinetic.Util._isArray(start)) {
+                if (Konva.Util._isArray(start)) {
                     newVal = [];
                     len = start.length;
                     for (n=0; n<len; n++) {
@@ -180,7 +180,7 @@
         /**
          * play
          * @method
-         * @memberof Kinetic.Tween.prototype
+         * @memberof Konva.Tween.prototype
          * @returns {Tween}
          */
         play: function() {
@@ -190,7 +190,7 @@
         /**
          * reverse
          * @method
-         * @memberof Kinetic.Tween.prototype
+         * @memberof Konva.Tween.prototype
          * @returns {Tween}
          */
         reverse: function() {
@@ -200,7 +200,7 @@
         /**
          * reset
          * @method
-         * @memberof Kinetic.Tween.prototype
+         * @memberof Konva.Tween.prototype
          * @returns {Tween}
          */
         reset: function() {
@@ -210,7 +210,7 @@
         /**
          * seek
          * @method
-         * @memberof Kinetic.Tween.prototype
+         * @memberof Konva.Tween.prototype
          * @param {Integer} t time in seconds between 0 and the duration
          * @returns {Tween}
          */
@@ -221,7 +221,7 @@
         /**
          * pause
          * @method
-         * @memberof Kinetic.Tween.prototype
+         * @memberof Konva.Tween.prototype
          * @returns {Tween}
          */
         pause: function() {
@@ -231,7 +231,7 @@
         /**
          * finish
          * @method
-         * @memberof Kinetic.Tween.prototype
+         * @memberof Konva.Tween.prototype
          * @returns {Tween}
          */
         finish: function() {
@@ -241,21 +241,21 @@
         /**
          * destroy
          * @method
-         * @memberof Kinetic.Tween.prototype
+         * @memberof Konva.Tween.prototype
          */
         destroy: function() {
             var nodeId = this.node._id,
                 thisId = this._id,
-                attrs = Kinetic.Tween.tweens[nodeId],
+                attrs = Konva.Tween.tweens[nodeId],
                 key;
 
             this.pause();
 
             for (key in attrs) {
-                delete Kinetic.Tween.tweens[nodeId][key];
+                delete Konva.Tween.tweens[nodeId][key];
             }
 
-            delete Kinetic.Tween.attrs[nodeId][thisId];
+            delete Konva.Tween.attrs[nodeId][thisId];
         }
     };
 
@@ -383,13 +383,13 @@
 
     /**
      * @namespace Easings
-     * @memberof Kinetic
+     * @memberof Konva
      */
-    Kinetic.Easings = {
+    Konva.Easings = {
         /**
         * back ease in
         * @function
-        * @memberof Kinetic.Easings
+        * @memberof Konva.Easings
         */
         'BackEaseIn': function(t, b, c, d) {
             var s = 1.70158;
@@ -398,7 +398,7 @@
         /**
         * back ease out
         * @function
-        * @memberof Kinetic.Easings
+        * @memberof Konva.Easings
         */
         'BackEaseOut': function(t, b, c, d) {
             var s = 1.70158;
@@ -407,7 +407,7 @@
         /**
         * back ease in out
         * @function
-        * @memberof Kinetic.Easings
+        * @memberof Konva.Easings
         */
         'BackEaseInOut': function(t, b, c, d) {
             var s = 1.70158;
@@ -419,7 +419,7 @@
         /**
         * elastic ease in
         * @function
-        * @memberof Kinetic.Easings
+        * @memberof Konva.Easings
         */
         'ElasticEaseIn': function(t, b, c, d, a, p) {
             // added s = 0
@@ -445,7 +445,7 @@
         /**
         * elastic ease out
         * @function
-        * @memberof Kinetic.Easings
+        * @memberof Konva.Easings
         */
         'ElasticEaseOut': function(t, b, c, d, a, p) {
             // added s = 0
@@ -471,7 +471,7 @@
         /**
         * elastic ease in out
         * @function
-        * @memberof Kinetic.Easings
+        * @memberof Konva.Easings
         */
         'ElasticEaseInOut': function(t, b, c, d, a, p) {
             // added s = 0
@@ -500,7 +500,7 @@
         /**
         * bounce ease out
         * @function
-        * @memberof Kinetic.Easings
+        * @memberof Konva.Easings
         */
         'BounceEaseOut': function(t, b, c, d) {
             if((t /= d) < (1 / 2.75)) {
@@ -519,28 +519,28 @@
         /**
         * bounce ease in
         * @function
-        * @memberof Kinetic.Easings
+        * @memberof Konva.Easings
         */
         'BounceEaseIn': function(t, b, c, d) {
-            return c - Kinetic.Easings.BounceEaseOut(d - t, 0, c, d) + b;
+            return c - Konva.Easings.BounceEaseOut(d - t, 0, c, d) + b;
         },
         /**
         * bounce ease in out
         * @function
-        * @memberof Kinetic.Easings
+        * @memberof Konva.Easings
         */
         'BounceEaseInOut': function(t, b, c, d) {
             if(t < d / 2) {
-                return Kinetic.Easings.BounceEaseIn(t * 2, 0, c, d) * 0.5 + b;
+                return Konva.Easings.BounceEaseIn(t * 2, 0, c, d) * 0.5 + b;
             }
             else {
-                return Kinetic.Easings.BounceEaseOut(t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b;
+                return Konva.Easings.BounceEaseOut(t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b;
             }
         },
         /**
         * ease in
         * @function
-        * @memberof Kinetic.Easings
+        * @memberof Konva.Easings
         */
         'EaseIn': function(t, b, c, d) {
             return c * (t /= d) * t + b;
@@ -548,7 +548,7 @@
         /**
         * ease out
         * @function
-        * @memberof Kinetic.Easings
+        * @memberof Konva.Easings
         */
         'EaseOut': function(t, b, c, d) {
             return -c * (t /= d) * (t - 2) + b;
@@ -556,7 +556,7 @@
         /**
         * ease in out
         * @function
-        * @memberof Kinetic.Easings
+        * @memberof Konva.Easings
         */
         'EaseInOut': function(t, b, c, d) {
             if((t /= d / 2) < 1) {
@@ -567,7 +567,7 @@
         /**
         * strong ease in
         * @function
-        * @memberof Kinetic.Easings
+        * @memberof Konva.Easings
         */
         'StrongEaseIn': function(t, b, c, d) {
             return c * (t /= d) * t * t * t * t + b;
@@ -575,7 +575,7 @@
         /**
         * strong ease out
         * @function
-        * @memberof Kinetic.Easings
+        * @memberof Konva.Easings
         */
         'StrongEaseOut': function(t, b, c, d) {
             return c * (( t = t / d - 1) * t * t * t * t + 1) + b;
@@ -583,7 +583,7 @@
         /**
         * strong ease in out
         * @function
-        * @memberof Kinetic.Easings
+        * @memberof Konva.Easings
         */
         'StrongEaseInOut': function(t, b, c, d) {
             if((t /= d / 2) < 1) {
@@ -594,7 +594,7 @@
         /**
         * linear
         * @function
-        * @memberof Kinetic.Easings
+        * @memberof Konva.Easings
         */
         'Linear': function(t, b, c, d) {
             return c * t / d + b;

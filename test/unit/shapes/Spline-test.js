@@ -2,9 +2,9 @@ suite('Spline', function() {
     // ======================================================
     test('add splines', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var line1 = new Kinetic.Line({
+        var line1 = new Konva.Line({
             points: [73,160,340,23,500,109,300,109],
             stroke: 'blue',
             strokeWidth: 10,
@@ -14,7 +14,7 @@ suite('Spline', function() {
             tension: 1
         });
 
-        var line2 = new Kinetic.Line({
+        var line2 = new Konva.Line({
             points: [73,160,340,23,500,109],
             stroke: 'red',
             strokeWidth: 10,
@@ -24,7 +24,7 @@ suite('Spline', function() {
             tension: 1
         });
 
-        var line3 = new Kinetic.Line({
+        var line3 = new Konva.Line({
             points: [73,160,340,23],
             stroke: 'green',
             strokeWidth: 10,
@@ -50,9 +50,9 @@ suite('Spline', function() {
     // ======================================================
     test('update spline points', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var spline = new Kinetic.Line({
+        var spline = new Konva.Line({
             points: [73,160,340,23,500,109,300,109],
             stroke: 'blue',
             strokeWidth: 10,
@@ -80,9 +80,9 @@ suite('Spline', function() {
     // ======================================================
     test('add point to spline points', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var spline = new Kinetic.Line({
+        var spline = new Konva.Line({
             points: [73,160,340,23,500,109,300,109],
             stroke: 'blue',
             strokeWidth: 10,

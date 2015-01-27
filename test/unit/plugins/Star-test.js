@@ -3,9 +3,9 @@ suite('Star', function() {
     test('add five point star', function() {
         var stage = addStage();
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var star = new Kinetic.Star({
+        var star = new Konva.Star({
             x: 200,
             y: 100,
             numPoints: 5,
@@ -34,9 +34,9 @@ suite('Star', function() {
     // ======================================================
     test('add star with line join and shadow', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 250,
             y: 75,
             width: 100,
@@ -44,7 +44,7 @@ suite('Star', function() {
             fill: 'red'
         });
 
-        var star = new Kinetic.Star({
+        var star = new Konva.Star({
             x: 200,
             y: 100,
             numPoints: 5,

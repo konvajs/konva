@@ -3,8 +3,8 @@ suite('Shape', function() {
     // ======================================================
     test('shape color components', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 200,
             y: 90,
             width: 100,
@@ -38,7 +38,7 @@ suite('Shape', function() {
         rect.fillGreen(128);
         rect.fillBlue(0);
 
-        // var tween = new Kinetic.Tween({
+        // var tween = new Konva.Tween({
         //     node: rect,
         //     fillGreen: 0,
         //     fillRed: 255,
@@ -58,8 +58,8 @@ suite('Shape', function() {
     // ======================================================
     test('test intersects()', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 200,
             y: 100,
             width: 100,
@@ -102,8 +102,8 @@ suite('Shape', function() {
     // ======================================================
     test('test hasShadow() method', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var shape = new Kinetic.Shape({
+        var layer = new Konva.Layer();
+        var shape = new Konva.Shape({
             drawFunc: function(context) {
 
                 context.beginPath();
@@ -140,8 +140,8 @@ suite('Shape', function() {
     // ======================================================
     test('custom shape with fill, stroke, and strokeWidth', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var shape = new Kinetic.Shape({
+        var layer = new Konva.Layer();
+        var shape = new Konva.Shape({
             drawFunc: function(context) {
                 context.beginPath();
                 context.moveTo(0, 0);
@@ -166,9 +166,9 @@ suite('Shape', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = addStage();
-            var layer = new Kinetic.Layer();
+            var layer = new Konva.Layer();
 
-            var star = new Kinetic.Star({
+            var star = new Konva.Star({
                 x: 200,
                 y: 100,
                 numPoints: 5,
@@ -192,7 +192,7 @@ suite('Shape', function() {
             stage.add(layer);
 
             /*
-             var anim = new Kinetic.Animation(function() {
+             var anim = new Konva.Animation(function() {
              star.attrs.fill.rotation += 0.02;
              }, layer);
              anim.start();
@@ -229,16 +229,16 @@ suite('Shape', function() {
     // ======================================================
     test('test size setters and getters', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 50,
             fill: 'red'
         });
 
-        var ellipse = new Kinetic.Circle({
+        var ellipse = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 50,
@@ -272,8 +272,8 @@ suite('Shape', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             var stage = addStage();
-            var layer = new Kinetic.Layer();
-            var circle = new Kinetic.Circle({
+            var layer = new Konva.Layer();
+            var circle = new Konva.Circle({
                 x: 200,
                 y: 60,
                 radius: 50,
@@ -315,8 +315,8 @@ suite('Shape', function() {
     // ======================================================
     test('test enablers and disablers', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -342,7 +342,7 @@ suite('Shape', function() {
         assert.equal(circle.getStrokeScaleEnabled(), false);
 
         layer.draw();
-        var trace = layer.getContext().getTrace();
+//        var trace = layer.getContext().getTrace();
 
         circle.fillEnabled(false);
         assert.equal(circle.getFillEnabled(), false, 'fillEnabled should be false');
@@ -377,9 +377,9 @@ suite('Shape', function() {
   test('fill with shadow and opacity', function(){
     var stage = addStage();
 
-    var layer = new Kinetic.Layer();
+    var layer = new Konva.Layer();
 
-    var rect = new Kinetic.Rect({
+    var rect = new Konva.Rect({
       x: 100,
       y: 50,
       width: 100,
@@ -409,9 +409,9 @@ suite('Shape', function() {
   test('stroke with shadow and opacity', function(){
     var stage = addStage();
 
-    var layer = new Kinetic.Layer();
+    var layer = new Konva.Layer();
 
-    var rect = new Kinetic.Rect({
+    var rect = new Konva.Rect({
       x: 100,
       y: 50,
       width: 100,
@@ -441,9 +441,9 @@ suite('Shape', function() {
     test('fill and stroke with opacity', function(){
         var stage = addStage();
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 100,
             y: 50,
             width: 100,
@@ -483,9 +483,9 @@ suite('Shape', function() {
     test('fill and stroke with shadow', function(){
         var stage = addStage();
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 100,
             y: 50,
             width: 100,
@@ -542,9 +542,9 @@ suite('Shape', function() {
         stage.bufferCanvas._canvas.style.position = 'relative';
 
         document.body.appendChild(stage.bufferCanvas._canvas);
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: 100,
             y: 50,
             width: 100,
@@ -619,9 +619,9 @@ suite('Shape', function() {
     test('shape intersect with shadow', function(){
         var stage = addStage();
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             fill: '#ff0000',
             x: 50,
             y: 50,
@@ -642,9 +642,9 @@ suite('Shape', function() {
   test('overloaded getters and setters', function(){
     var stage = addStage();
 
-    var layer = new Kinetic.Layer();
+    var layer = new Konva.Layer();
 
-    var rect = new Kinetic.Rect({
+    var rect = new Konva.Rect({
       x: 100,
       y: 50,
       width: 100,
@@ -699,11 +699,11 @@ suite('Shape', function() {
       var imageObj = new Image();
 
       var stage = addStage();
-      var layer = new Kinetic.Layer();
+      var layer = new Konva.Layer();
 
       imageObj.onload = function() {
 
-          var lion = new Kinetic.Image({
+          var lion = new Konva.Image({
               x: 200,
               y: 40,
               image: imageObj,
@@ -716,7 +716,7 @@ suite('Shape', function() {
 
           // override color key with black
           lion.colorKey = '#000000';
-          Kinetic.shapes['#000000'] = lion;
+          Konva.shapes['#000000'] = lion;
 
           layer.add(lion);
 
@@ -746,13 +746,13 @@ suite('Shape', function() {
   });
 
   test('back compat', function() {
-    assert.notEqual(Kinetic.Shape.prototype.dashArray, undefined);
-    assert.notEqual(Kinetic.Shape.prototype.setDashArray, undefined);
-    assert.notEqual(Kinetic.Shape.prototype.getDashArray, undefined);
+    assert.notEqual(Konva.Shape.prototype.dashArray, undefined);
+    assert.notEqual(Konva.Shape.prototype.setDashArray, undefined);
+    assert.notEqual(Konva.Shape.prototype.getDashArray, undefined);
   });
 
   test('test defaults', function() {
-    var shape = new Kinetic.Shape();
+    var shape = new Konva.Shape();
 
     assert.equal(shape.strokeRed(), 0);
     assert.equal(shape.strokeGreen(), 0);
@@ -795,8 +795,8 @@ suite('Shape', function() {
     // ======================================================
     test.skip('hit graph when shape cached before adding to Layer', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var rect = new Kinetic.Rect({
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
             x: 290,
             y: 111,
             width : 50,
@@ -823,22 +823,22 @@ suite('Shape', function() {
             clientY: 120 + top
         });
 
-        Kinetic.DD._endDragBefore();
+        Konva.DD._endDragBefore();
         stage._mouseup({
             clientX: 300,
             clientY: 120 + top
         });
-        Kinetic.DD._endDragAfter({dragEndNode:rect});
+        Konva.DD._endDragAfter({dragEndNode:rect});
 
         //TODO: can't get this to pass
         assert.equal(click, true, 'click event should have been fired when mousing down and then up on rect');
     });
 
     test('class inherince', function() {
-        var rect = new Kinetic.Rect();
-        assert.equal(rect instanceof Kinetic.Rect, true);
-        assert.equal(rect instanceof Kinetic.Shape, true);
-        assert.equal(rect instanceof Kinetic.Node, true);
+        var rect = new Konva.Rect();
+        assert.equal(rect instanceof Konva.Rect, true);
+        assert.equal(rect instanceof Konva.Shape, true);
+        assert.equal(rect instanceof Konva.Node, true);
 
     });
 });

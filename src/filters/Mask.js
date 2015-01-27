@@ -163,14 +163,14 @@
 	 * Mask Filter
 	 * @function
 	 * @name Mask
-	 * @memberof Kinetic.Filters
+	 * @memberof Konva.Filters
 	 * @param {Object} imageData
 	 * @example
      * node.cache();
-     * node.filters([Kinetic.Filters.Mask]);
+     * node.filters([Konva.Filters.Mask]);
      * node.threshold(0.1);
 	 */
-	Kinetic.Filters.Mask = function(imageData) {
+	Konva.Filters.Mask = function(imageData) {
 		// Detect pixels close to the background color
 		var threshold = this.threshold(),
         mask = backgroundMask(imageData, threshold);
@@ -193,5 +193,5 @@
 		return imageData;
 	};
 
-	Kinetic.Factory.addGetterSetter(Kinetic.Node, 'threshold', 0, null, Kinetic.Factory.afterSetFilter);
+	Konva.Factory.addGetterSetter(Konva.Node, 'threshold', 0, null, Konva.Factory.afterSetFilter);
 })();

@@ -4,10 +4,10 @@ suite('Text', function(){
     // ======================================================
     test('text with empty config is allowed', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
         stage.add(layer);
-        var text = new Kinetic.Text();
+        var text = new Konva.Text();
 
         layer.add(text);
         layer.draw();
@@ -15,9 +15,9 @@ suite('Text', function(){
 
     test('add text with shadows', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             stroke: '#555',
@@ -32,7 +32,7 @@ suite('Text', function(){
             cornerRadius: 10
         });
 
-        var text = new Kinetic.Text({
+        var text = new Konva.Text({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             text: 'Hello World!',
@@ -52,7 +52,7 @@ suite('Text', function(){
             shadowOpacity: 0.2
         });
 
-        var group = new Kinetic.Group({
+        var group = new Konva.Group({
             draggable: true
         });
 
@@ -71,9 +71,9 @@ suite('Text', function(){
     // ======================================================
     test('text getters and setters', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var text = new Kinetic.Text({
+        var text = new Konva.Text({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             text: 'Hello World!',
@@ -171,9 +171,9 @@ suite('Text', function(){
     // ======================================================
     test('text multi line', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
           x: 10,
           y: 10,
           width: 380,
@@ -181,7 +181,7 @@ suite('Text', function(){
           fill: 'red'
         });
 
-        var text = new Kinetic.Text({
+        var text = new Konva.Text({
             x: 10,
             y: 10,
             text: 'HEADING\n\nAll the world\'s a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.',
@@ -225,9 +225,9 @@ suite('Text', function(){
     // ======================================================
     test('text multi line with shadows', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var text = new Kinetic.Text({
+        var text = new Konva.Text({
             x: 10,
             y: 10,
             //stroke: '#555',
@@ -260,9 +260,9 @@ suite('Text', function(){
     // ======================================================
     test('change font size should update text data', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var text = new Kinetic.Text({
+        var text = new Konva.Text({
             x: 10,
             y: 10,
             text: 'Some awesome text',
@@ -294,9 +294,9 @@ suite('Text', function(){
     });
     test('get text width', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
         stage.add(layer);
-        var text = new Kinetic.Text({
+        var text = new Konva.Text({
             text : 'hello asd fasdf asdf asd fasdf asdfasd fa sds helloo',
             fill : 'black',
             width: 100
@@ -309,15 +309,15 @@ suite('Text', function(){
     });
 
     test('default text color should be black', function() {
-        var text = new Kinetic.Text();
+        var text = new Konva.Text();
         assert.equal(text.fill(), 'black');
     });
 
     test('text with stoke and strokeScaleEnabled', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var text = new Kinetic.Text({
+        var text = new Konva.Text({
             fontSize: 50,
             y : 50,
             x : 50,

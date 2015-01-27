@@ -3,8 +3,8 @@ suite('DragAndDrop', function() {
     // ======================================================
     test('test drag and drop properties and methods', function(done) {
             var stage = addStage();
-            var layer = new Kinetic.Layer();
-            var circle = new Kinetic.Circle({
+            var layer = new Konva.Layer();
+            var circle = new Konva.Circle({
                 x: stage.getWidth() / 2,
                 y: stage.getHeight() / 2,
                 radius: 70,
@@ -45,8 +45,8 @@ suite('DragAndDrop', function() {
     // ======================================================
     test('multiple drag and drop sets with setDraggable()', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var circle = new Kinetic.Circle({
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
             x: 380,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -72,9 +72,9 @@ suite('DragAndDrop', function() {
 
         var top = stage.content.getBoundingClientRect().top;
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -100,12 +100,12 @@ suite('DragAndDrop', function() {
 
         assert(circle.isDragging(), 'dragging is ok');
 
-        Kinetic.DD._endDragBefore();
+        Konva.DD._endDragBefore();
         stage._mouseup({
             clientX: 291,
             clientY: 112 + top
         });
-        Kinetic.DD._endDragAfter({dragEndNode:circle});
+        Konva.DD._endDragAfter({dragEndNode:circle});
 
 
         
@@ -123,13 +123,13 @@ suite('DragAndDrop', function() {
 
         assert(circle.isDragging() === false, 'no dragging with right click');
 
-        Kinetic.DD._endDragBefore();
+        Konva.DD._endDragBefore();
         stage._mouseup({
             clientX: 291,
             clientY: 112 + top,
             button: 2
         });
-        Kinetic.DD._endDragAfter({dragEndNode:circle});
+        Konva.DD._endDragAfter({dragEndNode:circle});
     });
 
     // ======================================================
@@ -138,13 +138,13 @@ suite('DragAndDrop', function() {
 
         var top = stage.content.getBoundingClientRect().top;
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
         stage.add(layer);
 
-        var dragLayer = new Kinetic.Layer();
+        var dragLayer = new Konva.Layer();
         stage.add(dragLayer);
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -158,7 +158,7 @@ suite('DragAndDrop', function() {
         dragLayer.add(circle);
         dragLayer.draw();
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
@@ -207,12 +207,12 @@ suite('DragAndDrop', function() {
         assert.equal(!!shape, false, 'circle is not detected');
 
 
-        Kinetic.DD._endDragBefore();
+        Konva.DD._endDragBefore();
         stage._mouseup({
             clientX: 291,
             clientY: 112 + top
         });
-        Kinetic.DD._endDragAfter({dragEndNode:circle});
+        Konva.DD._endDragAfter({dragEndNode:circle});
 
     });
 
@@ -222,13 +222,13 @@ suite('DragAndDrop', function() {
 
         var top = stage.content.getBoundingClientRect().top;
 
-        var startDragLayer = new Kinetic.Layer();
+        var startDragLayer = new Konva.Layer();
         stage.add(startDragLayer);
 
-        var endDragLayer = new Kinetic.Layer();
+        var endDragLayer = new Konva.Layer();
         stage.add(endDragLayer);
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
@@ -242,7 +242,7 @@ suite('DragAndDrop', function() {
         startDragLayer.add(circle);
         startDragLayer.draw();
 
-        var rect = new Kinetic.Rect({
+        var rect = new Konva.Rect({
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
@@ -271,7 +271,7 @@ suite('DragAndDrop', function() {
         rect.moveTo(startDragLayer);
         startDragLayer.draw();
 
-        assert.equal(Kinetic.DD.anim.getLayers()[0], endDragLayer, 'drag layer should be switched');
+        assert.equal(Konva.DD.anim.getLayers()[0], endDragLayer, 'drag layer should be switched');
 
 
         var shape = startDragLayer.getIntersection({
@@ -291,12 +291,12 @@ suite('DragAndDrop', function() {
         assert.equal(!!shape, false, 'circle is not detected');
 
 
-        Kinetic.DD._endDragBefore();
+        Konva.DD._endDragBefore();
         stage._mouseup({
             clientX: 291,
             clientY: 112 + top
         });
-        Kinetic.DD._endDragAfter({dragEndNode:circle});
+        Konva.DD._endDragAfter({dragEndNode:circle});
 
     });
 });

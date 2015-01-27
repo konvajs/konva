@@ -2,8 +2,8 @@
     /**
      * Arrow constructor
      * @constructor
-     * @memberof Kinetic
-     * @augments Kinetic.Shape
+     * @memberof Konva
+     * @augments Konva.Shape
      * @param {Object} config
      * @param {Array} config.points
      * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
@@ -13,7 +13,7 @@
      * @@shapeParams
      * @@nodeParams
      * @example
-     * var line = new Kinetic.Line({
+     * var line = new Konva.Line({
      *   points: [73, 70, 340, 23, 450, 60, 500, 20],
      *   stroke: 'red',
      *   tension: 1,
@@ -21,14 +21,14 @@
      *   pointerWidth : 12
      * });
      */
-    Kinetic.Arrow = function(config) {
+    Konva.Arrow = function(config) {
         this.____init(config);
     };
 
-    Kinetic.Arrow.prototype = {
+    Konva.Arrow.prototype = {
         ____init : function(config) {
             // call super constructor
-            Kinetic.Line.call(this, config);
+            Konva.Line.call(this, config);
             this.className = 'Arrow';
         },
         _sceneFunc : function(ctx) {
@@ -65,16 +65,16 @@
             }
 
             ctx.fillStrokeShape(this);
-            Kinetic.Line.prototype._sceneFunc.apply(this, arguments);
+            Konva.Line.prototype._sceneFunc.apply(this, arguments);
         }
     };
 
-    Kinetic.Util.extend(Kinetic.Arrow, Kinetic.Line);
+    Konva.Util.extend(Konva.Arrow, Konva.Line);
     /**
      * get/set pointerLength
      * @name pointerLength
      * @method
-     * @memberof Kinetic.Arrow.prototype
+     * @memberof Konva.Arrow.prototype
      * @param {Number} Length of pointer of arrow.
      *   The default is 10.
      * @returns {Number}
@@ -86,12 +86,12 @@
      * line.pointerLength(15);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Arrow, 'pointerLength', 10);
+    Konva.Factory.addGetterSetter(Konva.Arrow, 'pointerLength', 10);
     /**
      * get/set pointerWidth
      * @name pointerWidth
      * @method
-     * @memberof Kinetic.Arrow.prototype
+     * @memberof Konva.Arrow.prototype
      * @param {Number} Width of pointer of arrow.
      *   The default is 10.
      * @returns {Number}
@@ -103,12 +103,12 @@
      * line.pointerWidth(15);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Arrow, 'pointerWidth', 10);
+    Konva.Factory.addGetterSetter(Konva.Arrow, 'pointerWidth', 10);
     /**
      * get/set pointerAtBeginning
      * @name pointerAtBeginning
      * @method
-     * @memberof Kinetic.Arrow.prototype
+     * @memberof Konva.Arrow.prototype
      * @param {Number} Should pointer displayed at beginning of arrow.
      *   The default is false.
      * @returns {Boolean}
@@ -120,8 +120,8 @@
      * line.pointerAtBeginning(true);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Arrow, 'pointerAtBeginning', false);
-    Kinetic.Collection.mapMethods(Kinetic.Arrow);
+    Konva.Factory.addGetterSetter(Konva.Arrow, 'pointerAtBeginning', false);
+    Konva.Collection.mapMethods(Konva.Arrow);
 
 })();
 

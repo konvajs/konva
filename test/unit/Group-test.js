@@ -4,20 +4,20 @@ suite('Group', function() {
   test('cache group with text', function() {
     var stage = addStage();
 
-    var layer = new Kinetic.Layer();
-    var group = new Kinetic.Group({
+    var layer = new Konva.Layer();
+    var group = new Konva.Group({
         draggable : true,
         x: 100,
         y: 40
     });
-    var text = new Kinetic.Text({
+    var text = new Konva.Text({
         text : "some text",
         fontSize: 20,
         fill: "black",
         y : 50
     });
 
-    var rect = new Kinetic.Rect({
+    var rect = new Konva.Rect({
         height : 100,
         width : 100,
         stroke : "#00B80C",

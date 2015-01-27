@@ -2,8 +2,8 @@ suite('Arc', function() {
     // ======================================================
     test('add arc', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
-        var arc = new Kinetic.Arc({
+        var layer = new Konva.Layer();
+        var arc = new Konva.Arc({
             x: 100,
             y: 100,
             innerRadius: 50,

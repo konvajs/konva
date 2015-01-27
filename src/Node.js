@@ -8,7 +8,7 @@
         EMPTY_STRING = '',
         GET = 'get',
         ID = 'id',
-        KINETIC = 'kinetic',
+        KINETIC = 'konva',
         LISTENING = 'listening',
         MOUSEENTER = 'mouseenter',
         MOUSELEAVE = 'mouseleave',
@@ -23,23 +23,23 @@
         CLONE_BLACK_LIST = ['id'],
 
         TRANSFORM_CHANGE_STR = [
-            'xChange.kinetic',
-            'yChange.kinetic',
-            'scaleXChange.kinetic',
-            'scaleYChange.kinetic',
-            'skewXChange.kinetic',
-            'skewYChange.kinetic',
-            'rotationChange.kinetic',
-            'offsetXChange.kinetic',
-            'offsetYChange.kinetic',
-            'transformsEnabledChange.kinetic'
+            'xChange.konva',
+            'yChange.konva',
+            'scaleXChange.konva',
+            'scaleYChange.konva',
+            'skewXChange.konva',
+            'skewYChange.konva',
+            'rotationChange.konva',
+            'offsetXChange.konva',
+            'offsetYChange.konva',
+            'transformsEnabledChange.konva'
         ].join(SPACE);
 
 
-    Kinetic.Util.addMethods(Kinetic.Node, {
+    Konva.Util.addMethods(Konva.Node, {
         _init: function(config) {
             var that = this;
-            this._id = Kinetic.idCounter++;
+            this._id = Konva.idCounter++;
             this.eventListeners = {};
             this.attrs = {};
             this._cache = {};
@@ -51,13 +51,13 @@
                 this._clearCache(TRANSFORM);
                 that._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
             });
-            this.on('visibleChange.kinetic', function() {
+            this.on('visibleChange.konva', function() {
                 that._clearSelfAndDescendantCache(VISIBLE);
             });
-            this.on('listeningChange.kinetic', function() {
+            this.on('listeningChange.konva', function() {
                 that._clearSelfAndDescendantCache(LISTENING);
             });
-            this.on('opacityChange.kinetic', function() {
+            this.on('opacityChange.konva', function() {
                 that._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
             });
         },
@@ -95,8 +95,8 @@
         /**
         * clear cached canvas
         * @method
-        * @memberof Kinetic.Node.prototype
-        * @returns {Kinetic.Node}
+        * @memberof Konva.Node.prototype
+        * @returns {Konva.Node}
         * @example
         * node.clearCache();
         */
@@ -109,7 +109,7 @@
         * cache node to improve drawing performance, apply filters, or create more accurate
         *  hit regions
         * @method
-        * @memberof Kinetic.Node.prototype
+        * @memberof Konva.Node.prototype
         * @param {Object} config
         * @param {Number} [config.x]
         * @param {Number} [config.y]
@@ -117,7 +117,7 @@
         * @param {Number} [config.height]
         * @param {Boolean} [config.drawBorder] when set to true, a red border will be drawn around the cached
         *  region for debugging purposes
-        * @returns {Kinetic.Node}
+        * @returns {Konva.Node}
         * @example
         * // cache a shape with the x,y position of the bounding box at the center and
         * // the width and height of the bounding box equal to the width and height of
@@ -151,20 +151,20 @@
                 drawBorder = conf.drawBorder || false;
 
             if (width === 0 || height === 0) {
-                Kinetic.Util.warn('Width or height of caching configuration equals 0. Cache is ignored.');
+                Konva.Util.warn('Width or height of caching configuration equals 0. Cache is ignored.');
                 return;
             }
-            var cachedSceneCanvas = new Kinetic.SceneCanvas({
+            var cachedSceneCanvas = new Konva.SceneCanvas({
                     pixelRatio: 1,
                     width: width,
                     height: height
                 }),
-                cachedFilterCanvas = new Kinetic.SceneCanvas({
+                cachedFilterCanvas = new Konva.SceneCanvas({
                     pixelRatio: 1,
                     width: width,
                     height: height
                 }),
-                cachedHitCanvas = new Kinetic.HitCanvas({
+                cachedHitCanvas = new Konva.HitCanvas({
                     width: width,
                     height: height
                 }),
@@ -246,7 +246,7 @@
                         }
                     }
                     catch(e) {
-                        Kinetic.Util.warn('Unable to apply filter. ' + e.message);
+                        Konva.Util.warn('Unable to apply filter. ' + e.message);
                     }
 
                     this._filterUpToDate = true;
@@ -268,19 +268,19 @@
             context.restore();
         },
         /**
-         * bind events to the node. KineticJS supports mouseover, mousemove,
+         * bind events to the node. KonvaJS supports mouseover, mousemove,
          *  mouseout, mouseenter, mouseleave, mousedown, mouseup, mousewheel, click, dblclick, touchstart, touchmove,
-         *  touchend, tap, dbltap, dragstart, dragmove, and dragend events. The Kinetic Stage supports
+         *  touchend, tap, dbltap, dragstart, dragmove, and dragend events. The Konva Stage supports
          *  contentMouseover, contentMousemove, contentMouseout, contentMousedown, contentMouseup,
          *  contentClick, contentDblclick, contentTouchstart, contentTouchmove, contentTouchend, contentTap,
          *  and contentDblTap.  Pass in a string of events delimmited by a space to bind multiple events at once
          *  such as 'mousedown mouseup mousemove'. Include a namespace to bind an
          *  event by name such as 'click.foobar'.
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @param {String} evtStr e.g. 'click', 'mousedown touchstart', 'mousedown.foo touchstart.foo'
          * @param {Function} handler The handler function is passed an event object
-         * @returns {Kinetic.Node}
+         * @returns {Konva.Node}
          * @example
          * // add click listener
          * node.on('click', function() {
@@ -360,9 +360,9 @@
          *  such as 'click.foobar'. If you only give a name like '.foobar',
          *  all events in that namespace will be removed.
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @param {String} evtStr e.g. 'click', 'mousedown touchstart', '.foobar'
-         * @returns {Kinetic.Node}
+         * @returns {Konva.Node}
          * @example
          * // remove listener
          * node.off('click');
@@ -424,8 +424,8 @@
         /**
          * remove self from parent, but don't destroy
          * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Kinetic.Node}
+         * @memberof Konva.Node.prototype
+         * @returns {Konva.Node}
          * @example
          * node.remove();
          */
@@ -451,29 +451,29 @@
         /**
          * remove and destroy self
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @example
          * node.destroy();
          */
         destroy: function() {
             // remove from ids and names hashes
-            Kinetic._removeId(this.getId());
-            Kinetic._removeName(this.getName(), this._id);
+            Konva._removeId(this.getId());
+            Konva._removeName(this.getName(), this._id);
 
             this.remove();
         },
         /**
          * get attr
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @param {String} attr
          * @returns {Integer|String|Object|Array}
          * @example
          * var x = node.getAttr('x');
          */
         getAttr: function(attr) {
-            var method = GET + Kinetic.Util._capitalize(attr);
-            if(Kinetic.Util._isFunction(this[method])) {
+            var method = GET + Konva.Util._capitalize(attr);
+            if(Konva.Util._isFunction(this[method])) {
                 return this[method]();
             }
             // otherwise get directly
@@ -484,8 +484,8 @@
         /**
         * get ancestors
         * @method
-        * @memberof Kinetic.Node.prototype
-        * @returns {Kinetic.Collection}
+        * @memberof Konva.Node.prototype
+        * @returns {Konva.Collection}
         * @example
         * shape.getAncestors().each(function(node) {
         *   console.log(node.getId());
@@ -493,7 +493,7 @@
         */
         getAncestors: function() {
             var parent = this.getParent(),
-                ancestors = new Kinetic.Collection();
+                ancestors = new Konva.Collection();
 
             while (parent) {
                 ancestors.push(parent);
@@ -505,7 +505,7 @@
         /**
          * get attrs object literal
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {Object}
          */
         getAttrs: function() {
@@ -514,9 +514,9 @@
         /**
          * set multiple attrs at once using an object literal
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @param {Object} config object containing key value pairs
-         * @returns {Kinetic.Node}
+         * @returns {Konva.Node}
          * @example
          * node.setAttrs({
          *   x: 5,
@@ -528,13 +528,13 @@
 
             if(config) {
                 for(key in config) {
-                    if (key === CHILDREN || config[key] instanceof Kinetic.Node) {
+                    if (key === CHILDREN || config[key] instanceof Konva.Node) {
 
                     }
                     else {
-                        method = SET + Kinetic.Util._capitalize(key);
+                        method = SET + Konva.Util._capitalize(key);
                         // use setter if available
-                        if(Kinetic.Util._isFunction(this[method])) {
+                        if(Konva.Util._isFunction(this[method])) {
                             this[method](config[key]);
                         }
                         // otherwise set directly
@@ -562,7 +562,7 @@
          * I         | I         | T
          *
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {Boolean}
          */
         isListening: function() {
@@ -602,7 +602,7 @@
          * I         | I         | T
 
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {Boolean}
          */
         isVisible: function() {
@@ -630,7 +630,7 @@
          * determine if listening is enabled by taking into account descendants.  If self or any children
          * have _isListeningEnabled set to true, then self also has listening enabled.
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {Boolean}
          */
         shouldDrawHit: function(canvas) {
@@ -641,8 +641,8 @@
         /**
          * show node
          * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Kinetic.Node}
+         * @memberof Konva.Node.prototype
+         * @returns {Konva.Node}
          */
         show: function() {
             this.setVisible(true);
@@ -651,8 +651,8 @@
         /**
          * hide node.  Hidden nodes are no longer detectable
          * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Kinetic.Node}
+         * @memberof Konva.Node.prototype
+         * @returns {Konva.Node}
          */
         hide: function() {
             this.setVisible(false);
@@ -661,7 +661,7 @@
         /**
          * get zIndex relative to the node's siblings who share the same parent
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {Integer}
          */
         getZIndex: function() {
@@ -671,7 +671,7 @@
          * get absolute z-index which takes into account sibling
          *  and ancestor indices
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {Integer}
          */
         getAbsoluteZIndex: function() {
@@ -711,7 +711,7 @@
          *  e.g. Stage depth will always be 0.  Layers will always be 1.  Groups and Shapes will always
          *  be >= 2
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {Integer}
          */
         getDepth: function() {
@@ -738,12 +738,12 @@
         /**
          * get absolute position relative to the top left corner of the stage container div
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {Object}
          */
         getAbsolutePosition: function() {
             var absoluteMatrix = this.getAbsoluteTransform().getMatrix(),
-                absoluteTransform = new Kinetic.Transform(),
+                absoluteTransform = new Konva.Transform(),
                 offset = this.offset();
 
             // clone the matrix array
@@ -755,11 +755,11 @@
         /**
          * set absolute position
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @param {Object} pos
          * @param {Number} pos.x
          * @param {Number} pos.y
-         * @returns {Kinetic.Node}
+         * @returns {Konva.Node}
          */
         setAbsolutePosition: function(pos) {
             var origTrans = this._clearTransform(),
@@ -828,11 +828,11 @@
         /**
          * move node by an amount relative to its current position
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @param {Object} change
          * @param {Number} change.x
          * @param {Number} change.y
-         * @returns {Kinetic.Node}
+         * @returns {Konva.Node}
          * @example
          * // move node in x direction by 1px and y direction by 2px
          * node.move({
@@ -885,9 +885,9 @@
         /**
          * rotate node by an amount in degrees relative to its current rotation
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @param {Number} theta
-         * @returns {Kinetic.Node}
+         * @returns {Konva.Node}
          */
         rotate: function(theta) {
             this.setRotation(this.getRotation() + theta);
@@ -896,12 +896,12 @@
         /**
          * move node to the top of its siblings
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {Boolean}
          */
         moveToTop: function() {
             if (!this.parent) {
-                Kinetic.Util.warn('Node has no parent. moveToTop function is ignored.');
+                Konva.Util.warn('Node has no parent. moveToTop function is ignored.');
                 return;
             }
             var index = this.index;
@@ -913,12 +913,12 @@
         /**
          * move node up
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {Boolean}
          */
         moveUp: function() {
             if (!this.parent) {
-                Kinetic.Util.warn('Node has no parent. moveUp function is ignored.');
+                Konva.Util.warn('Node has no parent. moveUp function is ignored.');
                 return;
             }
             var index = this.index,
@@ -934,12 +934,12 @@
         /**
          * move node down
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {Boolean}
          */
         moveDown: function() {
             if (!this.parent) {
-                Kinetic.Util.warn('Node has no parent. moveDown function is ignored.');
+                Konva.Util.warn('Node has no parent. moveDown function is ignored.');
                 return;
             }
             var index = this.index;
@@ -954,12 +954,12 @@
         /**
          * move node to the bottom of its siblings
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {Boolean}
          */
         moveToBottom: function() {
             if (!this.parent) {
-                Kinetic.Util.warn('Node has no parent. moveToBottom function is ignored.');
+                Konva.Util.warn('Node has no parent. moveToBottom function is ignored.');
                 return;
             }
             var index = this.index;
@@ -974,13 +974,13 @@
         /**
          * set zIndex relative to siblings
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @param {Integer} zIndex
-         * @returns {Kinetic.Node}
+         * @returns {Konva.Node}
          */
         setZIndex: function(zIndex) {
             if (!this.parent) {
-                Kinetic.Util.warn('Node has no parent. zIndex parameter is ignored.');
+                Konva.Util.warn('Node has no parent. zIndex parameter is ignored.');
                 return;
             }
             var index = this.index;
@@ -992,7 +992,7 @@
         /**
          * get absolute opacity
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {Number}
          */
         getAbsoluteOpacity: function() {
@@ -1008,9 +1008,9 @@
         /**
          * move node to another container
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @param {Container} newContainer
-         * @returns {Kinetic.Node}
+         * @returns {Konva.Node}
          * @example
          * // move node from current layer into layer2
          * node.moveTo(layer2);
@@ -1026,11 +1026,11 @@
         /**
          * convert Node into an object for serialization.  Returns an object.
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {Object}
          */
         toObject: function() {
-            var type = Kinetic.Util,
+            var type = Konva.Util,
                 obj = {},
                 attrs = this.getAttrs(),
                 key, val, getter, defaultValue;
@@ -1059,7 +1059,7 @@
         /**
          * convert Node into a JSON string.  Returns a JSON string.
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {String}}
          */
         toJSON: function() {
@@ -1068,8 +1068,8 @@
         /**
          * get parent container
          * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Kinetic.Node}
+         * @memberof Konva.Node.prototype
+         * @returns {Konva.Node}
          */
         getParent: function() {
             return this.parent;
@@ -1077,8 +1077,8 @@
         /**
          * get layer ancestor
          * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Kinetic.Layer}
+         * @memberof Konva.Node.prototype
+         * @returns {Konva.Layer}
          */
         getLayer: function() {
             var parent = this.getParent();
@@ -1087,8 +1087,8 @@
         /**
          * get stage ancestor
          * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Kinetic.Stage}
+         * @memberof Konva.Node.prototype
+         * @returns {Konva.Stage}
          */
         getStage: function() {
             return this._getCache(STAGE, this._getStage);
@@ -1105,12 +1105,12 @@
         /**
          * fire event
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @param {String} eventType event type.  can be a regular event, like click, mouseover, or mouseout, or it can be a custom event, like myCustomEvent
          * @param {Event} [evt] event object
          * @param {Boolean} [bubble] setting the value to false, or leaving it undefined, will result in the event
          *  not bubbling.  Setting the value to true will result in the event bubbling.
-         * @returns {Kinetic.Node}
+         * @returns {Konva.Node}
          * @example
          * // manually fire click event
          * node.fire('click');
@@ -1141,8 +1141,8 @@
          * get absolute transform of the node which takes into
          *  account its ancestor transforms
          * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Kinetic.Transform}
+         * @memberof Konva.Node.prototype
+         * @returns {Konva.Transform}
          */
         getAbsoluteTransform: function(top) {
             // if using an argument, we can't cache the result.
@@ -1155,7 +1155,7 @@
             }
         },
         _getAbsoluteTransform: function(top) {
-            var at = new Kinetic.Transform(),
+            var at = new Konva.Transform(),
                 transformsEnabled, trans;
 
             // start with stage and traverse downwards to self
@@ -1175,17 +1175,17 @@
         /**
          * get transform of the node
          * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Kinetic.Transform}
+         * @memberof Konva.Node.prototype
+         * @returns {Konva.Transform}
          */
         getTransform: function() {
             return this._getCache(TRANSFORM, this._getTransform);
         },
         _getTransform: function() {
-            var m = new Kinetic.Transform(),
+            var m = new Konva.Transform(),
                 x = this.getX(),
                 y = this.getY(),
-                rotation = Kinetic.getAngle(this.getRotation()),
+                rotation = Konva.getAngle(this.getRotation()),
                 scaleX = this.getScaleX(),
                 scaleY = this.getScaleY(),
                 skewX = this.getSkewX(),
@@ -1216,9 +1216,9 @@
          *  the node properties with an object literal, enabling you to use an existing node as a template
          *  for another node
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @param {Object} obj override attrs
-         * @returns {Kinetic.Node}
+         * @returns {Konva.Node}
          * @example
          * // simple clone
          * var clone = node.clone();
@@ -1231,7 +1231,7 @@
         clone: function(obj) {
             // instantiate new node
             var className = this.getClassName(),
-                attrs = Kinetic.Util.cloneObject(this.attrs),
+                attrs = Konva.Util.cloneObject(this.attrs),
                 key, allListeners, len, n, listener;
             // filter black attrs
             for (var i in CLONE_BLACK_LIST) {
@@ -1243,7 +1243,7 @@
                 attrs[key] = obj[key];
             }
 
-            var node = new Kinetic[className](attrs);
+            var node = new Konva[className](attrs);
             // copy over listeners
             for(key in this.eventListeners) {
                 allListeners = this.eventListeners[key];
@@ -1251,7 +1251,7 @@
                 for(n = 0; n < len; n++) {
                     listener = allListeners[n];
                     /*
-                     * don't include kinetic namespaced listeners because
+                     * don't include konva namespaced listeners because
                      *  these are generated by the constructors
                      */
                     if(listener.name.indexOf(KINETIC) < 0) {
@@ -1270,7 +1270,7 @@
          * specified, then "image/png" will result. For "image/jpeg", specify a quality
          * level as quality (range 0.0 - 1.0)
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @param {Object} config
          * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
          *  "image/png" is the default
@@ -1291,7 +1291,7 @@
                 stage = this.getStage(),
                 x = config.x || 0,
                 y = config.y || 0,
-                canvas = new Kinetic.SceneCanvas({
+                canvas = new Konva.SceneCanvas({
                     width: config.width || this.getWidth() || (stage ? stage.getWidth() : 0),
                     height: config.height || this.getHeight() || (stage ? stage.getHeight() : 0),
                     pixelRatio: 1
@@ -1314,7 +1314,7 @@
          *  method is asynchronous, a callback is required.  toImage is most commonly used
          *  to cache complex drawings as an image so that they don't have to constantly be redrawn
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @param {Object} config
          * @param {Function} config.callback function executed when the composite has completed
          * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
@@ -1334,7 +1334,7 @@
          * });
          */
         toImage: function(config) {
-            Kinetic.Util._getImage(this.toDataURL(config), function(img) {
+            Konva.Util._getImage(this.toDataURL(config), function(img) {
                 config.callback(img);
             });
         },
@@ -1358,7 +1358,7 @@
         /**
          * get class name, which may return Stage, Layer, Group, or shape class names like Rect, Circle, Text, etc.
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {String}
          */
         getClassName: function() {
@@ -1367,7 +1367,7 @@
         /**
          * get the node type, which may return Stage, Layer, Group, or Node
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @returns {String}
          */
         getType: function() {
@@ -1380,7 +1380,7 @@
             } else if (this.parent) {
                 return this.parent.getDragDistance();
             } else {
-                return Kinetic.dragDistance;
+                return Konva.dragDistance;
             }
         },
         _get: function(selector) {
@@ -1393,10 +1393,10 @@
             for(i = 0; i < evtListeners.length; i++) {
                 evtName = evtListeners[i].name;
                 // the following two conditions must be true in order to remove a handler:
-                // 1) the current event name cannot be kinetic unless the event name is kinetic
-                //    this enables developers to force remove a kinetic specific listener for whatever reason
+                // 1) the current event name cannot be konva unless the event name is konva
+                //    this enables developers to force remove a konva specific listener for whatever reason
                 // 2) an event name is not specified, or if one is specified, it matches the current event name
-                if((evtName !== 'kinetic' || name === 'kinetic') && (!name || evtName === name)) {
+                if((evtName !== 'konva' || name === 'konva') && (!name || evtName === name)) {
                     evtListeners.splice(i, 1);
                     if(evtListeners.length === 0) {
                         delete this.eventListeners[type];
@@ -1415,34 +1415,34 @@
         setId: function(id) {
             var oldId = this.getId();
 
-            Kinetic._removeId(oldId);
-            Kinetic._addId(this, id);
+            Konva._removeId(oldId);
+            Konva._addId(this, id);
             this._setAttr(ID, id);
             return this;
         },
         setName: function(name) {
             var oldName = this.getName();
 
-            Kinetic._removeName(oldName, this._id);
-            Kinetic._addName(this, name);
+            Konva._removeName(oldName, this._id);
+            Konva._addName(this, name);
             this._setAttr(NAME, name);
             return this;
         },
         /**
          * set attr
          * @method
-         * @memberof Kinetic.Node.prototype
+         * @memberof Konva.Node.prototype
          * @param {String} attr
          * @param {*} val
-         * @returns {Kinetic.Node}
+         * @returns {Konva.Node}
          * @example
          * node.setAttr('x', 5);
          */
         setAttr: function(attr, val) {
-            var method = SET + Kinetic.Util._capitalize(attr),
+            var method = SET + Konva.Util._capitalize(attr),
                 func = this[method];
 
-            if(Kinetic.Util._isFunction(func)) {
+            if(Konva.Util._isFunction(func)) {
                 func.call(this, val);
             }
             // otherwise set directly
@@ -1516,8 +1516,8 @@
         /**
          * draw both scene and hit graphs.  If the node being drawn is the stage, all of the layers will be cleared and redrawn
          * @method
-         * @memberof Kinetic.Node.prototype
-         * @returns {Kinetic.Node}
+         * @memberof Konva.Node.prototype
+         * @returns {Konva.Node}
          */
         draw: function() {
             this.drawScene();
@@ -1534,16 +1534,16 @@
      *  shapes after loading the stage and set these properties via on(), setDrawFunc(),
      *  and setImage() methods
      * @method
-     * @memberof Kinetic.Node
+     * @memberof Konva.Node
      * @param {String} json
      * @param {Element} [container] optional container dom element used only if you're
      *  creating a stage node
      */
-    Kinetic.Node.create = function(json, container) {
+    Konva.Node.create = function(json, container) {
         return this._createNode(JSON.parse(json), container);
     };
-    Kinetic.Node._createNode = function(obj, container) {
-        var className = Kinetic.Node.prototype.getClassName.call(obj),
+    Konva.Node._createNode = function(obj, container) {
+        var className = Konva.Node.prototype.getClassName.call(obj),
             children = obj.children,
             no, len, n;
 
@@ -1552,7 +1552,7 @@
             obj.attrs.container = container;
         }
 
-        no = new Kinetic[className](obj.attrs);
+        no = new Konva[className](obj.attrs);
         if(children) {
             len = children.length;
             for(n = 0; n < len; n++) {
@@ -1566,12 +1566,12 @@
 
     // =========================== add getters setters ===========================
 
-    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'position');
+    Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'position');
     /**
      * get/set node position relative to parent
      * @name position
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Object} pos
      * @param {Number} pos.x
      * @param {Number} pos.y
@@ -1587,13 +1587,13 @@
      * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'x', 0);
+    Konva.Factory.addGetterSetter(Konva.Node, 'x', 0);
 
     /**
      * get/set x position
      * @name x
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Number} x
      * @returns {Object}
      * @example
@@ -1604,13 +1604,13 @@
      * node.x(5);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'y', 0);
+    Konva.Factory.addGetterSetter(Konva.Node, 'y', 0);
 
     /**
      * get/set y position
      * @name y
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Number} y
      * @returns {Integer}
      * @example
@@ -1621,7 +1621,7 @@
      * node.y(5);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'opacity', 1);
+    Konva.Factory.addGetterSetter(Konva.Node, 'opacity', 1);
 
     /**
      * get/set opacity.  Opacity values range from 0 to 1.
@@ -1629,7 +1629,7 @@
      *  with an opacity of 1 is fully opaque
      * @name opacity
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Object} opacity
      * @returns {Number}
      * @example
@@ -1640,14 +1640,14 @@
      * node.opacity(0.5);
      */
 
-    Kinetic.Factory.addGetter(Kinetic.Node, 'name');
-    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'name');
+    Konva.Factory.addGetter(Konva.Node, 'name');
+    Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'name');
 
     /**
      * get/set name
      * @name name
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {String} name
      * @returns {String}
      * @example
@@ -1661,14 +1661,14 @@
      * node.name('foo bar');
      */
 
-    Kinetic.Factory.addGetter(Kinetic.Node, 'id');
-    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'id');
+    Konva.Factory.addGetter(Konva.Node, 'id');
+    Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'id');
 
     /**
      * get/set id
      * @name id
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {String} id
      * @returns {String}
      * @example
@@ -1679,13 +1679,13 @@
      * node.id('foo');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'rotation', 0);
+    Konva.Factory.addGetterSetter(Konva.Node, 'rotation', 0);
 
     /**
      * get/set rotation in degrees
      * @name rotation
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Number} rotation
      * @returns {Number}
      * @example
@@ -1696,7 +1696,7 @@
      * node.rotation(45);
      */
 
-    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Node, 'scale', ['x', 'y']);
+    Konva.Factory.addComponentsGetterSetter(Konva.Node, 'scale', ['x', 'y']);
 
     /**
      * get/set scale
@@ -1705,7 +1705,7 @@
      * @param {Number} scale.x
      * @param {Number} scale.y
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @returns {Object}
      * @example
      * // get scale
@@ -1718,14 +1718,14 @@
      * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'scaleX', 1);
+    Konva.Factory.addGetterSetter(Konva.Node, 'scaleX', 1);
 
     /**
      * get/set scale x
      * @name scaleX
      * @param {Number} x
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @returns {Number}
      * @example
      * // get scale x
@@ -1735,14 +1735,14 @@
      * node.scaleX(2);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'scaleY', 1);
+    Konva.Factory.addGetterSetter(Konva.Node, 'scaleY', 1);
 
     /**
      * get/set scale y
      * @name scaleY
      * @param {Number} y
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @returns {Number}
      * @example
      * // get scale y
@@ -1752,7 +1752,7 @@
      * node.scaleY(2);
      */
 
-    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Node, 'skew', ['x', 'y']);
+    Konva.Factory.addComponentsGetterSetter(Konva.Node, 'skew', ['x', 'y']);
 
     /**
      * get/set skew
@@ -1761,7 +1761,7 @@
      * @param {Number} skew.x
      * @param {Number} skew.y
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @returns {Object}
      * @example
      * // get skew
@@ -1774,14 +1774,14 @@
      * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'skewX', 0);
+    Konva.Factory.addGetterSetter(Konva.Node, 'skewX', 0);
 
     /**
      * get/set skew x
      * @name skewX
      * @param {Number} x
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @returns {Number}
      * @example
      * // get skew x
@@ -1791,14 +1791,14 @@
      * node.skewX(3);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'skewY', 0);
+    Konva.Factory.addGetterSetter(Konva.Node, 'skewY', 0);
 
     /**
      * get/set skew y
      * @name skewY
      * @param {Number} y
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @returns {Number}
      * @example
      * // get skew y
@@ -1808,12 +1808,12 @@
      * node.skewY(3);
      */
 
-    Kinetic.Factory.addComponentsGetterSetter(Kinetic.Node, 'offset', ['x', 'y']);
+    Konva.Factory.addComponentsGetterSetter(Konva.Node, 'offset', ['x', 'y']);
 
     /**
      * get/set offset.  Offsets the default position and rotation point
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Object} offset
      * @param {Number} offset.x
      * @param {Number} offset.y
@@ -1829,13 +1829,13 @@
      * });
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'offsetX', 0);
+    Konva.Factory.addGetterSetter(Konva.Node, 'offsetX', 0);
 
     /**
      * get/set offset x
      * @name offsetX
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Number} x
      * @returns {Number}
      * @example
@@ -1846,13 +1846,13 @@
      * node.offsetX(3);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'offsetY', 0);
+    Konva.Factory.addGetterSetter(Konva.Node, 'offsetY', 0);
 
     /**
      * get/set offset y
      * @name offsetY
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Number} y
      * @returns {Number}
      * @example
@@ -1863,14 +1863,14 @@
      * node.offsetY(3);
      */
 
-    Kinetic.Factory.addSetter(Kinetic.Node, 'dragDistance');
-    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'dragDistance');
+    Konva.Factory.addSetter(Konva.Node, 'dragDistance');
+    Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'dragDistance');
 
     /**
      * get/set drag distance
      * @name dragDistance
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Number} distance
      * @returns {Number}
      * @example
@@ -1881,17 +1881,17 @@
      * // node starts dragging only if pointer moved more then 3 pixels
      * node.dragDistance(3);
      * // or set globally
-     * Kinetic.dragDistance = 3;
+     * Konva.dragDistance = 3;
      */
 
 
-    Kinetic.Factory.addSetter(Kinetic.Node, 'width', 0);
-    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'width');
+    Konva.Factory.addSetter(Konva.Node, 'width', 0);
+    Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'width');
     /**
      * get/set width
      * @name width
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Number} width
      * @returns {Number}
      * @example
@@ -1902,13 +1902,13 @@
      * node.width(100);
      */
 
-    Kinetic.Factory.addSetter(Kinetic.Node, 'height', 0);
-    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'height');
+    Konva.Factory.addSetter(Konva.Node, 'height', 0);
+    Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'height');
     /**
      * get/set height
      * @name height
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Number} height
      * @returns {Number}
      * @example
@@ -1919,13 +1919,13 @@
      * node.height(100);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'listening', 'inherit');
+    Konva.Factory.addGetterSetter(Konva.Node, 'listening', 'inherit');
     /**
      * get/set listenig attr.  If you need to determine if a node is listening or not
      *   by taking into account its parents, use the isListening() method  
      * @name listening
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Boolean|String} listening Can be "inherit", true, or false.  The default is "inherit".
      * @returns {Boolean|String}
      * @example
@@ -1942,12 +1942,12 @@
      * node.listening('inherit');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'filters', undefined, function(val) {this._filterUpToDate = false;return val;});
+    Konva.Factory.addGetterSetter(Konva.Node, 'filters', undefined, function(val) {this._filterUpToDate = false;return val;});
     /**
      * get/set filters.  Filters are applied to cached canvases
      * @name filters
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Array} filters array of filters
      * @returns {Array}
      * @example
@@ -1956,25 +1956,25 @@
      *
      * // set a single filter
      * node.cache();
-     * node.filters([Kinetic.Filters.Blur]);
+     * node.filters([Konva.Filters.Blur]);
      *
      * // set multiple filters
      * node.cache();
      * node.filters([
-     *   Kinetic.Filters.Blur,
-     *   Kinetic.Filters.Sepia,
-     *   Kinetic.Filters.Invert
+     *   Konva.Filters.Blur,
+     *   Konva.Filters.Sepia,
+     *   Konva.Filters.Invert
      * ]);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'visible', 'inherit');
+    Konva.Factory.addGetterSetter(Konva.Node, 'visible', 'inherit');
     /**
      * get/set visible attr.  Can be "inherit", true, or false.  The default is "inherit".
      *   If you need to determine if a node is visible or not
      *   by taking into account its parents, use the isVisible() method  
      * @name visible
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Boolean|String} visible
      * @returns {Boolean|String}
      * @example
@@ -1991,14 +1991,14 @@
      * node.visible('inherit');
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'transformsEnabled', 'all');
+    Konva.Factory.addGetterSetter(Konva.Node, 'transformsEnabled', 'all');
 
     /**
      * get/set transforms that are enabled.  Can be "all", "none", or "position".  The default
      *  is "all"
      * @name transformsEnabled
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {String} enabled
      * @returns {String}
      * @example
@@ -2015,7 +2015,7 @@
      * get/set node size
      * @name size
      * @method
-     * @memberof Kinetic.Node.prototype
+     * @memberof Konva.Node.prototype
      * @param {Object} size
      * @param {Number} size.width
      * @param {Number} size.height
@@ -2032,13 +2032,13 @@
      *   height: 200
      * });
      */
-    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Node, 'size');
+    Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'size');
 
-    Kinetic.Factory.backCompat(Kinetic.Node, {
+    Konva.Factory.backCompat(Konva.Node, {
         rotateDeg: 'rotate',
         setRotationDeg: 'setRotation',
         getRotationDeg: 'getRotation'
     });
 
-    Kinetic.Collection.mapMethods(Kinetic.Node);
+    Konva.Collection.mapMethods(Konva.Node);
 })();

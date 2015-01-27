@@ -8,8 +8,8 @@ suite('HSV', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -20,15 +20,15 @@ suite('HSV', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.HSV]);
+            darth.filters([Konva.Filters.HSV]);
             darth.hue(360);
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: darth, 
               duration: 1.0,
               hue: 0,
-              easing: Kinetic.Easings.EaseInOut
+              easing: Konva.Easings.EaseInOut
             });
         
             darth.on('mouseover', function() {
@@ -52,8 +52,8 @@ suite('HSV', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -64,16 +64,16 @@ suite('HSV', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.HSV]);
+            darth.filters([Konva.Filters.HSV]);
 
             darth.saturation(1.0);
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: darth, 
               duration: 1.0,
               saturation: -1.0,
-              easing: Kinetic.Easings.EaseInOut
+              easing: Konva.Easings.EaseInOut
             });
         
             darth.on('mouseover', function() {
@@ -97,8 +97,8 @@ suite('HSV', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -109,15 +109,15 @@ suite('HSV', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.HSV]);
+            darth.filters([Konva.Filters.HSV]);
             darth.saturation(1.0);
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: darth, 
               duration: 1.0,
               saturation: -1,
-              easing: Kinetic.Easings.EaseInOut
+              easing: Konva.Easings.EaseInOut
             });
         
             darth.on('mouseover', function() {
@@ -141,8 +141,8 @@ suite('HSV', function() {
         var imageObj = new Image();
         imageObj.onload = function() {
             
-            var layer = new Kinetic.Layer();
-            darth = new Kinetic.Image({
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
                 x: 10,
                 y: 10,
                 image: imageObj,
@@ -153,15 +153,15 @@ suite('HSV', function() {
             stage.add(layer);
 
             darth.cache();
-            darth.filters([Kinetic.Filters.HSV]);
+            darth.filters([Konva.Filters.HSV]);
             darth.value(1.0);
             layer.draw();
 
-            var tween = new Kinetic.Tween({
+            var tween = new Konva.Tween({
               node: darth, 
               duration: 1.0,
               value: -1.0,
-              easing: Kinetic.Easings.EaseInOut
+              easing: Konva.Easings.EaseInOut
             });
         
             darth.on('mouseover', function() {

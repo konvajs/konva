@@ -27,15 +27,15 @@
     *  writes.
     * @function
     * @name Enhance
-    * @memberof Kinetic.Filters
+    * @memberof Konva.Filters
     * @param {Object} imageData
     * @author ippo615
     * @example
     * node.cache();
-    * node.filters([Kinetic.Filters.Enhance]);
+    * node.filters([Konva.Filters.Enhance]);
     * node.enhance(0.4);
     */
-    Kinetic.Filters.Enhance = function (imageData) {
+    Konva.Filters.Enhance = function (imageData) {
         var data = imageData.data,
             nSubPixels = data.length,
             rMin = data[0], rMax = rMin, r,
@@ -102,13 +102,13 @@
         }
     };
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Node, 'enhance', 0, null, Kinetic.Factory.afterSetFilter);
+    Konva.Factory.addGetterSetter(Konva.Node, 'enhance', 0, null, Konva.Factory.afterSetFilter);
 
     /**
-    * get/set enhance. Use with {@link Kinetic.Filters.Enhance} filter.
+    * get/set enhance. Use with {@link Konva.Filters.Enhance} filter.
     * @name enhance
     * @method
-    * @memberof Kinetic.Node.prototype
+    * @memberof Konva.Node.prototype
     * @param {Float} amount
     * @returns {Float}
     */

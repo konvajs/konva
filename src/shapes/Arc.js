@@ -2,7 +2,7 @@
     /**
      * Arc constructor
      * @constructor
-     * @augments Kinetic.Shape
+     * @augments Konva.Shape
      * @param {Object} config
      * @param {Number} config.angle in degrees
      * @param {Number} config.innerRadius
@@ -12,7 +12,7 @@
      * @@nodeParams
      * @example
      * // draw a Arc that's pointing downwards
-     * var arc = new Kinetic.Arc({
+     * var arc = new Konva.Arc({
      *   innerRadius: 40,
      *   outerRadius: 80,
      *   fill: 'red',
@@ -22,19 +22,19 @@
      *   rotationDeg: -120
      * });
      */
-    Kinetic.Arc = function(config) {
+    Konva.Arc = function(config) {
         this.___init(config);
     };
 
-    Kinetic.Arc.prototype = {
+    Konva.Arc.prototype = {
         ___init: function(config) {
             // call super constructor
-            Kinetic.Shape.call(this, config);
+            Konva.Shape.call(this, config);
             this.className = 'Arc';
             this.sceneFunc(this._sceneFunc);
         },
         _sceneFunc: function(context) {
-            var angle = Kinetic.getAngle(this.angle()),
+            var angle = Konva.getAngle(this.angle()),
                 clockwise = this.clockwise();
 
             context.beginPath();
@@ -44,16 +44,16 @@
             context.fillStrokeShape(this);
         }
     };
-    Kinetic.Util.extend(Kinetic.Arc, Kinetic.Shape);
+    Konva.Util.extend(Konva.Arc, Konva.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Arc, 'innerRadius', 0);
+    Konva.Factory.addGetterSetter(Konva.Arc, 'innerRadius', 0);
 
     /**
      * get/set innerRadius
      * @name innerRadius
      * @method
-     * @memberof Kinetic.Arc.prototype
+     * @memberof Konva.Arc.prototype
      * @param {Number} innerRadius
      * @returns {Number}
      * @example
@@ -64,13 +64,13 @@
      * arc.innerRadius(20);
      */
      
-    Kinetic.Factory.addGetterSetter(Kinetic.Arc, 'outerRadius', 0);
+    Konva.Factory.addGetterSetter(Konva.Arc, 'outerRadius', 0);
 
     /**
      * get/set outerRadius
      * @name outerRadius
      * @method
-     * @memberof Kinetic.Arc.prototype
+     * @memberof Konva.Arc.prototype
      * @param {Number} outerRadius
      * @returns {Number}
      * @example
@@ -81,13 +81,13 @@
      * arc.outerRadius(20);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Arc, 'angle', 0);
+    Konva.Factory.addGetterSetter(Konva.Arc, 'angle', 0);
 
     /**
      * get/set angle in degrees
      * @name angle
      * @method
-     * @memberof Kinetic.Arc.prototype
+     * @memberof Konva.Arc.prototype
      * @param {Number} angle
      * @returns {Number}
      * @example
@@ -98,13 +98,13 @@
      * arc.angle(20);
      */
 
-    Kinetic.Factory.addGetterSetter(Kinetic.Arc, 'clockwise', false);
+    Konva.Factory.addGetterSetter(Konva.Arc, 'clockwise', false);
 
     /**
      * get/set clockwise flag
      * @name clockwise
      * @method
-     * @memberof Kinetic.Arc.prototype
+     * @memberof Konva.Arc.prototype
      * @param {Boolean} clockwise
      * @returns {Boolean}
      * @example
@@ -118,5 +118,5 @@
      * arc.clockwise(true);
      */
 
-    Kinetic.Collection.mapMethods(Kinetic.Arc);
+    Konva.Collection.mapMethods(Konva.Arc);
 })();

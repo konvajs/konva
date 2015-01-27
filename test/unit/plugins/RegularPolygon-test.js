@@ -3,9 +3,9 @@ suite('RegularPolygon', function() {
     test('add regular polygon triangle', function() {
         var stage = addStage();
         
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var poly = new Kinetic.RegularPolygon({
+        var poly = new Konva.RegularPolygon({
             x: 200,
             y: 100,
             sides: 3,
@@ -30,9 +30,9 @@ suite('RegularPolygon', function() {
     // ======================================================
     test('add regular polygon square', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var poly = new Kinetic.RegularPolygon({
+        var poly = new Konva.RegularPolygon({
             x: 200,
             y: 100,
             sides: 4,
@@ -50,9 +50,9 @@ suite('RegularPolygon', function() {
     // ======================================================
     test('add regular polygon pentagon', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var poly = new Kinetic.RegularPolygon({
+        var poly = new Konva.RegularPolygon({
             x: 200,
             y: 100,
             sides: 5,
@@ -70,9 +70,9 @@ suite('RegularPolygon', function() {
     // ======================================================
     test('add regular polygon octogon', function() {
         var stage = addStage();
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var poly = new Kinetic.RegularPolygon({
+        var poly = new Konva.RegularPolygon({
             x: 200,
             y: 100,
             sides: 8,

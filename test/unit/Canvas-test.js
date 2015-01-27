@@ -3,9 +3,9 @@ suite('Canvas', function() {
     test('pixel ratio', function() {
         var stage = addStage();
 
-        var layer = new Kinetic.Layer();
+        var layer = new Konva.Layer();
 
-        var circle = new Kinetic.Circle({
+        var circle = new Konva.Circle({
             x: 578/2,
             y: 100,
             radius: 70,

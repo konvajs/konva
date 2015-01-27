@@ -5,7 +5,7 @@
     /**
      * Ring constructor
      * @constructor
-     * @augments Kinetic.Shape
+     * @augments Konva.Shape
      * @param {Object} config
      * @param {Number} config.innerRadius
      * @param {Number} config.outerRadius
@@ -13,7 +13,7 @@
      * @@shapeParams
      * @@nodeParams
      * @example
-     * var ring = new Kinetic.Ring({
+     * var ring = new Konva.Ring({
      *   innerRadius: 40,
      *   outerRadius: 80,
      *   fill: 'red',
@@ -21,14 +21,14 @@
      *   strokeWidth: 5
      * });
      */
-    Kinetic.Ring = function(config) {
+    Konva.Ring = function(config) {
         this.___init(config);
     };
 
-    Kinetic.Ring.prototype = {
+    Konva.Ring.prototype = {
         ___init: function(config) {
             // call super constructor
-            Kinetic.Shape.call(this, config);
+            Konva.Shape.call(this, config);
             this.className = 'Ring';
             this.sceneFunc(this._sceneFunc);
         },
@@ -50,14 +50,14 @@
         },
         // implements Shape.prototype.setWidth()
         setWidth: function(width) {
-            Kinetic.Node.prototype.setWidth.call(this, width);
+            Konva.Node.prototype.setWidth.call(this, width);
             if (this.outerRadius() !== width / 2) {
                 this.setOuterRadius(width / 2);
             }
         },
         // implements Shape.prototype.setHeight()
         setHeight: function(height) {
-            Kinetic.Node.prototype.setHeight.call(this, height);
+            Konva.Node.prototype.setHeight.call(this, height);
             if (this.outerRadius() !== height / 2) {
                 this.setOuterRadius(height / 2);
             }
@@ -68,16 +68,16 @@
             this.setHeight(val * 2);
         }
     };
-    Kinetic.Util.extend(Kinetic.Ring, Kinetic.Shape);
+    Konva.Util.extend(Konva.Ring, Konva.Shape);
 
     // add getters setters
-    Kinetic.Factory.addGetterSetter(Kinetic.Ring, 'innerRadius', 0);
+    Konva.Factory.addGetterSetter(Konva.Ring, 'innerRadius', 0);
 
     /**
      * get/set innerRadius
      * @name innerRadius
      * @method
-     * @memberof Kinetic.Ring.prototype
+     * @memberof Konva.Ring.prototype
      * @param {Number} innerRadius
      * @returns {Number}
      * @example
@@ -88,14 +88,14 @@
      * ring.innerRadius(20);
      */
      
-    Kinetic.Factory.addGetter(Kinetic.Ring, 'outerRadius', 0);
-    Kinetic.Factory.addOverloadedGetterSetter(Kinetic.Ring, 'outerRadius');
+    Konva.Factory.addGetter(Konva.Ring, 'outerRadius', 0);
+    Konva.Factory.addOverloadedGetterSetter(Konva.Ring, 'outerRadius');
 
     /**
      * get/set outerRadius
      * @name outerRadius
      * @method
-     * @memberof Kinetic.Ring.prototype
+     * @memberof Konva.Ring.prototype
      * @param {Number} outerRadius
      * @returns {Number}
      * @example
@@ -106,5 +106,5 @@
      * ring.outerRadius(20);
      */
 
-    Kinetic.Collection.mapMethods(Kinetic.Ring);
+    Konva.Collection.mapMethods(Konva.Ring);
 })();
