@@ -751,6 +751,54 @@ suite('MouseEvents', function() {
         });
         assert.equal(groupMousedowns, 1, 'groupMousedowns should be 1');
     });
+    test('test mousemove events with antialiasing', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var group = new Konva.Group({
+            name: 'group'
+        });
+        var rect1 = new Konva.Rect({
+            x:0,
+            y:0,
+            width: 100,
+            height: 100,
+            fill: 'red'
+        });
+
+        var rect2 = new Konva.Rect({
+            x:50,
+            y:0,
+            width: 70,
+            height: 70,
+            rotation: 45,
+            fill: 'green'
+        });
+        group.add(rect1).add(rect2);
+        layer.add(group);
+        group.cache({
+            width : rect1.width(),
+            height : rect1.height()
+        });
+        group.scaleX(5);
+        group.scaleY(5);
+        var mouseenterCount = 0;
+        group.on('mouseenter', function() {
+            mouseenterCount++;
+        });
+
+        stage.add(layer);
+
+        var top = stage.content.getBoundingClientRect().top;
+        // move mouse slowly
+        for (var i = 99; i < 129; i++) {
+            stage._mousemove({
+                clientX: i,
+                clientY: 135 + top
+            });
+        }
+        assert.equal(mouseenterCount, 1, 'mouseenterCount should be 1');
+    });
 
     // ======================================================
     test('group mouseenter events', function(done) {

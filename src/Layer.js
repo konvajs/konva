@@ -75,8 +75,12 @@
                         }
                         // we should continue search if we found antialiased pixel
                         // that means our node somewhere very close
-                        else if (obj.antialiased) {
-                            continueSearch = true;
+                        else {
+                            continueSearch = !!obj.antialiased;
+                            // stop search if found empty pixel
+                            if (!obj.antialiased) {
+                                break;
+                            }
                         }
                     }
                     // if no shape, and no antialiased pixel, we should end searching 
@@ -115,9 +119,16 @@
             if(p3 === 255) {
                 colorKey = Konva.Util._rgbToHex(p[0], p[1], p[2]);
                 shape = Konva.shapes[HASH + colorKey];
-                return {
-                    shape: shape
-                };
+                if (shape) {
+                    return {
+                        shape: shape
+                    };
+                } else {
+                    return {
+                        antialiased: true
+                    };
+                }
+
             }
             // antialiased pixel
             else if(p3 > 0) {

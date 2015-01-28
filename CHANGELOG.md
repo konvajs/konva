@@ -1,3 +1,11 @@
+## 0.7.1
+
+* Bug Fixes
+    * fixed when browser is crashing on pointer events fixed (and optimized `getIntersection` function)
+* Enhancements
+
+
+
 ## Rebranding release 2015-01-28 (Differents from last official KineticJS release)
 
 * Bug Fixes

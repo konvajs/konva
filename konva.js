@@ -1,9 +1,9 @@
 
 /*
- * Konva JavaScript Framework v0.7.0
+ * Konva JavaScript Framework v0.7.1
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2015-01-28
+ * Date: 2015-01-29
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -36,7 +36,7 @@ var Konva = {};
 
     Konva = {
         // public
-        version: '0.7.0',
+        version: '0.7.1',
 
         // private
         stages: [],
@@ -10244,8 +10244,12 @@ var Konva = {};
                         }
                         // we should continue search if we found antialiased pixel
                         // that means our node somewhere very close
-                        else if (obj.antialiased) {
-                            continueSearch = true;
+                        else {
+                            continueSearch = !!obj.antialiased;
+                            // stop search if found empty pixel
+                            if (!obj.antialiased) {
+                                break;
+                            }
                         }
                     }
                     // if no shape, and no antialiased pixel, we should end searching 
@@ -10284,9 +10288,16 @@ var Konva = {};
             if(p3 === 255) {
                 colorKey = Konva.Util._rgbToHex(p[0], p[1], p[2]);
                 shape = Konva.shapes[HASH + colorKey];
-                return {
-                    shape: shape
-                };
+                if (shape) {
+                    return {
+                        shape: shape
+                    };
+                } else {
+                    return {
+                        antialiased: true
+                    };
+                }
+
             }
             // antialiased pixel
             else if(p3 > 0) {
