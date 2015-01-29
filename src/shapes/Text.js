@@ -3,7 +3,7 @@
     var AUTO = 'auto',
         //CANVAS = 'canvas',
         CENTER = 'center',
-        CHANGE_KINETIC = 'Change.konva',
+        CHANGE_KONVA = 'Change.konva',
         CONTEXT_2D = '2d',
         DASH = '-',
         EMPTY_STRING = '',
@@ -84,7 +84,7 @@
 
             // update text data for certain attr changes
             for(var n = 0; n < attrChangeListLen; n++) {
-                this.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, this._setTextData);
+                this.on(ATTR_CHANGE_LIST[n] + CHANGE_KONVA, this._setTextData);
             }
 
             this._setTextData();

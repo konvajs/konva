@@ -301,8 +301,8 @@
         HASH = '#',
         EMPTY_STRING = '',
         ZERO = '0',
-        KINETIC_WARNING = 'Konva warning: ',
-        KINETIC_ERROR = 'Konva error: ',
+        KONVA_WARNING = 'Konva warning: ',
+        KONVA_ERROR = 'Konva error: ',
         RGB_PAREN = 'rgb(',
         COLORS = {
             aqua: [0,255,255],
@@ -622,7 +622,7 @@
             return str.charAt(0).toUpperCase() + str.slice(1);
         },
         error: function(str) {
-            throw new Error(KINETIC_ERROR + str);
+            throw new Error(KONVA_ERROR + str);
         },
         warn: function(str) {
             /*
@@ -630,7 +630,7 @@
              * if we don't use window.console in the conditional
              */
             if(Konva.root.console && console.warn && Konva.showWarnings) {
-                console.warn(KINETIC_WARNING + str);
+                console.warn(KONVA_WARNING + str);
             }
         },
         extend: function(child, parent) {
