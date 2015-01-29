@@ -1,7 +1,7 @@
 (function() {
     // constants
     var ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'lineHeight', 'text'],
-        CHANGE_KINETIC = 'Change.konva',
+        CHANGE_KONVA = 'Change.konva',
         NONE = 'none',
         UP = 'up',
         RIGHT = 'right',
@@ -95,7 +95,7 @@
 
             // update text data for certain attr changes
             for(n = 0; n < attrChangeListLen; n++) {
-                text.on(ATTR_CHANGE_LIST[n] + CHANGE_KINETIC, func);
+                text.on(ATTR_CHANGE_LIST[n] + CHANGE_KONVA, func);
             }
         },
         getWidth: function() {
