@@ -101,6 +101,12 @@ var Konva = {};
         Filters: {},
 
         /**
+         * @namespace Loader
+         * @memberof Konva
+         */
+        Loader: {},
+
+        /**
          * Node constructor. Nodes are entities that can be transformed, layered,
          * and have bound events. The stage, layers, groups, and shapes all extend Node.
          * @constructor

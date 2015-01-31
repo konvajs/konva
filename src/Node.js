@@ -1523,7 +1523,41 @@
             this.drawScene();
             this.drawHit();
             return this;
-        }
+        },
+        /**
+         * start loading all children assets, or just current node
+         * of descendant
+         * @method
+         * @memberof Konva.Node.prototype
+         * @param {Function} callback
+         */
+        load: function(loadClass, clearEvents) {
+            //if no loader is set, use default
+            if (!loadClass) {
+                loadClass = Konva.Loader.Default;
+            }
+
+            var loader = new loadClass({
+                container: this,
+                clearEvents: clearEvents || false
+            });
+
+            //check if this is a container or a normal node
+            if (typeof this.getChildren == 'function') { 
+                this.getChildren().each(function(node) {
+                    //currently only images/sprites have any reason to load
+                    if (node.className == 'Image' || node.className == 'Sprite') { 
+                        loader.set(node);
+                    }
+                });
+            } else {
+                if (this.className == 'Image' || this.className == 'Sprite') { 
+                    loader.set(this);
+                }
+            }
+
+            loader.load();
+        },
     });
 
     /**

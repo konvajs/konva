@@ -57,7 +57,11 @@ module.exports = function(grunt) {
     'src/plugins/RegularPolygon.js',
     'src/plugins/Star.js',
     'src/plugins/Label.js',
-    'src/plugins/Arrow.js'
+    'src/plugins/Arrow.js',
+
+    //loaders
+    'src/loaders/Base.js',
+    'src/loaders/Default.js'
   ];
 
   // Project configuration.
