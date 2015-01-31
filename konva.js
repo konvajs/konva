@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.7.1
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2015-01-29
+ * Date: 2015-01-31
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -99,6 +99,12 @@ var Konva = {};
          * @memberof Konva
          */
         Filters: {},
+
+        /**
+         * @namespace Loader
+         * @memberof Konva
+         */
+        Loader: {},
 
         /**
          * Node constructor. Nodes are entities that can be transformed, layered,
@@ -3798,7 +3804,41 @@ var Konva = {};
             this.drawScene();
             this.drawHit();
             return this;
-        }
+        },
+        /**
+         * start loading all children assets, or just current node
+         * of descendant
+         * @method
+         * @memberof Konva.Node.prototype
+         * @param {Function} callback
+         */
+        load: function(loadClass, clearEvents) {
+            //if no loader is set, use default
+            if (!loadClass) {
+                loadClass = Konva.Loader.Default;
+            }
+
+            var loader = new loadClass({
+                container: this,
+                clearEvents: clearEvents || false
+            });
+
+            //check if this is a container or a normal node
+            if (typeof this.getChildren == 'function') { 
+                this.getChildren().each(function(node) {
+                    //currently only images/sprites have any reason to load
+                    if (node.className == 'Image' || node.className == 'Sprite') { 
+                        loader.set(node);
+                    }
+                });
+            } else {
+                if (this.className == 'Image' || this.className == 'Sprite') { 
+                    loader.set(this);
+                }
+            }
+
+            loader.load();
+        },
     });
 
     /**
@@ -15193,3 +15233,89 @@ var Konva = {};
 
 })();
 
+;(function() {
+
+	Konva.Loader.Base = function (config) {
+		this.__init(config);
+	};
+
+	Konva.Loader.Base.prototype = {
+		__init: function(config) {
+			this.cache = {};
+			this.toLoad = [];
+			this.count = 0;
+
+			//error needs to be here, a container must be added
+			this.container = config.container;
+			this.clearEvents = config.clearEvents || false;
+		},
+		set: function(node) {
+			this.toLoad.push(node);
+		},
+		progress: function(node) {
+			this.count = this.count + 1;
+
+			this.container.fire('progress', node);
+			if (this.count == this.toLoad.length) {
+				this.container.fire('complete', this.container);
+				this._cleanup();
+			}
+		},
+		//cleanup and remove events if needed
+		_cleanup: function() {
+			this.count = 0;
+			this.toLoad = [];
+			if (this.clearEvents) {
+				this.container.off('progress complete');
+			}
+		}
+	};
+
+
+	Konva.Factory.addGetterSetter(Konva.Image, 'src');
+
+    /**
+    * get/set src
+    * @name src
+    * @method
+    * @memberof Konva.Image.prototype
+    * @param {String} src
+    * @returns {String}
+    */
+
+    Konva.Factory.addGetterSetter(Konva.Sprite, 'src');
+
+    /**
+    * get/set src
+    * @name src
+    * @method
+    * @memberof Konva.Sprite.prototype
+    * @param {String} src
+    * @returns {String}
+    */
+})();;(function() {
+
+	Konva.Loader.Default = function (config) {
+		this.__init(config);
+	};
+
+	Konva.Loader.Default.prototype.load = function() {
+		var self = this;
+
+		if (this.toLoad.length) {
+			this.toLoad.forEach(function (node) {
+				var image = new Image();
+				image.onload = function () {
+					node.setImage(image);
+					self.progress(node);
+				}
+				image.src = node.getSrc();
+			});
+		} else {
+			//there is nothing to load, fire complete
+			this.container.fire('complete', this.container);
+		}
+	}
+
+	Konva.Util.extend(Konva.Loader.Default, Konva.Loader.Base);
+})();
