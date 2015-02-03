@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.7.1
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2015-01-29
+ * Date: 2015-02-03
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -2118,7 +2118,7 @@ var Konva = {};
             this.restore();
         },
         _stroke: function(shape) {
-            if(shape.hasStroke()) {
+            if(shape.hasStroke() && shape.strokeHit()) {
                 // ignore strokeScaleEnabled for Text
                 var strokeScaleEnabled = (shape.getStrokeScaleEnabled() || (shape instanceof Konva.Text));
                 if (!strokeScaleEnabled) {
@@ -4934,7 +4934,7 @@ var Konva = {};
 	 * @example
      * node.cache();
      * node.filters([Konva.Filters.Mask]);
-     * node.threshold(0.1);
+     * node.threshold(200);
 	 */
 	Konva.Filters.Mask = function(imageData) {
 		// Detect pixels close to the background color
@@ -7494,6 +7494,22 @@ var Konva = {};
 
             return Konva.Collection.toCollection(retArr);
         },
+        /**
+         * return a first node from `find` method
+         * @method
+         * @memberof Konva.Container.prototype
+         * @param {String} selector
+         * @returns {Konva.Node}
+         * @example
+         * // select node with id foo
+         * var node = stage.findOne('#foo');
+         *
+         * // select node with name bar inside layer
+         * var nodes = layer.findOne('.bar');
+         */
+        findOne : function(selector) {
+        	return this.find(selector)[0];
+        },
         _getNodeById: function(key) {
             var node = Konva.ids[key];
 
@@ -8195,6 +8211,27 @@ var Konva = {};
      *
      * // set stroke width
      * shape.strokeWidth();
+     */
+
+    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeHit', true);
+
+    /**
+     * get/set stroke hit property. Useful for performance optimization.
+     * You may set `shape.strokeHit(false)`. In this case stroke will be no draw on hit canvas, so hit area
+     * of shape will be decreased (by lineWidth / 2). Remember that non closed line with `strokeHit = false`
+     * will be not drawn on hit canvas, that is mean line will no trigger pointer events (like mouseover)
+     * Default value is true
+     * @name strokeHit
+     * @method
+     * @memberof Konva.Shape.prototype
+     * @param {Boolean} strokeHit
+     * @returns {Boolean}
+     * @example
+     * // get strokeHit
+     * var strokeHit = shape.strokeHit();
+     *
+     * // set strokeHit
+     * shape.strokeHit();
      */
 
     Konva.Factory.addGetterSetter(Konva.Shape, 'lineJoin');
