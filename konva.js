@@ -1,9 +1,9 @@
 
 /*
- * Konva JavaScript Framework v0.7.1
+ * Konva JavaScript Framework v0.8.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2015-02-03
+ * Date: 2015-02-04
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -36,7 +36,7 @@ var Konva = {};
 
     Konva = {
         // public
-        version: '0.7.1',
+        version: '0.8.0',
 
         // private
         stages: [],
@@ -179,6 +179,7 @@ var Konva = {};
      * @param {Integer} [config.strokeBlue] set stroke blue component
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -2118,7 +2119,7 @@ var Konva = {};
             this.restore();
         },
         _stroke: function(shape) {
-            if(shape.hasStroke() && shape.strokeHit()) {
+            if(shape.hasStroke() && shape.strokeHitEnabled()) {
                 // ignore strokeScaleEnabled for Text
                 var strokeScaleEnabled = (shape.getStrokeScaleEnabled() || (shape instanceof Konva.Text));
                 if (!strokeScaleEnabled) {
@@ -8213,25 +8214,25 @@ var Konva = {};
      * shape.strokeWidth();
      */
 
-    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeHit', true);
+    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeHitEnabled', true);
 
     /**
-     * get/set stroke hit property. Useful for performance optimization.
-     * You may set `shape.strokeHit(false)`. In this case stroke will be no draw on hit canvas, so hit area
-     * of shape will be decreased (by lineWidth / 2). Remember that non closed line with `strokeHit = false`
+     * get/set strokeHitEnabled property. Useful for performance optimization.
+     * You may set `shape.strokeHitEnabled(false)`. In this case stroke will be no draw on hit canvas, so hit area
+     * of shape will be decreased (by lineWidth / 2). Remember that non closed line with `strokeHitEnabled = false`
      * will be not drawn on hit canvas, that is mean line will no trigger pointer events (like mouseover)
      * Default value is true
-     * @name strokeHit
+     * @name strokeHitEnabled
      * @method
      * @memberof Konva.Shape.prototype
-     * @param {Boolean} strokeHit
+     * @param {Boolean} strokeHitEnabled
      * @returns {Boolean}
      * @example
-     * // get strokeHit
-     * var strokeHit = shape.strokeHit();
+     * // get strokeHitEnabled
+     * var strokeHitEnabled = shape.strokeHitEnabled();
      *
-     * // set strokeHit
-     * shape.strokeHit();
+     * // set strokeHitEnabled
+     * shape.strokeHitEnabled();
      */
 
     Konva.Factory.addGetterSetter(Konva.Shape, 'lineJoin');
@@ -10627,6 +10628,7 @@ var Konva = {};
      * @param {Integer} [config.strokeBlue] set stroke blue component
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -10787,6 +10789,7 @@ var Konva = {};
      * @param {Integer} [config.strokeBlue] set stroke blue component
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -11085,6 +11088,7 @@ var Konva = {};
      * @param {Integer} [config.strokeBlue] set stroke blue component
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -11270,6 +11274,7 @@ var Konva = {};
      * @param {Integer} [config.strokeBlue] set stroke blue component
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -11455,6 +11460,7 @@ var Konva = {};
      * @param {Integer} [config.strokeBlue] set stroke blue component
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -11658,6 +11664,7 @@ var Konva = {};
      * @param {Integer} [config.strokeBlue] set stroke blue component
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -11966,6 +11973,7 @@ var Konva = {};
      * @param {Integer} [config.strokeBlue] set stroke blue component
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -12494,6 +12502,7 @@ var Konva = {};
      * @param {Integer} [config.strokeBlue] set stroke blue component
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -12776,6 +12785,7 @@ var Konva = {};
      * @param {Integer} [config.strokeBlue] set stroke blue component
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -13191,6 +13201,7 @@ var Konva = {};
      * @param {Integer} [config.strokeBlue] set stroke blue component
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -13902,6 +13913,7 @@ var Konva = {};
      * @param {Integer} [config.strokeBlue] set stroke blue component
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -14382,6 +14394,7 @@ var Konva = {};
      * @param {Integer} [config.strokeBlue] set stroke blue component
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -14550,6 +14563,7 @@ var Konva = {};
      * @param {Integer} [config.strokeBlue] set stroke blue component
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -15077,6 +15091,7 @@ var Konva = {};
      * @param {Integer} [config.strokeBlue] set stroke blue component
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default

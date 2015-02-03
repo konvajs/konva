@@ -1,12 +1,12 @@
 ## 0.7.1
 
 * Bug Fixes
-    * fixed when browser is crashing on pointer events fixed (and optimized `getIntersection` function)
+    * fixed when browser is crashing on pointer events fixed
+    * optimized `getIntersection` function
 * Enhancements
     * `container.findOne()` method
     * new `strokeHitEnabled` property. Useful for performance optimizations
     * typescript definitions. see `/resources/konva.d.ts`
-
 
 
 ## Rebranding release 2015-01-28 (Differents from last official KineticJS release)

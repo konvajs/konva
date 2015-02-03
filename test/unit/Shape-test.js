@@ -535,9 +535,9 @@ suite('Shape', function() {
     // ======================================================
     test.skip('fill and stroke with shadow and opacity', function(){
         var stage = addStage();
-        stage.bufferCanvas2._canvas.style.position = 'relative';
+//        stage.bufferCanvas2._canvas.style.position = 'relative';
 
-        document.body.appendChild(stage.bufferCanvas2._canvas);
+//        document.body.appendChild(stage.bufferCanvas2._canvas);
 
         stage.bufferCanvas._canvas.style.position = 'relative';
 
@@ -569,11 +569,10 @@ suite('Shape', function() {
 
         var trace = layer.getContext().getTrace();
         console.log(trace);
-//        assert.equal(trace, 'clearRect(0,0,578,200);save();save();globalAlpha=0.25;shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;drawImage([object HTMLCanvasElement],0,0);restore();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0);restore();');
 
         var canvas = createCanvas();
         var context = canvas.getContext('2d');
-        context.globalAlpha = 0.5;
+        context.globalAlpha = 0.60;
 
         // draw shadow
         context.save();
@@ -588,6 +587,7 @@ suite('Shape', function() {
         context.restore();
 
         // draw "stroke"
+        context.save();
         context.beginPath();
         context.moveTo(100,50);
         context.lineTo(200,50);
@@ -599,17 +599,7 @@ suite('Shape', function() {
         context.stroke();
         context.fillStyle = 'green';
         context.fillRect(105, 55, 90, 40);
-
-
-
-
-//        // clear the shadow
-//        context.shadowColor = 0;
-//        context.shadowOffsetX = 0;
-//        context.shadowOffsetY = 0;
-//        context.shadowBlur = 0;
-//
-//        // restroke without the shaodw
+        context.restore();
 //        context.stroke();
 //        console.log(layer.getContext().getTrace());
         compareLayerAndCanvas(layer, canvas, 10);
