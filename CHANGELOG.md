@@ -5,6 +5,7 @@
 * Enhancements
     * `container.findOne()` method
     * new `strokeHitEnabled` property. Useful for performance optimizations
+    * typescript definitions. see `/resources/konva.d.ts`
 
 
 
