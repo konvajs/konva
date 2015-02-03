@@ -580,7 +580,7 @@
             this.restore();
         },
         _stroke: function(shape) {
-            if(shape.hasStroke()) {
+            if(shape.hasStroke() && shape.strokeHit()) {
                 // ignore strokeScaleEnabled for Text
                 var strokeScaleEnabled = (shape.getStrokeScaleEnabled() || (shape instanceof Konva.Text));
                 if (!strokeScaleEnabled) {

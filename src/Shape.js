@@ -428,6 +428,27 @@
      * shape.strokeWidth();
      */
 
+    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeHit', true);
+
+    /**
+     * get/set stroke hit property. Useful for performance optimization.
+     * You may set `shape.strokeHit(false)`. In this case stroke will be no draw on hit canvas, so hit area
+     * of shape will be decreased (by lineWidth / 2). Remember that non closed line with `strokeHit = false`
+     * will be not drawn on hit canvas, that is mean line will no trigger pointer events (like mouseover)
+     * Default value is true
+     * @name strokeHit
+     * @method
+     * @memberof Konva.Shape.prototype
+     * @param {Boolean} strokeHit
+     * @returns {Boolean}
+     * @example
+     * // get strokeHit
+     * var strokeHit = shape.strokeHit();
+     *
+     * // set strokeHit
+     * shape.strokeHit();
+     */
+
     Konva.Factory.addGetterSetter(Konva.Shape, 'lineJoin');
 
     /**
