@@ -4,7 +4,7 @@
     * fixed when browser is crashing on pointer events fixed (and optimized `getIntersection` function)
 * Enhancements
     * `container.findOne()` method
-    * new `strokeHit` property. Useful for performance optimizations
+    * new `strokeHitEnabled` property. Useful for performance optimizations
 
 
 

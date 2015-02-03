@@ -855,10 +855,10 @@ suite('Shape', function() {
             strokeWidth: 20
         });
         // default value
-        assert.equal(rect.strokeHit(), true);
+        assert.equal(rect.strokeHitEnabled(), true);
 
-        rect.strokeHit(false);
-        assert.equal(rect.strokeHit(), false);
+        rect.strokeHitEnabled(false);
+        assert.equal(rect.strokeHitEnabled(), false);
         layer.add(rect);
         stage.add(layer);
 
