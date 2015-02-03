@@ -230,6 +230,48 @@ suite('Container', function() {
     });
 
     // ======================================================
+    test('select shape by id and name with findOne', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer({
+            id: 'myLayer'
+        });
+        var circle = new Konva.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            id: 'myCircle'
+        });
+
+        var rect = new Konva.Rect({
+            x: 300,
+            y: 100,
+            width: 100,
+            height: 50,
+            fill: 'purple',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myRect'
+        });
+
+        layer.add(circle);
+        layer.add(rect);
+        stage.add(layer);
+
+        var node;
+        node = stage.findOne('#myCircle');
+        assert.equal(node, circle);
+        node = layer.findOne('.myRect');
+        assert.equal(node, rect);
+        node = layer.findOne('#myLayer');
+        assert.equal(node, undefined, 'node should be undefined');
+        node = stage.findOne('#myLayer');
+        assert.equal(node, layer, 'node type should be Layer');
+    });
+
+    // ======================================================
     test('select shapes with multiple selectors', function() {
         var stage = addStage();
         var layer = new Konva.Layer({

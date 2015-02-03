@@ -184,6 +184,22 @@
 
             return Konva.Collection.toCollection(retArr);
         },
+        /**
+         * return a first node from `find` method
+         * @method
+         * @memberof Konva.Container.prototype
+         * @param {String} selector
+         * @returns {Konva.Node}
+         * @example
+         * // select node with id foo
+         * var node = stage.findOne('#foo');
+         *
+         * // select node with name bar inside layer
+         * var nodes = layer.findOne('.bar');
+         */
+        findOne : function(selector) {
+        	return this.find(selector)[0];
+        },
         _getNodeById: function(key) {
             var node = Konva.ids[key];
 

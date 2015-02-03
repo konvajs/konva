@@ -839,6 +839,33 @@ suite('Shape', function() {
         assert.equal(rect instanceof Konva.Rect, true);
         assert.equal(rect instanceof Konva.Shape, true);
         assert.equal(rect instanceof Konva.Node, true);
+    });
 
+    test('disable stroke for hit', function(){
+        var stage = addStage();
+
+        var layer = new Konva.Layer();
+
+        var rect = new Konva.Rect({
+            x: 100,
+            y: 50,
+            width: 100,
+            height: 50,
+            stroke: 'red',
+            strokeWidth: 20
+        });
+        // default value
+        assert.equal(rect.strokeHit(), true);
+
+        rect.strokeHit(false);
+        assert.equal(rect.strokeHit(), false);
+        layer.add(rect);
+        stage.add(layer);
+
+
+        assert.equal(rect.getY(), 50);
+
+        var trace = layer.getHitCanvas().getContext().getTrace(true);
+        assert.equal(trace, 'clearRect();save();transform();beginPath();rect();closePath();save();fillStyle;fill();restore();restore();');
     });
 });
