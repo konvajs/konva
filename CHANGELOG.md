@@ -3,6 +3,8 @@
 * Bug Fixes
     * fixed when browser is crashing on pointer events fixed (and optimized `getIntersection` function)
 * Enhancements
+    * `container.findOne()` method
+    * new `strokeHit` property. Useful for performance optimizations
 
 
 
@@ -44,4 +46,4 @@
     * `mousewheel` support. Thanks [@vmichnowicz](https://github.com/vmichnowicz)
     * new Arrow plugin
     * multiple names: `node.name('foo bar'); container.find('.foo');` (thanks [@mattslocum](https://github.com/mattslocum))
-    * `Container.findOne()` method. (thanks [@pronebird](https://github.com/pronebird))
+    * `Container.findOne()`
