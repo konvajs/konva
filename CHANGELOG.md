@@ -1,4 +1,4 @@
-## 0.7.1
+## 0.8.0 2015-02-04
 
 * Bug Fixes
     * fixed when browser is crashing on pointer events fixed
