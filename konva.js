@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.8.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2015-02-04
+ * Date: 2015-02-08
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -3703,6 +3703,60 @@ var Konva = {};
             Konva._addName(this, name);
             this._setAttr(NAME, name);
             return this;
+        },
+        // naming methods
+        /**
+         * add name to node
+         * @method
+         * @memberof Konva.Node.prototype
+         * @param {String} name
+         * @returns {Konva.Node}
+         * @example
+         * node.name('red');
+         * node.addName('selected');
+         * node.name(); // return 'red selected'
+         */
+        addName : function(name) {
+            if (!this.hasName(name)) {
+                var newName = this.name() + ' ' + name;
+                this.setName(newName);
+            }
+            return this;
+        },
+        /**
+         * check is node has name
+         * @method
+         * @memberof Konva.Node.prototype
+         * @param {String} name
+         * @returns {Boolean}
+         * @example
+         * node.name('red');
+         * node.hasName('red');   // return true
+         * node.hasName('selected'); // return false
+         */
+        hasName : function(name) {
+            var names = this.name().split(/\s/g);
+            return names.indexOf(name) !== -1;
+        },
+        /**
+         * remove name from node
+         * @method
+         * @memberof Konva.Node.prototype
+         * @param {String} name
+         * @returns {Konva.Node}
+         * @example
+         * node.name('red selected');
+         * node.removeName('selected');
+         * node.hasName('selected'); // return false
+         * node.name(); // return 'red'
+         */
+        removeName : function(name) {
+            var names = this.name().split(/\s/g);
+            var index = names.indexOf(name);
+            if (index !== -1) {
+                names.splice(index, 1);
+                this.setName(names.join(' '));
+            }
         },
         /**
          * set attr

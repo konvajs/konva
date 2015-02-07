@@ -1094,7 +1094,7 @@ suite('Node', function() {
     });
 
     // ======================================================
-    test('get shape name', function() {
+    test('test name methods', function() {
         var stage = addStage();
         var layer = new Konva.Layer();
         var circle = new Konva.Circle({
@@ -1104,13 +1104,26 @@ suite('Node', function() {
             fill: 'green',
             stroke: 'black',
             strokeWidth: 4,
-            name: 'myCircle'
+            name: 'myCircle foo'
         });
 
         layer.add(circle);
         stage.add(layer);
+        assert.equal(circle.getName(),'myCircle foo');
 
-        assert.equal(circle.getName(),'myCircle');
+        // add existing name
+        circle.addName('foo');
+        assert.equal(circle.getName(),'myCircle foo');
+
+        // check hasName
+        assert.equal(circle.hasName('myCircle'), true);
+        assert.equal(circle.hasName('foo'), true);
+        assert.equal(circle.hasName('boo'), false);
+        assert.equal(stage.findOne('.foo'), circle);
+
+        // removing name
+        circle.removeName('foo');
+        assert.equal(circle.getName(), 'myCircle');
     });
 
     // ======================================================

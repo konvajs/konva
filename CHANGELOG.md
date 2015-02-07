@@ -1,3 +1,9 @@
+## 0.8.1 2015-02-30
+
+* Bug Fixes
+* Enhancements
+    * new methods for working with node's name: `addName`, `removeName`, `hasName`.
+
 ## 0.8.0 2015-02-04
 
 * Bug Fixes
