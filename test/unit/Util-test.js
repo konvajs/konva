@@ -15,6 +15,28 @@ suite('Util', function(){
       blue: 200,
       alpha: 0.5
     }), 'rgba(100,150,200,0.5)');
-
   });
+
+    test('test colorToRGBA', function(){
+        assert.deepEqual(Konva.Util.colorToRGBA('black'), {
+            r : 0,
+            g : 0,
+            b : 0,
+            a : 1
+        });
+
+        assert.deepEqual(Konva.Util.colorToRGBA('#ffcc00'), {
+            r : 255,
+            g : 204,
+            b : 0,
+            a : 1
+        });
+
+        assert.deepEqual(Konva.Util.colorToRGBA(), {
+            r : 0,
+            g : 0,
+            b : 0,
+            a : 1
+        });
+    });
 });

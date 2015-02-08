@@ -5,6 +5,7 @@ var assert = chai.assert,
     origAssertEqual = assert.equal,
     origAssert = assert,
     origNotEqual = assert.notEqual,
+    origDeepEqual = assert.deepEqual,
     assertionCount = 0,
     assertions = document.createElement('em');
 
@@ -33,6 +34,11 @@ function init() {
     origNotEqual.apply(this, arguments);
     assertions.innerHTML = ++assertionCount;
   };
+
+    assert.deepEqual = function() {
+        origDeepEqual.apply(this, arguments);
+        assertions.innerHTML = ++assertionCount;
+    };
 
   window.onload = function() {
     var mochaStats = document.getElementById('mocha-stats');

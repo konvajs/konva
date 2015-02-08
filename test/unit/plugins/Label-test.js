@@ -1,6 +1,6 @@
 suite('Label', function() {
     // ======================================================
-    test.skip('add label', function() {
+    test('add label', function() {
         var stage = addStage();
         var layer = new Konva.Layer();
 

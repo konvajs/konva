@@ -101,6 +101,7 @@
                 n;
 
             context.setAttr('font', this._getContextFont());
+
             context.setAttr('textBaseline', MIDDLE);
             context.setAttr('textAlign', LEFT);
             context.save();
@@ -128,6 +129,7 @@
                 }
 
                 this.partialText = text;
+
                 context.fillStrokeShape(this);
                 context.restore();
                 context.translate(0, lineHeightPx);

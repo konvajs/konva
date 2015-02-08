@@ -132,10 +132,31 @@ suite('Line', function() {
         layer.add(line);
         stage.add(layer);
 
+        var canvas = createCanvas();
+        var context = canvas.getContext('2d');
+
+        context.save();
+        context.lineJoin = 'round';
+        context.lineCap = 'round';
+        context.lineWidth = 20;
+        context.strokeStyle = 'blue';
+
+        context.shadowColor = 'rgba(0,0,0,0.5)';
+        context.shadowBlur = 20;
+        context.shadowOffsetX = 10;
+        context.shadowOffsetY = 10;
+        context.moveTo(73, 160);
+        context.lineTo(340, 23);
+
+        context.stroke();
+        context.fill();
+        context.restore();
+
+        compareLayerAndCanvas(layer, canvas, 5);
 
         var trace = layer.getContext().getTrace();
-        //console.log(trace);
-        assert.equal(trace, 'clearRect(0,0,578,200);save();lineJoin=round;transform(1,0,0,1,0,0);save();globalAlpha=0.5;shadowColor=black;shadowBlur=20;shadowOffsetX=10;shadowOffsetY=10;beginPath();moveTo(73,160);lineTo(340,23);lineCap=round;lineWidth=20;strokeStyle=blue;stroke();restore();beginPath();moveTo(73,160);lineTo(340,23);lineCap=round;lineWidth=20;strokeStyle=blue;stroke();restore();');
+
+        assert.equal(trace, 'clearRect(0,0,578,200);save();lineJoin=round;transform(1,0,0,1,0,0);save();shadowColor=rgba(0,0,0,0.5);shadowBlur=20;shadowOffsetX=10;shadowOffsetY=10;beginPath();moveTo(73,160);lineTo(340,23);lineCap=round;lineWidth=20;strokeStyle=blue;stroke();restore();restore();');
 
     });
 

@@ -1,5 +1,6 @@
 (function() {
     var HAS_SHADOW = 'hasShadow';
+    var SHADOW_RGBA = 'shadowRGBA';
 
     function _fillFunc(context) {
         context.fill();
@@ -16,6 +17,10 @@
 
     function _clearHasShadowCache() {
         this._clearCache(HAS_SHADOW);
+    }
+
+    function _clearGetShadowRGBACache() {
+        this._clearCache(SHADOW_RGBA);
     }
 
     Konva.Util.addMethods(Konva.Shape, {
@@ -44,6 +49,8 @@
             Konva.Node.call(this, config);
 
             this.on('shadowColorChange.konva shadowBlurChange.konva shadowOffsetChange.konva shadowOpacityChange.konva shadowEnabledChange.konva', _clearHasShadowCache);
+
+            this.on('shadowColorChange.konva shadowOpacityChange.konva shadowEnabledChange.konva', _clearGetShadowRGBACache);
         },
         hasChildren: function() {
             return false;
@@ -80,6 +87,15 @@
         },
         _hasShadow: function() {
             return this.getShadowEnabled() && (this.getShadowOpacity() !== 0 && !!(this.getShadowColor() || this.getShadowBlur() || this.getShadowOffsetX() || this.getShadowOffsetY()));
+        },
+        getShadowRGBA: function() {
+            return this._getCache(SHADOW_RGBA, this._getShadowRGBA);
+        },
+        _getShadowRGBA: function() {
+            if (this.hasShadow()) {
+                var rgba = Konva.Util.colorToRGBA(this.shadowColor());
+                return 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + (rgba.a * (this.getShadowOpacity() || 1)) + ')';
+            }
         },
         /**
          * returns whether or not the shape will be filled
@@ -138,6 +154,7 @@
                 cachedCanvas = this._cache.canvas,
                 drawFunc = this.sceneFunc(),
                 hasShadow = this.hasShadow(),
+                hasStroke = this.hasStroke(),
                 stage, bufferCanvas, bufferContext;
 
             if(this.isVisible()) {
@@ -200,26 +217,29 @@
                             context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
                         }
 
-                        if (hasShadow && !canvas.hitCanvas) {
+                        if (hasShadow && hasStroke && !canvas.hitCanvas) {
                             context.save();
+                            // apply shadow
+                            context._applyOpacity(this);
                             context._applyShadow(this);
                             drawFunc.call(this, context);
                             context.restore();
+                            // if shape has stroke we need to redraw shape
+                            // otherwise we will see shadow under stroke (and over fill)
+                            // but I think is is unexpected behavior
+                            if (this.hasFill()) {
+                                drawFunc.call(this, context);
+                            }
+                        } else if (hasShadow && !canvas.hitCanvas) {
+                            context.save();
+                            context._applyOpacity(this);
+                            context._applyShadow(this);
+                            drawFunc.call(this, context);
+                            context.restore();
+                        } else {
+                            context._applyOpacity(this);
+                            drawFunc.call(this, context);
                         }
-
-                        context._applyOpacity(this);
-                        drawFunc.call(this, context);
-
-//                        // clear stroke shadow
-//                        if (hasShadow && !canvas.hitCanvas) {
-//                            context.setAttr('shadowBlur', 0);
-//                            context.setAttr('shadowColor', 0);
-//                            context.setAttr('shadowOffsetX', 0);
-//                            context.setAttr('shadowOffsetY', 0);
-//                            context.stroke();
-//                        }
-
-
                     }
                     context.restore();
                 }

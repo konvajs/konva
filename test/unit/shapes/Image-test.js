@@ -248,7 +248,7 @@ suite('Image', function(){
           var stage = addStage();
 
           var layer = new Konva.Layer();
-          darth = new Konva.Image({
+          var darth = new Konva.Image({
               x: 200,
               y: 60,
               image: imageObj,
@@ -259,7 +259,7 @@ suite('Image', function(){
               opacity: 0.5,
               shadowColor: 'black',
               shadowBlur: 10,
-              shadowOpacity: 0.5,
+              shadowOpacity: 0.1,
               shadowOffset: {x: 20, y:20}
           });
 
@@ -268,7 +268,7 @@ suite('Image', function(){
 
           var trace = layer.getContext().getTrace();
           //console.log(trace);
-          assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);save();globalAlpha=0.25;shadowColor=black;shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;beginPath();rect(0,0,100,100);closePath();drawImage([object HTMLImageElement],0,0,100,100);restore();globalAlpha=0.5;beginPath();rect(0,0,100,100);closePath();drawImage([object HTMLImageElement],0,0,100,100);restore();');
+          assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,150,30);save();globalAlpha=0.5;shadowColor=rgba(0,0,0,0.1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;drawImage([object HTMLImageElement],0,0,100,100);restore();restore();');
 
           done();
 
@@ -277,13 +277,13 @@ suite('Image', function(){
   });
 
   // ======================================================
-  test.skip('image with stroke, opacity and shadow', function(done) {
+  test('image with stroke, opacity and shadow', function(done) {
       var imageObj = new Image();
       imageObj.onload = function() {
           var stage = addStage();
 
           var layer = new Konva.Layer();
-          darth = new Konva.Image({
+          var darth = new Konva.Image({
               x: 200,
               y: 60,
               image: imageObj,
@@ -305,7 +305,7 @@ suite('Image', function(){
 
           var trace = layer.getContext().getTrace();
           //console.log(trace);
-          assert.equal(trace, 'clearRect(0,0,578,200);save();save();globalAlpha=0.25;shadowColor=black;shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;drawImage([object HTMLCanvasElement],0,0);restore();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0);restore();');
+          assert.equal(trace, 'clearRect(0,0,578,200);save();save();shadowColor=rgba(0,0,0,0.5);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0);restore();restore();');
 
           done();
 

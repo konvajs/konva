@@ -375,33 +375,49 @@ suite('Shape', function() {
 
   // ======================================================
   test('fill with shadow and opacity', function(){
-    var stage = addStage();
+        var stage = addStage();
 
-    var layer = new Konva.Layer();
+        var layer = new Konva.Layer();
 
-    var rect = new Konva.Rect({
-      x: 100,
-      y: 50,
-      width: 100,
-      height: 50,
-      fill: 'green',
-      opacity: 0.5,
-      shadowColor: 'black',
-      shadowBlur: 10,
-      shadowOffset: {x:10, y:10},
-      shadowOpacity: 0.5
-    });
+        var rect = new Konva.Rect({
+          x: 100,
+          y: 50,
+          width: 100,
+          height: 50,
+          fill: 'green',
+          opacity: 0.5,
+          shadowColor: 'black',
+          shadowBlur: 10,
+          shadowOffset: {x:10, y:10},
+          shadowOpacity: 0.5
+        });
 
-    layer.add(rect);
-    stage.add(layer);
+        layer.add(rect);
+        stage.add(layer);
 
-    assert.equal(rect.getX(), 100);
-    assert.equal(rect.getY(), 50);
+        assert.equal(rect.getX(), 100);
+        assert.equal(rect.getY(), 50);
+
+      var canvas = createCanvas();
+      var context = canvas.getContext('2d');
+      context.globalAlpha = 0.5;
+      // rect
+      context.beginPath();
+      context.rect(100, 50, 100, 50);
+      context.closePath();
+
+      context.fillStyle = 'green';
+      context.shadowColor = 'rgba(0,0,0,0.5)';
+      context.shadowBlur = 10;
+      context.shadowOffsetX = 10;
+      context.shadowOffsetY = 10;
+      context.fill();
+
+      compareLayerAndCanvas(layer, canvas, 10);
 
     var trace = layer.getContext().getTrace();
-    //console.log(trace);
 
-    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);save();globalAlpha=0.25;shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();restore();globalAlpha=0.5;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();restore();');
+    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);save();globalAlpha=0.5;shadowColor=rgba(0,0,0,0.5);shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();restore();restore();');
 
   });
 
@@ -431,9 +447,29 @@ suite('Shape', function() {
     assert.equal(rect.getX(), 100);
     assert.equal(rect.getY(), 50);
 
+      var canvas = createCanvas();
+      var context = canvas.getContext('2d');
+      context.globalAlpha = 0.5;
+      // rect
+      context.beginPath();
+      context.rect(100, 50, 100, 50);
+      context.closePath();
+
+      context.strokeStyle = 'red';
+      context.lineWidth = 20;
+
+
+      context.shadowColor = 'rgba(0,0,0,0.5)';
+      context.shadowBlur = 10;
+      context.shadowOffsetX = 10;
+      context.shadowOffsetY = 10;
+      context.stroke();
+
+      compareLayerAndCanvas(layer, canvas, 10);
+
     var trace = layer.getContext().getTrace();
     //console.log(trace);
-    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);save();globalAlpha=0.25;shadowColor=black;shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;beginPath();rect(0,0,100,50);closePath();lineWidth=20;strokeStyle=red;stroke();restore();globalAlpha=0.5;beginPath();rect(0,0,100,50);closePath();lineWidth=20;strokeStyle=red;stroke();restore();');
+    assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);save();globalAlpha=0.5;shadowColor=rgba(0,0,0,0.5);shadowBlur=10;shadowOffsetX=10;shadowOffsetY=10;beginPath();rect(0,0,100,50);closePath();lineWidth=20;strokeStyle=red;stroke();restore();restore();');
   });
 
 
@@ -533,15 +569,8 @@ suite('Shape', function() {
     });
 
     // ======================================================
-    test.skip('fill and stroke with shadow and opacity', function(){
+    test('fill and stroke with shadow and opacity', function(){
         var stage = addStage();
-//        stage.bufferCanvas2._canvas.style.position = 'relative';
-
-//        document.body.appendChild(stage.bufferCanvas2._canvas);
-
-        stage.bufferCanvas._canvas.style.position = 'relative';
-
-        document.body.appendChild(stage.bufferCanvas._canvas);
         var layer = new Konva.Layer();
 
         var rect = new Konva.Rect({
@@ -553,8 +582,8 @@ suite('Shape', function() {
             stroke: 'black',
             strokeWidth: 10,
             shadowColor: 'grey',
-            shadowBlur: 10,
             opacity : 0.5,
+            shadowBlur : 1,
             shadowOffset: {
                 x: 20,
                 y: 20
@@ -565,24 +594,21 @@ suite('Shape', function() {
         layer.add(rect);
         stage.add(layer);
 
-
-
-        var trace = layer.getContext().getTrace();
-        console.log(trace);
-
         var canvas = createCanvas();
         var context = canvas.getContext('2d');
-        context.globalAlpha = 0.60;
+        context.globalAlpha = 0.5;
 
         // draw shadow
+        var offset = 200;
         context.save();
         context.beginPath();
-        context.rect(95, 45, 110, 60);
+        context.rect(95 - offset, 45 - offset, 110, 60);
         context.closePath();
         context.shadowColor = 'grey';
-        context.shadowBlur = 10;
-        context.shadowOffsetX = 20;
-        context.shadowOffsetY = 20;
+        context.shadowBlur = 1;
+        context.shadowOffsetX = 20 + offset;
+        context.shadowOffsetY = 20 + offset;
+        context.fillStyle = 'black';
         context.fill();
         context.restore();
 
@@ -597,13 +623,87 @@ suite('Shape', function() {
         context.lineWidth = 10;
         context.strokeStyle = 'black';
         context.stroke();
-        context.fillStyle = 'green';
-        context.fillRect(105, 55, 90, 40);
         context.restore();
-//        context.stroke();
-//        console.log(layer.getContext().getTrace());
-        compareLayerAndCanvas(layer, canvas, 10);
+
+        context.save();
+        context.beginPath();
+        context.fillStyle = 'green';
+        context.rect(105, 55, 90, 40);
+        context.closePath();
+        context.fill();
+        context.restore();
+
+
+        compareLayerAndCanvas(layer, canvas, 50);
+
+        var trace = layer.getContext().getTrace();
+        //console.log(trace);
+        assert.equal(trace, 'clearRect(0,0,578,200);save();save();shadowColor=rgba(128,128,128,1);shadowBlur=1;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0);restore();restore();');
+
     });
+
+    // ======================================================
+    test('text with fill and stroke with shadow', function(){
+        var stage = addStage();
+
+        var layer = new Konva.Layer();
+
+        var text = new Konva.Text({
+            x: 50,
+            y: 50,
+            text : 'Test TEXT',
+            fontSize :  50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 2,
+            shadowColor: 'grey',
+            shadowBlur: 2,
+            shadowOffset: {
+                x: 20,
+                y: 20
+            }
+        });
+
+        layer.add(text);
+        stage.add(layer);
+
+        var canvas = createCanvas();
+        var context = canvas.getContext('2d');
+
+        context.save();
+        context.shadowColor = 'grey';
+        context.shadowBlur = 2;
+        context.shadowOffsetX = 20;
+        context.shadowOffsetY = 20;
+        context.font = 'normal 50px Arial';
+        context.textBaseline = 'middle';
+
+        context.fillStyle = 'green';
+        context.fillText('Test TEXT', 50, 75);
+
+        context.lineWidth  = 2;
+        context.strokeStyle = 'black';
+        context.strokeText('Test TEXT', 50, 75);
+
+        context.stroke();
+        context.fill();
+        context.restore();
+
+        // draw text again to remove shadow under stroke
+        context.font = 'normal 50px Arial';
+        context.textBaseline = 'middle';
+        context.fillText('Test TEXT', 50, 75);
+        context.fillStyle = 'green';
+        context.fillText('Test TEXT', 50, 75);
+
+        context.lineWidth  = 2;
+        context.strokeStyle = 'black';
+        context.strokeText('Test TEXT', 50, 75);
+
+        compareLayerAndCanvas(layer, canvas, 50);
+    });
+
+
 
     // ======================================================
     test('shape intersect with shadow', function(){
@@ -857,5 +957,32 @@ suite('Shape', function() {
 
         var trace = layer.getHitCanvas().getContext().getTrace(true);
         assert.equal(trace, 'clearRect();save();transform();beginPath();rect();closePath();save();fillStyle;fill();restore();restore();');
+    });
+
+    test('cache shadow color rgba', function() {
+        var circle = new Konva.Circle({
+            fill : 'green',
+            radius : 50
+        });
+        // no shadow on start
+        assert.equal(circle.hasShadow(), false);
+        assert.equal(circle.getShadowRGBA(), undefined);
+
+        // set shadow
+        circle.shadowColor('black');
+        assert.equal(circle.hasShadow(), true);
+        assert.equal(circle.getShadowRGBA(), 'rgba(0,0,0,1)');
+
+        // set another shadow property
+        circle.shadowOpacity(0.2);
+        assert.equal(circle.getShadowRGBA(), 'rgba(0,0,0,0.2)');
+
+        circle.shadowColor('rgba(10,10,10,0.5)');
+        assert.equal(circle.getShadowRGBA(), 'rgba(10,10,10,0.1)');
+
+
+        // reset shadow
+        circle.shadowColor(null);
+        assert.equal(circle.getShadowRGBA(), undefined);
     });
 });

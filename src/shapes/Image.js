@@ -57,7 +57,7 @@
                 }
             }
 
-            if (this.hasFill() || this.hasStroke() || this.hasShadow()) {
+            if (this.hasFill() || this.hasStroke()) {
                 context.beginPath();
                 context.rect(0, 0, width, height);
                 context.closePath();

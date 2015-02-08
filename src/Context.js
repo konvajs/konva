@@ -546,18 +546,12 @@
         },
         _applyShadow: function(shape) {
             var util = Konva.Util,
-                absOpacity = shape.getAbsoluteOpacity(),
-                color = util.get(shape.getShadowColor(), 'black'),
+                color = util.get(shape.getShadowRGBA(), 'black'),
                 blur = util.get(shape.getShadowBlur(), 5),
-                shadowOpacity = util.get(shape.getShadowOpacity(), 1),
                 offset = util.get(shape.getShadowOffset(), {
                     x: 0,
                     y: 0
                 });
-
-            if(shadowOpacity) {
-                this.setAttr('globalAlpha', shadowOpacity * absOpacity);
-            }
 
             this.setAttr('shadowColor', color);
             this.setAttr('shadowBlur', blur);
