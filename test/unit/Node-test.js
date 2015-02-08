@@ -1129,6 +1129,7 @@ suite('Node', function() {
         // removing name
         circle.removeName('foo');
         assert.equal(circle.getName(), 'myCircle');
+        assert.equal(layer.find('.foo').length, 0);
     });
 
     // ======================================================

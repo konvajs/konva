@@ -510,18 +510,11 @@ var Konva = {};
             }
         },
         _addName: function(node, name) {
-            if(name !== undefined) {
-
-                var names = name.split(/\s/g);
-                for(var n = 0; n < names.length; n++) {
-                    var subname = names[n];
-                    if (subname) {
-                        if(this.names[subname] === undefined) {
-                            this.names[subname] = [];
-                        }
-                        this.names[subname].push(node);
-                    }
+            if(name) {
+                if(!this.names[name]) {
+                    this.names[name] = [];
                 }
+                this.names[name].push(node);
             }
         },
         _removeName: function(name, _id) {
@@ -3697,10 +3690,26 @@ var Konva = {};
             return this;
         },
         setName: function(name) {
-            var oldName = this.getName();
+            debugger;
+            var oldNames = (this.getName() || '').split(/\s/g);
+            var newNames = (name || '').split(/\s/g);
+            var subname, i;
+            // remove all subnames
+            for(i = 0; i < oldNames.length; i++) {
+                subname = oldNames[i];
+                if ((newNames.indexOf(subname)) === -1 && subname) {
+                    Konva._removeName(subname, this._id);
+                }
+            }
 
-            Konva._removeName(oldName, this._id);
-            Konva._addName(this, name);
+            // add new names
+            for(i = 0; i < newNames.length; i++) {
+                subname = newNames[i];
+                if ((oldNames.indexOf(subname) === -1) && subname) {
+                    Konva._addName(this, subname);
+                }
+            }
+
             this._setAttr(NAME, name);
             return this;
         },

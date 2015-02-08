@@ -292,18 +292,11 @@ var Konva = {};
             }
         },
         _addName: function(node, name) {
-            if(name !== undefined) {
-
-                var names = name.split(/\s/g);
-                for(var n = 0; n < names.length; n++) {
-                    var subname = names[n];
-                    if (subname) {
-                        if(this.names[subname] === undefined) {
-                            this.names[subname] = [];
-                        }
-                        this.names[subname].push(node);
-                    }
+            if(name) {
+                if(!this.names[name]) {
+                    this.names[name] = [];
                 }
+                this.names[name].push(node);
             }
         },
         _removeName: function(name, _id) {
