@@ -1103,17 +1103,22 @@ suite('Node', function() {
             radius: 70,
             fill: 'green',
             stroke: 'black',
-            strokeWidth: 4,
-            name: 'myCircle foo'
+            strokeWidth: 4
         });
 
         layer.add(circle);
         stage.add(layer);
-        assert.equal(circle.getName(),'myCircle foo');
+        assert.equal(circle.getName(), undefined);
+
+        circle.addName('foo');
+        assert.equal(circle.getName(),'foo');
+        circle.addName('myCircle');
+        assert.equal(circle.getName(),'foo myCircle');
 
         // add existing name
         circle.addName('foo');
-        assert.equal(circle.getName(),'myCircle foo');
+        assert.equal(circle.getName(),'foo myCircle');
+
 
         // check hasName
         assert.equal(circle.hasName('myCircle'), true);

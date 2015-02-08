@@ -3718,7 +3718,8 @@ var Konva = {};
          */
         addName : function(name) {
             if (!this.hasName(name)) {
-                var newName = this.name() + ' ' + name;
+                var oldName = this.name();
+                var newName = oldName ? (oldName + ' ' + name) : name;
                 this.setName(newName);
             }
             return this;
@@ -3735,7 +3736,7 @@ var Konva = {};
          * node.hasName('selected'); // return false
          */
         hasName : function(name) {
-            var names = this.name().split(/\s/g);
+            var names = (this.name() || '').split(/\s/g);
             return names.indexOf(name) !== -1;
         },
         /**
@@ -3751,7 +3752,7 @@ var Konva = {};
          * node.name(); // return 'red'
          */
         removeName : function(name) {
-            var names = this.name().split(/\s/g);
+            var names = (this.name() || '').split(/\s/g);
             var index = names.indexOf(name);
             if (index !== -1) {
                 names.splice(index, 1);
