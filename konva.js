@@ -3690,7 +3690,6 @@ var Konva = {};
             return this;
         },
         setName: function(name) {
-            debugger;
             var oldNames = (this.getName() || '').split(/\s/g);
             var newNames = (name || '').split(/\s/g);
             var subname, i;
