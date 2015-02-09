@@ -637,7 +637,7 @@ suite('Shape', function() {
         // don't test in PhantomJS as it use old chrome engine
         // it it has opacity + shadow bug
         if (!window.mochaPhantomJS) {
-            compareLayerAndCanvas(layer, canvas, 20);
+            compareLayerAndCanvas(layer, canvas, 50);
         }
 
         var trace = layer.getContext().getTrace();
@@ -988,5 +988,94 @@ suite('Shape', function() {
         // reset shadow
         circle.shadowColor(null);
         assert.equal(circle.getShadowRGBA(), undefined);
+    });
+
+    test('scale should also effect shadow offset', function() {
+        var stage = addStage();
+
+        var layer = new Konva.Layer();
+
+        var rect = new Konva.Rect({
+            x: 100,
+            y: 100,
+            width: 100,
+            height: 100,
+            scaleX : 0.5,
+            scaleY : 0.5,
+            fill: 'green',
+            shadowColor: 'black',
+            shadowBlur: 0,
+            shadowOffset: {x:10, y:10}
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        var canvas = createCanvas();
+        var context = canvas.getContext('2d');
+        // rect
+        context.beginPath();
+        context.rect(100, 100, 50, 50);
+        context.closePath();
+
+        context.fillStyle = 'green';
+        context.shadowColor = 'rgba(0,0,0,1)';
+        context.shadowBlur = 0;
+        context.shadowOffsetX = 5;
+        context.shadowOffsetY = 5;
+        context.fill();
+
+
+        compareLayerAndCanvas(layer, canvas, 10);
+
+        var trace = layer.getContext().getTrace();
+
+        assert.equal(trace, 'clearRect(0,0,578,200);save();transform(0.5,0,0,0.5,100,100);save();shadowColor=rgba(0,0,0,1);shadowBlur=0;shadowOffsetX=5;shadowOffsetY=5;beginPath();rect(0,0,100,100);closePath();fillStyle=green;fill();restore();restore();');
+    });
+
+    test('scale of parent container should also effect shadow offset', function() {
+        var stage = addStage();
+
+        var layer = new Konva.Layer();
+        var group = new Konva.Group({
+            x : 100,
+            y : 100,
+            scaleX : 0.5,
+            scaleY : 0.5
+        });
+        var rect = new Konva.Rect({
+            width: 200,
+            height: 200,
+            scaleX : 0.5,
+            scaleY : 0.5,
+            fill: 'green',
+            shadowColor: 'black',
+            shadowBlur: 0,
+            shadowOffset: {x:20, y:20}
+        });
+
+        group.add(rect);
+        layer.add(group);
+        stage.add(layer);
+
+        var canvas = createCanvas();
+        var context = canvas.getContext('2d');
+        // rect
+        context.beginPath();
+        context.rect(100, 100, 50, 50);
+        context.closePath();
+
+        context.fillStyle = 'green';
+        context.shadowColor = 'rgba(0,0,0,1)';
+        context.shadowBlur = 0;
+        context.shadowOffsetX = 5;
+        context.shadowOffsetY = 5;
+        context.fill();
+
+        compareLayerAndCanvas(layer, canvas, 10);
+
+        var trace = layer.getContext().getTrace();
+
+        assert.equal(trace, 'clearRect(0,0,578,200);save();transform(0.25,0,0,0.25,100,100);save();shadowColor=rgba(0,0,0,1);shadowBlur=0;shadowOffsetX=5;shadowOffsetY=5;beginPath();rect(0,0,200,200);closePath();fillStyle=green;fill();restore();restore();');
     });
 });

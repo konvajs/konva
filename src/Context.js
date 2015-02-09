@@ -551,12 +551,15 @@
                 offset = util.get(shape.getShadowOffset(), {
                     x: 0,
                     y: 0
-                });
+                }),
+                m = shape.getAbsoluteTransform().m,
+                scaleX = m[0],
+                scaleY = m[3];
 
             this.setAttr('shadowColor', color);
             this.setAttr('shadowBlur', blur);
-            this.setAttr('shadowOffsetX', offset.x);
-            this.setAttr('shadowOffsetY', offset.y);
+            this.setAttr('shadowOffsetX', offset.x * scaleX);
+            this.setAttr('shadowOffsetY', offset.y * scaleY);
         
         }
     };

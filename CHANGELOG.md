@@ -4,6 +4,8 @@
 * Enhancements
     * new methods for working with node's name: `addName`, `removeName`, `hasName`.
     * performance optimization (remove some unnecessary draws)
+    * more expected drawing when shape has opacity, stroke and shadow
+    * `scale` now affect to `shadowOffset`
 
 ## 0.8.0 2015-02-04
 
