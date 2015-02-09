@@ -660,8 +660,8 @@
                 // throws a JS warning.  layerX and layerY are required for FF
                 // when the container is transformed via CSS.
                 else if (Konva.UA.browser === 'mozilla') {
-                    x = evt.layerX;
-                    y = evt.layerY;
+                    x = evt.layerX || (evt.clientX - contentPosition.left);
+                    y = evt.layerY || (evt.clientY - contentPosition.top);
                 }
                 // if clientX is defined, assume that clientY is defined as well
                 else if (clientX !== undefined && contentPosition) {

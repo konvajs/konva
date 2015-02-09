@@ -196,7 +196,7 @@ suite('Rect', function(){
         context.arc(100, 100, 50, 0, Math.PI * 2);
         context.fillStyle = 'black';
         context.fill();
-        compareLayerAndCanvas(layer, canvas);
+        compareLayerAndCanvas(layer, canvas, 100);
     });
 
 });
