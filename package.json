@@ -35,12 +35,19 @@
   "bugs": {
     "url": "https://github.com/konvajs/konva/issues"
   },
-  "homepage" : "http://konvajs.github.io/",
+  "homepage": "http://konvajs.github.io/",
   "readmeFilename": "README.md",
   "main": "konva.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/konvajs/konva.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "testling": {
+    "html": "test/runner.html",
+    "harness": "mocha-tdd",
+    "browsers": [
+      "ie/latest"
+    ]
+  }
 }

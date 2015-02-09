@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.8.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2015-02-08
+ * Date: 2015-02-09
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -930,26 +930,155 @@ var Konva = {};
         KONVA_ERROR = 'Konva error: ',
         RGB_PAREN = 'rgb(',
         COLORS = {
-            aqua: [0,255,255],
-            lime: [0,255,0],
-            silver: [192,192,192],
-            black: [0,0,0],
-            maroon: [128,0,0],
-            teal: [0,128,128],
-            blue: [0,0,255],
-            navy: [0,0,128],
-            white: [255,255,255],
-            fuchsia: [255,0,255],
-            olive:[128,128,0],
-            yellow: [255,255,0],
-            orange: [255,165,0],
-            gray: [128,128,128],
-            purple: [128,0,128],
-            green: [0,128,0],
-            red: [255,0,0],
-            pink: [255,192,203],
-            cyan: [0,255,255],
-            transparent: [255,255,255,0]
+            aliceblue: [240, 248, 255],
+            antiquewhite: [250, 235, 215],
+            aqua: [0, 255, 255],
+            aquamarine: [127, 255, 212],
+            azure: [240, 255, 255],
+            beige: [245, 245, 220],
+            bisque: [255, 228, 196],
+            black: [0, 0, 0],
+            blanchedalmond: [255, 235, 205],
+            blue: [0, 0, 255],
+            blueviolet: [138, 43, 226],
+            brown: [165, 42, 42],
+            burlywood: [222, 184, 135],
+            cadetblue: [95, 158, 160],
+            chartreuse: [127, 255, 0],
+            chocolate: [210, 105, 30],
+            coral: [255, 127, 80],
+            cornflowerblue: [100, 149, 237],
+            cornsilk: [255, 248, 220],
+            crimson: [220, 20, 60],
+            cyan: [0, 255, 255],
+            darkblue: [0, 0, 139],
+            darkcyan: [0, 139, 139],
+            darkgoldenrod: [184, 132, 11],
+            darkgray: [169, 169, 169],
+            darkgreen: [0, 100, 0],
+            darkgrey: [169, 169, 169],
+            darkkhaki: [189, 183, 107],
+            darkmagenta: [139, 0, 139],
+            darkolivegreen: [85, 107, 47],
+            darkorange: [255, 140, 0],
+            darkorchid: [153, 50, 204],
+            darkred: [139, 0, 0],
+            darksalmon: [233, 150, 122],
+            darkseagreen: [143, 188, 143],
+            darkslateblue: [72, 61, 139],
+            darkslategray: [47, 79, 79],
+            darkslategrey: [47, 79, 79],
+            darkturquoise: [0, 206, 209],
+            darkviolet: [148, 0, 211],
+            deeppink: [255, 20, 147],
+            deepskyblue: [0, 191, 255],
+            dimgray: [105, 105, 105],
+            dimgrey: [105, 105, 105],
+            dodgerblue: [30, 144, 255],
+            firebrick: [178, 34, 34],
+            floralwhite: [255, 255, 240],
+            forestgreen: [34, 139, 34],
+            fuchsia: [255, 0, 255],
+            gainsboro: [220, 220, 220],
+            ghostwhite: [248, 248, 255],
+            gold: [255, 215, 0],
+            goldenrod: [218, 165, 32],
+            gray: [128, 128, 128],
+            green: [0, 128, 0],
+            greenyellow: [173, 255, 47],
+            grey: [128, 128, 128],
+            honeydew: [240, 255, 240],
+            hotpink: [255, 105, 180],
+            indianred: [205, 92, 92],
+            indigo: [75, 0, 130],
+            ivory: [255, 255, 240],
+            khaki: [240, 230, 140],
+            lavender: [230, 230, 250],
+            lavenderblush: [255, 240, 245],
+            lawngreen: [124, 252, 0],
+            lemonchiffon: [255, 250, 205],
+            lightblue: [173, 216, 230],
+            lightcoral: [240, 128, 128],
+            lightcyan: [224, 255, 255],
+            lightgoldenrodyellow: [250, 250, 210],
+            lightgray: [211, 211, 211],
+            lightgreen: [144, 238, 144],
+            lightgrey: [211, 211, 211],
+            lightpink: [255, 182, 193],
+            lightsalmon: [255, 160, 122],
+            lightseagreen: [32, 178, 170],
+            lightskyblue: [135, 206, 250],
+            lightslategray: [119, 136, 153],
+            lightslategrey: [119, 136, 153],
+            lightsteelblue: [176, 196, 222],
+            lightyellow: [255, 255, 224],
+            lime: [0, 255, 0],
+            limegreen: [50, 205, 50],
+            linen: [250, 240, 230],
+            magenta: [255, 0, 255],
+            maroon: [128, 0, 0],
+            mediumaquamarine: [102, 205, 170],
+            mediumblue: [0, 0, 205],
+            mediumorchid: [186, 85, 211],
+            mediumpurple: [147, 112, 219],
+            mediumseagreen: [60, 179, 113],
+            mediumslateblue: [123, 104, 238],
+            mediumspringgreen: [0, 250, 154],
+            mediumturquoise: [72, 209, 204],
+            mediumvioletred: [199, 21, 133],
+            midnightblue: [25, 25, 112],
+            mintcream: [245, 255, 250],
+            mistyrose: [255, 228, 225],
+            moccasin: [255, 228, 181],
+            navajowhite: [255, 222, 173],
+            navy: [0, 0, 128],
+            oldlace: [253, 245, 230],
+            olive: [128, 128, 0],
+            olivedrab: [107, 142, 35],
+            orange: [255, 165, 0],
+            orangered: [255, 69, 0],
+            orchid: [218, 112, 214],
+            palegoldenrod: [238, 232, 170],
+            palegreen: [152, 251, 152],
+            paleturquoise: [175, 238, 238],
+            palevioletred: [219, 112, 147],
+            papayawhip: [255, 239, 213],
+            peachpuff: [255, 218, 185],
+            peru: [205, 133, 63],
+            pink: [255, 192, 203],
+            plum: [221, 160, 203],
+            powderblue: [176, 224, 230],
+            purple: [128, 0, 128],
+            rebeccapurple: [102, 51, 153],
+            red: [255, 0, 0],
+            rosybrown: [188, 143, 143],
+            royalblue: [65, 105, 225],
+            saddlebrown: [139, 69, 19],
+            salmon: [250, 128, 114],
+            sandybrown: [244, 164, 96],
+            seagreen: [46, 139, 87],
+            seashell: [255, 245, 238],
+            sienna: [160, 82, 45],
+            silver: [192, 192, 192],
+            skyblue: [135, 206, 235],
+            slateblue: [106, 90, 205],
+            slategray: [119, 128, 144],
+            slategrey: [119, 128, 144],
+            snow: [255, 255, 250],
+            springgreen: [0, 255, 127],
+            steelblue: [70, 130, 180],
+            tan: [210, 180, 140],
+            teal: [0, 128, 128],
+            thistle: [216, 191, 216],
+            transparent: [255,255,255,0],
+            tomato: [255, 99, 71],
+            turquoise: [64, 224, 208],
+            violet: [238, 130, 238],
+            wheat: [245, 222, 179],
+            white: [255, 255, 255],
+            whitesmoke: [245, 245, 245],
+            yellow: [255, 255, 0],
+            yellowgreen: [154, 205, 5]
         },
 
         RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
@@ -1204,6 +1333,78 @@ var Konva = {};
                     r: 0,
                     g: 0,
                     b: 0
+                };
+            }
+        },
+        // convert any color string to RGBA object
+        // from https://github.com/component/color-parser
+        colorToRGBA : function(str) {
+            str = str || 'black';
+            return Konva.Util._namedColorToRBA(str)
+                || Konva.Util._hex3ColorToRGBA(str)
+                || Konva.Util._hex6ColorToRGBA(str)
+                || Konva.Util._rgbColorToRGBA(str)
+                || Konva.Util._rgbaColorToRGBA(str);
+        },
+        // Parse named css color. Like "green"
+        _namedColorToRBA : function(str) {
+            var c = COLORS[str.toLowerCase()];
+            if (!c) {
+                return;
+            }
+            return {
+                r: c[0],
+                g: c[1],
+                b: c[2],
+                a: 1
+            };
+        },
+        // Parse rgb(n, n, n)
+        _rgbColorToRGBA : function(str) {
+            if (str.indexOf('rgb(') === 0) {
+                str = str.match(/rgb\(([^)]+)\)/)[1];
+                var parts = str.split(/ *, */).map(Number);
+                return {
+                    r: parts[0],
+                    g: parts[1],
+                    b: parts[2],
+                    a: 1
+                };
+            }
+        },
+        // Parse rgba(n, n, n, n)
+        _rgbaColorToRGBA : function(str) {
+            if (str.indexOf('rgba(') === 0) {
+                str = str.match(/rgba\(([^)]+)\)/)[1];
+                var parts = str.split(/ *, */).map(Number);
+                return {
+                    r: parts[0],
+                    g: parts[1],
+                    b: parts[2],
+                    a: parts[3]
+                };
+            }
+
+        },
+        // Parse #nnnnnn
+        _hex6ColorToRGBA : function(str) {
+            if ((str[0] === '#') && (str.length === 7)) {
+                return {
+                    r: parseInt(str.slice(1, 3), 16),
+                    g: parseInt(str.slice(3, 5), 16),
+                    b: parseInt(str.slice(5, 7), 16),
+                    a: 1
+                };
+            }
+        },
+        // Parse #nnn
+        _hex3ColorToRGBA : function(str) {
+            if ((str[0] === '#') && (str.length === 4)) {
+                return {
+                    r: parseInt(str[1] + str[1], 16),
+                    g: parseInt(str[2] + str[2], 16),
+                    b: parseInt(str[3] + str[3], 16),
+                    a: 1
                 };
             }
         },
@@ -2078,18 +2279,12 @@ var Konva = {};
         },
         _applyShadow: function(shape) {
             var util = Konva.Util,
-                absOpacity = shape.getAbsoluteOpacity(),
-                color = util.get(shape.getShadowColor(), 'black'),
+                color = util.get(shape.getShadowRGBA(), 'black'),
                 blur = util.get(shape.getShadowBlur(), 5),
-                shadowOpacity = util.get(shape.getShadowOpacity(), 1),
                 offset = util.get(shape.getShadowOffset(), {
                     x: 0,
                     y: 0
                 });
-
-            if(shadowOpacity) {
-                this.setAttr('globalAlpha', shadowOpacity * absOpacity);
-            }
 
             this.setAttr('shadowColor', color);
             this.setAttr('shadowBlur', blur);
@@ -7849,6 +8044,7 @@ var Konva = {};
 })();
 ;(function() {
     var HAS_SHADOW = 'hasShadow';
+    var SHADOW_RGBA = 'shadowRGBA';
 
     function _fillFunc(context) {
         context.fill();
@@ -7865,6 +8061,10 @@ var Konva = {};
 
     function _clearHasShadowCache() {
         this._clearCache(HAS_SHADOW);
+    }
+
+    function _clearGetShadowRGBACache() {
+        this._clearCache(SHADOW_RGBA);
     }
 
     Konva.Util.addMethods(Konva.Shape, {
@@ -7893,6 +8093,8 @@ var Konva = {};
             Konva.Node.call(this, config);
 
             this.on('shadowColorChange.konva shadowBlurChange.konva shadowOffsetChange.konva shadowOpacityChange.konva shadowEnabledChange.konva', _clearHasShadowCache);
+
+            this.on('shadowColorChange.konva shadowOpacityChange.konva shadowEnabledChange.konva', _clearGetShadowRGBACache);
         },
         hasChildren: function() {
             return false;
@@ -7929,6 +8131,15 @@ var Konva = {};
         },
         _hasShadow: function() {
             return this.getShadowEnabled() && (this.getShadowOpacity() !== 0 && !!(this.getShadowColor() || this.getShadowBlur() || this.getShadowOffsetX() || this.getShadowOffsetY()));
+        },
+        getShadowRGBA: function() {
+            return this._getCache(SHADOW_RGBA, this._getShadowRGBA);
+        },
+        _getShadowRGBA: function() {
+            if (this.hasShadow()) {
+                var rgba = Konva.Util.colorToRGBA(this.shadowColor());
+                return 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + (rgba.a * (this.getShadowOpacity() || 1)) + ')';
+            }
         },
         /**
          * returns whether or not the shape will be filled
@@ -7987,6 +8198,7 @@ var Konva = {};
                 cachedCanvas = this._cache.canvas,
                 drawFunc = this.sceneFunc(),
                 hasShadow = this.hasShadow(),
+                hasStroke = this.hasStroke(),
                 stage, bufferCanvas, bufferContext;
 
             if(this.isVisible()) {
@@ -8049,26 +8261,29 @@ var Konva = {};
                             context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
                         }
 
-                        if (hasShadow && !canvas.hitCanvas) {
+                        if (hasShadow && hasStroke && !canvas.hitCanvas) {
                             context.save();
+                            // apply shadow
+                            context._applyOpacity(this);
                             context._applyShadow(this);
                             drawFunc.call(this, context);
                             context.restore();
+                            // if shape has stroke we need to redraw shape
+                            // otherwise we will see shadow under stroke (and over fill)
+                            // but I think is is unexpected behavior
+                            if (this.hasFill()) {
+                                drawFunc.call(this, context);
+                            }
+                        } else if (hasShadow && !canvas.hitCanvas) {
+                            context.save();
+                            context._applyOpacity(this);
+                            context._applyShadow(this);
+                            drawFunc.call(this, context);
+                            context.restore();
+                        } else {
+                            context._applyOpacity(this);
+                            drawFunc.call(this, context);
                         }
-
-                        context._applyOpacity(this);
-                        drawFunc.call(this, context);
-
-//                        // clear stroke shadow
-//                        if (hasShadow && !canvas.hitCanvas) {
-//                            context.setAttr('shadowBlur', 0);
-//                            context.setAttr('shadowColor', 0);
-//                            context.setAttr('shadowOffsetX', 0);
-//                            context.setAttr('shadowOffsetY', 0);
-//                            context.stroke();
-//                        }
-
-
                     }
                     context.restore();
                 }
@@ -9966,8 +10181,8 @@ var Konva = {};
                 // throws a JS warning.  layerX and layerY are required for FF
                 // when the container is transformed via CSS.
                 else if (Konva.UA.browser === 'mozilla') {
-                    x = evt.layerX;
-                    y = evt.layerY;
+                    x = evt.layerX || (evt.clientX - contentPosition.left);
+                    y = evt.layerY || (evt.clientY - contentPosition.top);
                 }
                 // if clientX is defined, assume that clientY is defined as well
                 else if (clientX !== undefined && contentPosition) {
@@ -11812,7 +12027,7 @@ var Konva = {};
                 }
             }
 
-            if (this.hasFill() || this.hasStroke() || this.hasShadow()) {
+            if (this.hasFill() || this.hasStroke()) {
                 context.beginPath();
                 context.rect(0, 0, width, height);
                 context.closePath();
@@ -12135,6 +12350,7 @@ var Konva = {};
                 n;
 
             context.setAttr('font', this._getContextFont());
+
             context.setAttr('textBaseline', MIDDLE);
             context.setAttr('textAlign', LEFT);
             context.save();
@@ -12162,6 +12378,7 @@ var Konva = {};
                 }
 
                 this.partialText = text;
+
                 context.fillStrokeShape(this);
                 context.restore();
                 context.translate(0, lineHeightPx);
