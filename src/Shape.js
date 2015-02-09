@@ -144,8 +144,8 @@
         },
         _useBufferCanvas: function() {
 //            return false;
-            return ((this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke()) ||
-               this.hasShadow() && (this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke() && this.getStage();
+            return (this.perfectDrawEnabled() && (this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke() && this.getStage()) ||
+                   (this.perfectDrawEnabled() && this.hasShadow() && (this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke() && this.getStage());
         },
         drawScene: function(can, top) {
             var layer = this.getLayer(),
@@ -467,6 +467,25 @@
      *
      * // set strokeHitEnabled
      * shape.strokeHitEnabled();
+     */
+
+    Konva.Factory.addGetterSetter(Konva.Shape, 'perfectDrawEnabled', true);
+
+    /**
+     * get/set perfectDrawEnabled. If a shape has fill, stroke and opacity you may set `perfectDrawEnabled` to improve performance.
+     * See http://konvajs.github.io/docs/performance/Disable_Perfect_Draw.html for more information.
+     * Default value is true
+     * @name perfectDrawEnabled
+     * @method
+     * @memberof Konva.Shape.prototype
+     * @param {Boolean} perfectDrawEnabled
+     * @returns {Boolean}
+     * @example
+     * // get perfectDrawEnabled
+     * var perfectDrawEnabled = shape.perfectDrawEnabled();
+     *
+     * // set perfectDrawEnabled
+     * shape.perfectDrawEnabled();
      */
 
     Konva.Factory.addGetterSetter(Konva.Shape, 'lineJoin');

@@ -6,6 +6,7 @@
     * performance optimization (remove some unnecessary draws)
     * more expected drawing when shape has opacity, stroke and shadow
     * `scale` now affect to `shadowOffset`
+    * new `perfectDrawEnabled` property for shape. See [http://konvajs.github.io/docs/performance/Disable_Perfect_Draw.html](http://konvajs.github.io/docs/performance/Disable_Perfect_Draw.html)
 
 ## 0.8.0 2015-02-04
 

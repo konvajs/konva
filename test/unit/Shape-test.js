@@ -1078,4 +1078,49 @@ suite('Shape', function() {
 
         assert.equal(trace, 'clearRect(0,0,578,200);save();transform(0.25,0,0,0.25,100,100);save();shadowColor=rgba(0,0,0,1);shadowBlur=0;shadowOffsetX=5;shadowOffsetY=5;beginPath();rect(0,0,200,200);closePath();fillStyle=green;fill();restore();restore();');
     });
+
+
+    test('optional disable buffer canvas', function() {
+        var stage = addStage();
+
+        var layer = new Konva.Layer();
+
+        var rect = new Konva.Rect({
+            x: 100,
+            y: 50,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 10,
+            opacity : 0.5,
+            perfectDrawEnabled : false
+        });
+
+        layer.add(rect);
+
+        stage.add(layer);
+
+        var canvas = createCanvas();
+        var context = canvas.getContext('2d');
+        context.globalAlpha = 0.5;
+        // stroke
+        context.beginPath();
+        context.rect(100, 50, 100, 50);
+        context.closePath();
+        context.lineWidth = 10;
+        context.strokeStyle = 'black';
+        context.fillStyle = 'green';
+        context.fill();
+        context.stroke();
+
+
+        compareLayerAndCanvas(layer, canvas, 10);
+
+        var trace = layer.getContext().getTrace();
+
+        assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);globalAlpha=0.5;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=10;strokeStyle=black;stroke();restore();');
+    });
+
+
 });
