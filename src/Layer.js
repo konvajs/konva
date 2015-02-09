@@ -180,26 +180,8 @@
             this.imageData = null; // Clear imageData cache
             return this;
         },
-        /**
-         * clear scene and hit canvas contexts tied to the layer
-         * @method
-         * @memberof Konva.Layer.prototype
-         * @param {Object} [bounds]
-         * @param {Number} [bounds.x]
-         * @param {Number} [bounds.y]
-         * @param {Number} [bounds.width]
-         * @param {Number} [bounds.height]
-         * @example
-         * layer.clear();
-         * layer.clear({
-         *   x : 0,
-         *   y : 0,
-         *   width : 100,
-         *   height : 100
-         * });
-         */
         clear: function(bounds) {
-            this.getContext().clear(bounds);
+            Konva.BaseLayer.prototype.clear.call(this, bounds);
             this.getHitCanvas().getContext().clear(bounds);
             this.imageData = null; // Clear getImageData cache
             return this;

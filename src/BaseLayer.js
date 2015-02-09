@@ -51,7 +51,6 @@
          */
         clear: function(bounds) {
             this.getContext().clear(bounds);
-            this.getHitCanvas().getContext().clear(bounds);
             return this;
         },
         clearHitCache: function() {
