@@ -1,6 +1,6 @@
 {
   "name": "konva",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "author": "Anton Lavrenov",
   "devDependencies": {
     "chai": "1.9.2",

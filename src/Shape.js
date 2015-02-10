@@ -227,7 +227,7 @@
                             // if shape has stroke we need to redraw shape
                             // otherwise we will see shadow under stroke (and over fill)
                             // but I think is is unexpected behavior
-                            if (this.hasFill()) {
+                            if (this.hasFill() && this.getShadowForStrokeEnabled()) {
                                 drawFunc.call(this, context);
                             }
                         } else if (hasShadow && !canvas.hitCanvas) {
@@ -486,6 +486,26 @@
      *
      * // set perfectDrawEnabled
      * shape.perfectDrawEnabled();
+     */
+
+    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowForStrokeEnabled', true);
+
+    /**
+     * get/set shadowForStrokeEnabled. Useful for performance optimization.
+     * You may set `shape.shadowForStrokeEnabled(false)`. In this case stroke will be no draw shadow for stroke.
+     * Remember if you set `shadowForStrokeEnabled = false` for non closed line - that line with have no shadow!.
+     * Default value is true
+     * @name shadowForStrokeEnabled
+     * @method
+     * @memberof Konva.Shape.prototype
+     * @param {Boolean} shadowForStrokeEnabled
+     * @returns {Boolean}
+     * @example
+     * // get shadowForStrokeEnabled
+     * var shadowForStrokeEnabled = shape.shadowForStrokeEnabled();
+     *
+     * // set shadowForStrokeEnabled
+     * shape.shadowForStrokeEnabled();
      */
 
     Konva.Factory.addGetterSetter(Konva.Shape, 'lineJoin');

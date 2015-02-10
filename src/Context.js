@@ -536,7 +536,9 @@
                         blue: shape.strokeBlue(),
                         alpha: shape.strokeAlpha()
                     }));
-
+                if (!shape.getShadowForStrokeEnabled()) {
+                    this.setAttr('shadowColor', 'rgba(0,0,0,0)');
+                }
                 shape._strokeFunc(this);
                 
                 if (!strokeScaleEnabled) {

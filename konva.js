@@ -1,9 +1,9 @@
 
 /*
- * Konva JavaScript Framework v0.8.0
+ * Konva JavaScript Framework v0.9.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2015-02-09
+ * Date: 2015-02-10
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -36,7 +36,7 @@ var Konva = {};
 
     Konva = {
         // public
-        version: '0.8.0',
+        version: '0.9.0',
 
         // private
         stages: [],
@@ -180,6 +180,8 @@ var Konva = {};
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shasow for stroke.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -2269,7 +2271,9 @@ var Konva = {};
                         blue: shape.strokeBlue(),
                         alpha: shape.strokeAlpha()
                     }));
-
+                if (!shape.getShadowForStrokeEnabled()) {
+                    this.setAttr('shadowColor', 'rgba(0,0,0,0)');
+                }
                 shape._strokeFunc(this);
                 
                 if (!strokeScaleEnabled) {
@@ -8274,7 +8278,7 @@ var Konva = {};
                             // if shape has stroke we need to redraw shape
                             // otherwise we will see shadow under stroke (and over fill)
                             // but I think is is unexpected behavior
-                            if (this.hasFill()) {
+                            if (this.hasFill() && this.getShadowForStrokeEnabled()) {
                                 drawFunc.call(this, context);
                             }
                         } else if (hasShadow && !canvas.hitCanvas) {
@@ -8533,6 +8537,26 @@ var Konva = {};
      *
      * // set perfectDrawEnabled
      * shape.perfectDrawEnabled();
+     */
+
+    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowForStrokeEnabled', true);
+
+    /**
+     * get/set shadowForStrokeEnabled. Useful for performance optimization.
+     * You may set `shape.shadowForStrokeEnabled(false)`. In this case stroke will be no draw shadow for stroke.
+     * Remember if you set `shadowForStrokeEnabled = false` for non closed line - that line with have no shadow!.
+     * Default value is true
+     * @name shadowForStrokeEnabled
+     * @method
+     * @memberof Konva.Shape.prototype
+     * @param {Boolean} shadowForStrokeEnabled
+     * @returns {Boolean}
+     * @example
+     * // get shadowForStrokeEnabled
+     * var shadowForStrokeEnabled = shape.shadowForStrokeEnabled();
+     *
+     * // set shadowForStrokeEnabled
+     * shape.shadowForStrokeEnabled();
      */
 
     Konva.Factory.addGetterSetter(Konva.Shape, 'lineJoin');
@@ -10888,6 +10912,8 @@ var Konva = {};
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shasow for stroke.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -11049,6 +11075,8 @@ var Konva = {};
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shasow for stroke.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -11348,6 +11376,8 @@ var Konva = {};
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shasow for stroke.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -11534,6 +11564,8 @@ var Konva = {};
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shasow for stroke.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -11720,6 +11752,8 @@ var Konva = {};
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shasow for stroke.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -11924,6 +11958,8 @@ var Konva = {};
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shasow for stroke.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -12233,6 +12269,8 @@ var Konva = {};
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shasow for stroke.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -12764,6 +12802,8 @@ var Konva = {};
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shasow for stroke.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -13047,6 +13087,8 @@ var Konva = {};
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shasow for stroke.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -13463,6 +13505,8 @@ var Konva = {};
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shasow for stroke.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -14175,6 +14219,8 @@ var Konva = {};
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shasow for stroke.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -14656,6 +14702,8 @@ var Konva = {};
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shasow for stroke.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -14825,6 +14873,8 @@ var Konva = {};
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shasow for stroke.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
@@ -15353,6 +15403,8 @@ var Konva = {};
      * @param {Integer} [config.strokeAlpha] set stroke alpha component
      * @param {Number} [config.strokeWidth] stroke width
      * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shasow for stroke.  The default is true
      * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
      * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
      * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default

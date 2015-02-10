@@ -566,6 +566,11 @@ suite('Shape', function() {
         context.stroke();
 
         compareLayerAndCanvas(layer, canvas, 10);
+
+
+        var trace = layer.getContext().getTrace();
+        //console.log(trace);
+        assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);save();shadowColor=rgba(128,128,128,1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=10;strokeStyle=black;stroke();restore();beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=10;strokeStyle=black;stroke();restore();');
     });
 
     // ======================================================
@@ -1120,6 +1125,56 @@ suite('Shape', function() {
         var trace = layer.getContext().getTrace();
 
         assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);globalAlpha=0.5;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=10;strokeStyle=black;stroke();restore();');
+    });
+
+    // ======================================================
+    test('optional disable shadow for stroke', function(){
+        var stage = addStage();
+
+        var layer = new Konva.Layer();
+
+        var rect = new Konva.Rect({
+            x: 100,
+            y: 50,
+            width: 100,
+            height: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 10,
+            shadowColor: 'grey',
+            shadowBlur: 10,
+            shadowOffset: {
+                x: 20,
+                y: 20
+            },
+            shadowForStrokeEnabled : false
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        var canvas = createCanvas();
+        var context = canvas.getContext('2d');
+        context.beginPath();
+        context.rect(100, 50, 100, 50);
+        context.closePath();
+        context.fillStyle = 'green';
+        context.shadowColor = 'grey';
+        context.shadowBlur = 10;
+        context.shadowOffsetX = 20;
+        context.shadowOffsetY = 20;
+        context.lineWidth  = 10;
+        context.fill();
+
+        context.shadowColor = 'rgba(0,0,0, 0)';
+        context.stroke();
+
+        compareLayerAndCanvas(layer, canvas, 10);
+
+
+        var trace = layer.getContext().getTrace();
+        //console.log(trace);
+        assert.equal(trace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);save();shadowColor=rgba(128,128,128,1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=10;strokeStyle=black;shadowColor=rgba(0,0,0,0);stroke();restore();restore();');
     });
 
 
