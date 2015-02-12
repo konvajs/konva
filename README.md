@@ -19,7 +19,7 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 
 * `bower install konva`
 * `npm install konva` - for Browserify. For nodejs you have to install some [dependencies](#nodejs)
-* CDN: [https://cdnjs.com/libraries/konva](https://cdnjs.com/libraries/konva)
+* CDN: [https://rawgit.com/konvajs/konva/0.8.0/konva.min.js](https://rawgit.com/konvajs/konva/0.8.0/konva.min.js)
 
 ###NodeJS
 
