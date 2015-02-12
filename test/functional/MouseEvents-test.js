@@ -730,10 +730,7 @@ suite('MouseEvents', function() {
         group.add(greenCircle);
         layer.add(group);
 
-        group.cache({
-            width : stage.width(),
-            height : stage.height()
-        });
+        group.cache();
         group.scale({
             x : 5,
             y : 5
@@ -741,6 +738,8 @@ suite('MouseEvents', function() {
         group.on('mousedown', function() {
             groupMousedowns++;
         });
+
+        layer.add(circle);
         stage.add(layer);
         layer.draw();
 
@@ -749,6 +748,7 @@ suite('MouseEvents', function() {
             clientX: 135,
             clientY: 30 + top
         });
+
         assert.equal(groupMousedowns, 1, 'groupMousedowns should be 1');
     });
     test('test mousemove events with antialiasing', function() {
@@ -776,10 +776,6 @@ suite('MouseEvents', function() {
         });
         group.add(rect1).add(rect2);
         layer.add(group);
-        group.cache({
-            width : rect1.width(),
-            height : rect1.height()
-        });
         group.scaleX(5);
         group.scaleY(5);
         var mouseenterCount = 0;

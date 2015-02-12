@@ -224,4 +224,47 @@ suite('Manual', function() {
 
         tween.play();
     });
+
+    test('Make sure that all texts are inside rectangles.', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var text = new Konva.Text({
+            fontSize: 50,
+            y : 5,
+            x : 25,
+            fill: 'black',
+            text: 'text'
+        });
+        var params = text.getSelfRect();
+        var rect = new Konva.Rect({
+            x : text.x() + params.x,
+            y : text.y() + params.y,
+            width : params.width,
+            height : params.height,
+            stroke : 'black'
+        });
+        layer.add(rect, text);
+
+        text = new Konva.Text({
+            fontSize: 40,
+            y : 40,
+            x : 150,
+            fill: 'black',
+            text: 'Hello\nWorld! How Are you?',
+            align : 'center'
+        });
+        params = text.getSelfRect();
+        rect = new Konva.Rect({
+            x : text.x() + params.x,
+            y : text.y() + params.y,
+            width : params.width,
+            height : params.height,
+            stroke : 'black'
+        });
+        layer.add(rect, text);
+
+        stage.add(layer);
+
+    });
 });

@@ -26,6 +26,7 @@
     };
 
     Konva.Ring.prototype = {
+        _centroid : true,
         ___init: function(config) {
             // call super constructor
             Konva.Shape.call(this, config);

@@ -188,4 +188,31 @@ suite('TextPath', function() {
         layer.add(textpath);
         stage.add(layer);
     });
+
+    // ======================================================
+    test('Render Text Along complex path cached', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var c = "M10,10 C0,0 10,150 100,100 S300,150 400,50";
+
+        var textpath = new Konva.TextPath({
+            stroke: 'black',
+            strokeWidth: 1,
+            fill: 'orange',
+            fontSize: 10,
+            fontFamily: 'Arial',
+            text: 'All the world\'s a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.',
+            data: c,
+            draggable : true
+        });
+
+        textpath.cache();
+
+        layer.add(textpath);
+        stage.add(layer);
+
+        cloneAndCompareLayer(layer,50);
+        showHit(layer);
+    });
 });

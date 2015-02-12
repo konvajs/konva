@@ -321,6 +321,35 @@
                 });
                 p0 = p1;
             }
+        },
+        getSelfRect : function() {
+            var points = [];
+            var fontSize = this.fontSize();
+
+            this.glyphInfo.forEach(function(info) {
+                points.push(info.p0.x);
+                points.push(info.p0.y);
+                points.push(info.p1.x);
+                points.push(info.p1.y);
+            });
+            var minX = points[0];
+            var maxX = points[0];
+            var minY = points[0];
+            var maxY = points[0];
+            var x,y;
+            for (var i = 0; i<points.length / 2; i++) {
+                x = points[i * 2]; y = points[i * 2 + 1];
+                minX = Math.min(minX, x);
+                maxX = Math.max(maxX, x);
+                minY = Math.min(minY, y);
+                maxY = Math.max(maxY, y);
+            }
+            return {
+                x : Math.round(minX) - fontSize,
+                y : Math.round(minY) - fontSize,
+                width : Math.round(maxX - minX) + fontSize * 2,
+                height : Math.round(maxY - minY) + fontSize * 2
+            };
         }
     };
 

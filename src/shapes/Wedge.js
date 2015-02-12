@@ -25,6 +25,7 @@
     };
 
     Konva.Wedge.prototype = {
+        _centroid : true,
         ___init: function(config) {
             // call super constructor
             Konva.Shape.call(this, config);
@@ -37,6 +38,28 @@
             context.lineTo(0, 0);
             context.closePath();
             context.fillStrokeShape(this);
+        },
+        // implements Shape.prototype.getWidth()
+        getWidth: function() {
+            return this.getRadius() * 2;
+        },
+        // implements Shape.prototype.getHeight()
+        getHeight: function() {
+            return this.getRadius() * 2;
+        },
+        // implements Shape.prototype.setWidth()
+        setWidth: function(width) {
+            Konva.Node.prototype.setWidth.call(this, width);
+            if (this.radius() !== width / 2) {
+                this.setRadius(width / 2);
+            }
+        },
+        // implements Shape.prototype.setHeight()
+        setHeight: function(height) {
+            Konva.Node.prototype.setHeight.call(this, height);
+            if (this.radius() !== height / 2) {
+                this.setRadius(height / 2);
+            }
         }
     };
     Konva.Util.extend(Konva.Wedge, Konva.Shape);

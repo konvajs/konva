@@ -303,7 +303,7 @@
                 child.index = n;
             });
         },
-        drawScene: function(can, top) {
+        drawScene: function(can, top, caching) {
             var layer = this.getLayer(),
                 canvas = can || (layer && layer.getCanvas()),
                 context = canvas && canvas.getContext(),
@@ -311,8 +311,11 @@
                 cachedSceneCanvas = cachedCanvas && cachedCanvas.scene;
 
             if (this.isVisible()) {
-                if (cachedSceneCanvas) {
+                if (!caching && cachedSceneCanvas) {
+                    context.save();
+                    layer._applyTransform(this, context, top);
                     this._drawCachedSceneCanvas(context);
+                    context.restore();
                 }
                 else {
                     this._drawChildren(canvas, 'drawScene', top);
@@ -320,7 +323,7 @@
             }
             return this;
         },
-        drawHit: function(can, top) {
+        drawHit: function(can, top, caching) {
             var layer = this.getLayer(),
                 canvas = can || (layer && layer.hitCanvas),
                 context = canvas && canvas.getContext(),
@@ -331,8 +334,11 @@
                 if (layer) {
                     layer.clearHitCache();
                 }
-                if (cachedHitCanvas) {
+                if (!caching && cachedHitCanvas) {
+                    context.save();
+                    layer._applyTransform(this, context, top);
                     this._drawCachedHitCanvas(context);
+                    context.restore();
                 }
                 else {
                     this._drawChildren(canvas, 'drawHit', top);
@@ -374,6 +380,27 @@
             var layerUnderDrag = dd && Konva.isDragging() && (Konva.DD.anim.getLayers().indexOf(layer) !== -1);
             return  (canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())
                 && this.isVisible() && !layerUnderDrag;
+        },
+        getClientRect : function(skipTransform) {
+            var minX, minY, maxX, maxY;
+            this.children.each(function(child) {
+                var rect = child.getClientRect();
+                minX = Math.min(minX, rect.x) || rect.x;
+                minY = Math.min(minY, rect.y) || rect.y;
+                maxX = Math.max(maxX, rect.x + rect.width) || (rect.x + rect.width);
+                maxY = Math.max(maxY, rect.y + rect.height) || (rect.y + rect.height);
+            });
+
+            var rect = {
+                x : minX,
+                y : minY,
+                width : maxX - minX,
+                height : maxY - minY
+            };
+            if (!skipTransform) {
+                return this._transformedRect(rect);
+            }
+            return rect;
         }
     });
 

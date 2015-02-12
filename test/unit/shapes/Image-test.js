@@ -312,4 +312,38 @@ suite('Image', function(){
       };
       imageObj.src = 'assets/darth-vader.jpg';
   });
+
+    // ======================================================
+    test('image caching', function(done) {
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var stage = addStage();
+            var layer = new Konva.Layer();
+            var darth = new Konva.Image({
+                x: 200,
+                y: 60,
+                image: imageObj,
+                width: 100,
+                height: 100,
+                draggable: true
+            });
+
+            darth.cache();
+            layer.add(darth);
+            stage.add(layer);
+
+            assert.deepEqual(darth.getSelfRect(), {
+                x : 0, y : 0, width : 100, height : 100
+            });
+
+            var canvas = createCanvas();
+            var context = canvas.getContext('2d');
+            context.drawImage(imageObj, 200, 60, 100, 100);
+            compareLayerAndCanvas(layer, canvas, 10);
+            done();
+        };
+        imageObj.src = 'assets/darth-vader.jpg';
+    });
+
+
 });

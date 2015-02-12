@@ -140,6 +140,39 @@
                 ]);
                     
             return tp;
+        },
+        getWidth : function() {
+            return this.getSelfRect().width;
+        },
+        getHeight : function() {
+            return this.getSelfRect().height;
+        },
+        // overload size detection
+        getSelfRect : function() {
+            var points;
+            if (this.getTension() !== 0) {
+                points = this._getTensionPoints();
+            } else {
+                points = this.getPoints();
+            }
+            var minX = points[0];
+            var maxX = points[0];
+            var minY = points[0];
+            var maxY = points[0];
+            var x,y;
+            for (var i = 0; i<points.length / 2; i++) {
+                x = points[i * 2]; y = points[i * 2 + 1];
+                minX = Math.min(minX, x);
+                maxX = Math.max(maxX, x);
+                minY = Math.min(minY, y);
+                maxY = Math.max(maxY, y);
+            }
+            return {
+                x : minX,
+                y : minY,
+                width : maxX - minX,
+                height : maxY - minY
+            };
         }
     };
     Konva.Util.extend(Konva.Line, Konva.Shape);

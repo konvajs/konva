@@ -91,4 +91,27 @@ suite('Blob', function(){
         assert.equal(blob.eventListeners.pointsChange, undefined);
         assert.equal(blob.eventListeners.tensionChange, undefined);
     });
+
+    test('cache', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var blob = new Konva.Line({
+            x : 50,
+            y : 50,
+            points: [-25,50,250,-30,150,50,250,110],
+            stroke: 'blue',
+            strokeWidth: 10,
+            draggable: true,
+            fill: '#aaf',
+            tension: 0.3,
+            closed: true
+        });
+        blob.cache();
+        layer.add(blob);
+        stage.add(layer);
+
+        if (!window.mochaPhantomJS) {
+            cloneAndCompareLayer(layer, 50);
+        }
+    });
 });

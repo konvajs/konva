@@ -143,11 +143,58 @@
             delete Konva.shapes[this.colorKey];
         },
         _useBufferCanvas: function() {
-//            return false;
             return (this.perfectDrawEnabled() && (this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke() && this.getStage()) ||
                    (this.perfectDrawEnabled() && this.hasShadow() && (this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke() && this.getStage());
         },
-        drawScene: function(can, top) {
+        /**
+         * return self rectangle (x, y, width, height) of shape.
+         * This method are not taken into account transformation and styles.
+         * @method
+         * @memberof Konva.Node.prototype
+         * @returns {Object} rect with {x, y, width, height} properties
+         * @example
+         *
+         * rect.getSelfRect();  // return {x:0, y:0, width:rect.width(), height:rect.height()}
+         * circle.getSelfRect();  // return {x: - circle.width() / 2, y: - circle.height() / 2, width:circle.width(), height:circle.height()}
+         *
+         */
+        getSelfRect : function() {
+            var size = this.getSize();
+            return {
+                x : this._centroid ? Math.round(-size.width / 2) : 0,
+                y : this._centroid ? Math.round(-size.height / 2) : 0,
+                width : size.width,
+                height : size.height
+            };
+        },
+        getClientRect : function(skipTransform) {
+            var fillRect = this.getSelfRect();
+            var strokeWidth = (this.hasStroke() && this.strokeWidth()) || 0;
+            var fillAndStrokeWidth = fillRect.width + strokeWidth;
+            var fillAndStrokeHeight = fillRect.height + strokeWidth;
+
+            var shadowOffsetX = this.shadowOffsetX();
+            var shadowOffsetY = this.shadowOffsetY();
+
+            var preWidth = fillAndStrokeWidth + Math.abs(shadowOffsetX);
+            var preHeight = fillAndStrokeHeight + Math.abs(shadowOffsetY);
+
+            var blurRadius = (this.hasShadow() && this.shadowBlur() || 0);
+
+            var width = preWidth + blurRadius * 2;
+            var height = preHeight + blurRadius * 2;
+            var rect = {
+                width : width,
+                height : height,
+                x : -Math.round(strokeWidth / 2 + blurRadius) + Math.min(shadowOffsetX, 0) + fillRect.x,
+                y : -Math.round(strokeWidth / 2 + blurRadius) + Math.min(shadowOffsetY, 0) + fillRect.y
+            };
+            if (!skipTransform) {
+                return this._transformedRect(rect);
+            }
+            return rect;
+        },
+        drawScene: function(can, top, caching) {
             var layer = this.getLayer(),
                 canvas = can || layer.getCanvas(),
                 context = canvas.getContext(),
@@ -159,7 +206,10 @@
 
             if(this.isVisible()) {
                 if (cachedCanvas) {
+                    context.save();
+                    layer._applyTransform(this, context, top);
                     this._drawCachedSceneCanvas(context);
+                    context.restore();
                 }
                 else if (drawFunc) {
                     context.save();
@@ -210,11 +260,13 @@
                     else {
                         context._applyLineJoin(this);
                         // layer might be undefined if we are using cache before adding to layer
-                        if (layer) {
-                            layer._applyTransform(this, context, top);
-                        } else {
-                            var o = this.getAbsoluteTransform(top).getMatrix();
-                            context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
+                        if (!caching) {
+                            if (layer) {
+                                layer._applyTransform(this, context, top);
+                            } else {
+                                var o = this.getAbsoluteTransform(top).getMatrix();
+                                context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
+                            }
                         }
 
                         if (hasShadow && hasStroke && !canvas.hitCanvas) {
@@ -247,7 +299,7 @@
 
             return this;
         },
-        drawHit: function(can, top) {
+        drawHit: function(can, top, caching) {
             var layer = this.getLayer(),
                 canvas = can || layer.hitCanvas,
                 context = canvas.getContext(),
@@ -260,16 +312,21 @@
                     layer.clearHitCache();
                 }
                 if (cachedHitCanvas) {
+                    context.save();
+                    layer._applyTransform(this, context, top);
                     this._drawCachedHitCanvas(context);
+                    context.restore();
                 }
                 else if (drawFunc) {
                     context.save();
                     context._applyLineJoin(this);
-                    if (layer) {
-                        layer._applyTransform(this, context, top);
-                    } else {
-                        var m = this.getAbsoluteTransform(top).getMatrix();
-                        context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+                    if (!caching) {
+                        if (layer) {
+                            layer._applyTransform(this, context, top);
+                        } else {
+                            var o = this.getAbsoluteTransform(top).getMatrix();
+                            context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
+                        }
                     }
                    
                     drawFunc.call(this, context);

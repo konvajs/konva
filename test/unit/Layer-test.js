@@ -350,4 +350,13 @@ suite('Layer', function() {
         // after drawing group hit cache should be cleared
         assert.equal(count, 2, 'while creating new cache getImageData should be called');
     });
+
+    it('get/set layer size', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        stage.add(layer);
+        assert.deepEqual(layer.size(), stage.size());
+        assert.equal(layer.width(), stage.width());
+        assert.equal(layer.height(), stage.height());
+    });
 });

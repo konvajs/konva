@@ -27,6 +27,7 @@
     };
 
     Konva.Arc.prototype = {
+        _centroid : true,
         ___init: function(config) {
             // call super constructor
             Konva.Shape.call(this, config);
@@ -42,6 +43,28 @@
             context.arc(0, 0, this.getInnerRadius(), angle, 0, !clockwise);
             context.closePath();
             context.fillStrokeShape(this);
+        },
+        // implements Shape.prototype.getWidth()
+        getWidth: function() {
+            return this.getOuterRadius() * 2;
+        },
+        // implements Shape.prototype.getHeight()
+        getHeight: function() {
+            return this.getOuterRadius() * 2;
+        },
+        // implements Shape.prototype.setWidth()
+        setWidth: function(width) {
+            Konva.Node.prototype.setWidth.call(this, width);
+            if (this.getOuterRadius() !== width / 2) {
+                this.setOuterRadius(width / 2);
+            }
+        },
+        // implements Shape.prototype.setHeight()
+        setHeight: function(height) {
+            Konva.Node.prototype.setHeight.call(this, height);
+            if (this.getOuterRadius() !== height / 2) {
+                this.setOuterRadius(height / 2);
+            }
         }
     };
     Konva.Util.extend(Konva.Arc, Konva.Shape);

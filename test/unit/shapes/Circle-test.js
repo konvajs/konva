@@ -188,7 +188,6 @@ suite('Circle', function(){
       stage.add(layer);
 
       assert.equal(circle.getWidth(), 140);
-      assert.equal(circle.attrs.height, 140);
       assert.equal(circle.getHeight(), 140);
 
       circle.setWidth(100);
@@ -218,4 +217,55 @@ suite('Circle', function(){
 
       stage.add(layer);
   });
+
+    test('getSelfRect', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
+            x: 100,
+            y: 100,
+            radius: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        assert.deepEqual(circle.getSelfRect(), {
+            x : -50,
+            y : -50,
+            width : 100,
+            height : 100
+        });
+    });
+
+    test('cache', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
+            x: 100,
+            y: 100,
+            radius: 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        var canvas = createCanvas();
+        var context = canvas.getContext('2d');
+        context.beginPath();
+        context.arc(100, 100, 50, 0, Math.PI * 2, false);
+        context.closePath();
+        context.fillStyle = 'green';
+        context.fill();
+        context.lineWidth  = 4;
+        context.stroke();
+        compareLayerAndCanvas(layer, canvas, 50);
+    });
 });

@@ -98,7 +98,7 @@
 
     /*
     * The usage of this class was inspired by some of the work done by a forked
-    * project, KonvaJS-Ext by Wappworks, which is based on Simon's Transform
+    * project, KineticJS-Ext by Wappworks, which is based on Simon's Transform
     * class.  Modified by Eric Rowell
     */
 

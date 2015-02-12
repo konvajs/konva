@@ -344,5 +344,27 @@ suite('Text', function(){
         compareLayerAndCanvas(layer, canvas);
     });
 
+    test('text getSelfRect', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var text = new Konva.Text({
+            fontSize: 50,
+            y : 50,
+            x : 50,
+            fill: 'black',
+            text: 'text'
+        });
+
+        layer.add(text);
+        stage.add(layer);
+
+        var rect = text.getSelfRect();
+
+        assert.deepEqual(rect, {
+            x : 0,y : 0, width : text.width(), height : 50
+        });
+    });
+
 
 });

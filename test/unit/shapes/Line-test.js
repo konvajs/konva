@@ -205,4 +205,73 @@ suite('Line', function() {
         });
         assert.equal(shape, line1, 'first line detected');
     });
+
+    test('line get size', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var line = new Konva.Line({
+            points: [73, 160, 340, 23, 500, 109, 500, 180],
+            stroke: 'blue',
+
+            strokeWidth: 10
+        });
+
+        layer.add(line);
+        stage.add(layer);
+
+        assert.deepEqual(line.size(), {
+            width : 500 - 73,
+            height : 180 - 23
+        });
+    });
+
+    test('getSelfRect', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var blob = new Konva.Line({
+            x : 50,
+            y : 50,
+            points: [-25,50,250,-30,150,50,250,110],
+            stroke: 'blue',
+            strokeWidth: 10,
+            draggable: true,
+            fill: '#aaf',
+            closed: true
+        });
+
+        layer.add(blob);
+        stage.add(layer);
+
+        assert.deepEqual(blob.getSelfRect(), {
+            x : -25,
+            y : -30,
+            width : 275,
+            height : 140
+        });
+    });
+
+    test('line caching', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var blob = new Konva.Line({
+            x : 50,
+            y : 50,
+            points: [-25,50,250,-30,150,50,250,110],
+            stroke: 'blue',
+            strokeWidth: 10,
+            draggable: true,
+            closed : true
+        });
+
+        layer.add(blob);
+        var layer2 = layer.clone();
+        blob.cache({
+            offset : 30
+        });
+        stage.add(layer);
+        stage.add(layer2);
+        layer2.hide();
+        compareLayers(layer, layer2);
+    });
 });

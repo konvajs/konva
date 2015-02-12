@@ -139,37 +139,47 @@
         *   y: -30,
         *   width: 100,
         *   height: 200,
+        *   offset : 10,
         *   drawBorder: true
         * });
         */
         cache: function(config) {
             var conf = config || {},
-                x = conf.x || 0,
-                y = conf.y || 0,
-                width = conf.width || this.width(),
-                height = conf.height || this.height(),
+                rect = this.getClientRect(true),
+                width = conf.width || rect.width,
+                height = conf.height || rect.height,
+                x = conf.x || rect.x,
+                y = conf.y || rect.y,
+                offset = conf.offset || 0,
                 drawBorder = conf.drawBorder || false;
 
-            if (width === 0 || height === 0) {
-                Konva.Util.warn('Width or height of caching configuration equals 0. Cache is ignored.');
-                return;
+            if (!width || !height) {
+                throw new Error('Width or height of caching configuration equals 0.');
             }
+
+            width += offset * 2;
+            height += offset * 2;
+
+            x -= offset;
+            y -= offset;
+
+
             var cachedSceneCanvas = new Konva.SceneCanvas({
-                    pixelRatio: 1,
-                    width: width,
-                    height: height
-                }),
-                cachedFilterCanvas = new Konva.SceneCanvas({
-                    pixelRatio: 1,
-                    width: width,
-                    height: height
-                }),
-                cachedHitCanvas = new Konva.HitCanvas({
-                    width: width,
-                    height: height
-                }),
-                sceneContext = cachedSceneCanvas.getContext(),
-                hitContext = cachedHitCanvas.getContext();
+                pixelRatio: 1,
+                width: width,
+                height: height
+            }),
+            cachedFilterCanvas = new Konva.SceneCanvas({
+                pixelRatio: 1,
+                width: width,
+                height: height
+            }),
+            cachedHitCanvas = new Konva.HitCanvas({
+                width: width,
+                height: height
+            }),
+            sceneContext = cachedSceneCanvas.getContext(),
+            hitContext = cachedHitCanvas.getContext();
 
             cachedHitCanvas.isCache = true;
 
@@ -177,6 +187,15 @@
    
             sceneContext.save();
             hitContext.save();
+
+            sceneContext.translate(-x, -y);
+            hitContext.translate(-x, -y);
+
+            this.drawScene(cachedSceneCanvas, this, true);
+            this.drawHit(cachedHitCanvas, this, true);
+
+            sceneContext.restore();
+            hitContext.restore();
 
             // this will draw a red border around the cached box for
             // debugging purposes
@@ -191,34 +210,78 @@
                 sceneContext.restore();
             }
 
-            sceneContext.translate(x * -1, y * -1);
-            hitContext.translate(x * -1, y * -1);
-
-            // don't need to translate canvas if shape is not added to layer
-            if (this.nodeType === 'Shape') {
-                sceneContext.translate(this.x() * -1, this.y() * -1);
-                hitContext.translate(this.x() * -1, this.y() * -1);
-            }
-
-            this.drawScene(cachedSceneCanvas, this);
-            this.drawHit(cachedHitCanvas, this);
-
-            sceneContext.restore();
-            hitContext.restore();
-
             this._cache.canvas = {
                 scene: cachedSceneCanvas,
                 filter: cachedFilterCanvas,
-                hit: cachedHitCanvas
+                hit: cachedHitCanvas,
+                x : x,
+                y : y
             };
 
             return this;
         },
+        /**
+         * return client rectangle (x, y, width, height) of node. This rectangle also include all styling (strokes, shadows, etc)
+         * @method
+         * @memberof Konva.Node.prototype
+         * @param {Boolean} [skipTransform] flag should we apply transformation to rectangle
+         * @returns {Object} rect with {x, y, width, height} properties
+         * @example
+         *
+         * circle.getClientRect(true);
+         */
+        getClientRect : function() {
+            // abstract method
+            // redefine in Container and Shape
+            throw 'abstract "getClientRect" method call';
+        },
+        _transformedRect : function(rect) {
+            var points = [
+                {x : rect.x, y : rect.y},
+                {x : rect.x + rect.width, y : rect.y},
+                {x : rect.x + rect.width, y : rect.y + rect.height},
+                {x : rect.x, y : rect.y + rect.height}
+            ];
+            var minX, minY, maxX, maxY;
+            var trans = this.getTransform();
+            points.forEach(function(point) {
+                var transformed = trans.point(point);
+                if (minX === undefined) {
+                    minX = maxX = transformed.x;
+                    minY = maxY = transformed.y;
+                }
+                minX = Math.min(minX, transformed.x);
+                minY = Math.min(minY, transformed.y);
+                maxX = Math.max(maxX, transformed.x);
+                maxY = Math.max(maxY, transformed.y);
+            });
+            return {
+                x : Math.round(minX),
+                y : Math.round(minY),
+                width : Math.round(maxX - minX),
+                height : Math.round(maxY - minY)
+            };
+        },
         _drawCachedSceneCanvas: function(context) {
             context.save();
-            this.getLayer()._applyTransform(this, context);
-            context._applyOpacity(this);
+
+            context.translate(
+                this._cache.canvas.x,
+                this._cache.canvas.y
+            );
+
             context.drawImage(this._getCachedSceneCanvas()._canvas, 0, 0);
+            context.restore();
+        },
+        _drawCachedHitCanvas: function(context) {
+            var cachedCanvas = this._cache.canvas,
+                hitCanvas = cachedCanvas.hit;
+            context.save();
+            context.translate(
+                this._cache.canvas.x,
+                this._cache.canvas.y
+            );
+            context.drawImage(hitCanvas._canvas, 0, 0);
             context.restore();
         },
         _getCachedSceneCanvas: function() {
@@ -257,15 +320,6 @@
             else {
                 return sceneCanvas;
             }
-        },
-        _drawCachedHitCanvas: function(context) {
-            var cachedCanvas = this._cache.canvas,
-                hitCanvas = cachedCanvas.hit;
-
-            context.save();
-            this.getLayer()._applyTransform(this, context);
-            context.drawImage(hitCanvas._canvas, 0, 0);
-            context.restore();
         },
         /**
          * bind events to the node. KonvaJS supports mouseover, mousemove,
@@ -1348,6 +1402,9 @@
                 width: this.getWidth(),
                 height: this.getHeight()
             };
+        },
+        getTransformedSize : function() {
+
         },
         getWidth: function() {
             return this.attrs.width || 0;

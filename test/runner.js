@@ -64,7 +64,7 @@ function init() {
 
 
 Konva.enableTrace = true;
-Konva.showWarnings = false;
+Konva.showWarnings = true;
 
 function addStats() {
     stats = new Stats();
@@ -115,15 +115,16 @@ function get (element, content) {
     }
     return element;
 }
-
-function compareLayerAndCanvas(layer, canvas, tol) {
-    var equal = imagediff.equal(layer.getCanvas()._canvas, canvas, tol);
+function compareCanvases(canvas1, canvas2, tol) {
+    // don't test in PhantomJS as it use old chrome engine
+    // it it has opacity + shadow bug
+    var equal = imagediff.equal(canvas1, canvas2, tol);
     if (!equal) {
         var
             div     = get('div'),
             b       = get('div', '<div>Expected:</div>'),
             c       = get('div', '<div>Diff:</div>'),
-            diff    = imagediff.diff(layer.getCanvas()._canvas, canvas),
+            diff    = imagediff.diff(canvas1, canvas2),
             diffCanvas  = get('canvas'),
             context;
 
@@ -134,18 +135,47 @@ function compareLayerAndCanvas(layer, canvas, tol) {
         b.style.float = 'left';
         c.style.float = 'left';
 
+        canvas2.style.position = '';
+        canvas2.style.display = '';
+
         context = diffCanvas.getContext('2d');
         context.putImageData(diff, 0, 0);
 
-        b.appendChild(canvas);
+        b.appendChild(canvas2);
         c.appendChild(diffCanvas);
 
         div.appendChild(b);
         div.appendChild(c);
         konvaContainer.appendChild(div);
     }
-    assert.equal(equal, true);
+    assert.equal(equal, true, 'Result from Konva is different with canvas result');
+}
 
+function compareLayerAndCanvas(layer, canvas, tol) {
+    compareCanvases(layer.getCanvas()._canvas, canvas, tol);
+}
+
+function compareLayers(layer1, layer2, tol) {
+    compareLayerAndCanvas(layer1, layer2.getCanvas()._canvas, tol);
+}
+
+function cloneAndCompareLayer(layer, tol) {
+    var layer2 = layer.clone();
+    layer.getStage().add(layer2);
+    layer2.hide();
+    compareLayers(layer, layer2, tol);
+}
+
+function cloneAndCompareLayerWithHit(layer, tol) {
+    var layer2 = layer.clone();
+    layer.getStage().add(layer2);
+    layer2.hide();
+    compareLayers(layer, layer2, tol);
+    compareCanvases(layer.getHitCanvas()._canvas, layer2.getHitCanvas()._canvas, tol);
+}
+
+function compareSceneAndHit(layer) {
+    compareLayerAndCanvas(layer, layer.getHitCanvas()._canvas, 254);
 }
 
 function addContainer() {

@@ -26,6 +26,7 @@
     };
 
     Konva.Circle.prototype = {
+        _centroid : true,
         ___init: function(config) {
             // call super constructor
             Konva.Shape.call(this, config);
@@ -59,17 +60,12 @@
             if (this.radius() !== height / 2) {
                 this.setRadius(height / 2);
             }
-        },
-        setRadius : function(val) {
-            this._setAttr('radius', val);
-            this.setWidth(val * 2);
-            this.setHeight(val * 2);
         }
     };
     Konva.Util.extend(Konva.Circle, Konva.Shape);
 
     // add getters setters
-    Konva.Factory.addGetter(Konva.Circle, 'radius', 0);
+    Konva.Factory.addGetterSetter(Konva.Circle, 'radius', 0);
     Konva.Factory.addOverloadedGetterSetter(Konva.Circle, 'radius');
 
     /**

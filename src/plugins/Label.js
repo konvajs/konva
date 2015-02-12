@@ -241,6 +241,34 @@
 
             context.closePath();
             context.fillStrokeShape(this);
+        },
+        getSelfRect : function() {
+            var x = 0,
+                y = 0,
+                pointerWidth = this.getPointerWidth(),
+                pointerHeight = this.getPointerHeight(),
+                direction = this.pointerDirection(),
+                width = this.getWidth(),
+                height = this.getHeight();
+
+            if (direction === UP) {
+                y -= pointerHeight;
+                height += pointerHeight;
+            }  else if (direction === DOWN) {
+                height += pointerHeight;
+            } else if (direction === LEFT) {
+                // ARGH!!! I have no idea why should I used magic 1.5!!!!!!!!!
+                x -= pointerWidth * 1.5;
+                width += pointerWidth;
+            } else if (direction === RIGHT) {
+                width += pointerWidth  * 1.5;
+            }
+            return {
+                x : x,
+                y : y,
+                width : width,
+                height : height
+            };
         }
     };
 

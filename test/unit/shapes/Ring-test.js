@@ -23,7 +23,6 @@ suite('Ring', function() {
    });
 
   // ======================================================
-  // test for https://github.com/ericdrowell/KonvaJS/issues/987
   test('ring attrs sync', function() {
       var stage = addStage();
       var layer = new Konva.Layer();
@@ -31,8 +30,6 @@ suite('Ring', function() {
           name: 'ring',
           x: 30,
           y: 50,
-          width: 50,
-          height: 50,
           innerRadius: 15,
           outerRadius: 30,
           fill: 'green',
@@ -43,11 +40,50 @@ suite('Ring', function() {
       layer.add(ring);
       stage.add(layer);
 
+      assert(ring.width(),60);
+      assert(ring.height(), 60);
 
-      var cring = ring.clone();
-      assert.equal(cring.outerRadius(), ring.outerRadius());
+      ring.height(100);
+      assert(ring.width(), 100);
+      assert(ring.outerRadius(), 50);
 
-      assert.equal(ring.attrs.width, ring.outerRadius() * 2);      
+      ring.width(120);
+      assert(ring.height(), 120);
+      assert(ring.outerRadius(), 60);
    });
+
+    test('ring cache', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var ring = new Konva.Ring({
+            name: 'ring',
+            x: 30,
+            y: 50,
+            innerRadius: 15,
+            outerRadius: 30,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true
+        });
+
+        layer.add(ring);
+        stage.add(layer);
+
+        assert.deepEqual(ring.getSelfRect(), {
+            x : -30,
+            y : -30,
+            width : 60,
+            height : 60
+        });
+
+        var layer2 = layer.clone();
+        stage.add(layer2);
+        layer2.hide();
+
+        compareLayers(layer, layer2);
+
+
+    });
 
 });
