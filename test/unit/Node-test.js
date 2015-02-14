@@ -2689,8 +2689,9 @@ suite('Node', function() {
     layer.on('click', function() {
         layerClick += 1;
     });
-
+      showHit(layer);
     var top = stage.content.getBoundingClientRect().top;
+
     stage._mousedown({
         clientX: 150,
         clientY: 75 + top
@@ -2701,7 +2702,7 @@ suite('Node', function() {
         clientY: 75 + top
     });
 
-    assert.equal(rectClick, 1, 'click on rectange');
+    assert.equal(rectClick, 1, 'click on rectangle');
     assert.equal(groupClick, 0, 'no click on group');
     assert.equal(layerClick, 0, 'no click on layer');
   });

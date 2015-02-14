@@ -165,16 +165,15 @@
 
 
             var cachedSceneCanvas = new Konva.SceneCanvas({
-                pixelRatio: 1,
                 width: width,
                 height: height
             }),
             cachedFilterCanvas = new Konva.SceneCanvas({
-                pixelRatio: 1,
                 width: width,
                 height: height
             }),
             cachedHitCanvas = new Konva.HitCanvas({
+                pixelRatio : 1,
                 width: width,
                 height: height
             }),
@@ -264,13 +263,16 @@
         },
         _drawCachedSceneCanvas: function(context) {
             context.save();
-
+            context._applyOpacity(this);
             context.translate(
                 this._cache.canvas.x,
                 this._cache.canvas.y
             );
 
-            context.drawImage(this._getCachedSceneCanvas()._canvas, 0, 0);
+            var cacheCanvas = this._getCachedSceneCanvas();
+            var ratio = context.canvas.pixelRatio;
+
+            context.drawImage(cacheCanvas._canvas, 0, 0, cacheCanvas.width / ratio, cacheCanvas.height /ratio);
             context.restore();
         },
         _drawCachedHitCanvas: function(context) {

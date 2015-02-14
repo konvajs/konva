@@ -87,8 +87,9 @@
          *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
          */
         setPixelRatio: function(pixelRatio) {
+            var previousRatio = this.pixelRatio;
             this.pixelRatio = pixelRatio;
-            this.setSize(this.getWidth(), this.getHeight());
+            this.setSize(this.getWidth() / previousRatio, this.getHeight() / previousRatio);
         },
         /**
          * set width
@@ -100,6 +101,10 @@
             // take into account pixel ratio
             this.width = this._canvas.width = width * this.pixelRatio;
             this._canvas.style.width = width + 'px';
+
+            var pixelRatio = this.pixelRatio,
+                _context = this.getContext()._context;
+            _context.scale(pixelRatio, pixelRatio);
         },
         /**
          * set height
@@ -111,6 +116,9 @@
             // take into account pixel ratio
             this.height = this._canvas.height = height * this.pixelRatio;
             this._canvas.style.height = height + 'px';
+            var pixelRatio = this.pixelRatio,
+                _context = this.getContext()._context;
+            _context.scale(pixelRatio, pixelRatio);
         },
         /**
          * get width
@@ -177,29 +185,13 @@
         this.setSize(width, height);
     };
 
-    Konva.SceneCanvas.prototype = {
-        setWidth: function(width) {
-            var pixelRatio = this.pixelRatio,
-                _context = this.getContext()._context;
-
-            Konva.Canvas.prototype.setWidth.call(this, width);
-            _context.scale(pixelRatio, pixelRatio);
-        },
-        setHeight: function(height) {
-            var pixelRatio = this.pixelRatio,
-                _context = this.getContext()._context;
-
-            Konva.Canvas.prototype.setHeight.call(this, height);
-            _context.scale(pixelRatio, pixelRatio);
-        }
-    };
     Konva.Util.extend(Konva.SceneCanvas, Konva.Canvas);
 
     Konva.HitCanvas = function(config) {
         var conf = config || {};
         var width = conf.width || 0,
             height = conf.height || 0;
-            
+
         Konva.Canvas.call(this, conf);
         this.context = new Konva.HitContext(this);
         this.setSize(width, height);

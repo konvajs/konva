@@ -1311,4 +1311,40 @@ suite('MouseEvents', function() {
         }, 20);
 
     });
+
+    test('change ratio for hit graph', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
+            x : stage.width() / 2,
+            y : stage.height() / 2,
+            radius : 50,
+            stroke : 'black',
+            fill : 'red',
+            strokeWidth : 5,
+            draggable : true
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        layer.getHitCanvas().setPixelRatio(0.5);
+
+        layer.draw();
+        var shape = layer.getIntersection({
+            x : stage.width() / 2 - 55,
+            y : stage.height() / 2 - 55
+        });
+        assert.equal(!!shape, false, 'no shape here');
+        shape = layer.getIntersection({
+            x : stage.width() / 2 + 55,
+            y : stage.height() / 2 + 55
+        });
+        assert.equal(!!shape, false, 'no shape here');
+        shape = layer.getIntersection({
+            x : stage.width() / 2,
+            y : stage.height() / 2
+        });
+        assert.equal(shape, circle);
+    });
 });

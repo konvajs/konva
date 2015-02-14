@@ -106,12 +106,13 @@ suite('Blob', function(){
             tension: 0.3,
             closed: true
         });
+
         blob.cache();
         layer.add(blob);
         stage.add(layer);
 
         if (!window.mochaPhantomJS) {
-            cloneAndCompareLayer(layer, 50);
+            cloneAndCompareLayer(layer, 100);
         }
     });
 });

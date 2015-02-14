@@ -505,7 +505,8 @@ suite('Stage', function() {
             clientY: clientY
         });
         Konva.DD._endDragAfter({dragEndNode:rect});
-
+        assert.equal(Konva.isDragging(), false);
+        assert.equal(Konva.DD.node, undefined);
         // simulate click
         stage._mousedown({
             clientX: 66,
@@ -516,5 +517,8 @@ suite('Stage', function() {
             clientX: 66,
             clientY: clientY
         });
-    })
+        Konva.DD._endDragBefore({dragEndNode:rect});
+        assert.equal(Konva.isDragging(), false);
+        assert.equal(Konva.DD.node, undefined);
+    });
 });

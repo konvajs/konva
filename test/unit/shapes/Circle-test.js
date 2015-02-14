@@ -266,6 +266,6 @@ suite('Circle', function(){
         context.fill();
         context.lineWidth  = 4;
         context.stroke();
-        compareLayerAndCanvas(layer, canvas, 50);
+        compareLayerAndCanvas(layer, canvas, 100);
     });
 });

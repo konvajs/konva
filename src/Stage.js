@@ -473,7 +473,7 @@
             }
         },
         _mouseup: function(evt) {
-        
+
             // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event       
             if (Konva.UA.ieMobile) {
                 return this._touchend(evt);

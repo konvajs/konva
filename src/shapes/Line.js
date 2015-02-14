@@ -168,10 +168,10 @@
                 maxY = Math.max(maxY, y);
             }
             return {
-                x : minX,
-                y : minY,
-                width : maxX - minX,
-                height : maxY - minY
+                x : Math.round(minX),
+                y : Math.round(minY),
+                width : Math.round(maxX - minX),
+                height : Math.round(maxY - minY)
             };
         }
     };

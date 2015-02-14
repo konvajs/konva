@@ -65,6 +65,7 @@ function init() {
 
 Konva.enableTrace = true;
 Konva.showWarnings = true;
+//Konva.pixelRatio = 2;
 
 function addStats() {
     stats = new Stats();
@@ -103,8 +104,10 @@ function addStage() {
 
 function createCanvas() {
     var canvas = document.createElement('canvas');
-    canvas.width = 578;
-    canvas.height = 200;
+    var ratio = (Konva.pixelRatio || window.devicePixelRatio);
+    canvas.width = 578 * ratio;
+    canvas.height = 200 * ratio;
+    canvas.getContext('2d').scale(ratio, ratio);
     return canvas;
 }
 
@@ -210,6 +213,14 @@ beforeEach(function(){
     Konva.inDblClickWindow = false;
     Konva.DD.isDragging = false;
     Konva.DD.node = undefined;
+});
+
+Konva.UA.mobile = false;
+
+afterEach(function(){
+//    Konva.stages.forEach(function(stage) {
+//        stage.destroy();
+//    });
 });
 
 init();

@@ -366,5 +366,35 @@ suite('Text', function(){
         });
     });
 
+    test.skip('cache text', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var text = new Konva.Text({
+            fontSize: 20,
+            y : 50,
+            x : 50,
+            fill: 'black',
+            text: 'Hello world with cache!\nHow are you?',
+            draggable : true
+        });
+
+        text.cache();
+        layer.add(text);
+
+        var text2 = new Konva.Text({
+            fontSize: 20,
+            y : 50,
+            x : 260,
+            fill: 'black',
+            text: 'Hello world without cache!\nHow are you?',
+            draggable : true
+        });
+
+        layer.add(text2);
+
+        stage.add(layer);
+    });
+
 
 });

@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      canvas {
+        border: 1px solid #9C9898;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+
+    <script src="../../dist/konva-dev.js"></script>
+
+    <script>
+      var stage = new Konva.Stage({
+        container: 'container',
+        width: 500,
+        height: 250
+      });
+      var layer = new Konva.Layer();
+
+      for(var j =0; j < 20; j++) {
+          layer.add(new Konva.Circle({
+              x : stage.width() * Math.random(),
+              y : stage.height() * Math.random(),
+              radius : 50,
+              stroke : 'black',
+              fill : Konva.Util.getRandomColor(),
+              strokeWidth : 5,
+              draggable : true
+          }));
+      }
+
+      stage.add(layer);
+        var i, count = 500, start;
+
+      var start = Date.now();
+        for(i = 0; i< count; i++) {
+            layer.draw();
+        }
+      var defTime = Date.now() - start;
+
+      layer.getHitCanvas().setPixelRatio(1);
+//      layer.getCanvas().setPixelRatio(1);
+      layer.draw();
+
+      start = Date.now();
+      for(i = 0; i< count; i++) {
+          layer.draw();
+      }
+      var time1 = Date.now() - start;
+
+      layer.getHitCanvas().setPixelRatio(0.2);
+//      layer.getCanvas().setPixelRatio(0.5);
+      layer.draw();
+
+      start = Date.now();
+      for(i = 0; i< count; i++) {
+          layer.draw();
+      }
+      var time05 = Date.now() - start;
+        alert('def ' + defTime + ', 1 ration ' + time1 + ', 05 ration ' + time05)
+    </script>
+  </body>
+</html>

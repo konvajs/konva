@@ -29,7 +29,9 @@
         ____init: function(config) {
             this.nodeType = 'Layer';
             this.canvas = new Konva.SceneCanvas();
-            this.hitCanvas = new Konva.HitCanvas();
+            this.hitCanvas = new Konva.HitCanvas({
+                pixelRatio : 1
+            });
             // call super constructor
             Konva.BaseLayer.call(this, config);
         },
@@ -111,10 +113,10 @@
             ];
         },
         _getIntersection: function(pos) {
-            var p = this.hitCanvas.context.getImageData(pos.x, pos.y, 1, 1).data,
+            var ratio = this.hitCanvas.pixelRatio;
+            var p = this.hitCanvas.context.getImageData(Math.round(pos.x * ratio), Math.round(pos.y * ratio), 1, 1).data,
                 p3 = p[3],
                 colorKey, shape;
-
             // fully opaque pixel
             if(p3 === 255) {
                 colorKey = Konva.Util._rgbToHex(p[0], p[1], p[2]);

@@ -6,12 +6,13 @@ suite('Canvas', function() {
         var layer = new Konva.Layer();
 
         var circle = new Konva.Circle({
-            x: 578/2,
-            y: 100,
+            x: 100,
+            y: 70,
             radius: 70,
             fill: 'green',
             stroke: 'blue',
-            strokeWidth: 4
+            strokeWidth: 4,
+            draggable : true
         });
 
         layer.add(circle);
@@ -22,6 +23,7 @@ suite('Canvas', function() {
         stage.setHeight(100);
 
         stage.draw();
+        assert.equal(layer.getCanvas().getPixelRatio(), Konva.pixelRatio || window.devicePixelRatio || 1);
 
         layer.getCanvas().setPixelRatio(1);
         assert.equal(layer.getCanvas().getPixelRatio(), 1);

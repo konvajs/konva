@@ -201,7 +201,7 @@
                 this.clearRect(bounds.x || 0, bounds.y || 0, bounds.width || 0, bounds.height || 0);
             }
             else {
-                this.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                this.clearRect(0, 0, canvas.getWidth() / canvas.pixelRatio, canvas.getHeight() / canvas.pixelRatio);
             }
         },
         _applyLineCap: function(shape) {
@@ -381,7 +381,11 @@
                     that[methodName] = function() {
                         args = _simplifyArray(Array.prototype.slice.call(arguments, 0));
                         ret = origMethod.apply(that, arguments);
-           
+
+                        if (methodName === 'clearRect') {
+                            args[2] = args[2] / that.canvas.getPixelRatio();
+                            args[3] = args[3] / that.canvas.getPixelRatio();
+                        }
                         that._trace({
                             method: methodName,
                             args: args

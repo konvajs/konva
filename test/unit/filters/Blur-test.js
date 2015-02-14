@@ -1,6 +1,7 @@
 suite('Blur', function() {
     // ======================================================
     test('basic blur', function(done) {
+        this.timeout(5000);
         var stage = addStage();
 
         var imageObj = new Image();

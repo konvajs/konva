@@ -414,6 +414,7 @@ suite('Path', function() {
     
     // ======================================================
     test('Tiger (RAWR!)', function() {
+        this.timeout(5000);
         var stage = addStage();
         var layer = new Konva.Layer();
         var group = new Konva.Group();

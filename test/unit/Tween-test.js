@@ -132,7 +132,6 @@ suite('Tween', function() {
 
 
         setTimeout(function(){
-            "use strict";
             assert.equal(circle.x(), 200);
             assert.equal(circle.y(), 100);
             done();

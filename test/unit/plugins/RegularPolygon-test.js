@@ -143,7 +143,7 @@ suite('RegularPolygon', function() {
             width : 100
         });
         if (!window.mochaPhantomJS) {
-            cloneAndCompareLayer(layer, 50);
+            cloneAndCompareLayer(layer, 200);
         }
     });
     

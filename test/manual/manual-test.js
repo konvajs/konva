@@ -265,6 +265,42 @@ suite('Manual', function() {
         layer.add(rect, text);
 
         stage.add(layer);
+    });
 
+    test('change hit graph ratio', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
+            x : stage.width() / 2,
+            y : stage.height() / 2,
+            radius : 50,
+            stroke : 'black',
+            fill : 'red',
+            strokeWidth : 5,
+            draggable : true
+        });
+
+        var text = new Konva.Text({
+            text : "click on circle to decrease hit grpah retion"
+        });
+
+        layer.add(circle, text);
+        stage.add(layer);
+        showHit(layer);
+
+        circle.on('mouseenter', function() {
+            document.body.style.cursor = 'pointer';
+        });
+
+        circle.on('mouseleave', function() {
+            document.body.style.cursor = 'default';
+        });
+
+        circle.on('click', function() {
+            var ratio = layer.getHitCanvas().getPixelRatio() * 0.8;
+            console.log('new ratio', ratio);
+            layer.getHitCanvas().setPixelRatio(ratio);
+            layer.draw();
+        });
     });
 });
