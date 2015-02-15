@@ -106,15 +106,18 @@
             return this;
         },
         /**
-        * cache node to improve drawing performance, apply filters, or create more accurate
-        *  hit regions
+        *  cache node to improve drawing performance, apply filters, or create more accurate
+        *  hit regions. For all basic shapes size of cache canvas will be automatically detected.
+        *  If you need to cache your custom `Konva.Shape` instance you have to pass shape's bounding box
+        *  properties. Look at [link to demo page](link to demo page) for more information.
         * @method
         * @memberof Konva.Node.prototype
-        * @param {Object} config
+        * @param {Object} [config]
         * @param {Number} [config.x]
         * @param {Number} [config.y]
         * @param {Number} [config.width]
         * @param {Number} [config.height]
+        * @param {Number} [config.offset]  increase canvas size by `offset` pixel in all directions.
         * @param {Boolean} [config.drawBorder] when set to true, a red border will be drawn around the cached
         *  region for debugging purposes
         * @returns {Konva.Node}
@@ -220,14 +223,36 @@
             return this;
         },
         /**
-         * return client rectangle (x, y, width, height) of node. This rectangle also include all styling (strokes, shadows, etc)
+         * return client rectangle (x, y, width, height) of node. This rectangle also include all styling (strokes, shadows, etc).
+         * This rectangle relative to parent container.
          * @method
          * @memberof Konva.Node.prototype
-         * @param {Boolean} [skipTransform] flag should we apply transformation to rectangle
+         * @param {Boolean} [skipTransform] flag should we skip transformation to rectangle
          * @returns {Object} rect with {x, y, width, height} properties
          * @example
+         * var rect = new Konva.Rect({
+         *      width : 100,
+         *      height : 100,
+         *      x : 50,
+         *      y : 50,
+         *      strokeWidth : 4,
+         *      stroke : 'black',
+         *      offsetX : 50,
+         *      scaleY : 2
+         * });
          *
-         * circle.getClientRect(true);
+         * // get client rect without think off transformations (position, rotation, scale, offset, etc)
+         * rect.getClientRect(true);
+         * // returns {
+         * //     x : -2,   // two pixels for stroke / 2
+         * //     y : -2,
+         * //     width : 104, // increased by 4 for stroke
+         * //     height : 104
+         * //}
+         *
+         * // get client rect with transformation applied
+         * rect.getClientRect();
+         * // returns Object {x: -2, y: 46, width: 104, height: 208}
          */
         getClientRect : function() {
             // abstract method

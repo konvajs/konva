@@ -169,6 +169,7 @@
         },
         getClientRect : function(skipTransform) {
             var fillRect = this.getSelfRect();
+            debugger;
             var strokeWidth = (this.hasStroke() && this.strokeWidth()) || 0;
             var fillAndStrokeWidth = fillRect.width + strokeWidth;
             var fillAndStrokeHeight = fillRect.height + strokeWidth;

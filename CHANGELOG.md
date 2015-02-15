@@ -1,13 +1,18 @@
 ## 0.8.1 2015-02-30
 
 * Bug Fixes
+    * cache algorithm has A LOT OF updates.
 * Enhancements
     * new methods for working with node's name: `addName`, `removeName`, `hasName`.
     * performance optimization (remove some unnecessary draws)
     * more expected drawing when shape has opacity, stroke and shadow
-    * `scale` now affect to `shadowOffset`
+    * `scale` now affect `shadowOffset`
     * new `perfectDrawEnabled` property for shape. See [http://konvajs.github.io/docs/performance/Disable_Perfect_Draw.html](http://konvajs.github.io/docs/performance/Disable_Perfect_Draw.html)
     * new `shadowForStrokeEnabled` property for shape. See [http://konvajs.github.io/docs/performance/All_Performance_Tips.html](http://konvajs.github.io/docs/performance/All_Performance_Tips.html)
+    * HDPI for caching.
+    * new `getClientRect` method.
+    * Cache should work much better. Now you don't need to pass bounding box {x,y,width,height} to `cache` method for all buildin Konva shapes.
+    (only for your custom `Konva.Shape` instance).
 
 ## 0.8.0 2015-02-04
 
