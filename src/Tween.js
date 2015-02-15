@@ -11,7 +11,8 @@
     PLAYING = 2,
     REVERSING = 3,
 
-    idCounter = 0;
+    idCounter = 0,
+    colorAttrs = ['fill', 'stroke', 'shadowColor'];
 
     /**
      * Tween constructor.  Tweens enable you to animate a node between the current state and a new state.
@@ -115,9 +116,16 @@
                 for (n=0; n<len; n++) {
                     diff.push(end[n] - start[n]);
                 }
-
-            }
-            else {
+            } else if (colorAttrs.indexOf(key) !== -1) {
+                start = Konva.Util.colorToRGBA(start);
+                var endRGBA = Konva.Util.colorToRGBA(end);
+                diff = {
+                    r : endRGBA.r - start.r,
+                    g : endRGBA.g - start.g,
+                    b : endRGBA.b - start.b,
+                    a : endRGBA.a - start.a
+                };
+            } else {
                 diff = end - start;
             }
 
@@ -143,8 +151,13 @@
                     for (n=0; n<len; n++) {
                         newVal.push(start[n] + (diff[n] * i));
                     }
-                }
-                else {
+                }  else if (colorAttrs.indexOf(key) !== -1) {
+                    newVal = 'rgba(' +
+                            Math.round(start.r + diff.r * i) + ',' +
+                            Math.round(start.g + diff.g * i) + ',' +
+                            Math.round(start.b + diff.b * i) + ',' +
+                            Math.round(start.a + diff.a * i) + ')';
+                } else {
                     newVal = start + (diff * i);
                 }
 

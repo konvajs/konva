@@ -139,4 +139,36 @@ suite('Tween', function() {
 
     });
 
+    test('color tweening', function(done) {
+        var stage = addStage();
+
+        var layer = new Konva.Layer();
+
+        var circle = new Konva.Circle({
+            x: 100,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'red',
+            stroke: 'blue',
+            strokeWidth: 4
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        var c = Konva.Util.colorToRGBA('green');
+        var endFill = 'rgba(' + c.r + ',' + c.g + ',' + c.b + ',' + c.a + ')';
+        var tween = new Konva.Tween({
+            node: circle,
+            duration: 0.1,
+            fill : endFill,
+            onFinish : function() {
+                assert.equal(endFill, circle.fill());
+                done();
+            }
+        });
+        tween.play();
+    });
+
+
 });

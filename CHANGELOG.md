@@ -13,6 +13,7 @@
     * new `getClientRect` method.
     * Cache should work much better. Now you don't need to pass bounding box {x,y,width,height} to `cache` method for all buildin Konva shapes.
     (only for your custom `Konva.Shape` instance).
+    * `Tween` now supports color properties (`fill`, `stroke`, `shadowColor`)
 
 ## 0.8.0 2015-02-04
 

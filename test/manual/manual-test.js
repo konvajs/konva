@@ -303,4 +303,41 @@ suite('Manual', function() {
             layer.draw();
         });
     });
+
+    test('tween color', function() {
+        var stage = addStage();
+
+        var layer = new Konva.Layer();
+
+        var circle = new Konva.Circle({
+            x: 100,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'red',
+            stroke: 'blue',
+            strokeWidth: 4,
+            shadowOffsetX : 10,
+            shadowOffsetY : 10,
+            shadowColor : 'black'
+        });
+
+        var text = new Konva.Text({
+            text : 'click on circle to start tween'
+        });
+
+        layer.add(circle, text);
+        stage.add(layer);
+
+
+        circle.on('click', function() {
+            var tween = new Konva.Tween({
+                node: circle,
+                duration: 1,
+                fill : Konva.Util.getRandomColor(),
+                stroke : Konva.Util.getRandomColor(),
+                shadowColor : Konva.Util.getRandomColor()
+            });
+            tween.play();
+        });
+    });
 });
