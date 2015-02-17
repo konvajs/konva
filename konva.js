@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.9.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2015-02-16
+ * Date: 2015-02-17
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -8340,7 +8340,7 @@ var Konva = {};
         },
         getClientRect : function(skipTransform) {
             var fillRect = this.getSelfRect();
-            debugger;
+
             var strokeWidth = (this.hasStroke() && this.strokeWidth()) || 0;
             var fillAndStrokeWidth = fillRect.width + strokeWidth;
             var fillAndStrokeHeight = fillRect.height + strokeWidth;
