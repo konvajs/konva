@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.9.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2015-02-17
+ * Date: 2015-02-26
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -7019,6 +7019,30 @@ var Konva = {};
 
             delete Konva.Tween.attrs[nodeId][thisId];
         }
+    };
+
+    /**
+     * Tween node properties. Shorter usage of {@link Konva.Tween} object.
+     *
+     * @method Konva.Node#to
+     * @memberof Konva.Node
+     * @param {Object} [params] tween params
+     * @example
+     *
+     * circle.to({
+     *  x : 50,
+     *  duration : 0.5
+     * });
+     */
+    Konva.Node.prototype.to = function(params) {
+        var onFinish = params.onFinish;
+        params.node = this;
+        params.onFinish = function() {
+            tween.destroy();
+            onFinish();
+        };
+        var tween = new Konva.Tween(params);
+        tween.play();
     };
 
     var Tween = function(prop, propFunc, func, begin, finish, duration, yoyo) {

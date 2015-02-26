@@ -199,16 +199,6 @@ module.exports = function(grunt) {
         dest: 'konva.js'
       }
     },
-    shell: {
-        jsdoc: {
-            options: {
-                stdout: true,
-                stderr : true,
-                failOnError : true
-            },
-            command: './node_modules/.bin/jsdoc ./dist/konva-v<%= pkg.version %>.js -d ./docs'
-        }
-    },
     mocha_phantomjs: {
       all: ['test/runner.html']
     },
@@ -223,9 +213,9 @@ module.exports = function(grunt) {
     },
     jsdoc : {
       dist : {
-        src: ['README.md', './dist/konva-v<%= pkg.version %>.js'],
+        src: ['./dist/konva-v<%= pkg.version %>.js'],
         options: {
-          destination: 'api',
+          destination: 'docs',
           template : './node_modules/grunt-jsdoc/node_modules/ink-docstrap/template',
           configure : './resources/jsdoc.conf.json'
         }
@@ -261,11 +251,6 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('docs', 'Generate docs', [
-    'full',
-    'shell:jsdoc'
-  ]);
-
-  grunt.registerTask('api', 'Generate docs for homepage', [
     'full',
     'jsdoc'
   ]);

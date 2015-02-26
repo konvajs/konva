@@ -19,11 +19,7 @@
 		"linenums"              : true,
 		"collapseSymbols"       : false,
 		"inverseNav"            : true,
-		"highlightTutorialCode" : true,
-	  	"analytics" : {
-		  "ua" : "UA-54202824-2",
-		  "domain" : "http://konvajs.github.io"
-		}
+		"highlightTutorialCode" : true
 	},
 	"markdown"  : {
 		"parser"   : "gfm",
