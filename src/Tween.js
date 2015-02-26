@@ -272,6 +272,30 @@
         }
     };
 
+    /**
+     * Tween node properties. Shorter usage of {@link Konva.Tween} object.
+     *
+     * @method Konva.Node#to
+     * @memberof Konva.Node
+     * @param {Object} [params] tween params
+     * @example
+     *
+     * circle.to({
+     *  x : 50,
+     *  duration : 0.5
+     * });
+     */
+    Konva.Node.prototype.to = function(params) {
+        var onFinish = params.onFinish;
+        params.node = this;
+        params.onFinish = function() {
+            tween.destroy();
+            onFinish();
+        };
+        var tween = new Konva.Tween(params);
+        tween.play();
+    };
+
     var Tween = function(prop, propFunc, func, begin, finish, duration, yoyo) {
         this.prop = prop;
         this.propFunc = propFunc;

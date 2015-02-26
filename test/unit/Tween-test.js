@@ -170,5 +170,32 @@ suite('Tween', function() {
         tween.play();
     });
 
+    test('transitionTo method', function(done) {
+        var stage = addStage();
+
+        var layer = new Konva.Layer();
+
+        var circle = new Konva.Circle({
+            radius: 70,
+            fill: 'red',
+            stroke: 'blue',
+            strokeWidth: 4
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        circle.to({
+            x: stage.width() / 2,
+            y: stage.getHeight() / 2,
+            duration : 0.1,
+            onFinish : function() {
+                assert.equal(circle.x(), stage.width() / 2);
+                assert.equal(Object.keys(Konva.Tween.attrs[circle._id]).length, 0);
+                done();
+            }
+        });
+    });
+
 
 });
