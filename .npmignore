@@ -12,5 +12,6 @@ api
 bower-template.json
 bower.json
 presentation-schedule.md
+.jshintrc
 *.sublime-project
 *.sublime-workspace
