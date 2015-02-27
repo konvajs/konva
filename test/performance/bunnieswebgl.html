@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <div id='container'></div>
+    <script src='../konva.js'></script>
+    <script src='webgl-2d.js'></script>
+    <script src='konva.webgl.js'></script>
+    <script src='http://code.jquery.com/jquery-1.11.0.min.js'></script>
+    <script src='../lib/stats.js'></script>
+    <script defer='defer'>      
+      var lastTime = 0;
+      var vendors = ['ms', 'moz', 'webkit', 'o'];
+      for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+          window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+          window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
+                                     || window[vendors[x]+'CancelRequestAnimationFrame'];
+      }
+      if (!window.requestAnimationFrame) {
+          window.requestAnimationFrame = function(callback) {
+              var currTime = new Date().getTime();
+              var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+              var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
+                timeToCall);
+              lastTime = currTime + timeToCall;
+              return id;
+          };
+      }
+      window.requestAnimFrame = window.requestAnimationFrame;
+      
+      var width = $(window).width();
+      var height = $(window).height();
+      
+      var wabbitTexture;
+      
+      var bunnys = [];
+      var gravity = 0.75;
+      
+      var maxX = width - 10;
+      var minX = 0;
+      var maxY = height - 10;
+      var minY = 0;
+      
+      var startBunnyCount = 10;
+      var isAdding = false;
+      var count = 0;
+      var container;
+      var layer;
+      var stats;
+      var amount = 10;
+      var counter;
+      
+      function onReady() {
+          var stage = new Konva.Stage({
+              container: 'container',
+              width: width - 10,
+              height: height - 10,
+          });
+          layer = new Konva.FastLayer();
+          stage.add(layer);
+          stats = new Stats();
+          
+          wabbitTexture = new Image();
+          wabbitTexture.onload = function() {
+              _handleTextureLoaded();
+          };
+          wabbitTexture.src = '../assets/bunny.png';
+          
+          document.body.appendChild( stats.domElement );
+          stats.domElement.style.position = 'absolute';
+          stats.domElement.style.top = '0px';
+          
+          window.requestAnimationFrame(update);
+      
+          counter = document.createElement('div');
+          counter.className = 'counter';
+          counter.style.position = 'absolute';
+          counter.style.top = '50px';
+
+          document.body.appendChild(counter);
+          
+          count = startBunnyCount;
+          counter.innerHTML = startBunnyCount + ' BUNNIES';
+          
+          container = stage;
+          // stage.addChild(container);
+          
+          $(stage.getContainer()).mousedown(function(){
+              isAdding = true;
+          });
+          
+          $(stage.getContainer()).mouseup(function(){
+              isAdding = false;
+          });
+          
+          document.addEventListener('touchstart', onTouchStart, true);
+          document.addEventListener('touchend', onTouchEnd, true);
+      }
+      
+      function _handleTextureLoaded (event) {
+          for (var i = 0; i < startBunnyCount; i++) 
+          {
+              var bunny = new Konva.Image({
+                  image: wabbitTexture,
+                  transformsEnabled: 'position',
+                  hitGraphEnabled: false,
+                  x : 10,
+                  y : 10
+              });
+             
+
+      
+              bunny.speedX = Math.random() * 10;
+              bunny.speedY = (Math.random() * 10) - 5;
+              
+              bunnys.push(bunny);
+              // bunny.cache();
+              layer.add(bunny);
+              bunny.cache();
+
+              layer.draw();
+          }
+      }
+      
+      function onTouchStart(event){
+          isAdding = true;
+      }
+      
+      function onTouchEnd(event){
+          isAdding = false;
+      }
+      
+      function update(){
+          stats.begin();
+          if(isAdding) {
+              // add 10 at a time :)
+              
+              for (var i = 0; i < amount; i++) 
+              {
+                  var bunny = new Konva.Image({
+                      image: wabbitTexture,
+                      transformsEnabled: 'position',
+                      x : 0,
+                      y : 0
+                  });
+                  bunny.speedX = Math.random() * 10;
+                  bunny.speedY = (Math.random() * 10) - 5;
+                  // bunny.cache();
+                  bunnys.push(bunny);
+                  layer.add(bunny);
+                  bunny.cache();
+
+                  
+                  
+                  count++;
+              }    
+              counter.innerHTML = count + ' BUNNIES';
+          }
+          
+          for (var i = 0; i < bunnys.length; i++) {
+              var bunny = bunnys[i];
+              bunny.setX(bunny.getX() + bunny.speedX);
+              bunny.setY(bunny.getY() + bunny.speedY);
+              bunny.speedY += gravity;
+              if (bunny.getX() > maxX - wabbitTexture.width)
+              {
+                  bunny.speedX *= -1;
+                  bunny.setX(maxX - wabbitTexture.width);
+              }
+              else if (bunny.getX() < minX)
+              {
+                  bunny.speedX *= -1;
+                  bunny.setX(minX);
+              }
+              
+              if (bunny.getY() > maxY - wabbitTexture.height)
+              {
+                  bunny.speedY *= -0.85;
+                  bunny.setY(maxY - wabbitTexture.height);
+                  if (Math.random() > 0.5)
+                  {
+                      bunny.speedY -= Math.random() * 6;
+                  }
+              } 
+              else if (bunny.getY() < minY)
+              {
+                  bunny.speedY = 0;
+                  bunny.setY(minY);
+              }
+              
+          }
+          layer.drawScene();
+          requestAnimFrame(update);
+          stats.end();
+      }
+
+      $(document).ready(onReady);
+      
+    </script>
+  </body>
+</html>
