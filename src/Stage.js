@@ -37,7 +37,6 @@
 
         DIV = 'div',
         RELATIVE = 'relative',
-        INLINE_BLOCK = 'inline-block',
         KONVA_CONTENT = 'konvajs-content',
         SPACE = ' ',
         UNDERSCORE = '_',
@@ -700,7 +699,6 @@
             // content
             this.content = Konva.document.createElement(DIV);
             this.content.style.position = RELATIVE;
-            this.content.style.display = INLINE_BLOCK;
             this.content.className = KONVA_CONTENT;
             this.content.setAttribute('role', 'presentation');
             container.appendChild(this.content);
