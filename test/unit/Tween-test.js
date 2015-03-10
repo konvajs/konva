@@ -170,7 +170,7 @@ suite('Tween', function() {
         tween.play();
     });
 
-    test('transitionTo method', function(done) {
+    test('to method', function(done) {
         var stage = addStage();
 
         var layer = new Konva.Layer();
@@ -195,6 +195,18 @@ suite('Tween', function() {
                 done();
             }
         });
+    });
+
+    test('to method simple usage', function(done) {
+        var stage = addStage();
+
+        stage.to({
+            x : 10,
+            duration : 0.001
+        });
+        setTimeout(function() {
+            done();
+        }, 50);
     });
 
 
