@@ -1,9 +1,9 @@
 
 /*
- * Konva JavaScript Framework v0.9.0
+ * Konva JavaScript Framework v0.9.5
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2015-02-27
+ * Date: 2015-03-13
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -36,7 +36,7 @@ var Konva = {};
 
     Konva = {
         // public
-        version: '0.9.0',
+        version: '0.9.5',
 
         // private
         stages: [],
@@ -601,7 +601,7 @@ var Konva = {};
             var jsdom = require('jsdom').jsdom;
 
             Konva.document = jsdom('<!DOCTYPE html><html><head></head><body></body></html>');
-            Konva.window = Konva.document.createWindow();
+            Konva.window = Konva.document.parentWindow;
             Konva.window.Image = Canvas.Image;
             Konva._nodeCanvas = Canvas;
         }
@@ -7039,7 +7039,7 @@ var Konva = {};
         params.node = this;
         params.onFinish = function() {
             tween.destroy();
-            onFinish();
+            onFinish && onFinish();
         };
         var tween = new Konva.Tween(params);
         tween.play();
@@ -9809,7 +9809,6 @@ var Konva = {};
 
         DIV = 'div',
         RELATIVE = 'relative',
-        INLINE_BLOCK = 'inline-block',
         KONVA_CONTENT = 'konvajs-content',
         SPACE = ' ',
         UNDERSCORE = '_',
@@ -10472,7 +10471,6 @@ var Konva = {};
             // content
             this.content = Konva.document.createElement(DIV);
             this.content.style.position = RELATIVE;
-            this.content.style.display = INLINE_BLOCK;
             this.content.className = KONVA_CONTENT;
             this.content.setAttribute('role', 'presentation');
             container.appendChild(this.content);

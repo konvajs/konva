@@ -1,5 +1,5 @@
 var fs = require('fs'),
-    Konva = require('./dist/konva-dev');
+    Konva = require('../dist/konva-dev');
 
 
 // Create stage. Container parameter is not required in NodeJS.
