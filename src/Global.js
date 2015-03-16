@@ -369,10 +369,10 @@ var Konva = {};
 ( function(root, factory) {
     if( typeof exports === 'object') {
         var KonvaJS = factory();
-        // runtime-check for browserify
-        if(global.window === global) {
-            Konva.document = global.document;
-            Konva.window = global;
+        // runtime-check for browserify and nw.js (node-webkit)
+        if(global.window && global.window.document) {
+            Konva.document = global.window.document;
+            Konva.window = global.window;
         } else {
             // Node. Does not work with strict CommonJS, but
             // only CommonJS-like enviroments that support module.exports,
