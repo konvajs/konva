@@ -995,7 +995,7 @@
          * move node up
          * @method
          * @memberof Konva.Node.prototype
-         * @returns {Boolean}
+         * @returns {Boolean} flag is moved or not
          */
         moveUp: function() {
             if (!this.parent) {

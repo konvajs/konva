@@ -9,8 +9,8 @@
      * @augments Konva.Shape
      * @param {Object} config
      * @param {Object} config.radius defines x and y radius
-     * @@ShapeParams
-     * @@NodeParams
+     * @@shapeParams
+     * @@nodeParams
      * @example
      * var ellipse = new Konva.Ellipse({
      *   radius : {

@@ -1,4 +1,5 @@
 {
+  "esnext" : true,
   "curly": true,
   "immed": true,   
   "latedef": true, 
@@ -15,9 +16,9 @@
   "trailing" : true,
   "laxbreak" : true,
   "globals": { 
-    "Konva": false,
     "document": false,
     "window" : false,
+    "Konva" : false,
     "navigator" : false,
     "define" : false,
     "Image" : false,

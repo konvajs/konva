@@ -835,12 +835,12 @@
             }
         },
         extend: function(child, parent) {
-                function ctor() {
+                function Ctor() {
                     this.constructor = child;
                 }
-                ctor.prototype = parent.prototype;
+            Ctor.prototype = parent.prototype;
                 var old_proto = child.prototype;
-                child.prototype = new ctor();
+                child.prototype = new Ctor();
                 for (var key in old_proto) {
                     if (old_proto.hasOwnProperty(key)) {
                         child.prototype[key] = old_proto[key];

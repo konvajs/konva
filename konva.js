@@ -3,11 +3,12 @@
  * Konva JavaScript Framework v0.9.5
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: 2015-03-13
+ * Date: Tue Apr 07 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
  *
+ * @license
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -601,7 +602,7 @@ var Konva = {};
             var jsdom = require('jsdom').jsdom;
 
             Konva.document = jsdom('<!DOCTYPE html><html><head></head><body></body></html>');
-            Konva.window = Konva.document.parentWindow;
+            Konva.window = Konva.document.createWindow();
             Konva.window.Image = Canvas.Image;
             Konva._nodeCanvas = Canvas;
         }
@@ -625,7 +626,8 @@ var Konva = {};
     // can return a function as the exported value.
     return Konva;
 }));
-;(function() {
+
+(function() {
     /**
      * Collection constructor.  Collection extends
      *  Array.  This class is used in conjunction with {@link Konva.Container#get}
@@ -1462,12 +1464,12 @@ var Konva = {};
             }
         },
         extend: function(child, parent) {
-                function ctor() {
+                function Ctor() {
                     this.constructor = child;
                 }
-                ctor.prototype = parent.prototype;
+            Ctor.prototype = parent.prototype;
                 var old_proto = child.prototype;
-                child.prototype = new ctor();
+                child.prototype = new Ctor();
                 for (var key in old_proto) {
                     if (old_proto.hasOwnProperty(key)) {
                         child.prototype[key] = old_proto[key];
@@ -1523,7 +1525,8 @@ var Konva = {};
         }
     };
 })();
-;(function() {
+
+(function() {
     // calculate pixel ratio
     var canvas = Konva.Util.createCanvasElement(),
         context = canvas.getContext('2d'),
@@ -1725,7 +1728,8 @@ var Konva = {};
     Konva.Util.extend(Konva.HitCanvas, Konva.Canvas);
 
 })();
-;(function() {
+
+(function() {
     var COMMA = ',',
         OPEN_PAREN = '(',
         CLOSE_PAREN = ')',
@@ -2329,7 +2333,8 @@ var Konva = {};
     };
     Konva.Util.extend(Konva.HitContext, Konva.Context);
 })();
-;/*jshint unused:false */
+
+/*jshint unused:false */
 (function() {
     // CONSTANTS
     var GET = 'get',
@@ -2465,7 +2470,8 @@ var Konva = {};
             }
         }
     };
-})();;(function() {
+})();
+(function() {
     // CONSTANTS
     var ABSOLUTE_OPACITY = 'absoluteOpacity',
         ABSOLUTE_TRANSFORM = 'absoluteTransform',
@@ -3462,7 +3468,7 @@ var Konva = {};
          * move node up
          * @method
          * @memberof Konva.Node.prototype
-         * @returns {Boolean}
+         * @returns {Boolean} flag is moved or not
          */
         moveUp: function() {
             if (!this.parent) {
@@ -4663,7 +4669,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.Node);
 })();
-;(function() {
+
+(function() {
     /**
     * Grayscale Filter
     * @function
@@ -4689,7 +4696,8 @@ var Konva = {};
         }
     };
 })();
-;(function() {
+
+(function() {
     /**
      * Brighten Filter.  
      * @function
@@ -4728,7 +4736,8 @@ var Konva = {};
     */
 
 })();
-;(function() {
+
+(function() {
     /**
     * Invert Filter
     * @function
@@ -4752,7 +4761,8 @@ var Konva = {};
             data[i + 2] = 255 - data[i + 2];
         }
     };
-})();;/*
+})();
+/*
  the Gauss filter
  master repo: https://github.com/pavelpower/konvajsGaussFilter/
 */
@@ -5110,7 +5120,8 @@ var Konva = {};
     * @param {Integer} radius
     * @returns {Integer}
     */
-})();;(function() {
+})();
+(function() {
 
 	function pixelAt(idata, x, y) {
 		var idx = (y * idata.width + x) * 4;
@@ -5307,7 +5318,8 @@ var Konva = {};
 
 	Konva.Factory.addGetterSetter(Konva.Node, 'threshold', 0, null, Konva.Factory.afterSetFilter);
 })();
-;(function () {
+
+(function () {
     /**
      * RGB Filter
      * @function
@@ -5390,7 +5402,8 @@ var Konva = {};
     * @returns {Integer}
     */
 })();
-;(function () {
+
+(function () {
 
     /**
     * HSV Filter. Adjusts the hue, saturation and value
@@ -5484,7 +5497,8 @@ var Konva = {};
     */
 
 })();
-;(function () {
+
+(function () {
 
     Konva.Factory.addGetterSetter(Konva.Node, 'hue', 0, null, Konva.Factory.afterSetFilter);
     /**
@@ -5576,7 +5590,8 @@ var Konva = {};
         }
     };
 })();
-;(function () {
+
+(function () {
     /**
      * Emboss Filter.
      * Pixastic Lib - Emboss filter - v0.1.0
@@ -5758,7 +5773,8 @@ var Konva = {};
 })();
 
 
-;(function () {
+
+(function () {
     function remap(fromValue, fromMin, fromMax, toMin, toMax) {
         // Compute the range of the data
         var fromRange = fromMax - fromMin,
@@ -5873,7 +5889,8 @@ var Konva = {};
     * @returns {Float}
     */
 })();
-;(function () {
+
+(function () {
 
     /**
      * Posterize Filter. Adjusts the channels so that there are no more
@@ -5913,7 +5930,8 @@ var Konva = {};
     * @param {Number} level between 0 and 1
     * @returns {Number}
     */
-})();;(function () {
+})();
+(function () {
 
     /**
      * Noise Filter. Randomly adds or substracts to the color channels
@@ -5952,7 +5970,8 @@ var Konva = {};
     * @returns {Number}
     */
 })();
-;(function () {
+
+(function () {
 
     /**
      * Pixelate Filter. Averages groups of pixels and redraws
@@ -6044,7 +6063,8 @@ var Konva = {};
     * @param {Integer} pixelSize
     * @returns {Integer}
     */
-})();;(function () {
+})();
+(function () {
 
     /**
      * Threshold Filter. Pushes any value above the mid point to 
@@ -6082,7 +6102,8 @@ var Konva = {};
     * @param {Number} threshold
     * @returns {Number}
     */
-})();;(function() {
+})();
+(function() {
     /**
      * Sepia Filter
      * Based on: Pixastic Lib - Sepia filter - v0.1.0
@@ -6126,7 +6147,8 @@ var Konva = {};
         } while (--y);
     };
 })();
-;(function () {
+
+(function () {
     /**
      * Solarize Filter
      * Pixastic Lib - Solarize filter - v0.1.0
@@ -6175,7 +6197,8 @@ var Konva = {};
 })();
 
 
-;/*jshint newcap:false */
+
+/*jshint newcap:false */
 (function () {
 
   /*
@@ -6442,7 +6465,8 @@ var Konva = {};
     Konva.Factory.addGetterSetter(Konva.Node, 'kaleidoscopeAngle', 0, null, Konva.Factory.afterSetFilter);
 
 })();
-;(function() {
+
+(function() {
     var BATCH_DRAW_STOP_TIME_DIFF = 500;
 
     var now =(function() {
@@ -6747,7 +6771,8 @@ var Konva = {};
         });
     };
 })(this);
-;(function() {
+
+(function() {
     var blacklist = {
         node: 1,
         duration: 1,
@@ -7039,7 +7064,9 @@ var Konva = {};
         params.node = this;
         params.onFinish = function() {
             tween.destroy();
-            onFinish && onFinish();
+            if (onFinish) {
+                onFinish();
+            }
         };
         var tween = new Konva.Tween(params);
         tween.play();
@@ -7387,7 +7414,8 @@ var Konva = {};
         }
     };
 })();
-;(function() {
+
+(function() {
     Konva.DD = {
         // properties
         anim: new Konva.Animation(function() {
@@ -7691,7 +7719,8 @@ var Konva = {};
     html.addEventListener('touchend', Konva.DD._endDragAfter, false);
 
 })();
-;(function() {
+
+(function() {
     Konva.Util.addMethods(Konva.Container, {
         __init: function(config) {
             this.children = new Konva.Collection();
@@ -8193,7 +8222,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.Container);
 })();
-;(function() {
+
+(function() {
     var HAS_SHADOW = 'hasShadow';
     var SHADOW_RGBA = 'shadowRGBA';
 
@@ -9770,7 +9800,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.Shape);
 })();
-;/*jshint unused:false */
+
+/*jshint unused:false */
 (function() {
     // CONSTANTS
     var STAGE = 'Stage',
@@ -10529,7 +10560,8 @@ var Konva = {};
      */
 
 })();
-;(function() {
+
+(function() {
     Konva.Util.addMethods(Konva.BaseLayer, {
         ___init: function(config) {
             this.nodeType = 'Layer';
@@ -10731,7 +10763,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.BaseLayer);
 })();
-;(function() {
+
+(function() {
     // constants
     var HASH = '#',
         BEFORE_DRAW ='beforeDraw',
@@ -10985,7 +11018,8 @@ var Konva = {};
      */
     Konva.Collection.mapMethods(Konva.Layer);
 })();
-;(function() {
+
+(function() {
 
     Konva.Util.addMethods(Konva.FastLayer, {
         ____init: function(config) {
@@ -11050,7 +11084,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.FastLayer);
 })();
-;(function() {
+
+(function() {
     Konva.Util.addMethods(Konva.Group, {
         ___init: function(config) {
             this.nodeType = 'Group';
@@ -11068,7 +11103,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.Group);
 })();
-;(function() {
+
+(function() {
     /**
      * Rect constructor
      * @constructor
@@ -11227,7 +11263,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.Rect);
 })();
-;(function() {
+
+(function() {
     // the 0.0001 offset fixes a bug in Chrome 27
     var PIx2 = (Math.PI * 2) - 0.0001,
         CIRCLE = 'Circle';
@@ -11395,7 +11432,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.Circle);
 })();
-;(function() {
+
+(function() {
     // the 0.0001 offset fixes a bug in Chrome 27
     var PIx2 = (Math.PI * 2) - 0.0001,
         ELLIPSE = 'Ellipse';
@@ -11406,8 +11444,89 @@ var Konva = {};
      * @augments Konva.Shape
      * @param {Object} config
      * @param {Object} config.radius defines x and y radius
-     * @@ShapeParams
-     * @@NodeParams
+     * @param {String} [config.fill] fill color
+     * @param {Integer} [config.fillRed] set fill red component
+     * @param {Integer} [config.fillGreen] set fill green component
+     * @param {Integer} [config.fillBlue] set fill blue component
+     * @param {Integer} [config.fillAlpha] set fill alpha component
+     * @param {Image} [config.fillPatternImage] fill pattern image
+     * @param {Number} [config.fillPatternX]
+     * @param {Number} [config.fillPatternY]
+     * @param {Object} [config.fillPatternOffset] object with x and y component
+     * @param {Number} [config.fillPatternOffsetX] 
+     * @param {Number} [config.fillPatternOffsetY] 
+     * @param {Object} [config.fillPatternScale] object with x and y component
+     * @param {Number} [config.fillPatternScaleX]
+     * @param {Number} [config.fillPatternScaleY]
+     * @param {Number} [config.fillPatternRotation]
+     * @param {String} [config.fillPatternRepeat] can be "repeat", "repeat-x", "repeat-y", or "no-repeat".  The default is "no-repeat"
+     * @param {Object} [config.fillLinearGradientStartPoint] object with x and y component
+     * @param {Number} [config.fillLinearGradientStartPointX]
+     * @param {Number} [config.fillLinearGradientStartPointY]
+     * @param {Object} [config.fillLinearGradientEndPoint] object with x and y component
+     * @param {Number} [config.fillLinearGradientEndPointX]
+     * @param {Number} [config.fillLinearGradientEndPointY]
+     * @param {Array} [config.fillLinearGradientColorStops] array of color stops
+     * @param {Object} [config.fillRadialGradientStartPoint] object with x and y component
+     * @param {Number} [config.fillRadialGradientStartPointX]
+     * @param {Number} [config.fillRadialGradientStartPointY]
+     * @param {Object} [config.fillRadialGradientEndPoint] object with x and y component
+     * @param {Number} [config.fillRadialGradientEndPointX] 
+     * @param {Number} [config.fillRadialGradientEndPointY] 
+     * @param {Number} [config.fillRadialGradientStartRadius]
+     * @param {Number} [config.fillRadialGradientEndRadius]
+     * @param {Array} [config.fillRadialGradientColorStops] array of color stops
+     * @param {Boolean} [config.fillEnabled] flag which enables or disables the fill.  The default value is true
+     * @param {String} [config.fillPriority] can be color, linear-gradient, radial-graident, or pattern.  The default value is color.  The fillPriority property makes it really easy to toggle between different fill types.  For example, if you want to toggle between a fill color style and a fill pattern style, simply set the fill property and the fillPattern properties, and then use setFillPriority('color') to render the shape with a color fill, or use setFillPriority('pattern') to render the shape with the pattern fill configuration
+     * @param {String} [config.stroke] stroke color
+     * @param {Integer} [config.strokeRed] set stroke red component
+     * @param {Integer} [config.strokeGreen] set stroke green component
+     * @param {Integer} [config.strokeBlue] set stroke blue component
+     * @param {Integer} [config.strokeAlpha] set stroke alpha component
+     * @param {Number} [config.strokeWidth] stroke width
+     * @param {Boolean} [config.strokeHitEnabled] flag which enables or disables stroke hit region.  The default is true
+     * @param {Boolean} [config.perfectDrawEnabled] flag which enables or disables using buffer canvas.  The default is true
+     * @param {Boolean} [config.shadowForStrokeEnabled] flag which enables or disables shasow for stroke.  The default is true
+     * @param {Boolean} [config.strokeScaleEnabled] flag which enables or disables stroke scale.  The default is true
+     * @param {Boolean} [config.strokeEnabled] flag which enables or disables the stroke.  The default value is true
+     * @param {String} [config.lineJoin] can be miter, round, or bevel.  The default
+     *  is miter
+     * @param {String} [config.lineCap] can be butt, round, or sqare.  The default
+     *  is butt
+     * @param {String} [config.shadowColor]
+     * @param {Integer} [config.shadowRed] set shadow color red component
+     * @param {Integer} [config.shadowGreen] set shadow color green component
+     * @param {Integer} [config.shadowBlue] set shadow color blue component
+     * @param {Integer} [config.shadowAlpha] set shadow color alpha component
+     * @param {Number} [config.shadowBlur]
+     * @param {Object} [config.shadowOffset] object with x and y component
+     * @param {Number} [config.shadowOffsetX]
+     * @param {Number} [config.shadowOffsetY]
+     * @param {Number} [config.shadowOpacity] shadow opacity.  Can be any real number
+     *  between 0 and 1
+     * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
+     * @param {Array} [config.dash]
+     * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
+     * @param {Number} [config.x]
+     * @param {Number} [config.y]
+     * @param {Number} [config.width]
+     * @param {Number} [config.height]
+     * @param {Boolean} [config.visible]
+     * @param {Boolean} [config.listening] whether or not the node is listening for events
+     * @param {String} [config.id] unique id
+     * @param {String} [config.name] non-unique name
+     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+     * @param {Object} [config.scale] set scale
+     * @param {Number} [config.scaleX] set scale x
+     * @param {Number} [config.scaleY] set scale y
+     * @param {Number} [config.rotation] rotation in degrees
+     * @param {Object} [config.offset] offset from center point and rotation point
+     * @param {Number} [config.offsetX] set offset x
+     * @param {Number} [config.offsetY] set offset y
+     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
+     *  the entire stage by dragging any portion of the stage
+     * @param {Number} [config.dragDistance]
+     * @param {Function} [config.dragBoundFunc]
      * @example
      * var ellipse = new Konva.Ellipse({
      *   radius : {
@@ -11525,7 +11644,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.Ellipse);
 
-})();;(function() {
+})();
+(function() {
     // the 0.0001 offset fixes a bug in Chrome 27
     var PIx2 = (Math.PI * 2) - 0.0001;
     
@@ -11717,7 +11837,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.Ring);
 })();
-;(function() {
+
+(function() {
     /**
      * Wedge constructor
      * @constructor
@@ -11927,7 +12048,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.Wedge);
 })();
-;(function() {
+
+(function() {
     /**
      * Arc constructor
      * @constructor
@@ -12153,7 +12275,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.Arc);
 })();
-;(function() {
+
+(function() {
 
     // CONSTANTS
     var IMAGE = 'Image';
@@ -12434,7 +12557,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.Image);
 })();
-;(function() {
+
+(function() {
     // constants
     var AUTO = 'auto',
         //CANVAS = 'canvas',
@@ -12998,7 +13122,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.Text);
 })();
-;(function() {
+
+(function() {
     /**
      * Line constructor.&nbsp; Lines are defined by an array of points and
      *  a tension
@@ -13317,7 +13442,8 @@ var Konva = {};
      */
 
     Konva.Collection.mapMethods(Konva.Line);
-})();;(function() {
+})();
+(function() {
     /**
      * Sprite constructor
      * @constructor
@@ -13737,7 +13863,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.Sprite);
 })();
-;(function () {
+
+(function () {
     /**
      * Path constructor.
      * @author Jason Follas
@@ -14466,7 +14593,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.Path);
 })();
-;(function() {
+
+(function() {
     var EMPTY_STRING = '',
         //CALIBRI = 'Calibri',
         NORMAL = 'normal';
@@ -14987,7 +15115,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.TextPath);
 })();
-;(function() {
+
+(function() {
     /**
      * RegularPolygon constructor.&nbsp; Examples include triangles, squares, pentagons, hexagons, etc.
      * @constructor
@@ -15179,7 +15308,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.RegularPolygon);
 })();
-;(function() {
+
+(function() {
     /**
      * Star constructor
      * @constructor
@@ -15393,7 +15523,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.Star);
 })();
-;(function() {
+
+(function() {
     // constants
     var ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'lineHeight', 'text'],
         CHANGE_KONVA = 'Change.konva',
@@ -15758,7 +15889,8 @@ var Konva = {};
 
     Konva.Collection.mapMethods(Konva.Tag);
 })();
-;(function() {
+
+(function() {
     /**
      * Arrow constructor
      * @constructor

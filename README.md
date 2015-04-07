@@ -45,7 +45,7 @@ Run `grunt --help` to see all build options.
 
 To build a development version of the framework, run `grunt dev`. To run a full build, which also produces the minified version and the individually minified modules for the custom build, run `grunt full`.  You can also run `grunt beta` to generate a beta version.   
 
-If you add a file in the src directory, be sure to add the filename to the sourceFiles array variable in Gruntfile.js.
+If you add a file in the src directory, be sure to add the filename to the sourceFiles array variable in `gulpfile.js`.
 
 ##Testing
 

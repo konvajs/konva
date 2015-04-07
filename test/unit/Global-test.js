@@ -2,7 +2,7 @@ suite('Global', function() {
 
     // ======================================================
     test('test Konva version number', function() {
-        assert.equal(Konva.version, 'dev');
+        assert.equal(!!Konva.version, true);
     });
 
     // ======================================================

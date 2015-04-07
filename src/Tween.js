@@ -290,7 +290,9 @@
         params.node = this;
         params.onFinish = function() {
             tween.destroy();
-            onFinish && onFinish();
+            if (onFinish) {
+                onFinish();
+            }
         };
         var tween = new Konva.Tween(params);
         tween.play();

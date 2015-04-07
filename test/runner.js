@@ -211,8 +211,8 @@ beforeEach(function(){
 
     // resets
     Konva.inDblClickWindow = false;
-    Konva.DD.isDragging = false;
-    Konva.DD.node = undefined;
+    Konva.DD && (Konva.DD.isDragging = false);
+    Konva.DD && (Konva.DD.node = undefined);
 });
 
 Konva.UA.mobile = false;

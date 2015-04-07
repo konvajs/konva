@@ -6,8 +6,9 @@ branches:
   - master
 before_script:
 - npm install
+- npm install -g gulp
 script:
-- grunt test
+- gulp lint test
 deploy:
   provider: npm
   email: lavrton@gmail.com

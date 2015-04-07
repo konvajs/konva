@@ -175,7 +175,7 @@ suite('Image', function(){
   });
 
   // ======================================================
-  test('image with svg source', function(done) {
+  test.skip('image with svg source', function(done) {
       var imageObj = new Image();
 
       var stage = addStage();
@@ -200,7 +200,7 @@ suite('Image', function(){
   });
 
   // ======================================================
-  test('opacity test for image with svg source', function(done) {
+  test.skip('opacity test for image with svg source', function(done) {
       var imageObj = new Image();
 
       var stage = addStage();
