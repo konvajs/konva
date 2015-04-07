@@ -88,8 +88,7 @@ function build() {
 
 // Basic usage
 gulp.task('dev-build', function() {
-        build()
-//        .pipe(uglify())
+        return build()
         .pipe(gulp.dest('./dist/'));
 });
 
