@@ -1,4 +1,18 @@
 (function() {
+    /**
+     * Container constructor.&nbsp; Containers are used to contain nodes or other containers
+     * @constructor
+     * @memberof Konva
+     * @augments Konva.Node
+     * @abstract
+     * @param {Object} config
+     * @@nodeParams
+     * @@containerParams
+     */
+    Konva.Container = function(config) {
+        this.__init(config);
+    };
+
     Konva.Util.addMethods(Konva.Container, {
         __init: function(config) {
             this.children = new Konva.Collection();

@@ -35,6 +35,18 @@
             'transformsEnabledChange.konva'
         ].join(SPACE);
 
+    /**
+     * Node constructor. Nodes are entities that can be transformed, layered,
+     * and have bound events. The stage, layers, groups, and shapes all extend Node.
+     * @constructor
+     * @memberof Konva
+     * @abstract
+     * @param {Object} config
+     * @@nodeParams
+     */
+    Konva.Node = function(config) {
+        this._init(config);
+    };
 
     Konva.Util.addMethods(Konva.Node, {
         _init: function(config) {

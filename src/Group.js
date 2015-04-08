@@ -1,4 +1,20 @@
 (function() {
+
+    /**
+     * Group constructor.  Groups are used to contain shapes or other groups.
+     * @constructor
+     * @memberof Konva
+     * @augments Konva.Container
+     * @param {Object} config
+     * @@nodeParams
+     * @@containerParams
+     * @example
+     * var group = new Konva.Group();
+     */
+    Konva.Group = function(config) {
+        this.___init(config);
+    };
+
     Konva.Util.addMethods(Konva.Group, {
         ___init: function(config) {
             this.nodeType = 'Group';

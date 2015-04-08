@@ -44,9 +44,6 @@ var sourceFiles = [
     'src/filters/Kaleidoscope.js',
 
     // core
-    'src/Animation.js',
-    'src/Tween.js',
-    'src/DragAndDrop.js',
     'src/Container.js',
     'src/Shape.js',
     'src/Stage.js',
@@ -54,6 +51,9 @@ var sourceFiles = [
     'src/Layer.js',
     'src/FastLayer.js',
     'src/Group.js',
+    'src/Animation.js',
+    'src/Tween.js',
+    'src/DragAndDrop.js',
 
     // shapes
     'src/shapes/Rect.js',

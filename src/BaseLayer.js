@@ -1,4 +1,21 @@
 (function() {
+    /**
+     * BaseLayer constructor.
+     * @constructor
+     * @memberof Konva
+     * @augments Konva.Container
+     * @param {Object} config
+     * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
+     * to clear the canvas before each layer draw.  The default value is true.
+     * @@nodeParams
+     * @@containerParams
+     * @example
+     * var layer = new Konva.Layer();
+     */
+    Konva.BaseLayer = function(config) {
+        this.___init(config);
+    };
+
     Konva.Util.addMethods(Konva.BaseLayer, {
         ___init: function(config) {
             this.nodeType = 'Layer';

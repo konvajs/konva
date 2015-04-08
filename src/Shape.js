@@ -23,6 +23,35 @@
         this._clearCache(SHADOW_RGBA);
     }
 
+    /**
+     * Shape constructor.  Shapes are primitive objects such as rectangles,
+     *  circles, text, lines, etc.
+     * @constructor
+     * @memberof Konva
+     * @augments Konva.Node
+     * @param {Object} config
+     * @@shapeParams
+     * @@nodeParams
+     * @example
+     * var customShape = new Konva.Shape({
+         *   x: 5,
+         *   y: 10,
+         *   fill: 'red',
+         *   // a Konva.Canvas renderer is passed into the drawFunc function
+         *   drawFunc: function(context) {
+         *     context.beginPath();
+         *     context.moveTo(200, 50);
+         *     context.lineTo(420, 80);
+         *     context.quadraticCurveTo(300, 100, 260, 170);
+         *     context.closePath();
+         *     context.fillStrokeShape(this);
+         *   }
+         *});
+     */
+    Konva.Shape = function(config) {
+        this.__init(config);
+    };
+
     Konva.Util.addMethods(Konva.Shape, {
         __init: function(config) {
             this.nodeType = 'Shape';

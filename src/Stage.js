@@ -53,6 +53,25 @@
         }, false);
     }
 
+    /**
+     * Stage constructor.  A stage is used to contain multiple layers
+     * @constructor
+     * @memberof Konva
+     * @augments Konva.Container
+     * @param {Object} config
+     * @param {String|Element} config.container Container id or DOM element
+     * @@nodeParams
+     * @example
+     * var stage = new Konva.Stage({
+         *   width: 500,
+         *   height: 800,
+         *   container: 'containerId'
+         * });
+     */
+    Konva.Stage = function(config) {
+        this.___init(config);
+    };
+
     Konva.Util.addMethods(Konva.Stage, {
         ___init: function(config) {
             this.nodeType = STAGE;
