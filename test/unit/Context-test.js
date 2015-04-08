@@ -1,7 +1,7 @@
 suite('Context', function() {
     // ======================================================
     var contextMethods = ['clearRect', 'fillRect', 'strokeRect',
-        'fillText', 'strokeText', 'measureText', 'getLineDash', 'setLineDash',
+        'fillText', 'strokeText', 'measureText',
         'createLinearGradient', 'createRadialGradient', 'createPattern',
         'beginPath', 'closePath', 'moveTo', 'lineTo', 'bezierCurveTo', 'quadraticCurveTo',
         'arc', 'arcTo', 'rect', 'fill', 'stroke', 'clip', 'isPointInPath',
