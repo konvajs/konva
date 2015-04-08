@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - `to` don't throw error if no `onFinish` callback
 
+### Changed
+- context wrapper is more capable with native context.
+  So you can use `context.fillStyle` in your `sceneFunc` without accessing native context.
+  
 
 ## [0.9.0][2015-02-27]
 

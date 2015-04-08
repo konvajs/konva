@@ -42,6 +42,10 @@
             'translate'
         ];
 
+    var CONTEXT_PROPERTIES = ['fillStyle', 'strokeStyle', 'shadowColor', 'shadowBlur', 'shadowOffsetX',
+        'shadowOffsetY', 'lineCap', 'lineJoin', 'lineWidth', 'miterLimit', 'font', 'textAlign', 'textBaseline',
+        'globalAlpha', 'globalCompositeOperation'];
+
     /**
      * Canvas Context constructor
      * @constructor
@@ -283,12 +287,24 @@
                 _context.drawImage(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8]);
             }
         },
+        isPointInPath: function(x, y) {
+            return this._context.isPointInPath(x, y);
+        },
         fill: function() {
             this._context.fill();
+        },
+        fillRect: function(x, y, width, height) {
+            this._context.fillRect(x, y, width, height);
+        },
+        strokeRect: function(x, y, width, height) {
+            this._context.strokeRect(x, y, width, height);
         },
         fillText: function() {
             var a = arguments;
             this._context.fillText(a[0], a[1], a[2]);
+        },
+        measureText: function(text) {
+            return this._context.measureText(text);
         },
         getImageData: function() {
             var a = arguments;
@@ -346,6 +362,9 @@
             }
 
             // no support for IE9 and IE10
+        },
+        getLineDash: function() {
+            return this._context.getLineDash();
         },
         setTransform: function() {
             var a = arguments;
@@ -409,6 +428,17 @@
             };
         }
     };
+
+    CONTEXT_PROPERTIES.forEach(function(prop) {
+        Object.defineProperty(Konva.Context.prototype, prop, {
+            get : function () {
+                return this._context[prop];
+            },
+            set : function (val) {
+                return this._context[prop] = val;
+            }
+        });
+    });
 
     Konva.SceneContext = function(canvas) {
         Konva.Context.call(this, canvas);
