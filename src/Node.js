@@ -621,7 +621,7 @@
 
             if(config) {
                 for(key in config) {
-                    if (key === CHILDREN || config[key] instanceof Konva.Node) {
+                    if (key === CHILDREN) {
 
                     }
                     else {
