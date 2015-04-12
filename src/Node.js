@@ -333,11 +333,14 @@
 
             if (filters) {
                 if (!this._filterUpToDate) {
+                    var ratio = sceneCanvas.pixelRatio;
+                    
                     try {
                         len = filters.length;
                         filterContext.clear();
+
                         // copy cached canvas onto filter context
-                        filterContext.drawImage(sceneCanvas._canvas, 0, 0);
+                        filterContext.drawImage(sceneCanvas._canvas, 0, 0, sceneCanvas.getWidth() / ratio, sceneCanvas.getHeight() / ratio);
                         imageData = filterContext.getImageData(0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
 
                         // apply filters to filter context
