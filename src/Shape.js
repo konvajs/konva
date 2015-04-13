@@ -393,7 +393,6 @@
                 height = sceneCanvas.getHeight(),
                 hitWidth = hitCanvas.getWidth(),
                 hitHeight = hitCanvas.getHeight(),
-                pixelRatio = sceneCanvas.pixelRatio,
                 hitImageData, hitData, len, rgbColorKey, i, alpha;
 
             hitContext.clear();
