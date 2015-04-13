@@ -188,7 +188,6 @@
                 height: height
             }),
             cachedHitCanvas = new Konva.HitCanvas({
-                pixelRatio : 1,
                 width: width,
                 height: height
             }),
@@ -314,13 +313,14 @@
         },
         _drawCachedHitCanvas: function(context) {
             var cachedCanvas = this._cache.canvas,
-                hitCanvas = cachedCanvas.hit;
+                hitCanvas = cachedCanvas.hit,
+                ratio = hitCanvas.pixelRatio;
             context.save();
             context.translate(
                 this._cache.canvas.x,
                 this._cache.canvas.y
             );
-            context.drawImage(hitCanvas._canvas, 0, 0);
+            context.drawImage(hitCanvas._canvas, 0, 0, hitCanvas.width / ratio, hitCanvas.height / ratio);
             context.restore();
         },
         _getCachedSceneCanvas: function() {
