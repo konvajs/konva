@@ -1123,26 +1123,27 @@
          * @returns {Object}
          */
         toObject: function() {
-            var type = Konva.Util,
-                obj = {},
+            var obj = {},
                 attrs = this.getAttrs(),
                 key, val, getter, defaultValue;
 
             obj.attrs = {};
 
-            // serialize only attributes that are not function, image, DOM, or objects with methods
             for(key in attrs) {
                 val = attrs[key];
-                if (!type._isFunction(val) && !type._isElement(val) && !(type._isObject(val) && type._hasMethods(val))) {
-                    getter = this[key];
-                    // remove attr value so that we can extract the default value from the getter
-                    delete attrs[key];
-                    defaultValue = getter ? getter.call(this) : null;
-                    // restore attr value
-                    attrs[key] = val;
-                    if (defaultValue !== val) {
-                        obj.attrs[key] = val;
-                    }
+                // serialize only attributes that are not function, image, DOM, or objects with methods
+                if (Konva.Util._isFunction(val) || Konva.Util._isElement(val) ||
+                    (Konva.Util._isObject(val) || Konva.Util._hasMethods(val))) {
+                    continue;
+                }
+                getter = this[key];
+                // remove attr value so that we can extract the default value from the getter
+                delete attrs[key];
+                defaultValue = getter ? getter.call(this) : null;
+                // restore attr value
+                attrs[key] = val;
+                if (defaultValue !== val) {
+                    obj.attrs[key] = val;
                 }
             }
 

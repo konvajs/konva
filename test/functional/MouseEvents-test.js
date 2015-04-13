@@ -739,7 +739,7 @@ suite('MouseEvents', function() {
             groupMousedowns++;
         });
 
-        layer.add(circle);
+
         stage.add(layer);
         layer.draw();
 

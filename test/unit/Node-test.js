@@ -444,7 +444,7 @@ suite('Node', function() {
         stage.add(layer);
 
         assert.equal(line.points() === clone.points(), false);
-        assert.equal(clone.points().toString(), '0,0,10,10');
+        assert.equal(JSON.stringify(clone.points()), '[0,0,10,10]');
     });
 
     // ======================================================
@@ -986,7 +986,7 @@ suite('Node', function() {
     test('add shape with custom attr pointing to self', function() {
         var stage = addStage();
         var layer = new Konva.Layer();
-        circle = new Konva.Circle({
+        var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
             y: stage.getHeight() / 2,
             radius: 70,
