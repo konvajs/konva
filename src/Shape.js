@@ -386,11 +386,8 @@
             var threshold = alphaThreshold || 0,
                 cachedCanvas = this._cache.canvas,
                 sceneCanvas = this._getCachedSceneCanvas(),
-                sceneContext = sceneCanvas.getContext(),
                 hitCanvas = cachedCanvas.hit,
                 hitContext = hitCanvas.getContext(),
-                width = sceneCanvas.getWidth(),
-                height = sceneCanvas.getHeight(),
                 hitWidth = hitCanvas.getWidth(),
                 hitHeight = hitCanvas.getHeight(),
                 hitImageData, hitData, len, rgbColorKey, i, alpha;
