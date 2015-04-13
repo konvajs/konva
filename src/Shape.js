@@ -391,21 +391,23 @@
                 hitContext = hitCanvas.getContext(),
                 width = sceneCanvas.getWidth(),
                 height = sceneCanvas.getHeight(),
-                sceneImageData, sceneData, hitImageData, hitData, len, rgbColorKey, i, alpha;
+                hitWidth = hitCanvas.getWidth(),
+                hitHeight = hitCanvas.getHeight(),
+                pixelRatio = sceneCanvas.pixelRatio,
+                hitImageData, hitData, len, rgbColorKey, i, alpha;
 
             hitContext.clear();
+            hitContext.drawImage(sceneCanvas._canvas, 0, 0, hitWidth, hitHeight);
 
             try {
-                sceneImageData = sceneContext.getImageData(0, 0, width, height);
-                sceneData = sceneImageData.data;
-                hitImageData = hitContext.getImageData(0, 0, width, height);
+                hitImageData = hitContext.getImageData(0, 0, hitWidth, hitHeight);
                 hitData = hitImageData.data;
-                len = sceneData.length;
+                len = hitData.length;
                 rgbColorKey = Konva.Util._hexToRgb(this.colorKey);
 
                 // replace non transparent pixels with color key
                 for(i = 0; i < len; i += 4) {
-                    alpha = sceneData[i + 3];
+                    alpha = hitData[i + 3];
                     if (alpha > threshold) {
                         hitData[i] = rgbColorKey.r;
                         hitData[i + 1] = rgbColorKey.g;
