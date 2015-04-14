@@ -343,7 +343,7 @@ suite('Manual', function() {
 
 
     // ======================================================
-    test.only('create image hit region with pixelRatio, look at hit, test hit with mouseover', function(done) {
+    test('create image hit region with pixelRatio, look at hit, test hit with mouseover', function(done) {
         var imageObj = new Image();
 
         Konva.pixelRatio = 2;
@@ -375,7 +375,7 @@ suite('Manual', function() {
                 document.body.style.cursor = 'default';
             });
 
-            Konva.pixelRatio = 1;
+            Konva.pixelRatio = undefined;
             done();
 
 
