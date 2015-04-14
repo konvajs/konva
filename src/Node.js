@@ -188,7 +188,7 @@
                 height: height
             }),
             cachedHitCanvas = new Konva.HitCanvas({
-                pixelRatio : 1,
+                pixelRatio: 1,
                 width: width,
                 height: height
             }),
