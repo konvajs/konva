@@ -394,11 +394,27 @@
                 sceneImageData, sceneData, hitImageData, hitData, len, rgbColorKey, i, alpha;
 
             hitContext.clear();
+            var ratio = sceneCanvas.pixelRatio;
+            var hitWidth = Math.floor(width / ratio);
+            var hitHeight = Math.floor(height / ratio);
 
             try {
-                sceneImageData = sceneContext.getImageData(0, 0, width, height);
-                sceneData = sceneImageData.data;
-                hitImageData = hitContext.getImageData(0, 0, width, height);
+                // if pixelRatio > 1 we need to redraw scene canvas into temp canvas
+                // with pixelRatio = 1 to have the same dimension as hitCanvas
+                if (ratio !== 1) {
+                    var tempCanvas = new Konva.SceneCanvas({
+                        width : hitWidth,
+                        height : hitHeight,
+                        pixelRatio : 1
+                    });
+                    tempCanvas.getContext().drawImage(sceneCanvas._canvas, 0, 0, hitWidth, hitHeight);
+                    sceneImageData = tempCanvas.getContext().getImageData(0, 0, hitWidth, hitHeight);
+                    sceneData = sceneImageData.data;
+                } else {
+                    sceneImageData = sceneContext.getImageData(0, 0, width, height);
+                    sceneData = sceneImageData.data;
+                }
+                hitImageData = hitContext.getImageData(0, 0, hitWidth, hitHeight);
                 hitData = hitImageData.data;
                 len = sceneData.length;
                 rgbColorKey = Konva.Util._hexToRgb(this.colorKey);
@@ -413,11 +429,10 @@
                         hitData[i + 3] = 255;
                     }
                 }
-
                 hitContext.putImageData(hitImageData, 0, 0);
             }
             catch(e) {
-                Konva.Util.warn('Unable to draw hit graph from cached scene canvas. ' + e.message);
+                Konva.Util.error('Unable to draw hit graph from cached scene canvas. ' + e.message);
             }
 
             return this;

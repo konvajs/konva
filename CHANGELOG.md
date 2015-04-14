@@ -7,7 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - `to` don't throw error if no `onFinish` callback
 - HDPI support for desktop
-- Fix bug when filters on not correct for HDPI
+- Fix bug when filters are not correct for HDPI
+- Fix bug when hit area is not correct for HDPI
 
 ### Changed
 - context wrapper is more capable with native context.
