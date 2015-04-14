@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.9.5
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mon Apr 13 2015
+ * Date: Tue Apr 14 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -2481,11 +2481,14 @@ var Konva = {};
 
             if (filters) {
                 if (!this._filterUpToDate) {
+                    var ratio = sceneCanvas.pixelRatio;
+                    
                     try {
                         len = filters.length;
                         filterContext.clear();
+
                         // copy cached canvas onto filter context
-                        filterContext.drawImage(sceneCanvas._canvas, 0, 0);
+                        filterContext.drawImage(sceneCanvas._canvas, 0, 0, sceneCanvas.getWidth() / ratio, sceneCanvas.getHeight() / ratio);
                         imageData = filterContext.getImageData(0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
 
                         // apply filters to filter context
@@ -7172,11 +7175,27 @@ var Konva = {};
                 sceneImageData, sceneData, hitImageData, hitData, len, rgbColorKey, i, alpha;
 
             hitContext.clear();
+            var ratio = sceneCanvas.pixelRatio;
+            var hitWidth = Math.floor(width / ratio);
+            var hitHeight = Math.floor(height / ratio);
 
             try {
-                sceneImageData = sceneContext.getImageData(0, 0, width, height);
-                sceneData = sceneImageData.data;
-                hitImageData = hitContext.getImageData(0, 0, width, height);
+                // if pixelRatio > 1 we need to redraw scene canvas into temp canvas
+                // with pixelRatio = 1 to have the same dimension as hitCanvas
+                if (ratio !== 1) {
+                    var tempCanvas = new Konva.SceneCanvas({
+                        width : hitWidth,
+                        height : hitHeight,
+                        pixelRatio : 1
+                    });
+                    tempCanvas.getContext().drawImage(sceneCanvas._canvas, 0, 0, hitWidth, hitHeight);
+                    sceneImageData = tempCanvas.getContext().getImageData(0, 0, hitWidth, hitHeight);
+                    sceneData = sceneImageData.data;
+                } else {
+                    sceneImageData = sceneContext.getImageData(0, 0, width, height);
+                    sceneData = sceneImageData.data;
+                }
+                hitImageData = hitContext.getImageData(0, 0, hitWidth, hitHeight);
                 hitData = hitImageData.data;
                 len = sceneData.length;
                 rgbColorKey = Konva.Util._hexToRgb(this.colorKey);
@@ -7191,11 +7210,10 @@ var Konva = {};
                         hitData[i + 3] = 255;
                     }
                 }
-
                 hitContext.putImageData(hitImageData, 0, 0);
             }
             catch(e) {
-                Konva.Util.warn('Unable to draw hit graph from cached scene canvas. ' + e.message);
+                Konva.Util.error('Unable to draw hit graph from cached scene canvas. ' + e.message);
             }
 
             return this;
