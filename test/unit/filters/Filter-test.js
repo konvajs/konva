@@ -1,6 +1,6 @@
 "use strict";
 
-suite.only('Filter', function() {
+suite('Filter', function() {
 
     test('pixelRaio check', function () {
         Konva.pixelRatio = 2;
@@ -22,7 +22,9 @@ suite.only('Filter', function() {
         circle.blurRadius(0);
         layer.draw();
 
-        cloneAndCompareLayer(layer, 20);
+        if (!window.mochaPhantomJS) {
+            cloneAndCompareLayer(layer, 50);
+        }
         Konva.pixelRatio = 1;
     });
 });

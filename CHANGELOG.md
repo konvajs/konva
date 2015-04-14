@@ -6,10 +6,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - `to` don't throw error if no `onFinish` callback
+- HDPI support for desktop
+- Fix bug when filters on not correct for HDPI
 
 ### Changed
 - context wrapper is more capable with native context.
-  So you can use `context.fillStyle` in your `sceneFunc` without accessing native context.
+  So you can use `context.fillStyle` property in your `sceneFunc` without accessing native context.
   
 
 ## [0.9.0][2015-02-27]
