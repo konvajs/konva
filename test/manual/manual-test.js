@@ -340,4 +340,48 @@ suite('Manual', function() {
             tween.play();
         });
     });
+
+
+    // ======================================================
+    test('create image hit region with pixelRatio, look at hit, test hit with mouseover', function(done) {
+        var imageObj = new Image();
+
+        Konva.pixelRatio = 2;
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        imageObj.onload = function() {
+
+            var lion = new Konva.Image({
+                x: 200,
+                y: 40,
+                image: imageObj,
+                draggable: true
+            });
+
+            layer.add(lion);
+
+            stage.add(layer);
+
+            lion.cache();
+            lion.drawHitFromCache();
+            layer.draw();
+
+            lion.on('mouseenter', function() {
+                document.body.style.cursor = 'pointer';
+            });
+
+            lion.on('mouseleave', function() {
+                document.body.style.cursor = 'default';
+            });
+
+            Konva.pixelRatio = undefined;
+            done();
+
+
+        };
+        imageObj.src = 'assets/lion.png';
+
+        showHit(layer);
+    });
 });
