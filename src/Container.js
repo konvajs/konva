@@ -399,10 +399,18 @@
             var minX, minY, maxX, maxY;
             this.children.each(function(child) {
                 var rect = child.getClientRect();
-                minX = Math.min(minX, rect.x) || rect.x;
-                minY = Math.min(minY, rect.y) || rect.y;
-                maxX = Math.max(maxX, rect.x + rect.width) || (rect.x + rect.width);
-                maxY = Math.max(maxY, rect.y + rect.height) || (rect.y + rect.height);
+                if (minX === undefined) { // initial value for first child
+                    minX = rect.x;
+                    minY = rect.y;
+                    maxX = rect.x + rect.width;
+                    maxY = rect.y + rect.height;
+                } else {
+                    minX = Math.min(minX, rect.x);
+                    minY = Math.min(minY, rect.y);
+                    maxX = Math.max(maxX, rect.x + rect.width);
+                    maxY = Math.max(maxY, rect.y + rect.height);
+                }
+
             });
 
             var rect = {

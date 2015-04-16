@@ -480,6 +480,41 @@ suite('Caching', function() {
         compareLayerAndCanvas(layer, canvas, 150);
     });
 
+    test('cache group with rectangle and text', function() {
+        var stage = addStage();
+
+        var layer = new Konva.Layer();
+
+        var button = new Konva.Group({
+            width: 100,
+            height: 50,
+            draggable: true
+        });
+
+        var face = new Konva.Rect({
+            fill: 'red',
+            x: 0, y: 0,
+            width: 100,
+            height: 50
+        });
+
+        var text = new Konva.Text({
+            text: 'Wrong button',
+            x: 15,
+            y: 20
+        });
+
+        button.add(face);
+        button.add(text);
+
+        button.cache();
+
+        layer.add(button);
+        stage.add(layer);
+
+        cloneAndCompareLayer(layer, 100);
+    });
+
     test('cache layer with several shape with transform', function() {
         var stage = addStage();
 

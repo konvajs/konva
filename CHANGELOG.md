@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - HDPI support for desktop
 - Fix bug when filters are not correct for HDPI
 - Fix bug when hit area is not correct for HDPI
+- Fix bug for incorrect `getClientRect` calculation
 
 ### Changed
 - context wrapper is more capable with native context.

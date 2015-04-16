@@ -6585,10 +6585,18 @@ var Konva = {};
             var minX, minY, maxX, maxY;
             this.children.each(function(child) {
                 var rect = child.getClientRect();
-                minX = Math.min(minX, rect.x) || rect.x;
-                minY = Math.min(minY, rect.y) || rect.y;
-                maxX = Math.max(maxX, rect.x + rect.width) || (rect.x + rect.width);
-                maxY = Math.max(maxY, rect.y + rect.height) || (rect.y + rect.height);
+                if (minX === undefined) { // initial value for first child
+                    minX = rect.x;
+                    minY = rect.y;
+                    maxX = rect.x + rect.width;
+                    maxY = rect.y + rect.height;
+                } else {
+                    minX = Math.min(minX, rect.x);
+                    minY = Math.min(minY, rect.y);
+                    maxX = Math.max(maxX, rect.x + rect.width);
+                    maxY = Math.max(maxY, rect.y + rect.height);
+                }
+
             });
 
             var rect = {
@@ -7170,47 +7178,32 @@ var Konva = {};
             var threshold = alphaThreshold || 0,
                 cachedCanvas = this._cache.canvas,
                 sceneCanvas = this._getCachedSceneCanvas(),
-                sceneContext = sceneCanvas.getContext(),
                 hitCanvas = cachedCanvas.hit,
                 hitContext = hitCanvas.getContext(),
-                width = sceneCanvas.getWidth(),
-                height = sceneCanvas.getHeight(),
-                sceneImageData, sceneData, hitImageData, hitData, len, rgbColorKey, i, alpha;
+                hitWidth = hitCanvas.getWidth(),
+                hitHeight = hitCanvas.getHeight(),
+                hitImageData, hitData, len, rgbColorKey, i, alpha;
 
             hitContext.clear();
-            var ratio = sceneCanvas.pixelRatio;
-            var hitWidth = Math.floor(width / ratio);
-            var hitHeight = Math.floor(height / ratio);
+            hitContext.drawImage(sceneCanvas._canvas, 0, 0, hitWidth, hitHeight);
 
             try {
-                // if pixelRatio > 1 we need to redraw scene canvas into temp canvas
-                // with pixelRatio = 1 to have the same dimension as hitCanvas
-                if (ratio !== 1) {
-                    var tempCanvas = new Konva.SceneCanvas({
-                        width : hitWidth,
-                        height : hitHeight,
-                        pixelRatio : 1
-                    });
-                    tempCanvas.getContext().drawImage(sceneCanvas._canvas, 0, 0, hitWidth, hitHeight);
-                    sceneImageData = tempCanvas.getContext().getImageData(0, 0, hitWidth, hitHeight);
-                    sceneData = sceneImageData.data;
-                } else {
-                    sceneImageData = sceneContext.getImageData(0, 0, width, height);
-                    sceneData = sceneImageData.data;
-                }
                 hitImageData = hitContext.getImageData(0, 0, hitWidth, hitHeight);
                 hitData = hitImageData.data;
-                len = sceneData.length;
+                len = hitData.length;
                 rgbColorKey = Konva.Util._hexToRgb(this.colorKey);
 
                 // replace non transparent pixels with color key
                 for(i = 0; i < len; i += 4) {
-                    alpha = sceneData[i + 3];
+                    alpha = hitData[i + 3];
                     if (alpha > threshold) {
                         hitData[i] = rgbColorKey.r;
                         hitData[i + 1] = rgbColorKey.g;
                         hitData[i + 2] = rgbColorKey.b;
                         hitData[i + 3] = 255;
+                    }
+                    else {
+                        hitData[i + 3] = 0;
                     }
                 }
                 hitContext.putImageData(hitImageData, 0, 0);
