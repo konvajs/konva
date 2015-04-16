@@ -1431,6 +1431,9 @@
          * });
          */
         toImage: function(config) {
+            if (!config || !config.callback) {
+                throw "callback required for toImage method config argument";
+            }
             Konva.Util._getImage(this.toDataURL(config), function(img) {
                 config.callback(img);
             });

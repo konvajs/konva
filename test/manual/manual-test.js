@@ -384,4 +384,59 @@ suite('Manual', function() {
 
         showHit(layer);
     });
+
+    // ======================================================
+    test('image hit region with alpha threshold, mouseover circle', function(done) {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        stage.add(layer);
+
+        var group = new Konva.Group();
+
+        var circle = new Konva.Circle({
+            x : 50,
+            y : 50,
+            fill: 'red',
+            radius : 40
+        });
+        var rect = new Konva.Rect({
+            width : 100,
+            height : 100,
+            fill : 'green',
+            opacity : 0.5
+        });
+        group.add(rect, circle);
+
+        group.toImage({
+            width : 100,
+            height : 100,
+            callback :function(img) {
+                var image = new Konva.Image({
+                    image: img
+                });
+                image.cache();
+                image.drawHitFromCache(200);
+                layer.add(image);
+                layer.draw();
+                var shape = layer.getIntersection({
+                    x : 5,
+                    y : 5
+                });
+
+                assert.equal(!!shape, false, 'shape should not be detected');
+
+
+                image.on('mouseenter', function () {
+                    document.body.style.cursor = 'pointer';
+                });
+
+                image.on('mouseleave', function () {
+                    document.body.style.cursor = 'default';
+                });
+                done();
+            }
+        });
+
+        showHit(layer);
+    });
 });

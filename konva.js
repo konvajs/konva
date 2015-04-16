@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.9.5
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Tue Apr 14 2015
+ * Date: Thu Apr 16 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -3579,6 +3579,9 @@ var Konva = {};
          * });
          */
         toImage: function(config) {
+            if (!config || !config.callback) {
+                throw "callback required for toImage method config argument";
+            }
             Konva.Util._getImage(this.toDataURL(config), function(img) {
                 config.callback(img);
             });
