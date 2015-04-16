@@ -307,9 +307,9 @@
             );
 
             var cacheCanvas = this._getCachedSceneCanvas();
-            var ratio = context.canvas.pixelRatio;
+            var ratio = cacheCanvas.pixelRatio;
 
-            context.drawImage(cacheCanvas._canvas, 0, 0, cacheCanvas.width / ratio, cacheCanvas.height /ratio);
+            context.drawImage(cacheCanvas._canvas, 0, 0, cacheCanvas.width / ratio, cacheCanvas.height / ratio);
             context.restore();
         },
         _drawCachedHitCanvas: function(context) {
