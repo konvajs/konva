@@ -1391,7 +1391,7 @@
                 canvas = new Konva.SceneCanvas({
                     width: config.width || this.getWidth() || (stage ? stage.getWidth() : 0),
                     height: config.height || this.getHeight() || (stage ? stage.getHeight() : 0),
-                    pixelRatio: 1
+                    pixelRatio: config.pixelRatio
                 }),
                 context = canvas.getContext();
 
