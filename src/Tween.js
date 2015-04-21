@@ -156,7 +156,7 @@
                             Math.round(start.r + diff.r * i) + ',' +
                             Math.round(start.g + diff.g * i) + ',' +
                             Math.round(start.b + diff.b * i) + ',' +
-                            Math.round(start.a + diff.a * i) + ')';
+                            (start.a + diff.a * i) + ')';
                 } else {
                     newVal = start + (diff * i);
                 }
