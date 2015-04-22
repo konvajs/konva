@@ -156,17 +156,25 @@ suite('Tween', function() {
         layer.add(circle);
         stage.add(layer);
 
-        var c = Konva.Util.colorToRGBA('green');
+        var duration = 0.1;
+        var c = Konva.Util.colorToRGBA('rgba(0,255,0,0.5)');
         var endFill = 'rgba(' + c.r + ',' + c.g + ',' + c.b + ',' + c.a + ')';
+        var midFill = 'rgba(128,128,0,0.75)';
+
         var tween = new Konva.Tween({
             node: circle,
-            duration: 0.1,
+            duration: duration,
             fill : endFill,
             onFinish : function() {
                 assert.equal(endFill, circle.fill());
                 done();
             }
         });
+
+        tween.seek(duration * 0.5);
+        assert.equal(midFill, circle.fill());
+
+        tween.seek(0);
         tween.play();
     });
 
