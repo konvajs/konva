@@ -246,7 +246,7 @@
 
             function drawLayer(n) {
                 var layer = layers[n],
-                    layerUrl = layer.toDataURL(),
+                    layerUrl = layer.toDataURL(config),
                     imageObj = new Konva.window.Image();
 
                 imageObj.onload = function() {
