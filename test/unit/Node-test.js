@@ -280,7 +280,7 @@ suite('Node', function() {
     });
 
     // ======================================================
-    test.only('toDataURL + HDPI', function(done) {
+    test('toDataURL + HDPI', function(done) {
         var oldRatio = Konva.pixelRatio;
         Konva.pixelRatio = 2;
 
@@ -302,15 +302,18 @@ suite('Node', function() {
         stage.draw();
         stage.toDataURL({
             callback : function(url) {
-                console.log(url);
                 var img = new Image();
                 img.onload = function() {
                     var image = new Konva.Image({
-                        image : img
+                        image : img,
+                        scaleX: 0.5,
+                        scaleY: 0.5
                     });
+                    assert.equal(image.width(), stage.width() * 2, 'image has double size');
                     layer2.add(image);
                     layer2.draw();
                     compareLayers(layer, layer2);
+                    Konva.pixelRatio = oldRatio;
                     done();
                 }
                 img.src = url;
