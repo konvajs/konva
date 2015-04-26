@@ -280,32 +280,45 @@ suite('Node', function() {
     });
 
     // ======================================================
-    test('test pixel ratio toDataURL', function() {
+    test.only('toDataURL + HDPI', function(done) {
+        var oldRatio = Konva.pixelRatio;
+        Konva.pixelRatio = 2;
+
         var stage = addStage();
         var layer = new Konva.Layer();
-
-        // override pixel ratio
-
-        layer.canvas = new Konva.SceneCanvas({
-           pixelRatio: 2
-        });
-        layer.canvas._canvas.style.position = 'absolute';
-
-        var circle = new Konva.Circle({
-            x: stage.getWidth() / 2,
-            y: stage.getHeight() / 2,
-            radius: 70,
-            fill: 'green',
-            stroke: 'black',
-            strokeWidth: 4
-        });
-
-        layer.add(circle);
         stage.add(layer);
 
-        assert.equal(layer.canvas.pixelRatio, 2);
+        var circle = new Konva.Circle({
+            fill : 'green',
+            x : stage.width() / 2,
+            y : stage.height() / 2,
+            radius : 50
+        });
+        layer.add(circle);
 
+        var layer2 = new Konva.Layer();
+        stage.add(layer2);
+
+        stage.draw();
+        stage.toDataURL({
+            callback : function(url) {
+                console.log(url);
+                var img = new Image();
+                img.onload = function() {
+                    var image = new Konva.Image({
+                        image : img
+                    });
+                    layer2.add(image);
+                    layer2.draw();
+                    compareLayers(layer, layer2);
+                    done();
+                }
+                img.src = url;
+            }
+        });
     });
+
+
 
     // ======================================================
     test('listen and don\'t listen', function() {

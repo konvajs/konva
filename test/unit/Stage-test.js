@@ -521,4 +521,43 @@ suite('Stage', function() {
         assert.equal(Konva.isDragging(), false);
         assert.equal(Konva.DD.node, undefined);
     });
+
+    test.skip('toDataURL + HDPI', function(done) {
+        Konva.pixelRatio = 2;
+
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var image = new Image();
+        image.onload = function() {
+            var lion = new Konva.Image({
+                image: image,
+                draggable: true
+            });
+
+            lion.cache();
+            lion.drawHitFromCache();
+
+            layer.add(lion);
+            stage.add(layer);
+            stage.draw();
+
+            var snapshotStage = addStage();
+
+            stage.toImage({
+                callback: function (image) {
+                    var imageNode = new Konva.Image({
+                        image: image
+                    });
+                    var snapshotLayer = new Konva.Layer();
+                    snapshotLayer.add(imageNode);
+                    snapshotStage.add(snapshotLayer);
+                    snapshotStage.draw();
+                    Konva.pixelRatio = undefined;
+                    done();
+                }
+            });
+        };
+        image.src = 'assets/lion.png';
+    });
 });
