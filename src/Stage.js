@@ -235,7 +235,7 @@
                 canvas = new Konva.SceneCanvas({
                     width: config.width || this.getWidth(),
                     height: config.height || this.getHeight(),
-                    pixelRatio: 1
+                    pixelRatio: config.pixelRatio
                 }),
                 _context = canvas.getContext()._context,
                 layers = this.children;
@@ -246,11 +246,14 @@
 
             function drawLayer(n) {
                 var layer = layers[n],
-                    layerUrl = layer.toDataURL(),
+                    layerUrl = layer.toDataURL({
+                        pixelRatio: config.pixelRatio
+                    }),
+                    pixelRatio = canvas.pixelRatio,
                     imageObj = new Konva.window.Image();
 
                 imageObj.onload = function() {
-                    _context.drawImage(imageObj, 0, 0);
+                    _context.drawImage(imageObj, 0, 0, imageObj.width / pixelRatio, imageObj.height / pixelRatio);
 
                     if(n < layers.length - 1) {
                         drawLayer(n + 1);
