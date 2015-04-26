@@ -307,9 +307,9 @@
             );
 
             var cacheCanvas = this._getCachedSceneCanvas();
-            var ratio = context.canvas.pixelRatio;
+            var ratio = cacheCanvas.pixelRatio;
 
-            context.drawImage(cacheCanvas._canvas, 0, 0, cacheCanvas.width / ratio, cacheCanvas.height /ratio);
+            context.drawImage(cacheCanvas._canvas, 0, 0, cacheCanvas.width / ratio, cacheCanvas.height / ratio);
             context.restore();
         },
         _drawCachedHitCanvas: function(context) {
@@ -1391,7 +1391,7 @@
                 canvas = new Konva.SceneCanvas({
                     width: config.width || this.getWidth() || (stage ? stage.getWidth() : 0),
                     height: config.height || this.getHeight() || (stage ? stage.getHeight() : 0),
-                    pixelRatio: 1
+                    pixelRatio: config.pixelRatio
                 }),
                 context = canvas.getContext();
 
