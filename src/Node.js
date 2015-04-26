@@ -1378,6 +1378,7 @@
          * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
          *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
          *  is very high quality
+         * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image url.
          * @returns {String}
          */
         toDataURL: function(config) {
@@ -1423,6 +1424,7 @@
          * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
          *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
          *  is very high quality
+         * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image.
          * @example
          * var image = node.toImage({
          *   callback: function(img) {
