@@ -3,7 +3,7 @@
     var canvas = Konva.Util.createCanvasElement(),
         context = canvas.getContext('2d'),
         _pixelRatio = (function() {
-            var devicePixelRatio = window.devicePixelRatio || 1,
+            var devicePixelRatio = Konva.window.devicePixelRatio || 1,
             backingStoreRatio = context.webkitBackingStorePixelRatio
                 || context.mozBackingStorePixelRatio
                 || context.msBackingStorePixelRatio

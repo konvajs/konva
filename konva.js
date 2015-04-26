@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.9.5
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Thu Apr 16 2015
+ * Date: Sun Apr 26 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -2455,9 +2455,9 @@ var Konva = {};
             );
 
             var cacheCanvas = this._getCachedSceneCanvas();
-            var ratio = context.canvas.pixelRatio;
+            var ratio = cacheCanvas.pixelRatio;
 
-            context.drawImage(cacheCanvas._canvas, 0, 0, cacheCanvas.width / ratio, cacheCanvas.height /ratio);
+            context.drawImage(cacheCanvas._canvas, 0, 0, cacheCanvas.width / ratio, cacheCanvas.height / ratio);
             context.restore();
         },
         _drawCachedHitCanvas: function(context) {
@@ -3539,7 +3539,7 @@ var Konva = {};
                 canvas = new Konva.SceneCanvas({
                     width: config.width || this.getWidth() || (stage ? stage.getWidth() : 0),
                     height: config.height || this.getHeight() || (stage ? stage.getHeight() : 0),
-                    pixelRatio: 1
+                    pixelRatio: config.pixelRatio
                 }),
                 context = canvas.getContext();
 
@@ -8653,7 +8653,7 @@ var Konva = {};
                 canvas = new Konva.SceneCanvas({
                     width: config.width || this.getWidth(),
                     height: config.height || this.getHeight(),
-                    pixelRatio: 1
+                    pixelRatio: config.pixelRatio
                 }),
                 _context = canvas.getContext()._context,
                 layers = this.children;
@@ -8664,11 +8664,14 @@ var Konva = {};
 
             function drawLayer(n) {
                 var layer = layers[n],
-                    layerUrl = layer.toDataURL(),
+                    layerUrl = layer.toDataURL({
+                        pixelRatio: config.pixelRatio
+                    }),
+                    pixelRatio = canvas.pixelRatio,
                     imageObj = new Konva.window.Image();
 
                 imageObj.onload = function() {
-                    _context.drawImage(imageObj, 0, 0);
+                    _context.drawImage(imageObj, 0, 0, imageObj.width / pixelRatio, imageObj.height / pixelRatio);
 
                     if(n < layers.length - 1) {
                         drawLayer(n + 1);
@@ -10351,7 +10354,7 @@ var Konva = {};
                             Math.round(start.r + diff.r * i) + ',' +
                             Math.round(start.g + diff.g * i) + ',' +
                             Math.round(start.b + diff.b * i) + ',' +
-                            Math.round(start.a + diff.a * i) + ')';
+                            (start.a + diff.a * i) + ')';
                 } else {
                     newVal = start + (diff * i);
                 }
