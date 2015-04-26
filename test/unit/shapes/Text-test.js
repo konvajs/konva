@@ -396,5 +396,29 @@ suite('Text', function(){
         stage.add(layer);
     });
 
+    test('gradient', function(){
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var text = new Konva.Text({
+            fontSize: 50,
+            y : 10,
+            x : 10,
+            fillLinearGradientStartPoint: { x : -50, y : -50},
+            fillLinearGradientEndPoint: { x : 50, y : 50},
+            fillLinearGradientColorStops: [0, 'yellow', 1, 'yellow'],
+            text: 'Text with gradient!!',
+            draggable : true
+        });
+        layer.add(text);
+        stage.add(layer);
+
+        var data = layer.getContext().getImageData(79, 37, 1, 1).data;
+        assert.equal(data[0], 255);
+        assert.equal(data[1], 255);
+        assert.equal(data[2], 0);
+        assert.equal(data[3], 255);
+    });
+
 
 });

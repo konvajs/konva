@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fix bug when filters are not correct for HDPI
 - Fix bug when hit area is not correct for HDPI
 - Fix bug for incorrect `getClientRect` calculation
+- Repair fill gradient for text
 
 ### Changed
 - context wrapper is more capable with native context.

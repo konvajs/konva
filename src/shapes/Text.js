@@ -66,8 +66,12 @@
     Konva.Text.prototype = {
         ___init: function(config) {
             config = config || {};
-            config.fill = config.fill || 'black';
 
+            // set default color to black
+            if (!config.fillLinearGradientColorStops && !config.fillRadialGradientColorStops) {
+                config.fill = config.fill || 'black';
+            }
+            
             if (config.width === undefined) {
                 config.width = AUTO;
             }

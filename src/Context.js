@@ -494,7 +494,7 @@
                     grd.addColorStop(colorStops[n], colorStops[n + 1]);
                 }
                 this.setAttr('fillStyle', grd);
-                this.fill();
+                shape._fillFunc(this);
             }
         },
         _fillRadialGradient: function(shape) {
