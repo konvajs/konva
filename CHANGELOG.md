@@ -16,6 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - context wrapper is more capable with native context.
   So you can use `context.fillStyle` property in your `sceneFunc` without accessing native context.
 - `toDataURL` now handle pixelRatio. So image for stage 400x400 for retina will be 800x800.
+- Correct `clone()` for custom nodes
   
 
 ## [0.9.0][2015-02-27]

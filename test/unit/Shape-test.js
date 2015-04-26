@@ -1178,4 +1178,28 @@ suite('Shape', function() {
     });
 
 
+    test('clone custom shape', function() {
+        var className = 'myCustomName'
+        var CustomShape = function() {
+            CustomShape.super.apply(this, arguments);
+            this.className = className;
+        }
+
+        CustomShape.prototype.foo = function() {};
+
+        Konva.Util.extend(CustomShape, Konva.Shape);
+
+        var myShape = new CustomShape({
+            fill : 'grey'
+        });
+
+        var clone = myShape.clone();
+        assert.equal(clone instanceof CustomShape, true);
+        assert.equal(clone instanceof Konva.Shape, true);
+        assert.equal(clone.className, className);
+        assert.equal(clone.fill(), 'grey');
+        assert.equal(clone.foo, CustomShape.prototype.foo);
+    });
+
+
 });

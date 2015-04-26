@@ -1340,7 +1340,7 @@
                 attrs[key] = obj[key];
             }
 
-            var node = new Konva[className](attrs);
+            var node = new this.constructor(attrs);
             // copy over listeners
             for(key in this.eventListeners) {
                 allListeners = this.eventListeners[key];

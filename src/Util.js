@@ -835,18 +835,20 @@
             }
         },
         extend: function(child, parent) {
-                function Ctor() {
-                    this.constructor = child;
-                }
+            function Ctor() {
+                this.constructor = child;
+            }
             Ctor.prototype = parent.prototype;
-                var old_proto = child.prototype;
-                child.prototype = new Ctor();
-                for (var key in old_proto) {
-                    if (old_proto.hasOwnProperty(key)) {
-                        child.prototype[key] = old_proto[key];
-                    }
+            var old_proto = child.prototype;
+            child.prototype = new Ctor();
+            for (var key in old_proto) {
+                if (old_proto.hasOwnProperty(key)) {
+                    child.prototype[key] = old_proto[key];
                 }
-                child.__super__ = parent.prototype;
+            }
+            child.__super__ = parent.prototype;
+            // create reference to parent
+            child.super = parent;
         },
         /**
          * adds methods to a constructor prototype
