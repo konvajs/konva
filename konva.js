@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.9.5
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sun Apr 26 2015
+ * Date: Mon Apr 27 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -1095,18 +1095,20 @@ var Konva = {};
             }
         },
         extend: function(child, parent) {
-                function Ctor() {
-                    this.constructor = child;
-                }
+            function Ctor() {
+                this.constructor = child;
+            }
             Ctor.prototype = parent.prototype;
-                var old_proto = child.prototype;
-                child.prototype = new Ctor();
-                for (var key in old_proto) {
-                    if (old_proto.hasOwnProperty(key)) {
-                        child.prototype[key] = old_proto[key];
-                    }
+            var old_proto = child.prototype;
+            child.prototype = new Ctor();
+            for (var key in old_proto) {
+                if (old_proto.hasOwnProperty(key)) {
+                    child.prototype[key] = old_proto[key];
                 }
-                child.__super__ = parent.prototype;
+            }
+            child.__super__ = parent.prototype;
+            // create reference to parent
+            child.super = parent;
         },
         /**
          * adds methods to a constructor prototype
@@ -1851,7 +1853,7 @@ var Konva = {};
                     grd.addColorStop(colorStops[n], colorStops[n + 1]);
                 }
                 this.setAttr('fillStyle', grd);
-                this.fill();
+                shape._fillFunc(this);
             }
         },
         _fillRadialGradient: function(shape) {
@@ -3475,8 +3477,7 @@ var Konva = {};
          */
         clone: function(obj) {
             // instantiate new node
-            var className = this.getClassName(),
-                attrs = Konva.Util.cloneObject(this.attrs),
+            var attrs = Konva.Util.cloneObject(this.attrs),
                 key, allListeners, len, n, listener;
             // filter black attrs
             for (var i in CLONE_BLACK_LIST) {
@@ -3488,7 +3489,7 @@ var Konva = {};
                 attrs[key] = obj[key];
             }
 
-            var node = new Konva[className](attrs);
+            var node = new this.constructor(attrs);
             // copy over listeners
             for(key in this.eventListeners) {
                 allListeners = this.eventListeners[key];
@@ -3526,6 +3527,7 @@ var Konva = {};
          * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
          *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
          *  is very high quality
+         * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image url. Default is 1
          * @returns {String}
          */
         toDataURL: function(config) {
@@ -3536,10 +3538,11 @@ var Konva = {};
                 stage = this.getStage(),
                 x = config.x || 0,
                 y = config.y || 0,
+                pixelRatio = config.pixelRatio || 1,
                 canvas = new Konva.SceneCanvas({
                     width: config.width || this.getWidth() || (stage ? stage.getWidth() : 0),
                     height: config.height || this.getHeight() || (stage ? stage.getHeight() : 0),
-                    pixelRatio: config.pixelRatio
+                    pixelRatio: pixelRatio
                 }),
                 context = canvas.getContext();
 
@@ -3571,6 +3574,7 @@ var Konva = {};
          * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
          *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
          *  is very high quality
+         * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image.  Default is 1.
          * @example
          * var image = node.toImage({
          *   callback: function(img) {
@@ -3580,7 +3584,7 @@ var Konva = {};
          */
         toImage: function(config) {
             if (!config || !config.callback) {
-                throw "callback required for toImage method config argument";
+                throw 'callback required for toImage method config argument';
             }
             Konva.Util._getImage(this.toDataURL(config), function(img) {
                 config.callback(img);
@@ -12747,8 +12751,12 @@ var Konva = {};
     Konva.Text.prototype = {
         ___init: function(config) {
             config = config || {};
-            config.fill = config.fill || 'black';
 
+            // set default color to black
+            if (!config.fillLinearGradientColorStops && !config.fillRadialGradientColorStops) {
+                config.fill = config.fill || 'black';
+            }
+            
             if (config.width === undefined) {
                 config.width = AUTO;
             }

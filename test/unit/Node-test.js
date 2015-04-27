@@ -281,6 +281,7 @@ suite('Node', function() {
 
     // ======================================================
     test('toDataURL + HDPI', function(done) {
+        this.timeout(5000);
         var oldRatio = Konva.pixelRatio;
         Konva.pixelRatio = 2;
 
@@ -301,6 +302,7 @@ suite('Node', function() {
 
         stage.draw();
         stage.toDataURL({
+            pixelRatio : 2,
             callback : function(url) {
                 var img = new Image();
                 img.onload = function() {

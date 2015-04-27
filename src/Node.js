@@ -1327,8 +1327,7 @@
          */
         clone: function(obj) {
             // instantiate new node
-            var className = this.getClassName(),
-                attrs = Konva.Util.cloneObject(this.attrs),
+            var attrs = Konva.Util.cloneObject(this.attrs),
                 key, allListeners, len, n, listener;
             // filter black attrs
             for (var i in CLONE_BLACK_LIST) {
@@ -1378,7 +1377,7 @@
          * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
          *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
          *  is very high quality
-         * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image url.
+         * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image url. Default is 1
          * @returns {String}
          */
         toDataURL: function(config) {
@@ -1389,10 +1388,11 @@
                 stage = this.getStage(),
                 x = config.x || 0,
                 y = config.y || 0,
+                pixelRatio = config.pixelRatio || 1,
                 canvas = new Konva.SceneCanvas({
                     width: config.width || this.getWidth() || (stage ? stage.getWidth() : 0),
                     height: config.height || this.getHeight() || (stage ? stage.getHeight() : 0),
-                    pixelRatio: config.pixelRatio
+                    pixelRatio: pixelRatio
                 }),
                 context = canvas.getContext();
 
@@ -1424,7 +1424,7 @@
          * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
          *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
          *  is very high quality
-         * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image.
+         * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image.  Default is 1.
          * @example
          * var image = node.toImage({
          *   callback: function(img) {
@@ -1434,7 +1434,7 @@
          */
         toImage: function(config) {
             if (!config || !config.callback) {
-                throw "callback required for toImage method config argument";
+                throw 'callback required for toImage method config argument';
             }
             Konva.Util._getImage(this.toDataURL(config), function(img) {
                 config.callback(img);
