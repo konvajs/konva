@@ -17,7 +17,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   So you can use `context.fillStyle` property in your `sceneFunc` without accessing native context.
 - `toDataURL` now handle pixelRatio. So image for stage 400x400 for retina will be 800x800.
 - Correct `clone()` for custom nodes
-  
+
+### Added
+- new `Konva.Image.fromURL` method
 
 ## [0.9.0][2015-02-27]
 
@@ -38,7 +40,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - new `shadowForStrokeEnabled` property for shape. See [http://konvajs.github.io/docs/performance/All_Performance_Tips.html](http://konvajs.github.io/docs/performance/All_Performance_Tips.html)
 - new `getClientRect` method.
 - new `to` method for every nodes for shorter tweening
-    
+
 ## [0.8.0] - 2015-02-04
 
 * Bug Fixes
@@ -64,7 +66,7 @@ Differents from last official `KineticJS` release
     * Correct mouseover/mouseout/mouseenter/mouseleave events for groups
     * cache node before adding to layer
     * `intersects` function now works for shapes with shadow
-    
+
 * Enhancements
     * `cornerRadius` of Rect is limited by `width/2` and `height/2`
     * `black` is default fill for text
@@ -84,4 +86,3 @@ Differents from last official `KineticJS` release
     * new Arrow plugin
     * multiple names: `node.name('foo bar'); container.find('.foo');` (thanks [@mattslocum](https://github.com/mattslocum))
     * `Container.findOne()`
-    

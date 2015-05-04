@@ -96,7 +96,7 @@ suite('Image', function(){
           });
 
           //document.body.appendChild(layer.bufferCanvas.element)
-          
+
           assert.equal(darth.getClassName(), 'Image');
 
           var trace = layer.getContext().getTrace();
@@ -142,7 +142,7 @@ suite('Image', function(){
           assert.equal(darth.getCropHeight(), 74);
 
           darth.setCrop({x: 1, y: 2, width: 3, height: 4});
-          
+
           assert.equal(darth.getCrop().x, 1);
           assert.equal(darth.getCrop().y, 2);
           assert.equal(darth.getCrop().width, 3);
@@ -166,9 +166,9 @@ suite('Image', function(){
           assert.equal(darth.getCropX(), 5);
           assert.equal(darth.getCropY(), 6);
           assert.equal(darth.getCropWidth(), 7);
-          assert.equal(darth.getCropHeight(), 8);  
+          assert.equal(darth.getCropHeight(), 8);
 
-          done();    
+          done();
 
       };
       imageObj.src = 'assets/darth-vader.jpg';
@@ -194,7 +194,7 @@ suite('Image', function(){
           layer.add(tiger);
           stage.add(layer);
 
-          done();  
+          done();
       };
       imageObj.src = 'assets/Ghostscript_Tiger.svg';
   });
@@ -211,7 +211,7 @@ suite('Image', function(){
           stroke: 'black',
           strokeWidth: 5
       }));
-      
+
       imageObj.onload = function() {
 
           var tiger = new Konva.Image({
@@ -224,21 +224,21 @@ suite('Image', function(){
           });
 
           layer.add(tiger);
-          
+
           layer.add(new Konva.Line({
               points: [578,0,0,200],
               stroke: 'blue',
               strokeWidth: 5
           }));
-      
+
           stage.add(layer);
 
-          done();  
+          done();
 
       };
       imageObj.style.opacity = 0.5;
       imageObj.src = 'assets/Ghostscript_Tiger.svg';
-              
+
   });
 
   // ======================================================
@@ -343,6 +343,23 @@ suite('Image', function(){
             done();
         };
         imageObj.src = 'assets/darth-vader.jpg';
+    });
+
+    test('image loader', function(done) {
+      var stage = addStage();
+      var layer = new Konva.Layer();
+      stage.add(layer);
+      var src = 'assets/darth-vader.jpg';
+      Konva.Image.fromURL(src, function(image) {
+          layer.add(image);
+          layer.draw();
+          assert.equal(image instanceof Konva.Image, true);
+          var nativeImg = image.image();
+          assert.equal(nativeImg instanceof Image, true);
+          assert.equal(nativeImg.src.indexOf(src) !== -1, true);
+          assert.equal(nativeImg.complete, true);
+          done();
+      });
     });
 
 

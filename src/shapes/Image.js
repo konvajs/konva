@@ -197,4 +197,28 @@
      */
 
     Konva.Collection.mapMethods(Konva.Image);
+
+    /**
+     * load image from given url and create `Konva.Image` instance
+     * @method
+     * @memberof Konva.Image
+     * @param {String} url image source
+     * @param {Function} callback with Konva.Image instance as first argument
+     * @example
+     *  Konva.Image.fromURL(imageURL, function(image){
+     *    // image is Konva.Image instance
+     *    layer.add(image);
+     *    layer.draw();
+     *  });
+     */
+    Konva.Image.fromURL = function(url, callback) {
+        var img = new Image();
+        img.onload = function() {
+          var image = new Konva.Image({
+            image: img
+          });
+          callback(image);
+        };
+        img.src = url;
+    };
 })();
