@@ -68,29 +68,29 @@
         if( gMax === gMin ){ gMax = 255; gMin = 0; }
         if( bMax === bMin ){ bMax = 255; bMin = 0; }
 
-        var rMid, rGoalMax,rGoalMin,
-            gMid, gGoalMax,gGoalMin,
-            bMid, bGoalMax,bGoalMin;
+        var rMid, rGoalMax, rGoalMin,
+            gMid, gGoalMax, gGoalMin,
+            bMid, bGoalMax, bGoalMin;
 
-        // If the enhancement is positive - stretch the histogram 
+        // If the enhancement is positive - stretch the histogram
         if ( enhanceAmount > 0 ){
-            rGoalMax = rMax + enhanceAmount*(255-rMax);
-            rGoalMin = rMin - enhanceAmount*(rMin-0);
-            gGoalMax = gMax + enhanceAmount*(255-gMax);
-            gGoalMin = gMin - enhanceAmount*(gMin-0);
-            bGoalMax = bMax + enhanceAmount*(255-bMax);
-            bGoalMin = bMin - enhanceAmount*(bMin-0);
-        // If the enhancement is negative - compress the histogram
+            rGoalMax = rMax + enhanceAmount * (255 - rMax);
+            rGoalMin = rMin - enhanceAmount * (rMin - 0);
+            gGoalMax = gMax + enhanceAmount * (255 - gMax);
+            gGoalMin = gMin - enhanceAmount * (gMin - 0);
+            bGoalMax = bMax + enhanceAmount * (255 - bMax);
+            bGoalMin = bMin - enhanceAmount * (bMin - 0);
+        // If the enhancement is negative -   compress the histogram
         } else {
-            rMid = (rMax + rMin)*0.5;
-            rGoalMax = rMax + enhanceAmount*(rMax-rMid);
-            rGoalMin = rMin + enhanceAmount*(rMin-rMid);
-            gMid = (gMax + gMin)*0.5;
-            gGoalMax = gMax + enhanceAmount*(gMax-gMid);
-            gGoalMin = gMin + enhanceAmount*(gMin-gMid);
-            bMid = (bMax + bMin)*0.5;
-            bGoalMax = bMax + enhanceAmount*(bMax-bMid);
-            bGoalMin = bMin + enhanceAmount*(bMin-bMid);
+            rMid = (rMax + rMin) * 0.5;
+            rGoalMax = rMax + enhanceAmount * (rMax - rMid);
+            rGoalMin = rMin + enhanceAmount * (rMin - rMid);
+            gMid = (gMax + gMin) * 0.5;
+            gGoalMax = gMax + enhanceAmount * (gMax - gMid);
+            gGoalMin = gMin + enhanceAmount * (gMin - gMid);
+            bMid = (bMax + bMin) * 0.5;
+            bGoalMax = bMax + enhanceAmount * (bMax - bMid);
+            bGoalMin = bMin + enhanceAmount * (bMin - bMid);
         }
 
         // Pass 2 - remap everything, except the alpha

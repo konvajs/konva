@@ -30,7 +30,7 @@
             data = imageData.data,
             w = imageData.width,
             h = imageData.height,
-            w4 = w*4,
+            w4 = w * 4,
             y = h;
 
         switch (direction) {
@@ -69,7 +69,7 @@
         }
 
         do {
-            var offsetY = (y-1)*w4;
+            var offsetY = (y - 1) * w4;
 
             var otherY = dirY;
             if (y + otherY < 1){
@@ -79,11 +79,11 @@
                 otherY = 0;
             }
 
-            var offsetYOther = (y-1+otherY)*w*4;
+            var offsetYOther = (y - 1 + otherY) * w * 4;
 
             var x = w;
             do {
-                var offset = offsetY + (x-1)*4;
+                var offset = offsetY + (x - 1) * 4;
 
                 var otherX = dirX;
                 if (x + otherX < 1){
@@ -93,11 +93,11 @@
                     otherX = 0;
                 }
 
-                var offsetOther = offsetYOther + (x-1+otherX)*4;
+                var offsetOther = offsetYOther + (x - 1 + otherX) * 4;
 
                 var dR = data[offset] - data[offsetOther];
-                var dG = data[offset+1] - data[offsetOther+1];
-                var dB = data[offset+2] - data[offsetOther+2];
+                var dG = data[offset + 1] - data[offsetOther + 1];
+                var dB = data[offset + 2] - data[offsetOther + 2];
 
                 var dif = dR;
                 var absDif = dif > 0 ? dif : -dif;
@@ -116,12 +116,12 @@
 
                 if (blend) {
                     var r = data[offset] + dif;
-                    var g = data[offset+1] + dif;
-                    var b = data[offset+2] + dif;
+                    var g = data[offset + 1] + dif;
+                    var b = data[offset + 2] + dif;
 
                     data[offset] = (r > 255) ? 255 : (r < 0 ? 0 : r);
-                    data[offset+1] = (g > 255) ? 255 : (g < 0 ? 0 : g);
-                    data[offset+2] = (b > 255) ? 255 : (b < 0 ? 0 : b);
+                    data[offset + 1] = (g > 255) ? 255 : (g < 0 ? 0 : g);
+                    data[offset + 2] = (b > 255) ? 255 : (b < 0 ? 0 : b);
                 } else {
                     var grey = greyLevel - dif;
                     if (grey < 0) {
@@ -130,7 +130,7 @@
                         grey = 255;
                     }
 
-                    data[offset] = data[offset+1] = data[offset+2] = grey;
+                    data[offset] = data[offset + 1] = data[offset + 2] = grey;
                 }
 
             } while (--x);
@@ -178,5 +178,3 @@
     * @returns {Boolean}
     */
 })();
-
-

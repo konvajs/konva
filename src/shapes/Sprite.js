@@ -37,7 +37,7 @@
      *         156, 109, 70, 98,
      *         229, 109, 60, 98,
      *         287, 109, 41, 98
-     *       ]          
+     *       ]
      *     },
      *     frameRate: 7,
      *     frameIndex: 0
@@ -88,9 +88,9 @@
                 ix4 = index * 4,
                 set = this.getAnimations()[anim],
                 offsets = this.frameOffsets(),
-                x =      set[ix4 + 0],
-                y =      set[ix4 + 1],
-                width =  set[ix4 + 2],
+                x = set[ix4 + 0],
+                y = set[ix4 + 1],
+                width = set[ix4 + 2],
                 height = set[ix4 + 3],
                 image = this.getImage();
 
@@ -110,7 +110,7 @@
                 ix4 = index * 4,
                 set = this.getAnimations()[anim],
                 offsets = this.frameOffsets(),
-                width =  set[ix4 + 2],
+                width = set[ix4 + 2],
                 height = set[ix4 + 3];
 
             context.beginPath();
@@ -216,7 +216,7 @@
      * @example
      * // get animations map
      * var animations = sprite.animations();
-     * 
+     *
      * // set animations map
      * sprite.animations({
      *   standing: [
@@ -236,7 +236,7 @@
      *     156, 109, 70, 98,
      *     229, 109, 60, 98,
      *     287, 109, 41, 98
-     *   ]          
+     *   ]
      * });
      */
 
@@ -275,7 +275,7 @@
     *   ]
     * });
     */
- 
+
     Konva.Factory.addGetterSetter(Konva.Sprite, 'image');
 
     /**

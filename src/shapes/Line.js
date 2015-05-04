@@ -9,7 +9,7 @@
      * @param {Array} config.points
      * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
      *   The default is 0
-     * @param {Boolean} [config.closed] defines whether or not the line shape is closed, creating a polygon or blob 
+     * @param {Boolean} [config.closed] defines whether or not the line shape is closed, creating a polygon or blob
      * @@shapeParams
      * @@nodeParams
      * @example
@@ -66,13 +66,13 @@
                 }
 
                 if (!closed) {
-                    context.quadraticCurveTo(tp[len-2], tp[len-1], points[length-2], points[length-1]);
+                    context.quadraticCurveTo(tp[len - 2], tp[len - 1], points[length - 2], points[length - 1]);
                 }
             }
             // no tension
             else {
-                for(n = 2; n < length; n+=2) {
-                    context.lineTo(points[n], points[n+1]);
+                for(n = 2; n < length; n += 2) {
+                    context.lineTo(points[n], points[n + 1]);
                 }
             }
 
@@ -103,8 +103,8 @@
                 tension = this.getTension(),
                 util = Konva.Util,
                 firstControlPoints = util._getControlPoints(
-                    p[len-2],
-                    p[len-1],
+                    p[len - 2],
+                    p[len - 1],
                     p[0],
                     p[1],
                     p[2],
@@ -112,10 +112,10 @@
                     tension
                 ),
                 lastControlPoints = util._getControlPoints(
-                    p[len-4],
-                    p[len-3],
-                    p[len-2],
-                    p[len-1],
+                    p[len - 4],
+                    p[len - 3],
+                    p[len - 2],
+                    p[len - 1],
                     p[0],
                     p[1],
                     tension
@@ -129,8 +129,8 @@
                 .concat([
                     lastControlPoints[0],
                     lastControlPoints[1],
-                    p[len-2],
-                    p[len-1],
+                    p[len - 2],
+                    p[len - 1],
                     lastControlPoints[2],
                     lastControlPoints[3],
                     firstControlPoints[0],
@@ -138,17 +138,17 @@
                     p[0],
                     p[1]
                 ]);
-                    
+
             return tp;
         },
-        getWidth : function() {
+        getWidth: function() {
             return this.getSelfRect().width;
         },
-        getHeight : function() {
+        getHeight: function() {
             return this.getSelfRect().height;
         },
         // overload size detection
-        getSelfRect : function() {
+        getSelfRect: function() {
             var points;
             if (this.getTension() !== 0) {
                 points = this._getTensionPoints();
@@ -159,8 +159,8 @@
             var maxX = points[0];
             var minY = points[0];
             var maxY = points[0];
-            var x,y;
-            for (var i = 0; i<points.length / 2; i++) {
+            var x, y;
+            for (var i = 0; i < points.length / 2; i++) {
                 x = points[i * 2]; y = points[i * 2 + 1];
                 minX = Math.min(minX, x);
                 maxX = Math.max(maxX, x);
@@ -168,10 +168,10 @@
                 maxY = Math.max(maxY, y);
             }
             return {
-                x : Math.round(minX),
-                y : Math.round(minY),
-                width : Math.round(maxX - minX),
-                height : Math.round(maxY - minY)
+                x: Math.round(minX),
+                y: Math.round(minY),
+                width: Math.round(maxX - minX),
+                height: Math.round(maxY - minY)
             };
         }
     };

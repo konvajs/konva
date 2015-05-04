@@ -1,4 +1,5 @@
-(function() {
+(function(Konva) {
+    'use strict';
     // CONSTANTS
     var ABSOLUTE_OPACITY = 'absoluteOpacity',
         ABSOLUTE_TRANSFORM = 'absoluteTransform',
@@ -188,7 +189,7 @@
                 height: height
             }),
             cachedHitCanvas = new Konva.HitCanvas({
-                pixelRatio : 1,
+                pixelRatio: 1,
                 width: width,
                 height: height
             }),
@@ -198,7 +199,7 @@
             cachedHitCanvas.isCache = true;
 
             this.clearCache();
-   
+
             sceneContext.save();
             hitContext.save();
 
@@ -228,8 +229,8 @@
                 scene: cachedSceneCanvas,
                 filter: cachedFilterCanvas,
                 hit: cachedHitCanvas,
-                x : x,
-                y : y
+                x: x,
+                y: y
             };
 
             return this;
@@ -266,17 +267,17 @@
          * rect.getClientRect();
          * // returns Object {x: -2, y: 46, width: 104, height: 208}
          */
-        getClientRect : function() {
+        getClientRect: function() {
             // abstract method
             // redefine in Container and Shape
             throw 'abstract "getClientRect" method call';
         },
-        _transformedRect : function(rect) {
+        _transformedRect: function(rect) {
             var points = [
-                {x : rect.x, y : rect.y},
-                {x : rect.x + rect.width, y : rect.y},
-                {x : rect.x + rect.width, y : rect.y + rect.height},
-                {x : rect.x, y : rect.y + rect.height}
+                {x: rect.x, y: rect.y},
+                {x: rect.x + rect.width, y: rect.y},
+                {x: rect.x + rect.width, y: rect.y + rect.height},
+                {x: rect.x, y: rect.y + rect.height}
             ];
             var minX, minY, maxX, maxY;
             var trans = this.getTransform();
@@ -292,10 +293,10 @@
                 maxY = Math.max(maxY, transformed.y);
             });
             return {
-                x : Math.round(minX),
-                y : Math.round(minY),
-                width : Math.round(maxX - minX),
-                height : Math.round(maxY - minY)
+                x: Math.round(minX),
+                y: Math.round(minY),
+                width: Math.round(maxX - minX),
+                height: Math.round(maxY - minY)
             };
         },
         _drawCachedSceneCanvas: function(context) {
@@ -334,7 +335,7 @@
             if (filters) {
                 if (!this._filterUpToDate) {
                     var ratio = sceneCanvas.pixelRatio;
-                    
+
                     try {
                         len = filters.length;
                         filterContext.clear();
@@ -344,7 +345,7 @@
                         imageData = filterContext.getImageData(0, 0, filterCanvas.getWidth(), filterCanvas.getHeight());
 
                         // apply filters to filter context
-                        for (n=0; n<len; n++) {
+                        for (n = 0; n < len; n++) {
                             filter = filters[n];
                             filter.call(this, imageData);
                             filterContext.putImageData(imageData, 0, 0);
@@ -514,7 +515,7 @@
                 handler.call(this, evt.evt);
             });
         },
-        removeEventListener : function(type) {
+        removeEventListener: function(type) {
             this.off(type);
         },
         /**
@@ -622,22 +623,21 @@
         setAttrs: function(config) {
             var key, method;
 
-            if(config) {
-                for(key in config) {
-                    if (key === CHILDREN) {
-
-                    }
-                    else {
-                        method = SET + Konva.Util._capitalize(key);
-                        // use setter if available
-                        if(Konva.Util._isFunction(this[method])) {
-                            this[method](config[key]);
-                        }
-                        // otherwise set directly
-                        else {
-                            this._setAttr(key, config[key]);
-                        }
-                    }
+            if(!config) {
+                return this;
+            }
+            for(key in config) {
+                if (key === CHILDREN) {
+                    continue;
+                }
+                method = SET + Konva.Util._capitalize(key);
+                // use setter if available
+                if(Konva.Util._isFunction(this[method])) {
+                    this[method](config[key]);
+                }
+                // otherwise set directly
+                else {
+                    this._setAttr(key, config[key]);
                 }
             }
             return this;
@@ -646,11 +646,11 @@
          * determine if node is listening for events by taking into account ancestors.
          *
          * Parent    | Self      | isListening
-         * listening | listening | 
+         * listening | listening |
          * ----------+-----------+------------
-         * T         | T         | T 
+         * T         | T         | T
          * T         | F         | F
-         * F         | T         | T 
+         * F         | T         | T
          * F         | F         | F
          * ----------+-----------+------------
          * T         | I         | T
@@ -686,11 +686,11 @@
          * determine if node is visible by taking into account ancestors.
          *
          * Parent    | Self      | isVisible
-         * visible   | visible   | 
+         * visible   | visible   |
          * ----------+-----------+------------
-         * T         | T         | T 
+         * T         | T         | T
          * T         | F         | F
-         * F         | T         | T 
+         * F         | T         | T
          * F         | F         | F
          * ----------+-----------+------------
          * T         | I         | T
@@ -731,7 +731,7 @@
          */
         shouldDrawHit: function(canvas) {
             var layer = this.getLayer();
-            return  (canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())
+            return (canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())
                 && this.isListening() && this.isVisible();
         },
         /**
@@ -877,7 +877,7 @@
                 y: this.attrs.y + it.getTranslation().y
             };
 
-            this.setPosition({x:pos.x, y:pos.y});
+            this.setPosition({x: pos.x, y: pos.y});
             this._setTransform(origTrans);
 
             return this;
@@ -950,7 +950,7 @@
                 y += changeY;
             }
 
-            this.setPosition({x:x, y:y});
+            this.setPosition({x: x, y: y});
             return this;
         },
         _eachAncestorReverse: function(func, top) {
@@ -998,7 +998,7 @@
         moveToTop: function() {
             if (!this.parent) {
                 Konva.Util.warn('Node has no parent. moveToTop function is ignored.');
-                return;
+                return false;
             }
             var index = this.index;
             this.parent.children.splice(index, 1);
@@ -1015,7 +1015,7 @@
         moveUp: function() {
             if (!this.parent) {
                 Konva.Util.warn('Node has no parent. moveUp function is ignored.');
-                return;
+                return false;
             }
             var index = this.index,
                 len = this.parent.getChildren().length;
@@ -1036,7 +1036,7 @@
         moveDown: function() {
             if (!this.parent) {
                 Konva.Util.warn('Node has no parent. moveDown function is ignored.');
-                return;
+                return false;
             }
             var index = this.index;
             if(index > 0) {
@@ -1056,7 +1056,7 @@
         moveToBottom: function() {
             if (!this.parent) {
                 Konva.Util.warn('Node has no parent. moveToBottom function is ignored.');
-                return;
+                return false;
             }
             var index = this.index;
             if(index > 0) {
@@ -1077,7 +1077,7 @@
         setZIndex: function(zIndex) {
             if (!this.parent) {
                 Konva.Util.warn('Node has no parent. zIndex parameter is ignored.');
-                return;
+                return false;
             }
             var index = this.index;
             this.parent.children.splice(index, 1);
@@ -1451,9 +1451,6 @@
                 height: this.getHeight()
             };
         },
-        getTransformedSize : function() {
-
-        },
         getWidth: function() {
             return this.attrs.width || 0;
         },
@@ -1560,7 +1557,7 @@
          * node.addName('selected');
          * node.name(); // return 'red selected'
          */
-        addName : function(name) {
+        addName: function(name) {
             if (!this.hasName(name)) {
                 var oldName = this.name();
                 var newName = oldName ? (oldName + ' ' + name) : name;
@@ -1579,7 +1576,7 @@
          * node.hasName('red');   // return true
          * node.hasName('selected'); // return false
          */
-        hasName : function(name) {
+        hasName: function(name) {
             var names = (this.name() || '').split(/\s/g);
             return names.indexOf(name) !== -1;
         },
@@ -1595,7 +1592,7 @@
          * node.hasName('selected'); // return false
          * node.name(); // return 'red'
          */
-        removeName : function(name) {
+        removeName: function(name) {
             var names = (this.name() || '').split(/\s/g);
             var index = names.indexOf(name);
             if (index !== -1) {
@@ -1643,7 +1640,7 @@
                     // set value to default value using getAttr
                     this.attrs[key] = this.getAttr(key);
                 }
-                
+
                 this.attrs[key][component] = val;
                 this._fireChangeEvent(key, oldVal, val);
             }
@@ -1886,7 +1883,7 @@
      * // get scale
      * var scale = node.scale();
      *
-     * // set scale 
+     * // set scale
      * shape.scale({
      *   x: 2
      *   y: 3
@@ -1942,7 +1939,7 @@
      * // get skew
      * var skew = node.skew();
      *
-     * // set skew 
+     * // set skew
      * node.skew({
      *   x: 20
      *   y: 10
@@ -2097,7 +2094,7 @@
     Konva.Factory.addGetterSetter(Konva.Node, 'listening', 'inherit');
     /**
      * get/set listenig attr.  If you need to determine if a node is listening or not
-     *   by taking into account its parents, use the isListening() method  
+     *   by taking into account its parents, use the isListening() method
      * @name listening
      * @method
      * @memberof Konva.Node.prototype
@@ -2117,7 +2114,7 @@
      * node.listening('inherit');
      */
 
-    Konva.Factory.addGetterSetter(Konva.Node, 'filters', undefined, function(val) {this._filterUpToDate = false;return val;});
+    Konva.Factory.addGetterSetter(Konva.Node, 'filters', undefined, function(val) {this._filterUpToDate = false; return val; });
     /**
      * get/set filters.  Filters are applied to cached canvases
      * @name filters
@@ -2146,7 +2143,7 @@
     /**
      * get/set visible attr.  Can be "inherit", true, or false.  The default is "inherit".
      *   If you need to determine if a node is visible or not
-     *   by taking into account its parents, use the isVisible() method  
+     *   by taking into account its parents, use the isVisible() method
      * @name visible
      * @method
      * @memberof Konva.Node.prototype
@@ -2216,4 +2213,4 @@
     });
 
     Konva.Collection.mapMethods(Konva.Node);
-})();
+})(Konva);

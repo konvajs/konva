@@ -1,8 +1,7 @@
-/*jshint unused:false */
 (function() {
+    'use strict';
     // CONSTANTS
     var GET = 'get',
-        RGB = 'RGB',
         SET = 'set';
 
     Konva.Factory = {
@@ -47,7 +46,7 @@
             constructor.prototype[getter] = function() {
                 var ret = {};
 
-                for (n=0; n<len; n++) {
+                for (n = 0; n < len; n++) {
                     component = components[n];
                     ret[component] = this.getAttr(attr + capitalize(component));
                 }
@@ -69,7 +68,7 @@
                 }
 
                 this._fireChangeEvent(attr, oldVal, val);
-                
+
                 if (after) {
                     after.call(this);
                 }

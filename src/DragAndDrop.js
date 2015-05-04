@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
     Konva.DD = {
         // properties
         anim: new Konva.Animation(function() {
@@ -36,27 +37,26 @@
                 if(!dd.isDragging) {
                     dd.isDragging = true;
                     node.fire('dragstart', {
-                        type : 'dragstart',
-                        target : node,
-                        evt : evt
+                        type: 'dragstart',
+                        target: node,
+                        evt: evt
                     }, true);
                 }
 
                 // execute ondragmove if defined
                 node.fire('dragmove', {
-                    type : 'dragmove',
-                    target : node,
-                    evt : evt
+                    type: 'dragmove',
+                    target: node,
+                    evt: evt
                 }, true);
             }
         },
         _endDragBefore: function(evt) {
             var dd = Konva.DD,
                 node = dd.node,
-                nodeType, layer;
+                layer;
 
             if(node) {
-                nodeType = node.nodeType;
                 layer = node.getLayer();
                 dd.anim.stop();
 
@@ -84,9 +84,9 @@
 
             if (evt && dragEndNode) {
                 dragEndNode.fire('dragend', {
-                    type : 'dragend',
-                    target : dragEndNode,
-                    evt : evt
+                    type: 'dragend',
+                    target: dragEndNode,
+                    evt: evt
                 }, true);
             }
         }

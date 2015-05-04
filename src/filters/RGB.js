@@ -22,7 +22,7 @@
 
         for (i = 0; i < nPixels; i += 4) {
             brightness = (0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2])/255;
-            data[i    ] = brightness*red; // r
+            data[i] = brightness*red; // r
             data[i + 1] = brightness*green; // g
             data[i + 2] = brightness*blue; // b
             data[i + 3] = data[i + 3]; // alpha

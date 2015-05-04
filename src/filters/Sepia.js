@@ -19,13 +19,13 @@
             y = imageData.height,
             w4 = w*4,
             offsetY, x, offset, or, og, ob, r, g, b;
-        
+
         do {
             offsetY = (y-1)*w4;
             x = w;
             do {
                 offset = offsetY + (x-1)*4;
-                
+
                 or = data[offset];
                 og = data[offset+1];
                 ob = data[offset+2];

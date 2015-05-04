@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
     /**
      * BaseLayer constructor.
      * @constructor
@@ -21,7 +22,7 @@
             this.nodeType = 'Layer';
             Konva.Container.call(this, config);
         },
-        createPNGStream : function() {
+        createPNGStream: function() {
             return this.canvas._canvas.createPNGStream();
         },
         /**
@@ -100,18 +101,20 @@
         },
         // extend Node.prototype.moveUp
         moveUp: function() {
-            if(Konva.Node.prototype.moveUp.call(this)) {
-                var stage = this.getStage();
-                if(stage) {
-                    stage.content.removeChild(this.getCanvas()._canvas);
+            var moved = Konva.Node.prototype.moveUp.call(this);
+            if (!moved){
+                return;
+            }
+            var stage = this.getStage();
+            if(!stage) {
+                return;
+            }
+            stage.content.removeChild(this.getCanvas()._canvas);
 
-                    if(this.index < stage.getChildren().length - 1) {
-                        stage.content.insertBefore(this.getCanvas()._canvas, stage.getChildren()[this.index + 1].getCanvas()._canvas);
-                    }
-                    else {
-                        stage.content.appendChild(this.getCanvas()._canvas);
-                    }
-                }
+            if(this.index < stage.getChildren().length - 1) {
+                stage.content.insertBefore(this.getCanvas()._canvas, stage.getChildren()[this.index + 1].getCanvas()._canvas);
+            } else {
+                stage.content.appendChild(this.getCanvas()._canvas);
             }
         },
         // extend Node.prototype.moveDown
@@ -152,7 +155,7 @@
         getStage: function() {
             return this.parent;
         },
-        setSize : function(width, height) {
+        setSize: function(width, height) {
             this.canvas.setSize(width, height);
         },
         /**
@@ -165,12 +168,12 @@
          * @example
          * var width = layer.width();
          */
-        getWidth : function() {
+        getWidth: function() {
             if (this.parent) {
                 return this.parent.getWidth();
             }
         },
-        setWidth : function() {
+        setWidth: function() {
             Konva.Util.warn('Can not change width of layer. Use "stage.width(value)" function instead.');
         },
         /**
@@ -183,12 +186,12 @@
          * @example
          * var height = layer.height();
          */
-        getHeight : function() {
+        getHeight: function() {
             if (this.parent) {
                 return this.parent.getHeight();
             }
         },
-        setHeight : function() {
+        setHeight: function() {
             Konva.Util.warn('Can not change height of layer. Use "stage.height(value)" function instead.');
         }
     });

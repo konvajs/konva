@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
     /**
      * Container constructor.&nbsp; Containers are used to contain nodes or other containers
      * @constructor
@@ -211,8 +212,8 @@
          * // select node with name bar inside layer
          * var nodes = layer.findOne('.bar');
          */
-        findOne : function(selector) {
-        	return this.find(selector)[0];
+        findOne: function(selector) {
+            return this.find(selector)[0];
         },
         _getNodeById: function(key) {
             var node = Konva.ids[key];
@@ -392,10 +393,10 @@
             var layer = this.getLayer();
             var dd = Konva.DD;
             var layerUnderDrag = dd && Konva.isDragging() && (Konva.DD.anim.getLayers().indexOf(layer) !== -1);
-            return  (canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())
+            return (canvas && canvas.isCache) || (layer && layer.hitGraphEnabled())
                 && this.isVisible() && !layerUnderDrag;
         },
-        getClientRect : function(skipTransform) {
+        getClientRect: function(skipTransform) {
             var minX, minY, maxX, maxY;
             this.children.each(function(child) {
                 var rect = child.getClientRect();
@@ -413,16 +414,16 @@
 
             });
 
-            var rect = {
-                x : minX,
-                y : minY,
-                width : maxX - minX,
-                height : maxY - minY
+            var selfRect = {
+                x: minX,
+                y: minY,
+                width: maxX - minX,
+                height: maxY - minY
             };
             if (!skipTransform) {
-                return this._transformedRect(rect);
+                return this._transformedRect(selfRect);
             }
-            return rect;
+            return selfRect;
         }
     });
 

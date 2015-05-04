@@ -27,7 +27,7 @@
     };
 
     Konva.Arc.prototype = {
-        _centroid : true,
+        _centroid: true,
         ___init: function(config) {
             // call super constructor
             Konva.Shape.call(this, config);
@@ -86,7 +86,7 @@
      * // set inner radius
      * arc.innerRadius(20);
      */
-     
+
     Konva.Factory.addGetterSetter(Konva.Arc, 'outerRadius', 0);
 
     /**

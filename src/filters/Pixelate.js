@@ -30,7 +30,7 @@
 
         for (xBin = 0; xBin < nBinsX; xBin += 1) {
             for (yBin = 0; yBin < nBinsY; yBin += 1) {
-        
+
                 // Initialize the color accumlators to 0
                 red = 0;
                 green = 0;
@@ -77,7 +77,7 @@
                 }
             }
         }
-      
+
     };
 
     Konva.Factory.addGetterSetter(Konva.Node, 'pixelSize', 8, null, Konva.Factory.afterSetFilter);

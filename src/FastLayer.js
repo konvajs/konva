@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
     /**
      * FastLayer constructor. Layers are tied to their own canvas element and are used
      * to contain shapes only.  If you don't need node nesting, mouse and touch interactions,
@@ -51,7 +52,7 @@
             if(this.getClearBeforeDraw()) {
                 canvas.getContext().clear();
             }
-            
+
             Konva.Container.prototype.drawScene.call(this, canvas);
 
             return this;

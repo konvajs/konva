@@ -1,4 +1,5 @@
-(function() {
+(function(Konva) {
+    'use strict';
     var HAS_SHADOW = 'hasShadow';
     var SHADOW_RGBA = 'shadowRGBA';
 
@@ -151,7 +152,7 @@
          *  because it performs much better
          * @method
          * @memberof Konva.Shape.prototype
-         * @param {Object} point 
+         * @param {Object} point
          * @param {Number} point.x
          * @param {Number} point.y
          * @returns {Boolean}
@@ -166,7 +167,7 @@
             p = bufferHitCanvas.context.getImageData(Math.round(point.x), Math.round(point.y), 1, 1).data;
             return p[3] > 0;
         },
-        // extends Node.prototype.destroy 
+        // extends Node.prototype.destroy
         destroy: function() {
             Konva.Node.prototype.destroy.call(this);
             delete Konva.shapes[this.colorKey];
@@ -187,16 +188,16 @@
          * circle.getSelfRect();  // return {x: - circle.width() / 2, y: - circle.height() / 2, width:circle.width(), height:circle.height()}
          *
          */
-        getSelfRect : function() {
+        getSelfRect: function() {
             var size = this.getSize();
             return {
-                x : this._centroid ? Math.round(-size.width / 2) : 0,
-                y : this._centroid ? Math.round(-size.height / 2) : 0,
-                width : size.width,
-                height : size.height
+                x: this._centroid ? Math.round(-size.width / 2) : 0,
+                y: this._centroid ? Math.round(-size.height / 2) : 0,
+                width: size.width,
+                height: size.height
             };
         },
-        getClientRect : function(skipTransform) {
+        getClientRect: function(skipTransform) {
             var fillRect = this.getSelfRect();
 
             var strokeWidth = (this.hasStroke() && this.strokeWidth()) || 0;
@@ -222,10 +223,10 @@
                 roundingOffset = 1;
             }
             var rect = {
-                width : width + roundingOffset,
-                height : height + roundingOffset,
-                x : -Math.round(strokeWidth / 2 + blurRadius) + Math.min(shadowOffsetX, 0) + fillRect.x,
-                y : -Math.round(strokeWidth / 2 + blurRadius) + Math.min(shadowOffsetY, 0) + fillRect.y
+                width: width + roundingOffset,
+                height: height + roundingOffset,
+                x: -Math.round(strokeWidth / 2 + blurRadius) + Math.min(shadowOffsetX, 0) + fillRect.x,
+                y: -Math.round(strokeWidth / 2 + blurRadius) + Math.min(shadowOffsetY, 0) + fillRect.y
             };
             if (!skipTransform) {
                 return this._transformedRect(rect);
@@ -242,94 +243,96 @@
                 hasStroke = this.hasStroke(),
                 stage, bufferCanvas, bufferContext;
 
-            if(this.isVisible()) {
-                if (cachedCanvas) {
-                    context.save();
-                    layer._applyTransform(this, context, top);
-                    this._drawCachedSceneCanvas(context);
-                    context.restore();
+            if(!this.isVisible()) {
+                return this;
+            }
+            if (cachedCanvas) {
+                context.save();
+                layer._applyTransform(this, context, top);
+                this._drawCachedSceneCanvas(context);
+                context.restore();
+                return this;
+            }
+            if (!drawFunc) {
+                return this;
+            }
+            context.save();
+            // if buffer canvas is needed
+            if (this._useBufferCanvas(caching)) {
+                stage = this.getStage();
+                bufferCanvas = stage.bufferCanvas;
+                bufferContext = bufferCanvas.getContext();
+                bufferContext.clear();
+                bufferContext.save();
+                bufferContext._applyLineJoin(this);
+                // layer might be undefined if we are using cache before adding to layer
+                if (!caching) {
+                    if (layer) {
+                        layer._applyTransform(this, bufferContext, top);
+                    } else {
+                        var m = this.getAbsoluteTransform(top).getMatrix();
+                        context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
+                    }
                 }
-                else if (drawFunc) {
-                    context.save();
-                    // if buffer canvas is needed
-                    if (this._useBufferCanvas(caching)) {
-                        stage = this.getStage();
-                        bufferCanvas = stage.bufferCanvas;
-                        bufferContext = bufferCanvas.getContext();
-                        bufferContext.clear();
-                        bufferContext.save();
-                        bufferContext._applyLineJoin(this);
-                        // layer might be undefined if we are using cache before adding to layer
-                        if (!caching) {
-                            if (layer) {
-                                layer._applyTransform(this, bufferContext, top);
-                            } else {
-                                var m = this.getAbsoluteTransform(top).getMatrix();
-                                context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
-                            }
-                        }
-                     
-                        drawFunc.call(this, bufferContext);
-                        bufferContext.restore();
 
-                        if (hasShadow && !canvas.hitCanvas) {
-                                context.save();
-                                context._applyShadow(this);
-                                context._applyOpacity(this);
-                                context.drawImage(bufferCanvas._canvas, 0, 0);
-                                context.restore();
-                        } else {
-                            context._applyOpacity(this);
-                            context.drawImage(bufferCanvas._canvas, 0, 0);
-                        }
-                    }
-                    // if buffer canvas is not needed
-                    else {
-                        context._applyLineJoin(this);
-                        // layer might be undefined if we are using cache before adding to layer
-                        if (!caching) {
-                            if (layer) {
-                                layer._applyTransform(this, context, top);
-                            } else {
-                                var o = this.getAbsoluteTransform(top).getMatrix();
-                                context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
-                            }
-                        }
+                drawFunc.call(this, bufferContext);
+                bufferContext.restore();
 
-                        if (hasShadow && hasStroke && !canvas.hitCanvas) {
-                            context.save();
-                            // apply shadow
-                            if (!caching) {
-                                context._applyOpacity(this);
-                            }
-                            context._applyShadow(this);
-                            drawFunc.call(this, context);
-                            context.restore();
-                            // if shape has stroke we need to redraw shape
-                            // otherwise we will see a shadow under stroke (and over fill)
-                            // but I think this is unexpected behavior
-                            if (this.hasFill() && this.getShadowForStrokeEnabled()) {
-                                drawFunc.call(this, context);
-                            }
-                        } else if (hasShadow && !canvas.hitCanvas) {
-                            context.save();
-                            if (!caching) {
-                                context._applyOpacity(this);
-                            }
-                            context._applyShadow(this);
-                            drawFunc.call(this, context);
-                            context.restore();
-                        } else {
-                            if (!caching) {
-                                context._applyOpacity(this);
-                            }
-                            drawFunc.call(this, context);
-                        }
-                    }
-                    context.restore();
+                if (hasShadow && !canvas.hitCanvas) {
+                        context.save();
+                        context._applyShadow(this);
+                        context._applyOpacity(this);
+                        context.drawImage(bufferCanvas._canvas, 0, 0);
+                        context.restore();
+                } else {
+                    context._applyOpacity(this);
+                    context.drawImage(bufferCanvas._canvas, 0, 0);
                 }
             }
+            // if buffer canvas is not needed
+            else {
+                context._applyLineJoin(this);
+                // layer might be undefined if we are using cache before adding to layer
+                if (!caching) {
+                    if (layer) {
+                        layer._applyTransform(this, context, top);
+                    } else {
+                        var o = this.getAbsoluteTransform(top).getMatrix();
+                        context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
+                    }
+                }
 
+                if (hasShadow && hasStroke && !canvas.hitCanvas) {
+                    context.save();
+                    // apply shadow
+                    if (!caching) {
+                        context._applyOpacity(this);
+                    }
+                    context._applyShadow(this);
+                    drawFunc.call(this, context);
+                    context.restore();
+                    // if shape has stroke we need to redraw shape
+                    // otherwise we will see a shadow under stroke (and over fill)
+                    // but I think this is unexpected behavior
+                    if (this.hasFill() && this.getShadowForStrokeEnabled()) {
+                        drawFunc.call(this, context);
+                    }
+                } else if (hasShadow && !canvas.hitCanvas) {
+                    context.save();
+                    if (!caching) {
+                        context._applyOpacity(this);
+                    }
+                    context._applyShadow(this);
+                    drawFunc.call(this, context);
+                    context.restore();
+                } else {
+                    if (!caching) {
+                        context._applyOpacity(this);
+                    }
+                    drawFunc.call(this, context);
+                }
+            }
+            context.restore();
             return this;
         },
         drawHit: function(can, top, caching) {
@@ -340,34 +343,34 @@
                 cachedCanvas = this._cache.canvas,
                 cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
-            if(this.shouldDrawHit(canvas)) {
-                if (layer) {
-                    layer.clearHitCache();
-                }
-                if (cachedHitCanvas) {
-                    context.save();
-                    layer._applyTransform(this, context, top);
-                    this._drawCachedHitCanvas(context);
-                    context.restore();
-                }
-                else if (drawFunc) {
-                    context.save();
-                    context._applyLineJoin(this);
-                    if (!caching) {
-                        if (layer) {
-                            layer._applyTransform(this, context, top);
-                        } else {
-                            var o = this.getAbsoluteTransform(top).getMatrix();
-                            context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
-                        }
-                    }
-                   
-                    drawFunc.call(this, context);
-                    context.restore();
-                }
-                
+            if(!this.shouldDrawHit(canvas)) {
+                return this;
             }
-
+            if (layer) {
+                layer.clearHitCache();
+            }
+            if (cachedHitCanvas) {
+                context.save();
+                layer._applyTransform(this, context, top);
+                this._drawCachedHitCanvas(context);
+                context.restore();
+                return this;
+            }
+            if (!drawFunc) {
+                return this;
+            }
+            context.save();
+            context._applyLineJoin(this);
+            if (!caching) {
+                if (layer) {
+                    layer._applyTransform(this, context, top);
+                } else {
+                    var o = this.getAbsoluteTransform(top).getMatrix();
+                    context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
+                }
+            }
+            drawFunc.call(this, context);
+            context.restore();
             return this;
         },
         /**
@@ -375,7 +378,7 @@
         * @method
         * @memberof Konva.Shape.prototype
         * @param {Integer} alphaThreshold alpha channel threshold that determines whether or not
-        *  a pixel should be drawn onto the hit graph.  Must be a value between 0 and 255.  
+        *  a pixel should be drawn onto the hit graph.  Must be a value between 0 and 255.
         *  The default is 0
         * @returns {Konva.Shape}
         * @example
@@ -689,9 +692,8 @@
      * @example
      *  // apply dashed stroke that is 10px long and 5 pixels apart
      *  line.dash([10, 5]);
-     *  
-     *  // apply dashed stroke that is made up of alternating dashed 
-     *  // lines that are 10px long and 20px apart, and dots that have 
+     *  // apply dashed stroke that is made up of alternating dashed
+     *  // lines that are 10px long and 20px apart, and dots that have
      *  // a radius of 5px and are 20px apart
      *  line.dash([10, 20, 0.001, 20]);
      */
@@ -791,7 +793,7 @@
      * // set shadow alpha component
      * shape.shadowAlpha(0.5);
      */
-     
+
     Konva.Factory.addGetterSetter(Konva.Shape, 'shadowBlur');
 
     /**
@@ -1014,7 +1016,6 @@
      * @example
      * // get fill pattern x
      * var fillPatternX = shape.fillPatternX();
-     * 
      * // set fill pattern x
      * shape.fillPatternX(20);
      */
@@ -1031,7 +1032,6 @@
      * @example
      * // get fill pattern y
      * var fillPatternY = shape.fillPatternY();
-     * 
      * // set fill pattern y
      * shape.fillPatternY(20);
      */
@@ -1049,7 +1049,7 @@
      * // get fill linear gradient color stops
      * var colorStops = shape.fillLinearGradientColorStops();
      *
-     * // create a linear gradient that starts with red, changes to blue 
+     * // create a linear gradient that starts with red, changes to blue
      * // halfway through, and then changes to green
      * shape.fillLinearGradientColorStops(0, 'red', 0.5, 'blue', 1, 'green');
      */
@@ -1101,7 +1101,7 @@
      * // get fill radial gradient color stops
      * var colorStops = shape.fillRadialGradientColorStops();
      *
-     * // create a radial gradient that starts with red, changes to blue 
+     * // create a radial gradient that starts with red, changes to blue
      * // halfway through, and then changes to green
      * shape.fillRadialGradientColorStops(0, 'red', 0.5, 'blue', 1, 'green');
      */
@@ -1603,4 +1603,4 @@
     });
 
     Konva.Collection.mapMethods(Konva.Shape);
-})();
+})(Konva);

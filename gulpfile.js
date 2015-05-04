@@ -1,12 +1,15 @@
+'use strict';
+
 var gulp = require('gulp');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 var replace = require('gulp-replace');
-var jshint = require('gulp-jshint');
 var mochaPhantomJS = require('gulp-mocha-phantomjs');
 var jsdoc = require('gulp-jsdoc');
 var connect = require('gulp-connect');
+var jscpd = require('gulp-jscpd');
+var eslint = require('gulp-eslint');
 
 var fs = require('fs');
 var NodeParams = fs.readFileSync('./resources/doc-includes/NodeParams.txt').toString();
@@ -97,7 +100,7 @@ gulp.task('build', function() {
         .pipe(rename('konva.js'))
         .pipe(gulp.dest('./'))
         .pipe(uglify({
-            preserveComments : 'some'
+            preserveComments: 'some'
         }))
         .pipe(rename('konva.min.js'))
         .pipe(gulp.dest('./'));
@@ -115,8 +118,23 @@ gulp.task('server', function() {
 
 gulp.task('lint', function() {
     return gulp.src('./src/**/*.js')
-        .pipe(jshint())
-        .pipe(jshint.reporter('default'));
+        .pipe(eslint({
+            configFile: './.eslintrc'
+        }))
+        // eslint.format() outputs the lint results to the console.
+        // Alternatively use eslint.formatEach() (see Docs).
+        .pipe(eslint.format())
+        // To have the process exit with an error code (1) on
+        // lint error, return the stream and pipe to failOnError last.
+        .pipe(eslint.failOnError());
+});
+
+gulp.task('inspect', function() {
+  return gulp.src('./src/**/*.js')
+    .pipe(jscpd({
+      'min-lines': 10,
+      verbose: true
+    }));
 });
 
 gulp.task('api', function() {

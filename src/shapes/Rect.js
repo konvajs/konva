@@ -32,7 +32,6 @@
                 width = this.getWidth(),
                 height = this.getHeight();
 
-            
             context.beginPath();
 
             if(!cornerRadius) {
@@ -69,7 +68,7 @@
      * @example
      * // get corner radius
      * var cornerRadius = rect.cornerRadius();
-     * 
+     *
      * // set corner radius
      * rect.cornerRadius(10);
      */

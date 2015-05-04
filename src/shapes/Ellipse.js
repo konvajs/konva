@@ -25,7 +25,7 @@
     };
 
     Konva.Ellipse.prototype = {
-        _centroid : true,
+        _centroid: true,
         ___init: function(config) {
             // call super constructor
             Konva.Shape.call(this, config);
@@ -86,7 +86,7 @@
      * @example
      * // get radius
      * var radius = ellipse.radius();
-     * 
+     *
      * // set radius
      * ellipse.radius({
      *   x: 200,
@@ -105,7 +105,7 @@
      * @example
      * // get radius x
      * var radiusX = ellipse.radiusX();
-     * 
+     *
      * // set radius x
      * ellipse.radiusX(200);
      */
@@ -121,7 +121,7 @@
      * @example
      * // get radius y
      * var radiusY = ellipse.radiusY();
-     * 
+     *
      * // set radius y
      * ellipse.radiusY(200);
      */

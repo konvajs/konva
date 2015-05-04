@@ -55,7 +55,7 @@
             this._strokeFunc = _strokeFunc;
             this._fillFuncHit = _fillFunc;
             this._strokeFuncHit = _strokeFunc;
-            
+
             this.className = 'TextPath';
 
             this.dataArray = Konva.Path.parsePathData(this.attrs.data);
@@ -161,16 +161,16 @@
                 currentT = 0;
                 var pathData = that.dataArray;
 
-                for(var i = pIndex + 1; i < pathData.length; i++) {
-                    if(pathData[i].pathLength > 0) {
-                        pIndex = i;
+                for(var j = pIndex + 1; j < pathData.length; j++) {
+                    if(pathData[j].pathLength > 0) {
+                        pIndex = j;
 
-                        return pathData[i];
+                        return pathData[j];
                     }
-                    else if(pathData[i].command == 'M') {
+                    else if(pathData[j].command === 'M') {
                         p0 = {
-                            x: pathData[i].points[0],
-                            y: pathData[i].points[1]
+                            x: pathData[j].points[0],
+                            y: pathData[j].points[1]
                         };
                     }
                 }
@@ -322,7 +322,7 @@
                 p0 = p1;
             }
         },
-        getSelfRect : function() {
+        getSelfRect: function() {
             var points = [];
             var fontSize = this.fontSize();
 
@@ -336,7 +336,7 @@
             var maxX = points[0];
             var minY = points[0];
             var maxY = points[0];
-            var x,y;
+            var x, y;
             for (var i = 0; i<points.length / 2; i++) {
                 x = points[i * 2]; y = points[i * 2 + 1];
                 minX = Math.min(minX, x);
@@ -345,10 +345,10 @@
                 maxY = Math.max(maxY, y);
             }
             return {
-                x : Math.round(minX) - fontSize,
-                y : Math.round(minY) - fontSize,
-                width : Math.round(maxX - minX) + fontSize * 2,
-                height : Math.round(maxY - minY) + fontSize * 2
+                x: Math.round(minX) - fontSize,
+                y: Math.round(minY) - fontSize,
+                width: Math.round(maxX - minX) + fontSize * 2,
+                height: Math.round(maxY - minY) + fontSize * 2
             };
         }
     };

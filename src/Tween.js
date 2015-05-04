@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
     var blacklist = {
         node: 1,
         duration: 1,
@@ -13,290 +14,6 @@
 
     idCounter = 0,
     colorAttrs = ['fill', 'stroke', 'shadowColor'];
-
-    /**
-     * Tween constructor.  Tweens enable you to animate a node between the current state and a new state.
-     *  You can play, pause, reverse, seek, reset, and finish tweens.  By default, tweens are animated using
-     *  a linear easing.  For more tweening options, check out {@link Konva.Easings}
-     * @constructor
-     * @memberof Konva
-     * @example
-     * // instantiate new tween which fully rotates a node in 1 second
-     * var tween = new Konva.Tween({
-     *   node: node,
-     *   rotationDeg: 360,
-     *   duration: 1,
-     *   easing: Konva.Easings.EaseInOut
-     * });
-     *
-     * // play tween
-     * tween.play();
-     *
-     * // pause tween
-     * tween.pause();
-     */
-    Konva.Tween = function(config) {
-        var that = this,
-            node = config.node,
-            nodeId = node._id,
-            duration,
-            easing = config.easing || Konva.Easings.Linear,
-            yoyo = !!config.yoyo,
-            key;
-
-        if (typeof config.duration === 'undefined') {
-            duration = 1;
-        } else if (config.duration === 0) {  // zero is bad value for duration
-            duration = 0.001;
-        } else {
-            duration = config.duration;
-        }
-        this.node = node;
-        this._id = idCounter++;
-
-        this.anim = new Konva.Animation(function() {
-            that.tween.onEnterFrame();
-        }, node.getLayer() || ((node instanceof Konva.Stage) ? node.getLayers() : null));
-
-        this.tween = new Tween(key, function(i) {
-            that._tweenFunc(i);
-        }, easing, 0, 1, duration * 1000, yoyo);
-
-        this._addListeners();
-
-        // init attrs map
-        if (!Konva.Tween.attrs[nodeId]) {
-            Konva.Tween.attrs[nodeId] = {};
-        }
-        if (!Konva.Tween.attrs[nodeId][this._id]) {
-            Konva.Tween.attrs[nodeId][this._id] = {};
-        }
-        // init tweens map
-        if (!Konva.Tween.tweens[nodeId]) {
-            Konva.Tween.tweens[nodeId] = {};
-        }
-
-        for (key in config) {
-            if (blacklist[key] === undefined) {
-                this._addAttr(key, config[key]);
-            }
-        }
-
-        this.reset();
-
-        // callbacks
-        this.onFinish = config.onFinish;
-        this.onReset = config.onReset;
-    };
-
-    // start/diff object = attrs.nodeId.tweenId.attr
-    Konva.Tween.attrs = {};
-    // tweenId = tweens.nodeId.attr
-    Konva.Tween.tweens = {};
-
-    Konva.Tween.prototype = {
-        _addAttr: function(key, end) {
-            var node = this.node,
-                nodeId = node._id,
-                start, diff, tweenId, n, len;
-
-            // remove conflict from tween map if it exists
-            tweenId = Konva.Tween.tweens[nodeId][key];
-
-            if (tweenId) {
-                delete Konva.Tween.attrs[nodeId][tweenId][key];
-            }
-
-            // add to tween map
-            start = node.getAttr(key);
-
-            if (Konva.Util._isArray(end)) {
-                diff = [];
-                len = end.length;
-                for (n=0; n<len; n++) {
-                    diff.push(end[n] - start[n]);
-                }
-            } else if (colorAttrs.indexOf(key) !== -1) {
-                start = Konva.Util.colorToRGBA(start);
-                var endRGBA = Konva.Util.colorToRGBA(end);
-                diff = {
-                    r : endRGBA.r - start.r,
-                    g : endRGBA.g - start.g,
-                    b : endRGBA.b - start.b,
-                    a : endRGBA.a - start.a
-                };
-            } else {
-                diff = end - start;
-            }
-
-            Konva.Tween.attrs[nodeId][this._id][key] = {
-                start: start,
-                diff: diff
-            };
-            Konva.Tween.tweens[nodeId][key] = this._id;
-        },
-        _tweenFunc: function(i) {
-            var node = this.node,
-                attrs = Konva.Tween.attrs[node._id][this._id],
-                key, attr, start, diff, newVal, n, len;
-
-            for (key in attrs) {
-                attr = attrs[key];
-                start = attr.start;
-                diff = attr.diff;
-
-                if (Konva.Util._isArray(start)) {
-                    newVal = [];
-                    len = start.length;
-                    for (n=0; n<len; n++) {
-                        newVal.push(start[n] + (diff[n] * i));
-                    }
-                }  else if (colorAttrs.indexOf(key) !== -1) {
-                    newVal = 'rgba(' +
-                            Math.round(start.r + diff.r * i) + ',' +
-                            Math.round(start.g + diff.g * i) + ',' +
-                            Math.round(start.b + diff.b * i) + ',' +
-                            (start.a + diff.a * i) + ')';
-                } else {
-                    newVal = start + (diff * i);
-                }
-
-                node.setAttr(key, newVal);
-            }
-        },
-        _addListeners: function() {
-            var that = this;
-
-            // start listeners
-            this.tween.onPlay = function() {
-                that.anim.start();
-            };
-            this.tween.onReverse = function() {
-                that.anim.start();
-            };
-
-            // stop listeners
-            this.tween.onPause = function() {
-                that.anim.stop();
-            };
-            this.tween.onFinish = function() {
-                if (that.onFinish) {
-                    that.onFinish();
-                }
-            };
-            this.tween.onReset = function() {
-                if (that.onReset) {
-                    that.onReset();
-                }
-            };
-        },
-        /**
-         * play
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @returns {Tween}
-         */
-        play: function() {
-            this.tween.play();
-            return this;
-        },
-        /**
-         * reverse
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @returns {Tween}
-         */
-        reverse: function() {
-            this.tween.reverse();
-            return this;
-        },
-        /**
-         * reset
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @returns {Tween}
-         */
-        reset: function() {
-            this.tween.reset();
-            return this;
-        },
-        /**
-         * seek
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @param {Integer} t time in seconds between 0 and the duration
-         * @returns {Tween}
-         */
-        seek: function(t) {
-            this.tween.seek(t * 1000);
-            return this;
-        },
-        /**
-         * pause
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @returns {Tween}
-         */
-        pause: function() {
-            this.tween.pause();
-            return this;
-        },
-        /**
-         * finish
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @returns {Tween}
-         */
-        finish: function() {
-            this.tween.finish();
-            return this;
-        },
-        /**
-         * destroy
-         * @method
-         * @memberof Konva.Tween.prototype
-         */
-        destroy: function() {
-            var nodeId = this.node._id,
-                thisId = this._id,
-                attrs = Konva.Tween.tweens[nodeId],
-                key;
-
-            this.pause();
-
-            for (key in attrs) {
-                delete Konva.Tween.tweens[nodeId][key];
-            }
-
-            delete Konva.Tween.attrs[nodeId][thisId];
-        }
-    };
-
-    /**
-     * Tween node properties. Shorter usage of {@link Konva.Tween} object.
-     *
-     * @method Konva.Node#to
-     * @memberof Konva.Node
-     * @param {Object} [params] tween params
-     * @example
-     *
-     * circle.to({
-     *  x : 50,
-     *  duration : 0.5
-     * });
-     */
-    Konva.Node.prototype.to = function(params) {
-        var onFinish = params.onFinish;
-        params.node = this;
-        params.onFinish = function() {
-            tween.destroy();
-            if (onFinish) {
-                onFinish();
-            }
-        };
-        var tween = new Konva.Tween(params);
-        tween.play();
-    };
 
     var Tween = function(prop, propFunc, func, begin, finish, duration, yoyo) {
         this.prop = prop;
@@ -415,6 +132,290 @@
         }
     };
 
+    /**
+     * Tween constructor.  Tweens enable you to animate a node between the current state and a new state.
+     *  You can play, pause, reverse, seek, reset, and finish tweens.  By default, tweens are animated using
+     *  a linear easing.  For more tweening options, check out {@link Konva.Easings}
+     * @constructor
+     * @memberof Konva
+     * @example
+     * // instantiate new tween which fully rotates a node in 1 second
+     * var tween = new Konva.Tween({
+     *   node: node,
+     *   rotationDeg: 360,
+     *   duration: 1,
+     *   easing: Konva.Easings.EaseInOut
+     * });
+     *
+     * // play tween
+     * tween.play();
+     *
+     * // pause tween
+     * tween.pause();
+     */
+    Konva.Tween = function(config) {
+        var that = this,
+            node = config.node,
+            nodeId = node._id,
+            duration,
+            easing = config.easing || Konva.Easings.Linear,
+            yoyo = !!config.yoyo,
+            key;
+
+        if (typeof config.duration === 'undefined') {
+            duration = 1;
+        } else if (config.duration === 0) {  // zero is bad value for duration
+            duration = 0.001;
+        } else {
+            duration = config.duration;
+        }
+        this.node = node;
+        this._id = idCounter++;
+
+        this.anim = new Konva.Animation(function() {
+            that.tween.onEnterFrame();
+        }, node.getLayer() || ((node instanceof Konva.Stage) ? node.getLayers() : null));
+
+        this.tween = new Tween(key, function(i) {
+            that._tweenFunc(i);
+        }, easing, 0, 1, duration * 1000, yoyo);
+
+        this._addListeners();
+
+        // init attrs map
+        if (!Konva.Tween.attrs[nodeId]) {
+            Konva.Tween.attrs[nodeId] = {};
+        }
+        if (!Konva.Tween.attrs[nodeId][this._id]) {
+            Konva.Tween.attrs[nodeId][this._id] = {};
+        }
+        // init tweens map
+        if (!Konva.Tween.tweens[nodeId]) {
+            Konva.Tween.tweens[nodeId] = {};
+        }
+
+        for (key in config) {
+            if (blacklist[key] === undefined) {
+                this._addAttr(key, config[key]);
+            }
+        }
+
+        this.reset();
+
+        // callbacks
+        this.onFinish = config.onFinish;
+        this.onReset = config.onReset;
+    };
+
+    // start/diff object = attrs.nodeId.tweenId.attr
+    Konva.Tween.attrs = {};
+    // tweenId = tweens.nodeId.attr
+    Konva.Tween.tweens = {};
+
+    Konva.Tween.prototype = {
+        _addAttr: function(key, end) {
+            var node = this.node,
+                nodeId = node._id,
+                start, diff, tweenId, n, len;
+
+            // remove conflict from tween map if it exists
+            tweenId = Konva.Tween.tweens[nodeId][key];
+
+            if (tweenId) {
+                delete Konva.Tween.attrs[nodeId][tweenId][key];
+            }
+
+            // add to tween map
+            start = node.getAttr(key);
+
+            if (Konva.Util._isArray(end)) {
+                diff = [];
+                len = end.length;
+                for (n = 0; n < len; n++) {
+                    diff.push(end[n] - start[n]);
+                }
+            } else if (colorAttrs.indexOf(key) !== -1) {
+                start = Konva.Util.colorToRGBA(start);
+                var endRGBA = Konva.Util.colorToRGBA(end);
+                diff = {
+                    r: endRGBA.r - start.r,
+                    g: endRGBA.g - start.g,
+                    b: endRGBA.b - start.b,
+                    a: endRGBA.a - start.a
+                };
+            } else {
+                diff = end - start;
+            }
+
+            Konva.Tween.attrs[nodeId][this._id][key] = {
+                start: start,
+                diff: diff
+            };
+            Konva.Tween.tweens[nodeId][key] = this._id;
+        },
+        _tweenFunc: function(i) {
+            var node = this.node,
+                attrs = Konva.Tween.attrs[node._id][this._id],
+                key, attr, start, diff, newVal, n, len;
+
+            for (key in attrs) {
+                attr = attrs[key];
+                start = attr.start;
+                diff = attr.diff;
+
+                if (Konva.Util._isArray(start)) {
+                    newVal = [];
+                    len = start.length;
+                    for (n = 0; n < len; n++) {
+                        newVal.push(start[n] + (diff[n] * i));
+                    }
+                } else if (colorAttrs.indexOf(key) !== -1) {
+                    newVal = 'rgba(' +
+                            Math.round(start.r + diff.r * i) + ',' +
+                            Math.round(start.g + diff.g * i) + ',' +
+                            Math.round(start.b + diff.b * i) + ',' +
+                            (start.a + diff.a * i) + ')';
+                } else {
+                    newVal = start + (diff * i);
+                }
+
+                node.setAttr(key, newVal);
+            }
+        },
+        _addListeners: function() {
+            var that = this;
+
+            // start listeners
+            this.tween.onPlay = function() {
+                that.anim.start();
+            };
+            this.tween.onReverse = function() {
+                that.anim.start();
+            };
+
+            // stop listeners
+            this.tween.onPause = function() {
+                that.anim.stop();
+            };
+            this.tween.onFinish = function() {
+                if (that.onFinish) {
+                    that.onFinish.call(that);
+                }
+            };
+            this.tween.onReset = function() {
+                if (that.onReset) {
+                    that.onReset();
+                }
+            };
+        },
+        /**
+         * play
+         * @method
+         * @memberof Konva.Tween.prototype
+         * @returns {Tween}
+         */
+        play: function() {
+            this.tween.play();
+            return this;
+        },
+        /**
+         * reverse
+         * @method
+         * @memberof Konva.Tween.prototype
+         * @returns {Tween}
+         */
+        reverse: function() {
+            this.tween.reverse();
+            return this;
+        },
+        /**
+         * reset
+         * @method
+         * @memberof Konva.Tween.prototype
+         * @returns {Tween}
+         */
+        reset: function() {
+            this.tween.reset();
+            return this;
+        },
+        /**
+         * seek
+         * @method
+         * @memberof Konva.Tween.prototype
+         * @param {Integer} t time in seconds between 0 and the duration
+         * @returns {Tween}
+         */
+        seek: function(t) {
+            this.tween.seek(t * 1000);
+            return this;
+        },
+        /**
+         * pause
+         * @method
+         * @memberof Konva.Tween.prototype
+         * @returns {Tween}
+         */
+        pause: function() {
+            this.tween.pause();
+            return this;
+        },
+        /**
+         * finish
+         * @method
+         * @memberof Konva.Tween.prototype
+         * @returns {Tween}
+         */
+        finish: function() {
+            this.tween.finish();
+            return this;
+        },
+        /**
+         * destroy
+         * @method
+         * @memberof Konva.Tween.prototype
+         */
+        destroy: function() {
+            var nodeId = this.node._id,
+                thisId = this._id,
+                attrs = Konva.Tween.tweens[nodeId],
+                key;
+
+            this.pause();
+
+            for (key in attrs) {
+                delete Konva.Tween.tweens[nodeId][key];
+            }
+
+            delete Konva.Tween.attrs[nodeId][thisId];
+        }
+    };
+
+    /**
+     * Tween node properties. Shorter usage of {@link Konva.Tween} object.
+     *
+     * @method Konva.Node#to
+     * @memberof Konva.Node
+     * @param {Object} [params] tween params
+     * @example
+     *
+     * circle.to({
+     *  x : 50,
+     *  duration : 0.5
+     * });
+     */
+    Konva.Node.prototype.to = function(params) {
+        var onFinish = params.onFinish;
+        params.node = this;
+        params.onFinish = function() {
+            this.destroy();
+            if (onFinish) {
+                onFinish();
+            }
+        };
+        var tween = new Konva.Tween(params);
+        tween.play();
+    };
+
     /*
     * These eases were ported from an Adobe Flash tweening library to JavaScript
     * by Xaric
@@ -466,7 +467,7 @@
             if(t === 0) {
                 return b;
             }
-            if((t /= d) == 1) {
+            if((t /= d) === 1) {
                 return b + c;
             }
             if(!p) {
@@ -492,7 +493,7 @@
             if(t === 0) {
                 return b;
             }
-            if((t /= d) == 1) {
+            if((t /= d) === 1) {
                 return b + c;
             }
             if(!p) {
@@ -518,7 +519,7 @@
             if(t === 0) {
                 return b;
             }
-            if((t /= d / 2) == 2) {
+            if((t /= d / 2) === 2) {
                 return b + c;
             }
             if(!p) {

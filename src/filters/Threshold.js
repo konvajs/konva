@@ -1,7 +1,7 @@
 (function () {
 
     /**
-     * Threshold Filter. Pushes any value above the mid point to 
+     * Threshold Filter. Pushes any value above the mid point to
      *  the max and any value below the mid point to the min.
      *  This affects the alpha channel.
      * @function

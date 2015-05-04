@@ -26,24 +26,24 @@
     };
 
     Konva.Arrow.prototype = {
-        ____init : function(config) {
+        ____init: function(config) {
             // call super constructor
             Konva.Line.call(this, config);
             this.className = 'Arrow';
         },
-        _sceneFunc : function(ctx) {
+        _sceneFunc: function(ctx) {
             var PI2 = Math.PI * 2;
             var points = this.points();
             var n = points.length;
-            var dx = points[n-2] - points[n-4];
-            var dy = points[n-1] - points[n-3];
+            var dx = points[n - 2] - points[n - 4];
+            var dy = points[n - 1] - points[n - 3];
             var radians = (Math.atan2(dy, dx) + PI2) % PI2;
             var length = this.pointerLength();
             var width = this.pointerWidth();
 
             ctx.save();
             ctx.beginPath();
-            ctx.translate(points[n-2], points[n-1]);
+            ctx.translate(points[n - 2], points[n - 1]);
             ctx.rotate(radians);
             ctx.moveTo(0, 0);
             ctx.lineTo(-length, width / 2);

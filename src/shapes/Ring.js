@@ -1,7 +1,6 @@
 (function() {
     // the 0.0001 offset fixes a bug in Chrome 27
     var PIx2 = (Math.PI * 2) - 0.0001;
-    
     /**
      * Ring constructor
      * @constructor
@@ -26,7 +25,7 @@
     };
 
     Konva.Ring.prototype = {
-        _centroid : true,
+        _centroid: true,
         ___init: function(config) {
             // call super constructor
             Konva.Shape.call(this, config);
@@ -63,7 +62,7 @@
                 this.setOuterRadius(height / 2);
             }
         },
-        setOuterRadius : function(val) {
+        setOuterRadius: function(val) {
             this._setAttr('outerRadius', val);
             this.setWidth(val * 2);
             this.setHeight(val * 2);
@@ -88,7 +87,6 @@
      * // set inner radius
      * ring.innerRadius(20);
      */
-     
     Konva.Factory.addGetter(Konva.Ring, 'outerRadius', 0);
     Konva.Factory.addOverloadedGetterSetter(Konva.Ring, 'outerRadius');
 

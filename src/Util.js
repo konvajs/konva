@@ -1,4 +1,6 @@
+/*eslint-disable  eqeqeq, no-cond-assign, no-empty*/
 (function() {
+    'use strict';
     /**
      * Collection constructor.  Collection extends
      *  Array.  This class is used in conjunction with {@link Konva.Container#get}
@@ -445,7 +447,7 @@
             tan: [210, 180, 140],
             teal: [0, 128, 128],
             thistle: [216, 191, 216],
-            transparent: [255,255,255,0],
+            transparent: [255, 255, 255, 0],
             tomato: [255, 99, 71],
             turquoise: [64, 224, 208],
             violet: [238, 130, 238],
@@ -473,16 +475,16 @@
             return !!(obj && obj.constructor && obj.call && obj.apply);
         },
         _isObject: function(obj) {
-            return (!!obj && obj.constructor == Object);
+            return (!!obj && obj.constructor === Object);
         },
         _isArray: function(obj) {
-            return Object.prototype.toString.call(obj) == OBJECT_ARRAY;
+            return Object.prototype.toString.call(obj) === OBJECT_ARRAY;
         },
         _isNumber: function(obj) {
-            return Object.prototype.toString.call(obj) == OBJECT_NUMBER;
+            return Object.prototype.toString.call(obj) === OBJECT_NUMBER;
         },
         _isString: function(obj) {
-            return Object.prototype.toString.call(obj) == OBJECT_STRING;
+            return Object.prototype.toString.call(obj) === OBJECT_STRING;
         },
         // Returns a function, that, when invoked, will only be triggered at most once
         // during a given window of time. Normally, the throttled function will run
@@ -544,7 +546,7 @@
             return canvas;
         },
         isBrowser: function() {
-            return (typeof exports !==  'object');
+            return (typeof exports !== 'object');
         },
         _isInDocument: function(el) {
             while(el = el.parentNode) {
@@ -560,7 +562,7 @@
                 util = Konva.Util,
                 n, val;
 
-            for (n=0; n<len; n++) {
+            for (n = 0; n < len; n++) {
                 val = arr[n];
                 if (util._isNumber(val)) {
                     val = Math.round(val * 1000) / 1000;
@@ -695,7 +697,7 @@
             }
             // rgb string
             else if (color.substr(0, 4) === RGB_PAREN) {
-                rgb = RGB_REGEX.exec(color.replace(/ /g,''));
+                rgb = RGB_REGEX.exec(color.replace(/ /g, ''));
                 return {
                     r: parseInt(rgb[1], 10),
                     g: parseInt(rgb[2], 10),
@@ -713,7 +715,7 @@
         },
         // convert any color string to RGBA object
         // from https://github.com/component/color-parser
-        colorToRGBA : function(str) {
+        colorToRGBA: function(str) {
             str = str || 'black';
             return Konva.Util._namedColorToRBA(str)
                 || Konva.Util._hex3ColorToRGBA(str)
@@ -722,10 +724,10 @@
                 || Konva.Util._rgbaColorToRGBA(str);
         },
         // Parse named css color. Like "green"
-        _namedColorToRBA : function(str) {
+        _namedColorToRBA: function(str) {
             var c = COLORS[str.toLowerCase()];
             if (!c) {
-                return;
+                return null;
             }
             return {
                 r: c[0],
@@ -735,7 +737,7 @@
             };
         },
         // Parse rgb(n, n, n)
-        _rgbColorToRGBA : function(str) {
+        _rgbColorToRGBA: function(str) {
             if (str.indexOf('rgb(') === 0) {
                 str = str.match(/rgb\(([^)]+)\)/)[1];
                 var parts = str.split(/ *, */).map(Number);
@@ -748,7 +750,7 @@
             }
         },
         // Parse rgba(n, n, n, n)
-        _rgbaColorToRGBA : function(str) {
+        _rgbaColorToRGBA: function(str) {
             if (str.indexOf('rgba(') === 0) {
                 str = str.match(/rgba\(([^)]+)\)/)[1];
                 var parts = str.split(/ *, */).map(Number);
@@ -762,7 +764,7 @@
 
         },
         // Parse #nnnnnn
-        _hex6ColorToRGBA : function(str) {
+        _hex6ColorToRGBA: function(str) {
             if ((str[0] === '#') && (str.length === 7)) {
                 return {
                     r: parseInt(str.slice(1, 3), 16),
@@ -773,7 +775,7 @@
             }
         },
         // Parse #nnn
-        _hex3ColorToRGBA : function(str) {
+        _hex3ColorToRGBA: function(str) {
             if ((str[0] === '#') && (str.length === 4)) {
                 return {
                     r: parseInt(str[1] + str[1], 16),
@@ -839,11 +841,11 @@
                 this.constructor = child;
             }
             Ctor.prototype = parent.prototype;
-            var old_proto = child.prototype;
+            var oldProto = child.prototype;
             child.prototype = new Ctor();
-            for (var key in old_proto) {
-                if (old_proto.hasOwnProperty(key)) {
-                    child.prototype[key] = old_proto[key];
+            for (var key in oldProto) {
+                if (oldProto.hasOwnProperty(key)) {
+                    child.prototype[key] = oldProto[key];
                 }
             }
             child.__super__ = parent.prototype;
@@ -874,19 +876,19 @@
                 p2x = x1 + fb * (x2 - x0),
                 p2y = y1 + fb * (y2 - y0);
 
-            return [p1x ,p1y, p2x, p2y];
+            return [p1x, p1y, p2x, p2y];
         },
         _expandPoints: function(p, tension) {
             var len = p.length,
                 allPoints = [],
                 n, cp;
 
-            for (n=2; n<len-2; n+=2) {
-                cp = Konva.Util._getControlPoints(p[n-2], p[n-1], p[n], p[n+1], p[n+2], p[n+3], tension);
+            for (n = 2; n < len - 2; n += 2) {
+                cp = Konva.Util._getControlPoints(p[n - 2], p[n - 1], p[n], p[n + 1], p[n + 2], p[n + 3], tension);
                 allPoints.push(cp[0]);
                 allPoints.push(cp[1]);
                 allPoints.push(p[n]);
-                allPoints.push(p[n+1]);
+                allPoints.push(p[n + 1]);
                 allPoints.push(cp[2]);
                 allPoints.push(cp[3]);
             }

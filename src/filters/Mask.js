@@ -158,7 +158,7 @@
 
 		return maskResult;
 	}
-	
+
 	/**
 	 * Mask Filter
 	 * @function
@@ -186,7 +186,7 @@
 
 			// Apply mask
 			applyMask(imageData, mask);
-			
+
 			// todo : Update hit region function according to mask
 		}
 

@@ -1,5 +1,5 @@
-/*jshint unused:false */
 (function() {
+    'use strict';
     // CONSTANTS
     var STAGE = 'Stage',
         STRING = 'string',
@@ -168,7 +168,6 @@
                 obj = {};
             }
             obj.container = Konva.document.createElement(DIV);
-            
             return Konva.Container.prototype.clone.call(this, obj);
         },
         /**
@@ -330,7 +329,6 @@
                 this.content.style.height = height + PX;
 
                 this.bufferCanvas.setSize(width, height);
-//                this.bufferCanvas2.setSize(width, height);
                 this.bufferHitCanvas.setSize(width, height);
 
                 // set layer dimensions
@@ -354,7 +352,7 @@
                 for (var i = 0; i < arguments.length; i++) {
                     this.add(arguments[i]);
                 }
-                return;
+                return this;
             }
             Konva.Container.prototype.add.call(this, layer);
             layer._setCanvasSize(this.width(), this.height());
@@ -407,18 +405,16 @@
             }
         },
         _mousemove: function(evt) {
-        
             // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
             if (Konva.UA.ieMobile) {
                 return this._touchmove(evt);
             }
-            
             // workaround fake mousemove event in chrome browser https://code.google.com/p/chromium/issues/detail?id=161464
             if ((typeof evt.webkitMovementX !== 'undefined' || typeof evt.webkitMovementY !== 'undefined') && evt.webkitMovementY === 0 && evt.webkitMovementX === 0) {
-                return;
+                return null;
             }
             if (Konva.UA.mobile) {
-                return;
+                return null;
             }
             this._setPointerPosition(evt);
             var dd = Konva.DD, shape;
@@ -466,12 +462,10 @@
             }
         },
         _mousedown: function(evt) {
-        
-            // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event       
+            // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
             if (Konva.UA.ieMobile) {
                 return this._touchstart(evt);
             }
-            
             if (!Konva.UA.mobile) {
                 this._setPointerPosition(evt);
                 var shape = this.getIntersection(this.getPointerPosition());
@@ -495,7 +489,7 @@
         },
         _mouseup: function(evt) {
 
-            // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event       
+            // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
             if (Konva.UA.ieMobile) {
                 return this._touchend(evt);
             }
@@ -725,15 +719,12 @@
             this.content.setAttribute('role', 'presentation');
             container.appendChild(this.content);
 
-            // the buffer canvas pixel ratio must be 1 because it is used as an 
+            // the buffer canvas pixel ratio must be 1 because it is used as an
             // intermediate canvas before copying the result onto a scene canvas.
             // not setting it to 1 will result in an over compensation
             this.bufferCanvas = new Konva.SceneCanvas({
                 pixelRatio: 1
             });
-//            this.bufferCanvas2 = new Konva.SceneCanvas({
-//                pixelRatio: 1
-//            });
             this.bufferHitCanvas = new Konva.HitCanvas();
 
             this._resizeDOM();
@@ -753,7 +744,7 @@
         cache: function() {
             Konva.Util.warn('Cache function is not allowed for stage. You may use cache only for layers, groups and shapes.');
         },
-        clearCache : function() {
+        clearCache: function() {
         }
     });
     Konva.Util.extend(Konva.Stage, Konva.Container);
@@ -771,7 +762,6 @@
      * @example
      * // get container
      * var container = stage.container();
-     * 
      * // set container
      * var container = document.createElement('div');
      * body.appendChild(container);

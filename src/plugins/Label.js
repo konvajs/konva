@@ -22,7 +22,7 @@
      * // create label
      * var label = new Konva.Label({
      *   x: 100,
-     *   y: 100, 
+     *   y: 100,
      *   draggable: true
      * });
      *
@@ -60,7 +60,7 @@
 
             Konva.Group.call(this, config);
             this.className = LABEL;
-            
+
             this.on('add.konva', function(evt) {
                 that._addListeners(evt.child);
                 that._sync();
@@ -187,7 +187,7 @@
                 cornerRadius = this.getCornerRadius();
 
             context.beginPath();
-            context.moveTo(0,0);
+            context.moveTo(0, 0);
 
             if (pointerDirection === UP) {
                 context.lineTo((width - pointerWidth)/2, 0);
@@ -201,13 +201,13 @@
                 context.lineTo(width - cornerRadius, 0);
                 context.arc(width - cornerRadius, cornerRadius, cornerRadius, Math.PI * 3 / 2, 0, false);
             }
-            
+
             if (pointerDirection === RIGHT) {
                 context.lineTo(width, (height - pointerHeight)/2);
                 context.lineTo(width + pointerWidth, height/2);
                 context.lineTo(width, (height + pointerHeight)/2);
             }
-            
+
             if(!cornerRadius) {
                 context.lineTo(width, height);
             } else {
@@ -220,7 +220,7 @@
                 context.lineTo(width/2, height + pointerHeight);
                 context.lineTo((width - pointerWidth)/2, height);
             }
-            
+
             if(!cornerRadius) {
                 context.lineTo(0, height);
             } else {
@@ -233,7 +233,7 @@
                 context.lineTo(-1 * pointerWidth, height/2);
                 context.lineTo(0, (height - pointerHeight)/2);
             }
-            
+
             if(cornerRadius) {
                 context.lineTo(0, cornerRadius);
                 context.arc(cornerRadius, cornerRadius, cornerRadius, Math.PI, Math.PI * 3 / 2, false);
@@ -242,7 +242,7 @@
             context.closePath();
             context.fillStrokeShape(this);
         },
-        getSelfRect : function() {
+        getSelfRect: function() {
             var x = 0,
                 y = 0,
                 pointerWidth = this.getPointerWidth(),
@@ -254,20 +254,20 @@
             if (direction === UP) {
                 y -= pointerHeight;
                 height += pointerHeight;
-            }  else if (direction === DOWN) {
+            } else if (direction === DOWN) {
                 height += pointerHeight;
             } else if (direction === LEFT) {
                 // ARGH!!! I have no idea why should I used magic 1.5!!!!!!!!!
                 x -= pointerWidth * 1.5;
                 width += pointerWidth;
             } else if (direction === RIGHT) {
-                width += pointerWidth  * 1.5;
+                width += pointerWidth * 1.5;
             }
             return {
-                x : x,
-                y : y,
-                width : width,
-                height : height
+                x: x,
+                y: y,
+                width: width,
+                height: height
             };
         }
     };

@@ -71,7 +71,7 @@
             if (!config.fillLinearGradientColorStops && !config.fillRadialGradientColorStops) {
                 config.fill = config.fill || 'black';
             }
-            
+
             if (config.width === undefined) {
                 config.width = AUTO;
             }
@@ -229,7 +229,7 @@
                 currentHeightPx = 0,
                 wrap = this.getWrap(),
                 shouldWrap = wrap !== NONE,
-                wrapAtWord = wrap !==  CHAR && shouldWrap;
+                wrapAtWord = wrap !== CHAR && shouldWrap;
 
             this.textArr = [];
             dummyContext.save();
@@ -406,7 +406,7 @@
      * @example
      * // get padding
      * var padding = text.padding();
-     * 
+     *
      * // set padding to 10 pixels
      * text.padding(10);
      */
@@ -440,7 +440,7 @@
      * @memberof Konva.Text.prototype
      * @param {Number} lineHeight
      * @returns {Number}
-     * @example 
+     * @example
      * // get line height
      * var lineHeight = text.lineHeight();
      *
@@ -478,7 +478,7 @@
      * @example
      * // get text
      * var text = text.text();
-     * 
+     *
      * // set text
      * text.text('Hello world!');
      */

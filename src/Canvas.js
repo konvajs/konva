@@ -1,8 +1,9 @@
 (function() {
+    'use strict';
     // calculate pixel ratio
     var canvas = Konva.Util.createCanvasElement(),
         context = canvas.getContext('2d'),
-        _pixelRatio = (function() {
+        _pixelRatio = (function(){
             var devicePixelRatio = Konva.window.devicePixelRatio || 1,
             backingStoreRatio = context.webkitBackingStorePixelRatio
                 || context.mozBackingStorePixelRatio
@@ -23,8 +24,8 @@
      * @param {Number} config.height
      * @param {Number} config.pixelRatio KonvaJS automatically handles pixel ratio adjustments in order to render crisp drawings
      *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
-     *  of 1.  Some high end tablets and phones, like iPhones and iPads (not the mini) have a device pixel ratio 
-     *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel 
+     *  of 1.  Some high end tablets and phones, like iPhones and iPads (not the mini) have a device pixel ratio
+     *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel
      *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
      *  specified, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
      *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
@@ -73,10 +74,10 @@
          * get pixel ratio
          * @method
          * @memberof Konva.Canvas.prototype
-         * @param {Number} pixelRatio KonvaJS automatically handles pixel ratio adustments in order to render crisp drawings 
+         * @param {Number} pixelRatio KonvaJS automatically handles pixel ratio adustments in order to render crisp drawings
          *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
          *  of 1.  Some high end tablets and phones, like iPhones and iPads have a device pixel ratio
-         *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel 
+         *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel
          *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
          *  specificed, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
          *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.

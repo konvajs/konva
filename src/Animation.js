@@ -1,7 +1,8 @@
-(function() {
+(function(Konva) {
+    'use strict';
     var BATCH_DRAW_STOP_TIME_DIFF = 500;
 
-    var now =(function() {
+    var now = (function() {
         if (Konva.root.performance && Konva.root.performance.now) {
             return function() {
                 return Konva.root.performance.now();
@@ -14,7 +15,11 @@
         }
     })();
 
-    var RAF = (function() {
+    function FRAF(callback) {
+        setTimeout(callback, 1000 / 60);
+    }
+
+    var RAF = (function(){
         return Konva.root.requestAnimationFrame
             || Konva.root.webkitRequestAnimationFrame
             || Konva.root.mozRequestAnimationFrame
@@ -23,14 +28,12 @@
             || FRAF;
     })();
 
-    function FRAF(callback) {
-        setTimeout(callback, 1000 / 60);
-    }
+
 
     function requestAnimFrame() {
         return RAF.apply(Konva.root, arguments);
     }
-    
+
     /**
      * Animation constructor.  A stage is used to contain multiple layers and handle
      * @constructor
@@ -110,20 +113,13 @@
          */
         addLayer: function(layer) {
             var layers = this.layers,
-                len, n;
+                len = layers.length, n;
 
-            if (layers) {
-                len = layers.length;
-
-                // don't add the layer if it already exists
-                for (n = 0; n < len; n++) {
-                    if (layers[n]._id === layer._id) {
-                        return false;
-                    }
+            // don't add the layer if it already exists
+            for (n = 0; n < len; n++) {
+                if (layers[n]._id === layer._id){
+                    return false;
                 }
-            }
-            else {
-                this.layers = [];
             }
 
             this.layers.push(layer);
@@ -228,13 +224,14 @@
             } else {
                 needRedraw = true;
             }
-            if (needRedraw) {
-                for (i = 0; i < layersLen; i++) {
-                    layer = layers[i];
+            if (!needRedraw) {
+                continue;
+            }
+            for (i = 0; i < layersLen; i++) {
+                layer = layers[i];
 
-                    if (layer._id !== undefined) {
-                        layerHash[layer._id] = layer;
-                    }
+                if (layer._id !== undefined) {
+                    layerHash[layer._id] = layer;
                 }
             }
         }
@@ -302,4 +299,4 @@
             layer.batchDraw();
         });
     };
-})(this);
+})(Konva);

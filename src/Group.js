@@ -1,5 +1,5 @@
 (function() {
-
+    'use strict';
     /**
      * Group constructor.  Groups are used to contain shapes or other groups.
      * @constructor

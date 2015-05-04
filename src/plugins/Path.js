@@ -1,3 +1,4 @@
+/*eslint-disable  no-shadow*/
 (function () {
     /**
      * Path constructor.
@@ -90,7 +91,7 @@
                 context.strokeShape(this);
             }
         },
-        getSelfRect : function() {
+        getSelfRect: function() {
             var points = [];
             this.dataArray.forEach(function(data) {
                 points = points.concat(data.points);
@@ -99,7 +100,7 @@
             var maxX = points[0];
             var minY = points[0];
             var maxY = points[0];
-            var x,y;
+            var x, y;
             for (var i = 0; i<points.length / 2; i++) {
                 x = points[i * 2]; y = points[i * 2 + 1];
                 minX = Math.min(minX, x);
@@ -108,10 +109,10 @@
                 maxY = Math.max(maxY, y);
             }
             return {
-                x : Math.round(minX),
-                y : Math.round(minY),
-                width : Math.round(maxX - minX),
-                height : Math.round(maxY - minY)
+                x: Math.round(minX),
+                y: Math.round(minY),
+                width: Math.round(maxX - minX),
+                height: Math.round(maxY - minY)
             };
         }
     };
@@ -329,10 +330,10 @@
                         cpx += dx;
                         cpy += dy;
                         cmd = 'M';
-                        // After closing the path move the current position 
-                        // to the the first point of the path (if any). 
+                        // After closing the path move the current position
+                        // to the the first point of the path (if any).
                         if(ca.length>2 && ca[ca.length-1].command==='z'){
-                            for(var idx=ca.length-2;idx>=0;idx--){
+                            for(var idx=ca.length-2; idx>=0; idx--){
                                 if(ca[idx].command==='M'){
                                     cpx=ca[idx].points[0]+dx;
                                     cpy=ca[idx].points[1]+dy;

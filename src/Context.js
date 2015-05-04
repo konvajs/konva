@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
     var COMMA = ',',
         OPEN_PAREN = '(',
         CLOSE_PAREN = ')',
@@ -118,7 +119,7 @@
                 str = '',
                 n, trace, method, args;
 
-            for (n=0; n<len; n++) {
+            for (n = 0; n < len; n++) {
                 trace = traceArr[n];
                 method = trace.method;
 
@@ -162,7 +163,7 @@
         _trace: function(str) {
             var traceArr = this.traceArr,
                 len;
- 
+
             traceArr.push(str);
             len = traceArr.length;
 
@@ -200,7 +201,7 @@
          */
         clear: function(bounds) {
             var canvas = this.getCanvas();
-            
+
             if (bounds) {
                 this.clearRect(bounds.x || 0, bounds.y || 0, bounds.width || 0, bounds.height || 0);
             }
@@ -409,12 +410,12 @@
                             method: methodName,
                             args: args
                         });
-                 
+
                         return ret;
                     };
             };
             // methods
-            for (n=0; n<len; n++) {
+            for (n = 0; n < len; n++) {
                 func(CONTEXT_METHODS[n]);
             }
 
@@ -431,11 +432,11 @@
 
     CONTEXT_PROPERTIES.forEach(function(prop) {
         Object.defineProperty(Konva.Context.prototype, prop, {
-            get : function () {
+            get: function () {
                 return this._context[prop];
             },
-            set : function (val) {
-                return this._context[prop] = val;
+            set: function (val) {
+                this._context[prop] = val;
             }
         });
     });
@@ -458,13 +459,11 @@
             shape._fillFunc(this);
         },
         _fillPattern: function(shape) {
-            var fillPatternImage = shape.getFillPatternImage(),
-                fillPatternX = shape.getFillPatternX(),
+            var fillPatternX = shape.getFillPatternX(),
                 fillPatternY = shape.getFillPatternY(),
                 fillPatternScale = shape.getFillPatternScale(),
                 fillPatternRotation = Konva.getAngle(shape.getFillPatternRotation()),
-                fillPatternOffset = shape.getFillPatternOffset(),
-                fillPatternRepeat = shape.getFillPatternRepeat();
+                fillPatternOffset = shape.getFillPatternOffset();
 
             if(fillPatternX || fillPatternY) {
                 this.translate(fillPatternX || 0, fillPatternY || 0);
@@ -479,7 +478,7 @@
                 this.translate(-1 * fillPatternOffset.x, -1 * fillPatternOffset.y);
             }
 
-            this.setAttr('fillStyle', this.createPattern(fillPatternImage, fillPatternRepeat || 'repeat'));
+            this.setAttr('fillStyle', this.createPattern(shape.getFillPatternImage(), shape.getFillPatternRepeat() || 'repeat'));
             this.fill();
         },
         _fillLinearGradient: function(shape) {
@@ -504,7 +503,7 @@
                 endRadius = shape.getFillRadialGradientEndRadius(),
                 colorStops = shape.getFillRadialGradientColorStops(),
                 grd = this.createRadialGradient(start.x, start.y, startRadius, end.x, end.y, endRadius);
-           
+
             // build color stops
             for(var n = 0; n < colorStops.length; n += 2) {
                 grd.addColorStop(colorStops[n], colorStops[n + 1]);
@@ -574,7 +573,7 @@
                     this.setAttr('shadowColor', 'rgba(0,0,0,0)');
                 }
                 shape._strokeFunc(this);
-                
+
                 if (!strokeScaleEnabled) {
                     this.restore();
                 }
@@ -596,7 +595,6 @@
             this.setAttr('shadowBlur', blur);
             this.setAttr('shadowOffsetX', offset.x * scaleX);
             this.setAttr('shadowOffsetY', offset.y * scaleY);
-        
         }
     };
     Konva.Util.extend(Konva.SceneContext, Konva.Context);

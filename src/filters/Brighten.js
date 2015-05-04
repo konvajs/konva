@@ -1,6 +1,6 @@
 (function() {
     /**
-     * Brighten Filter.  
+     * Brighten Filter.
      * @function
      * @memberof Konva.Filters
      * @param {Object} imageData
@@ -27,7 +27,7 @@
 
     Konva.Factory.addGetterSetter(Konva.Node, 'brightness', 0, null, Konva.Factory.afterSetFilter);
     /**
-    * get/set filter brightness.  The brightness is a number between -1 and 1.&nbsp; Positive values 
+    * get/set filter brightness.  The brightness is a number between -1 and 1.&nbsp; Positive values
     *  brighten the pixels and negative values darken them. Use with {@link Konva.Filters.Brighten} filter.
     * @name brightness
     * @method

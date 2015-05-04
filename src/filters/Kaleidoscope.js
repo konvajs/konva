@@ -1,8 +1,7 @@
-/*jshint newcap:false */
 (function () {
 
   /*
-   * ToPolar Filter. Converts image data to polar coordinates. Performs 
+   * ToPolar Filter. Converts image data to polar coordinates. Performs
    *  w*h*4 pixel reads and w*h pixel writes. The r axis is placed along
    *  what would be the y axis and the theta axis along the x axis.
    * @function
@@ -17,7 +16,7 @@
    *  default is in the middle
    */
 
-    var ToPolar = function(src,dst,opt){
+    var ToPolar = function(src, dst, opt){
 
         var srcPixels = src.data,
             dstPixels = dst.data,
@@ -25,7 +24,7 @@
             ySize = src.height,
             xMid = opt.polarCenterX || xSize/2,
             yMid = opt.polarCenterY || ySize/2,
-            i, x, y, r=0,g=0,b=0,a=0;
+            i, x, y, r=0, g=0, b=0, a=0;
 
         // Find the largest radius
         var rad, rMax = Math.sqrt( xMid*xMid + yMid*yMid );
@@ -86,7 +85,7 @@
      *  0 is no rotation, 360 degrees is a full rotation
      */
 
-    var FromPolar = function(src,dst,opt){
+    var FromPolar = function(src, dst, opt){
 
         var srcPixels = src.data,
             dstPixels = dst.data,
@@ -94,7 +93,7 @@
             ySize = src.height,
             xMid = opt.polarCenterX || xSize/2,
             yMid = opt.polarCenterY || ySize/2,
-            i, x, y, dx, dy, r=0,g=0,b=0,a=0;
+            i, x, y, dx, dy, r=0, g=0, b=0, a=0;
 
 
         // Find the largest radius
@@ -122,7 +121,7 @@
                 dx = x - xMid;
                 dy = y - yMid;
                 radius = Math.sqrt(dx*dx + dy*dy)*rSize/rMax;
-                theta = (Math.atan2(dy,dx)*180/Math.PI + 360 + phaseShift)%360;
+                theta = (Math.atan2(dy, dx)*180/Math.PI + 360 + phaseShift)%360;
                 theta = theta*tSize/360;
                 x1 = Math.floor(theta);
                 y1 = Math.floor(radius);
@@ -150,7 +149,7 @@
     var tempCanvas = Konva.Util.createCanvasElement();
 
     /*
-     * Kaleidoscope Filter. 
+     * Kaleidoscope Filter.
      * @function
      * @name Kaleidoscope
      * @author ippo615
@@ -165,27 +164,27 @@
         var xSize = imageData.width,
             ySize = imageData.height;
 
-        var x,y,xoff,i, r,g,b,a, srcPos, dstPos;
+        var x, y, xoff, i, r, g, b, a, srcPos, dstPos;
         var power = Math.round( this.kaleidoscopePower() );
         var angle = Math.round( this.kaleidoscopeAngle() );
         var offset = Math.floor(xSize*(angle%360)/360);
 
-        if( power < 1 ){return;}
+        if( power < 1 ){return; }
 
         // Work with our shared buffer canvas
         tempCanvas.width = xSize;
         tempCanvas.height = ySize;
-        var scratchData = tempCanvas.getContext('2d').getImageData(0,0,xSize,ySize);
+        var scratchData = tempCanvas.getContext('2d').getImageData(0, 0, xSize, ySize);
 
         // Convert thhe original to polar coordinates
         ToPolar( imageData, scratchData, {
-            polarCenterX:xSize/2,
-            polarCenterY:ySize/2
+            polarCenterX: xSize/2,
+            polarCenterY: ySize/2
         });
 
-        // Determine how big each section will be, if it's too small 
+        // Determine how big each section will be, if it's too small
         // make it bigger
-        var minSectionSize = xSize / Math.pow(2,power);
+        var minSectionSize = xSize / Math.pow(2, power);
         while( minSectionSize <= 8){
             minSectionSize = minSectionSize*2;
             power -= 1;
@@ -241,7 +240,7 @@
         }
 
         // Convert back from polar coordinates
-        FromPolar(scratchData,imageData,{polarRotation:0});
+        FromPolar(scratchData, imageData, {polarRotation: 0});
     };
 
     /**

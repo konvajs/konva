@@ -41,6 +41,13 @@ suite('Circle', function(){
     assert.equal(trace, 'clearRect(0,0,578,200);clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
   });
 
+  test('clone', function() {
+      var circle = new Konva.Circle();
+      var clone = circle.clone();
+      assert.equal(clone instanceof  Konva.Circle, true);
+      assert.equal(clone.className, 'Circle');
+  });
+
   // ======================================================
   test('add circle with pattern fill', function(done) {
       var imageObj = new Image();

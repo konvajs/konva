@@ -33,6 +33,7 @@
 /*jshint -W079, -W020*/
 var Konva = {};
 (function(root) {
+    'use strict';
     var PI_OVER_180 = Math.PI / 180;
 
     Konva = {
@@ -71,7 +72,7 @@ var Konva = {};
          * @example
          * Konva.dragDistance = 10;
          */
-        dragDistance : 0,
+        dragDistance: 0,
         /**
          * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
          * @property angleDeg
@@ -91,7 +92,7 @@ var Konva = {};
          * @example
          * Konva.showWarnings = false;
          */
-        showWarnings : true,
+        showWarnings: true,
 
 
 
@@ -153,19 +154,21 @@ var Konva = {};
             }
         },
         _removeName: function(name, _id) {
-            if(name !== undefined) {
-                var nodes = this.names[name];
-                if(nodes !== undefined) {
-                    for(var n = 0; n < nodes.length; n++) {
-                        var no = nodes[n];
-                        if(no._id === _id) {
-                            nodes.splice(n, 1);
-                        }
-                    }
-                    if(nodes.length === 0) {
-                        delete this.names[name];
-                    }
+            if(!name) {
+                return;
+            }
+            var nodes = this.names[name];
+            if(!nodes) {
+                return;
+            }
+            for(var n = 0; n < nodes.length; n++) {
+                var no = nodes[n];
+                if(no._id === _id) {
+                    nodes.splice(n, 1);
                 }
+            }
+            if(nodes.length === 0) {
+                delete this.names[name];
             }
         },
         getAngle: function(angle) {
@@ -184,7 +187,7 @@ var Konva = {};
                 // adding mobile flag as well
                 mobile = !!(userAgent.match(/Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i)),
                 ieMobile = !!(userAgent.match(/IEMobile/i));
-                
+
             return {
                 browser: match[ 1 ] || '',
                 version: match[ 2 ] || '0',
@@ -194,12 +197,12 @@ var Konva = {};
                 ieMobile: ieMobile  // If this is true (i.e., WP8), then Konva touch events are executed instead of equivalent Konva mouse events
             };
         },
-        // user agent  
+        // user agent
         UA: undefined
     };
 
     Konva.UA = Konva._parseUA((root.navigator && root.navigator.userAgent) || '');
-    
+
 })(this);
 
 // Uses Node, AMD or browser globals to create a module.
@@ -220,6 +223,7 @@ var Konva = {};
 
 // if the module has no dependencies, the above pattern can be simplified to
 ( function(root, factory) {
+    'use strict';
     if( typeof exports === 'object') {
         var KonvaJS = factory();
         // runtime-check for browserify and nw.js (node-webkit)
@@ -250,8 +254,8 @@ var Konva = {};
     Konva.document = document;
     Konva.window = window;
     Konva.root = root;
-
 }(this, function() {
+    'use strict';
     // Just return a value to define the module export.
     // This example returns an object, but the module
     // can return a function as the exported value.

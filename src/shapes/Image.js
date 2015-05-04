@@ -113,7 +113,7 @@
      * @method
      * @name crop
      * @memberof Konva.Image.prototype
-     * @param {Object} crop 
+     * @param {Object} crop
      * @param {Number} crop.x
      * @param {Number} crop.y
      * @param {Number} crop.width
