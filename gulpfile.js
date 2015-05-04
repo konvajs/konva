@@ -89,12 +89,15 @@ function build() {
         .pipe(replace('@@date', new Date().toDateString()));
 }
 
-// Basic usage
+
+// create development build
 gulp.task('dev-build', function() {
         return build()
         .pipe(gulp.dest('./dist/'));
 });
 
+
+// create usual build konva.js and konva.min.js
 gulp.task('build', function() {
     return build()
         .pipe(rename('konva.js'))
@@ -106,16 +109,19 @@ gulp.task('build', function() {
         .pipe(gulp.dest('./'));
 });
 
+// tun tests
 gulp.task('test', ['dev-build'], function () {
     return gulp
         .src('test/runner.html')
         .pipe(mochaPhantomJS());
 });
 
+// local server for better development
 gulp.task('server', function() {
     connect.server();
 });
 
+// lint files
 gulp.task('lint', function() {
     return gulp.src('./src/**/*.js')
         .pipe(eslint({
@@ -129,6 +135,7 @@ gulp.task('lint', function() {
         .pipe(eslint.failOnError());
 });
 
+// check code for duplication
 gulp.task('inspect', function() {
   return gulp.src('./src/**/*.js')
     .pipe(jscpd({
@@ -137,6 +144,8 @@ gulp.task('inspect', function() {
     }));
 });
 
+
+// generate documentation
 gulp.task('api', function() {
     return gulp.src('./src/**/*.js')
         .pipe(jsdoc('./api'));
