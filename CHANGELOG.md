@@ -15,8 +15,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - context wrapper is more capable with native context.
   So you can use `context.fillStyle` property in your `sceneFunc` without accessing native context.
-- `toDataURL` now handle pixelRatio. So image for stage 400x400 for retina will be 800x800.
+- `toDataURL` now handle pixelRatio. you can pass `config.pixelRatio` argument
 - Correct `clone()` for custom nodes
+- `FastLayer` now can have transforms
 
 ### Added
 - new `Konva.Image.fromURL` method
