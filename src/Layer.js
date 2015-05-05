@@ -178,13 +178,6 @@
 
             return this;
         },
-        // the apply transform method is handled by the Layer and FastLayer class
-        // because it is up to the layer to decide if an absolute or relative transform
-        // should be used
-        _applyTransform: function(shape, context, top) {
-            var m = shape.getAbsoluteTransform(top).getMatrix();
-            context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
-        },
         drawHit: function(can, top) {
             var layer = this.getLayer(),
                 canvas = can || (layer && layer.hitCanvas);

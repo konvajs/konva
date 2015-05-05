@@ -21,6 +21,31 @@ suite('FastLayer', function() {
 
     });
 
+    test('transform', function() {
+      var stage = addStage();
+
+      var fastLayer = new Konva.FastLayer({
+        x: stage.width() / 2,
+        y: stage.height() / 2
+      });
+
+      var layer = new Konva.Layer({
+        x: stage.width() / 2,
+        y: stage.height() / 2
+      });
+
+      var circle = new Konva.Circle({
+          radius: 70,
+          fill: 'green'
+      });
+
+      fastLayer.add(circle);
+      layer.add(circle.clone());
+      stage.add(layer, fastLayer);
+
+      compareLayers(fastLayer, layer);
+    });
+
 test('cache shape on fast layer', function(){
     var stage = addStage();
     var layer = new Konva.FastLayer();
