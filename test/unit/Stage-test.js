@@ -60,7 +60,7 @@ suite('Stage', function() {
     test('stage instantiation should clear container', function() {
         var container = Konva.document.createElement('div');
         var dummy = Konva.document.createElement('p');
-        
+
         container.appendChild(dummy);
         konvaContainer.appendChild(container);
 
@@ -559,5 +559,37 @@ suite('Stage', function() {
             });
         };
         image.src = 'assets/lion.png';
+    });
+
+    test('check hit graph with stage listeting property', function() {
+      var stage = addStage();
+      var layer = new Konva.Layer();
+      stage.add(layer);
+      showHit(layer);
+      var circle = new Konva.Circle({
+        fill : 'green',
+        radius: 50
+      });
+      layer.add(circle);
+
+      var pos = {
+        x: stage.width() / 2,
+        y: stage.height() /2
+      };
+      circle.position(pos);
+      stage.draw();
+
+      // try to detect circle via hit graph
+      assert.equal(stage.getIntersection(pos), circle, 'has circle');
+
+      // disable hit graph
+      stage.listening(false);
+      stage.draw();
+      assert.equal(!!stage.getIntersection(pos), false, 'no circle');
+
+      // enable it again
+      stage.listening(true);
+      stage.draw();
+      assert.equal(stage.getIntersection(pos), circle, 'circle again');
     });
 });

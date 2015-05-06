@@ -217,5 +217,4 @@ suite('Tween', function() {
         }, 50);
     });
 
-
 });
