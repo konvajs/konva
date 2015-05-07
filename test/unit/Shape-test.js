@@ -1,60 +1,4 @@
 suite('Shape', function() {
-
-    // ======================================================
-    test('shape color components', function() {
-        var stage = addStage();
-        var layer = new Konva.Layer();
-        var rect = new Konva.Rect({
-            x: 200,
-            y: 90,
-            width: 100,
-            height: 50,
-            fillGreen: 128,
-            strokeRed: 255,
-            draggable: true
-        });
-
-        layer.add(rect);
-        stage.add(layer);
-
-        assert.equal(rect.getFillRed(), 0, 'rect fill r should be 0');
-        assert.equal(rect.getFillGreen(), 128, 'rect fill g should be 128');
-        assert.equal(rect.getFillBlue(), 0, 'rect fill b should be 0');
-
-        assert.equal(rect.getStrokeRed(), 255, 'rect stroke r should be 255');
-        assert.equal(rect.getStrokeGreen(), 0, 'rect stroke g should be 0');
-        assert.equal(rect.getStrokeBlue(), 0, 'rect stroke b should be 0');
-
-        rect.fillRed(130);
-        assert.equal(rect.fillRed(), 130, 'rect fill r should be 130');
-
-        rect.fillGreen(140);
-        assert.equal(rect.fillGreen(), 140, 'rect fill g should be 140');
-
-        rect.fillBlue(150);
-        assert.equal(rect.fillBlue(), 150, 'rect fill b should be 150');
-
-        rect.fillRed(0);
-        rect.fillGreen(128);
-        rect.fillBlue(0);
-
-        // var tween = new Konva.Tween({
-        //     node: rect,
-        //     fillGreen: 0,
-        //     fillRed: 255,
-        //     duration: 2,
-        //     fillAlpha: 0
-        // });
-
-        // tween.play();
-
-
-
-        layer.draw();
-
-        //console.log(layer.getContext().getTrace());
-    });
-
     // ======================================================
     test('test intersects()', function() {
         var stage = addStage();
@@ -104,8 +48,7 @@ suite('Shape', function() {
         var stage = addStage();
         var layer = new Konva.Layer();
         var shape = new Konva.Shape({
-            drawFunc: function(context) {
-
+            sceneFunc: function(context) {
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(100, 0);
@@ -142,7 +85,7 @@ suite('Shape', function() {
         var stage = addStage();
         var layer = new Konva.Layer();
         var shape = new Konva.Shape({
-            drawFunc: function(context) {
+            sceneFunc: function(context) {
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(100, 0);
@@ -760,14 +703,6 @@ suite('Shape', function() {
     rect.stroke('blue');
     assert.equal(rect.stroke(), 'blue');
 
-    rect.strokeRed(255);
-    assert.equal(rect.strokeRed(), 255);
-
-    rect.strokeGreen(20);
-    assert.equal(rect.strokeGreen(), 20);
-
-    rect.strokeBlue(30);
-    assert.equal(rect.strokeBlue(), 30);
 
     rect.lineJoin('bevel');
     assert.equal(rect.lineJoin(), 'bevel');
@@ -787,7 +722,7 @@ suite('Shape', function() {
     rect.dash([1]);
     assert.equal(rect.dash()[0], 1);
 
-    // NOTE: skipping the rest because it would take hours to test all possible methods.  
+    // NOTE: skipping the rest because it would take hours to test all possible methods.
     // This should hopefully be enough to test Factor overloaded methods
 
 
@@ -844,27 +779,12 @@ suite('Shape', function() {
       layer.hitCanvas._canvas.style.border='2px solid black';
   });
 
-  test('back compat', function() {
-    assert.notEqual(Konva.Shape.prototype.dashArray, undefined);
-    assert.notEqual(Konva.Shape.prototype.setDashArray, undefined);
-    assert.notEqual(Konva.Shape.prototype.getDashArray, undefined);
-  });
-
   test('test defaults', function() {
     var shape = new Konva.Shape();
 
-    assert.equal(shape.strokeRed(), 0);
-    assert.equal(shape.strokeGreen(), 0);
-    assert.equal(shape.strokeBlue(), 0);
     assert.equal(shape.strokeWidth(), 2);
-    assert.equal(shape.shadowRed(), 0);
-    assert.equal(shape.shadowGreen(), 0);
-    assert.equal(shape.shadowBlue(), 0);
     assert.equal(shape.shadowOffsetX(), 0);
     assert.equal(shape.shadowOffsetY(), 0);
-    assert.equal(shape.fillRed(), 0);
-    assert.equal(shape.fillGreen(), 0);
-    assert.equal(shape.fillBlue(), 0);
     assert.equal(shape.fillPatternX(), 0);
     assert.equal(shape.fillPatternY(), 0);
     assert.equal(shape.fillRadialGradientStartRadius(), 0);
@@ -890,7 +810,7 @@ suite('Shape', function() {
     assert.equal(shape.fillRadialGradientEndPointY(), 0);
     assert.equal(shape.fillPatternRotation(), 0);
   });
-    
+
     // ======================================================
     test.skip('hit graph when shape cached before adding to Layer', function() {
         var stage = addStage();

@@ -21,6 +21,9 @@
     },
     "globals": {
 	    "Konva" : false,
-        "define": false
+      "define": false,
+      "test": false,
+      "assert": false,
+      "addStage": false
 	}
 }

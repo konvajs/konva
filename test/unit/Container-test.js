@@ -1575,5 +1575,4 @@ suite('Container', function() {
         layer.add(circle1, circle2, circle3);
         assert.equal(layer.getChildren().length, 3, 'layer has exactly three children');
     });
-
 });

@@ -22,6 +22,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - new `Konva.Image.fromURL` method
 
+### Deprecated
+- `fillRed`, `fillGreen`, `fillBlue`, `fillAlpha` are deprecated. Use `fill` instead.
+- `strokeRed`, `strokeGreen`, `strokeBlue`, `strokeAlpha` are deprecated. Use `stroke` instead.
+- `shadowRed`, `shadowGreen`, `shadowBlue`, `shadowAlpha` are deprecated. Use `shadow` instead.
+- `dashArray` is deprecated. Use `dash` instead.
+- `drawFunc` is deprecated. Use `sceneFunc` instead.
+- `drawFunc` is deprecated. Use `hitFunc` instead.
+- `rotateDeg` is deprecated. Use `rotate` instead.
+
+
 ## [0.9.0][2015-02-27]
 
 ### Fixed

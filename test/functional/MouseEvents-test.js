@@ -2,7 +2,7 @@ suite('MouseEvents', function() {
 
     // NOTE: disable throttling so these tests can run synchronously
     Konva.enableThrottling = false;
-    
+
     // ======================================================
     test('stage content mouse events', function(done) {
 
@@ -977,7 +977,7 @@ suite('MouseEvents', function() {
             y:0,
             width: 70,
             height: 70,
-            rotationDeg: 45,
+            rotation: 45,
             fill: 'green',
             id : 'greenRect'
         });
@@ -1032,7 +1032,7 @@ suite('MouseEvents', function() {
         group2.on('mouseout', function() {
             group2Mouseout +=1;
         });
-        
+
         var top = stage.content.getBoundingClientRect().top;
 
         stage._mousemove({
@@ -1172,7 +1172,7 @@ suite('MouseEvents', function() {
         Konva.DD._endDragAfter({dragEndNode:circle});
 
         assert.equal(e.toString(), 'circle,group1,group2,layer,stage', 'problem with event bubbling');
-  
+
     });
 
     // ======================================================

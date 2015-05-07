@@ -567,7 +567,7 @@ suite('Stage', function() {
       stage.add(layer);
       showHit(layer);
       var circle = new Konva.Circle({
-        fill : 'green',
+        fill: 'green',
         radius: 50
       });
       layer.add(circle);

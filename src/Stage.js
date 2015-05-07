@@ -85,7 +85,7 @@
         },
         _validateAdd: function(child) {
             if (child.getType() !== 'Layer') {
-                Konva.Util.error('You may only add layers to the stage.');
+                Konva.Util.throw('You may only add layers to the stage.');
             }
         },
         /**

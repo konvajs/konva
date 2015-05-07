@@ -824,8 +824,11 @@
         _capitalize: function(str) {
             return str.charAt(0).toUpperCase() + str.slice(1);
         },
-        error: function(str) {
+        throw: function(str) {
             throw new Error(KONVA_ERROR + str);
+        },
+        error: function(str) {
+          console.error(KONVA_ERROR + str);
         },
         warn: function(str) {
             /*
@@ -897,6 +900,11 @@
         },
         _removeLastLetter: function(str) {
             return str.substring(0, str.length - 1);
+        },
+        each: function(obj, func) {
+          for (var key in obj) {
+            func(key, obj[key]);
+          }
         }
     };
 })();

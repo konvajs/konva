@@ -33,7 +33,7 @@
         _validateAdd: function(child) {
             var type = child.getType();
             if (type !== 'Shape') {
-                Konva.Util.error('You may only add shapes to a fast layer.');
+                Konva.Util.throw('You may only add shapes to a fast layer.');
             }
         },
         _setCanvasSize: function(width, height) {

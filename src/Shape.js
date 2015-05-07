@@ -143,7 +143,7 @@
          * @returns {Boolean}
          */
         hasStroke: function() {
-            return !!(this.stroke() || this.strokeRed() || this.strokeGreen() || this.strokeBlue());
+            return !!(this.stroke());
         },
         /**
          * determines if point is in the shape, regardless if other shapes are on top of it.  Note: because
@@ -455,74 +455,11 @@
      * shape.stroke('rgba(0,255,0,0.5');
      */
 
-    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeRed', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'strokeRed', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'strokeGreen', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'strokeBlue', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'strokeAlpha', 1, Konva.Validators.alphaComponent);
 
-    /**
-     * get/set stroke red component
-     * @name strokeRed
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} red
-     * @returns {Integer}
-     * @example
-     * // get stroke red component
-     * var strokeRed = shape.strokeRed();
-     *
-     * // set stroke red component
-     * shape.strokeRed(0);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeGreen', 0, Konva.Validators.RGBComponent);
-
-    /**
-     * get/set stroke green component
-     * @name strokeGreen
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} green
-     * @returns {Integer}
-     * @example
-     * // get stroke green component
-     * var strokeGreen = shape.strokeGreen();
-     *
-     * // set stroke green component
-     * shape.strokeGreen(255);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeBlue', 0, Konva.Validators.RGBComponent);
-
-    /**
-     * get/set stroke blue component
-     * @name strokeBlue
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} blue
-     * @returns {Integer}
-     * @example
-     * // get stroke blue component
-     * var strokeBlue = shape.strokeBlue();
-     *
-     * // set stroke blue component
-     * shape.strokeBlue(0);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeAlpha', 1, Konva.Validators.alphaComponent);
-
-    /**
-     * get/set stroke alpha component.  Alpha is a real number between 0 and 1.  The default
-     *  is 1.
-     * @name strokeAlpha
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Number} alpha
-     * @returns {Number}
-     * @example
-     * // get stroke alpha component
-     * var strokeAlpha = shape.strokeAlpha();
-     *
-     * // set stroke alpha component
-     * shape.strokeAlpha(0.5);
-     */
 
     Konva.Factory.addGetterSetter(Konva.Shape, 'strokeWidth', 2);
 
@@ -725,74 +662,10 @@
      * shape.shadowColor('rgba(0,255,0,0.5');
      */
 
-    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowRed', 0, Konva.Validators.RGBComponent);
-
-    /**
-     * get/set shadow red component
-     * @name shadowRed
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} red
-     * @returns {Integer}
-     * @example
-     * // get shadow red component
-     * var shadowRed = shape.shadowRed();
-     *
-     * // set shadow red component
-     * shape.shadowRed(0);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowGreen', 0, Konva.Validators.RGBComponent);
-
-    /**
-     * get/set shadow green component
-     * @name shadowGreen
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} green
-     * @returns {Integer}
-     * @example
-     * // get shadow green component
-     * var shadowGreen = shape.shadowGreen();
-     *
-     * // set shadow green component
-     * shape.shadowGreen(255);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowBlue', 0, Konva.Validators.RGBComponent);
-
-    /**
-     * get/set shadow blue component
-     * @name shadowBlue
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} blue
-     * @returns {Integer}
-     * @example
-     * // get shadow blue component
-     * var shadowBlue = shape.shadowBlue();
-     *
-     * // set shadow blue component
-     * shape.shadowBlue(0);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowAlpha', 1, Konva.Validators.alphaComponent);
-
-    /**
-     * get/set shadow alpha component.  Alpha is a real number between 0 and 1.  The default
-     *  is 1.
-     * @name shadowAlpha
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Number} alpha
-     * @returns {Number}
-     * @example
-     * // get shadow alpha component
-     * var shadowAlpha = shape.shadowAlpha();
-     *
-     * // set shadow alpha component
-     * shape.shadowAlpha(0.5);
-     */
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'shadowRed', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'shadowGreen', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'shadowBlue', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'shadowAlpha', 1, Konva.Validators.alphaComponent);
 
     Konva.Factory.addGetterSetter(Konva.Shape, 'shadowBlur');
 
@@ -934,75 +807,10 @@
      * shape.fill(null);
      */
 
-    Konva.Factory.addGetterSetter(Konva.Shape, 'fillRed', 0, Konva.Validators.RGBComponent);
-
-    /**
-     * get/set fill red component
-     * @name fillRed
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} red
-     * @returns {Integer}
-     * @example
-     * // get fill red component
-     * var fillRed = shape.fillRed();
-     *
-     * // set fill red component
-     * shape.fillRed(0);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'fillGreen', 0, Konva.Validators.RGBComponent);
-
-    /**
-     * get/set fill green component
-     * @name fillGreen
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} green
-     * @returns {Integer}
-     * @example
-     * // get fill green component
-     * var fillGreen = shape.fillGreen();
-     *
-     * // set fill green component
-     * shape.fillGreen(255);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'fillBlue', 0, Konva.Validators.RGBComponent);
-
-    /**
-     * get/set fill blue component
-     * @name fillBlue
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} blue
-     * @returns {Integer}
-     * @example
-     * // get fill blue component
-     * var fillBlue = shape.fillBlue();
-     *
-     * // set fill blue component
-     * shape.fillBlue(0);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'fillAlpha', 1, Konva.Validators.alphaComponent);
-
-    /**
-     * get/set fill alpha component.  Alpha is a real number between 0 and 1.  The default
-     *  is 1.
-     * @name fillAlpha
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Number} alpha
-     * @returns {Number}
-     * @example
-     * // get fill alpha component
-     * var fillAlpha = shape.fillAlpha();
-     *
-     * // set fill alpha component
-     * shape.fillAlpha(0.5);
-     */
-
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'fillRed', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'fillGreen', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'fillBlue', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'fillAlpha', 1, Konva.Validators.alphaComponent);
 
     Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternX', 0);
 

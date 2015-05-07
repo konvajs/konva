@@ -60,7 +60,7 @@
         _validateAdd: function(child) {
             var type = child.getType();
             if (type !== 'Group' && type !== 'Shape') {
-                Konva.Util.error('You may only add groups and shapes to a layer.');
+                Konva.Util.throw('You may only add groups and shapes to a layer.');
             }
         },
         /**

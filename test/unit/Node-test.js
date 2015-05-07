@@ -246,7 +246,7 @@ suite('Node', function() {
         stage.add(layer);
 
         // listening cache
-        
+
         // prime the cache
         circle.isListening();
 
@@ -887,7 +887,7 @@ suite('Node', function() {
                         156, 109, 70, 98,
                         229, 109, 60, 98,
                         287, 109, 41, 98
-                    ]              
+                    ]
                 },
                 frameRate: 10,
                 draggable: true,
@@ -1459,16 +1459,11 @@ suite('Node', function() {
             stroke: 'black',
             strokeWidth: 4,
             draggable: true
-            //rotationDeg: 60
-            //rotationDeg: Math.PI / 3
         });
 
         layer.add(rect);
         stage.add(layer);
 
-        //stage.rotateDeg(20);
-
-        //console.log(rect.getAbsoluteTransform().getTranslation())
 
         stage.rotate(180 / 3);
         stage.setScale({x:0.5, y:0.5});
@@ -1599,7 +1594,7 @@ suite('Node', function() {
         var circle = new Konva.Rect({
             x: 100,
             y: 100,
-            rotationDeg: 20,
+            rotation: 20,
             width: 100,
             height: 50,
             fill: 'green',
@@ -1626,7 +1621,7 @@ suite('Node', function() {
         var rect = new Konva.Rect({
             x: 100,
             y: 100,
-            rotationDeg: 20,
+            rotation: 20,
             width: 100,
             height: 50,
             fill: 'green',
@@ -2187,7 +2182,7 @@ suite('Node', function() {
             context.fillStrokeShape(this);
         };
         var triangle = new Konva.Shape({
-            drawFunc: drawTriangle,
+            sceneFunc: drawTriangle,
             fill: "#00D2FF",
             stroke: "black",
             strokeWidth: 4,
@@ -2607,7 +2602,7 @@ suite('Node', function() {
             stroke: 'black',
             strokeWidth: 4,
             draggable: true,
-            rotationDeg: 60,
+            rotation: 60,
             scale: {
                 x: 2,
                 y: 1
@@ -2821,10 +2816,10 @@ suite('Node', function() {
     assert.equal(circle.opacity(), 0.5);
 
     circle.name('foo');
-    assert.equal(circle.name(), 'foo'); 
+    assert.equal(circle.name(), 'foo');
 
     circle.id('bar');
-    assert.equal(circle.id(), 'bar'); 
+    assert.equal(circle.id(), 'bar');
 
     circle.rotation(2);
     assert.equal(circle.rotation(), 2);
@@ -2860,19 +2855,19 @@ suite('Node', function() {
     assert.equal(circle.offsetY(), 8);
 
     circle.width(23);
-    assert.equal(circle.width(), 23); 
+    assert.equal(circle.width(), 23);
 
     circle.height(11);
-    assert.equal(circle.height(), 11); 
+    assert.equal(circle.height(), 11);
 
     circle.listening(false);
     assert.equal(circle.listening(), false);
 
     circle.visible(false);
-    assert.equal(circle.visible(), false); 
+    assert.equal(circle.visible(), false);
 
     circle.transformsEnabled(false);
-    assert.equal(circle.transformsEnabled(), false);  
+    assert.equal(circle.transformsEnabled(), false);
 
     circle.position({x: 6, y: 8});
     assert.equal(circle.position().x, 6);
@@ -2925,7 +2920,7 @@ suite('Node', function() {
     // document.body.appendChild(circle._cache.canvas.hit._canvas);
 
     showHit(layer);
-                                        
+
     //assert.equal(layer.getContext().getTrace(), 'clearRect(0,0,578,200);save();transform(1,0,0,1,74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);drawImage([object HTMLCanvasElement],0,0);restore();');
 
     //assert.equal(circle._cache.canvas.scene.getContext().getTrace(), 'save();translate(74,74);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();');
@@ -2953,7 +2948,7 @@ suite('Node', function() {
         draggable: true,
     });
     group.add(rect);
-    
+
 
     assert.equal(rect._cache.canvas, undefined);
     group.cache({
@@ -2962,12 +2957,12 @@ suite('Node', function() {
         width: 148,
         height: 148
     });
-    stage.add(layer);   
+    stage.add(layer);
 
     assert(group._cache.canvas.scene);
     assert(group._cache.canvas.hit);
 
-    
+
     layer.add(group);
     layer.draw();
     var shape = stage.getIntersection({

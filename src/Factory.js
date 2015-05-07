@@ -95,12 +95,27 @@
                 }
             };
         },
+        addDeprecatedGetterSetter: function(constructor, attr, def, validator) {
+            var method = GET + Konva.Util._capitalize(attr);
+            var message = attr + ' property is deprecated and will be removed soon. Look at Konva change log for more information.';
+            constructor.prototype[method] = function() {
+                Konva.Util.error(message);
+                var val = this.attrs[attr];
+                return val === undefined ? def : val;
+            };
+            this.addSetter(constructor, attr, validator, function() {
+              Konva.Util.error(message);
+            });
+            this.addOverloadedGetterSetter(constructor, attr);
+        },
         backCompat: function(constructor, methods) {
-            var key;
-
-            for (key in methods) {
-                constructor.prototype[key] = constructor.prototype[methods[key]];
-            }
+            Konva.Util.each(methods, function(oldMethodName, newMethodName) {
+                var method = constructor.prototype[newMethodName];
+                constructor.prototype[oldMethodName] = function(){
+                    method.apply(this, arguments);
+                    Konva.Util.error(oldMethodName + ' method is deprecated and will be removed soon. Use ' + newMethodName + ' instead');
+                };
+            });
         },
         afterSetFilter: function() {
             this._filterUpToDate = false;

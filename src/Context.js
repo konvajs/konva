@@ -447,13 +447,7 @@
 
     Konva.SceneContext.prototype = {
         _fillColor: function(shape) {
-            var fill = shape.fill()
-                || Konva.Util._getRGBAString({
-                    red: shape.fillRed(),
-                    green: shape.fillGreen(),
-                    blue: shape.fillBlue(),
-                    alpha: shape.fillAlpha()
-                });
+            var fill = shape.fill();
 
             this.setAttr('fillStyle', fill);
             shape._fillFunc(this);
@@ -512,7 +506,7 @@
             this.fill();
         },
         _fill: function(shape) {
-            var hasColor = shape.fill() || shape.fillRed() || shape.fillGreen() || shape.fillBlue(),
+            var hasColor = shape.fill(),
                 hasPattern = shape.getFillPatternImage(),
                 hasLinearGradient = shape.getFillLinearGradientColorStops(),
                 hasRadialGradient = shape.getFillRadialGradientColorStops(),
@@ -562,13 +556,8 @@
                 }
 
                 this.setAttr('lineWidth', shape.strokeWidth());
-                this.setAttr('strokeStyle', shape.stroke()
-                    || Konva.Util._getRGBAString({
-                        red: shape.strokeRed(),
-                        green: shape.strokeGreen(),
-                        blue: shape.strokeBlue(),
-                        alpha: shape.strokeAlpha()
-                    }));
+                this.setAttr('strokeStyle', shape.stroke());
+
                 if (!shape.getShadowForStrokeEnabled()) {
                     this.setAttr('shadowColor', 'rgba(0,0,0,0)');
                 }
