@@ -1837,7 +1837,7 @@
     Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'id');
 
     /**
-     * get/set id
+     * get/set id. Id is global for whole page.
      * @name id
      * @method
      * @memberof Konva.Node.prototype
