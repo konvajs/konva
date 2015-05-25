@@ -413,10 +413,10 @@ suite('Text', function(){
         layer.add(text);
         stage.add(layer);
 
-        stage.on('mousemove', function() {
-            console.log(stage.getPointerPosition());
-        });
-        var data = layer.getContext().getImageData(176, 66, 1, 1).data;
+        //stage.on('mousemove', function() {
+        //    console.log(stage.getPointerPosition());
+        //});
+        var data = layer.getContext().getImageData(41, 50, 1, 1).data;
         assert.equal(data[0], 255, 'full green');
         assert.equal(data[1], 255, 'full red');
         assert.equal(data[2], 0, 'no blue');
