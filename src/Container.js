@@ -1,5 +1,13 @@
 (function() {
     'use strict';
+
+    function isValidSelector(selector) {
+        if (typeof selector !== 'string') {
+            return false;
+        }
+        var firstChar = selector[0];
+        return firstChar === '#' || firstChar === '.' ||   firstChar === firstChar.toUpperCase();
+    }
     /**
      * Container constructor.&nbsp; Containers are used to contain nodes or other containers
      * @constructor
@@ -174,7 +182,11 @@
 
             for (n = 0; n < len; n++) {
                 sel = selectorArr[n];
-
+                if (!isValidSelector(sel)) {
+                    Konva.Util.warn('Selector "' + sel + '" is invalid. Allowed selectors examples are "#foo", ".bar" or "Group".');
+                    Konva.Util.warn('If you have a custom shape with such className, please change it to start with upper letter like "Triangle".');
+                    Konva.Util.warn('Konva is awesome, right?');
+                }
                 // id selector
                 if(sel.charAt(0) === '#') {
                     node = this._getNodeById(sel.slice(1));

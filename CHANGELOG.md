@@ -19,6 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Correct `clone()` for custom nodes
 - `FastLayer` now can have transforms
 - `stage.toDataURL()` method now works in synchronous way. So `callback` argument is not required.
+- `container.find(selector)` method now have validation step. So if you forgot to add `#` or `.` you will see a warning message in the console.
 
 ### Added
 - new `Konva.Image.fromURL` method

@@ -236,8 +236,8 @@
             return this;
         },
         /**
-         * return client rectangle (x, y, width, height) of node. This rectangle also include all styling (strokes, shadows, etc).
-         * This rectangle relative to parent container.
+         * Return client rectangle {x, y, width, height} of node. This rectangle also include all styling (strokes, shadows, etc).
+         * The rectangle position is relative to parent container.
          * @method
          * @memberof Konva.Node.prototype
          * @param {Boolean} [skipTransform] flag should we skip transformation to rectangle
