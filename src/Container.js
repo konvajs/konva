@@ -6,7 +6,7 @@
             return false;
         }
         var firstChar = selector[0];
-        return firstChar === '#' || firstChar === '.' ||   firstChar === firstChar.toUpperCase();
+        return firstChar === '#' || firstChar === '.' || firstChar === firstChar.toUpperCase();
     }
     /**
      * Container constructor.&nbsp; Containers are used to contain nodes or other containers
