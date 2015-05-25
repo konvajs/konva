@@ -561,6 +561,20 @@ suite('Stage', function() {
         image.src = 'assets/lion.png';
     });
 
+    test('toDataURL in sync way', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
+            x: stage.width() / 2,
+            y: stage.height() / 2,
+            fill: 'red',
+            radius: 50
+        });
+        layer.add(circle);
+        stage.add(layer);
+        assert.equal(stage.toDataURL(), layer.toDataURL());
+    });
+
     test('check hit graph with stage listeting property', function() {
       var stage = addStage();
       var layer = new Konva.Layer();

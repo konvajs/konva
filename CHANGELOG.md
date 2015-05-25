@@ -18,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - `toDataURL` now handle pixelRatio. you can pass `config.pixelRatio` argument
 - Correct `clone()` for custom nodes
 - `FastLayer` now can have transforms
+- `stage.toDataURL()` method now works in synchronous way. So `callback` argument is not required.
 
 ### Added
 - new `Konva.Image.fromURL` method

@@ -209,11 +209,11 @@
             return this.content;
         },
         /**
-         * Creates a composite data URL and requires a callback because the composite is generated asynchronously.
+         * Creates a composite data URL
          * @method
          * @memberof Konva.Stage.prototype
          * @param {Object} config
-         * @param {Function} config.callback function executed when the composite has completed
+         * @param {Function} [config.callback] function executed when the composite has completed. Deprecated as method is sync now.
          * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
          *  "image/png" is the default
          * @param {Number} [config.x] x position of canvas section
@@ -243,27 +243,20 @@
                 _context.translate(-1 * x, -1 * y);
             }
 
-            function drawLayer(n) {
-                var layer = layers[n],
-                    layerUrl = layer.toDataURL({
-                        pixelRatio: config.pixelRatio
-                    }),
-                    pixelRatio = canvas.pixelRatio,
-                    imageObj = new Konva.window.Image();
 
-                imageObj.onload = function() {
-                    _context.drawImage(imageObj, 0, 0, imageObj.width / pixelRatio, imageObj.height / pixelRatio);
+            layers.each(function(layer) {
+                var width = layer.getCanvas().getWidth();
+                var height = layer.getCanvas().getHeight();
+                var ratio = layer.getCanvas().getPixelRatio();
+                _context.drawImage(layer.getCanvas()._canvas, 0, 0, width / ratio, height / ratio);
+            });
+            var src = canvas.toDataURL(mimeType, quality);
 
-                    if(n < layers.length - 1) {
-                        drawLayer(n + 1);
-                    }
-                    else {
-                        config.callback(canvas.toDataURL(mimeType, quality));
-                    }
-                };
-                imageObj.src = layerUrl;
+            if (config.callback) {
+                config.callback(src);
             }
-            drawLayer(0);
+
+            return src;
         },
         /**
          * converts stage into an image.

@@ -401,7 +401,7 @@ suite('Text', function(){
         var layer = new Konva.Layer();
 
         var text = new Konva.Text({
-            fontSize: 50,
+            fontSize: 100,
             y : 10,
             x : 10,
             fillLinearGradientStartPoint: { x : -50, y : -50},
@@ -413,11 +413,14 @@ suite('Text', function(){
         layer.add(text);
         stage.add(layer);
 
-        var data = layer.getContext().getImageData(79, 37, 1, 1).data;
-        assert.equal(data[0], 255);
-        assert.equal(data[1], 255);
-        assert.equal(data[2], 0);
-        assert.equal(data[3], 255);
+        stage.on('mousemove', function() {
+            console.log(stage.getPointerPosition());
+        });
+        var data = layer.getContext().getImageData(176, 66, 1, 1).data;
+        assert.equal(data[0], 255, 'full green');
+        assert.equal(data[1], 255, 'full red');
+        assert.equal(data[2], 0, 'no blue');
+        assert.equal(data[3], 255, '255 alpha - fully visible');
     });
 
 

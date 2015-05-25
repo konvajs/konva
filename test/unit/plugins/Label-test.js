@@ -214,7 +214,7 @@ suite('Label', function() {
 
         stage.add(layer);
 
-        cloneAndCompareLayer(layer, 220);
+        cloneAndCompareLayer(layer, 254);
     });
 
 });
