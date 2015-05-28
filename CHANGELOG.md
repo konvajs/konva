@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [0.9.5][2015-05-28]
+
 ### Fixed
 - `to` don't throw error if no `onFinish` callback
 - HDPI support for desktop
