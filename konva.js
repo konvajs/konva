@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.9.5
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Tue May 05 2015
+ * Date: Thu May 28 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -1088,8 +1088,11 @@ var Konva = {};
         _capitalize: function(str) {
             return str.charAt(0).toUpperCase() + str.slice(1);
         },
-        error: function(str) {
+        throw: function(str) {
             throw new Error(KONVA_ERROR + str);
+        },
+        error: function(str) {
+          console.error(KONVA_ERROR + str);
         },
         warn: function(str) {
             /*
@@ -1161,6 +1164,11 @@ var Konva = {};
         },
         _removeLastLetter: function(str) {
             return str.substring(0, str.length - 1);
+        },
+        each: function(obj, func) {
+          for (var key in obj) {
+            func(key, obj[key]);
+          }
         }
     };
 })();
@@ -1813,13 +1821,7 @@ var Konva = {};
 
     Konva.SceneContext.prototype = {
         _fillColor: function(shape) {
-            var fill = shape.fill()
-                || Konva.Util._getRGBAString({
-                    red: shape.fillRed(),
-                    green: shape.fillGreen(),
-                    blue: shape.fillBlue(),
-                    alpha: shape.fillAlpha()
-                });
+            var fill = shape.fill();
 
             this.setAttr('fillStyle', fill);
             shape._fillFunc(this);
@@ -1878,7 +1880,7 @@ var Konva = {};
             this.fill();
         },
         _fill: function(shape) {
-            var hasColor = shape.fill() || shape.fillRed() || shape.fillGreen() || shape.fillBlue(),
+            var hasColor = shape.fill(),
                 hasPattern = shape.getFillPatternImage(),
                 hasLinearGradient = shape.getFillLinearGradientColorStops(),
                 hasRadialGradient = shape.getFillRadialGradientColorStops(),
@@ -1928,13 +1930,8 @@ var Konva = {};
                 }
 
                 this.setAttr('lineWidth', shape.strokeWidth());
-                this.setAttr('strokeStyle', shape.stroke()
-                    || Konva.Util._getRGBAString({
-                        red: shape.strokeRed(),
-                        green: shape.strokeGreen(),
-                        blue: shape.strokeBlue(),
-                        alpha: shape.strokeAlpha()
-                    }));
+                this.setAttr('strokeStyle', shape.stroke());
+
                 if (!shape.getShadowForStrokeEnabled()) {
                     this.setAttr('shadowColor', 'rgba(0,0,0,0)');
                 }
@@ -2094,12 +2091,27 @@ var Konva = {};
                 }
             };
         },
+        addDeprecatedGetterSetter: function(constructor, attr, def, validator) {
+            var method = GET + Konva.Util._capitalize(attr);
+            var message = attr + ' property is deprecated and will be removed soon. Look at Konva change log for more information.';
+            constructor.prototype[method] = function() {
+                Konva.Util.error(message);
+                var val = this.attrs[attr];
+                return val === undefined ? def : val;
+            };
+            this.addSetter(constructor, attr, validator, function() {
+              Konva.Util.error(message);
+            });
+            this.addOverloadedGetterSetter(constructor, attr);
+        },
         backCompat: function(constructor, methods) {
-            var key;
-
-            for (key in methods) {
-                constructor.prototype[key] = constructor.prototype[methods[key]];
-            }
+            Konva.Util.each(methods, function(oldMethodName, newMethodName) {
+                var method = constructor.prototype[newMethodName];
+                constructor.prototype[oldMethodName] = function(){
+                    method.apply(this, arguments);
+                    Konva.Util.error(oldMethodName + ' method is deprecated and will be removed soon. Use ' + newMethodName + ' instead');
+                };
+            });
         },
         afterSetFilter: function() {
             this._filterUpToDate = false;
@@ -2391,8 +2403,8 @@ var Konva = {};
             return this;
         },
         /**
-         * return client rectangle (x, y, width, height) of node. This rectangle also include all styling (strokes, shadows, etc).
-         * This rectangle relative to parent container.
+         * Return client rectangle {x, y, width, height} of node. This rectangle also include all styling (strokes, shadows, etc).
+         * The rectangle position is relative to parent container.
          * @method
          * @memberof Konva.Node.prototype
          * @param {Boolean} [skipTransform] flag should we skip transformation to rectangle
@@ -3992,7 +4004,7 @@ var Konva = {};
     Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'id');
 
     /**
-     * get/set id
+     * get/set id. Id is global for whole page.
      * @name id
      * @method
      * @memberof Konva.Node.prototype
@@ -6170,6 +6182,14 @@ var Konva = {};
 
 (function() {
     'use strict';
+
+    function isValidSelector(selector) {
+        if (typeof selector !== 'string') {
+            return false;
+        }
+        var firstChar = selector[0];
+        return firstChar === '#' || firstChar === '.' || firstChar === firstChar.toUpperCase();
+    }
     /**
      * Container constructor.&nbsp; Containers are used to contain nodes or other containers
      * @constructor
@@ -6368,7 +6388,11 @@ var Konva = {};
 
             for (n = 0; n < len; n++) {
                 sel = selectorArr[n];
-
+                if (!isValidSelector(sel)) {
+                    Konva.Util.warn('Selector "' + sel + '" is invalid. Allowed selectors examples are "#foo", ".bar" or "Group".');
+                    Konva.Util.warn('If you have a custom shape with such className, please change it to start with upper letter like "Triangle".');
+                    Konva.Util.warn('Konva is awesome, right?');
+                }
                 // id selector
                 if(sel.charAt(0) === '#') {
                     node = this._getNodeById(sel.slice(1));
@@ -6944,7 +6968,7 @@ var Konva = {};
          * @returns {Boolean}
          */
         hasStroke: function() {
-            return !!(this.stroke() || this.strokeRed() || this.strokeGreen() || this.strokeBlue());
+            return !!(this.stroke());
         },
         /**
          * determines if point is in the shape, regardless if other shapes are on top of it.  Note: because
@@ -7256,74 +7280,11 @@ var Konva = {};
      * shape.stroke('rgba(0,255,0,0.5');
      */
 
-    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeRed', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'strokeRed', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'strokeGreen', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'strokeBlue', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'strokeAlpha', 1, Konva.Validators.alphaComponent);
 
-    /**
-     * get/set stroke red component
-     * @name strokeRed
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} red
-     * @returns {Integer}
-     * @example
-     * // get stroke red component
-     * var strokeRed = shape.strokeRed();
-     *
-     * // set stroke red component
-     * shape.strokeRed(0);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeGreen', 0, Konva.Validators.RGBComponent);
-
-    /**
-     * get/set stroke green component
-     * @name strokeGreen
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} green
-     * @returns {Integer}
-     * @example
-     * // get stroke green component
-     * var strokeGreen = shape.strokeGreen();
-     *
-     * // set stroke green component
-     * shape.strokeGreen(255);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeBlue', 0, Konva.Validators.RGBComponent);
-
-    /**
-     * get/set stroke blue component
-     * @name strokeBlue
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} blue
-     * @returns {Integer}
-     * @example
-     * // get stroke blue component
-     * var strokeBlue = shape.strokeBlue();
-     *
-     * // set stroke blue component
-     * shape.strokeBlue(0);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'strokeAlpha', 1, Konva.Validators.alphaComponent);
-
-    /**
-     * get/set stroke alpha component.  Alpha is a real number between 0 and 1.  The default
-     *  is 1.
-     * @name strokeAlpha
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Number} alpha
-     * @returns {Number}
-     * @example
-     * // get stroke alpha component
-     * var strokeAlpha = shape.strokeAlpha();
-     *
-     * // set stroke alpha component
-     * shape.strokeAlpha(0.5);
-     */
 
     Konva.Factory.addGetterSetter(Konva.Shape, 'strokeWidth', 2);
 
@@ -7526,74 +7487,10 @@ var Konva = {};
      * shape.shadowColor('rgba(0,255,0,0.5');
      */
 
-    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowRed', 0, Konva.Validators.RGBComponent);
-
-    /**
-     * get/set shadow red component
-     * @name shadowRed
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} red
-     * @returns {Integer}
-     * @example
-     * // get shadow red component
-     * var shadowRed = shape.shadowRed();
-     *
-     * // set shadow red component
-     * shape.shadowRed(0);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowGreen', 0, Konva.Validators.RGBComponent);
-
-    /**
-     * get/set shadow green component
-     * @name shadowGreen
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} green
-     * @returns {Integer}
-     * @example
-     * // get shadow green component
-     * var shadowGreen = shape.shadowGreen();
-     *
-     * // set shadow green component
-     * shape.shadowGreen(255);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowBlue', 0, Konva.Validators.RGBComponent);
-
-    /**
-     * get/set shadow blue component
-     * @name shadowBlue
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} blue
-     * @returns {Integer}
-     * @example
-     * // get shadow blue component
-     * var shadowBlue = shape.shadowBlue();
-     *
-     * // set shadow blue component
-     * shape.shadowBlue(0);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'shadowAlpha', 1, Konva.Validators.alphaComponent);
-
-    /**
-     * get/set shadow alpha component.  Alpha is a real number between 0 and 1.  The default
-     *  is 1.
-     * @name shadowAlpha
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Number} alpha
-     * @returns {Number}
-     * @example
-     * // get shadow alpha component
-     * var shadowAlpha = shape.shadowAlpha();
-     *
-     * // set shadow alpha component
-     * shape.shadowAlpha(0.5);
-     */
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'shadowRed', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'shadowGreen', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'shadowBlue', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'shadowAlpha', 1, Konva.Validators.alphaComponent);
 
     Konva.Factory.addGetterSetter(Konva.Shape, 'shadowBlur');
 
@@ -7735,75 +7632,10 @@ var Konva = {};
      * shape.fill(null);
      */
 
-    Konva.Factory.addGetterSetter(Konva.Shape, 'fillRed', 0, Konva.Validators.RGBComponent);
-
-    /**
-     * get/set fill red component
-     * @name fillRed
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} red
-     * @returns {Integer}
-     * @example
-     * // get fill red component
-     * var fillRed = shape.fillRed();
-     *
-     * // set fill red component
-     * shape.fillRed(0);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'fillGreen', 0, Konva.Validators.RGBComponent);
-
-    /**
-     * get/set fill green component
-     * @name fillGreen
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} green
-     * @returns {Integer}
-     * @example
-     * // get fill green component
-     * var fillGreen = shape.fillGreen();
-     *
-     * // set fill green component
-     * shape.fillGreen(255);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'fillBlue', 0, Konva.Validators.RGBComponent);
-
-    /**
-     * get/set fill blue component
-     * @name fillBlue
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Integer} blue
-     * @returns {Integer}
-     * @example
-     * // get fill blue component
-     * var fillBlue = shape.fillBlue();
-     *
-     * // set fill blue component
-     * shape.fillBlue(0);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'fillAlpha', 1, Konva.Validators.alphaComponent);
-
-    /**
-     * get/set fill alpha component.  Alpha is a real number between 0 and 1.  The default
-     *  is 1.
-     * @name fillAlpha
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Number} alpha
-     * @returns {Number}
-     * @example
-     * // get fill alpha component
-     * var fillAlpha = shape.fillAlpha();
-     *
-     * // set fill alpha component
-     * shape.fillAlpha(0.5);
-     */
-
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'fillRed', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'fillGreen', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'fillBlue', 0, Konva.Validators.RGBComponent);
+    Konva.Factory.addDeprecatedGetterSetter(Konva.Shape, 'fillAlpha', 1, Konva.Validators.alphaComponent);
 
     Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternX', 0);
 
@@ -8512,7 +8344,7 @@ var Konva = {};
         },
         _validateAdd: function(child) {
             if (child.getType() !== 'Layer') {
-                Konva.Util.error('You may only add layers to the stage.');
+                Konva.Util.throw('You may only add layers to the stage.');
             }
         },
         /**
@@ -8636,11 +8468,11 @@ var Konva = {};
             return this.content;
         },
         /**
-         * Creates a composite data URL and requires a callback because the composite is generated asynchronously.
+         * Creates a composite data URL
          * @method
          * @memberof Konva.Stage.prototype
          * @param {Object} config
-         * @param {Function} config.callback function executed when the composite has completed
+         * @param {Function} [config.callback] function executed when the composite has completed. Deprecated as method is sync now.
          * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
          *  "image/png" is the default
          * @param {Number} [config.x] x position of canvas section
@@ -8670,27 +8502,20 @@ var Konva = {};
                 _context.translate(-1 * x, -1 * y);
             }
 
-            function drawLayer(n) {
-                var layer = layers[n],
-                    layerUrl = layer.toDataURL({
-                        pixelRatio: config.pixelRatio
-                    }),
-                    pixelRatio = canvas.pixelRatio,
-                    imageObj = new Konva.window.Image();
 
-                imageObj.onload = function() {
-                    _context.drawImage(imageObj, 0, 0, imageObj.width / pixelRatio, imageObj.height / pixelRatio);
+            layers.each(function(layer) {
+                var width = layer.getCanvas().getWidth();
+                var height = layer.getCanvas().getHeight();
+                var ratio = layer.getCanvas().getPixelRatio();
+                _context.drawImage(layer.getCanvas()._canvas, 0, 0, width / ratio, height / ratio);
+            });
+            var src = canvas.toDataURL(mimeType, quality);
 
-                    if(n < layers.length - 1) {
-                        drawLayer(n + 1);
-                    }
-                    else {
-                        config.callback(canvas.toDataURL(mimeType, quality));
-                    }
-                };
-                imageObj.src = layerUrl;
+            if (config.callback) {
+                config.callback(src);
             }
-            drawLayer(0);
+
+            return src;
         },
         /**
          * converts stage into an image.
@@ -9537,7 +9362,7 @@ var Konva = {};
         _validateAdd: function(child) {
             var type = child.getType();
             if (type !== 'Group' && type !== 'Shape') {
-                Konva.Util.error('You may only add groups and shapes to a layer.');
+                Konva.Util.throw('You may only add groups and shapes to a layer.');
             }
         },
         /**
@@ -9778,7 +9603,7 @@ var Konva = {};
         _validateAdd: function(child) {
             var type = child.getType();
             if (type !== 'Shape') {
-                Konva.Util.error('You may only add shapes to a fast layer.');
+                Konva.Util.throw('You may only add shapes to a fast layer.');
             }
         },
         _setCanvasSize: function(width, height) {
@@ -9873,7 +9698,7 @@ var Konva = {};
         _validateAdd: function(child) {
             var type = child.getType();
             if (type !== 'Group' && type !== 'Shape') {
-                Konva.Util.error('You may only add groups and shapes to groups.');
+                Konva.Util.throw('You may only add groups and shapes to groups.');
             }
         }
     });

@@ -30,7 +30,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - `shadowRed`, `shadowGreen`, `shadowBlue`, `shadowAlpha` are deprecated. Use `shadow` instead.
 - `dashArray` is deprecated. Use `dash` instead.
 - `drawFunc` is deprecated. Use `sceneFunc` instead.
-- `drawFunc` is deprecated. Use `hitFunc` instead.
+- `drawHitFunc` is deprecated. Use `hitFunc` instead.
 - `rotateDeg` is deprecated. Use `rotate` instead.
 
 
