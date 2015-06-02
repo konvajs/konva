@@ -152,7 +152,7 @@ gulp.task('api', function() {
 });
 
 gulp.task('watch', function() {
-    gulp.watch(['src2/**/*.ts'], ['dev-build']);
+    gulp.watch(['src/**/*.js'], ['dev-build']);
 });
 
 

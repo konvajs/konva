@@ -39,7 +39,7 @@ suite('Context', function() {
         });
 
         contextProperties.forEach(function(prop) {
-            assert.equal(nativeContext.hasOwnProperty(prop), true, 'native context has no property ' + prop);
+            assert.equal(nativeContext[prop] !== undefined, true, 'native context has no property ' + prop);
             assert.equal(context[prop] !== undefined, true, 'context wrapper has no property ' + prop);
         });
 

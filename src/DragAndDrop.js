@@ -33,6 +33,8 @@
                     }
                 }
 
+
+                node.getStage()._setPointerPosition(evt);
                 node._setDragPosition(evt);
                 if(!dd.isDragging) {
                     dd.isDragging = true;
@@ -79,7 +81,6 @@
         },
         _endDragAfter: function(evt) {
             evt = evt || {};
-
             var dragEndNode = evt.dragEndNode;
 
             if (evt && dragEndNode) {
@@ -297,6 +298,9 @@
     var html = Konva.document.documentElement;
     html.addEventListener('mouseup', Konva.DD._endDragBefore, true);
     html.addEventListener('touchend', Konva.DD._endDragBefore, true);
+
+    html.addEventListener('mousemove', Konva.DD._drag);
+    html.addEventListener('touchmove', Konva.DD._drag);
 
     html.addEventListener('mouseup', Konva.DD._endDragAfter, false);
     html.addEventListener('touchend', Konva.DD._endDragAfter, false);

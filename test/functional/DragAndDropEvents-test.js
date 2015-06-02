@@ -33,13 +33,10 @@ suite('DragAndDropEvents', function() {
         layer.add(greenCircle);
         stage.add(layer);
 
-        var top = stage.content.getBoundingClientRect().top;
-
         var dragStart = false;
         var dragMove = false;
         var dragEnd = false;
         var mouseup = false;
-        var layerDragMove = false;
         var events = [];
 
         circle.on('dragstart', function() {
@@ -52,20 +49,14 @@ suite('DragAndDropEvents', function() {
         });
 
 
-        layer.on('dragmove', function() {
-            //console.log('move');
-        });
-
         circle.on('dragend', function() {
             dragEnd = true;
-            //console.log('dragend');
             events.push('dragend');
         });
 
 
 
         circle.on('mouseup', function() {
-            //console.log('mouseup');
             events.push('mouseup');
         });
 
@@ -76,12 +67,10 @@ suite('DragAndDropEvents', function() {
         /*
         * simulate drag and drop
         */
-        //console.log(1)
-        stage._mousedown({
-            clientX: 380,
-            clientY: 98 + top
+        stage.simulateMouseDown({
+            x: 380,
+            y: 98
         });
-        //console.log(2)
         assert(!dragStart, 'dragstart event should not have been triggered 3');
         //assert.equal(!dragMove, 'dragmove event should not have been triggered');
         assert(!dragEnd, 'dragend event should not have been triggered 4');
@@ -90,9 +79,9 @@ suite('DragAndDropEvents', function() {
         assert(Konva.isDragReady(), ' isDragReady()) should be true 6');
 
         setTimeout(function() {
-            stage._mousemove({
-                clientX: 100,
-                clientY: 98 + top
+            stage.simulateMouseMove({
+                x: 100,
+                y: 98
             });
 
             assert(Konva.isDragging(), ' isDragging() should be true 7');
@@ -102,12 +91,10 @@ suite('DragAndDropEvents', function() {
             //assert.equal(dragMove, 'dragmove event was not triggered');
             assert(!dragEnd, 'dragend event should not have been triggered 10');
 
-            Konva.DD._endDragBefore();
-            stage._mouseup({
-                clientX: 100,
-                clientY: 98 + top
+            stage.simulateMouseUp({
+                x: 100,
+                y: 98
             });
-            Konva.DD._endDragAfter({dragEndNode:circle});
 
             assert(dragStart, 'dragstart event was not triggered 11');
             assert(dragMove, 'dragmove event was not triggered 12');
@@ -169,9 +156,6 @@ suite('DragAndDropEvents', function() {
         layer.add(greenCircle);
         stage.add(layer);
 
-        var top = stage.content.getBoundingClientRect().top;
-
-
         var dragEnd = false;
 
 
@@ -191,17 +175,17 @@ suite('DragAndDropEvents', function() {
         assert(!Konva.isDragReady(), ' isDragReady()) should be false');
 
 
-        stage._mousedown({
-            clientX: 380,
-            clientY: 98 + top
+        stage.simulateMouseDown({
+            x: 380,
+            y: 98
         });
 
         assert(!circle.isDragging(), 'circle should not be dragging');
 
         setTimeout(function() {
-            stage._mousemove({
-                clientX: 100,
-                clientY: 98 + top
+            stage.simulateMouseMove({
+                x: 100,
+                y: 98
             });
 
 
@@ -242,8 +226,7 @@ suite('DragAndDropEvents', function() {
         layer.add(circle);
         stage.add(layer);
 
-        var top = stage.content.getBoundingClientRect().top,
-            clicked = false;
+        var clicked = false;
 
         circle.on('click', function() {
             //console.log('click');
@@ -254,23 +237,21 @@ suite('DragAndDropEvents', function() {
             //console.log('dblclick');
         });
 
-        stage._mousedown({
-            clientX: 40,
-            clientY: 40 + top
+        stage.simulateMouseDown({
+            x: 40,
+            y: 40
         });
 
         setTimeout(function() {
-            stage._mousemove({
-                clientX: 100,
-                clientY: 100 + top
+            stage.simulateMouseMove({
+                x: 100,
+                y: 100
             });
 
-            Konva.DD._endDragBefore();
-            stage._mouseup({
-                clientX: 100,
-                clientY: 100 + top
+            stage.simulateMouseUp({
+                x: 100,
+                y: 100
             });
-            Konva.DD._endDragAfter({dragEndNode:circle});
 
             assert(!clicked, 'click event should not have been fired');
 
@@ -300,28 +281,26 @@ suite('DragAndDropEvents', function() {
         circle.dragDistance(4);
         var top = stage.content.getBoundingClientRect().top;
 
-        stage._mousedown({
-            clientX: 40,
-            clientY: 40 + top
+        stage.simulateMouseDown({
+            x: 40,
+            y: 40
         });
 
         setTimeout(function() {
-            stage._mousemove({
-                clientX: 40,
-                clientY: 42 + top
+            stage.simulateMouseMove({
+                x: 40,
+                y: 42
             });
             assert(!circle.isDragging(), 'still not dragging');
-            stage._mousemove({
-                clientX: 40,
-                clientY: 45 + top
+            stage.simulateMouseMove({
+                x: 40,
+                y: 45
             });
             assert(circle.isDragging(), 'now circle is dragging');
-            Konva.DD._endDragBefore();
-            stage._mouseup({
-                clientX: 41,
-                clientY: 45 + top
+            stage.simulateMouseUp({
+                x: 41,
+                y: 45
             });
-            Konva.DD._endDragAfter({dragEndNode:circle});
 
             
 
@@ -372,23 +351,21 @@ suite('DragAndDropEvents', function() {
         /*
          * simulate drag and drop
          */
-        stage._mousedown({
-            clientX: 380,
-            clientY: 100 + top
+        stage.simulateMouseDown({
+            x: 380,
+            y: 100
         });
 
         setTimeout(function() {
-            stage._mousemove({
-                clientX: 100,
-                clientY: 100 + top
+            stage.simulateMouseMove({
+                x: 100,
+                y: 100
             });
 
-            Konva.DD._endDragBefore();
-            stage._mouseup({
-                clientX: 100,
-                clientY: 100 + top
+            stage.simulateMouseUp({
+                x: 100,
+                y: 100
             });
-            Konva.DD._endDragAfter({dragEndNode:circle});
 
             assert.equal(circle.getPosition().x, 380, 'circle x should be 380');
             assert.equal(circle.getPosition().y, 100, 'circle y should be 100');
@@ -437,23 +414,21 @@ suite('DragAndDropEvents', function() {
         /*
          * simulate drag and drop
          */
-        stage._mousedown({
-            clientX: 399,
-            clientY: 96 + top
+        stage.simulateMouseDown({
+            x: 399,
+            y: 96
         });
 
         setTimeout(function() {
-            stage._mousemove({
-                clientX: 210,
-                clientY: 109 + top
+            stage.simulateMouseMove({
+                x: 210,
+                y: 109
             });
 
-            Konva.DD._endDragBefore();
-            stage._mouseup({
-                clientX: 210,
-                clientY: 109 + top
+            stage.simulateMouseUp({
+                x: 210,
+                y: 109
             });
-            Konva.DD._endDragAfter({dragEndNode:circle2});
 
             //console.log(layer.getPosition())
 
@@ -499,23 +474,21 @@ suite('DragAndDropEvents', function() {
         /*
          * simulate drag and drop
          */
-        stage._mousedown({
-            clientX: 0,
-            clientY: 100 + top
+        stage.simulateMouseDown({
+            x: 0,
+            y: 100
         });
 
         setTimeout(function() {
-            stage._mousemove({
-                clientX: 300,
-                clientY: 110 + top
+            stage.simulateMouseMove({
+                x: 300,
+                y: 110
             });
 
-            Konva.DD._endDragBefore();
-            stage._mouseup({
-                clientX: 300,
-                clientY: 110 + top
+            stage.simulateMouseUp({
+                x: 300,
+                y: 110
             });
-            Konva.DD._endDragAfter();
 
             assert.equal(stage.getX(), 300);
             assert.equal(stage.getY(), 10);

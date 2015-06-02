@@ -470,54 +470,51 @@ suite('Stage', function() {
             assert(false, 'double click fired');
         });
 
-        var top = stage.content.getBoundingClientRect().top,
-            clientY = 60 + top;
+        var y = 60;
 
         // simulate dragging
-        stage._mousedown({
-            clientX: 60,
-            clientY: clientY
+        stage.simulateMouseDown({
+            x: 60,
+            y: y
         });
 
-        stage._mousemove({
-            clientX: 61,
-            clientY: clientY
+        stage.simulateMouseMove({
+            x: 61,
+            y: y
         });
 
-        stage._mousemove({
-            clientX: 62,
-            clientY: clientY
+        stage.simulateMouseMove({
+            x: 62,
+            y: y
         });
 
-        stage._mousemove({
-            clientX: 63,
-            clientY: clientY
+        stage.simulateMouseMove({
+            x: 63,
+            y: y
         });
 
-        stage._mousemove({
-            clientX: 64,
-            clientY: clientY
+        stage.simulateMouseMove({
+            x: 64,
+            y: y
         });
 
-        Konva.DD._endDragBefore();
-        stage._mouseup({
-            clientX: 65,
-            clientY: clientY
+        stage.simulateMouseUp({
+            x: 65,
+            y: y
         });
-        Konva.DD._endDragAfter({dragEndNode:rect});
+
         assert.equal(Konva.isDragging(), false);
         assert.equal(Konva.DD.node, undefined);
         // simulate click
-        stage._mousedown({
-            clientX: 66,
-            clientY: clientY
+        stage.simulateMouseDown({
+            x: 66,
+            y: y
         });
 
-        stage._mouseup({
-            clientX: 66,
-            clientY: clientY
+        stage.simulateMouseUp({
+            x: 66,
+            y: y
         });
-        Konva.DD._endDragBefore({dragEndNode:rect});
         assert.equal(Konva.isDragging(), false);
         assert.equal(Konva.DD.node, undefined);
     });

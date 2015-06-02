@@ -1,9 +1,9 @@
 
 /*
- * Konva JavaScript Framework v0.9.5
+ * Konva JavaScript Framework v0.9.9
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Thu May 28 2015
+ * Date: Tue Jun 02 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -38,7 +38,7 @@ var Konva = {};
 
     Konva = {
         // public
-        version: '0.9.5',
+        version: '0.9.9',
 
         // private
         stages: [],
@@ -8657,7 +8657,7 @@ var Konva = {};
                 return null;
             }
             this._setPointerPosition(evt);
-            var dd = Konva.DD, shape;
+            var shape;
 
             if (!Konva.isDragging()) {
                 shape = this.getIntersection(this.getPointerPosition());
@@ -8690,9 +8690,6 @@ var Konva = {};
 
                 // content event
                 this._fire(CONTENT_MOUSEMOVE, {evt: evt});
-            }
-            if(dd) {
-                dd._drag(evt);
             }
 
             // always call preventDefault for desktop events because some browsers
@@ -8862,7 +8859,6 @@ var Konva = {};
                 this._fire(CONTENT_TOUCHMOVE, {evt: evt});
             }
             if(dd) {
-                dd._drag(evt);
                 if (Konva.isDragging()) {
                     evt.preventDefault();
                 }
@@ -8884,11 +8880,8 @@ var Konva = {};
         },
         _setPointerPosition: function(evt) {
             var contentPosition = this._getContentPosition(),
-                offsetX = evt.offsetX,
-                clientX = evt.clientX,
                 x = null,
-                y = null,
-                touch;
+                y = null;
             evt = evt ? evt : window.event;
 
             // touch events
@@ -8896,8 +8889,7 @@ var Konva = {};
                 // currently, only handle one finger
                 if (evt.touches.length > 0) {
 
-                    touch = evt.touches[0];
-
+                    var touch = evt.touches[0];
                     // get the information for finger #1
                     x = touch.clientX - contentPosition.left;
                     y = touch.clientY - contentPosition.top;
@@ -8905,10 +8897,9 @@ var Konva = {};
             }
             // mouse events
             else {
-                // if offsetX is defined, assume that offsetY is defined as well
-                if (offsetX !== undefined) {
-                    x = offsetX;
-                    y = evt.offsetY;
+                if (!contentPosition) {
+                    x = evt.offsetX;
+                    y = evt.offetY;
                 }
                 // we unfortunately have to use UA detection here because accessing
                 // the layerX or layerY properties in newer versions of Chrome
@@ -8917,10 +8908,8 @@ var Konva = {};
                 else if (Konva.UA.browser === 'mozilla') {
                     x = evt.layerX || (evt.clientX - contentPosition.left);
                     y = evt.layerY || (evt.clientY - contentPosition.top);
-                }
-                // if clientX is defined, assume that clientY is defined as well
-                else if (clientX !== undefined && contentPosition) {
-                    x = clientX - contentPosition.left;
+                } else {
+                    x = evt.clientX - contentPosition.left;
                     y = evt.clientY - contentPosition.top;
                 }
             }
@@ -10677,6 +10666,8 @@ var Konva = {};
                     }
                 }
 
+
+                node.getStage()._setPointerPosition(evt);
                 node._setDragPosition(evt);
                 if(!dd.isDragging) {
                     dd.isDragging = true;
@@ -10723,7 +10714,6 @@ var Konva = {};
         },
         _endDragAfter: function(evt) {
             evt = evt || {};
-
             var dragEndNode = evt.dragEndNode;
 
             if (evt && dragEndNode) {
@@ -10941,6 +10931,9 @@ var Konva = {};
     var html = Konva.document.documentElement;
     html.addEventListener('mouseup', Konva.DD._endDragBefore, true);
     html.addEventListener('touchend', Konva.DD._endDragBefore, true);
+
+    html.addEventListener('mousemove', Konva.DD._drag);
+    html.addEventListener('touchmove', Konva.DD._drag);
 
     html.addEventListener('mouseup', Konva.DD._endDragAfter, false);
     html.addEventListener('touchend', Konva.DD._endDragAfter, false);

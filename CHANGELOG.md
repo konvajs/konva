@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+### Changed
+- Dragging now works much better. If your pointer is out of stage content dragging will still continue.
+
 ## [0.9.5][2015-05-28]
 
 ### Fixed

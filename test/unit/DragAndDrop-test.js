@@ -69,9 +69,6 @@ suite('DragAndDrop', function() {
     // ======================================================
     test('right click is not for dragging', function() {
          var stage = addStage();
-
-        var top = stage.content.getBoundingClientRect().top;
-
         var layer = new Konva.Layer();
 
         var circle = new Konva.Circle({
@@ -88,48 +85,42 @@ suite('DragAndDrop', function() {
         layer.add(circle);
         stage.add(layer);
 
-        stage._mousedown({
-            clientX: 291,
-            clientY: 112 + top,
+        stage.simulateMouseDown({
+            x: 291,
+            y: 112
         });
 
-        stage._mousemove({
-            clientX: 311,
-            clientY: 112 + top,
+        stage.simulateMouseMove({
+            x: 311,
+            y: 112
         });
 
         assert(circle.isDragging(), 'dragging is ok');
 
-        Konva.DD._endDragBefore();
-        stage._mouseup({
-            clientX: 291,
-            clientY: 112 + top
+        stage.simulateMouseUp({
+            x: 291,
+            y: 112
         });
-        Konva.DD._endDragAfter({dragEndNode:circle});
 
-
-        
-        stage._mousedown({
-            clientX: 291,
-            clientY: 112 + top,
+        stage.simulateMouseDown({
+            x: 291,
+            y: 112,
             button: 2
         });
 
-        stage._mousemove({
-            clientX: 311,
-            clientY: 112 + top,
+        stage.simulateMouseMove({
+            x: 311,
+            y: 112,
             button: 2
         });
 
         assert(circle.isDragging() === false, 'no dragging with right click');
 
-        Konva.DD._endDragBefore();
-        stage._mouseup({
-            clientX: 291,
-            clientY: 112 + top,
+        stage.simulateMouseUp({
+            x: 291,
+            y: 112,
             button: 2
         });
-        Konva.DD._endDragAfter({dragEndNode:circle});
     });
 
     // ======================================================
@@ -177,15 +168,15 @@ suite('DragAndDrop', function() {
 
         assert.equal(shape, rect, 'rect is detected');
 
-        stage._mousedown({
-            clientX: stage.width() / 2,
-            clientY: stage.height() / 2 + top
+        stage.simulateMouseDown({
+            x: stage.width() / 2,
+            y: stage.height() / 2
         });
 
 
-        stage._mousemove({
-            clientX: stage.width() / 2 + 5,
-            clientY: stage.height() / 2 + top
+        stage.simulateMouseMove({
+            x: stage.width() / 2 + 5,
+            y: stage.height() / 2
         });
 
         // redraw layer. hit must be not touched for not dragging layer
@@ -207,12 +198,10 @@ suite('DragAndDrop', function() {
         assert.equal(!!shape, false, 'circle is not detected');
 
 
-        Konva.DD._endDragBefore();
-        stage._mouseup({
-            clientX: 291,
-            clientY: 112 + top
+        stage.simulateMouseUp({
+            x: 291,
+            y: 112 + top
         });
-        Konva.DD._endDragAfter({dragEndNode:circle});
 
     });
 
@@ -254,15 +243,15 @@ suite('DragAndDrop', function() {
         endDragLayer.add(rect);
         endDragLayer.draw();
 
-        stage._mousedown({
-            clientX: stage.width() / 2,
-            clientY: stage.height() / 2 + top
+        stage.simulateMouseDown({
+            x: stage.width() / 2,
+            y: stage.height() / 2
         });
 
 
-        stage._mousemove({
-            clientX: stage.width() / 2 + 5,
-            clientY: stage.height() / 2 + top
+        stage.simulateMouseMove({
+            x: stage.width() / 2 + 5,
+            y: stage.height() / 2
         });
 
         // change layer while dragging circle
@@ -291,12 +280,10 @@ suite('DragAndDrop', function() {
         assert.equal(!!shape, false, 'circle is not detected');
 
 
-        Konva.DD._endDragBefore();
-        stage._mouseup({
-            clientX: 291,
-            clientY: 112 + top
+        stage.simulateMouseUp({
+            x: 291,
+            y: 112 + top
         });
-        Konva.DD._endDragAfter({dragEndNode:circle});
 
     });
 });

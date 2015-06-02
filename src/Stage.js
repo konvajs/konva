@@ -410,7 +410,7 @@
                 return null;
             }
             this._setPointerPosition(evt);
-            var dd = Konva.DD, shape;
+            var shape;
 
             if (!Konva.isDragging()) {
                 shape = this.getIntersection(this.getPointerPosition());
@@ -443,9 +443,6 @@
 
                 // content event
                 this._fire(CONTENT_MOUSEMOVE, {evt: evt});
-            }
-            if(dd) {
-                dd._drag(evt);
             }
 
             // always call preventDefault for desktop events because some browsers
@@ -615,7 +612,6 @@
                 this._fire(CONTENT_TOUCHMOVE, {evt: evt});
             }
             if(dd) {
-                dd._drag(evt);
                 if (Konva.isDragging()) {
                     evt.preventDefault();
                 }
@@ -637,11 +633,8 @@
         },
         _setPointerPosition: function(evt) {
             var contentPosition = this._getContentPosition(),
-                offsetX = evt.offsetX,
-                clientX = evt.clientX,
                 x = null,
-                y = null,
-                touch;
+                y = null;
             evt = evt ? evt : window.event;
 
             // touch events
@@ -649,8 +642,7 @@
                 // currently, only handle one finger
                 if (evt.touches.length > 0) {
 
-                    touch = evt.touches[0];
-
+                    var touch = evt.touches[0];
                     // get the information for finger #1
                     x = touch.clientX - contentPosition.left;
                     y = touch.clientY - contentPosition.top;
@@ -658,10 +650,9 @@
             }
             // mouse events
             else {
-                // if offsetX is defined, assume that offsetY is defined as well
-                if (offsetX !== undefined) {
-                    x = offsetX;
-                    y = evt.offsetY;
+                if (!contentPosition) {
+                    x = evt.offsetX;
+                    y = evt.offetY;
                 }
                 // we unfortunately have to use UA detection here because accessing
                 // the layerX or layerY properties in newer versions of Chrome
@@ -670,10 +661,8 @@
                 else if (Konva.UA.browser === 'mozilla') {
                     x = evt.layerX || (evt.clientX - contentPosition.left);
                     y = evt.layerY || (evt.clientY - contentPosition.top);
-                }
-                // if clientX is defined, assume that clientY is defined as well
-                else if (clientX !== undefined && contentPosition) {
-                    x = clientX - contentPosition.left;
+                } else {
+                    x = evt.clientX - contentPosition.left;
                     y = evt.clientY - contentPosition.top;
                 }
             }
