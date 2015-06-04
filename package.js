@@ -3,7 +3,7 @@ Package.describe({
     summary: "Konva.js html5 canvas framework",
     version: "0.9.5",
     documentation: "",
-    git: "git://github.com/konvajs/konva.git",
+    git: "https://github.com/Arturs/konva",
 });
 
 Package.onUse(function (api) {
