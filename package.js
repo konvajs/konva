@@ -8,7 +8,7 @@ Package.describe({
 Package.onUse(function (api) {
   api.add_files(['konva.js'], 'client');
 
-  // if (typeof api.export !== 'undefined') {
-  //   api.export(['Konva'], 'client'); 
-  // }
+   if (typeof api.export !== 'undefined') {
+     api.export(['Konva'], 'client'); 
+   }
 });
