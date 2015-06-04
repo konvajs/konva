@@ -15,7 +15,11 @@
     "gulp-replace": "^0.5.3",
     "gulp-uglify": "^1.1.0",
     "gulp-util": "^3.0.1",
-    "mocha": "1.21.4"
+    "mocha": "1.21.4",
+
+    "grunt-exec": "^0.4.6",
+    "spacejam": "^1.1.1",
+    
   },
   "keywords": [
     "canvas",
@@ -44,5 +48,5 @@
     "browsers": [
       "ie/latest"
     ]
-  }
+  },
 }
