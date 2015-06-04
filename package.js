@@ -5,8 +5,8 @@ Package.describe({
     git: "https://github.com/Arturs/konva",
 });
 
-Package.onUse(function (api) {
-  api.add_files(['konva.js'], 'client');
+Package.on_use(function (api) {
+  api.add_files(['konva.min.js'], 'client');
 
    if (typeof api.export !== 'undefined') {
      api.export(['Konva'], 'client'); 
