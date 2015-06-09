@@ -85,7 +85,7 @@
     * @returns {Integer}
     */
 
-    Konva.Factory.addGetterSetter(Konva.Node, 'alpha', 0, function(val) {
+    Konva.Factory.addGetterSetter(Konva.Node, 'alpha', 1, function(val) {
         this._filterUpToDate = false;
         if (val > 1) {
             return 1;
