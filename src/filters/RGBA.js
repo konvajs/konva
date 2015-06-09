@@ -20,16 +20,16 @@
             green = this.green(),
             blue = this.blue(),
             alpha = this.alpha(),
-            i, brightness, ab, iab;
+            i, brightness, ab, ia;
 
         for (i = 0; i < nPixels; i += 4) {
             brightness = (0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2])/255;
             ab = alpha * brightness;
-            iab = (1 - alpha) * brightness;
+            ia = (1 - alpha);
 
-            data[i] = red * ab + data[i] * iab; // r
-            data[i + 1] = green * ab + data[i + 1] * iab; // g
-            data[i + 2] = blue * ab + data[i + 2] * iab; // b
+            data[i] = red * ab + data[i] * ia; // r
+            data[i + 1] = green * ab + data[i + 1] * ia; // g
+            data[i + 2] = blue * ab + data[i + 2] * ia; // b
         }
     };
 
