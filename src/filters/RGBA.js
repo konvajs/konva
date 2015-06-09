@@ -20,14 +20,16 @@
             green = this.green(),
             blue = this.blue(),
             alpha = this.alpha(),
-            i, brightness;
+            i, brightness, ab, iab;
 
         for (i = 0; i < nPixels; i += 4) {
             brightness = (0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2])/255;
-            data[i] = brightness*red; // r
-            data[i + 1] = brightness*green; // g
-            data[i + 2] = brightness*blue; // b
-            data[i + 3] = brightness*alpha; // alpha
+            ab = alpha * brightness;
+            iab = (1 - alpha) * brightness;
+
+            data[i] = red * ab + data[i] * iab; // r
+            data[i + 1] = green * ab + data[i + 1] * iab; // g
+            data[i + 2] = blue * ab + data[i + 2] * iab; // b
         }
     };
 
@@ -92,7 +94,7 @@
             return 0;
         }
         else {
-            return Math.round(val);
+            return val;
         }
     });
     /**
