@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.9.9
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Tue Jun 02 2015
+ * Date: Tue Jun 09 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -5115,6 +5115,115 @@ var Konva = {};
     * @param {Integer} blue value between 0 and 255
     * @returns {Integer}
     */
+})();
+
+(function () {
+    /**
+     * RGBA Filter
+     * @function
+     * @name RGBA
+     * @memberof Konva.Filters
+     * @param {Object} imageData
+     * @author codefo
+     * @example
+     * node.cache();
+     * node.filters([Konva.Filters.RGBA]);
+     * node.blue(120);
+     * node.green(200);
+     * node.alpha(0.3);
+     */
+    Konva.Filters.RGBA = function (imageData) {
+        var data = imageData.data,
+            nPixels = data.length,
+            red = this.red(),
+            green = this.green(),
+            blue = this.blue(),
+            alpha = this.alpha(),
+            i, brightness, ab, iab;
+
+        for (i = 0; i < nPixels; i += 4) {
+            brightness = (0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2])/255;
+            ab = alpha * brightness;
+            iab = (1 - alpha) * brightness;
+
+            data[i] = red * ab + data[i] * iab; // r
+            data[i + 1] = green * ab + data[i + 1] * iab; // g
+            data[i + 2] = blue * ab + data[i + 2] * iab; // b
+        }
+    };
+
+    Konva.Factory.addGetterSetter(Konva.Node, 'red', 0, function(val) {
+        this._filterUpToDate = false;
+        if (val > 255) {
+            return 255;
+        }
+        else if (val < 0) {
+            return 0;
+        }
+        else {
+            return Math.round(val);
+        }
+    });
+    /**
+    * get/set filter red value. Use with {@link Konva.Filters.RGBA} filter.
+    * @name red
+    * @method
+    * @memberof Konva.Node.prototype
+    * @param {Integer} red value between 0 and 255
+    * @returns {Integer}
+    */
+
+    Konva.Factory.addGetterSetter(Konva.Node, 'green', 0, function(val) {
+        this._filterUpToDate = false;
+        if (val > 255) {
+            return 255;
+        }
+        else if (val < 0) {
+            return 0;
+        }
+        else {
+            return Math.round(val);
+        }
+    });
+    /**
+    * get/set filter green value. Use with {@link Konva.Filters.RGBA} filter.
+    * @name green
+    * @method
+    * @memberof Konva.Node.prototype
+    * @param {Integer} green value between 0 and 255
+    * @returns {Integer}
+    */
+
+    Konva.Factory.addGetterSetter(Konva.Node, 'blue', 0, Konva.Validators.RGBComponent, Konva.Factory.afterSetFilter);
+    /**
+    * get/set filter blue value. Use with {@link Konva.Filters.RGBA} filter.
+    * @name blue
+    * @method
+    * @memberof Konva.Node.prototype
+    * @param {Integer} blue value between 0 and 255
+    * @returns {Integer}
+    */
+
+    Konva.Factory.addGetterSetter(Konva.Node, 'alpha', 0, function(val) {
+        this._filterUpToDate = false;
+        if (val > 1) {
+            return 1;
+        }
+        else if (val < 0) {
+            return 0;
+        }
+        else {
+            return val;
+        }
+    });
+    /**
+     * get/set filter alpha value. Use with {@link Konva.Filters.RGBA} filter.
+     * @name alpha
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {Float} alpha value between 0 and 1
+     * @returns {Float}
+     */
 })();
 
 (function () {
