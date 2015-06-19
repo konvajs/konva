@@ -1616,4 +1616,17 @@ suite('Container', function() {
         layer.add(circle1, circle2, circle3);
         assert.equal(layer.getChildren().length, 3, 'layer has exactly three children');
     });
+
+    test('getClientRect - test empty case', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        stage.add(layer);
+        var group = new Konva.Group({
+            x : 10,
+            y : 10
+        });
+        group.add(new Konva.Group());
+        assert.deepEqual(group.getClientRect(), {x:10, y:10, width: 0, height:0});
+
+    });
 });

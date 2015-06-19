@@ -410,6 +410,12 @@
         },
         getClientRect: function(skipTransform) {
             var minX, minY, maxX, maxY;
+            var selfRect = {
+                    x: 0,
+                    y: 0,
+                    width: 0,
+                    height: 0
+                };
             this.children.each(function(child) {
                 var rect = child.getClientRect();
                 if (minX === undefined) { // initial value for first child
@@ -426,12 +432,15 @@
 
             });
 
-            var selfRect = {
-                x: minX,
-                y: minY,
-                width: maxX - minX,
-                height: maxY - minY
-            };
+            if (this.children.length !== 0) {
+                selfRect = {
+                    x: minX,
+                    y: minY,
+                    width: maxX - minX,
+                    height: maxY - minY
+                };
+            }
+
             if (!skipTransform) {
                 return this._transformedRect(selfRect);
             }
