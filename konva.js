@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.9.9
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Tue Jun 09 2015
+ * Date: Thu Jul 30 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -5139,16 +5139,14 @@ var Konva = {};
             green = this.green(),
             blue = this.blue(),
             alpha = this.alpha(),
-            i, brightness, ab, iab;
+            i, brightness, ia;
 
         for (i = 0; i < nPixels; i += 4) {
-            brightness = (0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2])/255;
-            ab = alpha * brightness;
-            iab = (1 - alpha) * brightness;
+            ia = (1 - alpha);
 
-            data[i] = red * ab + data[i] * iab; // r
-            data[i + 1] = green * ab + data[i + 1] * iab; // g
-            data[i + 2] = blue * ab + data[i + 2] * iab; // b
+            data[i] = red * alpha + data[i] * ia; // r
+            data[i + 1] = green * alpha + data[i + 1] * ia; // g
+            data[i + 2] = blue * alpha + data[i + 2] * ia; // b
         }
     };
 
@@ -5204,7 +5202,7 @@ var Konva = {};
     * @returns {Integer}
     */
 
-    Konva.Factory.addGetterSetter(Konva.Node, 'alpha', 0, function(val) {
+    Konva.Factory.addGetterSetter(Konva.Node, 'alpha', 1, function(val) {
         this._filterUpToDate = false;
         if (val > 1) {
             return 1;
