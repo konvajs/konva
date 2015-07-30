@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.9.9
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri Jun 19 2015
+ * Date: Thu Jul 30 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -5139,10 +5139,10 @@ var Konva = {};
             green = this.green(),
             blue = this.blue(),
             alpha = this.alpha(),
-            i, brightness, ia;
+            i, ia;
 
         for (i = 0; i < nPixels; i += 4) {
-            ia = (1 - alpha);
+            ia = 1 - alpha;
 
             data[i] = red * alpha + data[i] * ia; // r
             data[i + 1] = green * alpha + data[i + 1] * ia; // g
