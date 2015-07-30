@@ -1,6 +1,6 @@
-suite('Line', function() {
+suite('Line', function () {
     // ======================================================
-    test('add line', function() {
+    test('add line', function () {
         var stage = addStage();
         var layer = new Konva.Layer();
 
@@ -19,12 +19,12 @@ suite('Line', function() {
         line.setPoints([1, 2, 3, 4]);
         assert.equal(line.getPoints()[0], 1);
 
-        line.setPoints([5,6,7,8]);
+        line.setPoints([5, 6, 7, 8]);
         assert.equal(line.getPoints()[0], 5);
 
         line.setPoints([73, 160, 340, 23, 340, 80]);
         assert.equal(line.getPoints()[0], 73);
-        
+
         assert.equal(line.getClassName(), 'Line');
 
         layer.draw();
@@ -32,7 +32,7 @@ suite('Line', function() {
     });
 
     // ======================================================
-    test('test default ponts array for two lines', function() {
+    test('test default ponts array for two lines', function () {
         var stage = addStage();
         var layer = new Konva.Layer();
 
@@ -53,19 +53,19 @@ suite('Line', function() {
             draggable: true
         });
 
-        line.setPoints([0,1,2,3]);
-        redLine.setPoints([4,5,6,7]);
+        line.setPoints([0, 1, 2, 3]);
+        redLine.setPoints([4, 5, 6, 7]);
 
         layer.add(line).add(redLine);
         stage.add(layer);
 
         assert.equal(line.getPoints()[0], 0);
         assert.equal(redLine.getPoints()[0], 4);
-        
+
     });
 
     // ======================================================
-    test('add dashed line', function() {
+    test('add dashed line', function () {
         var stage = addStage();
         var layer = new Konva.Layer();
 
@@ -96,7 +96,10 @@ suite('Line', function() {
             dash: [30, 10, 0, 10, 10, 20],
             shadowColor: '#aaa',
             shadowBlur: 10,
-            shadowOffset: {x:20, y:20}
+            shadowOffset: {
+                x: 20,
+                y: 20
+            }
             //opacity: 0.2
         });
 
@@ -111,20 +114,23 @@ suite('Line', function() {
 
     });
 
-   // ======================================================
-    test('add line with shadow', function() {
+    // ======================================================
+    test('add line with shadow', function () {
         var stage = addStage();
         var layer = new Konva.Layer();
 
         var line = new Konva.Line({
-            points: [73,160,340,23],
+            points: [73, 160, 340, 23],
             stroke: 'blue',
             strokeWidth: 20,
             lineCap: 'round',
             lineJoin: 'round',
             shadowColor: 'black',
             shadowBlur: 20,
-            shadowOffset: {x: 10, y: 10},
+            shadowOffset: {
+                x: 10,
+                y: 10
+            },
             shadowOpacity: 0.5,
             draggable: true
         });
@@ -160,15 +166,15 @@ suite('Line', function() {
 
     });
 
-    test('line hit test with strokeScaleEnabled = false', function() {
+    test('line hit test with strokeScaleEnabled = false', function () {
         var stage = addStage();
         var scale = 0.1;
         var layer = new Konva.Layer();
 
         var group = new Konva.Group({
             scale: {
-                x :scale,
-                y : scale
+                x: scale,
+                y: scale
             }
         });
 
@@ -177,7 +183,7 @@ suite('Line', function() {
             stroke: 'red',
             strokeScaleEnabled: false,
             strokeWidth: 10,
-            y : 0
+            y: 0
         });
         group.add(line1);
 
@@ -185,7 +191,7 @@ suite('Line', function() {
             points: [0, 0, 300, 0],
             stroke: 'green',
             strokeWidth: 40 / scale,
-            y : 60 / scale
+            y: 60 / scale
         });
         group.add(line2);
 
@@ -194,19 +200,19 @@ suite('Line', function() {
         showHit(layer);
 
         var shape = layer.getIntersection({
-            x : 10,
-            y : 60
+            x: 10,
+            y: 60
         });
         assert.equal(shape, line2, 'second line detected');
 
         shape = layer.getIntersection({
-            x : 10,
-            y : 4
+            x: 10,
+            y: 4
         });
         assert.equal(shape, line1, 'first line detected');
     });
 
-    test('line get size', function() {
+    test('line get size', function () {
         var stage = addStage();
         var layer = new Konva.Layer();
 
@@ -221,18 +227,18 @@ suite('Line', function() {
         stage.add(layer);
 
         assert.deepEqual(line.size(), {
-            width : 500 - 73,
-            height : 180 - 23
+            width: 500 - 73,
+            height: 180 - 23
         });
     });
 
-    test('getSelfRect', function() {
+    test('getSelfRect', function () {
         var stage = addStage();
         var layer = new Konva.Layer();
         var blob = new Konva.Line({
-            x : 50,
-            y : 50,
-            points: [-25,50,250,-30,150,50,250,110],
+            x: 50,
+            y: 50,
+            points: [-25, 50, 250, -30, 150, 50, 250, 110],
             stroke: 'blue',
             strokeWidth: 10,
             draggable: true,
@@ -244,30 +250,59 @@ suite('Line', function() {
         stage.add(layer);
 
         assert.deepEqual(blob.getSelfRect(), {
-            x : -25,
-            y : -30,
-            width : 275,
-            height : 140
+            x: -25,
+            y: -30,
+            width: 275,
+            height: 140
         });
     });
 
-    test('line caching', function() {
+    test('getClientRect', function () {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var poly = new Konva.Line({
+            x: 0,
+            y: 0,
+            points: [-100, 0, +100, 0, +100, 100, -100, 100],
+            closed: true,
+            fill: '#0f0'
+        });
+
+        stage.position({
+            x: 150,
+            y: 50
+        });
+
+        layer.add(poly);
+        stage.add(layer);
+
+        var rect = layer.getClientRect();
+        assert.deepEqual(rect, {
+            x: -100,
+            y: 0,
+            width: 200,
+            height: 100
+        });
+    });
+
+    test('line caching', function () {
         var stage = addStage();
         var layer = new Konva.Layer();
         var blob = new Konva.Line({
-            x : 50,
-            y : 50,
-            points: [-25,50,250,-30,150,50,250,110],
+            x: 50,
+            y: 50,
+            points: [-25, 50, 250, -30, 150, 50, 250, 110],
             stroke: 'blue',
             strokeWidth: 10,
             draggable: true,
-            closed : true
+            closed: true
         });
 
         layer.add(blob);
         var layer2 = layer.clone();
         blob.cache({
-            offset : 30
+            offset: 30
         });
         stage.add(layer);
         stage.add(layer2);

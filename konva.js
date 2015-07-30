@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.9.9
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Thu Jul 30 2015
+ * Date: Fri Jun 19 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -6723,6 +6723,12 @@ var Konva = {};
         },
         getClientRect: function(skipTransform) {
             var minX, minY, maxX, maxY;
+            var selfRect = {
+                    x: 0,
+                    y: 0,
+                    width: 0,
+                    height: 0
+                };
             this.children.each(function(child) {
                 var rect = child.getClientRect();
                 if (minX === undefined) { // initial value for first child
@@ -6739,12 +6745,15 @@ var Konva = {};
 
             });
 
-            var selfRect = {
-                x: minX,
-                y: minY,
-                width: maxX - minX,
-                height: maxY - minY
-            };
+            if (this.children.length !== 0) {
+                selfRect = {
+                    x: minX,
+                    y: minY,
+                    width: maxX - minX,
+                    height: maxY - minY
+                };
+            }
+
             if (!skipTransform) {
                 return this._transformedRect(selfRect);
             }
@@ -12996,7 +13005,7 @@ var Konva = {};
     Konva.Collection.mapMethods(Konva.Text);
 })();
 
-(function() {
+(function () {
     /**
      * Line constructor.&nbsp; Lines are defined by an array of points and
      *  a tension
@@ -13088,23 +13097,23 @@ var Konva = {};
      *   tension: 1
      * });
      */
-    Konva.Line = function(config) {
+    Konva.Line = function (config) {
         this.___init(config);
     };
 
     Konva.Line.prototype = {
-        ___init: function(config) {
+        ___init: function (config) {
             // call super constructor
             Konva.Shape.call(this, config);
             this.className = 'Line';
 
-            this.on('pointsChange.konva tensionChange.konva closedChange.konva', function() {
+            this.on('pointsChange.konva tensionChange.konva closedChange.konva', function () {
                 this._clearCache('tensionPoints');
             });
 
             this.sceneFunc(this._sceneFunc);
         },
-        _sceneFunc: function(context) {
+        _sceneFunc: function (context) {
             var points = this.getPoints(),
                 length = points.length,
                 tension = this.getTension(),
@@ -13119,7 +13128,7 @@ var Konva = {};
             context.moveTo(points[0], points[1]);
 
             // tension
-            if(tension !== 0 && length > 4) {
+            if (tension !== 0 && length > 4) {
                 tp = this.getTensionPoints();
                 len = tp.length;
                 n = closed ? 0 : 4;
@@ -13128,7 +13137,7 @@ var Konva = {};
                     context.quadraticCurveTo(tp[0], tp[1], tp[2], tp[3]);
                 }
 
-                while(n < len - 2) {
+                while (n < len - 2) {
                     context.bezierCurveTo(tp[n++], tp[n++], tp[n++], tp[n++], tp[n++], tp[n++]);
                 }
 
@@ -13138,7 +13147,7 @@ var Konva = {};
             }
             // no tension
             else {
-                for(n = 2; n < length; n += 2) {
+                for (n = 2; n < length; n += 2) {
                     context.lineTo(points[n], points[n + 1]);
                 }
             }
@@ -13153,18 +13162,17 @@ var Konva = {};
                 context.strokeShape(this);
             }
         },
-        getTensionPoints: function() {
+        getTensionPoints: function () {
             return this._getCache('tensionPoints', this._getTensionPoints);
         },
-        _getTensionPoints: function() {
+        _getTensionPoints: function () {
             if (this.getClosed()) {
                 return this._getTensionPointsClosed();
-            }
-            else {
+            } else {
                 return Konva.Util._expandPoints(this.getPoints(), this.getTension());
             }
         },
-        _getTensionPointsClosed: function() {
+        _getTensionPointsClosed: function () {
             var p = this.getPoints(),
                 len = p.length,
                 tension = this.getTension(),
@@ -13208,14 +13216,14 @@ var Konva = {};
 
             return tp;
         },
-        getWidth: function() {
+        getWidth: function () {
             return this.getSelfRect().width;
         },
-        getHeight: function() {
+        getHeight: function () {
             return this.getSelfRect().height;
         },
         // overload size detection
-        getSelfRect: function() {
+        getSelfRect: function () {
             var points;
             if (this.getTension() !== 0) {
                 points = this._getTensionPoints();
@@ -13224,11 +13232,12 @@ var Konva = {};
             }
             var minX = points[0];
             var maxX = points[0];
-            var minY = points[0];
-            var maxY = points[0];
+            var minY = points[1];
+            var maxY = points[1];
             var x, y;
             for (var i = 0; i < points.length / 2; i++) {
-                x = points[i * 2]; y = points[i * 2 + 1];
+                x = points[i * 2];
+                y = points[i * 2 + 1];
                 minX = Math.min(minX, x);
                 maxX = Math.max(maxX, x);
                 minY = Math.min(minY, y);
