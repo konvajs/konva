@@ -10,7 +10,7 @@
     "gulp-eslint": "^0.11.1",
     "gulp-jscpd": "0.0.3",
     "gulp-jsdoc": "^0.1.4",
-    "gulp-mocha-phantomjs": "^0.6.1",
+    "gulp-mocha-phantomjs": "^0.8.1",
     "gulp-rename": "^1.2.0",
     "gulp-replace": "^0.5.3",
     "gulp-uglify": "^1.1.0",
