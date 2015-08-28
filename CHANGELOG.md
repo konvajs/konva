@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Correct calculation in `getClientRect` method of `Konva.Line` and `Konva.Container`.
+- Correct `toObject()` behaviour for node with attrs with extended native prototypes
 
 ### Changed
 - Dragging now works much better. If your pointer is out of stage content dragging will still continue.

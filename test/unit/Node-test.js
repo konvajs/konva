@@ -3015,4 +3015,15 @@ suite('Node', function() {
       };
       imageObj.src = 'assets/darth-vader.jpg';
   });
+
+  test('toObject with extended prototypes', function() {
+      var node = new Konva.Circle({
+          id: 'foo',
+          radius: 10
+      });
+      Number.prototype.customFunc = function() {};
+      console.dir(node.toObject());
+      assert.equal(node.toObject().attrs.radius, 10);
+      delete Number.prototype.customFunc;
+  });
 });

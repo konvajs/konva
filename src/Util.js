@@ -530,6 +530,9 @@
                 key;
 
             for(key in obj) {
+                if (!obj.hasOwnProperty(key)) {
+                    continue;
+                }
                 if(this._isFunction(obj[key])) {
                     names.push(key);
                 }
