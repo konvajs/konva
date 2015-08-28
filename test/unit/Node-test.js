@@ -2168,6 +2168,17 @@ suite('Node', function() {
     });
 
     // ======================================================
+    test('create node using object', function() {
+        var node = new Konva.Circle({
+            id: 'test',
+            radius: 10
+        });
+        var clone = Konva.Node.create(node.toObject());
+
+        assert.deepEqual(node.toObject(), clone.toObject());
+    });
+
+    // ======================================================
     test('serialize stage with custom shape', function() {
         var stage = addStage();
         var layer = new Konva.Layer();
