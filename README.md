@@ -26,7 +26,7 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 We are using [node-canvas](https://github.com/LearnBoost/node-canvas) to create canvas element.
 
 1. Install node-canvas [https://github.com/LearnBoost/node-canvas/wiki/_pages](https://github.com/LearnBoost/node-canvas/wiki/_pages)
-2. `npm install jsdom`
+2. `npm install jsdom@3.x` (jsdom v4 require iojs)
 3. `npm install konva`
 
 See file `resources/nodejs-demo.js` for example.
