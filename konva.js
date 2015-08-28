@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.9.9
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sun Aug 23 2015
+ * Date: Fri Aug 28 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -794,6 +794,9 @@ var Konva = {};
                 key;
 
             for(key in obj) {
+                if (!obj.hasOwnProperty(key)) {
+                    continue;
+                }
                 if(this._isFunction(obj[key])) {
                     names.push(key);
                 }
@@ -3866,7 +3869,7 @@ var Konva = {};
     });
 
     /**
-     * create node with JSON string.  De-serializtion does not generate custom
+     * create node with JSON string or an Object.  De-serializtion does not generate custom
      *  shape drawing functions, images, or event handlers (this would make the
      *  serialized object huge).  If your app uses custom shapes, images, and
      *  event handlers (it probably does), then you need to select the appropriate
@@ -3874,12 +3877,15 @@ var Konva = {};
      *  and setImage() methods
      * @method
      * @memberof Konva.Node
-     * @param {String} json
+     * @param {String|Object} json string or object
      * @param {Element} [container] optional container dom element used only if you're
      *  creating a stage node
      */
-    Konva.Node.create = function(json, container) {
-        return this._createNode(JSON.parse(json), container);
+    Konva.Node.create = function(data, container) {
+        if (Konva.Util._isString(data)) {
+            data = JSON.parse(data);
+        }
+        return this._createNode(data, container);
     };
     Konva.Node._createNode = function(obj, container) {
         var className = Konva.Node.prototype.getClassName.call(obj),
