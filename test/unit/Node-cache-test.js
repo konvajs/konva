@@ -62,7 +62,7 @@ suite('Caching', function() {
         context.fillStyle = 'green';
         context.fill();
 
-        if (!window.mochaPhantomJS) {
+        if (!window.isPhantomJS) {
             compareLayerAndCanvas(layer, canvas, 200);
             cloneAndCompareLayer(layer, 150);
         }
@@ -177,7 +177,7 @@ suite('Caching', function() {
         layer.add(rect);
         stage.add(layer);
 
-        if (!window.mochaPhantomJS) {
+        if (!window.isPhantomJS) {
             cloneAndCompareLayer(layer, 10);
         }
     });
@@ -398,7 +398,7 @@ suite('Caching', function() {
         context.closePath();
         context.fillStyle = 'green';
         context.fill();
-        if (!window.mochaPhantomJS) {
+        if (!window.isPhantomJS) {
             compareLayerAndCanvas(layer, canvas, 150);
             cloneAndCompareLayer(layer, 150);
         }

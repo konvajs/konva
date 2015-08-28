@@ -66,6 +66,7 @@ function init() {
 Konva.enableTrace = true;
 Konva.showWarnings = true;
 //Konva.pixelRatio = 2;
+window.isPhantomJS = /PhantomJS/.test(window.navigator.userAgent);
 
 function addStats() {
     stats = new Stats();

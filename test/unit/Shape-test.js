@@ -585,7 +585,7 @@ suite('Shape', function() {
         // don't test in PhantomJS as it use old chrome engine
         // it it has opacity + shadow bug
         if (!window.mochaPhantomJS) {
-            compareLayerAndCanvas(layer, canvas, 50);
+            compareLayerAndCanvas(layer, canvas, 210);
         }
 
         var trace = layer.getContext().getTrace();

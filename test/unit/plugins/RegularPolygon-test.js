@@ -2,7 +2,7 @@ suite('RegularPolygon', function() {
     // ======================================================
     test('add regular polygon triangle', function() {
         var stage = addStage();
-        
+
         var layer = new Konva.Layer();
 
         var poly = new Konva.RegularPolygon({
@@ -22,7 +22,7 @@ suite('RegularPolygon', function() {
 
         layer.add(poly);
         stage.add(layer);
-        
+
         assert.equal(poly.getClassName(), 'RegularPolygon');
 
     });
@@ -46,7 +46,7 @@ suite('RegularPolygon', function() {
         layer.add(poly);
         stage.add(layer);
     });
-    
+
     // ======================================================
     test('add regular polygon pentagon', function() {
         var stage = addStage();
@@ -66,7 +66,7 @@ suite('RegularPolygon', function() {
         layer.add(poly);
         stage.add(layer);
     });
-    
+
     // ======================================================
     test('add regular polygon octogon', function() {
         var stage = addStage();
@@ -142,9 +142,9 @@ suite('RegularPolygon', function() {
             height : 100,
             width : 100
         });
-        if (!window.mochaPhantomJS) {
+        if (!window.isPhantomJS) {
             cloneAndCompareLayer(layer, 200);
         }
     });
-    
+
 });

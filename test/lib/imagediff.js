@@ -11,7 +11,7 @@
       var Canvas = require('canvas');
     } catch (e) {
       throw new Error(
-        e.message + '\n' + 
+        e.message + '\n' +
         'Please see https://github.com/HumbleSoftware/js-imagediff#cannot-find-module-canvas\n'
       );
     }
@@ -166,7 +166,12 @@
     tolerance = tolerance || 0;
 
     if (!equalDimensions(a, b)) return false;
-    for (i = length; i--;) if (aData[i] !== bData[i] && Math.abs(aData[i] - bData[i]) > tolerance) return false;
+    for (i = length; i--;) {
+        if (aData[i] !== bData[i] && Math.abs(aData[i] - bData[i]) > tolerance) {
+            console.log('Difference', Math.abs(aData[i] - bData[i]));
+            return false;
+        }
+    }
 
     return true;
   }

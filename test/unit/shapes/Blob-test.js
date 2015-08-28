@@ -111,7 +111,7 @@ suite('Blob', function(){
         layer.add(blob);
         stage.add(layer);
 
-        if (!window.mochaPhantomJS) {
+        if (!window.isPhantomJS) {
             cloneAndCompareLayer(layer, 100);
         }
     });

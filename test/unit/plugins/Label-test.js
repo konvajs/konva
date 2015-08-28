@@ -99,7 +99,7 @@ suite('Label', function() {
         assert.equal(stage.find('Label')[0], label);
     });
 
-    test('cache label', function() {
+    test.skip('cache label', function() {
         var stage = addStage();
         var layer = new Konva.Layer();
 

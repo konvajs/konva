@@ -22,7 +22,7 @@ suite('Filter', function() {
         circle.blurRadius(0);
         layer.draw();
 
-        if (!window.mochaPhantomJS) {
+        if (!window.isPhantomJS) {
             cloneAndCompareLayer(layer, 50);
         }
         Konva.pixelRatio = 1;
