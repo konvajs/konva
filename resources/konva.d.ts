@@ -46,6 +46,7 @@ declare module Konva {
         static Pixelate(imageData : any): Filter;
         static Posterize(imageData : any): Filter;
         static RGB(imageData : any): Filter;
+        static RGA(imageData : any): Filter;
         static Sepia(imageData : any): Filter;
         static Solarize(imageData : any): Filter;
         static Threshold(imageData : any): Filter;
@@ -107,7 +108,7 @@ declare module Konva {
 
     class Node {
         constructor (config: NodeConfig);
-        static create<T>(JSON: any, container?: HTMLElement) : T;
+        static create<T>(data: any, container?: HTMLElement) : T;
 
         blue() : number;
         blue(blue: number) : Node;
@@ -414,7 +415,7 @@ declare module Konva {
         fillPatternScaleY(y: number): Shape;
         fillPatternX(): number;
         fillPatternX(x: number): number;
-        fillPatternY(): number;        
+        fillPatternY(): number;
         fillPatternY(y: number): Shape;
         fillPriority(): string;
         fillPriority(priority: string): Shape;
@@ -844,7 +845,7 @@ declare module Konva {
         x: number;
         y: number;
     }
-    
+
 }
 
 declare module "konva" {
