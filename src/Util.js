@@ -905,9 +905,84 @@
             return str.substring(0, str.length - 1);
         },
         each: function(obj, func) {
-          for (var key in obj) {
-            func(key, obj[key]);
-          }
+            for (var key in obj) {
+                func(key, obj[key]);
+            }
+        },
+        _getProjectionToSegment: function(x1, y1, x2, y2, x3, y3) {
+            var x, y, dist;
+
+            var pd2 = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+            if(pd2 == 0) {
+                x = x1;
+                y = y1;
+                dist = (x3 - x2) * (x3 - x2) + (y3 - y2) * (y3 - y2);
+            } else {
+                var u = ((x3 - x1) * (x2 - x1) + (y3 - y1) * (y2 - y1)) / pd2;
+                if(u < 0) {
+                    x = x1;
+                    y = y1;
+                    dist = (x1 - x3) * (x1 - x3) + (y1 - y3) * (y1 - y3);
+                } else if (u > 1.0) {
+                    x = x2;
+                    y = y2;
+                    dist = (x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3);
+                } else {
+                    x = x1 + u * (x2 - x1);
+                    y = y1 + u * (y2 - y1);
+                    dist = (x - x3) * (x - x3) + (y - y3) * (y - y3);
+                }
+            }
+            return [x, y, dist];
+        },
+        // line as array of points.
+        // line might be closed
+        _getProjectionToLine: function(pt, line, isClosed) {
+            var pc = Konva.Util.cloneObject(pt);
+            var dist = Number.MAX_VALUE;
+            line.forEach(function(p1, i) {
+                if (!isClosed && i === line.length - 1) {
+                    return;
+                }
+                var p2 = line[(i + 1) % line.length];
+                var proj = Konva.Util._getProjectionToSegment(p1.x, p1.y, p2.x, p2.y, pt.x, pt.y);
+                var px = proj[0], py = proj[1], pdist = proj[2];
+                if (pdist < dist) {
+                    pc.x = px;
+                    pc.y = py;
+                    dist = pdist;
+                }
+            });
+            return pc;
+        },
+        _prepareArrayForTween: function(startArray, endArray, isClosed) {
+            var n, start = [], end = [];
+            if (startArray.length > endArray.length) {
+                var temp = endArray;
+                endArray = startArray;
+                startArray = temp;
+            }
+            for (n = 0; n < startArray.length; n += 2) {
+                start.push({
+                    x: startArray[n],
+                    y: startArray[n + 1]
+                });
+            }
+            for (n = 0; n < endArray.length; n += 2) {
+                end.push({
+                    x: endArray[n],
+                    y: endArray[n + 1]
+                });
+            }
+
+
+            var newStart = [];
+            end.forEach(function(point) {
+                var pr = Konva.Util._getProjectionToLine(point, start, isClosed);
+                newStart.push(pr.x);
+                newStart.push(pr.y);
+            });
+            return newStart;
         }
     };
 })();

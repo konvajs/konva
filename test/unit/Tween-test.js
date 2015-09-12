@@ -22,7 +22,7 @@ suite('Tween', function() {
         var onFinish = function() {
             assert(++finishCount <= 1, 'finishCount should not exceed 1');
             done();
-        }
+        };
 
         var tweens = 0;
         var attrs = 0;
@@ -215,6 +215,68 @@ suite('Tween', function() {
         setTimeout(function() {
             done();
         }, 50);
+    });
+
+    suite('tween array with different length', function() {
+        test('prepare array closed', function() {
+            var start = [0, 0, 10, 0, 10, 10];
+            var end = [0, 0, 10, 0, 10, 10, 0, 10];
+            var newStart = Konva.Util._prepareArrayForTween(start, end, true);
+            assert.deepEqual(newStart, [0, 0, 10, 0, 10, 10, 5, 5]);
+        });
+
+        test('prepare array - opened', function() {
+            var start = [0, 0, 10, 0, 10, 10, 0, 10];
+            var end = [0, 0, 10, 0, 7, 9];
+            end = Konva.Util._prepareArrayForTween(start, end, false);
+            assert.deepEqual(end, [0, 0, 10, 0, 7, 9, 7, 9]);
+        });
+
+        test('tween array with bigger size', function(done) {
+            var stage = addStage();
+
+            var layer = new Konva.Layer();
+            stage.add(layer);
+
+            var line = new Konva.Line({
+                stroke: 'black',
+                points: [100, 100, 200, 100, 200, 200],
+                closed: true
+            });
+            layer.add(line);
+
+            line.to({
+                points: [100, 100, 200, 100, 200, 200, 100, 200],
+                duration: 0.1,
+                onFinish: function() {
+                    assert.deepEqual(line.points(), [100, 100, 200, 100, 200, 200, 100, 200]);
+                    done();
+                }
+            });
+        });
+
+        test('tween array to lower size', function(done) {
+            var stage = addStage();
+
+            var layer = new Konva.Layer();
+            stage.add(layer);
+
+            var line = new Konva.Line({
+                stroke: 'black',
+                points: [100, 100, 200, 100, 200, 200, 100, 200],
+                closed: true
+            });
+            layer.add(line);
+
+            line.to({
+                points: [100, 100, 200, 100, 200, 200],
+                duration: 0.1,
+                onFinish: function() {
+                    assert.deepEqual(line.points(), [100, 100, 200, 100, 200, 200]);
+                    done();
+                }
+            });
+        });
     });
 
 });

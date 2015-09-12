@@ -1629,4 +1629,27 @@ suite('Container', function() {
         assert.deepEqual(group.getClientRect(), {x:10, y:10, width: 0, height:0});
 
     });
+
+    test.skip('getClientRect - test layer', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var group1 = new Konva.Group();
+        var group2 = new Konva.Group();
+
+        var rect = new Konva.Rect({
+            x: 50,
+            y: 100,
+            width: 200,
+            height: 75,
+            fill: 'red'
+        });
+
+        group1.add(rect);
+        layer.add(group1);
+        layer.add(group2);
+        stage.add(layer);
+
+        assert.deepEqual(layer.getClientRect(), {x: 50, y: 100, width: 200, height: 75});
+
+    });
 });

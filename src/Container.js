@@ -411,13 +411,20 @@
         getClientRect: function(skipTransform) {
             var minX, minY, maxX, maxY;
             var selfRect = {
-                    x: 0,
-                    y: 0,
-                    width: 0,
-                    height: 0
-                };
+                x: 0,
+                y: 0,
+                width: 0,
+                height: 0
+            };
             this.children.each(function(child) {
                 var rect = child.getClientRect();
+
+                // skip invisible children (like empty groups)
+                // or don't skip... hmmm...
+                // if (rect.width === 0 && rect.height === 0) {
+                //     return;
+                // }
+
                 if (minX === undefined) { // initial value for first child
                     minX = rect.x;
                     minY = rect.y;

@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Dragging now works much better. If your pointer is out of stage content dragging will still continue.
 - `Konva.Node.create` not works with objects.
+- `Konva.Tween` now supports tweening points to state with different length
 
 ## [0.9.5][2015-05-28]
 

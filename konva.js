@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.9.9
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri Aug 28 2015
+ * Date: Sat Sep 12 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -1169,9 +1169,84 @@ var Konva = {};
             return str.substring(0, str.length - 1);
         },
         each: function(obj, func) {
-          for (var key in obj) {
-            func(key, obj[key]);
-          }
+            for (var key in obj) {
+                func(key, obj[key]);
+            }
+        },
+        _getProjectionToSegment: function(x1, y1, x2, y2, x3, y3) {
+            var x, y, dist;
+
+            var pd2 = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+            if(pd2 == 0) {
+                x = x1;
+                y = y1;
+                dist = (x3 - x2) * (x3 - x2) + (y3 - y2) * (y3 - y2);
+            } else {
+                var u = ((x3 - x1) * (x2 - x1) + (y3 - y1) * (y2 - y1)) / pd2;
+                if(u < 0) {
+                    x = x1;
+                    y = y1;
+                    dist = (x1 - x3) * (x1 - x3) + (y1 - y3) * (y1 - y3);
+                } else if (u > 1.0) {
+                    x = x2;
+                    y = y2;
+                    dist = (x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3);
+                } else {
+                    x = x1 + u * (x2 - x1);
+                    y = y1 + u * (y2 - y1);
+                    dist = (x - x3) * (x - x3) + (y - y3) * (y - y3);
+                }
+            }
+            return [x, y, dist];
+        },
+        // line as array of points.
+        // line might be closed
+        _getProjectionToLine: function(pt, line, isClosed) {
+            var pc = Konva.Util.cloneObject(pt);
+            var dist = Number.MAX_VALUE;
+            line.forEach(function(p1, i) {
+                if (!isClosed && i === line.length - 1) {
+                    return;
+                }
+                var p2 = line[(i + 1) % line.length];
+                var proj = Konva.Util._getProjectionToSegment(p1.x, p1.y, p2.x, p2.y, pt.x, pt.y);
+                var px = proj[0], py = proj[1], pdist = proj[2];
+                if (pdist < dist) {
+                    pc.x = px;
+                    pc.y = py;
+                    dist = pdist;
+                }
+            });
+            return pc;
+        },
+        _prepareArrayForTween: function(startArray, endArray, isClosed) {
+            var n, start = [], end = [];
+            if (startArray.length > endArray.length) {
+                var temp = endArray;
+                endArray = startArray;
+                startArray = temp;
+            }
+            for (n = 0; n < startArray.length; n += 2) {
+                start.push({
+                    x: startArray[n],
+                    y: startArray[n + 1]
+                });
+            }
+            for (n = 0; n < endArray.length; n += 2) {
+                end.push({
+                    x: endArray[n],
+                    y: endArray[n + 1]
+                });
+            }
+
+
+            var newStart = [];
+            end.forEach(function(point) {
+                var pr = Konva.Util._getProjectionToLine(point, start, isClosed);
+                newStart.push(pr.x);
+                newStart.push(pr.y);
+            });
+            return newStart;
         }
     };
 })();
@@ -6730,13 +6805,20 @@ var Konva = {};
         getClientRect: function(skipTransform) {
             var minX, minY, maxX, maxY;
             var selfRect = {
-                    x: 0,
-                    y: 0,
-                    width: 0,
-                    height: 0
-                };
+                x: 0,
+                y: 0,
+                width: 0,
+                height: 0
+            };
             this.children.each(function(child) {
                 var rect = child.getClientRect();
+
+                // skip invisible children (like empty groups)
+                // or don't skip... hmmm...
+                // if (rect.width === 0 && rect.height === 0) {
+                //     return;
+                // }
+
                 if (minX === undefined) { // initial value for first child
                     minX = rect.x;
                     minY = rect.y;
@@ -10327,7 +10409,7 @@ var Konva = {};
         _addAttr: function(key, end) {
             var node = this.node,
                 nodeId = node._id,
-                start, diff, tweenId, n, len;
+                start, diff, tweenId, n, len, trueEnd;
 
             // remove conflict from tween map if it exists
             tweenId = Konva.Tween.tweens[nodeId][key];
@@ -10341,10 +10423,26 @@ var Konva = {};
 
             if (Konva.Util._isArray(end)) {
                 diff = [];
-                len = end.length;
-                for (n = 0; n < len; n++) {
-                    diff.push(end[n] - start[n]);
+                len = Math.max(end.length, start.length);
+
+                if (key === 'points') {
+                    // before tweening points we need to make sure that start.length === end.length
+                    // Konva.Util._prepareArrayForTween thinking that end.length > start.length
+
+                    if (end.length > start.length) {
+                        // so in this case we will increase number of starting points
+                        start = Konva.Util._prepareArrayForTween(start, end, node.closed());
+                    } else {
+                        // in this case we will increase number of eding points
+                        trueEnd = end;
+                        end = Konva.Util._prepareArrayForTween(end, start, node.closed());
+                    }
                 }
+
+                for (n = 0; n < len; n++) {
+                    diff.push((end[n]) - (start[n]));
+                }
+
             } else if (colorAttrs.indexOf(key) !== -1) {
                 start = Konva.Util.colorToRGBA(start);
                 var endRGBA = Konva.Util.colorToRGBA(end);
@@ -10360,25 +10458,28 @@ var Konva = {};
 
             Konva.Tween.attrs[nodeId][this._id][key] = {
                 start: start,
-                diff: diff
+                diff: diff,
+                end: end,
+                trueEnd: trueEnd
             };
             Konva.Tween.tweens[nodeId][key] = this._id;
         },
         _tweenFunc: function(i) {
             var node = this.node,
                 attrs = Konva.Tween.attrs[node._id][this._id],
-                key, attr, start, diff, newVal, n, len;
+                key, attr, start, diff, newVal, n, len, end;
 
             for (key in attrs) {
                 attr = attrs[key];
                 start = attr.start;
                 diff = attr.diff;
+                end = attr.end;
 
                 if (Konva.Util._isArray(start)) {
                     newVal = [];
-                    len = start.length;
+                    len = Math.max(start.length, end.length);
                     for (n = 0; n < len; n++) {
-                        newVal.push(start[n] + (diff[n] * i));
+                        newVal.push((start[n] || 0) + (diff[n] * i));
                     }
                 } else if (colorAttrs.indexOf(key) !== -1) {
                     newVal = 'rgba(' +
@@ -10409,6 +10510,14 @@ var Konva = {};
                 that.anim.stop();
             };
             this.tween.onFinish = function() {
+                var node = that.node;
+
+                // after tweening  points of line we need to set original end
+                var attrs = Konva.Tween.attrs[node._id][that._id];
+                if (attrs.points) {
+                    node.points(attrs.points.trueEnd);
+                }
+
                 if (that.onFinish) {
                     that.onFinish.call(that);
                 }

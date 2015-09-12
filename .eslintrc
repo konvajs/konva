@@ -20,10 +20,11 @@
         "new-cap": 0
     },
     "globals": {
-	    "Konva" : false,
-      "define": false,
-      "test": false,
-      "assert": false,
-      "addStage": false
+        "Konva" : false,
+        "define": false,
+        "test": false,
+        "assert": false,
+        "addStage": false,
+        "suite": false
 	}
 }

@@ -216,7 +216,7 @@
         _addAttr: function(key, end) {
             var node = this.node,
                 nodeId = node._id,
-                start, diff, tweenId, n, len;
+                start, diff, tweenId, n, len, trueEnd;
 
             // remove conflict from tween map if it exists
             tweenId = Konva.Tween.tweens[nodeId][key];
@@ -230,10 +230,26 @@
 
             if (Konva.Util._isArray(end)) {
                 diff = [];
-                len = end.length;
-                for (n = 0; n < len; n++) {
-                    diff.push(end[n] - start[n]);
+                len = Math.max(end.length, start.length);
+
+                if (key === 'points') {
+                    // before tweening points we need to make sure that start.length === end.length
+                    // Konva.Util._prepareArrayForTween thinking that end.length > start.length
+
+                    if (end.length > start.length) {
+                        // so in this case we will increase number of starting points
+                        start = Konva.Util._prepareArrayForTween(start, end, node.closed());
+                    } else {
+                        // in this case we will increase number of eding points
+                        trueEnd = end;
+                        end = Konva.Util._prepareArrayForTween(end, start, node.closed());
+                    }
                 }
+
+                for (n = 0; n < len; n++) {
+                    diff.push((end[n]) - (start[n]));
+                }
+
             } else if (colorAttrs.indexOf(key) !== -1) {
                 start = Konva.Util.colorToRGBA(start);
                 var endRGBA = Konva.Util.colorToRGBA(end);
@@ -249,25 +265,28 @@
 
             Konva.Tween.attrs[nodeId][this._id][key] = {
                 start: start,
-                diff: diff
+                diff: diff,
+                end: end,
+                trueEnd: trueEnd
             };
             Konva.Tween.tweens[nodeId][key] = this._id;
         },
         _tweenFunc: function(i) {
             var node = this.node,
                 attrs = Konva.Tween.attrs[node._id][this._id],
-                key, attr, start, diff, newVal, n, len;
+                key, attr, start, diff, newVal, n, len, end;
 
             for (key in attrs) {
                 attr = attrs[key];
                 start = attr.start;
                 diff = attr.diff;
+                end = attr.end;
 
                 if (Konva.Util._isArray(start)) {
                     newVal = [];
-                    len = start.length;
+                    len = Math.max(start.length, end.length);
                     for (n = 0; n < len; n++) {
-                        newVal.push(start[n] + (diff[n] * i));
+                        newVal.push((start[n] || 0) + (diff[n] * i));
                     }
                 } else if (colorAttrs.indexOf(key) !== -1) {
                     newVal = 'rgba(' +
@@ -298,6 +317,14 @@
                 that.anim.stop();
             };
             this.tween.onFinish = function() {
+                var node = that.node;
+
+                // after tweening  points of line we need to set original end
+                var attrs = Konva.Tween.attrs[node._id][that._id];
+                if (attrs.points) {
+                    node.points(attrs.points.trueEnd);
+                }
+
                 if (that.onFinish) {
                     that.onFinish.call(that);
                 }
