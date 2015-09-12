@@ -10425,7 +10425,7 @@ var Konva = {};
                 diff = [];
                 len = Math.max(end.length, start.length);
 
-                if (key === 'points') {
+                if (key === 'points' && end.length !== start.length) {
                     // before tweening points we need to make sure that start.length === end.length
                     // Konva.Util._prepareArrayForTween thinking that end.length > start.length
 
@@ -10514,7 +10514,7 @@ var Konva = {};
 
                 // after tweening  points of line we need to set original end
                 var attrs = Konva.Tween.attrs[node._id][that._id];
-                if (attrs.points) {
+                if (attrs.points && attrs.points.trueEnd) {
                     node.points(attrs.points.trueEnd);
                 }
 
