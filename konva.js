@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.9.9
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sat Sep 12 2015
+ * Date: Sat Sep 19 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -6739,7 +6739,7 @@ var Konva = {};
                     context.restore();
                 }
                 else {
-                    this._drawChildren(canvas, 'drawScene', top);
+                    this._drawChildren(canvas, 'drawScene', top, false, caching);
                 }
             }
             return this;
@@ -6767,7 +6767,7 @@ var Konva = {};
             }
             return this;
         },
-        _drawChildren: function(canvas, drawMethod, top) {
+        _drawChildren: function(canvas, drawMethod, top, caching, skipBuffer) {
             var layer = this.getLayer(),
                 context = canvas && canvas.getContext(),
                 clipWidth = this.getClipWidth(),
@@ -6788,7 +6788,7 @@ var Konva = {};
             }
 
             this.children.each(function(child) {
-                child[drawMethod](canvas, top);
+                child[drawMethod](canvas, top, caching, skipBuffer);
             });
 
             if (hasClip) {
@@ -7250,7 +7250,7 @@ var Konva = {};
             }
             return rect;
         },
-        drawScene: function(can, top, caching) {
+        drawScene: function(can, top, caching, skipBuffer) {
             var layer = this.getLayer(),
                 canvas = can || layer.getCanvas(),
                 context = canvas.getContext(),
@@ -7275,7 +7275,7 @@ var Konva = {};
             }
             context.save();
             // if buffer canvas is needed
-            if (this._useBufferCanvas(caching)) {
+            if (this._useBufferCanvas(caching) && !skipBuffer) {
                 stage = this.getStage();
                 bufferCanvas = stage.bufferCanvas;
                 bufferContext = bufferCanvas.getContext();

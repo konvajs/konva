@@ -233,7 +233,7 @@
             }
             return rect;
         },
-        drawScene: function(can, top, caching) {
+        drawScene: function(can, top, caching, skipBuffer) {
             var layer = this.getLayer(),
                 canvas = can || layer.getCanvas(),
                 context = canvas.getContext(),
@@ -258,7 +258,7 @@
             }
             context.save();
             // if buffer canvas is needed
-            if (this._useBufferCanvas(caching)) {
+            if (this._useBufferCanvas(caching) && !skipBuffer) {
                 stage = this.getStage();
                 bufferCanvas = stage.bufferCanvas;
                 bufferContext = bufferCanvas.getContext();

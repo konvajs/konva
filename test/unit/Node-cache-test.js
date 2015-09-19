@@ -710,4 +710,35 @@ suite('Caching', function() {
         layer.draw();
         cloneAndCompareLayer(layer, 150);
     });
+
+    test('test group with circle + buffer canvas usage', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        stage.add(layer);
+
+        var group = new Konva.Group({
+            x: 100,
+            y: 100,
+            draggable: true
+        });
+        layer.add(group);
+
+        var circle = new Konva.Circle({
+            radius: 10,
+            // fill: 'white',
+            fillRadialGradientStartPoint: 0,
+            fillRadialGradientStartRadius: 0,
+            fillRadialGradientEndPoint: 0,
+            fillRadialGradientEndRadius: 10,
+            fillRadialGradientColorStops: [0, 'red', 0.5, 'yellow', 1, 'blue'],
+            opacity: 0.4,
+            strokeHitEnabled: false,
+            stroke: 'rgba(0,0,0,0)'
+        });
+        group.add(circle);
+        group.cache();
+        stage.draw();
+        
+        cloneAndCompareLayer(layer, 150);
+    });
 });
