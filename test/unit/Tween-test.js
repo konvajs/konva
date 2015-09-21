@@ -277,6 +277,63 @@ suite('Tween', function() {
                 }
             });
         });
+
+        test('tween array to lower size and go back', function(done) {
+            var stage = addStage();
+
+            var layer = new Konva.Layer();
+            stage.add(layer);
+
+            var line = new Konva.Line({
+                stroke: 'black',
+                points: [100, 100, 200, 100, 200, 200, 100, 200],
+                closed: true
+            });
+            layer.add(line);
+
+            var tween = new Konva.Tween({
+                node: line,
+                points: [100, 100, 200, 100, 200, 200],
+                duration: 0.01,
+                onFinish: function() {
+                    tween.reverse();
+                },
+                onReset: function() {
+                    assert.deepEqual(line.points(), [100, 100, 200, 100, 200, 200, 100, 200]);
+                    done();
+                }
+            });
+            tween.play();
+        });
+
+        test('tween array to bigger size and go back', function(done) {
+            var stage = addStage();
+
+            var layer = new Konva.Layer();
+            stage.add(layer);
+
+            var line = new Konva.Line({
+                stroke: 'black',
+                points: [100, 100, 200, 100, 200, 200],
+                closed: true
+            });
+            layer.add(line);
+
+            var tween = new Konva.Tween({
+                node: line,
+                points: [100, 100, 200, 100, 200, 200, 100, 200],
+                duration: 0.01,
+                onFinish: function() {
+                    tween.reverse();
+                },
+                onReset: function() {
+                    assert.deepEqual(line.points(), [100, 100, 200, 100, 200, 200]);
+                    done();
+                }
+            });
+            tween.play();
+        });
+
     });
 
 });
