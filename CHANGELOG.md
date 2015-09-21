@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Not released][Not released]
 
 ### Added
-- RGBA filter =. Thanls to [@codefo](https://github.com/codefo)
+- RGBA filter. Thanks to [@codefo](https://github.com/codefo)
 
 ### Fixed
 - Correct calculation in `getClientRect` method of `Konva.Line` and `Konva.Container`.
