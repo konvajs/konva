@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.9.9
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sat Sep 19 2015
+ * Date: Mon Oct 12 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -6529,7 +6529,7 @@ var Konva = {};
             });
 
             // if node under drag we need to update drag animation
-            if (child.isDragging()) {
+            if (Konva.DD && child.isDragging()) {
                 Konva.DD.anim.setLayers(child.getLayer());
             }
 
@@ -8854,7 +8854,7 @@ var Konva = {};
                 return this._touchmove(evt);
             }
             // workaround fake mousemove event in chrome browser https://code.google.com/p/chromium/issues/detail?id=161464
-            if ((typeof evt.webkitMovementX !== 'undefined' || typeof evt.webkitMovementY !== 'undefined') && evt.webkitMovementY === 0 && evt.webkitMovementX === 0) {
+            if ((typeof evt.movementX !== 'undefined' || typeof evt.movementY !== 'undefined') && evt.movementY === 0 && evt.movementX === 0) {
                 return null;
             }
             if (Konva.UA.mobile) {
@@ -10409,7 +10409,7 @@ var Konva = {};
         _addAttr: function(key, end) {
             var node = this.node,
                 nodeId = node._id,
-                start, diff, tweenId, n, len, trueEnd;
+                start, diff, tweenId, n, len, trueEnd, trueStart;
 
             // remove conflict from tween map if it exists
             tweenId = Konva.Tween.tweens[nodeId][key];
@@ -10431,6 +10431,7 @@ var Konva = {};
 
                     if (end.length > start.length) {
                         // so in this case we will increase number of starting points
+                        trueStart = start;
                         start = Konva.Util._prepareArrayForTween(start, end, node.closed());
                     } else {
                         // in this case we will increase number of eding points
@@ -10460,7 +10461,8 @@ var Konva = {};
                 start: start,
                 diff: diff,
                 end: end,
-                trueEnd: trueEnd
+                trueEnd: trueEnd,
+                trueStart: trueStart
             };
             Konva.Tween.tweens[nodeId][key] = this._id;
         },
@@ -10523,6 +10525,13 @@ var Konva = {};
                 }
             };
             this.tween.onReset = function() {
+                var node = that.node;
+                // after tweening  points of line we need to set original start
+                var attrs = Konva.Tween.attrs[node._id][that._id];
+                if (attrs.points && attrs.points.trueStart) {
+                    node.points(attrs.points.trueStart);
+                }
+
                 if (that.onReset) {
                     that.onReset();
                 }

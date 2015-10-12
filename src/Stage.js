@@ -403,7 +403,7 @@
                 return this._touchmove(evt);
             }
             // workaround fake mousemove event in chrome browser https://code.google.com/p/chromium/issues/detail?id=161464
-            if ((typeof evt.webkitMovementX !== 'undefined' || typeof evt.webkitMovementY !== 'undefined') && evt.webkitMovementY === 0 && evt.webkitMovementX === 0) {
+            if ((typeof evt.movementX !== 'undefined' || typeof evt.movementY !== 'undefined') && evt.movementY === 0 && evt.movementX === 0) {
                 return null;
             }
             if (Konva.UA.mobile) {
