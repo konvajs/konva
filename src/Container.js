@@ -135,7 +135,7 @@
             });
 
             // if node under drag we need to update drag animation
-            if (child.isDragging()) {
+            if (Konva.DD && child.isDragging()) {
                 Konva.DD.anim.setLayers(child.getLayer());
             }
 
