@@ -13,14 +13,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed bug for caching where buffer canvas is required
 
 ### Changed
-- Dragging now works much better. If your pointer is out of stage content dragging will still continue.
-- `Konva.Node.create` not works with objects.
+- Dragging works much better. If your pointer is out of stage content dragging will still continue.
+- `Konva.Node.create` now works with objects.
 - `Konva.Tween` now supports tweening points to state with different length
 
 ## [0.9.5][2015-05-28]
 
 ### Fixed
-- `to` don't throw error if no `onFinish` callback
+- `to` will not throw error if no `onFinish` callback
 - HDPI support for desktop
 - Fix bug when filters are not correct for HDPI
 - Fix bug when hit area is not correct for HDPI
@@ -30,11 +30,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - context wrapper is more capable with native context.
   So you can use `context.fillStyle` property in your `sceneFunc` without accessing native context.
-- `toDataURL` now handle pixelRatio. you can pass `config.pixelRatio` argument
+- `toDataURL` now handles pixelRatio. you can pass `config.pixelRatio` argument
 - Correct `clone()` for custom nodes
-- `FastLayer` now can have transforms
-- `stage.toDataURL()` method now works in synchronous way. So `callback` argument is not required.
-- `container.find(selector)` method now have validation step. So if you forgot to add `#` or `.` you will see a warning message in the console.
+- `FastLayer` can now have transforms
+- `stage.toDataURL()` method now works synchronously. So `callback` argument is not required.
+- `container.find(selector)` method now has a validation step. So if you forgot to add `#` or `.` you will see a warning message in the console.
 
 ### Added
 - new `Konva.Image.fromURL` method
@@ -55,7 +55,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - cache algorithm has A LOT OF updates.
 
 ### Changed
-- `scale` now affect `shadowOffset`
+- `scale` now affects `shadowOffset`
 - performance optimization (remove some unnecessary draws)
 - more expected drawing when shape has opacity, stroke and shadow
 - HDPI for caching.
@@ -67,12 +67,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - new `perfectDrawEnabled` property for shape. See [http://konvajs.github.io/docs/performance/Disable_Perfect_Draw.html](http://konvajs.github.io/docs/performance/Disable_Perfect_Draw.html)
 - new `shadowForStrokeEnabled` property for shape. See [http://konvajs.github.io/docs/performance/All_Performance_Tips.html](http://konvajs.github.io/docs/performance/All_Performance_Tips.html)
 - new `getClientRect` method.
-- new `to` method for every nodes for shorter tweening
+- new `to` method for every node for shorter tweening
 
 ## [0.8.0] - 2015-02-04
 
 * Bug Fixes
-    * fixed when browser is crashing on pointer events fixed
+    * browser crashing on pointer events fixed
     * optimized `getIntersection` function
 * Enhancements
     * `container.findOne()` method
@@ -81,14 +81,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## Rebranding release 2015-01-28
-Differents from last official `KineticJS` release
+Differences from last official `KineticJS` release
 
 * Bug Fixes
-    * `strokeScaleEnabled = false` is disabled for text as I can not find way to implement this
-    * `strokeScaleEnabled = false` for Line now create correct hit graph
+    * `strokeScaleEnabled = false` is disabled for text as I can not find a way to implement this
+    * `strokeScaleEnabled = false` for Line now creates a correct hit graph
     * working "this-example" as name for nodes
-    * Konva.Text() with no config don't throws exception
-    * Konva.Line() with no config don't throws exception
+    * Konva.Text() with no config will not throw exception
+    * Konva.Line() with no config will not throw exception
     * Correct stage resizing with `FastLayer`
     * `batchDraw` method for `FastLayer`
     * Correct mouseover/mouseout/mouseenter/mouseleave events for groups
@@ -107,7 +107,7 @@ Differents from last official `KineticJS` release
     * applying opacity to cached node
     * remove all events with `node.off()`
     * mouse dragging only with left button
-    * opacity now affect cached shapes
+    * opacity now affects cached shapes
     * Label corner radius
     * smart changing `width`, `height`, `radius` attrs for circle, start, ellipse, ring.
     * `mousewheel` support. Thanks [@vmichnowicz](https://github.com/vmichnowicz)
