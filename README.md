@@ -3,4 +3,4 @@ Konva is an HTML5 Canvas JavaScript framework that enables high performance anim
 
 Link to the official site: http://konvajs.github.io
 
-Version: v0.9.5
+Version: v0.9.9
