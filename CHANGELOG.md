@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - RGBA filter. Thanks to [@codefo](https://github.com/codefo)
+- `stroke` and `fill` support for `Konva.Sprite`
 
 ### Fixed
 - Correct calculation in `getClientRect` method of `Konva.Line` and `Konva.Container`.

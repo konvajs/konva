@@ -95,6 +95,13 @@
                 height = set[ix4 + 3],
                 image = this.getImage();
 
+            if (this.hasFill() || this.hasStroke()) {
+                context.beginPath();
+                context.rect(0, 0, width, height);
+                context.closePath();
+                context.fillStrokeShape(this);
+            }
+
             if(image) {
                 if (offsets) {
                     var offset = offsets[anim],
