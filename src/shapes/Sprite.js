@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
     /**
      * Sprite constructor
      * @constructor

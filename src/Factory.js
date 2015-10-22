@@ -64,6 +64,9 @@
                 }
 
                 for (key in val) {
+                    if (!val.hasOwnProperty(key)) {
+                        continue;
+                    }
                     this._setAttr(attr + capitalize(key), val[key]);
                 }
 
@@ -90,9 +93,7 @@
                     return this;
                 }
                 // getting
-                else {
-                    return this[getter]();
-                }
+                return this[getter]();
             };
         },
         addDeprecatedGetterSetter: function(constructor, attr, def, validator) {
@@ -131,9 +132,8 @@
                 return 255;
             } else if (val < 0) {
                 return 0;
-            } else {
-                return Math.round(val);
             }
+            return Math.round(val);
         },
         alphaComponent: function(val) {
             if (val > 1) {
@@ -143,9 +143,8 @@
             else if (val < 0.0001) {
                 return 0.0001;
             }
-            else {
-                return val;
-            }
+
+            return val;
         }
     };
 })();

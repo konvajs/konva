@@ -23,7 +23,8 @@
     "package.json",
     ".travis.yml",
     ".gitignore",
-    "Gruntfile.js"
+    "Gruntfile.js",
+    "gulpfile.js"
   ],
   "main": "konva.min.js"
 }

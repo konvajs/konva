@@ -1,5 +1,6 @@
+/*eslint-disable  max-depth */
 (function() {
-
+	'use strict';
 	function pixelAt(idata, x, y) {
 		var idx = (y * idata.width + x) * 4;
 		var d = [];

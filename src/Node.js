@@ -270,7 +270,7 @@
         getClientRect: function() {
             // abstract method
             // redefine in Container and Shape
-            throw 'abstract "getClientRect" method call';
+            throw new Error('abstract "getClientRect" method call');
         },
         _transformedRect: function(rect) {
             var points = [
@@ -360,9 +360,7 @@
 
                 return filterCanvas;
             }
-            else {
-                return sceneCanvas;
-            }
+            return sceneCanvas;
         },
         /**
          * bind events to the node. KonvaJS supports mouseover, mousemove,
@@ -574,9 +572,7 @@
                 return this[method]();
             }
             // otherwise get directly
-            else {
-                return this.attrs[attr];
-            }
+            return this.attrs[attr];
         },
         /**
         * get ancestors

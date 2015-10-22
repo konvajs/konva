@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.9.9
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mon Oct 12 2015
+ * Date: Thu Oct 22 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -30,7 +30,6 @@
 /**
  * @namespace Konva
  */
-/*jshint -W079, -W020*/
 var Konva = {};
 (function(root) {
     'use strict';
@@ -114,9 +113,8 @@ var Konva = {};
             // drag and drop is not even possible
             if (dd) {
                 return dd.isDragging;
-            } else {
-                return false;
             }
+            return false;
         },
         /**
         * returns whether or not a drag and drop operation is ready, but may
@@ -131,9 +129,8 @@ var Konva = {};
             // drag and drop is not even possible
             if (dd) {
                 return !!dd.node;
-            } else {
-                return false;
             }
+            return false;
         },
         _addId: function(node, id) {
             if(id !== undefined) {
@@ -2138,6 +2135,9 @@ var Konva = {};
                 }
 
                 for (key in val) {
+                    if (!val.hasOwnProperty(key)) {
+                        continue;
+                    }
                     this._setAttr(attr + capitalize(key), val[key]);
                 }
 
@@ -2164,9 +2164,7 @@ var Konva = {};
                     return this;
                 }
                 // getting
-                else {
-                    return this[getter]();
-                }
+                return this[getter]();
             };
         },
         addDeprecatedGetterSetter: function(constructor, attr, def, validator) {
@@ -2205,9 +2203,8 @@ var Konva = {};
                 return 255;
             } else if (val < 0) {
                 return 0;
-            } else {
-                return Math.round(val);
             }
+            return Math.round(val);
         },
         alphaComponent: function(val) {
             if (val > 1) {
@@ -2217,9 +2214,8 @@ var Konva = {};
             else if (val < 0.0001) {
                 return 0.0001;
             }
-            else {
-                return val;
-            }
+
+            return val;
         }
     };
 })();
@@ -2515,7 +2511,7 @@ var Konva = {};
         getClientRect: function() {
             // abstract method
             // redefine in Container and Shape
-            throw 'abstract "getClientRect" method call';
+            throw new Error('abstract "getClientRect" method call');
         },
         _transformedRect: function(rect) {
             var points = [
@@ -2605,9 +2601,7 @@ var Konva = {};
 
                 return filterCanvas;
             }
-            else {
-                return sceneCanvas;
-            }
+            return sceneCanvas;
         },
         /**
          * bind events to the node. KonvaJS supports mouseover, mousemove,
@@ -2819,9 +2813,7 @@ var Konva = {};
                 return this[method]();
             }
             // otherwise get directly
-            else {
-                return this.attrs[attr];
-            }
+            return this.attrs[attr];
         },
         /**
         * get ancestors
@@ -4464,6 +4456,7 @@ var Konva = {};
 })(Konva);
 
 (function() {
+    'use strict';
     /**
     * Grayscale Filter
     * @function
@@ -4491,6 +4484,7 @@ var Konva = {};
 })();
 
 (function() {
+    'use strict';
     /**
      * Brighten Filter.
      * @function
@@ -4531,6 +4525,7 @@ var Konva = {};
 })();
 
 (function() {
+    'use strict';
     /**
     * Invert Filter
     * @function
@@ -4561,6 +4556,7 @@ var Konva = {};
  master repo: https://github.com/pavelpower/kineticjsGaussFilter
 */
 (function() {
+    'use strict';
     /*
 
      StackBlur - a fast almost Gaussian Blur For Canvas
@@ -4916,8 +4912,9 @@ var Konva = {};
     */
 })();
 
+/*eslint-disable  max-depth */
 (function() {
-
+	'use strict';
 	function pixelAt(idata, x, y) {
 		var idx = (y * idata.width + x) * 4;
 		var d = [];
@@ -5115,6 +5112,7 @@ var Konva = {};
 })();
 
 (function () {
+    'use strict';
     /**
      * RGB Filter
      * @function
@@ -5137,10 +5135,10 @@ var Konva = {};
             i, brightness;
 
         for (i = 0; i < nPixels; i += 4) {
-            brightness = (0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2])/255;
-            data[i] = brightness*red; // r
-            data[i + 1] = brightness*green; // g
-            data[i + 2] = brightness*blue; // b
+            brightness = (0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2]) / 255;
+            data[i] = brightness * red; // r
+            data[i + 1] = brightness * green; // g
+            data[i + 2] = brightness * blue; // b
             data[i + 3] = data[i + 3]; // alpha
         }
     };
@@ -5199,6 +5197,7 @@ var Konva = {};
 })();
 
 (function () {
+    'use strict';
     /**
      * RGBA Filter
      * @function
@@ -5306,7 +5305,7 @@ var Konva = {};
 })();
 
 (function () {
-
+    'use strict';
     /**
     * HSV Filter. Adjusts the hue, saturation and value
     * @function
@@ -5401,6 +5400,7 @@ var Konva = {};
 })();
 
 (function () {
+    'use strict';
 
     Konva.Factory.addGetterSetter(Konva.Node, 'hue', 0, null, Konva.Factory.afterSetFilter);
     /**
@@ -5494,6 +5494,7 @@ var Konva = {};
 })();
 
 (function () {
+    'use strict';
     /**
      * Emboss Filter.
      * Pixastic Lib - Emboss filter - v0.1.0
@@ -5675,6 +5676,7 @@ var Konva = {};
 })();
 
 (function () {
+    'use strict';
     function remap(fromValue, fromMin, fromMax, toMin, toMax) {
         // Compute the range of the data
         var fromRange = fromMax - fromMin,
@@ -5791,7 +5793,7 @@ var Konva = {};
 })();
 
 (function () {
-
+    'use strict';
     /**
      * Posterize Filter. Adjusts the channels so that there are no more
      *  than n different values for that channel. This is also applied
@@ -5833,6 +5835,7 @@ var Konva = {};
 })();
 
 (function () {
+    'use strict';
 
     /**
      * Noise Filter. Randomly adds or substracts to the color channels
@@ -5872,8 +5875,9 @@ var Konva = {};
     */
 })();
 
+/*eslint-disable max-depth */
 (function () {
-
+    'use strict';
     /**
      * Pixelate Filter. Averages groups of pixels and redraws
      *  them as larger pixels
@@ -5967,7 +5971,7 @@ var Konva = {};
 })();
 
 (function () {
-
+    'use strict';
     /**
      * Threshold Filter. Pushes any value above the mid point to
      *  the max and any value below the mid point to the min.
@@ -6007,6 +6011,7 @@ var Konva = {};
 })();
 
 (function() {
+    'use strict';
     /**
      * Sepia Filter
      * Based on: Pixastic Lib - Sepia filter - v0.1.0
@@ -6025,33 +6030,34 @@ var Konva = {};
         var data = imageData.data,
             w = imageData.width,
             y = imageData.height,
-            w4 = w*4,
+            w4 = w * 4,
             offsetY, x, offset, or, og, ob, r, g, b;
 
         do {
-            offsetY = (y-1)*w4;
+            offsetY = (y - 1) * w4;
             x = w;
             do {
-                offset = offsetY + (x-1)*4;
+                offset = offsetY + (x - 1) * 4;
 
                 or = data[offset];
-                og = data[offset+1];
-                ob = data[offset+2];
+                og = data[offset + 1];
+                ob = data[offset + 2];
 
                 r = or * 0.393 + og * 0.769 + ob * 0.189;
                 g = or * 0.349 + og * 0.686 + ob * 0.168;
                 b = or * 0.272 + og * 0.534 + ob * 0.131;
 
                 data[offset] = r > 255 ? 255 : r;
-                data[offset+1] = g > 255 ? 255 : g;
-                data[offset+2] = b > 255 ? 255 : b;
-                data[offset+3] = data[offset+3];
+                data[offset + 1] = g > 255 ? 255 : g;
+                data[offset + 2] = b > 255 ? 255 : b;
+                data[offset + 3] = data[offset + 3];
             } while (--x);
         } while (--y);
     };
 })();
 
 (function () {
+    'use strict';
     /**
      * Solarize Filter
      * Pixastic Lib - Solarize filter - v0.1.0
@@ -6069,17 +6075,17 @@ var Konva = {};
         var data = imageData.data,
             w = imageData.width,
             h = imageData.height,
-            w4 = w*4,
+            w4 = w * 4,
             y = h;
 
         do {
-            var offsetY = (y-1)*w4;
+            var offsetY = (y - 1) * w4;
             var x = w;
             do {
-                var offset = offsetY + (x-1)*4;
+                var offset = offsetY + (x - 1) * 4;
                 var r = data[offset];
-                var g = data[offset+1];
-                var b = data[offset+2];
+                var g = data[offset + 1];
+                var b = data[offset + 2];
 
                 if (r > 127) {
                     r = 255 - r;
@@ -6092,8 +6098,8 @@ var Konva = {};
                 }
 
                 data[offset] = r;
-                data[offset+1] = g;
-                data[offset+2] = b;
+                data[offset + 1] = g;
+                data[offset + 2] = b;
             } while (--x);
         } while (--y);
     };
@@ -6102,6 +6108,7 @@ var Konva = {};
 
 
 (function () {
+    'use strict';
 
   /*
    * ToPolar Filter. Converts image data to polar coordinates. Performs
@@ -6125,16 +6132,16 @@ var Konva = {};
             dstPixels = dst.data,
             xSize = src.width,
             ySize = src.height,
-            xMid = opt.polarCenterX || xSize/2,
-            yMid = opt.polarCenterY || ySize/2,
-            i, x, y, r=0, g=0, b=0, a=0;
+            xMid = opt.polarCenterX || xSize / 2,
+            yMid = opt.polarCenterY || ySize / 2,
+            i, x, y, r = 0, g = 0, b = 0, a = 0;
 
         // Find the largest radius
-        var rad, rMax = Math.sqrt( xMid*xMid + yMid*yMid );
+        var rad, rMax = Math.sqrt( xMid * xMid + yMid * yMid );
         x = xSize - xMid;
         y = ySize - yMid;
-        rad = Math.sqrt( x*x + y*y );
-        rMax = (rad > rMax)?rad:rMax;
+        rad = Math.sqrt( x * x + y * y );
+        rMax = (rad > rMax) ? rad : rMax;
 
         // We'll be uisng y as the radius, and x as the angle (theta=t)
         var rSize = ySize,
@@ -6143,29 +6150,29 @@ var Konva = {};
 
         // We want to cover all angles (0-360) and we need to convert to
         // radians (*PI/180)
-        var conversion = 360/tSize*Math.PI/180, sin, cos;
+        var conversion = 360 / tSize * Math.PI / 180, sin, cos;
 
         // var x1, x2, x1i, x2i, y1, y2, y1i, y2i, scale;
 
-        for( theta=0; theta<tSize; theta+=1 ){
-            sin = Math.sin(theta*conversion);
-            cos = Math.cos(theta*conversion);
-            for( radius=0; radius<rSize; radius+=1 ){
-                x = Math.floor(xMid+rMax*radius/rSize*cos);
-                y = Math.floor(yMid+rMax*radius/rSize*sin);
-                i = (y*xSize + x)*4;
-                r = srcPixels[i+0];
-                g = srcPixels[i+1];
-                b = srcPixels[i+2];
-                a = srcPixels[i+3];
+        for( theta = 0; theta < tSize; theta += 1 ){
+            sin = Math.sin(theta * conversion);
+            cos = Math.cos(theta * conversion);
+            for( radius = 0; radius < rSize; radius += 1 ){
+                x = Math.floor(xMid + rMax * radius / rSize * cos);
+                y = Math.floor(yMid + rMax * radius / rSize * sin);
+                i = (y * xSize + x) * 4;
+                r = srcPixels[i + 0];
+                g = srcPixels[i + 1];
+                b = srcPixels[i + 2];
+                a = srcPixels[i + 3];
 
                 // Store it
-                //i = (theta * xSize + radius) * 4;
-                i = (theta + radius*xSize) * 4;
-                dstPixels[i+0] = r;
-                dstPixels[i+1] = g;
-                dstPixels[i+2] = b;
-                dstPixels[i+3] = a;
+                //i = (theta * xSize  +  radius) * 4;
+                i = (theta + radius * xSize) * 4;
+                dstPixels[i + 0] = r;
+                dstPixels[i + 1] = g;
+                dstPixels[i + 2] = b;
+                dstPixels[i + 3] = a;
 
             }
         }
@@ -6194,17 +6201,17 @@ var Konva = {};
             dstPixels = dst.data,
             xSize = src.width,
             ySize = src.height,
-            xMid = opt.polarCenterX || xSize/2,
-            yMid = opt.polarCenterY || ySize/2,
-            i, x, y, dx, dy, r=0, g=0, b=0, a=0;
+            xMid = opt.polarCenterX || xSize / 2,
+            yMid = opt.polarCenterY || ySize / 2,
+            i, x, y, dx, dy, r = 0, g = 0, b = 0, a = 0;
 
 
         // Find the largest radius
-        var rad, rMax = Math.sqrt( xMid*xMid + yMid*yMid );
+        var rad, rMax = Math.sqrt( xMid * xMid + yMid * yMid );
         x = xSize - xMid;
         y = ySize - yMid;
-        rad = Math.sqrt( x*x + y*y );
-        rMax = (rad > rMax)?rad:rMax;
+        rad = Math.sqrt( x * x + y * y );
+        rMax = (rad > rMax) ? rad : rMax;
 
         // We'll be uisng x as the radius, and y as the angle (theta=t)
         var rSize = ySize,
@@ -6219,27 +6226,27 @@ var Konva = {};
 
         var x1, y1;
 
-        for( x=0; x<xSize; x+=1 ){
-            for( y=0; y<ySize; y+=1 ){
+        for( x = 0; x < xSize; x += 1 ){
+            for( y = 0; y < ySize; y += 1 ){
                 dx = x - xMid;
                 dy = y - yMid;
-                radius = Math.sqrt(dx*dx + dy*dy)*rSize/rMax;
-                theta = (Math.atan2(dy, dx)*180/Math.PI + 360 + phaseShift)%360;
-                theta = theta*tSize/360;
+                radius = Math.sqrt(dx * dx + dy * dy) * rSize / rMax;
+                theta = (Math.atan2(dy, dx) * 180 / Math.PI + 360 + phaseShift) % 360;
+                theta = theta * tSize / 360;
                 x1 = Math.floor(theta);
                 y1 = Math.floor(radius);
-                i = (y1*xSize + x1)*4;
-                r = srcPixels[i+0];
-                g = srcPixels[i+1];
-                b = srcPixels[i+2];
-                a = srcPixels[i+3];
+                i = (y1 * xSize + x1) * 4;
+                r = srcPixels[i + 0];
+                g = srcPixels[i + 1];
+                b = srcPixels[i + 2];
+                a = srcPixels[i + 3];
 
                 // Store it
-                i = (y*xSize + x)*4;
-                dstPixels[i+0] = r;
-                dstPixels[i+1] = g;
-                dstPixels[i+2] = b;
-                dstPixels[i+3] = a;
+                i = (y * xSize + x) * 4;
+                dstPixels[i + 0] = r;
+                dstPixels[i + 1] = g;
+                dstPixels[i + 2] = b;
+                dstPixels[i + 3] = a;
             }
         }
 
@@ -6270,7 +6277,7 @@ var Konva = {};
         var x, y, xoff, i, r, g, b, a, srcPos, dstPos;
         var power = Math.round( this.kaleidoscopePower() );
         var angle = Math.round( this.kaleidoscopeAngle() );
-        var offset = Math.floor(xSize*(angle%360)/360);
+        var offset = Math.floor(xSize * (angle % 360) / 360);
 
         if( power < 1 ){return; }
 
@@ -6281,15 +6288,15 @@ var Konva = {};
 
         // Convert thhe original to polar coordinates
         ToPolar( imageData, scratchData, {
-            polarCenterX: xSize/2,
-            polarCenterY: ySize/2
+            polarCenterX: xSize / 2,
+            polarCenterY: ySize / 2
         });
 
         // Determine how big each section will be, if it's too small
         // make it bigger
         var minSectionSize = xSize / Math.pow(2, power);
         while( minSectionSize <= 8){
-            minSectionSize = minSectionSize*2;
+            minSectionSize = minSectionSize * 2;
             power -= 1;
         }
         minSectionSize = Math.ceil(minSectionSize);
@@ -6301,42 +6308,42 @@ var Konva = {};
         var xStart = 0,
           xEnd = sectionSize,
           xDelta = 1;
-        if( offset+minSectionSize > xSize ){
+        if( offset + minSectionSize > xSize ){
             xStart = sectionSize;
             xEnd = 0;
             xDelta = -1;
         }
-        for( y=0; y<ySize; y+=1 ){
-            for( x=xStart; x !== xEnd; x+=xDelta ){
-                xoff = Math.round(x+offset)%xSize;
-                srcPos = (xSize*y+xoff)*4;
-                r = scratchData.data[srcPos+0];
-                g = scratchData.data[srcPos+1];
-                b = scratchData.data[srcPos+2];
-                a = scratchData.data[srcPos+3];
-                dstPos = (xSize*y+x)*4;
-                scratchData.data[dstPos+0] = r;
-                scratchData.data[dstPos+1] = g;
-                scratchData.data[dstPos+2] = b;
-                scratchData.data[dstPos+3] = a;
+        for( y = 0; y < ySize; y += 1 ){
+            for( x = xStart; x !== xEnd; x += xDelta ){
+                xoff = Math.round(x + offset) % xSize;
+                srcPos = (xSize * y + xoff) * 4;
+                r = scratchData.data[srcPos + 0];
+                g = scratchData.data[srcPos + 1];
+                b = scratchData.data[srcPos + 2];
+                a = scratchData.data[srcPos + 3];
+                dstPos = (xSize * y + x) * 4;
+                scratchData.data[dstPos + 0] = r;
+                scratchData.data[dstPos + 1] = g;
+                scratchData.data[dstPos + 2] = b;
+                scratchData.data[dstPos + 3] = a;
             }
         }
 
         // Perform the actual effect
-        for( y=0; y<ySize; y+=1 ){
+        for( y = 0; y < ySize; y += 1 ){
             sectionSize = Math.floor( minSectionSize );
-            for( i=0; i<power; i+=1 ){
-                for( x=0; x<sectionSize+1; x+=1 ){
-                    srcPos = (xSize*y+x)*4;
-                    r = scratchData.data[srcPos+0];
-                    g = scratchData.data[srcPos+1];
-                    b = scratchData.data[srcPos+2];
-                    a = scratchData.data[srcPos+3];
-                    dstPos = (xSize*y+sectionSize*2-x-1)*4;
-                    scratchData.data[dstPos+0] = r;
-                    scratchData.data[dstPos+1] = g;
-                    scratchData.data[dstPos+2] = b;
-                    scratchData.data[dstPos+3] = a;
+            for( i = 0; i < power; i += 1 ){
+                for( x = 0; x < sectionSize + 1; x += 1 ){
+                    srcPos = (xSize * y + x) * 4;
+                    r = scratchData.data[srcPos + 0];
+                    g = scratchData.data[srcPos + 1];
+                    b = scratchData.data[srcPos + 2];
+                    a = scratchData.data[srcPos + 3];
+                    dstPos = (xSize * y + sectionSize * 2 - x - 1) * 4;
+                    scratchData.data[dstPos + 0] = r;
+                    scratchData.data[dstPos + 1] = g;
+                    scratchData.data[dstPos + 2] = b;
+                    scratchData.data[dstPos + 3] = a;
                 }
                 sectionSize *= 2;
             }
@@ -6439,15 +6446,15 @@ var Konva = {};
         getChildren: function(filterFunc) {
             if (!filterFunc) {
                 return this.children;
-            } else {
-                var results = new Konva.Collection();
-                this.children.each(function(child){
-                    if (filterFunc(child)) {
-                        results.push(child);
-                    }
-                });
-                return results;
             }
+
+            var results = new Konva.Collection();
+            this.children.each(function(child){
+                if (filterFunc(child)) {
+                    results.push(child);
+                }
+            });
+            return results;
         },
         /**
          * determine if node has children
@@ -9623,12 +9630,10 @@ var Konva = {};
                     return {
                         shape: shape
                     };
-                } else {
-                    return {
-                        antialiased: true
-                    };
                 }
-
+                return {
+                    antialiased: true
+                };
             }
             // antialiased pixel
             else if(p3 > 0) {
@@ -9637,9 +9642,7 @@ var Konva = {};
                 };
             }
             // empty pixel
-            else {
-                return {};
-            }
+            return {};
         },
         drawScene: function(can, top) {
             var layer = this.getLayer(),
@@ -9898,11 +9901,10 @@ var Konva = {};
                 return Konva.root.performance.now();
             };
         }
-        else {
-            return function() {
-                return new Date().getTime();
-            };
-        }
+
+        return function() {
+            return new Date().getTime();
+        };
     })();
 
     function FRAF(callback) {
@@ -9967,6 +9969,7 @@ var Konva = {};
          * @method
          * @memberof Konva.Animation.prototype
          * @param {Konva.Layer|Array} [layers] layer(s) to be redrawn.&nbsp; Can be a layer, an array of layers, or null.  Not specifying a node will result in no redraw.
+         * @return {Konva.Animation} this
          */
         setLayers: function(layers) {
             var lays = [];
@@ -9986,11 +9989,13 @@ var Konva = {};
             }
 
             this.layers = lays;
+            return this;
         },
         /**
          * get layers
          * @method
          * @memberof Konva.Animation.prototype
+         * @return {Array} Array of Konva.Layer
          */
         getLayers: function() {
             return this.layers;
@@ -9999,7 +10004,8 @@ var Konva = {};
          * add layer.  Returns true if the layer was added, and false if it was not
          * @method
          * @memberof Konva.Animation.prototype
-         * @param {Konva.Layer} layer
+         * @param {Konva.Layer} layer to add
+         * @return {Bool} true if layer is added to animation, otherwise false
          */
         addLayer: function(layer) {
             var layers = this.layers,
@@ -10019,6 +10025,7 @@ var Konva = {};
          * determine if animation is running or not.  returns true or false
          * @method
          * @memberof Konva.Animation.prototype
+         * @return {Bool} is animation running?
          */
         isRunning: function() {
             var a = Konva.Animation,
@@ -10037,6 +10044,7 @@ var Konva = {};
          * start animation
          * @method
          * @memberof Konva.Animation.prototype
+         * @return {Konva.Animation} this
          */
         start: function() {
             var Anim = Konva.Animation;
@@ -10044,14 +10052,17 @@ var Konva = {};
             this.frame.timeDiff = 0;
             this.frame.lastTime = now();
             Anim._addAnimation(this);
+            return this;
         },
         /**
          * stop animation
          * @method
          * @memberof Konva.Animation.prototype
+         * @return {Konva.Animation} this
          */
         stop: function() {
             Konva.Animation._removeAnimation(this);
+            return this;
         },
         _updateFrameObject: function(time) {
             this.frame.timeDiff = time - this.frame.lastTime;
@@ -10127,12 +10138,14 @@ var Konva = {};
         }
 
         for (key in layerHash) {
+            if (!layerHash.hasOwnProperty(key)) {
+                continue;
+            }
             layerHash[key].draw();
         }
     };
     Konva.Animation._animationLoop = function() {
         var Anim = Konva.Animation;
-
         if(Anim.animations.length) {
             requestAnimFrame(Anim._animationLoop);
             Anim._runFrames();
@@ -10142,10 +10155,9 @@ var Konva = {};
         }
     };
     Konva.Animation._handleAnimation = function() {
-        var that = this;
         if(!this.animRunning) {
             this.animRunning = true;
-            that._animationLoop();
+            this._animationLoop();
         }
     };
 
@@ -10157,6 +10169,7 @@ var Konva = {};
     /**
      * batch draw
      * @method
+     * @return {Konva.Layer} this
      * @memberof Konva.Base.prototype
      */
     Konva.BaseLayer.prototype.batchDraw = function() {
@@ -10177,17 +10190,20 @@ var Konva = {};
             this.draw();
             this.batchAnim.start();
         }
+        return this;
     };
 
     /**
      * batch draw
      * @method
+     * @return {Konva.Stage} this
      * @memberof Konva.Stage.prototype
      */
     Konva.Stage.prototype.batchDraw = function() {
         this.getChildren().each(function(layer) {
             layer.batchDraw();
         });
+        return this;
     };
 })(Konva);
 
@@ -11181,6 +11197,7 @@ var Konva = {};
 })();
 
 (function() {
+    'use strict';
     /**
      * Rect constructor
      * @constructor
@@ -11328,6 +11345,7 @@ var Konva = {};
 })();
 
 (function() {
+    'use strict';
     // the 0.0001 offset fixes a bug in Chrome 27
     var PIx2 = (Math.PI * 2) - 0.0001,
         CIRCLE = 'Circle';
@@ -11485,6 +11503,7 @@ var Konva = {};
 })();
 
 (function() {
+    'use strict';
     // the 0.0001 offset fixes a bug in Chrome 27
     var PIx2 = (Math.PI * 2) - 0.0001,
         ELLIPSE = 'Ellipse';
@@ -11686,6 +11705,7 @@ var Konva = {};
 })();
 
 (function() {
+    'use strict';
     // the 0.0001 offset fixes a bug in Chrome 27
     var PIx2 = (Math.PI * 2) - 0.0001;
     /**
@@ -11865,6 +11885,7 @@ var Konva = {};
 })();
 
 (function() {
+    'use strict';
     /**
      * Wedge constructor
      * @constructor
@@ -12064,6 +12085,7 @@ var Konva = {};
 })();
 
 (function() {
+    'use strict';
     /**
      * Arc constructor
      * @constructor
@@ -12279,7 +12301,7 @@ var Konva = {};
 })();
 
 (function() {
-
+    'use strict';
     // CONSTANTS
     var IMAGE = 'Image';
 
@@ -12572,7 +12594,9 @@ var Konva = {};
     };
 })();
 
+/*eslint-disable max-depth */
 (function() {
+    'use strict';
     // constants
     var AUTO = 'auto',
         //CANVAS = 'canvas',
@@ -13130,6 +13154,7 @@ var Konva = {};
 })();
 
 (function () {
+    'use strict';
     /**
      * Line constructor.&nbsp; Lines are defined by an array of points and
      *  a tension
@@ -13439,6 +13464,7 @@ var Konva = {};
 })();
 
 (function() {
+    'use strict';
     /**
      * Sprite constructor
      * @constructor
@@ -13847,8 +13873,9 @@ var Konva = {};
     Konva.Collection.mapMethods(Konva.Sprite);
 })();
 
-/*eslint-disable  no-shadow*/
+/*eslint-disable  no-shadow, max-len, max-depth */
 (function () {
+    'use strict';
     /**
      * Path constructor.
      * @author Jason Follas
@@ -14019,7 +14046,7 @@ var Konva = {};
             var minY = points[0];
             var maxY = points[0];
             var x, y;
-            for (var i = 0; i<points.length / 2; i++) {
+            for (var i = 0; i < points.length / 2; i++) {
                 x = points[i * 2]; y = points[i * 2 + 1];
                 minX = Math.min(minX, x);
                 maxX = Math.max(maxX, x);
@@ -14250,11 +14277,11 @@ var Konva = {};
                         cmd = 'M';
                         // After closing the path move the current position
                         // to the the first point of the path (if any).
-                        if(ca.length>2 && ca[ca.length-1].command==='z'){
-                            for(var idx=ca.length-2; idx>=0; idx--){
-                                if(ca[idx].command==='M'){
-                                    cpx=ca[idx].points[0]+dx;
-                                    cpy=ca[idx].points[1]+dy;
+                        if(ca.length > 2 && ca[ca.length - 1].command === 'z'){
+                            for(var idx = ca.length - 2; idx >= 0; idx--){
+                                if(ca[idx].command === 'M'){
+                                    cpx = ca[idx].points[0] + dx;
+                                    cpy = ca[idx].points[1] + dy;
                                     break;
                                 }
                             }
@@ -14567,6 +14594,7 @@ var Konva = {};
 })();
 
 (function() {
+    'use strict';
     var EMPTY_STRING = '',
         //CALIBRI = 'Calibri',
         NORMAL = 'normal';
@@ -14974,7 +15002,7 @@ var Konva = {};
             var minY = points[0];
             var maxY = points[0];
             var x, y;
-            for (var i = 0; i<points.length / 2; i++) {
+            for (var i = 0; i < points.length / 2; i++) {
                 x = points[i * 2]; y = points[i * 2 + 1];
                 minX = Math.min(minX, x);
                 maxX = Math.max(maxX, x);
@@ -15077,6 +15105,7 @@ var Konva = {};
 })();
 
 (function() {
+    'use strict';
     /**
      * RegularPolygon constructor.&nbsp; Examples include triangles, squares, pentagons, hexagons, etc.
      * @constructor
@@ -15258,6 +15287,7 @@ var Konva = {};
 })();
 
 (function() {
+    'use strict';
     /**
      * Star constructor
      * @constructor
@@ -15461,6 +15491,7 @@ var Konva = {};
 })();
 
 (function() {
+    'use strict';
     // constants
     var ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'lineHeight', 'text'],
         CHANGE_KONVA = 'Change.konva',
@@ -15671,9 +15702,9 @@ var Konva = {};
             context.moveTo(0, 0);
 
             if (pointerDirection === UP) {
-                context.lineTo((width - pointerWidth)/2, 0);
-                context.lineTo(width/2, -1 * pointerHeight);
-                context.lineTo((width + pointerWidth)/2, 0);
+                context.lineTo((width - pointerWidth) / 2, 0);
+                context.lineTo(width / 2, -1 * pointerHeight);
+                context.lineTo((width + pointerWidth) / 2, 0);
             }
 
             if(!cornerRadius) {
@@ -15684,9 +15715,9 @@ var Konva = {};
             }
 
             if (pointerDirection === RIGHT) {
-                context.lineTo(width, (height - pointerHeight)/2);
-                context.lineTo(width + pointerWidth, height/2);
-                context.lineTo(width, (height + pointerHeight)/2);
+                context.lineTo(width, (height - pointerHeight) / 2);
+                context.lineTo(width + pointerWidth, height / 2);
+                context.lineTo(width, (height + pointerHeight) / 2);
             }
 
             if(!cornerRadius) {
@@ -15697,9 +15728,9 @@ var Konva = {};
             }
 
             if (pointerDirection === DOWN) {
-                context.lineTo((width + pointerWidth)/2, height);
-                context.lineTo(width/2, height + pointerHeight);
-                context.lineTo((width - pointerWidth)/2, height);
+                context.lineTo((width + pointerWidth) / 2, height);
+                context.lineTo(width / 2, height + pointerHeight);
+                context.lineTo((width - pointerWidth) / 2, height);
             }
 
             if(!cornerRadius) {
@@ -15710,9 +15741,9 @@ var Konva = {};
             }
 
             if (pointerDirection === LEFT) {
-                context.lineTo(0, (height + pointerHeight)/2);
-                context.lineTo(-1 * pointerWidth, height/2);
-                context.lineTo(0, (height - pointerHeight)/2);
+                context.lineTo(0, (height + pointerHeight) / 2);
+                context.lineTo(-1 * pointerWidth, height / 2);
+                context.lineTo(0, (height - pointerHeight) / 2);
             }
 
             if(cornerRadius) {
@@ -15827,6 +15858,7 @@ var Konva = {};
 })();
 
 (function() {
+    'use strict';
     /**
      * Arrow constructor
      * @constructor

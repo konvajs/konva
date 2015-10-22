@@ -1,5 +1,5 @@
 (function () {
-
+    'use strict';
     /**
      * Posterize Filter. Adjusts the channels so that there are no more
      *  than n different values for that channel. This is also applied

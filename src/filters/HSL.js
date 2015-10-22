@@ -1,4 +1,5 @@
 (function () {
+    'use strict';
 
     Konva.Factory.addGetterSetter(Konva.Node, 'hue', 0, null, Konva.Factory.afterSetFilter);
     /**

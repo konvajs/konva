@@ -30,7 +30,6 @@
 /**
  * @namespace Konva
  */
-/*jshint -W079, -W020*/
 var Konva = {};
 (function(root) {
     'use strict';
@@ -114,9 +113,8 @@ var Konva = {};
             // drag and drop is not even possible
             if (dd) {
                 return dd.isDragging;
-            } else {
-                return false;
             }
+            return false;
         },
         /**
         * returns whether or not a drag and drop operation is ready, but may
@@ -131,9 +129,8 @@ var Konva = {};
             // drag and drop is not even possible
             if (dd) {
                 return !!dd.node;
-            } else {
-                return false;
             }
+            return false;
         },
         _addId: function(node, id) {
             if(id !== undefined) {

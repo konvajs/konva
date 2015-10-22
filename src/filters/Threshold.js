@@ -1,5 +1,5 @@
 (function () {
-
+    'use strict';
     /**
      * Threshold Filter. Pushes any value above the mid point to
      *  the max and any value below the mid point to the min.

@@ -1,4 +1,5 @@
 (function () {
+    'use strict';
     /**
      * Emboss Filter.
      * Pixastic Lib - Emboss filter - v0.1.0

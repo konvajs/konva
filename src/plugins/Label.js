@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
     // constants
     var ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'lineHeight', 'text'],
         CHANGE_KONVA = 'Change.konva',
@@ -190,9 +191,9 @@
             context.moveTo(0, 0);
 
             if (pointerDirection === UP) {
-                context.lineTo((width - pointerWidth)/2, 0);
-                context.lineTo(width/2, -1 * pointerHeight);
-                context.lineTo((width + pointerWidth)/2, 0);
+                context.lineTo((width - pointerWidth) / 2, 0);
+                context.lineTo(width / 2, -1 * pointerHeight);
+                context.lineTo((width + pointerWidth) / 2, 0);
             }
 
             if(!cornerRadius) {
@@ -203,9 +204,9 @@
             }
 
             if (pointerDirection === RIGHT) {
-                context.lineTo(width, (height - pointerHeight)/2);
-                context.lineTo(width + pointerWidth, height/2);
-                context.lineTo(width, (height + pointerHeight)/2);
+                context.lineTo(width, (height - pointerHeight) / 2);
+                context.lineTo(width + pointerWidth, height / 2);
+                context.lineTo(width, (height + pointerHeight) / 2);
             }
 
             if(!cornerRadius) {
@@ -216,9 +217,9 @@
             }
 
             if (pointerDirection === DOWN) {
-                context.lineTo((width + pointerWidth)/2, height);
-                context.lineTo(width/2, height + pointerHeight);
-                context.lineTo((width - pointerWidth)/2, height);
+                context.lineTo((width + pointerWidth) / 2, height);
+                context.lineTo(width / 2, height + pointerHeight);
+                context.lineTo((width - pointerWidth) / 2, height);
             }
 
             if(!cornerRadius) {
@@ -229,9 +230,9 @@
             }
 
             if (pointerDirection === LEFT) {
-                context.lineTo(0, (height + pointerHeight)/2);
-                context.lineTo(-1 * pointerWidth, height/2);
-                context.lineTo(0, (height - pointerHeight)/2);
+                context.lineTo(0, (height + pointerHeight) / 2);
+                context.lineTo(-1 * pointerWidth, height / 2);
+                context.lineTo(0, (height - pointerHeight) / 2);
             }
 
             if(cornerRadius) {

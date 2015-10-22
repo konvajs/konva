@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
     /**
      * Rect constructor
      * @constructor

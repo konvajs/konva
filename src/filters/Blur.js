@@ -3,6 +3,7 @@
  master repo: https://github.com/pavelpower/kineticjsGaussFilter
 */
 (function() {
+    'use strict';
     /*
 
      StackBlur - a fast almost Gaussian Blur For Canvas

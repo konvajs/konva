@@ -140,12 +140,10 @@
                     return {
                         shape: shape
                     };
-                } else {
-                    return {
-                        antialiased: true
-                    };
                 }
-
+                return {
+                    antialiased: true
+                };
             }
             // antialiased pixel
             else if(p3 > 0) {
@@ -154,9 +152,7 @@
                 };
             }
             // empty pixel
-            else {
-                return {};
-            }
+            return {};
         },
         drawScene: function(can, top) {
             var layer = this.getLayer(),

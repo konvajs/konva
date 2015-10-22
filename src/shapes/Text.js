@@ -1,4 +1,6 @@
+/*eslint-disable max-depth */
 (function() {
+    'use strict';
     // constants
     var AUTO = 'auto',
         //CANVAS = 'canvas',

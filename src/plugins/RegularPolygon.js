@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
     /**
      * RegularPolygon constructor.&nbsp; Examples include triangles, squares, pentagons, hexagons, etc.
      * @constructor

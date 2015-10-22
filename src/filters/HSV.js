@@ -1,5 +1,5 @@
 (function () {
-
+    'use strict';
     /**
     * HSV Filter. Adjusts the hue, saturation and value
     * @function

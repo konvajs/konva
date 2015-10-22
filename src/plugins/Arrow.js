@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
     /**
      * Arrow constructor
      * @constructor

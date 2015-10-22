@@ -1,4 +1,5 @@
 (function () {
+    'use strict';
     function remap(fromValue, fromMin, fromMax, toMin, toMax) {
         // Compute the range of the data
         var fromRange = fromMax - fromMin,

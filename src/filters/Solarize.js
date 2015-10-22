@@ -1,4 +1,5 @@
 (function () {
+    'use strict';
     /**
      * Solarize Filter
      * Pixastic Lib - Solarize filter - v0.1.0
@@ -16,17 +17,17 @@
         var data = imageData.data,
             w = imageData.width,
             h = imageData.height,
-            w4 = w*4,
+            w4 = w * 4,
             y = h;
 
         do {
-            var offsetY = (y-1)*w4;
+            var offsetY = (y - 1) * w4;
             var x = w;
             do {
-                var offset = offsetY + (x-1)*4;
+                var offset = offsetY + (x - 1) * 4;
                 var r = data[offset];
-                var g = data[offset+1];
-                var b = data[offset+2];
+                var g = data[offset + 1];
+                var b = data[offset + 2];
 
                 if (r > 127) {
                     r = 255 - r;
@@ -39,8 +40,8 @@
                 }
 
                 data[offset] = r;
-                data[offset+1] = g;
-                data[offset+2] = b;
+                data[offset + 1] = g;
+                data[offset + 2] = b;
             } while (--x);
         } while (--y);
     };

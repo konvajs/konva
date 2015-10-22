@@ -1,5 +1,6 @@
+/*eslint-disable max-depth */
 (function () {
-
+    'use strict';
     /**
      * Pixelate Filter. Averages groups of pixels and redraws
      *  them as larger pixels

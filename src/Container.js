@@ -45,15 +45,15 @@
         getChildren: function(filterFunc) {
             if (!filterFunc) {
                 return this.children;
-            } else {
-                var results = new Konva.Collection();
-                this.children.each(function(child){
-                    if (filterFunc(child)) {
-                        results.push(child);
-                    }
-                });
-                return results;
             }
+
+            var results = new Konva.Collection();
+            this.children.each(function(child){
+                if (filterFunc(child)) {
+                    results.push(child);
+                }
+            });
+            return results;
         },
         /**
          * determine if node has children

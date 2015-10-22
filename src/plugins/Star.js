@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
     /**
      * Star constructor
      * @constructor

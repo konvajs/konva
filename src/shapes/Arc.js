@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
     /**
      * Arc constructor
      * @constructor

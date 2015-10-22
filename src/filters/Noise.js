@@ -1,4 +1,5 @@
 (function () {
+    'use strict';
 
     /**
      * Noise Filter. Randomly adds or substracts to the color channels

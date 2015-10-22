@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
     var EMPTY_STRING = '',
         //CALIBRI = 'Calibri',
         NORMAL = 'normal';
@@ -337,7 +338,7 @@
             var minY = points[0];
             var maxY = points[0];
             var x, y;
-            for (var i = 0; i<points.length / 2; i++) {
+            for (var i = 0; i < points.length / 2; i++) {
                 x = points[i * 2]; y = points[i * 2 + 1];
                 minX = Math.min(minX, x);
                 maxX = Math.max(maxX, x);

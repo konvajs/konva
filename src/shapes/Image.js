@@ -1,5 +1,5 @@
 (function() {
-
+    'use strict';
     // CONSTANTS
     var IMAGE = 'Image';
 

@@ -8,11 +8,10 @@
                 return Konva.root.performance.now();
             };
         }
-        else {
-            return function() {
-                return new Date().getTime();
-            };
-        }
+
+        return function() {
+            return new Date().getTime();
+        };
     })();
 
     function FRAF(callback) {
@@ -77,6 +76,7 @@
          * @method
          * @memberof Konva.Animation.prototype
          * @param {Konva.Layer|Array} [layers] layer(s) to be redrawn.&nbsp; Can be a layer, an array of layers, or null.  Not specifying a node will result in no redraw.
+         * @return {Konva.Animation} this
          */
         setLayers: function(layers) {
             var lays = [];
@@ -96,11 +96,13 @@
             }
 
             this.layers = lays;
+            return this;
         },
         /**
          * get layers
          * @method
          * @memberof Konva.Animation.prototype
+         * @return {Array} Array of Konva.Layer
          */
         getLayers: function() {
             return this.layers;
@@ -109,7 +111,8 @@
          * add layer.  Returns true if the layer was added, and false if it was not
          * @method
          * @memberof Konva.Animation.prototype
-         * @param {Konva.Layer} layer
+         * @param {Konva.Layer} layer to add
+         * @return {Bool} true if layer is added to animation, otherwise false
          */
         addLayer: function(layer) {
             var layers = this.layers,
@@ -129,6 +132,7 @@
          * determine if animation is running or not.  returns true or false
          * @method
          * @memberof Konva.Animation.prototype
+         * @return {Bool} is animation running?
          */
         isRunning: function() {
             var a = Konva.Animation,
@@ -147,6 +151,7 @@
          * start animation
          * @method
          * @memberof Konva.Animation.prototype
+         * @return {Konva.Animation} this
          */
         start: function() {
             var Anim = Konva.Animation;
@@ -154,14 +159,17 @@
             this.frame.timeDiff = 0;
             this.frame.lastTime = now();
             Anim._addAnimation(this);
+            return this;
         },
         /**
          * stop animation
          * @method
          * @memberof Konva.Animation.prototype
+         * @return {Konva.Animation} this
          */
         stop: function() {
             Konva.Animation._removeAnimation(this);
+            return this;
         },
         _updateFrameObject: function(time) {
             this.frame.timeDiff = time - this.frame.lastTime;
@@ -237,12 +245,14 @@
         }
 
         for (key in layerHash) {
+            if (!layerHash.hasOwnProperty(key)) {
+                continue;
+            }
             layerHash[key].draw();
         }
     };
     Konva.Animation._animationLoop = function() {
         var Anim = Konva.Animation;
-
         if(Anim.animations.length) {
             requestAnimFrame(Anim._animationLoop);
             Anim._runFrames();
@@ -252,10 +262,9 @@
         }
     };
     Konva.Animation._handleAnimation = function() {
-        var that = this;
         if(!this.animRunning) {
             this.animRunning = true;
-            that._animationLoop();
+            this._animationLoop();
         }
     };
 
@@ -267,6 +276,7 @@
     /**
      * batch draw
      * @method
+     * @return {Konva.Layer} this
      * @memberof Konva.Base.prototype
      */
     Konva.BaseLayer.prototype.batchDraw = function() {
@@ -287,16 +297,19 @@
             this.draw();
             this.batchAnim.start();
         }
+        return this;
     };
 
     /**
      * batch draw
      * @method
+     * @return {Konva.Stage} this
      * @memberof Konva.Stage.prototype
      */
     Konva.Stage.prototype.batchDraw = function() {
         this.getChildren().each(function(layer) {
             layer.batchDraw();
         });
+        return this;
     };
 })(Konva);

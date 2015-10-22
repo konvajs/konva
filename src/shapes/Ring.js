@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
     // the 0.0001 offset fixes a bug in Chrome 27
     var PIx2 = (Math.PI * 2) - 0.0001;
     /**

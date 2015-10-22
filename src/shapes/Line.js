@@ -1,4 +1,5 @@
 (function () {
+    'use strict';
     /**
      * Line constructor.&nbsp; Lines are defined by an array of points and
      *  a tension
