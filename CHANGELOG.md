@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Not released][Not released]
+## [0.10.0][2015-10-27]
 
 ### Added
 - RGBA filter. Thanks to [@codefo](https://github.com/codefo)
