@@ -78,6 +78,7 @@ declare module Konva {
         scale?: Vector2d;
         scaleX? : number;
         scaleY? : number;
+        rotation?: number;
         rotationDeg?: number;
         offset?: Vector2d;
         offsetX? : number;
