@@ -1,9 +1,9 @@
 
 /*
- * Konva JavaScript Framework v0.10.0
+ * Konva JavaScript Framework v0.11.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Tue Oct 27 2015
+ * Date: Fri Oct 30 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -37,7 +37,7 @@ var Konva = {};
 
     Konva = {
         // public
-        version: '0.10.0',
+        version: '0.11.0',
 
         // private
         stages: [],
@@ -15968,6 +15968,7 @@ var Konva = {};
             this.className = 'Arrow';
         },
         _sceneFunc: function(ctx) {
+            Konva.Line.prototype._sceneFunc.apply(this, arguments);
             var PI2 = Math.PI * 2;
             var points = this.points();
             var n = points.length;
@@ -15994,14 +15995,12 @@ var Konva = {};
                 dy = points[3] - points[1];
                 ctx.rotate((Math.atan2(-dy, -dx) + PI2) % PI2);
                 ctx.moveTo(0, 0);
-                ctx.lineTo(-10, 6);
-                ctx.lineTo(-10, -6);
+                ctx.lineTo(-length, width / 2);
+                ctx.lineTo(-length, -width / 2);
                 ctx.closePath();
                 ctx.restore();
             }
-
             ctx.fillStrokeShape(this);
-            Konva.Line.prototype._sceneFunc.apply(this, arguments);
         }
     };
 

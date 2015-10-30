@@ -33,6 +33,7 @@
             this.className = 'Arrow';
         },
         _sceneFunc: function(ctx) {
+            Konva.Line.prototype._sceneFunc.apply(this, arguments);
             var PI2 = Math.PI * 2;
             var points = this.points();
             var n = points.length;
@@ -59,14 +60,12 @@
                 dy = points[3] - points[1];
                 ctx.rotate((Math.atan2(-dy, -dx) + PI2) % PI2);
                 ctx.moveTo(0, 0);
-                ctx.lineTo(-10, 6);
-                ctx.lineTo(-10, -6);
+                ctx.lineTo(-length, width / 2);
+                ctx.lineTo(-length, -width / 2);
                 ctx.closePath();
                 ctx.restore();
             }
-
             ctx.fillStrokeShape(this);
-            Konva.Line.prototype._sceneFunc.apply(this, arguments);
         }
     };
 

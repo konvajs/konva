@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Not released][Not released]
+
+### Fixed
+- correct `Konva.Arrow` drawing. Now it works better.
+
 ## [0.10.0][2015-10-27]
 
 ### Added
