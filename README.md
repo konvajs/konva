@@ -52,7 +52,7 @@ If you add a file in the src directory, be sure to add the filename to the sourc
 Konva uses Mocha for testing.
 
 * If you need run test only one time run `gulp test`.
-* While developing it is easy to use `gulp` default task with with watch. Just run it and go to [http://localhost:8080/test/runner.html](http://localhost:8080/test/runner.html). After src file change konva-dev.js will be automatically created, so you just need refresh test the page.
+* While developing it is easy to use `gulp` default task with watch. Just run it and go to [http://localhost:8080/test/runner.html](http://localhost:8080/test/runner.html). After src file change konva-dev.js will be automatically created, so you just need refresh test the page.
 
 Konva is covered with hundreds of tests and well over a thousand assertions.
 Konva uses TDD (test driven development) which means that every new feature or bug fix is accompanied with at least one new test.
