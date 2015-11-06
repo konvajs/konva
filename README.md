@@ -1,3 +1,5 @@
+![Konva logo](https://raw.githubusercontent.com/konvajs/konvajs.github.io/master/apple-touch-icon-180x180.png)
+
 #Konva
 
 Konva is an HTML5 Canvas JavaScript framework that enables high performance animations, transitions, node nesting, layering, filtering, caching, event handling for desktop and mobile applications, and much more.
@@ -14,6 +16,50 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 * **Visit:** The [Home Page](http://konvajs.github.io/) and follow on [Twitter](https://twitter.com/lavrton)
 * **Discover:** [Tutorials](http://konvajs.github.io/docs), [API Documentation](http://konvajs.github.io/docs)
 * **Help:** [StackOverflow](http://stackoverflow.com/questions/tagged/konvajs)
+
+# Quick Look
+
+```html
+<script src="https://cdn.rawgit.com/konvajs/konva/0.10.0/konva.min.js"></script>
+<div id="container"></div>
+<script>
+    var stage = new Konva.Stage({
+        container: 'container',
+        width: window.innerWidth,
+        height: window.innerHeight
+    });
+
+    // add canvas element
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    // create shape
+    var box = new Konva.Rect({
+        x: 50,
+        y: 50,
+        width: 100,
+        height: 50,
+        fill: '#00D2FF',
+        stroke: 'black',
+        strokeWidth: 4,
+        draggable: true
+    });
+    layer.add(box);
+    
+    layer.draw();
+
+    // add cursor styling
+    box.on('mouseover', function() {
+        document.body.style.cursor = 'pointer';
+    });
+    box.on('mouseout', function() {
+        document.body.style.cursor = 'default';
+    });
+
+    
+    
+</script>
+```
 
 #Installation
 
