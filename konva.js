@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.11.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri Oct 30 2015
+ * Date: Sat Nov 21 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -9108,21 +9108,8 @@ var Konva = {};
             }
             // mouse events
             else {
-                if (!contentPosition) {
-                    x = evt.offsetX;
-                    y = evt.offetY;
-                }
-                // we unfortunately have to use UA detection here because accessing
-                // the layerX or layerY properties in newer versions of Chrome
-                // throws a JS warning.  layerX and layerY are required for FF
-                // when the container is transformed via CSS.
-                else if (Konva.UA.browser === 'mozilla') {
-                    x = evt.layerX || (evt.clientX - contentPosition.left);
-                    y = evt.layerY || (evt.clientY - contentPosition.top);
-                } else {
-                    x = evt.clientX - contentPosition.left;
-                    y = evt.clientY - contentPosition.top;
-                }
+                x = evt.clientX - contentPosition.left;
+                y = evt.clientY - contentPosition.top;
             }
 
             if (x !== null && y !== null) {

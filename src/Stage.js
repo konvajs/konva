@@ -650,21 +650,8 @@
             }
             // mouse events
             else {
-                if (!contentPosition) {
-                    x = evt.offsetX;
-                    y = evt.offetY;
-                }
-                // we unfortunately have to use UA detection here because accessing
-                // the layerX or layerY properties in newer versions of Chrome
-                // throws a JS warning.  layerX and layerY are required for FF
-                // when the container is transformed via CSS.
-                else if (Konva.UA.browser === 'mozilla') {
-                    x = evt.layerX || (evt.clientX - contentPosition.left);
-                    y = evt.layerY || (evt.clientY - contentPosition.top);
-                } else {
-                    x = evt.clientX - contentPosition.left;
-                    y = evt.clientY - contentPosition.top;
-                }
+                x = evt.clientX - contentPosition.left;
+                y = evt.clientY - contentPosition.top;
             }
 
             if (x !== null && y !== null) {

@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - correct `Konva.Arrow` drawing. Now it works better.
+- Better support for dragging when mouse out of stage
 
 ## [0.10.0][2015-10-27]
 
