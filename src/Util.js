@@ -539,6 +539,13 @@
             }
             return names.length > 0;
         },
+        isValidSelector: function(selector) {
+            if (typeof selector !== 'string') {
+                return false;
+            }
+            var firstChar = selector[0];
+            return firstChar === '#' || firstChar === '.' || firstChar === firstChar.toUpperCase();
+        },
         createCanvasElement: function() {
             var canvas = Konva.document.createElement('canvas');
             // on some environments canvas.style is readonly

@@ -8,6 +8,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - correct `Konva.Arrow` drawing. Now it works better.
 - Better support for dragging when mouse out of stage
 
+### Added
+- event delegation. You can use it in this way: `layer.on('click', 'Circle', handler);`
+
 ## [0.10.0][2015-10-27]
 
 ### Added

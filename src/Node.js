@@ -417,8 +417,17 @@
          *   var oldVal = evt.oldVal;
          *   var newVal = evt.newVal;
          * });
+         *
+         * // also event delegation works
+         * layer.on('click', 'Group', function(evt) {
+         *   var shape = evt.target;
+         *   var group = evtn.currentTarger;
+         * });
          */
         on: function(evtStr, handler) {
+            if (arguments.length === 3) {
+                return this._delegate.apply(this, arguments);
+            }
             var events = evtStr.split(SPACE),
                 len = events.length,
                 n, event, parts, baseEvent, name;
@@ -515,6 +524,17 @@
         },
         removeEventListener: function(type) {
             this.off(type);
+        },
+        _delegate: function(event, selector, handler) {
+            var stopNode = this;
+            this.on(event, function(evt) {
+                var targets = evt.target._findMatchers(selector, stopNode);
+                for(var i = 0; i < targets.length; i++) {
+                    evt = Konva.Util.cloneObject(evt);
+                    evt.currentTarget = targets[i];
+                    handler.call(targets[i], evt);
+                }
+            });
         },
         /**
          * remove self from parent, but don't destroy
@@ -1167,6 +1187,49 @@
         getParent: function() {
             return this.parent;
         },
+        _findMatchers: function(selector, stopNode) {
+            var res = [];
+            if (this._isMatch(selector)) {
+                res.push(this);
+            }
+            var parent = this.parent;
+            if (!parent) {
+                return res;
+            }
+            if (parent === stopNode) {
+                return res;
+            }
+            return res.concat(parent._findMatchers(selector, stopNode));
+        },
+        _isMatch: function(selector) {
+            var selectorArr = selector.replace(/ /g, '').split(','),
+                len = selectorArr.length,
+                n, sel;
+
+            for (n = 0; n < len; n++) {
+                sel = selectorArr[n];
+                if (!Konva.Util.isValidSelector(sel)) {
+                    Konva.Util.warn('Selector "' + sel + '" is invalid. Allowed selectors examples are "#foo", ".bar" or "Group".');
+                    Konva.Util.warn('If you have a custom shape with such className, please change it to start with upper letter like "Triangle".');
+                    Konva.Util.warn('Konva is awesome, right?');
+                }
+                // id selector
+                if(sel.charAt(0) === '#') {
+                    if (this.id() === sel.slice(1)) {
+                        return true;
+                    }
+                }
+                // name selector
+                else if(sel.charAt(0) === '.') {
+                    if (this.hasName(sel.slice(1))) {
+                        return true;
+                    }
+                } else if (this._get(sel).length !== 0) {
+                    return true;
+                }
+            }
+            return false;
+        },
         /**
          * get layer ancestor
          * @method
@@ -1221,12 +1284,14 @@
          */
         fire: function(eventType, evt, bubble) {
             // bubble
+            evt = Konva.Util.cloneObject(evt || {});
+            evt.currentTarget = this;
             if (bubble) {
-                this._fireAndBubble(eventType, evt || {});
+                this._fireAndBubble(eventType, evt);
             }
             // no bubble
             else {
-                this._fire(eventType, evt || {});
+                this._fire(eventType, evt);
             }
             return this;
         },

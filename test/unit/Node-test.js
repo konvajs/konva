@@ -1846,6 +1846,63 @@ suite('Node', function() {
         assert.equal(clicks[1], 'layer');
     });
 
+    test('simple event delegation', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle'
+        });
+
+        stage.add(layer);
+        layer.add(circle);
+        layer.draw();
+
+        var fired = false;
+        layer.on('click', 'Circle', function(e) {
+            assert.equal(this, circle);
+            assert.equal(e.currentTarget, circle);
+            fired = true;
+        });
+        circle.fire('click', null, true);
+        assert(fired, true);
+    });
+
+    test('complex event delegation', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        stage.add(layer);
+        var circle = new Konva.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle'
+        });
+        var group = new Konva.Group({
+            name: 'group1 group2'
+        });
+        group.add(circle);
+        layer.add(group);
+
+        layer.draw();
+
+        var fired = false;
+        layer.on('click', '.group1', function(e) {
+            assert.equal(this, group);
+            assert.equal(e.currentTarget, group);
+            fired = true;
+        });
+        circle.fire('click', null, true);
+        assert(fired, true);
+    });
     // ======================================================
     test('move shape, group, and layer, and then get absolute position', function() {
         var stage = addStage();
