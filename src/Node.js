@@ -418,7 +418,8 @@
          *   var newVal = evt.newVal;
          * });
          *
-         * // also event delegation works
+         * // get event targets
+         * // with event delegations
          * layer.on('click', 'Group', function(evt) {
          *   var shape = evt.target;
          *   var group = evtn.currentTarger;
@@ -525,6 +526,7 @@
         removeEventListener: function(type) {
             this.off(type);
         },
+        // like node.on
         _delegate: function(event, selector, handler) {
             var stopNode = this;
             this.on(event, function(evt) {
@@ -1201,6 +1203,7 @@
             }
             return res.concat(parent._findMatchers(selector, stopNode));
         },
+        // is current node match passed selector?
         _isMatch: function(selector) {
             var selectorArr = selector.replace(/ /g, '').split(','),
                 len = selectorArr.length,
