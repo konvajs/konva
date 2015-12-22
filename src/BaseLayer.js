@@ -98,16 +98,17 @@
                 stage.content.removeChild(this.getCanvas()._canvas);
                 stage.content.appendChild(this.getCanvas()._canvas);
             }
+            return this;
         },
         // extend Node.prototype.moveUp
         moveUp: function() {
             var moved = Konva.Node.prototype.moveUp.call(this);
             if (!moved){
-                return;
+                return this;
             }
             var stage = this.getStage();
             if(!stage) {
-                return;
+                return this;
             }
             stage.content.removeChild(this.getCanvas()._canvas);
 
@@ -116,6 +117,7 @@
             } else {
                 stage.content.appendChild(this.getCanvas()._canvas);
             }
+            return this;
         },
         // extend Node.prototype.moveDown
         moveDown: function() {
@@ -127,6 +129,7 @@
                     stage.content.insertBefore(this.getCanvas()._canvas, children[this.index + 1].getCanvas()._canvas);
                 }
             }
+            return this;
         },
         // extend Node.prototype.moveToBottom
         moveToBottom: function() {
@@ -138,6 +141,7 @@
                     stage.content.insertBefore(this.getCanvas()._canvas, children[1].getCanvas()._canvas);
                 }
             }
+            return this;
         },
         getLayer: function() {
             return this;
@@ -157,6 +161,7 @@
         },
         setSize: function(width, height) {
             this.canvas.setSize(width, height);
+            return this;
         },
         /**
          * get/set width of layer.getter return width of stage. setter doing nothing.

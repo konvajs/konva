@@ -141,6 +141,7 @@
             }
             // then destroy self
             Konva.Node.prototype.destroy.call(this);
+            return this;
         },
         /**
          * return a {@link Konva.Collection} of nodes that match the selector.  Use '#' for id selections

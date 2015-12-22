@@ -186,6 +186,7 @@
             if (index > -1) {
                 Konva.stages.splice(index, 1);
             }
+            return this;
         },
         /**
          * get pointer position which can be a touch position or mouse position
@@ -653,7 +654,6 @@
                 x = evt.clientX - contentPosition.left;
                 y = evt.clientY - contentPosition.top;
             }
-
             if (x !== null && y !== null) {
                 this.pointerPos = {
                     x: x,

@@ -171,6 +171,7 @@
         destroy: function() {
             Konva.Node.prototype.destroy.call(this);
             delete Konva.shapes[this.colorKey];
+            return this;
         },
         _useBufferCanvas: function(caching) {
             return !caching && (this.perfectDrawEnabled() && (this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke() && this.getStage()) ||

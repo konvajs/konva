@@ -516,15 +516,18 @@
               evt: evt
             };
             this.fire(evt.type, e);
+            return this;
         },
         addEventListener: function(type, handler) {
             // we have to pass native event to handler
             this.on(type, function(evt){
                 handler.call(this, evt.evt);
             });
+            return this;
         },
         removeEventListener: function(type) {
             this.off(type);
+            return this;
         },
         // like node.on
         _delegate: function(event, selector, handler) {
@@ -578,6 +581,7 @@
             Konva._removeName(this.getName(), this._id);
 
             this.remove();
+            return this;
         },
         /**
          * get attr
@@ -1663,6 +1667,7 @@
                 names.splice(index, 1);
                 this.setName(names.join(' '));
             }
+            return this;
         },
         /**
          * set attr

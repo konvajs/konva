@@ -230,6 +230,7 @@
         setSize: function(width, height) {
             Konva.BaseLayer.prototype.setSize.call(this, width, height);
             this.hitCanvas.setSize(width, height);
+            return this;
         }
     });
     Konva.Util.extend(Konva.Layer, Konva.BaseLayer);

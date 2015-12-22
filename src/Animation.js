@@ -268,11 +268,6 @@
         }
     };
 
-    var moveTo = Konva.Node.prototype.moveTo;
-    Konva.Node.prototype.moveTo = function(container) {
-        moveTo.call(this, container);
-    };
-
     /**
      * batch draw
      * @method

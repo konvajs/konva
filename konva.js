@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.11.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sun Nov 22 2015
+ * Date: Tue Dec 22 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -2666,7 +2666,8 @@ var Konva = {};
          *   var newVal = evt.newVal;
          * });
          *
-         * // also event delegation works
+         * // get event targets
+         * // with event delegations
          * layer.on('click', 'Group', function(evt) {
          *   var shape = evt.target;
          *   var group = evtn.currentTarger;
@@ -2763,16 +2764,20 @@ var Konva = {};
               evt: evt
             };
             this.fire(evt.type, e);
+            return this;
         },
         addEventListener: function(type, handler) {
             // we have to pass native event to handler
             this.on(type, function(evt){
                 handler.call(this, evt.evt);
             });
+            return this;
         },
         removeEventListener: function(type) {
             this.off(type);
+            return this;
         },
+        // like node.on
         _delegate: function(event, selector, handler) {
             var stopNode = this;
             this.on(event, function(evt) {
@@ -2824,6 +2829,7 @@ var Konva = {};
             Konva._removeName(this.getName(), this._id);
 
             this.remove();
+            return this;
         },
         /**
          * get attr
@@ -3449,6 +3455,7 @@ var Konva = {};
             }
             return res.concat(parent._findMatchers(selector, stopNode));
         },
+        // is current node match passed selector?
         _isMatch: function(selector) {
             var selectorArr = selector.replace(/ /g, '').split(','),
                 len = selectorArr.length,
@@ -3908,6 +3915,7 @@ var Konva = {};
                 names.splice(index, 1);
                 this.setName(names.join(' '));
             }
+            return this;
         },
         /**
          * set attr
@@ -6614,6 +6622,7 @@ var Konva = {};
             }
             // then destroy self
             Konva.Node.prototype.destroy.call(this);
+            return this;
         },
         /**
          * return a {@link Konva.Collection} of nodes that match the selector.  Use '#' for id selections
@@ -7259,6 +7268,7 @@ var Konva = {};
         destroy: function() {
             Konva.Node.prototype.destroy.call(this);
             delete Konva.shapes[this.colorKey];
+            return this;
         },
         _useBufferCanvas: function(caching) {
             return !caching && (this.perfectDrawEnabled() && (this.getAbsoluteOpacity() !== 1) && this.hasFill() && this.hasStroke() && this.getStage()) ||
@@ -8708,6 +8718,7 @@ var Konva = {};
             if (index > -1) {
                 Konva.stages.splice(index, 1);
             }
+            return this;
         },
         /**
          * get pointer position which can be a touch position or mouse position
@@ -9175,7 +9186,6 @@ var Konva = {};
                 x = evt.clientX - contentPosition.left;
                 y = evt.clientY - contentPosition.top;
             }
-
             if (x !== null && y !== null) {
                 this.pointerPos = {
                     x: x,
@@ -9385,16 +9395,17 @@ var Konva = {};
                 stage.content.removeChild(this.getCanvas()._canvas);
                 stage.content.appendChild(this.getCanvas()._canvas);
             }
+            return this;
         },
         // extend Node.prototype.moveUp
         moveUp: function() {
             var moved = Konva.Node.prototype.moveUp.call(this);
             if (!moved){
-                return;
+                return this;
             }
             var stage = this.getStage();
             if(!stage) {
-                return;
+                return this;
             }
             stage.content.removeChild(this.getCanvas()._canvas);
 
@@ -9403,6 +9414,7 @@ var Konva = {};
             } else {
                 stage.content.appendChild(this.getCanvas()._canvas);
             }
+            return this;
         },
         // extend Node.prototype.moveDown
         moveDown: function() {
@@ -9414,6 +9426,7 @@ var Konva = {};
                     stage.content.insertBefore(this.getCanvas()._canvas, children[this.index + 1].getCanvas()._canvas);
                 }
             }
+            return this;
         },
         // extend Node.prototype.moveToBottom
         moveToBottom: function() {
@@ -9425,6 +9438,7 @@ var Konva = {};
                     stage.content.insertBefore(this.getCanvas()._canvas, children[1].getCanvas()._canvas);
                 }
             }
+            return this;
         },
         getLayer: function() {
             return this;
@@ -9444,6 +9458,7 @@ var Konva = {};
         },
         setSize: function(width, height) {
             this.canvas.setSize(width, height);
+            return this;
         },
         /**
          * get/set width of layer.getter return width of stage. setter doing nothing.
@@ -9771,6 +9786,7 @@ var Konva = {};
         setSize: function(width, height) {
             Konva.BaseLayer.prototype.setSize.call(this, width, height);
             this.hitCanvas.setSize(width, height);
+            return this;
         }
     });
     Konva.Util.extend(Konva.Layer, Konva.BaseLayer);
@@ -10210,11 +10226,6 @@ var Konva = {};
             this.animRunning = true;
             this._animationLoop();
         }
-    };
-
-    var moveTo = Konva.Node.prototype.moveTo;
-    Konva.Node.prototype.moveTo = function(container) {
-        moveTo.call(this, container);
     };
 
     /**
