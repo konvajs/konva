@@ -11,6 +11,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - event delegation. You can use it in this way: `layer.on('click', 'Circle', handler);`
 
+### Changed
+- `moveTo` and some other methods not return `this`
+
 ## [0.10.0][2015-10-27]
 
 ### Added
