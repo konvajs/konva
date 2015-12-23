@@ -15767,7 +15767,7 @@ var Konva = {};
                 pointerDirection = this.getPointerDirection(),
                 pointerWidth = this.getPointerWidth(),
                 pointerHeight = this.getPointerHeight(),
-                cornerRadius = Math.min(this.getCornerRadius, width / 2, height / 2);
+                cornerRadius = Math.min(this.getCornerRadius(), width / 2, height / 2);
 
             context.beginPath();
             if (!cornerRadius) {
