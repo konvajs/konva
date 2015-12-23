@@ -3,7 +3,8 @@
   "version": "0.11.0",
   "author": "Anton Lavrenov",
   "scripts": {
-    "start": "gulp"
+    "start": "gulp",
+    "full-build": "gulp lint test build"
   },
   "devDependencies": {
     "chai": "3.2.0",

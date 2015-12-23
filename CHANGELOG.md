@@ -12,7 +12,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - event delegation. You can use it in this way: `layer.on('click', 'Circle', handler);`
 
 ### Changed
-- `moveTo` and some other methods will return `this`
+- `moveTo` and some other methods return `this`
+- `getAbsolutePosition` support optional relative parent argument (useful to find absolute position inside of some of parent nodes)
 
 ## [0.10.0][2015-10-27]
 

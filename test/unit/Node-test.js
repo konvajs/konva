@@ -1556,6 +1556,40 @@ suite('Node', function() {
     });
 
     // ======================================================
+    test('test relative getAbsolutePosition for transformed parent ', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer({
+            name: 'layerName',
+            id: 'layerId',
+            x: 100,
+            y: 100
+        });
+        var group = new Konva.Group({
+            name: 'groupName',
+            id: 'groupId',
+            x: 100,
+            y: 100
+        });
+        var rect = new Konva.Rect({
+            x: 50,
+            y: 60,
+            width: 50,
+            height: 50,
+            fill: 'red',
+            name: 'rectName',
+            id: 'rectId'
+        });
+        
+        group.add(rect);
+        layer.add(group);
+        stage.add(layer);
+
+        assert.equal(rect.getAbsolutePosition(layer).x, 150);
+        assert.equal(rect.getAbsolutePosition(layer).y, 160);
+
+    });
+
+    // ======================================================
     test('test dragDistance', function() {
         var stage = addStage();
         var layer = new Konva.Layer();

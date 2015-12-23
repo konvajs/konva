@@ -855,12 +855,14 @@
         },
         /**
          * get absolute position relative to the top left corner of the stage container div
+         * or relative to passed node
          * @method
+         * @param {Object} [top] optional parent node
          * @memberof Konva.Node.prototype
          * @returns {Object}
          */
-        getAbsolutePosition: function() {
-            var absoluteMatrix = this.getAbsoluteTransform().getMatrix(),
+        getAbsolutePosition: function(top) {
+            var absoluteMatrix = this.getAbsoluteTransform(top).getMatrix(),
                 absoluteTransform = new Konva.Transform(),
                 offset = this.offset();
 

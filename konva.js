@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.11.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Tue Dec 22 2015
+ * Date: Wed Dec 23 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -3103,12 +3103,14 @@ var Konva = {};
         },
         /**
          * get absolute position relative to the top left corner of the stage container div
+         * or relative to passed node
          * @method
+         * @param {Object} [top] optional parent node
          * @memberof Konva.Node.prototype
          * @returns {Object}
          */
-        getAbsolutePosition: function() {
-            var absoluteMatrix = this.getAbsoluteTransform().getMatrix(),
+        getAbsolutePosition: function(top) {
+            var absoluteMatrix = this.getAbsoluteTransform(top).getMatrix(),
                 absoluteTransform = new Konva.Transform(),
                 offset = this.offset();
 
