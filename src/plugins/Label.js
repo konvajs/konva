@@ -185,10 +185,14 @@
                 pointerDirection = this.getPointerDirection(),
                 pointerWidth = this.getPointerWidth(),
                 pointerHeight = this.getPointerHeight(),
-                cornerRadius = this.getCornerRadius();
+                cornerRadius = Math.min(this.getCornerRadius, width / 2, height / 2);
 
             context.beginPath();
-            context.moveTo(0, 0);
+            if (!cornerRadius) {
+                context.moveTo(0, 0);
+            } else {
+                context.moveTo(cornerRadius, 0);
+            }
 
             if (pointerDirection === UP) {
                 context.lineTo((width - pointerWidth) / 2, 0);
