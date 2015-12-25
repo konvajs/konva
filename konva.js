@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.11.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Wed Dec 23 2015
+ * Date: Fri Dec 25 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -2781,7 +2781,7 @@ var Konva = {};
         _delegate: function(event, selector, handler) {
             var stopNode = this;
             this.on(event, function(evt) {
-                var targets = evt.target._findMatchers(selector, stopNode);
+                var targets = evt.target.findAncestors(selector, true, stopNode);
                 for(var i = 0; i < targets.length; i++) {
                     evt = Konva.Util.cloneObject(evt);
                     evt.currentTarget = targets[i];
@@ -3443,22 +3443,56 @@ var Konva = {};
         getParent: function() {
             return this.parent;
         },
-        _findMatchers: function(selector, stopNode) {
+        /**
+         * get all ancestros (parent then parent of the parent, etc) of the node
+         * @method
+         * @memberof Konva.Node.prototype
+         * @param {String} [selector] selector for search
+         * @param {Boolean} [includeSelf] show we think that node is ancestro itself?
+         * @param {Konva.Node} [stopNode] optional node where we need to stop searching (one of ancestors)
+         * @returns {Array} [ancestors]
+         * @example
+         * // get one of the parent group
+         * var parentGroups = node.findAncestors('Group');
+         */
+        findAncestors: function(selector, includeSelf, stopNode) {
             var res = [];
-            if (this._isMatch(selector)) {
+
+            if (includeSelf && this._isMatch(selector)) {
                 res.push(this);
             }
-            var parent = this.parent;
-            if (!parent) {
-                return res;
+            var ancestor = this.parent;
+            while(ancestor) {
+                if (ancestor === stopNode) {
+                    return res;
+                }
+                if (ancestor._isMatch(selector)) {
+                    res.push(ancestor);
+                }
+                ancestor = ancestor.parent;
             }
-            if (parent === stopNode) {
-                return res;
-            }
-            return res.concat(parent._findMatchers(selector, stopNode));
+            return res;
+        },
+        /**
+         * get ancestor (parent or parent of the parent, etc) of the node that match passed selector
+         * @method
+         * @memberof Konva.Node.prototype
+         * @param {String} [selector] selector for search
+         * @param {Boolean} [includeSelf] show we think that node is ancestro itself?
+         * @param {Konva.Node} [stopNode] optional node where we need to stop searching (one of ancestors)
+         * @returns {Konva.Node} ancestor
+         * @example
+         * // get one of the parent group
+         * var group = node.findAncestors('.mygroup');
+         */
+        findAncestor: function(selector, includeSelf, stopNode) {
+            return this.findAncestors(selector, includeSelf, stopNode)[0];
         },
         // is current node match passed selector?
         _isMatch: function(selector) {
+            if (!selector) {
+                return false;
+            }
             var selectorArr = selector.replace(/ /g, '').split(','),
                 len = selectorArr.length,
                 n, sel;

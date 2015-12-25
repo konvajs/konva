@@ -3117,4 +3117,57 @@ suite('Node', function() {
       assert.equal(node.toObject().attrs.radius, 10);
       delete Number.prototype.customFunc;
   });
+
+
+    test('test findAncestor', function() {
+        var stage = addStage();
+        stage.setAttrs({
+            name: 'stage',
+            id: 'stage'
+        });
+        var layer = new Konva.Layer({
+            id: 'layer',
+            name: 'layer'
+        });
+        stage.add(layer);
+
+        var group = new Konva.Group({
+            id: 'group',
+            name: 'group'
+        });
+        layer.add(group);
+
+        var rect = new Konva.Rect({
+            x: 35,
+            y: 35,
+            width: 50,
+            height : 50,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'rect',
+        });
+        group.add(rect);
+
+        stage.draw();
+
+        assert.equal(!!rect.findAncestor('.null'), false);
+
+        assert.notEqual(rect.findAncestor('.rect'), rect, 'do not find self in ancestors')
+
+        assert.equal(rect.findAncestor('.stage'), stage, 'find stage by name');
+        assert.equal(rect.findAncestor('#stage'), stage, 'find stage by id');
+        assert.equal(rect.findAncestor('Stage'), stage, 'find stage by node type');
+
+        assert.equal(rect.findAncestor('.layer'), layer);
+        assert.equal(rect.findAncestor('#layer'), layer);
+        assert.equal(rect.findAncestor('Layer'), layer);
+
+        assert.equal(rect.findAncestor('.group'), group);
+        assert.equal(rect.findAncestor('#group'), group);
+        assert.equal(rect.findAncestor('Group'), group);
+
+        assert.equal(rect.findAncestor(), null, 'return null if no selector');
+    });
+
 });
