@@ -293,16 +293,21 @@
          * @param {Object} pos
          * @param {Number} pos.x
          * @param {Number} pos.y
-         * @returns {Konva.Shape}
+         * @param {String} [selector]
+         * @returns {Konva.Node}
+         * @example
+         * var shape = stage.getIntersection({x: 50, y: 50});
+         * // or if you interested in shape parent:
+         * var group = stage.getIntersection({x: 50, y: 50}, 'Group');
          */
-        getIntersection: function(pos) {
+        getIntersection: function(pos, selector) {
             var layers = this.getChildren(),
                 len = layers.length,
                 end = len - 1,
                 n, shape;
 
             for(n = end; n >= 0; n--) {
-                shape = layers[n].getIntersection(pos);
+                shape = layers[n].getIntersection(pos, selector);
                 if (shape) {
                     return shape;
                 }

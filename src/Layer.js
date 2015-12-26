@@ -66,14 +66,20 @@
         /**
          * get visible intersection shape. This is the preferred
          * method for determining if a point intersects a shape or not
+         * also you may pass optional selector parametr to return ancestor of intersected shape
          * @method
          * @memberof Konva.Layer.prototype
          * @param {Object} pos
          * @param {Number} pos.x
          * @param {Number} pos.y
-         * @returns {Konva.Shape}
+         * @param {String} [selector]
+         * @returns {Konva.Node}
+         * @example
+         * var shape = layer.getIntersection({x: 50, y: 50});
+         * // or if you interested in shape parent:
+         * var group = layer.getIntersection({x: 50, y: 50}, 'Group');
          */
-        getIntersection: function(pos) {
+        getIntersection: function(pos, selector) {
             var obj, i, intersectionOffset, shape;
 
             if(!this.hitGraphEnabled() || !this.isVisible()) {
@@ -92,7 +98,9 @@
                         y: pos.y + intersectionOffset.y * spiralSearchDistance
                     });
                     shape = obj.shape;
-                    if (shape) {
+                    if (shape && selector) {
+                        return shape.findAncestor(selector, true);
+                    } else if (shape) {
                         return shape;
                     }
                     // we should continue search if we found antialiased pixel

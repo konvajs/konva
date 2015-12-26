@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - event delegation. You can use it in this way: `layer.on('click', 'Circle', handler);`
 - new `node.findAncestors(selector)` and `node.findAncestor(selector)` functions
+- optional selector parametr for `stage.getIntersection` and `layer.getIntersection`
 
 ### Changed
 - `moveTo` and some other methods return `this`

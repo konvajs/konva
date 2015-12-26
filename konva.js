@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.11.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri Dec 25 2015
+ * Date: Sat Dec 26 2015
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -8861,16 +8861,21 @@ var Konva = {};
          * @param {Object} pos
          * @param {Number} pos.x
          * @param {Number} pos.y
-         * @returns {Konva.Shape}
+         * @param {String} [selector]
+         * @returns {Konva.Node}
+         * @example
+         * var shape = stage.getIntersection({x: 50, y: 50});
+         * // or if you interested in shape parent:
+         * var group = stage.getIntersection({x: 50, y: 50}, 'Group');
          */
-        getIntersection: function(pos) {
+        getIntersection: function(pos, selector) {
             var layers = this.getChildren(),
                 len = layers.length,
                 end = len - 1,
                 n, shape;
 
             for(n = end; n >= 0; n--) {
-                shape = layers[n].getIntersection(pos);
+                shape = layers[n].getIntersection(pos, selector);
                 if (shape) {
                     return shape;
                 }
@@ -9658,14 +9663,20 @@ var Konva = {};
         /**
          * get visible intersection shape. This is the preferred
          * method for determining if a point intersects a shape or not
+         * also you may pass optional selector parametr to return ancestor of intersected shape
          * @method
          * @memberof Konva.Layer.prototype
          * @param {Object} pos
          * @param {Number} pos.x
          * @param {Number} pos.y
-         * @returns {Konva.Shape}
+         * @param {String} [selector]
+         * @returns {Konva.Node}
+         * @example
+         * var shape = layer.getIntersection({x: 50, y: 50});
+         * // or if you interested in shape parent:
+         * var group = layer.getIntersection({x: 50, y: 50}, 'Group');
          */
-        getIntersection: function(pos) {
+        getIntersection: function(pos, selector) {
             var obj, i, intersectionOffset, shape;
 
             if(!this.hitGraphEnabled() || !this.isVisible()) {
@@ -9684,7 +9695,9 @@ var Konva = {};
                         y: pos.y + intersectionOffset.y * spiralSearchDistance
                     });
                     shape = obj.shape;
-                    if (shape) {
+                    if (shape && selector) {
+                        return shape.findAncestor(selector, true);
+                    } else if (shape) {
                         return shape;
                     }
                     // we should continue search if we found antialiased pixel

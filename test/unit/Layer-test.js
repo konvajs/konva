@@ -133,8 +133,35 @@ suite('Layer', function() {
         assert.equal(layer.getIntersection({x:300, y:100}).getId(), 'greenCircle', 'shape should be greenCircle');
         assert.equal(layer.getIntersection({x:380, y:100}).getId(), 'redCircle', 'shape should be redCircle');
         assert.equal(layer.getIntersection({x:100, y:100}), null, 'shape should be null');
+    });
 
+    // ======================================================
+    test('layer getIntersection() with selector', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer({
+            name: 'layer'
+        });
 
+        var group = new Konva.Group({
+            name: 'group'
+        });
+
+        var circle = new Konva.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+        });
+
+        group.add(circle)
+        layer.add(group);
+        stage.add(layer);
+
+        assert.equal(layer.getIntersection({x: stage.width() / 2, y: stage.height() / 2}, 'Circle'), circle, 'intersection with shape selector');
+        assert.equal(layer.getIntersection({x: stage.width() / 2, y: stage.height() / 2}, '.group'), group, 'intersection with group selector');
+        assert.equal(layer.getIntersection({x: stage.width() / 2, y: stage.height() / 2}, 'Stage'), stage, 'intersection with stage selector');
     });
 
     // ======================================================
