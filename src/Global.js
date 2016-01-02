@@ -27,6 +27,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+// runtime check for already included Konva
+(function(){
+    'use strict';
+    var global =
+        typeof window !== 'undefined' ? window :
+        typeof global !== 'undefined' ? global :
+        typeof WorkerGlobalScope !== 'undefined' ? self : {};
+
+    if (global.Konva) {
+        console.error(
+            'Konva instance is already exist in current eviroment. ' +
+            'Please use only one instance.'
+        );
+    }
+})();
+
 /**
  * @namespace Konva
  */

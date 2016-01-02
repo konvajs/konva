@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - event delegation. You can use it in this way: `layer.on('click', 'Circle', handler);`
 - new `node.findAncestors(selector)` and `node.findAncestor(selector)` functions
 - optional selector parametr for `stage.getIntersection` and `layer.getIntersection`
+- show warning message if several instances of Konva are added to page.
 
 ### Changed
 - `moveTo` and some other methods return `this`

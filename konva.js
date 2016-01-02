@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.11.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sat Dec 26 2015
+ * Date: Sat Jan 02 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -27,6 +27,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
+// runtime check for already included Konva
+(function(){
+    'use strict';
+    var global =
+        typeof window !== 'undefined' ? window :
+        typeof global !== 'undefined' ? global :
+        typeof WorkerGlobalScope !== 'undefined' ? self : {};
+
+    if (global.Konva) {
+        console.error(
+            'Konva instance is already exist in current eviroment. ' +
+            'Please use only one instance.'
+        );
+    }
+})();
+
 /**
  * @namespace Konva
  */
