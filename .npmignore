@@ -1,7 +1,6 @@
 dist
 doc-includes
 jsdoc-master
-src
 docs
 test
 .travis.yml
