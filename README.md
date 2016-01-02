@@ -61,13 +61,55 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 </script>
 ```
 
-#Installation
+# Loading and installing Konva
 
-* `bower install konva`
-* `npm install konva` - for Browserify. For nodejs you have to install some [dependencies](#nodejs)
-* CDN: [https://cdn.rawgit.com/konvajs/konva/0.9.5/konva.min.js](https://cdn.rawgit.com/konvajs/konva/0.9.5/konva.min.js)
+Konva support UMD loading. So you can use all variants to load the framework into your project:
 
-###NodeJS
+1. Load Konva via classical `<script>` tag:
+
+```html
+<script src="https://cdn.rawgit.com/konvajs/konva/0.10.0/konva.min.js"></script>
+```
+
+You can use CDN: [https://cdn.rawgit.com/konvajs/konva/0.9.5/konva.min.js](https://cdn.rawgit.com/konvajs/konva/0.9.5/konva.min.js)
+
+2. Load via AMD (requirejs):
+
+```javascript
+define(['./konva'], function(Konva) {
+   // your code 
+});
+```
+
+3. CommonJS style with npm:
+
+```bash
+npm install konva
+```
+
+```javascript
+// old way
+var Konva = require('konva');
+
+
+// modern way
+import Konva from 'konva';
+```
+
+4. Minimal version:
+
+If you are using webpack or browserfy you can use this approach to load only required Konva parts:
+```javascript
+import Konva from 'konva/src/Core';
+
+
+import 'konva/src/shapes/rect';
+//now Konva.Rect is available to use
+```
+
+5. NodeJS
+
+Here you have to install some deps by youself.
 
 We are using [node-canvas](https://github.com/LearnBoost/node-canvas) to create canvas element.
 
@@ -76,6 +118,7 @@ We are using [node-canvas](https://github.com/LearnBoost/node-canvas) to create 
 3. `npm install konva`
 
 See file `resources/nodejs-demo.js` for example.
+
 
 #Change log
 
