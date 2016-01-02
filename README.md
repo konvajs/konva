@@ -55,25 +55,22 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
     box.on('mouseout', function() {
         document.body.style.cursor = 'default';
     });
-
-    
-    
 </script>
 ```
 
 # Loading and installing Konva
 
-Konva support UMD loading. So you can use all variants to load the framework into your project:
+Konva supports UMD loading. So you can use all possible variants to load the framework into your project:
 
-1. Load Konva via classical `<script>` tag:
+1 Load Konva via classical `<script>` tag:
 
 ```html
 <script src="https://cdn.rawgit.com/konvajs/konva/0.10.0/konva.min.js"></script>
 ```
 
-You can use CDN: [https://cdn.rawgit.com/konvajs/konva/0.9.5/konva.min.js](https://cdn.rawgit.com/konvajs/konva/0.9.5/konva.min.js)
+You can use CDN: [https://cdn.rawgit.com/konvajs/konva/0.10.0/konva.min.js](https://cdn.rawgit.com/konvajs/konva/0.10.0/konva.min.js)
 
-2. Load via AMD (requirejs):
+2 Load via AMD (requirejs):
 
 ```javascript
 define(['./konva'], function(Konva) {
@@ -81,7 +78,7 @@ define(['./konva'], function(Konva) {
 });
 ```
 
-3. CommonJS style with npm:
+3 CommonJS style with npm:
 
 ```bash
 npm install konva
@@ -96,20 +93,24 @@ var Konva = require('konva');
 import Konva from 'konva';
 ```
 
-4. Minimal version:
+4 Minimal bundle
 
-If you are using webpack or browserfy you can use this approach to load only required Konva parts:
+If you are using webpack or browserfy you can use this approach to load only required Konva's parts:
+
 ```javascript
 import Konva from 'konva/src/Core';
+// now you have Konva object with Stage, Layer, FastLayer, Group, Shape and some additional utils function
+// so there are no shapes (rect, circle, etc), no filters, no d&d support.
 
 
+// but you can simply add anything you need:
 import 'konva/src/shapes/rect';
 //now Konva.Rect is available to use
 ```
 
-5. NodeJS
+5 NodeJS
 
-Here you have to install some deps by youself.
+You have to install some deps manually to use Konva in nodejs env.
 
 We are using [node-canvas](https://github.com/LearnBoost/node-canvas) to create canvas element.
 
