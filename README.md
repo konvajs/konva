@@ -62,7 +62,7 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 
 Konva supports UMD loading. So you can use all possible variants to load the framework into your project:
 
-1 Load Konva via classical `<script>` tag:
+###1 Load Konva via classical `<script>` tag:
 
 ```html
 <script src="https://cdn.rawgit.com/konvajs/konva/0.10.0/konva.min.js"></script>
@@ -70,7 +70,7 @@ Konva supports UMD loading. So you can use all possible variants to load the fra
 
 You can use CDN: [https://cdn.rawgit.com/konvajs/konva/0.10.0/konva.min.js](https://cdn.rawgit.com/konvajs/konva/0.10.0/konva.min.js)
 
-2 Load via AMD (requirejs):
+###2 Load via AMD (requirejs):
 
 ```javascript
 define(['./konva'], function(Konva) {
@@ -78,7 +78,7 @@ define(['./konva'], function(Konva) {
 });
 ```
 
-3 CommonJS style with npm:
+###3 CommonJS style with npm:
 
 ```bash
 npm install konva
@@ -93,7 +93,7 @@ var Konva = require('konva');
 import Konva from 'konva';
 ```
 
-4 Minimal bundle
+###4 Minimal bundle
 
 If you are using webpack or browserfy you can use this approach to load only required Konva's parts:
 
