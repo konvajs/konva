@@ -845,7 +845,7 @@
              * IE9 on Windows7 64bit will throw a JS error
              * if we don't use window.console in the conditional
              */
-            if(Konva.root.console && console.warn && Konva.showWarnings) {
+            if(Konva.global.console && console.warn && Konva.showWarnings) {
                 console.warn(KONVA_WARNING + str);
             }
         },

@@ -3,9 +3,9 @@
     var BATCH_DRAW_STOP_TIME_DIFF = 500;
 
     var now = (function() {
-        if (Konva.root.performance && Konva.root.performance.now) {
+        if (Konva.global.performance && Konva.global.performance.now) {
             return function() {
-                return Konva.root.performance.now();
+                return Konva.global.performance.now();
             };
         }
 
@@ -19,18 +19,18 @@
     }
 
     var RAF = (function(){
-        return Konva.root.requestAnimationFrame
-            || Konva.root.webkitRequestAnimationFrame
-            || Konva.root.mozRequestAnimationFrame
-            || Konva.root.oRequestAnimationFrame
-            || Konva.root.msRequestAnimationFrame
+        return Konva.global.requestAnimationFrame
+            || Konva.global.webkitRequestAnimationFrame
+            || Konva.global.mozRequestAnimationFrame
+            || Konva.global.oRequestAnimationFrame
+            || Konva.global.msRequestAnimationFrame
             || FRAF;
     })();
 
 
 
     function requestAnimFrame() {
-        return RAF.apply(Konva.root, arguments);
+        return RAF.apply(Konva.global, arguments);
     }
 
     /**

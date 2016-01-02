@@ -31,28 +31,13 @@
 // runtime check for already included Konva
 (function(){
     'use strict';
-    var global =
-        typeof window !== 'undefined' ? window :
-        typeof global !== 'undefined' ? global :
-        typeof WorkerGlobalScope !== 'undefined' ? self : {};
+    /**
+     * @namespace Konva
+     */
 
-    if (global.Konva) {
-        console.error(
-            'Konva instance is already exist in current eviroment. ' +
-            'Please use only one instance.'
-        );
-    }
-})();
-
-/**
- * @namespace Konva
- */
-var Konva = {};
-(function(root) {
-    'use strict';
     var PI_OVER_180 = Math.PI / 180;
 
-    Konva = {
+    var Konva = {
         // public
         version: '@@version',
 
@@ -215,31 +200,25 @@ var Konva = {};
         UA: undefined
     };
 
-    Konva.UA = Konva._parseUA((root.navigator && root.navigator.userAgent) || '');
+    var global =
+        typeof window !== 'undefined' ? window :
+        typeof global !== 'undefined' ? global :
+        typeof WorkerGlobalScope !== 'undefined' ? self : {};
 
-})(this);
 
-// Uses Node, AMD or browser globals to create a module.
+    Konva.UA = Konva._parseUA((global.navigator && global.navigator.userAgent) || '');
 
-// If you want something that will work in other stricter CommonJS environments,
-// or if you need to create a circular dependency, see commonJsStrict.js
+    if (global.Konva) {
+        console.error(
+            'Konva instance is already exist in current eviroment. ' +
+            'Please use only one instance.'
+        );
+    }
+    global.Konva = Konva;
+    Konva.global = global;
 
-// Defines a module "returnExports" that depends another module called "b".
-// Note that the name of the module is implied by the file name. It is best
-// if the file name and the exported global have matching names.
 
-// If the 'b' module also uses this type of boilerplate, then
-// in the browser, it will create a global .b that is used below.
-
-// If you do not want to support the browser global path, then you
-// can remove the `root` use and the passing `this` as the first arg to
-// the top function.
-
-// if the module has no dependencies, the above pattern can be simplified to
-( function(root, factory) {
-    'use strict';
     if( typeof exports === 'object') {
-        var KonvaJS = factory();
         // runtime-check for browserify and nw.js (node-webkit)
         if(global.window && global.window.document) {
             Konva.document = global.window.document;
@@ -256,22 +235,15 @@ var Konva = {};
             Konva.window.Image = Canvas.Image;
             Konva._nodeCanvas = Canvas;
         }
-
-        Konva.root = root;
-        module.exports = KonvaJS;
+        module.exports = Konva;
         return;
     }
     else if( typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(factory);
+        define(function() {
+            return Konva;
+        });
     }
     Konva.document = document;
     Konva.window = window;
-    Konva.root = root;
-}(this, function() {
-    'use strict';
-    // Just return a value to define the module export.
-    // This example returns an object, but the module
-    // can return a function as the exported value.
-    return Konva;
-}));
+})();
