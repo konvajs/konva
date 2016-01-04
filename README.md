@@ -108,7 +108,7 @@ import 'konva/src/shapes/rect';
 //now Konva.Rect is available to use
 ```
 
-5 NodeJS
+###5 NodeJS
 
 You have to install some deps manually to use Konva in nodejs env.
 
