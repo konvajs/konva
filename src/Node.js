@@ -1326,9 +1326,9 @@
          * node.fire('click', null, true);
          */
         fire: function(eventType, evt, bubble) {
+            evt = evt || {};
+            evt.target = evt.target || this;
             // bubble
-            evt = Konva.Util.cloneObject(evt || {});
-            evt.currentTarget = this;
             if (bubble) {
                 this._fireAndBubble(eventType, evt);
             }
@@ -1768,7 +1768,7 @@
 
                 // simulate event bubbling
                 var stopBubble = (eventType === MOUSEENTER || eventType === MOUSELEAVE) && ((compareShape && compareShape.isAncestorOf && compareShape.isAncestorOf(this)) || !!(compareShape && compareShape.isAncestorOf));
-                if(evt && !evt.cancelBubble && this.parent && this.parent.isListening() && (!stopBubble)) {
+                if((evt && !evt.cancelBubble || !evt) && this.parent && this.parent.isListening() && (!stopBubble)) {
                     if(compareShape && compareShape.parent) {
                         this._fireAndBubble.call(this.parent, eventType, evt, compareShape.parent);
                     }
@@ -1782,6 +1782,8 @@
             var events = this.eventListeners[eventType],
                 i;
 
+            evt = Konva.Util.cloneObject(evt || {});
+            evt.currentTarget = this;
             evt.type = eventType;
 
             if (events) {

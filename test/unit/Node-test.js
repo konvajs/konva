@@ -1899,12 +1899,13 @@ suite('Node', function() {
 
         var fired = false;
         layer.on('click', 'Circle', function(e) {
+            console.log(e);
             assert.equal(this, circle);
             assert.equal(e.currentTarget, circle);
             fired = true;
         });
         circle.fire('click', null, true);
-        assert(fired, true);
+        assert.equal(fired, true);
     });
 
     test('complex event delegation', function() {
@@ -1935,7 +1936,7 @@ suite('Node', function() {
             fired = true;
         });
         circle.fire('click', null, true);
-        assert(fired, true);
+        assert.equal(fired, true);
     });
     // ======================================================
     test('move shape, group, and layer, and then get absolute position', function() {
