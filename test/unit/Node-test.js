@@ -697,6 +697,36 @@ suite('Node', function() {
     });
 
     // ======================================================
+    test('test on attr change for same value', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var rect = new Konva.Rect({
+            x: 50,
+            y: 50,
+            width: 200,
+            height: 50,
+            fill: 'blue',
+            shadowOffset: {x: 10, y: 10},
+        });
+
+        layer.add(rect);
+        stage.add(layer);
+
+        var widthChanged = 0;
+
+        rect.on('widthChange', function(evt) {
+            widthChanged++;
+        });
+
+
+        rect.width(210);
+        rect.width(210);
+
+        assert.equal(widthChanged, 1, 'should trigger only once');
+
+    });
+
+    // ======================================================
     test('set shape, layer and stage opacity to 0.5', function() {
         var stage = addStage();
         var layer = new Konva.Layer();

@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.11.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mon Jan 04 2016
+ * Date: Thu Jan 07 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -3969,6 +3969,9 @@
             var oldVal;
             if(val !== undefined) {
                 oldVal = this.attrs[key];
+                if (oldVal === val) {
+                    return;
+                }
                 this.attrs[key] = val;
                 this._fireChangeEvent(key, oldVal, val);
             }

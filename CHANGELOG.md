@@ -18,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - `moveTo` and some other methods return `this`
 - `getAbsolutePosition` support optional relative parent argument (useful to find absolute position inside of some of parent nodes)
+- `change` event will be not fired if changed value is the same as old value
 
 ## [0.10.0][2015-10-27]
 

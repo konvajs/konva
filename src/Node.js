@@ -1732,6 +1732,9 @@
             var oldVal;
             if(val !== undefined) {
                 oldVal = this.attrs[key];
+                if (oldVal === val) {
+                    return;
+                }
                 this.attrs[key] = val;
                 this._fireChangeEvent(key, oldVal, val);
             }
