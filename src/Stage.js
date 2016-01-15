@@ -33,6 +33,7 @@
         CONTENT_TOUCHSTART = 'contentTouchstart',
         CONTENT_TOUCHEND = 'contentTouchend',
         CONTENT_DBL_TAP = 'contentDbltap',
+        CONTENT_TAP = 'contentTap',
         CONTENT_TOUCHMOVE = 'contentTouchmove',
 
         DIV = 'div',
@@ -593,8 +594,9 @@
                 }
             }
             // content events
+            this._fire(CONTENT_TOUCHEND, {evt: evt});
             if (Konva.listenClickTap) {
-                this._fire(CONTENT_TOUCHEND, {evt: evt});
+                this._fire(CONTENT_TAP, {evt: evt});
                 if(fireDblClick) {
                     this._fire(CONTENT_DBL_TAP, {evt: evt});
                 }

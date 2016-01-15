@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.11.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Thu Jan 07 2016
+ * Date: Sat Jan 16 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -8576,6 +8576,7 @@
         CONTENT_TOUCHSTART = 'contentTouchstart',
         CONTENT_TOUCHEND = 'contentTouchend',
         CONTENT_DBL_TAP = 'contentDbltap',
+        CONTENT_TAP = 'contentTap',
         CONTENT_TOUCHMOVE = 'contentTouchmove',
 
         DIV = 'div',
@@ -9155,8 +9156,9 @@
                 }
             }
             // content events
+            this._fire(CONTENT_TOUCHEND, {evt: evt});
             if (Konva.listenClickTap) {
-                this._fire(CONTENT_TOUCHEND, {evt: evt});
+                this._fire(CONTENT_TAP, {evt: evt});
                 if(fireDblClick) {
                     this._fire(CONTENT_DBL_TAP, {evt: evt});
                 }
