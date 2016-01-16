@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+
+## [0.11.0][2016-01-16]
+
 ### Fixed
 - correct `Konva.Arrow` drawing. Now it works better.
 - Better support for dragging when mouse out of stage
@@ -13,7 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - event delegation. You can use it in this way: `layer.on('click', 'Circle', handler);`
 - new `node.findAncestors(selector)` and `node.findAncestor(selector)` functions
-- optional selector parametr for `stage.getIntersection` and `layer.getIntersection`
+- optional selector parameter for `stage.getIntersection` and `layer.getIntersection`
 - show warning message if several instances of Konva are added to page.
 
 ### Changed
