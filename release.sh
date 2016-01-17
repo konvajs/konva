@@ -3,7 +3,12 @@
 set -e
 old_version="$(git describe --abbrev=0 --tags)"
 new_version=$1
-# new_version="0.11.0"
+
+old_cdn="https://cdn.rawgit.com/konvajs/konva/${old_version}/konva.js"
+new_cdn="https://cdn.rawgit.com/konvajs/konva/${new_version}/konva.js"
+
+old_cdn_min="https://cdn.rawgit.com/konvajs/konva/${old_version}/konva.min.js"
+new_cdn_min="https://cdn.rawgit.com/konvajs/konva/${new_version}/konva.min.js"
 
 # make sure new version parameter is passed
 if [ -z "$1" ]
@@ -35,6 +40,10 @@ echo "build for $1"
 npm start build
 git commit -am "build for $1"
 
+echo "update CDN link in REAME"
+perl -i -pe "s|${old_cdn_min}|${new_cdn_min}|g" ./README.md
+git commit -am "update cdn link"
+
 echo "create new git tag"
 git tag $1
 
@@ -53,9 +62,11 @@ cp ./konva.js ../konva-site/
 cd ../konva-site
 
 echo "replace CDN links"
-old_cdn="https://cdn.rawgit.com/konvajs/konva/${old_version}/konva.min.js"
-new_cdn="https://cdn.rawgit.com/konvajs/konva/${new_version}/konva.min.js"
+
+
 find source themes -exec perl -i -pe "s|${old_cdn}|${new_cdn}|g" {} +
+
+find source themes -exec perl -i -pe "s|${old_cdn_min}|${new_cdn_min}|g" {} +
 
 echo "regenerate site"
 npm start
