@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## Fixed
+- repair `cancelBubble` event property behaviour
 
 ## [0.11.1][2016-01-16]
 

@@ -1609,7 +1609,7 @@ suite('Node', function() {
             name: 'rectName',
             id: 'rectId'
         });
-        
+
         group.add(rect);
         layer.add(group);
         stage.add(layer);
@@ -1908,6 +1908,41 @@ suite('Node', function() {
 
         assert.equal(clicks[0], 'circle');
         assert.equal(clicks[1], 'layer');
+    });
+
+    // ======================================================
+    test('simulate cancel event bubble', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle'
+        });
+
+        stage.add(layer);
+        layer.add(circle);
+        layer.draw();
+
+        var clicks = [];
+
+        circle.on('click', function(e) {
+            e.cancelBubble = true;
+            clicks.push('circle');
+        });
+
+        layer.on('click', function() {
+            clicks.push('layer');
+        });
+
+        circle.fire('click', {}, true);
+
+        assert.equal(clicks[0], 'circle');
+        assert.equal(clicks.length, 1);
     });
 
     test('simple event delegation', function() {

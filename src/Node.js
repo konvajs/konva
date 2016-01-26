@@ -1785,7 +1785,7 @@
             var events = this.eventListeners[eventType],
                 i;
 
-            evt = Konva.Util.cloneObject(evt || {});
+            evt = evt || {};
             evt.currentTarget = this;
             evt.type = eventType;
 
