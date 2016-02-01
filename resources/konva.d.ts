@@ -272,6 +272,7 @@ declare module Konva {
         constructor(params?: ContainerConfig);
         add(child : Node): Container;
         getChildren(filterfunc?: Function) : Collection;
+        getClientRect(): SizeConfig;
         clip(): SizeConfig;
         clip(clip: SizeConfig) : Container;
         clipHeight(): number;
