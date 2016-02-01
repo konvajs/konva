@@ -151,6 +151,7 @@ declare module Konva {
         // CHECK
         getCanvas() : Canvas;
         getClassName() : string;
+        getClientRect(): SizeConfig;
         getContext() : Context;
         getDepth() : number;
         getHeight() : number;
@@ -272,7 +273,6 @@ declare module Konva {
         constructor(params?: ContainerConfig);
         add(child : Node): Container;
         getChildren(filterfunc?: Function) : Collection;
-        getClientRect(): SizeConfig;
         clip(): SizeConfig;
         clip(clip: SizeConfig) : Container;
         clipHeight(): number;
