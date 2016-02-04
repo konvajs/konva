@@ -151,6 +151,7 @@ declare module Konva {
         // CHECK
         getCanvas() : Canvas;
         getClassName() : string;
+        getClientRect(): SizeConfig;
         getContext() : Context;
         getDepth() : number;
         getHeight() : number;
