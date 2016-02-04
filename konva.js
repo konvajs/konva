@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.11.1
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Tue Jan 26 2016
+ * Date: Fri Feb 05 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -14157,8 +14157,8 @@
             });
             var minX = points[0];
             var maxX = points[0];
-            var minY = points[0];
-            var maxY = points[0];
+            var minY = points[1];
+            var maxY = points[1];
             var x, y;
             for (var i = 0; i < points.length / 2; i++) {
                 x = points[i * 2]; y = points[i * 2 + 1];

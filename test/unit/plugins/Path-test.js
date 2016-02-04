@@ -40,7 +40,7 @@ suite('Path', function() {
         assert.equal(path.dataArray.length, 1);
 
         path.setData('M200,100h100v50z');
-        
+
         assert.equal(path.getClassName(), 'Path');
 
     });
@@ -83,7 +83,7 @@ suite('Path', function() {
         stage.add(layer);
 
     });
-    
+
     //=======================================================
     test('complex path made of many different closed and open paths (Sopwith Camel)', function() {
         var stage = addStage();
@@ -128,11 +128,11 @@ suite('Path', function() {
         showHit(layer)
 
     });
-    
-    
 
-    
-    
+
+
+
+
     // ======================================================
     test('moveTo with implied lineTos and trailing comma', function() {
         var stage = addStage();
@@ -187,7 +187,7 @@ suite('Path', function() {
 //        context.stroke();
         compareLayerAndCanvas(layer, canvas, 20);
     });
-    
+
     // ======================================================
     test('add map path', function() {
         var stage = addStage();
@@ -224,7 +224,7 @@ suite('Path', function() {
 
         //document.body.appendChild(mapLayer.bufferCanvas.element);
     });
-    
+
     // ======================================================
     test('curved arrow path', function() {
         var stage = addStage();
@@ -253,7 +253,7 @@ suite('Path', function() {
         stage.add(layer);
 
     });
-    
+
     // ======================================================
     test('Quadradic Curve test from SVG w3c spec', function() {
         var stage = addStage();
@@ -313,7 +313,7 @@ suite('Path', function() {
         stage.add(layer);
 
     });
-    
+
     // ======================================================
     test('Cubic Bezier Curve test from SVG w3c spec using setData', function() {
         var stage = addStage();
@@ -382,7 +382,7 @@ suite('Path', function() {
         stage.add(layer);
 
     });
-    
+
     // ======================================================
     test('path arc', function() {
         var stage = addStage();
@@ -411,7 +411,7 @@ suite('Path', function() {
         stage.add(layer);
 
     });
-    
+
     // ======================================================
     test('Tiger (RAWR!)', function() {
         this.timeout(5000);
@@ -454,7 +454,7 @@ suite('Path', function() {
         cloneAndCompareLayer(layer, 200);
 
     });
-    
+
     // ======================================================
     test('Able to determine point on line some distance from another point on line', function() {
         var stage = addStage();
@@ -493,7 +493,7 @@ suite('Path', function() {
         stage.add(layer);
 
     });
-    
+
     // ======================================================
     test('Able to determine points on Cubic Bezier Curve', function() {
         var stage = addStage();
@@ -530,7 +530,7 @@ suite('Path', function() {
         layer.add(testPath);
         stage.add(layer);
     });
-    
+
     // ======================================================
     test('Able to determine points on Quadratic Curve', function() {
         var stage = addStage();
@@ -567,7 +567,7 @@ suite('Path', function() {
         layer.add(testPath);
         stage.add(layer);
     });
-    
+
     // ======================================================
     test('Able to determine points on Elliptical Arc with clockwise stroke', function() {
         var stage = addStage();
@@ -623,7 +623,7 @@ suite('Path', function() {
         layer.add(testpath);
         stage.add(layer);
     });
-    
+
     // ======================================================
     test('Able to determine points on Elliptical Arc with counter-clockwise stroke', function() {
         var stage = addStage();
@@ -679,7 +679,7 @@ suite('Path', function() {
         layer.add(testpath);
         stage.add(layer);
     });
-    
+
     // ======================================================
     test('Able to determine points on Elliptical Arc when rotated', function() {
         var stage = addStage();
@@ -737,7 +737,7 @@ suite('Path', function() {
         layer.add(testpath);
         stage.add(layer);
     });
-    
+
     // ======================================================
     test('getPointOnLine for different directions', function() {
         var origo = {
@@ -811,7 +811,7 @@ suite('Path', function() {
         point = Konva.Path.getPointOnLine(10, origo.x, origo.y, p.x, p.y);
         assert(Math.abs(point.x) < 0.0000001 && point.y == 10, 'The new point should be down');
     });
-    
+
     // ======================================================
     test('Borneo Map (has scientific notation: -10e-4)', function() {
 
@@ -825,12 +825,12 @@ suite('Path', function() {
         layer.add(borneo);
         stage.add(layer);
     });
-    
+
     // ======================================================
     test('Stroke only when no fill', function() {
 
         // https://github.com/ericdrowell/KonvaJS/issues/567
-        
+
         var stage = addStage();
         var layer = new Konva.Layer();
 
@@ -868,5 +868,21 @@ suite('Path', function() {
         assert.equal(trace,    'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(50,0);bezierCurveTo(50,150,170,170,200,170);lineWidth=2;strokeStyle=black;stroke();restore();');
         assert.equal(hitTrace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(50,0);bezierCurveTo(50,150,170,170,200,170);lineWidth=2;strokeStyle=black;stroke();restore();');
     });
-     
+
+    it('getClientRect', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        stage.add(layer);
+
+
+        var path = new Konva.Path({
+           data: 'M61.55,184.55 60.55,280.55 164.55,284.55 151.55,192.55 Z',
+           fill: 'black',
+           stroke: 'red'
+        });
+        layer.add(path);
+        var rect = path.getClientRect();
+        assert.deepEqual(rect, {x: 60, y: 184, width: 106, height: 102});
+    })
+
 });
