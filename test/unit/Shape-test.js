@@ -17,9 +17,9 @@ suite('Shape', function() {
         stage.add(layer);
 
         assert.equal(rect.intersects({
-            x: 200,
-            y: 100
-        }), true, '(200,100) should intersect the shape');
+            x: 201,
+            y: 101
+        }), true, '(201,101) should intersect the shape');
 
         assert.equal(rect.intersects({
             x: 197,
@@ -544,18 +544,17 @@ suite('Shape', function() {
 
         var canvas = createCanvas();
         var context = canvas.getContext('2d');
-        context.globalAlpha = 0.5;
+        context.globalAlpha = 0.1;
 
         // draw shadow
-        var offset = 200;
         context.save();
         context.beginPath();
-        context.rect(95 - offset, 45 - offset, 110, 60);
+        context.rect(95, 45, 110, 60);
         context.closePath();
         context.shadowColor = 'grey';
         context.shadowBlur = 1;
-        context.shadowOffsetX = 20 + offset;
-        context.shadowOffsetY = 20 + offset;
+        context.shadowOffsetX = 20;
+        context.shadowOffsetY = 20;
         context.fillStyle = 'black';
         context.fill();
         context.restore();
@@ -585,12 +584,12 @@ suite('Shape', function() {
         // don't test in PhantomJS as it use old chrome engine
         // it it has opacity + shadow bug
         if (!window.mochaPhantomJS) {
-            compareLayerAndCanvas(layer, canvas, 210);
+            compareLayerAndCanvas(layer, canvas, 200);
         }
 
         var trace = layer.getContext().getTrace();
         //console.log(trace);
-        assert.equal(trace, 'clearRect(0,0,578,200);save();save();shadowColor=rgba(128,128,128,1);shadowBlur=1;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0);restore();restore();');
+        assert.equal(trace, 'clearRect(0,0,578,200);save();save();shadowColor=rgba(128,128,128,1);shadowBlur=1;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();restore();');
 
     });
 
@@ -648,11 +647,13 @@ suite('Shape', function() {
         context.fillStyle = 'green';
         context.fillText('Test TEXT', 50, 75);
 
-        context.lineWidth  = 2;
+        context.lineWidth = 2;
         context.strokeStyle = 'black';
         context.strokeText('Test TEXT', 50, 75);
 
-        compareLayerAndCanvas(layer, canvas, 50);
+        if (!window.isPhantomJS) {
+            compareLayerAndCanvas(layer, canvas, 254);
+        }
     });
 
 

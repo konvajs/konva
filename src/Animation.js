@@ -140,8 +140,8 @@
                 len = animations.length,
                 n;
 
-            for(n = 0; n < len; n++) {
-                if(animations[n].id === this.id) {
+            for (n = 0; n < len; n++) {
+                if (animations[n].id === this.id) {
                     return true;
                 }
             }

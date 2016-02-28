@@ -5,7 +5,7 @@ suite('RGB', function() {
 
         var imageObj = new Image();
         imageObj.onload = function() {
-            
+
             var layer = new Konva.Layer();
             darth = new Konva.Image({
                 x: 10,
@@ -23,7 +23,7 @@ suite('RGB', function() {
             layer.draw();
 
             // Assert fails even though '[255,0,128] = [255,0,128]'
-            //assert.equal(darth.getFilterColorizeColor(), [255,0,128]);
+            // assert.deepEqual(darth.getFilterColorizeColor(), [255,0,128]);
 
             done();
         };
@@ -37,7 +37,7 @@ suite('RGB', function() {
 
         var imageObj = new Image();
         imageObj.onload = function() {
-            
+
             var layer = new Konva.Layer();
             darth = new Konva.Image({
                 x: 10,
@@ -55,7 +55,7 @@ suite('RGB', function() {
             darth.red(0).green(255).blue(0);
             layer.draw();
 
-            // assert.equal(darth.getFilterColorizeColor(), [0,255,0]);
+            // assert.deepEqual(darth.getFilterColorizeColor(), [0,255,0]);
 
             done();
 
@@ -87,7 +87,7 @@ suite('RGB', function() {
         for( i=0; i<l; i+=1 ){
             var imageObj = new Image();
             imageObj.onload = (function(color,x){ return function() {
-            
+
                 var darth = new Konva.Image({
                     x: x,
                     y: 32,

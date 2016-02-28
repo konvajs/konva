@@ -698,10 +698,8 @@
             // the buffer canvas pixel ratio must be 1 because it is used as an
             // intermediate canvas before copying the result onto a scene canvas.
             // not setting it to 1 will result in an over compensation
-            this.bufferCanvas = new Konva.SceneCanvas({
-                pixelRatio: 1
-            });
-            this.bufferHitCanvas = new Konva.HitCanvas();
+            this.bufferCanvas = new Konva.SceneCanvas();
+            this.bufferHitCanvas = new Konva.HitCanvas({pixelRatio: 1});
 
             this._resizeDOM();
         },

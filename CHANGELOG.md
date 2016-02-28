@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Fixed
 - repair `cancelBubble` event property behaviour
 - fix wrong `Path` `getClientRect()` calculation
+- better HDPI support
 
 ## [0.11.1][2016-01-16]
 

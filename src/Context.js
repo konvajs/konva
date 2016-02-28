@@ -402,10 +402,6 @@
                         args = _simplifyArray(Array.prototype.slice.call(arguments, 0));
                         ret = origMethod.apply(that, arguments);
 
-                        if (methodName === 'clearRect') {
-                            args[2] = args[2] / that.canvas.getPixelRatio();
-                            args[3] = args[3] / that.canvas.getPixelRatio();
-                        }
                         that._trace({
                             method: methodName,
                             args: args

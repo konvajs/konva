@@ -388,19 +388,8 @@ suite('Caching', function() {
 
         layer.add(group);
         stage.add(layer);
-
-        var canvas = createCanvas();
-        var context = canvas.getContext('2d');
-        context.translate(100, 50);
-        context.rotate(Math.PI / 4);
-        context.beginPath();
-        context.rect(0, 0, 100, 50);
-        context.closePath();
-        context.fillStyle = 'green';
-        context.fill();
         if (!window.isPhantomJS) {
-            compareLayerAndCanvas(layer, canvas, 150);
-            cloneAndCompareLayer(layer, 150);
+            cloneAndCompareLayer(layer, 200);
         }
     });
 
@@ -738,7 +727,7 @@ suite('Caching', function() {
         group.add(circle);
         group.cache();
         stage.draw();
-        
+
         cloneAndCompareLayer(layer, 150);
     });
 });

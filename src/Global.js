@@ -200,29 +200,29 @@
         UA: undefined
     };
 
-    var global =
+    var glob =
         typeof window !== 'undefined' ? window :
         typeof global !== 'undefined' ? global :
         typeof WorkerGlobalScope !== 'undefined' ? self : {};
 
 
-    Konva.UA = Konva._parseUA((global.navigator && global.navigator.userAgent) || '');
+    Konva.UA = Konva._parseUA((glob.navigator && glob.navigator.userAgent) || '');
 
-    if (global.Konva) {
+    if (glob.Konva) {
         console.error(
             'Konva instance is already exist in current eviroment. ' +
             'Please use only one instance.'
         );
     }
-    global.Konva = Konva;
-    Konva.global = global;
+    glob.Konva = Konva;
+    Konva.global = glob;
 
 
     if( typeof exports === 'object') {
         // runtime-check for browserify and nw.js (node-webkit)
-        if(global.window && global.window.document) {
-            Konva.document = global.window.document;
-            Konva.window = global.window;
+        if(glob.window && glob.window.document) {
+            Konva.document = glob.window.document;
+            Konva.window = glob.window;
         } else {
             // Node. Does not work with strict CommonJS, but
             // only CommonJS-like enviroments that support module.exports,

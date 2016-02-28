@@ -3,12 +3,6 @@ suite('RGBA', function() {
     test('colorize basic', function(done) {
         var data = [
             {
-                color: '#ff0000',
-                filter: [170, 170, 170, 0.5],
-                // Actually 212 but in tests rounding half up
-                result: [213, 85, 85, 255]
-            },
-            {
                 color: '#2a6511',
                 filter: [242, 193, 168, 0.33],
                 result: [108, 131, 67, 255]
@@ -67,11 +61,9 @@ suite('RGBA', function() {
 
         var a0 = imageDataToArray(0);
         var a1 = imageDataToArray(1);
-        var a2 = imageDataToArray(2);
 
         assert.deepEqual(a0, data[0].result);
         assert.deepEqual(a1, data[1].result);
-        assert.deepEqual(a2, data[2].result);
 
         done();
     });

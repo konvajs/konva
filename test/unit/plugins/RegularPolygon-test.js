@@ -119,6 +119,7 @@ suite('RegularPolygon', function() {
     });
 
     test('polygon cache', function() {
+        Konva.pixelRatio = 1;
         var stage = addStage();
         var layer = new Konva.Layer();
 
@@ -128,7 +129,7 @@ suite('RegularPolygon', function() {
             sides: 5,
             radius: 50,
             fill: 'green',
-            stroke: 'blue',
+            stroke: 'black',
             strokeWidth: 5,
             name: 'foobar'
         });
@@ -143,8 +144,10 @@ suite('RegularPolygon', function() {
             width : 100
         });
         if (!window.isPhantomJS) {
-            cloneAndCompareLayer(layer, 200);
+            cloneAndCompareLayer(layer, 254);
         }
+        Konva.pixelRatio = undefined;
+
     });
 
 });

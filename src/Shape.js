@@ -279,15 +279,16 @@
                 drawFunc.call(this, bufferContext);
                 bufferContext.restore();
 
+                var ratio = bufferCanvas.pixelRatio;
                 if (hasShadow && !canvas.hitCanvas) {
                         context.save();
                         context._applyShadow(this);
                         context._applyOpacity(this);
-                        context.drawImage(bufferCanvas._canvas, 0, 0);
+                        context.drawImage(bufferCanvas._canvas, 0, 0, bufferCanvas.width / ratio, bufferCanvas.height / ratio);
                         context.restore();
                 } else {
                     context._applyOpacity(this);
-                    context.drawImage(bufferCanvas._canvas, 0, 0);
+                    context.drawImage(bufferCanvas._canvas, 0, 0, bufferCanvas.width / ratio, bufferCanvas.height / ratio);
                 }
             }
             // if buffer canvas is not needed

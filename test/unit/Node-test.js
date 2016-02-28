@@ -314,7 +314,7 @@ suite('Node', function() {
                     assert.equal(image.width(), stage.width() * 2, 'image has double size');
                     layer2.add(image);
                     layer2.draw();
-                    compareLayers(layer, layer2);
+                    compareLayers(layer, layer2, 50);
                     Konva.pixelRatio = oldRatio;
                     done();
                 }
@@ -2128,7 +2128,7 @@ suite('Node', function() {
         var bufferTrace = stage.bufferCanvas.getContext().getTrace();
         //console.log(bufferTrace);
 
-        assert.equal(sceneTrace, 'clearRect(0,0,578,200);save();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0);restore();');
+        assert.equal(sceneTrace, 'clearRect(0,0,578,200);save();globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();');
         assert.equal(bufferTrace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,289,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=20;strokeStyle=black;stroke();restore();');
     });
 

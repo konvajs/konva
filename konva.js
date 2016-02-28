@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.11.1
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri Feb 05 2016
+ * Date: Sun Feb 28 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -200,29 +200,29 @@
         UA: undefined
     };
 
-    var global =
+    var glob =
         typeof window !== 'undefined' ? window :
         typeof global !== 'undefined' ? global :
         typeof WorkerGlobalScope !== 'undefined' ? self : {};
 
 
-    Konva.UA = Konva._parseUA((global.navigator && global.navigator.userAgent) || '');
+    Konva.UA = Konva._parseUA((glob.navigator && glob.navigator.userAgent) || '');
 
-    if (global.Konva) {
+    if (glob.Konva) {
         console.error(
             'Konva instance is already exist in current eviroment. ' +
             'Please use only one instance.'
         );
     }
-    global.Konva = Konva;
-    Konva.global = global;
+    glob.Konva = Konva;
+    Konva.global = glob;
 
 
     if( typeof exports === 'object') {
         // runtime-check for browserify and nw.js (node-webkit)
-        if(global.window && global.window.document) {
-            Konva.document = global.window.document;
-            Konva.window = global.window;
+        if(glob.window && glob.window.document) {
+            Konva.document = glob.window.document;
+            Konva.window = glob.window;
         } else {
             // Node. Does not work with strict CommonJS, but
             // only CommonJS-like enviroments that support module.exports,
@@ -1847,10 +1847,6 @@
                         args = _simplifyArray(Array.prototype.slice.call(arguments, 0));
                         ret = origMethod.apply(that, arguments);
 
-                        if (methodName === 'clearRect') {
-                            args[2] = args[2] / that.canvas.getPixelRatio();
-                            args[3] = args[3] / that.canvas.getPixelRatio();
-                        }
                         that._trace({
                             method: methodName,
                             args: args
@@ -2530,10 +2526,10 @@
                 maxY = Math.max(maxY, transformed.y);
             });
             return {
-                x: Math.round(minX),
-                y: Math.round(minY),
-                width: Math.round(maxX - minX),
-                height: Math.round(maxY - minY)
+                x: minX,
+                y: minY,
+                width: maxX - minX,
+                height: maxY - minY
             };
         },
         _drawCachedSceneCanvas: function(context) {
@@ -7406,15 +7402,16 @@
                 drawFunc.call(this, bufferContext);
                 bufferContext.restore();
 
+                var ratio = bufferCanvas.pixelRatio;
                 if (hasShadow && !canvas.hitCanvas) {
                         context.save();
                         context._applyShadow(this);
                         context._applyOpacity(this);
-                        context.drawImage(bufferCanvas._canvas, 0, 0);
+                        context.drawImage(bufferCanvas._canvas, 0, 0, bufferCanvas.width / ratio, bufferCanvas.height / ratio);
                         context.restore();
                 } else {
                     context._applyOpacity(this);
-                    context.drawImage(bufferCanvas._canvas, 0, 0);
+                    context.drawImage(bufferCanvas._canvas, 0, 0, bufferCanvas.width / ratio, bufferCanvas.height / ratio);
                 }
             }
             // if buffer canvas is not needed
@@ -9260,10 +9257,8 @@
             // the buffer canvas pixel ratio must be 1 because it is used as an
             // intermediate canvas before copying the result onto a scene canvas.
             // not setting it to 1 will result in an over compensation
-            this.bufferCanvas = new Konva.SceneCanvas({
-                pixelRatio: 1
-            });
-            this.bufferHitCanvas = new Konva.HitCanvas();
+            this.bufferCanvas = new Konva.SceneCanvas();
+            this.bufferHitCanvas = new Konva.HitCanvas({pixelRatio: 1});
 
             this._resizeDOM();
         },
@@ -10145,8 +10140,8 @@
                 len = animations.length,
                 n;
 
-            for(n = 0; n < len; n++) {
-                if(animations[n].id === this.id) {
+            for (n = 0; n < len; n++) {
+                if (animations[n].id === this.id) {
                     return true;
                 }
             }

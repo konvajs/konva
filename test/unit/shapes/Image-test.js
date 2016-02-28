@@ -305,7 +305,7 @@ suite('Image', function(){
 
           var trace = layer.getContext().getTrace();
           //console.log(trace);
-          assert.equal(trace, 'clearRect(0,0,578,200);save();save();shadowColor=rgba(0,0,0,0.5);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0);restore();restore();');
+          assert.equal(trace, 'clearRect(0,0,578,200);save();save();shadowColor=rgba(0,0,0,0.5);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;globalAlpha=0.5;drawImage([object HTMLCanvasElement],0,0,578,200);restore();restore();');
 
           done();
 

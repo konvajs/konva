@@ -36,8 +36,8 @@ suite('Stage', function() {
       });
 
 
-      assert.equal(stage.bufferCanvas.getPixelRatio(), 1);
-      assert.equal(stage.bufferHitCanvas.getPixelRatio(), 2);
+      assert.equal(stage.bufferCanvas.getPixelRatio(), 2);
+      assert.equal(stage.bufferHitCanvas.getPixelRatio(), 1);
 
       // reset
       Konva.pixelRatio = 1;
@@ -138,8 +138,8 @@ suite('Stage', function() {
         assert.equal(stage.getSize().height, 155);
         assert.equal(stage.getContent().style.width, '333px');
         assert.equal(stage.getContent().style.height, '155px');
-        assert.equal(layer.getCanvas()._canvas.width, 333);
-        assert.equal(layer.getCanvas()._canvas.height, 155);
+        assert.equal(layer.getCanvas()._canvas.width, 333 * layer.getCanvas().getPixelRatio());
+        assert.equal(layer.getCanvas()._canvas.height, 155 * layer.getCanvas().getPixelRatio());
     });
 
     // ======================================================
