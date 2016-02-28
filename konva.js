@@ -8654,10 +8654,20 @@
          * @memberof Konva.Stage.prototype
          * @param {DomElement} container can pass in a dom element or id string
          */
-        setContainer: function(container) {
-            if( typeof container === STRING) {
-                var id = container;
-                container = Konva.document.getElementById(container);
+        setContainer: function (container) {
+            if (typeof container === STRING) {
+                if (container.charAt(0) === '.') {
+                    var className = container.slice(1);
+                    container = Konva.document.getElementsByClassName(className)[0];
+                } else {
+                    var id;
+                    if (container.charAt(0) !== '#') {
+                        id = container;
+                    } else {
+                        id = container.slice(1);
+                    }
+                    container = Konva.document.getElementById(id);
+                }
                 if (!container) {
                     throw 'Can not find container in document with id ' + id;
                 }
