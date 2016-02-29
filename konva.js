@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.11.1
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sun Feb 28 2016
+ * Date: Mon Feb 29 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -2597,9 +2597,9 @@
         },
         /**
          * bind events to the node. KonvaJS supports mouseover, mousemove,
-         *  mouseout, mouseenter, mouseleave, mousedown, mouseup, mousewheel, click, dblclick, touchstart, touchmove,
+         *  mouseout, mouseenter, mouseleave, mousedown, mouseup, wheel, click, dblclick, touchstart, touchmove,
          *  touchend, tap, dbltap, dragstart, dragmove, and dragend events. The Konva Stage supports
-         *  contentMouseover, contentMousemove, contentMouseout, contentMousedown, contentMouseup,
+         *  contentMouseover, contentMousemove, contentMouseout, contentMousedown, contentMouseup, contentWheel
          *  contentClick, contentDblclick, contentTouchstart, contentTouchmove, contentTouchend, contentTap,
          *  and contentDblTap.  Pass in a string of events delimmited by a space to bind multiple events at once
          *  such as 'mousedown mouseup mousemove'. Include a namespace to bind an
@@ -8575,6 +8575,7 @@
         CONTENT_DBL_TAP = 'contentDbltap',
         CONTENT_TAP = 'contentTap',
         CONTENT_TOUCHMOVE = 'contentTouchmove',
+        CONTENT_WHEEL = 'contentWheel',
 
         DIV = 'div',
         RELATIVE = 'relative',
@@ -8600,7 +8601,7 @@
      * @memberof Konva
      * @augments Konva.Container
      * @param {Object} config
-     * @param {String|Element} config.container Container id or DOM element
+     * @param {String|Element} config.container Container selector or DOM element
      * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
@@ -8625,7 +8626,7 @@
      * var stage = new Konva.Stage({
          *   width: 500,
          *   height: 800,
-         *   container: 'containerId'
+         *   container: 'containerId' // or "#containerId" or ".containerClass"
          * });
      */
     Konva.Stage = function(config) {
@@ -9202,8 +9203,9 @@
             var shape = this.getIntersection(this.getPointerPosition());
 
             if (shape && shape.isListening()) {
-                shape._fireAndBubble(MOUSEWHEEL, {evt: evt});
+                shape._fireAndBubble(WHEEL, {evt: evt});
             }
+            this._fire(CONTENT_WHEEL, {evt: evt});
         },
         _wheel: function(evt) {
             this._mousewheel(evt);

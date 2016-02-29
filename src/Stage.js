@@ -35,6 +35,7 @@
         CONTENT_DBL_TAP = 'contentDbltap',
         CONTENT_TAP = 'contentTap',
         CONTENT_TOUCHMOVE = 'contentTouchmove',
+        CONTENT_WHEEL = 'contentWheel',
 
         DIV = 'div',
         RELATIVE = 'relative',
@@ -60,13 +61,13 @@
      * @memberof Konva
      * @augments Konva.Container
      * @param {Object} config
-     * @param {String|Element} config.container Container id or DOM element
+     * @param {String|Element} config.container Container selector or DOM element
      * @@nodeParams
      * @example
      * var stage = new Konva.Stage({
          *   width: 500,
          *   height: 800,
-         *   container: 'containerId'
+         *   container: 'containerId' // or "#containerId" or ".containerClass"
          * });
      */
     Konva.Stage = function(config) {
@@ -643,8 +644,9 @@
             var shape = this.getIntersection(this.getPointerPosition());
 
             if (shape && shape.isListening()) {
-                shape._fireAndBubble(MOUSEWHEEL, {evt: evt});
+                shape._fireAndBubble(WHEEL, {evt: evt});
             }
+            this._fire(CONTENT_WHEEL, {evt: evt});
         },
         _wheel: function(evt) {
             this._mousewheel(evt);

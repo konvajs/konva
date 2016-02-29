@@ -364,9 +364,9 @@
         },
         /**
          * bind events to the node. KonvaJS supports mouseover, mousemove,
-         *  mouseout, mouseenter, mouseleave, mousedown, mouseup, mousewheel, click, dblclick, touchstart, touchmove,
+         *  mouseout, mouseenter, mouseleave, mousedown, mouseup, wheel, click, dblclick, touchstart, touchmove,
          *  touchend, tap, dbltap, dragstart, dragmove, and dragend events. The Konva Stage supports
-         *  contentMouseover, contentMousemove, contentMouseout, contentMousedown, contentMouseup,
+         *  contentMouseover, contentMousemove, contentMouseout, contentMousedown, contentMouseup, contentWheel
          *  contentClick, contentDblclick, contentTouchstart, contentTouchmove, contentTouchend, contentTap,
          *  and contentDblTap.  Pass in a string of events delimmited by a space to bind multiple events at once
          *  such as 'mousedown mouseup mousemove'. Include a namespace to bind an

@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - fix wrong `Path` `getClientRect()` calculation
 - better HDPI support
 
+### Changed
+- more universal stage container selector
+- `mousewheel` event changed to `wheel`
+
 ## [0.11.1][2016-01-16]
 
 ### Fixed
