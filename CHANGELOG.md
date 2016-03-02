@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - repair `cancelBubble` event property behaviour
 - fix wrong `Path` `getClientRect()` calculation
 - better HDPI support
+- better typescript definitions
 
 ### Changed
 - more universal stage container selector
