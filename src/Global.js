@@ -29,7 +29,7 @@
  */
 
 // runtime check for already included Konva
-(function(){
+(function(global){
     'use strict';
     /**
      * @namespace Konva
@@ -246,4 +246,4 @@
     }
     Konva.document = document;
     Konva.window = window;
-})();
+})(typeof window !== 'undefined' ? window : global);
