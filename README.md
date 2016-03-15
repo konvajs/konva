@@ -110,11 +110,13 @@ import 'konva/src/shapes/rect';
 
 ###5 NodeJS
 
+Support for node 0.12.x only for now.
 You have to install some deps manually to use Konva in nodejs env.
 
 We are using [node-canvas](https://github.com/LearnBoost/node-canvas) to create canvas element.
 
-1. Install node-canvas [https://github.com/LearnBoost/node-canvas/wiki/_pages](https://github.com/LearnBoost/node-canvas/wiki/_pages)
+1. Install node-canvas dependencies [https://github.com/LearnBoost/node-canvas/wiki/_pages](https://github.com/LearnBoost/node-canvas/wiki/_pages)
+2. `npm install canvas@1.2.x`
 2. `npm install jsdom@3.x` (jsdom v4 require iojs)
 3. `npm install konva`
 
