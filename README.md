@@ -129,7 +129,7 @@ See [CHANGELOG.md](https://github.com/konvajs/konva/blob/master/CHANGELOG.md).
 
 #Dev environment
 
-Before doing all dev stuff make sure you have node installed. After that, run `npm install --dev` in the main directory to install the node module dependencies.
+Before doing all dev stuff make sure you have node installed. After that, run `npm install` in the main directory to install the node module dependencies.
 
 Run `gulp -T` to see all build options.
 
