@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.11.1
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mon Feb 29 2016
+ * Date: Tue Mar 15 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -29,7 +29,7 @@
  */
 
 // runtime check for already included Konva
-(function(){
+(function(global){
     'use strict';
     /**
      * @namespace Konva
@@ -246,7 +246,7 @@
     }
     Konva.document = document;
     Konva.window = window;
-})();
+})(typeof window !== 'undefined' ? window : global);
 
 /*eslint-disable  eqeqeq, no-cond-assign, no-empty*/
 (function() {
