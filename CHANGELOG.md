@@ -105,7 +105,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - new `getClientRect` method.
 - new `to` method for every node for shorter tweening
 
-## [0.8.0] - 2015-02-04
+## [0.8.0][2015-02-04]
 
 * Bug Fixes
     * browser crashing on pointer events fixed
