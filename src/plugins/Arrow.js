@@ -124,4 +124,3 @@
     Konva.Collection.mapMethods(Konva.Arrow);
 
 })();
-

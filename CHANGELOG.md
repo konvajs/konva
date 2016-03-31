@@ -4,11 +4,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+
+## [0.12.0][2016-03-31]
+
 ## Fixed
 - repair `cancelBubble` event property behaviour
 - fix wrong `Path` `getClientRect()` calculation
 - better HDPI support
 - better typescript definitions
+- node 0.12 support
 
 ### Changed
 - more universal stage container selector
