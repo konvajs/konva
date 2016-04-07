@@ -4,10 +4,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [0.12.3][2016-04-07]
 
-## [0.12.0][2016-03-31]
+### Fixed
+- `batchDraw` function works less time now
+- lighter npm package
 
-## Fixed
+## [0.12.2][2016-03-31]
+
+### Fixed
 - repair `cancelBubble` event property behaviour
 - fix wrong `Path` `getClientRect()` calculation
 - better HDPI support

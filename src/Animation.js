@@ -1,6 +1,5 @@
 (function(Konva) {
     'use strict';
-    var BATCH_DRAW_STOP_TIME_DIFF = 500;
 
     var now = (function() {
         if (Konva.global.performance && Konva.global.performance.now) {
