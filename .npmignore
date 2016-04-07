@@ -14,3 +14,5 @@ presentation-schedule.md
 .jshintrc
 *.sublime-project
 *.sublime-workspace
+*.zip
+gulpfile.js
