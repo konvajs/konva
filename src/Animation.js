@@ -280,9 +280,8 @@
 
         if (!this.batchAnim) {
             this.batchAnim = new Anim(function() {
-                if (that.lastBatchDrawTime && now() - that.lastBatchDrawTime > BATCH_DRAW_STOP_TIME_DIFF) {
-                    that.batchAnim.stop();
-                }
+                // stop animation after first tick
+                that.batchAnim.stop();
             }, this);
         }
 
