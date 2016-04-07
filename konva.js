@@ -1,9 +1,9 @@
 
 /*
- * Konva JavaScript Framework v0.12.2
+ * Konva JavaScript Framework v0.12.3
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Thu Mar 31 2016
+ * Date: Thu Apr 07 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -39,7 +39,7 @@
 
     var Konva = {
         // public
-        version: '0.12.2',
+        version: '0.12.3',
 
         // private
         stages: [],
@@ -10012,7 +10012,6 @@
 
 (function(Konva) {
     'use strict';
-    var BATCH_DRAW_STOP_TIME_DIFF = 500;
 
     var now = (function() {
         if (Konva.global.performance && Konva.global.performance.now) {
@@ -10292,9 +10291,8 @@
 
         if (!this.batchAnim) {
             this.batchAnim = new Anim(function() {
-                if (that.lastBatchDrawTime && now() - that.lastBatchDrawTime > BATCH_DRAW_STOP_TIME_DIFF) {
-                    that.batchAnim.stop();
-                }
+                // stop animation after first tick
+                that.batchAnim.stop();
             }, this);
         }
 
