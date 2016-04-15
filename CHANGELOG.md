@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+### Fixed
+- fix incorrect shadow offset on rotation
+
 ## [0.12.3][2016-04-07]
 
 ### Fixed

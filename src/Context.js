@@ -572,9 +572,10 @@
                     x: 0,
                     y: 0
                 }),
-                m = shape.getAbsoluteTransform().m,
-                scaleX = m[0],
-                scaleY = m[3];
+                // TODO: get this info from transform??
+                scale = shape.getAbsoluteScale(),
+                scaleX = scale.x,
+                scaleY = scale.y;
 
             this.setAttr('shadowColor', color);
             this.setAttr('shadowBlur', blur);

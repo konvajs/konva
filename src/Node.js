@@ -3,6 +3,7 @@
     // CONSTANTS
     var ABSOLUTE_OPACITY = 'absoluteOpacity',
         ABSOLUTE_TRANSFORM = 'absoluteTransform',
+        ABSOLUTE_SCALE = 'absoluteScale',
         CHANGE = 'Change',
         CHILDREN = 'children',
         DOT = '.',
@@ -34,6 +35,11 @@
             'offsetXChange.konva',
             'offsetYChange.konva',
             'transformsEnabledChange.konva'
+        ].join(SPACE),
+
+        SCALE_CHANGE_STR = [
+            'scaleXChange.konva',
+            'scaleYChange.konva'
         ].join(SPACE);
 
     /**
@@ -64,6 +70,11 @@
                 this._clearCache(TRANSFORM);
                 that._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
             });
+
+            this.on(SCALE_CHANGE_STR, function() {
+                that._clearSelfAndDescendantCache(ABSOLUTE_SCALE);
+            });
+
             this.on('visibleChange.konva', function() {
                 that._clearSelfAndDescendantCache(VISIBLE);
             });
@@ -1372,6 +1383,36 @@
                 }
             }, top);
             return at;
+        },
+        /**
+         * get absolute scale of the node which takes into
+         *  account its ancestor scales
+         * @method
+         * @memberof Konva.Node.prototype
+         * @returns {Konva.Transform}
+         */
+        getAbsoluteScale: function(top) {
+            // if using an argument, we can't cache the result.
+            if (top) {
+                return this._getAbsoluteTransform(top);
+            }
+            // if no argument, we can cache the result
+            else {
+                return this._getCache(ABSOLUTE_SCALE, this._getAbsoluteScale);
+            }
+        },
+        _getAbsoluteScale: function(top) {
+            var scaleX = 1, scaleY = 1;
+
+            // start with stage and traverse downwards to self
+            this._eachAncestorReverse(function(node) {
+                scaleX *= node.scaleX();
+                scaleY *= node.scaleY();
+            }, top);
+            return {
+                x: scaleX,
+                y: scaleY
+            };
         },
         /**
          * get transform of the node
