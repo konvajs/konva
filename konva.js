@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.12.3
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri Apr 15 2016
+ * Date: Tue Apr 19 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -2017,6 +2017,7 @@
                     x: 0,
                     y: 0
                 }),
+                // TODO: get this info from transform??
                 scale = shape.getAbsoluteScale(),
                 scaleX = scale.x,
                 scaleY = scale.y;
@@ -10321,7 +10322,8 @@
     };
 
     /**
-     * batch draw
+     * batch draw. this function will not do imidiate draw
+     * but it will schedule drawing to next tick (requestAnimFrame)
      * @method
      * @return {Konva.Layer} this
      * @memberof Konva.Base.prototype
@@ -10340,7 +10342,6 @@
         this.lastBatchDrawTime = now();
 
         if (!this.batchAnim.isRunning()) {
-            this.draw();
             this.batchAnim.start();
         }
         return this;

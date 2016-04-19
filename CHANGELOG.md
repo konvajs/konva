@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [0.12.4][2016-04-19]
+
+### Changed
+- `batchDraw` will not do immediate `draw()`
+
 ### Fixed
 - fix incorrect shadow offset on rotation
 

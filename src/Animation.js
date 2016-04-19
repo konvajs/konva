@@ -268,7 +268,8 @@
     };
 
     /**
-     * batch draw
+     * batch draw. this function will not do immediate draw
+     * but it will schedule drawing to next tick (requestAnimFrame)
      * @method
      * @return {Konva.Layer} this
      * @memberof Konva.Base.prototype
@@ -287,7 +288,6 @@
         this.lastBatchDrawTime = now();
 
         if (!this.batchAnim.isRunning()) {
-            this.draw();
             this.batchAnim.start();
         }
         return this;
