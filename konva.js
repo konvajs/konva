@@ -1,6 +1,6 @@
 
 /*
- * Konva JavaScript Framework v0.12.3
+ * Konva JavaScript Framework v0.12.4
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
  * Date: Tue Apr 19 2016
@@ -39,7 +39,7 @@
 
     var Konva = {
         // public
-        version: '0.12.3',
+        version: '0.12.4',
 
         // private
         stages: [],
@@ -10322,7 +10322,7 @@
     };
 
     /**
-     * batch draw. this function will not do imidiate draw
+     * batch draw. this function will not do immediate draw
      * but it will schedule drawing to next tick (requestAnimFrame)
      * @method
      * @return {Konva.Layer} this
