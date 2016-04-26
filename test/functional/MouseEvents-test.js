@@ -1102,6 +1102,117 @@ suite('MouseEvents', function() {
 
     });
 
+
+    // ======================================================
+    test('test mouseleave with multiple groups 2', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        stage.add(layer);
+
+        var group1 = new Konva.Group({name: 'group1'});
+        layer.add(group1);
+
+        var bigRect = new Konva.Rect({
+            x: 0, y: 0, width: 200, height: 200, fill: 'green'
+        });
+        group1.add(bigRect);
+
+
+        var group21 = new Konva.Group({name: 'group21'});
+        layer.add(group21);
+
+        var group22 = new Konva.Group({name: 'group22'});
+        group21.add(group22);
+
+        var smallRect = new Konva.Rect({
+            x: 50, y: 50, width: 100, height: 100, fill: 'red'
+        });
+        group22.add(smallRect);
+        stage.draw();
+
+
+        var group1Mouseenter = 0;
+        var group1Mouseleave = 0;
+        var group1Mouseover = 0;
+        var group1Mouseout = 0;
+
+        var group21Mouseenter = 0;
+        var group21Mouseleave = 0;
+        var group21Mouseover = 0;
+        var group21Mouseout = 0;
+
+        var group22Mouseenter = 0;
+        var group22Mouseleave = 0;
+        var group22Mouseover = 0;
+        var group22Mouseout = 0;
+
+        group1.on('mouseenter', function() {
+            group1Mouseenter +=1;
+        });
+        group1.on('mouseleave', function() {
+            group1Mouseleave +=1;
+        });
+        group1.on('mouseover', function() {
+            group1Mouseover +=1;
+        });
+        group1.on('mouseout', function() {
+            group1Mouseout +=1;
+        });
+
+        group21.on('mouseenter', function() {
+            group21Mouseenter +=1;
+        });
+        group21.on('mouseleave', function() {
+            group21Mouseleave +=1;
+        });
+        group21.on('mouseover', function() {
+            group21Mouseover +=1;
+        });
+        group21.on('mouseout', function() {
+            group21Mouseout +=1;
+        });
+
+
+        group22.on('mouseenter', function() {
+            group22Mouseenter +=1;
+        });
+        group22.on('mouseleave', function() {
+            group22Mouseleave +=1;
+        });
+        group22.on('mouseover', function() {
+            group22Mouseover +=1;
+        });
+        group22.on('mouseout', function() {
+            group22Mouseout +=1;
+        });
+
+        var top = stage.content.getBoundingClientRect().top;
+
+        stage._mousemove({
+            clientX: 10,
+            clientY: 10 + top
+        });
+
+        assert.equal(group1Mouseenter, 1, 'move1 : group1 mouseenter should trigger');
+
+        stage._mousemove({
+            clientX: 60,
+            clientY: 60 + top
+        });
+        assert.equal(group21Mouseenter, 1, 'move2 : group21 mouseenter should trigger');
+        assert.equal(group22Mouseenter, 1, 'move2 : group22 mouseenter should trigger');
+        assert.equal(group1Mouseleave, 1, 'move2 : group1 mouseleave should trigger');
+
+        stage._mousemove({
+            clientX: 10,
+            clientY: 10 + top
+        });
+
+        assert.equal(group21Mouseleave, 1, 'move3 : group21 mouseleave should trigger');
+        assert.equal(group22Mouseleave, 1, 'move3 : group22 mouseleave should trigger');
+        assert.equal(group1Mouseenter, 2, 'move3 : group1 mouseenter should trigger');
+    });
+
     // ======================================================
     test('test event bubbling', function() {
         var stage = addStage();
