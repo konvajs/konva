@@ -3,16 +3,17 @@
   "version": "0.12.4",
   "author": "Anton Lavrenov",
   "files": [
-    "./konva.d.ts",
-    "./src",
+    "README.md",
     "konva.js",
     "konva.min.js",
-    "README.md"
+    "src",
+    "konva.d.ts"
   ],
   "main": "konva.js",
   "typings": "./konva.d.ts",
   "scripts": {
     "start": "gulp",
+    "build": "gulp build",
     "full-build": "gulp lint test build",
     "test": "gulp test"
   },
