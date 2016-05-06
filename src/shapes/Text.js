@@ -208,7 +208,17 @@
             };
         },
         _getContextFont: function() {
-            return this.getFontStyle() + SPACE + this.getFontVariant() + SPACE + this.getFontSize() + PX_SPACE + this.getFontFamily();
+            // IE don't want to work with usual font style
+            // bold was not working
+            // removing font variant will solve
+            // fix for: https://github.com/konvajs/konva/issues/94
+            if (Konva.UA.isIE) {
+                return this.getFontStyle() + SPACE + this.getFontSize() + PX_SPACE + this.getFontFamily();
+            }
+            return this.getFontStyle() + SPACE +
+                    this.getFontVariant() + SPACE +
+                    this.getFontSize() + PX_SPACE +
+                    this.getFontFamily();
         },
         _addTextLine: function (line, width) {
             return this.textArr.push({text: line, width: width});

@@ -173,6 +173,29 @@
         getAngle: function(angle) {
             return this.angleDeg ? angle * PI_OVER_180 : angle;
         },
+        _detectIE: function(ua) {
+            var msie = ua.indexOf('MSIE ');
+            if (msie > 0) {
+                // IE 10 or older => return version number
+                return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+            }
+
+            var trident = ua.indexOf('Trident/');
+            if (trident > 0) {
+                // IE 11 => return version number
+                var rv = ua.indexOf('rv:');
+                return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+            }
+
+            var edge = ua.indexOf('Edge/');
+            if (edge > 0) {
+                // Edge (IE 12+) => return version number
+                return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
+            }
+
+            // other browser
+            return false;
+        },
         _parseUA: function(userAgent) {
             var ua = userAgent.toLowerCase(),
                 // jQuery UA regex
@@ -190,7 +213,7 @@
             return {
                 browser: match[ 1 ] || '',
                 version: match[ 2 ] || '0',
-
+                isIE: Konva._detectIE(ua),
                 // adding mobile flab
                 mobile: mobile,
                 ieMobile: ieMobile  // If this is true (i.e., WP8), then Konva touch events are executed instead of equivalent Konva mouse events
@@ -207,6 +230,7 @@
 
 
     Konva.UA = Konva._parseUA((glob.navigator && glob.navigator.userAgent) || '');
+
 
     if (glob.Konva) {
         console.error(
