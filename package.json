@@ -2,6 +2,15 @@
   "name": "konva",
   "version": "0.12.4",
   "author": "Anton Lavrenov",
+  "files": [
+    "./konva.d.ts",
+    "./src",
+    "konva.js",
+    "konva.min.js",
+    "README.md"
+  ],
+  "main": "konva.js",
+  "typings": "./konva.d.ts",
   "scripts": {
     "start": "gulp",
     "full-build": "gulp lint test build",
@@ -11,9 +20,9 @@
     "chai": "3.5.0",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
-    "gulp-connect": "^3.0.0",
+    "gulp-connect": "^4.0.0",
     "gulp-eslint": "^2.0.0",
-    "gulp-jscpd": "0.0.6",
+    "gulp-jscpd": "0.0.7",
     "gulp-jsdoc": "^0.1.4",
     "gulp-mocha-phantomjs": "^0.11.0",
     "gulp-rename": "^1.2.2",
@@ -37,17 +46,9 @@
   },
   "homepage": "http://konvajs.github.io/",
   "readmeFilename": "README.md",
-  "main": "konva.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/konvajs/konva.git"
   },
-  "license": "MIT",
-  "testling": {
-    "html": "test/runner.html",
-    "harness": "mocha-tdd",
-    "browsers": [
-      "ie/latest"
-    ]
-  }
+  "license": "MIT"
 }

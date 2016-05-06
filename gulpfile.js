@@ -70,14 +70,12 @@ var sourceFiles = [
     'src/shapes/Text.js',
     'src/shapes/Line.js',
     'src/shapes/Sprite.js',
-
-    // plugins
-    'src/plugins/Path.js',
-    'src/plugins/TextPath.js',
-    'src/plugins/RegularPolygon.js',
-    'src/plugins/Star.js',
-    'src/plugins/Label.js',
-    'src/plugins/Arrow.js'
+    'src/shapes/Path.js',
+    'src/shapes/TextPath.js',
+    'src/shapes/RegularPolygon.js',
+    'src/shapes/Star.js',
+    'src/shapes/Label.js',
+    'src/shapes/Arrow.js'
 ];
 
 function build() {
