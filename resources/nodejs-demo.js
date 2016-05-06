@@ -1,5 +1,5 @@
 var fs = require('fs'),
-    Konva = require('../dist/konva-dev');
+    Konva = require('konva');
 
 
 // Create stage. Container parameter is not required in NodeJS.
@@ -29,6 +29,7 @@ stage.setSize({
     width : 200,
     height : 200
 });
+
 
 // check tween works
 var tween = new Konva.Tween({

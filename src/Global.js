@@ -230,8 +230,8 @@
             var Canvas = require('canvas');
             var jsdom = require('jsdom').jsdom;
 
-            Konva.document = jsdom('<!DOCTYPE html><html><head></head><body></body></html>');
-            Konva.window = Konva.document.parentWindow;
+            Konva.window = jsdom('<!DOCTYPE html><html><head></head><body></body></html>').defaultView;
+            Konva.document = Konva.window.document;
             Konva.window.Image = Canvas.Image;
             Konva._nodeCanvas = Canvas;
         }

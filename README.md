@@ -81,7 +81,7 @@ define(['./konva'], function(Konva) {
 ###3 CommonJS style with npm:
 
 ```bash
-npm install konva
+npm install konva --save
 ```
 
 ```javascript
@@ -110,18 +110,18 @@ import 'konva/src/shapes/rect';
 
 ###5 NodeJS
 
-Support for node 0.12.x only for now.
 You have to install some deps manually to use Konva in nodejs env.
 
-We are using [node-canvas](https://github.com/LearnBoost/node-canvas) to create canvas element.
+We are using [node-canvas](https://github.com/Automattic/node-canvas) to create canvas element.
 
-1. Install node-canvas dependencies [https://github.com/LearnBoost/node-canvas/wiki/_pages](https://github.com/LearnBoost/node-canvas/wiki/_pages)
-2. `npm install canvas@1.2.x`
-2. `npm install jsdom@3.x` (jsdom v4 require iojs)
-3. `npm install konva`
+1. Install node-canvas dependencies [https://github.com/Automattic/node-canvas](https://github.com/Automattic/node-canvas)
+2. `npm install canvas --save`
+2. `npm install jsdom --save`
+3. `npm install konva --save`
 
 See file `resources/nodejs-demo.js` for example.
 
+Last tested with node@5.10.1, canvas@1.3.14, jsdom@8.5.0
 
 #Change log
 

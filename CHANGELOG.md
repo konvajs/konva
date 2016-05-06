@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+### Changed
+- typescript definition in npm package
+- node@5.10.1, canvas@1.3.14, jsdom@8.5.0 support
+
+
 ## [0.12.4][2016-04-19]
 
 ### Changed
