@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.12.4
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Tue Apr 26 2016
+ * Date: Fri May 06 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -230,8 +230,8 @@
             var Canvas = require('canvas');
             var jsdom = require('jsdom').jsdom;
 
-            Konva.document = jsdom('<!DOCTYPE html><html><head></head><body></body></html>');
-            Konva.window = Konva.document.parentWindow;
+            Konva.window = jsdom('<!DOCTYPE html><html><head></head><body></body></html>').defaultView;
+            Konva.document = Konva.window.document;
             Konva.window.Image = Canvas.Image;
             Konva._nodeCanvas = Canvas;
         }
