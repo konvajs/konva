@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.12.4
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri May 06 2016
+ * Date: Thu May 12 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -6944,7 +6944,9 @@
                 context = canvas && canvas.getContext(),
                 clipWidth = this.getClipWidth(),
                 clipHeight = this.getClipHeight(),
-                hasClip = clipWidth && clipHeight,
+                clipType = this.getClipType() || 'rect',
+                clipRadius = this.getClipRadius(),
+                hasClip = (clipWidth && clipHeight) || clipRadius,
                 clipX, clipY;
 
             if (hasClip && layer) {
@@ -6954,7 +6956,11 @@
                 context.save();
                 layer._applyTransform(this, context);
                 context.beginPath();
-                context.rect(clipX, clipY, clipWidth, clipHeight);
+                if (clipType === 'rect') {
+                    context.rect(clipX, clipY, clipWidth, clipHeight);
+                } else {
+                    context.arc(clipX + clipRadius, clipY + clipRadius, clipRadius, 0, 2 * Math.PI, false);
+                }
                 context.clip();
                 context.reset();
             }
@@ -7113,6 +7119,38 @@
      *
      * // set clip height
      * container.clipHeight(100);
+     */
+
+    Konva.Factory.addGetterSetter(Konva.Container, 'clipType');
+    /**
+     * get/set clip type (rect / circle)
+     * @name clipType
+     * @method
+     * @memberof Konva.Container.prototype
+     * @param {Number} height
+     * @returns {Number}
+     * @example
+     * // get clip height
+     * var clipType = container.clipType();
+     *
+     * // set clip height
+     * container.clipType('circle');
+     */
+
+     Konva.Factory.addGetterSetter(Konva.Container, 'clipRadius');
+    /**
+     * get/set clip type (rect / circle)
+     * @name clipRadius
+     * @method
+     * @memberof Konva.Container.prototype
+     * @param {Number} height
+     * @returns {Number}
+     * @example
+     * // get clip height
+     * var clipRadius = container.clipRadius();
+     *
+     * // set clip height
+     * container.clipRadius(100);
      */
 
     Konva.Collection.mapMethods(Konva.Container);

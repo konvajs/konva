@@ -371,7 +371,9 @@
                 context = canvas && canvas.getContext(),
                 clipWidth = this.getClipWidth(),
                 clipHeight = this.getClipHeight(),
-                hasClip = clipWidth && clipHeight,
+                clipType = this.getClipType() || 'rect',
+                clipRadius = this.getClipRadius(),
+                hasClip = (clipWidth && clipHeight) || clipRadius,
                 clipX, clipY;
 
             if (hasClip && layer) {
@@ -381,7 +383,11 @@
                 context.save();
                 layer._applyTransform(this, context);
                 context.beginPath();
-                context.rect(clipX, clipY, clipWidth, clipHeight);
+                if (clipType === 'rect') {
+                    context.rect(clipX, clipY, clipWidth, clipHeight);
+                } else {
+                    context.arc(clipX + clipRadius, clipY + clipRadius, clipRadius, 0, 2 * Math.PI, false);
+                }
                 context.clip();
                 context.reset();
             }
@@ -540,6 +546,38 @@
      *
      * // set clip height
      * container.clipHeight(100);
+     */
+
+    Konva.Factory.addGetterSetter(Konva.Container, 'clipType');
+    /**
+     * get/set clip type (rect / circle)
+     * @name clipType
+     * @method
+     * @memberof Konva.Container.prototype
+     * @param {Number} height
+     * @returns {Number}
+     * @example
+     * // get clip height
+     * var clipType = container.clipType();
+     *
+     * // set clip height
+     * container.clipType('circle');
+     */
+
+     Konva.Factory.addGetterSetter(Konva.Container, 'clipRadius');
+    /**
+     * get/set clip type (rect / circle)
+     * @name clipRadius
+     * @method
+     * @memberof Konva.Container.prototype
+     * @param {Number} height
+     * @returns {Number}
+     * @example
+     * // get clip height
+     * var clipRadius = container.clipRadius();
+     *
+     * // set clip height
+     * container.clipRadius(100);
      */
 
     Konva.Collection.mapMethods(Konva.Container);
