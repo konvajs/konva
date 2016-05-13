@@ -827,16 +827,17 @@ suite('Path', function() {
     });
 
     // ======================================================
-    test('Stroke only when no fill', function() {
+    test('Stroke and fill when no closed', function() {
 
-        // https://github.com/ericdrowell/KonvaJS/issues/567
+        // https://github.com/konvajs/konva/issues/150
 
         var stage = addStage();
         var layer = new Konva.Layer();
 
         var path = new Konva.Path({
             data: "M 50 0 C 50 150 170 170 200 170",
-            stroke: 'black'
+            stroke: 'black',
+            fill: '#ff0000'
         });
 
         // override color key so that we can test the context trace
@@ -865,8 +866,8 @@ suite('Path', function() {
         var hitTrace = layer.hitCanvas.getContext().getTrace();
         //console.log(hitTrace);
 
-        assert.equal(trace,    'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(50,0);bezierCurveTo(50,150,170,170,200,170);lineWidth=2;strokeStyle=black;stroke();restore();');
-        assert.equal(hitTrace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(50,0);bezierCurveTo(50,150,170,170,200,170);lineWidth=2;strokeStyle=black;stroke();restore();');
+        assert.equal(trace,    'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(50,0);bezierCurveTo(50,150,170,170,200,170);fillStyle=#ff0000;fill();lineWidth=2;strokeStyle=black;stroke();restore();');
+        assert.equal(hitTrace, 'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(50,0);bezierCurveTo(50,150,170,170,200,170);save();fillStyle=black;fill();restore();lineWidth=2;strokeStyle=black;stroke();restore();');
     });
 
     it('getClientRect', function() {
