@@ -366,23 +366,25 @@
             }
             return this;
         },
-        _drawChildren: function(canvas, drawMethod, top, caching, skipBuffer) {
+        _drawChildren: function(canvas, drawMethod, top, caching, skipBuffer, skipClip) {
             var layer = this.getLayer(),
                 context = canvas && canvas.getContext(),
-                clipWidth = this.getClipWidth(),
-                clipHeight = this.getClipHeight(),
-                hasClip = clipWidth && clipHeight,
-                clipX, clipY;
+                clipShape = this.getClipShape(),
+                hasClip = !!(clipShape);
 
             if (hasClip && layer) {
-                clipX = this.getClipX();
-                clipY = this.getClipY();
-
                 context.save();
                 layer._applyTransform(this, context);
-                context.beginPath();
-                context.rect(clipX, clipY, clipWidth, clipHeight);
-                context.clip();
+                // Apply mask
+                var maskPos = clipShape.getPosition();
+
+                context.translate(maskPos.x, maskPos.y);
+                clipShape.sceneFunc().call(clipShape, context);
+
+                // Clip!
+                if (!skipClip) {
+                    context.clip();
+                }
                 context.reset();
             }
 
@@ -453,17 +455,14 @@
     Konva.Container.prototype.get = Konva.Container.prototype.find;
 
     // add getters setters
-    Konva.Factory.addComponentsGetterSetter(Konva.Container, 'clip', ['x', 'y', 'width', 'height']);
+    Konva.Factory.addComponentsGetterSetter(Konva.Container, 'clip', ['shape']);
     /**
      * get/set clip
      * @method
      * @name clip
      * @memberof Konva.Container.prototype
      * @param {Object} clip
-     * @param {Number} clip.x
-     * @param {Number} clip.y
-     * @param {Number} clip.width
-     * @param {Number} clip.height
+     * @param {Konva.Shape} clip.shape
      * @returns {Object}
      * @example
      * // get clip
@@ -471,75 +470,24 @@
      *
      * // set clip
      * container.setClip({
-     *   x: 20,
-     *   y: 20,
-     *   width: 20,
-     *   height: 20
+     *   shape: new Konva.Circle(options)
      * });
      */
 
-    Konva.Factory.addGetterSetter(Konva.Container, 'clipX');
+    Konva.Factory.addGetterSetter(Konva.Container, 'clipShape');
     /**
-     * get/set clip x
-     * @name clipX
+     * get/set clip shape
+     * @name clipShape
      * @method
      * @memberof Konva.Container.prototype
-     * @param {Number} x
+     * @param {Number} shape
      * @returns {Number}
      * @example
-     * // get clip x
-     * var clipX = container.clipX();
+     * // get clip shape
+     * var clipShape = container.clipShape();
      *
-     * // set clip x
-     * container.clipX(10);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Container, 'clipY');
-    /**
-     * get/set clip y
-     * @name clipY
-     * @method
-     * @memberof Konva.Container.prototype
-     * @param {Number} y
-     * @returns {Number}
-     * @example
-     * // get clip y
-     * var clipY = container.clipY();
-     *
-     * // set clip y
-     * container.clipY(10);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Container, 'clipWidth');
-    /**
-     * get/set clip width
-     * @name clipWidth
-     * @method
-     * @memberof Konva.Container.prototype
-     * @param {Number} width
-     * @returns {Number}
-     * @example
-     * // get clip width
-     * var clipWidth = container.clipWidth();
-     *
-     * // set clip width
-     * container.clipWidth(100);
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Container, 'clipHeight');
-    /**
-     * get/set clip height
-     * @name clipHeight
-     * @method
-     * @memberof Konva.Container.prototype
-     * @param {Number} height
-     * @returns {Number}
-     * @example
-     * // get clip height
-     * var clipHeight = container.clipHeight();
-     *
-     * // set clip height
-     * container.clipHeight(100);
+     * // set clip shape
+     * container.clipShape( new Konva.Rect(options) );
      */
 
     Konva.Collection.mapMethods(Konva.Container);
