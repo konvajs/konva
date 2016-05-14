@@ -10558,7 +10558,7 @@
 
         var layers = node.getLayer() || ((node instanceof Konva.Stage) ? node.getLayers() : null);
         if (!layers) {
-            Konva.Util.console.error(
+            Konva.Util.error(
                 'Tween constructor have `node` that is not in a layer. Please add node into layer first.'
             );
         }
