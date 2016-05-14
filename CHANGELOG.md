@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [0.13.9][2016-05-14]
+
 ### Changed
 - typescript definition in npm package
 - node@5.10.1, canvas@1.3.14, jsdom@8.5.0 support
@@ -16,7 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.12.4][2016-04-19]
 
 ### Changed
-- `batchDraw` will not do immediate `draw()`
+- `batchDraw` will do not immediate `draw()`
 
 ### Fixed
 - fix incorrect shadow offset on rotation
