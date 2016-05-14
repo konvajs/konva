@@ -253,8 +253,8 @@
     Konva.Animation._animationLoop = function() {
         var Anim = Konva.Animation;
         if(Anim.animations.length) {
-            requestAnimFrame(Anim._animationLoop);
             Anim._runFrames();
+            requestAnimFrame(Anim._animationLoop);
         }
         else {
             Anim.animRunning = false;
@@ -263,7 +263,7 @@
     Konva.Animation._handleAnimation = function() {
         if(!this.animRunning) {
             this.animRunning = true;
-            this._animationLoop();
+            requestAnimFrame(this._animationLoop);
         }
     };
 

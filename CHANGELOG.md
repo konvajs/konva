@@ -7,7 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - typescript definition in npm package
 - node@5.10.1, canvas@1.3.14, jsdom@8.5.0 support
-
+- `Konva.Path` will be filled when it is not closed
+- `Animation.start()` will not not immediate sync draw. This should improve performance a little.
 
 ## [0.12.4][2016-04-19]
 
