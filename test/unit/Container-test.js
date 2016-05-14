@@ -528,7 +528,7 @@ suite('Container', function() {
         layer.draw();
 
         assert.equal(layer.children.length, 0, 'layer should have 0 children');
-        assert.equal(group.children.length, 0, 'group should have 0 children');
+        assert.equal(group.children.length, 2, 'group still should have 2 children');
     });
 
     // ======================================================

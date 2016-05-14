@@ -10,6 +10,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - `Konva.Path` will be filled when it is not closed
 - `Animation.start()` will not not immediate sync draw. This should improve performance a little.
 - Warning when node for `Tween` is not in layer yet.
+- `removeChildren()` remove only first level children. So it will not remove grandchildren.
+
 
 ## [0.12.4][2016-04-19]
 

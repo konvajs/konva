@@ -6642,9 +6642,6 @@
                 // reset parent to prevent many _setChildrenIndices calls
                 delete child.parent;
                 child.index = 0;
-                if (child.hasChildren()) {
-                    child.removeChildren();
-                }
                 child.remove();
             }
             children = null;
