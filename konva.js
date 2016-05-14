@@ -10559,9 +10559,15 @@
         this.node = node;
         this._id = idCounter++;
 
+        var layers = node.getLayer() || ((node instanceof Konva.Stage) ? node.getLayers() : null);
+        if (!layers) {
+            Konva.Util.console.error(
+                'Tween constructor have `node` that is not in a layer. Please add node into layer first.'
+            );
+        }
         this.anim = new Konva.Animation(function() {
             that.tween.onEnterFrame();
-        }, node.getLayer() || ((node instanceof Konva.Stage) ? node.getLayers() : null));
+        }, layers);
 
         this.tween = new Tween(key, function(i) {
             that._tweenFunc(i);
