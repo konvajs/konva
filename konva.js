@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.12.4
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri May 06 2016
+ * Date: Sat May 14 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -14180,8 +14180,7 @@
             this.sceneFunc(this._sceneFunc);
         },
         _sceneFunc: function(context) {
-            var ca = this.dataArray,
-                closedPath = false;
+            var ca = this.dataArray;
 
             // context position
             context.beginPath();
@@ -14219,17 +14218,11 @@
                         break;
                     case 'z':
                         context.closePath();
-                        closedPath = true;
                         break;
                 }
             }
 
-            if (closedPath) {
-                context.fillStrokeShape(this);
-            }
-            else {
-                context.strokeShape(this);
-            }
+            context.fillStrokeShape(this);
         },
         getSelfRect: function() {
             var points = [];
