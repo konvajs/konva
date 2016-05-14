@@ -85,12 +85,7 @@
                 }
             }
 
-            if (closedPath) {
-                context.fillStrokeShape(this);
-            }
-            else {
-                context.strokeShape(this);
-            }
+            context.fillStrokeShape(this);
         },
         getSelfRect: function() {
             var points = [];
