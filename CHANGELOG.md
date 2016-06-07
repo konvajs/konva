@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+### Fixed
+- fixes in typescript definitions
+- bug with `mouseenter` event on deep nesting case
+
 ## [0.13.9][2016-05-14]
 
 ### Changed

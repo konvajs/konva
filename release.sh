@@ -69,6 +69,7 @@ find source themes -exec perl -i -pe "s|${old_cdn}|${new_cdn}|g" {} +
 find source themes -exec perl -i -pe "s|${old_cdn_min}|${new_cdn_min}|g" {} +
 
 echo "regenerate site"
+rm ./db.json
 npm start
 
 echo "commit site changes"

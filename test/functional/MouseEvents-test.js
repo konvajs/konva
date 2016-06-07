@@ -1214,6 +1214,136 @@ suite('MouseEvents', function() {
     });
 
     // ======================================================
+    test('test mouseleave + mouseenter with deep nesting', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        stage.add(layer);
+
+        var leftRect = new Konva.Rect({
+            x: 0, y: 0, width: 100, height: 100, fill: 'green'
+        });
+        layer.add(leftRect);
+
+
+        var rightGrandParentGroup = new Konva.Group({name: 'rightGrandParentGroup'});
+        layer.add(rightGrandParentGroup);
+
+        var rightParentGroup = new Konva.Group({name: 'rightParentGroup'});
+        rightGrandParentGroup.add(rightParentGroup);
+
+        var rightRect = new Konva.Rect({
+            x: 100, y: 0, width: 100, height: 100, fill: 'red'
+        });
+        rightParentGroup.add(rightRect);
+        stage.draw();
+
+
+        var leftRectMouseenter = 0;
+        var leftRectMouseleave = 0;
+        var leftRectMouseover = 0;
+        var leftRectMouseout = 0;
+
+        var rightGrandParentGroupMouseenter = 0;
+        var rightGrandParentGroupMouseleave = 0;
+        var rightGrandParentGroupMouseover = 0;
+        var rightGrandParentGroupMouseout = 0;
+
+        var rightParentGroupMouseenter = 0;
+        var rightParentGroupMouseleave = 0;
+        var rightParentGroupMouseover = 0;
+        var rightParentGroupMouseout = 0;
+
+        var rightRectMouseenter = 0;
+        var rightRectMouseleave = 0;
+        var rightRectMouseover = 0;
+        var rightRectMouseout = 0;
+
+        leftRect.on('mouseenter', function() {
+            leftRectMouseenter += 1;
+        });
+        leftRect.on('mouseleave', function() {
+            leftRectMouseleave += 1;
+        });
+        leftRect.on('mouseover', function() {
+            leftRectMouseover += 1;
+        });
+        leftRect.on('mouseout', function() {
+            leftRectMouseout += 1;
+        });
+
+        rightGrandParentGroup.on('mouseenter', function() {
+            rightGrandParentGroupMouseenter += 1;
+        });
+        rightGrandParentGroup.on('mouseleave', function() {
+            rightGrandParentGroupMouseleave += 1;
+        });
+        rightGrandParentGroup.on('mouseover', function() {
+            rightGrandParentGroupMouseover += 1;
+        });
+        rightGrandParentGroup.on('mouseout', function() {
+            rightGrandParentGroupMouseout += 1;
+        });
+
+
+        rightParentGroup.on('mouseenter', function() {
+            rightParentGroupMouseenter += 1;
+        });
+        rightParentGroup.on('mouseleave', function() {
+            rightParentGroupMouseleave += 1;
+        });
+        rightParentGroup.on('mouseover', function() {
+            rightParentGroupMouseover += 1;
+        });
+        rightParentGroup.on('mouseout', function() {
+            rightParentGroupMouseout += 1;
+        });
+
+
+        rightRect.on('mouseenter', function() {
+            rightRectMouseenter += 1;
+        });
+        rightRect.on('mouseleave', function() {
+            rightRectMouseleave += 1;
+        });
+        rightRect.on('mouseover', function() {
+            rightRectMouseover += 1;
+        });
+        rightRect.on('mouseout', function() {
+            rightRectMouseout += 1;
+        });
+
+
+
+        stage.simulateMouseMove({
+            x: 50,
+            y: 50
+        });
+
+        assert.equal(leftRectMouseenter, 1, 'move1 : leftRectMouseenter mouseenter should trigger');
+
+        stage.simulateMouseMove({
+            x: 150,
+            y: 50
+        });
+
+        assert.equal(leftRectMouseleave, 1, 'move2 : leftRectMouseleave mouseleave should trigger');
+        assert.equal(rightRectMouseenter, 1, 'move2 : rightRect mouseenter should trigger');
+        assert.equal(rightParentGroupMouseenter, 1, 'move2 : rightParentGroup mouseenter should trigger');
+        assert.equal(rightGrandParentGroupMouseenter, 1, 'move2 : rightGrandParentGroup mouseenter should trigger');
+
+        stage.simulateMouseMove({
+            x: 50,
+            y: 50
+        });
+
+        assert.equal(rightRectMouseleave, 1, 'move3 : rightRect mouseleave should trigger');
+        assert.equal(rightParentGroupMouseleave, 1, 'move3 : rightParentGroup mouseleave should trigger');
+        assert.equal(rightGrandParentGroupMouseleave, 1, 'move3 : rightGrandParentGroup mouseleave should trigger');
+
+        assert.equal(leftRectMouseenter, 2, 'move3 : leftRectMouseenter mouseenter should trigger');
+    });
+
+    // ======================================================
     test('test event bubbling', function() {
         var stage = addStage();
         var layer = new Konva.Layer();
