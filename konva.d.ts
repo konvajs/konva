@@ -1,4 +1,4 @@
-declare module "Konva" {
+declare module Konva {
 
     var pixelRatio : number;
     var dragDistance: number;
@@ -824,5 +824,8 @@ declare module "Konva" {
         x: number;
         y: number;
     }
+}
 
+declare module "konva" {
+    export = Konva;
 }
