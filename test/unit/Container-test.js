@@ -3,9 +3,8 @@ suite('Container', function() {
     // ======================================================
     test('clip', function() {
         var stage = addStage();
-        var layer = new Konva.Layer({
-            clip: {x:0, y:0, width:stage.getWidth() / 2, height:100}
-        });
+        var layer = new Konva.Layer()
+
         var group = new Konva.Group();
         var circle = new Konva.Circle({
             x: stage.getWidth() / 2,
@@ -16,6 +15,19 @@ suite('Container', function() {
             strokeWidth: 4,
             name: 'myCircle',
             draggable: true
+        });
+
+        circle.on('click', function () { console.log('!'); });
+
+        var mask = new Konva.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: Math.min( stage.getWidth(), stage.getHeight() ),
+            fill: 'rgba(255, 0, 0, 0.3)'
+        });
+
+        layer.clip({
+            shape: mask
         });
 
         stage.add(layer);

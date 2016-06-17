@@ -244,7 +244,7 @@
                 hasStroke = this.hasStroke(),
                 stage, bufferCanvas, bufferContext;
 
-            if(!this.isVisible()) {
+            if (!this.isVisible()) {
                 return this;
             }
             if (cachedCanvas) {
