@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.14.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri Jun 17 2016
+ * Date: Sat Jun 18 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -6583,6 +6583,7 @@
      * @param {Number} [config.clipY] set clip y
      * @param {Number} [config.clipWidth] set clip width
      * @param {Number} [config.clipHeight] set clip height
+     * @param {Function} [config.clipFunc] set clip func
 
      */
     Konva.Container = function(config) {
@@ -6943,17 +6944,21 @@
                 context = canvas && canvas.getContext(),
                 clipWidth = this.getClipWidth(),
                 clipHeight = this.getClipHeight(),
-                hasClip = clipWidth && clipHeight,
+                clipFunc = this.getClipFunc(),
+                hasClip = clipWidth && clipHeight || clipFunc,
                 clipX, clipY;
 
             if (hasClip && layer) {
-                clipX = this.getClipX();
-                clipY = this.getClipY();
-
                 context.save();
                 layer._applyTransform(this, context);
                 context.beginPath();
-                context.rect(clipX, clipY, clipWidth, clipHeight);
+                if (clipFunc) {
+                  clipFunc.call(this, context, this);
+                } else {
+                  clipX = this.getClipX();
+                  clipY = this.getClipY();
+                  context.rect(clipX, clipY, clipWidth, clipHeight);
+                }
                 context.clip();
                 context.reset();
             }
@@ -7113,6 +7118,24 @@
      * // set clip height
      * container.clipHeight(100);
      */
+
+     Konva.Factory.addGetterSetter(Konva.Container, 'clipFunc');
+     /**
+      * get/set clip function
+      * @name clipFunc
+      * @method
+      * @memberof Konva.Container.prototype
+      * @param {Function} function
+      * @returns {Function}
+      * @example
+      * // get clip function
+      * var clipFunction = container.clipFunc();
+      *
+      * // set clip height
+      * container.clipFunc(function(ctx) {
+      *   ctx.rect(0, 0, 100, 100);
+      * });
+      */
 
     Konva.Collection.mapMethods(Konva.Container);
 })();
@@ -9415,6 +9438,7 @@
      * @param {Number} [config.clipY] set clip y
      * @param {Number} [config.clipWidth] set clip width
      * @param {Number} [config.clipHeight] set clip height
+     * @param {Function} [config.clipFunc] set clip func
 
      * @example
      * var layer = new Konva.Layer();
@@ -9700,6 +9724,7 @@
      * @param {Number} [config.clipY] set clip y
      * @param {Number} [config.clipWidth] set clip width
      * @param {Number} [config.clipHeight] set clip height
+     * @param {Function} [config.clipFunc] set clip func
 
      * @example
      * var layer = new Konva.Layer();
@@ -9953,6 +9978,7 @@
      * @param {Number} [config.clipY] set clip y
      * @param {Number} [config.clipWidth] set clip width
      * @param {Number} [config.clipHeight] set clip height
+     * @param {Function} [config.clipFunc] set clip func
 
      * @example
      * var layer = new Konva.FastLayer();
@@ -10049,6 +10075,7 @@
      * @param {Number} [config.clipY] set clip y
      * @param {Number} [config.clipWidth] set clip width
      * @param {Number} [config.clipHeight] set clip height
+     * @param {Function} [config.clipFunc] set clip func
 
      * @example
      * var group = new Konva.Group();
