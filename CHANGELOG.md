@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [0.15.0][2016-06-18]
+
 ## Added
 - Custom clip function
 
