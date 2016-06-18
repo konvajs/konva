@@ -25,6 +25,42 @@ suite('Container', function() {
     });
 
     // ======================================================
+    test.only('clip function', function() {
+        var stage = addStage();
+
+        // cliped by circle is the same as draw circle
+        var layer = new Konva.Layer();
+        stage.add(layer);
+        var circle = new Konva.Circle({
+          fill: 'green',
+          x: 50, y: 50,
+          radius: 40
+        });
+        layer.add(circle);
+
+
+        layer.draw();
+
+        var clipedLayer = new Konva.Layer({
+          clipFunc: function(ctx) {
+            ctx.arc(50, 50, 40, 0, Math.PI * 2, false);
+          }
+        });
+        stage.add(clipedLayer);
+        var rect = new Konva.Rect({
+            x: 10,
+            y: 10,
+            fill: 'green',
+            width: 200,
+            height: 200
+        });
+        clipedLayer.add(rect);
+        stage.draw();
+
+        compareLayers(layer, clipedLayer, 150);
+    });
+
+    // ======================================================
     test('adder validation', function() {
         var stage = addStage();
         var layer = new Konva.Layer();

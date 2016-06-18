@@ -283,6 +283,8 @@ declare module Konva {
         clipX(clipX: number) : Container;
         clipY(): number;
         clipY(clipY: number) : Container;
+        clipFunct(): number;
+        clipFunct(clipFunc: Function) : Container;
         destroyChildren() : void;
         find(selector? : string): Collection;
         getAllIntersections(pos: Vector2d): Node[];

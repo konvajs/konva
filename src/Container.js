@@ -368,17 +368,21 @@
                 context = canvas && canvas.getContext(),
                 clipWidth = this.getClipWidth(),
                 clipHeight = this.getClipHeight(),
-                hasClip = clipWidth && clipHeight,
+                clipFunc = this.getClipFunc(),
+                hasClip = clipWidth && clipHeight || clipFunc,
                 clipX, clipY;
 
             if (hasClip && layer) {
-                clipX = this.getClipX();
-                clipY = this.getClipY();
-
                 context.save();
                 layer._applyTransform(this, context);
                 context.beginPath();
-                context.rect(clipX, clipY, clipWidth, clipHeight);
+                if (clipFunc) {
+                  clipFunc.call(this, context, this);
+                } else {
+                  clipX = this.getClipX();
+                  clipY = this.getClipY();
+                  context.rect(clipX, clipY, clipWidth, clipHeight);
+                }
                 context.clip();
                 context.reset();
             }
@@ -538,6 +542,24 @@
      * // set clip height
      * container.clipHeight(100);
      */
+
+     Konva.Factory.addGetterSetter(Konva.Container, 'clipFunc');
+     /**
+      * get/set clip function
+      * @name clipFunc
+      * @method
+      * @memberof Konva.Container.prototype
+      * @param {Function} function
+      * @returns {Function}
+      * @example
+      * // get clip function
+      * var clipFunction = container.clipFunc();
+      *
+      * // set clip height
+      * container.clipFunc(function(ctx) {
+      *   ctx.rect(0, 0, 100, 100);
+      * });
+      */
 
     Konva.Collection.mapMethods(Konva.Container);
 })();
