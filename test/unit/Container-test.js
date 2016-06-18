@@ -25,7 +25,7 @@ suite('Container', function() {
     });
 
     // ======================================================
-    test.only('clip function', function() {
+    test('clip function', function() {
         var stage = addStage();
 
         // cliped by circle is the same as draw circle
