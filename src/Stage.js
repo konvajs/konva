@@ -592,7 +592,7 @@
                 shape._fireAndBubble(TOUCHEND, {evt: evt});
 
                 // detect if tap or double tap occurred
-                if(Konva.listenClickTap && shape._id === this.tapStartShape._id) {
+                if(Konva.listenClickTap && this.tapStartShape && shape._id === this.tapStartShape._id) {
                     shape._fireAndBubble(TAP, {evt: evt});
 
                     if(fireDblClick) {

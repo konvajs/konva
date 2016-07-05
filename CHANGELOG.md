@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+### Fixed
+- Bug fix for case when `touchend` event throws error
+
+
+
 ## [0.15.0][2016-06-18]
 
 ## Added

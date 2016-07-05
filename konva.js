@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v0.15.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sat Jun 18 2016
+ * Date: Tue Jul 05 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -9239,7 +9239,7 @@
                 shape._fireAndBubble(TOUCHEND, {evt: evt});
 
                 // detect if tap or double tap occurred
-                if(Konva.listenClickTap && shape._id === this.tapStartShape._id) {
+                if(Konva.listenClickTap && this.tapStartShape && shape._id === this.tapStartShape._id) {
                     shape._fireAndBubble(TAP, {evt: evt});
 
                     if(fireDblClick) {

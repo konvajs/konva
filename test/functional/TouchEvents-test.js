@@ -235,4 +235,59 @@ suite('TouchEvents', function() {
             done();
         }, 17);
     });
+
+    // test for https://github.com/konvajs/konva/issues/156
+    test("touchstart out of shape, then touch end inside shape", function() {
+      var stage = addStage();
+      var layer = new Konva.Layer();
+      var circle = new Konva.Circle({
+          x: 100,
+          y: 100,
+          radius: 70,
+          fill: 'green',
+          stroke: 'black',
+          strokeWidth: 4,
+          name: 'myCircle'
+      });
+
+      layer.add(circle);
+      stage.add(layer);
+
+      var circleTouchend =
+          stageContentTouchstart =
+          stageContentTouchend =
+          0;
+
+      var top = stage.content.getBoundingClientRect().top;
+
+      circle.on('touchend', function() {
+        circleTouchend++;
+      });
+
+      stage.on('contentTouchstart', function() {
+        stageContentTouchstart++;
+      });
+
+      stage.on('contentTouchend', function() {
+        stageContentTouchend++;
+      });
+
+      stage._touchstart({
+          touches: [{
+              clientX: 1,
+              clientY: 1 + top
+          }]
+      });
+
+      stage._touchend({
+        touches: [{
+            clientX: 100,
+            clientY: 100 + top
+        }]
+      });
+
+      assert.equal(stageContentTouchstart, 1);
+      assert.equal(stageContentTouchend, 1);
+      assert.equal(circleTouchend, 1);
+    });
 });
