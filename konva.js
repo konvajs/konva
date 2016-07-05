@@ -4029,14 +4029,16 @@
         },
         _setAttr: function(key, val) {
             var oldVal;
-            if(val !== undefined) {
-                oldVal = this.attrs[key];
-                if (oldVal === val) {
-                    return;
-                }
-                this.attrs[key] = val;
-                this._fireChangeEvent(key, oldVal, val);
+            oldVal = this.attrs[key];
+            if (oldVal === val) {
+                return;
             }
+            if (val === undefined || val === null) {
+              delete this.attrs[key];
+            } else {
+              this.attrs[key] = val;
+            }
+            this._fireChangeEvent(key, oldVal, val);
         },
         _setComponentAttr: function(key, component, val) {
             var oldVal;

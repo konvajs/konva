@@ -76,7 +76,29 @@ suite('Node', function() {
         circle.setAttr('foobar', 12);
 
         assert.equal(circle.getAttr('foobar'), 12);
+    });
 
+    // ======================================================
+    test('unset attr', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4
+        });
+
+        stage.add(layer.add(circle));
+
+
+        circle.setAttr('x', undefined);
+        assert.equal(circle.getX(), 0);
+
+        circle.y(null);
+        assert.equal(circle.y(), 0);
     });
 
     // ======================================================

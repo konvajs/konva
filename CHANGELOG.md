@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Not released][Not released]
+
+## [1.0.1][2016-07-05]
+
+### Changed
+- you can now unset property by `node.x(undefined)` or `node.setAttr('x', null)`
+
+### Fixed
+- Bug fix for case when `touchend` event throws error
+
 ## [1.0.0][2016-07-05]
 
 ### Fixed
