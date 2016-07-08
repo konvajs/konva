@@ -39,4 +39,25 @@ suite('Util', function(){
             a : 1
         });
     });
+
+    test('test _prepareToStringify', function() {
+        var o = {
+            a: 1,
+            b: 'string1'
+        };
+        o.c = {
+            d: 'string2',
+            e: o,
+            f: document.createElement('p')
+        };
+        o.g = o;
+
+        assert.deepEqual(Konva.Util._prepareToStringify(o), {
+            a: 1,
+            b: 'string1',
+            c: {
+                d: 'string2'
+            }
+        })
+    });
 });
