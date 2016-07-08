@@ -4,6 +4,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [1.0.2][2016-07-08]
+
+## Changed
+- `Konva.Text` will interpret undefined `width` and `height` as `AUTO`
+
+
 ## [1.0.1][2016-07-05]
 
 ### Changed

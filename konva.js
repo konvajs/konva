@@ -1,6 +1,6 @@
 
 /*
- * Konva JavaScript Framework v1.0.1
+ * Konva JavaScript Framework v1.0.2
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
  * Date: Fri Jul 08 2016
@@ -39,7 +39,7 @@
 
     var Konva = {
         // public
-        version: '1.0.1',
+        version: '1.0.2',
 
         // private
         stages: [],
@@ -12872,8 +12872,6 @@
      * @param {String} config.text
      * @param {String} [config.align] can be left, center, or right
      * @param {Number} [config.padding]
-     * @param {Number} [config.width] default is auto
-     * @param {Number} [config.height] default is auto
      * @param {Number} [config.lineHeight] default is 1
      * @param {String} [config.wrap] can be word, char, or none. Default is word
      * @param {String} [config.fill] fill color
@@ -12975,13 +12973,13 @@
             if (!config.fillLinearGradientColorStops && !config.fillRadialGradientColorStops) {
                 config.fill = config.fill || 'black';
             }
-
-            if (config.width === undefined) {
-                config.width = AUTO;
-            }
-            if (config.height === undefined) {
-                config.height = AUTO;
-            }
+            //
+            // if (config.width === undefined) {
+            //     config.width = AUTO;
+            // }
+            // if (config.height === undefined) {
+            //     config.height = AUTO;
+            // }
 
             // call super constructor
             Konva.Shape.call(this, config);
@@ -13065,7 +13063,8 @@
          * @returns {Number}
          */
         getWidth: function() {
-            return this.attrs.width === AUTO ? this.getTextWidth() + this.getPadding() * 2 : this.attrs.width;
+            var isAuto = (this.attrs.width === AUTO) || (this.attrs.width === undefined);
+            return isAuto ? this.getTextWidth() + this.getPadding() * 2 : this.attrs.width;
         },
         /**
          * get the height of the text area, which takes into account multi-line text, line heights, and padding
@@ -13074,7 +13073,8 @@
          * @returns {Number}
          */
         getHeight: function() {
-            return this.attrs.height === AUTO ? (this.getTextHeight() * this.textArr.length * this.getLineHeight()) + this.getPadding() * 2 : this.attrs.height;
+          var isAuto = (this.attrs.height === AUTO) || (this.attrs.height === undefined);
+          return isAuto ? (this.getTextHeight() * this.textArr.length * this.getLineHeight()) + this.getPadding() * 2 : this.attrs.height;
         },
         /**
          * get text width

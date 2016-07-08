@@ -169,6 +169,26 @@ suite('Text', function(){
     });
 
     // ======================================================
+    test('reset text auto width', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var text = new Konva.Text({
+            text: 'Hello World!',
+            fontSize: 50,
+            draggable: true,
+            width: 10
+        });
+
+        assert.equal(text.width(), 10);
+        text.setAttr('width', undefined);
+        assert.equal(text.width() > 100, true);
+
+        layer.add(text);
+        stage.add(layer);
+    });
+
+    // ======================================================
     test('text multi line', function() {
         var stage = addStage();
         var layer = new Konva.Layer();
