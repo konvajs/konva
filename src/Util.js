@@ -997,22 +997,21 @@
             obj.visitedByCircularReferenceRemoval = true;
 
             for(var key in obj) {
-                if (obj.hasOwnProperty(key) && obj[key] && typeof obj[key] == 'object') {
-                    desc = Object.getOwnPropertyDescriptor(obj, key);
-                    if (obj[key].visitedByCircularReferenceRemoval || Konva.Util._isElement(obj[key])) {
-                        if (desc.configurable) {
-                            delete obj[key];
-                        } else {
-                            return null;
-                        }
+                if (!(obj.hasOwnProperty(key) && obj[key] && typeof obj[key] == 'object')) {
+                    continue;
+                }
+                desc = Object.getOwnPropertyDescriptor(obj, key);
+                if (obj[key].visitedByCircularReferenceRemoval || Konva.Util._isElement(obj[key])) {
+                    if (desc.configurable) {
+                        delete obj[key];
                     } else {
-                        if (Konva.Util._prepareToStringify(obj[key]) === null) {
-                            if (desc.configurable) {
-                                delete obj[key];
-                            } else {
-                                return null;
-                            }
-                        }
+                        return null;
+                    }
+                } else if (Konva.Util._prepareToStringify(obj[key]) === null) {
+                    if (desc.configurable) {
+                        delete obj[key];
+                    } else {
+                        return null;
                     }
                 }
             }
