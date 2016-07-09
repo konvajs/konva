@@ -1264,6 +1264,35 @@
                 newStart.push(pr.y);
             });
             return newStart;
+        },
+        _prepareToStringify: function(obj) {
+            var desc;
+
+            obj.visitedByCircularReferenceRemoval = true;
+
+            for(var key in obj) {
+                if (!(obj.hasOwnProperty(key) && obj[key] && typeof obj[key] == 'object')) {
+                    continue;
+                }
+                desc = Object.getOwnPropertyDescriptor(obj, key);
+                if (obj[key].visitedByCircularReferenceRemoval || Konva.Util._isElement(obj[key])) {
+                    if (desc.configurable) {
+                        delete obj[key];
+                    } else {
+                        return null;
+                    }
+                } else if (Konva.Util._prepareToStringify(obj[key]) === null) {
+                    if (desc.configurable) {
+                        delete obj[key];
+                    } else {
+                        return null;
+                    }
+                }
+            }
+
+            delete obj.visitedByCircularReferenceRemoval;
+
+            return obj;
         }
     };
 })();
@@ -3427,11 +3456,6 @@
 
             for(key in attrs) {
                 val = attrs[key];
-                // serialize only attributes that are not function, image, DOM, or objects with methods
-                if (Konva.Util._isFunction(val) || Konva.Util._isElement(val) ||
-                    (Konva.Util._isObject(val) || Konva.Util._hasMethods(val))) {
-                    continue;
-                }
                 getter = this[key];
                 // remove attr value so that we can extract the default value from the getter
                 delete attrs[key];
@@ -3444,7 +3468,7 @@
             }
 
             obj.className = this.getClassName();
-            return obj;
+            return Konva.Util._prepareToStringify(obj);
         },
         /**
          * convert Node into a JSON string.  Returns a JSON string.

@@ -2337,6 +2337,42 @@ suite('Node', function() {
     });
 
     // ======================================================
+    test('serialize shape with custom attributes', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
+        var circle = new Konva.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle',
+            draggable: true
+        });
+
+        stage.add(layer);
+        layer.add(group);
+        group.add(circle);
+        layer.draw();
+
+        circle.setAttr('customAttr', 3);
+        circle.setAttr('customAttrObj', {
+            x:1,
+            y:5,
+            size: {
+                width: 10,
+                height: 20
+            }
+        });
+
+        var expectedJson = '{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true,"customAttr":3,"customAttrObj":{"x":1,"y":5,"size":{"width":10,"height":20}}},"className":"Circle"}';
+
+        assert.equal(circle.toJSON(), expectedJson);
+    });
+
+    // ======================================================
     test('load stage using json', function() {
         var container = addContainer();
         var json = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true},"className":"Shape"}]}]}]}';
@@ -2405,7 +2441,7 @@ suite('Node', function() {
             context.closePath();
             context.fillStrokeShape(this);
         };
-        var json = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"className":"Shape"}]}]}]}';
+        var json = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle","customAttrObj":{"x":1,"y":5,"size":{"width":10,"height":20}}},"className":"Shape"}]}]}]}';
 
         var stage = Konva.Node.create(json, container);
 
