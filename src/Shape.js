@@ -181,7 +181,7 @@
          * return self rectangle (x, y, width, height) of shape.
          * This method are not taken into account transformation and styles.
          * @method
-         * @memberof Konva.Node.prototype
+         * @memberof Konva.Shape.prototype
          * @returns {Object} rect with {x, y, width, height} properties
          * @example
          *
