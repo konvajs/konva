@@ -1,9 +1,9 @@
 
 /*
- * Konva JavaScript Framework v1.0.2
+ * Konva JavaScript Framework v1.0.3
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri Jul 08 2016
+ * Date: Sun Aug 14 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -39,7 +39,7 @@
 
     var Konva = {
         // public
-        version: '1.0.2',
+        version: '1.0.3',
 
         // private
         stages: [],
@@ -7418,7 +7418,7 @@
          * return self rectangle (x, y, width, height) of shape.
          * This method are not taken into account transformation and styles.
          * @method
-         * @memberof Konva.Node.prototype
+         * @memberof Konva.Shape.prototype
          * @returns {Object} rect with {x, y, width, height} properties
          * @example
          *
