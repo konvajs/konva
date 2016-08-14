@@ -91,6 +91,9 @@ var Konva = require('konva');
 
 // modern way
 import Konva from 'konva';
+
+// typescript
+import * as Konva from 'konva';
 ```
 
 ###4 Minimal bundle
