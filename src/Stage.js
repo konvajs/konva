@@ -564,7 +564,7 @@
                 shape._fireAndBubble(TOUCHSTART, {evt: evt});
 
                 // only call preventDefault if the shape is listening for events
-                if (shape.isListening() && evt.preventDefault) {
+                if (shape.isListening() && shape.preventDefault() && evt.preventDefault) {
                     evt.preventDefault();
                 }
             }
@@ -600,7 +600,7 @@
                     }
                 }
                 // only call preventDefault if the shape is listening for events
-                if (shape.isListening() && evt.preventDefault) {
+                if (shape.isListening() && shape.preventDefault() && evt.preventDefault) {
                     evt.preventDefault();
                 }
             }
@@ -624,14 +624,14 @@
                 if (shape && shape.isListening()) {
                     shape._fireAndBubble(TOUCHMOVE, {evt: evt});
                     // only call preventDefault if the shape is listening for events
-                    if (shape.isListening() && evt.preventDefault) {
+                    if (shape.isListening() && shape.preventDefault() && evt.preventDefault) {
                         evt.preventDefault();
                     }
                 }
                 this._fire(CONTENT_TOUCHMOVE, {evt: evt});
             }
             if(dd) {
-                if (Konva.isDragging()) {
+                if (Konva.isDragging() && Konva.DD.node.preventDefault()) {
                     evt.preventDefault();
                 }
             }

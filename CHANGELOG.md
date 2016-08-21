@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [1.1.0][2016-08-21]
+
+## Added
+- new property of `Konva.Shape` - `preventDefault`.
+
 ## [1.0.3][2016-08-14]
 
 ### Fixed

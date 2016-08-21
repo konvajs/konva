@@ -466,6 +466,28 @@
     Konva.Factory.addGetterSetter(Konva.Shape, 'strokeWidth', 2);
 
     /**
+     * get/set preventDefault
+     * By default all shapes will prevent default behaviour
+     * of a browser on a pointer move or tap.
+     * that will prevent native scrolling when you are trying to drag&drop a shape
+     * but sometimes you may need to enable default actions
+     * in that case you can set the property to false
+     * @name preventDefault
+     * @method
+     * @memberof Konva.Shape.prototype
+     * @param {Number} preventDefault
+     * @returns {Number}
+     * @example
+     * // get stroke width
+     * var strokeWidth = shape.strokeWidth();
+     *
+     * // set stroke width
+     * shape.strokeWidth();
+     */
+
+    Konva.Factory.addGetterSetter(Konva.Shape, 'preventDefault', true);
+
+    /**
      * get/set stroke width
      * @name strokeWidth
      * @method
