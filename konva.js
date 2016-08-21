@@ -1,9 +1,9 @@
 
 /*
- * Konva JavaScript Framework v1.0.3
+ * Konva JavaScript Framework v1.1.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sun Aug 14 2016
+ * Date: Sun Aug 21 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -39,7 +39,7 @@
 
     var Konva = {
         // public
-        version: '1.0.3',
+        version: '1.1.0',
 
         // private
         stages: [],
@@ -7703,6 +7703,28 @@
     Konva.Factory.addGetterSetter(Konva.Shape, 'strokeWidth', 2);
 
     /**
+     * get/set preventDefault
+     * By default all shapes will prevent default behaviour
+     * of a browser on a pointer move or tap.
+     * that will prevent native scrolling when you are trying to drag&drop a shape
+     * but sometimes you may need to enable default actions
+     * in that case you can set the property to false
+     * @name preventDefault
+     * @method
+     * @memberof Konva.Shape.prototype
+     * @param {Number} preventDefault
+     * @returns {Number}
+     * @example
+     * // get stroke width
+     * var strokeWidth = shape.strokeWidth();
+     *
+     * // set stroke width
+     * shape.strokeWidth();
+     */
+
+    Konva.Factory.addGetterSetter(Konva.Shape, 'preventDefault', true);
+
+    /**
      * get/set stroke width
      * @name strokeWidth
      * @method
@@ -9237,7 +9259,7 @@
                 shape._fireAndBubble(TOUCHSTART, {evt: evt});
 
                 // only call preventDefault if the shape is listening for events
-                if (shape.isListening() && evt.preventDefault) {
+                if (shape.isListening() && shape.preventDefault() && evt.preventDefault) {
                     evt.preventDefault();
                 }
             }
@@ -9273,7 +9295,7 @@
                     }
                 }
                 // only call preventDefault if the shape is listening for events
-                if (shape.isListening() && evt.preventDefault) {
+                if (shape.isListening() && shape.preventDefault() && evt.preventDefault) {
                     evt.preventDefault();
                 }
             }
@@ -9297,14 +9319,14 @@
                 if (shape && shape.isListening()) {
                     shape._fireAndBubble(TOUCHMOVE, {evt: evt});
                     // only call preventDefault if the shape is listening for events
-                    if (shape.isListening() && evt.preventDefault) {
+                    if (shape.isListening() && shape.preventDefault() && evt.preventDefault) {
                         evt.preventDefault();
                     }
                 }
                 this._fire(CONTENT_TOUCHMOVE, {evt: evt});
             }
             if(dd) {
-                if (Konva.isDragging()) {
+                if (Konva.isDragging() && Konva.DD.node.preventDefault()) {
                     evt.preventDefault();
                 }
             }
