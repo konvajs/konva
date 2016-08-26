@@ -828,4 +828,6 @@ declare module Konva {
     }
 }
 
-export = Konva;
+declare module "konva" {
+    export = Konva;
+}
