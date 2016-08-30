@@ -76,7 +76,10 @@
 
                 delete dd.node;
 
-                (layer || node).draw();
+                if (node.getLayer() || layer) {
+                  (layer || node).draw();
+                }
+
             }
         },
         _endDragAfter: function(evt) {

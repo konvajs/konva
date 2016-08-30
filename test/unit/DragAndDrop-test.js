@@ -286,4 +286,34 @@ suite('DragAndDrop', function() {
         });
 
     });
+
+    // ======================================================
+    test('removing parent of draggable node should not throw error', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        stage.add(layer);
+        var circle = new Konva.Circle({
+            x: 380,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            strokeWidth: 4,
+            fill: 'red',
+            stroke: 'black',
+            draggable: true
+        });
+
+        layer.add(circle);
+        stage.simulateMouseMove({
+            x: stage.width() / 2 + 5,
+            y: stage.height() / 2
+        });
+
+        circle.startDrag();
+        try {
+          layer.destroy();
+          assert.equal(true, true, 'no error, that is very good');
+        } catch (e) {
+          assert.equal(true, false, 'error happened');
+        }
+    });
 });
