@@ -2267,6 +2267,30 @@
      * node.listening('inherit');
      */
 
+
+
+     /**
+      * get/set preventDefault
+      * By default all shapes will prevent default behaviour
+      * of a browser on a pointer move or tap.
+      * that will prevent native scrolling when you are trying to drag&drop a node
+      * but sometimes you may need to enable default actions
+      * in that case you can set the property to false
+      * @name preventDefault
+      * @method
+      * @memberof Konva.Node.prototype
+      * @param {Number} preventDefault
+      * @returns {Number}
+      * @example
+      * // get preventDefault
+      * var shouldPrevent = shape.preventDefault();
+      *
+      * // set preventDefault
+      * shape.preventDefault(false);
+      */
+
+     Konva.Factory.addGetterSetter(Konva.Shape, 'preventDefault', true);
+
     Konva.Factory.addGetterSetter(Konva.Node, 'filters', undefined, function(val) {this._filterUpToDate = false; return val; });
     /**
      * get/set filters.  Filters are applied to cached canvases

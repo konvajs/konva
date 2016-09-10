@@ -4,11 +4,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [1.1.2][2016-09-10]
+
+### Fixed
+- Fixed "Dragging Group on mobile view throws "missing preventDefault" error" #169
+
 ## [1.1.1][2016-08-30]
 
 ### Fixed
 - Fixed #166 bug of drag&drop
-
 
 ## [1.1.0][2016-08-21]
 
