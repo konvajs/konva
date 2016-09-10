@@ -4576,7 +4576,7 @@
       * shape.preventDefault(false);
       */
 
-     Konva.Factory.addGetterSetter(Konva.Shape, 'preventDefault', true);
+     Konva.Factory.addGetterSetter(Konva.Node, 'preventDefault', true);
 
     Konva.Factory.addGetterSetter(Konva.Node, 'filters', undefined, function(val) {this._filterUpToDate = false; return val; });
     /**
