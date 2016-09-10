@@ -214,7 +214,7 @@ suite.only('Text', function(){
             width: 380,
             //width: 200,
             padding: 10,
-            lineHeight: 2,
+            lineHeight: 20,
             align: 'center',
             draggable: true,
             wrap: 'WORD'
