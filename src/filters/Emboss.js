@@ -67,6 +67,8 @@
                 dirY = 0;
                 dirX = -1;
                 break;
+            default:
+                Konva.Util.error('Unknwo emboss direction: ' + direction);
         }
 
         do {

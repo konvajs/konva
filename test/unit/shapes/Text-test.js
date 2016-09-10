@@ -1,6 +1,6 @@
 'use strict';
 
-suite('Text', function(){
+suite.only('Text', function(){
     // ======================================================
     test('text with empty config is allowed', function() {
         var stage = addStage();
@@ -206,7 +206,7 @@ suite('Text', function(){
             y: 10,
             text: 'HEADING\n\nAll the world\'s a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.',
             //text: 'HEADING\n\nThis is a really cool paragraph. \n And this is a footer.',
-            fontSize: 24,
+            fontSize: 14,
             fontFamily: 'Calibri',
             fontStyle: 'normal',
             fill: '#555',
@@ -214,32 +214,20 @@ suite('Text', function(){
             width: 380,
             //width: 200,
             padding: 10,
+            lineHeight: 2,
             align: 'center',
             draggable: true,
             wrap: 'WORD'
         });
 
+        rect.height(text.getHeight());
         // center text box
         //text.setOffset(text.getBoxWidth() / 2, text.getBoxHeight() / 2);
 
         layer.add(rect).add(text);
         stage.add(layer);
 
-        assert.equal(text.getLineHeight(), 1);
-
-         /*
-         text.transitionTo({
-             width: 50,
-             duration: 20
-         });
-
-         rect.transitionTo({
-             width: 50,
-             duration: 20
-         });
-         */
-
-
+        assert.equal(text.getLineHeight(), 20);
     });
 
     // ======================================================
@@ -442,6 +430,5 @@ suite('Text', function(){
         assert.equal(data[2], 0, 'no blue');
         assert.equal(data[3], 255, '255 alpha - fully visible');
     });
-
 
 });

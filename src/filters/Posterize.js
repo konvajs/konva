@@ -12,7 +12,7 @@
      * @example
      * node.cache();
      * node.filters([Konva.Filters.Posterize]);
-     * node.levels(0.8);
+     * node.levels(0.8); // between 0 and 1
      */
 
     Konva.Filters.Posterize = function (imageData) {

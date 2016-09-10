@@ -29,6 +29,11 @@
             xBin, yBin, pixelsInBin;
         imageData = imageData.data;
 
+        if (pixelSize <= 0) {
+            Konva.Util.error('pixelSize value can not be <= 0');
+            return;
+        }
+
         for (xBin = 0; xBin < nBinsX; xBin += 1) {
             for (yBin = 0; yBin < nBinsY; yBin += 1) {
 
