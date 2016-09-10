@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v1.1.1
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Tue Aug 30 2016
+ * Date: Sat Sep 10 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -4554,6 +4554,30 @@
      * node.listening('inherit');
      */
 
+
+
+     /**
+      * get/set preventDefault
+      * By default all shapes will prevent default behaviour
+      * of a browser on a pointer move or tap.
+      * that will prevent native scrolling when you are trying to drag&drop a node
+      * but sometimes you may need to enable default actions
+      * in that case you can set the property to false
+      * @name preventDefault
+      * @method
+      * @memberof Konva.Node.prototype
+      * @param {Number} preventDefault
+      * @returns {Number}
+      * @example
+      * // get preventDefault
+      * var shouldPrevent = shape.preventDefault();
+      *
+      * // set preventDefault
+      * shape.preventDefault(false);
+      */
+
+     Konva.Factory.addGetterSetter(Konva.Shape, 'preventDefault', true);
+
     Konva.Factory.addGetterSetter(Konva.Node, 'filters', undefined, function(val) {this._filterUpToDate = false; return val; });
     /**
      * get/set filters.  Filters are applied to cached canvases
@@ -5762,6 +5786,8 @@
                 dirY = 0;
                 dirX = -1;
                 break;
+            default:
+                Konva.Util.error('Unknwo emboss direction: ' + direction);
         }
 
         do {
@@ -6006,7 +6032,7 @@
      * @example
      * node.cache();
      * node.filters([Konva.Filters.Posterize]);
-     * node.levels(0.8);
+     * node.levels(0.8); // between 0 and 1
      */
 
     Konva.Filters.Posterize = function (imageData) {
@@ -6105,6 +6131,11 @@
             xBinStart, xBinEnd, yBinStart, yBinEnd,
             xBin, yBin, pixelsInBin;
         imageData = imageData.data;
+
+        if (pixelSize <= 0) {
+            Konva.Util.error('pixelSize value can not be <= 0');
+            return;
+        }
 
         for (xBin = 0; xBin < nBinsX; xBin += 1) {
             for (yBin = 0; yBin < nBinsY; yBin += 1) {
@@ -7701,28 +7732,6 @@
 
 
     Konva.Factory.addGetterSetter(Konva.Shape, 'strokeWidth', 2);
-
-    /**
-     * get/set preventDefault
-     * By default all shapes will prevent default behaviour
-     * of a browser on a pointer move or tap.
-     * that will prevent native scrolling when you are trying to drag&drop a shape
-     * but sometimes you may need to enable default actions
-     * in that case you can set the property to false
-     * @name preventDefault
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Number} preventDefault
-     * @returns {Number}
-     * @example
-     * // get stroke width
-     * var strokeWidth = shape.strokeWidth();
-     *
-     * // set stroke width
-     * shape.strokeWidth();
-     */
-
-    Konva.Factory.addGetterSetter(Konva.Shape, 'preventDefault', true);
 
     /**
      * get/set stroke width
