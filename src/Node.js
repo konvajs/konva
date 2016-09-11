@@ -358,12 +358,19 @@
                         // apply filters to filter context
                         for (n = 0; n < len; n++) {
                             filter = filters[n];
+                            if (typeof filter !== 'function') {
+                                Konva.Util.error(
+                                  'Filter should be type of function, but got ' +
+                                  (typeof filter) + ' insted. Please check correct filters'
+                                );
+                                continue;
+                            }
                             filter.call(this, imageData);
                             filterContext.putImageData(imageData, 0, 0);
                         }
                     }
                     catch(e) {
-                        Konva.Util.warn('Unable to apply filter. ' + e.message);
+                        Konva.Util.error('Unable to apply filter. ' + e.message);
                     }
 
                     this._filterUpToDate = true;

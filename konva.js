@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v1.1.2
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sat Sep 10 2016
+ * Date: Sun Sep 11 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -2645,12 +2645,19 @@
                         // apply filters to filter context
                         for (n = 0; n < len; n++) {
                             filter = filters[n];
+                            if (typeof filter !== 'function') {
+                                Konva.Util.error(
+                                  'Filter should be type of function, but got ' +
+                                  (typeof filter) + ' insted. Please check correct filters'
+                                );
+                                continue;
+                            }
                             filter.call(this, imageData);
                             filterContext.putImageData(imageData, 0, 0);
                         }
                     }
                     catch(e) {
-                        Konva.Util.warn('Unable to apply filter. ' + e.message);
+                        Konva.Util.error('Unable to apply filter. ' + e.message);
                     }
 
                     this._filterUpToDate = true;
