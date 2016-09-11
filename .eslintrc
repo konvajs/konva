@@ -126,7 +126,7 @@
         "indent": 0,
         "key-spacing": [2, { "beforeColon": false, "afterColon": true }],
         "lines-around-comment": 0,
-        "max-depth": [2, 4],
+        "max-depth": [2, 5],
         "max-len": [2, 320, 4],
         "max-nested-callbacks": [2, 2],
         "max-params": [1, 8],

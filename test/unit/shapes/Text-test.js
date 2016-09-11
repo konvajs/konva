@@ -1,6 +1,6 @@
 'use strict';
 
-suite.only('Text', function(){
+suite('Text', function(){
     // ======================================================
     test('text with empty config is allowed', function() {
         var stage = addStage();
