@@ -190,7 +190,7 @@ suite('TextPath', function() {
     });
 
     // ======================================================
-    test.only('Render Text Along complex path cached', function() {
+    test('Render Text Along complex path cached', function() {
         var stage = addStage();
         var layer = new Konva.Layer();
 
