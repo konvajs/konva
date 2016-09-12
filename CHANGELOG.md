@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
-## [1.1.2][2016-09-12]
+## [1.1.3][2016-09-12]
 
 ### Changed
 - Better hit function for `TextPath`.
