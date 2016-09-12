@@ -15013,6 +15013,7 @@
             this.dataArray = Konva.Path.parsePathData(this.attrs.data);
             this.on('dataChange.konva', function() {
                 that.dataArray = Konva.Path.parsePathData(this.attrs.data);
+                that._setTextData();
             });
 
             // update text data for certain attr changes
@@ -15102,7 +15103,7 @@
 
             this.glyphInfo = [];
 
-            var charArr = this.attrs.text.split('');
+            var charArr = this.getText().split('');
 
             var p0, p1, pathCmd;
 

@@ -24,11 +24,11 @@ suite('TextPath', function() {
         });
 		textpath.on('mouseover', function() { this.setFill('blue'); layer.drawScene(); });
 		textpath.on('mouseout', function() { this.setFill('orange'); layer.drawScene(); });
-		
+
         layer.add(textpath);
         stage.add(layer);
 		showHit(layer);
-        
+
         assert.equal(textpath.getClassName(), 'TextPath', 'getClassName should be TextPath');
 
         var trace = layer.getContext().getTrace(true);
@@ -41,7 +41,7 @@ suite('TextPath', function() {
         var stage = addStage();
         var layer = new Konva.Layer();
 
-        var c = "M 50 50 a 150 50 0 0 1 250 50 l 50 0"; 
+        var c = "M 50 50 a 150 50 0 0 1 250 50 l 50 0";
         var path = new Konva.Path({
             stroke: 'red',
             strokeWidth: 1,
@@ -58,9 +58,9 @@ suite('TextPath', function() {
         });
 
         layer.add(textpath);
-        stage.add(layer);   
+        stage.add(layer);
     });
-    
+
     // ======================================================
     test('Render Text Along Vertical Line', function() {
         var stage = addStage();
@@ -88,8 +88,8 @@ suite('TextPath', function() {
         });
 
         layer.add(textpath);
-                
-                
+
+
         // Bottom up
         c = "M 150,150 150,10";
 
@@ -110,12 +110,12 @@ suite('TextPath', function() {
             text: 'The quick brown fox jumped over the lazy dog\'s back',
             data: c
         });
-        
+
         layer.add(textpath);
         stage.add(layer);
-        
+
     });
-    
+
     // ======================================================
     test('Render Text Along two connected Bezier', function() {
         var stage = addStage();
@@ -144,7 +144,7 @@ suite('TextPath', function() {
         stage.add(layer);
 
     });
-    
+
     // ======================================================
     test('Render Text Along Elliptical Arc', function() {
         var stage = addStage();
@@ -169,7 +169,7 @@ suite('TextPath', function() {
         layer.add(textpath);
         stage.add(layer);
     });
-    
+
     // ======================================================
     test('Render Text Along complex path', function() {
         var stage = addStage();
@@ -190,7 +190,7 @@ suite('TextPath', function() {
     });
 
     // ======================================================
-    test('Render Text Along complex path cached', function() {
+    test.only('Render Text Along complex path cached', function() {
         var stage = addStage();
         var layer = new Konva.Layer();
 
