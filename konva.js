@@ -1,9 +1,9 @@
 
 /*
- * Konva JavaScript Framework v1.1.2
+ * Konva JavaScript Framework v1.1.3
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sun Sep 11 2016
+ * Date: Mon Sep 12 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -39,7 +39,7 @@
 
     var Konva = {
         // public
-        version: '1.1.2',
+        version: '1.1.3',
 
         // private
         stages: [],
@@ -15020,6 +15020,7 @@
             this.on('textChange.konva textStroke.konva textStrokeWidth.konva', that._setTextData);
             that._setTextData();
             this.sceneFunc(this._sceneFunc);
+            this.hitFunc(this._hitFunc);
         },
         _sceneFunc: function(context) {
             context.setAttr('font', this._getContextFont());
@@ -15052,6 +15053,22 @@
                 // context.stroke();
             }
             context.restore();
+        },
+        _hitFunc: function(context) {
+          context.beginPath();
+
+          var glyphInfo = this.glyphInfo;
+          if (glyphInfo.length >= 1) {
+            var p0 = glyphInfo[0].p0;
+            context.moveTo(p0.x, p0.y);
+          }
+          for(var i = 0; i < glyphInfo.length; i++) {
+              var p1 = glyphInfo[i].p1;
+              context.lineTo(p1.x, p1.y);
+          }
+          context.setAttr('lineWidth', this.getFontSize());
+          context.setAttr('strokeStyle', this.colorKey);
+          context.stroke();
         },
         /**
          * get text width in pixels
