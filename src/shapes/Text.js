@@ -150,7 +150,7 @@
             context.fillStrokeShape(this);
         },
         setText: function(text) {
-            var str = Konva.Util._isString(text) ? text : text.toString();
+            var str = Konva.Util._isString(text) ? text : (text || '').toString();
             this._setAttr(TEXT, str);
             return this;
         },

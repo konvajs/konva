@@ -13,6 +13,20 @@ suite('Text', function(){
         layer.draw();
     });
 
+    // ======================================================
+    test('text with undefined text property should not throw an error', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        stage.add(layer);
+        var text = new Konva.Text({text: undefined});
+
+        layer.add(text);
+        layer.draw();
+
+        assert.equal(text.getWidth(), 0);
+    });
+
     test('add text with shadows', function() {
         var stage = addStage();
         var layer = new Konva.Layer();
