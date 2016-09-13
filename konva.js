@@ -1,9 +1,9 @@
 
 /*
- * Konva JavaScript Framework v1.1.3
+ * Konva JavaScript Framework v1.1.4
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mon Sep 12 2016
+ * Date: Tue Sep 13 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -39,7 +39,7 @@
 
     var Konva = {
         // public
-        version: '1.1.3',
+        version: '1.1.4',
 
         // private
         stages: [],
@@ -13092,7 +13092,7 @@
             context.fillStrokeShape(this);
         },
         setText: function(text) {
-            var str = Konva.Util._isString(text) ? text : text.toString();
+            var str = Konva.Util._isString(text) ? text : (text || '').toString();
             this._setAttr(TEXT, str);
             return this;
         },
