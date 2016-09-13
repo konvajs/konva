@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [1.1.4][2016-09-13]
+
+### Fixed
+- Prevent throwing an error when text property of `Konva.Text` = undefined or null
+
 ## [1.1.3][2016-09-12]
 
 ### Changed
