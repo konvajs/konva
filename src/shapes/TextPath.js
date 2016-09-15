@@ -66,14 +66,14 @@
             });
 
             // update text data for certain attr changes
-            this.on('textChange.konva textStroke.konva textStrokeWidth.konva', that._setTextData);
+            this.on('textChange.konva textStroke.konva textStrokeWidth.konva letterSpacing.konva', that._setTextData);
             that._setTextData();
             this.sceneFunc(this._sceneFunc);
             this.hitFunc(this._hitFunc);
         },
         _sceneFunc: function(context) {
             context.setAttr('font', this._getContextFont());
-            context.setAttr('textBaseline', 'middle');
+            context.setAttr(this.getTextBaseline(), 'middle');
             context.setAttr('textAlign', 'left');
             context.save();
 
@@ -164,6 +164,8 @@
 
             var that = this;
             var size = this._getTextSize(this.attrs.text);
+            var letterSpacing = this.getLetterSpacing();
+
             this.textWidth = size.width;
             this.textHeight = size.height;
 
@@ -198,7 +200,7 @@
             };
             var findSegmentToFitCharacter = function(c) {
 
-                var glyphWidth = that._getTextSize(c).width;
+                var glyphWidth = that._getTextSize(c).width + letterSpacing;
 
                 var currLen = 0;
                 var attempts = 0;
@@ -422,6 +424,27 @@
      * @param {String} fontStyle
      */
 
+    Konva.Factory.addGetterSetter(Konva.TextPath, 'letterSpacing', 0);
+
+     /**
+      * set letter spacing property. Default value is 0.
+      * @name letterSpacing
+      * @method
+      * @memberof Konva.TextPath.prototype
+      * @param {Number} letterSpacing
+      */
+
+    Konva.Factory.addGetterSetter(Konva.TextPath, 'textBaseline', 'middle');
+
+     /**
+      * set textBaseline property. Default value is 'middle'.
+      * Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'
+      * @name textBaseline
+      * @method
+      * @memberof Konva.TextPath.prototype
+      * @param {Number} textBaseline
+      */
+
      /**
      * get font style
      * @name getFontStyle
@@ -430,6 +453,8 @@
      */
 
     Konva.Factory.addGetterSetter(Konva.TextPath, 'fontVariant', NORMAL);
+
+
 
     /**
      * set font variant.  Can be 'normal' or 'small-caps'.  'normal' is the default.
