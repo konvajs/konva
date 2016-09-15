@@ -1,9 +1,9 @@
 
 /*
- * Konva JavaScript Framework v1.1.4
+ * Konva JavaScript Framework v1.2.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Tue Sep 13 2016
+ * Date: Thu Sep 15 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -39,7 +39,7 @@
 
     var Konva = {
         // public
-        version: '1.1.4',
+        version: '1.2.0',
 
         // private
         stages: [],
@@ -15017,14 +15017,14 @@
             });
 
             // update text data for certain attr changes
-            this.on('textChange.konva textStroke.konva textStrokeWidth.konva', that._setTextData);
+            this.on('textChange.konva textStroke.konva textStrokeWidth.konva letterSpacing.konva', that._setTextData);
             that._setTextData();
             this.sceneFunc(this._sceneFunc);
             this.hitFunc(this._hitFunc);
         },
         _sceneFunc: function(context) {
             context.setAttr('font', this._getContextFont());
-            context.setAttr('textBaseline', 'middle');
+            context.setAttr(this.getTextBaseline(), 'middle');
             context.setAttr('textAlign', 'left');
             context.save();
 
@@ -15115,6 +15115,8 @@
 
             var that = this;
             var size = this._getTextSize(this.attrs.text);
+            var letterSpacing = this.getLetterSpacing();
+
             this.textWidth = size.width;
             this.textHeight = size.height;
 
@@ -15149,7 +15151,7 @@
             };
             var findSegmentToFitCharacter = function(c) {
 
-                var glyphWidth = that._getTextSize(c).width;
+                var glyphWidth = that._getTextSize(c).width + letterSpacing;
 
                 var currLen = 0;
                 var attempts = 0;
@@ -15373,6 +15375,27 @@
      * @param {String} fontStyle
      */
 
+    Konva.Factory.addGetterSetter(Konva.TextPath, 'letterSpacing', 0);
+
+     /**
+      * set letter spacing property. Default value is 0.
+      * @name letterSpacing
+      * @method
+      * @memberof Konva.TextPath.prototype
+      * @param {Number} letterSpacing
+      */
+
+    Konva.Factory.addGetterSetter(Konva.TextPath, 'textBaseline', 'middle');
+
+     /**
+      * set textBaseline property. Default value is 'middle'.
+      * Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'
+      * @name textBaseline
+      * @method
+      * @memberof Konva.TextPath.prototype
+      * @param {Number} textBaseline
+      */
+
      /**
      * get font style
      * @name getFontStyle
@@ -15381,6 +15404,8 @@
      */
 
     Konva.Factory.addGetterSetter(Konva.TextPath, 'fontVariant', NORMAL);
+
+
 
     /**
      * set font variant.  Can be 'normal' or 'small-caps'.  'normal' is the default.
