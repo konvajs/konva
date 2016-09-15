@@ -66,7 +66,7 @@
             });
 
             // update text data for certain attr changes
-            this.on('textChange.konva textStroke.konva textStrokeWidth.konva letterSpacing.konva', that._setTextData);
+            this.on('textChange.konva letterSpacingChange.konva', that._setTextData);
             that._setTextData();
             this.sceneFunc(this._sceneFunc);
             this.hitFunc(this._hitFunc);
