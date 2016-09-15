@@ -1,6 +1,6 @@
 
 /*
- * Konva JavaScript Framework v1.2.0
+ * Konva JavaScript Framework v1.2.1
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
  * Date: Thu Sep 15 2016
@@ -39,7 +39,7 @@
 
     var Konva = {
         // public
-        version: '1.2.0',
+        version: '1.2.1',
 
         // private
         stages: [],
@@ -15017,7 +15017,7 @@
             });
 
             // update text data for certain attr changes
-            this.on('textChange.konva textStroke.konva textStrokeWidth.konva letterSpacing.konva', that._setTextData);
+            this.on('textChange.konva letterSpacingChange.konva', that._setTextData);
             that._setTextData();
             this.sceneFunc(this._sceneFunc);
             this.hitFunc(this._hitFunc);
