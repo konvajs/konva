@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v1.2.1
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Thu Sep 15 2016
+ * Date: Fri Sep 16 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -7418,7 +7418,7 @@
          * @returns {Boolean}
          */
         hasStroke: function() {
-            return !!(this.stroke());
+            return this.strokeEnabled() && !!(this.stroke());
         },
         /**
          * determines if point is in the shape, regardless if other shapes are on top of it.  Note: because
@@ -7480,8 +7480,8 @@
             var fillAndStrokeWidth = fillRect.width + strokeWidth;
             var fillAndStrokeHeight = fillRect.height + strokeWidth;
 
-            var shadowOffsetX = this.shadowOffsetX();
-            var shadowOffsetY = this.shadowOffsetY();
+            var shadowOffsetX = this.hasShadow() ? this.shadowOffsetX() : 0;
+            var shadowOffsetY = this.hasShadow() ? this.shadowOffsetY() : 0;
 
             var preWidth = fillAndStrokeWidth + Math.abs(shadowOffsetX);
             var preHeight = fillAndStrokeHeight + Math.abs(shadowOffsetY);

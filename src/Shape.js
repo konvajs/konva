@@ -143,7 +143,7 @@
          * @returns {Boolean}
          */
         hasStroke: function() {
-            return !!(this.stroke());
+            return this.strokeEnabled() && !!(this.stroke());
         },
         /**
          * determines if point is in the shape, regardless if other shapes are on top of it.  Note: because
@@ -205,8 +205,8 @@
             var fillAndStrokeWidth = fillRect.width + strokeWidth;
             var fillAndStrokeHeight = fillRect.height + strokeWidth;
 
-            var shadowOffsetX = this.shadowOffsetX();
-            var shadowOffsetY = this.shadowOffsetY();
+            var shadowOffsetX = this.hasShadow() ? this.shadowOffsetX() : 0;
+            var shadowOffsetY = this.hasShadow() ? this.shadowOffsetY() : 0;
 
             var preWidth = fillAndStrokeWidth + Math.abs(shadowOffsetX);
             var preHeight = fillAndStrokeHeight + Math.abs(shadowOffsetY);

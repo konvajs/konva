@@ -1122,5 +1122,30 @@ suite('Shape', function() {
         assert.equal(clone.foo, CustomShape.prototype.foo);
     });
 
+    test('getClientRect should skip disabled attributes', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var shape = new Konva.Rect({
+            x: 200,
+            y: 100,
+            width: 100,
+            height: 100,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            strokeEnabled: false,
+            shadowOffsetX: 10,
+            shadowEnabled: false
+        });
+
+        layer.add(shape);
+        stage.add(layer);
+
+        var rect = shape.getClientRect();
+
+        assert.equal(rect.width, 100, 'should not effect width');
+        assert.equal(rect.height, 100, 'should not effect width');
+    });
+
 
 });
