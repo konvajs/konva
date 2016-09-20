@@ -316,4 +316,57 @@ suite('DragAndDrop', function() {
           assert.equal(true, false, 'error happened');
         }
     });
+
+    test('update hit on stage drag end', function(done) {
+        var stage = addStage();
+
+        stage.draggable(true);
+
+        var layer = new Konva.Layer();
+        stage.add(layer);
+
+        var circle = new Konva.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle'
+        });
+
+        layer.add(circle);
+        layer.draw();
+
+        stage.simulateMouseDown({
+            x: stage.width() / 2,
+            y: stage.height() / 2
+        });
+
+
+
+        stage.simulateMouseMove({
+            x: stage.width() / 2 - 50,
+            y: stage.height() / 2
+        });
+
+        setTimeout(function() {
+            assert.equal(stage.isDragging(), true);
+
+
+            stage.simulateMouseUp({
+              x: stage.width() / 2 - 50,
+              y: stage.height() / 2
+            });
+
+            var shape = layer.getIntersection({
+              x: stage.width() / 2 + 5,
+              y: stage.height() / 2
+            });
+
+            assert.equal(shape, circle);
+            done();
+        }, 50);
+
+    });
 });

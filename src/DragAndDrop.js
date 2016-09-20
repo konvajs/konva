@@ -76,7 +76,7 @@
 
                 delete dd.node;
 
-                if (node.getLayer() || layer) {
+                if (node.getLayer() || layer || (node instanceof Konva.Stage)) {
                   (layer || node).draw();
                 }
 

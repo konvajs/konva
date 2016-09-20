@@ -4,7 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [1.2.2][2016-09-15]
+
 ### Fixed
+- refresh stage hit and its `dragend`
 - `getClientRect` calculations
 
 ## [1.2.0][2016-09-15]

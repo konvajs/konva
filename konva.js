@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v1.2.1
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri Sep 16 2016
+ * Date: Tue Sep 20 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -11239,7 +11239,7 @@
 
                 delete dd.node;
 
-                if (node.getLayer() || layer) {
+                if (node.getLayer() || layer || (node instanceof Konva.Stage)) {
                   (layer || node).draw();
                 }
 
