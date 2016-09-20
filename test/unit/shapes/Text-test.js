@@ -83,6 +83,24 @@ suite('Text', function(){
     });
 
     // ======================================================
+    test('add text with letter spacing', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        stage.add(layer);
+        var text = new Konva.Text({
+          text: 'hello'
+        });
+        layer.add(text);
+        layer.draw();
+
+        var oldWidth = text.width();
+        text.letterSpacing(10);
+
+        assert.equal(text.width(), oldWidth + 40);
+        layer.draw();
+    });
+    // ======================================================
     test('text getters and setters', function() {
         var stage = addStage();
         var layer = new Konva.Layer();

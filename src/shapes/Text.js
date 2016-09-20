@@ -20,7 +20,7 @@
         WORD = 'word',
         CHAR = 'char',
         NONE = 'none',
-        ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'fontVariant', 'padding', 'align', 'lineHeight', 'text', 'width', 'height', 'wrap'],
+        ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'fontVariant', 'padding', 'align', 'lineHeight', 'text', 'width', 'height', 'wrap', 'letterSpacing'],
 
         // cached variables
         attrChangeListLen = ATTR_CHANGE_LIST.length,
@@ -102,6 +102,7 @@
                 textArr = this.textArr,
                 textArrLen = textArr.length,
                 totalWidth = this.getWidth(),
+                letterSpacing = this.getLetterSpacing(),
                 n;
 
             context.setAttr('font', this._getContextFont());
@@ -132,9 +133,18 @@
                     context.translate((totalWidth - width - p * 2) / 2, 0);
                 }
 
-                this.partialText = text;
+                if (letterSpacing > 0) {
+                  for(var li = 0; li < text.length; li++) {
+                    var letter = text[li];
+                    this.partialText = letter;
+                    context.fillStrokeShape(this);
+                    context.translate(this._getTextSize(letter).width + letterSpacing, 0);
+                  }
+                } else {
+                  this.partialText = text;
 
-                context.fillStrokeShape(this);
+                  context.fillStrokeShape(this);
+                }
                 context.restore();
                 context.translate(0, lineHeightPx);
             }
@@ -224,7 +234,10 @@
             return this.textArr.push({text: line, width: width});
         },
         _getTextWidth: function (text) {
-            return dummyContext.measureText(text).width;
+            var latterSpacing = this.getLetterSpacing();
+            var length = text.length;
+            return dummyContext.measureText(text).width +
+              (length ? latterSpacing * (length - 1) : 0);
         },
         _setTextData: function () {
             var lines = this.getText().split('\n'),
@@ -476,6 +489,16 @@
      * // set wrap
      * text.wrap('word');
      */
+
+     Konva.Factory.addGetterSetter(Konva.Text, 'letterSpacing', 0);
+
+      /**
+       * set letter spacing property. Default value is 0.
+       * @name letterSpacing
+       * @method
+       * @memberof Konva.TextPath.prototype
+       * @param {Number} letterSpacing
+       */
 
     Konva.Factory.addGetter(Konva.Text, 'text', EMPTY_STRING);
     Konva.Factory.addOverloadedGetterSetter(Konva.Text, 'text');

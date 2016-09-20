@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## Added
+- new properties for `Konva.Text`: `letterSpacing`
+
+
 ## [1.2.2][2016-09-15]
 
 ### Fixed
