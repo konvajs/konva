@@ -7,6 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Added
 - new properties for `Konva.Text`: `letterSpacing`
 
+### Changed
+- changing a size of `Konva.Stage` will update it in async way (via `batchDraw`).
 
 ## [1.2.2][2016-09-15]
 
