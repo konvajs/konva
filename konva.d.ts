@@ -810,10 +810,12 @@ declare module Konva {
     }
 
     class Transform {
+        copy(): Transform;
         getMatrix(): any[];
         getTranslation() : Vector2d;
         invert() : void;
-        multiply(matrix: any[]) : void;
+        multiply(matrix: any[]): void;
+        point(point: Vector2d): Vector2d;
         rotate(deg: number) : void;
         scale(x: number, y: Number) : void;
         setAbsolutePosition() : void;
