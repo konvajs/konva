@@ -374,7 +374,9 @@
 
             if (hasClip && layer) {
                 context.save();
-                layer._applyTransform(this, context);
+                var transform = this.getAbsoluteTransform(top);
+                var m = transform.getMatrix();
+                context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                 context.beginPath();
                 if (clipFunc) {
                   clipFunc.call(this, context, this);
@@ -384,7 +386,8 @@
                   context.rect(clipX, clipY, clipWidth, clipHeight);
                 }
                 context.clip();
-                context.reset();
+                m = transform.invert().getMatrix();
+                context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }
 
             this.children.each(function(child) {
