@@ -386,7 +386,7 @@
                   context.rect(clipX, clipY, clipWidth, clipHeight);
                 }
                 context.clip();
-                m = transform.invert().getMatrix();
+                m = transform.copy().invert().getMatrix();
                 context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }
 
