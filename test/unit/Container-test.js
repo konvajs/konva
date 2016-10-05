@@ -1688,4 +1688,107 @@ suite('Container', function() {
         assert.deepEqual(layer.getClientRect(), {x: 50, y: 100, width: 200, height: 75});
 
     });
+
+    test('clip-cache', function () {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
+        var circle = new Konva.Circle({
+            x: 50,
+            y: 50,
+            radius: 30,
+            fill: 'red'
+        });
+        
+        group.add(circle);
+        layer.add(group.clip({x:25,y:25,width:50,height:50}));
+        stage.add(layer);
+        
+        layer.cache();
+        stage.draw();
+        
+        var data = layer.getContext().getImageData(24,50,1,1).data;
+        var isTransparent = data[3] == 0;
+        assert.equal(isTransparent, true, 'tested pixel (24,50)  should be transparent: ' +data[0]+"_"+data[1]+"_"+data[2]+"_"+data[3]);
+        
+        data = layer.getContext().getImageData(50,24,1,1).data;
+        isTransparent = data[3] == 0;
+        assert.equal(isTransparent, true, 'tested pixel (50,24)  should be transparent: ' +data[0]+"_"+data[1]+"_"+data[2]+"_"+data[3]);
+        
+        data = layer.getContext().getImageData(76,50,1,1).data;
+        isTransparent = data[3] == 0;
+        assert.equal(isTransparent, true, 'tested pixel (76,50)  should be transparent: ' +data[0]+"_"+data[1]+"_"+data[2]+"_"+data[3]);
+        
+        data = layer.getContext().getImageData(50,76,1,1).data;
+        isTransparent = data[3] == 0;
+        assert.equal(isTransparent, true, 'tested pixel (50,76)  should be transparent: ' +data[0]+"_"+data[1]+"_"+data[2]+"_"+data[3]);
+        
+        data = layer.getContext().getImageData(26,50,1,1).data;
+        var isRed = data[0] == 255 && data[1] == 0 && data[2] == 0 && data[3] == 255;
+        assert.equal(isRed, true, 'tested pixel (26,50)  should be red: ' +data[0]+"_"+data[1]+"_"+data[2]+"_"+data[3]);
+
+        data = layer.getContext().getImageData(50,26,1,1).data;
+        isRed = data[0] == 255 && data[1] == 0 && data[2] == 0 && data[3] == 255;
+        assert.equal(isRed, true, 'tested pixel (50,26)  should be red: ' +data[0]+"_"+data[1]+"_"+data[2]+"_"+data[3]);
+
+        data = layer.getContext().getImageData(74,50,1,1).data;
+        isRed = data[0] == 255 && data[1] == 0 && data[2] == 0 && data[3] == 255;
+        assert.equal(isRed, true, 'tested pixel (74,50)  should be red: ' +data[0]+"_"+data[1]+"_"+data[2]+"_"+data[3]);
+
+        data = layer.getContext().getImageData(50,74,1,1).data;
+        isRed = data[0] == 255 && data[1] == 0 && data[2] == 0 && data[3] == 255;
+        assert.equal(isRed, true, 'tested pixel (50,74)  should be red: ' +data[0]+"_"+data[1]+"_"+data[2]+"_"+data[3]);
+    });
+
+    test('clip-cache-scale', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var group = new Konva.Group();
+        var circle = new Konva.Circle({
+            x: 50,
+            y: 50,
+            radius: 30,
+            fill: 'red'
+        });
+        
+        group.add(circle);
+        layer.add(group.clip({x:25,y:25,width:50,height:50}));
+        stage.add(layer);
+        
+        layer.cache();
+        stage.scale({x:2, y:2});
+        stage.draw();
+        
+        var data = layer.getContext().getImageData(48,100,1,1).data;
+        var isTransparent = data[3] == 0;
+        assert.equal(isTransparent, true, 'tested pixel (48,100)  should be transparent: ' +data[0]+"_"+data[1]+"_"+data[2]+"_"+data[3]);
+        
+        data = layer.getContext().getImageData(100,48,1,1).data;
+        isTransparent = data[3] == 0;
+        assert.equal(isTransparent, true, 'tested pixel (100,48)  should be transparent: ' +data[0]+"_"+data[1]+"_"+data[2]+"_"+data[3]);
+        
+        data = layer.getContext().getImageData(152,100,1,1).data;
+        isTransparent = data[3] == 0;
+        assert.equal(isTransparent, true, 'tested pixel (152,100)  should be transparent: ' +data[0]+"_"+data[1]+"_"+data[2]+"_"+data[3]);
+        
+        data = layer.getContext().getImageData(100,152,1,1).data;
+        isTransparent = data[3] == 0;
+        assert.equal(isTransparent, true, 'tested pixel (100,152)  should be transparent: ' +data[0]+"_"+data[1]+"_"+data[2]+"_"+data[3]);
+        
+        data = layer.getContext().getImageData(52,100,1,1).data;
+        var isRed = data[0] == 255 && data[1] == 0 && data[2] == 0 && data[3] == 255;
+        assert.equal(isRed, true, 'tested pixel (52,100)  should be red: ' +data[0]+"_"+data[1]+"_"+data[2]+"_"+data[3]);
+
+        data = layer.getContext().getImageData(100,52,1,1).data;
+        isRed = data[0] == 255 && data[1] == 0 && data[2] == 0 && data[3] == 255;
+        assert.equal(isRed, true, 'tested pixel (100,52)  should be red: ' +data[0]+"_"+data[1]+"_"+data[2]+"_"+data[3]);
+
+        data = layer.getContext().getImageData(148,100,1,1).data;
+        isRed = data[0] == 255 && data[1] == 0 && data[2] == 0 && data[3] == 255;
+        assert.equal(isRed, true, 'tested pixel (148,100)  should be red: ' +data[0]+"_"+data[1]+"_"+data[2]+"_"+data[3]);
+
+        data = layer.getContext().getImageData(100,148,1,1).data;
+        isRed = data[0] == 255 && data[1] == 0 && data[2] == 0 && data[3] == 255;
+        assert.equal(isRed, true, 'tested pixel (100,148)  should be red: ' +data[0]+"_"+data[1]+"_"+data[2]+"_"+data[3]);
+    });
 });
