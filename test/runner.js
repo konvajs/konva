@@ -9,58 +9,56 @@ var assert = chai.assert,
     assertionCount = 0,
     assertions = document.createElement('em');
 
-window.requestAnimFrame = (function(callback){
-  return window.requestAnimationFrame ||
-  window.webkitRequestAnimationFrame ||
-  window.mozRequestAnimationFrame ||
-  window.oRequestAnimationFrame ||
-  window.msRequestAnimationFrame ||
-  function(callback){
-      window.setTimeout(callback, 1000 / 30);
-  };
+window.requestAnimFrame = (function (callback) {
+    return window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        window.oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function (callback) {
+            window.setTimeout(callback, 1000 / 30);
+        };
 })();
 
 function init() {
-  // assert extenders so that we can count assertions
-  assert = function() {
-    origAssert.apply(this, arguments);
-    assertions.innerHTML = ++assertionCount;
-  };
-  assert.equal = function() {
-    origAssertEqual.apply(this, arguments);
-    assertions.innerHTML = ++assertionCount;
-  };
-  assert.notEqual = function() {
-    origNotEqual.apply(this, arguments);
-    assertions.innerHTML = ++assertionCount;
-  };
+    // assert extenders so that we can count assertions
+    assert = function () {
+        origAssert.apply(this, arguments);
+        assertions.innerHTML = ++assertionCount;
+    };
+    assert.equal = function () {
+        origAssertEqual.apply(this, arguments);
+        assertions.innerHTML = ++assertionCount;
+    };
+    assert.notEqual = function () {
+        origNotEqual.apply(this, arguments);
+        assertions.innerHTML = ++assertionCount;
+    };
 
-    assert.deepEqual = function() {
+    assert.deepEqual = function () {
         origDeepEqual.apply(this, arguments);
         assertions.innerHTML = ++assertionCount;
     };
 
-  window.onload = function() {
-    var mochaStats = document.getElementById('mocha-stats');
+    window.onload = function () {
+        var mochaStats = document.getElementById('mocha-stats');
 
-    if (mochaStats) {
-      var li = document.createElement('li');
-      var anchor = document.createElement('a');
+        if (mochaStats) {
+            var li = document.createElement('li');
+            var anchor = document.createElement('a');
 
-      anchor.href = '#';
-      anchor.innerHTML = 'assertions:';
-      assertions.innerHTML = 0;
+            anchor.href = '#';
+            anchor.innerHTML = 'assertions:';
+            assertions.innerHTML = 0;
 
-      li.appendChild(anchor);
-      li.appendChild(assertions);
-      mochaStats.appendChild(li);
+            li.appendChild(anchor);
+            li.appendChild(assertions);
+            mochaStats.appendChild(li);
+        }
     }
-  }
 
-  //addStats();
+    //addStats();
 }
-
-
 
 
 Konva.enableTrace = true;
@@ -74,33 +72,32 @@ function addStats() {
     stats.domElement.style.position = 'fixed';
     stats.domElement.style.left = '0px';
     stats.domElement.style.top = '0px';
-    document.getElementsByTagName('body')[0].appendChild( stats.domElement );
+    document.getElementsByTagName('body')[0].appendChild(stats.domElement);
 
 
-    function animate(lastTime){
-      stats.begin();
+    function animate(lastTime) {
+        stats.begin();
 
-      requestAnimFrame(function(){
-        stats.end();
-        animate(lastTime);
-      });
+        requestAnimFrame(function () {
+            stats.end();
+            animate(lastTime);
+        });
     }
 
     animate();
 }
 
 
-
 function addStage() {
-  var container = document.createElement('div'),
-      stage = new Konva.Stage({
-          container: container,
-          width: 578,
-          height: 200
-      });
+    var container = document.createElement('div'),
+        stage = new Konva.Stage({
+            container: container,
+            width: 578,
+            height: 200
+        });
 
-  konvaContainer.appendChild(container);
-  return stage;
+    konvaContainer.appendChild(container);
+    return stage;
 }
 
 function createCanvas() {
@@ -112,7 +109,7 @@ function createCanvas() {
     return canvas;
 }
 
-function get (element, content) {
+function get(element, content) {
     element = document.createElement(element);
     if (element && content) {
         element.innerHTML = content;
@@ -125,15 +122,15 @@ function compareCanvases(canvas1, canvas2, tol) {
     var equal = imagediff.equal(canvas1, canvas2, tol);
     if (!equal) {
         var
-            div     = get('div'),
-            b       = get('div', '<div>Expected:</div>'),
-            c       = get('div', '<div>Diff:</div>'),
-            diff    = imagediff.diff(canvas1, canvas2),
-            diffCanvas  = get('canvas'),
+            div = get('div'),
+            b = get('div', '<div>Expected:</div>'),
+            c = get('div', '<div>Diff:</div>'),
+            diff = imagediff.diff(canvas1, canvas2),
+            diffCanvas = get('canvas'),
             context;
 
         diffCanvas.height = diff.height;
-        diffCanvas.width  = diff.width;
+        diffCanvas.width = diff.width;
 
         div.style.overflow = 'hidden';
         b.style.float = 'left';
@@ -183,26 +180,26 @@ function compareSceneAndHit(layer) {
 }
 
 function addContainer() {
-  var container = document.createElement('div');
+    var container = document.createElement('div');
 
-  konvaContainer.appendChild(container);
+    konvaContainer.appendChild(container);
 
-  return container;
+    return container;
 }
 
 function showCanvas(canvas) {
-  canvas.style.position = 'relative';
+    canvas.style.position = 'relative';
 
-  konvaContainer.appendChild(canvas);
+    konvaContainer.appendChild(canvas);
 }
 function showHit(layer) {
-  var canvas = layer.hitCanvas._canvas;
-  canvas.style.position = 'relative';
+    var canvas = layer.hitCanvas._canvas;
+    canvas.style.position = 'relative';
 
-  konvaContainer.appendChild(canvas);
+    konvaContainer.appendChild(canvas);
 }
 
-beforeEach(function(){
+beforeEach(function () {
     var title = document.createElement('h2'),
         test = this.currentTest;
 
@@ -218,13 +215,13 @@ beforeEach(function(){
 
 Konva.UA.mobile = false;
 
-afterEach(function(){
+afterEach(function () {
 //    Konva.stages.forEach(function(stage) {
 //        stage.destroy();
 //    });
 });
 
-Konva.Stage.prototype.simulateMouseDown = function(pos) {
+Konva.Stage.prototype.simulateMouseDown = function (pos) {
     var top = this.content.getBoundingClientRect().top;
 
     this._mousedown({
@@ -234,7 +231,7 @@ Konva.Stage.prototype.simulateMouseDown = function(pos) {
     });
 };
 
-Konva.Stage.prototype.simulateMouseMove = function(pos) {
+Konva.Stage.prototype.simulateMouseMove = function (pos) {
     var top = this.content.getBoundingClientRect().top;
 
     var evt = {
@@ -247,7 +244,7 @@ Konva.Stage.prototype.simulateMouseMove = function(pos) {
     Konva.DD._drag(evt);
 };
 
-Konva.Stage.prototype.simulateMouseUp = function(pos) {
+Konva.Stage.prototype.simulateMouseUp = function (pos) {
     "use strict";
     var top = this.content.getBoundingClientRect().top;
 
@@ -262,6 +259,17 @@ Konva.Stage.prototype.simulateMouseUp = function(pos) {
     Konva.DD._endDragBefore(evt);
     this._mouseup(evt);
     Konva.DD._endDragAfter(evt);
-}
+};
+
+Konva.Stage.prototype.simulateMouseWheel = function (deltaY) {
+    var evt = {
+        type: 'wheel',
+        deltaMode: 0,
+        deltaX: 0,
+        deltaY: deltaY,
+        deltaZ: 0
+    };
+    this._mousewheel(evt);
+};
 
 init();

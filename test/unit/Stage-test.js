@@ -1,63 +1,63 @@
-suite('Stage', function() {
+suite('Stage', function () {
 
     // ======================================================
-    test('instantiate stage with id', function() {
-      var container = Konva.document.createElement('div');
-      container.id = 'container';
+    test('instantiate stage with id', function () {
+        var container = Konva.document.createElement('div');
+        container.id = 'container';
 
-      konvaContainer.appendChild(container);
+        konvaContainer.appendChild(container);
 
-      var stage = new Konva.Stage({
-          container: 'container',
-          width: 578,
-          height: 200
-      });
+        var stage = new Konva.Stage({
+            container: 'container',
+            width: 578,
+            height: 200
+        });
 
-      assert.equal(stage.getContent().className, 'konvajs-content');
-      assert.equal(stage.getContent().getAttribute('role'), 'presentation');
+        assert.equal(stage.getContent().className, 'konvajs-content');
+        assert.equal(stage.getContent().getAttribute('role'), 'presentation');
 
 
     });
 
     // ======================================================
-    test('test stage buffer canvas and hit buffer canvas', function() {
-      var container = Konva.document.createElement('div');
-      container.id = 'container';
+    test('test stage buffer canvas and hit buffer canvas', function () {
+        var container = Konva.document.createElement('div');
+        container.id = 'container';
 
-      konvaContainer.appendChild(container);
+        konvaContainer.appendChild(container);
 
-      // simulate pixelRatio = 2
-      Konva.pixelRatio = 2;
+        // simulate pixelRatio = 2
+        Konva.pixelRatio = 2;
 
-      var stage = new Konva.Stage({
-          container: 'container',
-          width: 578,
-          height: 200
-      });
+        var stage = new Konva.Stage({
+            container: 'container',
+            width: 578,
+            height: 200
+        });
 
 
-      assert.equal(stage.bufferCanvas.getPixelRatio(), 2);
-      assert.equal(stage.bufferHitCanvas.getPixelRatio(), 1);
+        assert.equal(stage.bufferCanvas.getPixelRatio(), 2);
+        assert.equal(stage.bufferHitCanvas.getPixelRatio(), 1);
 
-      // reset
-      Konva.pixelRatio = 1;
+        // reset
+        Konva.pixelRatio = 1;
     });
 
     // ======================================================
-    test('instantiate stage with dom element', function() {
-      var container = Konva.document.createElement('div');
+    test('instantiate stage with dom element', function () {
+        var container = Konva.document.createElement('div');
 
-      konvaContainer.appendChild(container);
+        konvaContainer.appendChild(container);
 
-      var stage = new Konva.Stage({
-          container: container,
-          width: 578,
-          height: 200
-      });
+        var stage = new Konva.Stage({
+            container: container,
+            width: 578,
+            height: 200
+        });
     });
 
     // ======================================================
-    test('stage instantiation should clear container', function() {
+    test('stage instantiation should clear container', function () {
         var container = Konva.document.createElement('div');
         var dummy = Konva.document.createElement('p');
 
@@ -74,7 +74,7 @@ suite('Stage', function() {
     });
 
     // ======================================================
-    test('test stage cloning', function() {
+    test('test stage cloning', function () {
         var stage = addStage();
         var layer = new Konva.Layer();
         stage.add(layer);
@@ -87,7 +87,7 @@ suite('Stage', function() {
     });
 
     // ======================================================
-    test('set stage size', function() {
+    test('set stage size', function () {
         var stage = addStage();
 
         var layer = new Konva.Layer();
@@ -104,10 +104,10 @@ suite('Stage', function() {
 
         assert.equal(stage.getSize().width, 578);
         assert.equal(stage.getSize().height, 200);
-        stage.setSize({width:1, height:2});
+        stage.setSize({ width: 1, height: 2 });
         assert.equal(stage.getSize().width, 1);
         assert.equal(stage.getSize().height, 2);
-        stage.setSize({width: 3, height: 3});
+        stage.setSize({ width: 3, height: 3 });
         assert.equal(stage.getSize().width, 3);
         assert.equal(stage.getSize().height, 3);
         stage.setSize({
@@ -122,17 +122,17 @@ suite('Stage', function() {
         stage.setHeight(7);
         assert.equal(stage.getSize().width, 6);
         assert.equal(stage.getSize().height, 7);
-        stage.setSize({width: 8, height: 9});
+        stage.setSize({ width: 8, height: 9 });
         assert.equal(stage.getSize().width, 8);
         assert.equal(stage.getSize().height, 9);
-        stage.setSize({width:10, height:11});
+        stage.setSize({ width: 10, height: 11 });
         assert.equal(stage.getSize().width, 10);
         assert.equal(stage.getSize().height, 11);
 
         layer.add(circle);
         stage.add(layer);
 
-        stage.setSize({width:333, height:155});
+        stage.setSize({ width: 333, height: 155 });
 
         assert.equal(stage.getSize().width, 333);
         assert.equal(stage.getSize().height, 155);
@@ -143,14 +143,14 @@ suite('Stage', function() {
     });
 
     // ======================================================
-    test('get stage DOM', function() {
+    test('get stage DOM', function () {
         var stage = addStage();
 
         assert.equal(stage.getContent().className, 'konvajs-content');
     });
 
     // ======================================================
-    test('stage getIntersection()', function() {
+    test('stage getIntersection()', function () {
         var stage = addStage();
         var layer = new Konva.Layer();
 
@@ -178,13 +178,13 @@ suite('Stage', function() {
         layer.add(greenCircle);
         stage.add(layer);
 
-        assert.equal(stage.getIntersection({x:300, y:100}).getId(), 'greenCircle', 'shape should be greenCircle');
-        assert.equal(stage.getIntersection({x:380, y:100}).getId(), 'redCircle', 'shape should be redCircle');
-        assert.equal(stage.getIntersection({x:100, y:100}), null, 'shape should be null');
+        assert.equal(stage.getIntersection({ x: 300, y: 100 }).getId(), 'greenCircle', 'shape should be greenCircle');
+        assert.equal(stage.getIntersection({ x: 380, y: 100 }).getId(), 'redCircle', 'shape should be redCircle');
+        assert.equal(stage.getIntersection({ x: 100, y: 100 }), null, 'shape should be null');
     });
 
     // ======================================================
-    test('layer getIntersection() with selector', function() {
+    test('layer getIntersection() with selector', function () {
         var stage = addStage();
         var layer = new Konva.Layer({
             name: 'layer'
@@ -207,13 +207,13 @@ suite('Stage', function() {
         layer.add(group);
         stage.add(layer);
 
-        assert.equal(stage.getIntersection({x: stage.width() / 2, y: stage.height() / 2}, 'Circle'), circle, 'intersection with shape selector');
-        assert.equal(stage.getIntersection({x: stage.width() / 2, y: stage.height() / 2}, '.group'), group, 'intersection with group selector');
-        assert.equal(stage.getIntersection({x: stage.width() / 2, y: stage.height() / 2}, 'Stage'), stage, 'intersection with stage selector');
+        assert.equal(stage.getIntersection({ x: stage.width() / 2, y: stage.height() / 2 }, 'Circle'), circle, 'intersection with shape selector');
+        assert.equal(stage.getIntersection({ x: stage.width() / 2, y: stage.height() / 2 }, '.group'), group, 'intersection with group selector');
+        assert.equal(stage.getIntersection({ x: stage.width() / 2, y: stage.height() / 2 }, 'Stage'), stage, 'intersection with stage selector');
     });
 
     // ======================================================
-    test('stage getIntersection() edge detection', function() {
+    test('stage getIntersection() edge detection', function () {
         var stage = addStage();
         var layer = new Konva.Layer();
 
@@ -237,10 +237,10 @@ suite('Stage', function() {
             id: 'greenCircle'
         });
 
-        stage.on('contentMousemove', function() {
+        stage.on('contentMousemove', function () {
             var pos = stage.getPointerPosition();
             var shape = stage.getIntersection(pos);
-            if (!shape){
+            if (!shape) {
                 //console.log(pos);
             }
         });
@@ -249,10 +249,10 @@ suite('Stage', function() {
         layer.add(greenCircle);
         stage.add(layer);
 
-        assert.equal(stage.getIntersection({x:370, y:93}).getId(), 'greenCircle', 'shape should be greenCircle');
+        assert.equal(stage.getIntersection({ x: 370, y: 93 }).getId(), 'greenCircle', 'shape should be greenCircle');
         // TODO: this passes in the browser but fails in phantomjs.  no idea why.
         //assert.equal(stage.getIntersection(371, 93).getId(), 'greenCircle', 'shape should be greenCircle');
-        assert.equal(stage.getIntersection({x:372, y:93}).getId(), 'redCircle', 'shape should be redCircle');
+        assert.equal(stage.getIntersection({ x: 372, y: 93 }).getId(), 'redCircle', 'shape should be redCircle');
 
         //console.log(layer.hitCanvas.context._context.getImageData(1, 1, 1, 1).data)
 
@@ -260,7 +260,7 @@ suite('Stage', function() {
     });
 
     // ======================================================
-    test('test getAllIntersections', function() {
+    test('test getAllIntersections', function () {
         var stage = addStage();
         var layer = new Konva.Layer();
 
@@ -289,55 +289,55 @@ suite('Stage', function() {
         stage.add(layer);
 
         // test individual shapes
-        assert.equal(stage.getAllIntersections({x: 266, y:114}).length, 1, '17) getAllIntersections should return one shape');
-        assert.equal(stage.getAllIntersections({x: 266, y:114})[0].getId(), 'greenCircle', '19) first intersection should be greenCircle');
+        assert.equal(stage.getAllIntersections({ x: 266, y: 114 }).length, 1, '17) getAllIntersections should return one shape');
+        assert.equal(stage.getAllIntersections({ x: 266, y: 114 })[0].getId(), 'greenCircle', '19) first intersection should be greenCircle');
 
-        assert.equal(stage.getAllIntersections({x: 414, y:115}).length, 1, '18) getAllIntersections should return one shape');
-        assert.equal(stage.getAllIntersections({x: 414, y:115})[0].getId(), 'redCircle', '20) first intersection should be redCircle');
+        assert.equal(stage.getAllIntersections({ x: 414, y: 115 }).length, 1, '18) getAllIntersections should return one shape');
+        assert.equal(stage.getAllIntersections({ x: 414, y: 115 })[0].getId(), 'redCircle', '20) first intersection should be redCircle');
 
-        assert.equal(stage.getAllIntersections({x: 350, y:118}).length, 2, '1) getAllIntersections should return two shapes');
-        assert.equal(stage.getAllIntersections({x: 350, y:118})[0].getId(), 'redCircle', '2) first intersection should be redCircle');
-        assert.equal(stage.getAllIntersections({x: 350, y:118})[1].getId(), 'greenCircle', '3) second intersection should be greenCircle');
+        assert.equal(stage.getAllIntersections({ x: 350, y: 118 }).length, 2, '1) getAllIntersections should return two shapes');
+        assert.equal(stage.getAllIntersections({ x: 350, y: 118 })[0].getId(), 'redCircle', '2) first intersection should be redCircle');
+        assert.equal(stage.getAllIntersections({ x: 350, y: 118 })[1].getId(), 'greenCircle', '3) second intersection should be greenCircle');
 
         // hide green circle.  make sure only red circle is in result set
         greenCircle.hide();
         layer.draw();
 
-        assert.equal(stage.getAllIntersections({x: 350, y:118}).length, 1, '4) getAllIntersections should return one shape');
-        assert.equal(stage.getAllIntersections({x: 350, y:118})[0].getId(), 'redCircle', '5) first intersection should be redCircle');
+        assert.equal(stage.getAllIntersections({ x: 350, y: 118 }).length, 1, '4) getAllIntersections should return one shape');
+        assert.equal(stage.getAllIntersections({ x: 350, y: 118 })[0].getId(), 'redCircle', '5) first intersection should be redCircle');
 
         // show green circle again.  make sure both circles are in result set
         greenCircle.show();
         layer.draw();
 
-        assert.equal(stage.getAllIntersections({x: 350, y:118}).length, 2, '6) getAllIntersections should return two shapes');
-        assert.equal(stage.getAllIntersections({x: 350, y:118})[0].getId(), 'redCircle', '7) first intersection should be redCircle');
-        assert.equal(stage.getAllIntersections({x: 350, y:118})[1].getId(), 'greenCircle', '8) second intersection should be greenCircle');
+        assert.equal(stage.getAllIntersections({ x: 350, y: 118 }).length, 2, '6) getAllIntersections should return two shapes');
+        assert.equal(stage.getAllIntersections({ x: 350, y: 118 })[0].getId(), 'redCircle', '7) first intersection should be redCircle');
+        assert.equal(stage.getAllIntersections({ x: 350, y: 118 })[1].getId(), 'greenCircle', '8) second intersection should be greenCircle');
 
         // hide red circle.  make sure only green circle is in result set
         redCircle.hide();
         layer.draw();
 
-        assert.equal(stage.getAllIntersections({x: 350, y:118}).length, 1, '9) getAllIntersections should return one shape');
-        assert.equal(stage.getAllIntersections({x: 350, y:118})[0].getId(), 'greenCircle', '10) first intersection should be greenCircle');
+        assert.equal(stage.getAllIntersections({ x: 350, y: 118 }).length, 1, '9) getAllIntersections should return one shape');
+        assert.equal(stage.getAllIntersections({ x: 350, y: 118 })[0].getId(), 'greenCircle', '10) first intersection should be greenCircle');
 
         // show red circle again.  make sure both circles are in result set
         redCircle.show();
         layer.draw();
 
-        assert.equal(stage.getAllIntersections({x: 350, y:118}).length, 2, '11) getAllIntersections should return two shapes');
-        assert.equal(stage.getAllIntersections({x: 350, y:118})[0].getId(), 'redCircle', '12) first intersection should be redCircle');
-        assert.equal(stage.getAllIntersections({x: 350, y:118})[1].getId(), 'greenCircle', '13) second intersection should be greenCircle');
+        assert.equal(stage.getAllIntersections({ x: 350, y: 118 }).length, 2, '11) getAllIntersections should return two shapes');
+        assert.equal(stage.getAllIntersections({ x: 350, y: 118 })[0].getId(), 'redCircle', '12) first intersection should be redCircle');
+        assert.equal(stage.getAllIntersections({ x: 350, y: 118 })[1].getId(), 'greenCircle', '13) second intersection should be greenCircle');
 
         // test from layer
-        assert.equal(layer.getAllIntersections({x: 350, y:118}).length, 2, '14) getAllIntersections should return two shapes');
-        assert.equal(layer.getAllIntersections({x: 350, y:118})[0].getId(), 'redCircle', '15) first intersection should be redCircle');
-        assert.equal(layer.getAllIntersections({x: 350, y:118})[1].getId(), 'greenCircle', '16) second intersection should be greenCircle');
+        assert.equal(layer.getAllIntersections({ x: 350, y: 118 }).length, 2, '14) getAllIntersections should return two shapes');
+        assert.equal(layer.getAllIntersections({ x: 350, y: 118 })[0].getId(), 'redCircle', '15) first intersection should be redCircle');
+        assert.equal(layer.getAllIntersections({ x: 350, y: 118 })[1].getId(), 'greenCircle', '16) second intersection should be greenCircle');
 
     });
 
     // ======================================================
-    test('scale stage after add layer', function() {
+    test('scale stage after add layer', function () {
         var stage = addStage();
         var layer = new Konva.Layer();
         var circle = new Konva.Circle({
@@ -352,7 +352,7 @@ suite('Stage', function() {
         layer.add(circle);
         stage.add(layer);
 
-        stage.setScale({x:0.5, y:0.5});
+        stage.setScale({ x: 0.5, y: 0.5 });
 
         assert.equal(stage.getScale().x, 0.5, 'stage scale x should be 0.5');
         assert.equal(stage.getScale().y, 0.5, 'stage scale y should be 0.5');
@@ -360,7 +360,7 @@ suite('Stage', function() {
     });
 
     // ======================================================
-    test('scale stage before add shape', function() {
+    test('scale stage before add shape', function () {
         var stage = addStage();
         var layer = new Konva.Layer();
         var circle = new Konva.Circle({
@@ -372,7 +372,7 @@ suite('Stage', function() {
             strokeWidth: 4
         });
 
-        stage.setScale({x:0.5, y:0.5});
+        stage.setScale({ x: 0.5, y: 0.5 });
 
         assert.equal(stage.getScale().x, 0.5, 'stage scale x should be 0.5');
         assert.equal(stage.getScale().y, 0.5, 'stage scale y should be 0.5');
@@ -382,7 +382,7 @@ suite('Stage', function() {
     });
 
     // ======================================================
-    test('remove stage', function() {
+    test('remove stage', function () {
         var stage = addStage();
         var layer = new Konva.Layer();
         var circle = new Konva.Circle({
@@ -404,7 +404,7 @@ suite('Stage', function() {
     });
 
     // ======================================================
-    test('destroy stage', function() {
+    test('destroy stage', function () {
         var container = Konva.document.createElement('div');
 
         konvaContainer.appendChild(container);
@@ -449,7 +449,7 @@ suite('Stage', function() {
     });
 
     // ======================================================
-    test('scale stage with no shapes', function() {
+    test('scale stage with no shapes', function () {
         var stage = addStage();
 
         var layer = new Konva.Layer();
@@ -461,7 +461,7 @@ suite('Stage', function() {
     });
 
     // ======================================================
-    test('test stage.getStage()', function() {
+    test('test stage.getStage()', function () {
         var stage = addStage();
 
         assert.notEqual(stage.getStage(), undefined);
@@ -469,7 +469,7 @@ suite('Stage', function() {
         //console.log(stage.getStage());
     });
 
-    test('add multiple layers to stage', function() {
+    test('add multiple layers to stage', function () {
         var stage = addStage();
         var layer1 = new Konva.Layer();
         var layer2 = new Konva.Layer();
@@ -478,7 +478,7 @@ suite('Stage', function() {
         assert.equal(stage.getLayers().length, 3, 'stage has exactly three layers');
     });
     // ======================================================
-    test('test drag and click', function() {
+    test('test drag and click', function () {
         var stage = addStage();
         var layer = new Konva.Layer();
         var rect = new Konva.Rect({
@@ -493,7 +493,7 @@ suite('Stage', function() {
         layer.add(rect);
         stage.add(layer);
 
-        rect.on('dblclick', function() {
+        rect.on('dblclick', function () {
             assert(false, 'double click fired');
         });
 
@@ -546,14 +546,14 @@ suite('Stage', function() {
         assert.equal(Konva.DD.node, undefined);
     });
 
-    test.skip('toDataURL + HDPI', function(done) {
+    test.skip('toDataURL + HDPI', function (done) {
         Konva.pixelRatio = 2;
 
         var stage = addStage();
         var layer = new Konva.Layer();
 
         var image = new Image();
-        image.onload = function() {
+        image.onload = function () {
             var lion = new Konva.Image({
                 image: image,
                 draggable: true
@@ -585,7 +585,7 @@ suite('Stage', function() {
         image.src = 'assets/lion.png';
     });
 
-    test('toDataURL in sync way', function() {
+    test('toDataURL in sync way', function () {
         var stage = addStage();
         var layer = new Konva.Layer();
         var circle = new Konva.Circle({
@@ -599,35 +599,50 @@ suite('Stage', function() {
         assert.equal(stage.toDataURL(), layer.toDataURL());
     });
 
-    test('check hit graph with stage listeting property', function() {
-      var stage = addStage();
-      var layer = new Konva.Layer();
-      stage.add(layer);
-      showHit(layer);
-      var circle = new Konva.Circle({
-        fill: 'green',
-        radius: 50
-      });
-      layer.add(circle);
+    test('check hit graph with stage listeting property', function () {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        stage.add(layer);
+        showHit(layer);
+        var circle = new Konva.Circle({
+            fill: 'green',
+            radius: 50
+        });
+        layer.add(circle);
 
-      var pos = {
-        x: stage.width() / 2,
-        y: stage.height() /2
-      };
-      circle.position(pos);
-      stage.draw();
+        var pos = {
+            x: stage.width() / 2,
+            y: stage.height() / 2
+        };
+        circle.position(pos);
+        stage.draw();
 
-      // try to detect circle via hit graph
-      assert.equal(stage.getIntersection(pos), circle, 'has circle');
+        // try to detect circle via hit graph
+        assert.equal(stage.getIntersection(pos), circle, 'has circle');
 
-      // disable hit graph
-      stage.listening(false);
-      stage.draw();
-      assert.equal(!!stage.getIntersection(pos), false, 'no circle');
+        // disable hit graph
+        stage.listening(false);
+        stage.draw();
+        assert.equal(!!stage.getIntersection(pos), false, 'no circle');
 
-      // enable it again
-      stage.listening(true);
-      stage.draw();
-      assert.equal(stage.getIntersection(pos), circle, 'circle again');
+        // enable it again
+        stage.listening(true);
+        stage.draw();
+        assert.equal(stage.getIntersection(pos), circle, 'circle again');
+    });
+
+    test('check onWheel event works fine with passive mode', function (done) {
+        var doneCalled = false;
+        var stage = addStage();
+        stage.on('contentWheel', function () {
+            assert(true, 'Mouse wheel event fired and caught!');
+            // Prevent multiple done called
+            if (!doneCalled) {
+                doneCalled = true;
+                done();
+            }
+        });
+
+        stage.simulateMouseWheel(1);
     });
 });
