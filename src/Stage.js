@@ -12,6 +12,7 @@
         MOUSEMOVE = 'mousemove',
         MOUSEDOWN = 'mousedown',
         MOUSEUP = 'mouseup',
+        CONTEXTMENU = 'contextmenu',
         CLICK = 'click',
         DBL_CLICK = 'dblclick',
         TOUCHSTART = 'touchstart',
@@ -28,6 +29,7 @@
         CONTENT_MOUSEMOVE = 'contentMousemove',
         CONTENT_MOUSEDOWN = 'contentMousedown',
         CONTENT_MOUSEUP = 'contentMouseup',
+        CONTENT_CONTEXTMENU = 'contentContextmenu',
         CONTENT_CLICK = 'contentClick',
         CONTENT_DBL_CLICK = 'contentDblclick',
         CONTENT_TOUCHSTART = 'contentTouchstart',
@@ -44,7 +46,7 @@
         UNDERSCORE = '_',
         CONTAINER = 'container',
         EMPTY_STRING = '',
-        EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND, MOUSEOVER, DOMMOUSESCROLL, MOUSEWHEEL, WHEEL],
+        EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND, MOUSEOVER, DOMMOUSESCROLL, MOUSEWHEEL, WHEEL, CONTEXTMENU],
 
         // cached variables
         eventsLength = EVENTS.length;
@@ -552,6 +554,9 @@
             if (evt.preventDefault) {
                 evt.preventDefault();
             }
+        },
+        _contextmenu: function(evt) {
+            this._fire(CONTENT_CONTEXTMENU, { evt: evt });
         },
         _touchstart: function(evt) {
             this._setPointerPosition(evt);

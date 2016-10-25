@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v1.2.2
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Wed Sep 21 2016
+ * Date: Tue Oct 25 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -1916,9 +1916,14 @@
             // attrs
             that.setAttr = function() {
                 origSetter.apply(that, arguments);
+                var prop = arguments[0];
+                var val = arguments[1];
+                if ((prop === 'shadowOffsetX') || (prop === 'shadowOffsetY')) {
+                  val = val / this.canvas.getPixelRatio();
+                }
                 that._trace({
-                    property: arguments[0],
-                    val: arguments[1]
+                    property: prop,
+                    val: val
                 });
             };
         }
@@ -2072,8 +2077,9 @@
                 }),
                 // TODO: get this info from transform??
                 scale = shape.getAbsoluteScale(),
-                scaleX = scale.x,
-                scaleY = scale.y;
+                ratio = this.canvas.getPixelRatio(),
+                scaleX = scale.x * ratio,
+                scaleY = scale.y * ratio;
 
             this.setAttr('shadowColor', color);
             this.setAttr('shadowBlur', blur);
@@ -2671,7 +2677,7 @@
          * bind events to the node. KonvaJS supports mouseover, mousemove,
          *  mouseout, mouseenter, mouseleave, mousedown, mouseup, wheel, click, dblclick, touchstart, touchmove,
          *  touchend, tap, dbltap, dragstart, dragmove, and dragend events. The Konva Stage supports
-         *  contentMouseover, contentMousemove, contentMouseout, contentMousedown, contentMouseup, contentWheel
+         *  contentMouseover, contentMousemove, contentMouseout, contentMousedown, contentMouseup, contentWheel, contentContextmenu
          *  contentClick, contentDblclick, contentTouchstart, contentTouchmove, contentTouchend, contentTap,
          *  and contentDblTap.  Pass in a string of events delimmited by a space to bind multiple events at once
          *  such as 'mousedown mouseup mousemove'. Include a namespace to bind an
@@ -7014,7 +7020,9 @@
 
             if (hasClip && layer) {
                 context.save();
-                layer._applyTransform(this, context);
+                var transform = this.getAbsoluteTransform(top);
+                var m = transform.getMatrix();
+                context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
                 context.beginPath();
                 if (clipFunc) {
                   clipFunc.call(this, context, this);
@@ -7024,7 +7032,8 @@
                   context.rect(clipX, clipY, clipWidth, clipHeight);
                 }
                 context.clip();
-                context.reset();
+                m = transform.copy().invert().getMatrix();
+                context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
             }
 
             this.children.each(function(child) {
@@ -7779,7 +7788,7 @@
     Konva.Factory.addGetterSetter(Konva.Shape, 'perfectDrawEnabled', true);
 
     /**
-     * get/set perfectDrawEnabled. If a shape has fill, stroke and opacity you may set `perfectDrawEnabled` to improve performance.
+     * get/set perfectDrawEnabled. If a shape has fill, stroke and opacity you may set `perfectDrawEnabled` to false to improve performance.
      * See http://konvajs.github.io/docs/performance/Disable_Perfect_Draw.html for more information.
      * Default value is true
      * @name perfectDrawEnabled
@@ -8704,6 +8713,7 @@
         MOUSEMOVE = 'mousemove',
         MOUSEDOWN = 'mousedown',
         MOUSEUP = 'mouseup',
+        CONTEXTMENU = 'contextmenu',
         CLICK = 'click',
         DBL_CLICK = 'dblclick',
         TOUCHSTART = 'touchstart',
@@ -8720,6 +8730,7 @@
         CONTENT_MOUSEMOVE = 'contentMousemove',
         CONTENT_MOUSEDOWN = 'contentMousedown',
         CONTENT_MOUSEUP = 'contentMouseup',
+        CONTENT_CONTEXTMENU = 'contentContextmenu',
         CONTENT_CLICK = 'contentClick',
         CONTENT_DBL_CLICK = 'contentDblclick',
         CONTENT_TOUCHSTART = 'contentTouchstart',
@@ -8736,7 +8747,7 @@
         UNDERSCORE = '_',
         CONTAINER = 'container',
         EMPTY_STRING = '',
-        EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND, MOUSEOVER, DOMMOUSESCROLL, MOUSEWHEEL, WHEEL],
+        EVENTS = [MOUSEDOWN, MOUSEMOVE, MOUSEUP, MOUSEOUT, TOUCHSTART, TOUCHMOVE, TOUCHEND, MOUSEOVER, DOMMOUSESCROLL, MOUSEWHEEL, WHEEL, CONTEXTMENU],
 
         // cached variables
         eventsLength = EVENTS.length;
@@ -9263,6 +9274,9 @@
             if (evt.preventDefault) {
                 evt.preventDefault();
             }
+        },
+        _contextmenu: function(evt) {
+            this._fire(CONTENT_CONTEXTMENU, { evt: evt });
         },
         _touchstart: function(evt) {
             this._setPointerPosition(evt);
@@ -12873,7 +12887,9 @@
 
 /*eslint-disable max-depth */
 (function() {
+
     'use strict';
+    var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
     // constants
     var AUTO = 'auto',
         //CANVAS = 'canvas',
@@ -13101,6 +13117,14 @@
             context.closePath();
             context.fillStrokeShape(this);
         },
+        // _useBufferCanvas: function(caching) {
+        //     var useIt = Konva.Shape.prototype._useBufferCanvas.call(this, caching);
+        //     if (useIt) {
+        //       return true;
+        //     }
+        //     return false;
+        //     // return isFirefox && this.hasFill() && this.hasShadow();
+        // },
         setText: function(text) {
             var str = Konva.Util._isString(text) ? text : (text || '').toString();
             this._setAttr(TEXT, str);
