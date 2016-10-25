@@ -217,4 +217,30 @@ suite('Label', function() {
         cloneAndCompareLayer(layer, 254);
     });
 
+    it.only('tag should list text size changes', function() {
+      var stage = addStage();
+      var layer = new Konva.Layer();
+      stage.add(layer);
+
+      var label = new Konva.Label();
+
+      var tag = new Konva.Tag({
+        stroke: 'black'
+      });
+
+      label.add(tag);
+
+      var text = new Konva.Text({
+        text: 'hello hello hello hello hello hello hello hello'
+      });
+      label.add(text);
+
+      layer.add(label);
+      layer.draw();
+
+      text.width(200);
+
+      layer.draw();
+      assert.equal(tag.width(), text.width());
+    });
 });

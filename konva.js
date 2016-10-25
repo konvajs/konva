@@ -15870,7 +15870,7 @@
 (function() {
     'use strict';
     // constants
-    var ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'lineHeight', 'text'],
+    var ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'padding', 'lineHeight', 'text', 'width'],
         CHANGE_KONVA = 'Change.konva',
         NONE = 'none',
         UP = 'up',
