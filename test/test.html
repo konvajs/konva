@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+  <style>
+  body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #F0F0F0;
+  }
+
+  #buttons {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+  }
+
+  #buttons > input {
+    padding: 10px;
+    display: block;
+    margin-top: 5px;
+  }
+</style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <div id="buttons">
+      <button id="save">
+        Save as image
+      </button>
+    </div>
+
+    <script src="../dist/konva-dev.js"></script>
+
+    <script>
+    // Code goes here
+
+
+var width = window.innerWidth;
+var height = window.innerHeight;
+
+var stage = new Konva.Stage({
+container: 'container',
+width: width,
+height: height
+});
+
+var layer = new Konva.Layer();
+
+var rectX = stage.getWidth() / 2 - 50;
+var rectY = stage.getHeight() / 2 - 25;
+
+(function() {
+for (var i = 0; i < 50; i++) {
+  layer.add(new Konva.Rect({
+    x: i * 50,
+    y: 0,
+    width: 50,
+    height: 10000,
+    fill: Konva.Util.getRandomColor()
+  }));
+}
+})();
+
+var box = new Konva.Rect({
+x: rectX,
+y: rectY,
+width: 100,
+height: 50,
+fill: '#00D2FF',
+stroke: 'black',
+strokeWidth: 4,
+draggable: true
+});
+
+box.on('mouseover', function() {
+document.body.style.cursor = 'pointer';
+});
+
+box.on('mouseout', function() {
+document.body.style.cursor = 'default';
+});
+
+layer.add(box);
+layer.draw();
+stage.add(layer);
+
+function exportCanvas() {
+    var dataURL = stage.toDataURL({
+      width: 1500,
+      height: 1000,
+      // pixelRatio: 2
+    });
+    window.open(dataURL);
+  }
+
+document.getElementById('save').addEventListener('click', exportCanvas, false);
+    </script>
+  </body>
+</html>

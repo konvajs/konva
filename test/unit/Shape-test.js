@@ -1148,4 +1148,32 @@ suite('Shape', function() {
     });
 
 
+    test('shadow should respect pixel ratio', function() {
+        var stage = addStage();
+        var layer1 = new Konva.Layer();
+        var shape = new Konva.Rect({
+            width: 50,
+            height: 50,
+            fill: 'black',
+            shadowColor: 'green',
+            shadowOffsetX: 10,
+            shadowOffsetY: 10,
+            opacity: 0.5
+        });
+
+        layer1.add(shape);
+        stage.add(layer1);
+
+        var layer2 = layer1.clone();
+
+        console.log(layer2.children.length);
+        layer2.getCanvas().setPixelRatio(1);
+        layer1.scaleX(0.5); layer1.scaleY(0.5);
+        stage.add(layer2);
+
+        compareLayers(layer2, layer1, 10);
+
+    });
+
+
 });

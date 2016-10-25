@@ -1,6 +1,8 @@
 /*eslint-disable max-depth */
 (function() {
+
     'use strict';
+    var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
     // constants
     var AUTO = 'auto',
         //CANVAS = 'canvas',
@@ -159,6 +161,14 @@
             context.closePath();
             context.fillStrokeShape(this);
         },
+        // _useBufferCanvas: function(caching) {
+        //     var useIt = Konva.Shape.prototype._useBufferCanvas.call(this, caching);
+        //     if (useIt) {
+        //       return true;
+        //     }
+        //     return false;
+        //     // return isFirefox && this.hasFill() && this.hasShadow();
+        // },
         setText: function(text) {
             var str = Konva.Util._isString(text) ? text : (text || '').toString();
             this._setAttr(TEXT, str);

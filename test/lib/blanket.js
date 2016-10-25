@@ -4712,7 +4712,7 @@ blanket.defaultReporter = function(coverage){
         totals.passedBranches += passedBranches;
         totals.totalBranches += totalBranches;
 
-        // if "data-cover-modulepattern" was provided, 
+        // if "data-cover-modulepattern" was provided,
         // track totals per module name as well as globally
         if (modulePatternRegex) {
             var moduleName = file.match(modulePatternRegex)[1];
@@ -4753,7 +4753,7 @@ blanket.defaultReporter = function(coverage){
         bodyContent += output;
     }
 
-    // create temporary function for use by the global totals reporter, 
+    // create temporary function for use by the global totals reporter,
     // as well as the per-module totals reporter
     var createAggregateTotal = function(numSt, numCov, numBranch, numCovBr, moduleName) {
 
@@ -4771,8 +4771,8 @@ blanket.defaultReporter = function(coverage){
         bodyContent += totalsOutput;
     };
 
-    // if "data-cover-modulepattern" was provided, 
-    // output the per-module totals alongside the global totals    
+    // if "data-cover-modulepattern" was provided,
+    // output the per-module totals alongside the global totals
     if (modulePatternRegex) {
         for (var thisModuleName in totals.moduleTotalStatements) {
             if (totals.moduleTotalStatements.hasOwnProperty(thisModuleName)) {

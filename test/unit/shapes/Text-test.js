@@ -82,6 +82,39 @@ suite('Text', function(){
         assert.equal(text.getClassName(),'Text', 'getClassName should be Text');
     });
 
+    test.only('text with fill and shadow', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var text = new Konva.Text({
+            x: 10,
+            y: 10,
+            text: 'Hello World!',
+            fontSize: 50,
+            fill: 'black',
+            shadowColor: 'darkgrey',
+            shadowOffsetX: 20,
+            shadowOffsetY: 20,
+            shadowBlur: 0
+        });
+
+
+        layer.add(text);
+        stage.add(layer);
+
+        var canvas = createCanvas();
+        var context = canvas.getContext('2d');
+        context.textBaseline = 'middle';
+        context.font = "normal normal 50px Arial";
+        context.fillStyle = 'darkgrey';
+        context.fillText('Hello World!', 20, 20 + 25);
+        context.fillStyle = 'black';
+        context.fillText('Hello World!', 10, 10 + 25);
+
+
+        compareLayerAndCanvas(layer, canvas, 250);
+    });
+
     // ======================================================
     test('add text with letter spacing', function() {
         var stage = addStage();

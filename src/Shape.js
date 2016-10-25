@@ -504,7 +504,7 @@
     Konva.Factory.addGetterSetter(Konva.Shape, 'perfectDrawEnabled', true);
 
     /**
-     * get/set perfectDrawEnabled. If a shape has fill, stroke and opacity you may set `perfectDrawEnabled` to improve performance.
+     * get/set perfectDrawEnabled. If a shape has fill, stroke and opacity you may set `perfectDrawEnabled` to false to improve performance.
      * See http://konvajs.github.io/docs/performance/Disable_Perfect_Draw.html for more information.
      * Default value is true
      * @name perfectDrawEnabled
