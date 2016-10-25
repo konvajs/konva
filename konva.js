@@ -12889,7 +12889,7 @@
 (function() {
 
     'use strict';
-    var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+    // var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
     // constants
     var AUTO = 'auto',
         //CANVAS = 'canvas',
