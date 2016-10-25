@@ -82,7 +82,7 @@ suite('Text', function(){
         assert.equal(text.getClassName(),'Text', 'getClassName should be Text');
     });
 
-    test.only('text with fill and shadow', function() {
+    test.skip('text with fill and shadow', function() {
         var stage = addStage();
         var layer = new Konva.Layer();
 
@@ -93,8 +93,8 @@ suite('Text', function(){
             fontSize: 50,
             fill: 'black',
             shadowColor: 'darkgrey',
-            shadowOffsetX: 20,
-            shadowOffsetY: 20,
+            shadowOffsetX: 0,
+            shadowOffsetY: 50,
             shadowBlur: 0
         });
 
@@ -104,15 +104,15 @@ suite('Text', function(){
 
         var canvas = createCanvas();
         var context = canvas.getContext('2d');
-        context.textBaseline = 'middle';
+        context.textBaseline = 'top';
         context.font = "normal normal 50px Arial";
         context.fillStyle = 'darkgrey';
-        context.fillText('Hello World!', 20, 20 + 25);
+        context.fillText('Hello World!', 10, (50));
         context.fillStyle = 'black';
-        context.fillText('Hello World!', 10, 10 + 25);
+        context.fillText('Hello World!', 10, 10);
 
 
-        compareLayerAndCanvas(layer, canvas, 250);
+        compareLayerAndCanvas(layer, canvas, 254);
     });
 
     // ======================================================

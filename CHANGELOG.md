@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - changing a size of `Konva.Stage` will update it in async way (via `batchDraw`).
+- `shadowOffset` respect pixel ratio now
 
 ## [1.2.2][2016-09-15]
 

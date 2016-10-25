@@ -352,8 +352,8 @@ suite('Shape', function() {
       context.fillStyle = 'green';
       context.shadowColor = 'rgba(0,0,0,0.5)';
       context.shadowBlur = 10;
-      context.shadowOffsetX = 10;
-      context.shadowOffsetY = 10;
+      context.shadowOffsetX = 10 * canvas.ratio;
+      context.shadowOffsetY = 10 * canvas.ratio;
       context.fill();
 
       compareLayerAndCanvas(layer, canvas, 10);
@@ -404,8 +404,8 @@ suite('Shape', function() {
 
       context.shadowColor = 'rgba(0,0,0,0.5)';
       context.shadowBlur = 10;
-      context.shadowOffsetX = 10;
-      context.shadowOffsetY = 10;
+      context.shadowOffsetX = 10 * canvas.ratio;
+      context.shadowOffsetY = 10 * canvas.ratio;
       context.stroke();
 
       compareLayerAndCanvas(layer, canvas, 10);
@@ -491,8 +491,8 @@ suite('Shape', function() {
         context.fillStyle = 'green';
         context.shadowColor = 'grey';
         context.shadowBlur = 10;
-        context.shadowOffsetX = 20;
-        context.shadowOffsetY = 20;
+        context.shadowOffsetX = 20 * canvas.ratio;
+        context.shadowOffsetY = 20 * canvas.ratio;
         context.lineWidth  = 10;
         context.stroke();
         context.fill();
@@ -553,8 +553,8 @@ suite('Shape', function() {
         context.closePath();
         context.shadowColor = 'grey';
         context.shadowBlur = 1;
-        context.shadowOffsetX = 20;
-        context.shadowOffsetY = 20;
+        context.shadowOffsetX = 20 * canvas.ratio;
+        context.shadowOffsetY = 20 * canvas.ratio;
         context.fillStyle = 'black';
         context.fill();
         context.restore();
@@ -624,8 +624,8 @@ suite('Shape', function() {
         context.save();
         context.shadowColor = 'grey';
         context.shadowBlur = 2;
-        context.shadowOffsetX = 20;
-        context.shadowOffsetY = 20;
+        context.shadowOffsetX = 20 * canvas.ratio;
+        context.shadowOffsetY = 20 * canvas.ratio;
         context.font = 'normal 50px Arial';
         context.textBaseline = 'middle';
 
@@ -947,8 +947,8 @@ suite('Shape', function() {
         context.fillStyle = 'green';
         context.shadowColor = 'rgba(0,0,0,1)';
         context.shadowBlur = 0;
-        context.shadowOffsetX = 5;
-        context.shadowOffsetY = 5;
+        context.shadowOffsetX = 5 * canvas.ratio;
+        context.shadowOffsetY = 5 * canvas.ratio;
         context.fill();
 
 
@@ -994,8 +994,8 @@ suite('Shape', function() {
         context.fillStyle = 'green';
         context.shadowColor = 'rgba(0,0,0,1)';
         context.shadowBlur = 0;
-        context.shadowOffsetX = 5;
-        context.shadowOffsetY = 5;
+        context.shadowOffsetX = 5 * canvas.ratio;
+        context.shadowOffsetY = 5 * canvas.ratio;
         context.fill();
 
         compareLayerAndCanvas(layer, canvas, 10);
@@ -1082,8 +1082,8 @@ suite('Shape', function() {
         context.fillStyle = 'green';
         context.shadowColor = 'grey';
         context.shadowBlur = 10;
-        context.shadowOffsetX = 20;
-        context.shadowOffsetY = 20;
+        context.shadowOffsetX = 20 * canvas.ratio;
+        context.shadowOffsetY = 20 * canvas.ratio;
         context.lineWidth  = 10;
         context.fill();
 
@@ -1149,30 +1149,24 @@ suite('Shape', function() {
 
 
     test('shadow should respect pixel ratio', function() {
+
         var stage = addStage();
-        var layer1 = new Konva.Layer();
+        var layer = new Konva.Layer();
+        layer.getCanvas().setPixelRatio(2);
         var shape = new Konva.Rect({
-            width: 50,
-            height: 50,
+            width: 100,
+            height: 100,
             fill: 'black',
             shadowColor: 'green',
-            shadowOffsetX: 10,
-            shadowOffsetY: 10,
-            opacity: 0.5
+            shadowOffsetX: 20,
+            shadowOffsetY: 20,
+            shadowBlur: 0
         });
 
-        layer1.add(shape);
-        stage.add(layer1);
-
-        var layer2 = layer1.clone();
-
-        console.log(layer2.children.length);
-        layer2.getCanvas().setPixelRatio(1);
-        layer1.scaleX(0.5); layer1.scaleY(0.5);
-        stage.add(layer2);
-
-        compareLayers(layer2, layer1, 10);
-
+        layer.add(shape);
+        stage.add(layer);
+        var data = layer.getContext().getImageData(15 * 2, (100 + 5) * 2, 1, 1);
+        assert.equal(data.data[3], 0, 'pixel should be empty, no shadow here');
     });
 
 

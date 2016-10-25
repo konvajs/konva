@@ -109,6 +109,7 @@ function createCanvas() {
     canvas.width = 578 * ratio;
     canvas.height = 200 * ratio;
     canvas.getContext('2d').scale(ratio, ratio);
+    canvas.ratio = ratio;
     return canvas;
 }
 

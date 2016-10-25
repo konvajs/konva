@@ -102,7 +102,7 @@ suite('Caching', function() {
     });
 
 
-    test.skip('cache rectangle with fill and opacity', function() {
+    test('cache rectangle with fill and opacity', function() {
         var stage = addStage();
 
         var layer = new Konva.Layer();
@@ -172,8 +172,9 @@ suite('Caching', function() {
             shadowColor : 'black'
         });
         rect.cache();
-        rect.opacity(0.3);
+        // rect.opacity(0.3);
 
+        layer.add(rect.clone({y: 75, x: 55}));
         layer.add(rect);
         stage.add(layer);
 
@@ -249,8 +250,8 @@ suite('Caching', function() {
         context.fillStyle = 'green';
         context.shadowColor = 'black';
         context.shadowBlur = 10;
-        context.shadowOffsetX = 10;
-        context.shadowOffsetY = 10;
+        context.shadowOffsetX = 10 * canvas.ratio;
+        context.shadowOffsetY = 10 * canvas.ratio;
         context.fill();
         compareLayerAndCanvas(layer, canvas, 50);
     });
@@ -286,8 +287,8 @@ suite('Caching', function() {
         context.fillStyle = 'green';
         context.shadowColor = 'black';
         context.shadowBlur = 10;
-        context.shadowOffsetX = -10;
-        context.shadowOffsetY = -10;
+        context.shadowOffsetX = -10 * canvas.ratio;
+        context.shadowOffsetY = -10 * canvas.ratio;
         context.fill();
         compareLayerAndCanvas(layer, canvas, 50);
     });
@@ -325,8 +326,8 @@ suite('Caching', function() {
         context.fillStyle = 'green';
         context.shadowColor = 'black';
         context.shadowBlur = 10;
-        context.shadowOffsetX = -10;
-        context.shadowOffsetY = -10;
+        context.shadowOffsetX = -10 * canvas.ratio;
+        context.shadowOffsetY = -10 * canvas.ratio;
         context.fill();
         compareLayerAndCanvas(layer, canvas, 50);
     });
@@ -444,8 +445,8 @@ suite('Caching', function() {
         context.fillStyle = 'green';
         context.shadowColor = 'black';
         context.shadowBlur = 10;
-        context.shadowOffsetX = 10;
-        context.shadowOffsetY = 10;
+        context.shadowOffsetX = 10 * canvas.ratio;
+        context.shadowOffsetY = 10 * canvas.ratio;
         context.fill();
         context.restore();
 
@@ -557,8 +558,8 @@ suite('Caching', function() {
         context.fillStyle = 'green';
         context.shadowColor = 'black';
         context.shadowBlur = 10;
-        context.shadowOffsetX = 10;
-        context.shadowOffsetY = 10;
+        context.shadowOffsetX = 10 * canvas.ratio;
+        context.shadowOffsetY = 10 * canvas.ratio;
         context.fill();
         context.restore();
 

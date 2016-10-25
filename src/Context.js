@@ -418,9 +418,14 @@
             // attrs
             that.setAttr = function() {
                 origSetter.apply(that, arguments);
+                var prop = arguments[0];
+                var val = arguments[1];
+                if ((prop === 'shadowOffsetX') || (prop === 'shadowOffsetY')) {
+                  val = val / this.canvas.getPixelRatio();
+                }
                 that._trace({
-                    property: arguments[0],
-                    val: arguments[1]
+                    property: prop,
+                    val: val
                 });
             };
         }
@@ -574,8 +579,9 @@
                 }),
                 // TODO: get this info from transform??
                 scale = shape.getAbsoluteScale(),
-                scaleX = scale.x,
-                scaleY = scale.y;
+                ratio = this.canvas.getPixelRatio(),
+                scaleX = scale.x * ratio,
+                scaleY = scale.y * ratio;
 
             this.setAttr('shadowColor', color);
             this.setAttr('shadowBlur', blur);
