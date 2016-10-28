@@ -15167,7 +15167,8 @@
             this.textWidth = size.width;
             this.textHeight = size.height;
 
-            var textFullWidth = this.textWidth + (this.attrs.text.length - 1) * letterSpacing;
+            var textFullWidth = Math.max(this.textWidth +
+              ((this.attrs.text || '').length - 1) * letterSpacing, 0);
 
             this.glyphInfo = [];
 
