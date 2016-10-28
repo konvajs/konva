@@ -66,7 +66,7 @@
             });
 
             // update text data for certain attr changes
-            this.on('textChange.konva letterSpacingChange.konva', that._setTextData);
+            this.on('textChange.konva alignChange.konva letterSpacingChange.konva', that._setTextData);
             that._setTextData();
             this.sceneFunc(this._sceneFunc);
             this.hitFunc(this._hitFunc);
@@ -169,14 +169,41 @@
             this.textWidth = size.width;
             this.textHeight = size.height;
 
+            var textFullWidth = this.textWidth + (this.attrs.text.length - 1) * letterSpacing;
+
             this.glyphInfo = [];
+
+            var fullPathWidth = 0;
+            for(var l = 0; l < that.dataArray.length; l++) {
+              if(that.dataArray[l].pathLength > 0) {
+                  fullPathWidth += that.dataArray[l].pathLength;
+              }
+            }
+
+            var offset = 0;
+            if (this.align() === 'center') {
+              offset = Math.max(0, fullPathWidth / 2 - textFullWidth / 2);
+            }
+            if (this.align() === 'right') {
+              offset = Math.max(0, fullPathWidth - textFullWidth);
+            }
 
             var charArr = this.getText().split('');
 
             var p0, p1, pathCmd;
 
+
+
             var pIndex = -1;
             var currentT = 0;
+            // var sumLength = 0;
+            // for(var j = 0; j < that.dataArray.length; j++) {
+            //   if(that.dataArray[j].pathLength > 0) {
+            //
+            //     if (sumLength + that.dataArray[j].pathLength > offset) {}
+            //       fullPathWidth += that.dataArray[j].pathLength;
+            //   }
+            // }
 
             var getNextPathSegment = function() {
                 currentT = 0;
@@ -198,6 +225,7 @@
 
                 return {};
             };
+
             var findSegmentToFitCharacter = function(c) {
 
                 var glyphWidth = that._getTextSize(c).width + letterSpacing;
@@ -312,6 +340,19 @@
                     }
                 }
             };
+
+            // fake search for offset, this is very bad approach
+            // TODO: find other way to add offset from start (for align)
+            var testChar = 'C';
+            var glyphWidth = that._getTextSize(testChar).width + letterSpacing;
+            for (var k = 0; k < (offset / glyphWidth); k++) {
+              findSegmentToFitCharacter(testChar);
+              if(p0 === undefined || p1 === undefined) {
+                  break;
+              }
+              p0 = p1;
+            }
+
             for(var i = 0; i < charArr.length; i++) {
 
                 // Find p1 such that line segment between p0 and p1 is approx. width of glyph
@@ -423,6 +464,25 @@
      * @memberof Konva.TextPath.prototype
      * @param {String} fontStyle
      */
+     Konva.Factory.addGetterSetter(Konva.TextPath, 'align', 'left');
+
+     /**
+      * get/set horizontal align of text.  Can be 'left', 'center', or 'right'
+      * @name align
+      * @method
+      * @memberof Konva.Text.prototype
+      * @param {String} align
+      * @returns {String}
+      * @example
+      * // get text align
+      * var align = text.align();
+      *
+      * // center text
+      * text.align('center');
+      *
+      * // align text to right
+      * text.align('right');
+      */
 
     Konva.Factory.addGetterSetter(Konva.TextPath, 'letterSpacing', 0);
 

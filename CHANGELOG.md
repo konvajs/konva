@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Added
 - new properties for `Konva.Text`: `letterSpacing`
 - new event `contentContextmenu` for `Konva.Stage`
+- `align` support for `Konva.TextPath`
 
 ### Changed
 - changing a size of `Konva.Stage` will update it in async way (via `batchDraw`).

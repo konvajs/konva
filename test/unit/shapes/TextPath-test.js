@@ -240,4 +240,28 @@ suite('TextPath', function() {
         cloneAndCompareLayer(layer,50);
         showHit(layer);
     });
+
+    test('Text path with align', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var c = "M10,10 C0,0 10,150 100,100 S300,150 400,50";
+
+        var textpath = new Konva.TextPath({
+            stroke: 'black',
+            strokeWidth: 1,
+            fill: 'orange',
+            fontSize: 10,
+            fontFamily: 'Arial',
+            letterSpacing: 5,
+            text: 'All the world\'s a stage.',
+            align: 'center',
+            data: c
+        });
+
+        // TODO: add test case
+
+        layer.add(textpath);
+        stage.add(layer);
+    });
 });
