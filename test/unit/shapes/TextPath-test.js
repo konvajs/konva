@@ -264,4 +264,35 @@ suite('TextPath', function() {
         layer.add(textpath);
         stage.add(layer);
     });
+
+
+    test('Text with baseline', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var c = "M 10,10 300,10";
+
+        var path = new Konva.Path({
+            stroke: 'red',
+            strokeWidth: 1,
+            data: c
+        });
+
+        layer.add(path);
+
+        var textpath = new Konva.TextPath({
+            fill: 'orange',
+            fontSize: '24',
+            fontFamily: 'Arial',
+            text: 'The quick brown fox jumped over the lazy dog\'s back',
+            data: c,
+            textBaseline: 'top'
+        });
+		      textpath.on('mouseover', function() { this.setFill('blue'); layer.drawScene(); });
+		        textpath.on('mouseout', function() { this.setFill('orange'); layer.drawScene(); });
+
+        layer.add(textpath);
+        stage.add(layer);
+		      showHit(layer);
+    });
 });

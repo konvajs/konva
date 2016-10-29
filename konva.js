@@ -15071,7 +15071,7 @@
         },
         _sceneFunc: function(context) {
             context.setAttr('font', this._getContextFont());
-            context.setAttr(this.getTextBaseline(), 'middle');
+            context.setAttr('textBaseline', this.getTextBaseline());
             context.setAttr('textAlign', 'left');
             context.save();
 
@@ -15089,15 +15089,15 @@
                 context.restore();
 
                 //// To assist with debugging visually, uncomment following
-                // context.beginPath();
-                // if (i % 2)
-                // context.strokeStyle = 'cyan';
-                // else
-                // context.strokeStyle = 'green';
-                // var p1 = glyphInfo[i].p1;
-                // context.moveTo(p0.x, p0.y);
-                // context.lineTo(p1.x, p1.y);
-                // context.stroke();
+                context.beginPath();
+                if (i % 2)
+                context.strokeStyle = 'cyan';
+                else
+                context.strokeStyle = 'green';
+                var p1 = glyphInfo[i].p1;
+                context.moveTo(p0.x, p0.y);
+                context.lineTo(p1.x, p1.y);
+                context.stroke();
             }
             context.restore();
         },
