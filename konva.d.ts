@@ -624,6 +624,28 @@ declare module Konva {
         points(points: number[]): Line;
     }
 
+    interface ArrowConfig extends ShapeConfig {
+        points: number[];
+        tension?: number;
+        closed?: boolean;
+        pointerLength?: number;
+        pointerWidth?: number;
+    }
+
+    class Arrow extends Shape {
+        constructor(ArrowConfig : ArrowConfig);
+        closed(): boolean;
+        closed(closed: boolean): Arrow;
+        tension(): number;
+        tension(tension: number): Arrow;
+        points(): number[];
+        points(points: number[]): Arrow;
+        pointerLength(): Number;
+        pointerLength(Length: Number): Number;
+        pointerWidth(): Number;
+        pointerWidth(Width: Number): Number;
+    }
+
     interface RectConfig extends ShapeConfig {
         cornerRadius?: number;
     }
