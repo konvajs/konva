@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v1.2.2
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri Oct 28 2016
+ * Date: Mon Oct 31 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -15385,7 +15385,7 @@
         },
         getSelfRect: function() {
             var points = [];
-            var fontSize = this.fontSize();
+
 
             this.glyphInfo.forEach(function(info) {
                 points.push(info.p0.x);
@@ -15405,11 +15405,12 @@
                 minY = Math.min(minY, y);
                 maxY = Math.max(maxY, y);
             }
+            var fontSize = this.fontSize();
             return {
-                x: Math.round(minX) - fontSize,
-                y: Math.round(minY) - fontSize,
-                width: Math.round(maxX - minX) + fontSize * 2,
-                height: Math.round(maxY - minY) + fontSize * 2
+                x: Math.round(minX) - fontSize / 2,
+                y: Math.round(minY) - fontSize / 2,
+                width: Math.round(maxX - minX) + fontSize,
+                height: Math.round(maxY - minY) + fontSize
             };
         }
     };

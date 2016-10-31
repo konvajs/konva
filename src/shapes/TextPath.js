@@ -387,7 +387,7 @@
         },
         getSelfRect: function() {
             var points = [];
-            var fontSize = this.fontSize();
+
 
             this.glyphInfo.forEach(function(info) {
                 points.push(info.p0.x);
@@ -407,11 +407,12 @@
                 minY = Math.min(minY, y);
                 maxY = Math.max(maxY, y);
             }
+            var fontSize = this.fontSize();
             return {
-                x: Math.round(minX) - fontSize,
-                y: Math.round(minY) - fontSize,
-                width: Math.round(maxX - minX) + fontSize * 2,
-                height: Math.round(maxY - minY) + fontSize * 2
+                x: Math.round(minX) - fontSize / 2,
+                y: Math.round(minY) - fontSize / 2,
+                width: Math.round(maxX - minX) + fontSize,
+                height: Math.round(maxY - minY) + fontSize
             };
         }
     };
