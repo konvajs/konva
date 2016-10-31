@@ -135,7 +135,7 @@
                     context.translate((totalWidth - width - p * 2) / 2, 0);
                 }
 
-                if (letterSpacing > 0) {
+                if (letterSpacing !== 0) {
                   for(var li = 0; li < text.length; li++) {
                     var letter = text[li];
                     this.partialText = letter;
