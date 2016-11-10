@@ -168,9 +168,10 @@
         this._dragChange();
     };
 
-    var origDestroy = Konva.Node.prototype.destroy;
+    var origRemove = Konva.Node.prototype.remove;
 
-    Konva.Node.prototype.destroy = function() {
+    Konva.Node.prototype.__originalRemove = origRemove;
+    Konva.Node.prototype.remove = function() {
         var dd = Konva.DD;
 
         // stop DD
@@ -179,7 +180,7 @@
             this.stopDrag();
         }
 
-        origDestroy.call(this);
+        origRemove.call(this);
     };
 
     /**

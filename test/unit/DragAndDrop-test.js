@@ -369,4 +369,79 @@ suite('DragAndDrop', function() {
         }, 50);
 
     });
+
+    test('removing shape while drag and drop should no throw error', function() {
+         var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var circle = new Konva.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle',
+            draggable: true
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        stage.simulateMouseDown({
+            x: 291,
+            y: 112
+        });
+
+        circle.remove();
+
+        stage.simulateMouseMove({
+            x: 311,
+            y: 112
+        });
+
+
+        stage.simulateMouseUp({
+            x: 291,
+            y: 112,
+            button: 2
+        });
+    });
+
+    test('destroying shape while drag and drop should no throw error', function() {
+         var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var circle = new Konva.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'myCircle',
+            draggable: true
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        stage.simulateMouseDown({
+            x: 291,
+            y: 112
+        });
+
+        circle.destroy();
+
+        stage.simulateMouseMove({
+            x: 311,
+            y: 112
+        });
+
+
+        stage.simulateMouseUp({
+            x: 291,
+            y: 112,
+        });
+    });
 });

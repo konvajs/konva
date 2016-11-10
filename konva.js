@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v1.2.2
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mon Oct 31 2016
+ * Date: Thu Nov 10 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -3449,7 +3449,9 @@
         moveTo: function(newContainer) {
             // do nothing if new container is already parent
             if (this.getParent() !== newContainer) {
-                this.remove();
+                // this.remove my be overrided by drag and drop
+                // buy we need original
+                (this.__originalRemove || this.remove).call(this);
                 newContainer.add(this);
             }
             return this;
@@ -11345,9 +11347,10 @@
         this._dragChange();
     };
 
-    var origDestroy = Konva.Node.prototype.destroy;
+    var origRemove = Konva.Node.prototype.remove;
 
-    Konva.Node.prototype.destroy = function() {
+    Konva.Node.prototype.__originalRemove = origRemove;
+    Konva.Node.prototype.remove = function() {
         var dd = Konva.DD;
 
         // stop DD
@@ -11356,7 +11359,7 @@
             this.stopDrag();
         }
 
-        origDestroy.call(this);
+        origRemove.call(this);
     };
 
     /**

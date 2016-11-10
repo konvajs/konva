@@ -5,7 +5,7 @@ suite('Enhance', function () {
 
         var imageObj = new Image();
         imageObj.onload = function() {
-            
+
             var layer = new Konva.Layer();
             var filt = new Konva.Image({
                 x: 10,
@@ -41,7 +41,7 @@ suite('Enhance', function () {
 
         var imageObj = new Image();
         imageObj.onload = function() {
-            
+
             var layer = new Konva.Layer();
             darth = new Konva.Image({
                 x: 10,
@@ -59,16 +59,16 @@ suite('Enhance', function () {
             layer.draw();
 
             var tween = new Konva.Tween({
-              node: darth, 
+              node: darth,
               duration: 2.0,
               enhance: 1.0,
               easing: Konva.Easings.EaseInOut
             });
-        
+
             darth.on('mouseover', function() {
               tween.play();
             });
-      
+
             darth.on('mouseout', function() {
               tween.reverse();
             });
