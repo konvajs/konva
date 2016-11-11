@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v1.2.2
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Thu Nov 10 2016
+ * Date: Fri Nov 11 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -3803,6 +3803,48 @@
             }
             return node;
         },
+        _toKonvaCanvas: function(config) {
+          config = config || {};
+
+          var stage = this.getStage(),
+              x = config.x || 0,
+              y = config.y || 0,
+              pixelRatio = config.pixelRatio || 1,
+              canvas = new Konva.SceneCanvas({
+                  width: config.width || this.getWidth() || (stage ? stage.getWidth() : 0),
+                  height: config.height || this.getHeight() || (stage ? stage.getHeight() : 0),
+                  pixelRatio: pixelRatio
+              }),
+              context = canvas.getContext();
+
+          context.save();
+
+          if(x || y) {
+              context.translate(-1 * x, -1 * y);
+          }
+
+          this.drawScene(canvas);
+          context.restore();
+
+          return canvas;
+        },
+        /**
+         * converts node into an canvas element.
+         * @method
+         * @memberof Konva.Node.prototype
+         * @param {Object} config
+         * @param {Function} config.callback function executed when the composite has completed
+         * @param {Number} [config.x] x position of canvas section
+         * @param {Number} [config.y] y position of canvas section
+         * @param {Number} [config.width] width of canvas section
+         * @param {Number} [config.height] height of canvas section
+         * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image.  Default is 1.
+         * @example
+         * var canvas = node.toCanvas();
+         */
+        toCanvas: function(config) {
+          return this._toKonvaCanvas(config)._canvas;
+        },
         /**
          * Creates a composite data URL. If MIME type is not
          * specified, then "image/png" will result. For "image/jpeg", specify a quality
@@ -3824,30 +3866,9 @@
          */
         toDataURL: function(config) {
             config = config || {};
-
             var mimeType = config.mimeType || null,
-                quality = config.quality || null,
-                stage = this.getStage(),
-                x = config.x || 0,
-                y = config.y || 0,
-                pixelRatio = config.pixelRatio || 1,
-                canvas = new Konva.SceneCanvas({
-                    width: config.width || this.getWidth() || (stage ? stage.getWidth() : 0),
-                    height: config.height || this.getHeight() || (stage ? stage.getHeight() : 0),
-                    pixelRatio: pixelRatio
-                }),
-                context = canvas.getContext();
-
-            context.save();
-
-            if(x || y) {
-                context.translate(-1 * x, -1 * y);
-            }
-
-            this.drawScene(canvas);
-            context.restore();
-
-            return canvas.toDataURL(mimeType, quality);
+              quality = config.quality || null;
+            return this._toKonvaCanvas(config).toDataURL(mimeType, quality);
         },
         /**
          * converts node into an image.  Since the toImage

@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - new properties for `Konva.Text`: `letterSpacing`
 - new event `contentContextmenu` for `Konva.Stage`
 - `align` support for `Konva.TextPath`
+- new method `toCanvas()` for converting a node into canvas element
 
 ### Changed
 - changing a size of `Konva.Stage` will update it in async way (via `batchDraw`).
