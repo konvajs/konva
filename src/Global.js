@@ -270,4 +270,4 @@
     }
     Konva.document = document;
     Konva.window = window;
-})(typeof window !== 'undefined' ? window : global);
+})(typeof global !== 'undefined' ? global : window);
