@@ -224,8 +224,8 @@
     };
 
     var glob =
-        typeof window !== 'undefined' ? window :
         typeof global !== 'undefined' ? global :
+        typeof window !== 'undefined' ? window :
         typeof WorkerGlobalScope !== 'undefined' ? self : {};
 
 
