@@ -224,8 +224,8 @@
     };
 
     var glob =
-        typeof window !== 'undefined' ? window :
         typeof global !== 'undefined' ? global :
+        typeof window !== 'undefined' ? window :
         typeof WorkerGlobalScope !== 'undefined' ? self : {};
 
 
@@ -270,4 +270,4 @@
     }
     Konva.document = document;
     Konva.window = window;
-})(typeof window !== 'undefined' ? window : global);
+})(typeof global !== 'undefined' ? global : window);
