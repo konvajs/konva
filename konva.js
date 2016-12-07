@@ -15151,14 +15151,11 @@
 
                 context.fillStrokeShape(this);
                 if (textDecoration === 'underline') {
-                  // context.beginPath();
-                  // context.strokeStyle = fill;
                   if (i === 0) {
-                    context.moveTo(0, fontSize / 2);
+                    context.moveTo(0, fontSize / 2 + 1);
                   }
 
-                  context.lineTo(fontSize, fontSize / 2);
-                  // context.stroke();
+                  context.lineTo(fontSize, fontSize / 2 + 1);
                 }
                 context.restore();
 
@@ -15176,6 +15173,7 @@
             }
             if (textDecoration === 'underline') {
               context.strokeStyle = fill;
+              context.lineWidth = fontSize / 20;
               context.stroke();
             }
 
