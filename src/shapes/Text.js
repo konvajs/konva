@@ -107,6 +107,7 @@
                 letterSpacing = this.getLetterSpacing(),
                 textDecoration = this.textDecoration(),
                 fill = this.fill(),
+                fontSize = this.fontSize(),
                 n;
 
             context.setAttr('font', this._getContextFont());
@@ -143,7 +144,9 @@
                   context.beginPath();
                   context.moveTo(0, Math.round(lineHeightPx / 2));
                   context.lineTo(Math.round(width), Math.round(lineHeightPx / 2));
-                  // context
+                  // TODO: I have no idea what is real ratio
+                  // just /20 looks good enough
+                  context.lineWidth = fontSize / 20;
                   context.strokeStyle = fill;
                   context.stroke();
                   context.restore();

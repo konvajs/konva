@@ -342,7 +342,7 @@ suite('Text', function(){
             x: 10,
             y: 10,
             text: 'hello\nworld',
-            fontSize: 15,
+            fontSize: 80,
             fill: 'red',
             letterSpacing: 5,
             textDecoration: 'underline',
