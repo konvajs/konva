@@ -82,6 +82,9 @@
             var fontSize = this.fontSize();
 
             var glyphInfo = this.glyphInfo;
+            if (textDecoration === 'underline') {
+              context.beginPath();
+            }
             for(var i = 0; i < glyphInfo.length; i++) {
                 context.save();
 

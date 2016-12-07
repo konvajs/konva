@@ -280,7 +280,8 @@ suite('TextPath', function() {
           letterSpacing: 5,
           text: 'All the worlds a stage.',
           textDecoration: 'underline',
-          data: c
+          data: c,
+          draggable: true
       });
 
       layer.add(textpath);

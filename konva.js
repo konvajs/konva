@@ -13120,6 +13120,7 @@
 
                 if (textDecoration === 'underline') {
                   context.save();
+                  context.beginPath();
                   context.moveTo(0, Math.round(lineHeightPx / 2));
                   context.lineTo(Math.round(width), Math.round(lineHeightPx / 2));
                   // context
@@ -15133,6 +15134,9 @@
             var fontSize = this.fontSize();
 
             var glyphInfo = this.glyphInfo;
+            if (textDecoration === 'underline') {
+              context.beginPath();
+            }
             for(var i = 0; i < glyphInfo.length; i++) {
                 context.save();
 

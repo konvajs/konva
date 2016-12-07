@@ -140,6 +140,7 @@
 
                 if (textDecoration === 'underline') {
                   context.save();
+                  context.beginPath();
                   context.moveTo(0, Math.round(lineHeightPx / 2));
                   context.lineTo(Math.round(width), Math.round(lineHeightPx / 2));
                   // context
