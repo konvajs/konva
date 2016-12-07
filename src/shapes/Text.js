@@ -105,6 +105,8 @@
                 textArrLen = textArr.length,
                 totalWidth = this.getWidth(),
                 letterSpacing = this.getLetterSpacing(),
+                textDecoration = this.textDecoration(),
+                fill = this.fill(),
                 n;
 
             context.setAttr('font', this._getContextFont());
@@ -118,6 +120,7 @@
             } else {
                 context.translate(0, textHeight / 2);
             }
+
 
 
             // draw text lines
@@ -135,12 +138,21 @@
                     context.translate((totalWidth - width - p * 2) / 2, 0);
                 }
 
+                if (textDecoration === 'underline') {
+                  context.save();
+                  context.moveTo(0, Math.round(lineHeightPx / 2));
+                  context.lineTo(Math.round(width), Math.round(lineHeightPx / 2));
+                  // context
+                  context.strokeStyle = fill;
+                  context.stroke();
+                  context.restore();
+                }
                 if (letterSpacing !== 0) {
                   for(var li = 0; li < text.length; li++) {
                     var letter = text[li];
                     this.partialText = letter;
                     context.fillStrokeShape(this);
-                    context.translate(this._getTextSize(letter).width + letterSpacing, 0);
+                    context.translate(Math.round(this._getTextSize(letter).width) + letterSpacing, 0);
                   }
                 } else {
                   this.partialText = text;
@@ -527,6 +539,23 @@
      * // set text
      * text.text('Hello world!');
      */
+
+     Konva.Factory.addGetterSetter(Konva.Text, 'textDecoration', null);
+
+     /**
+      * get/set text decoration of a text.  Can be '' or 'underline'
+      * @name textDecoration
+      * @method
+      * @memberof Konva.Text.prototype
+      * @param {String} textDecoration
+      * @returns {String}
+      * @example
+      * // get text decoration
+      * var textDecoration = text.textDecoration();
+      *
+      * // center text
+      * text.textDecoration('underline');
+      */
 
     Konva.Collection.mapMethods(Konva.Text);
 })();

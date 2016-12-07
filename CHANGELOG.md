@@ -5,7 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Not released][Not released]
 
 ## Added
-- new properties for `Konva.Text`: `letterSpacing`
+- new property for `Konva.Text` and `Konva.TextPath`: `textDecoration`. Right now it sports only '' (no decoration) and 'underline' values.
+- new property for `Konva.Text`: `letterSpacing`
 - new event `contentContextmenu` for `Konva.Stage`
 - `align` support for `Konva.TextPath`
 - new method `toCanvas()` for converting a node into canvas element

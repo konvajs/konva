@@ -330,6 +330,33 @@ suite('Text', function(){
 
     });
 
+
+    // ======================================================
+    test('text multi line with textDecoration and spacing', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var text = new Konva.Text({
+            x: 10,
+            y: 10,
+            text: 'hello\nworld',
+            fontSize: 15,
+            fill: 'red',
+            letterSpacing: 5,
+            textDecoration: 'underline'
+        });
+
+        layer.add(text);
+        stage.add(layer);
+
+        var trace = 'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 15px Arial;textBaseline=middle;textAlign=left;save();translate(0,7.5);save();save();moveTo(0,8);lineTo(52,8);stroke();restore();fillStyle=red;fillText(h,0,0);translate(13,0);fillStyle=red;fillText(e,0,0);translate(13,0);fillStyle=red;fillText(l,0,0);translate(8,0);fillStyle=red;fillText(l,0,0);translate(8,0);fillStyle=red;fillText(o,0,0);translate(13,0);restore();translate(0,15);save();save();moveTo(0,8);lineTo(56,8);stroke();restore();fillStyle=red;fillText(w,0,0);translate(16,0);fillStyle=red;fillText(o,0,0);translate(13,0);fillStyle=red;fillText(r,0,0);translate(10,0);fillStyle=red;fillText(l,0,0);translate(8,0);fillStyle=red;fillText(d,0,0);translate(13,0);restore();translate(0,15);restore();restore();';
+
+
+
+        assert.equal(layer.getContext().getTrace(), trace);
+
+    });
+
     // ======================================================
     test('change font size should update text data', function() {
         var stage = addStage();

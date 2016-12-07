@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v1.2.2
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri Nov 11 2016
+ * Date: Wed Dec 07 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -13085,6 +13085,8 @@
                 textArrLen = textArr.length,
                 totalWidth = this.getWidth(),
                 letterSpacing = this.getLetterSpacing(),
+                textDecoration = this.textDecoration(),
+                fill = this.fill(),
                 n;
 
             context.setAttr('font', this._getContextFont());
@@ -13098,6 +13100,7 @@
             } else {
                 context.translate(0, textHeight / 2);
             }
+
 
 
             // draw text lines
@@ -13115,12 +13118,21 @@
                     context.translate((totalWidth - width - p * 2) / 2, 0);
                 }
 
+                if (textDecoration === 'underline') {
+                  context.save();
+                  context.moveTo(0, Math.round(lineHeightPx / 2));
+                  context.lineTo(Math.round(width), Math.round(lineHeightPx / 2));
+                  // context
+                  context.strokeStyle = fill;
+                  context.stroke();
+                  context.restore();
+                }
                 if (letterSpacing !== 0) {
                   for(var li = 0; li < text.length; li++) {
                     var letter = text[li];
                     this.partialText = letter;
                     context.fillStrokeShape(this);
-                    context.translate(this._getTextSize(letter).width + letterSpacing, 0);
+                    context.translate(Math.round(this._getTextSize(letter).width) + letterSpacing, 0);
                   }
                 } else {
                   this.partialText = text;
@@ -13507,6 +13519,23 @@
      * // set text
      * text.text('Hello world!');
      */
+
+     Konva.Factory.addGetterSetter(Konva.Text, 'textDecoration', null);
+
+     /**
+      * get/set text decoration of a text.  Can be '' or 'underline'
+      * @name textDecoration
+      * @method
+      * @memberof Konva.Text.prototype
+      * @param {String} textDecoration
+      * @returns {String}
+      * @example
+      * // get text decoration
+      * var textDecoration = text.textDecoration();
+      *
+      * // center text
+      * text.textDecoration('underline');
+      */
 
     Konva.Collection.mapMethods(Konva.Text);
 })();
@@ -15099,6 +15128,10 @@
             context.setAttr('textAlign', 'left');
             context.save();
 
+            var textDecoration = this.textDecoration();
+            var fill = this.fill();
+            var fontSize = this.fontSize();
+
             var glyphInfo = this.glyphInfo;
             for(var i = 0; i < glyphInfo.length; i++) {
                 context.save();
@@ -15110,10 +15143,21 @@
                 this.partialText = glyphInfo[i].text;
 
                 context.fillStrokeShape(this);
+                if (textDecoration === 'underline') {
+                  // context.beginPath();
+                  // context.strokeStyle = fill;
+                  if (i === 0) {
+                    context.moveTo(0, fontSize / 2);
+                  }
+
+                  context.lineTo(fontSize, fontSize / 2);
+                  // context.stroke();
+                }
                 context.restore();
 
+
                 //// To assist with debugging visually, uncomment following
-                // context.beginPath();
+                //
                 // if (i % 2)
                 // context.strokeStyle = 'cyan';
                 // else
@@ -15123,6 +15167,11 @@
                 // context.lineTo(p1.x, p1.y);
                 // context.stroke();
             }
+            if (textDecoration === 'underline') {
+              context.strokeStyle = fill;
+              context.stroke();
+            }
+
             context.restore();
         },
         _hitFunc: function(context) {
@@ -15563,6 +15612,23 @@
      * @method
      * @memberof Konva.TextPath.prototype
      */
+
+     Konva.Factory.addGetterSetter(Konva.TextPath, 'textDecoration', null);
+
+     /**
+      * get/set text decoration of a text.  Can be '' or 'underline'
+      * @name textDecoration
+      * @method
+      * @memberof Konva.Text.prototype
+      * @param {String} textDecoration
+      * @returns {String}
+      * @example
+      * // get text decoration
+      * var textDecoration = text.textDecoration();
+      *
+      * // center text
+      * text.textDecoration('underline');
+      */
 
     Konva.Collection.mapMethods(Konva.TextPath);
 })();

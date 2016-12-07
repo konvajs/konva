@@ -145,6 +145,8 @@ suite('TextPath', function() {
 
     });
 
+
+
     // ======================================================
     test('Render Text Along Elliptical Arc', function() {
         var stage = addStage();
@@ -263,6 +265,31 @@ suite('TextPath', function() {
 
         layer.add(textpath);
         stage.add(layer);
+    });
+
+    test('Text path with underline', function() {
+      var stage = addStage();
+      var layer = new Konva.Layer();
+
+      var c = "M10,10 C0,0 10,150 100,100 S300,150 400,50";
+
+      var textpath = new Konva.TextPath({
+          fill: 'orange',
+          fontSize: 10,
+          fontFamily: 'Arial',
+          letterSpacing: 5,
+          text: 'All the worlds a stage.',
+          textDecoration: 'underline',
+          data: c
+      });
+
+      layer.add(textpath);
+      stage.add(layer);
+
+
+      var trace = 'rotate();fillStyle;fillText();lineTo();restore();save();translate();rotate();fillStyle;fillText();lineTo();restore();save();translate();rotate();fillStyle;fillText();lineTo();restore();save();translate();rotate();fillStyle;fillText();lineTo();restore();save();translate();rotate();fillStyle;fillText();lineTo();restore();save();translate();rotate();fillStyle;fillText();lineTo();restore();save();translate();rotate();fillStyle;fillText();lineTo();restore();save();translate();rotate();fillStyle;fillText();lineTo();restore();save();translate();rotate();fillStyle;fillText();lineTo();restore();save();translate();rotate();fillStyle;fillText();lineTo();restore();save();translate();rotate();fillStyle;fillText();lineTo();restore();save();translate();rotate();fillStyle;fillText();lineTo();restore();save();translate();rotate();fillStyle;fillText();lineTo();restore();save();translate();rotate();fillStyle;fillText();lineTo();restore();stroke();restore();restore();';
+
+      assert.equal(layer.getContext().getTrace(true), trace);
     });
 
 

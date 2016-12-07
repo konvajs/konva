@@ -77,6 +77,10 @@
             context.setAttr('textAlign', 'left');
             context.save();
 
+            var textDecoration = this.textDecoration();
+            var fill = this.fill();
+            var fontSize = this.fontSize();
+
             var glyphInfo = this.glyphInfo;
             for(var i = 0; i < glyphInfo.length; i++) {
                 context.save();
@@ -88,10 +92,21 @@
                 this.partialText = glyphInfo[i].text;
 
                 context.fillStrokeShape(this);
+                if (textDecoration === 'underline') {
+                  // context.beginPath();
+                  // context.strokeStyle = fill;
+                  if (i === 0) {
+                    context.moveTo(0, fontSize / 2);
+                  }
+
+                  context.lineTo(fontSize, fontSize / 2);
+                  // context.stroke();
+                }
                 context.restore();
 
+
                 //// To assist with debugging visually, uncomment following
-                // context.beginPath();
+                //
                 // if (i % 2)
                 // context.strokeStyle = 'cyan';
                 // else
@@ -101,6 +116,11 @@
                 // context.lineTo(p1.x, p1.y);
                 // context.stroke();
             }
+            if (textDecoration === 'underline') {
+              context.strokeStyle = fill;
+              context.stroke();
+            }
+
             context.restore();
         },
         _hitFunc: function(context) {
@@ -541,6 +561,23 @@
      * @method
      * @memberof Konva.TextPath.prototype
      */
+
+     Konva.Factory.addGetterSetter(Konva.TextPath, 'textDecoration', null);
+
+     /**
+      * get/set text decoration of a text.  Can be '' or 'underline'
+      * @name textDecoration
+      * @method
+      * @memberof Konva.Text.prototype
+      * @param {String} textDecoration
+      * @returns {String}
+      * @example
+      * // get text decoration
+      * var textDecoration = text.textDecoration();
+      *
+      * // center text
+      * text.textDecoration('underline');
+      */
 
     Konva.Collection.mapMethods(Konva.TextPath);
 })();
