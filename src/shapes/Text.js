@@ -160,7 +160,7 @@
                     var letter = text[li];
                     // skip justify for the last line
                     if ((letter === ' ') && (n !== textArrLen - 1) && align === JUSTIFY) {
-                        context.translate(((totalWidth - width) / spacesNumber), 0);
+                        context.translate(Math.floor((totalWidth - width) / spacesNumber), 0);
                     }
                     this.partialText = letter;
                     context.fillStrokeShape(this);
@@ -384,6 +384,10 @@
             }
             dummyContext.restore();
             this.textHeight = fontSize;
+            // var maxTextWidth = 0;
+            // for(var j = 0; j < this.textArr.length; j++) {
+            //     maxTextWidth = Math.max(maxTextWidth, this.textArr[j].width);
+            // }
             this.textWidth = textWidth;
         }
     };
