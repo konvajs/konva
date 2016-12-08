@@ -13139,8 +13139,8 @@
                   for(var li = 0; li < text.length; li++) {
                     var letter = text[li];
                     // skip justify for the last line
-                    if ((letter === ' ') && (n !== textArrLen - 1)) {
-                        context.translate(Math.ceil((totalWidth - width) / spacesNumber), 0);
+                    if ((letter === ' ') && (n !== textArrLen - 1) && align === JUSTIFY) {
+                        context.translate(((totalWidth - width) / spacesNumber), 0);
                     }
                     this.partialText = letter;
                     context.fillStrokeShape(this);
@@ -13244,7 +13244,11 @@
                     this.getFontSize() + PX_SPACE +
                     this.getFontFamily();
         },
-        _addTextLine: function (line, width) {
+        _addTextLine: function (line) {
+            if (this.align() === JUSTIFY) {
+                line = line.trim();
+            }
+            var width = this._getTextWidth(line);
             return this.textArr.push({text: line, width: width});
         },
         _getTextWidth: function (text) {
@@ -13274,8 +13278,9 @@
             dummyContext.save();
             dummyContext.font = this._getContextFont();
             for (var i = 0, max = lines.length; i < max; ++i) {
-                var line = lines[i],
-                    lineWidth = this._getTextWidth(line);
+                var line = lines[i];
+
+                var lineWidth = this._getTextWidth(line);
                 if (fixedWidth && lineWidth > maxWidth) {
                     /*
                      * if width is fixed and line does not fit entirely
@@ -13318,7 +13323,7 @@
                                     matchWidth = this._getTextWidth(match);
                                 }
                             }
-                            this._addTextLine(match, matchWidth);
+                            this._addTextLine(match);
                             textWidth = Math.max(textWidth, matchWidth);
                             currentHeightPx += lineHeightPx;
                             if (!shouldWrap ||
@@ -13335,7 +13340,7 @@
                                 lineWidth = this._getTextWidth(line);
                                 if (lineWidth <= maxWidth) {
                                     // if it does, add the line and break out of the loop
-                                    this._addTextLine(line, lineWidth);
+                                    this._addTextLine(line);
                                     currentHeightPx += lineHeightPx;
                                     textWidth = Math.max(textWidth, lineWidth);
                                     break;
@@ -13348,7 +13353,7 @@
                     }
                 } else {
                     // element width is automatically adjusted to max line width
-                    this._addTextLine(line, lineWidth);
+                    this._addTextLine(line);
                     currentHeightPx += lineHeightPx;
                     textWidth = Math.max(textWidth, lineWidth);
                 }
