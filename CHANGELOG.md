@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Not released][Not released]
 
 ## Added
+- new align value for `Konva.Text` and `Konva.TextPath`: `justify`
 - new property for `Konva.Text` and `Konva.TextPath`: `textDecoration`. Right now it sports only '' (no decoration) and 'underline' values.
 - new property for `Konva.Text`: `letterSpacing`
 - new event `contentContextmenu` for `Konva.Stage`

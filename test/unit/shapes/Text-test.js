@@ -295,6 +295,43 @@ suite('Text', function(){
         assert.equal(text.getLineHeight(), 20);
     });
 
+
+    // ======================================================
+    test('text multi line with justify align', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var rect = new Konva.Rect({
+          x: 10,
+          y: 10,
+          width: 380,
+          height: 300,
+          fill: 'yellow'
+        });
+
+        var text = new Konva.Text({
+            x: 10,
+            y: 10,
+            text: 'HEADING\n\n    All the world\'s a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.',
+            fontSize: 14,
+            fontFamily: 'Calibri',
+            fontStyle: 'normal',
+            fill: '#555',
+            width: 380,
+            align: 'justify',
+            letterSpacing: 5,
+            draggable: true
+        });
+
+        rect.height(text.getHeight());
+        layer.add(rect).add(text);
+        stage.add(layer);
+
+        var trace = 'fillStyle=#555;fillText( ,0,0);translate(9,0);fillStyle=#555;fillText(i,0,0);translate(9,0);fillStyle=#555;fillText(n,0,0);translate(12,0);translate(1,0);fillStyle=#555;fillText( ,0,0);translate(9,0);fillStyle=#555;fillText(h,0,0);translate(12,0);fillStyle=#555;fillText(i,0,0);translate(9,0);fillStyle=#555;fillText(s,0,0);translate(10,0);translate(1,0);fillStyle=#555;fillText( ,0,0);translate(9,0);restore();translate(0,14);save();fillStyle=#555;fillText(t,0,0);translate(9,0);fillStyle=#555;fillText(i,0,0);translate(9,0);fillStyle=#555;fillText(m,0,0);translate(16,0);fillStyle=#555;fillText(e,0,0);translate(11,0);fillStyle=#555;fillText( ,0,0);translate(9,0);fillStyle=#555;fillText(p,0,0);translate(12,0);fillStyle=#555;fillText(l,0,0);translate(9,0);fillStyle=#555;fillText(a,0,0);translate(11,0);fillStyle=#555;fillText(y,0,0);translate(12,0);fillStyle=#555;fillText(s,0,0);translate(10,0);fillStyle=#555;fillText( ,0,0);translate(9,0);fillStyle=#555;fillText(m,0,0);translate(16,0);fillStyle=#555;fillText(a,0,0);translate(11,0);fillStyle=#555;fillText(n,0,0);translate(12,0);fillStyle=#555;fillText(y,0,0);translate(12,0);fillStyle=#555;fillText( ,0,0);translate(9,0);fillStyle=#555;fillText(p,0,0);translate(12,0);fillStyle=#555;fillText(a,0,0);translate(11,0);fillStyle=#555;fillText(r,0,0);translate(10,0);fillStyle=#555;fillText(t,0,0);translate(9,0);fillStyle=#555;fillText(s,0,0);translate(10,0);fillStyle=#555;fillText(.,0,0);translate(9,0);restore();translate(0,14);restore();restore();';
+
+        assert.equal(layer.getContext().getTrace(), trace);
+    });
+
     // ======================================================
     test('text multi line with shadows', function() {
         var stage = addStage();

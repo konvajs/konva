@@ -7,6 +7,7 @@
     var AUTO = 'auto',
         //CANVAS = 'canvas',
         CENTER = 'center',
+        JUSTIFY = 'justify',
         CHANGE_KONVA = 'Change.konva',
         CONTEXT_2D = '2d',
         DASH = '-',
@@ -103,6 +104,7 @@
                 lineHeightPx = this.getLineHeight() * textHeight,
                 textArr = this.textArr,
                 textArrLen = textArr.length,
+                align = this.getAlign(),
                 totalWidth = this.getWidth(),
                 letterSpacing = this.getLetterSpacing(),
                 textDecoration = this.textDecoration(),
@@ -132,10 +134,10 @@
 
                 // horizontal alignment
                 context.save();
-                if(this.getAlign() === RIGHT) {
+                if(align === RIGHT) {
                     context.translate(totalWidth - width - p * 2, 0);
                 }
-                else if(this.getAlign() === CENTER) {
+                else if(align === CENTER) {
                     context.translate((totalWidth - width - p * 2) / 2, 0);
                 }
 
@@ -151,9 +153,15 @@
                   context.stroke();
                   context.restore();
                 }
-                if (letterSpacing !== 0) {
+                if ((letterSpacing !== 0) || align === JUSTIFY) {
+                //   var words = text.split(' ');
+                  var spacesNumber = text.split(' ').length - 1;
                   for(var li = 0; li < text.length; li++) {
                     var letter = text[li];
+                    // skip justify for the last line
+                    if ((letter === ' ') && (n !== textArrLen - 1)) {
+                        context.translate(Math.ceil((totalWidth - width) / spacesNumber), 0);
+                    }
                     this.partialText = letter;
                     context.fillStrokeShape(this);
                     context.translate(Math.round(this._getTextSize(letter).width) + letterSpacing, 0);
@@ -465,7 +473,7 @@
     Konva.Factory.addGetterSetter(Konva.Text, 'align', LEFT);
 
     /**
-     * get/set horizontal align of text.  Can be 'left', 'center', or 'right'
+     * get/set horizontal align of text.  Can be 'left', 'center', 'right' or 'justify'
      * @name align
      * @method
      * @memberof Konva.Text.prototype

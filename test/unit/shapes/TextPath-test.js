@@ -267,6 +267,36 @@ suite('TextPath', function() {
         stage.add(layer);
     });
 
+    test('Text path with justify align', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var c = "M10,10 C0,0 10,150 100,100 S300,150 400,50";
+
+        var textpath = new Konva.TextPath({
+            stroke: 'black',
+            strokeWidth: 1,
+            fill: 'orange',
+            fontSize: 10,
+            fontFamily: 'Arial',
+            letterSpacing: 5,
+            text: 'All the worlds a stage.',
+            align: 'justify',
+            data: c
+        });
+
+        // TODO: add test case
+
+        layer.add(textpath);
+        stage.add(layer);
+
+
+        // console.log(layer.getContext().getTrace(true));
+        var trace = 'rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();save();translate();rotate();fillStyle;fillText();lineWidth;strokeStyle;strokeText();restore();restore();restore();';
+
+        assert.equal(layer.getContext().getTrace(true), trace);
+    });
+
     test('Text path with underline', function() {
       var stage = addStage();
       var layer = new Konva.Layer();

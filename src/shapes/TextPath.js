@@ -186,6 +186,7 @@
             var that = this;
             var size = this._getTextSize(this.attrs.text);
             var letterSpacing = this.getLetterSpacing();
+            var align = this.align();
 
             this.textWidth = size.width;
             this.textHeight = size.height;
@@ -203,14 +204,15 @@
             }
 
             var offset = 0;
-            if (this.align() === 'center') {
+            if (align === 'center') {
               offset = Math.max(0, fullPathWidth / 2 - textFullWidth / 2);
             }
-            if (this.align() === 'right') {
+            if (align === 'right') {
               offset = Math.max(0, fullPathWidth - textFullWidth);
             }
 
             var charArr = this.getText().split('');
+            var spacesNumber = this.getText().split(' ').length - 1;
 
             var p0, p1, pathCmd;
 
@@ -251,6 +253,10 @@
             var findSegmentToFitCharacter = function(c) {
 
                 var glyphWidth = that._getTextSize(c).width + letterSpacing;
+
+                if ((c === ' ') && (align === 'justify')) {
+                    glyphWidth += (fullPathWidth - textFullWidth) / spacesNumber;
+                }
 
                 var currLen = 0;
                 var attempts = 0;
@@ -490,7 +496,7 @@
      Konva.Factory.addGetterSetter(Konva.TextPath, 'align', 'left');
 
      /**
-      * get/set horizontal align of text.  Can be 'left', 'center', or 'right'
+      * get/set horizontal align of text.  Can be 'left', 'center', 'right' or 'justify'
       * @name align
       * @method
       * @memberof Konva.Text.prototype
