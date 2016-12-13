@@ -13,7 +13,7 @@ suite('Caching', function() {
             width: 100,
             height: 50,
             fill: 'green',
-            draggable : true
+            draggable: true
         });
         rect.cache();
 
@@ -730,5 +730,73 @@ suite('Caching', function() {
         stage.draw();
 
         cloneAndCompareLayer(layer, 150);
+    });
+
+
+    test('test group with opacir', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        stage.add(layer);
+
+        var group = new Konva.Group({
+            x: 100,
+            y: 100,
+            draggable: true
+        });
+        layer.add(group);
+
+        var circle = new Konva.Circle({
+            radius: 10,
+            // fill: 'white',
+            fillRadialGradientStartPoint: 0,
+            fillRadialGradientStartRadius: 0,
+            fillRadialGradientEndPoint: 0,
+            fillRadialGradientEndRadius: 10,
+            fillRadialGradientColorStops: [0, 'red', 0.5, 'yellow', 1, 'blue'],
+            opacity: 0.4,
+            strokeHitEnabled: false,
+            stroke: 'rgba(0,0,0,0)'
+        });
+        group.add(circle);
+        group.cache();
+        stage.draw();
+
+        cloneAndCompareLayer(layer, 150);
+    });
+
+
+    test('cache group with rectangle with fill and opacity', function() {
+        var stage = addStage();
+
+        var layer = new Konva.Layer();
+
+        var group = new Konva.Group({
+            opacity: 0.5
+        });
+
+        var rect = new Konva.Rect({
+            x: 100,
+            y: 50,
+            width: 100,
+            height: 50,
+            fill: 'green'
+        });
+        
+        group.add(rect);
+        layer.add(group);
+        stage.add(layer);
+
+        group.cache();
+        layer.draw();
+
+        var canvas = createCanvas();
+        var context = canvas.getContext('2d');
+        context.globalAlpha = 0.5;
+        context.beginPath();
+        context.rect(100, 50, 100, 50);
+        context.closePath();
+        context.fillStyle = 'green';
+        context.fill();
+        compareLayerAndCanvas(layer, canvas, 5);
     });
 });

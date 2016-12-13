@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v1.2.2
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Thu Dec 08 2016
+ * Date: Tue Dec 13 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -1715,7 +1715,7 @@
         },
         _applyOpacity: function(shape) {
             var absOpacity = shape.getAbsoluteOpacity();
-            if(absOpacity !== 1) {
+            if (absOpacity !== 1) {
                 this.setAttr('globalAlpha', absOpacity);
             }
         },
@@ -2356,6 +2356,7 @@
             this.attrs = {};
             this._cache = {};
             this._filterUpToDate = false;
+            this._isUnderCache = false;
             this.setAttrs(config);
 
             // event bindings for cache handling
@@ -2510,8 +2511,13 @@
             sceneContext.translate(-x, -y);
             hitContext.translate(-x, -y);
 
+            // extra flag to skip on getAbsolute opacity calc
+            this._isUnderCache = true;
+            this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
+
             this.drawScene(cachedSceneCanvas, this, true);
             this.drawHit(cachedHitCanvas, this, true);
+            this._isUnderCache = false;
 
             sceneContext.restore();
             hitContext.restore();
@@ -3431,7 +3437,8 @@
         },
         _getAbsoluteOpacity: function() {
             var absOpacity = this.getOpacity();
-            if(this.getParent()) {
+            var parent = this.getParent();
+            if(parent && !parent._isUnderCache) {
                 absOpacity *= this.getParent().getAbsoluteOpacity();
             }
             return absOpacity;

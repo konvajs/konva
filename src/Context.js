@@ -217,7 +217,7 @@
         },
         _applyOpacity: function(shape) {
             var absOpacity = shape.getAbsoluteOpacity();
-            if(absOpacity !== 1) {
+            if (absOpacity !== 1) {
                 this.setAttr('globalAlpha', absOpacity);
             }
         },

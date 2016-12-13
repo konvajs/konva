@@ -19,6 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Fixed bug when `Konva.Tag` width was not changing its width dynamically
 - Fixed "calling remove() for dragging shape will throw an error"
+- Fixed wrong opacity level for cached group with opacity
 
 ## [1.2.2][2016-09-15]
 

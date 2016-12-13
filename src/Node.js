@@ -63,6 +63,7 @@
             this.attrs = {};
             this._cache = {};
             this._filterUpToDate = false;
+            this._isUnderCache = false;
             this.setAttrs(config);
 
             // event bindings for cache handling
@@ -217,8 +218,13 @@
             sceneContext.translate(-x, -y);
             hitContext.translate(-x, -y);
 
+            // extra flag to skip on getAbsolute opacity calc
+            this._isUnderCache = true;
+            this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
+
             this.drawScene(cachedSceneCanvas, this, true);
             this.drawHit(cachedHitCanvas, this, true);
+            this._isUnderCache = false;
 
             sceneContext.restore();
             hitContext.restore();
@@ -1138,7 +1144,8 @@
         },
         _getAbsoluteOpacity: function() {
             var absOpacity = this.getOpacity();
-            if(this.getParent()) {
+            var parent = this.getParent();
+            if(parent && !parent._isUnderCache) {
                 absOpacity *= this.getParent().getAbsoluteOpacity();
             }
             return absOpacity;
