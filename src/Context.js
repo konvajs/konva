@@ -584,7 +584,7 @@
                 scaleY = scale.y * ratio;
 
             this.setAttr('shadowColor', color);
-            this.setAttr('shadowBlur', blur * ratio);
+            this.setAttr('shadowBlur', blur * ratio * Math.min(scaleX, scaleY));
             this.setAttr('shadowOffsetX', offset.x * scaleX);
             this.setAttr('shadowOffsetY', offset.y * scaleY);
         }
