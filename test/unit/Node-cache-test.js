@@ -184,6 +184,7 @@ suite('Caching', function() {
     });
 
     test('cache rectangle with fill and simple shadow', function() {
+        Konva.pixelRatio = 1;
         var stage = addStage();
 
         var layer = new Konva.Layer();
@@ -217,6 +218,7 @@ suite('Caching', function() {
         showCanvas(rect._cache.canvas.hit._canvas);
         showHit(layer);
         compareLayerAndCanvas(layer, canvas, 10);
+        Konva.pixelRatio = undefined;
     });
 
     test('cache rectangle with fill and shadow with offset', function() {
@@ -249,7 +251,7 @@ suite('Caching', function() {
         context.closePath();
         context.fillStyle = 'green';
         context.shadowColor = 'black';
-        context.shadowBlur = 10;
+        context.shadowBlur = 10 * canvas.ratio;
         context.shadowOffsetX = 10 * canvas.ratio;
         context.shadowOffsetY = 10 * canvas.ratio;
         context.fill();
@@ -286,7 +288,7 @@ suite('Caching', function() {
         context.closePath();
         context.fillStyle = 'green';
         context.shadowColor = 'black';
-        context.shadowBlur = 10;
+        context.shadowBlur = 10 * canvas.ratio;
         context.shadowOffsetX = -10 * canvas.ratio;
         context.shadowOffsetY = -10 * canvas.ratio;
         context.fill();
@@ -325,7 +327,7 @@ suite('Caching', function() {
         context.closePath();
         context.fillStyle = 'green';
         context.shadowColor = 'black';
-        context.shadowBlur = 10;
+        context.shadowBlur = 10 * canvas.ratio;
         context.shadowOffsetX = -10 * canvas.ratio;
         context.shadowOffsetY = -10 * canvas.ratio;
         context.fill();
@@ -444,7 +446,7 @@ suite('Caching', function() {
         context.closePath();
         context.fillStyle = 'green';
         context.shadowColor = 'black';
-        context.shadowBlur = 10;
+        context.shadowBlur = 10 * canvas.ratio;
         context.shadowOffsetX = 10 * canvas.ratio;
         context.shadowOffsetY = 10 * canvas.ratio;
         context.fill();
@@ -557,7 +559,7 @@ suite('Caching', function() {
         context.closePath();
         context.fillStyle = 'green';
         context.shadowColor = 'black';
-        context.shadowBlur = 10;
+        context.shadowBlur = 10 * canvas.ratio;
         context.shadowOffsetX = 10 * canvas.ratio;
         context.shadowOffsetY = 10 * canvas.ratio;
         context.fill();

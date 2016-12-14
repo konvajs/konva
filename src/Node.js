@@ -176,6 +176,7 @@
                 rect = this.getClientRect(true),
                 width = conf.width || rect.width,
                 height = conf.height || rect.height,
+                pixelRatio = conf.pixelRatio,
                 x = conf.x || rect.x,
                 y = conf.y || rect.y,
                 offset = conf.offset || 0,
@@ -193,10 +194,12 @@
 
 
             var cachedSceneCanvas = new Konva.SceneCanvas({
+                pixelRatio: pixelRatio,
                 width: width,
                 height: height
             }),
             cachedFilterCanvas = new Konva.SceneCanvas({
+                pixelRatio: pixelRatio,
                 width: width,
                 height: height
             }),
@@ -221,6 +224,7 @@
             // extra flag to skip on getAbsolute opacity calc
             this._isUnderCache = true;
             this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
+            this._clearSelfAndDescendantCache(ABSOLUTE_SCALE);
 
             this.drawScene(cachedSceneCanvas, this, true);
             this.drawHit(cachedHitCanvas, this, true);
@@ -1413,6 +1417,16 @@
             }
         },
         _getAbsoluteScale: function(top) {
+            // this is special logic for caching with some shapes with shadow
+            var parent = this;
+            while(parent) {
+                if (parent._isUnderCache) {
+                    top = parent;
+                }
+                parent = parent.getParent();
+            }
+
+
             var scaleX = 1, scaleY = 1;
 
             // start with stage and traverse downwards to self

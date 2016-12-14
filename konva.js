@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v1.2.2
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Tue Dec 13 2016
+ * Date: Wed Dec 14 2016
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -1918,7 +1918,7 @@
                 origSetter.apply(that, arguments);
                 var prop = arguments[0];
                 var val = arguments[1];
-                if ((prop === 'shadowOffsetX') || (prop === 'shadowOffsetY')) {
+                if ((prop === 'shadowOffsetX') || (prop === 'shadowOffsetY') || (prop === 'shadowBlur')) {
                   val = val / this.canvas.getPixelRatio();
                 }
                 that._trace({
@@ -2082,7 +2082,7 @@
                 scaleY = scale.y * ratio;
 
             this.setAttr('shadowColor', color);
-            this.setAttr('shadowBlur', blur);
+            this.setAttr('shadowBlur', blur * ratio);
             this.setAttr('shadowOffsetX', offset.x * scaleX);
             this.setAttr('shadowOffsetY', offset.y * scaleY);
         }
@@ -2469,6 +2469,7 @@
                 rect = this.getClientRect(true),
                 width = conf.width || rect.width,
                 height = conf.height || rect.height,
+                pixelRatio = conf.pixelRatio,
                 x = conf.x || rect.x,
                 y = conf.y || rect.y,
                 offset = conf.offset || 0,
@@ -2486,10 +2487,12 @@
 
 
             var cachedSceneCanvas = new Konva.SceneCanvas({
+                pixelRatio: pixelRatio,
                 width: width,
                 height: height
             }),
             cachedFilterCanvas = new Konva.SceneCanvas({
+                pixelRatio: pixelRatio,
                 width: width,
                 height: height
             }),
@@ -2514,6 +2517,7 @@
             // extra flag to skip on getAbsolute opacity calc
             this._isUnderCache = true;
             this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
+            this._clearSelfAndDescendantCache(ABSOLUTE_SCALE);
 
             this.drawScene(cachedSceneCanvas, this, true);
             this.drawHit(cachedHitCanvas, this, true);
@@ -3706,6 +3710,16 @@
             }
         },
         _getAbsoluteScale: function(top) {
+            // this is special logic for caching with some shapes with shadow
+            var parent = this;
+            while(parent) {
+                if (parent._isUnderCache) {
+                    top = parent;
+                }
+                parent = parent.getParent();
+            }
+
+
             var scaleX = 1, scaleY = 1;
 
             // start with stage and traverse downwards to self

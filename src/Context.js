@@ -420,7 +420,7 @@
                 origSetter.apply(that, arguments);
                 var prop = arguments[0];
                 var val = arguments[1];
-                if ((prop === 'shadowOffsetX') || (prop === 'shadowOffsetY')) {
+                if ((prop === 'shadowOffsetX') || (prop === 'shadowOffsetY') || (prop === 'shadowBlur')) {
                   val = val / this.canvas.getPixelRatio();
                 }
                 that._trace({
@@ -584,7 +584,7 @@
                 scaleY = scale.y * ratio;
 
             this.setAttr('shadowColor', color);
-            this.setAttr('shadowBlur', blur);
+            this.setAttr('shadowBlur', blur * ratio);
             this.setAttr('shadowOffsetX', offset.x * scaleX);
             this.setAttr('shadowOffsetY', offset.y * scaleY);
         }

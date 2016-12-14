@@ -180,9 +180,9 @@ suite('Path', function() {
         context.closePath();
         context.fillStyle = '#fcc';
         context.shadowColor = 'maroon';
-        context.shadowBlur = 2;
-        context.shadowOffsetX = 10;
-        context.shadowOffsetY = 10;
+        context.shadowBlur = 2 * canvas.ratio;
+        context.shadowOffsetX = 10 * canvas.ratio;
+        context.shadowOffsetY = 10  * canvas.ratio;
         context.fill();
 //        context.stroke();
         compareLayerAndCanvas(layer, canvas, 20);

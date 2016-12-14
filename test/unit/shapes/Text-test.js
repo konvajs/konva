@@ -104,15 +104,88 @@ suite('Text', function(){
 
         var canvas = createCanvas();
         var context = canvas.getContext('2d');
-        context.textBaseline = 'top';
+        context.textBaseline = 'middle';
         context.font = "normal normal 50px Arial";
         context.fillStyle = 'darkgrey';
-        context.fillText('Hello World!', 10, (50));
+        context.fillText('Hello World!', 10, 10 + 50 + 25);
         context.fillStyle = 'black';
-        context.fillText('Hello World!', 10, 10);
+        context.fillText('Hello World!', 10, 10 + 25);
 
 
         compareLayerAndCanvas(layer, canvas, 254);
+    });
+
+
+    test('text cache with fill and shadow', function() {
+        var stage = addStage();
+        var layer1 = new Konva.Layer();
+        layer1.getCanvas().setPixelRatio(1);
+        stage.add(layer1);
+
+        var text1 = new Konva.Text({
+            x: 10,
+            y: 10,
+            text: 'some text',
+            fontSize: 50,
+            fill: 'black',
+            shadowColor: 'black',
+            shadowOffsetX: 0,
+            shadowOffsetY: 50,
+            opacity: 1,
+            shadowBlur: 10,
+            draggable: true
+        });
+        layer1.add(text1);
+
+        var layer2 = new Konva.Layer();
+        layer2.getCanvas().setPixelRatio(1);
+
+        layer2.add(text1.clone().cache({pixelRatio: 2}));
+        stage.add(layer1, layer2);
+
+        if (!window.isPhantomJS) {
+            compareLayers(layer1, layer2, 220);
+        }
+    });
+
+    test('text cache with fill and shadow and some scale', function() {
+        var stage = addStage();
+        var layer1 = new Konva.Layer();
+        stage.add(layer1);
+
+        var text1 = new Konva.Text({
+            x: 10,
+            y: 10,
+            text: 'some text',
+            fontSize: 50,
+            fill: 'black',
+            shadowColor: 'black',
+            shadowOffsetX: 0,
+            shadowOffsetY: 50,
+            opacity: 1,
+            shadowBlur: 10,
+            draggable: true
+        });
+        layer1.add(text1);
+
+        var layer2 = new Konva.Layer({
+            scaleX: 0.5,
+            scaleY: 0.5
+        });
+        stage.add(layer2);
+
+        var group = new Konva.Group();
+        layer2.add(group);
+
+        var text2 = text1.clone();
+        group.add(text2);
+
+        text2.cache();
+        group.scale({ x: 2, y: 2});
+
+        stage.draw();
+
+        compareLayers(layer1, layer2, 150);
     });
 
     // ======================================================
