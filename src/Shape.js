@@ -419,10 +419,11 @@
                         hitData[i + 3] = 0;
                     }
                 }
+
                 hitContext.putImageData(hitImageData, 0, 0);
             }
             catch(e) {
-                Konva.Util.error('Unable to draw hit graph from cached scene canvas. ' + e.message);
+                Konva.Util.warn('Unable to draw hit graph from cached scene canvas. ' + e.message);
             }
 
             return this;

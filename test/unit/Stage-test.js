@@ -40,7 +40,7 @@ suite('Stage', function() {
       assert.equal(stage.bufferHitCanvas.getPixelRatio(), 1);
 
       // reset
-      Konva.pixelRatio = 1;
+      Konva.pixelRatio = undefined;
     });
 
     // ======================================================
