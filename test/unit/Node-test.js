@@ -2558,6 +2558,32 @@ suite('Node', function() {
     });
 
     // ======================================================
+    test('memory leak test for destroy and a shape with several names', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
+            x: stage.getWidth() / 2,
+            y: stage.getHeight() / 2,
+            radius: 70,
+            fill: 'green',
+            stroke: 'black',
+            strokeWidth: 4,
+            name: 'my-new-shape my-new-circle'
+        });
+
+        layer.add(circle);
+        stage.add(layer);
+
+        assert.equal(Konva.names['my-new-shape'].length, 1);
+        assert.equal(Konva.names['my-new-circle'].length, 1);
+
+        circle.destroy();
+
+        assert.equal(Konva.names['my-new-shape'], undefined);
+        assert.equal(Konva.names['my-new-circle'], undefined);
+    });
+
+    // ======================================================
     test('destroy shape without adding its parent to stage', function() {
         var stage = addStage();
         var layer = new Konva.Layer();

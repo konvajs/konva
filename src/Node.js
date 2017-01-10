@@ -606,7 +606,13 @@
         destroy: function() {
             // remove from ids and names hashes
             Konva._removeId(this.getId());
-            Konva._removeName(this.getName(), this._id);
+
+            // remove all names
+            var names = (this.getName() || '').split(/\s/g);
+            for(var i = 0; i < names.length; i++) {
+                var subname = names[i];
+                Konva._removeName(subname, this._id);
+            }
 
             this.remove();
             return this;

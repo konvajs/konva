@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v1.2.2
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Wed Dec 14 2016
+ * Date: Tue Jan 10 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -2899,7 +2899,13 @@
         destroy: function() {
             // remove from ids and names hashes
             Konva._removeId(this.getId());
-            Konva._removeName(this.getName(), this._id);
+
+            // remove all names
+            var names = (this.getName() || '').split(/\s/g);
+            for(var i = 0; i < names.length; i++) {
+                var subname = names[i];
+                Konva._removeName(subname, this._id);
+            }
 
             this.remove();
             return this;
