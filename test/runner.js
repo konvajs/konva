@@ -226,21 +226,21 @@ afterEach(function(){
 });
 
 Konva.Stage.prototype.simulateMouseDown = function(pos) {
-    var top = this.content.getBoundingClientRect().top;
+    var clientRect = this.content.getBoundingClientRect();
 
     this._mousedown({
-        clientX: pos.x,
-        clientY: pos.y + top,
+        clientX: pos.x + clientRect.left,
+        clientY: pos.y + clientRect.top,
         button: pos.button
     });
 };
 
 Konva.Stage.prototype.simulateMouseMove = function(pos) {
-    var top = this.content.getBoundingClientRect().top;
+    var clientRect = this.content.getBoundingClientRect();
 
     var evt = {
-        clientX: pos.x,
-        clientY: pos.y + top,
+        clientX: pos.x + clientRect.left,
+        clientY: pos.y + clientRect.top,
         button: pos.button
     };
 
@@ -250,12 +250,12 @@ Konva.Stage.prototype.simulateMouseMove = function(pos) {
 
 Konva.Stage.prototype.simulateMouseUp = function(pos) {
     "use strict";
-    var top = this.content.getBoundingClientRect().top;
+    var clientRect = this.content.getBoundingClientRect();
 
 
     var evt = {
-        clientX: pos.x,
-        clientY: pos.y + top,
+        clientX: pos.x + clientRect.left,
+        clientY: pos.y + clientRect.top,
         button: pos.button
     };
 
