@@ -213,6 +213,8 @@ declare module Konva {
         pixelSize(pixelSize: number) : Node;
         position() : Vector2d;
         position(position: Vector2d) : Node;
+        preventDefault(): boolean;
+        preventDefault(preventDefault: boolean): Node;
         red() : number;
         red(red: number) : Node;
         remove() : Node;
@@ -311,7 +313,7 @@ declare module Konva {
         fillLinearGradientEndPoint? : Vector2d;
         fillLinearGradientEndPointX?: number;
         fillLinearGradientEndPointY?: number;
-        fillLinearGradientColorStops?: string[];
+        fillLinearGradientColorStops?: Array<number | string>;
         fillLinearRadialStartPoint?: Vector2d;
         fillLinearRadialStartPointX?: number;
         fillLinearRadialStartPointY?: number;
@@ -320,7 +322,7 @@ declare module Konva {
         fillLinearRadialEndPointY?: number;
         fillRadialGradientStartRadius?: number;
         fillRadialGradientEndRadius?: number;
-        fillRadialGradientColorStops?: string[];
+        fillRadialGradientColorStops?: Array<number | string>;
         fillEnabled?: boolean;
         fillPriority?: string;
         stroke?: string;
@@ -354,8 +356,8 @@ declare module Konva {
         fill(fill: string): Shape;
         fillEnabled() : boolean;
         fillEnabled(fillEnabled: boolean): Shape;
-        fillLinearGradientColorStops() : string[];
-        fillLinearGradientColorStops(colors: string[]): Shape;
+        fillLinearGradientColorStops() : Array<number|string>;
+        fillLinearGradientColorStops(colors: Array<number|string>): Shape;
         fillLinearGradientStartPoint(): Vector2d;
         fillLinearGradientStartPoint(point: Vector2d): Vector2d;
         fillLinearGradientStartPointX(): number;
@@ -386,8 +388,8 @@ declare module Konva {
         fillRadialGradientStartRadius(radius: number): Shape;
         fillRadialGradientEndRadius(): number;
         fillRadialGradientEndRadius(radius: number): Shape;
-        fillRadialGradientColorStops(): string[];
-        fillRadialGradientColorStops(color: string[]): Shape;
+        fillRadialGradientColorStops(): Array<number|string>;
+        fillRadialGradientColorStops(color: Array<number|string>): Shape;
         fillPatternOffset(): Vector2d;
         fillPatternOffset(offset: Vector2d) : Shape;
         fillPatternOffsetX(): number;
