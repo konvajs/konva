@@ -495,9 +495,9 @@ suite('Text', function() {
     stage.add(layer);
     // TODO
 
-    var trace = 'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=middle;textAlign=left;save();translate(0,40);save();save();beginPath();moveTo(0,0);lineTo(169,0);stroke();restore();fillStyle=red;fillText(hello,0,0);restore();translate(0,80);save();save();beginPath();moveTo(0,0);lineTo(191,0);stroke();restore();fillStyle=red;fillText(world,0,0);restore();translate(0,80);restore();restore();';
-    // console.log(layer.getContext().getTrace());
-    assert.equal(layer.getContext().getTrace(), trace);
+    var trace = 'clearRect();save();transform();font;textBaseline;textAlign;save();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();restore();restore();';
+    console.log(layer.getContext().getTrace(true));
+    assert.equal(layer.getContext().getTrace(true), trace);
   });
 
   test('text multi line with underline and strike', function() {
@@ -516,9 +516,8 @@ suite('Text', function() {
     layer.add(text);
     stage.add(layer);
 
-    var trace = 'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=middle;textAlign=left;save();translate(0,40);save();save();beginPath();moveTo(0,40);lineTo(169,40);stroke();restore();save();beginPath();moveTo(0,0);lineTo(169,0);stroke();restore();fillStyle=red;fillText(hello,0,0);restore();translate(0,80);save();save();beginPath();moveTo(0,40);lineTo(191,40);stroke();restore();save();beginPath();moveTo(0,0);lineTo(191,0);stroke();restore();fillStyle=red;fillText(world,0,0);restore();translate(0,80);restore();restore();';
-
-    assert.equal(layer.getContext().getTrace(), trace);
+    var trace = 'clearRect();save();transform();font;textBaseline;textAlign;save();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();restore();restore();';
+    assert.equal(layer.getContext().getTrace(true), trace);
   });
 
   // ======================================================
