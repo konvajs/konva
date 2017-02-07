@@ -69,28 +69,7 @@ find source themes -exec perl -i -pe "s|${old_cdn}|${new_cdn}|g" {} +
 find source themes -exec perl -i -pe "s|${old_cdn_min}|${new_cdn_min}|g" {} +
 
 echo "regenerate site"
-rm ./db.json
-npm start
-
-echo "commit site changes"
-git add .
-
-DATE=`date +%Y-%m-%d`
-git commit -am "update ${DATE}" --allow-empty
-git push
-
-echo "clean previous generated site"
-cd ../konvajs.github.io
-rm -r ./*
-
-echo "copy new generated files"
-cp -r ../konva-site/public/* ./
-git status
-
-echo "commit and push site changes"
-git add .
-git commit -am "update ${DATE}"
-git push
+./deploy.sh
 
 cd ../konva
 git push
