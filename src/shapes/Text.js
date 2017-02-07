@@ -141,14 +141,24 @@
                     context.translate((totalWidth - width - p * 2) / 2, 0);
                 }
 
-                if (textDecoration === 'underline') {
+                if (textDecoration.indexOf('underline') !== -1) {
                   context.save();
                   context.beginPath();
                   context.moveTo(0, Math.round(lineHeightPx / 2));
                   context.lineTo(Math.round(width), Math.round(lineHeightPx / 2));
                   // TODO: I have no idea what is real ratio
                   // just /20 looks good enough
-                  context.lineWidth = fontSize / 20;
+                  context.lineWidth = fontSize / 15;
+                  context.strokeStyle = fill;
+                  context.stroke();
+                  context.restore();
+                }
+                if (textDecoration.indexOf('line-through') !== -1) {
+                  context.save();
+                  context.beginPath();
+                  context.moveTo(0, 0);
+                  context.lineTo(Math.round(width), 0);
+                  context.lineWidth = fontSize / 15;
                   context.strokeStyle = fill;
                   context.stroke();
                   context.restore();
@@ -561,10 +571,10 @@
      * text.text('Hello world!');
      */
 
-     Konva.Factory.addGetterSetter(Konva.Text, 'textDecoration', null);
+     Konva.Factory.addGetterSetter(Konva.Text, 'textDecoration', EMPTY_STRING);
 
      /**
-      * get/set text decoration of a text.  Can be '' or 'underline'
+      * get/set text decoration of a text.  Possible values are 'underline', 'line-through' or combination of these values separated by space
       * @name textDecoration
       * @method
       * @memberof Konva.Text.prototype
@@ -574,8 +584,14 @@
       * // get text decoration
       * var textDecoration = text.textDecoration();
       *
-      * // center text
+      * // underline text
       * text.textDecoration('underline');
+      *
+      * // strike text
+      * text.textDecoration('line-through');
+      *
+      * // underline and strike text
+      * text.textDecoration('underline line-through');
       */
 
     Konva.Collection.mapMethods(Konva.Text);

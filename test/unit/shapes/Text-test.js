@@ -463,7 +463,7 @@ suite('Text', function(){
     // ======================================================
     // skiping this test for now. It fails on travis. WHYYY??!?!?!
     // TODO: restore it
-    test.skip('text multi line with textDecoration and spacing', function() {
+    test.skip('text multi line with underline and spacing', function() {
         var stage = addStage();
         var layer = new Konva.Layer();
 
@@ -486,6 +486,46 @@ suite('Text', function(){
 
         assert.equal(layer.getContext().getTrace(), trace);
 
+    });
+
+    test('text multi line with strike', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var text = new Konva.Text({
+            x: 10,
+            y: 10,
+            text: 'hello\nworld',
+            fontSize: 80,
+            fill: 'red',
+            textDecoration: 'line-through'
+        });
+
+        layer.add(text);
+        stage.add(layer);
+
+        // TODO
+        // assert.equal(layer.getContext().getTrace(), trace);
+    });
+
+    test('text multi line with underline and strike', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var text = new Konva.Text({
+            x: 10,
+            y: 10,
+            text: 'hello\nworld',
+            fontSize: 80,
+            fill: 'red',
+            textDecoration: 'underline line-through'
+        });
+
+        layer.add(text);
+        stage.add(layer);
+
+        // TODO
+        // assert.equal(layer.getContext().getTrace(), trace);
     });
 
     // ======================================================
