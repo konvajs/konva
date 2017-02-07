@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [1.4.0][2017-02-07]
+
 ## Added
 - `textDecoration` of `Konva.Text` now supports `line-through`
 
