@@ -599,6 +599,8 @@
         _fill: function(shape) {
             this.save();
             this.setAttr('fillStyle', shape.colorKey);
+            // to keep the color's alpha value correct if user has set the globalAlpha attr
+            this.setAttr('globalAlpha', 1);
             shape._fillFuncHit(this);
             this.restore();
         },
@@ -613,6 +615,7 @@
                 this._applyLineCap(shape);
                 this.setAttr('lineWidth', shape.strokeWidth());
                 this.setAttr('strokeStyle', shape.colorKey);
+                this.setAttr('globalAlpha', 1);
                 shape._strokeFuncHit(this);
                 if (!strokeScaleEnabled) {
                     this.restore();
