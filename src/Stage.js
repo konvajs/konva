@@ -654,7 +654,7 @@
             this._fire(CONTENT_WHEEL, {evt: evt});
         },
         _wheel: function(evt) {
-            this._mousewheel(evt);
+            this._fire(WHEEL, { evt: evt });
         },
         _setPointerPosition: function(evt) {
             var contentPosition = this._getContentPosition(),
