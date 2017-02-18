@@ -599,6 +599,29 @@ suite('Stage', function() {
         assert.equal(stage.toDataURL(), layer.toDataURL());
     });
 
+    test('toDataUrl skips hidden layers', function () {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+        var circle = new Konva.Circle({
+            x: stage.width() / 2,
+            y: stage.height() / 2,
+            fill: 'red',
+            radius: 50
+        });
+        layer.add(circle);
+        stage.add(layer);
+
+        var layerDataUrl = layer.toDataURL();
+
+        layer.setVisible(false);
+
+        var stageDataUrl = stage.toDataURL({
+            exportVisibleLayersOnly: true
+        });
+
+        assert.notEqual(stageDataUrl, layerDataUrl);
+    });
+
     test('check hit graph with stage listeting property', function() {
       var stage = addStage();
       var layer = new Konva.Layer();

@@ -238,6 +238,7 @@
          * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
          *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
          *  is very high quality
+         * @param {Boolean} [config.exportVisibleLayersOnly=false] If set to true, the stage will only export a layer which is visible.
          */
         toDataURL: function(config) {
             config = config || {};
@@ -246,6 +247,7 @@
                 quality = config.quality || null,
                 x = config.x || 0,
                 y = config.y || 0,
+                exportVisibleLayersOnly = !!config.exportVisibleLayersOnly || false,
                 canvas = new Konva.SceneCanvas({
                     width: config.width || this.getWidth(),
                     height: config.height || this.getHeight(),
@@ -260,6 +262,10 @@
 
 
             layers.each(function(layer) {
+                if (exportVisibleLayersOnly && !layer.isVisible()) {
+                    return;
+                }
+
                 var width = layer.getCanvas().getWidth();
                 var height = layer.getCanvas().getHeight();
                 var ratio = layer.getCanvas().getPixelRatio();
