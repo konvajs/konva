@@ -13104,6 +13104,15 @@
             this._setTextData();
             this.sceneFunc(this._sceneFunc);
             this.hitFunc(this._hitFunc);
+
+			this.scaleDynamicX = config.scaleDynamicX;
+			this.scaleDynamicY = config.scaleDynamicY;
+			this.verticalAlign = config.verticalAlign;
+
+			if (config.scaleDynamicX || config.scaleDynamicY || this.verticalAlign)
+				this.wrap(NONE);
+			if (config.scaleDynamicX)
+				this.align(LEFT);
         },
         _sceneFunc: function(context) {
             var p = this.getPadding(),
@@ -13141,6 +13150,29 @@
 
                 // horizontal alignment
                 context.save();
+
+				if (this.scaleDynamicY)
+				{
+					context.translate(0, -textHeight/2);
+
+					if (this.scaleDynamicX)
+						context.scale((totalWidth - 2*p) / width, (this.getHeight() - 2*p) / lineHeightPx);
+					else
+						context.scale(1, (this.getHeight() - 2*p) / lineHeightPx);
+
+					context.translate(0, textHeight/2);
+				}
+				else if (this.scaleDynamicX)
+				{
+					if (this.verticalAlign)
+						context.translate(0, (this.getHeight() - lineHeightPx - 2*p)/2);
+					context.scale((totalWidth - 2*p) / width, 1);
+				}
+				else if (this.verticalAlign)
+				{
+					context.translate(0, (this.getHeight() - lineHeightPx - 2*p)/2);
+				}
+
                 if(align === RIGHT) {
                     context.translate(totalWidth - width - p * 2, 0);
                 }
@@ -13318,7 +13350,7 @@
                 var line = lines[i];
 
                 var lineWidth = this._getTextWidth(line);
-                if (fixedWidth && lineWidth > maxWidth) {
+                if (fixedWidth && lineWidth > maxWidth && !this.scaleDynamicX) {
                     /*
                      * if width is fixed and line does not fit entirely
                      * break the line into multiple fitting lines
