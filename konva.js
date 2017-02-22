@@ -13105,14 +13105,14 @@
             this.sceneFunc(this._sceneFunc);
             this.hitFunc(this._hitFunc);
 
-			this.scaleDynamicX = config.scaleDynamicX;
-			this.scaleDynamicY = config.scaleDynamicY;
-			this.verticalAlign = config.verticalAlign;
+            this.scaleDynamicX = config.scaleDynamicX;
+            this.scaleDynamicY = config.scaleDynamicY;
+            this.verticalAlign = config.verticalAlign;
 
-			if (config.scaleDynamicX || config.scaleDynamicY || this.verticalAlign)
-				this.wrap(NONE);
-			if (config.scaleDynamicX)
-				this.align(LEFT);
+            if (config.scaleDynamicX || config.scaleDynamicY || this.verticalAlign)
+                this.wrap(NONE);
+            if (config.scaleDynamicX)
+                this.align(LEFT);
         },
         _sceneFunc: function(context) {
             var p = this.getPadding(),
@@ -13151,27 +13151,27 @@
                 // horizontal alignment
                 context.save();
 
-				if (this.scaleDynamicY)
-				{
-					context.translate(0, -textHeight/2);
+                if (this.scaleDynamicY)
+                {
+                    context.translate(0, -textHeight/2);
 
-					if (this.scaleDynamicX)
-						context.scale((totalWidth - 2*p) / width, (this.getHeight() - 2*p) / lineHeightPx);
-					else
-						context.scale(1, (this.getHeight() - 2*p) / lineHeightPx);
+                    if (this.scaleDynamicX)
+                        context.scale((totalWidth - 2*p) / width, (this.getHeight() - 2*p) / lineHeightPx);
+                    else
+                        context.scale(1, (this.getHeight() - 2*p) / lineHeightPx);
 
-					context.translate(0, textHeight/2);
-				}
-				else if (this.scaleDynamicX)
-				{
-					if (this.verticalAlign)
-						context.translate(0, (this.getHeight() - lineHeightPx - 2*p)/2);
-					context.scale((totalWidth - 2*p) / width, 1);
-				}
-				else if (this.verticalAlign)
-				{
-					context.translate(0, (this.getHeight() - lineHeightPx - 2*p)/2);
-				}
+                    context.translate(0, textHeight/2);
+                }
+                else if (this.scaleDynamicX)
+                {
+                    if (this.verticalAlign)
+                        context.translate(0, (this.getHeight() - lineHeightPx - 2*p)/2);
+                    context.scale((totalWidth - 2*p) / width, 1);
+                }
+                else if (this.verticalAlign)
+                {
+                    context.translate(0, (this.getHeight() - lineHeightPx - 2*p)/2);
+                }
 
                 if(align === RIGHT) {
                     context.translate(totalWidth - width - p * 2, 0);
