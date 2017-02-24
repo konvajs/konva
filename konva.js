@@ -13166,24 +13166,15 @@
                         sx = this.scaleDynamicX;
                 }
                 else sx = 1;
-
+                
                 if (this.scaleDynamicY)
                 {
                     if (sy > this.scaleDynamicY)
-                    {
-                        if (this.verticalAlign)
-                            alignY+= (sy / this.scaleDynamicY - 1) * textHeight;
                         sy = this.scaleDynamicY;
-                    }
                 }
-                else
-                {
-                    sy = 1;
-                    if (this.verticalAlign)
-                        alignY = this.getHeight() - lineHeightPx - 2*p;
-                }
+                else sy = 1;
 
-                // limit scale ratio to a maximum defined
+                // limit scale ratio to a maximum ratio defined
                 if (sx > sy)
                 {
                     if (sx / sy > this.scaleDynamicMaxRatio)
@@ -13195,12 +13186,15 @@
                         sy = sx * this.scaleDynamicMaxRatio;
                 }
 
+                if (this.verticalAlign)
+                    alignY = (this.getHeight() - (sy*lineHeightPx)) / sy / 2;
+
                 // only apply scaling or vertical alignment if requested
                 if (sx != 1 || sy != 1 || alignY)
                 {
                     context.translate(0, -(textHeight / 2));
                     context.scale(sx, sy);
-                    context.translate(0, (textHeight / 2) + (alignY / 2));
+                    context.translate(0, (textHeight / 2) + alignY);
                 }
                 
                 if(align === RIGHT) {
