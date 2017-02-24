@@ -1,137 +1,130 @@
 suite('Ripple', function() {
-    // ======================================================
-    test('basic ripple', function(done) {
-        var stage = addStage();
+  // ======================================================
+  test('basic ripple', function(done) {
+    var stage = addStage();
 
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            
-            var layer = new Konva.Layer();
-            darth = new Konva.Image({
-                x: 10,
-                y: 10,
-                image: imageObj,
-                draggable: true
-            });
+    var imageObj = new Image();
+    imageObj.onload = function() {
+      var layer = new Konva.Layer();
+      darth = new Konva.Image({
+        x: 10,
+        y: 10,
+        image: imageObj,
+        draggable: true
+      });
 
-            layer.add(darth);
-            stage.add(layer);
+      layer.add(darth);
+      stage.add(layer);
 
-            darth.cache();
-            darth.filters([Konva.Filters.Ripple]);
-            darth.rippleSize(10);
+      darth.cache();
+      darth.filters([Konva.Filters.Ripple]);
+      darth.rippleSize(10);
 
-            assert.equal(darth.rippleSize(), 10);
-            assert.equal(darth._filterUpToDate, false);
+      assert.equal(darth.rippleSize(), 10);
+      assert.equal(darth._filterUpToDate, false);
 
-            layer.draw();
+      layer.draw();
 
-            assert.equal(darth._filterUpToDate, true);
-            
-            darth.rippleSize(20);
+      assert.equal(darth._filterUpToDate, true);
 
-            assert.equal(darth.rippleSize(), 20);
-            assert.equal(darth._filterUpToDate, false);
+      darth.rippleSize(20);
 
-            layer.draw();
+      assert.equal(darth.rippleSize(), 20);
+      assert.equal(darth._filterUpToDate, false);
 
-            assert.equal(darth._filterUpToDate, true);
+      layer.draw();
 
-            done();
-        };
-        imageObj.src = 'assets/lion.png';
+      assert.equal(darth._filterUpToDate, true);
 
-    });
+      done();
+    };
+    imageObj.src = 'assets/lion.png';
+  });
 
-    // ======================================================
-    test('tween ripple offset', function(done) {
-        var stage = addStage();
+  // ======================================================
+  test('tween ripple offset', function(done) {
+    var stage = addStage();
 
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            
-            var layer = new Konva.Layer();
-            darth = new Konva.Image({
-                x: 10,
-                y: 10,
-                image: imageObj,
-                draggable: true
-            });
+    var imageObj = new Image();
+    imageObj.onload = function() {
+      var layer = new Konva.Layer();
+      darth = new Konva.Image({
+        x: 10,
+        y: 10,
+        image: imageObj,
+        draggable: true
+      });
 
-            layer.add(darth);
-            stage.add(layer);
+      layer.add(darth);
+      stage.add(layer);
 
-            darth.cache();
-            darth.filters([Konva.Filters.Ripple]);
-            darth.rippleSize(16);
-            darth.rippleOffset(0);
-            layer.draw();
+      darth.cache();
+      darth.filters([Konva.Filters.Ripple]);
+      darth.rippleSize(16);
+      darth.rippleOffset(0);
+      layer.draw();
 
-            var tween = new Konva.Tween({
-              node: darth, 
-              duration: 2.0,
-              rippleOffset: 32,
-              //rippleSize: 64,
-              easing: Konva.Easings.EaseInOut
-            });
-        
-            darth.on('mouseover', function() {
-              tween.play();
-            });
-      
-            darth.on('mouseout', function() {
-              tween.reverse();
-            });
+      var tween = new Konva.Tween({
+        node: darth,
+        duration: 2.0,
+        rippleOffset: 32,
+        //rippleSize: 64,
+        easing: Konva.Easings.EaseInOut
+      });
 
-            done();
+      darth.on('mouseover', function() {
+        tween.play();
+      });
 
-        };
-        imageObj.src = 'assets/lion.png';
-    });
+      darth.on('mouseout', function() {
+        tween.reverse();
+      });
 
-    // ======================================================
-    test('tween ripple size', function(done) {
-        var stage = addStage();
+      done();
+    };
+    imageObj.src = 'assets/lion.png';
+  });
 
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            
-            var layer = new Konva.Layer();
-            darth = new Konva.Image({
-                x: 10,
-                y: 10,
-                image: imageObj,
-                draggable: true
-            });
+  // ======================================================
+  test('tween ripple size', function(done) {
+    var stage = addStage();
 
-            layer.add(darth);
-            stage.add(layer);
+    var imageObj = new Image();
+    imageObj.onload = function() {
+      var layer = new Konva.Layer();
+      darth = new Konva.Image({
+        x: 10,
+        y: 10,
+        image: imageObj,
+        draggable: true
+      });
 
-            darth.cache();
-            darth.filters([Konva.Filters.Ripple]);
-            darth.rippleSize(16);
-            darth.rippleOffset(0);
-            layer.draw();
+      layer.add(darth);
+      stage.add(layer);
 
-            var tween = new Konva.Tween({
-              node: darth, 
-              duration: 2.0,
-              rippleSize: 64,
-              easing: Konva.Easings.EaseInOut
-            });
-        
-            darth.on('mouseover', function() {
-              tween.play();
-            });
-      
-            darth.on('mouseout', function() {
-              tween.reverse();
-            });
+      darth.cache();
+      darth.filters([Konva.Filters.Ripple]);
+      darth.rippleSize(16);
+      darth.rippleOffset(0);
+      layer.draw();
 
-            done();
+      var tween = new Konva.Tween({
+        node: darth,
+        duration: 2.0,
+        rippleSize: 64,
+        easing: Konva.Easings.EaseInOut
+      });
 
-        };
-        imageObj.src = 'assets/lion.png';
-    });
+      darth.on('mouseover', function() {
+        tween.play();
+      });
 
+      darth.on('mouseout', function() {
+        tween.reverse();
+      });
+
+      done();
+    };
+    imageObj.src = 'assets/lion.png';
+  });
 });

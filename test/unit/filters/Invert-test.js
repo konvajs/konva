@@ -1,86 +1,80 @@
 suite('Invert', function() {
-    // ======================================================
-    test('basic', function(done) {
-        var stage = addStage();
+  // ======================================================
+  test('basic', function(done) {
+    var stage = addStage();
 
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            
-            var layer = new Konva.Layer();
-            darth = new Konva.Image({
-                x: 10,
-                y: 10,
-                image: imageObj,
-                draggable: true
-            });
+    var imageObj = new Image();
+    imageObj.onload = function() {
+      var layer = new Konva.Layer();
+      darth = new Konva.Image({
+        x: 10,
+        y: 10,
+        image: imageObj,
+        draggable: true
+      });
 
-            layer.add(darth);
-            stage.add(layer);
+      layer.add(darth);
+      stage.add(layer);
 
-            darth.cache();
-            darth.filters([Konva.Filters.Invert]);
-            layer.draw();
+      darth.cache();
+      darth.filters([Konva.Filters.Invert]);
+      layer.draw();
 
-            done();
-        };
-        imageObj.src = 'assets/darth-vader.jpg';
+      done();
+    };
+    imageObj.src = 'assets/darth-vader.jpg';
+  });
 
-    });
+  // ======================================================
+  test('crop', function(done) {
+    var stage = addStage();
 
-    // ======================================================
-    test('crop', function(done) {
-        var stage = addStage();
+    var imageObj = new Image();
+    imageObj.onload = function() {
+      var layer = new Konva.Layer();
+      darth = new Konva.Image({
+        x: 10,
+        y: 10,
+        image: imageObj,
+        crop: { x: 128, y: 48, width: 256, height: 128 },
+        draggable: true
+      });
 
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            
-            var layer = new Konva.Layer();
-            darth = new Konva.Image({
-                x: 10,
-                y: 10,
-                image: imageObj,
-                crop: {x:128, y:48, width:256, height:128},
-                draggable: true
-            });
+      layer.add(darth);
+      stage.add(layer);
 
-            layer.add(darth);
-            stage.add(layer);
+      darth.cache();
+      darth.filters([Konva.Filters.Invert]);
+      layer.draw();
 
-            darth.cache();
-            darth.filters([Konva.Filters.Invert]);
-            layer.draw();
+      done();
+    };
+    imageObj.src = 'assets/darth-vader.jpg';
+  });
 
-            done();
+  // ======================================================
+  test('transparancy', function(done) {
+    var stage = addStage();
 
-        };
-        imageObj.src = 'assets/darth-vader.jpg';
-    });
+    var imageObj = new Image();
+    imageObj.onload = function() {
+      var layer = new Konva.Layer();
+      darth = new Konva.Image({
+        x: 10,
+        y: 10,
+        image: imageObj,
+        draggable: true
+      });
 
-    // ======================================================
-    test('transparancy', function(done) {
-        var stage = addStage();
+      layer.add(darth);
+      stage.add(layer);
 
-        var imageObj = new Image();
-        imageObj.onload = function() {
-            
-            var layer = new Konva.Layer();
-            darth = new Konva.Image({
-                x: 10,
-                y: 10,
-                image: imageObj,
-                draggable: true
-            });
+      darth.cache();
+      darth.filters([Konva.Filters.Invert]);
+      layer.draw();
 
-            layer.add(darth);
-            stage.add(layer);
-
-            darth.cache();
-            darth.filters([Konva.Filters.Invert]);
-            layer.draw();
-
-            done();
-        };
-        imageObj.src = 'assets/lion.png';
-
-    });
+      done();
+    };
+    imageObj.src = 'assets/lion.png';
+  });
 });
