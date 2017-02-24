@@ -13156,12 +13156,13 @@
 
 
                 // handle scale and vertical alignment
-                var sx = (totalWidth - 2*p) / width,
-                    sy = (this.getHeight() - 2*p) / lineHeightPx,
+                var sx,
+                    sy,
                     alignY = 0;
 
                 if (this.scaleDynamicX)
                 {
+                    sx = (totalWidth - 2*p) / width;
                     if (sx > this.scaleDynamicX)
                         sx = this.scaleDynamicX;
                 }
@@ -13169,6 +13170,7 @@
                 
                 if (this.scaleDynamicY)
                 {
+                    sy = (this.getHeight() - 2*p) / lineHeightPx;
                     if (sy > this.scaleDynamicY)
                         sy = this.scaleDynamicY;
                 }
