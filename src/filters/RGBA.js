@@ -1,6 +1,6 @@
-(function () {
-    'use strict';
-    /**
+(function() {
+  'use strict';
+  /**
      * RGBA Filter
      * @function
      * @name RGBA
@@ -14,37 +14,36 @@
      * node.green(200);
      * node.alpha(0.3);
      */
-    Konva.Filters.RGBA = function (imageData) {
-        var data = imageData.data,
-            nPixels = data.length,
-            red = this.red(),
-            green = this.green(),
-            blue = this.blue(),
-            alpha = this.alpha(),
-            i, ia;
+  Konva.Filters.RGBA = function(imageData) {
+    var data = imageData.data,
+      nPixels = data.length,
+      red = this.red(),
+      green = this.green(),
+      blue = this.blue(),
+      alpha = this.alpha(),
+      i,
+      ia;
 
-        for (i = 0; i < nPixels; i += 4) {
-            ia = 1 - alpha;
+    for (i = 0; i < nPixels; i += 4) {
+      ia = 1 - alpha;
 
-            data[i] = red * alpha + data[i] * ia; // r
-            data[i + 1] = green * alpha + data[i + 1] * ia; // g
-            data[i + 2] = blue * alpha + data[i + 2] * ia; // b
-        }
-    };
+      data[i] = red * alpha + data[i] * ia; // r
+      data[i + 1] = green * alpha + data[i + 1] * ia; // g
+      data[i + 2] = blue * alpha + data[i + 2] * ia; // b
+    }
+  };
 
-    Konva.Factory.addGetterSetter(Konva.Node, 'red', 0, function(val) {
-        this._filterUpToDate = false;
-        if (val > 255) {
-            return 255;
-        }
-        else if (val < 0) {
-            return 0;
-        }
-        else {
-            return Math.round(val);
-        }
-    });
-    /**
+  Konva.Factory.addGetterSetter(Konva.Node, 'red', 0, function(val) {
+    this._filterUpToDate = false;
+    if (val > 255) {
+      return 255;
+    } else if (val < 0) {
+      return 0;
+    } else {
+      return Math.round(val);
+    }
+  });
+  /**
     * get/set filter red value. Use with {@link Konva.Filters.RGBA} filter.
     * @name red
     * @method
@@ -53,19 +52,17 @@
     * @returns {Integer}
     */
 
-    Konva.Factory.addGetterSetter(Konva.Node, 'green', 0, function(val) {
-        this._filterUpToDate = false;
-        if (val > 255) {
-            return 255;
-        }
-        else if (val < 0) {
-            return 0;
-        }
-        else {
-            return Math.round(val);
-        }
-    });
-    /**
+  Konva.Factory.addGetterSetter(Konva.Node, 'green', 0, function(val) {
+    this._filterUpToDate = false;
+    if (val > 255) {
+      return 255;
+    } else if (val < 0) {
+      return 0;
+    } else {
+      return Math.round(val);
+    }
+  });
+  /**
     * get/set filter green value. Use with {@link Konva.Filters.RGBA} filter.
     * @name green
     * @method
@@ -74,8 +71,14 @@
     * @returns {Integer}
     */
 
-    Konva.Factory.addGetterSetter(Konva.Node, 'blue', 0, Konva.Validators.RGBComponent, Konva.Factory.afterSetFilter);
-    /**
+  Konva.Factory.addGetterSetter(
+    Konva.Node,
+    'blue',
+    0,
+    Konva.Validators.RGBComponent,
+    Konva.Factory.afterSetFilter
+  );
+  /**
     * get/set filter blue value. Use with {@link Konva.Filters.RGBA} filter.
     * @name blue
     * @method
@@ -84,19 +87,17 @@
     * @returns {Integer}
     */
 
-    Konva.Factory.addGetterSetter(Konva.Node, 'alpha', 1, function(val) {
-        this._filterUpToDate = false;
-        if (val > 1) {
-            return 1;
-        }
-        else if (val < 0) {
-            return 0;
-        }
-        else {
-            return val;
-        }
-    });
-    /**
+  Konva.Factory.addGetterSetter(Konva.Node, 'alpha', 1, function(val) {
+    this._filterUpToDate = false;
+    if (val > 1) {
+      return 1;
+    } else if (val < 0) {
+      return 0;
+    } else {
+      return val;
+    }
+  });
+  /**
      * get/set filter alpha value. Use with {@link Konva.Filters.RGBA} filter.
      * @name alpha
      * @method

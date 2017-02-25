@@ -1,9 +1,9 @@
 (function() {
-    'use strict';
-    // CONSTANTS
-    var IMAGE = 'Image';
+  'use strict';
+  // CONSTANTS
+  var IMAGE = 'Image';
 
-    /**
+  /**
      * Image constructor
      * @constructor
      * @memberof Konva
@@ -26,72 +26,85 @@
      * };
      * imageObj.src = '/path/to/image.jpg'
      */
-    Konva.Image = function(config) {
-        this.___init(config);
-    };
+  Konva.Image = function(config) {
+    this.___init(config);
+  };
 
-    Konva.Image.prototype = {
-        ___init: function(config) {
-            // call super constructor
-            Konva.Shape.call(this, config);
-            this.className = IMAGE;
-            this.sceneFunc(this._sceneFunc);
-            this.hitFunc(this._hitFunc);
-        },
-        _useBufferCanvas: function() {
-            return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) && this.hasStroke() && this.getStage();
-        },
-        _sceneFunc: function(context) {
-            var width = this.getWidth(),
-                height = this.getHeight(),
-                image = this.getImage(),
-                cropWidth, cropHeight, params;
+  Konva.Image.prototype = {
+    ___init: function(config) {
+      // call super constructor
+      Konva.Shape.call(this, config);
+      this.className = IMAGE;
+      this.sceneFunc(this._sceneFunc);
+      this.hitFunc(this._hitFunc);
+    },
+    _useBufferCanvas: function() {
+      return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) &&
+        this.hasStroke() &&
+        this.getStage();
+    },
+    _sceneFunc: function(context) {
+      var width = this.getWidth(),
+        height = this.getHeight(),
+        image = this.getImage(),
+        cropWidth,
+        cropHeight,
+        params;
 
-            if (image) {
-                cropWidth = this.getCropWidth();
-                cropHeight = this.getCropHeight();
-                if (cropWidth && cropHeight) {
-                    params = [image, this.getCropX(), this.getCropY(), cropWidth, cropHeight, 0, 0, width, height];
-                } else {
-                    params = [image, 0, 0, width, height];
-                }
-            }
-
-            if (this.hasFill() || this.hasStroke()) {
-                context.beginPath();
-                context.rect(0, 0, width, height);
-                context.closePath();
-                context.fillStrokeShape(this);
-            }
-
-            if (image) {
-                context.drawImage.apply(context, params);
-            }
-        },
-        _hitFunc: function(context) {
-            var width = this.getWidth(),
-                height = this.getHeight();
-
-            context.beginPath();
-            context.rect(0, 0, width, height);
-            context.closePath();
-            context.fillStrokeShape(this);
-        },
-        getWidth: function() {
-            var image = this.getImage();
-            return this.attrs.width || (image ? image.width : 0);
-        },
-        getHeight: function() {
-            var image = this.getImage();
-            return this.attrs.height || (image ? image.height : 0);
+      if (image) {
+        cropWidth = this.getCropWidth();
+        cropHeight = this.getCropHeight();
+        if (cropWidth && cropHeight) {
+          params = [
+            image,
+            this.getCropX(),
+            this.getCropY(),
+            cropWidth,
+            cropHeight,
+            0,
+            0,
+            width,
+            height
+          ];
+        } else {
+          params = [image, 0, 0, width, height];
         }
-    };
-    Konva.Util.extend(Konva.Image, Konva.Shape);
+      }
 
-    // add getters setters
-    Konva.Factory.addGetterSetter(Konva.Image, 'image');
+      if (this.hasFill() || this.hasStroke()) {
+        context.beginPath();
+        context.rect(0, 0, width, height);
+        context.closePath();
+        context.fillStrokeShape(this);
+      }
 
-    /**
+      if (image) {
+        context.drawImage.apply(context, params);
+      }
+    },
+    _hitFunc: function(context) {
+      var width = this.getWidth(), height = this.getHeight();
+
+      context.beginPath();
+      context.rect(0, 0, width, height);
+      context.closePath();
+      context.fillStrokeShape(this);
+    },
+    getWidth: function() {
+      var image = this.getImage();
+      return this.attrs.width || (image ? image.width : 0);
+    },
+    getHeight: function() {
+      var image = this.getImage();
+      return this.attrs.height || (image ? image.height : 0);
+    }
+  };
+  Konva.Util.extend(Konva.Image, Konva.Shape);
+
+  // add getters setters
+  Konva.Factory.addGetterSetter(Konva.Image, 'image');
+
+  /**
      * set image
      * @name setImage
      * @method
@@ -99,7 +112,7 @@
      * @param {Image} image
      */
 
-    /**
+  /**
      * get image
      * @name getImage
      * @method
@@ -107,8 +120,13 @@
      * @returns {Image}
      */
 
-    Konva.Factory.addComponentsGetterSetter(Konva.Image, 'crop', ['x', 'y', 'width', 'height']);
-    /**
+  Konva.Factory.addComponentsGetterSetter(Konva.Image, 'crop', [
+    'x',
+    'y',
+    'width',
+    'height'
+  ]);
+  /**
      * get/set crop
      * @method
      * @name crop
@@ -132,8 +150,8 @@
      * });
      */
 
-    Konva.Factory.addGetterSetter(Konva.Image, 'cropX', 0);
-    /**
+  Konva.Factory.addGetterSetter(Konva.Image, 'cropX', 0);
+  /**
      * get/set crop x
      * @method
      * @name cropX
@@ -148,8 +166,8 @@
      * image.cropX(20);
      */
 
-    Konva.Factory.addGetterSetter(Konva.Image, 'cropY', 0);
-    /**
+  Konva.Factory.addGetterSetter(Konva.Image, 'cropY', 0);
+  /**
      * get/set crop y
      * @name cropY
      * @method
@@ -164,8 +182,8 @@
      * image.cropY(20);
      */
 
-    Konva.Factory.addGetterSetter(Konva.Image, 'cropWidth', 0);
-    /**
+  Konva.Factory.addGetterSetter(Konva.Image, 'cropWidth', 0);
+  /**
      * get/set crop width
      * @name cropWidth
      * @method
@@ -180,8 +198,8 @@
      * image.cropWidth(20);
      */
 
-    Konva.Factory.addGetterSetter(Konva.Image, 'cropHeight', 0);
-    /**
+  Konva.Factory.addGetterSetter(Konva.Image, 'cropHeight', 0);
+  /**
      * get/set crop height
      * @name cropHeight
      * @method
@@ -196,9 +214,9 @@
      * image.cropHeight(20);
      */
 
-    Konva.Collection.mapMethods(Konva.Image);
+  Konva.Collection.mapMethods(Konva.Image);
 
-    /**
+  /**
      * load image from given url and create `Konva.Image` instance
      * @method
      * @memberof Konva.Image
@@ -211,14 +229,14 @@
      *    layer.draw();
      *  });
      */
-    Konva.Image.fromURL = function(url, callback) {
-        var img = new Image();
-        img.onload = function() {
-          var image = new Konva.Image({
-            image: img
-          });
-          callback(image);
-        };
-        img.src = url;
+  Konva.Image.fromURL = function(url, callback) {
+    var img = new Image();
+    img.onload = function() {
+      var image = new Konva.Image({
+        image: img
+      });
+      callback(image);
     };
+    img.src = url;
+  };
 })();
