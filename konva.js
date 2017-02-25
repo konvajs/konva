@@ -14378,78 +14378,6 @@
          * @memberof Konva.Text.prototype
          * @returns {Number}
          */
-<<<<<<< HEAD
-        getTextHeight: function() {
-            return this.textHeight;
-        },
-        _getTextSize: function(text) {
-            var _context = dummyContext,
-                fontSize = this.getFontSize(),
-                metrics;
-
-            _context.save();
-            _context.font = this._getContextFont();
-
-            metrics = _context.measureText(text);
-            _context.restore();
-            return {
-                width: metrics.width,
-                height: parseInt(fontSize, 10)
-            };
-        },
-        _getContextFont: function() {
-            // IE don't want to work with usual font style
-            // bold was not working
-            // removing font variant will solve
-            // fix for: https://github.com/konvajs/konva/issues/94
-            if (Konva.UA.isIE) {
-                return this.getFontStyle() + SPACE + this.getFontSize() + PX_SPACE + this.getFontFamily();
-            }
-            return this.getFontStyle() + SPACE +
-                    this.getFontVariant() + SPACE +
-                    this.getFontSize() + PX_SPACE +
-                    this.getFontFamily();
-        },
-        _addTextLine: function (line) {
-            if (this.align() === JUSTIFY) {
-                line = line.trim();
-            }
-            var width = this._getTextWidth(line);
-            return this.textArr.push({text: line, width: width});
-        },
-        _getTextWidth: function (text) {
-            var latterSpacing = this.getLetterSpacing();
-            var length = text.length;
-            return dummyContext.measureText(text).width +
-              (length ? latterSpacing * (length - 1) : 0);
-        },
-        _setTextData: function () {
-            var lines = this.getText().split('\n'),
-                fontSize = +this.getFontSize(),
-                textWidth = 0,
-                lineHeightPx = this.getLineHeight() * fontSize,
-                width = this.attrs.width,
-                height = this.attrs.height,
-                fixedWidth = width !== AUTO,
-                fixedHeight = height !== AUTO,
-                padding = this.getPadding(),
-                maxWidth = width - padding * 2,
-                maxHeightPx = height - padding * 2,
-                currentHeightPx = 0,
-                wrap = this.getWrap(),
-                shouldWrap = wrap !== NONE,
-                wrapAtWord = wrap !== CHAR && shouldWrap;
-
-            this.textArr = [];
-            dummyContext.save();
-            dummyContext.font = this._getContextFont();
-            for (var i = 0, max = lines.length; i < max; ++i) {
-                var line = lines[i];
-
-                var lineWidth = this._getTextWidth(line);
-                if (fixedWidth && lineWidth > maxWidth && !this.scaleDynamicX) {
-                    /*
-=======
     getTextHeight: function() {
       return this.textHeight;
     },
@@ -14523,9 +14451,8 @@
         var line = lines[i];
 
         var lineWidth = this._getTextWidth(line);
-        if (fixedWidth && lineWidth > maxWidth) {
+        if (fixedWidth && lineWidth > maxWidth && !this.scaleDynamicX) {
           /*
->>>>>>> upstream/master
                      * if width is fixed and line does not fit entirely
                      * break the line into multiple fitting lines
                      */
