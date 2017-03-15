@@ -457,6 +457,7 @@ declare module Konva {
     class Stage extends Container {
         constructor(StageConfig: StageConfig);
         add(layer: Layer): Stage;
+        add(layer: FastLayer): Stage;
         batchDraw(): void;
         container(): HTMLElement;
         destroy(): void;
@@ -471,6 +472,13 @@ declare module Konva {
 
     interface LayerConfig extends ContainerConfig {
         clearBeforeDraw?: boolean;
+    }
+
+    class FastLayer extends Container {
+        constructor (config?: ContainerConfig);
+        drawScene(): void;
+        hitGraphEnabled(val: boolean): FastLayer;
+        batchDraw(): void;
     }
 
     class Layer extends Container {
