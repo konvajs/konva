@@ -51,6 +51,7 @@
     'shadowOffsetX',
     'shadowOffsetY',
     'lineCap',
+    'lineDashOffset',
     'lineJoin',
     'lineWidth',
     'miterLimit',
