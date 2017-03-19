@@ -10393,13 +10393,13 @@
         if (evt.touches.length > 0) {
           var touch = evt.touches[0];
           // get the information for finger #1
-          x = touch.clientX - contentPosition.left;
-          y = touch.clientY - contentPosition.top;
+          x = touch.offsetX;
+          y = touch.offsetY;
         }
       } else {
         // mouse events
-        x = evt.clientX - contentPosition.left;
-        y = evt.clientY - contentPosition.top;
+        x = evt.offsetX;
+        y = evt.offsetY;
       }
       if (x !== null && y !== null) {
         this.pointerPos = {
