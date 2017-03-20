@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+### Added
+- support for `lineDashOffset` property for `Konva.Shape`.
+
 ## [1.4.0][2017-02-07]
 
 ## Added
