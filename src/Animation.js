@@ -284,8 +284,6 @@
       );
     }
 
-    this.lastBatchDrawTime = now();
-
     if (!this.batchAnim.isRunning()) {
       this.batchAnim.start();
     }
