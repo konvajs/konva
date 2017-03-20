@@ -713,6 +713,21 @@
      *  line.dash([10, 20, 0.001, 20]);
      */
 
+  Konva.Factory.addGetterSetter(Konva.Shape, 'dashOffset', 0);
+
+  /**
+     * get/set dash offset for stroke.
+     * @name dash
+     * @method
+     * @memberof Konva.Shape.prototype
+     * @param {Number} dash offset
+     * @returns {Number}
+     * @example
+     *  // apply dashed stroke that is 10px long and 5 pixels apart with an offset of 5px
+     *  line.dash([10, 5]);
+     *  line.dashOffset(5);
+     */
+
   Konva.Factory.addGetterSetter(Konva.Shape, 'shadowColor');
 
   /**

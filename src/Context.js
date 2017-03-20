@@ -51,6 +51,7 @@
     'shadowOffsetX',
     'shadowOffsetY',
     'lineCap',
+    'lineDashOffset',
     'lineJoin',
     'lineWidth',
     'miterLimit',
@@ -599,6 +600,7 @@
         this._applyLineCap(shape);
         if (dash && shape.dashEnabled()) {
           this.setLineDash(dash);
+          this.setAttr('lineDashOffset', shape.dashOffset());
         }
 
         this.setAttr('lineWidth', shape.strokeWidth());

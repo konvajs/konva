@@ -896,6 +896,7 @@ suite('Shape', function() {
     assert.equal(shape.strokeEnabled(), true);
     assert.equal(shape.shadowEnabled(), true);
     assert.equal(shape.dashEnabled(), true);
+    assert.equal(shape.dashOffset(), 0);
     assert.equal(shape.strokeScaleEnabled(), true);
     assert.equal(shape.fillPriority(), 'color');
     assert.equal(shape.fillPatternOffsetX(), 0);
