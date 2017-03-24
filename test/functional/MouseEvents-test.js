@@ -61,14 +61,14 @@ suite('MouseEvents', function() {
       stageContentDblClick++;
     });
 
-    stage._mousedown({
-      clientX: 100,
-      clientY: 100 + top
+    stage.simulateMouseDown({
+      x: 100,
+      y: 100
     });
 
-    stage._mouseup({
-      clientX: 100,
-      clientY: 100 + top
+    stage.simulateMouseUp({
+      x: 100,
+      y: 100
     });
 
     assert.equal(circleMousedown, 1);
@@ -77,26 +77,26 @@ suite('MouseEvents', function() {
     assert.equal(stageContentMouseup, 1);
     assert.equal(stageContentClick, 1);
 
-    stage._mousedown({
-      clientX: 1,
-      clientY: 1 + top
+    stage.simulateMouseDown({
+      x: 1,
+      y: 1
     });
-    stage._mouseup({
-      clientX: 1,
-      clientY: 1 + top
+    stage.simulateMouseUp({
+      x: 1,
+      y: 1
     });
 
     assert.equal(stageContentMousedown, 2);
     assert.equal(stageContentMouseup, 2);
 
     // trigger double click
-    stage._mousedown({
-      clientX: 1,
-      clientY: 1 + top
+    stage.simulateMouseDown({
+      x: 1,
+      y: 1
     });
-    stage._mouseup({
-      clientX: 1,
-      clientY: 1 + top
+    stage.simulateMouseUp({
+      x: 1,
+      y: 1
     });
 
     assert.equal(stageContentMousedown, 3);
@@ -105,23 +105,23 @@ suite('MouseEvents', function() {
 
     setTimeout(
       function() {
-        stage._mousemove({
-          clientX: 200,
-          clientY: 1 + top
+        stage.simulateMouseMove({
+          x: 200,
+          y: 1
         });
 
         assert.equal(stageContentMousemove, 1);
 
         stage._mouseout({
-          clientX: 0,
-          clientY: 0
+          offsetX: 0,
+          offsetY: 0
         });
 
         assert.equal(stageContentMouseout, 1);
 
         stage._mouseover({
-          clientX: 0,
-          clientY: 0
+          offsetX: 0,
+          offsetY: 0
         });
 
         assert.equal(stageContentMouseover, 1);
@@ -163,15 +163,15 @@ suite('MouseEvents', function() {
       setTimeout(remove, 0);
     });
 
-    stage._mousedown({
-      clientX: 291,
-      clientY: 112 + top
+    stage.simulateMouseDown({
+      x: 291,
+      y: 112
     });
 
     Konva.DD._endDragBefore();
-    stage._mouseup({
-      clientX: 291,
-      clientY: 112 + top
+    stage.simulateMouseUp({
+      x: 291,
+      y: 112
     });
     Konva.DD._endDragAfter({ dragEndNode: circle });
   });
@@ -204,27 +204,27 @@ suite('MouseEvents', function() {
     stage.add(layer);
 
     // -----------------------------------
-    stage._mousedown({
-      clientX: 291,
-      clientY: 112 + top
+    stage.simulateMouseDown({
+      x: 291,
+      y: 112
     });
     Konva.DD._endDragBefore();
-    stage._mouseup({
-      clientX: 291,
-      clientY: 112 + top
+    stage.simulateMouseUp({
+      x: 291,
+      y: 112
     });
     assert.equal(clickCount, 1, 'should be 1 click');
 
     // -----------------------------------
     circle.setListening(false);
-    stage._mousedown({
-      clientX: 291,
-      clientY: 112 + top
+    stage.simulateMouseDown({
+      x: 291,
+      y: 112
     });
     Konva.DD._endDragBefore();
-    stage._mouseup({
-      clientX: 291,
-      clientY: 112 + top
+    stage.simulateMouseUp({
+      x: 291,
+      y: 112
     });
     assert.equal(
       clickCount,
@@ -234,14 +234,14 @@ suite('MouseEvents', function() {
 
     // -----------------------------------
     circle.setListening(true);
-    stage._mousedown({
-      clientX: 291,
-      clientY: 112 + top
+    stage.simulateMouseDown({
+      x: 291,
+      y: 112
     });
     Konva.DD._endDragBefore();
-    stage._mouseup({
-      clientX: 291,
-      clientY: 112 + top
+    stage.simulateMouseUp({
+      x: 291,
+      y: 112
     });
     assert.equal(clickCount, 2, 'should be 2 clicks');
   });
@@ -298,15 +298,15 @@ suite('MouseEvents', function() {
     showHit(layer);
 
     // mousedown and mouseup on red circle
-    stage._mousedown({
-      clientX: 284,
-      clientY: 113 + top
+    stage.simulateMouseDown({
+      x: 284,
+      y: 113
     });
 
     Konva.DD._endDragBefore();
-    stage._mouseup({
-      clientX: 284,
-      clientY: 113 + top
+    stage.simulateMouseUp({
+      x: 284,
+      y: 113
     });
     Konva.DD._endDragAfter({ dragEndNode: redCircle });
 
@@ -314,15 +314,15 @@ suite('MouseEvents', function() {
     assert.equal(greenClicks, 0, 'green circle should have 0 clicks');
 
     // mousedown and mouseup on green circle
-    stage._mousedown({
-      clientX: 397,
-      clientY: 108 + top
+    stage.simulateMouseDown({
+      x: 397,
+      y: 108
     });
 
     Konva.DD._endDragBefore();
-    stage._mouseup({
-      clientX: 397,
-      clientY: 108 + top
+    stage.simulateMouseUp({
+      x: 397,
+      y: 108
     });
     Konva.DD._endDragAfter({ dragEndNode: redCircle });
 
@@ -330,15 +330,15 @@ suite('MouseEvents', function() {
     assert.equal(greenClicks, 1, 'green circle should have 1 click');
 
     // mousedown red circle and mouseup on green circle
-    stage._mousedown({
-      clientX: 284,
-      clientY: 113 + top
+    stage.simulateMouseDown({
+      x: 284,
+      y: 113
     });
 
     Konva.DD._endDragBefore();
-    stage._mouseup({
-      clientX: 397,
-      clientY: 108 + top
+    stage.simulateMouseUp({
+      x: 397,
+      y: 108
     });
     Konva.DD._endDragAfter({ dragEndNode: redCircle });
 
@@ -374,15 +374,15 @@ suite('MouseEvents', function() {
 
     showHit(layer);
 
-    stage._mousedown({
-      clientX: 300,
-      clientY: 120 + top
+    stage.simulateMouseDown({
+      x: 300,
+      y: 120
     });
 
     Konva.DD._endDragBefore();
-    stage._mouseup({
-      clientX: 300,
-      clientY: 120 + top
+    stage.simulateMouseUp({
+      x: 300,
+      y: 120
     });
     Konva.DD._endDragAfter({ dragEndNode: text });
 
@@ -437,9 +437,9 @@ suite('MouseEvents', function() {
 
     setTimeout(
       function() {
-        stage._mousemove({
-          clientX: 377,
-          clientY: 101 + top
+        stage.simulateMouseMove({
+          x: 377,
+          y: 101
         });
 
         assert.equal(
@@ -456,9 +456,9 @@ suite('MouseEvents', function() {
         setTimeout(
           function() {
             // move mouse back out of circle
-            stage._mousemove({
-              clientX: 157,
-              clientY: 138 + top
+            stage.simulateMouseMove({
+              x: 157,
+              y: 138
             });
 
             assert.equal(circle.getFill(), 'red', 'circle fill should be red');
@@ -543,9 +543,9 @@ suite('MouseEvents', function() {
       setTimeout(
         function() {
           // move mouse to center of circle to trigger mouseover
-          stage._mousemove({
-            clientX: 290,
-            clientY: 100 + top
+          stage.simulateMouseMove({
+            x: 290,
+            y: 100
           });
 
           assert(mouseover, '1) mouseover should be true');
@@ -559,9 +559,9 @@ suite('MouseEvents', function() {
           setTimeout(
             function() {
               // move mouse again inside circle to trigger mousemove
-              stage._mousemove({
-                clientX: 290,
-                clientY: 100 + top
+              stage.simulateMouseMove({
+                x: 290,
+                y: 100
               });
 
               assert(mouseover, '2) mouseover should be true');
@@ -573,9 +573,9 @@ suite('MouseEvents', function() {
               assert(!mouseout, '2) mouseout should be false');
 
               // mousedown inside circle
-              stage._mousedown({
-                clientX: 290,
-                clientY: 100 + top
+              stage.simulateMouseDown({
+                x: 290,
+                y: 100
               });
 
               assert(mouseover, '3) mouseover should be true');
@@ -587,9 +587,9 @@ suite('MouseEvents', function() {
               assert(!mouseout, '3) mouseout should be false');
 
               // mouseup inside circle
-              stage._mouseup({
-                clientX: 290,
-                clientY: 100 + top
+              stage.simulateMouseUp({
+                x: 290,
+                y: 100
               });
 
               assert(mouseover, '4) mouseover should be true');
@@ -601,9 +601,9 @@ suite('MouseEvents', function() {
               assert(!mouseout, '4) mouseout should be false');
 
               // mousedown inside circle
-              stage._mousedown({
-                clientX: 290,
-                clientY: 100 + top
+              stage.simulateMouseDown({
+                x: 290,
+                y: 100
               });
 
               assert(mouseover, '5) mouseover should be true');
@@ -615,9 +615,9 @@ suite('MouseEvents', function() {
               assert(!mouseout, '5) mouseout should be false');
 
               // mouseup inside circle to trigger double click
-              stage._mouseup({
-                clientX: 290,
-                clientY: 100 + top
+              stage.simulateMouseUp({
+                x: 290,
+                y: 100
               });
 
               assert(mouseover, '6) mouseover should be true');
@@ -631,9 +631,9 @@ suite('MouseEvents', function() {
               setTimeout(
                 function() {
                   // move mouse outside of circle to trigger mouseout
-                  stage._mousemove({
-                    clientX: 0,
-                    clientY: 100 + top
+                  stage.simulateMouseMove({
+                    x: 0,
+                    y: 100
                   });
 
                   assert(mouseover, '7) mouseover should be true');
@@ -701,33 +701,33 @@ suite('MouseEvents', function() {
       greenCircleMousedowns++;
     });
 
-    stage._mousedown({
-      clientX: 285,
-      clientY: 100 + top
+    stage.simulateMouseDown({
+      x: 285,
+      y: 100
     });
 
     assert.equal(groupMousedowns, 1, 'groupMousedowns should be 1');
     assert.equal(greenCircleMousedowns, 1, 'greenCircleMousedowns should be 1');
 
-    stage._mousedown({
-      clientX: 332,
-      clientY: 139 + top
+    stage.simulateMouseDown({
+      x: 332,
+      y: 139
     });
 
     assert.equal(groupMousedowns, 2, 'groupMousedowns should be 2');
     assert.equal(greenCircleMousedowns, 1, 'greenCircleMousedowns should be 1');
 
-    stage._mousedown({
-      clientX: 285,
-      clientY: 92 + top
+    stage.simulateMouseDown({
+      x: 285,
+      y: 92
     });
 
     assert.equal(groupMousedowns, 3, 'groupMousedowns should be 3');
     assert.equal(greenCircleMousedowns, 2, 'greenCircleMousedowns should be 2');
 
-    stage._mousedown({
-      clientX: 221,
-      clientY: 146 + top
+    stage.simulateMouseDown({
+      x: 221,
+      y: 146
     });
 
     //assert.equal(groupMousedowns, 4, 'groupMousedowns should be 4');
@@ -765,9 +765,9 @@ suite('MouseEvents', function() {
     layer.draw();
 
     var top = stage.content.getBoundingClientRect().top;
-    stage._mousedown({
-      clientX: 135,
-      clientY: 30 + top
+    stage.simulateMouseDown({
+      x: 135,
+      y: 30
     });
 
     assert.equal(groupMousedowns, 1, 'groupMousedowns should be 1');
@@ -809,9 +809,9 @@ suite('MouseEvents', function() {
     var top = stage.content.getBoundingClientRect().top;
     // move mouse slowly
     for (var i = 99; i < 129; i++) {
-      stage._mousemove({
-        clientX: i,
-        clientY: 135 + top
+      stage.simulateMouseMove({
+        x: i,
+        y: 135
       });
     }
     assert.equal(mouseenterCount, 1, 'mouseenterCount should be 1');
@@ -893,9 +893,9 @@ suite('MouseEvents', function() {
     setTimeout(
       function() {
         // move mouse outside of circles
-        stage._mousemove({
-          clientX: 177,
-          clientY: 146 + top
+        stage.simulateMouseMove({
+          x: 177,
+          y: 146
         });
 
         assert.equal(redMouseenters, 0, 'redMouseenters should be 0');
@@ -908,9 +908,9 @@ suite('MouseEvents', function() {
         setTimeout(
           function() {
             // move mouse inside of red circle
-            stage._mousemove({
-              clientX: 236,
-              clientY: 145 + top
+            stage.simulateMouseMove({
+              x: 236,
+              y: 145
             });
 
             //console.log('groupMouseenters=' + groupMouseenters);
@@ -925,9 +925,9 @@ suite('MouseEvents', function() {
             setTimeout(
               function() {
                 // move mouse inside of green circle
-                stage._mousemove({
-                  clientX: 284,
-                  clientY: 118 + top
+                stage.simulateMouseMove({
+                  x: 284,
+                  y: 118
                 });
 
                 assert.equal(redMouseenters, 1, 'redMouseenters should be 1');
@@ -957,9 +957,9 @@ suite('MouseEvents', function() {
                   function() {
                     // move mouse back to red circle
 
-                    stage._mousemove({
-                      clientX: 345,
-                      clientY: 105 + top
+                    stage.simulateMouseMove({
+                      x: 345,
+                      y: 105
                     });
 
                     assert.equal(
@@ -996,9 +996,9 @@ suite('MouseEvents', function() {
                     setTimeout(
                       function() {
                         // move mouse outside of circles
-                        stage._mousemove({
-                          clientX: 177,
-                          clientY: 146 + top
+                        stage.simulateMouseMove({
+                          x: 177,
+                          y: 146
                         });
 
                         assert.equal(
@@ -1131,9 +1131,9 @@ suite('MouseEvents', function() {
 
     var top = stage.content.getBoundingClientRect().top;
 
-    stage._mousemove({
-      clientX: 10,
-      clientY: 10 + top
+    stage.simulateMouseMove({
+      x: 10,
+      y: 10
     });
     assert.equal(groupMouseenter, 1, 'move1 : group mouseenter should trigger');
     assert.equal(
@@ -1167,9 +1167,9 @@ suite('MouseEvents', function() {
       'move1 : group2 mouseout should not trigger'
     );
 
-    stage._mousemove({
-      clientX: 50,
-      clientY: 50 + top
+    stage.simulateMouseMove({
+      x: 50,
+      y: 50
     });
     assert.equal(
       groupMouseenter,
@@ -1203,9 +1203,9 @@ suite('MouseEvents', function() {
       'move2 : group2 mouseout should not trigger'
     );
 
-    stage._mousemove({
-      clientX: 10,
-      clientY: 10 + top
+    stage.simulateMouseMove({
+      x: 10,
+      y: 10
     });
     assert.equal(
       groupMouseenter,
@@ -1235,9 +1235,9 @@ suite('MouseEvents', function() {
     assert.equal(groupMouseout, 2, 'move3 : group mouseout should trigger');
     assert.equal(group2Mouseout, 1, 'move3 : group2 mouseout should trigger');
 
-    stage._mousemove({
-      clientX: 50,
-      clientY: 50 + top
+    stage.simulateMouseMove({
+      x: 50,
+      y: 50
     });
 
     assert.equal(groupMouseenter, 1, 'move4 : mouseenter should not trigger');
@@ -1359,9 +1359,9 @@ suite('MouseEvents', function() {
 
     var top = stage.content.getBoundingClientRect().top;
 
-    stage._mousemove({
-      clientX: 10,
-      clientY: 10 + top
+    stage.simulateMouseMove({
+      x: 10,
+      y: 10
     });
 
     assert.equal(
@@ -1370,9 +1370,9 @@ suite('MouseEvents', function() {
       'move1 : group1 mouseenter should trigger'
     );
 
-    stage._mousemove({
-      clientX: 60,
-      clientY: 60 + top
+    stage.simulateMouseMove({
+      x: 60,
+      y: 60
     });
     assert.equal(
       group21Mouseenter,
@@ -1390,9 +1390,9 @@ suite('MouseEvents', function() {
       'move2 : group1 mouseleave should trigger'
     );
 
-    stage._mousemove({
-      clientX: 10,
-      clientY: 10 + top
+    stage.simulateMouseMove({
+      x: 10,
+      y: 10
     });
 
     assert.equal(
@@ -1640,14 +1640,14 @@ suite('MouseEvents', function() {
       e.push('stage');
     });
     // click on circle
-    stage._mousedown({
-      clientX: 374,
-      clientY: 114 + top
+    stage.simulateMouseDown({
+      x: 374,
+      y: 114
     });
     Konva.DD._endDragBefore();
-    stage._mouseup({
-      clientX: 374,
-      clientY: 114 + top
+    stage.simulateMouseUp({
+      x: 374,
+      y: 114
     });
     Konva.DD._endDragAfter({ dragEndNode: circle });
 
@@ -1700,9 +1700,9 @@ suite('MouseEvents', function() {
     setTimeout(
       function() {
         // move mouse far outside circle
-        stage._mousemove({
-          clientX: 113,
-          clientY: 112 + top
+        stage.simulateMouseMove({
+          x: 113,
+          y: 112
         });
 
         setTimeout(
@@ -1710,9 +1710,9 @@ suite('MouseEvents', function() {
             assert.equal(mouseovers, 0, '1) mouseovers should be 0');
             assert.equal(mouseouts, 0, '1) mouseouts should be 0');
 
-            stage._mousemove({
-              clientX: 286,
-              clientY: 118 + top
+            stage.simulateMouseMove({
+              x: 286,
+              y: 118
             });
 
             assert.equal(mouseovers, 1, '2) mouseovers should be 1');
@@ -1720,9 +1720,9 @@ suite('MouseEvents', function() {
 
             setTimeout(
               function() {
-                stage._mousemove({
-                  clientX: 113,
-                  clientY: 112 + top
+                stage.simulateMouseMove({
+                  x: 113,
+                  y: 112
                 });
 
                 assert.equal(mouseovers, 1, '3) mouseovers should be 1');
@@ -1753,9 +1753,9 @@ suite('MouseEvents', function() {
                 setTimeout(
                   function() {
                     // move mouse far outside circle
-                    stage._mousemove({
-                      clientX: 113,
-                      clientY: 112 + top
+                    stage.simulateMouseMove({
+                      x: 113,
+                      y: 112
                     });
 
                     assert.equal(mouseovers, 1, '4) mouseovers should be 1');
@@ -1763,9 +1763,9 @@ suite('MouseEvents', function() {
 
                     setTimeout(
                       function() {
-                        stage._mousemove({
-                          clientX: 286,
-                          clientY: 118 + top
+                        stage.simulateMouseMove({
+                          x: 286,
+                          y: 118
                         });
 
                         assert.equal(
@@ -1777,9 +1777,9 @@ suite('MouseEvents', function() {
 
                         setTimeout(
                           function() {
-                            stage._mousemove({
-                              clientX: 321,
-                              clientY: 112 + top
+                            stage.simulateMouseMove({
+                              x: 321,
+                              y: 112
                             });
 
                             assert.equal(
@@ -1796,9 +1796,9 @@ suite('MouseEvents', function() {
                             setTimeout(
                               function() {
                                 // move to center of circle
-                                stage._mousemove({
-                                  clientX: 375,
-                                  clientY: 112 + top
+                                stage.simulateMouseMove({
+                                  x: 375,
+                                  y: 112
                                 });
 
                                 assert.equal(

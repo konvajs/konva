@@ -3002,14 +3002,13 @@ suite('Node', function() {
     showHit(layer);
     var top = stage.content.getBoundingClientRect().top;
 
-    stage._mousedown({
-      clientX: 150,
-      clientY: 75 + top
+    stage.simulateMouseDown({
+      x: 150,
+      y: 75
     });
-    Konva.DD._endDragBefore();
-    stage._mouseup({
-      clientX: 150,
-      clientY: 75 + top
+    stage.simulateMouseUp({
+      x: 150,
+      y: 75
     });
 
     assert.equal(rectClick, 1, 'click on rectangle');

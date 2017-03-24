@@ -51,8 +51,8 @@ suite('TouchEvents', function() {
     stage._touchstart({
       touches: [
         {
-          clientX: 100,
-          clientY: 100 + top
+          offsetX: 100,
+          offsetY: 100
         }
       ]
     });
@@ -70,8 +70,8 @@ suite('TouchEvents', function() {
     stage._touchstart({
       touches: [
         {
-          clientX: 1,
-          clientY: 1 + top
+          offsetX: 1,
+          offsetY: 1
         }
       ]
     });
@@ -146,8 +146,8 @@ suite('TouchEvents', function() {
     stage._touchstart({
       touches: [
         {
-          clientX: 289,
-          clientY: 100 + top
+          offsetX: 289,
+          offsetY: 100
         }
       ],
       preventDefault: function() {}
@@ -178,8 +178,8 @@ suite('TouchEvents', function() {
     stage._touchstart({
       touches: [
         {
-          clientX: 289,
-          clientY: 100 + top
+          offsetX: 289,
+          offsetY: 100
         }
       ],
       preventDefault: function() {}
@@ -212,8 +212,8 @@ suite('TouchEvents', function() {
         stage._touchmove({
           touches: [
             {
-              clientX: 290,
-              clientY: 100 + top
+              offsetX: 290,
+              offsetY: 100
             }
           ],
           preventDefault: function() {}
@@ -267,8 +267,8 @@ suite('TouchEvents', function() {
     stage._touchstart({
       touches: [
         {
-          clientX: 1,
-          clientY: 1 + top
+          offsetX: 1,
+          offsetY: 1
         }
       ]
     });
@@ -276,8 +276,8 @@ suite('TouchEvents', function() {
     stage._touchend({
       touches: [
         {
-          clientX: 100,
-          clientY: 100 + top
+          offsetX: 100,
+          offsetY: 100
         }
       ]
     });

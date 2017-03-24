@@ -696,7 +696,7 @@
       this._mousewheel(evt);
     },
     _setPointerPosition: function(evt) {
-      var contentPosition = this._getContentPosition(), x = null, y = null;
+      var x = null, y = null;
       evt = evt ? evt : window.event;
 
       // touch events
