@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.5.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mon Mar 20 2017
+ * Date: Fri Mar 24 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -10411,13 +10411,13 @@
         if (evt.touches.length > 0) {
           var touch = evt.touches[0];
           // get the information for finger #1
-          x = touch.clientX - contentPosition.left;
-          y = touch.clientY - contentPosition.top;
+          x = touch.offsetX;
+          y = touch.offsetY;
         }
       } else {
         // mouse events
-        x = evt.clientX - contentPosition.left;
-        y = evt.clientY - contentPosition.top;
+        x = evt.offsetX;
+        y = evt.offsetY;
       }
       if (x !== null && y !== null) {
         this.pointerPos = {
