@@ -1,56 +1,65 @@
-var fs = require('fs'), Konva = require('../dist/konva-dev');
+var fs = require('fs'),
+    Konva = require('../dist/konva-dev');
+
+
 
 global.Konva = Konva;
 Konva.enableTrace = true;
 
 // Config MINIMAL test environment
 global.suite = function(title, func) {
-  console.log('Suite : ' + title);
-  func();
+    console.log('Suite : ' + title);
+    func();
 };
 
 global.test = function(title, func) {
-  try {
-    console.log('Run test: ' + title);
-    func(function() {});
-  } catch (e) {
-    console.log('Error at ' + title, e);
-    throw e;
-  }
+    try {
+        console.log('Run test: ' + title);
+        func(function(){});
+    } catch (e) {
+        console.log('Error at ' + title, e);
+        throw e;
+    }
+    
 };
-test.skip = function() {};
-global.assert = function(condtion, message) {
-  if (!condtion) {
-    throw 'assert throw:' + message;
-  }
+test.skip = function(){};
+global.assert = function(condtion, message){
+    if (!condtion) {
+        throw 'assert throw:' + message;
+    }
 };
-global.assert.equal = function(left, right) {
-  if (left !== right) {
-  }
+global.assert.equal = function(left, right){
+    if (left !== right) {
+        
+    }
 };
-global.assert.notEqual = function(left, right) {
-  if (left === right) {
-    throw 'assert throw';
-  }
+global.assert.notEqual = function(left, right){
+    if (left === right) {
+        throw 'assert throw';
+    }
 };
 
-global.addStage = function() {
-  return new Konva.Stage({
-    width: 578,
-    height: 200
-  });
+global.addStage = function(){
+    return new Konva.Stage({
+          width: 578,
+          height: 200
+    });
 };
 
 // Some utils for testing
 global.konvaContainer = Konva.document.createElement('div');
 Konva.document.body.appendChild(konvaContainer);
-global.showHit = global.addContainer = function() {};
+global.showHit = global.addContainer = function(){
+};
 global.Image = Konva._nodeCanvas.Image;
 Image.prototype.style = {};
-eval(fs.readFileSync('./test/assets/tiger.js') + '');
-eval(fs.readFileSync('./test/assets/worldMap.js') + '');
+eval(fs.readFileSync('./test/assets/tiger.js')+"");
+eval(fs.readFileSync('./test/assets/worldMap.js')+"");
 global.tiger = tiger;
 global.worldMap = worldMap;
+
+
+
 
 // now load all tests
 require('./unit/Global-test.js');
@@ -65,7 +74,7 @@ require('./unit/Layer-test.js');
 require('./unit/Shape-test.js');
 require('./unit/Collection-test.js');
 
-// shapes -->
+    // shapes -->
 require('./unit/shapes/Rect-test.js');
 require('./unit/shapes/Circle-test.js');
 require('./unit/shapes/Image-test.js');

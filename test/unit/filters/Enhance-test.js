@@ -1,77 +1,81 @@
-suite('Enhance', function() {
-  // ======================================================
-  test('on image', function(done) {
-    var stage = addStage();
+suite('Enhance', function () {
+    // ======================================================
+    test('on image', function(done) {
+        var stage = addStage();
 
-    var imageObj = new Image();
-    imageObj.onload = function() {
-      var layer = new Konva.Layer();
-      var filt = new Konva.Image({
-        x: 10,
-        y: 10,
-        image: imageObj,
-        draggable: true
-      });
-      var orig = new Konva.Image({
-        x: 200,
-        y: 10,
-        image: imageObj,
-        draggable: true
-      });
+        var imageObj = new Image();
+        imageObj.onload = function() {
 
-      layer.add(filt);
-      layer.add(orig);
-      stage.add(layer);
+            var layer = new Konva.Layer();
+            var filt = new Konva.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
+            var orig = new Konva.Image({
+                x: 200,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
 
-      filt.cache();
-      filt.enhance(1.0);
-      filt.filters([Konva.Filters.Enhance]);
-      layer.draw();
+            layer.add(filt);
+            layer.add(orig);
+            stage.add(layer);
 
-      done();
-    };
-    imageObj.src = 'assets/scorpion-sprite.png';
-  });
+            filt.cache();
+            filt.enhance(1.0);
+            filt.filters([Konva.Filters.Enhance]);
+            layer.draw();
 
-  // ======================================================
-  test('tween enhance', function(done) {
-    var stage = addStage();
+            done();
+        };
+        imageObj.src = 'assets/scorpion-sprite.png';
 
-    var imageObj = new Image();
-    imageObj.onload = function() {
-      var layer = new Konva.Layer();
-      darth = new Konva.Image({
-        x: 10,
-        y: 10,
-        image: imageObj,
-        draggable: true
-      });
+    });
 
-      layer.add(darth);
-      stage.add(layer);
+    // ======================================================
+    test('tween enhance', function(done) {
+        var stage = addStage();
 
-      darth.cache();
-      darth.filters([Konva.Filters.Enhance]);
-      darth.enhance(-1);
-      layer.draw();
+        var imageObj = new Image();
+        imageObj.onload = function() {
 
-      var tween = new Konva.Tween({
-        node: darth,
-        duration: 2.0,
-        enhance: 1.0,
-        easing: Konva.Easings.EaseInOut
-      });
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
 
-      darth.on('mouseover', function() {
-        tween.play();
-      });
+            layer.add(darth);
+            stage.add(layer);
 
-      darth.on('mouseout', function() {
-        tween.reverse();
-      });
+            darth.cache();
+            darth.filters([Konva.Filters.Enhance]);
+            darth.enhance(-1);
+            layer.draw();
 
-      done();
-    };
-    imageObj.src = 'assets/scorpion-sprite.png';
-  });
+            var tween = new Konva.Tween({
+              node: darth,
+              duration: 2.0,
+              enhance: 1.0,
+              easing: Konva.Easings.EaseInOut
+            });
+
+            darth.on('mouseover', function() {
+              tween.play();
+            });
+
+            darth.on('mouseout', function() {
+              tween.reverse();
+            });
+
+            done();
+
+        };
+        imageObj.src = 'assets/scorpion-sprite.png';
+    });
 });

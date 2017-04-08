@@ -1,7 +1,7 @@
-suite('Collection', function() {
+suite('Collection', function(){
   var util;
 
-  test('test collection method mapping', function() {
+  test('test collection method mapping', function(){
     // Node method
     assert.notEqual(Konva.Collection.prototype.on, undefined);
 
@@ -15,31 +15,33 @@ suite('Collection', function() {
     assert.notEqual(Konva.Collection.prototype.strokeWidth, undefined);
   });
 
-  test('add circle to stage', function() {
+  test('add circle to stage', function(){
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle1 = new Konva.Circle({
-      x: 100,
-      y: 100,
-      radius: 70,
-      fill: 'green',
-      stroke: 'black',
-      strokeWidth: 4,
-      name: 'myCircle',
-      draggable: true
+        x: 100,
+        y: 100,
+        radius: 70,
+        fill: 'green',
+        stroke: 'black',
+        strokeWidth: 4,
+        name: 'myCircle',
+        draggable: true
     });
+
 
     var circle2 = new Konva.Circle({
-      x: 300,
-      y: 100,
-      radius: 70,
-      fill: 'red',
-      stroke: 'black',
-      strokeWidth: 4,
-      name: 'myCircle',
-      draggable: true
+        x:300,
+        y: 100,
+        radius: 70,
+        fill: 'red',
+        stroke: 'black',
+        strokeWidth: 4,
+        name: 'myCircle',
+        draggable: true
     });
 
+    
     layer.add(circle1).add(circle2);
     stage.add(layer);
 
@@ -48,9 +50,8 @@ suite('Collection', function() {
 
     //console.log(layer.getContext().getTrace());
 
-    assert.equal(
-      layer.getContext().getTrace(),
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,300,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=red;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=green;stroke();restore();save();transform(1,0,0,1,300,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=green;stroke();restore();'
-    );
+    assert.equal(layer.getContext().getTrace(),'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,300,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=red;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=green;stroke();restore();save();transform(1,0,0,1,300,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=blue;fill();lineWidth=4;strokeStyle=green;stroke();restore();');
+
+
   });
 });

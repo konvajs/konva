@@ -1,6 +1,6 @@
 {
   "name": "konva",
-  "version": "1.5.0",
+  "version": "1.4.0",
   "author": "Anton Lavrenov",
   "files": [
     "README.md",
@@ -13,11 +13,9 @@
   "typings": "./konva.d.ts",
   "scripts": {
     "start": "gulp",
-    "lint": "gulp lint",
     "build": "gulp build",
     "full-build": "gulp lint test build",
-    "test": "gulp test",
-    "prettier": "prettier --write \"src/**/*.js\" \"test/**/*.js\" --single-quote"
+    "test": "gulp test"
   },
   "devDependencies": {
     "chai": "3.5.0",
@@ -32,8 +30,7 @@
     "gulp-replace": "^0.5.4",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
-    "mocha": "3.2.0",
-    "prettier": "^0.19.0"
+    "mocha": "3.2.0"
   },
   "keywords": [
     "canvas",

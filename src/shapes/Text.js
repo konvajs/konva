@@ -1,46 +1,35 @@
 /*eslint-disable max-depth */
 (function() {
-  'use strict';
-  // var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-  // constants
-  var AUTO = 'auto',
-    //CANVAS = 'canvas',
-    CENTER = 'center',
-    JUSTIFY = 'justify',
-    CHANGE_KONVA = 'Change.konva',
-    CONTEXT_2D = '2d',
-    DASH = '-',
-    EMPTY_STRING = '',
-    LEFT = 'left',
-    TEXT = 'text',
-    TEXT_UPPER = 'Text',
-    MIDDLE = 'middle',
-    NORMAL = 'normal',
-    PX_SPACE = 'px ',
-    SPACE = ' ',
-    RIGHT = 'right',
-    WORD = 'word',
-    CHAR = 'char',
-    NONE = 'none',
-    ATTR_CHANGE_LIST = [
-      'fontFamily',
-      'fontSize',
-      'fontStyle',
-      'fontVariant',
-      'padding',
-      'align',
-      'lineHeight',
-      'text',
-      'width',
-      'height',
-      'wrap',
-      'letterSpacing'
-    ],
-    // cached variables
-    attrChangeListLen = ATTR_CHANGE_LIST.length,
-    dummyContext = Konva.Util.createCanvasElement().getContext(CONTEXT_2D);
 
-  /**
+    'use strict';
+    // var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+    // constants
+    var AUTO = 'auto',
+        //CANVAS = 'canvas',
+        CENTER = 'center',
+        JUSTIFY = 'justify',
+        CHANGE_KONVA = 'Change.konva',
+        CONTEXT_2D = '2d',
+        DASH = '-',
+        EMPTY_STRING = '',
+        LEFT = 'left',
+        TEXT = 'text',
+        TEXT_UPPER = 'Text',
+        MIDDLE = 'middle',
+        NORMAL = 'normal',
+        PX_SPACE = 'px ',
+        SPACE = ' ',
+        RIGHT = 'right',
+        WORD = 'word',
+        CHAR = 'char',
+        NONE = 'none',
+        ATTR_CHANGE_LIST = ['fontFamily', 'fontSize', 'fontStyle', 'fontVariant', 'padding', 'align', 'lineHeight', 'text', 'width', 'height', 'wrap', 'letterSpacing'],
+
+        // cached variables
+        attrChangeListLen = ATTR_CHANGE_LIST.length,
+        dummyContext = Konva.Util.createCanvasElement().getContext(CONTEXT_2D);
+
+    /**
      * Text constructor
      * @constructor
      * @memberof Konva
@@ -67,374 +56,357 @@
      *   fill: 'green'
      * });
      */
-  Konva.Text = function(config) {
-    this.___init(config);
-  };
-  function _fillFunc(context) {
-    context.fillText(this.partialText, 0, 0);
-  }
-  function _strokeFunc(context) {
-    context.strokeText(this.partialText, 0, 0);
-  }
+    Konva.Text = function(config) {
+        this.___init(config);
+    };
+    function _fillFunc(context) {
+        context.fillText(this.partialText, 0, 0);
+    }
+    function _strokeFunc(context) {
+        context.strokeText(this.partialText, 0, 0);
+    }
 
-  Konva.Text.prototype = {
-    ___init: function(config) {
-      config = config || {};
+    Konva.Text.prototype = {
+        ___init: function(config) {
+            config = config || {};
 
-      // set default color to black
-      if (
-        !config.fillLinearGradientColorStops &&
-        !config.fillRadialGradientColorStops
-      ) {
-        config.fill = config.fill || 'black';
-      }
-      //
-      // if (config.width === undefined) {
-      //     config.width = AUTO;
-      // }
-      // if (config.height === undefined) {
-      //     config.height = AUTO;
-      // }
-
-      // call super constructor
-      Konva.Shape.call(this, config);
-
-      this._fillFunc = _fillFunc;
-      this._strokeFunc = _strokeFunc;
-      this.className = TEXT_UPPER;
-
-      // update text data for certain attr changes
-      for (var n = 0; n < attrChangeListLen; n++) {
-        this.on(ATTR_CHANGE_LIST[n] + CHANGE_KONVA, this._setTextData);
-      }
-
-      this._setTextData();
-      this.sceneFunc(this._sceneFunc);
-      this.hitFunc(this._hitFunc);
-    },
-    _sceneFunc: function(context) {
-      var p = this.getPadding(),
-        textHeight = this.getTextHeight(),
-        lineHeightPx = this.getLineHeight() * textHeight,
-        textArr = this.textArr,
-        textArrLen = textArr.length,
-        align = this.getAlign(),
-        totalWidth = this.getWidth(),
-        letterSpacing = this.getLetterSpacing(),
-        textDecoration = this.textDecoration(),
-        fill = this.fill(),
-        fontSize = this.fontSize(),
-        n;
-
-      context.setAttr('font', this._getContextFont());
-
-      context.setAttr('textBaseline', MIDDLE);
-      context.setAttr('textAlign', LEFT);
-      context.save();
-      if (p) {
-        context.translate(p, 0);
-        context.translate(0, p + textHeight / 2);
-      } else {
-        context.translate(0, textHeight / 2);
-      }
-
-      // draw text lines
-      for (n = 0; n < textArrLen; n++) {
-        var obj = textArr[n], text = obj.text, width = obj.width;
-
-        // horizontal alignment
-        context.save();
-        if (align === RIGHT) {
-          context.translate(totalWidth - width - p * 2, 0);
-        } else if (align === CENTER) {
-          context.translate((totalWidth - width - p * 2) / 2, 0);
-        }
-
-        if (textDecoration.indexOf('underline') !== -1) {
-          context.save();
-          context.beginPath();
-          context.moveTo(0, Math.round(lineHeightPx / 2));
-          context.lineTo(Math.round(width), Math.round(lineHeightPx / 2));
-          // TODO: I have no idea what is real ratio
-          // just /20 looks good enough
-          context.lineWidth = fontSize / 15;
-          context.strokeStyle = fill;
-          context.stroke();
-          context.restore();
-        }
-        if (textDecoration.indexOf('line-through') !== -1) {
-          context.save();
-          context.beginPath();
-          context.moveTo(0, 0);
-          context.lineTo(Math.round(width), 0);
-          context.lineWidth = fontSize / 15;
-          context.strokeStyle = fill;
-          context.stroke();
-          context.restore();
-        }
-        if (letterSpacing !== 0 || align === JUSTIFY) {
-          //   var words = text.split(' ');
-          var spacesNumber = text.split(' ').length - 1;
-          for (var li = 0; li < text.length; li++) {
-            var letter = text[li];
-            // skip justify for the last line
-            if (letter === ' ' && n !== textArrLen - 1 && align === JUSTIFY) {
-              context.translate(
-                Math.floor((totalWidth - width) / spacesNumber),
-                0
-              );
+            // set default color to black
+            if (!config.fillLinearGradientColorStops && !config.fillRadialGradientColorStops) {
+                config.fill = config.fill || 'black';
             }
-            this.partialText = letter;
+            //
+            // if (config.width === undefined) {
+            //     config.width = AUTO;
+            // }
+            // if (config.height === undefined) {
+            //     config.height = AUTO;
+            // }
+
+            // call super constructor
+            Konva.Shape.call(this, config);
+
+            this._fillFunc = _fillFunc;
+            this._strokeFunc = _strokeFunc;
+            this.className = TEXT_UPPER;
+
+            // update text data for certain attr changes
+            for(var n = 0; n < attrChangeListLen; n++) {
+                this.on(ATTR_CHANGE_LIST[n] + CHANGE_KONVA, this._setTextData);
+            }
+
+            this._setTextData();
+            this.sceneFunc(this._sceneFunc);
+            this.hitFunc(this._hitFunc);
+        },
+        _sceneFunc: function(context) {
+            var p = this.getPadding(),
+                textHeight = this.getTextHeight(),
+                lineHeightPx = this.getLineHeight() * textHeight,
+                textArr = this.textArr,
+                textArrLen = textArr.length,
+                align = this.getAlign(),
+                totalWidth = this.getWidth(),
+                letterSpacing = this.getLetterSpacing(),
+                textDecoration = this.textDecoration(),
+                fill = this.fill(),
+                fontSize = this.fontSize(),
+                n;
+
+            context.setAttr('font', this._getContextFont());
+
+            context.setAttr('textBaseline', MIDDLE);
+            context.setAttr('textAlign', LEFT);
+            context.save();
+            if (p) {
+                context.translate(p, 0);
+                context.translate(0, p + textHeight / 2);
+            } else {
+                context.translate(0, textHeight / 2);
+            }
+
+
+
+            // draw text lines
+            for(n = 0; n < textArrLen; n++) {
+                var obj = textArr[n],
+                    text = obj.text,
+                    width = obj.width;
+
+                // horizontal alignment
+                context.save();
+                if(align === RIGHT) {
+                    context.translate(totalWidth - width - p * 2, 0);
+                }
+                else if(align === CENTER) {
+                    context.translate((totalWidth - width - p * 2) / 2, 0);
+                }
+
+                if (textDecoration.indexOf('underline') !== -1) {
+                  context.save();
+                  context.beginPath();
+                  context.moveTo(0, Math.round(lineHeightPx / 2));
+                  context.lineTo(Math.round(width), Math.round(lineHeightPx / 2));
+                  // TODO: I have no idea what is real ratio
+                  // just /20 looks good enough
+                  context.lineWidth = fontSize / 15;
+                  context.strokeStyle = fill;
+                  context.stroke();
+                  context.restore();
+                }
+                if (textDecoration.indexOf('line-through') !== -1) {
+                  context.save();
+                  context.beginPath();
+                  context.moveTo(0, 0);
+                  context.lineTo(Math.round(width), 0);
+                  context.lineWidth = fontSize / 15;
+                  context.strokeStyle = fill;
+                  context.stroke();
+                  context.restore();
+                }
+                if ((letterSpacing !== 0) || align === JUSTIFY) {
+                //   var words = text.split(' ');
+                  var spacesNumber = text.split(' ').length - 1;
+                  for(var li = 0; li < text.length; li++) {
+                    var letter = text[li];
+                    // skip justify for the last line
+                    if ((letter === ' ') && (n !== textArrLen - 1) && align === JUSTIFY) {
+                        context.translate(Math.floor((totalWidth - width) / spacesNumber), 0);
+                    }
+                    this.partialText = letter;
+                    context.fillStrokeShape(this);
+                    context.translate(Math.round(this._getTextSize(letter).width) + letterSpacing, 0);
+                  }
+                } else {
+                  this.partialText = text;
+
+                  context.fillStrokeShape(this);
+                }
+                context.restore();
+                context.translate(0, lineHeightPx);
+            }
+            context.restore();
+        },
+        _hitFunc: function(context) {
+            var width = this.getWidth(),
+                height = this.getHeight();
+
+            context.beginPath();
+            context.rect(0, 0, width, height);
+            context.closePath();
             context.fillStrokeShape(this);
-            context.translate(
-              Math.round(this._getTextSize(letter).width) + letterSpacing,
-              0
-            );
-          }
-        } else {
-          this.partialText = text;
-
-          context.fillStrokeShape(this);
-        }
-        context.restore();
-        context.translate(0, lineHeightPx);
-      }
-      context.restore();
-    },
-    _hitFunc: function(context) {
-      var width = this.getWidth(), height = this.getHeight();
-
-      context.beginPath();
-      context.rect(0, 0, width, height);
-      context.closePath();
-      context.fillStrokeShape(this);
-    },
-    // _useBufferCanvas: function(caching) {
-    //     var useIt = Konva.Shape.prototype._useBufferCanvas.call(this, caching);
-    //     if (useIt) {
-    //       return true;
-    //     }
-    //     return false;
-    //     // return isFirefox && this.hasFill() && this.hasShadow();
-    // },
-    setText: function(text) {
-      var str = Konva.Util._isString(text) ? text : (text || '').toString();
-      this._setAttr(TEXT, str);
-      return this;
-    },
-    /**
+        },
+        // _useBufferCanvas: function(caching) {
+        //     var useIt = Konva.Shape.prototype._useBufferCanvas.call(this, caching);
+        //     if (useIt) {
+        //       return true;
+        //     }
+        //     return false;
+        //     // return isFirefox && this.hasFill() && this.hasShadow();
+        // },
+        setText: function(text) {
+            var str = Konva.Util._isString(text) ? text : (text || '').toString();
+            this._setAttr(TEXT, str);
+            return this;
+        },
+        /**
          * get width of text area, which includes padding
          * @method
          * @memberof Konva.Text.prototype
          * @returns {Number}
          */
-    getWidth: function() {
-      var isAuto = this.attrs.width === AUTO || this.attrs.width === undefined;
-      return isAuto
-        ? this.getTextWidth() + this.getPadding() * 2
-        : this.attrs.width;
-    },
-    /**
+        getWidth: function() {
+            var isAuto = (this.attrs.width === AUTO) || (this.attrs.width === undefined);
+            return isAuto ? this.getTextWidth() + this.getPadding() * 2 : this.attrs.width;
+        },
+        /**
          * get the height of the text area, which takes into account multi-line text, line heights, and padding
          * @method
          * @memberof Konva.Text.prototype
          * @returns {Number}
          */
-    getHeight: function() {
-      var isAuto = this.attrs.height === AUTO ||
-        this.attrs.height === undefined;
-      return isAuto
-        ? this.getTextHeight() * this.textArr.length * this.getLineHeight() +
-            this.getPadding() * 2
-        : this.attrs.height;
-    },
-    /**
+        getHeight: function() {
+          var isAuto = (this.attrs.height === AUTO) || (this.attrs.height === undefined);
+          return isAuto ? (this.getTextHeight() * this.textArr.length * this.getLineHeight()) + this.getPadding() * 2 : this.attrs.height;
+        },
+        /**
          * get text width
          * @method
          * @memberof Konva.Text.prototype
          * @returns {Number}
          */
-    getTextWidth: function() {
-      return this.textWidth;
-    },
-    /**
+        getTextWidth: function() {
+            return this.textWidth;
+        },
+        /**
          * get text height
          * @method
          * @memberof Konva.Text.prototype
          * @returns {Number}
          */
-    getTextHeight: function() {
-      return this.textHeight;
-    },
-    _getTextSize: function(text) {
-      var _context = dummyContext, fontSize = this.getFontSize(), metrics;
+        getTextHeight: function() {
+            return this.textHeight;
+        },
+        _getTextSize: function(text) {
+            var _context = dummyContext,
+                fontSize = this.getFontSize(),
+                metrics;
 
-      _context.save();
-      _context.font = this._getContextFont();
+            _context.save();
+            _context.font = this._getContextFont();
 
-      metrics = _context.measureText(text);
-      _context.restore();
-      return {
-        width: metrics.width,
-        height: parseInt(fontSize, 10)
-      };
-    },
-    _getContextFont: function() {
-      // IE don't want to work with usual font style
-      // bold was not working
-      // removing font variant will solve
-      // fix for: https://github.com/konvajs/konva/issues/94
-      if (Konva.UA.isIE) {
-        return this.getFontStyle() +
-          SPACE +
-          this.getFontSize() +
-          PX_SPACE +
-          this.getFontFamily();
-      }
-      return this.getFontStyle() +
-        SPACE +
-        this.getFontVariant() +
-        SPACE +
-        this.getFontSize() +
-        PX_SPACE +
-        this.getFontFamily();
-    },
-    _addTextLine: function(line) {
-      if (this.align() === JUSTIFY) {
-        line = line.trim();
-      }
-      var width = this._getTextWidth(line);
-      return this.textArr.push({ text: line, width: width });
-    },
-    _getTextWidth: function(text) {
-      var latterSpacing = this.getLetterSpacing();
-      var length = text.length;
-      return dummyContext.measureText(text).width +
-        (length ? latterSpacing * (length - 1) : 0);
-    },
-    _setTextData: function() {
-      var lines = this.getText().split('\n'),
-        fontSize = +this.getFontSize(),
-        textWidth = 0,
-        lineHeightPx = this.getLineHeight() * fontSize,
-        width = this.attrs.width,
-        height = this.attrs.height,
-        fixedWidth = width !== AUTO,
-        fixedHeight = height !== AUTO,
-        padding = this.getPadding(),
-        maxWidth = width - padding * 2,
-        maxHeightPx = height - padding * 2,
-        currentHeightPx = 0,
-        wrap = this.getWrap(),
-        shouldWrap = wrap !== NONE,
-        wrapAtWord = wrap !== CHAR && shouldWrap;
+            metrics = _context.measureText(text);
+            _context.restore();
+            return {
+                width: metrics.width,
+                height: parseInt(fontSize, 10)
+            };
+        },
+        _getContextFont: function() {
+            // IE don't want to work with usual font style
+            // bold was not working
+            // removing font variant will solve
+            // fix for: https://github.com/konvajs/konva/issues/94
+            if (Konva.UA.isIE) {
+                return this.getFontStyle() + SPACE + this.getFontSize() + PX_SPACE + this.getFontFamily();
+            }
+            return this.getFontStyle() + SPACE +
+                    this.getFontVariant() + SPACE +
+                    this.getFontSize() + PX_SPACE +
+                    this.getFontFamily();
+        },
+        _addTextLine: function (line) {
+            if (this.align() === JUSTIFY) {
+                line = line.trim();
+            }
+            var width = this._getTextWidth(line);
+            return this.textArr.push({text: line, width: width});
+        },
+        _getTextWidth: function (text) {
+            var latterSpacing = this.getLetterSpacing();
+            var length = text.length;
+            return dummyContext.measureText(text).width +
+              (length ? latterSpacing * (length - 1) : 0);
+        },
+        _setTextData: function () {
+            var lines = this.getText().split('\n'),
+                fontSize = +this.getFontSize(),
+                textWidth = 0,
+                lineHeightPx = this.getLineHeight() * fontSize,
+                width = this.attrs.width,
+                height = this.attrs.height,
+                fixedWidth = width !== AUTO,
+                fixedHeight = height !== AUTO,
+                padding = this.getPadding(),
+                maxWidth = width - padding * 2,
+                maxHeightPx = height - padding * 2,
+                currentHeightPx = 0,
+                wrap = this.getWrap(),
+                shouldWrap = wrap !== NONE,
+                wrapAtWord = wrap !== CHAR && shouldWrap;
 
-      this.textArr = [];
-      dummyContext.save();
-      dummyContext.font = this._getContextFont();
-      for (var i = 0, max = lines.length; i < max; ++i) {
-        var line = lines[i];
+            this.textArr = [];
+            dummyContext.save();
+            dummyContext.font = this._getContextFont();
+            for (var i = 0, max = lines.length; i < max; ++i) {
+                var line = lines[i];
 
-        var lineWidth = this._getTextWidth(line);
-        if (fixedWidth && lineWidth > maxWidth) {
-          /*
+                var lineWidth = this._getTextWidth(line);
+                if (fixedWidth && lineWidth > maxWidth) {
+                    /*
                      * if width is fixed and line does not fit entirely
                      * break the line into multiple fitting lines
                      */
-          while (line.length > 0) {
-            /*
+                    while (line.length > 0) {
+                        /*
                          * use binary search to find the longest substring that
                          * that would fit in the specified width
                          */
-            var low = 0, high = line.length, match = '', matchWidth = 0;
-            while (low < high) {
-              var mid = low + high >>> 1,
-                substr = line.slice(0, mid + 1),
-                substrWidth = this._getTextWidth(substr);
-              if (substrWidth <= maxWidth) {
-                low = mid + 1;
-                match = substr;
-                matchWidth = substrWidth;
-              } else {
-                high = mid;
-              }
-            }
-            /*
+                        var low = 0, high = line.length,
+                            match = '', matchWidth = 0;
+                        while (low < high) {
+                            var mid = (low + high) >>> 1,
+                                substr = line.slice(0, mid + 1),
+                                substrWidth = this._getTextWidth(substr);
+                            if (substrWidth <= maxWidth) {
+                                low = mid + 1;
+                                match = substr;
+                                matchWidth = substrWidth;
+                            } else {
+                                high = mid;
+                            }
+                        }
+                        /*
                          * 'low' is now the index of the substring end
                          * 'match' is the substring
                          * 'matchWidth' is the substring width in px
                          */
-            if (match) {
-              // a fitting substring was found
-              if (wrapAtWord) {
-                // try to find a space or dash where wrapping could be done
-                var wrapIndex = Math.max(
-                  match.lastIndexOf(SPACE),
-                  match.lastIndexOf(DASH)
-                ) + 1;
-                if (wrapIndex > 0) {
-                  // re-cut the substring found at the space/dash position
-                  low = wrapIndex;
-                  match = match.slice(0, low);
-                  matchWidth = this._getTextWidth(match);
-                }
-              }
-              this._addTextLine(match);
-              textWidth = Math.max(textWidth, matchWidth);
-              currentHeightPx += lineHeightPx;
-              if (
-                !shouldWrap ||
-                (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx)
-              ) {
-                /*
+                        if (match) {
+                            // a fitting substring was found
+                            if (wrapAtWord) {
+                                // try to find a space or dash where wrapping could be done
+                                var wrapIndex = Math.max(match.lastIndexOf(SPACE),
+                                                          match.lastIndexOf(DASH)) + 1;
+                                if (wrapIndex > 0) {
+                                    // re-cut the substring found at the space/dash position
+                                    low = wrapIndex;
+                                    match = match.slice(0, low);
+                                    matchWidth = this._getTextWidth(match);
+                                }
+                            }
+                            this._addTextLine(match);
+                            textWidth = Math.max(textWidth, matchWidth);
+                            currentHeightPx += lineHeightPx;
+                            if (!shouldWrap ||
+                                (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx)) {
+                                /*
                                  * stop wrapping if wrapping is disabled or if adding
                                  * one more line would overflow the fixed height
                                  */
-                break;
-              }
-              line = line.slice(low);
-              if (line.length > 0) {
-                // Check if the remaining text would fit on one line
-                lineWidth = this._getTextWidth(line);
-                if (lineWidth <= maxWidth) {
-                  // if it does, add the line and break out of the loop
-                  this._addTextLine(line);
-                  currentHeightPx += lineHeightPx;
-                  textWidth = Math.max(textWidth, lineWidth);
-                  break;
+                                break;
+                            }
+                            line = line.slice(low);
+                            if (line.length > 0) {
+                                // Check if the remaining text would fit on one line
+                                lineWidth = this._getTextWidth(line);
+                                if (lineWidth <= maxWidth) {
+                                    // if it does, add the line and break out of the loop
+                                    this._addTextLine(line);
+                                    currentHeightPx += lineHeightPx;
+                                    textWidth = Math.max(textWidth, lineWidth);
+                                    break;
+                                }
+                            }
+                        } else {
+                            // not even one character could fit in the element, abort
+                            break;
+                        }
+                    }
+                } else {
+                    // element width is automatically adjusted to max line width
+                    this._addTextLine(line);
+                    currentHeightPx += lineHeightPx;
+                    textWidth = Math.max(textWidth, lineWidth);
                 }
-              }
-            } else {
-              // not even one character could fit in the element, abort
-              break;
+                // if element height is fixed, abort if adding one more line would overflow
+                if (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx) {
+                    break;
+                }
             }
-          }
-        } else {
-          // element width is automatically adjusted to max line width
-          this._addTextLine(line);
-          currentHeightPx += lineHeightPx;
-          textWidth = Math.max(textWidth, lineWidth);
+            dummyContext.restore();
+            this.textHeight = fontSize;
+            // var maxTextWidth = 0;
+            // for(var j = 0; j < this.textArr.length; j++) {
+            //     maxTextWidth = Math.max(maxTextWidth, this.textArr[j].width);
+            // }
+            this.textWidth = textWidth;
         }
-        // if element height is fixed, abort if adding one more line would overflow
-        if (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx) {
-          break;
-        }
-      }
-      dummyContext.restore();
-      this.textHeight = fontSize;
-      // var maxTextWidth = 0;
-      // for(var j = 0; j < this.textArr.length; j++) {
-      //     maxTextWidth = Math.max(maxTextWidth, this.textArr[j].width);
-      // }
-      this.textWidth = textWidth;
-    }
-  };
-  Konva.Util.extend(Konva.Text, Konva.Shape);
+    };
+    Konva.Util.extend(Konva.Text, Konva.Shape);
 
-  // add getters setters
-  Konva.Factory.addGetterSetter(Konva.Text, 'fontFamily', 'Arial');
+    // add getters setters
+    Konva.Factory.addGetterSetter(Konva.Text, 'fontFamily', 'Arial');
 
-  /**
+    /**
      * get/set font family
      * @name fontFamily
      * @method
@@ -449,9 +421,9 @@
      * text.fontFamily('Arial');
      */
 
-  Konva.Factory.addGetterSetter(Konva.Text, 'fontSize', 12);
+    Konva.Factory.addGetterSetter(Konva.Text, 'fontSize', 12);
 
-  /**
+    /**
      * get/set font size in pixels
      * @name fontSize
      * @method
@@ -466,9 +438,9 @@
      * text.fontSize(22);
      */
 
-  Konva.Factory.addGetterSetter(Konva.Text, 'fontStyle', NORMAL);
+    Konva.Factory.addGetterSetter(Konva.Text, 'fontStyle', NORMAL);
 
-  /**
+    /**
      * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
      * @name fontStyle
      * @method
@@ -483,9 +455,9 @@
      * text.fontStyle('bold');
      */
 
-  Konva.Factory.addGetterSetter(Konva.Text, 'fontVariant', NORMAL);
+    Konva.Factory.addGetterSetter(Konva.Text, 'fontVariant', NORMAL);
 
-  /**
+    /**
      * set font variant.  Can be 'normal' or 'small-caps'.  'normal' is the default.
      * @name fontVariant
      * @method
@@ -500,9 +472,9 @@
      * text.fontVariant('small-caps');
      */
 
-  Konva.Factory.addGetterSetter(Konva.Text, 'padding', 0);
+    Konva.Factory.addGetterSetter(Konva.Text, 'padding', 0);
 
-  /**
+    /**
      * set padding
      * @name padding
      * @method
@@ -517,9 +489,9 @@
      * text.padding(10);
      */
 
-  Konva.Factory.addGetterSetter(Konva.Text, 'align', LEFT);
+    Konva.Factory.addGetterSetter(Konva.Text, 'align', LEFT);
 
-  /**
+    /**
      * get/set horizontal align of text.  Can be 'left', 'center', 'right' or 'justify'
      * @name align
      * @method
@@ -537,9 +509,9 @@
      * text.align('right');
      */
 
-  Konva.Factory.addGetterSetter(Konva.Text, 'lineHeight', 1);
+    Konva.Factory.addGetterSetter(Konva.Text, 'lineHeight', 1);
 
-  /**
+    /**
      * get/set line height.  The default is 1.
      * @name lineHeight
      * @method
@@ -554,9 +526,9 @@
      * text.lineHeight(2);
      */
 
-  Konva.Factory.addGetterSetter(Konva.Text, 'wrap', WORD);
+    Konva.Factory.addGetterSetter(Konva.Text, 'wrap', WORD);
 
-  /**
+    /**
      * get/set wrap.  Can be word, char, or none. Default is word.
      * @name wrap
      * @method
@@ -571,9 +543,9 @@
      * text.wrap('word');
      */
 
-  Konva.Factory.addGetterSetter(Konva.Text, 'letterSpacing', 0);
+     Konva.Factory.addGetterSetter(Konva.Text, 'letterSpacing', 0);
 
-  /**
+      /**
        * set letter spacing property. Default value is 0.
        * @name letterSpacing
        * @method
@@ -581,10 +553,10 @@
        * @param {Number} letterSpacing
        */
 
-  Konva.Factory.addGetter(Konva.Text, 'text', EMPTY_STRING);
-  Konva.Factory.addOverloadedGetterSetter(Konva.Text, 'text');
+    Konva.Factory.addGetter(Konva.Text, 'text', EMPTY_STRING);
+    Konva.Factory.addOverloadedGetterSetter(Konva.Text, 'text');
 
-  /**
+    /**
      * get/set text
      * @name getText
      * @method
@@ -599,9 +571,9 @@
      * text.text('Hello world!');
      */
 
-  Konva.Factory.addGetterSetter(Konva.Text, 'textDecoration', EMPTY_STRING);
+     Konva.Factory.addGetterSetter(Konva.Text, 'textDecoration', EMPTY_STRING);
 
-  /**
+     /**
       * get/set text decoration of a text.  Possible values are 'underline', 'line-through' or combination of these values separated by space
       * @name textDecoration
       * @method
@@ -622,5 +594,5 @@
       * text.textDecoration('underline line-through');
       */
 
-  Konva.Collection.mapMethods(Konva.Text);
+    Konva.Collection.mapMethods(Konva.Text);
 })();

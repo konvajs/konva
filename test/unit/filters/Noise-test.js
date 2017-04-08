@@ -1,43 +1,47 @@
-suite('Noise', function() {
-  // ======================================================
-  test('noise tween', function(done) {
-    var stage = addStage();
+suite('Noise', function () {
 
-    var imageObj = new Image();
-    imageObj.onload = function() {
-      var layer = new Konva.Layer();
-      darth = new Konva.Image({
-        x: 10,
-        y: 10,
-        image: imageObj,
-        draggable: true
-      });
+    // ======================================================
+    test('noise tween', function(done) {
+        var stage = addStage();
 
-      layer.add(darth);
-      stage.add(layer);
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
 
-      darth.cache();
-      darth.filters([Konva.Filters.Noise]);
-      darth.noise(1);
-      layer.draw();
+            layer.add(darth);
+            stage.add(layer);
 
-      var tween = new Konva.Tween({
-        node: darth,
-        duration: 5.0,
-        noise: 0,
-        easing: Konva.Easings.EaseInOut
-      });
+            darth.cache();
+            darth.filters([Konva.Filters.Noise]);
+            darth.noise(1);
+            layer.draw();
 
-      darth.on('mouseover', function() {
-        tween.play();
-      });
+            var tween = new Konva.Tween({
+              node: darth, 
+              duration: 5.0,
+              noise: 0,
+              easing: Konva.Easings.EaseInOut
+            });
+        
+            darth.on('mouseover', function() {
+              tween.play();
+            });
+      
+            darth.on('mouseout', function() {
+              tween.reverse();
+            });
 
-      darth.on('mouseout', function() {
-        tween.reverse();
-      });
+            done();
+        };
+        imageObj.src = 'assets/lion.png';
 
-      done();
-    };
-    imageObj.src = 'assets/lion.png';
-  });
+    });
+
 });

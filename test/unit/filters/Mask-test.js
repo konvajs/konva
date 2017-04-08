@@ -1,38 +1,43 @@
 suite('Mask', function() {
-  // ======================================================
-  test('basic', function(done) {
-    var stage = addStage();
 
-    var imageObj = new Image();
-    imageObj.onload = function() {
-      var layer = new Konva.Layer({
-        throttle: 999
-      });
-      var bamoon = new Konva.Image({
-        x: 0,
-        y: 0,
-        image: imageObj,
-        draggable: true
-      }),
-        filtered = new Konva.Image({
-          x: 300,
-          y: 0,
-          image: imageObj,
-          draggable: true
-        });
+    // ======================================================
+    test('basic', function(done) {
+        var stage = addStage();
 
-      layer.add(bamoon);
-      layer.add(filtered);
-      stage.add(layer);
+        var imageObj = new Image();
+        imageObj.onload = function() {
 
-      filtered.cache();
-      filtered.filters([Konva.Filters.Mask]);
-      filtered.threshold(10);
+            var layer = new Konva.Layer({
+                throttle: 999
+            });
+            var bamoon = new Konva.Image({
+                x: 0,
+                y: 0,
+                image: imageObj,
+                draggable: true
+            }),
+            filtered = new Konva.Image({
+                x: 300,
+                y: 0,
+                image: imageObj,
+                draggable: true
+            });
 
-      layer.draw();
+            layer.add(bamoon);
+            layer.add(filtered);
+            stage.add(layer);
 
-      done();
-    };
-    imageObj.src = 'assets/bamoon.jpg';
-  });
+            filtered.cache();
+            filtered.filters([Konva.Filters.Mask]);
+            filtered.threshold(10);
+
+            layer.draw();
+
+            done();
+
+        };
+        imageObj.src = 'assets/bamoon.jpg';
+
+    });
+
 });

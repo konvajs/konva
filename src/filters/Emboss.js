@@ -1,6 +1,6 @@
-(function() {
-  'use strict';
-  /**
+(function () {
+    'use strict';
+    /**
      * Emboss Filter.
      * Pixastic Lib - Emboss filter - v0.1.0
      * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
@@ -16,136 +16,132 @@
      * node.embossDirection('right');
      * node.embossBlend(true);
      */
-  Konva.Filters.Emboss = function(imageData) {
-    // pixastic strength is between 0 and 10.  I want it between 0 and 1
-    // pixastic greyLevel is between 0 and 255.  I want it between 0 and 1.  Also,
-    // a max value of greyLevel yields a white emboss, and the min value yields a black
-    // emboss.  Therefore, I changed greyLevel to whiteLevel
-    var strength = this.embossStrength() * 10,
-      greyLevel = this.embossWhiteLevel() * 255,
-      direction = this.embossDirection(),
-      blend = this.embossBlend(),
-      dirY = 0,
-      dirX = 0,
-      data = imageData.data,
-      w = imageData.width,
-      h = imageData.height,
-      w4 = w * 4,
-      y = h;
+    Konva.Filters.Emboss = function (imageData) {
 
-    switch (direction) {
-      case 'top-left':
-        dirY = -1;
-        dirX = -1;
-        break;
-      case 'top':
-        dirY = -1;
-        dirX = 0;
-        break;
-      case 'top-right':
-        dirY = -1;
-        dirX = 1;
-        break;
-      case 'right':
-        dirY = 0;
-        dirX = 1;
-        break;
-      case 'bottom-right':
-        dirY = 1;
-        dirX = 1;
-        break;
-      case 'bottom':
-        dirY = 1;
-        dirX = 0;
-        break;
-      case 'bottom-left':
-        dirY = 1;
-        dirX = -1;
-        break;
-      case 'left':
-        dirY = 0;
-        dirX = -1;
-        break;
-      default:
-        Konva.Util.error('Unknown emboss direction: ' + direction);
-    }
+        // pixastic strength is between 0 and 10.  I want it between 0 and 1
+        // pixastic greyLevel is between 0 and 255.  I want it between 0 and 1.  Also,
+        // a max value of greyLevel yields a white emboss, and the min value yields a black
+        // emboss.  Therefore, I changed greyLevel to whiteLevel
+        var strength = this.embossStrength() * 10,
+            greyLevel = this.embossWhiteLevel() * 255,
+            direction = this.embossDirection(),
+            blend = this.embossBlend(),
+            dirY = 0,
+            dirX = 0,
+            data = imageData.data,
+            w = imageData.width,
+            h = imageData.height,
+            w4 = w * 4,
+            y = h;
 
-    do {
-      var offsetY = (y - 1) * w4;
-
-      var otherY = dirY;
-      if (y + otherY < 1) {
-        otherY = 0;
-      }
-      if (y + otherY > h) {
-        otherY = 0;
-      }
-
-      var offsetYOther = (y - 1 + otherY) * w * 4;
-
-      var x = w;
-      do {
-        var offset = offsetY + (x - 1) * 4;
-
-        var otherX = dirX;
-        if (x + otherX < 1) {
-          otherX = 0;
-        }
-        if (x + otherX > w) {
-          otherX = 0;
+        switch (direction) {
+            case 'top-left':
+                dirY = -1;
+                dirX = -1;
+                break;
+            case 'top':
+                dirY = -1;
+                dirX = 0;
+                break;
+            case 'top-right':
+                dirY = -1;
+                dirX = 1;
+                break;
+            case 'right':
+                dirY = 0;
+                dirX = 1;
+                break;
+            case 'bottom-right':
+                dirY = 1;
+                dirX = 1;
+                break;
+            case 'bottom':
+                dirY = 1;
+                dirX = 0;
+                break;
+            case 'bottom-left':
+                dirY = 1;
+                dirX = -1;
+                break;
+            case 'left':
+                dirY = 0;
+                dirX = -1;
+                break;
+            default:
+                Konva.Util.error('Unknown emboss direction: ' + direction);
         }
 
-        var offsetOther = offsetYOther + (x - 1 + otherX) * 4;
+        do {
+            var offsetY = (y - 1) * w4;
 
-        var dR = data[offset] - data[offsetOther];
-        var dG = data[offset + 1] - data[offsetOther + 1];
-        var dB = data[offset + 2] - data[offsetOther + 2];
+            var otherY = dirY;
+            if (y + otherY < 1){
+                otherY = 0;
+            }
+            if (y + otherY > h) {
+                otherY = 0;
+            }
 
-        var dif = dR;
-        var absDif = dif > 0 ? dif : -dif;
+            var offsetYOther = (y - 1 + otherY) * w * 4;
 
-        var absG = dG > 0 ? dG : -dG;
-        var absB = dB > 0 ? dB : -dB;
+            var x = w;
+            do {
+                var offset = offsetY + (x - 1) * 4;
 
-        if (absG > absDif) {
-          dif = dG;
-        }
-        if (absB > absDif) {
-          dif = dB;
-        }
+                var otherX = dirX;
+                if (x + otherX < 1){
+                    otherX = 0;
+                }
+                if (x + otherX > w) {
+                    otherX = 0;
+                }
 
-        dif *= strength;
+                var offsetOther = offsetYOther + (x - 1 + otherX) * 4;
 
-        if (blend) {
-          var r = data[offset] + dif;
-          var g = data[offset + 1] + dif;
-          var b = data[offset + 2] + dif;
+                var dR = data[offset] - data[offsetOther];
+                var dG = data[offset + 1] - data[offsetOther + 1];
+                var dB = data[offset + 2] - data[offsetOther + 2];
 
-          data[offset] = r > 255 ? 255 : r < 0 ? 0 : r;
-          data[offset + 1] = g > 255 ? 255 : g < 0 ? 0 : g;
-          data[offset + 2] = b > 255 ? 255 : b < 0 ? 0 : b;
-        } else {
-          var grey = greyLevel - dif;
-          if (grey < 0) {
-            grey = 0;
-          } else if (grey > 255) {
-            grey = 255;
-          }
+                var dif = dR;
+                var absDif = dif > 0 ? dif : -dif;
 
-          data[offset] = data[offset + 1] = data[offset + 2] = grey;
-        }
-      } while (--x);
-    } while (--y);
-  };
+                var absG = dG > 0 ? dG : -dG;
+                var absB = dB > 0 ? dB : -dB;
 
-  Konva.Factory.addGetterSetter(
-    Konva.Node,
-    'embossStrength',
-    0.5,
-    null,
-    Konva.Factory.afterSetFilter
-  );
-  /**
+                if (absG > absDif) {
+                    dif = dG;
+                }
+                if (absB > absDif) {
+                    dif = dB;
+                }
+
+                dif *= strength;
+
+                if (blend) {
+                    var r = data[offset] + dif;
+                    var g = data[offset + 1] + dif;
+                    var b = data[offset + 2] + dif;
+
+                    data[offset] = (r > 255) ? 255 : (r < 0 ? 0 : r);
+                    data[offset + 1] = (g > 255) ? 255 : (g < 0 ? 0 : g);
+                    data[offset + 2] = (b > 255) ? 255 : (b < 0 ? 0 : b);
+                } else {
+                    var grey = greyLevel - dif;
+                    if (grey < 0) {
+                        grey = 0;
+                    } else if (grey > 255) {
+                        grey = 255;
+                    }
+
+                    data[offset] = data[offset + 1] = data[offset + 2] = grey;
+                }
+
+            } while (--x);
+        } while (--y);
+    };
+
+    Konva.Factory.addGetterSetter(Konva.Node, 'embossStrength', 0.5, null, Konva.Factory.afterSetFilter);
+    /**
     * get/set emboss strength. Use with {@link Konva.Filters.Emboss} filter.
     * @name embossStrength
     * @method
@@ -154,14 +150,8 @@
     * @returns {Number}
     */
 
-  Konva.Factory.addGetterSetter(
-    Konva.Node,
-    'embossWhiteLevel',
-    0.5,
-    null,
-    Konva.Factory.afterSetFilter
-  );
-  /**
+    Konva.Factory.addGetterSetter(Konva.Node, 'embossWhiteLevel', 0.5, null, Konva.Factory.afterSetFilter);
+    /**
     * get/set emboss white level. Use with {@link Konva.Filters.Emboss} filter.
     * @name embossWhiteLevel
     * @method
@@ -170,14 +160,8 @@
     * @returns {Number}
     */
 
-  Konva.Factory.addGetterSetter(
-    Konva.Node,
-    'embossDirection',
-    'top-left',
-    null,
-    Konva.Factory.afterSetFilter
-  );
-  /**
+    Konva.Factory.addGetterSetter(Konva.Node, 'embossDirection', 'top-left', null, Konva.Factory.afterSetFilter);
+    /**
     * get/set emboss direction. Use with {@link Konva.Filters.Emboss} filter.
     * @name embossDirection
     * @method
@@ -187,14 +171,8 @@
     * @returns {String}
     */
 
-  Konva.Factory.addGetterSetter(
-    Konva.Node,
-    'embossBlend',
-    false,
-    null,
-    Konva.Factory.afterSetFilter
-  );
-  /**
+    Konva.Factory.addGetterSetter(Konva.Node, 'embossBlend', false, null, Konva.Factory.afterSetFilter);
+    /**
     * get/set emboss blend. Use with {@link Konva.Filters.Emboss} filter.
     * @name embossBlend
     * @method

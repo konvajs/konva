@@ -20,7 +20,7 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 # Quick Look
 
 ```html
-<script src="https://cdn.rawgit.com/konvajs/konva/1.5.0/konva.min.js"></script>
+<script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
 <div id="container"></div>
 <script>
     var stage = new Konva.Stage({
@@ -62,15 +62,15 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 
 Konva supports UMD loading. So you can use all possible variants to load the framework into your project:
 
-### 1 Load Konva via classical `<script>` tag:
+###1 Load Konva via classical `<script>` tag:
 
 ```html
-<script src="https://cdn.rawgit.com/konvajs/konva/1.5.0/konva.min.js"></script>
+<script src="https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js"></script>
 ```
 
-You can use CDN: [https://cdn.rawgit.com/konvajs/konva/1.5.0/konva.min.js](https://cdn.rawgit.com/konvajs/konva/1.5.0/konva.min.js)
+You can use CDN: [https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js](https://cdn.rawgit.com/konvajs/konva/1.4.0/konva.min.js)
 
-### 2 Load via AMD (requirejs):
+###2 Load via AMD (requirejs):
 
 ```javascript
 define(['./konva'], function(Konva) {
@@ -78,7 +78,7 @@ define(['./konva'], function(Konva) {
 });
 ```
 
-### 3 CommonJS style with npm:
+###3 CommonJS style with npm:
 
 ```bash
 npm install konva --save
@@ -96,7 +96,7 @@ import Konva from 'konva';
 import * as Konva from 'konva';
 ```
 
-### 4 Minimal bundle
+###4 Minimal bundle
 
 If you are using webpack or browserfy you can use this approach to load only required Konva's parts:
 
@@ -111,7 +111,7 @@ import 'konva/src/shapes/rect';
 //now Konva.Rect is available to use
 ```
 
-### 5 NodeJS
+###5 NodeJS
 
 You have to install some deps manually to use Konva in nodejs env.
 
@@ -126,23 +126,23 @@ See file `resources/nodejs-demo.js` for example.
 
 Last tested with node@5.10.1, canvas@1.3.14, jsdom@8.5.0
 
-# Change log
+#Change log
 
 See [CHANGELOG.md](https://github.com/konvajs/konva/blob/master/CHANGELOG.md).
 
-# Dev environment
+#Dev environment
 
 Before doing all dev stuff make sure you have node installed. After that, run `npm install` in the main directory to install the node module dependencies.
 
 Run `gulp -T` to see all build options.
 
-## Building the Konva Framework
+##Building the Konva Framework
 
 To build a development version of the framework, run `gulp dev-build`. To run a full build, which also produces the minified version run `gulp build`.
 
 If you add a file in the src directory, be sure to add the filename to the sourceFiles array variable in `gulpfile.js`.
 
-## Testing
+##Testing
 
 Konva uses Mocha for testing.
 
@@ -152,11 +152,11 @@ Konva uses Mocha for testing.
 Konva is covered with hundreds of tests and well over a thousand assertions.
 Konva uses TDD (test driven development) which means that every new feature or bug fix is accompanied with at least one new test.
 
-## Generate documentation
+##Generate documentation
 
 Run `gulp api` which will build the documentation files and place them in the `api` folder.
 
 
-# Pull Requests
+#Pull Requests
 I'd be happy to review any pull requests that may better the Konva project,
 in particular if you have a bug fix, enhancement, or a new shape (see `src/shapes` for examples).  Before doing so, please first make sure that all of the tests pass (`gulp lint test`).

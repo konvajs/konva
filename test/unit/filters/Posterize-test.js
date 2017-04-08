@@ -1,43 +1,47 @@
-suite('Posterize', function() {
-  // ======================================================
-  test('on image tween', function(done) {
-    var stage = addStage();
+suite('Posterize', function () {
 
-    var imageObj = new Image();
-    imageObj.onload = function() {
-      var layer = new Konva.Layer();
-      darth = new Konva.Image({
-        x: 10,
-        y: 10,
-        image: imageObj,
-        draggable: true
-      });
+    // ======================================================
+    test('on image tween', function(done) {
+        var stage = addStage();
 
-      layer.add(darth);
-      stage.add(layer);
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
 
-      darth.cache();
-      darth.filters([Konva.Filters.Posterize]);
-      darth.levels(0.2);
-      layer.draw();
+            layer.add(darth);
+            stage.add(layer);
 
-      var tween = new Konva.Tween({
-        node: darth,
-        duration: 1.0,
-        levels: 0,
-        easing: Konva.Easings.Linear
-      });
+            darth.cache();
+            darth.filters([Konva.Filters.Posterize]);
+            darth.levels(0.2);
+            layer.draw();
 
-      darth.on('mouseover', function() {
-        tween.play();
-      });
+            var tween = new Konva.Tween({
+              node: darth, 
+              duration: 1.0,
+              levels: 0,
+              easing: Konva.Easings.Linear
+            });
+        
+            darth.on('mouseover', function() {
+              tween.play();
+            });
+      
+            darth.on('mouseout', function() {
+              tween.reverse();
+            });
 
-      darth.on('mouseout', function() {
-        tween.reverse();
-      });
+            done();
+        };
+        imageObj.src = 'assets/darth-vader.jpg';
 
-      done();
-    };
-    imageObj.src = 'assets/darth-vader.jpg';
-  });
+    });
+
 });

@@ -1,28 +1,34 @@
 suite('Solarize', function() {
-  // ======================================================
-  test('solarize', function(done) {
-    var stage = addStage();
 
-    var imageObj = new Image();
-    imageObj.onload = function() {
-      var layer = new Konva.Layer();
-      darth = new Konva.Image({
-        x: 10,
-        y: 10,
-        image: imageObj,
-        draggable: true
-      });
+    // ======================================================
+    test('solarize', function(done) {
+        var stage = addStage();
 
-      layer.add(darth);
-      stage.add(layer);
-      darth.cache();
-      darth.filters([Konva.Filters.Solarize]);
+        var imageObj = new Image();
+        imageObj.onload = function() {
+            var layer = new Konva.Layer();
+            darth = new Konva.Image({
+                x: 10,
+                y: 10,
+                image: imageObj,
+                draggable: true
+            });
 
-      layer.draw();
+            layer.add(darth);
+            stage.add(layer);
+            darth.cache();
+            darth.filters([Konva.Filters.Solarize]);
 
-      done();
-    };
-    imageObj.src = 'assets/darth-vader.jpg';
-    //imageObj.src = 'assets/lion.png';
-  });
+
+            layer.draw();
+
+
+            done();
+
+        };
+        imageObj.src = 'assets/darth-vader.jpg';
+        //imageObj.src = 'assets/lion.png';
+
+    });
+
 });
