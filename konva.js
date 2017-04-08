@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v1.4.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Tue Feb 07 2017
+ * Date: Sat Apr 08 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -15175,13 +15175,14 @@
             this.className = 'TextPath';
 
             this.dataArray = Konva.Path.parsePathData(this.attrs.data);
+            this.kerningTable = this.attrs.kerningTable;
             this.on('dataChange.konva', function() {
                 that.dataArray = Konva.Path.parsePathData(this.attrs.data);
                 that._setTextData();
             });
 
             // update text data for certain attr changes
-            this.on('textChange.konva alignChange.konva letterSpacingChange.konva', that._setTextData);
+            this.on('textChange.konva alignChange.konva letterSpacingChange.konva kerningTableChange.konva', that._setTextData);
             that._setTextData();
             this.sceneFunc(this._sceneFunc);
             this.hitFunc(this._hitFunc);
@@ -15301,6 +15302,7 @@
             var that = this;
             var size = this._getTextSize(this.attrs.text);
             var letterSpacing = this.getLetterSpacing();
+            var kerningTable = this.attrs.kerningTable;
             var align = this.align();
 
             this.textWidth = size.width;
@@ -15363,6 +15365,23 @@
                 }
 
                 return {};
+            };
+
+            var getKerning = function(leftChar, rightChar) {
+                var defaultKerning = 0;
+                if (!kerningTable) {
+                    return defaultKerning;
+                }
+
+                if (!leftChar || !rightChar) {
+                    return defaultKerning;
+                }
+
+                if (kerningTable[leftChar]) {
+                    return kerningTable[leftChar][rightChar] || defaultKerning;
+                } else {
+                    return defaultKerning;
+                }
             };
 
             var findSegmentToFitCharacter = function(c) {
@@ -15507,11 +15526,9 @@
 
                 var width = Konva.Path.getLineLength(p0.x, p0.y, p1.x, p1.y);
 
-                // Note: Since glyphs are rendered one at a time, any kerning pair data built into the font will not be used.
-                // Can foresee having a rough pair table built in that the developer can override as needed.
-
-                var kern = 0;
-                // placeholder for future implementation
+                var kern = getKerning(charArr[i - 1], charArr[i]) * that.fontSize();
+                p0.x += kern;
+                p1.x += kern;
 
                 var midpoint = Konva.Path.getPointOnLine(kern + width / 2.0, p0.x, p0.y, p1.x, p1.y);
 
