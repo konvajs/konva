@@ -3,7 +3,7 @@
  * Konva JavaScript Framework v1.4.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sat Apr 08 2017
+ * Date: Sun Apr 09 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2015 by Anton Lavrenov (Konva)
@@ -15529,6 +15529,7 @@
                 var kern = getKerning(charArr[i - 1], charArr[i]) * that.fontSize();
                 p0.x += kern;
                 p1.x += kern;
+                that.textWidth +=kern;
 
                 var midpoint = Konva.Path.getPointOnLine(kern + width / 2.0, p0.x, p0.y, p1.x, p1.y);
 

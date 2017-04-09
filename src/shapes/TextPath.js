@@ -414,6 +414,7 @@
                 var kern = getKerning(charArr[i - 1], charArr[i]) * that.fontSize();
                 p0.x += kern;
                 p1.x += kern;
+                that.textWidth +=kern;
 
                 var midpoint = Konva.Path.getPointOnLine(kern + width / 2.0, p0.x, p0.y, p1.x, p1.y);
 
