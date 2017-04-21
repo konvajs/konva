@@ -317,6 +317,7 @@
     _drawCachedSceneCanvas: function(context) {
       context.save();
       context._applyOpacity(this);
+      context._applyGlobalCompositeOperation(this);
       context.translate(this._cache.canvas.x, this._cache.canvas.y);
 
       var cacheCanvas = this._getCachedSceneCanvas();
@@ -2040,6 +2041,26 @@
      * node.y(5);
      */
 
+  Konva.Factory.addGetterSetter(
+    Konva.Node,
+    'globalCompositeOperation',
+    'source-over'
+  );
+
+  /**
+     * get/set globalCompositeOperation of a shape
+     * @name globalCompositeOperation
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {Number} blur
+     * @returns {Number}
+     * @example
+     * // get shadow blur
+     * var globalCompositeOperation = shape.globalCompositeOperation();
+     *
+     * // set shadow blur
+     * shape.globalCompositeOperation('source-in');
+     */
   Konva.Factory.addGetterSetter(Konva.Node, 'opacity', 1);
 
   /**

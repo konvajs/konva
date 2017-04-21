@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+### Changed
+- moved `globalCompositeOperation` property to `Konva.Node`
 
 ## [1.6.0][2017-04-21]
 

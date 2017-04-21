@@ -786,27 +786,6 @@
     Konva.Validators.alphaComponent
   );
 
-  Konva.Factory.addGetterSetter(
-    Konva.Shape,
-    'globalCompositeOperation',
-    'source-over'
-  );
-
-  /**
-     * get/set globalCompositeOperation of a shape
-     * @name globalCompositeOperation
-     * @method
-     * @memberof Konva.Shape.prototype
-     * @param {Number} blur
-     * @returns {Number}
-     * @example
-     * // get shadow blur
-     * var globalCompositeOperation = shape.globalCompositeOperation();
-     *
-     * // set shadow blur
-     * shape.globalCompositeOperation('source-in');
-     */
-
   Konva.Factory.addGetterSetter(Konva.Shape, 'shadowBlur');
 
   /**
