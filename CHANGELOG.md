@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Not released][Not released]
 
 
+## [1.6.0][2017-04-21]
+
 ### Added
 - support of globalCompositeOperation for `Konva.Shape`
 
