@@ -323,8 +323,10 @@
         var ratio = bufferCanvas.pixelRatio;
         if (hasShadow && !canvas.hitCanvas) {
           context.save();
+
           context._applyShadow(this);
           context._applyOpacity(this);
+          context._applyGlobalCompositeOperation(this);
           context.drawImage(
             bufferCanvas._canvas,
             0,
@@ -335,6 +337,7 @@
           context.restore();
         } else {
           context._applyOpacity(this);
+          context._applyGlobalCompositeOperation(this);
           context.drawImage(
             bufferCanvas._canvas,
             0,
@@ -361,8 +364,10 @@
           // apply shadow
           if (!caching) {
             context._applyOpacity(this);
+            context._applyGlobalCompositeOperation(this);
           }
           context._applyShadow(this);
+
           drawFunc.call(this, context);
           context.restore();
           // if shape has stroke we need to redraw shape
@@ -375,6 +380,7 @@
           context.save();
           if (!caching) {
             context._applyOpacity(this);
+            context._applyGlobalCompositeOperation(this);
           }
           context._applyShadow(this);
           drawFunc.call(this, context);
@@ -382,6 +388,7 @@
         } else {
           if (!caching) {
             context._applyOpacity(this);
+            context._applyGlobalCompositeOperation(this);
           }
           drawFunc.call(this, context);
         }
@@ -778,6 +785,27 @@
     1,
     Konva.Validators.alphaComponent
   );
+
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'globalCompositeOperation',
+    'source-over'
+  );
+
+  /**
+     * get/set globalCompositeOperation of a shape
+     * @name globalCompositeOperation
+     * @method
+     * @memberof Konva.Shape.prototype
+     * @param {Number} blur
+     * @returns {Number}
+     * @example
+     * // get shadow blur
+     * var globalCompositeOperation = shape.globalCompositeOperation();
+     *
+     * // set shadow blur
+     * shape.globalCompositeOperation('source-in');
+     */
 
   Konva.Factory.addGetterSetter(Konva.Shape, 'shadowBlur');
 

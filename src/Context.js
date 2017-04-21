@@ -634,6 +634,12 @@
       this.setAttr('shadowBlur', blur * ratio * Math.min(scaleX, scaleY));
       this.setAttr('shadowOffsetX', offset.x * scaleX);
       this.setAttr('shadowOffsetY', offset.y * scaleY);
+    },
+    _applyGlobalCompositeOperation: function(shape) {
+      var globalCompositeOperation = shape.getGlobalCompositeOperation();
+      if (globalCompositeOperation !== 'source-over') {
+        this.setAttr('globalCompositeOperation', globalCompositeOperation);
+      }
     }
   };
   Konva.Util.extend(Konva.SceneContext, Konva.Context);

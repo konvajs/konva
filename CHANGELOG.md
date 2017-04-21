@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+
+### Added
+- support of globalCompositeOperation for `Konva.Shape`
+
 ### Fixed
 - getAllIntersections now works ok for Text shapes (https://github.com/konvajs/konva/issues/224)
 
