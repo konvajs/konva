@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+### Fixed
+- getAllIntersections now works ok for Text shapes (https://github.com/konvajs/konva/issues/224)
+
 ### Changed
 - Konva a bit changed a way to detect pointer position. Now it should be OK to apply css transform on Konva container. https://github.com/konvajs/konva/pull/215
 

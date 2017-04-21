@@ -183,7 +183,7 @@
       var stage = this.getStage(), bufferHitCanvas = stage.bufferHitCanvas, p;
 
       bufferHitCanvas.getContext().clear();
-      this.drawScene(bufferHitCanvas);
+      this.drawHit(bufferHitCanvas);
       p = bufferHitCanvas.context.getImageData(
         Math.round(point.x),
         Math.round(point.y),

@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.5.0
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri Mar 24 2017
+ * Date: Fri Apr 21 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -8281,7 +8281,7 @@
       var stage = this.getStage(), bufferHitCanvas = stage.bufferHitCanvas, p;
 
       bufferHitCanvas.getContext().clear();
-      this.drawScene(bufferHitCanvas);
+      this.drawHit(bufferHitCanvas);
       p = bufferHitCanvas.context.getImageData(
         Math.round(point.x),
         Math.round(point.y),

@@ -468,6 +468,30 @@ suite('Stage', function() {
   });
 
   // ======================================================
+  test('test getAllIntersections for text', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      x: 0,
+      y: 0,
+      text: 'Hello world',
+      fontSize: 50,
+      name: 'intersectText'
+    });
+
+    layer.add(text);
+    stage.add(layer);
+
+    // test individual shapes
+    assert.equal(
+      stage.getAllIntersections({ x: 10, y: 10 }).length,
+      1,
+      '17) getAllIntersections should return one shape'
+    );
+  });
+
+  // ======================================================
   test('scale stage after add layer', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
