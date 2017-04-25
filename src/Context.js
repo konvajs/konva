@@ -149,9 +149,8 @@
             str += DOUBLE_PAREN;
           } else {
             if (Konva.Util._isArray(args[0])) {
-              str += OPEN_PAREN_BRACKET +
-                args.join(COMMA) +
-                CLOSE_BRACKET_PAREN;
+              str +=
+                OPEN_PAREN_BRACKET + args.join(COMMA) + CLOSE_BRACKET_PAREN;
             } else {
               str += OPEN_PAREN + args.join(COMMA) + CLOSE_PAREN;
             }
@@ -509,7 +508,7 @@
         this.scale(fillPatternScale.x, fillPatternScale.y);
       }
       if (fillPatternOffset) {
-        this.translate((-1) * fillPatternOffset.x, (-1) * fillPatternOffset.y);
+        this.translate(-1 * fillPatternOffset.x, -1 * fillPatternOffset.y);
       }
 
       this.setAttr(
@@ -588,8 +587,8 @@
     _stroke: function(shape) {
       var dash = shape.dash(),
         // ignore strokeScaleEnabled for Text
-        strokeScaleEnabled = shape.getStrokeScaleEnabled() ||
-          shape instanceof Konva.Text;
+        strokeScaleEnabled =
+          shape.getStrokeScaleEnabled() || shape instanceof Konva.Text;
 
       if (shape.hasStroke()) {
         if (!strokeScaleEnabled) {
@@ -631,7 +630,10 @@
         scaleY = scale.y * ratio;
 
       this.setAttr('shadowColor', color);
-      this.setAttr('shadowBlur', blur * ratio * Math.min(scaleX, scaleY));
+      this.setAttr(
+        'shadowBlur',
+        blur * ratio * Math.min(Math.abs(scaleX), Math.abs(scaleY))
+      );
       this.setAttr('shadowOffsetX', offset.x * scaleX);
       this.setAttr('shadowOffsetY', offset.y * scaleY);
     },
@@ -658,8 +660,8 @@
     _stroke: function(shape) {
       if (shape.hasStroke() && shape.strokeHitEnabled()) {
         // ignore strokeScaleEnabled for Text
-        var strokeScaleEnabled = shape.getStrokeScaleEnabled() ||
-          shape instanceof Konva.Text;
+        var strokeScaleEnabled =
+          shape.getStrokeScaleEnabled() || shape instanceof Konva.Text;
         if (!strokeScaleEnabled) {
           this.save();
           this.setTransform(1, 0, 0, 1, 0, 0);

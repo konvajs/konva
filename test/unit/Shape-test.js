@@ -279,68 +279,67 @@ suite('Shape', function() {
   });
 
   // ======================================================
-  test(
-    'set image fill to color then image then linear gradient then back to image',
-    function(done) {
-      var imageObj = new Image();
-      imageObj.onload = function() {
-        var stage = addStage();
-        var layer = new Konva.Layer();
-        var circle = new Konva.Circle({
-          x: 200,
-          y: 60,
-          radius: 50,
-          fill: 'blue'
-        });
+  test('set image fill to color then image then linear gradient then back to image', function(
+    done
+  ) {
+    var imageObj = new Image();
+    imageObj.onload = function() {
+      var stage = addStage();
+      var layer = new Konva.Layer();
+      var circle = new Konva.Circle({
+        x: 200,
+        y: 60,
+        radius: 50,
+        fill: 'blue'
+      });
 
-        layer.add(circle);
-        stage.add(layer);
+      layer.add(circle);
+      stage.add(layer);
 
-        assert.equal(circle.getFill(), 'blue', 'circle fill should be blue');
+      assert.equal(circle.getFill(), 'blue', 'circle fill should be blue');
 
-        circle.setFill(null);
-        circle.setFillPatternImage(imageObj);
-        circle.setFillPatternRepeat('no-repeat');
-        circle.setFillPatternOffset({ x: -200, y: -70 });
+      circle.setFill(null);
+      circle.setFillPatternImage(imageObj);
+      circle.setFillPatternRepeat('no-repeat');
+      circle.setFillPatternOffset({ x: -200, y: -70 });
 
-        assert.notEqual(
-          circle.getFillPatternImage(),
-          undefined,
-          'circle fill image should be defined'
-        );
-        assert.equal(
-          circle.getFillPatternRepeat(),
-          'no-repeat',
-          'circle fill repeat should be no-repeat'
-        );
-        assert.equal(
-          circle.getFillPatternOffset().x,
-          -200,
-          'circle fill offset x should be -200'
-        );
-        assert.equal(
-          circle.getFillPatternOffset().y,
-          -70,
-          'circle fill offset y should be -70'
-        );
+      assert.notEqual(
+        circle.getFillPatternImage(),
+        undefined,
+        'circle fill image should be defined'
+      );
+      assert.equal(
+        circle.getFillPatternRepeat(),
+        'no-repeat',
+        'circle fill repeat should be no-repeat'
+      );
+      assert.equal(
+        circle.getFillPatternOffset().x,
+        -200,
+        'circle fill offset x should be -200'
+      );
+      assert.equal(
+        circle.getFillPatternOffset().y,
+        -70,
+        'circle fill offset y should be -70'
+      );
 
-        circle.setFillPatternImage(null);
-        circle.setFillLinearGradientStartPoint({ x: -35, y: -35 });
-        circle.setFillLinearGradientEndPoint({ x: 35, y: 35 });
-        circle.setFillLinearGradientColorStops([0, 'red', 1, 'blue']);
+      circle.setFillPatternImage(null);
+      circle.setFillLinearGradientStartPoint({ x: -35, y: -35 });
+      circle.setFillLinearGradientEndPoint({ x: 35, y: 35 });
+      circle.setFillLinearGradientColorStops([0, 'red', 1, 'blue']);
 
-        circle.setFillLinearGradientStartPoint(null);
-        circle.setFillPatternImage(imageObj);
-        circle.setFillPatternRepeat('repeat');
-        circle.setFillPatternOffset({ x: 0, y: 0 });
+      circle.setFillLinearGradientStartPoint(null);
+      circle.setFillPatternImage(imageObj);
+      circle.setFillPatternRepeat('repeat');
+      circle.setFillPatternOffset({ x: 0, y: 0 });
 
-        layer.draw();
+      layer.draw();
 
-        done();
-      };
-      imageObj.src = 'assets/darth-vader.jpg';
-    }
-  );
+      done();
+    };
+    imageObj.src = 'assets/darth-vader.jpg';
+  });
 
   // ======================================================
   test('test enablers and disablers', function() {
@@ -1068,57 +1067,99 @@ suite('Shape', function() {
     );
   });
 
-  test(
-    'scale of parent container should also effect shadow offset',
-    function() {
-      var stage = addStage();
+  test('scale should also effect shadow offset - negative scale', function() {
+    var stage = addStage();
 
-      var layer = new Konva.Layer();
-      var group = new Konva.Group({
-        x: 100,
-        y: 100,
-        scaleX: 0.5,
-        scaleY: 0.5
-      });
-      var rect = new Konva.Rect({
-        width: 200,
-        height: 200,
-        scaleX: 0.5,
-        scaleY: 0.5,
-        fill: 'green',
-        shadowColor: 'black',
-        shadowBlur: 0,
-        shadowOffset: { x: 20, y: 20 }
-      });
+    var layer = new Konva.Layer();
 
-      group.add(rect);
-      layer.add(group);
-      stage.add(layer);
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 100,
+      width: 100,
+      height: 100,
+      scaleX: -0.5,
+      scaleY: 0.5,
+      fill: 'green',
+      shadowColor: 'black',
+      shadowBlur: 10,
+      shadowOffset: { x: 10, y: 10 }
+    });
 
-      var canvas = createCanvas();
-      var context = canvas.getContext('2d');
-      // rect
-      context.beginPath();
-      context.rect(100, 100, 50, 50);
-      context.closePath();
+    layer.add(rect);
+    stage.add(layer);
 
-      context.fillStyle = 'green';
-      context.shadowColor = 'rgba(0,0,0,1)';
-      context.shadowBlur = 0;
-      context.shadowOffsetX = 5 * canvas.ratio;
-      context.shadowOffsetY = 5 * canvas.ratio;
-      context.fill();
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+    // rect
+    context.beginPath();
+    context.rect(50, 100, 50, 50);
+    context.closePath();
 
-      compareLayerAndCanvas(layer, canvas, 10);
+    context.fillStyle = 'green';
+    context.shadowColor = 'rgba(0,0,0,1)';
+    context.shadowBlur = 10;
+    context.shadowOffsetX = -5 * canvas.ratio;
+    context.shadowOffsetY = 5 * canvas.ratio;
+    context.fill();
 
-      var trace = layer.getContext().getTrace();
+    compareLayerAndCanvas(layer, canvas, 150);
 
-      assert.equal(
-        trace,
-        'clearRect(0,0,578,200);save();transform(0.25,0,0,0.25,100,100);save();shadowColor=rgba(0,0,0,1);shadowBlur=0;shadowOffsetX=5;shadowOffsetY=5;beginPath();rect(0,0,200,200);closePath();fillStyle=green;fill();restore();restore();'
-      );
-    }
-  );
+    // var trace = layer.getContext().getTrace();
+
+    // assert.equal(
+    //   trace,
+    //   'clearRect(0,0,578,200);save();transform(-0.5,0,0,0.5,100,100);save();shadowColor=rgba(0,0,0,1);shadowBlur=10;shadowOffsetX=-5;shadowOffsetY=5;beginPath();rect(0,0,100,100);closePath();fillStyle=green;fill();restore();restore();'
+    // );
+  });
+
+  test('scale of parent container should also effect shadow offset', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    var group = new Konva.Group({
+      x: 100,
+      y: 100,
+      scaleX: 0.5,
+      scaleY: 0.5
+    });
+    var rect = new Konva.Rect({
+      width: 200,
+      height: 200,
+      scaleX: 0.5,
+      scaleY: 0.5,
+      fill: 'green',
+      shadowColor: 'black',
+      shadowBlur: 0,
+      shadowOffset: { x: 20, y: 20 }
+    });
+
+    group.add(rect);
+    layer.add(group);
+    stage.add(layer);
+
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+    // rect
+    context.beginPath();
+    context.rect(100, 100, 50, 50);
+    context.closePath();
+
+    context.fillStyle = 'green';
+    context.shadowColor = 'rgba(0,0,0,1)';
+    context.shadowBlur = 0;
+    context.shadowOffsetX = 5 * canvas.ratio;
+    context.shadowOffsetY = 5 * canvas.ratio;
+    context.fill();
+
+    compareLayerAndCanvas(layer, canvas, 10);
+
+    var trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(0.25,0,0,0.25,100,100);save();shadowColor=rgba(0,0,0,1);shadowBlur=0;shadowOffsetX=5;shadowOffsetY=5;beginPath();rect(0,0,200,200);closePath();fillStyle=green;fill();restore();restore();'
+    );
+  });
 
   test('optional disable buffer canvas', function() {
     var stage = addStage();
