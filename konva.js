@@ -10445,13 +10445,21 @@
         if (evt.touches.length > 0) {
           var touch = evt.touches[0];
           // get the information for finger #1
-          x = touch.offsetX || touch.clientX - contentPosition.left;
-          y = touch.offsetY || touch.clientY - contentPosition.top;
+          x = touch.offsetX !== undefined
+            ? touch.offsetX
+            : touch.clientX - contentPosition.left;
+          y = touch.offsetY !== undefined
+            ? touch.offsetY
+            : touch.clientY - contentPosition.top;
         }
       } else {
         // mouse events
-        x = evt.offsetX || evt.clientX - contentPosition.left;
-        y = evt.offsetY || evt.clientY - contentPosition.top;
+        x = evt.offsetX !== undefined
+          ? evt.offsetX
+          : evt.clientX - contentPosition.left;
+        y = evt.offsetY !== undefined
+          ? evt.offsetY
+          : evt.clientY - contentPosition.top;
       }
       if (x !== null && y !== null) {
         this.pointerPos = {

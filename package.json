@@ -27,13 +27,13 @@
     "gulp-eslint": "^3.0.1",
     "gulp-jscpd": "0.0.7",
     "gulp-jsdoc": "^0.1.5",
-    "gulp-mocha-phantomjs": "^0.12.0",
+    "gulp-mocha-phantomjs": "^0.12.1",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
-    "gulp-uglify": "^2.0.0",
-    "gulp-util": "^3.0.7",
-    "mocha": "3.2.0",
-    "prettier": "^0.19.0"
+    "gulp-uglify": "^2.1.2",
+    "gulp-util": "^3.0.8",
+    "mocha": "3.3.0",
+    "prettier": "^1.2.2"
   },
   "keywords": [
     "canvas",
