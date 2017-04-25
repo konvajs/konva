@@ -4,8 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
-### Fixed
+## [1.6.1][2017-04-25]
 
+### Fixed
+- Fix pointer position detection
 
 
 ### Changed
