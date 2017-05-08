@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [1.6.2][2017-05-08]
+
+### Fixed
+- Fixed bug with automatic shadow for negative scale values
+
 ## [1.6.1][2017-04-25]
 
 ### Fixed
