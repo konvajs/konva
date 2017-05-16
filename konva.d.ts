@@ -555,8 +555,6 @@ declare module Konva {
 
     class Ring extends Shape {
         constructor(RingConfig: RingConfig);
-        angle(): number;
-        angle(angle: number): Ring;
         innerRadius(): number;
         innerRadius(innerRadius: number): Ring;
         outerRadius(): number;
@@ -567,8 +565,10 @@ declare module Konva {
         angle: number;
     }
 
-    class Arc extends Shape {
+    class Arc extends Ring {
         constructor(ArcConfig: ArcConfig);
+        angle(): number;
+        angle(angle: number): Ring;
         clockwise(): boolean;
         clockwise(clockwise: boolean): Arc;
     }
