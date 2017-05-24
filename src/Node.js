@@ -795,11 +795,13 @@
          */
     shouldDrawHit: function(canvas) {
       var layer = this.getLayer();
-      return (canvas && canvas.isCache) ||
+      return (
+        (canvas && canvas.isCache) ||
         (layer &&
           layer.hitGraphEnabled() &&
           this.isListening() &&
-          this.isVisible());
+          this.isVisible())
+      );
     },
     /**
          * show node
@@ -1397,19 +1399,16 @@
       var at = new Konva.Transform(), transformsEnabled, trans;
 
       // start with stage and traverse downwards to self
-      this._eachAncestorReverse(
-        function(node) {
-          transformsEnabled = node.transformsEnabled();
-          trans = node.getTransform();
+      this._eachAncestorReverse(function(node) {
+        transformsEnabled = node.transformsEnabled();
+        trans = node.getTransform();
 
-          if (transformsEnabled === 'all') {
-            at.multiply(trans);
-          } else if (transformsEnabled === 'position') {
-            at.translate(node.x(), node.y());
-          }
-        },
-        top
-      );
+        if (transformsEnabled === 'all') {
+          at.multiply(trans);
+        } else if (transformsEnabled === 'position') {
+          at.translate(node.x(), node.y());
+        }
+      }, top);
       return at;
     },
     /**
@@ -1422,7 +1421,7 @@
     getAbsoluteScale: function(top) {
       // if using an argument, we can't cache the result.
       if (top) {
-        return this._getAbsoluteTransform(top);
+        return this._getAbsoluteScale(top);
       } else {
         // if no argument, we can cache the result
         return this._getCache(ABSOLUTE_SCALE, this._getAbsoluteScale);
@@ -1441,13 +1440,10 @@
       var scaleX = 1, scaleY = 1;
 
       // start with stage and traverse downwards to self
-      this._eachAncestorReverse(
-        function(node) {
-          scaleX *= node.scaleX();
-          scaleY *= node.scaleY();
-        },
-        top
-      );
+      this._eachAncestorReverse(function(node) {
+        scaleX *= node.scaleX();
+        scaleY *= node.scaleY();
+      }, top);
       return {
         x: scaleX,
         y: scaleY
@@ -1487,7 +1483,7 @@
         m.scale(scaleX, scaleY);
       }
       if (offsetX !== 0 || offsetY !== 0) {
-        m.translate((-1) * offsetX, (-1) * offsetY);
+        m.translate(-1 * offsetX, -1 * offsetY);
       }
 
       return m;
@@ -1570,7 +1566,7 @@
       context.save();
 
       if (x || y) {
-        context.translate((-1) * x, (-1) * y);
+        context.translate(-1 * x, -1 * y);
       }
 
       this.drawScene(canvas);
@@ -1891,8 +1887,8 @@
         this._fire(eventType, evt);
 
         // simulate event bubbling
-        var stopBubble = (eventType === MOUSEENTER ||
-          eventType === MOUSELEAVE) &&
+        var stopBubble =
+          (eventType === MOUSEENTER || eventType === MOUSELEAVE) &&
           (compareShape &&
             compareShape.isAncestorOf &&
             compareShape.isAncestorOf(this) &&
