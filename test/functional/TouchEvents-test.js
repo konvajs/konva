@@ -16,7 +16,7 @@ suite('TouchEvents', function() {
     layer.add(circle);
     stage.add(layer);
 
-    var circleTouchstart = circleTouchend = stageContentTouchstart = stageContentTouchend = stageContentTouchmove = stageContentTap = stageContentDbltap = 0;
+    var circleTouchstart = (circleTouchend = stageContentTouchstart = stageContentTouchend = stageContentTouchmove = stageContentTap = stageContentDbltap = 0);
 
     var top = stage.content.getBoundingClientRect().top;
 
@@ -51,8 +51,8 @@ suite('TouchEvents', function() {
     stage._touchstart({
       touches: [
         {
-          offsetX: 100,
-          offsetY: 100
+          clientX: 100,
+          clientY: 100 + top
         }
       ]
     });
@@ -70,8 +70,8 @@ suite('TouchEvents', function() {
     stage._touchstart({
       touches: [
         {
-          offsetX: 1,
-          offsetY: 1
+          clientX: 1,
+          clientY: 1 + top
         }
       ]
     });
@@ -146,8 +146,8 @@ suite('TouchEvents', function() {
     stage._touchstart({
       touches: [
         {
-          offsetX: 289,
-          offsetY: 100
+          clientX: 289,
+          clientY: 100 + top
         }
       ],
       preventDefault: function() {}
@@ -178,8 +178,8 @@ suite('TouchEvents', function() {
     stage._touchstart({
       touches: [
         {
-          offsetX: 289,
-          offsetY: 100
+          clientX: 289,
+          clientY: 100 + top
         }
       ],
       preventDefault: function() {}
@@ -206,29 +206,26 @@ suite('TouchEvents', function() {
     assert(tap, '11) tap should be true');
     assert(dbltap, '11) dbltap should be true');
 
-    setTimeout(
-      function() {
-        // touchmove circle
-        stage._touchmove({
-          touches: [
-            {
-              offsetX: 290,
-              offsetY: 100
-            }
-          ],
-          preventDefault: function() {}
-        });
+    setTimeout(function() {
+      // touchmove circle
+      stage._touchmove({
+        touches: [
+          {
+            clientX: 290,
+            clientY: 100 + top
+          }
+        ],
+        preventDefault: function() {}
+      });
 
-        assert(touchstart, '12) touchstart should be true');
-        assert(touchmove, '12) touchmove should be true');
-        assert(touchend, '12) touchend should be true');
-        assert(tap, '12) tap should be true');
-        assert(dbltap, '12) dbltap should be true');
+      assert(touchstart, '12) touchstart should be true');
+      assert(touchmove, '12) touchmove should be true');
+      assert(touchend, '12) touchend should be true');
+      assert(tap, '12) tap should be true');
+      assert(dbltap, '12) dbltap should be true');
 
-        done();
-      },
-      17
-    );
+      done();
+    }, 17);
   });
 
   // test for https://github.com/konvajs/konva/issues/156
@@ -248,7 +245,7 @@ suite('TouchEvents', function() {
     layer.add(circle);
     stage.add(layer);
 
-    var circleTouchend = stageContentTouchstart = stageContentTouchend = 0;
+    var circleTouchend = (stageContentTouchstart = stageContentTouchend = 0);
 
     var top = stage.content.getBoundingClientRect().top;
 
@@ -267,8 +264,8 @@ suite('TouchEvents', function() {
     stage._touchstart({
       touches: [
         {
-          offsetX: 1,
-          offsetY: 1
+          clientX: 1,
+          clientY: 1 + top
         }
       ]
     });
@@ -276,8 +273,8 @@ suite('TouchEvents', function() {
     stage._touchend({
       touches: [
         {
-          offsetX: 100,
-          offsetY: 100
+          clientX: 100,
+          clientY: 100 + top
         }
       ]
     });

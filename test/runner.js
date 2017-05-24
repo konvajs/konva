@@ -10,14 +10,16 @@ var assert = chai.assert,
   assertions = document.createElement('em');
 
 window.requestAnimFrame = (function(callback) {
-  return window.requestAnimationFrame ||
+  return (
+    window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame ||
     window.msRequestAnimationFrame ||
     function(callback) {
       window.setTimeout(callback, 1000 / 30);
-    };
+    }
+  );
 })();
 
 function init() {
@@ -226,17 +228,21 @@ afterEach(function() {
 });
 
 Konva.Stage.prototype.simulateMouseDown = function(pos) {
+  var top = this.content.getBoundingClientRect().top;
+
   this._mousedown({
-    offsetX: pos.x,
-    offsetY: pos.y,
+    clientX: pos.x,
+    clientY: pos.y + top,
     button: pos.button
   });
 };
 
 Konva.Stage.prototype.simulateMouseMove = function(pos) {
+  var top = this.content.getBoundingClientRect().top;
+
   var evt = {
-    offsetX: pos.x,
-    offsetY: pos.y,
+    clientX: pos.x,
+    clientY: pos.y + top,
     button: pos.button
   };
 
@@ -245,10 +251,11 @@ Konva.Stage.prototype.simulateMouseMove = function(pos) {
 };
 
 Konva.Stage.prototype.simulateMouseUp = function(pos) {
-  'use strict';
+  var top = this.content.getBoundingClientRect().top;
+
   var evt = {
-    offsetX: pos.x,
-    offsetY: pos.y,
+    clientX: pos.x,
+    clientY: pos.y + top,
     button: pos.button
   };
 

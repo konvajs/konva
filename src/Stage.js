@@ -266,7 +266,7 @@
         layers = this.children;
 
       if (x || y) {
-        _context.translate((-1) * x, (-1) * y);
+        _context.translate(-1 * x, -1 * y);
       }
 
       layers.each(function(layer) {
@@ -542,12 +542,9 @@
           dd.justDragged = false;
         }
 
-        setTimeout(
-          function() {
-            Konva.inDblClickWindow = false;
-          },
-          Konva.dblClickWindow
-        );
+        setTimeout(function() {
+          Konva.inDblClickWindow = false;
+        }, Konva.dblClickWindow);
 
         if (shape && shape.isListening()) {
           shape._fireAndBubble(MOUSEUP, { evt: evt });
@@ -598,7 +595,9 @@
 
         // only call preventDefault if the shape is listening for events
         if (
-          shape.isListening() && shape.preventDefault() && evt.preventDefault
+          shape.isListening() &&
+          shape.preventDefault() &&
+          evt.preventDefault
         ) {
           evt.preventDefault();
         }
@@ -618,12 +617,9 @@
         Konva.inDblClickWindow = true;
       }
 
-      setTimeout(
-        function() {
-          Konva.inDblClickWindow = false;
-        },
-        Konva.dblClickWindow
-      );
+      setTimeout(function() {
+        Konva.inDblClickWindow = false;
+      }, Konva.dblClickWindow);
 
       if (shape && shape.isListening()) {
         shape._fireAndBubble(TOUCHEND, { evt: evt });
@@ -642,7 +638,9 @@
         }
         // only call preventDefault if the shape is listening for events
         if (
-          shape.isListening() && shape.preventDefault() && evt.preventDefault
+          shape.isListening() &&
+          shape.preventDefault() &&
+          evt.preventDefault
         ) {
           evt.preventDefault();
         }
@@ -667,7 +665,9 @@
           shape._fireAndBubble(TOUCHMOVE, { evt: evt });
           // only call preventDefault if the shape is listening for events
           if (
-            shape.isListening() && shape.preventDefault() && evt.preventDefault
+            shape.isListening() &&
+            shape.preventDefault() &&
+            evt.preventDefault
           ) {
             evt.preventDefault();
           }
@@ -705,21 +705,13 @@
         if (evt.touches.length > 0) {
           var touch = evt.touches[0];
           // get the information for finger #1
-          x = touch.offsetX !== undefined
-            ? touch.offsetX
-            : touch.clientX - contentPosition.left;
-          y = touch.offsetY !== undefined
-            ? touch.offsetY
-            : touch.clientY - contentPosition.top;
+          x = touch.clientX - contentPosition.left;
+          y = touch.clientY - contentPosition.top;
         }
       } else {
         // mouse events
-        x = evt.offsetX !== undefined
-          ? evt.offsetX
-          : evt.clientX - contentPosition.left;
-        y = evt.offsetY !== undefined
-          ? evt.offsetY
-          : evt.clientY - contentPosition.top;
+        x = evt.clientX - contentPosition.left;
+        y = evt.clientY - contentPosition.top;
       }
       if (x !== null && y !== null) {
         this.pointerPos = {
