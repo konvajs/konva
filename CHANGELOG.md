@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [1.6.3][2017-05-24]
+
+### Fixed
+- Fixed bug with pointer detection. css 3d transformed stage will not work now.
+
 ## [1.6.2][2017-05-08]
 
 ### Fixed
