@@ -555,22 +555,29 @@ declare module Konva {
 
     class Ring extends Shape {
         constructor(RingConfig: RingConfig);
-        angle(): number;
-        angle(angle: number): Ring;
         innerRadius(): number;
         innerRadius(innerRadius: number): Ring;
         outerRadius(): number;
         outerRadius(outerRadius: number): Ring;
     }
 
-    interface ArcConfig extends RingConfig {
+    interface ArcConfig extends ShapeConfig {
         angle: number;
+        innerRadius: number;
+        outerRadius: number;
+        clockwise?: boolean;
     }
 
     class Arc extends Shape {
         constructor(ArcConfig: ArcConfig);
+        angle(): number;
+        angle(angle: number): Ring;
         clockwise(): boolean;
         clockwise(clockwise: boolean): Arc;
+        innerRadius(): number;
+        innerRadius(innerRadius: number): Arc;
+        outerRadius(): number;
+        outerRadius(outerRadius: number): Arc;
     }
 
     interface CircleConfig extends ShapeConfig {
