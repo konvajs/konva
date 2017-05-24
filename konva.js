@@ -1,5 +1,5 @@
 /*
- * Konva JavaScript Framework v1.6.2
+ * Konva JavaScript Framework v1.6.3
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
  * Date: Wed May 24 2017
@@ -38,7 +38,7 @@
 
   var Konva = {
     // public
-    version: '1.6.2',
+    version: '1.6.3',
 
     // private
     stages: [],
