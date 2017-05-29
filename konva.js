@@ -14164,6 +14164,10 @@
      * @param {Object} [config.scale] set scale
      * @param {Number} [config.scaleX] set scale x
      * @param {Number} [config.scaleY] set scale y
+     * @param {Number} [config.scaleDynamicX] scale dynamically until either the maximum width is reached or the scaling factor scaleDynamicX is hit. Forces one line text
+     * @param {Number} [config.scaleDynamicY] scale dynamically until either the maximum height is reached or the scaling factor scaleDynamicY is hit. Forces one line text
+     * @param {Number} [config.scaleDynamicMaxRatio] Limits scaleDynamicX/scaleDynamicY to prevent text thinning or flattening. The default is 4
+     * @param {Boolean} [config.verticalAlign] Vertically align the text. Forces one line text.
      * @param {Number} [config.rotation] rotation in degrees
      * @param {Object} [config.offset] offset from center point and rotation point
      * @param {Number} [config.offsetX] set offset x
@@ -14226,6 +14230,14 @@
       this._setTextData();
       this.sceneFunc(this._sceneFunc);
       this.hitFunc(this._hitFunc);
+            
+      this.scaleDynamicX = config.scaleDynamicX;
+      this.scaleDynamicY = config.scaleDynamicY;
+      this.scaleDynamicMaxRatio = config.scaleDynamicMaxRatio || 4;
+      this.verticalAlign = config.verticalAlign;
+
+      if (config.scaleDynamicX || config.scaleDynamicY || this.verticalAlign)
+        this.wrap(NONE);
     },
     _sceneFunc: function(context) {
       var p = this.getPadding(),
@@ -14259,10 +14271,50 @@
 
         // horizontal alignment
         context.save();
-        if (align === RIGHT) {
-          context.translate(totalWidth - width - p * 2, 0);
-        } else if (align === CENTER) {
-          context.translate((totalWidth - width - p * 2) / 2, 0);
+                
+        // handle scale and vertical alignment
+        var sx,
+            sy,
+            alignY = 0;
+
+        if (this.scaleDynamicX) {
+          sx = (totalWidth - 2*p) / width;
+          if (sx > this.scaleDynamicX)
+            sx = this.scaleDynamicX;
+        }
+        else sx = 1;
+        
+        if (this.scaleDynamicY) {
+          sy = (this.getHeight() - 2*p) / lineHeightPx;
+          if (sy > this.scaleDynamicY)
+            sy = this.scaleDynamicY;
+        }
+        else sy = 1;
+
+        // limit scale ratio to a maximum ratio defined
+        if (sx > sy) {
+          if (sx / sy > this.scaleDynamicMaxRatio)
+            sx = sy * this.scaleDynamicMaxRatio;
+        } else {
+          if (sy / sx > this.scaleDynamicMaxRatio)
+            sy = sx * this.scaleDynamicMaxRatio;
+        }
+
+        if (this.verticalAlign)
+          alignY = (this.getHeight() - (sy*lineHeightPx) - 2*p) / sy / 2;
+
+        // only apply scaling or vertical alignment if requested
+        if (sx != 1 || sy != 1 || alignY) {
+          context.translate(0, -(textHeight / 2));
+          context.scale(sx, sy);
+          context.translate(0, (textHeight / 2) + alignY);
+        }
+        
+        if(align === RIGHT) {
+          context.translate((totalWidth - width*sx - p * 2) / sx, 0);
+        }
+        else if(align === CENTER) {
+          context.translate((totalWidth - width*sx - p * 2) / sx / 2, 0);
         }
 
         if (textDecoration.indexOf('underline') !== -1) {
@@ -14451,7 +14503,7 @@
         var line = lines[i];
 
         var lineWidth = this._getTextWidth(line);
-        if (fixedWidth && lineWidth > maxWidth) {
+        if (fixedWidth && lineWidth > maxWidth && !this.scaleDynamicX) {
           /*
                      * if width is fixed and line does not fit entirely
                      * break the line into multiple fitting lines
