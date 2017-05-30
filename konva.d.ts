@@ -122,6 +122,7 @@ declare module Konva {
         clear(bounds?: ClearConfig): Node;
         clone(attrs?: NodeConfig): Node;
         destroy(): void;
+        addTo(parent: Container): Node;
 
         dragBoundFunc(): Function;
         dragBoundFunc(dragBoundFunc: Function): Node;
@@ -639,6 +640,7 @@ declare module Konva {
         tension(tension: number): Line;
         points(): number[];
         points(points: number[]): Line;
+        addPoint(x: number, y: number): Line;
     }
 
     interface ArrowConfig extends ShapeConfig {

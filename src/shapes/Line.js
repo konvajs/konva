@@ -102,6 +102,10 @@
         context.strokeShape(this);
       }
     },
+    addPoint: function(x, y){
+      this.setPoints(this.points().concat([x, y]));
+      return this;
+    },
     getTensionPoints: function() {
       return this._getCache('tensionPoints', this._getTensionPoints);
     },

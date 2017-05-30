@@ -81,6 +81,17 @@
         that._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
       });
     },
+    /**
+         * Add this nodes to it's parent container.
+         * @method
+         * @memberof Konva.Node.prototype
+         * @param {...Konva.Container} parent
+         * @returns {Node}
+         */
+    addTo(parent){
+      container.add(this);
+      return this;
+    },
     _clearCache: function(attr) {
       if (attr) {
         delete this._cache[attr];
