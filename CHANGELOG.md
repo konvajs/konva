@@ -4,6 +4,42 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [1.6.3][2017-05-24]
+
+### Fixed
+- Fixed bug with pointer detection. css 3d transformed stage will not work now.
+
+## [1.6.2][2017-05-08]
+
+### Fixed
+- Fixed bug with automatic shadow for negative scale values
+
+## [1.6.1][2017-04-25]
+
+### Fixed
+- Fix pointer position detection
+
+
+### Changed
+- moved `globalCompositeOperation` property to `Konva.Node`
+
+## [1.6.0][2017-04-21]
+
+### Added
+- support of globalCompositeOperation for `Konva.Shape`
+
+### Fixed
+- getAllIntersections now works ok for Text shapes (https://github.com/konvajs/konva/issues/224)
+
+### Changed
+- Konva a bit changed a way to detect pointer position. Now it should be OK to apply css transform on Konva container. https://github.com/konvajs/konva/pull/215
+
+
+## [1.5.0][2017-03-20]
+
+### Added
+- support for `lineDashOffset` property for `Konva.Shape`.
+
 ## [1.4.0][2017-02-07]
 
 ## Added
