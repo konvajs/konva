@@ -11,6 +11,7 @@
      * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
      *   The default is 0
      * @param {Boolean} [config.closed] defines whether or not the line shape is closed, creating a polygon or blob
+     * @param {Boolean} [config.bezier] if no tension is provided but bezier=true, we draw the line as a bezier using the passed points
      * @@shapeParams
      * @@nodeParams
      * @example
@@ -33,7 +34,7 @@
       this.className = 'Line';
 
       this.on(
-        'pointsChange.konva tensionChange.konva closedChange.konva',
+        'pointsChange.konva tensionChange.konva closedChange.konva bezierChange.konva',
         function() {
           this._clearCache('tensionPoints');
         }
@@ -46,6 +47,7 @@
         length = points.length,
         tension = this.getTension(),
         closed = this.getClosed(),
+        bezier = this.getBezier(),
         tp,
         len,
         n;
@@ -84,6 +86,20 @@
             tp[len - 1],
             points[length - 2],
             points[length - 1]
+          );
+        }
+      } else if (bezier) {
+        // no tension but bezier
+        n = 2;
+
+        while (n < length) {
+          context.bezierCurveTo(
+            points[n++],
+            points[n++],
+            points[n++],
+            points[n++],
+            points[n++],
+            points[n++]
           );
         }
       } else {
@@ -210,6 +226,23 @@
      * // open the shape
      * line.closed(false);
      */
+
+  Konva.Factory.addGetterSetter(Konva.Line, 'bezier', false);
+
+  /**
+    * get/set bezier flag.  The default is false
+    * @name bezier
+    * @method
+    * @memberof Konva.Line.prototype
+    * @param {Boolean} bezier
+    * @returns {Boolean}
+    * @example
+    * // get whether the line is a bezier
+    * var isBezier = line.bezier();
+    *
+    * // set whether the line is a bezier
+    * line.bezier(true);
+    */
 
   Konva.Factory.addGetterSetter(Konva.Line, 'tension', 0);
 

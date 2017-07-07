@@ -1,8 +1,8 @@
 /*
- * Konva JavaScript Framework v1.6.3
+ * Konva JavaScript Framework v1.6.4
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Wed May 24 2017
+ * Date: Fri Jul 07 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -38,7 +38,7 @@
 
   var Konva = {
     // public
-    version: '1.6.3',
+    version: '1.6.4',
 
     // private
     stages: [],
@@ -3133,11 +3133,13 @@
          */
     shouldDrawHit: function(canvas) {
       var layer = this.getLayer();
-      return (canvas && canvas.isCache) ||
+      return (
+        (canvas && canvas.isCache) ||
         (layer &&
           layer.hitGraphEnabled() &&
           this.isListening() &&
-          this.isVisible());
+          this.isVisible())
+      );
     },
     /**
          * show node
@@ -3735,19 +3737,16 @@
       var at = new Konva.Transform(), transformsEnabled, trans;
 
       // start with stage and traverse downwards to self
-      this._eachAncestorReverse(
-        function(node) {
-          transformsEnabled = node.transformsEnabled();
-          trans = node.getTransform();
+      this._eachAncestorReverse(function(node) {
+        transformsEnabled = node.transformsEnabled();
+        trans = node.getTransform();
 
-          if (transformsEnabled === 'all') {
-            at.multiply(trans);
-          } else if (transformsEnabled === 'position') {
-            at.translate(node.x(), node.y());
-          }
-        },
-        top
-      );
+        if (transformsEnabled === 'all') {
+          at.multiply(trans);
+        } else if (transformsEnabled === 'position') {
+          at.translate(node.x(), node.y());
+        }
+      }, top);
       return at;
     },
     /**
@@ -3760,7 +3759,7 @@
     getAbsoluteScale: function(top) {
       // if using an argument, we can't cache the result.
       if (top) {
-        return this._getAbsoluteTransform(top);
+        return this._getAbsoluteScale(top);
       } else {
         // if no argument, we can cache the result
         return this._getCache(ABSOLUTE_SCALE, this._getAbsoluteScale);
@@ -3779,13 +3778,10 @@
       var scaleX = 1, scaleY = 1;
 
       // start with stage and traverse downwards to self
-      this._eachAncestorReverse(
-        function(node) {
-          scaleX *= node.scaleX();
-          scaleY *= node.scaleY();
-        },
-        top
-      );
+      this._eachAncestorReverse(function(node) {
+        scaleX *= node.scaleX();
+        scaleY *= node.scaleY();
+      }, top);
       return {
         x: scaleX,
         y: scaleY
@@ -3825,7 +3821,7 @@
         m.scale(scaleX, scaleY);
       }
       if (offsetX !== 0 || offsetY !== 0) {
-        m.translate((-1) * offsetX, (-1) * offsetY);
+        m.translate(-1 * offsetX, -1 * offsetY);
       }
 
       return m;
@@ -3908,7 +3904,7 @@
       context.save();
 
       if (x || y) {
-        context.translate((-1) * x, (-1) * y);
+        context.translate(-1 * x, -1 * y);
       }
 
       this.drawScene(canvas);
@@ -4229,8 +4225,8 @@
         this._fire(eventType, evt);
 
         // simulate event bubbling
-        var stopBubble = (eventType === MOUSEENTER ||
-          eventType === MOUSELEAVE) &&
+        var stopBubble =
+          (eventType === MOUSEENTER || eventType === MOUSELEAVE) &&
           (compareShape &&
             compareShape.isAncestorOf &&
             compareShape.isAncestorOf(this) &&
@@ -14753,6 +14749,7 @@
      * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
      *   The default is 0
      * @param {Boolean} [config.closed] defines whether or not the line shape is closed, creating a polygon or blob
+     * @param {Boolean} [config.bezier] if no tension is provided but bezier=true, we draw the line as a bezier using the passed points
      * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
@@ -14844,7 +14841,7 @@
       this.className = 'Line';
 
       this.on(
-        'pointsChange.konva tensionChange.konva closedChange.konva',
+        'pointsChange.konva tensionChange.konva closedChange.konva bezierChange.konva',
         function() {
           this._clearCache('tensionPoints');
         }
@@ -14857,6 +14854,7 @@
         length = points.length,
         tension = this.getTension(),
         closed = this.getClosed(),
+        bezier = this.getBezier(),
         tp,
         len,
         n;
@@ -14895,6 +14893,20 @@
             tp[len - 1],
             points[length - 2],
             points[length - 1]
+          );
+        }
+      } else if (bezier) {
+        // no tension but bezier
+        n = 2;
+
+        while (n < length) {
+          context.bezierCurveTo(
+            points[n++],
+            points[n++],
+            points[n++],
+            points[n++],
+            points[n++],
+            points[n++]
           );
         }
       } else {
@@ -15021,6 +15033,23 @@
      * // open the shape
      * line.closed(false);
      */
+
+  Konva.Factory.addGetterSetter(Konva.Line, 'bezier', false);
+
+  /**
+    * get/set bezier flag.  The default is false
+    * @name bezier
+    * @method
+    * @memberof Konva.Line.prototype
+    * @param {Boolean} bezier
+    * @returns {Boolean}
+    * @example
+    * // get whether the line is a bezier
+    * var isBezier = line.bezier();
+    *
+    * // set whether the line is a bezier
+    * line.bezier(true);
+    */
 
   Konva.Factory.addGetterSetter(Konva.Line, 'tension', 0);
 
