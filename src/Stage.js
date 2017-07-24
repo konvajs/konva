@@ -681,11 +681,11 @@
       }
     },
     _DOMMouseScroll: function(evt) {
-      if (Konva.lastEvt.clientX != evt.clientX || 
-          Konva.lastEvt.clientY != evt.clientY ||
-          Konva.lastEvt.buttons != evt.buttons ||
-          Konva.lastEvt.layerX != evt.layerX ||
-          Konva.lastEvt.layerY != evt.layerY) {
+      if (Konva.lastEvt.clientX !== evt.clientX || 
+          Konva.lastEvt.clientY !== evt.clientY ||
+          Konva.lastEvt.buttons !== evt.buttons ||
+          Konva.lastEvt.layerX !== evt.layerX ||
+          Konva.lastEvt.layerY !== evt.layerY) {
       this._mousewheel(evt);
       Konva.lastEvt = evt;
       }
