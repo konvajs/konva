@@ -681,7 +681,14 @@
       }
     },
     _DOMMouseScroll: function(evt) {
+      if (Konva.lastEvt.clientX !== evt.clientX ||
+          Konva.lastEvt.clientY !== evt.clientY ||
+          Konva.lastEvt.buttons !== evt.buttons ||
+          Konva.lastEvt.layerX !== evt.layerX ||
+          Konva.lastEvt.layerY !== evt.layerY) {
       this._mousewheel(evt);
+      Konva.lastEvt = evt;
+      }
     },
     _mousewheel: function(evt) {
       this._setPointerPosition(evt);
@@ -693,6 +700,7 @@
       this._fire(CONTENT_WHEEL, { evt: evt });
     },
     _wheel: function(evt) {
+      Konva.lastEvt = evt;
       this._mousewheel(evt);
     },
     _setPointerPosition: function(evt) {
