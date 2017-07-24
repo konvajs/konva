@@ -681,7 +681,7 @@
       }
     },
     _DOMMouseScroll: function(evt) {
-      if (Konva.lastEvt.clientX !== evt.clientX || 
+      if (Konva.lastEvt.clientX !== evt.clientX ||
           Konva.lastEvt.clientY !== evt.clientY ||
           Konva.lastEvt.buttons !== evt.buttons ||
           Konva.lastEvt.layerX !== evt.layerX ||
