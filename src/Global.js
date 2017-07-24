@@ -48,6 +48,7 @@
     shapes: {},
     listenClickTap: false,
     inDblClickWindow: false,
+    lastEvt: null,
 
     // configurations
     enableTrace: false,
