@@ -1413,6 +1413,72 @@ suite('MouseEvents', function() {
   });
 
   // ======================================================
+  test('test dblclick to a wrong target', function () {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var leftRect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      fill: 'red'
+    });
+    layer.add(leftRect);
+
+    var rightRect = new Konva.Rect({
+      x: 100,
+      y: 0,
+      width: 100,
+      height: 100,
+      fill: 'blue'
+    });
+    layer.add(rightRect);
+
+    stage.draw();
+
+    var leftRectSingleClick = 0;
+    var rightRectSingleClick = 0;
+    var rightRectDblClick = 0;
+
+    leftRect.on('click', function () {
+      leftRectSingleClick++;
+    });
+    rightRect.on('click', function () {
+      rightRectSingleClick++;
+    });
+    rightRect.on('dblclick', function () {
+      rightRectDblClick++;
+    });
+
+    stage.simulateMouseDown({
+      x: 50,
+      y: 50
+    });
+    stage.simulateMouseUp({
+      x: 50,
+      y: 50
+    });
+    assert.equal(leftRectSingleClick, 1, 'leftRect trigger a click');
+
+    stage.simulateMouseDown({
+      x: 150,
+      y: 50
+    });
+    stage.simulateMouseUp({
+      x: 150,
+      y: 50
+    });
+    assert.equal(rightRectSingleClick, 1, 'rightRect trigger a click');
+    assert.equal(
+      rightRectDblClick,
+      0,
+      'rightRect dblClick should not trigger'
+    );
+  });
+
+  // ======================================================
   test('test mouseleave + mouseenter with deep nesting', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
