@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.6.4
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri Jul 07 2017
+ * Date: Thu Jul 27 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -9738,8 +9738,6 @@
     TAP = 'tap',
     DBL_TAP = 'dbltap',
     TOUCHMOVE = 'touchmove',
-    DOMMOUSESCROLL = 'DOMMouseScroll',
-    MOUSEWHEEL = 'mousewheel',
     WHEEL = 'wheel',
     CONTENT_MOUSEOUT = 'contentMouseout',
     CONTENT_MOUSEOVER = 'contentMouseover',
@@ -9771,8 +9769,6 @@
       TOUCHMOVE,
       TOUCHEND,
       MOUSEOVER,
-      DOMMOUSESCROLL,
-      MOUSEWHEEL,
       WHEEL,
       CONTEXTMENU
     ],
@@ -10418,10 +10414,7 @@
         }
       }
     },
-    _DOMMouseScroll: function(evt) {
-      this._mousewheel(evt);
-    },
-    _mousewheel: function(evt) {
+    _wheel: function(evt) {
       this._setPointerPosition(evt);
       var shape = this.getIntersection(this.getPointerPosition());
 
@@ -10429,9 +10422,6 @@
         shape._fireAndBubble(WHEEL, { evt: evt });
       }
       this._fire(CONTENT_WHEEL, { evt: evt });
-    },
-    _wheel: function(evt) {
-      this._mousewheel(evt);
     },
     _setPointerPosition: function(evt) {
       var contentPosition = this._getContentPosition(), x = null, y = null;
