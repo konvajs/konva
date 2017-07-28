@@ -5,8 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Not released][Not released]
 
 ### Fixed
--Fix bug with double trigger wheel in Firefox
--Fix `node.getClientRect()` calculation in a case of Group + invisible child
+- Fix bug with double trigger wheel in Firefox
+- Fix `node.getClientRect()` calculation in a case of Group + invisible child
+- Fix dblclick issue https://github.com/konvajs/konva/issues/252
 
 
 ## [1.6.3][2017-05-24]
