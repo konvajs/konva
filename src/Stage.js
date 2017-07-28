@@ -525,6 +525,7 @@
         this._setPointerPosition(evt);
         var shape = this.getIntersection(this.getPointerPosition()),
           clickStartShape = this.clickStartShape,
+          clickEndShape = this.clickEndShape,
           fireDblClick = false,
           dd = Konva.DD;
 
@@ -543,6 +544,7 @@
         }, Konva.dblClickWindow);
 
         if (shape && shape.isListening()) {
+          this.clickEndShape = shape;
           shape._fireAndBubble(MOUSEUP, { evt: evt });
 
           // detect if click or double click occurred
@@ -553,7 +555,11 @@
           ) {
             shape._fireAndBubble(CLICK, { evt: evt });
 
-            if (fireDblClick) {
+            if (
+              fireDblClick &&
+              clickEndShape &&
+              clickEndShape._id === shape._id
+            ) {
               shape._fireAndBubble(DBL_CLICK, { evt: evt });
             }
           }
