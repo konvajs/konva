@@ -1122,192 +1122,186 @@ suite('Container', function() {
   });
 
   // ======================================================
-  test(
-    'test find() selector by adding shape, then group, then layer',
-    function() {
-      var stage = addStage();
-      var layer = new Konva.Layer({
-        name: 'layerName',
-        id: 'layerId'
-      });
-      var group = new Konva.Group({
-        name: 'groupName',
-        id: 'groupId'
-      });
-      var rect = new Konva.Rect({
-        x: 200,
-        y: 20,
-        width: 100,
-        height: 50,
-        fill: 'red',
-        stroke: 'black',
-        strokeWidth: 4,
-        name: 'rectName',
-        id: 'rectId'
-      });
+  test('test find() selector by adding shape, then group, then layer', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      name: 'layerName',
+      id: 'layerId'
+    });
+    var group = new Konva.Group({
+      name: 'groupName',
+      id: 'groupId'
+    });
+    var rect = new Konva.Rect({
+      x: 200,
+      y: 20,
+      width: 100,
+      height: 50,
+      fill: 'red',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'rectName',
+      id: 'rectId'
+    });
 
-      group.add(rect);
-      layer.add(group);
-      stage.add(layer);
+    group.add(rect);
+    layer.add(group);
+    stage.add(layer);
 
-      assert.equal(
-        stage.find('.rectName')[0].attrs.id,
-        'rectId',
-        'problem with shape name selector'
-      );
-      assert.equal(
-        stage.find('#rectId')[0].attrs.id,
-        'rectId',
-        'problem with shape id selector'
-      );
-      assert.equal(
-        layer.find('.rectName')[0].attrs.id,
-        'rectId',
-        'problem with shape name selector'
-      );
-      assert.equal(
-        layer.find('#rectId')[0].attrs.id,
-        'rectId',
-        'problem with shape id selector'
-      );
-      assert.equal(
-        group.find('.rectName')[0].attrs.id,
-        'rectId',
-        'problem with shape name selector'
-      );
-      assert.equal(
-        group.find('#rectId')[0].attrs.id,
-        'rectId',
-        'problem with shape id selector'
-      );
+    assert.equal(
+      stage.find('.rectName')[0].attrs.id,
+      'rectId',
+      'problem with shape name selector'
+    );
+    assert.equal(
+      stage.find('#rectId')[0].attrs.id,
+      'rectId',
+      'problem with shape id selector'
+    );
+    assert.equal(
+      layer.find('.rectName')[0].attrs.id,
+      'rectId',
+      'problem with shape name selector'
+    );
+    assert.equal(
+      layer.find('#rectId')[0].attrs.id,
+      'rectId',
+      'problem with shape id selector'
+    );
+    assert.equal(
+      group.find('.rectName')[0].attrs.id,
+      'rectId',
+      'problem with shape name selector'
+    );
+    assert.equal(
+      group.find('#rectId')[0].attrs.id,
+      'rectId',
+      'problem with shape id selector'
+    );
 
-      assert.equal(
-        stage.find('.groupName')[0].attrs.id,
-        'groupId',
-        'problem with group name selector'
-      );
-      assert.equal(
-        stage.find('#groupId')[0].attrs.id,
-        'groupId',
-        'problem with group id selector'
-      );
-      assert.equal(
-        layer.find('.groupName')[0].attrs.id,
-        'groupId',
-        'problem with group name selector'
-      );
-      assert.equal(
-        layer.find('#groupId')[0].attrs.id,
-        'groupId',
-        'problem with group id selector'
-      );
+    assert.equal(
+      stage.find('.groupName')[0].attrs.id,
+      'groupId',
+      'problem with group name selector'
+    );
+    assert.equal(
+      stage.find('#groupId')[0].attrs.id,
+      'groupId',
+      'problem with group id selector'
+    );
+    assert.equal(
+      layer.find('.groupName')[0].attrs.id,
+      'groupId',
+      'problem with group name selector'
+    );
+    assert.equal(
+      layer.find('#groupId')[0].attrs.id,
+      'groupId',
+      'problem with group id selector'
+    );
 
-      assert.equal(
-        stage.find('.layerName')[0].attrs.id,
-        'layerId',
-        'problem with layer name selector'
-      );
-      assert.equal(
-        stage.find('#layerId')[0].attrs.id,
-        'layerId',
-        'problem with layer id selector'
-      );
-    }
-  );
+    assert.equal(
+      stage.find('.layerName')[0].attrs.id,
+      'layerId',
+      'problem with layer name selector'
+    );
+    assert.equal(
+      stage.find('#layerId')[0].attrs.id,
+      'layerId',
+      'problem with layer id selector'
+    );
+  });
 
   // ======================================================
-  test(
-    'test find() selector by adding group, then shape, then layer',
-    function() {
-      var stage = addStage();
-      var layer = new Konva.Layer({
-        name: 'layerName',
-        id: 'layerId'
-      });
-      var group = new Konva.Group({
-        name: 'groupName',
-        id: 'groupId'
-      });
-      var rect = new Konva.Rect({
-        x: 200,
-        y: 20,
-        width: 100,
-        height: 50,
-        fill: 'red',
-        stroke: 'black',
-        strokeWidth: 4,
-        name: 'rectName',
-        id: 'rectId'
-      });
+  test('test find() selector by adding group, then shape, then layer', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      name: 'layerName',
+      id: 'layerId'
+    });
+    var group = new Konva.Group({
+      name: 'groupName',
+      id: 'groupId'
+    });
+    var rect = new Konva.Rect({
+      x: 200,
+      y: 20,
+      width: 100,
+      height: 50,
+      fill: 'red',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'rectName',
+      id: 'rectId'
+    });
 
-      layer.add(group);
-      group.add(rect);
-      stage.add(layer);
+    layer.add(group);
+    group.add(rect);
+    stage.add(layer);
 
-      assert.equal(
-        stage.find('.rectName')[0].attrs.id,
-        'rectId',
-        'problem with shape name selector'
-      );
-      assert.equal(
-        stage.find('#rectId')[0].attrs.id,
-        'rectId',
-        'problem with shape id selector'
-      );
-      assert.equal(
-        layer.find('.rectName')[0].attrs.id,
-        'rectId',
-        'problem with shape name selector'
-      );
-      assert.equal(
-        layer.find('#rectId')[0].attrs.id,
-        'rectId',
-        'problem with shape id selector'
-      );
-      assert.equal(
-        group.find('.rectName')[0].attrs.id,
-        'rectId',
-        'problem with shape name selector'
-      );
-      assert.equal(
-        group.find('#rectId')[0].attrs.id,
-        'rectId',
-        'problem with shape id selector'
-      );
+    assert.equal(
+      stage.find('.rectName')[0].attrs.id,
+      'rectId',
+      'problem with shape name selector'
+    );
+    assert.equal(
+      stage.find('#rectId')[0].attrs.id,
+      'rectId',
+      'problem with shape id selector'
+    );
+    assert.equal(
+      layer.find('.rectName')[0].attrs.id,
+      'rectId',
+      'problem with shape name selector'
+    );
+    assert.equal(
+      layer.find('#rectId')[0].attrs.id,
+      'rectId',
+      'problem with shape id selector'
+    );
+    assert.equal(
+      group.find('.rectName')[0].attrs.id,
+      'rectId',
+      'problem with shape name selector'
+    );
+    assert.equal(
+      group.find('#rectId')[0].attrs.id,
+      'rectId',
+      'problem with shape id selector'
+    );
 
-      assert.equal(
-        stage.find('.groupName')[0].attrs.id,
-        'groupId',
-        'problem with group name selector'
-      );
-      assert.equal(
-        stage.find('#groupId')[0].attrs.id,
-        'groupId',
-        'problem with group id selector'
-      );
-      assert.equal(
-        layer.find('.groupName')[0].attrs.id,
-        'groupId',
-        'problem with group name selector'
-      );
-      assert.equal(
-        layer.find('#groupId')[0].attrs.id,
-        'groupId',
-        'problem with group id selector'
-      );
+    assert.equal(
+      stage.find('.groupName')[0].attrs.id,
+      'groupId',
+      'problem with group name selector'
+    );
+    assert.equal(
+      stage.find('#groupId')[0].attrs.id,
+      'groupId',
+      'problem with group id selector'
+    );
+    assert.equal(
+      layer.find('.groupName')[0].attrs.id,
+      'groupId',
+      'problem with group name selector'
+    );
+    assert.equal(
+      layer.find('#groupId')[0].attrs.id,
+      'groupId',
+      'problem with group id selector'
+    );
 
-      assert.equal(
-        stage.find('.layerName')[0].attrs.id,
-        'layerId',
-        'problem with layer name selector'
-      );
-      assert.equal(
-        stage.find('#layerId')[0].attrs.id,
-        'layerId',
-        'problem with layer id selector'
-      );
-    }
-  );
+    assert.equal(
+      stage.find('.layerName')[0].attrs.id,
+      'layerId',
+      'problem with layer name selector'
+    );
+    assert.equal(
+      stage.find('#layerId')[0].attrs.id,
+      'layerId',
+      'problem with layer id selector'
+    );
+  });
 
   // ======================================================
   test('test deprecated get() method', function() {
@@ -1344,194 +1338,188 @@ suite('Container', function() {
   });
 
   // ======================================================
-  test(
-    'test find() selector by adding group, then layer, then shape',
-    function() {
-      var stage = addStage();
-      var layer = new Konva.Layer({
-        name: 'layerName',
-        id: 'layerId'
-      });
-      var group = new Konva.Group({
-        name: 'groupName',
-        id: 'groupId'
-      });
-      var rect = new Konva.Rect({
-        x: 200,
-        y: 20,
-        width: 100,
-        height: 50,
-        fill: 'red',
-        stroke: 'black',
-        strokeWidth: 4,
-        name: 'rectName',
-        id: 'rectId'
-      });
+  test('test find() selector by adding group, then layer, then shape', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      name: 'layerName',
+      id: 'layerId'
+    });
+    var group = new Konva.Group({
+      name: 'groupName',
+      id: 'groupId'
+    });
+    var rect = new Konva.Rect({
+      x: 200,
+      y: 20,
+      width: 100,
+      height: 50,
+      fill: 'red',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'rectName',
+      id: 'rectId'
+    });
 
-      layer.add(group);
-      stage.add(layer);
-      group.add(rect);
+    layer.add(group);
+    stage.add(layer);
+    group.add(rect);
 
-      assert.equal(
-        stage.find('.rectName')[0].attrs.id,
-        'rectId',
-        'problem with shape name selector'
-      );
-      assert.equal(
-        stage.find('#rectId')[0].attrs.id,
-        'rectId',
-        'problem with shape id selector'
-      );
-      assert.equal(
-        layer.find('.rectName')[0].attrs.id,
-        'rectId',
-        'problem with shape name selector'
-      );
-      assert.equal(
-        layer.find('#rectId')[0].attrs.id,
-        'rectId',
-        'problem with shape id selector'
-      );
-      assert.equal(
-        group.find('.rectName')[0].attrs.id,
-        'rectId',
-        'problem with shape name selector'
-      );
-      assert.equal(
-        group.find('#rectId')[0].attrs.id,
-        'rectId',
-        'problem with shape id selector'
-      );
+    assert.equal(
+      stage.find('.rectName')[0].attrs.id,
+      'rectId',
+      'problem with shape name selector'
+    );
+    assert.equal(
+      stage.find('#rectId')[0].attrs.id,
+      'rectId',
+      'problem with shape id selector'
+    );
+    assert.equal(
+      layer.find('.rectName')[0].attrs.id,
+      'rectId',
+      'problem with shape name selector'
+    );
+    assert.equal(
+      layer.find('#rectId')[0].attrs.id,
+      'rectId',
+      'problem with shape id selector'
+    );
+    assert.equal(
+      group.find('.rectName')[0].attrs.id,
+      'rectId',
+      'problem with shape name selector'
+    );
+    assert.equal(
+      group.find('#rectId')[0].attrs.id,
+      'rectId',
+      'problem with shape id selector'
+    );
 
-      assert.equal(
-        stage.find('.groupName')[0].attrs.id,
-        'groupId',
-        'problem with group name selector'
-      );
-      assert.equal(
-        stage.find('#groupId')[0].attrs.id,
-        'groupId',
-        'problem with group id selector'
-      );
-      assert.equal(
-        layer.find('.groupName')[0].attrs.id,
-        'groupId',
-        'problem with group name selector'
-      );
-      assert.equal(
-        layer.find('#groupId')[0].attrs.id,
-        'groupId',
-        'problem with group id selector'
-      );
+    assert.equal(
+      stage.find('.groupName')[0].attrs.id,
+      'groupId',
+      'problem with group name selector'
+    );
+    assert.equal(
+      stage.find('#groupId')[0].attrs.id,
+      'groupId',
+      'problem with group id selector'
+    );
+    assert.equal(
+      layer.find('.groupName')[0].attrs.id,
+      'groupId',
+      'problem with group name selector'
+    );
+    assert.equal(
+      layer.find('#groupId')[0].attrs.id,
+      'groupId',
+      'problem with group id selector'
+    );
 
-      assert.equal(
-        stage.find('.layerName')[0].attrs.id,
-        'layerId',
-        'problem with layer name selector'
-      );
-      assert.equal(
-        stage.find('#layerId')[0].attrs.id,
-        'layerId',
-        'problem with layer id selector'
-      );
-    }
-  );
+    assert.equal(
+      stage.find('.layerName')[0].attrs.id,
+      'layerId',
+      'problem with layer name selector'
+    );
+    assert.equal(
+      stage.find('#layerId')[0].attrs.id,
+      'layerId',
+      'problem with layer id selector'
+    );
+  });
 
   // ======================================================
-  test(
-    'test find() selector by adding layer, then group, then shape',
-    function() {
-      var stage = addStage();
-      var layer = new Konva.Layer({
-        name: 'layerName',
-        id: 'layerId'
-      });
-      var group = new Konva.Group({
-        name: 'groupName',
-        id: 'groupId'
-      });
-      var rect = new Konva.Rect({
-        x: 200,
-        y: 20,
-        width: 100,
-        height: 50,
-        fill: 'red',
-        stroke: 'black',
-        strokeWidth: 4,
-        name: 'rectName',
-        id: 'rectId'
-      });
+  test('test find() selector by adding layer, then group, then shape', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      name: 'layerName',
+      id: 'layerId'
+    });
+    var group = new Konva.Group({
+      name: 'groupName',
+      id: 'groupId'
+    });
+    var rect = new Konva.Rect({
+      x: 200,
+      y: 20,
+      width: 100,
+      height: 50,
+      fill: 'red',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'rectName',
+      id: 'rectId'
+    });
 
-      stage.add(layer);
-      layer.add(group);
-      group.add(rect);
+    stage.add(layer);
+    layer.add(group);
+    group.add(rect);
 
-      assert.equal(
-        stage.find('.rectName')[0].attrs.id,
-        'rectId',
-        'problem with shape name selector'
-      );
-      assert.equal(
-        stage.find('#rectId')[0].attrs.id,
-        'rectId',
-        'problem with shape id selector'
-      );
-      assert.equal(
-        layer.find('.rectName')[0].attrs.id,
-        'rectId',
-        'problem with shape name selector'
-      );
-      assert.equal(
-        layer.find('#rectId')[0].attrs.id,
-        'rectId',
-        'problem with shape id selector'
-      );
-      assert.equal(
-        group.find('.rectName')[0].attrs.id,
-        'rectId',
-        'problem with shape name selector'
-      );
-      assert.equal(
-        group.find('#rectId')[0].attrs.id,
-        'rectId',
-        'problem with shape id selector'
-      );
+    assert.equal(
+      stage.find('.rectName')[0].attrs.id,
+      'rectId',
+      'problem with shape name selector'
+    );
+    assert.equal(
+      stage.find('#rectId')[0].attrs.id,
+      'rectId',
+      'problem with shape id selector'
+    );
+    assert.equal(
+      layer.find('.rectName')[0].attrs.id,
+      'rectId',
+      'problem with shape name selector'
+    );
+    assert.equal(
+      layer.find('#rectId')[0].attrs.id,
+      'rectId',
+      'problem with shape id selector'
+    );
+    assert.equal(
+      group.find('.rectName')[0].attrs.id,
+      'rectId',
+      'problem with shape name selector'
+    );
+    assert.equal(
+      group.find('#rectId')[0].attrs.id,
+      'rectId',
+      'problem with shape id selector'
+    );
 
-      assert.equal(
-        stage.find('.groupName')[0].attrs.id,
-        'groupId',
-        'problem with group name selector'
-      );
-      assert.equal(
-        stage.find('#groupId')[0].attrs.id,
-        'groupId',
-        'problem with group id selector'
-      );
-      assert.equal(
-        layer.find('.groupName')[0].attrs.id,
-        'groupId',
-        'problem with group name selector'
-      );
-      assert.equal(
-        layer.find('#groupId')[0].attrs.id,
-        'groupId',
-        'problem with group id selector'
-      );
+    assert.equal(
+      stage.find('.groupName')[0].attrs.id,
+      'groupId',
+      'problem with group name selector'
+    );
+    assert.equal(
+      stage.find('#groupId')[0].attrs.id,
+      'groupId',
+      'problem with group id selector'
+    );
+    assert.equal(
+      layer.find('.groupName')[0].attrs.id,
+      'groupId',
+      'problem with group name selector'
+    );
+    assert.equal(
+      layer.find('#groupId')[0].attrs.id,
+      'groupId',
+      'problem with group id selector'
+    );
 
-      assert.equal(
-        stage.find('.layerName')[0].attrs.id,
-        'layerId',
-        'problem with layer name selector'
-      );
-      assert.equal(
-        stage.find('#layerId')[0].attrs.id,
-        'layerId',
-        'problem with layer id selector'
-      );
+    assert.equal(
+      stage.find('.layerName')[0].attrs.id,
+      'layerId',
+      'problem with layer name selector'
+    );
+    assert.equal(
+      stage.find('#layerId')[0].attrs.id,
+      'layerId',
+      'problem with layer id selector'
+    );
 
-      layer.draw();
-    }
-  );
+    layer.draw();
+  });
 
   test('warn on invalid selector', function() {
     var stage = addStage();
@@ -2160,6 +2148,39 @@ suite('Container', function() {
     });
   });
 
+  test('getClientRect - test empty group with invisible child', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var group = new Konva.Group({
+      x: 10,
+      y: 10
+    });
+    group.add(
+      new Konva.Rect({
+        x: 0,
+        y: 0,
+        width: 50,
+        height: 50
+      })
+    );
+    group.add(
+      new Konva.Rect({
+        x: 400,
+        y: 400,
+        width: 50,
+        height: 50,
+        visible: false
+      })
+    );
+    assert.deepEqual(group.getClientRect(), {
+      x: 10,
+      y: 10,
+      width: 50,
+      height: 50
+    });
+  });
+
   test.skip('getClientRect - test layer', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -2268,10 +2289,8 @@ suite('Container', function() {
 
     var ratio = layer.getCanvas().getPixelRatio();
     data = layer.getContext().getImageData(26 * ratio, 50 * ratio, 1, 1).data;
-    var isRed = data[0] == 255 &&
-      data[1] == 0 &&
-      data[2] == 0 &&
-      data[3] == 255;
+    var isRed =
+      data[0] == 255 && data[1] == 0 && data[2] == 0 && data[3] == 255;
     assert.equal(
       isRed,
       true,
@@ -2350,10 +2369,8 @@ suite('Container', function() {
     stage.scale({ x: 2, y: 2 });
     stage.draw();
 
-    var data = layer
-      .getHitCanvas()
-      .getContext()
-      .getImageData(48, 100, 1, 1).data;
+    var data = layer.getHitCanvas().getContext().getImageData(48, 100, 1, 1)
+      .data;
     var isTransparent = data[3] == 0;
     assert.equal(
       isTransparent,
@@ -2415,10 +2432,8 @@ suite('Container', function() {
 
     var ratio = layer.getCanvas().getPixelRatio();
     data = layer.getContext().getImageData(52 * ratio, 100 * ratio, 1, 1).data;
-    var isRed = data[0] == 255 &&
-      data[1] == 0 &&
-      data[2] == 0 &&
-      data[3] == 255;
+    var isRed =
+      data[0] == 255 && data[1] == 0 && data[2] == 0 && data[3] == 255;
     assert.equal(
       isRed,
       true,

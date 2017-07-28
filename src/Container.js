@@ -410,14 +410,17 @@
     shouldDrawHit: function(canvas) {
       var layer = this.getLayer();
       var dd = Konva.DD;
-      var layerUnderDrag = dd &&
+      var layerUnderDrag =
+        dd &&
         Konva.isDragging() &&
         Konva.DD.anim.getLayers().indexOf(layer) !== -1;
-      return (canvas && canvas.isCache) ||
+      return (
+        (canvas && canvas.isCache) ||
         (layer &&
           layer.hitGraphEnabled() &&
           this.isVisible() &&
-          !layerUnderDrag);
+          !layerUnderDrag)
+      );
     },
     getClientRect: function(skipTransform) {
       var minX, minY, maxX, maxY;
@@ -428,6 +431,10 @@
         height: 0
       };
       this.children.each(function(child) {
+        // skip invisible children
+        if (!child.isVisible()) {
+          return;
+        }
         var rect = child.getClientRect();
 
         // skip invisible children (like empty groups)
