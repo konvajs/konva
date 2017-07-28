@@ -49,7 +49,7 @@
   var M_HALF_PI = M_PI / 2.0;
 
   function isPOT(value) {
-    return value > 0 && (value - 1 & value) === 0;
+    return value > 0 && ((value - 1) & value) === 0;
   }
 
   var vec3 = {
@@ -105,9 +105,11 @@
       if (a === undefined || b === undefined) {
         return false;
       }
-      return Math.abs(a[0] - b[0]) < epsilon &&
+      return (
+        Math.abs(a[0] - b[0]) < epsilon &&
         Math.abs(a[1] - b[1]) < epsilon &&
-        Math.abs(a[2] - b[2]) < epsilon;
+        Math.abs(a[2] - b[2]) < epsilon
+      );
     }
   };
 
@@ -280,7 +282,7 @@
     */
   };
 
-  var WebGL2D = this.WebGL2D = function WebGL2D(canvas, options) {
+  var WebGL2D = (this.WebGL2D = function WebGL2D(canvas, options) {
     this.canvas = canvas;
     this.options = options || {};
     this.gl = undefined;
@@ -307,7 +309,7 @@
             return gl2d.gl;
           }
 
-          var gl = gl2d.gl = gl2d.canvas.$getContext('experimental-webgl');
+          var gl = (gl2d.gl = gl2d.canvas.$getContext('experimental-webgl'));
 
           gl2d.initShaders();
           gl2d.initBuffers();
@@ -342,7 +344,7 @@
     })(this);
 
     this.postInit();
-  };
+  });
 
   // Enables WebGL2D on your canvas
   WebGL2D.enable = function(canvas, options) {
@@ -398,7 +400,7 @@
     stackDepth,
     sMask
   ) {
-    var w = 2 / this.canvas.width, h = (-2) / this.canvas.height;
+    var w = 2 / this.canvas.width, h = -2 / this.canvas.height;
 
     stackDepth = stackDepth || 1;
 
@@ -462,7 +464,7 @@
       this.shaderProgram = storedShader;
       return storedShader;
     } else {
-      var fs = this.fs = gl.createShader(gl.FRAGMENT_SHADER);
+      var fs = (this.fs = gl.createShader(gl.FRAGMENT_SHADER));
       gl.shaderSource(this.fs, this.getFragmentShaderSource(sMask));
       gl.compileShader(this.fs);
 
@@ -470,7 +472,7 @@
         throw 'fragment shader error: ' + gl.getShaderInfoLog(this.fs);
       }
 
-      var vs = this.vs = gl.createShader(gl.VERTEX_SHADER);
+      var vs = (this.vs = gl.createShader(gl.VERTEX_SHADER));
       gl.shaderSource(
         this.vs,
         this.getVertexShaderSource(transformStackDepth, sMask)
@@ -481,7 +483,7 @@
         throw 'vertex shader error: ' + gl.getShaderInfoLog(this.vs);
       }
 
-      var shaderProgram = this.shaderProgram = gl.createProgram();
+      var shaderProgram = (this.shaderProgram = gl.createProgram());
       shaderProgram.stackDepth = transformStackDepth;
       gl.attachShader(shaderProgram, fs);
       gl.attachShader(shaderProgram, vs);
@@ -625,8 +627,8 @@
         alphaChannel,
         sameType;
 
-      if (match = reRGBAColor.exec(value)) {
-        hasAlpha = match[1], alphaChannel = parseFloat(match[8]);
+      if ((match = reRGBAColor.exec(value))) {
+        (hasAlpha = match[1]), (alphaChannel = parseFloat(match[8]));
 
         if (
           (hasAlpha && isNaN(alphaChannel)) ||
@@ -638,7 +640,7 @@
         sameType = match[3];
 
         for (var i = 2; i < 8; i += 2) {
-          channel = match[i], isPercent = match[i + 1];
+          (channel = match[i]), (isPercent = match[i + 1]);
 
           if (isPercent !== sameType) {
             return false;
@@ -657,15 +659,15 @@
         }
 
         result.push(hasAlpha ? alphaChannel : 1.0);
-      } else if (match = reHSLAColor.exec(value)) {
-        hasAlpha = match[1], alphaChannel = parseFloat(match[5]);
+      } else if ((match = reHSLAColor.exec(value))) {
+        (hasAlpha = match[1]), (alphaChannel = parseFloat(match[5]));
         result = HSLAToRGBA(
           match[2],
           match[3],
           match[4],
           parseFloat(hasAlpha && alphaChannel ? alphaChannel : 1.0)
         );
-      } else if (match = reHex6Color.exec(value)) {
+      } else if ((match = reHex6Color.exec(value))) {
         var colorInt = parseInt(match[1], 16);
         result = [
           ((colorInt & 0xff0000) >> 16) / 255,
@@ -673,8 +675,9 @@
           (colorInt & 0x0000ff) / 255,
           1.0
         ];
-      } else if (match = reHex3Color.exec(value)) {
-        var hexString = '#' +
+      } else if ((match = reHex3Color.exec(value))) {
+        var hexString =
+          '#' +
           [match[1], match[1], match[2], match[2], match[3], match[3]].join('');
         result = colorStringToVec4(hexString);
       } else if (value.toLowerCase() in colorKeywords) {
@@ -690,7 +693,8 @@
     }
 
     function colorVecToString(vec4) {
-      return 'rgba(' +
+      return (
+        'rgba(' +
         vec4[0] * 255 +
         ', ' +
         vec4[1] * 255 +
@@ -698,7 +702,8 @@
         vec4[2] * 255 +
         ', ' +
         parseFloat(vec4[3]) +
-        ')';
+        ')'
+      );
     }
 
     var colorKeywords = {
@@ -917,8 +922,8 @@
         return colorVecToString(drawState.strokeStyle);
       },
       set: function(value) {
-        drawState.strokeStyle = colorStringToVec4(value) ||
-          drawStyle.strokeStyle;
+        drawState.strokeStyle =
+          colorStringToVec4(value) || drawStyle.strokeStyle;
       }
     });
 
@@ -1398,7 +1403,8 @@
       // we may wish to consider tiling large images like this instead of scaling and
       // adjust appropriately (flip to next texture source and tile offset) when drawing
       if (
-        image.width > gl2d.maxTextureSize || image.height > gl2d.maxTextureSize
+        image.width > gl2d.maxTextureSize ||
+        image.height > gl2d.maxTextureSize
       ) {
         var canvas = document.createElement('canvas');
 

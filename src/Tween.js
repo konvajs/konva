@@ -166,19 +166,17 @@
     this.node = node;
     this._id = idCounter++;
 
-    var layers = node.getLayer() ||
+    var layers =
+      node.getLayer() ||
       (node instanceof Konva.Stage ? node.getLayers() : null);
     if (!layers) {
       Konva.Util.error(
         'Tween constructor have `node` that is not in a layer. Please add node into layer first.'
       );
     }
-    this.anim = new Konva.Animation(
-      function() {
-        that.tween.onEnterFrame();
-      },
-      layers
-    );
+    this.anim = new Konva.Animation(function() {
+      that.tween.onEnterFrame();
+    }, layers);
 
     this.tween = new Tween(
       key,
@@ -315,7 +313,8 @@
             newVal.push((start[n] || 0) + diff[n] * i);
           }
         } else if (colorAttrs.indexOf(key) !== -1) {
-          newVal = 'rgba(' +
+          newVal =
+            'rgba(' +
             Math.round(start.r + diff.r * i) +
             ',' +
             Math.round(start.g + diff.g * i) +
@@ -543,9 +542,11 @@
       } else {
         s = p / (2 * Math.PI) * Math.asin(c / a);
       }
-      return -(a *
-        Math.pow(2, 10 * (t -= 1)) *
-        Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
+      return (
+        -(a *
+          Math.pow(2, 10 * (t -= 1)) *
+          Math.sin((t * d - s) * (2 * Math.PI) / p)) + b
+      );
     },
     /**
         * elastic ease out
@@ -570,11 +571,11 @@
       } else {
         s = p / (2 * Math.PI) * Math.asin(c / a);
       }
-      return a *
-        Math.pow(2, (-10) * t) *
-        Math.sin((t * d - s) * (2 * Math.PI) / p) +
+      return (
+        a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) +
         c +
-        b;
+        b
+      );
     },
     /**
         * elastic ease in out
@@ -600,18 +601,22 @@
         s = p / (2 * Math.PI) * Math.asin(c / a);
       }
       if (t < 1) {
-        return (-0.5) *
-          (a *
-            Math.pow(2, 10 * (t -= 1)) *
-            Math.sin((t * d - s) * (2 * Math.PI) / p)) +
-          b;
+        return (
+          -0.5 *
+            (a *
+              Math.pow(2, 10 * (t -= 1)) *
+              Math.sin((t * d - s) * (2 * Math.PI) / p)) +
+          b
+        );
       }
-      return a *
-        Math.pow(2, (-10) * (t -= 1)) *
-        Math.sin((t * d - s) * (2 * Math.PI) / p) *
-        0.5 +
+      return (
+        a *
+          Math.pow(2, -10 * (t -= 1)) *
+          Math.sin((t * d - s) * (2 * Math.PI) / p) *
+          0.5 +
         c +
-        b;
+        b
+      );
     },
     /**
         * bounce ease out
@@ -646,9 +651,9 @@
       if (t < d / 2) {
         return Konva.Easings.BounceEaseIn(t * 2, 0, c, d) * 0.5 + b;
       } else {
-        return Konva.Easings.BounceEaseOut(t * 2 - d, 0, c, d) * 0.5 +
-          c * 0.5 +
-          b;
+        return (
+          Konva.Easings.BounceEaseOut(t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b
+        );
       }
     },
     /**
@@ -665,7 +670,7 @@
         * @memberof Konva.Easings
         */
     EaseOut: function(t, b, c, d) {
-      return (-c) * (t /= d) * (t - 2) + b;
+      return -c * (t /= d) * (t - 2) + b;
     },
     /**
         * ease in out
@@ -676,7 +681,7 @@
       if ((t /= d / 2) < 1) {
         return c / 2 * t * t + b;
       }
-      return (-c) / 2 * (--t * (t - 2) - 1) + b;
+      return -c / 2 * (--t * (t - 2) - 1) + b;
     },
     /**
         * strong ease in

@@ -41,7 +41,7 @@
 
       for (n = 1; n < sides; n++) {
         x = radius * Math.sin(n * 2 * Math.PI / sides);
-        y = (-1) * radius * Math.cos(n * 2 * Math.PI / sides);
+        y = -1 * radius * Math.cos(n * 2 * Math.PI / sides);
         context.lineTo(x, y);
       }
       context.closePath();

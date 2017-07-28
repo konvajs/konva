@@ -664,12 +664,12 @@
       stackIn = stackStart;
       stackOut = stackEnd;
       for (x = 0; x < width; x++) {
-        pixels[yi + 3] = pa = a_sum * mul_sum >> shg_sum;
+        pixels[yi + 3] = pa = (a_sum * mul_sum) >> shg_sum;
         if (pa !== 0) {
           pa = 255 / pa;
-          pixels[yi] = (r_sum * mul_sum >> shg_sum) * pa;
-          pixels[yi + 1] = (g_sum * mul_sum >> shg_sum) * pa;
-          pixels[yi + 2] = (b_sum * mul_sum >> shg_sum) * pa;
+          pixels[yi] = ((r_sum * mul_sum) >> shg_sum) * pa;
+          pixels[yi + 1] = ((g_sum * mul_sum) >> shg_sum) * pa;
+          pixels[yi + 2] = ((b_sum * mul_sum) >> shg_sum) * pa;
         } else {
           pixels[yi] = pixels[yi + 1] = pixels[yi + 2] = 0;
         }
@@ -684,7 +684,7 @@
         b_out_sum -= stackIn.b;
         a_out_sum -= stackIn.a;
 
-        p = yw + ((p = x + radius + 1) < widthMinus1 ? p : widthMinus1) << 2;
+        p = (yw + ((p = x + radius + 1) < widthMinus1 ? p : widthMinus1)) << 2;
 
         r_in_sum += stackIn.r = pixels[p];
         g_in_sum += stackIn.g = pixels[p + 1];
@@ -742,7 +742,7 @@
       yp = width;
 
       for (i = 1; i <= radius; i++) {
-        yi = yp + x << 2;
+        yi = (yp + x) << 2;
 
         r_sum += (stack.r = pr = pixels[yi]) * (rbs = radiusPlus1 - i);
         g_sum += (stack.g = pg = pixels[yi + 1]) * rbs;
@@ -766,12 +766,12 @@
       stackOut = stackEnd;
       for (y = 0; y < height; y++) {
         p = yi << 2;
-        pixels[p + 3] = pa = a_sum * mul_sum >> shg_sum;
+        pixels[p + 3] = pa = (a_sum * mul_sum) >> shg_sum;
         if (pa > 0) {
           pa = 255 / pa;
-          pixels[p] = (r_sum * mul_sum >> shg_sum) * pa;
-          pixels[p + 1] = (g_sum * mul_sum >> shg_sum) * pa;
-          pixels[p + 2] = (b_sum * mul_sum >> shg_sum) * pa;
+          pixels[p] = ((r_sum * mul_sum) >> shg_sum) * pa;
+          pixels[p + 1] = ((g_sum * mul_sum) >> shg_sum) * pa;
+          pixels[p + 2] = ((b_sum * mul_sum) >> shg_sum) * pa;
         } else {
           pixels[p] = pixels[p + 1] = pixels[p + 2] = 0;
         }
@@ -786,8 +786,10 @@
         b_out_sum -= stackIn.b;
         a_out_sum -= stackIn.a;
 
-        p = x +
-          ((p = y + radiusPlus1) < heightMinus1 ? p : heightMinus1) * width <<
+        p =
+          (x +
+            ((p = y + radiusPlus1) < heightMinus1 ? p : heightMinus1) *
+              width) <<
           2;
 
         r_sum += r_in_sum += stackIn.r = pixels[p];

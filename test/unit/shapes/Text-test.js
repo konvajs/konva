@@ -14,21 +14,18 @@ suite('Text', function() {
   });
 
   // ======================================================
-  test(
-    'text with undefined text property should not throw an error',
-    function() {
-      var stage = addStage();
-      var layer = new Konva.Layer();
+  test('text with undefined text property should not throw an error', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
 
-      stage.add(layer);
-      var text = new Konva.Text({ text: undefined });
+    stage.add(layer);
+    var text = new Konva.Text({ text: undefined });
 
-      layer.add(text);
-      layer.draw();
+    layer.add(text);
+    layer.draw();
 
-      assert.equal(text.getWidth(), 0);
-    }
-  );
+    assert.equal(text.getWidth(), 0);
+  });
 
   test('add text with shadows', function() {
     var stage = addStage();
@@ -414,7 +411,8 @@ suite('Text', function() {
 
     stage.add(layer);
 
-    var trace = 'fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();restore();translate();save();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();restore();translate();restore();restore();';
+    var trace =
+      'fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();restore();translate();save();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();restore();translate();restore();restore();';
 
     assert.equal(layer.getContext().getTrace(true), trace);
   });
@@ -473,7 +471,8 @@ suite('Text', function() {
     layer.add(text);
     stage.add(layer);
 
-    var trace = 'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 15px Arial;textBaseline=middle;textAlign=left;save();translate(0,7.5);save();save();beginPath();moveTo(0,8);lineTo(52,8);stroke();restore();fillStyle=red;fillText(h,0,0);translate(13,0);fillStyle=red;fillText(e,0,0);translate(13,0);fillStyle=red;fillText(l,0,0);translate(8,0);fillStyle=red;fillText(l,0,0);translate(8,0);fillStyle=red;fillText(o,0,0);translate(13,0);restore();translate(0,15);save();save();beginPath();moveTo(0,8);lineTo(56,8);stroke();restore();fillStyle=red;fillText(w,0,0);translate(16,0);fillStyle=red;fillText(o,0,0);translate(13,0);fillStyle=red;fillText(r,0,0);translate(10,0);fillStyle=red;fillText(l,0,0);translate(8,0);fillStyle=red;fillText(d,0,0);translate(13,0);restore();translate(0,15);restore();restore();';
+    var trace =
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 15px Arial;textBaseline=middle;textAlign=left;save();translate(0,7.5);save();save();beginPath();moveTo(0,8);lineTo(52,8);stroke();restore();fillStyle=red;fillText(h,0,0);translate(13,0);fillStyle=red;fillText(e,0,0);translate(13,0);fillStyle=red;fillText(l,0,0);translate(8,0);fillStyle=red;fillText(l,0,0);translate(8,0);fillStyle=red;fillText(o,0,0);translate(13,0);restore();translate(0,15);save();save();beginPath();moveTo(0,8);lineTo(56,8);stroke();restore();fillStyle=red;fillText(w,0,0);translate(16,0);fillStyle=red;fillText(o,0,0);translate(13,0);fillStyle=red;fillText(r,0,0);translate(10,0);fillStyle=red;fillText(l,0,0);translate(8,0);fillStyle=red;fillText(d,0,0);translate(13,0);restore();translate(0,15);restore();restore();';
 
     assert.equal(layer.getContext().getTrace(), trace);
   });
@@ -495,7 +494,8 @@ suite('Text', function() {
     stage.add(layer);
     // TODO
 
-    var trace = 'clearRect();save();transform();font;textBaseline;textAlign;save();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();restore();restore();';
+    var trace =
+      'clearRect();save();transform();font;textBaseline;textAlign;save();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();restore();restore();';
     console.log(layer.getContext().getTrace(true));
     assert.equal(layer.getContext().getTrace(true), trace);
   });
@@ -516,7 +516,8 @@ suite('Text', function() {
     layer.add(text);
     stage.add(layer);
 
-    var trace = 'clearRect();save();transform();font;textBaseline;textAlign;save();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();restore();restore();';
+    var trace =
+      'clearRect();save();transform();font;textBaseline;textAlign;save();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();restore();restore();';
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 

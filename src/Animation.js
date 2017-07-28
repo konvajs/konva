@@ -17,12 +17,14 @@
   }
 
   var RAF = (function() {
-    return Konva.global.requestAnimationFrame ||
+    return (
+      Konva.global.requestAnimationFrame ||
       Konva.global.webkitRequestAnimationFrame ||
       Konva.global.mozRequestAnimationFrame ||
       Konva.global.oRequestAnimationFrame ||
       Konva.global.msRequestAnimationFrame ||
-      FRAF;
+      FRAF
+    );
   })();
 
   function requestAnimFrame() {
@@ -275,13 +277,10 @@
     var that = this, Anim = Konva.Animation;
 
     if (!this.batchAnim) {
-      this.batchAnim = new Anim(
-        function() {
-          // stop animation after first tick
-          that.batchAnim.stop();
-        },
-        this
-      );
+      this.batchAnim = new Anim(function() {
+        // stop animation after first tick
+        that.batchAnim.stop();
+      }, this);
     }
 
     if (!this.batchAnim.isRunning()) {

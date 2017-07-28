@@ -8,14 +8,16 @@ var height = 300;
 var VERSION = Konva.version === 'dev' ? 'new' : 'old';
 
 window.requestAnimFrame = (function() {
-  return window.requestAnimationFrame ||
+  return (
+    window.requestAnimationFrame ||
     window.webkitRequestAnimationFrame ||
     window.mozRequestAnimationFrame ||
     window.oRequestAnimationFrame ||
     window.msRequestAnimationFrame ||
     function(callback) {
       window.setTimeout(callback, 1000 / 30);
-    };
+    }
+  );
 })();
 
 function fpsCounter() {

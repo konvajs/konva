@@ -173,8 +173,8 @@
       var s = Math.sin(rad);
       var m11 = this.m[0] * c + this.m[2] * s;
       var m12 = this.m[1] * c + this.m[3] * s;
-      var m21 = this.m[0] * (-s) + this.m[2] * c;
-      var m22 = this.m[1] * (-s) + this.m[3] * c;
+      var m21 = this.m[0] * -s + this.m[2] * c;
+      var m22 = this.m[1] * -s + this.m[3] * c;
       this.m[0] = m11;
       this.m[1] = m12;
       this.m[2] = m21;
@@ -246,8 +246,8 @@
     invert: function() {
       var d = 1 / (this.m[0] * this.m[3] - this.m[1] * this.m[2]);
       var m0 = this.m[3] * d;
-      var m1 = (-this.m[1]) * d;
-      var m2 = (-this.m[2]) * d;
+      var m1 = -this.m[1] * d;
+      var m2 = -this.m[2] * d;
       var m3 = this.m[0] * d;
       var m4 = d * (this.m[2] * this.m[5] - this.m[3] * this.m[4]);
       var m5 = d * (this.m[1] * this.m[4] - this.m[0] * this.m[5]);
@@ -537,9 +537,11 @@
         return false;
       }
       var firstChar = selector[0];
-      return firstChar === '#' ||
+      return (
+        firstChar === '#' ||
         firstChar === '.' ||
-        firstChar === firstChar.toUpperCase();
+        firstChar === firstChar.toUpperCase()
+      );
     },
     createCanvasElement: function() {
       var canvas = Konva.document.createElement('canvas');
@@ -553,7 +555,7 @@
       return typeof exports !== 'object';
     },
     _isInDocument: function(el) {
-      while (el = el.parentNode) {
+      while ((el = el.parentNode)) {
         if (el == Konva.document) {
           return true;
         }
@@ -624,8 +626,8 @@
       hex = hex.replace(HASH, EMPTY_STRING);
       var bigint = parseInt(hex, 16);
       return {
-        r: bigint >> 16 & 255,
-        g: bigint >> 8 & 255,
+        r: (bigint >> 16) & 255,
+        g: (bigint >> 8) & 255,
         b: bigint & 255
       };
     },
@@ -635,7 +637,7 @@
          * @memberof Konva.Util.prototype
          */
     getRandomColor: function() {
-      var randColor = (Math.random() * 0xffffff << 0).toString(16);
+      var randColor = ((Math.random() * 0xffffff) << 0).toString(16);
       while (randColor.length < 6) {
         randColor = ZERO + randColor;
       }
@@ -698,11 +700,13 @@
     // from https://github.com/component/color-parser
     colorToRGBA: function(str) {
       str = str || 'black';
-      return Konva.Util._namedColorToRBA(str) ||
+      return (
+        Konva.Util._namedColorToRBA(str) ||
         Konva.Util._hex3ColorToRGBA(str) ||
         Konva.Util._hex6ColorToRGBA(str) ||
         Konva.Util._rgbColorToRGBA(str) ||
-        Konva.Util._rgbaColorToRGBA(str);
+        Konva.Util._rgbaColorToRGBA(str)
+      );
     },
     // Parse named css color. Like "green"
     _namedColorToRBA: function(str) {

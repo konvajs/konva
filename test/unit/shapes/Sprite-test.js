@@ -88,23 +88,17 @@ suite('Sprite', function() {
       sprite.start();
 
       // kick once
-      setTimeout(
-        function() {
-          sprite.setAnimation('kicking');
-          sprite.on('indexChange', function(evt) {
-            if (evt.newVal === 0 && this.getAnimation() === 'kicking') {
-              sprite.setAnimation('standing');
-            }
-          });
-        },
-        2000
-      );
-      setTimeout(
-        function() {
-          sprite.stop();
-        },
-        3000
-      );
+      setTimeout(function() {
+        sprite.setAnimation('kicking');
+        sprite.on('indexChange', function(evt) {
+          if (evt.newVal === 0 && this.getAnimation() === 'kicking') {
+            sprite.setAnimation('standing');
+          }
+        });
+      }, 2000);
+      setTimeout(function() {
+        sprite.stop();
+      }, 3000);
 
       done();
     };
@@ -170,14 +164,11 @@ suite('Sprite', function() {
       };
 
       sprite.start();
-      setTimeout(
-        function() {
-          sprite.stop();
-          assert.equal(updateCount < 7, true);
-          done();
-        },
-        1000
-      );
+      setTimeout(function() {
+        sprite.stop();
+        assert.equal(updateCount < 7, true);
+        done();
+      }, 1000);
     };
     imageObj.src = 'assets/scorpion-sprite.png';
   });
@@ -273,16 +264,13 @@ suite('Sprite', function() {
 
       sprite.start();
       sprite2.start();
-      setTimeout(
-        function() {
-          sprite.stop();
-          sprite2.stop();
-          assert.equal(updateCount > 15, true);
-          assert.equal(updateCount < 27, true);
-          done();
-        },
-        1000
-      );
+      setTimeout(function() {
+        sprite.stop();
+        sprite2.stop();
+        assert.equal(updateCount > 15, true);
+        assert.equal(updateCount < 27, true);
+        done();
+      }, 1000);
     };
     imageObj.src = 'assets/scorpion-sprite.png';
   });
@@ -395,29 +383,23 @@ suite('Sprite', function() {
       layer.add(sprite);
       stage.add(layer);
       assert.equal(sprite.frameRate(), 50);
-      setTimeout(
-        function() {
-          sprite.frameRate(100);
-          assert.equal(sprite.frameRate(), 100);
-          // don't run animation after change frame rate
-          assert.equal(sprite.anim.isRunning(), false);
+      setTimeout(function() {
+        sprite.frameRate(100);
+        assert.equal(sprite.frameRate(), 100);
+        // don't run animation after change frame rate
+        assert.equal(sprite.anim.isRunning(), false);
 
-          sprite.start();
-        },
-        23
-      );
+        sprite.start();
+      }, 23);
 
-      setTimeout(
-        function() {
-          sprite.frameRate(52);
-          assert.equal(sprite.anim.isRunning(), true);
-          // for this moment should tick more than 2 times
-          // make sure that sprite is not restating after set frame rate
-          assert.equal(sprite.frameIndex() > 2, true);
-          done();
-        },
-        68
-      );
+      setTimeout(function() {
+        sprite.frameRate(52);
+        assert.equal(sprite.anim.isRunning(), true);
+        // for this moment should tick more than 2 times
+        // make sure that sprite is not restating after set frame rate
+        assert.equal(sprite.frameIndex() > 2, true);
+        done();
+      }, 68);
     };
     imageObj.src = 'assets/scorpion-sprite.png';
   });

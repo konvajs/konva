@@ -16,29 +16,26 @@ suite('DragAndDrop', function() {
     stage.add(layer);
     layer.add(circle);
 
-    setTimeout(
-      function() {
-        layer.draw();
+    setTimeout(function() {
+      layer.draw();
 
-        // test defaults
-        assert.equal(circle.draggable(), false);
+      // test defaults
+      assert.equal(circle.draggable(), false);
 
-        //change properties
-        circle.setDraggable(true);
+      //change properties
+      circle.setDraggable(true);
 
-        //circle.on('click', function(){});
+      //circle.on('click', function(){});
 
-        layer.draw();
+      layer.draw();
 
-        showHit(layer);
+      showHit(layer);
 
-        // test new properties
-        assert.equal(circle.getDraggable(), true);
+      // test new properties
+      assert.equal(circle.getDraggable(), true);
 
-        done();
-      },
-      50
-    );
+      done();
+    }, 50);
   });
 
   // ======================================================
@@ -344,25 +341,22 @@ suite('DragAndDrop', function() {
       y: stage.height() / 2
     });
 
-    setTimeout(
-      function() {
-        assert.equal(stage.isDragging(), true);
+    setTimeout(function() {
+      assert.equal(stage.isDragging(), true);
 
-        stage.simulateMouseUp({
-          x: stage.width() / 2 - 50,
-          y: stage.height() / 2
-        });
+      stage.simulateMouseUp({
+        x: stage.width() / 2 - 50,
+        y: stage.height() / 2
+      });
 
-        var shape = layer.getIntersection({
-          x: stage.width() / 2 + 5,
-          y: stage.height() / 2
-        });
+      var shape = layer.getIntersection({
+        x: stage.width() / 2 + 5,
+        y: stage.height() / 2
+      });
 
-        assert.equal(shape, circle);
-        done();
-      },
-      50
-    );
+      assert.equal(shape, circle);
+      done();
+    }, 50);
   });
 
   test('removing shape while drag and drop should no throw error', function() {
@@ -402,42 +396,39 @@ suite('DragAndDrop', function() {
     });
   });
 
-  test(
-    'destroying shape while drag and drop should no throw error',
-    function() {
-      var stage = addStage();
-      var layer = new Konva.Layer();
+  test('destroying shape while drag and drop should no throw error', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
 
-      var circle = new Konva.Circle({
-        x: stage.getWidth() / 2,
-        y: stage.getHeight() / 2,
-        radius: 70,
-        fill: 'green',
-        stroke: 'black',
-        strokeWidth: 4,
-        name: 'myCircle',
-        draggable: true
-      });
+    var circle = new Konva.Circle({
+      x: stage.getWidth() / 2,
+      y: stage.getHeight() / 2,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true
+    });
 
-      layer.add(circle);
-      stage.add(layer);
+    layer.add(circle);
+    stage.add(layer);
 
-      stage.simulateMouseDown({
-        x: 291,
-        y: 112
-      });
+    stage.simulateMouseDown({
+      x: 291,
+      y: 112
+    });
 
-      circle.destroy();
+    circle.destroy();
 
-      stage.simulateMouseMove({
-        x: 311,
-        y: 112
-      });
+    stage.simulateMouseMove({
+      x: 311,
+      y: 112
+    });
 
-      stage.simulateMouseUp({
-        x: 291,
-        y: 112
-      });
-    }
-  );
+    stage.simulateMouseUp({
+      x: 291,
+      y: 112
+    });
+  });
 });

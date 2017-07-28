@@ -49,7 +49,7 @@
       ctx.rotate(radians);
       ctx.moveTo(0, 0);
       ctx.lineTo(-length, width / 2);
-      ctx.lineTo(-length, (-width) / 2);
+      ctx.lineTo(-length, -width / 2);
       ctx.closePath();
       ctx.restore();
 
@@ -61,7 +61,7 @@
         ctx.rotate((Math.atan2(-dy, -dx) + PI2) % PI2);
         ctx.moveTo(0, 0);
         ctx.lineTo(-length, width / 2);
-        ctx.lineTo(-length, (-width) / 2);
+        ctx.lineTo(-length, -width / 2);
         ctx.closePath();
         ctx.restore();
       }

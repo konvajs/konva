@@ -39,9 +39,11 @@
       this.hitFunc(this._hitFunc);
     },
     _useBufferCanvas: function() {
-      return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) &&
+      return (
+        (this.hasShadow() || this.getAbsoluteOpacity() !== 1) &&
         this.hasStroke() &&
-        this.getStage();
+        this.getStage()
+      );
     },
     _sceneFunc: function(context) {
       var width = this.getWidth(),

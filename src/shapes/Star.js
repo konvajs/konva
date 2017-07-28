@@ -46,7 +46,7 @@
       for (var n = 1; n < numPoints * 2; n++) {
         var radius = n % 2 === 0 ? outerRadius : innerRadius;
         var x = radius * Math.sin(n * Math.PI / numPoints);
-        var y = (-1) * radius * Math.cos(n * Math.PI / numPoints);
+        var y = -1 * radius * Math.cos(n * Math.PI / numPoints);
         context.lineTo(x, y);
       }
       context.closePath();

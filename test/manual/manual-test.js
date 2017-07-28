@@ -32,15 +32,12 @@ suite('Manual', function() {
     // in ms
     var centerX = stage.width() / 2;
 
-    var anim = new Konva.Animation(
-      function(frame) {
-        hexagon.setX(
-          amplitude * Math.sin(new Date().getTime() * 2 * Math.PI / period) +
-            centerX
-        );
-      },
-      layer
-    );
+    var anim = new Konva.Animation(function(frame) {
+      hexagon.setX(
+        amplitude * Math.sin(new Date().getTime() * 2 * Math.PI / period) +
+          centerX
+      );
+    }, layer);
 
     anim.start();
   });
@@ -69,12 +66,9 @@ suite('Manual', function() {
 
     var velocity = 360; // 1 rev per second
 
-    var anim = new Konva.Animation(
-      function(frame) {
-        layer.find('Rect').rotate(velocity * frame.timeDiff / 1000);
-      },
-      layer
-    );
+    var anim = new Konva.Animation(function(frame) {
+      layer.find('Rect').rotate(velocity * frame.timeDiff / 1000);
+    }, layer);
 
     anim.start();
   });
@@ -321,47 +315,46 @@ suite('Manual', function() {
   });
 
   // ======================================================
-  test(
-    'create image hit region with pixelRatio, look at hit, test hit with mouseover',
-    function(done) {
-      var imageObj = new Image();
+  test('create image hit region with pixelRatio, look at hit, test hit with mouseover', function(
+    done
+  ) {
+    var imageObj = new Image();
 
-      Konva.pixelRatio = 2;
-      var stage = addStage();
-      var layer = new Konva.Layer();
+    Konva.pixelRatio = 2;
+    var stage = addStage();
+    var layer = new Konva.Layer();
 
-      imageObj.onload = function() {
-        var lion = new Konva.Image({
-          x: 200,
-          y: 40,
-          image: imageObj,
-          draggable: true
-        });
+    imageObj.onload = function() {
+      var lion = new Konva.Image({
+        x: 200,
+        y: 40,
+        image: imageObj,
+        draggable: true
+      });
 
-        layer.add(lion);
+      layer.add(lion);
 
-        stage.add(layer);
+      stage.add(layer);
 
-        lion.cache();
-        lion.drawHitFromCache();
-        layer.draw();
+      lion.cache();
+      lion.drawHitFromCache();
+      layer.draw();
 
-        lion.on('mouseenter', function() {
-          document.body.style.cursor = 'pointer';
-        });
+      lion.on('mouseenter', function() {
+        document.body.style.cursor = 'pointer';
+      });
 
-        lion.on('mouseleave', function() {
-          document.body.style.cursor = 'default';
-        });
+      lion.on('mouseleave', function() {
+        document.body.style.cursor = 'default';
+      });
 
-        Konva.pixelRatio = undefined;
-        done();
-      };
-      imageObj.src = 'assets/lion.png';
+      Konva.pixelRatio = undefined;
+      done();
+    };
+    imageObj.src = 'assets/lion.png';
 
-      showHit(layer);
-    }
-  );
+    showHit(layer);
+  });
 
   // ======================================================
   test('image hit region with alpha threshold, mouseover circle', function(

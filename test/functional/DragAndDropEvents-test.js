@@ -71,52 +71,49 @@ suite('DragAndDropEvents', function() {
     assert(!Konva.isDragging(), ' isDragging() should be false 5');
     assert(Konva.isDragReady(), ' isDragReady()) should be true 6');
 
-    setTimeout(
-      function() {
-        stage.simulateMouseMove({
-          x: 100,
-          y: 98
-        });
+    setTimeout(function() {
+      stage.simulateMouseMove({
+        x: 100,
+        y: 98
+      });
 
-        assert(Konva.isDragging(), ' isDragging() should be true 7');
-        assert(Konva.isDragReady(), ' isDragReady()) should be true 8');
+      assert(Konva.isDragging(), ' isDragging() should be true 7');
+      assert(Konva.isDragReady(), ' isDragReady()) should be true 8');
 
-        assert(dragStart, 'dragstart event was not triggered 9');
-        //assert.equal(dragMove, 'dragmove event was not triggered');
-        assert(!dragEnd, 'dragend event should not have been triggered 10');
+      assert(dragStart, 'dragstart event was not triggered 9');
+      //assert.equal(dragMove, 'dragmove event was not triggered');
+      assert(!dragEnd, 'dragend event should not have been triggered 10');
 
-        stage.simulateMouseUp({
-          x: 100,
-          y: 98
-        });
+      stage.simulateMouseUp({
+        x: 100,
+        y: 98
+      });
 
-        assert(dragStart, 'dragstart event was not triggered 11');
-        assert(dragMove, 'dragmove event was not triggered 12');
-        assert(dragEnd, 'dragend event was not triggered 13');
+      assert(dragStart, 'dragstart event was not triggered 11');
+      assert(dragMove, 'dragmove event was not triggered 12');
+      assert(dragEnd, 'dragend event was not triggered 13');
 
-        assert.equal(
-          events.toString(),
-          'mouseup,dragend',
-          'mouseup should occur before dragend 14'
-        );
+      assert.equal(
+        events.toString(),
+        'mouseup,dragend',
+        'mouseup should occur before dragend 14'
+      );
 
-        assert(!Konva.isDragging(), ' isDragging() should be false 15');
-        assert(!Konva.isDragReady(), ' isDragReady()) should be false 16');
+      assert(!Konva.isDragging(), ' isDragging() should be false 15');
+      assert(!Konva.isDragReady(), ' isDragReady()) should be false 16');
 
-        //console.log(greenCircle.getPosition());
-        //console.log(circle.getPosition());
+      //console.log(greenCircle.getPosition());
+      //console.log(circle.getPosition());
 
-        assert.equal(greenCircle.getX(), 40, 'green circle x should be 40');
-        assert.equal(greenCircle.getY(), 40, 'green circle y should be 40');
-        assert.equal(circle.getX(), 100, 'circle x should be 100');
-        assert.equal(circle.getY(), 100, 'circle y should be 100');
+      assert.equal(greenCircle.getX(), 40, 'green circle x should be 40');
+      assert.equal(greenCircle.getY(), 40, 'green circle y should be 40');
+      assert.equal(circle.getX(), 100, 'circle x should be 100');
+      assert.equal(circle.getY(), 100, 'circle y should be 100');
 
-        showHit(layer);
+      showHit(layer);
 
-        done();
-      },
-      20
-    );
+      done();
+    }, 20);
   });
 
   // ======================================================
@@ -171,31 +168,28 @@ suite('DragAndDropEvents', function() {
 
     assert(!circle.isDragging(), 'circle should not be dragging');
 
-    setTimeout(
-      function() {
-        stage.simulateMouseMove({
-          x: 100,
-          y: 98
-        });
+    setTimeout(function() {
+      stage.simulateMouseMove({
+        x: 100,
+        y: 98
+      });
 
-        assert(circle.isDragging(), 'circle should be dragging');
-        assert(!dragEnd, 'dragEnd should not have fired yet');
+      assert(circle.isDragging(), 'circle should be dragging');
+      assert(!dragEnd, 'dragEnd should not have fired yet');
 
-        // at this point, we are in drag and drop mode
+      // at this point, we are in drag and drop mode
 
-        // removing or destroying the circle should trigger dragend
-        circle.destroy();
-        layer.draw();
+      // removing or destroying the circle should trigger dragend
+      circle.destroy();
+      layer.draw();
 
-        assert(
-          !circle.isDragging(),
-          'destroying circle should stop drag and drop'
-        );
-        assert(dragEnd, 'dragEnd should have fired');
-        done();
-      },
-      20
-    );
+      assert(
+        !circle.isDragging(),
+        'destroying circle should stop drag and drop'
+      );
+      assert(dragEnd, 'dragEnd should have fired');
+      done();
+    }, 20);
   });
 
   // ======================================================
@@ -232,24 +226,21 @@ suite('DragAndDropEvents', function() {
       y: 40
     });
 
-    setTimeout(
-      function() {
-        stage.simulateMouseMove({
-          x: 100,
-          y: 100
-        });
+    setTimeout(function() {
+      stage.simulateMouseMove({
+        x: 100,
+        y: 100
+      });
 
-        stage.simulateMouseUp({
-          x: 100,
-          y: 100
-        });
+      stage.simulateMouseUp({
+        x: 100,
+        y: 100
+      });
 
-        assert(!clicked, 'click event should not have been fired');
+      assert(!clicked, 'click event should not have been fired');
 
-        done();
-      },
-      20
-    );
+      done();
+    }, 20);
   });
 
   // ======================================================
@@ -277,27 +268,24 @@ suite('DragAndDropEvents', function() {
       y: 40
     });
 
-    setTimeout(
-      function() {
-        stage.simulateMouseMove({
-          x: 40,
-          y: 42
-        });
-        assert(!circle.isDragging(), 'still not dragging');
-        stage.simulateMouseMove({
-          x: 40,
-          y: 45
-        });
-        assert(circle.isDragging(), 'now circle is dragging');
-        stage.simulateMouseUp({
-          x: 41,
-          y: 45
-        });
+    setTimeout(function() {
+      stage.simulateMouseMove({
+        x: 40,
+        y: 42
+      });
+      assert(!circle.isDragging(), 'still not dragging');
+      stage.simulateMouseMove({
+        x: 40,
+        y: 45
+      });
+      assert(circle.isDragging(), 'now circle is dragging');
+      stage.simulateMouseUp({
+        x: 41,
+        y: 45
+      });
 
-        done();
-      },
-      20
-    );
+      done();
+    }, 20);
   });
 
   // ======================================================
@@ -347,24 +335,21 @@ suite('DragAndDropEvents', function() {
       y: 100
     });
 
-    setTimeout(
-      function() {
-        stage.simulateMouseMove({
-          x: 100,
-          y: 100
-        });
+    setTimeout(function() {
+      stage.simulateMouseMove({
+        x: 100,
+        y: 100
+      });
 
-        stage.simulateMouseUp({
-          x: 100,
-          y: 100
-        });
+      stage.simulateMouseUp({
+        x: 100,
+        y: 100
+      });
 
-        assert.equal(circle.getPosition().x, 380, 'circle x should be 380');
-        assert.equal(circle.getPosition().y, 100, 'circle y should be 100');
-        done();
-      },
-      20
-    );
+      assert.equal(circle.getPosition().x, 380, 'circle x should be 380');
+      assert.equal(circle.getPosition().y, 100, 'circle y should be 100');
+      done();
+    }, 20);
   });
 
   // ======================================================
@@ -413,27 +398,24 @@ suite('DragAndDropEvents', function() {
       y: 96
     });
 
-    setTimeout(
-      function() {
-        stage.simulateMouseMove({
-          x: 210,
-          y: 109
-        });
+    setTimeout(function() {
+      stage.simulateMouseMove({
+        x: 210,
+        y: 109
+      });
 
-        stage.simulateMouseUp({
-          x: 210,
-          y: 109
-        });
+      stage.simulateMouseUp({
+        x: 210,
+        y: 109
+      });
 
-        //console.log(layer.getPosition())
+      //console.log(layer.getPosition())
 
-        assert.equal(layer.getX(), -189, 'layer x should be -189');
-        assert.equal(layer.getY(), 13, 'layer y should be 13');
+      assert.equal(layer.getX(), -189, 'layer x should be -189');
+      assert.equal(layer.getY(), 13, 'layer y should be 13');
 
-        done();
-      },
-      20
-    );
+      done();
+    }, 20);
   });
 
   // ======================================================
@@ -475,24 +457,21 @@ suite('DragAndDropEvents', function() {
       y: 100
     });
 
-    setTimeout(
-      function() {
-        stage.simulateMouseMove({
-          x: 300,
-          y: 110
-        });
+    setTimeout(function() {
+      stage.simulateMouseMove({
+        x: 300,
+        y: 110
+      });
 
-        stage.simulateMouseUp({
-          x: 300,
-          y: 110
-        });
+      stage.simulateMouseUp({
+        x: 300,
+        y: 110
+      });
 
-        assert.equal(stage.getX(), 300);
-        assert.equal(stage.getY(), 10);
+      assert.equal(stage.getX(), 300);
+      assert.equal(stage.getY(), 10);
 
-        done();
-      },
-      20
-    );
+      done();
+    }, 20);
   });
 });

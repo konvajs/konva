@@ -103,7 +103,8 @@
     },
     addDeprecatedGetterSetter: function(constructor, attr, def, validator) {
       var method = GET + Konva.Util._capitalize(attr);
-      var message = attr +
+      var message =
+        attr +
         ' property is deprecated and will be removed soon. Look at Konva change log for more information.';
       constructor.prototype[method] = function() {
         Konva.Util.error(message);

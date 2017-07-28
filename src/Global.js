@@ -197,12 +197,11 @@
       var ua = userAgent.toLowerCase(),
         // jQuery UA regex
         match = /(chrome)[ \/]([\w.]+)/.exec(ua) ||
-          /(webkit)[ \/]([\w.]+)/.exec(ua) ||
-          /(opera)(?:.*version|)[ \/]([\w.]+)/.exec(ua) ||
-          /(msie) ([\w.]+)/.exec(ua) ||
-          ua.indexOf('compatible') < 0 &&
-            /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(ua) ||
-          [],
+        /(webkit)[ \/]([\w.]+)/.exec(ua) ||
+        /(opera)(?:.*version|)[ \/]([\w.]+)/.exec(ua) ||
+        /(msie) ([\w.]+)/.exec(ua) ||
+        (ua.indexOf('compatible') < 0 &&
+          /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(ua)) || [],
         // adding mobile flag as well
         mobile = !!userAgent.match(
           /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i
@@ -228,7 +227,7 @@
         ? window
         : typeof WorkerGlobalScope !== 'undefined' ? self : {};
 
-  Konva.UA = Konva._parseUA(glob.navigator && glob.navigator.userAgent || '');
+  Konva.UA = Konva._parseUA((glob.navigator && glob.navigator.userAgent) || '');
 
   if (glob.Konva) {
     console.error(

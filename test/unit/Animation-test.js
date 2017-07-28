@@ -21,14 +21,11 @@ suite('Animation', function() {
     // in ms
     var centerX = stage.getWidth() / 2 - 100 / 2;
 
-    var anim = new Konva.Animation(
-      function(frame) {
-        rect.setX(
-          amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX
-        );
-      },
-      layer
-    );
+    var anim = new Konva.Animation(function(frame) {
+      rect.setX(
+        amplitude * Math.sin(frame.time * 2 * Math.PI / period) + centerX
+      );
+    }, layer);
     var a = Konva.Animation.animations;
     var startLen = a.length;
 

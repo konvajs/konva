@@ -56,7 +56,7 @@ parseStatement: true, parseSourceElement: true */
     } else if (typeof exports !== 'undefined') {
       factory(exports);
     } else {
-      factory(root.esprima = {});
+      factory((root.esprima = {}));
     }
   })(this, function(exports) {
     'use strict';
@@ -283,7 +283,8 @@ parseStatement: true, parseSourceElement: true */
     // 7.2 White Space
 
     function isWhiteSpace(ch) {
-      return ch === 0x20 ||
+      return (
+        ch === 0x20 ||
         ch === 0x09 ||
         ch === 0x0b ||
         ch === 0x0c ||
@@ -307,7 +308,8 @@ parseStatement: true, parseSourceElement: true */
             0x205f,
             0x3000,
             0xfeff
-          ].indexOf(ch) >= 0);
+          ].indexOf(ch) >= 0)
+      );
     }
 
     // 7.3 Line Terminators
@@ -319,24 +321,28 @@ parseStatement: true, parseSourceElement: true */
     // 7.6 Identifier Names and Identifiers
 
     function isIdentifierStart(ch) {
-      return ch === 0x24 ||
+      return (
+        ch === 0x24 ||
         ch === 0x5f || // $ (dollar) and _ (underscore)
         (ch >= 0x41 && ch <= 0x5a) || // A..Z
         (ch >= 0x61 && ch <= 0x7a) || // a..z
         ch === 0x5c || // \ (backslash)
         (ch >= 0x80 &&
-          Regex.NonAsciiIdentifierStart.test(String.fromCharCode(ch)));
+          Regex.NonAsciiIdentifierStart.test(String.fromCharCode(ch)))
+      );
     }
 
     function isIdentifierPart(ch) {
-      return ch === 0x24 ||
+      return (
+        ch === 0x24 ||
         ch === 0x5f || // $ (dollar) and _ (underscore)
         (ch >= 0x41 && ch <= 0x5a) || // A..Z
         (ch >= 0x61 && ch <= 0x7a) || // a..z
         (ch >= 0x30 && ch <= 0x39) || // 0..9
         ch === 0x5c || // \ (backslash)
         (ch >= 0x80 &&
-          Regex.NonAsciiIdentifierPart.test(String.fromCharCode(ch)));
+          Regex.NonAsciiIdentifierPart.test(String.fromCharCode(ch)))
+      );
     }
 
     // 7.6.1.2 Future Reserved Words
@@ -391,34 +397,42 @@ parseStatement: true, parseSourceElement: true */
         case 2:
           return id === 'if' || id === 'in' || id === 'do';
         case 3:
-          return id === 'var' ||
+          return (
+            id === 'var' ||
             id === 'for' ||
             id === 'new' ||
             id === 'try' ||
-            id === 'let';
+            id === 'let'
+          );
         case 4:
-          return id === 'this' ||
+          return (
+            id === 'this' ||
             id === 'else' ||
             id === 'case' ||
             id === 'void' ||
             id === 'with' ||
-            id === 'enum';
+            id === 'enum'
+          );
         case 5:
-          return id === 'while' ||
+          return (
+            id === 'while' ||
             id === 'break' ||
             id === 'catch' ||
             id === 'throw' ||
             id === 'const' ||
             id === 'yield' ||
             id === 'class' ||
-            id === 'super';
+            id === 'super'
+          );
         case 6:
-          return id === 'return' ||
+          return (
+            id === 'return' ||
             id === 'typeof' ||
             id === 'delete' ||
             id === 'switch' ||
             id === 'export' ||
-            id === 'import';
+            id === 'import'
+          );
         case 7:
           return id === 'default' || id === 'finally' || id === 'extends';
         case 8:
@@ -635,7 +649,7 @@ parseStatement: true, parseSourceElement: true */
     function getEscapedIdentifier() {
       var ch, id;
 
-      ch = source.charCodeAt((index++));
+      ch = source.charCodeAt(index++);
       id = String.fromCharCode(ch);
 
       // '\u' (U+005C, U+0075) denotes an escaped character.
@@ -1316,10 +1330,12 @@ parseStatement: true, parseSourceElement: true */
     }
 
     function isIdentifierName(token) {
-      return token.type === Token.Identifier ||
+      return (
+        token.type === Token.Identifier ||
         token.type === Token.Keyword ||
         token.type === Token.BooleanLiteral ||
-        token.type === Token.NullLiteral;
+        token.type === Token.NullLiteral
+      );
     }
 
     function advanceSlash() {
@@ -1537,19 +1553,16 @@ parseStatement: true, parseSourceElement: true */
         } else {
           if (
             extra.bottomRightStack.length > 0 &&
-            extra.bottomRightStack[
-              extra.bottomRightStack.length - 1
-            ].trailingComments &&
-            extra.bottomRightStack[
-              extra.bottomRightStack.length - 1
-            ].trailingComments[0].range[0] >= node.range[1]
+            extra.bottomRightStack[extra.bottomRightStack.length - 1]
+              .trailingComments &&
+            extra.bottomRightStack[extra.bottomRightStack.length - 1]
+              .trailingComments[0].range[0] >= node.range[1]
           ) {
-            trailingComments = extra.bottomRightStack[
-              extra.bottomRightStack.length - 1
-            ].trailingComments;
-            delete extra.bottomRightStack[
-              extra.bottomRightStack.length - 1
-            ].trailingComments;
+            trailingComments =
+              extra.bottomRightStack[extra.bottomRightStack.length - 1]
+                .trailingComments;
+            delete extra.bottomRightStack[extra.bottomRightStack.length - 1]
+              .trailingComments;
           }
         }
 
@@ -1565,9 +1578,8 @@ parseStatement: true, parseSourceElement: true */
         if (lastChild) {
           if (
             lastChild.leadingComments &&
-            lastChild.leadingComments[
-              lastChild.leadingComments.length - 1
-            ].range[1] <= node.range[0]
+            lastChild.leadingComments[lastChild.leadingComments.length - 1]
+              .range[1] <= node.range[0]
           ) {
             node.leadingComments = lastChild.leadingComments;
             delete lastChild.leadingComments;
@@ -2085,7 +2097,8 @@ parseStatement: true, parseSourceElement: true */
         return false;
       }
       op = lookahead.value;
-      return op === '=' ||
+      return (
+        op === '=' ||
         op === '*=' ||
         op === '/=' ||
         op === '%=' ||
@@ -2096,7 +2109,8 @@ parseStatement: true, parseSourceElement: true */
         op === '>>>=' ||
         op === '&=' ||
         op === '^=' ||
-        op === '|=';
+        op === '|='
+      );
     }
 
     function consumeSemicolon() {
@@ -2122,8 +2136,9 @@ parseStatement: true, parseSourceElement: true */
     // Return true if provided expression is LeftHandSideExpression
 
     function isLeftHandSide(expr) {
-      return expr.type === Syntax.Identifier ||
-        expr.type === Syntax.MemberExpression;
+      return (
+        expr.type === Syntax.Identifier || expr.type === Syntax.MemberExpression
+      );
     }
 
     // 11.1.4 Array Initialiser
@@ -2355,7 +2370,8 @@ parseStatement: true, parseSourceElement: true */
       if (type === Token.Identifier) {
         expr = delegate.createIdentifier(lex().value);
       } else if (
-        type === Token.StringLiteral || type === Token.NumericLiteral
+        type === Token.StringLiteral ||
+        type === Token.NumericLiteral
       ) {
         if (strict && lookahead.octal) {
           throwErrorTolerant(lookahead, Messages.StrictOctalLiteral);
@@ -2558,7 +2574,8 @@ parseStatement: true, parseSourceElement: true */
       var token, expr, startToken;
 
       if (
-        lookahead.type !== Token.Punctuator && lookahead.type !== Token.Keyword
+        lookahead.type !== Token.Punctuator &&
+        lookahead.type !== Token.Keyword
       ) {
         expr = parsePostfixExpression();
       } else if (match('++') || match('--')) {
@@ -2587,7 +2604,9 @@ parseStatement: true, parseSourceElement: true */
         expr = delegate.createUnaryExpression(token.value, expr);
         expr = delegate.markEnd(expr, startToken);
       } else if (
-        matchKeyword('delete') || matchKeyword('void') || matchKeyword('typeof')
+        matchKeyword('delete') ||
+        matchKeyword('void') ||
+        matchKeyword('typeof')
       ) {
         startToken = lookahead;
         token = lex();
@@ -3963,11 +3982,13 @@ parseStatement: true, parseSourceElement: true */
       if (typeof options !== 'undefined') {
         extra.range = typeof options.range === 'boolean' && options.range;
         extra.loc = typeof options.loc === 'boolean' && options.loc;
-        extra.attachComment = typeof options.attachComment === 'boolean' &&
-          options.attachComment;
+        extra.attachComment =
+          typeof options.attachComment === 'boolean' && options.attachComment;
 
         if (
-          extra.loc && options.source !== null && options.source !== undefined
+          extra.loc &&
+          options.source !== null &&
+          options.source !== undefined
         ) {
           extra.source = toString(options.source);
         }
@@ -4049,7 +4070,8 @@ parseStatement: true, parseSourceElement: true */
 
 (function(require, module) {
   var parse = require('esprima').parse;
-  var objectKeys = Object.keys ||
+  var objectKeys =
+    Object.keys ||
     function(obj) {
       var keys = [];
       for (var key in obj)
@@ -4063,7 +4085,8 @@ parseStatement: true, parseSourceElement: true */
     }
   };
 
-  var isArray = Array.isArray ||
+  var isArray =
+    Array.isArray ||
     function(xs) {
       return Object.prototype.toString.call(xs) === '[object Array]';
     };
@@ -4230,7 +4253,8 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
       if (source) {
         for (var prop in source) {
           if (
-            dest[prop] instanceof Object && typeof dest[prop] !== 'function'
+            dest[prop] instanceof Object &&
+            typeof dest[prop] !== 'function'
           ) {
             _blanket._extend(dest[prop], source[prop]);
           } else {
@@ -4285,11 +4309,11 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
           { loc: true, comment: true },
           _blanket._addTracking(inFileName)
         );
-        instrumented = _blanket._trackingSetup(inFileName, sourceArray) +
-          instrumented;
+        instrumented =
+          _blanket._trackingSetup(inFileName, sourceArray) + instrumented;
         if (_blanket.options('sourceURL')) {
-          instrumented += '\n//@ sourceURL=' +
-            inFileName.replace('http://', '');
+          instrumented +=
+            '\n//@ sourceURL=' + inFileName.replace('http://', '');
         }
         if (_blanket.options('debug')) {
           console.log('BLANKET-Instrumented file: ', inFileName);
@@ -4324,43 +4348,35 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
       var intro = '';
       var covVar = _blanket.getCovVar();
 
-      intro += 'if (typeof ' +
-        covVar +
-        " === 'undefined') " +
-        covVar +
-        ' = {};\n';
+      intro +=
+        'if (typeof ' + covVar + " === 'undefined') " + covVar + ' = {};\n';
       if (branches) {
         intro += 'var _$branchFcn=function(f,l,c,r){ ';
         intro += 'if (!!r) { ';
-        intro += covVar +
+        intro +=
+          covVar +
           '[f].branchData[l][c][0] = ' +
           covVar +
           '[f].branchData[l][c][0] || [];';
         intro += covVar + '[f].branchData[l][c][0].push(r); }';
         intro += 'else { ';
-        intro += covVar +
+        intro +=
+          covVar +
           '[f].branchData[l][c][1] = ' +
           covVar +
           '[f].branchData[l][c][1] || [];';
         intro += covVar + '[f].branchData[l][c][1].push(r); }';
         intro += 'return r;};\n';
       }
-      intro += 'if (typeof ' +
-        covVar +
-        "['" +
-        filename +
-        "'] === 'undefined'){";
+      intro +=
+        'if (typeof ' + covVar + "['" + filename + "'] === 'undefined'){";
 
       intro += covVar + "['" + filename + "']=[];\n";
       if (branches) {
         intro += covVar + "['" + filename + "'].branchData=[];\n";
       }
-      intro += covVar +
-        "['" +
-        filename +
-        "'].source=['" +
-        sourceString +
-        "'];\n";
+      intro +=
+        covVar + "['" + filename + "'].source=['" + sourceString + "'];\n";
       //initialize array values
       _blanket._trackingArraySetup
         .sort(function(a, b) {
@@ -4379,21 +4395,24 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
           })
           .forEach(function(item) {
             if (item.file === filename) {
-              intro += 'if (typeof ' +
+              intro +=
+                'if (typeof ' +
                 covVar +
                 "['" +
                 filename +
                 "'].branchData[" +
                 item.line +
                 "] === 'undefined'){\n";
-              intro += covVar +
+              intro +=
+                covVar +
                 "['" +
                 filename +
                 "'].branchData[" +
                 item.line +
                 ']=[];\n';
               intro += '}';
-              intro += covVar +
+              intro +=
+                covVar +
                 "['" +
                 filename +
                 "'].branchData[" +
@@ -4401,7 +4420,8 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
                 '][' +
                 item.column +
                 '] = [];\n';
-              intro += covVar +
+              intro +=
+                covVar +
                 "['" +
                 filename +
                 "'].branchData[" +
@@ -4411,7 +4431,8 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
                 '].consequent = ' +
                 JSON.stringify(item.consequent) +
                 ';\n';
-              intro += covVar +
+              intro +=
+                covVar +
                 "['" +
                 filename +
                 "'].branchData[" +
@@ -4436,7 +4457,8 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
           bracketsExistAlt.update('{\n' + bracketsExistAlt.source() + '}\n');
         }
         if (
-          bracketsExistObject && bracketsExistObject.type !== 'BlockStatement'
+          bracketsExistObject &&
+          bracketsExistObject.type !== 'BlockStatement'
         ) {
           bracketsExistObject.update(
             '{\n' + bracketsExistObject.source() + '}\n'
@@ -4457,7 +4479,8 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
         alternate: node.alternate.loc
       });
 
-      var updated = '_$branchFcn' +
+      var updated =
+        '_$branchFcn' +
         "('" +
         filename +
         "'," +
@@ -4692,16 +4715,23 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
       loader += '&nbsp;</div>';
       loader += "<div class='blanketDialogVerticalOffset'>";
       loader += "<div class='blanketDialogBox'>";
-      loader += '<b>Error:</b> Blanket.js encountered a cross origin request error while instrumenting the source files.  ';
-      loader += '<br><br>This is likely caused by the source files being referenced locally (using the file:// protocol). ';
-      loader += "<br><br>Some solutions include <a href='http://askubuntu.com/questions/160245/making-google-chrome-option-allow-file-access-from-files-permanent' target='_blank'>starting Chrome with special flags</a>, <a target='_blank' href='https://github.com/remy/servedir'>running a server locally</a>, or using a browser without these CORS restrictions (Safari).";
+      loader +=
+        '<b>Error:</b> Blanket.js encountered a cross origin request error while instrumenting the source files.  ';
+      loader +=
+        '<br><br>This is likely caused by the source files being referenced locally (using the file:// protocol). ';
+      loader +=
+        "<br><br>Some solutions include <a href='http://askubuntu.com/questions/160245/making-google-chrome-option-allow-file-access-from-files-permanent' target='_blank'>starting Chrome with special flags</a>, <a target='_blank' href='https://github.com/remy/servedir'>running a server locally</a>, or using a browser without these CORS restrictions (Safari).";
       loader += '<br>';
       if (typeof FileReader !== 'undefined') {
-        loader += '<br>Or, try the experimental loader.  When prompted, simply click on the directory containing all the source files you want covered.';
-        loader += '<a href=\'javascript:document.getElementById("fileInput").click();\'>Start Loader</a>';
-        loader += "<input type='file' type='application/x-javascript' accept='application/x-javascript' webkitdirectory id='fileInput' multiple onchange='window.blanket.manualFileLoader(this.files)' style='visibility:hidden;position:absolute;top:-50;left:-50'/>";
+        loader +=
+          '<br>Or, try the experimental loader.  When prompted, simply click on the directory containing all the source files you want covered.';
+        loader +=
+          '<a href=\'javascript:document.getElementById("fileInput").click();\'>Start Loader</a>';
+        loader +=
+          "<input type='file' type='application/x-javascript' accept='application/x-javascript' webkitdirectory id='fileInput' multiple onchange='window.blanket.manualFileLoader(this.files)' style='visibility:hidden;position:absolute;top:-50;left:-50'/>";
       }
-      loader += "<br><span style='float:right;cursor:pointer;'  onclick=document.getElementById('blanketLoaderDialog').style.display='none';>Close</span>";
+      loader +=
+        "<br><span style='float:right;cursor:pointer;'  onclick=document.getElementById('blanketLoaderDialog').style.display='none';>Close</span>";
       loader += "<div style='clear:both'></div>";
       loader += '</div></div>';
 
@@ -4716,7 +4746,8 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
       css += 'height:100%;';
       css += 'background-color:black;';
       css += 'opacity:.5; ';
-      css += "-ms-filter:'progid:DXImageTransform.Microsoft.Alpha(Opacity=50)'; ";
+      css +=
+        "-ms-filter:'progid:DXImageTransform.Microsoft.Alpha(Opacity=50)'; ";
       css += 'filter:alpha(opacity=50); ';
       css += 'z-index:40001; }';
 
@@ -4793,9 +4824,8 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
       var script = document.createElement('script');
       script.type = 'text/javascript';
       script.text = data;
-      (document.body || document.getElementsByTagName('head')[0]).appendChild(
-        script
-      );
+      (document.body || document.getElementsByTagName('head')[0])
+        .appendChild(script);
     },
     hasAdapter: function(callback) {
       return _blanket.options('adapter') !== null;
@@ -4886,19 +4916,16 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
         });
 
         var currScript = -1;
-        _blanket.utils.loadAll(
-          function(test) {
-            if (test) {
-              return typeof scripts[currScript + 1] !== 'undefined';
-            }
-            currScript++;
-            if (currScript >= scripts.length) {
-              return null;
-            }
-            return scripts[currScript];
-          },
-          callback
-        );
+        _blanket.utils.loadAll(function(test) {
+          if (test) {
+            return typeof scripts[currScript + 1] !== 'undefined';
+          }
+          currScript++;
+          if (currScript >= scripts.length) {
+            return null;
+          }
+          return scripts[currScript];
+        }, callback);
       }
     },
     beforeStartTestRunner: function(opts) {
@@ -4960,7 +4987,8 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
 })(blanket);
 
 blanket.defaultReporter = function(coverage) {
-  var cssSytle = "#blanket-main {margin:2px;background:#EEE;color:#333;clear:both;font-family:'Helvetica Neue Light', 'HelveticaNeue-Light', 'Helvetica Neue', Calibri, Helvetica, Arial, sans-serif; font-size:17px;} #blanket-main a {color:#333;text-decoration:none;}  #blanket-main a:hover {text-decoration:underline;} .blanket {margin:0;padding:5px;clear:both;border-bottom: 1px solid #FFFFFF;} .bl-error {color:red;}.bl-success {color:#5E7D00;} .bl-file{width:auto;} .bl-cl{float:left;} .blanket div.rs {margin-left:50px; width:150px; float:right} .bl-nb {padding-right:10px;} #blanket-main a.bl-logo {color: #EB1764;cursor: pointer;font-weight: bold;text-decoration: none} .bl-source{ overflow-x:scroll; background-color: #FFFFFF; border: 1px solid #CBCBCB; color: #363636; margin: 25px 20px; width: 80%;} .bl-source div{white-space: pre;font-family: monospace;} .bl-source > div > span:first-child{background-color: #EAEAEA;color: #949494;display: inline-block;padding: 0 10px;text-align: center;width: 30px;} .bl-source .miss{background-color:#e6c3c7} .bl-source span.branchWarning{color:#000;background-color:yellow;} .bl-source span.branchOkay{color:#000;background-color:transparent;}",
+  var cssSytle =
+    "#blanket-main {margin:2px;background:#EEE;color:#333;clear:both;font-family:'Helvetica Neue Light', 'HelveticaNeue-Light', 'Helvetica Neue', Calibri, Helvetica, Arial, sans-serif; font-size:17px;} #blanket-main a {color:#333;text-decoration:none;}  #blanket-main a:hover {text-decoration:underline;} .blanket {margin:0;padding:5px;clear:both;border-bottom: 1px solid #FFFFFF;} .bl-error {color:red;}.bl-success {color:#5E7D00;} .bl-file{width:auto;} .bl-cl{float:left;} .blanket div.rs {margin-left:50px; width:150px; float:right} .bl-nb {padding-right:10px;} #blanket-main a.bl-logo {color: #EB1764;cursor: pointer;font-weight: bold;text-decoration: none} .bl-source{ overflow-x:scroll; background-color: #FFFFFF; border: 1px solid #CBCBCB; color: #363636; margin: 25px 20px; width: 80%;} .bl-source div{white-space: pre;font-family: monospace;} .bl-source > div > span:first-child{background-color: #EAEAEA;color: #949494;display: inline-block;padding: 0 10px;text-align: center;width: 30px;} .bl-source .miss{background-color:#e6c3c7} .bl-source span.branchWarning{color:#000;background-color:yellow;} .bl-source span.branchOkay{color:#000;background-color:transparent;}",
     successRate = 60,
     head = document.head,
     fileNumber = 0,
@@ -4969,17 +4997,20 @@ blanket.defaultReporter = function(coverage) {
     hasBranchTracking = Object.keys(coverage.files).some(function(elem) {
       return typeof coverage.files[elem].branchData !== 'undefined';
     }),
-    bodyContent = "<div id='blanket-main'><div class='blanket bl-title'><div class='bl-cl bl-file'><a href='http://alex-seville.github.com/blanket/' target='_blank' class='bl-logo'>Blanket.js</a> results</div><div class='bl-cl rs'>Coverage (%)</div><div class='bl-cl rs'>Covered/Total Smts.</div>" +
+    bodyContent =
+      "<div id='blanket-main'><div class='blanket bl-title'><div class='bl-cl bl-file'><a href='http://alex-seville.github.com/blanket/' target='_blank' class='bl-logo'>Blanket.js</a> results</div><div class='bl-cl rs'>Coverage (%)</div><div class='bl-cl rs'>Covered/Total Smts.</div>" +
       (hasBranchTracking
         ? "<div class='bl-cl rs'>Covered/Total Branches</div>"
         : '') +
       "<div style='clear:both;'></div></div>",
-    fileTemplate = "<div class='blanket {{statusclass}}'><div class='bl-cl bl-file'><span class='bl-nb'>{{fileNumber}}.</span><a href='javascript:blanket_toggleSource(\"file-{{fileNumber}}\")'>{{file}}</a></div><div class='bl-cl rs'>{{percentage}} %</div><div class='bl-cl rs'>{{numberCovered}}/{{totalSmts}}</div>" +
+    fileTemplate =
+      "<div class='blanket {{statusclass}}'><div class='bl-cl bl-file'><span class='bl-nb'>{{fileNumber}}.</span><a href='javascript:blanket_toggleSource(\"file-{{fileNumber}}\")'>{{file}}</a></div><div class='bl-cl rs'>{{percentage}} %</div><div class='bl-cl rs'>{{numberCovered}}/{{totalSmts}}</div>" +
       (hasBranchTracking
         ? "<div class='bl-cl rs'>{{passedBranches}}/{{totalBranches}}</div>"
         : '') +
       "<div id='file-{{fileNumber}}' class='bl-source' style='display:none;'>{{source}}</div><div style='clear:both;'></div></div>";
-  grandTotalTemplate = "<div class='blanket grand-total {{statusclass}}'><div class='bl-cl'>{{rowTitle}}</div><div class='bl-cl rs'>{{percentage}} %</div><div class='bl-cl rs'>{{numberCovered}}/{{totalSmts}}</div>" +
+  grandTotalTemplate =
+    "<div class='blanket grand-total {{statusclass}}'><div class='bl-cl'>{{rowTitle}}</div><div class='bl-cl rs'>{{percentage}} %</div><div class='bl-cl rs'>{{numberCovered}}/{{totalSmts}}</div>" +
     (hasBranchTracking
       ? "<div class='bl-cl rs'>{{passedBranches}}/{{totalBranches}}</div>"
       : '') +
@@ -5041,7 +5072,8 @@ blanket.defaultReporter = function(coverage) {
     var newsrc = '';
     var postfix = '';
     if (branchStack.length > 0) {
-      newsrc += "<span class='" +
+      newsrc +=
+        "<span class='" +
         (isBranchFollowed(
           branchStack[0][1],
           branchStack[0][1].consequent === branchStack[0][0]
@@ -5050,21 +5082,23 @@ blanket.defaultReporter = function(coverage) {
           : 'branchWarning') +
         "'>";
       if (branchStack[0][0].end.line === lineNum) {
-        newsrc += escapeInvalidXmlChars(
-          src.slice(0, branchStack[0][0].end.column)
-        ) + '</span>';
+        newsrc +=
+          escapeInvalidXmlChars(src.slice(0, branchStack[0][0].end.column)) +
+          '</span>';
         src = src.slice(branchStack[0][0].end.column);
         branchStack.shift();
         if (branchStack.length > 0) {
-          newsrc += "<span class='" +
+          newsrc +=
+            "<span class='" +
             (isBranchFollowed(branchStack[0][1], false)
               ? 'branchOkay'
               : 'branchWarning') +
             "'>";
           if (branchStack[0][0].end.line === lineNum) {
-            newsrc += escapeInvalidXmlChars(
-              src.slice(0, branchStack[0][0].end.column)
-            ) + '</span>';
+            newsrc +=
+              escapeInvalidXmlChars(
+                src.slice(0, branchStack[0][0].end.column)
+              ) + '</span>';
             src = src.slice(branchStack[0][0].end.column);
             branchStack.shift();
             if (!cols) {
@@ -5099,12 +5133,12 @@ blanket.defaultReporter = function(coverage) {
       branchStack.unshift([cons, thisline]);
       src = escapeInvalidXmlChars(src);
     } else {
-      var style = "<span class='" +
+      var style =
+        "<span class='" +
         (isBranchFollowed(thisline, true) ? 'branchOkay' : 'branchWarning') +
         "'>";
-      newsrc += escapeInvalidXmlChars(
-        src.slice(0, cons.start.column - offset)
-      ) + style;
+      newsrc +=
+        escapeInvalidXmlChars(src.slice(0, cons.start.column - offset)) + style;
 
       if (
         cols.length > colsIndex + 1 &&
@@ -5138,7 +5172,8 @@ blanket.defaultReporter = function(coverage) {
         newsrc += escapeInvalidXmlChars(
           src.slice(cons.end.column - offset, alt.start.column - offset)
         );
-        style = "<span class='" +
+        style =
+          "<span class='" +
           (isBranchFollowed(thisline, false) ? 'branchOkay' : 'branchWarning') +
           "'>";
         newsrc += style;
@@ -5210,7 +5245,8 @@ blanket.defaultReporter = function(coverage) {
       var src = statsForFile.source[i];
 
       if (
-        branchStack.length > 0 || typeof statsForFile.branchData !== 'undefined'
+        branchStack.length > 0 ||
+        typeof statsForFile.branchData !== 'undefined'
       ) {
         if (typeof statsForFile.branchData[i + 1] !== 'undefined') {
           var cols = statsForFile.branchData[i + 1].filter(isUndefined);
@@ -5236,7 +5272,8 @@ blanket.defaultReporter = function(coverage) {
           lineClass = 'miss';
         }
       }
-      code[i + 1] = "<div class='" +
+      code[i + 1] =
+        "<div class='" +
         lineClass +
         "'><span class=''>" +
         (i + 1) +
@@ -5343,14 +5380,12 @@ blanket.defaultReporter = function(coverage) {
     for (var thisModuleName in totals.moduleTotalStatements) {
       if (totals.moduleTotalStatements.hasOwnProperty(thisModuleName)) {
         var moduleTotalSt = totals.moduleTotalStatements[thisModuleName];
-        var moduleTotalCovSt = totals.moduleTotalCoveredStatements[
-          thisModuleName
-        ];
+        var moduleTotalCovSt =
+          totals.moduleTotalCoveredStatements[thisModuleName];
 
         var moduleTotalBr = totals.moduleTotalBranches[thisModuleName];
-        var moduleTotalCovBr = totals.moduleTotalCoveredBranches[
-          thisModuleName
-        ];
+        var moduleTotalCovBr =
+          totals.moduleTotalCoveredBranches[thisModuleName];
 
         createAggregateTotal(
           moduleTotalSt,
@@ -5497,9 +5532,10 @@ blanket.defaultReporter = function(coverage) {
           } else if (pattern.indexOf('#') === 0) {
             return window[pattern.slice(1)].call(window, filename);
           } else {
-            return filename.indexOf(
-              _blanket.utils.normalizeBackslashes(pattern)
-            ) > -1;
+            return (
+              filename.indexOf(_blanket.utils.normalizeBackslashes(pattern)) >
+              -1
+            );
           }
         } else if (pattern instanceof Array) {
           return pattern.some(function(elem) {
@@ -5523,15 +5559,19 @@ blanket.defaultReporter = function(coverage) {
           //global filter in place, data-cover-only
           var antimatch = _blanket.options('antifilter');
           selectedScripts = toArray.call(document.scripts).filter(function(s) {
-            return toArray.call(s.attributes).filter(function(sn) {
-              return sn.nodeName === 'src' &&
-                _blanket.utils.matchPatternAttribute(sn.nodeValue, filter) &&
-                (typeof antimatch === 'undefined' ||
-                  !_blanket.utils.matchPatternAttribute(
-                    sn.nodeValue,
-                    antimatch
-                  ));
-            }).length === 1;
+            return (
+              toArray.call(s.attributes).filter(function(sn) {
+                return (
+                  sn.nodeName === 'src' &&
+                  _blanket.utils.matchPatternAttribute(sn.nodeValue, filter) &&
+                  (typeof antimatch === 'undefined' ||
+                    !_blanket.utils.matchPatternAttribute(
+                      sn.nodeValue,
+                      antimatch
+                    ))
+                );
+              }).length === 1
+            );
           });
         } else {
           selectedScripts = toArray.call(
@@ -5610,14 +5650,11 @@ blanket.defaultReporter = function(coverage) {
       },
       attachScript: function(options, cb) {
         var timeout = _blanket.options('timeout') || 3000;
-        setTimeout(
-          function() {
-            if (!_blanket.utils.cache[options.url].loaded) {
-              throw new Error('error loading source script');
-            }
-          },
-          timeout
-        );
+        setTimeout(function() {
+          if (!_blanket.utils.cache[options.url].loaded) {
+            throw new Error('error loading source script');
+          }
+        }, timeout);
         _blanket.utils.getFile(options.url, cb, function() {
           throw new Error('error loading source script');
         });
@@ -5838,7 +5875,8 @@ blanket.defaultReporter = function(coverage) {
       ? blanket._commonjs.requirejs
       : window.requirejs;
     if (
-      !_blanket.options('engineOnly') && _blanket.options('existingRequireJS')
+      !_blanket.options('engineOnly') &&
+      _blanket.options('existingRequireJS')
     ) {
       _blanket.utils.oldloader = requirejs.load;
 

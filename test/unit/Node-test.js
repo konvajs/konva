@@ -1512,154 +1512,145 @@ suite('Node', function() {
   });
 
   // ======================================================
-  test(
-    'test getPosition and getAbsolutePosition for shape inside transformed stage',
-    function() {
-      var stage = addStage();
-      var layer = new Konva.Layer();
-      var rect = new Konva.Rect({
-        x: 200,
-        y: 20,
-        width: 100,
-        height: 50,
-        fill: 'red',
-        stroke: 'black',
-        strokeWidth: 4,
-        draggable: true
-      });
+  test('test getPosition and getAbsolutePosition for shape inside transformed stage', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var rect = new Konva.Rect({
+      x: 200,
+      y: 20,
+      width: 100,
+      height: 50,
+      fill: 'red',
+      stroke: 'black',
+      strokeWidth: 4,
+      draggable: true
+    });
 
-      layer.add(rect);
-      stage.add(layer);
+    layer.add(rect);
+    stage.add(layer);
 
-      stage.rotate(180 / 3);
-      stage.setScale({ x: 0.5, y: 0.5 });
+    stage.rotate(180 / 3);
+    stage.setScale({ x: 0.5, y: 0.5 });
 
-      stage.draw();
+    stage.draw();
 
-      assert.equal(rect.getPosition().x, 200);
-      assert.equal(rect.getPosition().y, 20);
+    assert.equal(rect.getPosition().x, 200);
+    assert.equal(rect.getPosition().y, 20);
 
-      assert.equal(Math.round(rect.getAbsolutePosition().x), 41);
-      assert.equal(Math.round(rect.getAbsolutePosition().y), 92);
-    }
-  );
+    assert.equal(Math.round(rect.getAbsolutePosition().x), 41);
+    assert.equal(Math.round(rect.getAbsolutePosition().y), 92);
+  });
 
   // ======================================================
-  test(
-    'test consecutive getAbsolutePositions()s when shape has offset',
-    function() {
-      var stage = addStage();
-      var layer = new Konva.Layer();
-      var rect = new Konva.Rect({
-        x: 200,
-        y: 20,
-        width: 100,
-        height: 50,
-        fill: 'red',
-        stroke: 'black',
-        strokeWidth: 4,
-        draggable: true,
-        offsetX: 30,
-        offsetY: 30
-        //rotationDeg: 60
-        //rotationDeg: Math.PI / 3
-      });
+  test('test consecutive getAbsolutePositions()s when shape has offset', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var rect = new Konva.Rect({
+      x: 200,
+      y: 20,
+      width: 100,
+      height: 50,
+      fill: 'red',
+      stroke: 'black',
+      strokeWidth: 4,
+      draggable: true,
+      offsetX: 30,
+      offsetY: 30
+      //rotationDeg: 60
+      //rotationDeg: Math.PI / 3
+    });
 
-      layer.add(rect);
-      stage.add(layer);
+    layer.add(rect);
+    stage.add(layer);
 
-      assert(
-        rect.getAbsolutePosition().x === 200 &&
-          rect.getAbsolutePosition().y === 20,
-        'absolute position should be 200, 20'
-      );
-      assert(
-        rect.getAbsolutePosition().x === 200 &&
-          rect.getAbsolutePosition().y === 20,
-        'absolute position should be 200, 20'
-      );
-      assert(
-        rect.getAbsolutePosition().x === 200 &&
-          rect.getAbsolutePosition().y === 20,
-        'absolute position should be 200, 20'
-      );
-      assert(
-        rect.getAbsolutePosition().x === 200 &&
-          rect.getAbsolutePosition().y === 20,
-        'absolute position should be 200, 20'
-      );
-      assert(
-        rect.getAbsolutePosition().x === 200 &&
-          rect.getAbsolutePosition().y === 20,
-        'absolute position should be 200, 20'
-      );
-    }
-  );
+    assert(
+      rect.getAbsolutePosition().x === 200 &&
+        rect.getAbsolutePosition().y === 20,
+      'absolute position should be 200, 20'
+    );
+    assert(
+      rect.getAbsolutePosition().x === 200 &&
+        rect.getAbsolutePosition().y === 20,
+      'absolute position should be 200, 20'
+    );
+    assert(
+      rect.getAbsolutePosition().x === 200 &&
+        rect.getAbsolutePosition().y === 20,
+      'absolute position should be 200, 20'
+    );
+    assert(
+      rect.getAbsolutePosition().x === 200 &&
+        rect.getAbsolutePosition().y === 20,
+      'absolute position should be 200, 20'
+    );
+    assert(
+      rect.getAbsolutePosition().x === 200 &&
+        rect.getAbsolutePosition().y === 20,
+      'absolute position should be 200, 20'
+    );
+  });
 
   // ======================================================
-  test(
-    'test getPosition and getAbsolutePosition for transformed parent with offset offset',
-    function() {
-      var side = 100;
-      var diagonal = Math.sqrt(side * side * 2);
+  test('test getPosition and getAbsolutePosition for transformed parent with offset offset', function() {
+    var side = 100;
+    var diagonal = Math.sqrt(side * side * 2);
 
-      var stage = addStage();
-      var layer = new Konva.Layer({
-        name: 'layerName',
-        id: 'layerId'
-      });
-      var group = new Konva.Group({
-        name: 'groupName',
-        id: 'groupId',
-        rotation: 45,
-        offset: { x: side / 2, y: side / 2 },
-        x: diagonal / 2,
-        y: diagonal / 2
-      });
-      var rect = new Konva.Rect({
-        x: 0,
-        y: 0,
-        width: side,
-        height: side,
-        fill: 'red',
-        name: 'rectName',
-        id: 'rectId'
-      });
-      var marker = new Konva.Rect({
-        x: side,
-        y: 0,
-        width: 1,
-        height: 1,
-        fill: 'blue',
-        stroke: 'blue',
-        strokeWidth: 4,
-        name: 'markerName',
-        id: 'markerId'
-      });
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      name: 'layerName',
+      id: 'layerId'
+    });
+    var group = new Konva.Group({
+      name: 'groupName',
+      id: 'groupId',
+      rotation: 45,
+      offset: { x: side / 2, y: side / 2 },
+      x: diagonal / 2,
+      y: diagonal / 2
+    });
+    var rect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: side,
+      height: side,
+      fill: 'red',
+      name: 'rectName',
+      id: 'rectId'
+    });
+    var marker = new Konva.Rect({
+      x: side,
+      y: 0,
+      width: 1,
+      height: 1,
+      fill: 'blue',
+      stroke: 'blue',
+      strokeWidth: 4,
+      name: 'markerName',
+      id: 'markerId'
+    });
 
-      group.add(rect);
-      group.add(marker);
-      layer.add(group);
-      stage.add(layer);
+    group.add(rect);
+    group.add(marker);
+    layer.add(group);
+    stage.add(layer);
 
-      assert.equal(
-        Math.round(marker.getAbsolutePosition().x),
-        Math.round(diagonal),
-        'marker absolute position x should be about ' +
-          Math.round(diagonal) +
-          ' but is about ' +
-          Math.round(marker.getAbsolutePosition().x)
-      );
-      assert.equal(
-        Math.round(marker.getAbsolutePosition().y),
-        Math.round(diagonal / 2),
-        'marker absolute position y should be about ' +
-          Math.round(diagonal / 2) +
-          ' but is about ' +
-          Math.round(marker.getAbsolutePosition().y)
-      );
-    }
-  );
+    assert.equal(
+      Math.round(marker.getAbsolutePosition().x),
+      Math.round(diagonal),
+      'marker absolute position x should be about ' +
+        Math.round(diagonal) +
+        ' but is about ' +
+        Math.round(marker.getAbsolutePosition().x)
+    );
+    assert.equal(
+      Math.round(marker.getAbsolutePosition().y),
+      Math.round(diagonal / 2),
+      'marker absolute position y should be about ' +
+        Math.round(diagonal / 2) +
+        ' but is about ' +
+        Math.round(marker.getAbsolutePosition().y)
+    );
+  });
 
   // ======================================================
   test('test relative getAbsolutePosition for transformed parent ', function() {
@@ -2062,82 +2053,76 @@ suite('Node', function() {
     assert.equal(fired, true);
   });
   // ======================================================
-  test(
-    'move shape, group, and layer, and then get absolute position',
-    function() {
-      var stage = addStage();
-      var layer = new Konva.Layer();
-      var group = new Konva.Group();
+  test('move shape, group, and layer, and then get absolute position', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var group = new Konva.Group();
 
-      var circle = new Konva.Circle({
-        x: stage.getWidth() / 2,
-        y: stage.getHeight() / 2,
-        radius: 70,
-        fill: 'green',
-        stroke: 'black',
-        strokeWidth: 4
-      });
+    var circle = new Konva.Circle({
+      x: stage.getWidth() / 2,
+      y: stage.getHeight() / 2,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4
+    });
 
-      group.add(circle);
-      layer.add(group);
-      stage.add(layer);
+    group.add(circle);
+    layer.add(group);
+    stage.add(layer);
 
-      circle.setPosition({ x: 100, y: 0 });
-      group.setPosition({ x: 100, y: 0 });
-      layer.setPosition({ x: 100, y: 0 });
+    circle.setPosition({ x: 100, y: 0 });
+    group.setPosition({ x: 100, y: 0 });
+    layer.setPosition({ x: 100, y: 0 });
 
-      // test relative positions
-      assert.equal(circle.getPosition().x, 100);
-      assert.equal(group.getPosition().x, 100);
-      assert.equal(layer.getPosition().x, 100);
+    // test relative positions
+    assert.equal(circle.getPosition().x, 100);
+    assert.equal(group.getPosition().x, 100);
+    assert.equal(layer.getPosition().x, 100);
 
-      // test absolute positions
-      assert.equal(circle.getAbsolutePosition().x, 300);
-      assert.equal(group.getAbsolutePosition().x, 200);
-      assert.equal(layer.getAbsolutePosition().x, 100);
+    // test absolute positions
+    assert.equal(circle.getAbsolutePosition().x, 300);
+    assert.equal(group.getAbsolutePosition().x, 200);
+    assert.equal(layer.getAbsolutePosition().x, 100);
 
-      layer.draw();
-    }
-  );
+    layer.draw();
+  });
 
   // ======================================================
-  test(
-    'scale layer, rotate group, position shape, and then get absolute position',
-    function() {
-      var stage = addStage();
-      var layer = new Konva.Layer({
-        scale: {
-          x: 2,
-          y: 2
-        }
-      });
-      var group = new Konva.Group({
-        x: 100,
-        rotation: 90
-      });
+  test('scale layer, rotate group, position shape, and then get absolute position', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      scale: {
+        x: 2,
+        y: 2
+      }
+    });
+    var group = new Konva.Group({
+      x: 100,
+      rotation: 90
+    });
 
-      var rect = new Konva.Rect({
-        x: 50,
-        y: 10,
-        width: 100,
-        height: 50,
-        fill: 'green',
-        stroke: 'black',
-        strokeWidth: 4,
-        draggable: true
-      });
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 10,
+      width: 100,
+      height: 50,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      draggable: true
+    });
 
-      group.add(rect);
-      layer.add(group);
-      stage.add(layer);
+    group.add(rect);
+    layer.add(group);
+    stage.add(layer);
 
-      // test absolute positions
-      assert.equal(rect.getAbsolutePosition().x, 180);
-      assert.equal(rect.getAbsolutePosition().y, 100);
+    // test absolute positions
+    assert.equal(rect.getAbsolutePosition().x, 180);
+    assert.equal(rect.getAbsolutePosition().y, 100);
 
-      layer.draw();
-    }
-  );
+    layer.draw();
+  });
 
   // ======================================================
   test('hide show circle', function() {
@@ -2359,7 +2344,8 @@ suite('Node', function() {
     group.add(circle);
     layer.draw();
 
-    var expectedJson = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true},"className":"Circle"}]}]}]}';
+    var expectedJson =
+      '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true},"className":"Circle"}]}]}]}';
 
     assert.equal(stage.toJSON(), expectedJson);
   });
@@ -2385,7 +2371,8 @@ suite('Node', function() {
     group.add(circle);
     layer.draw();
 
-    var expectedJson = '{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true},"className":"Circle"}';
+    var expectedJson =
+      '{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true},"className":"Circle"}';
 
     assert.equal(circle.toJSON(), expectedJson);
   });
@@ -2421,7 +2408,8 @@ suite('Node', function() {
       }
     });
 
-    var expectedJson = '{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true,"customAttr":3,"customAttrObj":{"x":1,"y":5,"size":{"width":10,"height":20}}},"className":"Circle"}';
+    var expectedJson =
+      '{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true,"customAttr":3,"customAttrObj":{"x":1,"y":5,"size":{"width":10,"height":20}}},"className":"Circle"}';
 
     assert.equal(circle.toJSON(), expectedJson);
   });
@@ -2429,7 +2417,8 @@ suite('Node', function() {
   // ======================================================
   test('load stage using json', function() {
     var container = addContainer();
-    var json = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true},"className":"Shape"}]}]}]}';
+    var json =
+      '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"x":289,"y":100,"radius":70,"fill":"green","stroke":"black","strokeWidth":4,"name":"myCircle","draggable":true},"className":"Shape"}]}]}]}';
     var stage = Konva.Node.create(json, container);
 
     assert.equal(stage.toJSON(), json);
@@ -2474,7 +2463,8 @@ suite('Node', function() {
 
     assert.equal(triangle.getId(), 'myTriangle');
 
-    var expectedJson = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"className":"Shape"}]}]}]}';
+    var expectedJson =
+      '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle"},"className":"Shape"}]}]}]}';
 
     assert.equal(stage.toJSON(), expectedJson);
 
@@ -2493,7 +2483,8 @@ suite('Node', function() {
       context.closePath();
       context.fillStrokeShape(this);
     };
-    var json = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle","customAttrObj":{"x":1,"y":5,"size":{"width":10,"height":20}}},"className":"Shape"}]}]}]}';
+    var json =
+      '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle","customAttrObj":{"x":1,"y":5,"size":{"width":10,"height":20}}},"className":"Shape"}]}]}]}';
 
     var stage = Konva.Node.create(json, container);
 
@@ -2525,7 +2516,8 @@ suite('Node', function() {
 
       layer.add(darth);
       stage.add(layer);
-      var json = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"x":200,"y":60,"offsetX":50,"offsetY":150,"id":"darth"},"className":"Image"}]}]}';
+      var json =
+        '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"x":200,"y":60,"offsetX":50,"offsetY":150,"id":"darth"},"className":"Image"}]}]}';
 
       assert.equal(stage.toJSON(), json);
 
@@ -2539,7 +2531,8 @@ suite('Node', function() {
     var imageObj = new Image();
     var container = addContainer();
     imageObj.onload = function() {
-      var json = '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"x":200,"y":60,"offsetX":50,"offsetY":150,"id":"darth"},"className":"Image"}]}]}';
+      var json =
+        '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"x":200,"y":60,"offsetX":50,"offsetY":150,"id":"darth"},"className":"Image"}]}]}';
       var stage = Konva.Node.create(json, container);
 
       assert.equal(stage.toJSON(), json);
@@ -2610,33 +2603,30 @@ suite('Node', function() {
   });
 
   // ======================================================
-  test(
-    'memory leak test for destroy and a shape with several names',
-    function() {
-      var stage = addStage();
-      var layer = new Konva.Layer();
-      var circle = new Konva.Circle({
-        x: stage.getWidth() / 2,
-        y: stage.getHeight() / 2,
-        radius: 70,
-        fill: 'green',
-        stroke: 'black',
-        strokeWidth: 4,
-        name: 'my-new-shape my-new-circle'
-      });
+  test('memory leak test for destroy and a shape with several names', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({
+      x: stage.getWidth() / 2,
+      y: stage.getHeight() / 2,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'my-new-shape my-new-circle'
+    });
 
-      layer.add(circle);
-      stage.add(layer);
+    layer.add(circle);
+    stage.add(layer);
 
-      assert.equal(Konva.names['my-new-shape'].length, 1);
-      assert.equal(Konva.names['my-new-circle'].length, 1);
+    assert.equal(Konva.names['my-new-shape'].length, 1);
+    assert.equal(Konva.names['my-new-circle'].length, 1);
 
-      circle.destroy();
+    circle.destroy();
 
-      assert.equal(Konva.names['my-new-shape'], undefined);
-      assert.equal(Konva.names['my-new-circle'], undefined);
-    }
-  );
+    assert.equal(Konva.names['my-new-shape'], undefined);
+    assert.equal(Konva.names['my-new-circle'], undefined);
+  });
 
   // ======================================================
   test('destroy shape without adding its parent to stage', function() {

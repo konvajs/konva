@@ -5,7 +5,8 @@
     context = canvas.getContext('2d'),
     _pixelRatio = (function() {
       var devicePixelRatio = Konva.window.devicePixelRatio || 1,
-        backingStoreRatio = context.webkitBackingStorePixelRatio ||
+        backingStoreRatio =
+          context.webkitBackingStorePixelRatio ||
           context.mozBackingStorePixelRatio ||
           context.msBackingStorePixelRatio ||
           context.oBackingStorePixelRatio ||

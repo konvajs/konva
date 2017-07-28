@@ -245,44 +245,41 @@ suite('Layer', function() {
   });
 
   // ======================================================
-  test(
-    'set clearBeforeDraw to false, and test toDataURL for stage, layer, group, and shape',
-    function() {
-      var stage = addStage();
+  test('set clearBeforeDraw to false, and test toDataURL for stage, layer, group, and shape', function() {
+    var stage = addStage();
 
-      var layer = new Konva.Layer({
-        clearBeforeDraw: false,
-        throttle: 999
-      });
+    var layer = new Konva.Layer({
+      clearBeforeDraw: false,
+      throttle: 999
+    });
 
-      var group = new Konva.Group();
+    var group = new Konva.Group();
 
-      var circle = new Konva.Circle({
-        x: 100,
-        y: stage.getHeight() / 2,
-        radius: 70,
-        fill: 'green',
-        stroke: 'black',
-        strokeWidth: 4
-      });
+    var circle = new Konva.Circle({
+      x: 100,
+      y: stage.getHeight() / 2,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4
+    });
 
-      group.add(circle);
-      layer.add(group);
-      stage.add(layer);
+    group.add(circle);
+    layer.add(group);
+    stage.add(layer);
 
-      for (var n = 0; n < 20; n++) {
-        circle.move({ x: 10, y: 0 });
-        layer.draw();
-      }
-
-      var trace = layer.getContext().getTrace();
-      //console.log(trace);
-      assert.equal(
-        trace,
-        'save();transform(1,0,0,1,220,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,230,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,240,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,250,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,260,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,270,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,280,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,290,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,300,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();'
-      );
+    for (var n = 0; n < 20; n++) {
+      circle.move({ x: 10, y: 0 });
+      layer.draw();
     }
-  );
+
+    var trace = layer.getContext().getTrace();
+    //console.log(trace);
+    assert.equal(
+      trace,
+      'save();transform(1,0,0,1,220,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,230,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,240,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,250,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,260,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,270,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,280,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,290,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,300,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();'
+    );
+  });
 
   // ======================================================
   test('save layer as png', function() {

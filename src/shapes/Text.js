@@ -241,8 +241,8 @@
          * @returns {Number}
          */
     getHeight: function() {
-      var isAuto = this.attrs.height === AUTO ||
-        this.attrs.height === undefined;
+      var isAuto =
+        this.attrs.height === AUTO || this.attrs.height === undefined;
       return isAuto
         ? this.getTextHeight() * this.textArr.length * this.getLineHeight() +
             this.getPadding() * 2
@@ -285,19 +285,23 @@
       // removing font variant will solve
       // fix for: https://github.com/konvajs/konva/issues/94
       if (Konva.UA.isIE) {
-        return this.getFontStyle() +
+        return (
+          this.getFontStyle() +
           SPACE +
           this.getFontSize() +
           PX_SPACE +
-          this.getFontFamily();
+          this.getFontFamily()
+        );
       }
-      return this.getFontStyle() +
+      return (
+        this.getFontStyle() +
         SPACE +
         this.getFontVariant() +
         SPACE +
         this.getFontSize() +
         PX_SPACE +
-        this.getFontFamily();
+        this.getFontFamily()
+      );
     },
     _addTextLine: function(line) {
       if (this.align() === JUSTIFY) {
@@ -309,8 +313,10 @@
     _getTextWidth: function(text) {
       var latterSpacing = this.getLetterSpacing();
       var length = text.length;
-      return dummyContext.measureText(text).width +
-        (length ? latterSpacing * (length - 1) : 0);
+      return (
+        dummyContext.measureText(text).width +
+        (length ? latterSpacing * (length - 1) : 0)
+      );
     },
     _setTextData: function() {
       var lines = this.getText().split('\n'),
@@ -348,7 +354,7 @@
                          */
             var low = 0, high = line.length, match = '', matchWidth = 0;
             while (low < high) {
-              var mid = low + high >>> 1,
+              var mid = (low + high) >>> 1,
                 substr = line.slice(0, mid + 1),
                 substrWidth = this._getTextWidth(substr);
               if (substrWidth <= maxWidth) {
@@ -368,10 +374,9 @@
               // a fitting substring was found
               if (wrapAtWord) {
                 // try to find a space or dash where wrapping could be done
-                var wrapIndex = Math.max(
-                  match.lastIndexOf(SPACE),
-                  match.lastIndexOf(DASH)
-                ) + 1;
+                var wrapIndex =
+                  Math.max(match.lastIndexOf(SPACE), match.lastIndexOf(DASH)) +
+                  1;
                 if (wrapIndex > 0) {
                   // re-cut the substring found at the space/dash position
                   low = wrapIndex;

@@ -134,7 +134,7 @@
         switch (pointerDirection) {
           case UP:
             x = width / 2;
-            y = (-1) * pointerHeight;
+            y = -1 * pointerHeight;
             break;
           case RIGHT:
             x = width + pointerWidth;
@@ -145,21 +145,21 @@
             y = height + pointerHeight;
             break;
           case LEFT:
-            x = (-1) * pointerWidth;
+            x = -1 * pointerWidth;
             y = height / 2;
             break;
         }
 
         tag.setAttrs({
-          x: (-1) * x,
-          y: (-1) * y,
+          x: -1 * x,
+          y: -1 * y,
           width: width,
           height: height
         });
 
         text.setAttrs({
-          x: (-1) * x,
-          y: (-1) * y
+          x: -1 * x,
+          y: -1 * y
         });
       }
     }
@@ -208,7 +208,7 @@
 
       if (pointerDirection === UP) {
         context.lineTo((width - pointerWidth) / 2, 0);
-        context.lineTo(width / 2, (-1) * pointerHeight);
+        context.lineTo(width / 2, -1 * pointerHeight);
         context.lineTo((width + pointerWidth) / 2, 0);
       }
 
@@ -268,7 +268,7 @@
 
       if (pointerDirection === LEFT) {
         context.lineTo(0, (height + pointerHeight) / 2);
-        context.lineTo((-1) * pointerWidth, height / 2);
+        context.lineTo(-1 * pointerWidth, height / 2);
         context.lineTo(0, (height - pointerHeight) / 2);
       }
 

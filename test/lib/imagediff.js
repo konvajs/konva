@@ -67,14 +67,18 @@
       typeof object.data !== UNDEFINED);
   }
   function isImageType(object) {
-    return isImage(object) ||
+    return (
+      isImage(object) ||
       isCanvas(object) ||
       isContext(object) ||
-      isImageData(object);
+      isImageData(object)
+    );
   }
   function isType(object, type) {
-    return typeof object === 'object' &&
-      !!Object.prototype.toString.apply(object).match(type);
+    return (
+      typeof object === 'object' &&
+      !!Object.prototype.toString.apply(object).match(type)
+    );
   }
 
   // Type Conversion

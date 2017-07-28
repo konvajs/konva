@@ -122,12 +122,14 @@
       return this._getCache(HAS_SHADOW, this._hasShadow);
     },
     _hasShadow: function() {
-      return this.getShadowEnabled() &&
+      return (
+        this.getShadowEnabled() &&
         (this.getShadowOpacity() !== 0 &&
           !!(this.getShadowColor() ||
             this.getShadowBlur() ||
             this.getShadowOffsetX() ||
-            this.getShadowOffsetY()));
+            this.getShadowOffsetY()))
+      );
     },
     getShadowRGBA: function() {
       return this._getCache(SHADOW_RGBA, this._getShadowRGBA);
@@ -135,7 +137,8 @@
     _getShadowRGBA: function() {
       if (this.hasShadow()) {
         var rgba = Konva.Util.colorToRGBA(this.shadowColor());
-        return 'rgba(' +
+        return (
+          'rgba(' +
           rgba.r +
           ',' +
           rgba.g +
@@ -143,7 +146,8 @@
           rgba.b +
           ',' +
           rgba.a * (this.getShadowOpacity() || 1) +
-          ')';
+          ')'
+        );
       }
     },
     /**
@@ -199,18 +203,20 @@
       return this;
     },
     _useBufferCanvas: function(caching) {
-      return (!caching &&
-        (this.perfectDrawEnabled() &&
-          this.getAbsoluteOpacity() !== 1 &&
-          this.hasFill() &&
-          this.hasStroke() &&
-          this.getStage())) ||
+      return (
+        (!caching &&
+          (this.perfectDrawEnabled() &&
+            this.getAbsoluteOpacity() !== 1 &&
+            this.hasFill() &&
+            this.hasStroke() &&
+            this.getStage())) ||
         (this.perfectDrawEnabled() &&
           this.hasShadow() &&
           this.getAbsoluteOpacity() !== 1 &&
           this.hasFill() &&
           this.hasStroke() &&
-          this.getStage());
+          this.getStage())
+      );
     },
     /**
          * return self rectangle (x, y, width, height) of shape.
@@ -227,8 +233,8 @@
     getSelfRect: function() {
       var size = this.getSize();
       return {
-        x: this._centroid ? Math.round((-size.width) / 2) : 0,
-        y: this._centroid ? Math.round((-size.height) / 2) : 0,
+        x: this._centroid ? Math.round(-size.width / 2) : 0,
+        y: this._centroid ? Math.round(-size.height / 2) : 0,
         width: size.width,
         height: size.height
       };

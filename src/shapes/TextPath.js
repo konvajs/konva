@@ -262,7 +262,8 @@
 
         p1 = undefined;
         while (
-          Math.abs(glyphWidth - currLen) / glyphWidth > 0.01 && attempts < 25
+          Math.abs(glyphWidth - currLen) / glyphWidth > 0.01 &&
+          attempts < 25
         ) {
           attempts++;
           var cumulativePathLength = currLen;
@@ -270,7 +271,8 @@
             pathCmd = getNextPathSegment();
 
             if (
-              pathCmd && cumulativePathLength + pathCmd.pathLength < glyphWidth
+              pathCmd &&
+              cumulativePathLength + pathCmd.pathLength < glyphWidth
             ) {
               cumulativePathLength += pathCmd.pathLength;
               pathCmd = undefined;
@@ -392,7 +394,6 @@
                 pathCmd.points[3]
               );
               break;
-
           }
 
           if (p1 !== undefined) {
@@ -487,7 +488,8 @@
   };
 
   // map TextPath methods to Text
-  Konva.TextPath.prototype._getContextFont = Konva.Text.prototype._getContextFont;
+  Konva.TextPath.prototype._getContextFont =
+    Konva.Text.prototype._getContextFont;
 
   Konva.Util.extend(Konva.TextPath, Konva.Shape);
 

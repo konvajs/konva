@@ -362,7 +362,6 @@
             cpy = p.shift();
             points.push(cpx, cpy);
             break;
-
           // Note: lineTo handlers need to be above this point
           case 'm':
             var dx = p.shift();
@@ -713,8 +712,8 @@
     // Derived from: http://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
     var psi = psiDeg * (Math.PI / 180.0);
     var xp = Math.cos(psi) * (x1 - x2) / 2.0 + Math.sin(psi) * (y1 - y2) / 2.0;
-    var yp = (-1) * Math.sin(psi) * (x1 - x2) / 2.0 +
-      Math.cos(psi) * (y1 - y2) / 2.0;
+    var yp =
+      -1 * Math.sin(psi) * (x1 - x2) / 2.0 + Math.cos(psi) * (y1 - y2) / 2.0;
 
     var lambda = xp * xp / (rx * rx) + yp * yp / (ry * ry);
 
@@ -736,7 +735,7 @@
     }
 
     var cxp = f * rx * yp / ry;
-    var cyp = f * (-ry) * xp / rx;
+    var cyp = f * -ry * xp / rx;
 
     var cx = (x1 + x2) / 2.0 + Math.cos(psi) * cxp - Math.sin(psi) * cyp;
     var cy = (y1 + y2) / 2.0 + Math.sin(psi) * cxp + Math.cos(psi) * cyp;
@@ -752,7 +751,7 @@
     };
     var theta = vAngle([1, 0], [(xp - cxp) / rx, (yp - cyp) / ry]);
     var u = [(xp - cxp) / rx, (yp - cyp) / ry];
-    var v = [((-1) * xp - cxp) / rx, ((-1) * yp - cyp) / ry];
+    var v = [(-1 * xp - cxp) / rx, (-1 * yp - cyp) / ry];
     var dTheta = vAngle(u, v);
 
     if (vRatio(u, v) <= -1) {

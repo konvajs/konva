@@ -124,14 +124,11 @@ suite('Tween', function() {
     });
     tween.play();
 
-    setTimeout(
-      function() {
-        assert.equal(circle.x(), 200);
-        assert.equal(circle.y(), 100);
-        done();
-      },
-      60
-    );
+    setTimeout(function() {
+      assert.equal(circle.x(), 200);
+      assert.equal(circle.y(), 100);
+      done();
+    }, 60);
   });
 
   test('color tweening', function(done) {
@@ -207,12 +204,9 @@ suite('Tween', function() {
       x: 10,
       duration: 0.001
     });
-    setTimeout(
-      function() {
-        done();
-      },
-      50
-    );
+    setTimeout(function() {
+      done();
+    }, 50);
   });
 
   suite('tween array with different length', function() {

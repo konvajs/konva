@@ -142,17 +142,16 @@
       context.fillShape(this);
     },
     _useBufferCanvas: function() {
-      return (this.hasShadow() || this.getAbsoluteOpacity() !== 1) &&
-        this.hasStroke();
+      return (
+        (this.hasShadow() || this.getAbsoluteOpacity() !== 1) &&
+        this.hasStroke()
+      );
     },
     _setInterval: function() {
       var that = this;
-      this.interval = setInterval(
-        function() {
-          that._updateIndex();
-        },
-        1000 / this.getFrameRate()
-      );
+      this.interval = setInterval(function() {
+        that._updateIndex();
+      }, 1000 / this.getFrameRate());
     },
     /**
          * start sprite animation

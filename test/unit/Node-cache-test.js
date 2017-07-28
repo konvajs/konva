@@ -286,8 +286,8 @@ suite('Caching', function() {
     context.fillStyle = 'green';
     context.shadowColor = 'black';
     context.shadowBlur = 10 * canvas.ratio;
-    context.shadowOffsetX = (-10) * canvas.ratio;
-    context.shadowOffsetY = (-10) * canvas.ratio;
+    context.shadowOffsetX = -10 * canvas.ratio;
+    context.shadowOffsetY = -10 * canvas.ratio;
     context.fill();
     compareLayerAndCanvas(layer, canvas, 50);
   });
@@ -325,8 +325,8 @@ suite('Caching', function() {
     context.fillStyle = 'green';
     context.shadowColor = 'black';
     context.shadowBlur = 10 * canvas.ratio;
-    context.shadowOffsetX = (-10) * canvas.ratio;
-    context.shadowOffsetY = (-10) * canvas.ratio;
+    context.shadowOffsetX = -10 * canvas.ratio;
+    context.shadowOffsetY = -10 * canvas.ratio;
     context.fill();
     compareLayerAndCanvas(layer, canvas, 50);
   });
@@ -617,33 +617,30 @@ suite('Caching', function() {
     compareLayerAndCanvas(layer, canvas, 150);
   });
 
-  test(
-    'cache shape that is larger than stage but need buffer canvas',
-    function() {
-      var stage = addStage();
-      var layer = new Konva.Layer();
-      var group = new Konva.Group();
-      var circle = new Konva.Circle({
-        x: stage.width() / 2,
-        y: stage.height() / 2,
-        radius: 400,
-        fill: 'red',
-        stroke: 'black',
-        strokeWidth: 50,
-        opacity: 0.5,
-        scaleX: 1 / 5,
-        scaleY: 1 / 5
-      });
+  test('cache shape that is larger than stage but need buffer canvas', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var group = new Konva.Group();
+    var circle = new Konva.Circle({
+      x: stage.width() / 2,
+      y: stage.height() / 2,
+      radius: 400,
+      fill: 'red',
+      stroke: 'black',
+      strokeWidth: 50,
+      opacity: 0.5,
+      scaleX: 1 / 5,
+      scaleY: 1 / 5
+    });
 
-      group.add(circle);
-      layer.add(group);
-      stage.add(layer);
-      circle.cache();
-      layer.draw();
+    group.add(circle);
+    layer.add(group);
+    stage.add(layer);
+    circle.cache();
+    layer.draw();
 
-      cloneAndCompareLayer(layer, 200);
-    }
-  );
+    cloneAndCompareLayer(layer, 200);
+  });
 
   test('cache nested groups', function() {
     var stage = addStage();
