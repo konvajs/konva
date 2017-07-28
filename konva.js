@@ -1,5 +1,5 @@
 /*
- * Konva JavaScript Framework v1.6.5
+ * Konva JavaScript Framework v1.6.6
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
  * Date: Fri Jul 28 2017
@@ -38,7 +38,7 @@
 
   var Konva = {
     // public
-    version: '1.6.5',
+    version: '1.6.6',
 
     // private
     stages: [],
@@ -10283,6 +10283,7 @@
         this._setPointerPosition(evt);
         var shape = this.getIntersection(this.getPointerPosition()),
           clickStartShape = this.clickStartShape,
+          clickEndShape = this.clickEndShape,
           fireDblClick = false,
           dd = Konva.DD;
 
@@ -10301,6 +10302,7 @@
         }, Konva.dblClickWindow);
 
         if (shape && shape.isListening()) {
+          this.clickEndShape = shape;
           shape._fireAndBubble(MOUSEUP, { evt: evt });
 
           // detect if click or double click occurred
@@ -10311,7 +10313,11 @@
           ) {
             shape._fireAndBubble(CLICK, { evt: evt });
 
-            if (fireDblClick) {
+            if (
+              fireDblClick &&
+              clickEndShape &&
+              clickEndShape._id === shape._id
+            ) {
               shape._fireAndBubble(DBL_CLICK, { evt: evt });
             }
           }
