@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [1.6.6][2017-07-28]
+
 ### Fixed
 - Fix bug with double trigger wheel in Firefox
 - Fix `node.getClientRect()` calculation in a case of Group + invisible child
