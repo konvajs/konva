@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
-## [1.6.6][2017-07-28]
+## [1.6.7][2017-07-28]
 
 ### Fixed
 - Fix bug with double trigger wheel in Firefox
