@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.6.7
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri Jul 28 2017
+ * Date: Mon Jul 31 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -248,14 +248,15 @@
       // only CommonJS-like enviroments that support module.exports,
       // like Node.
       var Canvas = require('canvas');
-      var jsdom = require('jsdom').jsdom;
+      var JSDOM = require('jsdom').JSDOM;
 
-      Konva.window = jsdom(
+      Konva.window = new JSDOM(
         '<!DOCTYPE html><html><head></head><body></body></html>'
-      ).defaultView;
+      ).window;
       Konva.document = Konva.window.document;
       Konva.window.Image = Canvas.Image;
       Konva._nodeCanvas = Canvas;
+      Konva.isNode = true;
     }
     module.exports = Konva;
     return;
@@ -815,7 +816,9 @@
       );
     },
     createCanvasElement: function() {
-      var canvas = Konva.document.createElement('canvas');
+      var canvas = Konva.isNode
+        ? new Konva._nodeCanvas()
+        : Konva.document.createElement('canvas');
       // on some environments canvas.style is readonly
       try {
         canvas.style = canvas.style || {};

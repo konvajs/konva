@@ -544,7 +544,9 @@
       );
     },
     createCanvasElement: function() {
-      var canvas = Konva.document.createElement('canvas');
+      var canvas = Konva.isNode
+        ? new Konva._nodeCanvas()
+        : Konva.document.createElement('canvas');
       // on some environments canvas.style is readonly
       try {
         canvas.style = canvas.style || {};
