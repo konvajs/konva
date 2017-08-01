@@ -422,7 +422,11 @@
           !layerUnderDrag)
       );
     },
-    getClientRect: function(skipTransform) {
+    getClientRect: function(attrs) {
+      attrs = attrs || {};
+      var skipTransform = attrs.skipTransform;
+      var relativeTo = attrs.relativeTo;
+
       var minX, minY, maxX, maxY;
       var selfRect = {
         x: 0,
@@ -430,12 +434,13 @@
         width: 0,
         height: 0
       };
+      var that = this;
       this.children.each(function(child) {
         // skip invisible children
         if (!child.isVisible()) {
           return;
         }
-        var rect = child.getClientRect();
+        var rect = child.getClientRect({ relativeTo: that });
 
         // skip invisible children (like empty groups)
         // or don't skip... hmmm...
@@ -467,7 +472,7 @@
       }
 
       if (!skipTransform) {
-        return this._transformedRect(selfRect);
+        return this._transformedRect(selfRect, relativeTo);
       }
       return selfRect;
     }

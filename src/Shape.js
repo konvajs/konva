@@ -239,7 +239,11 @@
         height: size.height
       };
     },
-    getClientRect: function(skipTransform) {
+    getClientRect: function(attrs) {
+      attrs = attrs || {};
+      var skipTransform = attrs.skipTransform;
+      var relativeTo = attrs.relativeTo;
+
       var fillRect = this.getSelfRect();
 
       var strokeWidth = (this.hasStroke() && this.strokeWidth()) || 0;
@@ -275,7 +279,7 @@
           fillRect.y
       };
       if (!skipTransform) {
-        return this._transformedRect(rect);
+        return this._transformedRect(rect, relativeTo);
       }
       return rect;
     },

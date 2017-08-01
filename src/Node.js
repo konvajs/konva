@@ -168,7 +168,10 @@
         */
     cache: function(config) {
       var conf = config || {},
-        rect = this.getClientRect(true),
+        rect = this.getClientRect({
+          skipTransform: true,
+          relativeTo: this.getParent()
+        }),
         width = conf.width || rect.width,
         height = conf.height || rect.height,
         pixelRatio = conf.pixelRatio,
@@ -255,7 +258,9 @@
          * The rectangle position is relative to parent container.
          * @method
          * @memberof Konva.Node.prototype
-         * @param {Boolean} [skipTransform] flag should we skip transformation to rectangle
+         * @param {Object} config
+         * @param {Boolean} [config.skipTransform] should we apply transform to node for calculating rect?
+         * @param {Object} [config.relativeTo] calculate client rect relative to one of the parents
          * @returns {Object} rect with {x, y, width, height} properties
          * @example
          * var rect = new Konva.Rect({
@@ -270,7 +275,7 @@
          * });
          *
          * // get client rect without think off transformations (position, rotation, scale, offset, etc)
-         * rect.getClientRect(true);
+         * rect.getClientRect({ skipTransform: true});
          * // returns {
          * //     x : -2,   // two pixels for stroke / 2
          * //     y : -2,
@@ -287,7 +292,7 @@
       // redefine in Container and Shape
       throw new Error('abstract "getClientRect" method call');
     },
-    _transformedRect: function(rect) {
+    _transformedRect: function(rect, top) {
       var points = [
         { x: rect.x, y: rect.y },
         { x: rect.x + rect.width, y: rect.y },
@@ -295,7 +300,7 @@
         { x: rect.x, y: rect.y + rect.height }
       ];
       var minX, minY, maxX, maxY;
-      var trans = this.getTransform();
+      var trans = this.getAbsoluteTransform(top);
       points.forEach(function(point) {
         var transformed = trans.point(point);
         if (minX === undefined) {

@@ -1305,6 +1305,42 @@ suite('Shape', function() {
     assert.equal(rect.height, 100, 'should not effect width');
   });
 
+  test('getClientRect for shape in transformed parent', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group({
+      x: 110,
+      y: 0,
+      rotation: 90
+    });
+    layer.add(group);
+
+    var shape = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      fill: 'green'
+    });
+    group.add(shape);
+
+    var relativeRect = shape.getClientRect({ relativeTo: group });
+
+    assert.equal(relativeRect.x, 0);
+    assert.equal(relativeRect.y, 0);
+    assert.equal(relativeRect.width, 100);
+    assert.equal(relativeRect.height, 100);
+
+    var absRect = shape.getClientRect();
+
+    assert.equal(absRect.x, 10);
+    assert.equal(absRect.y, 0);
+    assert.equal(absRect.width, 100);
+    assert.equal(absRect.height, 100);
+  });
+
   test('shadow should respect pixel ratio', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

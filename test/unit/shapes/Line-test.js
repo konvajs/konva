@@ -277,7 +277,7 @@ suite('Line', function() {
     layer.add(poly);
     stage.add(layer);
 
-    var rect = layer.getClientRect();
+    var rect = layer.getClientRect({ relativeTo: stage });
     assert.deepEqual(rect, {
       x: -100,
       y: 0,
