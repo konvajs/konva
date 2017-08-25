@@ -65,14 +65,14 @@
     pixelRatio: undefined,
     /**
          * Drag distance property. If you start to drag a node you may want to wait until pointer is moved to some distance from start point,
-         * only then start dragging.
+         * only then start dragging. Default is 3px.
          * @property dragDistance
          * @default 0
          * @memberof Konva
          * @example
          * Konva.dragDistance = 10;
          */
-    dragDistance: 0,
+    dragDistance: 3,
     /**
          * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
          * @property angleDeg

@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.6.8
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sat Aug 19 2017
+ * Date: Thu Aug 24 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -10567,7 +10567,7 @@
      */
 })();
 
-(function() {
+(function(Konva) {
   'use strict';
   /**
      * BaseLayer constructor.
@@ -10604,8 +10604,6 @@
      * @param {Number} [config.clipHeight] set clip height
      * @param {Function} [config.clipFunc] set clip func
 
-     * @example
-     * var layer = new Konva.Layer();
      */
   Konva.BaseLayer = function(config) {
     this.___init(config);
@@ -10620,47 +10618,47 @@
       return this.canvas._canvas.createPNGStream();
     },
     /**
-         * get layer canvas
-         * @method
-         * @memberof Konva.BaseLayer.prototype
-         */
+     * get layer canvas
+     * @method
+     * @memberof Konva.BaseLayer.prototype
+     */
     getCanvas: function() {
       return this.canvas;
     },
     /**
-         * get layer hit canvas
-         * @method
-         * @memberof Konva.BaseLayer.prototype
-         */
+     * get layer hit canvas
+     * @method
+     * @memberof Konva.BaseLayer.prototype
+     */
     getHitCanvas: function() {
       return this.hitCanvas;
     },
     /**
-         * get layer canvas context
-         * @method
-         * @memberof Konva.BaseLayer.prototype
-         */
+     * get layer canvas context
+     * @method
+     * @memberof Konva.BaseLayer.prototype
+     */
     getContext: function() {
       return this.getCanvas().getContext();
     },
     /**
-         * clear scene and hit canvas contexts tied to the layer
-         * @method
-         * @memberof Konva.BaseLayer.prototype
-         * @param {Object} [bounds]
-         * @param {Number} [bounds.x]
-         * @param {Number} [bounds.y]
-         * @param {Number} [bounds.width]
-         * @param {Number} [bounds.height]
-         * @example
-         * layer.clear();
-         * layer.clear({
-         *   x : 0,
-         *   y : 0,
-         *   width : 100,
-         *   height : 100
-         * });
-         */
+     * clear scene and hit canvas contexts tied to the layer
+     * @method
+     * @memberof Konva.BaseLayer.prototype
+     * @param {Object} [bounds]
+     * @param {Number} [bounds.x]
+     * @param {Number} [bounds.y]
+     * @param {Number} [bounds.width]
+     * @param {Number} [bounds.height]
+     * @example
+     * layer.clear();
+     * layer.clear({
+     *   x : 0,
+     *   y : 0,
+     *   width : 100,
+     *   height : 100
+     * });
+     */
     clear: function(bounds) {
       this.getContext().clear(bounds);
       return this;
@@ -10769,15 +10767,15 @@
       return this;
     },
     /**
-         * get/set width of layer.getter return width of stage. setter doing nothing.
-         * if you want change width use `stage.width(value);`
-         * @name width
-         * @method
-         * @memberof Konva.BaseLayer.prototype
-         * @returns {Number}
-         * @example
-         * var width = layer.width();
-         */
+     * get/set width of layer.getter return width of stage. setter doing nothing.
+     * if you want change width use `stage.width(value);`
+     * @name width
+     * @method
+     * @memberof Konva.BaseLayer.prototype
+     * @returns {Number}
+     * @example
+     * var width = layer.width();
+     */
     getWidth: function() {
       if (this.parent) {
         return this.parent.getWidth();
@@ -10789,15 +10787,15 @@
       );
     },
     /**
-         * get/set height of layer.getter return height of stage. setter doing nothing.
-         * if you want change height use `stage.height(value);`
-         * @name height
-         * @method
-         * @memberof Konva.BaseLayer.prototype
-         * @returns {Number}
-         * @example
-         * var height = layer.height();
-         */
+     * get/set height of layer.getter return height of stage. setter doing nothing.
+     * if you want change height use `stage.height(value);`
+     * @name height
+     * @method
+     * @memberof Konva.BaseLayer.prototype
+     * @returns {Number}
+     * @example
+     * var height = layer.height();
+     */
     getHeight: function() {
       if (this.parent) {
         return this.parent.getHeight();
@@ -10821,26 +10819,26 @@
   // add getters and setters
   Konva.Factory.addGetterSetter(Konva.BaseLayer, 'clearBeforeDraw', true);
   /**
-     * get/set clearBeforeDraw flag which determines if the layer is cleared or not
-     *  before drawing
-     * @name clearBeforeDraw
-     * @method
-     * @memberof Konva.BaseLayer.prototype
-     * @param {Boolean} clearBeforeDraw
-     * @returns {Boolean}
-     * @example
-     * // get clearBeforeDraw flag
-     * var clearBeforeDraw = layer.clearBeforeDraw();
-     *
-     * // disable clear before draw
-     * layer.clearBeforeDraw(false);
-     *
-     * // enable clear before draw
-     * layer.clearBeforeDraw(true);
-     */
+   * get/set clearBeforeDraw flag which determines if the layer is cleared or not
+   *  before drawing
+   * @name clearBeforeDraw
+   * @method
+   * @memberof Konva.BaseLayer.prototype
+   * @param {Boolean} clearBeforeDraw
+   * @returns {Boolean}
+   * @example
+   * // get clearBeforeDraw flag
+   * var clearBeforeDraw = layer.clearBeforeDraw();
+   *
+   * // disable clear before draw
+   * layer.clearBeforeDraw(false);
+   *
+   * // enable clear before draw
+   * layer.clearBeforeDraw(true);
+   */
 
   Konva.Collection.mapMethods(Konva.BaseLayer);
-})();
+})(Konva);
 
 (function() {
   'use strict';

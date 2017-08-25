@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+### Changed
+- Default value for `dragDistance` is changed to 3px.
+
 ## [1.6.8][2017-08-19]
 
 ### Changed

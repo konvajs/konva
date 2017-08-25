@@ -1712,7 +1712,7 @@ suite('Node', function() {
     layer.add(rect1).add(group);
     stage.add(layer);
 
-    assert.equal(rect1.dragDistance(), 0);
+    assert.equal(rect1.dragDistance(), Konva.dragDistance);
     assert.equal(group.dragDistance(), 2);
     assert.equal(rect2.dragDistance(), 2);
   });
