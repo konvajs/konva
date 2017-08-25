@@ -1,4 +1,4 @@
-(function() {
+(function(Konva) {
   'use strict';
   /**
      * Arrow constructor
@@ -122,4 +122,4 @@
 
   Konva.Factory.addGetterSetter(Konva.Arrow, 'pointerAtBeginning', false);
   Konva.Collection.mapMethods(Konva.Arrow);
-})();
+})(Konva);

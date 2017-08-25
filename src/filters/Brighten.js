@@ -1,4 +1,4 @@
-(function() {
+(function(Konva) {
   'use strict';
   /**
      * Brighten Filter.
@@ -42,4 +42,4 @@
     * @param {Number} brightness value between -1 and 1
     * @returns {Number}
     */
-})();
+})(Konva);

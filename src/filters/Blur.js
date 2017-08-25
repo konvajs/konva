@@ -2,7 +2,7 @@
  the Gauss filter
  master repo: https://github.com/pavelpower/kineticjsGaussFilter
 */
-(function() {
+(function(Konva) {
   'use strict';
   /*
 
@@ -851,4 +851,4 @@
     * @param {Integer} radius
     * @returns {Integer}
     */
-})();
+})(Konva);

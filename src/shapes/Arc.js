@@ -1,4 +1,4 @@
-(function() {
+(function(Konva) {
   'use strict';
   /**
      * Arc constructor
@@ -142,4 +142,4 @@
      */
 
   Konva.Collection.mapMethods(Konva.Arc);
-})();
+})(Konva);

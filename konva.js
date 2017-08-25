@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.6.8
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Thu Aug 24 2017
+ * Date: Fri Aug 25 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -65,14 +65,14 @@
     pixelRatio: undefined,
     /**
          * Drag distance property. If you start to drag a node you may want to wait until pointer is moved to some distance from start point,
-         * only then start dragging.
+         * only then start dragging. Default is 3px.
          * @property dragDistance
          * @default 0
          * @memberof Konva
          * @example
          * Konva.dragDistance = 10;
          */
-    dragDistance: 0,
+    dragDistance: 3,
     /**
          * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
          * @property angleDeg
@@ -196,9 +196,9 @@
     _parseUA: function(userAgent) {
       var ua = userAgent.toLowerCase(),
         // jQuery UA regex
-        match = /(chrome)[ \/]([\w.]+)/.exec(ua) ||
-        /(webkit)[ \/]([\w.]+)/.exec(ua) ||
-        /(opera)(?:.*version|)[ \/]([\w.]+)/.exec(ua) ||
+        match = /(chrome)[ /]([\w.]+)/.exec(ua) ||
+        /(webkit)[ /]([\w.]+)/.exec(ua) ||
+        /(opera)(?:.*version|)[ /]([\w.]+)/.exec(ua) ||
         /(msie) ([\w.]+)/.exec(ua) ||
         (ua.indexOf('compatible') < 0 &&
           /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(ua)) || [],
@@ -4880,7 +4880,7 @@
   };
 })();
 
-(function() {
+(function(Konva) {
   'use strict';
   /**
      * Brighten Filter.
@@ -4924,7 +4924,7 @@
     * @param {Number} brightness value between -1 and 1
     * @returns {Number}
     */
-})();
+})(Konva);
 
 (function() {
   'use strict';
@@ -4955,7 +4955,7 @@
  the Gauss filter
  master repo: https://github.com/pavelpower/kineticjsGaussFilter
 */
-(function() {
+(function(Konva) {
   'use strict';
   /*
 
@@ -5804,7 +5804,7 @@
     * @param {Integer} radius
     * @returns {Integer}
     */
-})();
+})(Konva);
 
 /*eslint-disable  max-depth */
 (function() {
@@ -12805,7 +12805,7 @@
   Konva.Collection.mapMethods(Konva.Rect);
 })();
 
-(function() {
+(function(Konva) {
   'use strict';
   // the 0.0001 offset fixes a bug in Chrome 27
   var PIx2 = Math.PI * 2 - 0.0001, CIRCLE = 'Circle';
@@ -12960,7 +12960,7 @@
      */
 
   Konva.Collection.mapMethods(Konva.Circle);
-})();
+})(Konva);
 
 (function() {
   'use strict';
@@ -13548,7 +13548,7 @@
   Konva.Collection.mapMethods(Konva.Wedge);
 })();
 
-(function() {
+(function(Konva) {
   'use strict';
   /**
      * Arc constructor
@@ -13761,7 +13761,7 @@
      */
 
   Konva.Collection.mapMethods(Konva.Arc);
-})();
+})(Konva);
 
 (function() {
   'use strict';
@@ -17921,7 +17921,7 @@
   Konva.Collection.mapMethods(Konva.Tag);
 })();
 
-(function() {
+(function(Konva) {
   'use strict';
   /**
      * Arrow constructor
@@ -18114,4 +18114,4 @@
 
   Konva.Factory.addGetterSetter(Konva.Arrow, 'pointerAtBeginning', false);
   Konva.Collection.mapMethods(Konva.Arrow);
-})();
+})(Konva);

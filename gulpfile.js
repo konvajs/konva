@@ -8,6 +8,7 @@ var jsdoc = require('gulp-jsdoc3');
 var connect = require('gulp-connect');
 var jscpd = require('gulp-jscpd');
 var eslint = require('gulp-eslint');
+var gutil = require('gulp-util');
 
 var fs = require('fs');
 var NodeParams = fs
@@ -103,11 +104,10 @@ gulp.task('build', function() {
   return build()
     .pipe(rename('konva.js'))
     .pipe(gulp.dest('./'))
-    .pipe(
-      uglify({
-        preserveComments: 'some'
-      })
-    )
+    .pipe(uglify({ output: { comments: /^!|@preserve|@license|@cc_on/i } }))
+    .on('error', function(err) {
+      gutil.log(gutil.colors.red('[Error]'), err.toString());
+    })
     .pipe(rename('konva.min.js'))
     .pipe(gulp.dest('./'));
 });
