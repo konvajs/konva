@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.6.8
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri Aug 25 2017
+ * Date: Sat Aug 26 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -12331,10 +12331,15 @@
     // methods
     _drag: function(evt) {
       var dd = Konva.DD, node = dd.node;
-
       if (node) {
         if (!dd.isDragging) {
           var pos = node.getStage().getPointerPosition();
+          // it is possible that pos is undefined
+          // reattach it
+          if (!pos) {
+            node.getStage()._setPointerPosition(evt);
+            pos = node.getStage().getPointerPosition();
+          }
           var dragDistance = node.dragDistance();
           var distance = Math.max(
             Math.abs(pos.x - dd.startPointerPos.x),

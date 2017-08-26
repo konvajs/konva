@@ -18,10 +18,15 @@
     // methods
     _drag: function(evt) {
       var dd = Konva.DD, node = dd.node;
-
       if (node) {
         if (!dd.isDragging) {
           var pos = node.getStage().getPointerPosition();
+          // it is possible that pos is undefined
+          // reattach it
+          if (!pos) {
+            node.getStage()._setPointerPosition(evt);
+            pos = node.getStage().getPointerPosition();
+          }
           var dragDistance = node.dragDistance();
           var distance = Math.max(
             Math.abs(pos.x - dd.startPointerPos.x),
