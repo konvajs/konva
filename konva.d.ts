@@ -140,6 +140,8 @@ declare module Konva {
         enhance(enhance: number): Node;
         filters(): Filter[];
         filters(filters: Filter): Node;
+        findAncestor(selector?: string, includeSelf?: boolean, stopNode?: Node): Node;
+        findAncestors(selector?: string, includeSelf?: boolean, stopNode?: Node): Node[];
         fire(eventType: string, evt?: any, bubble?: boolean): Node;
         getAbsoluteOpacity(): number;
         getAbsolutePosition(): Vector2d;
@@ -273,7 +275,7 @@ declare module Konva {
 
     class Container extends Node {
         constructor(params?: ContainerConfig);
-        add(child: Node): Container;
+        add(...children: Node[]): Container;
         getChildren(filterfunc?: Function): Collection;
         clip(): SizeConfig;
         clip(clip: SizeConfig): Container;
@@ -456,13 +458,13 @@ declare module Konva {
 
     class Stage extends Container {
         constructor(StageConfig: StageConfig);
-        add(layer: Layer): Stage;
-        add(layer: FastLayer): Stage;
+        add(...layers: Layer[]): Stage;
+        add(...layers: FastLayer[]): Stage;
         batchDraw(): void;
         container(): HTMLElement;
         destroy(): void;
         drawHit(): void;
-        getIntersection(pos: Vector2d): Shape;
+        getIntersection(pos: Vector2d, selector?: string): Shape;
         getLayers(): Layer[];
         getPointerPosition(): Vector2d;
         setContainer(con: HTMLElement): void;
@@ -483,7 +485,7 @@ declare module Konva {
 
     class Layer extends Container {
         constructor(config?: LayerConfig);
-        getIntersection(pos: Vector2d): Shape;
+        getIntersection(pos: Vector2d, selector?: string): Shape;
         enableHitGraph(): Layer;
         disableHitGraph(): Layer;
         clearBeforeDraw(): boolean;
