@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Default value for `dragDistance` is changed to 3px.
 - Fix rare error throw on drag
+- Caching with height = 0 or width = 0 with throw async error. Caching will be ignored.
 
 ## [1.6.8][2017-08-19]
 

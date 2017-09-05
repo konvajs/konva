@@ -151,7 +151,7 @@ gulp.task('inspect', function() {
 
 // // generate documentation
 gulp.task('api', function() {
-  return gulp.src('./src/**/*.js').pipe(
+  return gulp.src('./konva.js').pipe(
     jsdoc({
       opts: {
         destination: './api'

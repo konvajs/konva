@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.6.8
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Sat Aug 26 2017
+ * Date: Tue Sep 05 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -2527,7 +2527,13 @@
         drawBorder = conf.drawBorder || false;
 
       if (!width || !height) {
-        throw new Error('Width or height of caching configuration equals 0.');
+        // make throw async, because we don't need to stop funcion
+        setTimeout(function() {
+          Konva.Util.throw(
+            'Width or height of caching configuration equals 0. Caching is ignored.'
+          );
+        });
+        return;
       }
 
       width += offset * 2;
@@ -2537,10 +2543,10 @@
       y -= offset;
 
       var cachedSceneCanvas = new Konva.SceneCanvas({
-        pixelRatio: pixelRatio,
-        width: width,
-        height: height
-      }),
+          pixelRatio: pixelRatio,
+          width: width,
+          height: height
+        }),
         cachedFilterCanvas = new Konva.SceneCanvas({
           pixelRatio: pixelRatio,
           width: width,
@@ -2684,7 +2690,8 @@
       context.restore();
     },
     _drawCachedHitCanvas: function(context) {
-      var cachedCanvas = this._cache.canvas, hitCanvas = cachedCanvas.hit;
+      var cachedCanvas = this._cache.canvas,
+        hitCanvas = cachedCanvas.hit;
       context.save();
       context.translate(this._cache.canvas.x, this._cache.canvas.y);
       context.drawImage(hitCanvas._canvas, 0, 0);
@@ -3012,7 +3019,8 @@
         * })
         */
     getAncestors: function() {
-      var parent = this.getParent(), ancestors = new Konva.Collection();
+      var parent = this.getParent(),
+        ancestors = new Konva.Collection();
 
       while (parent) {
         ancestors.push(parent);
@@ -3086,7 +3094,8 @@
       return this._getCache(LISTENING, this._isListening);
     },
     _isListening: function() {
-      var listening = this.getListening(), parent = this.getParent();
+      var listening = this.getListening(),
+        parent = this.getParent();
 
       // the following conditions are a simplification of the truth table above.
       // please modify carefully
@@ -3123,7 +3132,8 @@
       return this._getCache(VISIBLE, this._isVisible);
     },
     _isVisible: function() {
-      var visible = this.getVisible(), parent = this.getParent();
+      var visible = this.getVisible(),
+        parent = this.getParent();
 
       // the following conditions are a simplification of the truth table above.
       // please modify carefully
@@ -3191,7 +3201,13 @@
          * @returns {Integer}
          */
     getAbsoluteZIndex: function() {
-      var depth = this.getDepth(), that = this, index = 0, nodes, len, n, child;
+      var depth = this.getDepth(),
+        that = this,
+        index = 0,
+        nodes,
+        len,
+        n,
+        child;
 
       function addChildren(children) {
         nodes = [];
@@ -3228,7 +3244,8 @@
          * @returns {Integer}
          */
     getDepth: function() {
-      var depth = 0, parent = this.parent;
+      var depth = 0,
+        parent = this.parent;
 
       while (parent) {
         depth++;
@@ -3276,7 +3293,8 @@
          * @returns {Konva.Node}
          */
     setAbsolutePosition: function(pos) {
-      var origTrans = this._clearTransform(), it;
+      var origTrans = this._clearTransform(),
+        it;
 
       // don't clear translation
       this.attrs.x = origTrans.x;
@@ -3371,7 +3389,10 @@
       return this;
     },
     _eachAncestorReverse: function(func, top) {
-      var family = [], parent = this.getParent(), len, n;
+      var family = [],
+        parent = this.getParent(),
+        len,
+        n;
 
       // if top node is defined, and this node is top node,
       // there's no need to build a family tree.  just execute
@@ -3432,7 +3453,8 @@
         Konva.Util.warn('Node has no parent. moveUp function is ignored.');
         return false;
       }
-      var index = this.index, len = this.parent.getChildren().length;
+      var index = this.index,
+        len = this.parent.getChildren().length;
       if (index < len - 1) {
         this.parent.children.splice(index, 1);
         this.parent.children.splice(index + 1, 0, this);
@@ -3545,7 +3567,12 @@
          * @returns {Object}
          */
     toObject: function() {
-      var obj = {}, attrs = this.getAttrs(), key, val, getter, defaultValue;
+      var obj = {},
+        attrs = this.getAttrs(),
+        key,
+        val,
+        getter,
+        defaultValue;
 
       obj.attrs = {};
 
@@ -3747,7 +3774,9 @@
       }
     },
     _getAbsoluteTransform: function(top) {
-      var at = new Konva.Transform(), transformsEnabled, trans;
+      var at = new Konva.Transform(),
+        transformsEnabled,
+        trans;
 
       // start with stage and traverse downwards to self
       this._eachAncestorReverse(function(node) {
@@ -3788,7 +3817,8 @@
         parent = parent.getParent();
       }
 
-      var scaleX = 1, scaleY = 1;
+      var scaleX = 1,
+        scaleY = 1;
 
       // start with stage and traverse downwards to self
       this._eachAncestorReverse(function(node) {
@@ -3904,10 +3934,10 @@
         y = config.y || 0,
         pixelRatio = config.pixelRatio || 1,
         canvas = new Konva.SceneCanvas({
-          width: config.width ||
-            this.getWidth() ||
-            (stage ? stage.getWidth() : 0),
-          height: config.height ||
+          width:
+            config.width || this.getWidth() || (stage ? stage.getWidth() : 0),
+          height:
+            config.height ||
             this.getHeight() ||
             (stage ? stage.getHeight() : 0),
           pixelRatio: pixelRatio
@@ -3963,7 +3993,8 @@
          */
     toDataURL: function(config) {
       config = config || {};
-      var mimeType = config.mimeType || null, quality = config.quality || null;
+      var mimeType = config.mimeType || null,
+        quality = config.quality || null;
       return this._toKonvaCanvas(config).toDataURL(mimeType, quality);
     },
     /**
@@ -4050,7 +4081,9 @@
         : [];
     },
     _off: function(type, name) {
-      var evtListeners = this.eventListeners[type], i, evtName;
+      var evtListeners = this.eventListeners[type],
+        i,
+        evtName;
 
       for (i = 0; i < evtListeners.length; i++) {
         evtName = evtListeners[i].name;
@@ -4175,7 +4208,8 @@
          * node.setAttr('x', 5);
          */
     setAttr: function(attr, val) {
-      var method = SET + Konva.Util._capitalize(attr), func = this[method];
+      var method = SET + Konva.Util._capitalize(attr),
+        func = this[method];
 
       if (Konva.Util._isFunction(func)) {
         func.call(this, val);
@@ -4264,7 +4298,8 @@
       }
     },
     _fire: function(eventType, evt) {
-      var events = this.eventListeners[eventType], i;
+      var events = this.eventListeners[eventType],
+        i;
 
       evt = evt || {};
       evt.currentTarget = this;
