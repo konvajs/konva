@@ -160,6 +160,7 @@ declare module Konva {
         getHitCanvas(): Canvas;
         getLayer(): Layer;
         getParent(): Container;
+        getPosition(): Vector2d;
         // CHECK
         getSize(): {
             width: number;
@@ -528,12 +529,47 @@ declare module Konva {
         getCanvas(): Canvas;
         getTrace(relaxed: boolean): string;
         reset(): void;
-        moveTo(x: number, y: number): void;
-        lineTo(x: number, y: number): void;
-        beginPath(): void;
         setAttr(attr: string, value: any): void;
-        closePath(): void;
         strokeShape(shape: Shape): void;
+
+        // context pass through methods
+        // originally from lib.es6.d.ts
+        arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise?: boolean): void;
+        beginPath(): void;
+        bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: numer, y: number): void;
+        clearRect(x: number, y: number, width: number, height: number): void;
+        clip(): void;
+        closePath(): void;
+        createImageData(imageDataOrSw: number | ImageData, sh?: number): ImageData;
+        createLinearGradient(x0: number, y0: number, x1: number, y1: number): CanvasGradient;
+        createPattern(image: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement, repetition: string): CanvasPattern;
+        createRadialGradient(x0: number, y0: number, r0: number, x1: number, y1: number, r1: number): CanvasGradient;
+        drawImage(image: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | ImageBitmap, dstX: number, dstY: number): void;
+        drawImage(image: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | ImageBitmap, dstX: number, dstY: number, dstW: number, dstH: number): void;
+        drawImage(image: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | ImageBitmap, srcX: number, srcY: number, srcW: number, srcH: number, dstX: number, dstY: number, dstW: number, dstH: number): void;
+        isPointInPath(x: number, y: number): boolean;
+        fill(): void;
+        fillRect(x: number, y: number, width: number, height: number): void;
+        strokeRect(x: number, y: number, w: number, h: number): void;
+        fillText(text: string, x: number, y: number): void;
+        measureText(text: string): TextMetrics;
+        getImageData(sx: number, sy: number, sw: number, sh: number): ImageData;
+        lineTo(x: number, y: number): void;
+        moveTo(x: number, y: number): void;
+        rect(x: number, y: number, w: number, h: number): void;
+        putImageData(imagedata: ImageData, dx: number, dy: number): void;
+        quadraticCurveTo(cpx: number, cpy: number, x: number, y: number): void;
+        restore(): void;
+        rotate(angle: number): void;
+        save(): void;
+        scale(x: number, y: number): void;
+        setLineDash(segments: number[]): void;
+        getLineDash(): number[];
+        setTransform(m11: number, m12: number, m21: number, m22: number, dx: number, dy: number): void;
+        stroke(path?: Path2D): void;
+        strokeText(text: string, x: number, y: number): void;
+        transform(m11: number, m12: number, m21: number, m22: number, dx: number, dy: number): void;
+        translate(x: number, y: number): void;
     }
 
     class Tween {
