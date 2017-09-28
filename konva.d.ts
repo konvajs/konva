@@ -84,6 +84,7 @@ declare module Konva {
         offsetX?: number;
         offsetY?: number;
         draggable?: boolean;
+        dragDistance?: number;
         dragBoundFunc?: Function;
     }
 
