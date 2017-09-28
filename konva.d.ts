@@ -542,7 +542,7 @@ declare module Konva {
         // originally from lib.es6.d.ts
         arc(x: number, y: number, radius: number, startAngle: number, endAngle: number, anticlockwise?: boolean): void;
         beginPath(): void;
-        bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: numer, y: number): void;
+        bezierCurveTo(cp1x: number, cp1y: number, cp2x: number, cp2y: number, x: number, y: number): void;
         clearRect(x: number, y: number, width: number, height: number): void;
         clip(): void;
         closePath(): void;
