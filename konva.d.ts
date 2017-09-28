@@ -6,6 +6,11 @@ declare module Konva {
     var isDragReady: () => boolean;
     var DD: any;
 
+    interface Coordinates {
+      x: number;
+      y: number;
+    }
+
     export class Util {
         static getRandomColor(): string;
         static getRGB(color: string): string;
@@ -85,7 +90,7 @@ declare module Konva {
         offsetY?: number;
         draggable?: boolean;
         dragDistance?: number;
-        dragBoundFunc?: Function;
+        dragBoundFunc?: (pos: Coordinates) => Coordinates;
     }
 
     interface SizeConfig {
@@ -124,8 +129,8 @@ declare module Konva {
         clone(attrs?: NodeConfig): Node;
         destroy(): void;
 
-        dragBoundFunc(): Function;
-        dragBoundFunc(dragBoundFunc: Function): Node;
+        dragBoundFunc(): (pos: Coordinates) => Coordinates;
+        dragBoundFunc(dragBoundFunc: (pos: Coordinates) => Coordinates): Node;
         draggable(): boolean;
         draggable(draggable: boolean): Node;
         draw(): Node;
