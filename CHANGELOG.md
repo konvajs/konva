@@ -6,6 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.7.0][2017-10-08]
 
+### Fixed
+- Several typescript fixes
+
 ### Changed
 - Default value for `dragDistance` is changed to 3px.
 - Fix rare error throw on drag
