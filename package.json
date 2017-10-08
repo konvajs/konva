@@ -1,8 +1,14 @@
 {
   "name": "konva",
-  "version": "1.6.8",
+  "version": "1.7.0",
   "author": "Anton Lavrenov",
-  "files": ["README.md", "konva.js", "konva.min.js", "src", "konva.d.ts"],
+  "files": [
+    "README.md",
+    "konva.js",
+    "konva.min.js",
+    "src",
+    "konva.d.ts"
+  ],
   "main": "konva.js",
   "typings": "./konva.d.ts",
   "scripts": {
@@ -29,7 +35,12 @@
     "mocha": "3.5.0",
     "prettier": "^1.5.3"
   },
-  "keywords": ["canvas", "animations", "graphic", "html5"],
+  "keywords": [
+    "canvas",
+    "animations",
+    "graphic",
+    "html5"
+  ],
   "browser": {
     "canvas": false,
     "jsdom": false
