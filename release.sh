@@ -27,6 +27,9 @@ while true; do
     esac
 done
 
+echo "Pulling"
+git pull
+
 echo "lint and test"
 npm start lint test
 
