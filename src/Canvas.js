@@ -7,19 +7,19 @@
     if (_pixelRatio) {
       return _pixelRatio;
     }
-    var canvas = Konva.Util.createCanvasElement(),
-      context = canvas.getContext('2d'),
-      _pixelRatio = (function() {
-        var devicePixelRatio = Konva.window.devicePixelRatio || 1,
-          backingStoreRatio =
-            context.webkitBackingStorePixelRatio ||
-            context.mozBackingStorePixelRatio ||
-            context.msBackingStorePixelRatio ||
-            context.oBackingStorePixelRatio ||
-            context.backingStorePixelRatio ||
-            1;
-        return devicePixelRatio / backingStoreRatio;
-      })();
+    var canvas = Konva.Util.createCanvasElement();
+    var context = canvas.getContext('2d');
+    _pixelRatio = (function() {
+      var devicePixelRatio = Konva.window.devicePixelRatio || 1,
+        backingStoreRatio =
+          context.webkitBackingStorePixelRatio ||
+          context.mozBackingStorePixelRatio ||
+          context.msBackingStorePixelRatio ||
+          context.oBackingStorePixelRatio ||
+          context.backingStorePixelRatio ||
+          1;
+      return devicePixelRatio / backingStoreRatio;
+    })();
     return _pixelRatio;
   }
 

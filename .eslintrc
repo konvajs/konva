@@ -187,7 +187,6 @@
     "space-before-function-parentheses": [0, "always"],
     "space-in-brackets": [0, "never"],
     "space-in-parens": [0, "never"],
-    "max-statements": [1, 30],
     "space-infix-ops": 2,
     "keyword-spacing": 0,
     "space-unary-ops": [
