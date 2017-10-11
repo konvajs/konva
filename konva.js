@@ -1,5 +1,5 @@
 /*
- * Konva JavaScript Framework v1.7.1
+ * Konva JavaScript Framework v1.7.2
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
  * Date: Wed Oct 11 2017
@@ -38,7 +38,7 @@
 
   var Konva = {
     // public
-    version: '1.7.1',
+    version: '1.7.2',
 
     // private
     stages: [],
@@ -245,17 +245,17 @@
   glob.Konva = Konva;
   Konva.global = glob;
 
+  Konva.document = document;
+  Konva.window = window;
+
   if (typeof exports === 'object') {
     module.exports = Konva;
-    return;
   } else if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(function() {
       return Konva;
     });
   }
-  Konva.document = document;
-  Konva.window = window;
 })();
 
 /*eslint-disable  eqeqeq, no-cond-assign, no-empty*/
