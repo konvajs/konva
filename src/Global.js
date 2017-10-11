@@ -245,15 +245,15 @@
   glob.Konva = Konva;
   Konva.global = glob;
 
+  Konva.document = document;
+  Konva.window = window;
+
   if (typeof exports === 'object') {
     module.exports = Konva;
-    return;
   } else if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(function() {
       return Konva;
     });
   }
-  Konva.document = document;
-  Konva.window = window;
 })();

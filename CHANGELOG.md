@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [1.7.2][2017-10-11]
+
+### Fixed
+- Fixed `Konva.document is undefined`
+
 ## [1.7.1][2017-10-11]
 
 ### Changed
