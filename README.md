@@ -113,18 +113,20 @@ import 'konva/src/shapes/rect';
 
 ### 5 NodeJS
 
-You have to install some deps manually to use Konva in nodejs env.
-
 We are using [node-canvas](https://github.com/Automattic/node-canvas) to create canvas element.
+Please check installation instructions for it. Then just run
 
-1. Install node-canvas dependencies [https://github.com/Automattic/node-canvas](https://github.com/Automattic/node-canvas)
-2. `npm install canvas --save`
-2. `npm install jsdom --save`
-3. `npm install konva --save`
+```bash
+npm install konva-node
+```
+
+Then in you javascript file you will need to use
+
+```javascript
+const Konva = require('konva-node');
+```
 
 See file `resources/nodejs-demo.js` for example.
-
-Last tested with node@5.10.1, canvas@1.3.14, jsdom@8.5.0
 
 # Change log
 
