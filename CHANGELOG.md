@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [1.7.1][2017-10-11]
+
+### Changed
+- Konva for browser env and Konva for nodejs env are separate packages now. You can use `konva-node` for NodeJS env.
+
 ## [1.7.0][2017-10-08]
 
 ### Fixed

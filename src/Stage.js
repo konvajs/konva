@@ -177,7 +177,9 @@
          * @memberof Konva.Stage.prototype
          */
     clear: function() {
-      var layers = this.children, len = layers.length, n;
+      var layers = this.children,
+        len = layers.length,
+        n;
 
       for (n = 0; n < len; n++) {
         layers[n].clear();
@@ -386,7 +388,10 @@
 
       // draw layer and append canvas to container
       layer.draw();
-      this.content.appendChild(layer.canvas._canvas);
+
+      if (Konva.isBrowser) {
+        this.content.appendChild(layer.canvas._canvas);
+      }
 
       // chainable
       return this;
@@ -406,6 +411,9 @@
       return this.getChildren();
     },
     _bindContentEvents: function() {
+      if (!Konva.isBrowser) {
+        return;
+      }
       for (var n = 0; n < eventsLength; n++) {
         addEvent(this, EVENTS[n]);
       }
@@ -660,7 +668,8 @@
     },
     _touchmove: function(evt) {
       this._setPointerPosition(evt);
-      var dd = Konva.DD, shape;
+      var dd = Konva.DD,
+        shape;
       if (!Konva.isDragging()) {
         shape = this.getIntersection(this.getPointerPosition());
         if (shape && shape.isListening()) {
@@ -692,7 +701,9 @@
       this._fire(CONTENT_WHEEL, { evt: evt });
     },
     _setPointerPosition: function(evt) {
-      var contentPosition = this._getContentPosition(), x = null, y = null;
+      var contentPosition = this._getContentPosition(),
+        x = null,
+        y = null;
       evt = evt ? evt : window.event;
 
       // touch events
@@ -726,14 +737,18 @@
       };
     },
     _buildDOM: function() {
+      // the buffer canvas pixel ratio must be 1 because it is used as an
+      // intermediate canvas before copying the result onto a scene canvas.
+      // not setting it to 1 will result in an over compensation
+      this.bufferCanvas = new Konva.SceneCanvas();
+      this.bufferHitCanvas = new Konva.HitCanvas({ pixelRatio: 1 });
+
+      if (!Konva.isBrowser) {
+        return;
+      }
       var container = this.getContainer();
       if (!container) {
-        if (Konva.Util.isBrowser()) {
-          throw 'Stage has no container. A container is required.';
-        } else {
-          // automatically create element for jsdom in nodejs env
-          container = Konva.document.createElement(DIV);
-        }
+        throw 'Stage has no container. A container is required.';
       }
       // clear content inside container
       container.innerHTML = EMPTY_STRING;
@@ -743,18 +758,16 @@
       this.content.style.position = RELATIVE;
       this.content.className = KONVA_CONTENT;
       this.content.setAttribute('role', 'presentation');
-      container.appendChild(this.content);
 
-      // the buffer canvas pixel ratio must be 1 because it is used as an
-      // intermediate canvas before copying the result onto a scene canvas.
-      // not setting it to 1 will result in an over compensation
-      this.bufferCanvas = new Konva.SceneCanvas();
-      this.bufferHitCanvas = new Konva.HitCanvas({ pixelRatio: 1 });
+      container.appendChild(this.content);
 
       this._resizeDOM();
     },
     _onContent: function(typesStr, handler) {
-      var types = typesStr.split(SPACE), len = types.length, n, baseEvent;
+      var types = typesStr.split(SPACE),
+        len = types.length,
+        n,
+        baseEvent;
 
       for (n = 0; n < len; n++) {
         baseEvent = types[n];

@@ -1,19 +1,27 @@
 (function() {
   'use strict';
   // calculate pixel ratio
-  var canvas = Konva.Util.createCanvasElement(),
-    context = canvas.getContext('2d'),
-    _pixelRatio = (function() {
-      var devicePixelRatio = Konva.window.devicePixelRatio || 1,
-        backingStoreRatio =
-          context.webkitBackingStorePixelRatio ||
-          context.mozBackingStorePixelRatio ||
-          context.msBackingStorePixelRatio ||
-          context.oBackingStorePixelRatio ||
-          context.backingStorePixelRatio ||
-          1;
-      return devicePixelRatio / backingStoreRatio;
-    })();
+
+  var _pixelRatio;
+  function getDevicePixelRatio() {
+    if (_pixelRatio) {
+      return _pixelRatio;
+    }
+    var canvas = Konva.Util.createCanvasElement(),
+      context = canvas.getContext('2d'),
+      _pixelRatio = (function() {
+        var devicePixelRatio = Konva.window.devicePixelRatio || 1,
+          backingStoreRatio =
+            context.webkitBackingStorePixelRatio ||
+            context.mozBackingStorePixelRatio ||
+            context.msBackingStorePixelRatio ||
+            context.oBackingStorePixelRatio ||
+            context.backingStorePixelRatio ||
+            1;
+        return devicePixelRatio / backingStoreRatio;
+      })();
+    return _pixelRatio;
+  }
 
   /**
      * Canvas Renderer constructor
@@ -39,7 +47,8 @@
     init: function(config) {
       var conf = config || {};
 
-      var pixelRatio = conf.pixelRatio || Konva.pixelRatio || _pixelRatio;
+      var pixelRatio =
+        conf.pixelRatio || Konva.pixelRatio || getDevicePixelRatio();
 
       this.pixelRatio = pixelRatio;
       this._canvas = Konva.Util.createCanvasElement();
@@ -102,7 +111,8 @@
       this.width = this._canvas.width = width * this.pixelRatio;
       this._canvas.style.width = width + 'px';
 
-      var pixelRatio = this.pixelRatio, _context = this.getContext()._context;
+      var pixelRatio = this.pixelRatio,
+        _context = this.getContext()._context;
       _context.scale(pixelRatio, pixelRatio);
     },
     /**
@@ -115,7 +125,8 @@
       // take into account pixel ratio
       this.height = this._canvas.height = height * this.pixelRatio;
       this._canvas.style.height = height + 'px';
-      var pixelRatio = this.pixelRatio, _context = this.getContext()._context;
+      var pixelRatio = this.pixelRatio,
+        _context = this.getContext()._context;
       _context.scale(pixelRatio, pixelRatio);
     },
     /**
@@ -173,7 +184,8 @@
 
   Konva.SceneCanvas = function(config) {
     var conf = config || {};
-    var width = conf.width || 0, height = conf.height || 0;
+    var width = conf.width || 0,
+      height = conf.height || 0;
 
     Konva.Canvas.call(this, conf);
     this.context = new Konva.SceneContext(this);
@@ -184,7 +196,8 @@
 
   Konva.HitCanvas = function(config) {
     var conf = config || {};
-    var width = conf.width || 0, height = conf.height || 0;
+    var width = conf.width || 0,
+      height = conf.height || 0;
 
     Konva.Canvas.call(this, conf);
     this.context = new Konva.HitContext(this);

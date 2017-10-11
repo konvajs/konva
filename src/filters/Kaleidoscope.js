@@ -32,18 +32,24 @@
       a = 0;
 
     // Find the largest radius
-    var rad, rMax = Math.sqrt(xMid * xMid + yMid * yMid);
+    var rad,
+      rMax = Math.sqrt(xMid * xMid + yMid * yMid);
     x = xSize - xMid;
     y = ySize - yMid;
     rad = Math.sqrt(x * x + y * y);
     rMax = rad > rMax ? rad : rMax;
 
     // We'll be uisng y as the radius, and x as the angle (theta=t)
-    var rSize = ySize, tSize = xSize, radius, theta;
+    var rSize = ySize,
+      tSize = xSize,
+      radius,
+      theta;
 
     // We want to cover all angles (0-360) and we need to convert to
     // radians (*PI/180)
-    var conversion = 360 / tSize * Math.PI / 180, sin, cos;
+    var conversion = 360 / tSize * Math.PI / 180,
+      sin,
+      cos;
 
     // var x1, x2, x1i, x2i, y1, y2, y1i, y2i, scale;
 
@@ -105,7 +111,8 @@
       a = 0;
 
     // Find the largest radius
-    var rad, rMax = Math.sqrt(xMid * xMid + yMid * yMid);
+    var rad,
+      rMax = Math.sqrt(xMid * xMid + yMid * yMid);
     x = xSize - xMid;
     y = ySize - yMid;
     rad = Math.sqrt(x * x + y * y);
@@ -154,7 +161,6 @@
   //Konva.Filters.FromPolar = Konva.Util._FilterWrapDoubleBuffer(FromPolar);
 
   // create a temporary canvas for working - shared between multiple calls
-  var tempCanvas = Konva.Util.createCanvasElement();
 
   /*
      * Kaleidoscope Filter.
@@ -169,7 +175,8 @@
      * node.kaleidoscopeAngle(45);
      */
   Konva.Filters.Kaleidoscope = function(imageData) {
-    var xSize = imageData.width, ySize = imageData.height;
+    var xSize = imageData.width,
+      ySize = imageData.height;
 
     var x, y, xoff, i, r, g, b, a, srcPos, dstPos;
     var power = Math.round(this.kaleidoscopePower());
@@ -181,6 +188,7 @@
     }
 
     // Work with our shared buffer canvas
+    var tempCanvas = Konva.Util.createCanvasElement();
     tempCanvas.width = xSize;
     tempCanvas.height = ySize;
     var scratchData = tempCanvas
@@ -206,7 +214,9 @@
     // Copy the offset region to 0
     // Depending on the size of filter and location of the offset we may need
     // to copy the section backwards to prevent it from rewriting itself
-    var xStart = 0, xEnd = sectionSize, xDelta = 1;
+    var xStart = 0,
+      xEnd = sectionSize,
+      xDelta = 1;
     if (offset + minSectionSize > xSize) {
       xStart = sectionSize;
       xEnd = 0;

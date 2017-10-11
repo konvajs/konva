@@ -8,7 +8,9 @@
      * @memberof Konva
      */
   Konva.Collection = function() {
-    var args = [].slice.call(arguments), length = args.length, i = 0;
+    var args = [].slice.call(arguments),
+      length = args.length,
+      i = 0;
 
     this.length = length;
     for (; i < length; i++) {
@@ -40,7 +42,9 @@
      * @memberof Konva.Collection.prototype
      */
   Konva.Collection.prototype.toArray = function() {
-    var arr = [], len = this.length, n;
+    var arr = [],
+      len = this.length,
+      n;
 
     for (n = 0; n < len; n++) {
       arr.push(this[n]);
@@ -54,7 +58,9 @@
      * @param {Array} arr
      */
   Konva.Collection.toCollection = function(arr) {
-    var collection = new Konva.Collection(), len = arr.length, n;
+    var collection = new Konva.Collection(),
+      len = arr.length,
+      n;
 
     for (n = 0; n < len; n++) {
       collection.push(arr[n]);
@@ -65,7 +71,8 @@
   // map one method by it's name
   Konva.Collection._mapMethod = function(methodName) {
     Konva.Collection.prototype[methodName] = function() {
-      var len = this.length, i;
+      var len = this.length,
+        i;
 
       var args = [].slice.call(arguments);
       for (i = 0; i < len; i++) {
@@ -520,7 +527,8 @@
          * other utils
          */
     _hasMethods: function(obj) {
-      var names = [], key;
+      var names = [],
+        key;
 
       for (key in obj) {
         if (!obj.hasOwnProperty(key)) {
@@ -544,17 +552,14 @@
       );
     },
     createCanvasElement: function() {
-      var canvas = Konva.isNode
-        ? new Konva._nodeCanvas()
-        : Konva.document.createElement('canvas');
+      var canvas = Konva.isBrowser
+        ? Konva.document.createElement('canvas')
+        : new Konva._nodeCanvas();
       // on some environments canvas.style is readonly
       try {
         canvas.style = canvas.style || {};
       } catch (e) {}
       return canvas;
-    },
-    isBrowser: function() {
-      return typeof exports !== 'object';
     },
     _isInDocument: function(el) {
       while ((el = el.parentNode)) {
@@ -565,7 +570,11 @@
       return false;
     },
     _simplifyArray: function(arr) {
-      var retArr = [], len = arr.length, util = Konva.Util, n, val;
+      var retArr = [],
+        len = arr.length,
+        util = Konva.Util,
+        n,
+        val;
 
       for (n = 0; n < len; n++) {
         val = arr[n];
@@ -866,7 +875,10 @@
       return [p1x, p1y, p2x, p2y];
     },
     _expandPoints: function(p, tension) {
-      var len = p.length, allPoints = [], n, cp;
+      var len = p.length,
+        allPoints = [],
+        n,
+        cp;
 
       for (n = 2; n < len - 2; n += 2) {
         cp = Konva.Util._getControlPoints(
@@ -940,7 +952,9 @@
           pt.x,
           pt.y
         );
-        var px = proj[0], py = proj[1], pdist = proj[2];
+        var px = proj[0],
+          py = proj[1],
+          pdist = proj[2];
         if (pdist < dist) {
           pc.x = px;
           pc.y = py;
@@ -950,7 +964,9 @@
       return pc;
     },
     _prepareArrayForTween: function(startArray, endArray, isClosed) {
-      var n, start = [], end = [];
+      var n,
+        start = [],
+        end = [];
       if (startArray.length > endArray.length) {
         var temp = endArray;
         endArray = startArray;

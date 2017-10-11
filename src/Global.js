@@ -28,7 +28,7 @@
  */
 
 // runtime check for already included Konva
-(function(global) {
+(function() {
   'use strict';
   /**
      * @namespace Konva
@@ -48,6 +48,10 @@
     shapes: {},
     listenClickTap: false,
     inDblClickWindow: false,
+
+    isBrowser:
+      typeof window !== 'undefined' &&
+      {}.toString.call(window) === '[object Window]',
 
     // configurations
     enableTrace: false,
@@ -196,12 +200,14 @@
     _parseUA: function(userAgent) {
       var ua = userAgent.toLowerCase(),
         // jQuery UA regex
-        match = /(chrome)[ /]([\w.]+)/.exec(ua) ||
-        /(webkit)[ /]([\w.]+)/.exec(ua) ||
-        /(opera)(?:.*version|)[ /]([\w.]+)/.exec(ua) ||
-        /(msie) ([\w.]+)/.exec(ua) ||
-        (ua.indexOf('compatible') < 0 &&
-          /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(ua)) || [],
+        match =
+          /(chrome)[ /]([\w.]+)/.exec(ua) ||
+          /(webkit)[ /]([\w.]+)/.exec(ua) ||
+          /(opera)(?:.*version|)[ /]([\w.]+)/.exec(ua) ||
+          /(msie) ([\w.]+)/.exec(ua) ||
+          (ua.indexOf('compatible') < 0 &&
+            /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(ua)) ||
+          [],
         // adding mobile flag as well
         mobile = !!userAgent.match(
           /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i
@@ -221,9 +227,10 @@
     UA: undefined
   };
 
-  var glob = typeof global !== 'undefined'
-    ? global
-    : typeof window !== 'undefined'
+  var glob =
+    typeof global !== 'undefined'
+      ? global
+      : typeof window !== 'undefined'
         ? window
         : typeof WorkerGlobalScope !== 'undefined' ? self : {};
 
@@ -239,25 +246,6 @@
   Konva.global = glob;
 
   if (typeof exports === 'object') {
-    // runtime-check for browserify and nw.js (node-webkit)
-    if (glob.window && glob.window.document) {
-      Konva.document = glob.window.document;
-      Konva.window = glob.window;
-    } else {
-      // Node. Does not work with strict CommonJS, but
-      // only CommonJS-like enviroments that support module.exports,
-      // like Node.
-      var Canvas = require('canvas');
-      var JSDOM = require('jsdom').JSDOM;
-
-      Konva.window = new JSDOM(
-        '<!DOCTYPE html><html><head></head><body></body></html>'
-      ).window;
-      Konva.document = Konva.window.document;
-      Konva.window.Image = Canvas.Image;
-      Konva._nodeCanvas = Canvas;
-      Konva.isNode = true;
-    }
     module.exports = Konva;
     return;
   } else if (typeof define === 'function' && define.amd) {
@@ -268,4 +256,4 @@
   }
   Konva.document = document;
   Konva.window = window;
-})(typeof global !== 'undefined' ? global : window);
+})();

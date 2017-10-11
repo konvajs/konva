@@ -37,8 +37,15 @@
       'letterSpacing'
     ],
     // cached variables
-    attrChangeListLen = ATTR_CHANGE_LIST.length,
+    attrChangeListLen = ATTR_CHANGE_LIST.length;
+  var dummyContext;
+  function getDummyContext() {
+    if (dummyContext) {
+      return dummyContext;
+    }
     dummyContext = Konva.Util.createCanvasElement().getContext(CONTEXT_2D);
+    return dummyContext;
+  }
 
   /**
      * Text constructor
@@ -140,7 +147,9 @@
 
       // draw text lines
       for (n = 0; n < textArrLen; n++) {
-        var obj = textArr[n], text = obj.text, width = obj.width;
+        var obj = textArr[n],
+          text = obj.text,
+          width = obj.width;
 
         // horizontal alignment
         context.save();
@@ -202,7 +211,8 @@
       context.restore();
     },
     _hitFunc: function(context) {
-      var width = this.getWidth(), height = this.getHeight();
+      var width = this.getWidth(),
+        height = this.getHeight();
 
       context.beginPath();
       context.rect(0, 0, width, height);
@@ -245,7 +255,7 @@
         this.attrs.height === AUTO || this.attrs.height === undefined;
       return isAuto
         ? this.getTextHeight() * this.textArr.length * this.getLineHeight() +
-            this.getPadding() * 2
+          this.getPadding() * 2
         : this.attrs.height;
     },
     /**
@@ -267,7 +277,9 @@
       return this.textHeight;
     },
     _getTextSize: function(text) {
-      var _context = dummyContext, fontSize = this.getFontSize(), metrics;
+      var _context = getDummyContext(),
+        fontSize = this.getFontSize(),
+        metrics;
 
       _context.save();
       _context.font = this._getContextFont();
@@ -314,7 +326,7 @@
       var latterSpacing = this.getLetterSpacing();
       var length = text.length;
       return (
-        dummyContext.measureText(text).width +
+        getDummyContext().measureText(text).width +
         (length ? latterSpacing * (length - 1) : 0)
       );
     },
@@ -336,8 +348,8 @@
         wrapAtWord = wrap !== CHAR && shouldWrap;
 
       this.textArr = [];
-      dummyContext.save();
-      dummyContext.font = this._getContextFont();
+      getDummyContext().save();
+      getDummyContext().font = this._getContextFont();
       for (var i = 0, max = lines.length; i < max; ++i) {
         var line = lines[i];
 
@@ -352,7 +364,10 @@
                          * use binary search to find the longest substring that
                          * that would fit in the specified width
                          */
-            var low = 0, high = line.length, match = '', matchWidth = 0;
+            var low = 0,
+              high = line.length,
+              match = '',
+              matchWidth = 0;
             while (low < high) {
               var mid = (low + high) >>> 1,
                 substr = line.slice(0, mid + 1),
@@ -425,7 +440,7 @@
           break;
         }
       }
-      dummyContext.restore();
+      getDummyContext().restore();
       this.textHeight = fontSize;
       // var maxTextWidth = 0;
       // for(var j = 0; j < this.textArr.length; j++) {

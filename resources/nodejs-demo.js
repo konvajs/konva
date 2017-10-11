@@ -1,4 +1,10 @@
-var fs = require('fs'), Konva = require('../dist/konva-dev');
+var fs = require('fs');
+
+// relative path here
+// but you will need just require('konva-node');
+var Konva = require('../konva-node');
+
+// console.log(Konva.Util.c);
 
 // Create stage. Container parameter is not required in NodeJS.
 var stage = new Konva.Stage({
@@ -13,7 +19,7 @@ var rect = new Konva.Rect({
   height: 100,
   x: 50,
   y: 50,
-  fill: 'green'
+  fill: 'white'
 });
 var text = new Konva.Text({
   text: 'Generated inside node js',

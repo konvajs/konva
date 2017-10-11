@@ -9,6 +9,7 @@ homedocs
 jsdoc-template
 api
 test/sandbox.html
+package-lock.json
 *.zip
 
 # Numerous always-ignore extensions
