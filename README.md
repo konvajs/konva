@@ -17,6 +17,10 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 * **Discover:** [Tutorials](http://konvajs.github.io/docs), [API Documentation](http://konvajs.github.io/api)
 * **Help:** [StackOverflow](http://stackoverflow.com/questions/tagged/konvajs), [Chat](https://gitter.im/konvajs/konva)
 
+<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/wUMFgN5Poni4w2c2fAY71nB3/konvajs/konva'>
+  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/wUMFgN5Poni4w2c2fAY71nB3/konvajs/konva.svg' />
+</a>
+
 # Quick Look
 
 ```html
