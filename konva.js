@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.2
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Wed Oct 11 2017
+ * Date: Tue Oct 17 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -10201,7 +10201,7 @@
         for (n = 0; n < len; n++) {
           layer = layers[n];
           layer.setSize(width, height);
-          layer.batchDraw();
+          layer.draw();
         }
       }
     },

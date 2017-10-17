@@ -364,7 +364,7 @@
         for (n = 0; n < len; n++) {
           layer = layers[n];
           layer.setSize(width, height);
-          layer.batchDraw();
+          layer.draw();
         }
       }
     },

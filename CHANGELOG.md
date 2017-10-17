@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+### Changed
+- Changing size of a stage will redraw it in synchronous way
+
 ## [1.7.2][2017-10-11]
 
 ### Fixed
