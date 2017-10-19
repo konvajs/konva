@@ -1,4 +1,4 @@
-var Konva = require('../dist/konva-dev');
+var Konva = require('konva');
 
 var Canvas = require('canvas');
 

@@ -1,6 +1,6 @@
 {
   "name": "konva",
-  "version": "1.7.3",
+  "version": "1.7.4",
   "author": "Anton Lavrenov",
   "files": [
     "README.md",
@@ -54,8 +54,5 @@
     "type": "git",
     "url": "git://github.com/konvajs/konva.git"
   },
-  "license": "MIT",
-  "dependencies": {
-    "konva-node": "^0.5.2"
-  }
+  "license": "MIT"
 }
