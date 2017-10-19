@@ -24,7 +24,7 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 # Quick Look
 
 ```html
-<script src="https://cdn.rawgit.com/konvajs/konva/1.7.2/konva.min.js"></script>
+<script src="https://cdn.rawgit.com/konvajs/konva/1.7.3/konva.min.js"></script>
 <div id="container"></div>
 <script>
     var stage = new Konva.Stage({
@@ -69,10 +69,10 @@ Konva supports UMD loading. So you can use all possible variants to load the fra
 ### 1 Load Konva via classical `<script>` tag:
 
 ```html
-<script src="https://cdn.rawgit.com/konvajs/konva/1.7.2/konva.min.js"></script>
+<script src="https://cdn.rawgit.com/konvajs/konva/1.7.3/konva.min.js"></script>
 ```
 
-You can use CDN: [https://cdn.rawgit.com/konvajs/konva/1.7.2/konva.min.js](https://cdn.rawgit.com/konvajs/konva/1.7.2/konva.min.js)
+You can use CDN: [https://cdn.rawgit.com/konvajs/konva/1.7.3/konva.min.js](https://cdn.rawgit.com/konvajs/konva/1.7.3/konva.min.js)
 
 ### 2 Load via AMD (requirejs):
 
