@@ -1,12 +1,19 @@
 {
   "name": "konva-node",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Konva framework for NodeJS env",
   "main": "index.js",
-  "files": ["index.js"],
+  "files": [
+    "index.js"
+  ],
   "typings": "./node_modules/konva/konva.d.ts",
   "scripts": {},
-  "keywords": ["canvas", "animations", "graphic", "html5"],
+  "keywords": [
+    "canvas",
+    "animations",
+    "graphic",
+    "html5"
+  ],
   "author": "Anton Lavrenov",
   "bugs": {
     "url": "https://github.com/konvajs/konva/issues"
