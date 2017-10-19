@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.2
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Tue Oct 17 2017
+ * Date: Thu Oct 19 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -245,8 +245,8 @@
   glob.Konva = Konva;
   Konva.global = glob;
 
-  Konva.document = document;
-  Konva.window = window;
+  Konva.document = glob.document;
+  Konva.window = glob;
 
   if (typeof exports === 'object') {
     module.exports = Konva;

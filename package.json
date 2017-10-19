@@ -54,5 +54,8 @@
     "type": "git",
     "url": "git://github.com/konvajs/konva.git"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "konva-node": "^0.5.2"
+  }
 }

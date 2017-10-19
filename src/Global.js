@@ -244,9 +244,8 @@
   }
   glob.Konva = Konva;
   Konva.global = glob;
-
-  Konva.document = document;
-  Konva.window = window;
+  Konva.window = glob;
+  Konva.document = glob.document;
 
   if (typeof exports === 'object') {
     module.exports = Konva;
