@@ -51,7 +51,8 @@
 
     isBrowser:
       typeof window !== 'undefined' &&
-      {}.toString.call(window) === '[object Window]',
+      ({}.toString.call(window) === '[object Window]' ||
+        {}.toString.call(window) === '[object global]'),
 
     // configurations
     enableTrace: false,

@@ -6,6 +6,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.7.3][2017-10-19]
 
+## Fixed
+- `isBrowser` detection for electron
+
+## [1.7.3][2017-10-19]
+
 ### Changed
 - Changing size of a stage will redraw it in synchronous way
 
