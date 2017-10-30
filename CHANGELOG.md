@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
-## [1.7.3][2017-10-19]
+## [1.7.4][2017-10-30]
 
 ## Fixed
 - `isBrowser` detection for electron
