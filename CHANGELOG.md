@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Not released][Not released]
 
+## [1.7.5][2017-11-01]
+
+## Fixed
+- Some typescript fixes
+
 ## [1.7.4][2017-10-30]
 
 ## Fixed

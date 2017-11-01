@@ -332,6 +332,7 @@ declare module Konva {
         stroke?: string;
         strokeWidth?: number;
         strokeScaleEnabled?: boolean;
+        strokeHitEnabled?: boolean;
         strokeEnabled?: boolean;
         lineJoin?: string;
         lineCap?: string;
@@ -476,10 +477,11 @@ declare module Konva {
 
     interface LayerConfig extends ContainerConfig {
         clearBeforeDraw?: boolean;
+        hitGraphEnabled?: boolean;
     }
 
     class FastLayer extends Container {
-        constructor (config?: ContainerConfig);
+        constructor (config?: LayerConfig);
         drawScene(): void;
         hitGraphEnabled(val: boolean): FastLayer;
         batchDraw(): void;
