@@ -1,8 +1,8 @@
 /*
- * Konva JavaScript Framework v1.7.4
+ * Konva JavaScript Framework v1.7.5
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Mon Oct 30 2017
+ * Date: Wed Nov 01 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -38,7 +38,7 @@
 
   var Konva = {
     // public
-    version: '1.7.4',
+    version: '1.7.5',
 
     // private
     stages: [],
@@ -51,7 +51,9 @@
 
     isBrowser:
       typeof window !== 'undefined' &&
+      // browser case
       ({}.toString.call(window) === '[object Window]' ||
+        // electron case
         {}.toString.call(window) === '[object global]'),
 
     // configurations
