@@ -178,27 +178,31 @@
 
         if (this.scaleDynamicX) {
           sx = (totalWidth - 2*p) / width;
-          if (sx > this.scaleDynamicX)
+          if (sx > this.scaleDynamicX) {
             sx = this.scaleDynamicX;
+          }
         } else {
           sx = 1;
         }
 
         if (this.scaleDynamicY) {
           sy = (this.getHeight() - 2*p) / lineHeightPx;
-          if (sy > this.scaleDynamicY)
+          if (sy > this.scaleDynamicY) {
             sy = this.scaleDynamicY;
+          }
         } else {
           sy = 1;
         }
 
         // limit scale ratio to a maximum ratio defined
         if (sx > sy) {
-          if (sx / sy > this.scaleDynamicMaxRatio)
+          if (sx / sy > this.scaleDynamicMaxRatio) {
             sx = sy * this.scaleDynamicMaxRatio;
+          }
         } else {
-          if (sy / sx > this.scaleDynamicMaxRatio)
+          if (sy / sx > this.scaleDynamicMaxRatio) {
             sy = sx * this.scaleDynamicMaxRatio;
+          }
         }
 
         if (this.verticalAlign) {
