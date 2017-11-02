@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Wed Nov 01 2017
+ * Date: Thu Nov 02 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -14368,8 +14368,9 @@
       this.scaleDynamicMaxRatio = config.scaleDynamicMaxRatio || 4;
       this.verticalAlign = config.verticalAlign;
 
-      if (config.scaleDynamicX || config.scaleDynamicY || this.verticalAlign)
+      if (config.scaleDynamicX || config.scaleDynamicY || this.verticalAlign) {
         this.wrap(NONE);
+      }
     },
     _sceneFunc: function(context) {
       var p = this.getPadding(),
@@ -14412,42 +14413,49 @@
             alignY = 0;
 
         if (this.scaleDynamicX) {
-          sx = (totalWidth - 2*p) / width;
-          if (sx > this.scaleDynamicX)
+          sx = (totalWidth - 2 * p) / width;
+          if (sx > this.scaleDynamicX) {
             sx = this.scaleDynamicX;
+          }
+        } else {
+          sx = 1;
         }
-        else sx = 1;
 
         if (this.scaleDynamicY) {
-          sy = (this.getHeight() - 2*p) / lineHeightPx;
-          if (sy > this.scaleDynamicY)
+          sy = (this.getHeight() - 2 * p) / lineHeightPx;
+          if (sy > this.scaleDynamicY) {
             sy = this.scaleDynamicY;
+          }
+        } else {
+          sy = 1;
         }
-        else sy = 1;
 
         // limit scale ratio to a maximum ratio defined
         if (sx > sy) {
-          if (sx / sy > this.scaleDynamicMaxRatio)
+          if (sx / sy > this.scaleDynamicMaxRatio) {
             sx = sy * this.scaleDynamicMaxRatio;
+          }
         } else {
-          if (sy / sx > this.scaleDynamicMaxRatio)
+          if (sy / sx > this.scaleDynamicMaxRatio) {
             sy = sx * this.scaleDynamicMaxRatio;
+          }
         }
 
-        if (this.verticalAlign)
-          alignY = (this.getHeight() - (sy*lineHeightPx) - 2*p) / sy / 2;
+        if (this.verticalAlign) {
+          alignY = (this.getHeight() - (sy * lineHeightPx) - 2 * p) / sy / 2;
+        }
 
         // only apply scaling or vertical alignment if requested
-        if (sx != 1 || sy != 1 || alignY) {
+        if (sx !== 1 || sy !== 1 || alignY) {
           context.translate(0, -(textHeight / 2));
           context.scale(sx, sy);
           context.translate(0, (textHeight / 2) + alignY);
         }
 
         if (align === RIGHT) {
-          context.translate((totalWidth - width*sx - p * 2) / sx, 0);
+          context.translate((totalWidth - width * sx - p * 2) / sx, 0);
         } else if (align === CENTER) {
-          context.translate((totalWidth - width*sx - p * 2) / sx / 2, 0);
+          context.translate((totalWidth - width * sx - p * 2) / sx / 2, 0);
         }
 
         if (textDecoration.indexOf('underline') !== -1) {
