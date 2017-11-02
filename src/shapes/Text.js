@@ -177,7 +177,7 @@
             alignY = 0;
 
         if (this.scaleDynamicX) {
-          sx = (totalWidth - 2*p) / width;
+          sx = (totalWidth - 2 * p) / width;
           if (sx > this.scaleDynamicX) {
             sx = this.scaleDynamicX;
           }
@@ -186,7 +186,7 @@
         }
 
         if (this.scaleDynamicY) {
-          sy = (this.getHeight() - 2*p) / lineHeightPx;
+          sy = (this.getHeight() - 2 * p) / lineHeightPx;
           if (sy > this.scaleDynamicY) {
             sy = this.scaleDynamicY;
           }
@@ -206,20 +206,20 @@
         }
 
         if (this.verticalAlign) {
-          alignY = (this.getHeight() - (sy*lineHeightPx) - 2*p) / sy / 2;
+          alignY = (this.getHeight() - (sy * lineHeightPx) - 2 * p) / sy / 2;
         }
 
         // only apply scaling or vertical alignment if requested
-        if (sx != 1 || sy != 1 || alignY) {
+        if (sx !== 1 || sy !== 1 || alignY) {
           context.translate(0, -(textHeight / 2));
           context.scale(sx, sy);
           context.translate(0, (textHeight / 2) + alignY);
         }
 
         if (align === RIGHT) {
-          context.translate((totalWidth - width*sx - p * 2) / sx, 0);
+          context.translate((totalWidth - width * sx - p * 2) / sx, 0);
         } else if (align === CENTER) {
-          context.translate((totalWidth - width*sx - p * 2) / sx / 2, 0);
+          context.translate((totalWidth - width * sx - p * 2) / sx / 2, 0);
         }
 
         if (textDecoration.indexOf('underline') !== -1) {
