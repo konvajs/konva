@@ -132,8 +132,9 @@
       this.scaleDynamicMaxRatio = config.scaleDynamicMaxRatio || 4;
       this.verticalAlign = config.verticalAlign;
 
-      if (config.scaleDynamicX || config.scaleDynamicY || this.verticalAlign)
+      if (config.scaleDynamicX || config.scaleDynamicY || this.verticalAlign) {
         this.wrap(NONE);
+      }
     },
     _sceneFunc: function(context) {
       var p = this.getPadding(),
@@ -179,15 +180,17 @@
           sx = (totalWidth - 2*p) / width;
           if (sx > this.scaleDynamicX)
             sx = this.scaleDynamicX;
+        } else {
+          sx = 1;
         }
-        else sx = 1;
 
         if (this.scaleDynamicY) {
           sy = (this.getHeight() - 2*p) / lineHeightPx;
           if (sy > this.scaleDynamicY)
             sy = this.scaleDynamicY;
+        } else {
+          sy = 1;
         }
-        else sy = 1;
 
         // limit scale ratio to a maximum ratio defined
         if (sx > sy) {
@@ -198,8 +201,9 @@
             sy = sx * this.scaleDynamicMaxRatio;
         }
 
-        if (this.verticalAlign)
+        if (this.verticalAlign) {
           alignY = (this.getHeight() - (sy*lineHeightPx) - 2*p) / sy / 2;
+        }
 
         // only apply scaling or vertical alignment if requested
         if (sx != 1 || sy != 1 || alignY) {
