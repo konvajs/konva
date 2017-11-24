@@ -646,7 +646,7 @@ declare module Konva {
     }
 
     interface ImageConfig extends ShapeConfig {
-        image: HTMLImageElement;
+        image: HTMLImageElement | HTMLCanvasElement;
         crop?: SizeConfig;
     }
 
