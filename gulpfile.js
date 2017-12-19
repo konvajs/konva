@@ -80,7 +80,8 @@ var sourceFiles = [
   'src/shapes/RegularPolygon.js',
   'src/shapes/Star.js',
   'src/shapes/Label.js',
-  'src/shapes/Arrow.js'
+  'src/shapes/Arrow.js',
+  'src/shapes/Resizer.js'
 ];
 
 function build() {
