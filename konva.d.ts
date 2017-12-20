@@ -112,6 +112,7 @@ declare module Konva {
             constructor(config: NodeConfig);
             static create<T>(data: any, container?: HTMLElement): T;
 
+            addName(name: string): Node;
             blue(): number;
             blue(blue: number): Node;
             brightness(): number;
@@ -174,6 +175,7 @@ declare module Konva {
             getZIndex(): number;
             green(): number;
             green(green: number): Node;
+            hasName(name: string): boolean;
             height(): number;
             height(height: number): Node;
             hide(): void;
