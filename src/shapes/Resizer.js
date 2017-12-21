@@ -174,14 +174,19 @@
         var dAlpha = Math.atan2(-y, x) + Math.PI / 2;
         var attrs = this._getAttrs();
 
-        var newRotation = this.rotation() + dAlpha / Math.PI * 180;
+        var rot = Konva.getAngle(this.rotation());
 
-        var alpha = Konva.Util._degToRad(this._el.rotation());
+        var newRotation =
+          Konva.Util._radToDeg(rot) + Konva.Util._radToDeg(dAlpha);
+
+        var alpha = Konva.getAngle(this._el.rotation());
         var newAlpha = Konva.Util._degToRad(newRotation);
 
         this._setElementAttrs(
           Object.assign(attrs, {
-            rotation: newRotation,
+            rotation: Konva.angleDeg
+              ? newRotation
+              : Konva.Util._degToRad(newRotation),
             x:
               attrs.x +
               attrs.width / 2 * (Math.cos(alpha) - Math.cos(newAlpha)) +
