@@ -19,7 +19,7 @@
     attachTo: function(node) {
       this._el = node;
       this._update();
-      this._el.on('dragmove', this._update);
+      this._el.on('dragmove.resizer', this._update);
       //     this._set();
     },
 
@@ -63,6 +63,9 @@
       });
       anchor.on('mouseout', function() {
         var layer = this.getLayer();
+        if (!layer) {
+          return;
+        }
         document.body.style.cursor = 'default';
         this.setStrokeWidth(1);
         layer.draw();
@@ -332,6 +335,14 @@
         x: width / 2,
         y: -50
       });
+    },
+    destroy: function() {
+      Konva.Group.prototype.destroy.call(this);
+      this._el.off('.resizer');
+      window.removeEventListener('mousemove', this.handleMouseMove);
+      window.removeEventListener('touchmove', this.handleMouseMove);
+      window.removeEventListener('mouseup', this.handleMouseUp);
+      window.removeEventListener('touchend', this.handleMouseUp);
     }
   };
   Konva.Util.extend(Konva.Resizer, Konva.Group);
