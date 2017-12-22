@@ -224,6 +224,7 @@ declare module Konva {
             red(): number;
             red(red: number): Node;
             remove(): Node;
+            removeName(name: string): Node;
             rotate(theta: number): Node;
             rotation(): number;
             rotation(rotation: number): Node;
