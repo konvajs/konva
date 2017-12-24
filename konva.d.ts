@@ -296,6 +296,7 @@ declare module Konva {
             clipFunc(ctx: CanvasRenderingContext2D | undefined | null): void;
             destroyChildren(): void;
             find(selector?: string): Collection;
+            findOne<T extends Node>(selector: string): T;
             getAllIntersections(pos: Vector2d): Node[];
             hasChildren(): boolean;
             removeChildren(): void;
@@ -894,16 +895,16 @@ declare module Konva {
 
         class Transform {
             copy(): Transform;
-            getMatrix(): any[];
+            getMatrix(): number[];
             getTranslation(): Vector2d;
-            invert(): void;
-            multiply(matrix: any[]): void;
+            invert(): Transform;
+            multiply(matrix: number[]): Transform;
             point(point: Vector2d): Vector2d;
-            rotate(deg: number): void;
-            scale(x: number, y: Number): void;
-            setAbsolutePosition(): void;
-            skew(x: number, y: Number): void;
-            translate(x: number, y: Number): void;
+            rotate(deg: number): Transform;
+            scale(x: number, y: Number): Transform;
+            setAbsolutePosition(): Transform;
+            skew(x: number, y: Number): Transform;
+            translate(x: number, y: Number): Transform;
         }
 
 
