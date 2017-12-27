@@ -128,7 +128,7 @@
         *  cache node to improve drawing performance, apply filters, or create more accurate
         *  hit regions. For all basic shapes size of cache canvas will be automatically detected.
         *  If you need to cache your custom `Konva.Shape` instance you have to pass shape's bounding box
-        *  properties. Look at [link to demo page](link to demo page) for more information.
+        *  properties. Look at [https://konvajs.github.io/docs/performance/Shape_Caching.html](link to demo page) for more information.
         * @method
         * @memberof Konva.Node.prototype
         * @param {Object} [config]
