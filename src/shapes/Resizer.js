@@ -298,40 +298,46 @@
         });
       }
 
-      this.findOne('.top-left').position({
+      var keepRatio = this.keepRatio();
+
+      this.findOne('.top-left').setAttrs({
         x: 0,
         y: 0
       });
-      this.findOne('.top-center').position({
+      this.findOne('.top-center').setAttrs({
         x: width / 2,
-        y: 0
+        y: 0,
+        visible: !keepRatio
       });
-      this.findOne('.top-right').position({
+      this.findOne('.top-right').setAttrs({
         x: width,
         y: 0
       });
-      this.findOne('.middle-left').position({
+      this.findOne('.middle-left').setAttrs({
         x: 0,
-        y: height / 2
+        y: height / 2,
+        visible: !keepRatio
       });
-      this.findOne('.middle-right').position({
+      this.findOne('.middle-right').setAttrs({
         x: width,
-        y: height / 2
+        y: height / 2,
+        visible: !keepRatio
       });
-      this.findOne('.bottom-left').position({
+      this.findOne('.bottom-left').setAttrs({
         x: 0,
         y: height
       });
-      this.findOne('.bottom-center').position({
+      this.findOne('.bottom-center').setAttrs({
         x: width / 2,
-        y: height
+        y: height,
+        visible: !keepRatio
       });
-      this.findOne('.bottom-right').position({
+      this.findOne('.bottom-right').setAttrs({
         x: width,
         y: height
       });
 
-      this.findOne('.rotater').position({
+      this.findOne('.rotater').setAttrs({
         x: width / 2,
         y: -50
       });
@@ -346,6 +352,8 @@
     }
   };
   Konva.Util.extend(Konva.Resizer, Konva.Group);
+
+  Konva.Factory.addGetterSetter(Konva.Resizer, 'keepRatio', false);
 
   Konva.Collection.mapMethods(Konva.Resizer);
 })(Konva);

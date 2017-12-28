@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Thu Dec 21 2017
+ * Date: Thu Dec 28 2017
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -2493,7 +2493,7 @@
         *  cache node to improve drawing performance, apply filters, or create more accurate
         *  hit regions. For all basic shapes size of cache canvas will be automatically detected.
         *  If you need to cache your custom `Konva.Shape` instance you have to pass shape's bounding box
-        *  properties. Look at [link to demo page](link to demo page) for more information.
+        *  properties. Look at [https://konvajs.github.io/docs/performance/Shape_Caching.html](link to demo page) for more information.
         * @method
         * @memberof Konva.Node.prototype
         * @param {Object} [config]
@@ -18519,40 +18519,46 @@
         });
       }
 
-      this.findOne('.top-left').position({
+      var keepRatio = this.keepRatio();
+
+      this.findOne('.top-left').setAttrs({
         x: 0,
         y: 0
       });
-      this.findOne('.top-center').position({
+      this.findOne('.top-center').setAttrs({
         x: width / 2,
-        y: 0
+        y: 0,
+        visible: !keepRatio
       });
-      this.findOne('.top-right').position({
+      this.findOne('.top-right').setAttrs({
         x: width,
         y: 0
       });
-      this.findOne('.middle-left').position({
+      this.findOne('.middle-left').setAttrs({
         x: 0,
-        y: height / 2
+        y: height / 2,
+        visible: !keepRatio
       });
-      this.findOne('.middle-right').position({
+      this.findOne('.middle-right').setAttrs({
         x: width,
-        y: height / 2
+        y: height / 2,
+        visible: !keepRatio
       });
-      this.findOne('.bottom-left').position({
+      this.findOne('.bottom-left').setAttrs({
         x: 0,
         y: height
       });
-      this.findOne('.bottom-center').position({
+      this.findOne('.bottom-center').setAttrs({
         x: width / 2,
-        y: height
+        y: height,
+        visible: !keepRatio
       });
-      this.findOne('.bottom-right').position({
+      this.findOne('.bottom-right').setAttrs({
         x: width,
         y: height
       });
 
-      this.findOne('.rotater').position({
+      this.findOne('.rotater').setAttrs({
         x: width / 2,
         y: -50
       });
@@ -18567,6 +18573,8 @@
     }
   };
   Konva.Util.extend(Konva.Resizer, Konva.Group);
+
+  Konva.Factory.addGetterSetter(Konva.Resizer, 'keepRatio', false);
 
   Konva.Collection.mapMethods(Konva.Resizer);
 })(Konva);
