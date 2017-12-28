@@ -24,6 +24,8 @@
     },
 
     _createElements: function() {
+      this._createBack();
+
       this._createAnchor('top-left');
       this._createAnchor('top-center');
       this._createAnchor('top-right');
@@ -57,7 +59,7 @@
       // add hover styling
       anchor.on('mouseover', function() {
         var layer = this.getLayer();
-        document.body.style.cursor = 'pointer';
+        anchor.getStage().getContainer().style.cursor = 'pointer';
         this.setStrokeWidth(4);
         layer.draw();
       });
@@ -66,11 +68,29 @@
         if (!layer) {
           return;
         }
-        document.body.style.cursor = 'default';
+        anchor.getStage().getContainer().style.cursor = '';
         this.setStrokeWidth(1);
         layer.draw();
       });
       this.add(anchor);
+    },
+
+    _createBack: function() {
+      var back = new Konva.Shape({
+        stroke: 'rgb(0, 161, 255)',
+        name: 'back',
+        width: 0,
+        height: 0,
+        listening: false,
+        sceneFunc: function(ctx) {
+          ctx.beginPath();
+          ctx.rect(0, 0, this.width(), this.height());
+          ctx.moveTo(this.width() / 2, 0);
+          ctx.lineTo(this.width() / 2, -50);
+          ctx.fillStrokeShape(this);
+        }
+      });
+      this.add(back);
     },
 
     handleResizerMouseDown: function(e) {
@@ -340,6 +360,11 @@
       this.findOne('.rotater').setAttrs({
         x: width / 2,
         y: -50
+      });
+
+      this.findOne('.back').setAttrs({
+        width: width,
+        height: height
       });
     },
     destroy: function() {
