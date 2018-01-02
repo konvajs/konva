@@ -321,42 +321,47 @@
       }
 
       var keepRatio = this.keepRatio();
+      var resizeEnabled = this.resizeEnabled();
 
       this.findOne('.top-left').setAttrs({
         x: 0,
-        y: 0
+        y: 0,
+        visible: resizeEnabled
       });
       this.findOne('.top-center').setAttrs({
         x: width / 2,
         y: 0,
-        visible: !keepRatio
+        visible: resizeEnabled && !keepRatio
       });
       this.findOne('.top-right').setAttrs({
         x: width,
-        y: 0
+        y: 0,
+        visible: resizeEnabled
       });
       this.findOne('.middle-left').setAttrs({
         x: 0,
         y: height / 2,
-        visible: !keepRatio
+        visible: resizeEnabled && !keepRatio
       });
       this.findOne('.middle-right').setAttrs({
         x: width,
         y: height / 2,
-        visible: !keepRatio
+        visible: resizeEnabled && !keepRatio
       });
       this.findOne('.bottom-left').setAttrs({
         x: 0,
-        y: height
+        y: height,
+        visible: resizeEnabled
       });
       this.findOne('.bottom-center').setAttrs({
         x: width / 2,
         y: height,
-        visible: !keepRatio
+        visible: resizeEnabled && !keepRatio
       });
       this.findOne('.bottom-right').setAttrs({
         x: width,
-        y: height
+        y: height,
+        visible: resizeEnabled
       });
 
       this.findOne('.rotater').setAttrs({
@@ -381,6 +386,7 @@
   Konva.Util.extend(Konva.Resizer, Konva.Group);
 
   Konva.Factory.addGetterSetter(Konva.Resizer, 'keepRatio', false);
+  Konva.Factory.addGetterSetter(Konva.Resizer, 'resizeEnabled', true);
 
   Konva.Collection.mapMethods(Konva.Resizer);
 })(Konva);
