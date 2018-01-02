@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Thu Dec 28 2017
+ * Date: Tue Jan 02 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -18270,7 +18270,9 @@
         width: 10,
         height: 10,
         offsetX: 5,
-        offsetY: 5
+        offsetY: 5,
+        draggable: true,
+        dragDistance: 0
       });
       var self = this;
       anchor.on('mousedown touchstart', function(e) {
