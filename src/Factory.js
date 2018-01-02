@@ -1,7 +1,8 @@
 (function() {
   'use strict';
   // CONSTANTS
-  var GET = 'get', SET = 'set';
+  var GET = 'get',
+    SET = 'set';
 
   Konva.Factory = {
     addGetterSetter: function(constructor, attr, def, validator, after) {
@@ -62,7 +63,8 @@
 
       // setter
       constructor.prototype[setter] = function(val) {
-        var oldVal = this.attrs[attr], key;
+        var oldVal = this.attrs[attr],
+          key;
 
         if (validator) {
           val = validator.call(this, val);
@@ -137,8 +139,8 @@
 
   Konva.Validators = {
     /**
-         * @return {number}
-         */
+     * @return {number}
+     */
     RGBComponent: function(val) {
       if (val > 255) {
         return 255;

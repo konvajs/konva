@@ -207,6 +207,20 @@
         var alpha = Konva.getAngle(this._el.rotation());
         var newAlpha = Konva.Util._degToRad(newRotation);
 
+        var snaps = this.rotationSnaps();
+        var offset = 0.1;
+        for (var i = 0; i < snaps.length; i++) {
+          var angle = Konva.getAngle(snaps[i]);
+
+          var dif =
+            Math.abs(angle - Konva.Util._degToRad(newRotation)) % (Math.PI * 2);
+
+          if (dif < offset) {
+            newRotation = Konva.Util._radToDeg(angle);
+            newAlpha = Konva.Util._degToRad(newRotation);
+          }
+        }
+
         this._setElementAttrs(
           Object.assign(attrs, {
             rotation: Konva.angleDeg
@@ -281,7 +295,7 @@
     },
 
     _setElementAttrs: function(attrs) {
-      if (attrs.rotation) {
+      if (attrs.rotation !== undefined) {
         this._el.setAttrs({
           rotation: attrs.rotation,
           x: attrs.x,
@@ -387,6 +401,7 @@
 
   Konva.Factory.addGetterSetter(Konva.Resizer, 'keepRatio', false);
   Konva.Factory.addGetterSetter(Konva.Resizer, 'resizeEnabled', true);
+  Konva.Factory.addGetterSetter(Konva.Resizer, 'rotationSnaps', []);
 
   Konva.Collection.mapMethods(Konva.Resizer);
 })(Konva);
