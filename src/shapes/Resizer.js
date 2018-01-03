@@ -268,6 +268,8 @@
     },
 
     handleMouseUp: function() {
+      this.fire('transformend');
+      this._el.fire('transformend');
       window.removeEventListener('mousemove', this.handleMouseMove);
       window.removeEventListener('touchmove', this.handleMouseMove);
       window.removeEventListener('mouseup', this.handleMouseUp);
