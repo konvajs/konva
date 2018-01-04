@@ -17,10 +17,6 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 * **Discover:** [Tutorials](http://konvajs.github.io/docs), [API Documentation](http://konvajs.github.io/api)
 * **Help:** [StackOverflow](http://stackoverflow.com/questions/tagged/konvajs), [Chat](https://gitter.im/konvajs/konva)
 
-<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/wUMFgN5Poni4w2c2fAY71nB3/konvajs/konva'>
-  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/wUMFgN5Poni4w2c2fAY71nB3/konvajs/konva.svg' />
-</a>
-
 # Quick Look
 
 ```html
@@ -78,7 +74,7 @@ You can use CDN: [https://cdn.rawgit.com/konvajs/konva/1.7.3/konva.min.js](https
 
 ```javascript
 define(['./konva'], function(Konva) {
-   // your code
+  // your code
 });
 ```
 
@@ -91,7 +87,6 @@ npm install konva --save
 ```javascript
 // old way
 var Konva = require('konva');
-
 
 // modern way
 import Konva from 'konva';
@@ -108,7 +103,6 @@ If you are using webpack or browserfy you can use this approach to load only req
 import Konva from 'konva/src/Core';
 // now you have Konva object with Stage, Layer, FastLayer, Group, Shape and some additional utils function
 // so there are no shapes (rect, circle, etc), no filters, no d&d support.
-
 
 // but you can simply add anything you need:
 import 'konva/src/shapes/rect';
@@ -162,7 +156,7 @@ Konva uses TDD (test driven development) which means that every new feature or b
 
 Run `gulp api` which will build the documentation files and place them in the `api` folder.
 
-
 # Pull Requests
+
 I'd be happy to review any pull requests that may better the Konva project,
-in particular if you have a bug fix, enhancement, or a new shape (see `src/shapes` for examples).  Before doing so, please first make sure that all of the tests pass (`gulp lint test`).
+in particular if you have a bug fix, enhancement, or a new shape (see `src/shapes` for examples). Before doing so, please first make sure that all of the tests pass (`gulp lint test`).
