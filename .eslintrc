@@ -198,7 +198,7 @@
     ],
     "spaced-comment": 0,
     "spaced-line-comment": [0, "always"],
-    "strict": [2, "function"],
+    "strict": [0, "function"],
     "use-isnan": 2,
     "valid-jsdoc": 0,
     "valid-typeof": 2,

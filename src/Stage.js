@@ -67,20 +67,20 @@
   }
 
   /**
-     * Stage constructor.  A stage is used to contain multiple layers
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Container
-     * @param {Object} config
-     * @param {String|Element} config.container Container selector or DOM element
-     * @@nodeParams
-     * @example
-     * var stage = new Konva.Stage({
-         *   width: 500,
-         *   height: 800,
-         *   container: 'containerId' // or "#containerId" or ".containerClass"
-         * });
-     */
+   * Stage constructor.  A stage is used to contain multiple layers
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Container
+   * @param {Object} config
+   * @param {String|Element} config.container Container selector or DOM element
+   * @@nodeParams
+   * @example
+   * var stage = new Konva.Stage({
+   *   width: 500,
+   *   height: 800,
+   *   container: 'containerId' // or "#containerId" or ".containerClass"
+   * });
+   */
   Konva.Stage = function(config) {
     this.___init(config);
   };
@@ -102,11 +102,11 @@
       }
     },
     /**
-         * set container dom element which contains the stage wrapper div element
-         * @method
-         * @memberof Konva.Stage.prototype
-         * @param {DomElement} container can pass in a dom element or id string
-         */
+     * set container dom element which contains the stage wrapper div element
+     * @method
+     * @memberof Konva.Stage.prototype
+     * @param {DomElement} container can pass in a dom element or id string
+     */
     setContainer: function(container) {
       if (typeof container === STRING) {
         if (container.charAt(0) === '.') {
@@ -136,46 +136,46 @@
       return this;
     },
     /**
-         * draw layer scene graphs
-         * @name draw
-         * @method
-         * @memberof Konva.Stage.prototype
-         */
+     * draw layer scene graphs
+     * @name draw
+     * @method
+     * @memberof Konva.Stage.prototype
+     */
 
     /**
-         * draw layer hit graphs
-         * @name drawHit
-         * @method
-         * @memberof Konva.Stage.prototype
-         */
+     * draw layer hit graphs
+     * @name drawHit
+     * @method
+     * @memberof Konva.Stage.prototype
+     */
 
     /**
-         * set height
-         * @method
-         * @memberof Konva.Stage.prototype
-         * @param {Number} height
-         */
+     * set height
+     * @method
+     * @memberof Konva.Stage.prototype
+     * @param {Number} height
+     */
     setHeight: function(height) {
       Konva.Node.prototype.setHeight.call(this, height);
       this._resizeDOM();
       return this;
     },
     /**
-         * set width
-         * @method
-         * @memberof Konva.Stage.prototype
-         * @param {Number} width
-         */
+     * set width
+     * @method
+     * @memberof Konva.Stage.prototype
+     * @param {Number} width
+     */
     setWidth: function(width) {
       Konva.Node.prototype.setWidth.call(this, width);
       this._resizeDOM();
       return this;
     },
     /**
-         * clear all layers
-         * @method
-         * @memberof Konva.Stage.prototype
-         */
+     * clear all layers
+     * @method
+     * @memberof Konva.Stage.prototype
+     */
     clear: function() {
       var layers = this.children,
         len = layers.length,
@@ -194,10 +194,10 @@
       return Konva.Container.prototype.clone.call(this, obj);
     },
     /**
-         * destroy stage
-         * @method
-         * @memberof Konva.Stage.prototype
-         */
+     * destroy stage
+     * @method
+     * @memberof Konva.Stage.prototype
+     */
     destroy: function() {
       var content = this.content;
       Konva.Container.prototype.destroy.call(this);
@@ -212,11 +212,11 @@
       return this;
     },
     /**
-         * get pointer position which can be a touch position or mouse position
-         * @method
-         * @memberof Konva.Stage.prototype
-         * @returns {Object}
-         */
+     * get pointer position which can be a touch position or mouse position
+     * @method
+     * @memberof Konva.Stage.prototype
+     * @returns {Object}
+     */
     getPointerPosition: function() {
       return this.pointerPos;
     },
@@ -224,30 +224,30 @@
       return this;
     },
     /**
-         * get stage content div element which has the
-         *  the class name "konvajs-content"
-         * @method
-         * @memberof Konva.Stage.prototype
-         */
+     * get stage content div element which has the
+     *  the class name "konvajs-content"
+     * @method
+     * @memberof Konva.Stage.prototype
+     */
     getContent: function() {
       return this.content;
     },
     /**
-         * Creates a composite data URL
-         * @method
-         * @memberof Konva.Stage.prototype
-         * @param {Object} config
-         * @param {Function} [config.callback] function executed when the composite has completed. Deprecated as method is sync now.
-         * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
-         *  "image/png" is the default
-         * @param {Number} [config.x] x position of canvas section
-         * @param {Number} [config.y] y position of canvas section
-         * @param {Number} [config.width] width of canvas section
-         * @param {Number} [config.height] height of canvas section
-         * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
-         *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
-         *  is very high quality
-         */
+     * Creates a composite data URL
+     * @method
+     * @memberof Konva.Stage.prototype
+     * @param {Object} config
+     * @param {Function} [config.callback] function executed when the composite has completed. Deprecated as method is sync now.
+     * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
+     *  "image/png" is the default
+     * @param {Number} [config.x] x position of canvas section
+     * @param {Number} [config.y] y position of canvas section
+     * @param {Number} [config.width] width of canvas section
+     * @param {Number} [config.height] height of canvas section
+     * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
+     *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
+     *  is very high quality
+     */
     toDataURL: function(config) {
       config = config || {};
 
@@ -288,21 +288,21 @@
       return src;
     },
     /**
-         * converts stage into an image.
-         * @method
-         * @memberof Konva.Stage.prototype
-         * @param {Object} config
-         * @param {Function} config.callback function executed when the composite has completed
-         * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
-         *  "image/png" is the default
-         * @param {Number} [config.x] x position of canvas section
-         * @param {Number} [config.y] y position of canvas section
-         * @param {Number} [config.width] width of canvas section
-         * @param {Number} [config.height] height of canvas section
-         * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
-         *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
-         *  is very high quality
-         */
+     * converts stage into an image.
+     * @method
+     * @memberof Konva.Stage.prototype
+     * @param {Object} config
+     * @param {Function} config.callback function executed when the composite has completed
+     * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
+     *  "image/png" is the default
+     * @param {Number} [config.x] x position of canvas section
+     * @param {Number} [config.y] y position of canvas section
+     * @param {Number} [config.width] width of canvas section
+     * @param {Number} [config.height] height of canvas section
+     * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
+     *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
+     *  is very high quality
+     */
     toImage: function(config) {
       var cb = config.callback;
 
@@ -314,20 +314,20 @@
       this.toDataURL(config);
     },
     /**
-         * get visible intersection shape. This is the preferred
-         *  method for determining if a point intersects a shape or not
-         * @method
-         * @memberof Konva.Stage.prototype
-         * @param {Object} pos
-         * @param {Number} pos.x
-         * @param {Number} pos.y
-         * @param {String} [selector]
-         * @returns {Konva.Node}
-         * @example
-         * var shape = stage.getIntersection({x: 50, y: 50});
-         * // or if you interested in shape parent:
-         * var group = stage.getIntersection({x: 50, y: 50}, 'Group');
-         */
+     * get visible intersection shape. This is the preferred
+     *  method for determining if a point intersects a shape or not
+     * @method
+     * @memberof Konva.Stage.prototype
+     * @param {Object} pos
+     * @param {Number} pos.x
+     * @param {Number} pos.y
+     * @param {String} [selector]
+     * @returns {Konva.Node}
+     * @example
+     * var shape = stage.getIntersection({x: 50, y: 50});
+     * // or if you interested in shape parent:
+     * var group = stage.getIntersection({x: 50, y: 50}, 'Group');
+     */
     getIntersection: function(pos, selector) {
       var layers = this.getChildren(),
         len = layers.length,
@@ -369,13 +369,13 @@
       }
     },
     /**
-         * add layer or layers to stage
-         * @method
-         * @memberof Konva.Stage.prototype
-         * @param {...Konva.Layer} layer
-         * @example
-         * stage.add(layer1, layer2, layer3);
-         */
+     * add layer or layers to stage
+     * @method
+     * @memberof Konva.Stage.prototype
+     * @param {...Konva.Layer} layer
+     * @example
+     * stage.add(layer1, layer2, layer3);
+     */
     add: function(layer) {
       if (arguments.length > 1) {
         for (var i = 0; i < arguments.length; i++) {
@@ -403,10 +403,10 @@
       return null;
     },
     /**
-         * returns a {@link Konva.Collection} of layers
-         * @method
-         * @memberof Konva.Stage.prototype
-         */
+     * returns a {@link Konva.Collection} of layers
+     * @method
+     * @memberof Konva.Stage.prototype
+     */
     getLayers: function() {
       return this.getChildren();
     },
@@ -512,6 +512,12 @@
         if (shape && shape.isListening()) {
           this.clickStartShape = shape;
           shape._fireAndBubble(MOUSEDOWN, { evt: evt });
+        } else {
+          this._fire(MOUSEDOWN, {
+            evt: evt,
+            target: this,
+            currentTarget: this
+          });
         }
 
         // content event
@@ -571,6 +577,16 @@
               shape._fireAndBubble(DBL_CLICK, { evt: evt });
             }
           }
+        } else {
+          this._fire(MOUSEUP, { evt: evt, target: this, currentTarget: this });
+          this._fire(CLICK, { evt: evt, target: this, currentTarget: this });
+          if (fireDblClick) {
+            this._fire(DBL_CLICK, {
+              evt: evt,
+              target: this,
+              currentTarget: this
+            });
+          }
         }
         // content events
         this._fire(CONTENT_MOUSEUP, { evt: evt });
@@ -611,6 +627,12 @@
         ) {
           evt.preventDefault();
         }
+      } else {
+        this._fire(TOUCHSTART, {
+          evt: evt,
+          target: this,
+          currentTarget: this
+        });
       }
       // content event
       this._fire(CONTENT_TOUCHSTART, { evt: evt });
@@ -653,6 +675,16 @@
           evt.preventDefault
         ) {
           evt.preventDefault();
+        }
+      } else {
+        this._fire(TOUCHEND, { evt: evt, target: this, currentTarget: this });
+        this._fire(TAP, { evt: evt, target: this, currentTarget: this });
+        if (fireDblClick) {
+          this._fire(DBL_TAP, {
+            evt: evt,
+            target: this,
+            currentTarget: this
+          });
         }
       }
       // content events
@@ -790,17 +822,17 @@
   Konva.Factory.addOverloadedGetterSetter(Konva.Stage, 'container');
 
   /**
-     * get container DOM element
-     * @name container
-     * @method
-     * @memberof Konva.Stage.prototype
-     * @returns {DomElement} container
-     * @example
-     * // get container
-     * var container = stage.container();
-     * // set container
-     * var container = document.createElement('div');
-     * body.appendChild(container);
-     * stage.container(container);
-     */
+   * get container DOM element
+   * @name container
+   * @method
+   * @memberof Konva.Stage.prototype
+   * @returns {DomElement} container
+   * @example
+   * // get container
+   * var container = stage.container();
+   * // set container
+   * var container = document.createElement('div');
+   * body.appendChild(container);
+   * stage.container(container);
+   */
 })();

@@ -1,15 +1,15 @@
 (function(Konva) {
   'use strict';
-  Konva.Resizer = function(config) {
+  Konva.Transformer = function(config) {
     this.____init(config);
   };
 
-  Konva.Resizer.prototype = {
+  Konva.Transformer.prototype = {
     _centroid: false,
     ____init: function(config) {
       // call super constructor
       Konva.Group.call(this, config);
-      this.className = 'Resizer';
+      this.className = 'Transformer';
       this._createElements();
       this.handleMouseMove = this.handleMouseMove.bind(this);
       this.handleMouseUp = this.handleMouseUp.bind(this);
@@ -399,11 +399,11 @@
       window.removeEventListener('touchend', this.handleMouseUp);
     }
   };
-  Konva.Util.extend(Konva.Resizer, Konva.Group);
+  Konva.Util.extend(Konva.Transformer, Konva.Group);
 
-  Konva.Factory.addGetterSetter(Konva.Resizer, 'keepRatio', false);
-  Konva.Factory.addGetterSetter(Konva.Resizer, 'resizeEnabled', true);
-  Konva.Factory.addGetterSetter(Konva.Resizer, 'rotationSnaps', []);
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'keepRatio', false);
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'resizeEnabled', true);
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'rotationSnaps', []);
 
-  Konva.Collection.mapMethods(Konva.Resizer);
+  Konva.Collection.mapMethods(Konva.Transformer);
 })(Konva);

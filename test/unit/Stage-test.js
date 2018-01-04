@@ -733,6 +733,217 @@ suite('Stage', function() {
     assert.equal(Konva.DD.node, undefined);
   });
 
+  test('test can listen click on empty areas', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var dblicks = 0;
+    var clicks = 0;
+    var mousedowns = 0;
+    var mouseups = 0;
+
+    stage.on('mousedown', function(e) {
+      mousedowns += 1;
+      assert.equal(e.target, stage);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    stage.on('mouseup', function(e) {
+      mouseups += 1;
+      assert.equal(e.target, stage);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    stage.on('click', function(e) {
+      clicks += 1;
+      assert.equal(e.target, stage);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    stage.on('dblclick', function(e) {
+      dblicks += 1;
+      assert.equal(e.target, stage);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    // simulate dragging
+    stage.simulateMouseDown({
+      x: 60,
+      y: 10
+    });
+
+    stage.simulateMouseUp({
+      x: 65,
+      y: 10
+    });
+
+    assert.equal(mousedowns, 1, 'first mousedown registered');
+    assert.equal(mouseups, 1, 'first mouseup registered');
+    assert.equal(clicks, 1, 'first click registered');
+    assert.equal(dblicks, 0, 'no  dbclicks registered');
+
+    stage.simulateMouseDown({
+      x: 60,
+      y: 10
+    });
+
+    stage.simulateMouseUp({
+      x: 65,
+      y: 10
+    });
+
+    assert.equal(mousedowns, 2, 'second mousedown registered');
+    assert.equal(mouseups, 2, 'seconds mouseup registered');
+    assert.equal(clicks, 2, 'seconds click registered');
+    assert.equal(dblicks, 1, 'first dbclick registered');
+  });
+
+  test('test can listen taps on empty areas', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var dbltaps = 0;
+    var taps = 0;
+    var touchstarts = 0;
+    var touchends = 0;
+
+    stage.on('touchstart', function(e) {
+      touchstarts += 1;
+      assert.equal(e.target, stage);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    stage.on('touchend', function(e) {
+      touchends += 1;
+      assert.equal(e.target, stage);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    stage.on('tap', function(e) {
+      taps += 1;
+      assert.equal(e.target, stage);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    stage.on('dbltap', function(e) {
+      dbltaps += 1;
+      assert.equal(e.target, stage);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    var top = stage.content.getBoundingClientRect().top;
+    // simulate dragging
+    stage._touchstart({
+      touches: [
+        {
+          clientX: 100,
+          clientY: 100 + top
+        }
+      ]
+    });
+
+    stage._touchend({
+      touches: []
+    });
+
+    assert.equal(touchstarts, 1, 'first touchstart registered');
+    assert.equal(touchends, 1, 'first touchends registered');
+    assert.equal(taps, 1, 'first tap registered');
+    assert.equal(dbltaps, 0, 'no  dbltap registered');
+
+    stage._touchstart({
+      touches: [
+        {
+          clientX: 100,
+          clientY: 100 + top
+        }
+      ]
+    });
+
+    stage._touchend({
+      touches: []
+    });
+
+    assert.equal(touchstarts, 2, 'first touchstart registered');
+    assert.equal(touchends, 2, 'first touchends registered');
+    assert.equal(taps, 2, 'first tap registered');
+    assert.equal(dbltaps, 1, 'dbltap registered');
+  });
+
+  test('make sure it does not trigger too many events', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+    var rect = new Konva.Rect({
+      width: stage.width(),
+      height: stage.height()
+    });
+    layer.add(rect);
+    layer.draw();
+
+    var dblicks = 0;
+    var clicks = 0;
+    var mousedowns = 0;
+    var mouseups = 0;
+
+    stage.on('mousedown', function(e) {
+      mousedowns += 1;
+      assert.equal(e.target, rect);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    stage.on('mouseup', function(e) {
+      mouseups += 1;
+      assert.equal(e.target, rect);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    stage.on('click', function(e) {
+      clicks += 1;
+      assert.equal(e.target, rect);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    stage.on('dblclick', function(e) {
+      dblicks += 1;
+      assert.equal(e.target, rect);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    // simulate dragging
+    stage.simulateMouseDown({
+      x: 60,
+      y: 10
+    });
+
+    stage.simulateMouseUp({
+      x: 65,
+      y: 10
+    });
+
+    assert.equal(mousedowns, 1, 'first mousedown registered');
+    assert.equal(mouseups, 1, 'first mouseup registered');
+    assert.equal(clicks, 1, 'first click registered');
+    assert.equal(dblicks, 0, 'no  dbclicks registered');
+
+    stage.simulateMouseDown({
+      x: 60,
+      y: 10
+    });
+
+    stage.simulateMouseUp({
+      x: 65,
+      y: 10
+    });
+
+    assert.equal(mousedowns, 2, 'second mousedown registered');
+    assert.equal(mouseups, 2, 'seconds mouseup registered');
+    assert.equal(clicks, 2, 'seconds click registered');
+    assert.equal(dblicks, 1, 'first dbclick registered');
+  });
+
   test.skip('toDataURL + HDPI', function(done) {
     Konva.pixelRatio = 2;
 

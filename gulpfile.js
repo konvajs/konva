@@ -81,7 +81,7 @@ var sourceFiles = [
   'src/shapes/Star.js',
   'src/shapes/Label.js',
   'src/shapes/Arrow.js',
-  'src/shapes/Resizer.js'
+  'src/shapes/Transformer.js'
 ];
 
 function build() {

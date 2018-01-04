@@ -207,7 +207,8 @@ function showHit(layer) {
 }
 
 beforeEach(function() {
-  var title = document.createElement('h2'), test = this.currentTest;
+  var title = document.createElement('h2'),
+    test = this.currentTest;
 
   title.innerHTML = test.parent.title + ' - ' + test.title;
   title.className = 'konva-title';
