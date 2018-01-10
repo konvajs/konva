@@ -18256,6 +18256,10 @@
 
 (function(Konva) {
   'use strict';
+
+  var CHANGE_KONVA = 'Change.konva';
+  var ATTR_CHANGE_LIST = ['keepRatio', 'resizeEnabled', 'rotateHandlerOffset'];
+
   Konva.Transformer = function(config) {
     this.____init(config);
   };
@@ -18269,7 +18273,11 @@
       this._createElements();
       this.handleMouseMove = this.handleMouseMove.bind(this);
       this.handleMouseUp = this.handleMouseUp.bind(this);
-      this._update = this._update.bind(this);
+
+      // update transformer data for certain attr changes
+      for (var n = 0; n < ATTR_CHANGE_LIST.length; n++) {
+        this.on(ATTR_CHANGE_LIST[n] + CHANGE_KONVA, this._update);
+      }
     },
 
     attachTo: function(node) {
