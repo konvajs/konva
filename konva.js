@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Thu Jan 04 2018
+ * Date: Wed Jan 10 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -18061,17 +18061,18 @@
 (function(Konva) {
   'use strict';
   /**
-     * Arrow constructor
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {Array} config.points
-     * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
-     *   The default is 0
-     * @param {Number} config.pointerLength
-     * @param {Number} config.pointerWidth
-     * @param {String} [config.fill] fill color
+   * Arrow constructor
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {Array} config.points
+   * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
+   *   The default is 0
+   * @param {Number} config.pointerLength
+   * @param {Number} config.pointerWidth
+   * @param {Boolean} config.pointerAtBeginning Do we need to draw pointer on both sides?. Default false.
+   * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -18122,7 +18123,7 @@
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
      * @param {Array} [config.dash]
      * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-     * @param {Number} [config.x]
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -18142,15 +18143,15 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * var line = new Konva.Line({
-     *   points: [73, 70, 340, 23, 450, 60, 500, 20],
-     *   stroke: 'red',
-     *   tension: 1,
-     *   pointerLength : 10,
-     *   pointerWidth : 12
-     * });
-     */
+   * @example
+   * var line = new Konva.Line({
+   *   points: [73, 70, 340, 23, 450, 60, 500, 20],
+   *   stroke: 'red',
+   *   tension: 1,
+   *   pointerLength : 10,
+   *   pointerWidth : 12
+   * });
+   */
   Konva.Arrow = function(config) {
     this.____init(config);
   };
@@ -18200,54 +18201,54 @@
 
   Konva.Util.extend(Konva.Arrow, Konva.Line);
   /**
-     * get/set pointerLength
-     * @name pointerLength
-     * @method
-     * @memberof Konva.Arrow.prototype
-     * @param {Number} Length of pointer of arrow.
-     *   The default is 10.
-     * @returns {Number}
-     * @example
-     * // get tension
-     * var pointerLength = line.pointerLength();
-     *
-     * // set tension
-     * line.pointerLength(15);
-     */
+   * get/set pointerLength
+   * @name pointerLength
+   * @method
+   * @memberof Konva.Arrow.prototype
+   * @param {Number} Length of pointer of arrow.
+   *   The default is 10.
+   * @returns {Number}
+   * @example
+   * // get tension
+   * var pointerLength = line.pointerLength();
+   *
+   * // set tension
+   * line.pointerLength(15);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Arrow, 'pointerLength', 10);
   /**
-     * get/set pointerWidth
-     * @name pointerWidth
-     * @method
-     * @memberof Konva.Arrow.prototype
-     * @param {Number} Width of pointer of arrow.
-     *   The default is 10.
-     * @returns {Number}
-     * @example
-     * // get tension
-     * var pointerWidth = line.pointerWidth();
-     *
-     * // set tension
-     * line.pointerWidth(15);
-     */
+   * get/set pointerWidth
+   * @name pointerWidth
+   * @method
+   * @memberof Konva.Arrow.prototype
+   * @param {Number} Width of pointer of arrow.
+   *   The default is 10.
+   * @returns {Number}
+   * @example
+   * // get tension
+   * var pointerWidth = line.pointerWidth();
+   *
+   * // set tension
+   * line.pointerWidth(15);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Arrow, 'pointerWidth', 10);
   /**
-     * get/set pointerAtBeginning
-     * @name pointerAtBeginning
-     * @method
-     * @memberof Konva.Arrow.prototype
-     * @param {Number} Should pointer displayed at beginning of arrow.
-     *   The default is false.
-     * @returns {Boolean}
-     * @example
-     * // get tension
-     * var pointerAtBeginning = line.pointerAtBeginning();
-     *
-     * // set tension
-     * line.pointerAtBeginning(true);
-     */
+   * get/set pointerAtBeginning
+   * @name pointerAtBeginning
+   * @method
+   * @memberof Konva.Arrow.prototype
+   * @param {Number} Should pointer displayed at beginning of arrow.
+   *   The default is false.
+   * @returns {Boolean}
+   * @example
+   * // get tension
+   * var pointerAtBeginning = line.pointerAtBeginning();
+   *
+   * // set tension
+   * line.pointerAtBeginning(true);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Arrow, 'pointerAtBeginning', false);
   Konva.Collection.mapMethods(Konva.Arrow);
@@ -18343,7 +18344,7 @@
           ctx.beginPath();
           ctx.rect(0, 0, this.width(), this.height());
           ctx.moveTo(this.width() / 2, 0);
-          ctx.lineTo(this.width() / 2, -50);
+          ctx.lineTo(this.width() / 2, -this.rotateHandlerOffset());
           ctx.fillStrokeShape(this);
         }
       });
@@ -18637,7 +18638,7 @@
 
       this.findOne('.rotater').setAttrs({
         x: width / 2,
-        y: -50
+        y: -this.rotateHandlerOffset()
       });
 
       this.findOne('.back').setAttrs({
@@ -18659,6 +18660,7 @@
   Konva.Factory.addGetterSetter(Konva.Transformer, 'keepRatio', false);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'resizeEnabled', true);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotationSnaps', []);
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateHandlerOffset', 50);
 
   Konva.Collection.mapMethods(Konva.Transformer);
 })(Konva);

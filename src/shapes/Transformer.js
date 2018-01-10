@@ -88,7 +88,7 @@
           ctx.beginPath();
           ctx.rect(0, 0, this.width(), this.height());
           ctx.moveTo(this.width() / 2, 0);
-          ctx.lineTo(this.width() / 2, -50);
+          ctx.lineTo(this.width() / 2, -this.rotateHandlerOffset());
           ctx.fillStrokeShape(this);
         }
       });
@@ -382,7 +382,7 @@
 
       this.findOne('.rotater').setAttrs({
         x: width / 2,
-        y: -50
+        y: -this.rotateHandlerOffset()
       });
 
       this.findOne('.back').setAttrs({
@@ -404,6 +404,7 @@
   Konva.Factory.addGetterSetter(Konva.Transformer, 'keepRatio', false);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'resizeEnabled', true);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotationSnaps', []);
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateHandlerOffset', 50);
 
   Konva.Collection.mapMethods(Konva.Transformer);
 })(Konva);
