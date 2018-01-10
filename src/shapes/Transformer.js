@@ -88,7 +88,7 @@
           ctx.beginPath();
           ctx.rect(0, 0, this.width(), this.height());
           ctx.moveTo(this.width() / 2, 0);
-          ctx.lineTo(this.width() / 2, -this.rotateHandlerOffset());
+          ctx.lineTo(this.width() / 2, -this.getParent().rotateHandlerOffset());
           ctx.fillStrokeShape(this);
         }
       });
