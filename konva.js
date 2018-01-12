@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Wed Jan 10 2018
+ * Date: Fri Jan 12 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -18273,6 +18273,7 @@
       this._createElements();
       this.handleMouseMove = this.handleMouseMove.bind(this);
       this.handleMouseUp = this.handleMouseUp.bind(this);
+      this._update = this._update.bind(this);
 
       // update transformer data for certain attr changes
       for (var n = 0; n < ATTR_CHANGE_LIST.length; n++) {
@@ -18281,10 +18282,17 @@
     },
 
     attachTo: function(node) {
+      if (this._el) {
+        this.detach();
+      }
       this._el = node;
       this._update();
       this._el.on('dragmove.resizer', this._update);
-      //     this._set();
+    },
+
+    detach: function() {
+      this._el.off('.resizer');
+      this._el = null;
     },
 
     _createElements: function() {

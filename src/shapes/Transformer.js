@@ -17,6 +17,7 @@
       this._createElements();
       this.handleMouseMove = this.handleMouseMove.bind(this);
       this.handleMouseUp = this.handleMouseUp.bind(this);
+      this._update = this._update.bind(this);
 
       // update transformer data for certain attr changes
       for (var n = 0; n < ATTR_CHANGE_LIST.length; n++) {
@@ -25,10 +26,17 @@
     },
 
     attachTo: function(node) {
+      if (this._el) {
+        this.detach();
+      }
       this._el = node;
       this._update();
       this._el.on('dragmove.resizer', this._update);
-      //     this._set();
+    },
+
+    detach: function() {
+      this._el.off('.resizer');
+      this._el = null;
     },
 
     _createElements: function() {
