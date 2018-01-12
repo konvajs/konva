@@ -1927,6 +1927,48 @@ suite('Node', function() {
   });
 
   // ======================================================
+  test('remove event with with callback', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({
+      x: stage.getWidth() / 2,
+      y: stage.getHeight() / 2,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle'
+    });
+    stage.add(layer);
+    layer.add(circle);
+    layer.draw();
+
+    var event1 = 0;
+    var event2 = 0;
+
+    var callback1 = function() {
+      event1 += 1;
+    }
+    var callback2 = function() {
+      event2 += 1;
+    }
+    
+    circle.on('event', callback1);
+    circle.on('event', callback2);
+
+    circle.fire('event');
+
+    assert.equal(event1, 1, 'event1 triggered once');
+    assert.equal(event2, 1, 'event2 triggered once');
+
+    circle.off('event', callback1);
+    circle.fire('event');
+
+    assert.equal(event1, 1, 'event1 still triggered once');
+    assert.equal(event2, 2, 'event2 triggered twice');
+  });
+
+  // ======================================================
   test('simulate event bubble', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

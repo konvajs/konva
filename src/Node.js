@@ -38,14 +38,14 @@
     SCALE_CHANGE_STR = ['scaleXChange.konva', 'scaleYChange.konva'].join(SPACE);
 
   /**
-     * Node constructor. Nodes are entities that can be transformed, layered,
-     * and have bound events. The stage, layers, groups, and shapes all extend Node.
-     * @constructor
-     * @memberof Konva
-     * @abstract
-     * @param {Object} config
-     * @@nodeParams
-     */
+   * Node constructor. Nodes are entities that can be transformed, layered,
+   * and have bound events. The stage, layers, groups, and shapes all extend Node.
+   * @constructor
+   * @memberof Konva
+   * @abstract
+   * @param {Object} config
+   * @@nodeParams
+   */
   Konva.Node = function(config) {
     this._init(config);
   };
@@ -112,60 +112,60 @@
       }
     },
     /**
-        * clear cached canvas
-        * @method
-        * @memberof Konva.Node.prototype
-        * @returns {Konva.Node}
-        * @example
-        * node.clearCache();
-        */
+     * clear cached canvas
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Konva.Node}
+     * @example
+     * node.clearCache();
+     */
     clearCache: function() {
       delete this._cache.canvas;
       this._filterUpToDate = false;
       return this;
     },
     /**
-        *  cache node to improve drawing performance, apply filters, or create more accurate
-        *  hit regions. For all basic shapes size of cache canvas will be automatically detected.
-        *  If you need to cache your custom `Konva.Shape` instance you have to pass shape's bounding box
-        *  properties. Look at [https://konvajs.github.io/docs/performance/Shape_Caching.html](link to demo page) for more information.
-        * @method
-        * @memberof Konva.Node.prototype
-        * @param {Object} [config]
-        * @param {Number} [config.x]
-        * @param {Number} [config.y]
-        * @param {Number} [config.width]
-        * @param {Number} [config.height]
-        * @param {Number} [config.offset]  increase canvas size by `offset` pixel in all directions.
-        * @param {Boolean} [config.drawBorder] when set to true, a red border will be drawn around the cached
-        *  region for debugging purposes
-        * @param {Number} [config.pixelRatio] change quality (or pixel ratio) of cached image. pixelRatio = 2 will produce 2x sized cache.
-        * @returns {Konva.Node}
-        * @example
-        * // cache a shape with the x,y position of the bounding box at the center and
-        * // the width and height of the bounding box equal to the width and height of
-        * // the shape obtained from shape.width() and shape.height()
-        * image.cache();
-        *
-        * // cache a node and define the bounding box position and size
-        * node.cache({
-        *   x: -30,
-        *   y: -30,
-        *   width: 100,
-        *   height: 200
-        * });
-        *
-        * // cache a node and draw a red border around the bounding box
-        * // for debugging purposes
-        * node.cache({
-        *   x: -30,
-        *   y: -30,
-        *   width: 100,
-        *   height: 200,
-        *   offset : 10,
-        *   drawBorder: true
-        * });
-        */
+     *  cache node to improve drawing performance, apply filters, or create more accurate
+     *  hit regions. For all basic shapes size of cache canvas will be automatically detected.
+     *  If you need to cache your custom `Konva.Shape` instance you have to pass shape's bounding box
+     *  properties. Look at [https://konvajs.github.io/docs/performance/Shape_Caching.html](link to demo page) for more information.
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {Object} [config]
+     * @param {Number} [config.x]
+     * @param {Number} [config.y]
+     * @param {Number} [config.width]
+     * @param {Number} [config.height]
+     * @param {Number} [config.offset]  increase canvas size by `offset` pixel in all directions.
+     * @param {Boolean} [config.drawBorder] when set to true, a red border will be drawn around the cached
+     *  region for debugging purposes
+     * @param {Number} [config.pixelRatio] change quality (or pixel ratio) of cached image. pixelRatio = 2 will produce 2x sized cache.
+     * @returns {Konva.Node}
+     * @example
+     * // cache a shape with the x,y position of the bounding box at the center and
+     * // the width and height of the bounding box equal to the width and height of
+     * // the shape obtained from shape.width() and shape.height()
+     * image.cache();
+     *
+     * // cache a node and define the bounding box position and size
+     * node.cache({
+     *   x: -30,
+     *   y: -30,
+     *   width: 100,
+     *   height: 200
+     * });
+     *
+     * // cache a node and draw a red border around the bounding box
+     * // for debugging purposes
+     * node.cache({
+     *   x: -30,
+     *   y: -30,
+     *   width: 100,
+     *   height: 200,
+     *   offset : 10,
+     *   drawBorder: true
+     * });
+     */
     cache: function(config) {
       var conf = config || {},
         rect = this.getClientRect({
@@ -260,39 +260,39 @@
       return this;
     },
     /**
-         * Return client rectangle {x, y, width, height} of node. This rectangle also include all styling (strokes, shadows, etc).
-         * The rectangle position is relative to parent container.
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {Object} config
-         * @param {Boolean} [config.skipTransform] should we apply transform to node for calculating rect?
-         * @param {Object} [config.relativeTo] calculate client rect relative to one of the parents
-         * @returns {Object} rect with {x, y, width, height} properties
-         * @example
-         * var rect = new Konva.Rect({
-         *      width : 100,
-         *      height : 100,
-         *      x : 50,
-         *      y : 50,
-         *      strokeWidth : 4,
-         *      stroke : 'black',
-         *      offsetX : 50,
-         *      scaleY : 2
-         * });
-         *
-         * // get client rect without think off transformations (position, rotation, scale, offset, etc)
-         * rect.getClientRect({ skipTransform: true});
-         * // returns {
-         * //     x : -2,   // two pixels for stroke / 2
-         * //     y : -2,
-         * //     width : 104, // increased by 4 for stroke
-         * //     height : 104
-         * //}
-         *
-         * // get client rect with transformation applied
-         * rect.getClientRect();
-         * // returns Object {x: -2, y: 46, width: 104, height: 208}
-         */
+     * Return client rectangle {x, y, width, height} of node. This rectangle also include all styling (strokes, shadows, etc).
+     * The rectangle position is relative to parent container.
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {Object} config
+     * @param {Boolean} [config.skipTransform] should we apply transform to node for calculating rect?
+     * @param {Object} [config.relativeTo] calculate client rect relative to one of the parents
+     * @returns {Object} rect with {x, y, width, height} properties
+     * @example
+     * var rect = new Konva.Rect({
+     *      width : 100,
+     *      height : 100,
+     *      x : 50,
+     *      y : 50,
+     *      strokeWidth : 4,
+     *      stroke : 'black',
+     *      offsetX : 50,
+     *      scaleY : 2
+     * });
+     *
+     * // get client rect without think off transformations (position, rotation, scale, offset, etc)
+     * rect.getClientRect({ skipTransform: true});
+     * // returns {
+     * //     x : -2,   // two pixels for stroke / 2
+     * //     y : -2,
+     * //     width : 104, // increased by 4 for stroke
+     * //     height : 104
+     * //}
+     *
+     * // get client rect with transformation applied
+     * rect.getClientRect();
+     * // returns Object {x: -2, y: 46, width: 104, height: 208}
+     */
     getClientRect: function() {
       // abstract method
       // redefine in Container and Shape
@@ -411,68 +411,68 @@
       return sceneCanvas;
     },
     /**
-         * bind events to the node. KonvaJS supports mouseover, mousemove,
-         *  mouseout, mouseenter, mouseleave, mousedown, mouseup, wheel, click, dblclick, touchstart, touchmove,
-         *  touchend, tap, dbltap, dragstart, dragmove, and dragend events. The Konva Stage supports
-         *  contentMouseover, contentMousemove, contentMouseout, contentMousedown, contentMouseup, contentWheel, contentContextmenu
-         *  contentClick, contentDblclick, contentTouchstart, contentTouchmove, contentTouchend, contentTap,
-         *  and contentDblTap.  Pass in a string of events delimmited by a space to bind multiple events at once
-         *  such as 'mousedown mouseup mousemove'. Include a namespace to bind an
-         *  event by name such as 'click.foobar'.
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {String} evtStr e.g. 'click', 'mousedown touchstart', 'mousedown.foo touchstart.foo'
-         * @param {Function} handler The handler function is passed an event object
-         * @returns {Konva.Node}
-         * @example
-         * // add click listener
-         * node.on('click', function() {
-         *   console.log('you clicked me!');
-         * });
-         *
-         * // get the target node
-         * node.on('click', function(evt) {
-         *   console.log(evt.target);
-         * });
-         *
-         * // stop event propagation
-         * node.on('click', function(evt) {
-         *   evt.cancelBubble = true;
-         * });
-         *
-         * // bind multiple listeners
-         * node.on('click touchstart', function() {
-         *   console.log('you clicked/touched me!');
-         * });
-         *
-         * // namespace listener
-         * node.on('click.foo', function() {
-         *   console.log('you clicked/touched me!');
-         * });
-         *
-         * // get the event type
-         * node.on('click tap', function(evt) {
-         *   var eventType = evt.type;
-         * });
-         *
-         * // get native event object
-         * node.on('click tap', function(evt) {
-         *   var nativeEvent = evt.evt;
-         * });
-         *
-         * // for change events, get the old and new val
-         * node.on('xChange', function(evt) {
-         *   var oldVal = evt.oldVal;
-         *   var newVal = evt.newVal;
-         * });
-         *
-         * // get event targets
-         * // with event delegations
-         * layer.on('click', 'Group', function(evt) {
-         *   var shape = evt.target;
-         *   var group = evtn.currentTarger;
-         * });
-         */
+     * bind events to the node. KonvaJS supports mouseover, mousemove,
+     *  mouseout, mouseenter, mouseleave, mousedown, mouseup, wheel, click, dblclick, touchstart, touchmove,
+     *  touchend, tap, dbltap, dragstart, dragmove, and dragend events. The Konva Stage supports
+     *  contentMouseover, contentMousemove, contentMouseout, contentMousedown, contentMouseup, contentWheel, contentContextmenu
+     *  contentClick, contentDblclick, contentTouchstart, contentTouchmove, contentTouchend, contentTap,
+     *  and contentDblTap.  Pass in a string of events delimmited by a space to bind multiple events at once
+     *  such as 'mousedown mouseup mousemove'. Include a namespace to bind an
+     *  event by name such as 'click.foobar'.
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {String} evtStr e.g. 'click', 'mousedown touchstart', 'mousedown.foo touchstart.foo'
+     * @param {Function} handler The handler function is passed an event object
+     * @returns {Konva.Node}
+     * @example
+     * // add click listener
+     * node.on('click', function() {
+     *   console.log('you clicked me!');
+     * });
+     *
+     * // get the target node
+     * node.on('click', function(evt) {
+     *   console.log(evt.target);
+     * });
+     *
+     * // stop event propagation
+     * node.on('click', function(evt) {
+     *   evt.cancelBubble = true;
+     * });
+     *
+     * // bind multiple listeners
+     * node.on('click touchstart', function() {
+     *   console.log('you clicked/touched me!');
+     * });
+     *
+     * // namespace listener
+     * node.on('click.foo', function() {
+     *   console.log('you clicked/touched me!');
+     * });
+     *
+     * // get the event type
+     * node.on('click tap', function(evt) {
+     *   var eventType = evt.type;
+     * });
+     *
+     * // get native event object
+     * node.on('click tap', function(evt) {
+     *   var nativeEvent = evt.evt;
+     * });
+     *
+     * // for change events, get the old and new val
+     * node.on('xChange', function(evt) {
+     *   var oldVal = evt.oldVal;
+     *   var newVal = evt.newVal;
+     * });
+     *
+     * // get event targets
+     * // with event delegations
+     * layer.on('click', 'Group', function(evt) {
+     *   var shape = evt.target;
+     *   var group = evtn.currentTarger;
+     * });
+     */
     on: function(evtStr, handler) {
       if (arguments.length === 3) {
         return this._delegate.apply(this, arguments);
@@ -510,27 +510,27 @@
       return this;
     },
     /**
-         * remove event bindings from the node. Pass in a string of
-         *  event types delimmited by a space to remove multiple event
-         *  bindings at once such as 'mousedown mouseup mousemove'.
-         *  include a namespace to remove an event binding by name
-         *  such as 'click.foobar'. If you only give a name like '.foobar',
-         *  all events in that namespace will be removed.
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {String} evtStr e.g. 'click', 'mousedown touchstart', '.foobar'
-         * @returns {Konva.Node}
-         * @example
-         * // remove listener
-         * node.off('click');
-         *
-         * // remove multiple listeners
-         * node.off('click touchstart');
-         *
-         * // remove listener by name
-         * node.off('click.foo');
-         */
-    off: function(evtStr) {
+     * remove event bindings from the node. Pass in a string of
+     *  event types delimmited by a space to remove multiple event
+     *  bindings at once such as 'mousedown mouseup mousemove'.
+     *  include a namespace to remove an event binding by name
+     *  such as 'click.foobar'. If you only give a name like '.foobar',
+     *  all events in that namespace will be removed.
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {String} evtStr e.g. 'click', 'mousedown touchstart', '.foobar'
+     * @returns {Konva.Node}
+     * @example
+     * // remove listener
+     * node.off('click');
+     *
+     * // remove multiple listeners
+     * node.off('click touchstart');
+     *
+     * // remove listener by name
+     * node.off('click.foo');
+     */
+    off: function(evtStr, callback) {
       var events = (evtStr || '').split(SPACE),
         len = events.length,
         n,
@@ -554,11 +554,11 @@
 
         if (baseEvent) {
           if (this.eventListeners[baseEvent]) {
-            this._off(baseEvent, name);
+            this._off(baseEvent, name, callback);
           }
         } else {
           for (t in this.eventListeners) {
-            this._off(t, name);
+            this._off(t, name, callback);
           }
         }
       }
@@ -598,13 +598,13 @@
       });
     },
     /**
-         * remove self from parent, but don't destroy
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Konva.Node}
-         * @example
-         * node.remove();
-         */
+     * remove self from parent, but don't destroy
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Konva.Node}
+     * @example
+     * node.remove();
+     */
     remove: function() {
       var parent = this.getParent();
 
@@ -625,12 +625,12 @@
       return this;
     },
     /**
-         * remove and destroy self
-         * @method
-         * @memberof Konva.Node.prototype
-         * @example
-         * node.destroy();
-         */
+     * remove and destroy self
+     * @method
+     * @memberof Konva.Node.prototype
+     * @example
+     * node.destroy();
+     */
     destroy: function() {
       // remove from ids and names hashes
       Konva._removeId(this.getId());
@@ -646,14 +646,14 @@
       return this;
     },
     /**
-         * get attr
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {String} attr
-         * @returns {Integer|String|Object|Array}
-         * @example
-         * var x = node.getAttr('x');
-         */
+     * get attr
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {String} attr
+     * @returns {Integer|String|Object|Array}
+     * @example
+     * var x = node.getAttr('x');
+     */
     getAttr: function(attr) {
       var method = GET + Konva.Util._capitalize(attr);
       if (Konva.Util._isFunction(this[method])) {
@@ -663,15 +663,15 @@
       return this.attrs[attr];
     },
     /**
-        * get ancestors
-        * @method
-        * @memberof Konva.Node.prototype
-        * @returns {Konva.Collection}
-        * @example
-        * shape.getAncestors().each(function(node) {
-        *   console.log(node.getId());
-        * })
-        */
+     * get ancestors
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Konva.Collection}
+     * @example
+     * shape.getAncestors().each(function(node) {
+     *   console.log(node.getId());
+     * })
+     */
     getAncestors: function() {
       var parent = this.getParent(),
         ancestors = new Konva.Collection();
@@ -684,26 +684,26 @@
       return ancestors;
     },
     /**
-         * get attrs object literal
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Object}
-         */
+     * get attrs object literal
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Object}
+     */
     getAttrs: function() {
       return this.attrs || {};
     },
     /**
-         * set multiple attrs at once using an object literal
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {Object} config object containing key value pairs
-         * @returns {Konva.Node}
-         * @example
-         * node.setAttrs({
-         *   x: 5,
-         *   fill: 'red'
-         * });
-         */
+     * set multiple attrs at once using an object literal
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {Object} config object containing key value pairs
+     * @returns {Konva.Node}
+     * @example
+     * node.setAttrs({
+     *   x: 5,
+     *   fill: 'red'
+     * });
+     */
     setAttrs: function(config) {
       var key, method;
 
@@ -726,24 +726,24 @@
       return this;
     },
     /**
-         * determine if node is listening for events by taking into account ancestors.
-         *
-         * Parent    | Self      | isListening
-         * listening | listening |
-         * ----------+-----------+------------
-         * T         | T         | T
-         * T         | F         | F
-         * F         | T         | T
-         * F         | F         | F
-         * ----------+-----------+------------
-         * T         | I         | T
-         * F         | I         | F
-         * I         | I         | T
-         *
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Boolean}
-         */
+     * determine if node is listening for events by taking into account ancestors.
+     *
+     * Parent    | Self      | isListening
+     * listening | listening |
+     * ----------+-----------+------------
+     * T         | T         | T
+     * T         | F         | F
+     * F         | T         | T
+     * F         | F         | F
+     * ----------+-----------+------------
+     * T         | I         | T
+     * F         | I         | F
+     * I         | I         | T
+     *
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Boolean}
+     */
     isListening: function() {
       return this._getCache(LISTENING, this._isListening);
     },
@@ -802,12 +802,12 @@
       }
     },
     /**
-         * determine if listening is enabled by taking into account descendants.  If self or any children
-         * have _isListeningEnabled set to true, then self also has listening enabled.
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Boolean}
-         */
+     * determine if listening is enabled by taking into account descendants.  If self or any children
+     * have _isListeningEnabled set to true, then self also has listening enabled.
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Boolean}
+     */
     shouldDrawHit: function(canvas) {
       var layer = this.getLayer();
       return (
@@ -819,41 +819,41 @@
       );
     },
     /**
-         * show node
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Konva.Node}
-         */
+     * show node
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Konva.Node}
+     */
     show: function() {
       this.setVisible(true);
       return this;
     },
     /**
-         * hide node.  Hidden nodes are no longer detectable
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Konva.Node}
-         */
+     * hide node.  Hidden nodes are no longer detectable
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Konva.Node}
+     */
     hide: function() {
       this.setVisible(false);
       return this;
     },
     /**
-         * get zIndex relative to the node's siblings who share the same parent
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Integer}
-         */
+     * get zIndex relative to the node's siblings who share the same parent
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Integer}
+     */
     getZIndex: function() {
       return this.index || 0;
     },
     /**
-         * get absolute z-index which takes into account sibling
-         *  and ancestor indices
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Integer}
-         */
+     * get absolute z-index which takes into account sibling
+     *  and ancestor indices
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Integer}
+     */
     getAbsoluteZIndex: function() {
       var depth = this.getDepth(),
         that = this,
@@ -890,13 +890,13 @@
       return index;
     },
     /**
-         * get node depth in node tree.  Returns an integer.
-         *  e.g. Stage depth will always be 0.  Layers will always be 1.  Groups and Shapes will always
-         *  be >= 2
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Integer}
-         */
+     * get node depth in node tree.  Returns an integer.
+     *  e.g. Stage depth will always be 0.  Layers will always be 1.  Groups and Shapes will always
+     *  be >= 2
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Integer}
+     */
     getDepth: function() {
       var depth = 0,
         parent = this.parent;
@@ -919,13 +919,13 @@
       };
     },
     /**
-         * get absolute position relative to the top left corner of the stage container div
-         * or relative to passed node
-         * @method
-         * @param {Object} [top] optional parent node
-         * @memberof Konva.Node.prototype
-         * @returns {Object}
-         */
+     * get absolute position relative to the top left corner of the stage container div
+     * or relative to passed node
+     * @method
+     * @param {Object} [top] optional parent node
+     * @memberof Konva.Node.prototype
+     * @returns {Object}
+     */
     getAbsolutePosition: function(top) {
       var absoluteMatrix = this.getAbsoluteTransform(top).getMatrix(),
         absoluteTransform = new Konva.Transform(),
@@ -938,14 +938,14 @@
       return absoluteTransform.getTranslation();
     },
     /**
-         * set absolute position
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {Object} pos
-         * @param {Number} pos.x
-         * @param {Number} pos.y
-         * @returns {Konva.Node}
-         */
+     * set absolute position
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {Object} pos
+     * @param {Number} pos.x
+     * @param {Number} pos.y
+     * @returns {Konva.Node}
+     */
     setAbsolutePosition: function(pos) {
       var origTrans = this._clearTransform(),
         it;
@@ -1011,20 +1011,20 @@
       return trans;
     },
     /**
-         * move node by an amount relative to its current position
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {Object} change
-         * @param {Number} change.x
-         * @param {Number} change.y
-         * @returns {Konva.Node}
-         * @example
-         * // move node in x direction by 1px and y direction by 2px
-         * node.move({
-         *   x: 1,
-         *   y: 2)
-         * });
-         */
+     * move node by an amount relative to its current position
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {Object} change
+     * @param {Number} change.x
+     * @param {Number} change.y
+     * @returns {Konva.Node}
+     * @example
+     * // move node in x direction by 1px and y direction by 2px
+     * node.move({
+     *   x: 1,
+     *   y: 2)
+     * });
+     */
     move: function(change) {
       var changeX = change.x,
         changeY = change.y,
@@ -1069,22 +1069,22 @@
       }
     },
     /**
-         * rotate node by an amount in degrees relative to its current rotation
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {Number} theta
-         * @returns {Konva.Node}
-         */
+     * rotate node by an amount in degrees relative to its current rotation
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {Number} theta
+     * @returns {Konva.Node}
+     */
     rotate: function(theta) {
       this.setRotation(this.getRotation() + theta);
       return this;
     },
     /**
-         * move node to the top of its siblings
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Boolean}
-         */
+     * move node to the top of its siblings
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Boolean}
+     */
     moveToTop: function() {
       if (!this.parent) {
         Konva.Util.warn('Node has no parent. moveToTop function is ignored.');
@@ -1097,11 +1097,11 @@
       return true;
     },
     /**
-         * move node up
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Boolean} flag is moved or not
-         */
+     * move node up
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Boolean} flag is moved or not
+     */
     moveUp: function() {
       if (!this.parent) {
         Konva.Util.warn('Node has no parent. moveUp function is ignored.');
@@ -1118,11 +1118,11 @@
       return false;
     },
     /**
-         * move node down
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Boolean}
-         */
+     * move node down
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Boolean}
+     */
     moveDown: function() {
       if (!this.parent) {
         Konva.Util.warn('Node has no parent. moveDown function is ignored.');
@@ -1138,11 +1138,11 @@
       return false;
     },
     /**
-         * move node to the bottom of its siblings
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Boolean}
-         */
+     * move node to the bottom of its siblings
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Boolean}
+     */
     moveToBottom: function() {
       if (!this.parent) {
         Konva.Util.warn(
@@ -1160,12 +1160,12 @@
       return false;
     },
     /**
-         * set zIndex relative to siblings
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {Integer} zIndex
-         * @returns {Konva.Node}
-         */
+     * set zIndex relative to siblings
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {Integer} zIndex
+     * @returns {Konva.Node}
+     */
     setZIndex: function(zIndex) {
       if (!this.parent) {
         Konva.Util.warn('Node has no parent. zIndex parameter is ignored.');
@@ -1178,11 +1178,11 @@
       return this;
     },
     /**
-         * get absolute opacity
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Number}
-         */
+     * get absolute opacity
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Number}
+     */
     getAbsoluteOpacity: function() {
       return this._getCache(ABSOLUTE_OPACITY, this._getAbsoluteOpacity);
     },
@@ -1195,15 +1195,15 @@
       return absOpacity;
     },
     /**
-         * move node to another container
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {Container} newContainer
-         * @returns {Konva.Node}
-         * @example
-         * // move node from current layer into layer2
-         * node.moveTo(layer2);
-         */
+     * move node to another container
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {Container} newContainer
+     * @returns {Konva.Node}
+     * @example
+     * // move node from current layer into layer2
+     * node.moveTo(layer2);
+     */
     moveTo: function(newContainer) {
       // do nothing if new container is already parent
       if (this.getParent() !== newContainer) {
@@ -1215,11 +1215,11 @@
       return this;
     },
     /**
-         * convert Node into an object for serialization.  Returns an object.
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Object}
-         */
+     * convert Node into an object for serialization.  Returns an object.
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Object}
+     */
     toObject: function() {
       var obj = {},
         attrs = this.getAttrs(),
@@ -1247,35 +1247,35 @@
       return Konva.Util._prepareToStringify(obj);
     },
     /**
-         * convert Node into a JSON string.  Returns a JSON string.
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {String}}
-         */
+     * convert Node into a JSON string.  Returns a JSON string.
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {String}}
+     */
     toJSON: function() {
       return JSON.stringify(this.toObject());
     },
     /**
-         * get parent container
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Konva.Node}
-         */
+     * get parent container
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Konva.Node}
+     */
     getParent: function() {
       return this.parent;
     },
     /**
-         * get all ancestros (parent then parent of the parent, etc) of the node
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {String} [selector] selector for search
-         * @param {Boolean} [includeSelf] show we think that node is ancestro itself?
-         * @param {Konva.Node} [stopNode] optional node where we need to stop searching (one of ancestors)
-         * @returns {Array} [ancestors]
-         * @example
-         * // get one of the parent group
-         * var parentGroups = node.findAncestors('Group');
-         */
+     * get all ancestros (parent then parent of the parent, etc) of the node
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {String} [selector] selector for search
+     * @param {Boolean} [includeSelf] show we think that node is ancestro itself?
+     * @param {Konva.Node} [stopNode] optional node where we need to stop searching (one of ancestors)
+     * @returns {Array} [ancestors]
+     * @example
+     * // get one of the parent group
+     * var parentGroups = node.findAncestors('Group');
+     */
     findAncestors: function(selector, includeSelf, stopNode) {
       var res = [];
 
@@ -1295,17 +1295,17 @@
       return res;
     },
     /**
-         * get ancestor (parent or parent of the parent, etc) of the node that match passed selector
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {String} [selector] selector for search
-         * @param {Boolean} [includeSelf] show we think that node is ancestro itself?
-         * @param {Konva.Node} [stopNode] optional node where we need to stop searching (one of ancestors)
-         * @returns {Konva.Node} ancestor
-         * @example
-         * // get one of the parent group
-         * var group = node.findAncestors('.mygroup');
-         */
+     * get ancestor (parent or parent of the parent, etc) of the node that match passed selector
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {String} [selector] selector for search
+     * @param {Boolean} [includeSelf] show we think that node is ancestro itself?
+     * @param {Konva.Node} [stopNode] optional node where we need to stop searching (one of ancestors)
+     * @returns {Konva.Node} ancestor
+     * @example
+     * // get one of the parent group
+     * var group = node.findAncestors('.mygroup');
+     */
     findAncestor: function(selector, includeSelf, stopNode) {
       return this.findAncestors(selector, includeSelf, stopNode)[0];
     },
@@ -1349,21 +1349,21 @@
       return false;
     },
     /**
-         * get layer ancestor
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Konva.Layer}
-         */
+     * get layer ancestor
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Konva.Layer}
+     */
     getLayer: function() {
       var parent = this.getParent();
       return parent ? parent.getLayer() : null;
     },
     /**
-         * get stage ancestor
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Konva.Stage}
-         */
+     * get stage ancestor
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Konva.Stage}
+     */
     getStage: function() {
       return this._getCache(STAGE, this._getStage);
     },
@@ -1376,29 +1376,29 @@
       }
     },
     /**
-         * fire event
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {String} eventType event type.  can be a regular event, like click, mouseover, or mouseout, or it can be a custom event, like myCustomEvent
-         * @param {Event} [evt] event object
-         * @param {Boolean} [bubble] setting the value to false, or leaving it undefined, will result in the event
-         *  not bubbling.  Setting the value to true will result in the event bubbling.
-         * @returns {Konva.Node}
-         * @example
-         * // manually fire click event
-         * node.fire('click');
-         *
-         * // fire custom event
-         * node.fire('foo');
-         *
-         * // fire custom event with custom event object
-         * node.fire('foo', {
-         *   bar: 10
-         * });
-         *
-         * // fire click event that bubbles
-         * node.fire('click', null, true);
-         */
+     * fire event
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {String} eventType event type.  can be a regular event, like click, mouseover, or mouseout, or it can be a custom event, like myCustomEvent
+     * @param {Event} [evt] event object
+     * @param {Boolean} [bubble] setting the value to false, or leaving it undefined, will result in the event
+     *  not bubbling.  Setting the value to true will result in the event bubbling.
+     * @returns {Konva.Node}
+     * @example
+     * // manually fire click event
+     * node.fire('click');
+     *
+     * // fire custom event
+     * node.fire('foo');
+     *
+     * // fire custom event with custom event object
+     * node.fire('foo', {
+     *   bar: 10
+     * });
+     *
+     * // fire click event that bubbles
+     * node.fire('click', null, true);
+     */
     fire: function(eventType, evt, bubble) {
       evt = evt || {};
       evt.target = evt.target || this;
@@ -1412,12 +1412,12 @@
       return this;
     },
     /**
-         * get absolute transform of the node which takes into
-         *  account its ancestor transforms
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Konva.Transform}
-         */
+     * get absolute transform of the node which takes into
+     *  account its ancestor transforms
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Konva.Transform}
+     */
     getAbsoluteTransform: function(top) {
       // if using an argument, we can't cache the result.
       if (top) {
@@ -1446,12 +1446,12 @@
       return at;
     },
     /**
-         * get absolute scale of the node which takes into
-         *  account its ancestor scales
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Konva.Transform}
-         */
+     * get absolute scale of the node which takes into
+     *  account its ancestor scales
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Konva.Transform}
+     */
     getAbsoluteScale: function(top) {
       // if using an argument, we can't cache the result.
       if (top) {
@@ -1485,11 +1485,11 @@
       };
     },
     /**
-         * get transform of the node
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Konva.Transform}
-         */
+     * get transform of the node
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Konva.Transform}
+     */
     getTransform: function() {
       return this._getCache(TRANSFORM, this._getTransform);
     },
@@ -1524,22 +1524,22 @@
       return m;
     },
     /**
-         * clone node.  Returns a new Node instance with identical attributes.  You can also override
-         *  the node properties with an object literal, enabling you to use an existing node as a template
-         *  for another node
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {Object} obj override attrs
-         * @returns {Konva.Node}
-         * @example
-         * // simple clone
-         * var clone = node.clone();
-         *
-         * // clone a node and override the x position
-         * var clone = rect.clone({
-         *   x: 5
-         * });
-         */
+     * clone node.  Returns a new Node instance with identical attributes.  You can also override
+     *  the node properties with an object literal, enabling you to use an existing node as a template
+     *  for another node
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {Object} obj override attrs
+     * @returns {Konva.Node}
+     * @example
+     * // simple clone
+     * var clone = node.clone();
+     *
+     * // clone a node and override the x position
+     * var clone = rect.clone({
+     *   x: 5
+     * });
+     */
     clone: function(obj) {
       // instantiate new node
       var attrs = Konva.Util.cloneObject(this.attrs),
@@ -1610,41 +1610,41 @@
       return canvas;
     },
     /**
-         * converts node into an canvas element.
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {Object} config
-         * @param {Function} config.callback function executed when the composite has completed
-         * @param {Number} [config.x] x position of canvas section
-         * @param {Number} [config.y] y position of canvas section
-         * @param {Number} [config.width] width of canvas section
-         * @param {Number} [config.height] height of canvas section
-         * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image.  Default is 1.
-         * @example
-         * var canvas = node.toCanvas();
-         */
+     * converts node into an canvas element.
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {Object} config
+     * @param {Function} config.callback function executed when the composite has completed
+     * @param {Number} [config.x] x position of canvas section
+     * @param {Number} [config.y] y position of canvas section
+     * @param {Number} [config.width] width of canvas section
+     * @param {Number} [config.height] height of canvas section
+     * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image.  Default is 1.
+     * @example
+     * var canvas = node.toCanvas();
+     */
     toCanvas: function(config) {
       return this._toKonvaCanvas(config)._canvas;
     },
     /**
-         * Creates a composite data URL. If MIME type is not
-         * specified, then "image/png" will result. For "image/jpeg", specify a quality
-         * level as quality (range 0.0 - 1.0)
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {Object} config
-         * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
-         *  "image/png" is the default
-         * @param {Number} [config.x] x position of canvas section
-         * @param {Number} [config.y] y position of canvas section
-         * @param {Number} [config.width] width of canvas section
-         * @param {Number} [config.height] height of canvas section
-         * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
-         *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
-         *  is very high quality
-         * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image url. Default is 1
-         * @returns {String}
-         */
+     * Creates a composite data URL. If MIME type is not
+     * specified, then "image/png" will result. For "image/jpeg", specify a quality
+     * level as quality (range 0.0 - 1.0)
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {Object} config
+     * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
+     *  "image/png" is the default
+     * @param {Number} [config.x] x position of canvas section
+     * @param {Number} [config.y] y position of canvas section
+     * @param {Number} [config.width] width of canvas section
+     * @param {Number} [config.height] height of canvas section
+     * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
+     *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
+     *  is very high quality
+     * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image url. Default is 1
+     * @returns {String}
+     */
     toDataURL: function(config) {
       config = config || {};
       var mimeType = config.mimeType || null,
@@ -1652,30 +1652,30 @@
       return this._toKonvaCanvas(config).toDataURL(mimeType, quality);
     },
     /**
-         * converts node into an image.  Since the toImage
-         *  method is asynchronous, a callback is required.  toImage is most commonly used
-         *  to cache complex drawings as an image so that they don't have to constantly be redrawn
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {Object} config
-         * @param {Function} config.callback function executed when the composite has completed
-         * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
-         *  "image/png" is the default
-         * @param {Number} [config.x] x position of canvas section
-         * @param {Number} [config.y] y position of canvas section
-         * @param {Number} [config.width] width of canvas section
-         * @param {Number} [config.height] height of canvas section
-         * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
-         *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
-         *  is very high quality
-         * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image.  Default is 1.
-         * @example
-         * var image = node.toImage({
-         *   callback: function(img) {
-         *     // do stuff with img
-         *   }
-         * });
-         */
+     * converts node into an image.  Since the toImage
+     *  method is asynchronous, a callback is required.  toImage is most commonly used
+     *  to cache complex drawings as an image so that they don't have to constantly be redrawn
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {Object} config
+     * @param {Function} config.callback function executed when the composite has completed
+     * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
+     *  "image/png" is the default
+     * @param {Number} [config.x] x position of canvas section
+     * @param {Number} [config.y] y position of canvas section
+     * @param {Number} [config.width] width of canvas section
+     * @param {Number} [config.height] height of canvas section
+     * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
+     *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
+     *  is very high quality
+     * @paremt {Number} [config.pixelRatio] pixelRatio of ouput image.  Default is 1.
+     * @example
+     * var image = node.toImage({
+     *   callback: function(img) {
+     *     // do stuff with img
+     *   }
+     * });
+     */
     toImage: function(config) {
       if (!config || !config.callback) {
         throw 'callback required for toImage method config argument';
@@ -1702,20 +1702,20 @@
       return this.attrs.height || 0;
     },
     /**
-         * get class name, which may return Stage, Layer, Group, or shape class names like Rect, Circle, Text, etc.
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {String}
-         */
+     * get class name, which may return Stage, Layer, Group, or shape class names like Rect, Circle, Text, etc.
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {String}
+     */
     getClassName: function() {
       return this.className || this.nodeType;
     },
     /**
-         * get the node type, which may return Stage, Layer, Group, or Node
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {String}
-         */
+     * get the node type, which may return Stage, Layer, Group, or Node
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {String}
+     */
     getType: function() {
       return this.nodeType;
     },
@@ -1734,20 +1734,24 @@
         ? [this]
         : [];
     },
-    _off: function(type, name) {
+    _off: function(type, name, callback) {
       var evtListeners = this.eventListeners[type],
         i,
-        evtName;
+        evtName,
+        handler;
 
       for (i = 0; i < evtListeners.length; i++) {
         evtName = evtListeners[i].name;
+        handler = evtListeners[i].handler;
+
         // the following two conditions must be true in order to remove a handler:
         // 1) the current event name cannot be konva unless the event name is konva
         //    this enables developers to force remove a konva specific listener for whatever reason
         // 2) an event name is not specified, or if one is specified, it matches the current event name
         if (
           (evtName !== 'konva' || name === 'konva') &&
-          (!name || evtName === name)
+          (!name || evtName === name) &&
+          (!callback || callback === handler)
         ) {
           evtListeners.splice(i, 1);
           if (evtListeners.length === 0) {
@@ -1797,16 +1801,16 @@
     },
     // naming methods
     /**
-         * add name to node
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {String} name
-         * @returns {Konva.Node}
-         * @example
-         * node.name('red');
-         * node.addName('selected');
-         * node.name(); // return 'red selected'
-         */
+     * add name to node
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {String} name
+     * @returns {Konva.Node}
+     * @example
+     * node.name('red');
+     * node.addName('selected');
+     * node.name(); // return 'red selected'
+     */
     addName: function(name) {
       if (!this.hasName(name)) {
         var oldName = this.name();
@@ -1816,32 +1820,32 @@
       return this;
     },
     /**
-         * check is node has name
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {String} name
-         * @returns {Boolean}
-         * @example
-         * node.name('red');
-         * node.hasName('red');   // return true
-         * node.hasName('selected'); // return false
-         */
+     * check is node has name
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {String} name
+     * @returns {Boolean}
+     * @example
+     * node.name('red');
+     * node.hasName('red');   // return true
+     * node.hasName('selected'); // return false
+     */
     hasName: function(name) {
       var names = (this.name() || '').split(/\s/g);
       return names.indexOf(name) !== -1;
     },
     /**
-         * remove name from node
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {String} name
-         * @returns {Konva.Node}
-         * @example
-         * node.name('red selected');
-         * node.removeName('selected');
-         * node.hasName('selected'); // return false
-         * node.name(); // return 'red'
-         */
+     * remove name from node
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {String} name
+     * @returns {Konva.Node}
+     * @example
+     * node.name('red selected');
+     * node.removeName('selected');
+     * node.hasName('selected'); // return false
+     * node.name(); // return 'red'
+     */
     removeName: function(name) {
       var names = (this.name() || '').split(/\s/g);
       var index = names.indexOf(name);
@@ -1852,15 +1856,15 @@
       return this;
     },
     /**
-         * set attr
-         * @method
-         * @memberof Konva.Node.prototype
-         * @param {String} attr
-         * @param {*} val
-         * @returns {Konva.Node}
-         * @example
-         * node.setAttr('x', 5);
-         */
+     * set attr
+     * @method
+     * @memberof Konva.Node.prototype
+     * @param {String} attr
+     * @param {*} val
+     * @returns {Konva.Node}
+     * @example
+     * node.setAttr('x', 5);
+     */
     setAttr: function(attr, val) {
       var method = SET + Konva.Util._capitalize(attr),
         func = this[method];
@@ -1966,11 +1970,11 @@
       }
     },
     /**
-         * draw both scene and hit graphs.  If the node being drawn is the stage, all of the layers will be cleared and redrawn
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Konva.Node}
-         */
+     * draw both scene and hit graphs.  If the node being drawn is the stage, all of the layers will be cleared and redrawn
+     * @method
+     * @memberof Konva.Node.prototype
+     * @returns {Konva.Node}
+     */
     draw: function() {
       this.drawScene();
       this.drawHit();
@@ -1979,18 +1983,18 @@
   });
 
   /**
-     * create node with JSON string or an Object.  De-serializtion does not generate custom
-     *  shape drawing functions, images, or event handlers (this would make the
-     *  serialized object huge).  If your app uses custom shapes, images, and
-     *  event handlers (it probably does), then you need to select the appropriate
-     *  shapes after loading the stage and set these properties via on(), setDrawFunc(),
-     *  and setImage() methods
-     * @method
-     * @memberof Konva.Node
-     * @param {String|Object} json string or object
-     * @param {Element} [container] optional container dom element used only if you're
-     *  creating a stage node
-     */
+   * create node with JSON string or an Object.  De-serializtion does not generate custom
+   *  shape drawing functions, images, or event handlers (this would make the
+   *  serialized object huge).  If your app uses custom shapes, images, and
+   *  event handlers (it probably does), then you need to select the appropriate
+   *  shapes after loading the stage and set these properties via on(), setDrawFunc(),
+   *  and setImage() methods
+   * @method
+   * @memberof Konva.Node
+   * @param {String|Object} json string or object
+   * @param {Element} [container] optional container dom element used only if you're
+   *  creating a stage node
+   */
   Konva.Node.create = function(data, container) {
     if (Konva.Util._isString(data)) {
       data = JSON.parse(data);
@@ -2024,58 +2028,58 @@
 
   Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'position');
   /**
-     * get/set node position relative to parent
-     * @name position
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Object} pos
-     * @param {Number} pos.x
-     * @param {Number} pos.y
-     * @returns {Object}
-     * @example
-     * // get position
-     * var position = node.position();
-     *
-     * // set position
-     * node.position({
-     *   x: 5
-     *   y: 10
-     * });
-     */
+   * get/set node position relative to parent
+   * @name position
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Object} pos
+   * @param {Number} pos.x
+   * @param {Number} pos.y
+   * @returns {Object}
+   * @example
+   * // get position
+   * var position = node.position();
+   *
+   * // set position
+   * node.position({
+   *   x: 5
+   *   y: 10
+   * });
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'x', 0);
 
   /**
-     * get/set x position
-     * @name x
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Number} x
-     * @returns {Object}
-     * @example
-     * // get x
-     * var x = node.x();
-     *
-     * // set x
-     * node.x(5);
-     */
+   * get/set x position
+   * @name x
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} x
+   * @returns {Object}
+   * @example
+   * // get x
+   * var x = node.x();
+   *
+   * // set x
+   * node.x(5);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'y', 0);
 
   /**
-     * get/set y position
-     * @name y
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Number} y
-     * @returns {Integer}
-     * @example
-     * // get y
-     * var y = node.y();
-     *
-     * // set y
-     * node.y(5);
-     */
+   * get/set y position
+   * @name y
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} y
+   * @returns {Integer}
+   * @example
+   * // get y
+   * var y = node.y();
+   *
+   * // set y
+   * node.y(5);
+   */
 
   Konva.Factory.addGetterSetter(
     Konva.Node,
@@ -2084,358 +2088,358 @@
   );
 
   /**
-     * get/set globalCompositeOperation of a shape
-     * @name globalCompositeOperation
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Number} blur
-     * @returns {Number}
-     * @example
-     * // get shadow blur
-     * var globalCompositeOperation = shape.globalCompositeOperation();
-     *
-     * // set shadow blur
-     * shape.globalCompositeOperation('source-in');
-     */
+   * get/set globalCompositeOperation of a shape
+   * @name globalCompositeOperation
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} blur
+   * @returns {Number}
+   * @example
+   * // get shadow blur
+   * var globalCompositeOperation = shape.globalCompositeOperation();
+   *
+   * // set shadow blur
+   * shape.globalCompositeOperation('source-in');
+   */
   Konva.Factory.addGetterSetter(Konva.Node, 'opacity', 1);
 
   /**
-     * get/set opacity.  Opacity values range from 0 to 1.
-     *  A node with an opacity of 0 is fully transparent, and a node
-     *  with an opacity of 1 is fully opaque
-     * @name opacity
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Object} opacity
-     * @returns {Number}
-     * @example
-     * // get opacity
-     * var opacity = node.opacity();
-     *
-     * // set opacity
-     * node.opacity(0.5);
-     */
+   * get/set opacity.  Opacity values range from 0 to 1.
+   *  A node with an opacity of 0 is fully transparent, and a node
+   *  with an opacity of 1 is fully opaque
+   * @name opacity
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Object} opacity
+   * @returns {Number}
+   * @example
+   * // get opacity
+   * var opacity = node.opacity();
+   *
+   * // set opacity
+   * node.opacity(0.5);
+   */
 
   Konva.Factory.addGetter(Konva.Node, 'name');
   Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'name');
 
   /**
-     * get/set name
-     * @name name
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {String} name
-     * @returns {String}
-     * @example
-     * // get name
-     * var name = node.name();
-     *
-     * // set name
-     * node.name('foo');
-     *
-     * // also node may have multiple names (as css classes)
-     * node.name('foo bar');
-     */
+   * get/set name
+   * @name name
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {String} name
+   * @returns {String}
+   * @example
+   * // get name
+   * var name = node.name();
+   *
+   * // set name
+   * node.name('foo');
+   *
+   * // also node may have multiple names (as css classes)
+   * node.name('foo bar');
+   */
 
   Konva.Factory.addGetter(Konva.Node, 'id');
   Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'id');
 
   /**
-     * get/set id. Id is global for whole page.
-     * @name id
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {String} id
-     * @returns {String}
-     * @example
-     * // get id
-     * var name = node.id();
-     *
-     * // set id
-     * node.id('foo');
-     */
+   * get/set id. Id is global for whole page.
+   * @name id
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {String} id
+   * @returns {String}
+   * @example
+   * // get id
+   * var name = node.id();
+   *
+   * // set id
+   * node.id('foo');
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'rotation', 0);
 
   /**
-     * get/set rotation in degrees
-     * @name rotation
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Number} rotation
-     * @returns {Number}
-     * @example
-     * // get rotation in degrees
-     * var rotation = node.rotation();
-     *
-     * // set rotation in degrees
-     * node.rotation(45);
-     */
+   * get/set rotation in degrees
+   * @name rotation
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} rotation
+   * @returns {Number}
+   * @example
+   * // get rotation in degrees
+   * var rotation = node.rotation();
+   *
+   * // set rotation in degrees
+   * node.rotation(45);
+   */
 
   Konva.Factory.addComponentsGetterSetter(Konva.Node, 'scale', ['x', 'y']);
 
   /**
-     * get/set scale
-     * @name scale
-     * @param {Object} scale
-     * @param {Number} scale.x
-     * @param {Number} scale.y
-     * @method
-     * @memberof Konva.Node.prototype
-     * @returns {Object}
-     * @example
-     * // get scale
-     * var scale = node.scale();
-     *
-     * // set scale
-     * shape.scale({
-     *   x: 2
-     *   y: 3
-     * });
-     */
+   * get/set scale
+   * @name scale
+   * @param {Object} scale
+   * @param {Number} scale.x
+   * @param {Number} scale.y
+   * @method
+   * @memberof Konva.Node.prototype
+   * @returns {Object}
+   * @example
+   * // get scale
+   * var scale = node.scale();
+   *
+   * // set scale
+   * shape.scale({
+   *   x: 2
+   *   y: 3
+   * });
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'scaleX', 1);
 
   /**
-     * get/set scale x
-     * @name scaleX
-     * @param {Number} x
-     * @method
-     * @memberof Konva.Node.prototype
-     * @returns {Number}
-     * @example
-     * // get scale x
-     * var scaleX = node.scaleX();
-     *
-     * // set scale x
-     * node.scaleX(2);
-     */
+   * get/set scale x
+   * @name scaleX
+   * @param {Number} x
+   * @method
+   * @memberof Konva.Node.prototype
+   * @returns {Number}
+   * @example
+   * // get scale x
+   * var scaleX = node.scaleX();
+   *
+   * // set scale x
+   * node.scaleX(2);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'scaleY', 1);
 
   /**
-     * get/set scale y
-     * @name scaleY
-     * @param {Number} y
-     * @method
-     * @memberof Konva.Node.prototype
-     * @returns {Number}
-     * @example
-     * // get scale y
-     * var scaleY = node.scaleY();
-     *
-     * // set scale y
-     * node.scaleY(2);
-     */
+   * get/set scale y
+   * @name scaleY
+   * @param {Number} y
+   * @method
+   * @memberof Konva.Node.prototype
+   * @returns {Number}
+   * @example
+   * // get scale y
+   * var scaleY = node.scaleY();
+   *
+   * // set scale y
+   * node.scaleY(2);
+   */
 
   Konva.Factory.addComponentsGetterSetter(Konva.Node, 'skew', ['x', 'y']);
 
   /**
-     * get/set skew
-     * @name skew
-     * @param {Object} skew
-     * @param {Number} skew.x
-     * @param {Number} skew.y
-     * @method
-     * @memberof Konva.Node.prototype
-     * @returns {Object}
-     * @example
-     * // get skew
-     * var skew = node.skew();
-     *
-     * // set skew
-     * node.skew({
-     *   x: 20
-     *   y: 10
-     * });
-     */
+   * get/set skew
+   * @name skew
+   * @param {Object} skew
+   * @param {Number} skew.x
+   * @param {Number} skew.y
+   * @method
+   * @memberof Konva.Node.prototype
+   * @returns {Object}
+   * @example
+   * // get skew
+   * var skew = node.skew();
+   *
+   * // set skew
+   * node.skew({
+   *   x: 20
+   *   y: 10
+   * });
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'skewX', 0);
 
   /**
-     * get/set skew x
-     * @name skewX
-     * @param {Number} x
-     * @method
-     * @memberof Konva.Node.prototype
-     * @returns {Number}
-     * @example
-     * // get skew x
-     * var skewX = node.skewX();
-     *
-     * // set skew x
-     * node.skewX(3);
-     */
+   * get/set skew x
+   * @name skewX
+   * @param {Number} x
+   * @method
+   * @memberof Konva.Node.prototype
+   * @returns {Number}
+   * @example
+   * // get skew x
+   * var skewX = node.skewX();
+   *
+   * // set skew x
+   * node.skewX(3);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'skewY', 0);
 
   /**
-     * get/set skew y
-     * @name skewY
-     * @param {Number} y
-     * @method
-     * @memberof Konva.Node.prototype
-     * @returns {Number}
-     * @example
-     * // get skew y
-     * var skewY = node.skewY();
-     *
-     * // set skew y
-     * node.skewY(3);
-     */
+   * get/set skew y
+   * @name skewY
+   * @param {Number} y
+   * @method
+   * @memberof Konva.Node.prototype
+   * @returns {Number}
+   * @example
+   * // get skew y
+   * var skewY = node.skewY();
+   *
+   * // set skew y
+   * node.skewY(3);
+   */
 
   Konva.Factory.addComponentsGetterSetter(Konva.Node, 'offset', ['x', 'y']);
 
   /**
-     * get/set offset.  Offsets the default position and rotation point
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Object} offset
-     * @param {Number} offset.x
-     * @param {Number} offset.y
-     * @returns {Object}
-     * @example
-     * // get offset
-     * var offset = node.offset();
-     *
-     * // set offset
-     * node.offset({
-     *   x: 20
-     *   y: 10
-     * });
-     */
+   * get/set offset.  Offsets the default position and rotation point
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Object} offset
+   * @param {Number} offset.x
+   * @param {Number} offset.y
+   * @returns {Object}
+   * @example
+   * // get offset
+   * var offset = node.offset();
+   *
+   * // set offset
+   * node.offset({
+   *   x: 20
+   *   y: 10
+   * });
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'offsetX', 0);
 
   /**
-     * get/set offset x
-     * @name offsetX
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Number} x
-     * @returns {Number}
-     * @example
-     * // get offset x
-     * var offsetX = node.offsetX();
-     *
-     * // set offset x
-     * node.offsetX(3);
-     */
+   * get/set offset x
+   * @name offsetX
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} x
+   * @returns {Number}
+   * @example
+   * // get offset x
+   * var offsetX = node.offsetX();
+   *
+   * // set offset x
+   * node.offsetX(3);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'offsetY', 0);
 
   /**
-     * get/set offset y
-     * @name offsetY
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Number} y
-     * @returns {Number}
-     * @example
-     * // get offset y
-     * var offsetY = node.offsetY();
-     *
-     * // set offset y
-     * node.offsetY(3);
-     */
+   * get/set offset y
+   * @name offsetY
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} y
+   * @returns {Number}
+   * @example
+   * // get offset y
+   * var offsetY = node.offsetY();
+   *
+   * // set offset y
+   * node.offsetY(3);
+   */
 
   Konva.Factory.addSetter(Konva.Node, 'dragDistance');
   Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'dragDistance');
 
   /**
-     * get/set drag distance
-     * @name dragDistance
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Number} distance
-     * @returns {Number}
-     * @example
-     * // get drag distance
-     * var dragDistance = node.dragDistance();
-     *
-     * // set distance
-     * // node starts dragging only if pointer moved more then 3 pixels
-     * node.dragDistance(3);
-     * // or set globally
-     * Konva.dragDistance = 3;
-     */
+   * get/set drag distance
+   * @name dragDistance
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} distance
+   * @returns {Number}
+   * @example
+   * // get drag distance
+   * var dragDistance = node.dragDistance();
+   *
+   * // set distance
+   * // node starts dragging only if pointer moved more then 3 pixels
+   * node.dragDistance(3);
+   * // or set globally
+   * Konva.dragDistance = 3;
+   */
 
   Konva.Factory.addSetter(Konva.Node, 'width', 0);
   Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'width');
   /**
-     * get/set width
-     * @name width
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Number} width
-     * @returns {Number}
-     * @example
-     * // get width
-     * var width = node.width();
-     *
-     * // set width
-     * node.width(100);
-     */
+   * get/set width
+   * @name width
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} width
+   * @returns {Number}
+   * @example
+   * // get width
+   * var width = node.width();
+   *
+   * // set width
+   * node.width(100);
+   */
 
   Konva.Factory.addSetter(Konva.Node, 'height', 0);
   Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'height');
   /**
-     * get/set height
-     * @name height
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Number} height
-     * @returns {Number}
-     * @example
-     * // get height
-     * var height = node.height();
-     *
-     * // set height
-     * node.height(100);
-     */
+   * get/set height
+   * @name height
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} height
+   * @returns {Number}
+   * @example
+   * // get height
+   * var height = node.height();
+   *
+   * // set height
+   * node.height(100);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'listening', 'inherit');
   /**
-     * get/set listenig attr.  If you need to determine if a node is listening or not
-     *   by taking into account its parents, use the isListening() method
-     * @name listening
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Boolean|String} listening Can be "inherit", true, or false.  The default is "inherit".
-     * @returns {Boolean|String}
-     * @example
-     * // get listening attr
-     * var listening = node.listening();
-     *
-     * // stop listening for events
-     * node.listening(false);
-     *
-     * // listen for events
-     * node.listening(true);
-     *
-     * // listen to events according to the parent
-     * node.listening('inherit');
-     */
+   * get/set listenig attr.  If you need to determine if a node is listening or not
+   *   by taking into account its parents, use the isListening() method
+   * @name listening
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Boolean|String} listening Can be "inherit", true, or false.  The default is "inherit".
+   * @returns {Boolean|String}
+   * @example
+   * // get listening attr
+   * var listening = node.listening();
+   *
+   * // stop listening for events
+   * node.listening(false);
+   *
+   * // listen for events
+   * node.listening(true);
+   *
+   * // listen to events according to the parent
+   * node.listening('inherit');
+   */
 
   /**
-      * get/set preventDefault
-      * By default all shapes will prevent default behaviour
-      * of a browser on a pointer move or tap.
-      * that will prevent native scrolling when you are trying to drag&drop a node
-      * but sometimes you may need to enable default actions
-      * in that case you can set the property to false
-      * @name preventDefault
-      * @method
-      * @memberof Konva.Node.prototype
-      * @param {Number} preventDefault
-      * @returns {Number}
-      * @example
-      * // get preventDefault
-      * var shouldPrevent = shape.preventDefault();
-      *
-      * // set preventDefault
-      * shape.preventDefault(false);
-      */
+   * get/set preventDefault
+   * By default all shapes will prevent default behaviour
+   * of a browser on a pointer move or tap.
+   * that will prevent native scrolling when you are trying to drag&drop a node
+   * but sometimes you may need to enable default actions
+   * in that case you can set the property to false
+   * @name preventDefault
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} preventDefault
+   * @returns {Number}
+   * @example
+   * // get preventDefault
+   * var shouldPrevent = shape.preventDefault();
+   *
+   * // set preventDefault
+   * shape.preventDefault(false);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'preventDefault', true);
 
@@ -2446,92 +2450,92 @@
     return val;
   });
   /**
-     * get/set filters.  Filters are applied to cached canvases
-     * @name filters
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Array} filters array of filters
-     * @returns {Array}
-     * @example
-     * // get filters
-     * var filters = node.filters();
-     *
-     * // set a single filter
-     * node.cache();
-     * node.filters([Konva.Filters.Blur]);
-     *
-     * // set multiple filters
-     * node.cache();
-     * node.filters([
-     *   Konva.Filters.Blur,
-     *   Konva.Filters.Sepia,
-     *   Konva.Filters.Invert
-     * ]);
-     */
+   * get/set filters.  Filters are applied to cached canvases
+   * @name filters
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Array} filters array of filters
+   * @returns {Array}
+   * @example
+   * // get filters
+   * var filters = node.filters();
+   *
+   * // set a single filter
+   * node.cache();
+   * node.filters([Konva.Filters.Blur]);
+   *
+   * // set multiple filters
+   * node.cache();
+   * node.filters([
+   *   Konva.Filters.Blur,
+   *   Konva.Filters.Sepia,
+   *   Konva.Filters.Invert
+   * ]);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'visible', 'inherit');
   /**
-     * get/set visible attr.  Can be "inherit", true, or false.  The default is "inherit".
-     *   If you need to determine if a node is visible or not
-     *   by taking into account its parents, use the isVisible() method
-     * @name visible
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Boolean|String} visible
-     * @returns {Boolean|String}
-     * @example
-     * // get visible attr
-     * var visible = node.visible();
-     *
-     * // make invisible
-     * node.visible(false);
-     *
-     * // make visible
-     * node.visible(true);
-     *
-     * // make visible according to the parent
-     * node.visible('inherit');
-     */
+   * get/set visible attr.  Can be "inherit", true, or false.  The default is "inherit".
+   *   If you need to determine if a node is visible or not
+   *   by taking into account its parents, use the isVisible() method
+   * @name visible
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Boolean|String} visible
+   * @returns {Boolean|String}
+   * @example
+   * // get visible attr
+   * var visible = node.visible();
+   *
+   * // make invisible
+   * node.visible(false);
+   *
+   * // make visible
+   * node.visible(true);
+   *
+   * // make visible according to the parent
+   * node.visible('inherit');
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'transformsEnabled', 'all');
 
   /**
-     * get/set transforms that are enabled.  Can be "all", "none", or "position".  The default
-     *  is "all"
-     * @name transformsEnabled
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {String} enabled
-     * @returns {String}
-     * @example
-     * // enable position transform only to improve draw performance
-     * node.transformsEnabled('position');
-     *
-     * // enable all transforms
-     * node.transformsEnabled('all');
-     */
+   * get/set transforms that are enabled.  Can be "all", "none", or "position".  The default
+   *  is "all"
+   * @name transformsEnabled
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {String} enabled
+   * @returns {String}
+   * @example
+   * // enable position transform only to improve draw performance
+   * node.transformsEnabled('position');
+   *
+   * // enable all transforms
+   * node.transformsEnabled('all');
+   */
 
   /**
-     * get/set node size
-     * @name size
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Object} size
-     * @param {Number} size.width
-     * @param {Number} size.height
-     * @returns {Object}
-     * @example
-     * // get node size
-     * var size = node.size();
-     * var x = size.x;
-     * var y = size.y;
-     *
-     * // set size
-     * node.size({
-     *   width: 100,
-     *   height: 200
-     * });
-     */
+   * get/set node size
+   * @name size
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Object} size
+   * @param {Number} size.width
+   * @param {Number} size.height
+   * @returns {Object}
+   * @example
+   * // get node size
+   * var size = node.size();
+   * var x = size.x;
+   * var y = size.y;
+   *
+   * // set size
+   * node.size({
+   *   width: 100,
+   *   height: 200
+   * });
+   */
   Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'size');
 
   Konva.Factory.backCompat(Konva.Node, {
