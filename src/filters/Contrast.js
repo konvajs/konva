@@ -58,7 +58,7 @@
   };
 
   /**
-   * get/set filter contrast.  The contrast is a number between -100 and 100.&nbsp;
+   * get/set filter contrast.  The contrast is a number between -100 and 100.
    * Use with {@link Konva.Filters.Contrast} filter.
    * @name contrast
    * @method
