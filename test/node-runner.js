@@ -107,6 +107,7 @@ require('./unit/filters/Noise-test.js');
 require('./unit/filters/Threshold-test.js');
 require('./unit/filters/Posterize-test.js');
 require('./unit/filters/Sepia-test.js');
+require('./unit/filters/Contrast-test.js');
 require('./unit/filters/Emboss-test.js');
 require('./unit/filters/Solarize-test.js');
 require('./unit/filters/Kaleidoscope-test.js');
