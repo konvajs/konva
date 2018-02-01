@@ -51,6 +51,7 @@ var sourceFiles = [
   'src/filters/Sepia.js',
   'src/filters/Solarize.js',
   'src/filters/Kaleidoscope.js',
+  'src/filters/Contrast.js',
 
   // core
   'src/Container.js',
