@@ -2,11 +2,22 @@
   'use strict';
 
   var CHANGE_KONVA = 'Change.konva';
-  var ATTR_CHANGE_LIST = ['keepRatio', 'resizeEnabled', 'rotateHandlerOffset'];
+  var ATTR_CHANGE_LIST = ['resizeEnabled', 'rotateHandlerOffset'];
 
   Konva.Transformer = function(config) {
     this.____init(config);
   };
+
+  var RESIZERS_NAMES = [
+    'top-left',
+    'top-center',
+    'top-right',
+    'middle-right',
+    'middle-left',
+    'bottom-left',
+    'bottom-center',
+    'bottom-right'
+  ];
 
   Konva.Transformer.prototype = {
     _centroid: false,
@@ -42,16 +53,11 @@
     _createElements: function() {
       this._createBack();
 
-      this._createAnchor('top-left');
-      this._createAnchor('top-center');
-      this._createAnchor('top-right');
-
-      this._createAnchor('middle-right');
-      this._createAnchor('middle-left');
-
-      this._createAnchor('bottom-left');
-      this._createAnchor('bottom-center');
-      this._createAnchor('bottom-right');
+      RESIZERS_NAMES.forEach(
+        function(name) {
+          this._createAnchor(name);
+        }.bind(this)
+      );
 
       this._createAnchor('rotater');
     },
@@ -104,7 +110,13 @@
           ctx.beginPath();
           ctx.rect(0, 0, this.width(), this.height());
           ctx.moveTo(this.width() / 2, 0);
-          ctx.lineTo(this.width() / 2, -this.getParent().rotateHandlerOffset());
+          if (this.getParent().rotateEnabled()) {
+            ctx.lineTo(
+              this.width() / 2,
+              -this.getParent().rotateHandlerOffset()
+            );
+          }
+
           ctx.fillStrokeShape(this);
         }
       });
@@ -333,6 +345,8 @@
           y: attrs.absY
         });
       }
+      this.fire('transform');
+      this._el.fire('transform');
       this._update();
       this.getLayer().batchDraw();
     },
@@ -352,53 +366,54 @@
         });
       }
 
-      var keepRatio = this.keepRatio();
+      var enabledResizers = this.enabledResizers();
       var resizeEnabled = this.resizeEnabled();
 
       this.findOne('.top-left').setAttrs({
         x: 0,
         y: 0,
-        visible: resizeEnabled
+        visible: resizeEnabled && enabledResizers.indexOf('top-left') >= 0
       });
       this.findOne('.top-center').setAttrs({
         x: width / 2,
         y: 0,
-        visible: resizeEnabled && !keepRatio
+        visible: resizeEnabled && enabledResizers.indexOf('top-center') >= 0
       });
       this.findOne('.top-right').setAttrs({
         x: width,
         y: 0,
-        visible: resizeEnabled
+        visible: resizeEnabled && enabledResizers.indexOf('top-right') >= 0
       });
       this.findOne('.middle-left').setAttrs({
         x: 0,
         y: height / 2,
-        visible: resizeEnabled && !keepRatio
+        visible: resizeEnabled && enabledResizers.indexOf('middle-left') >= 0
       });
       this.findOne('.middle-right').setAttrs({
         x: width,
         y: height / 2,
-        visible: resizeEnabled && !keepRatio
+        visible: resizeEnabled && enabledResizers.indexOf('middle-right') >= 0
       });
       this.findOne('.bottom-left').setAttrs({
         x: 0,
         y: height,
-        visible: resizeEnabled
+        visible: resizeEnabled && enabledResizers.indexOf('bottom-left') >= 0
       });
       this.findOne('.bottom-center').setAttrs({
         x: width / 2,
         y: height,
-        visible: resizeEnabled && !keepRatio
+        visible: resizeEnabled && enabledResizers.indexOf('bottom-center') >= 0
       });
       this.findOne('.bottom-right').setAttrs({
         x: width,
         y: height,
-        visible: resizeEnabled
+        visible: resizeEnabled && enabledResizers.indexOf('bottom-right') >= 0
       });
 
       this.findOne('.rotater').setAttrs({
         x: width / 2,
-        y: -this.rotateHandlerOffset()
+        y: -this.rotateHandlerOffset(),
+        visible: this.rotateEnabled()
       });
 
       this.findOne('.back').setAttrs({
@@ -417,8 +432,36 @@
   };
   Konva.Util.extend(Konva.Transformer, Konva.Group);
 
-  Konva.Factory.addGetterSetter(Konva.Transformer, 'keepRatio', false);
+  Konva.Factory.addGetterSetter(
+    Konva.Transformer,
+    'enabledResizers',
+    RESIZERS_NAMES
+  );
+  Konva.Factory.addGetterSetter(
+    Konva.Transformer,
+    'enabledResizers',
+    RESIZERS_NAMES,
+    function(val) {
+      if (!(val instanceof Array)) {
+        Konva.Util.warn('enabledResizers value should be an array');
+      }
+      if (val instanceof Array) {
+        val.forEach(function(name) {
+          if (RESIZERS_NAMES.indexOf('name') === -1) {
+            Konva.Util.warn(
+              'Unknown resizer name: ' +
+                name +
+                '. Available names are: ' +
+                RESIZERS_NAMES.join(', ')
+            );
+          }
+        });
+      }
+      return val || [];
+    }
+  );
   Konva.Factory.addGetterSetter(Konva.Transformer, 'resizeEnabled', true);
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateEnabled', true);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotationSnaps', []);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateHandlerOffset', 50);
 

@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Fri Jan 12 2018
+ * Date: Fri Jan 26 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -14922,18 +14922,18 @@
 (function() {
   'use strict';
   /**
-     * Line constructor.&nbsp; Lines are defined by an array of points and
-     *  a tension
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {Array} config.points
-     * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
-     *   The default is 0
-     * @param {Boolean} [config.closed] defines whether or not the line shape is closed, creating a polygon or blob
-     * @param {Boolean} [config.bezier] if no tension is provided but bezier=true, we draw the line as a bezier using the passed points
-     * @param {String} [config.fill] fill color
+   * Line constructor.&nbsp; Lines are defined by an array of points and
+   *  a tension
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {Array} config.points Array of points coordinates. You should define them as [x1, y1, x2, y2, x3, y3].
+   * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
+   *   The default is 0
+   * @param {Boolean} [config.closed] defines whether or not the line shape is closed, creating a polygon or blob
+   * @param {Boolean} [config.bezier] if no tension is provided but bezier=true, we draw the line as a bezier using the passed points
+   * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -14984,7 +14984,7 @@
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
      * @param {Array} [config.dash]
      * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-     * @param {Number} [config.x]
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -15004,15 +15004,15 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * var line = new Konva.Line({
-     *   x: 100,
-     *   y: 50,
-     *   points: [73, 70, 340, 23, 450, 60, 500, 20],
-     *   stroke: 'red',
-     *   tension: 1
-     * });
-     */
+   * @example
+   * var line = new Konva.Line({
+   *   x: 100,
+   *   y: 50,
+   *   points: [73, 70, 340, 23, 450, 60, 500, 20],
+   *   stroke: 'red',
+   *   tension: 1
+   * });
+   */
   Konva.Line = function(config) {
     this.___init(config);
   };
@@ -15200,76 +15200,76 @@
   Konva.Factory.addGetterSetter(Konva.Line, 'closed', false);
 
   /**
-     * get/set closed flag.  The default is false
-     * @name closed
-     * @method
-     * @memberof Konva.Line.prototype
-     * @param {Boolean} closed
-     * @returns {Boolean}
-     * @example
-     * // get closed flag
-     * var closed = line.closed();
-     *
-     * // close the shape
-     * line.closed(true);
-     *
-     * // open the shape
-     * line.closed(false);
-     */
+   * get/set closed flag.  The default is false
+   * @name closed
+   * @method
+   * @memberof Konva.Line.prototype
+   * @param {Boolean} closed
+   * @returns {Boolean}
+   * @example
+   * // get closed flag
+   * var closed = line.closed();
+   *
+   * // close the shape
+   * line.closed(true);
+   *
+   * // open the shape
+   * line.closed(false);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Line, 'bezier', false);
 
   /**
-    * get/set bezier flag.  The default is false
-    * @name bezier
-    * @method
-    * @memberof Konva.Line.prototype
-    * @param {Boolean} bezier
-    * @returns {Boolean}
-    * @example
-    * // get whether the line is a bezier
-    * var isBezier = line.bezier();
-    *
-    * // set whether the line is a bezier
-    * line.bezier(true);
-    */
+   * get/set bezier flag.  The default is false
+   * @name bezier
+   * @method
+   * @memberof Konva.Line.prototype
+   * @param {Boolean} bezier
+   * @returns {Boolean}
+   * @example
+   * // get whether the line is a bezier
+   * var isBezier = line.bezier();
+   *
+   * // set whether the line is a bezier
+   * line.bezier(true);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Line, 'tension', 0);
 
   /**
-     * get/set tension
-     * @name tension
-     * @method
-     * @memberof Konva.Line.prototype
-     * @param {Number} Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
-     *   The default is 0
-     * @returns {Number}
-     * @example
-     * // get tension
-     * var tension = line.tension();
-     *
-     * // set tension
-     * line.tension(3);
-     */
+   * get/set tension
+   * @name tension
+   * @method
+   * @memberof Konva.Line.prototype
+   * @param {Number} Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
+   *   The default is 0
+   * @returns {Number}
+   * @example
+   * // get tension
+   * var tension = line.tension();
+   *
+   * // set tension
+   * line.tension(3);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Line, 'points', []);
   /**
-     * get/set points array
-     * @name points
-     * @method
-     * @memberof Konva.Line.prototype
-     * @param {Array} points
-     * @returns {Array}
-     * @example
-     * // get points
-     * var points = line.points();
-     *
-     * // set points
-     * line.points([10, 20, 30, 40, 50, 60]);
-     *
-     * // push a new point
-     * line.points(line.points().concat([70, 80]));
-     */
+   * get/set points array
+   * @name points
+   * @method
+   * @memberof Konva.Line.prototype
+   * @param {Array} points
+   * @returns {Array}
+   * @example
+   * // get points
+   * var points = line.points();
+   *
+   * // set points
+   * line.points([10, 20, 30, 40, 50, 60]);
+   *
+   * // push a new point
+   * line.points(line.points().concat([70, 80]));
+   */
 
   Konva.Collection.mapMethods(Konva.Line);
 })();
