@@ -50,6 +50,7 @@ declare module Konva {
             static Sepia(imageData: any): Filter;
             static Solarize(imageData: any): Filter;
             static Threshold(imageData: any): Filter;
+            static Contrast(imageData: any): Filter;
         }
 
         export class Animation {
@@ -117,6 +118,8 @@ declare module Konva {
             blue(blue: number): Node;
             brightness(): number;
             brightness(brightness: number): Node;
+            contrast(): number;
+            contrast(contrast: number): Node;
             blurRadius(): number;
             blurRadius(radius: number): Node;
             cache(config?: CacheConfig): Node;
