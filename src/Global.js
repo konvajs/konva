@@ -1,38 +1,19 @@
 /*
  * Konva JavaScript Framework v@@version
  * http://konvajs.github.io/
- * Licensed under the MIT or GPL Version 2 licenses.
+ * Licensed under the MIT
  * Date: @@date
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
- * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
- *
- * @license
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
  */
 
 // runtime check for already included Konva
 (function() {
   'use strict';
   /**
-     * @namespace Konva
-     */
+   * @namespace Konva
+   */
 
   var PI_OVER_180 = Math.PI / 180;
 
@@ -61,57 +42,57 @@
     traceArrMax: 100,
     dblClickWindow: 400,
     /**
-         * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.
-         * But you may override such property, if you want to use your value.
-         * @property pixelRatio
-         * @default undefined
-         * @memberof Konva
-         * @example
-         * Konva.pixelRatio = 1;
-         */
+     * Global pixel ratio configuration. KonvaJS automatically detect pixel ratio of current device.
+     * But you may override such property, if you want to use your value.
+     * @property pixelRatio
+     * @default undefined
+     * @memberof Konva
+     * @example
+     * Konva.pixelRatio = 1;
+     */
     pixelRatio: undefined,
     /**
-         * Drag distance property. If you start to drag a node you may want to wait until pointer is moved to some distance from start point,
-         * only then start dragging. Default is 3px.
-         * @property dragDistance
-         * @default 0
-         * @memberof Konva
-         * @example
-         * Konva.dragDistance = 10;
-         */
+     * Drag distance property. If you start to drag a node you may want to wait until pointer is moved to some distance from start point,
+     * only then start dragging. Default is 3px.
+     * @property dragDistance
+     * @default 0
+     * @memberof Konva
+     * @example
+     * Konva.dragDistance = 10;
+     */
     dragDistance: 3,
     /**
-         * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
-         * @property angleDeg
-         * @default true
-         * @memberof Konva
-         * @example
-         * node.rotation(45); // 45 degrees
-         * Konva.angleDeg = false;
-         * node.rotation(Math.PI / 2); // PI/2 radian
-         */
+     * Use degree values for angle properties. You may set this property to false if you want to use radiant values.
+     * @property angleDeg
+     * @default true
+     * @memberof Konva
+     * @example
+     * node.rotation(45); // 45 degrees
+     * Konva.angleDeg = false;
+     * node.rotation(Math.PI / 2); // PI/2 radian
+     */
     angleDeg: true,
     /**
-         * Show different warnings about errors or wrong API usage
-         * @property showWarnings
-         * @default true
-         * @memberof Konva
-         * @example
-         * Konva.showWarnings = false;
-         */
+     * Show different warnings about errors or wrong API usage
+     * @property showWarnings
+     * @default true
+     * @memberof Konva
+     * @example
+     * Konva.showWarnings = false;
+     */
     showWarnings: true,
 
     /**
-         * @namespace Filters
-         * @memberof Konva
-         */
+     * @namespace Filters
+     * @memberof Konva
+     */
     Filters: {},
 
     /**
-         * returns whether or not drag and drop is currently active
-         * @method
-         * @memberof Konva
-         */
+     * returns whether or not drag and drop is currently active
+     * @method
+     * @memberof Konva
+     */
     isDragging: function() {
       var dd = Konva.DD;
 
@@ -123,11 +104,11 @@
       return false;
     },
     /**
-        * returns whether or not a drag and drop operation is ready, but may
-        *  not necessarily have started
-        * @method
-        * @memberof Konva
-        */
+     * returns whether or not a drag and drop operation is ready, but may
+     *  not necessarily have started
+     * @method
+     * @memberof Konva
+     */
     isDragReady: function() {
       var dd = Konva.DD;
 
