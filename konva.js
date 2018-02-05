@@ -18482,6 +18482,8 @@
       window.addEventListener('touchmove', this.handleMouseMove);
       window.addEventListener('mouseup', this.handleMouseUp);
       window.addEventListener('touchend', this.handleMouseUp);
+
+      this._transforming = true;
     },
 
     handleMouseMove: function(e) {
@@ -18642,12 +18644,19 @@
     },
 
     handleMouseUp: function() {
-      this.fire('transformend');
-      this._el.fire('transformend');
-      window.removeEventListener('mousemove', this.handleMouseMove);
-      window.removeEventListener('touchmove', this.handleMouseMove);
-      window.removeEventListener('mouseup', this.handleMouseUp);
-      window.removeEventListener('touchend', this.handleMouseUp);
+      this._removeEvents();
+    },
+
+    _removeEvents: function() {
+      if (this._transforming) {
+        this.fire('transformend');
+        this._el.fire('transformend');
+        window.removeEventListener('mousemove', this.handleMouseMove);
+        window.removeEventListener('touchmove', this.handleMouseMove);
+        window.removeEventListener('mouseup', this.handleMouseUp);
+        window.removeEventListener('touchend', this.handleMouseUp);
+      }
+      this._transforming = false;
     },
 
     _getAttrs: function() {
@@ -18771,10 +18780,7 @@
     destroy: function() {
       Konva.Group.prototype.destroy.call(this);
       this._el.off('.resizer');
-      window.removeEventListener('mousemove', this.handleMouseMove);
-      window.removeEventListener('touchmove', this.handleMouseMove);
-      window.removeEventListener('mouseup', this.handleMouseUp);
-      window.removeEventListener('touchend', this.handleMouseUp);
+      this._removeEvents();
     }
   };
   Konva.Util.extend(Konva.Transformer, Konva.Group);
