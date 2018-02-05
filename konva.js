@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT or GPL Version 2 licenses.
- * Date: Thu Feb 01 2018
+ * Date: Mon Feb 05 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - 2017 by Anton Lavrenov (Konva)
@@ -18261,8 +18261,23 @@
 (function(Konva) {
   'use strict';
 
-  var CHANGE_KONVA = 'Change.konva';
-  var ATTR_CHANGE_LIST = ['resizeEnabled', 'rotateHandlerOffset'];
+  var ATTR_CHANGE_LIST = [
+    'resizeEnabledChange',
+    'rotateHandlerOffsetChange'
+  ].join(' ');
+
+  var TRANSFORM_CHANGE_STR = [
+    'xChange.resizer',
+    'yChange.resizer',
+    'scaleXChange.resizer',
+    'scaleYChange.resizer',
+    'skewXChange.resizer',
+    'skewYChange.resizer',
+    'rotationChange.resizer',
+    'offsetXChange.resizer',
+    'offsetYChange.resizer',
+    'transformsEnabledChange.resizer'
+  ].join(' ');
 
   Konva.Transformer = function(config) {
     this.____init(config);
@@ -18291,9 +18306,7 @@
       this._update = this._update.bind(this);
 
       // update transformer data for certain attr changes
-      for (var n = 0; n < ATTR_CHANGE_LIST.length; n++) {
-        this.on(ATTR_CHANGE_LIST[n] + CHANGE_KONVA, this._update);
-      }
+      this.on(ATTR_CHANGE_LIST, this._update);
     },
 
     attachTo: function(node) {
@@ -18303,6 +18316,7 @@
       this._el = node;
       this._update();
       this._el.on('dragmove.resizer', this._update);
+      this._el.on(TRANSFORM_CHANGE_STR, this._update);
     },
 
     detach: function() {
@@ -18338,6 +18352,7 @@
       var self = this;
       anchor.on('mousedown touchstart', function(e) {
         self.handleResizerMouseDown(e);
+        console.log('down');
       });
 
       // add hover styling
@@ -18678,7 +18693,8 @@
 
       this.findOne('.back').setAttrs({
         width: width,
-        height: height
+        height: height,
+        visible: this.lineEnabled()
       });
     },
     destroy: function() {
@@ -18692,6 +18708,24 @@
   };
   Konva.Util.extend(Konva.Transformer, Konva.Group);
 
+  function validateResizers(val) {
+    if (!(val instanceof Array)) {
+      Konva.Util.warn('enabledResizers value should be an array');
+    }
+    if (val instanceof Array) {
+      val.forEach(function(name) {
+        if (RESIZERS_NAMES.indexOf('name') === -1) {
+          Konva.Util.warn(
+            'Unknown resizer name: ' +
+              name +
+              '. Available names are: ' +
+              RESIZERS_NAMES.join(', ')
+          );
+        }
+      });
+    }
+    return val || [];
+  }
   Konva.Factory.addGetterSetter(
     Konva.Transformer,
     'enabledResizers',
@@ -18701,29 +18735,13 @@
     Konva.Transformer,
     'enabledResizers',
     RESIZERS_NAMES,
-    function(val) {
-      if (!(val instanceof Array)) {
-        Konva.Util.warn('enabledResizers value should be an array');
-      }
-      if (val instanceof Array) {
-        val.forEach(function(name) {
-          if (RESIZERS_NAMES.indexOf('name') === -1) {
-            Konva.Util.warn(
-              'Unknown resizer name: ' +
-                name +
-                '. Available names are: ' +
-                RESIZERS_NAMES.join(', ')
-            );
-          }
-        });
-      }
-      return val || [];
-    }
+    validateResizers
   );
   Konva.Factory.addGetterSetter(Konva.Transformer, 'resizeEnabled', true);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateEnabled', true);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotationSnaps', []);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateHandlerOffset', 50);
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'lineEnabled', true);
 
   Konva.Collection.mapMethods(Konva.Transformer);
 })(Konva);
