@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Mon Feb 05 2018
+ * Date: Tue Feb 06 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -247,11 +247,11 @@
 (function() {
   'use strict';
   /**
-     * Collection constructor.  Collection extends
-     *  Array.  This class is used in conjunction with {@link Konva.Container#get}
-     * @constructor
-     * @memberof Konva
-     */
+   * Collection constructor.  Collection extends
+   *  Array.  This class is used in conjunction with {@link Konva.Container#get}
+   * @constructor
+   * @memberof Konva
+   */
   Konva.Collection = function() {
     var args = [].slice.call(arguments),
       length = args.length,
@@ -265,27 +265,27 @@
   };
   Konva.Collection.prototype = [];
   /**
-     * iterate through node array and run a function for each node.
-     *  The node and index is passed into the function
-     * @method
-     * @memberof Konva.Collection.prototype
-     * @param {Function} func
-     * @example
-     * // get all nodes with name foo inside layer, and set x to 10 for each
-     * layer.get('.foo').each(function(shape, n) {
-     *   shape.setX(10);
-     * });
-     */
+   * iterate through node array and run a function for each node.
+   *  The node and index is passed into the function
+   * @method
+   * @memberof Konva.Collection.prototype
+   * @param {Function} func
+   * @example
+   * // get all nodes with name foo inside layer, and set x to 10 for each
+   * layer.get('.foo').each(function(shape, n) {
+   *   shape.setX(10);
+   * });
+   */
   Konva.Collection.prototype.each = function(func) {
     for (var n = 0; n < this.length; n++) {
       func(this[n], n);
     }
   };
   /**
-     * convert collection into an array
-     * @method
-     * @memberof Konva.Collection.prototype
-     */
+   * convert collection into an array
+   * @method
+   * @memberof Konva.Collection.prototype
+   */
   Konva.Collection.prototype.toArray = function() {
     var arr = [],
       len = this.length,
@@ -297,11 +297,11 @@
     return arr;
   };
   /**
-     * convert array into a collection
-     * @method
-     * @memberof Konva.Collection
-     * @param {Array} arr
-     */
+   * convert array into a collection
+   * @method
+   * @memberof Konva.Collection
+   * @param {Array} arr
+   */
   Konva.Collection.toCollection = function(arr) {
     var collection = new Konva.Collection(),
       len = arr.length,
@@ -352,32 +352,32 @@
     */
 
   /**
-     * Transform constructor
-     * @constructor
-     * @param {Array} [m] Optional six-element matrix
-     * @memberof Konva
-     */
+   * Transform constructor
+   * @constructor
+   * @param {Array} [m] Optional six-element matrix
+   * @memberof Konva
+   */
   Konva.Transform = function(m) {
     this.m = (m && m.slice()) || [1, 0, 0, 1, 0, 0];
   };
 
   Konva.Transform.prototype = {
     /**
-         * Copy Konva.Transform object
-         * @method
-         * @memberof Konva.Transform.prototype
-         * @returns {Konva.Transform}
-         */
+     * Copy Konva.Transform object
+     * @method
+     * @memberof Konva.Transform.prototype
+     * @returns {Konva.Transform}
+     */
     copy: function() {
       return new Konva.Transform(this.m);
     },
     /**
-         * Transform point
-         * @method
-         * @memberof Konva.Transform.prototype
-         * @param {Object} point 2D point(x, y)
-         * @returns {Object} 2D point(x, y)
-         */
+     * Transform point
+     * @method
+     * @memberof Konva.Transform.prototype
+     * @param {Object} point 2D point(x, y)
+     * @returns {Object} 2D point(x, y)
+     */
     point: function(point) {
       var m = this.m;
       return {
@@ -386,26 +386,26 @@
       };
     },
     /**
-         * Apply translation
-         * @method
-         * @memberof Konva.Transform.prototype
-         * @param {Number} x
-         * @param {Number} y
-         * @returns {Konva.Transform}
-         */
+     * Apply translation
+     * @method
+     * @memberof Konva.Transform.prototype
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {Konva.Transform}
+     */
     translate: function(x, y) {
       this.m[4] += this.m[0] * x + this.m[2] * y;
       this.m[5] += this.m[1] * x + this.m[3] * y;
       return this;
     },
     /**
-         * Apply scale
-         * @method
-         * @memberof Konva.Transform.prototype
-         * @param {Number} sx
-         * @param {Number} sy
-         * @returns {Konva.Transform}
-         */
+     * Apply scale
+     * @method
+     * @memberof Konva.Transform.prototype
+     * @param {Number} sx
+     * @param {Number} sy
+     * @returns {Konva.Transform}
+     */
     scale: function(sx, sy) {
       this.m[0] *= sx;
       this.m[1] *= sx;
@@ -414,12 +414,12 @@
       return this;
     },
     /**
-         * Apply rotation
-         * @method
-         * @memberof Konva.Transform.prototype
-         * @param {Number} rad  Angle in radians
-         * @returns {Konva.Transform}
-         */
+     * Apply rotation
+     * @method
+     * @memberof Konva.Transform.prototype
+     * @param {Number} rad  Angle in radians
+     * @returns {Konva.Transform}
+     */
     rotate: function(rad) {
       var c = Math.cos(rad);
       var s = Math.sin(rad);
@@ -434,11 +434,11 @@
       return this;
     },
     /**
-         * Returns the translation
-         * @method
-         * @memberof Konva.Transform.prototype
-         * @returns {Object} 2D point(x, y)
-         */
+     * Returns the translation
+     * @method
+     * @memberof Konva.Transform.prototype
+     * @returns {Object} 2D point(x, y)
+     */
     getTranslation: function() {
       return {
         x: this.m[4],
@@ -446,13 +446,13 @@
       };
     },
     /**
-         * Apply skew
-         * @method
-         * @memberof Konva.Transform.prototype
-         * @param {Number} sx
-         * @param {Number} sy
-         * @returns {Konva.Transform}
-         */
+     * Apply skew
+     * @method
+     * @memberof Konva.Transform.prototype
+     * @param {Number} sx
+     * @param {Number} sy
+     * @returns {Konva.Transform}
+     */
     skew: function(sx, sy) {
       var m11 = this.m[0] + this.m[2] * sy;
       var m12 = this.m[1] + this.m[3] * sy;
@@ -465,12 +465,12 @@
       return this;
     },
     /**
-         * Transform multiplication
-         * @method
-         * @memberof Konva.Transform.prototype
-         * @param {Konva.Transform} matrix
-         * @returns {Konva.Transform}
-         */
+     * Transform multiplication
+     * @method
+     * @memberof Konva.Transform.prototype
+     * @param {Konva.Transform} matrix
+     * @returns {Konva.Transform}
+     */
     multiply: function(matrix) {
       var m11 = this.m[0] * matrix.m[0] + this.m[2] * matrix.m[1];
       var m12 = this.m[1] * matrix.m[0] + this.m[3] * matrix.m[1];
@@ -490,11 +490,11 @@
       return this;
     },
     /**
-         * Invert the matrix
-         * @method
-         * @memberof Konva.Transform.prototype
-         * @returns {Konva.Transform}
-         */
+     * Invert the matrix
+     * @method
+     * @memberof Konva.Transform.prototype
+     * @returns {Konva.Transform}
+     */
     invert: function() {
       var d = 1 / (this.m[0] * this.m[3] - this.m[1] * this.m[2]);
       var m0 = this.m[3] * d;
@@ -512,20 +512,20 @@
       return this;
     },
     /**
-         * return matrix
-         * @method
-         * @memberof Konva.Transform.prototype
-         */
+     * return matrix
+     * @method
+     * @memberof Konva.Transform.prototype
+     */
     getMatrix: function() {
       return this.m;
     },
     /**
-         * set to absolute position via translation
-         * @method
-         * @memberof Konva.Transform.prototype
-         * @returns {Konva.Transform}
-         * @author ericdrowell
-         */
+     * set to absolute position via translation
+     * @method
+     * @memberof Konva.Transform.prototype
+     * @returns {Konva.Transform}
+     * @author ericdrowell
+     */
     setAbsolutePosition: function(x, y) {
       var m0 = this.m[0],
         m1 = this.m[1],
@@ -707,13 +707,13 @@
     RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
 
   /**
-     * @namespace Util
-     * @memberof Konva
-     */
+   * @namespace Util
+   * @memberof Konva
+   */
   Konva.Util = {
     /*
-         * cherry-picked utilities from underscore.js
-         */
+    * cherry-picked utilities from underscore.js
+    */
     _isElement: function(obj) {
       return !!(obj && obj.nodeType == 1);
     },
@@ -731,59 +731,6 @@
     },
     _isString: function(obj) {
       return Object.prototype.toString.call(obj) === OBJECT_STRING;
-    },
-    // Returns a function, that, when invoked, will only be triggered at most once
-    // during a given window of time. Normally, the throttled function will run
-    // as much as it can, without ever going more than once per `wait` duration;
-    // but if you'd like to disable the execution on the leading edge, pass
-    // `{leading: false}`. To disable execution on the trailing edge, ditto.
-    _throttle: function(func, wait, opts) {
-      var context, args, result;
-      var timeout = null;
-      var previous = 0;
-      var options = opts || {};
-      var later = function() {
-        previous = options.leading === false ? 0 : new Date().getTime();
-        timeout = null;
-        result = func.apply(context, args);
-        context = args = null;
-      };
-      return function() {
-        var now = new Date().getTime();
-        if (!previous && options.leading === false) {
-          previous = now;
-        }
-        var remaining = wait - (now - previous);
-        context = this;
-        args = arguments;
-        if (remaining <= 0) {
-          clearTimeout(timeout);
-          timeout = null;
-          previous = now;
-          result = func.apply(context, args);
-          context = args = null;
-        } else if (!timeout && options.trailing !== false) {
-          timeout = setTimeout(later, remaining);
-        }
-        return result;
-      };
-    },
-    /*
-         * other utils
-         */
-    _hasMethods: function(obj) {
-      var names = [],
-        key;
-
-      for (key in obj) {
-        if (!obj.hasOwnProperty(key)) {
-          continue;
-        }
-        if (this._isFunction(obj[key])) {
-          names.push(key);
-        }
-      }
-      return names.length > 0;
     },
     isValidSelector: function(selector) {
       if (typeof selector !== 'string') {
@@ -835,8 +782,8 @@
       return retArr;
     },
     /*
-         * arg can be an image object or image data
-         */
+    * arg can be an image object or image data
+    */
     _getImage: function(arg, callback) {
       var imageObj, canvas;
 
@@ -888,10 +835,10 @@
       };
     },
     /**
-         * return random hex color
-         * @method
-         * @memberof Konva.Util.prototype
-         */
+     * return random hex color
+     * @method
+     * @memberof Konva.Util.prototype
+     */
     getRandomColor: function() {
       var randColor = ((Math.random() * 0xffffff) << 0).toString(16);
       while (randColor.length < 6) {
@@ -900,10 +847,10 @@
       return HASH + randColor;
     },
     /**
-         * return value with default fallback
-         * @method
-         * @memberof Konva.Util.prototype
-         */
+     * return value with default fallback
+     * @method
+     * @memberof Konva.Util.prototype
+     */
     get: function(val, def) {
       if (val === undefined) {
         return def;
@@ -912,16 +859,16 @@
       }
     },
     /**
-         * get RGB components of a color
-         * @method
-         * @memberof Konva.Util.prototype
-         * @param {String} color
-         * @example
-         * // each of the following examples return {r:0, g:0, b:255}
-         * var rgb = Konva.Util.getRGB('blue');
-         * var rgb = Konva.Util.getRGB('#0000ff');
-         * var rgb = Konva.Util.getRGB('rgb(0,0,255)');
-         */
+     * get RGB components of a color
+     * @method
+     * @memberof Konva.Util.prototype
+     * @param {String} color
+     * @example
+     * // each of the following examples return {r:0, g:0, b:255}
+     * var rgb = Konva.Util.getRGB('blue');
+     * var rgb = Konva.Util.getRGB('#0000ff');
+     * var rgb = Konva.Util.getRGB('rgb(0,0,255)');
+     */
     getRGB: function(color) {
       var rgb;
       // color string
@@ -1037,6 +984,19 @@
       }
       return retObj;
     },
+    /**
+     * check intersection of two client rectangles
+     * @method
+     * @memberof Konva.Util.prototype
+     */
+    haveIntersection: function(r1, r2) {
+      return !(
+        r2.x > r1.x + r1.width ||
+        r2.x + r2.width < r1.x ||
+        r2.y > r1.y + r1.height ||
+        r2.y + r2.height < r1.y
+      );
+    },
     cloneObject: function(obj) {
       var retObj = {};
       for (var key in obj) {
@@ -1094,12 +1054,12 @@
       child.super = parent;
     },
     /**
-         * adds methods to a constructor prototype
-         * @method
-         * @memberof Konva.Util.prototype
-         * @param {Function} constructor
-         * @param {Object} methods
-         */
+     * adds methods to a constructor prototype
+     * @method
+     * @memberof Konva.Util.prototype
+     * @param {Function} constructor
+     * @param {Object} methods
+     */
     addMethods: function(constructor, methods) {
       var key;
 
@@ -18348,6 +18308,8 @@
     'bottom-right'
   ];
 
+  var warningShowed = false;
+
   Konva.Transformer.prototype = {
     _centroid: false,
     ____init: function(config) {
@@ -18361,6 +18323,13 @@
 
       // update transformer data for certain attr changes
       this.on(ATTR_CHANGE_LIST, this._update);
+
+      if (!warningShowed) {
+        Konva.Util.warn(
+          'Konva.Transformer is currently experimental and may have many bugs. Please report any bugs to GitHub repo.'
+        );
+        warningShowed = true;
+      }
     },
 
     attachTo: function(node) {

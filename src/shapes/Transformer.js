@@ -34,6 +34,8 @@
     'bottom-right'
   ];
 
+  var warningShowed = false;
+
   Konva.Transformer.prototype = {
     _centroid: false,
     ____init: function(config) {
@@ -47,6 +49,13 @@
 
       // update transformer data for certain attr changes
       this.on(ATTR_CHANGE_LIST, this._update);
+
+      if (!warningShowed) {
+        Konva.Util.warn(
+          'Konva.Transformer is currently experimental and may have many bugs. Please report any bugs to GitHub repo.'
+        );
+        warningShowed = true;
+      }
     },
 
     attachTo: function(node) {

@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * new `Konva.Transformer` group that allow simple resize, and rotate of a shape.
 * Add ability to remove event by callback `node.off('event', callback)`.
 * new `Konva.Filters.Contrast`.
+* new `Konva.Util.haveIntersection()` to detect collusion
 
 ## Changed
 
