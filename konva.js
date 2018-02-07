@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Tue Feb 06 2018
+ * Date: Wed Feb 07 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -16696,6 +16696,7 @@
       var that = this;
       this.dummyCanvas = Konva.Util.createCanvasElement();
       this.dataArray = [];
+      this.getKerning = config.getKerning;
 
       // call super constructor
       Konva.Shape.call(this, config);
@@ -17079,11 +17080,19 @@
 
         var width = Konva.Path.getLineLength(p0.x, p0.y, p1.x, p1.y);
 
-        // Note: Since glyphs are rendered one at a time, any kerning pair data built into the font will not be used.
-        // Can foresee having a rough pair table built in that the developer can override as needed.
-
         var kern = 0;
-        // placeholder for future implementation
+        if (this.getKerning) {
+          try {
+              // getKerning is a user provided getter. Make sure it never breaks our logic
+              kern = this.getKerning(charArr[i - 1], charArr[i]) * this.fontSize();
+          }
+          catch(e) {
+              kern = 0;
+          }
+        }
+
+        p0.x += kern;
+        p1.x += kern;
 
         var midpoint = Konva.Path.getPointOnLine(
           kern + width / 2.0,
