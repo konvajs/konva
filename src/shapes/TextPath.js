@@ -443,6 +443,7 @@
 
         p0.x += kern;
         p1.x += kern;
+        this.textWidth +=kern;
 
         var midpoint = Konva.Path.getPointOnLine(
           kern + width / 2.0,
