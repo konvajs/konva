@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Thu Feb 08 2018
+ * Date: Fri Feb 09 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -16598,6 +16598,7 @@
      * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
      * @param {String} config.text
      * @param {String} config.data SVG data string
+     * @param {Function} config.getKerning a getter for kerning values for the specified characters
      * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
@@ -16670,6 +16671,19 @@
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
      * @example
+     * var kerningPairs = {
+     *   'A': {
+     *     ' ': -0.05517578125,
+     *     'T': -0.07421875,
+     *     'V': -0.07421875,
+     *   },
+     *   'V': {
+     *     ',': -0.091796875,
+     *     ":": -0.037109375,
+     *     ";": -0.037109375,
+     *     "A": -0.07421875,
+     *   }
+     * }
      * var textpath = new Konva.TextPath({
      *   x: 100,
      *   y: 50,
@@ -16677,7 +16691,10 @@
      *   fontSize: '24',
      *   fontFamily: 'Arial',
      *   text: 'All the world\'s a stage, and all the men and women merely players.',
-     *   data: 'M10,10 C0,0 10,150 100,100 S300,150 400,50'
+     *   data: 'M10,10 C0,0 10,150 100,100 S300,150 400,50',
+     *   getKerning: function(leftChar, rightChar) {
+     *     return kerningPairs.hasOwnProperty(leftChar) ? pairs[leftChar][rightChar] || 0 : 0
+     *   }
      * });
      */
   Konva.TextPath = function(config) {
@@ -17093,7 +17110,7 @@
 
         p0.x += kern;
         p1.x += kern;
-        this.textWidth +=kern;
+        this.textWidth += kern;
 
         var midpoint = Konva.Path.getPointOnLine(
           kern + width / 2.0,
