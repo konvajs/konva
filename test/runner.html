@@ -1,187 +1,195 @@
 <!DOCTYPE html>
-  <head>
-    <meta charset="utf-8">
-    <title>KonvaJS Mocha Tests</title>
-    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
-    <style>
-      #mocha {
-        margin-top: 20px;
-      }
-      #mocha .test {
-        overflow: auto;
-      }
-      h1 {
-        font-family: Calibri;
-        margin-left: 10px;
-      }
-      h2.konva-title {
-        font-family: Calibri;
-        font-size: 16px;
-        color: #555;
-        border-top: 2px solid #999;
-        padding-left: 10px;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>KonvaJS Test</h1>
-    <div id="mocha"></div>
-    <div id="konva-container"></div>
 
-    <script src="../node_modules/mocha/mocha.js"></script>
-    <script src="../node_modules/chai/chai.js"></script>
-    <script src="lib/stats.js"></script>
+<head>
+  <meta charset="utf-8">
+  <title>KonvaJS Mocha Tests</title>
+  <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+  <style>
+    #mocha {
+      margin-top: 20px;
+    }
 
-    <!--<script src="lib/blanket.js"></script>-->
+    #mocha .test {
+      overflow: auto;
+    }
 
-    <!--CORE-->
-    <script src="../src/Global.js" data-cover></script>
-    <script src="../src/Util.js" data-cover></script>
-    <script src="../src/Canvas.js" data-cover></script>
-    <script src="../src/Context.js" data-cover></script>
-    <script src="../src/Factory.js" data-cover></script>
-    <script src="../src/Node.js" data-cover></script>
+    h1 {
+      font-family: Calibri;
+      margin-left: 10px;
+    }
 
-    <!--FILTERS-->
-    <script src="../src/filters/Grayscale.js" data-cover></script>
-    <script src="../src/filters/Brighten.js" data-cover></script>
-    <script src="../src/filters/Invert.js" data-cover></script>
-    <script src="../src/filters/Blur.js" data-cover></script>
-    <script src="../src/filters/Mask.js" data-cover></script>
-    <script src="../src/filters/RGB.js" data-cover></script>
-    <script src="../src/filters/RGBA.js" data-cover></script>
-    <script src="../src/filters/HSV.js" data-cover></script>
-    <script src="../src/filters/HSL.js" data-cover></script>
-    <script src="../src/filters/Emboss.js" data-cover></script>
-    <script src="../src/filters/Enhance.js" data-cover></script>
-    <script src="../src/filters/Posterize.js" data-cover></script>
-    <script src="../src/filters/Noise.js" data-cover></script>
-    <script src="../src/filters/Pixelate.js" data-cover></script>
-    <script src="../src/filters/Threshold.js" data-cover></script>
-    <script src="../src/filters/Sepia.js" data-cover></script>
-    <script src="../src/filters/Contrast.js" data-cover></script>
-    <script src="../src/filters/Solarize.js" data-cover></script>
-    <script src="../src/filters/Kaleidoscope.js" data-cover></script>
+    h2.konva-title {
+      font-family: Calibri;
+      font-size: 16px;
+      color: #555;
+      border-top: 2px solid #999;
+      padding-left: 10px;
+    }
+  </style>
+</head>
 
-    <!--MAIN ELEMENTS-->
+<body>
+  <h1>KonvaJS Test</h1>
+  <div id="mocha"></div>
+  <div id="konva-container"></div>
 
-    <script src="../src/Container.js" data-cover></script>
-    <script src="../src/Shape.js" data-cover></script>
-    <script src="../src/Stage.js" data-cover></script>
-    <script src="../src/BaseLayer.js" data-cover></script>
-    <script src="../src/Layer.js" data-cover></script>
-    <script src="../src/FastLayer.js" data-cover></script>
-    <script src="../src/Group.js" data-cover></script>
-    <script src="../src/Animation.js" data-cover></script>
-    <script src="../src/Tween.js" data-cover></script>
-    <script src="../src/DragAndDrop.js" data-cover></script>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script src="lib/stats.js"></script>
 
-    <!--SHAPES-->
-    <script src="../src/shapes/Rect.js" data-cover></script>
-    <script src="../src/shapes/Circle.js" data-cover></script>
-    <script src="../src/shapes/Ellipse.js" data-cover></script>
-    <script src="../src/shapes/Ring.js" data-cover></script>
-    <script src="../src/shapes/Wedge.js" data-cover></script>
-    <script src="../src/shapes/Arc.js" data-cover></script>
-    <script src="../src/shapes/Image.js" data-cover></script>
-    <script src="../src/shapes/Text.js" data-cover></script>
-    <script src="../src/shapes/Line.js" data-cover></script>
-    <script src="../src/shapes/Sprite.js" data-cover></script>
-    <script src="../src/shapes/Path.js" data-cover></script>
-    <script src="../src/shapes/TextPath.js" data-cover></script>
-    <script src="../src/shapes/RegularPolygon.js" data-cover></script>
-    <script src="../src/shapes/Star.js" data-cover></script>
-    <script src="../src/shapes/Label.js" data-cover></script>
-    <script src="../src/shapes/Arrow.js" data-cover></script>
+  <!--<script src="lib/blanket.js"></script>-->
 
-    <!--<script src="../dist/konva-dev.js"></script>-->
+  <!--CORE-->
+  <script src="../src/Global.js" data-cover></script>
+  <script src="../src/Util.js" data-cover></script>
+  <script src="../src/Canvas.js" data-cover></script>
+  <script src="../src/Context.js" data-cover></script>
+  <script src="../src/Factory.js" data-cover></script>
+  <script src="../src/Node.js" data-cover></script>
 
-    <script src="lib/imagediff.js"></script>
-    <script src="runner.js"></script>
+  <!--FILTERS-->
+  <script src="../src/filters/Grayscale.js" data-cover></script>
+  <script src="../src/filters/Brighten.js" data-cover></script>
+  <script src="../src/filters/Invert.js" data-cover></script>
+  <script src="../src/filters/Blur.js" data-cover></script>
+  <script src="../src/filters/Mask.js" data-cover></script>
+  <script src="../src/filters/RGB.js" data-cover></script>
+  <script src="../src/filters/RGBA.js" data-cover></script>
+  <script src="../src/filters/HSV.js" data-cover></script>
+  <script src="../src/filters/HSL.js" data-cover></script>
+  <script src="../src/filters/Emboss.js" data-cover></script>
+  <script src="../src/filters/Enhance.js" data-cover></script>
+  <script src="../src/filters/Posterize.js" data-cover></script>
+  <script src="../src/filters/Noise.js" data-cover></script>
+  <script src="../src/filters/Pixelate.js" data-cover></script>
+  <script src="../src/filters/Threshold.js" data-cover></script>
+  <script src="../src/filters/Sepia.js" data-cover></script>
+  <script src="../src/filters/Contrast.js" data-cover></script>
+  <script src="../src/filters/Solarize.js" data-cover></script>
+  <script src="../src/filters/Kaleidoscope.js" data-cover></script>
 
-    <!-- assets -->
-    <script src="assets/tiger.js"></script>
-    <script src="assets/worldMap.js"></script>
+  <!--MAIN ELEMENTS-->
 
-    <!--=============== unit tests ================-->
+  <script src="../src/Container.js" data-cover></script>
+  <script src="../src/Shape.js" data-cover></script>
+  <script src="../src/Stage.js" data-cover></script>
+  <script src="../src/BaseLayer.js" data-cover></script>
+  <script src="../src/Layer.js" data-cover></script>
+  <script src="../src/FastLayer.js" data-cover></script>
+  <script src="../src/Group.js" data-cover></script>
+  <script src="../src/Animation.js" data-cover></script>
+  <script src="../src/Tween.js" data-cover></script>
+  <script src="../src/DragAndDrop.js" data-cover></script>
 
-    <!-- core -->
-    <script src="unit/Global-test.js"></script>
-    <script src="unit/Util-test.js"></script>
-    <script src="unit/Canvas-test.js"></script>
-    <script src="unit/Context-test.js"></script>
-    <script src="unit/Node-test.js"></script>
-    <script src="unit/Node-cache-test.js"></script>
-    <script src="unit/Container-test.js"></script>
-    <script src="unit/Stage-test.js"></script>
-    <script src="unit/BaseLayer-test.js"></script>
-    <script src="unit/Layer-test.js"></script>
-    <script src="unit/Group-test.js"></script>
-    <script src="unit/FastLayer-test.js"></script>
-    <script src="unit/Shape-test.js"></script>
-    <script src="unit/Collection-test.js"></script>
+  <!--SHAPES-->
+  <script src="../src/shapes/Rect.js" data-cover></script>
+  <script src="../src/shapes/Circle.js" data-cover></script>
+  <script src="../src/shapes/Ellipse.js" data-cover></script>
+  <script src="../src/shapes/Ring.js" data-cover></script>
+  <script src="../src/shapes/Wedge.js" data-cover></script>
+  <script src="../src/shapes/Arc.js" data-cover></script>
+  <script src="../src/shapes/Image.js" data-cover></script>
+  <script src="../src/shapes/Text.js" data-cover></script>
+  <script src="../src/shapes/Line.js" data-cover></script>
+  <script src="../src/shapes/Sprite.js" data-cover></script>
+  <script src="../src/shapes/Path.js" data-cover></script>
+  <script src="../src/shapes/TextPath.js" data-cover></script>
+  <script src="../src/shapes/RegularPolygon.js" data-cover></script>
+  <script src="../src/shapes/Star.js" data-cover></script>
+  <script src="../src/shapes/Label.js" data-cover></script>
+  <script src="../src/shapes/Arrow.js" data-cover></script>
+  <script src="../src/shapes/Transformer.js" data-cover></script>
 
-    <!-- shapes -->
-    <script src="unit/shapes/Rect-test.js"></script>
-    <script src="unit/shapes/Circle-test.js"></script>
-    <script src="unit/shapes/Image-test.js"></script>
-    <script src="unit/shapes/Line-test.js"></script>
-    <script src="unit/shapes/Text-test.js"></script>
-    <script src="unit/shapes/Blob-test.js"></script>
-    <script src="unit/shapes/Ellipse-test.js"></script>
-    <script src="unit/shapes/Polygon-test.js"></script>
-    <script src="unit/shapes/Spline-test.js"></script>
-    <script src="unit/shapes/Sprite-test.js"></script>
-    <script src="unit/shapes/Wedge-test.js"></script>
-    <script src="unit/shapes/Arc-test.js"></script>
-    <script src="unit/shapes/Ring-test.js"></script>
-    <script src="unit/shapes/Label-test.js"></script>
-    <script src="unit/shapes/Star-test.js"></script>
-    <script src="unit/shapes/RegularPolygon-test.js"></script>
-    <script src="unit/shapes/Path-test.js"></script>
-    <script src="unit/shapes/TextPath-test.js"></script>
-    <script src="unit/shapes/Arrow-test.js"></script>
+  <!--<script src="../dist/konva-dev.js"></script>-->
 
-    <!-- extensions -->
-    <script src="unit/Animation-test.js"></script>
-    <script src="unit/DragAndDrop-test.js"></script>
-    <script src="unit/Tween-test.js"></script>
+  <script src="lib/imagediff.js"></script>
+  <script src="runner.js"></script>
+
+  <!-- assets -->
+  <script src="assets/tiger.js"></script>
+  <script src="assets/worldMap.js"></script>
+
+  <!--=============== unit tests ================-->
+
+  <!-- core -->
+  <script src="unit/Global-test.js"></script>
+  <script src="unit/Util-test.js"></script>
+  <script src="unit/Canvas-test.js"></script>
+  <script src="unit/Context-test.js"></script>
+  <script src="unit/Node-test.js"></script>
+  <script src="unit/Node-cache-test.js"></script>
+  <script src="unit/Container-test.js"></script>
+  <script src="unit/Stage-test.js"></script>
+  <script src="unit/BaseLayer-test.js"></script>
+  <script src="unit/Layer-test.js"></script>
+  <script src="unit/Group-test.js"></script>
+  <script src="unit/FastLayer-test.js"></script>
+  <script src="unit/Shape-test.js"></script>
+  <script src="unit/Collection-test.js"></script>
+
+  <!-- shapes -->
+  <script src="unit/shapes/Rect-test.js"></script>
+  <script src="unit/shapes/Circle-test.js"></script>
+  <script src="unit/shapes/Image-test.js"></script>
+  <script src="unit/shapes/Line-test.js"></script>
+  <script src="unit/shapes/Text-test.js"></script>
+  <script src="unit/shapes/Blob-test.js"></script>
+  <script src="unit/shapes/Ellipse-test.js"></script>
+  <script src="unit/shapes/Polygon-test.js"></script>
+  <script src="unit/shapes/Spline-test.js"></script>
+  <script src="unit/shapes/Sprite-test.js"></script>
+  <script src="unit/shapes/Wedge-test.js"></script>
+  <script src="unit/shapes/Arc-test.js"></script>
+  <script src="unit/shapes/Ring-test.js"></script>
+  <script src="unit/shapes/Label-test.js"></script>
+  <script src="unit/shapes/Star-test.js"></script>
+  <script src="unit/shapes/RegularPolygon-test.js"></script>
+  <script src="unit/shapes/Path-test.js"></script>
+  <script src="unit/shapes/TextPath-test.js"></script>
+  <script src="unit/shapes/Arrow-test.js"></script>
+  <script src="unit/shapes/Transformer-test.js"></script>
+
+  <!-- extensions -->
+  <script src="unit/Animation-test.js"></script>
+  <script src="unit/DragAndDrop-test.js"></script>
+  <script src="unit/Tween-test.js"></script>
 
 
-    <!-- filters -->
-    <script src="unit/filters/Filter-test.js"></script>
-    <script src="unit/filters/Blur-test.js"></script>
-    <script src="unit/filters/Brighten-test.js"></script>
-    <script src="unit/filters/RGB-test.js"></script>
-    <script src="unit/filters/RGBA-test.js"></script>
-    <script src="unit/filters/HSV-test.js"></script>
-    <script src="unit/filters/HSL-test.js"></script>
-    <script src="unit/filters/Invert-test.js"></script>
-    <script src="unit/filters/Mask-test.js"></script>
-    <script src="unit/filters/Grayscale-test.js"></script>
-    <script src="unit/filters/Enhance-test.js"></script>
-    <script src="unit/filters/Pixelate-test.js"></script>
-    <script src="unit/filters/Noise-test.js"></script>
-    <script src="unit/filters/Threshold-test.js"></script>
-    <script src="unit/filters/Posterize-test.js"></script>
-    <script src="unit/filters/Sepia-test.js"></script>
-    <script src="unit/filters/Contrast-test.js"></script>
-    <script src="unit/filters/Emboss-test.js"></script>
-    <script src="unit/filters/Solarize-test.js"></script>
-    <script src="unit/filters/Kaleidoscope-test.js"></script>
+  <!-- filters -->
+  <script src="unit/filters/Filter-test.js"></script>
+  <script src="unit/filters/Blur-test.js"></script>
+  <script src="unit/filters/Brighten-test.js"></script>
+  <script src="unit/filters/RGB-test.js"></script>
+  <script src="unit/filters/RGBA-test.js"></script>
+  <script src="unit/filters/HSV-test.js"></script>
+  <script src="unit/filters/HSL-test.js"></script>
+  <script src="unit/filters/Invert-test.js"></script>
+  <script src="unit/filters/Mask-test.js"></script>
+  <script src="unit/filters/Grayscale-test.js"></script>
+  <script src="unit/filters/Enhance-test.js"></script>
+  <script src="unit/filters/Pixelate-test.js"></script>
+  <script src="unit/filters/Noise-test.js"></script>
+  <script src="unit/filters/Threshold-test.js"></script>
+  <script src="unit/filters/Posterize-test.js"></script>
+  <script src="unit/filters/Sepia-test.js"></script>
+  <script src="unit/filters/Contrast-test.js"></script>
+  <script src="unit/filters/Emboss-test.js"></script>
+  <script src="unit/filters/Solarize-test.js"></script>
+  <script src="unit/filters/Kaleidoscope-test.js"></script>
 
-    <!--=============== functional tests ================-->
+  <!--=============== functional tests ================-->
 
-    <script src="functional/MouseEvents-test.js"></script>
-    <script src="functional/TouchEvents-test.js"></script>
-    <script src="functional/DragAndDropEvents-test.js"></script>
+  <script src="functional/MouseEvents-test.js"></script>
+  <script src="functional/TouchEvents-test.js"></script>
+  <script src="functional/DragAndDropEvents-test.js"></script>
 
-    <!--=============== manual tests ================-->
-    <script src="manual/manual-test.js"></script>
+  <!--=============== manual tests ================-->
+  <script src="manual/manual-test.js"></script>
 
-    <script>
-      if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
-      else { mocha.run(); }
-    </script>
-  </body>
+  <script>
+    if (window.mochaPhantomJS) { mochaPhantomJS.run(); }
+    else { mocha.run(); }
+  </script>
+</body>
+
 </html>
