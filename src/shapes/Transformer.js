@@ -9,6 +9,8 @@
   var TRANSFORM_CHANGE_STR = [
     'xChange.resizer',
     'yChange.resizer',
+    'widthChange.resizer',
+    'heightChange.resizer',
     'scaleXChange.resizer',
     'scaleYChange.resizer',
     'skewXChange.resizer',
@@ -43,6 +45,8 @@
       Konva.Group.call(this, config);
       this.className = 'Transformer';
       this._createElements();
+
+      // bindings
       this.handleMouseMove = this.handleMouseMove.bind(this);
       this.handleMouseUp = this.handleMouseUp.bind(this);
       this._update = this._update.bind(this);
@@ -52,25 +56,62 @@
 
       if (!warningShowed) {
         Konva.Util.warn(
-          'Konva.Transformer is currently experimental and may have many bugs. Please report any bugs to GitHub repo.'
+          'Konva.Transformer is currently experimental and may have bugs. Please report any issues to GitHub repo.'
         );
         warningShowed = true;
       }
     },
 
     attachTo: function(node) {
-      if (this._el) {
+      if (this.node()) {
         this.detach();
       }
-      this._el = node;
+      this.setNode(node);
+      node.on('dragmove.resizer', this._update);
+      node.on(TRANSFORM_CHANGE_STR, this._update);
+
       this._update();
-      this._el.on('dragmove.resizer', this._update);
-      this._el.on(TRANSFORM_CHANGE_STR, this._update);
     },
 
     detach: function() {
-      this._el.off('.resizer');
-      this._el = null;
+      this.getNode().off('.resizer');
+    },
+
+    _getNodeRect: function() {
+      var node = this.getNode();
+      var rect = node.getClientRect({ skipTransform: true });
+      var rotation = Konva.getAngle(node.rotation());
+
+      var dx = rect.x * node.scaleX() - node.offsetX();
+      var dy = rect.y * node.scaleY() - node.offsetX();
+
+      return {
+        x: node.x() + dx * Math.cos(rotation) + dy * Math.sin(-rotation),
+        y: node.y() + dy * Math.cos(rotation) + dx * Math.sin(rotation),
+        width: rect.width * node.scaleX(),
+        height: rect.height * node.scaleY(),
+        rotation: node.rotation()
+      };
+    },
+
+    getX: function() {
+      return this._getNodeRect().x;
+    },
+
+    getY: function() {
+      return this._getNodeRect().y;
+    },
+
+    getRotation: function() {
+      return this._getNodeRect().rotation;
+    },
+
+    getWidth: function() {
+      return this._getNodeRect().width;
+    },
+
+    getHeight: function() {
+      return this._getNodeRect().height;
     },
 
     _createElements: function() {
@@ -101,7 +142,6 @@
       var self = this;
       anchor.on('mousedown touchstart', function(e) {
         self.handleResizerMouseDown(e);
-        console.log('down');
       });
 
       // add hover styling
@@ -150,8 +190,10 @@
     handleResizerMouseDown: function(e) {
       this.movingResizer = e.target.name();
 
-      var width = this._el.width() * this._el.scaleX();
-      var height = this._el.height() * this._el.scaleY();
+      // var node = this.getNode();
+      var attrs = this._getNodeRect();
+      var width = attrs.width;
+      var height = attrs.height;
       var hypotenuse = Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2));
       this.sin = height / hypotenuse;
       this.cos = width / hypotenuse;
@@ -247,18 +289,19 @@
         this.findOne('.bottom-right').x(x);
         this.findOne('.bottom-right').y(y);
       } else if (this.movingResizer === 'rotater') {
-        x = resizerNode.x() - this._el.width() * this._el.scaleX() / 2;
-        y = -resizerNode.y() + this._el.height() * this._el.scaleY() / 2;
+        var attrs = this._getNodeRect();
+        x = resizerNode.x() - attrs.width / 2;
+        y = -resizerNode.y() + attrs.height / 2;
 
         var dAlpha = Math.atan2(-y, x) + Math.PI / 2;
-        var attrs = this._getAttrs();
+        // var attrs = this._getAttrs();
 
         var rot = Konva.getAngle(this.rotation());
 
         var newRotation =
           Konva.Util._radToDeg(rot) + Konva.Util._radToDeg(dAlpha);
 
-        var alpha = Konva.getAngle(this._el.rotation());
+        var alpha = Konva.getAngle(this.getNode().rotation());
         var newAlpha = Konva.Util._degToRad(newRotation);
 
         var snaps = this.rotationSnaps();
@@ -275,7 +318,7 @@
           }
         }
 
-        this._setElementAttrs(
+        this._fitNodeInto(
           Object.assign(attrs, {
             rotation: Konva.angleDeg
               ? newRotation
@@ -287,7 +330,9 @@
             y:
               attrs.y +
               attrs.height / 2 * (Math.cos(alpha) - Math.cos(newAlpha)) +
-              attrs.width / 2 * (Math.sin(alpha) - Math.sin(newAlpha))
+              attrs.width / 2 * (Math.sin(alpha) - Math.sin(newAlpha)),
+            width: attrs.width,
+            height: attrs.height
           })
         );
       } else {
@@ -313,9 +358,9 @@
       var height =
         this.findOne('.bottom-right').y() - this.findOne('.top-left').y();
 
-      this._setElementAttrs({
-        absX: this._el._centroid ? x + width / 2 : x,
-        absY: this._el._centroid ? y + height / 2 : y,
+      this._fitNodeInto({
+        x: x + this.offsetX(),
+        y: y + this.offsetY(),
         width: width,
         height: height
       });
@@ -328,7 +373,7 @@
     _removeEvents: function() {
       if (this._transforming) {
         this.fire('transformend');
-        this._el.fire('transformend');
+        this.getNode().fire('transformend');
         window.removeEventListener('mousemove', this.handleMouseMove);
         window.removeEventListener('touchmove', this.handleMouseMove);
         window.removeEventListener('mouseup', this.handleMouseUp);
@@ -337,67 +382,42 @@
       this._transforming = false;
     },
 
-    _getAttrs: function() {
-      if (this._el._centroid) {
-        var topLeftResizer = this.findOne('.top-left');
-        var absPos = topLeftResizer.getAbsolutePosition();
-
-        return {
-          x: absPos.x,
-          y: absPos.y,
-          width: this._el.width() * this._el.scaleX(),
-          height: this._el.height() * this._el.scaleY()
-        };
-      }
-      return {
-        x: this._el.x(),
-        y: this._el.y(),
-        width: this._el.width() * this._el.scaleX(),
-        height: this._el.height() * this._el.scaleY()
-      };
-    },
-
-    _setElementAttrs: function(attrs) {
+    _fitNodeInto: function(attrs) {
+      this._settings = true;
+      var node = this.getNode();
       if (attrs.rotation !== undefined) {
-        this._el.setAttrs({
-          rotation: attrs.rotation,
-          x: attrs.x,
-          y: attrs.y
-        });
-      } else {
-        var scaleX = attrs.width / this._el.width();
-        var scaleY = attrs.height / this._el.height();
-
-        this._el.setAttrs({
-          scaleX: scaleX,
-          scaleY: scaleY
-        });
-
-        this._el.setAbsolutePosition({
-          x: attrs.absX,
-          y: attrs.absY
-        });
+        this.getNode().rotation(attrs.rotation);
       }
+      var pure = node.getClientRect({ skipTransform: true });
+      var scaleX = attrs.width / pure.width;
+      var scaleY = attrs.height / pure.height;
+
+      var rotation = Konva.getAngle(node.getRotation());
+      // debugger;
+      var dx = pure.x * scaleX;
+      var dy = pure.y * scaleY;
+      this.getNode().setAttrs({
+        scaleX: scaleX,
+        scaleY: scaleY,
+        x: attrs.x - (dx * Math.cos(rotation) + dy * Math.sin(-rotation)),
+        y: attrs.y - (dy * Math.cos(rotation) + dx * Math.sin(rotation))
+      });
+      this._settings = false;
+
       this.fire('transform');
-      this._el.fire('transform');
+      this.getNode().fire('transform');
       this._update();
       this.getLayer().batchDraw();
     },
     _update: function() {
-      var x = this._el.x();
-      var y = this._el.y();
-      var width = this._el.width() * this._el.scaleX();
-      var height = this._el.height() * this._el.scaleY();
+      var attrs = this._getNodeRect();
+      var x = attrs.x;
+      var y = attrs.y;
+      var width = attrs.width;
+      var height = attrs.height;
       this.x(x);
       this.y(y);
-      this.rotation(this._el.rotation());
-
-      if (this._el._centroid) {
-        this.offset({
-          x: width / 2,
-          y: height / 2
-        });
-      }
+      this.rotation(attrs.rotation);
 
       var enabledResizers = this.enabledResizers();
       var resizeEnabled = this.resizeEnabled();
@@ -457,7 +477,7 @@
     },
     destroy: function() {
       Konva.Group.prototype.destroy.call(this);
-      this._el.off('.resizer');
+      this.getNode().off('.resizer');
       this._removeEvents();
     }
   };
@@ -497,6 +517,7 @@
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotationSnaps', []);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateHandlerOffset', 50);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'lineEnabled', true);
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'node');
 
   Konva.Collection.mapMethods(Konva.Transformer);
 })(Konva);
