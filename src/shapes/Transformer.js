@@ -148,7 +148,7 @@
       anchor.on('mousenter', function() {
         var layer = this.getLayer();
         anchor.getStage().getContainer().style.cursor = 'pointer';
-        this.strokeSize(this.strokeSize() * 4);
+        this.strokeWidth(this.strokeWidth() * 4);
         layer.draw();
       });
       anchor.on('mouseout', function() {
@@ -157,7 +157,7 @@
           return;
         }
         anchor.getStage().getContainer().style.cursor = '';
-        this.strokeSize(this.strokeSize() / 4);
+        this.strokeWidth(this.strokeWidth() / 4);
         layer.draw();
       });
       this.add(anchor);
