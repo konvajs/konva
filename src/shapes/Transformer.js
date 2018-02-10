@@ -83,7 +83,7 @@
       var rotation = Konva.getAngle(node.rotation());
 
       var dx = rect.x * node.scaleX() - node.offsetX();
-      var dy = rect.y * node.scaleY() - node.offsetX();
+      var dy = rect.y * node.scaleY() - node.offsetY();
 
       return {
         x: node.x() + dx * Math.cos(rotation) + dy * Math.sin(-rotation),
