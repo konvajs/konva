@@ -368,4 +368,85 @@ suite('TextPath', function() {
     stage.add(layer);
     showHit(layer);
   });
+
+  test('Text with kerning', function() {
+    var stage = addStage();
+
+    // simulate lack of kerning support
+    stage.getContainer().style.fontKerning = 'none';
+
+    var layer = new Konva.Layer();
+    var pairs = {
+      'A': {
+        'V': -0.07421875,
+      },
+      'V': {
+        'A': -0.07421875,
+      },
+    }
+
+    const kernedText = new Konva.TextPath({
+      x : 0, y : 30,
+      fill: 'black',
+      text: 'AV',
+      fontSize: 60,
+      data: 'M0,0 L200,0',
+      getKerning: function(leftChar, rightChar) {         
+        return pairs.hasOwnProperty(leftChar) ? pairs[leftChar][rightChar] || 0 : 0         
+      },
+    });
+
+    const unkernedText = new Konva.TextPath({
+      x : 0, y : 90,
+      fill: 'black',
+      text: 'AV',
+      fontSize: 60,
+      data: 'M0,0 L200,0',
+    });
+
+    layer.add(kernedText);
+    layer.add(unkernedText);
+    stage.add(layer);
+
+    assert(
+      kernedText.getTextWidth() < unkernedText.getTextWidth(),
+      'kerned text lenght must be less then unkerned text length');
+  });
+
+  test('Text with invalid kerning getter should not fail (fallback to unkerned)', function() {
+    var stage = addStage();
+
+    // simulate lack of kerning support
+    stage.getContainer().style.fontKerning = 'none';
+
+    var layer = new Konva.Layer();
+
+    const kernedText = new Konva.TextPath({
+      x : 0, y : 30,
+      fill: 'black',
+      text: 'AV',
+      fontSize: 60,
+      data: 'M0,0 L200,0',
+      getKerning: function(leftChar, rightChar) {         
+        // getter that fails
+        throw new Error("something went wrong");
+      },
+    });
+
+    const unkernedText = new Konva.TextPath({
+      x : 0, y : 90,
+      fill: 'black',
+      text: 'AV',
+      fontSize: 60,
+      data: 'M0,0 L200,0',
+    });
+
+    layer.add(kernedText);
+    layer.add(unkernedText);
+    stage.add(layer);
+
+    assert.equal(
+      kernedText.getTextWidth(), unkernedText.getTextWidth(),
+      'should gracefully fallback to unkerned text');
+  })
 });
