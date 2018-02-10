@@ -18419,7 +18419,7 @@
       });
 
       // add hover styling
-      anchor.on('mousenter', function() {
+      anchor.on('mouseenter', function() {
         var layer = this.getLayer();
         anchor.getStage().getContainer().style.cursor = 'pointer';
         this.strokeWidth(this.strokeWidth() * 4);
