@@ -6,11 +6,11 @@
    * @memberof Konva
    * @augments Konva.Shape
    * @param {Object} config
-   * @param {Array} config.points
+   * @param {Array} config.points Flat array of points coordinates. You should define them as [x1, y1, x2, y2, x3, y3].
    * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
    *   The default is 0
-   * @param {Number} config.pointerLength
-   * @param {Number} config.pointerWidth
+   * @param {Number} config.pointerLength Arrow pointer length. Default value is 10.
+   * @param {Number} config.pointerWidth Arrow pointer width. Default value is 10.
    * @param {Boolean} config.pointerAtBeginning Do we need to draw pointer on both sides?. Default false.
    * @@shapeParams
    * @@nodeParams

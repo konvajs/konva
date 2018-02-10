@@ -7,7 +7,7 @@
    * @memberof Konva
    * @augments Konva.Shape
    * @param {Object} config
-   * @param {Array} config.points Array of points coordinates. You should define them as [x1, y1, x2, y2, x3, y3].
+   * @param {Array} config.points Flat array of points coordinates. You should define them as [x1, y1, x2, y2, x3, y3].
    * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
    *   The default is 0
    * @param {Boolean} [config.closed] defines whether or not the line shape is closed, creating a polygon or blob

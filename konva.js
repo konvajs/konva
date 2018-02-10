@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Fri Feb 09 2018
+ * Date: Sat Feb 10 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -14942,7 +14942,7 @@
    * @memberof Konva
    * @augments Konva.Shape
    * @param {Object} config
-   * @param {Array} config.points Array of points coordinates. You should define them as [x1, y1, x2, y2, x3, y3].
+   * @param {Array} config.points Flat array of points coordinates. You should define them as [x1, y1, x2, y2, x3, y3].
    * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
    *   The default is 0
    * @param {Boolean} [config.closed] defines whether or not the line shape is closed, creating a polygon or blob
@@ -18084,11 +18084,11 @@
    * @memberof Konva
    * @augments Konva.Shape
    * @param {Object} config
-   * @param {Array} config.points
+   * @param {Array} config.points Flat array of points coordinates. You should define them as [x1, y1, x2, y2, x3, y3].
    * @param {Number} [config.tension] Higher values will result in a more curvy line.  A value of 0 will result in no interpolation.
    *   The default is 0
-   * @param {Number} config.pointerLength
-   * @param {Number} config.pointerWidth
+   * @param {Number} config.pointerLength Arrow pointer length. Default value is 10.
+   * @param {Number} config.pointerWidth Arrow pointer width. Default value is 10.
    * @param {Boolean} config.pointerAtBeginning Do we need to draw pointer on both sides?. Default false.
    * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
@@ -18419,10 +18419,10 @@
       });
 
       // add hover styling
-      anchor.on('mouseover', function() {
+      anchor.on('mousenter', function() {
         var layer = this.getLayer();
         anchor.getStage().getContainer().style.cursor = 'pointer';
-        this.setStrokeWidth(4);
+        this.strokeSize(this.strokeSize() * 4);
         layer.draw();
       });
       anchor.on('mouseout', function() {
@@ -18431,7 +18431,7 @@
           return;
         }
         anchor.getStage().getContainer().style.cursor = '';
-        this.setStrokeWidth(1);
+        this.strokeSize(this.strokeSize() / 4);
         layer.draw();
       });
       this.add(anchor);

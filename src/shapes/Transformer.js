@@ -145,10 +145,10 @@
       });
 
       // add hover styling
-      anchor.on('mouseover', function() {
+      anchor.on('mousenter', function() {
         var layer = this.getLayer();
         anchor.getStage().getContainer().style.cursor = 'pointer';
-        this.setStrokeWidth(4);
+        this.strokeSize(this.strokeSize() * 4);
         layer.draw();
       });
       anchor.on('mouseout', function() {
@@ -157,7 +157,7 @@
           return;
         }
         anchor.getStage().getContainer().style.cursor = '';
-        this.setStrokeWidth(1);
+        this.strokeSize(this.strokeSize() / 4);
         layer.draw();
       });
       this.add(anchor);
