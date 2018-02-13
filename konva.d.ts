@@ -777,6 +777,8 @@ declare module Konva {
             lineHeight(lineHeight: number): Text;
             wrap(): string;
             wrap(wrap: string): Text;
+            textDecoration(): string;
+            textDecoration(textDecoration: string): Text;
         }
 
         interface WedgeConfig extends ShapeConfig {
