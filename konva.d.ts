@@ -257,6 +257,7 @@ declare module Konva {
             stopDrag(): void;
             threshold(): number;
             threshold(threshold: number): Node;
+            to(params: any): void;
             toDataURL(config: ToDataURLConfig): string;
             toImage(config: ToDataURLConfig): HTMLImageElement;
             toJSON(): string;
@@ -709,6 +710,8 @@ declare module Konva {
             pointerLength(Length: Number): Number;
             pointerWidth(): Number;
             pointerWidth(Width: Number): Number;
+            pointerAtBeginning(): boolean;
+            pointerAtBeginning(Should: boolean): void;
         }
 
         interface RectConfig extends ShapeConfig {
