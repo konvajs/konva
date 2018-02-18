@@ -396,6 +396,10 @@
       // debugger;
       var dx = pure.x * scaleX;
       var dy = pure.y * scaleY;
+
+      // var dxo = node.offsetX() * scaleX;
+      // var dyo = node.offsetY() * scaleY;
+
       this.getNode().setAttrs({
         scaleX: scaleX,
         scaleY: scaleY,
@@ -489,7 +493,7 @@
     }
     if (val instanceof Array) {
       val.forEach(function(name) {
-        if (RESIZERS_NAMES.indexOf('name') === -1) {
+        if (RESIZERS_NAMES.indexOf(name) === -1) {
           Konva.Util.warn(
             'Unknown resizer name: ' +
               name +

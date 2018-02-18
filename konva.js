@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Sat Feb 10 2018
+ * Date: Sun Feb 18 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -18697,6 +18697,10 @@
       // debugger;
       var dx = pure.x * scaleX;
       var dy = pure.y * scaleY;
+
+      // var dxo = node.offsetX() * scaleX;
+      // var dyo = node.offsetY() * scaleY;
+
       this.getNode().setAttrs({
         scaleX: scaleX,
         scaleY: scaleY,
@@ -18790,7 +18794,7 @@
     }
     if (val instanceof Array) {
       val.forEach(function(name) {
-        if (RESIZERS_NAMES.indexOf('name') === -1) {
+        if (RESIZERS_NAMES.indexOf(name) === -1) {
           Konva.Util.warn(
             'Unknown resizer name: ' +
               name +

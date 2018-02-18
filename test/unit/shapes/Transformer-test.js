@@ -218,13 +218,13 @@ suite('Transformer', function() {
     tr._fitNodeInto({
       x: 50,
       y: 50,
-      width: 120,
-      height: 120
+      width: 200,
+      height: 100
     });
 
     assert.equal(rect.x(), 100);
     assert.equal(rect.y(), 100);
-    assert.equal(rect.width() * rect.scaleX(), 120);
+    assert.equal(rect.width() * rect.scaleX(), 200);
     assert.equal(rect.height() * rect.scaleY(), 100);
     assert.equal(rect.rotation(), rect.rotation());
 
