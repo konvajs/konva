@@ -80,6 +80,7 @@
         red = red / pixelsInBin;
         green = green / pixelsInBin;
         blue = blue / pixelsInBin;
+        alpha = alpha / pixelsInBin;
 
         // Draw this bin
         for (x = xBinStart; x < xBinEnd; x += 1) {
