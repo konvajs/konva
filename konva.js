@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Sun Feb 18 2018
+ * Date: Thu Feb 22 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -16586,20 +16586,20 @@
     NORMAL = 'normal';
 
   /**
-     * Path constructor.
-     * @author Jason Follas
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {String} [config.fontFamily] default is Calibri
-     * @param {Number} [config.fontSize] default is 12
-     * @param {String} [config.fontStyle] can be normal, bold, or italic.  Default is normal
-     * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
-     * @param {String} config.text
-     * @param {String} config.data SVG data string
-     * @param {Function} config.getKerning a getter for kerning values for the specified characters
-     * @param {String} [config.fill] fill color
+   * Path constructor.
+   * @author Jason Follas
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {String} [config.fontFamily] default is Calibri
+   * @param {Number} [config.fontSize] default is 12
+   * @param {String} [config.fontStyle] can be normal, bold, or italic.  Default is normal
+   * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
+   * @param {String} config.text
+   * @param {String} config.data SVG data string
+   * @param {Function} config.getKerning a getter for kerning values for the specified characters
+   * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -16650,7 +16650,7 @@
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
      * @param {Array} [config.dash]
      * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-     * @param {Number} [config.x]
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -16670,33 +16670,33 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * var kerningPairs = {
-     *   'A': {
-     *     ' ': -0.05517578125,
-     *     'T': -0.07421875,
-     *     'V': -0.07421875,
-     *   },
-     *   'V': {
-     *     ',': -0.091796875,
-     *     ":": -0.037109375,
-     *     ";": -0.037109375,
-     *     "A": -0.07421875,
-     *   }
-     * }
-     * var textpath = new Konva.TextPath({
-     *   x: 100,
-     *   y: 50,
-     *   fill: '#333',
-     *   fontSize: '24',
-     *   fontFamily: 'Arial',
-     *   text: 'All the world\'s a stage, and all the men and women merely players.',
-     *   data: 'M10,10 C0,0 10,150 100,100 S300,150 400,50',
-     *   getKerning: function(leftChar, rightChar) {
-     *     return kerningPairs.hasOwnProperty(leftChar) ? pairs[leftChar][rightChar] || 0 : 0
-     *   }
-     * });
-     */
+   * @example
+   * var kerningPairs = {
+   *   'A': {
+   *     ' ': -0.05517578125,
+   *     'T': -0.07421875,
+   *     'V': -0.07421875,
+   *   },
+   *   'V': {
+   *     ',': -0.091796875,
+   *     ":": -0.037109375,
+   *     ";": -0.037109375,
+   *     "A": -0.07421875,
+   *   }
+   * }
+   * var textpath = new Konva.TextPath({
+   *   x: 100,
+   *   y: 50,
+   *   fill: '#333',
+   *   fontSize: '24',
+   *   fontFamily: 'Arial',
+   *   text: 'All the world\'s a stage, and all the men and women merely players.',
+   *   data: 'M10,10 C0,0 10,150 100,100 S300,150 400,50',
+   *   getKerning: function(leftChar, rightChar) {
+   *     return kerningPairs.hasOwnProperty(leftChar) ? pairs[leftChar][rightChar] || 0 : 0
+   *   }
+   * });
+   */
   Konva.TextPath = function(config) {
     this.___init(config);
   };
@@ -16713,7 +16713,7 @@
       var that = this;
       this.dummyCanvas = Konva.Util.createCanvasElement();
       this.dataArray = [];
-      this.getKerning = config.getKerning;
+      this.getKerning = config && config.getKerning;
 
       // call super constructor
       Konva.Shape.call(this, config);
@@ -16811,27 +16811,27 @@
       context.stroke();
     },
     /**
-         * get text width in pixels
-         * @method
-         * @memberof Konva.TextPath.prototype
-         */
+     * get text width in pixels
+     * @method
+     * @memberof Konva.TextPath.prototype
+     */
     getTextWidth: function() {
       return this.textWidth;
     },
     /**
-         * get text height in pixels
-         * @method
-         * @memberof Konva.TextPath.prototype
-         */
+     * get text height in pixels
+     * @method
+     * @memberof Konva.TextPath.prototype
+     */
     getTextHeight: function() {
       return this.textHeight;
     },
     /**
-         * set text
-         * @method
-         * @memberof Konva.TextPath.prototype
-         * @param {String} text
-         */
+     * set text
+     * @method
+     * @memberof Konva.TextPath.prototype
+     * @param {String} text
+     */
     setText: function(text) {
       Konva.Text.prototype.setText.call(this, text);
     },
@@ -17100,11 +17100,11 @@
         var kern = 0;
         if (this.getKerning) {
           try {
-              // getKerning is a user provided getter. Make sure it never breaks our logic
-              kern = this.getKerning(charArr[i - 1], charArr[i]) * this.fontSize();
-          }
-          catch(e) {
-              kern = 0;
+            // getKerning is a user provided getter. Make sure it never breaks our logic
+            kern =
+              this.getKerning(charArr[i - 1], charArr[i]) * this.fontSize();
+          } catch (e) {
+            kern = 0;
           }
         }
 
@@ -17174,136 +17174,136 @@
   Konva.Factory.addGetterSetter(Konva.TextPath, 'fontFamily', 'Arial');
 
   /**
-     * set font family
-     * @name setFontFamily
-     * @method
-     * @memberof Konva.TextPath.prototype
-     * @param {String} fontFamily
-     */
+   * set font family
+   * @name setFontFamily
+   * @method
+   * @memberof Konva.TextPath.prototype
+   * @param {String} fontFamily
+   */
 
   /**
-     * get font family
-     * @name getFontFamily
-     * @method
-     * @memberof Konva.TextPath.prototype
-     */
+   * get font family
+   * @name getFontFamily
+   * @method
+   * @memberof Konva.TextPath.prototype
+   */
 
   Konva.Factory.addGetterSetter(Konva.TextPath, 'fontSize', 12);
 
   /**
-     * set font size
-     * @name setFontSize
-     * @method
-     * @memberof Konva.TextPath.prototype
-     * @param {int} fontSize
-     */
+   * set font size
+   * @name setFontSize
+   * @method
+   * @memberof Konva.TextPath.prototype
+   * @param {int} fontSize
+   */
 
   /**
-     * get font size
-     * @name getFontSize
-     * @method
-     * @memberof Konva.TextPath.prototype
-     */
+   * get font size
+   * @name getFontSize
+   * @method
+   * @memberof Konva.TextPath.prototype
+   */
 
   Konva.Factory.addGetterSetter(Konva.TextPath, 'fontStyle', NORMAL);
 
   /**
-     * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
-     * @name setFontStyle
-     * @method
-     * @memberof Konva.TextPath.prototype
-     * @param {String} fontStyle
-     */
+   * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
+   * @name setFontStyle
+   * @method
+   * @memberof Konva.TextPath.prototype
+   * @param {String} fontStyle
+   */
   Konva.Factory.addGetterSetter(Konva.TextPath, 'align', 'left');
 
   /**
-      * get/set horizontal align of text.  Can be 'left', 'center', 'right' or 'justify'
-      * @name align
-      * @method
-      * @memberof Konva.Text.prototype
-      * @param {String} align
-      * @returns {String}
-      * @example
-      * // get text align
-      * var align = text.align();
-      *
-      * // center text
-      * text.align('center');
-      *
-      * // align text to right
-      * text.align('right');
-      */
+   * get/set horizontal align of text.  Can be 'left', 'center', 'right' or 'justify'
+   * @name align
+   * @method
+   * @memberof Konva.Text.prototype
+   * @param {String} align
+   * @returns {String}
+   * @example
+   * // get text align
+   * var align = text.align();
+   *
+   * // center text
+   * text.align('center');
+   *
+   * // align text to right
+   * text.align('right');
+   */
 
   Konva.Factory.addGetterSetter(Konva.TextPath, 'letterSpacing', 0);
 
   /**
-      * set letter spacing property. Default value is 0.
-      * @name letterSpacing
-      * @method
-      * @memberof Konva.TextPath.prototype
-      * @param {Number} letterSpacing
-      */
+   * set letter spacing property. Default value is 0.
+   * @name letterSpacing
+   * @method
+   * @memberof Konva.TextPath.prototype
+   * @param {Number} letterSpacing
+   */
 
   Konva.Factory.addGetterSetter(Konva.TextPath, 'textBaseline', 'middle');
 
   /**
-      * set textBaseline property. Default value is 'middle'.
-      * Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'
-      * @name textBaseline
-      * @method
-      * @memberof Konva.TextPath.prototype
-      * @param {Number} textBaseline
-      */
+   * set textBaseline property. Default value is 'middle'.
+   * Can be 'top', 'bottom', 'middle', 'alphabetic', 'hanging'
+   * @name textBaseline
+   * @method
+   * @memberof Konva.TextPath.prototype
+   * @param {Number} textBaseline
+   */
 
   /**
-     * get font style
-     * @name getFontStyle
-     * @method
-     * @memberof Konva.TextPath.prototype
-     */
+   * get font style
+   * @name getFontStyle
+   * @method
+   * @memberof Konva.TextPath.prototype
+   */
 
   Konva.Factory.addGetterSetter(Konva.TextPath, 'fontVariant', NORMAL);
 
   /**
-     * set font variant.  Can be 'normal' or 'small-caps'.  'normal' is the default.
-     * @name setFontVariant
-     * @method
-     * @memberof Konva.TextPath.prototype
-     * @param {String} fontVariant
-     */
+   * set font variant.  Can be 'normal' or 'small-caps'.  'normal' is the default.
+   * @name setFontVariant
+   * @method
+   * @memberof Konva.TextPath.prototype
+   * @param {String} fontVariant
+   */
 
   /**
-     * @get font variant
-     * @name getFontVariant
-     * @method
-     * @memberof Konva.TextPath.prototype
-     */
+   * @get font variant
+   * @name getFontVariant
+   * @method
+   * @memberof Konva.TextPath.prototype
+   */
 
   Konva.Factory.addGetter(Konva.TextPath, 'text', EMPTY_STRING);
 
   /**
-     * get text
-     * @name getText
-     * @method
-     * @memberof Konva.TextPath.prototype
-     */
+   * get text
+   * @name getText
+   * @method
+   * @memberof Konva.TextPath.prototype
+   */
 
   Konva.Factory.addGetterSetter(Konva.TextPath, 'textDecoration', null);
 
   /**
-      * get/set text decoration of a text.  Can be '' or 'underline'
-      * @name textDecoration
-      * @method
-      * @memberof Konva.Text.prototype
-      * @param {String} textDecoration
-      * @returns {String}
-      * @example
-      * // get text decoration
-      * var textDecoration = text.textDecoration();
-      *
-      * // center text
-      * text.textDecoration('underline');
-      */
+   * get/set text decoration of a text.  Can be '' or 'underline'
+   * @name textDecoration
+   * @method
+   * @memberof Konva.Text.prototype
+   * @param {String} textDecoration
+   * @returns {String}
+   * @example
+   * // get text decoration
+   * var textDecoration = text.textDecoration();
+   *
+   * // center text
+   * text.textDecoration('underline');
+   */
 
   Konva.Collection.mapMethods(Konva.TextPath);
 })();
