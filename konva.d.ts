@@ -356,6 +356,7 @@ declare module Konva {
             shadowEnabled?: boolean;
             dash?: number[];
             dashEnabled?: boolean;
+            preventDefault?: boolean;
         }
 
         class Shape extends Node {
