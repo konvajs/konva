@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Thu Feb 22 2018
+ * Date: Mon Feb 26 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -6984,6 +6984,7 @@
         red = red / pixelsInBin;
         green = green / pixelsInBin;
         blue = blue / pixelsInBin;
+        alpha = alpha / pixelsInBin;
 
         // Draw this bin
         for (x = xBinStart; x < xBinEnd; x += 1) {
@@ -10353,7 +10354,7 @@
 
       // always call preventDefault for desktop events because some browsers
       // try to drag and drop the canvas element
-      if (evt.preventDefault) {
+      if (evt.preventDefault && evt.cancelable) {
         evt.preventDefault();
       }
     },
@@ -10385,7 +10386,7 @@
 
       // always call preventDefault for desktop events because some browsers
       // try to drag and drop the canvas element
-      if (evt.preventDefault) {
+      if (evt.preventDefault && evt.cancelable) {
         evt.preventDefault();
       }
     },
@@ -10461,7 +10462,7 @@
 
       // always call preventDefault for desktop events because some browsers
       // try to drag and drop the canvas element
-      if (evt.preventDefault) {
+      if (evt.preventDefault && evt.cancelable) {
         evt.preventDefault();
       }
     },
@@ -10482,6 +10483,7 @@
         if (
           shape.isListening() &&
           shape.preventDefault() &&
+          evt.cancelable &&
           evt.preventDefault
         ) {
           evt.preventDefault();
@@ -10531,6 +10533,7 @@
         if (
           shape.isListening() &&
           shape.preventDefault() &&
+          evt.cancelable &&
           evt.preventDefault
         ) {
           evt.preventDefault();
@@ -10569,6 +10572,7 @@
           if (
             shape.isListening() &&
             shape.preventDefault() &&
+            evt.cancelable &&
             evt.preventDefault
           ) {
             evt.preventDefault();
@@ -10577,7 +10581,7 @@
         this._fire(CONTENT_TOUCHMOVE, { evt: evt });
       }
       if (dd) {
-        if (Konva.isDragging() && Konva.DD.node.preventDefault()) {
+        if (Konva.isDragging() && Konva.DD.node.preventDefault() && evt.cancelable) {
           evt.preventDefault();
         }
       }
@@ -14241,6 +14245,7 @@
     WORD = 'word',
     CHAR = 'char',
     NONE = 'none',
+    ELLIPSIS = '…',
     ATTR_CHANGE_LIST = [
       'fontFamily',
       'fontSize',
@@ -14253,6 +14258,7 @@
       'width',
       'height',
       'wrap',
+      'ellipsis',
       'letterSpacing'
     ],
     // cached variables
@@ -14281,6 +14287,7 @@
      * @param {Number} [config.padding]
      * @param {Number} [config.lineHeight] default is 1
      * @param {String} [config.wrap] can be word, char, or none. Default is word
+     * @param {Boolean} [config.ellipsis] can be true or false. Default is false
      * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
@@ -14633,13 +14640,15 @@
         currentHeightPx = 0,
         wrap = this.getWrap(),
         shouldWrap = wrap !== NONE,
-        wrapAtWord = wrap !== CHAR && shouldWrap;
+        wrapAtWord = wrap !== CHAR && shouldWrap,
+        shouldAddEllipsis = this.getEllipsis() && !shouldWrap;
 
       this.textArr = [];
       getDummyContext().save();
       getDummyContext().font = this._getContextFont();
       for (var i = 0, max = lines.length; i < max; ++i) {
         var line = lines[i];
+        var additionalWidth = shouldAddEllipsis ? this._getTextWidth(ELLIPSIS) : 0;
 
         var lineWidth = this._getTextWidth(line);
         if (fixedWidth && lineWidth > maxWidth) {
@@ -14659,10 +14668,10 @@
             while (low < high) {
               var mid = (low + high) >>> 1,
                 substr = line.slice(0, mid + 1),
-                substrWidth = this._getTextWidth(substr);
+                substrWidth = this._getTextWidth(substr) + additionalWidth;
               if (substrWidth <= maxWidth) {
                 low = mid + 1;
-                match = substr;
+                match = substr + (shouldAddEllipsis ? ELLIPSIS : '');
                 matchWidth = substrWidth;
               } else {
                 high = mid;
@@ -14877,6 +14886,23 @@
      *
      * // set wrap
      * text.wrap('word');
+     */
+
+  Konva.Factory.addGetterSetter(Konva.Text, 'ellipsis', false);
+
+    /**
+     * get/set ellipsis.  Can be true or false. Default is false.
+     * @name ellipsis
+     * @method
+     * @memberof Konva.Text.prototype
+     * @param {Boolean} ellipsis
+     * @returns {Boolean}
+     * @example
+     * // get ellipsis
+     * var ellipsis = text.ellipsis();
+     *
+     * // set ellipsis
+     * text.ellipsis('word');
      */
 
   Konva.Factory.addGetterSetter(Konva.Text, 'letterSpacing', 0);
