@@ -10354,7 +10354,7 @@
 
       // always call preventDefault for desktop events because some browsers
       // try to drag and drop the canvas element
-      if (evt.preventDefault) {
+      if (evt.preventDefault && evt.cancelable) {
         evt.preventDefault();
       }
     },
@@ -10386,7 +10386,7 @@
 
       // always call preventDefault for desktop events because some browsers
       // try to drag and drop the canvas element
-      if (evt.preventDefault) {
+      if (evt.preventDefault && evt.cancelable) {
         evt.preventDefault();
       }
     },
@@ -10462,7 +10462,7 @@
 
       // always call preventDefault for desktop events because some browsers
       // try to drag and drop the canvas element
-      if (evt.preventDefault) {
+      if (evt.preventDefault && evt.cancelable) {
         evt.preventDefault();
       }
     },
@@ -10483,6 +10483,7 @@
         if (
           shape.isListening() &&
           shape.preventDefault() &&
+          evt.cancelable &&
           evt.preventDefault
         ) {
           evt.preventDefault();
@@ -10532,6 +10533,7 @@
         if (
           shape.isListening() &&
           shape.preventDefault() &&
+          evt.cancelable &&
           evt.preventDefault
         ) {
           evt.preventDefault();
@@ -10570,6 +10572,7 @@
           if (
             shape.isListening() &&
             shape.preventDefault() &&
+            evt.cancelable &&
             evt.preventDefault
           ) {
             evt.preventDefault();
@@ -10578,7 +10581,7 @@
         this._fire(CONTENT_TOUCHMOVE, { evt: evt });
       }
       if (dd) {
-        if (Konva.isDragging() && Konva.DD.node.preventDefault()) {
+        if (Konva.isDragging() && Konva.DD.node.preventDefault() && evt.cancelable) {
           evt.preventDefault();
         }
       }
