@@ -22,6 +22,7 @@
     WORD = 'word',
     CHAR = 'char',
     NONE = 'none',
+    ELLIPSIS = '…',
     ATTR_CHANGE_LIST = [
       'fontFamily',
       'fontSize',
@@ -34,6 +35,7 @@
       'width',
       'height',
       'wrap',
+      'ellipsis',
       'letterSpacing'
     ],
     // cached variables
@@ -62,6 +64,7 @@
      * @param {Number} [config.padding]
      * @param {Number} [config.lineHeight] default is 1
      * @param {String} [config.wrap] can be word, char, or none. Default is word
+     * @param {Boolean} [config.ellipsis] can be true or false. Default is false
      * @@shapeParams
      * @@nodeParams
      * @example
@@ -345,13 +348,15 @@
         currentHeightPx = 0,
         wrap = this.getWrap(),
         shouldWrap = wrap !== NONE,
-        wrapAtWord = wrap !== CHAR && shouldWrap;
+        wrapAtWord = wrap !== CHAR && shouldWrap,
+        shouldAddEllipsis = this.getEllipsis() && !shouldWrap;
 
       this.textArr = [];
       getDummyContext().save();
       getDummyContext().font = this._getContextFont();
       for (var i = 0, max = lines.length; i < max; ++i) {
         var line = lines[i];
+        var additionalWidth = shouldAddEllipsis ? this._getTextWidth(ELLIPSIS) : 0;
 
         var lineWidth = this._getTextWidth(line);
         if (fixedWidth && lineWidth > maxWidth) {
@@ -371,10 +376,10 @@
             while (low < high) {
               var mid = (low + high) >>> 1,
                 substr = line.slice(0, mid + 1),
-                substrWidth = this._getTextWidth(substr);
+                substrWidth = this._getTextWidth(substr) + additionalWidth;
               if (substrWidth <= maxWidth) {
                 low = mid + 1;
-                match = substr;
+                match = substr + (shouldAddEllipsis ? ELLIPSIS : '');
                 matchWidth = substrWidth;
               } else {
                 high = mid;
@@ -589,6 +594,23 @@
      *
      * // set wrap
      * text.wrap('word');
+     */
+
+  Konva.Factory.addGetterSetter(Konva.Text, 'ellipsis', false);
+
+    /**
+     * get/set ellipsis.  Can be true or false. Default is false.
+     * @name ellipsis
+     * @method
+     * @memberof Konva.Text.prototype
+     * @param {Boolean} ellipsis
+     * @returns {Boolean}
+     * @example
+     * // get ellipsis
+     * var ellipsis = text.ellipsis();
+     *
+     * // set ellipsis
+     * text.ellipsis('word');
      */
 
   Konva.Factory.addGetterSetter(Konva.Text, 'letterSpacing', 0);
