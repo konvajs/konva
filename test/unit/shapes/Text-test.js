@@ -364,6 +364,42 @@ suite('Text', function() {
     assert.equal(text.getLineHeight(), 20);
   });
 
+    // ======================================================
+    test('text single line with ellipsis', function() {
+        var stage = addStage();
+        var layer = new Konva.Layer();
+
+        var rect = new Konva.Rect({
+            x: 10,
+            y: 10,
+            width: 380,
+            height: 300,
+            fill: 'red'
+        });
+
+        var text = new Konva.Text({
+            x: 10,
+            y: 10,
+            text: "HEADING\n\nAll the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+            fontSize: 14,
+            fontFamily: 'Calibri',
+            fontStyle: 'normal',
+            fill: '#555',
+            width: 100,
+            padding: 0,
+            lineHeight: 20,
+            align: 'center',
+            wrap: 'none',
+            ellipsis: true
+        });
+
+        layer.add(rect).add(text);
+        stage.add(layer);
+
+        assert.equal(text.textArr.length, 3);
+        assert.equal(text.textArr[2].text.slice(-1), '…');
+    });
+
   // ======================================================
   test('text multi line with justify align', function() {
     var stage = addStage();
