@@ -757,6 +757,7 @@ declare module Konva {
             padding?: number;
             lineHeight?: number;
             wrap?: string;
+            ellipsis?: boolean;
         }
 
         class Text extends Shape {
@@ -781,6 +782,7 @@ declare module Konva {
             lineHeight(lineHeight: number): Text;
             wrap(): string;
             wrap(wrap: string): Text;
+            ellipsis(): boolean;
             textDecoration(): string;
             textDecoration(textDecoration: string): Text;
         }
