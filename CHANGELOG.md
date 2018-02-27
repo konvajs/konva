@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Add ability to remove event by callback `node.off('event', callback)`.
 * new `Konva.Filters.Contrast`.
 * new `Konva.Util.haveIntersection()` to detect collusion
+* add `Konva.Text.ellipsis` to add '…' to text string if width is fixed and wrap is set to 'none'
 
 ## Changed
 
