@@ -494,7 +494,7 @@
 
       // always call preventDefault for desktop events because some browsers
       // try to drag and drop the canvas element
-      if (evt.preventDefault && evt.cancelable) {
+      if (evt.cancelable) {
         evt.preventDefault();
       }
     },
@@ -526,7 +526,7 @@
 
       // always call preventDefault for desktop events because some browsers
       // try to drag and drop the canvas element
-      if (evt.preventDefault && evt.cancelable) {
+      if (evt.cancelable) {
         evt.preventDefault();
       }
     },
@@ -602,7 +602,7 @@
 
       // always call preventDefault for desktop events because some browsers
       // try to drag and drop the canvas element
-      if (evt.preventDefault && evt.cancelable) {
+      if (evt.cancelable) {
         evt.preventDefault();
       }
     },
@@ -620,12 +620,7 @@
         shape._fireAndBubble(TOUCHSTART, { evt: evt });
 
         // only call preventDefault if the shape is listening for events
-        if (
-          shape.isListening() &&
-          shape.preventDefault() &&
-          evt.cancelable &&
-          evt.preventDefault
-        ) {
+        if (shape.isListening() && shape.preventDefault() && evt.cancelable) {
           evt.preventDefault();
         }
       } else {
@@ -670,12 +665,7 @@
           }
         }
         // only call preventDefault if the shape is listening for events
-        if (
-          shape.isListening() &&
-          shape.preventDefault() &&
-          evt.cancelable &&
-          evt.preventDefault
-        ) {
+        if (shape.isListening() && shape.preventDefault() && evt.cancelable) {
           evt.preventDefault();
         }
       } else {
@@ -709,19 +699,18 @@
         if (shape && shape.isListening()) {
           shape._fireAndBubble(TOUCHMOVE, { evt: evt });
           // only call preventDefault if the shape is listening for events
-          if (
-            shape.isListening() &&
-            shape.preventDefault() &&
-            evt.cancelable &&
-            evt.preventDefault
-          ) {
+          if (shape.isListening() && shape.preventDefault() && evt.cancelable) {
             evt.preventDefault();
           }
         }
         this._fire(CONTENT_TOUCHMOVE, { evt: evt });
       }
       if (dd) {
-        if (Konva.isDragging() && Konva.DD.node.preventDefault() && evt.cancelable) {
+        if (
+          Konva.isDragging() &&
+          Konva.DD.node.preventDefault() &&
+          evt.cancelable
+        ) {
           evt.preventDefault();
         }
       }

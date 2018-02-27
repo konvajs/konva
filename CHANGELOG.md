@@ -19,6 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Fixed
 
 * Some typescript fixes
+* Pixelate filter fixes
 
 ## [1.7.6][2017-11-01]
 

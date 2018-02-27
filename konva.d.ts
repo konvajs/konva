@@ -85,6 +85,7 @@ declare namespace Konva {
     draggable?: boolean;
     dragDistance?: number;
     dragBoundFunc?: (pos: Vector2d) => Vector2d;
+    preventDefault?: boolean;
   }
 
   interface SizeConfig {
@@ -110,6 +111,8 @@ declare namespace Konva {
   class Node {
     constructor(config: NodeConfig);
     static create<T>(data: any, container?: HTMLElement): T;
+    preventDefault(): boolean;
+    preventDefault(preventDefault: boolean): this;
 
     addName(name: string): Node;
     blue(): number;
@@ -360,13 +363,10 @@ declare namespace Konva {
     shadowEnabled?: boolean;
     dash?: number[];
     dashEnabled?: boolean;
-    preventDefault?: boolean;
   }
 
   class Shape extends Node {
     constructor(ShapeConfig: ShapeConfig);
-    preventDefault(): boolean;
-    preventDefault(preventDefault: boolean): this;
     dash(): number[];
     dash(dash: number[]): this;
     dashEnabled(): boolean;
