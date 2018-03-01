@@ -486,6 +486,11 @@
             this.targetShape._fireAndBubble(MOUSELEAVE, { evt: evt });
             this.targetShape = null;
           }
+          this._fire(MOUSEMOVE, {
+            evt: evt,
+            target: this,
+            currentTarget: this
+          });
         }
 
         // content event
@@ -702,6 +707,12 @@
           if (shape.isListening() && shape.preventDefault() && evt.cancelable) {
             evt.preventDefault();
           }
+        } else {
+          this._fire(TOUCHMOVE, {
+            evt: evt,
+            target: this,
+            currentTarget: this
+          });
         }
         this._fire(CONTENT_TOUCHMOVE, { evt: evt });
       }

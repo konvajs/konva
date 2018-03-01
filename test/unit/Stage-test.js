@@ -733,7 +733,7 @@ suite('Stage', function() {
     assert.equal(Konva.DD.node, undefined);
   });
 
-  test('test can listen click on empty areas', function() {
+  test('can listen click on empty areas', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -742,9 +742,16 @@ suite('Stage', function() {
     var clicks = 0;
     var mousedowns = 0;
     var mouseups = 0;
+    var mousemoves = 0;
 
     stage.on('mousedown', function(e) {
       mousedowns += 1;
+      assert.equal(e.target, stage);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    stage.on('mousemove', function(e) {
+      mousemoves += 1;
       assert.equal(e.target, stage);
       assert.equal(e.currentTarget, stage);
     });
@@ -773,6 +780,11 @@ suite('Stage', function() {
       y: 10
     });
 
+    stage.simulateMouseMove({
+      x: 60,
+      y: 10
+    });
+
     stage.simulateMouseUp({
       x: 65,
       y: 10
@@ -781,6 +793,7 @@ suite('Stage', function() {
     assert.equal(mousedowns, 1, 'first mousedown registered');
     assert.equal(mouseups, 1, 'first mouseup registered');
     assert.equal(clicks, 1, 'first click registered');
+    assert.equal(mousemoves, 1, 'first mousemove registered');
     assert.equal(dblicks, 0, 'no  dbclicks registered');
 
     stage.simulateMouseDown({
@@ -808,6 +821,7 @@ suite('Stage', function() {
     var taps = 0;
     var touchstarts = 0;
     var touchends = 0;
+    var touchmoves = 0;
 
     stage.on('touchstart', function(e) {
       touchstarts += 1;
@@ -817,6 +831,12 @@ suite('Stage', function() {
 
     stage.on('touchend', function(e) {
       touchends += 1;
+      assert.equal(e.target, stage);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    stage.on('touchmove', function(e) {
+      touchmoves += 1;
       assert.equal(e.target, stage);
       assert.equal(e.currentTarget, stage);
     });
@@ -844,6 +864,15 @@ suite('Stage', function() {
       ]
     });
 
+    stage._touchmove({
+      touches: [
+        {
+          clientX: 100,
+          clientY: 100 + top
+        }
+      ]
+    });
+
     stage._touchend({
       touches: []
     });
@@ -851,6 +880,7 @@ suite('Stage', function() {
     assert.equal(touchstarts, 1, 'first touchstart registered');
     assert.equal(touchends, 1, 'first touchends registered');
     assert.equal(taps, 1, 'first tap registered');
+    assert.equal(touchmoves, 1, 'first touchmove registered');
     assert.equal(dbltaps, 0, 'no  dbltap registered');
 
     stage._touchstart({
