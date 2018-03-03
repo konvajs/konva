@@ -68,14 +68,14 @@
      * @abstract
      * @memberof Konva
      */
-  Konva.Context = function(canvas) {
-    this.init(canvas);
+  Konva.Context = function(canvas, enableAlpha) {
+    this.init(canvas, enableAlpha);
   };
 
   Konva.Context.prototype = {
-    init: function(canvas) {
+    init: function(canvas, enableAlpha) {
       this.canvas = canvas;
-      this._context = canvas._canvas.getContext('2d');
+      this._context = canvas._canvas.getContext('2d', { alpha: !!enableAlpha });
 
       if (Konva.enableTrace) {
         this.traceArr = [];
@@ -480,8 +480,8 @@
     });
   });
 
-  Konva.SceneContext = function(canvas) {
-    Konva.Context.call(this, canvas);
+  Konva.SceneContext = function(canvas, enableAlpha) {
+    Konva.Context.call(this, canvas, enableAlpha);
   };
 
   Konva.SceneContext.prototype = {

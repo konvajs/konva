@@ -185,10 +185,11 @@
   Konva.SceneCanvas = function(config) {
     var conf = config || {};
     var width = conf.width || 0,
-      height = conf.height || 0;
+      height = conf.height || 0,
+      alpha = conf.alpha || false;
 
     Konva.Canvas.call(this, conf);
-    this.context = new Konva.SceneContext(this);
+    this.context = new Konva.SceneContext(this, alpha);
     this.setSize(width, height);
   };
 
