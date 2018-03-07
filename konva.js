@@ -1113,6 +1113,9 @@
         func(key, obj[key]);
       }
     },
+    _inRange: function(val, left, right) {
+      return left <= val && val < right;
+    },
     _getProjectionToSegment: function(x1, y1, x2, y2, x3, y3) {
       var x, y, dist;
 
@@ -18351,6 +18354,60 @@
     'transformsEnabledChange.resizer'
   ].join(' ');
 
+  function getCursor(anchorName, rad) {
+    if (anchorName === 'rotater') {
+      return 'crosshair';
+    }
+
+    var angle;
+    if (anchorName === 'top-left' || anchorName === 'bottom-right') {
+      angle = -45;
+    } else if (anchorName === 'top-right' || anchorName === 'bottom-left') {
+      angle = 45;
+    } else if (anchorName === 'top-center' || anchorName === 'bottom-center') {
+      angle = 0;
+    } else if (anchorName === 'middle-left' || anchorName === 'middle-right') {
+      angle = 90;
+    } else {
+      angle = 0;
+    }
+
+    angle = (angle + Konva.Util._radToDeg(rad) + 360) % 360;
+
+    if (
+      Konva.Util._inRange(angle, 315 + 22.5, 360) ||
+      Konva.Util._inRange(angle, 0, 22.5)
+    ) {
+      // TOP
+      return 'ns-resize';
+    } else if (Konva.Util._inRange(angle, 45 - 22.5, 45 + 22.5)) {
+      // TOP - RIGHT
+      return 'nesw-resize';
+    } else if (Konva.Util._inRange(angle, 90 - 22.5, 90 + 22.5)) {
+      // RIGHT
+      return 'ew-resize';
+    } else if (Konva.Util._inRange(angle, 135 - 22.5, 135 + 22.5)) {
+      // BOTTOM - RIGHT
+      return 'nwse-resize';
+    } else if (Konva.Util._inRange(angle, 180 - 22.5, 180 + 22.5)) {
+      // BOTTOM
+      return 'ns-resize';
+    } else if (Konva.Util._inRange(angle, 225 - 22.5, 225 + 22.5)) {
+      // BOTTOM - LEFT
+      return 'nesw-resize';
+    } else if (Konva.Util._inRange(angle, 270 - 22.5, 270 + 22.5)) {
+      // RIGHT
+      return 'ew-resize';
+    } else if (Konva.Util._inRange(angle, 315 - 22.5, 315 + 22.5)) {
+      // BOTTOM - RIGHT
+      return 'nwse-resize';
+    } else {
+      // how can we can there?
+      // TODO: throw error
+      return 'pointer';
+    }
+  }
+
   Konva.Transformer = function(config) {
     this.____init(config);
   };
@@ -18477,9 +18534,11 @@
       // add hover styling
       anchor.on('mouseenter', function() {
         var layer = this.getLayer();
-        anchor.getStage().getContainer().style.cursor = 'pointer';
-        this.strokeWidth(this.strokeWidth() * 4);
-        layer.draw();
+        var rad = Konva.getAngle(this.getParent().rotation());
+        var cursor = getCursor(name, rad);
+        anchor.getStage().getContainer().style.cursor = cursor;
+        this.fill('lightgrey');
+        layer.batchDraw();
       });
       anchor.on('mouseout', function() {
         var layer = this.getLayer();
@@ -18487,8 +18546,8 @@
           return;
         }
         anchor.getStage().getContainer().style.cursor = '';
-        this.strokeWidth(this.strokeWidth() / 4);
-        layer.draw();
+        this.fill('white');
+        layer.batchDraw();
       });
       this.add(anchor);
     },

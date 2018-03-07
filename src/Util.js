@@ -868,6 +868,9 @@
         func(key, obj[key]);
       }
     },
+    _inRange: function(val, left, right) {
+      return left <= val && val < right;
+    },
     _getProjectionToSegment: function(x1, y1, x2, y2, x3, y3) {
       var x, y, dist;
 
