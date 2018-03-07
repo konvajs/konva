@@ -2075,11 +2075,9 @@
         var hasLinearGradient = shape.getStrokeLinearGradientColorStops();
         if (hasLinearGradient) {
           this._strokeLinearGradient(shape);
-          this.stroke();
         }
-        else {
-          shape._strokeFunc(this);
-        }
+
+        shape._strokeFunc(this);
 
         if (!strokeScaleEnabled) {
           this.restore();
