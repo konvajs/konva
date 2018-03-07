@@ -348,7 +348,9 @@
         return;
       }
 
-      var absPos = this.findOne('.top-left').getAbsolutePosition();
+      var absPos = this.findOne('.top-left').getAbsolutePosition(
+        this.getParent()
+      );
 
       x = absPos.x;
       y = absPos.y;
@@ -383,6 +385,7 @@
     },
 
     _fitNodeInto: function(attrs) {
+      console.log(attrs);
       this._settings = true;
       var node = this.getNode();
       if (attrs.rotation !== undefined) {

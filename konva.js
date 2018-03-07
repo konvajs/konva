@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Mon Feb 26 2018
+ * Date: Wed Mar 07 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -10346,6 +10346,11 @@
             this.targetShape._fireAndBubble(MOUSELEAVE, { evt: evt });
             this.targetShape = null;
           }
+          this._fire(MOUSEMOVE, {
+            evt: evt,
+            target: this,
+            currentTarget: this
+          });
         }
 
         // content event
@@ -10354,7 +10359,7 @@
 
       // always call preventDefault for desktop events because some browsers
       // try to drag and drop the canvas element
-      if (evt.preventDefault) {
+      if (evt.cancelable) {
         evt.preventDefault();
       }
     },
@@ -10386,7 +10391,7 @@
 
       // always call preventDefault for desktop events because some browsers
       // try to drag and drop the canvas element
-      if (evt.preventDefault) {
+      if (evt.cancelable) {
         evt.preventDefault();
       }
     },
@@ -10462,7 +10467,7 @@
 
       // always call preventDefault for desktop events because some browsers
       // try to drag and drop the canvas element
-      if (evt.preventDefault) {
+      if (evt.cancelable) {
         evt.preventDefault();
       }
     },
@@ -10480,11 +10485,7 @@
         shape._fireAndBubble(TOUCHSTART, { evt: evt });
 
         // only call preventDefault if the shape is listening for events
-        if (
-          shape.isListening() &&
-          shape.preventDefault() &&
-          evt.preventDefault
-        ) {
+        if (shape.isListening() && shape.preventDefault() && evt.cancelable) {
           evt.preventDefault();
         }
       } else {
@@ -10529,11 +10530,7 @@
           }
         }
         // only call preventDefault if the shape is listening for events
-        if (
-          shape.isListening() &&
-          shape.preventDefault() &&
-          evt.preventDefault
-        ) {
+        if (shape.isListening() && shape.preventDefault() && evt.cancelable) {
           evt.preventDefault();
         }
       } else {
@@ -10567,18 +10564,24 @@
         if (shape && shape.isListening()) {
           shape._fireAndBubble(TOUCHMOVE, { evt: evt });
           // only call preventDefault if the shape is listening for events
-          if (
-            shape.isListening() &&
-            shape.preventDefault() &&
-            evt.preventDefault
-          ) {
+          if (shape.isListening() && shape.preventDefault() && evt.cancelable) {
             evt.preventDefault();
           }
+        } else {
+          this._fire(TOUCHMOVE, {
+            evt: evt,
+            target: this,
+            currentTarget: this
+          });
         }
         this._fire(CONTENT_TOUCHMOVE, { evt: evt });
       }
       if (dd) {
-        if (Konva.isDragging() && Konva.DD.node.preventDefault()) {
+        if (
+          Konva.isDragging() &&
+          Konva.DD.node.preventDefault() &&
+          evt.cancelable
+        ) {
           evt.preventDefault();
         }
       }
@@ -14270,22 +14273,22 @@
   }
 
   /**
-     * Text constructor
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {String} [config.fontFamily] default is Arial
-     * @param {Number} [config.fontSize] in pixels.  Default is 12
-     * @param {String} [config.fontStyle] can be normal, bold, or italic.  Default is normal
-     * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
-     * @param {String} config.text
-     * @param {String} [config.align] can be left, center, or right
-     * @param {Number} [config.padding]
-     * @param {Number} [config.lineHeight] default is 1
-     * @param {String} [config.wrap] can be word, char, or none. Default is word
-     * @param {Boolean} [config.ellipsis] can be true or false. Default is false
-     * @param {String} [config.fill] fill color
+   * Text constructor
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {String} [config.fontFamily] default is Arial
+   * @param {Number} [config.fontSize] in pixels.  Default is 12
+   * @param {String} [config.fontStyle] can be normal, bold, or italic.  Default is normal
+   * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
+   * @param {String} config.text
+   * @param {String} [config.align] can be left, center, or right
+   * @param {Number} [config.padding]
+   * @param {Number} [config.lineHeight] default is 1
+   * @param {String} [config.wrap] can be word, char, or none. Default is word
+   * @param {Boolean} [config.ellipsis] can be true or false. Default is false. if Konva.Text config is set to wrap="none" and ellipsis=true, then it will add "..." to the end
+   * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -14336,7 +14339,7 @@
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
      * @param {Array} [config.dash]
      * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-     * @param {Number} [config.x]
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -14356,16 +14359,16 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * var text = new Konva.Text({
-     *   x: 10,
-     *   y: 15,
-     *   text: 'Simple Text',
-     *   fontSize: 30,
-     *   fontFamily: 'Calibri',
-     *   fill: 'green'
-     * });
-     */
+   * @example
+   * var text = new Konva.Text({
+   *   x: 10,
+   *   y: 15,
+   *   text: 'Simple Text',
+   *   fontSize: 30,
+   *   fontFamily: 'Calibri',
+   *   fill: 'green'
+   * });
+   */
   Konva.Text = function(config) {
     this.___init(config);
   };
@@ -14525,11 +14528,11 @@
       return this;
     },
     /**
-         * get width of text area, which includes padding
-         * @method
-         * @memberof Konva.Text.prototype
-         * @returns {Number}
-         */
+     * get width of text area, which includes padding
+     * @method
+     * @memberof Konva.Text.prototype
+     * @returns {Number}
+     */
     getWidth: function() {
       var isAuto = this.attrs.width === AUTO || this.attrs.width === undefined;
       return isAuto
@@ -14537,34 +14540,34 @@
         : this.attrs.width;
     },
     /**
-         * get the height of the text area, which takes into account multi-line text, line heights, and padding
-         * @method
-         * @memberof Konva.Text.prototype
-         * @returns {Number}
-         */
+     * get the height of the text area, which takes into account multi-line text, line heights, and padding
+     * @method
+     * @memberof Konva.Text.prototype
+     * @returns {Number}
+     */
     getHeight: function() {
       var isAuto =
         this.attrs.height === AUTO || this.attrs.height === undefined;
       return isAuto
         ? this.getTextHeight() * this.textArr.length * this.getLineHeight() +
-          this.getPadding() * 2
+            this.getPadding() * 2
         : this.attrs.height;
     },
     /**
-         * get text width
-         * @method
-         * @memberof Konva.Text.prototype
-         * @returns {Number}
-         */
+     * get text width
+     * @method
+     * @memberof Konva.Text.prototype
+     * @returns {Number}
+     */
     getTextWidth: function() {
       return this.textWidth;
     },
     /**
-         * get text height
-         * @method
-         * @memberof Konva.Text.prototype
-         * @returns {Number}
-         */
+     * get text height
+     * @method
+     * @memberof Konva.Text.prototype
+     * @returns {Number}
+     */
     getTextHeight: function() {
       return this.textHeight;
     },
@@ -14645,7 +14648,9 @@
       getDummyContext().font = this._getContextFont();
       for (var i = 0, max = lines.length; i < max; ++i) {
         var line = lines[i];
-        var additionalWidth = shouldAddEllipsis ? this._getTextWidth(ELLIPSIS) : 0;
+        var additionalWidth = shouldAddEllipsis
+          ? this._getTextWidth(ELLIPSIS)
+          : 0;
 
         var lineWidth = this._getTextWidth(line);
         if (fixedWidth && lineWidth > maxWidth) {
@@ -14749,209 +14754,210 @@
   Konva.Factory.addGetterSetter(Konva.Text, 'fontFamily', 'Arial');
 
   /**
-     * get/set font family
-     * @name fontFamily
-     * @method
-     * @memberof Konva.Text.prototype
-     * @param {String} fontFamily
-     * @returns {String}
-     * @example
-     * // get font family
-     * var fontFamily = text.fontFamily();
-     *
-     * // set font family
-     * text.fontFamily('Arial');
-     */
+   * get/set font family
+   * @name fontFamily
+   * @method
+   * @memberof Konva.Text.prototype
+   * @param {String} fontFamily
+   * @returns {String}
+   * @example
+   * // get font family
+   * var fontFamily = text.fontFamily();
+   *
+   * // set font family
+   * text.fontFamily('Arial');
+   */
 
   Konva.Factory.addGetterSetter(Konva.Text, 'fontSize', 12);
 
   /**
-     * get/set font size in pixels
-     * @name fontSize
-     * @method
-     * @memberof Konva.Text.prototype
-     * @param {Number} fontSize
-     * @returns {Number}
-     * @example
-     * // get font size
-     * var fontSize = text.fontSize();
-     *
-     * // set font size to 22px
-     * text.fontSize(22);
-     */
+   * get/set font size in pixels
+   * @name fontSize
+   * @method
+   * @memberof Konva.Text.prototype
+   * @param {Number} fontSize
+   * @returns {Number}
+   * @example
+   * // get font size
+   * var fontSize = text.fontSize();
+   *
+   * // set font size to 22px
+   * text.fontSize(22);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Text, 'fontStyle', NORMAL);
 
   /**
-     * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
-     * @name fontStyle
-     * @method
-     * @memberof Konva.Text.prototype
-     * @param {String} fontStyle
-     * @returns {String}
-     * @example
-     * // get font style
-     * var fontStyle = text.fontStyle();
-     *
-     * // set font style
-     * text.fontStyle('bold');
-     */
+   * set font style.  Can be 'normal', 'italic', or 'bold'.  'normal' is the default.
+   * @name fontStyle
+   * @method
+   * @memberof Konva.Text.prototype
+   * @param {String} fontStyle
+   * @returns {String}
+   * @example
+   * // get font style
+   * var fontStyle = text.fontStyle();
+   *
+   * // set font style
+   * text.fontStyle('bold');
+   */
 
   Konva.Factory.addGetterSetter(Konva.Text, 'fontVariant', NORMAL);
 
   /**
-     * set font variant.  Can be 'normal' or 'small-caps'.  'normal' is the default.
-     * @name fontVariant
-     * @method
-     * @memberof Konva.Text.prototype
-     * @param {String} fontVariant
-     * @returns {String}
-     * @example
-     * // get font variant
-     * var fontVariant = text.fontVariant();
-     *
-     * // set font variant
-     * text.fontVariant('small-caps');
-     */
+   * set font variant.  Can be 'normal' or 'small-caps'.  'normal' is the default.
+   * @name fontVariant
+   * @method
+   * @memberof Konva.Text.prototype
+   * @param {String} fontVariant
+   * @returns {String}
+   * @example
+   * // get font variant
+   * var fontVariant = text.fontVariant();
+   *
+   * // set font variant
+   * text.fontVariant('small-caps');
+   */
 
   Konva.Factory.addGetterSetter(Konva.Text, 'padding', 0);
 
   /**
-     * set padding
-     * @name padding
-     * @method
-     * @memberof Konva.Text.prototype
-     * @param {Number} padding
-     * @returns {Number}
-     * @example
-     * // get padding
-     * var padding = text.padding();
-     *
-     * // set padding to 10 pixels
-     * text.padding(10);
-     */
+   * set padding
+   * @name padding
+   * @method
+   * @memberof Konva.Text.prototype
+   * @param {Number} padding
+   * @returns {Number}
+   * @example
+   * // get padding
+   * var padding = text.padding();
+   *
+   * // set padding to 10 pixels
+   * text.padding(10);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Text, 'align', LEFT);
 
   /**
-     * get/set horizontal align of text.  Can be 'left', 'center', 'right' or 'justify'
-     * @name align
-     * @method
-     * @memberof Konva.Text.prototype
-     * @param {String} align
-     * @returns {String}
-     * @example
-     * // get text align
-     * var align = text.align();
-     *
-     * // center text
-     * text.align('center');
-     *
-     * // align text to right
-     * text.align('right');
-     */
+   * get/set horizontal align of text.  Can be 'left', 'center', 'right' or 'justify'
+   * @name align
+   * @method
+   * @memberof Konva.Text.prototype
+   * @param {String} align
+   * @returns {String}
+   * @example
+   * // get text align
+   * var align = text.align();
+   *
+   * // center text
+   * text.align('center');
+   *
+   * // align text to right
+   * text.align('right');
+   */
 
   Konva.Factory.addGetterSetter(Konva.Text, 'lineHeight', 1);
 
   /**
-     * get/set line height.  The default is 1.
-     * @name lineHeight
-     * @method
-     * @memberof Konva.Text.prototype
-     * @param {Number} lineHeight
-     * @returns {Number}
-     * @example
-     * // get line height
-     * var lineHeight = text.lineHeight();
-     *
-     * // set the line height
-     * text.lineHeight(2);
-     */
+   * get/set line height.  The default is 1.
+   * @name lineHeight
+   * @method
+   * @memberof Konva.Text.prototype
+   * @param {Number} lineHeight
+   * @returns {Number}
+   * @example
+   * // get line height
+   * var lineHeight = text.lineHeight();
+   *
+   * // set the line height
+   * text.lineHeight(2);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Text, 'wrap', WORD);
 
   /**
-     * get/set wrap.  Can be word, char, or none. Default is word.
-     * @name wrap
-     * @method
-     * @memberof Konva.Text.prototype
-     * @param {String} wrap
-     * @returns {String}
-     * @example
-     * // get wrap
-     * var wrap = text.wrap();
-     *
-     * // set wrap
-     * text.wrap('word');
-     */
+   * get/set wrap.  Can be word, char, or none. Default is word.
+   * @name wrap
+   * @method
+   * @memberof Konva.Text.prototype
+   * @param {String} wrap
+   * @returns {String}
+   * @example
+   * // get wrap
+   * var wrap = text.wrap();
+   *
+   * // set wrap
+   * text.wrap('word');
+   */
 
   Konva.Factory.addGetterSetter(Konva.Text, 'ellipsis', false);
 
-    /**
-     * get/set ellipsis.  Can be true or false. Default is false.
-     * @name ellipsis
-     * @method
-     * @memberof Konva.Text.prototype
-     * @param {Boolean} ellipsis
-     * @returns {Boolean}
-     * @example
-     * // get ellipsis
-     * var ellipsis = text.ellipsis();
-     *
-     * // set ellipsis
-     * text.ellipsis('word');
-     */
+  /**
+   * get/set ellipsis.  Can be true or false. Default is false.
+   * if Konva.Text config is set to wrap="none" and ellipsis=true, then it will add "..." to the end
+   * @name ellipsis
+   * @method
+   * @memberof Konva.Text.prototype
+   * @param {Boolean} ellipsis
+   * @returns {Boolean}
+   * @example
+   * // get ellipsis
+   * var ellipsis = text.ellipsis();
+   *
+   * // set ellipsis
+   * text.ellipsis(true);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Text, 'letterSpacing', 0);
 
   /**
-       * set letter spacing property. Default value is 0.
-       * @name letterSpacing
-       * @method
-       * @memberof Konva.TextPath.prototype
-       * @param {Number} letterSpacing
-       */
+   * set letter spacing property. Default value is 0.
+   * @name letterSpacing
+   * @method
+   * @memberof Konva.TextPath.prototype
+   * @param {Number} letterSpacing
+   */
 
   Konva.Factory.addGetter(Konva.Text, 'text', EMPTY_STRING);
   Konva.Factory.addOverloadedGetterSetter(Konva.Text, 'text');
 
   /**
-     * get/set text
-     * @name getText
-     * @method
-     * @memberof Konva.Text.prototype
-     * @param {String} text
-     * @returns {String}
-     * @example
-     * // get text
-     * var text = text.text();
-     *
-     * // set text
-     * text.text('Hello world!');
-     */
+   * get/set text
+   * @name getText
+   * @method
+   * @memberof Konva.Text.prototype
+   * @param {String} text
+   * @returns {String}
+   * @example
+   * // get text
+   * var text = text.text();
+   *
+   * // set text
+   * text.text('Hello world!');
+   */
 
   Konva.Factory.addGetterSetter(Konva.Text, 'textDecoration', EMPTY_STRING);
 
   /**
-      * get/set text decoration of a text.  Possible values are 'underline', 'line-through' or combination of these values separated by space
-      * @name textDecoration
-      * @method
-      * @memberof Konva.Text.prototype
-      * @param {String} textDecoration
-      * @returns {String}
-      * @example
-      * // get text decoration
-      * var textDecoration = text.textDecoration();
-      *
-      * // underline text
-      * text.textDecoration('underline');
-      *
-      * // strike text
-      * text.textDecoration('line-through');
-      *
-      * // underline and strike text
-      * text.textDecoration('underline line-through');
-      */
+   * get/set text decoration of a text.  Possible values are 'underline', 'line-through' or combination of these values separated by space
+   * @name textDecoration
+   * @method
+   * @memberof Konva.Text.prototype
+   * @param {String} textDecoration
+   * @returns {String}
+   * @example
+   * // get text decoration
+   * var textDecoration = text.textDecoration();
+   *
+   * // underline text
+   * text.textDecoration('underline');
+   *
+   * // strike text
+   * text.textDecoration('line-through');
+   *
+   * // underline and strike text
+   * text.textDecoration('underline line-through');
+   */
 
   Konva.Collection.mapMethods(Konva.Text);
 })();
@@ -18672,7 +18678,9 @@
         return;
       }
 
-      var absPos = this.findOne('.top-left').getAbsolutePosition();
+      var absPos = this.findOne('.top-left').getAbsolutePosition(
+        this.getParent()
+      );
 
       x = absPos.x;
       y = absPos.y;
@@ -18707,6 +18715,7 @@
     },
 
     _fitNodeInto: function(attrs) {
+      console.log(attrs);
       this._settings = true;
       var node = this.getNode();
       if (attrs.rotation !== undefined) {
