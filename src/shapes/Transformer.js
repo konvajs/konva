@@ -441,7 +441,6 @@
     },
 
     _fitNodeInto: function(attrs) {
-      console.log(attrs);
       this._settings = true;
       var node = this.getNode();
       if (attrs.rotation !== undefined) {
