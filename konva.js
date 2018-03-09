@@ -18585,6 +18585,9 @@
     },
 
     handleResizerMouseDown: function(e) {
+      if (this._transforming) return;
+      this._transforming = true;
+
       this.movingResizer = e.target.name();
 
       // var node = this.getNode();
@@ -18600,7 +18603,8 @@
       window.addEventListener('mouseup', this.handleMouseUp);
       window.addEventListener('touchend', this.handleMouseUp);
 
-      this._transforming = true;
+      this.fire('transformstart');
+      this.getNode().fire('transformstart');
     },
 
     handleMouseMove: function(e) {
@@ -18740,6 +18744,9 @@
           )
         );
       }
+
+      this.fire('transforming');
+      this.getNode().fire('transforming');
 
       if (this.movingResizer === 'rotater') {
         return;
