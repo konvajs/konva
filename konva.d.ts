@@ -333,12 +333,12 @@ declare namespace Konva {
     fillLinearGradientEndPointX?: number;
     fillLinearGradientEndPointY?: number;
     fillLinearGradientColorStops?: Array<number | string>;
-    fillLinearRadialStartPoint?: Vector2d;
-    fillLinearRadialStartPointX?: number;
-    fillLinearRadialStartPointY?: number;
-    fillLinearRadialEndPoint?: Vector2d;
-    fillLinearRadialEndPointX?: number;
-    fillLinearRadialEndPointY?: number;
+    fillRadialGradientStartPoint?: Vector2d;
+    fillRadialGradientStartPointX?: number;
+    fillRadialGradientStartPointY?: number;
+    fillRadialGradientEndPoint?: Vector2d;
+    fillRadialGradientEndPointX?: number;
+    fillRadialGradientEndPointY?: number;
     fillRadialGradientStartRadius?: number;
     fillRadialGradientEndRadius?: number;
     fillRadialGradientColorStops?: Array<number | string>;
