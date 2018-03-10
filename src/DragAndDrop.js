@@ -114,10 +114,10 @@
   // Node extenders
 
   /**
-     * initiate drag and drop
-     * @method
-     * @memberof Konva.Node.prototype
-     */
+   * initiate drag and drop
+   * @method
+   * @memberof Konva.Node.prototype
+   */
   Konva.Node.prototype.startDrag = function() {
     var dd = Konva.DD,
       stage = this.getStage(),
@@ -170,10 +170,10 @@
   };
 
   /**
-     * stop drag and drop
-     * @method
-     * @memberof Konva.Node.prototype
-     */
+   * stop drag and drop
+   * @method
+   * @memberof Konva.Node.prototype
+   */
   Konva.Node.prototype.stopDrag = function() {
     var dd = Konva.DD,
       evt = {};
@@ -201,10 +201,10 @@
   };
 
   /**
-     * determine if node is currently in drag and drop mode
-     * @method
-     * @memberof Konva.Node.prototype
-     */
+   * determine if node is currently in drag and drop mode
+   * @method
+   * @memberof Konva.Node.prototype
+   */
   Konva.Node.prototype.isDragging = function() {
     var dd = Konva.DD;
     return !!(dd.node && dd.node._id === this._id && dd.isDragging);
@@ -273,46 +273,48 @@
   Konva.Factory.addGetterSetter(Konva.Node, 'dragBoundFunc');
 
   /**
-     * get/set drag bound function.  This is used to override the default
-     *  drag and drop position
-     * @name dragBoundFunc
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Function} dragBoundFunc
-     * @returns {Function}
-     * @example
-     * // get drag bound function
-     * var dragBoundFunc = node.dragBoundFunc();
-     *
-     * // create vertical drag and drop
-     * node.dragBoundFunc(function(pos){
-     *   return {
-     *     x: this.getAbsolutePosition().x,
-     *     y: pos.y
-     *   };
-     * });
-     */
+   * get/set drag bound function.  This is used to override the default
+   *  drag and drop position.
+   * @name dragBoundFunc
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Function} dragBoundFunc
+   * @returns {Function}
+   * @example
+   * // get drag bound function
+   * var dragBoundFunc = node.dragBoundFunc();
+   *
+   * // create vertical drag and drop
+   * node.dragBoundFunc(function(pos){
+   *   // important pos - is absolute position of the node
+   *   // you should return absolute position too
+   *   return {
+   *     x: this.getAbsolutePosition().x,
+   *     y: pos.y
+   *   };
+   * });
+   */
 
   Konva.Factory.addGetter(Konva.Node, 'draggable', false);
   Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'draggable');
 
   /**
-     * get/set draggable flag
-     * @name draggable
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Boolean} draggable
-     * @returns {Boolean}
-     * @example
-     * // get draggable flag
-     * var draggable = node.draggable();
-     *
-     * // enable drag and drop
-     * node.draggable(true);
-     *
-     * // disable drag and drop
-     * node.draggable(false);
-     */
+   * get/set draggable flag
+   * @name draggable
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Boolean} draggable
+   * @returns {Boolean}
+   * @example
+   * // get draggable flag
+   * var draggable = node.draggable();
+   *
+   * // enable drag and drop
+   * node.draggable(true);
+   *
+   * // disable drag and drop
+   * node.draggable(false);
+   */
 
   if (Konva.isBrowser) {
     var html = Konva.document.documentElement;
