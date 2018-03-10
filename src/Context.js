@@ -611,7 +611,9 @@
       if (shape.hasStroke()) {
         if (!strokeScaleEnabled) {
           this.save();
-          this.setTransform(1, 0, 0, 1, 0, 0);
+          var pixelRatio = this.getCanvas().getPixelRatio();
+          var transform = this._context.currentTransform;
+          this.setTransform(pixelRatio, transform.b, transform.c, pixelRatio, transform.e, transform.f);
         }
 
         this._applyLineCap(shape);
@@ -691,7 +693,9 @@
           shape.getStrokeScaleEnabled() || shape instanceof Konva.Text;
         if (!strokeScaleEnabled) {
           this.save();
-          this.setTransform(1, 0, 0, 1, 0, 0);
+          var pixelRatio = this.getCanvas().getPixelRatio();
+          var transform = this._context.currentTransform;
+          this.setTransform(pixelRatio, transform.b, transform.c, pixelRatio, transform.e, transform.f);
         }
         this._applyLineCap(shape);
         this.setAttr('lineWidth', shape.strokeWidth());
