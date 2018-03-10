@@ -510,7 +510,7 @@
           textWidth = Math.max(textWidth, lineWidth);
         }
         // if element height is fixed, abort if adding one more line would overflow
-        if (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx) {
+        if (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx && !this.resizeToFitY) {
           break;
         }
       }
