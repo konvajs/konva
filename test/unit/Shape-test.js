@@ -279,9 +279,7 @@ suite('Shape', function() {
   });
 
   // ======================================================
-  test('set image fill to color then image then linear gradient then back to image', function(
-    done
-  ) {
+  test('set image fill to color then image then linear gradient then back to image', function(done) {
     var imageObj = new Image();
     imageObj.onload = function() {
       var stage = addStage();
@@ -339,6 +337,41 @@ suite('Shape', function() {
       done();
     };
     imageObj.src = 'assets/darth-vader.jpg';
+  });
+
+  test('stroke gradient', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var shape = new Konva.Rect({
+      x: 50,
+      y: 50,
+      width: 100,
+      height: 100,
+      fillLinearGradientColorStops: [0, 'yellow', 0.5, 'red', 1, 'white'],
+      fillLinearGradientStartPoint: {
+        x: 0,
+        y: 0
+      },
+      scaleX: 3,
+      fillLinearGradientEndPoint: {
+        x: 100,
+        y: 100
+      },
+      strokeLinearGradientColorStops: [0, 'red', 0.5, 'blue', 1, 'green'],
+      strokeLinearGradientStartPoint: {
+        x: 0,
+        y: 0
+      },
+      strokeLinearGradientEndPoint: {
+        x: 100,
+        y: 100
+      }
+    });
+    layer.add(shape);
+
+    layer.draw();
   });
 
   // ======================================================
@@ -989,7 +1022,10 @@ suite('Shape', function() {
 
     assert.equal(rect.getY(), 50);
 
-    var trace = layer.getHitCanvas().getContext().getTrace(true);
+    var trace = layer
+      .getHitCanvas()
+      .getContext()
+      .getTrace(true);
     assert.equal(
       trace,
       'clearRect();save();transform();beginPath();rect();closePath();save();fillStyle;fill();restore();restore();'

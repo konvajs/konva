@@ -2033,6 +2033,20 @@
         this._fillRadialGradient(shape);
       }
     },
+    _strokeLinearGradient: function(shape) {
+      var start = shape.getStrokeLinearGradientStartPoint(),
+        end = shape.getStrokeLinearGradientEndPoint(),
+        colorStops = shape.getStrokeLinearGradientColorStops(),
+        grd = this.createLinearGradient(start.x, start.y, end.x, end.y);
+
+      if (colorStops) {
+        // build color stops
+        for (var n = 0; n < colorStops.length; n += 2) {
+          grd.addColorStop(colorStops[n], colorStops[n + 1]);
+        }
+        this.setAttr('strokeStyle', grd);
+      }
+    },
     _stroke: function(shape) {
       var dash = shape.dash(),
         // ignore strokeScaleEnabled for Text
@@ -2057,6 +2071,12 @@
         if (!shape.getShadowForStrokeEnabled()) {
           this.setAttr('shadowColor', 'rgba(0,0,0,0)');
         }
+
+        var hasLinearGradient = shape.getStrokeLinearGradientColorStops();
+        if (hasLinearGradient) {
+          this._strokeLinearGradient(shape);
+        }
+
         shape._strokeFunc(this);
 
         if (!strokeScaleEnabled) {
@@ -9260,6 +9280,24 @@
    * shape.fillLinearGradientColorStops(0, 'red', 0.5, 'blue', 1, 'green');
    */
 
+   Konva.Factory.addGetterSetter(Konva.Shape, 'strokeLinearGradientColorStops');
+
+   /**
+     * get/set stroke linear gradient color stops
+     * @name strokeLinearGradientColorStops
+     * @method
+     * @memberof Konva.Shape.prototype
+     * @param {Array} colorStops
+     * @returns {Array} colorStops
+     * @example
+     * // get stroke linear gradient color stops
+     * var colorStops = shape.strokeLinearGradientColorStops();
+     *
+     * // create a linear gradient that starts with red, changes to blue
+     * // halfway through, and then changes to green
+     * shape.strokeLinearGradientColorStops(0, 'red', 0.5, 'blue', 1, 'green');
+     */
+
   Konva.Factory.addGetterSetter(
     Konva.Shape,
     'fillRadialGradientStartRadius',
@@ -9480,6 +9518,7 @@
    */
 
   Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternOffsetX', 0);
+
   /**
    * get/set fill pattern offset x
    * @name fillPatternOffsetX
@@ -9496,6 +9535,7 @@
    */
 
   Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternOffsetY', 0);
+
   /**
    * get/set fill pattern offset y
    * @name fillPatternOffsetY
@@ -9537,6 +9577,7 @@
    */
 
   Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternScaleX', 1);
+
   /**
    * get/set fill pattern scale x
    * @name fillPatternScaleX
@@ -9553,6 +9594,7 @@
    */
 
   Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternScaleY', 1);
+
   /**
    * get/set fill pattern scale y
    * @name fillPatternScaleY
@@ -9594,11 +9636,38 @@
    * });
    */
 
+  Konva.Factory.addComponentsGetterSetter(
+    Konva.Shape,
+    'strokeLinearGradientStartPoint',
+    ['x', 'y']
+  );
+
+  /**
+    * get/set stroke linear gradient start point
+    * @name strokeLinearGradientStartPoint
+    * @method
+    * @memberof Konva.Shape.prototype
+    * @param {Object} startPoint
+    * @param {Number} startPoint.x
+    * @param {Number} startPoint.y
+    * @returns {Object}
+    * @example
+    * // get stroke linear gradient start point
+    * var startPoint = shape.strokeLinearGradientStartPoint();
+    *
+    * // set stroke linear gradient start point
+    * shape.strokeLinearGradientStartPoint({
+    *   x: 20
+    *   y: 10
+    * });
+    */
+
   Konva.Factory.addGetterSetter(
     Konva.Shape,
     'fillLinearGradientStartPointX',
     0
   );
+
   /**
    * get/set fill linear gradient start point x
    * @name fillLinearGradientStartPointX
@@ -9616,9 +9685,31 @@
 
   Konva.Factory.addGetterSetter(
     Konva.Shape,
+    'strokeLinearGradientStartPointX',
+    0
+  );
+
+  /**
+    * get/set stroke linear gradient start point x
+    * @name linearLinearGradientStartPointX
+    * @method
+    * @memberof Konva.Shape.prototype
+    * @param {Number} x
+    * @returns {Number}
+    * @example
+    * // get stroke linear gradient start point x
+    * var startPointX = shape.strokeLinearGradientStartPointX();
+    *
+    * // set stroke linear gradient start point x
+    * shape.strokeLinearGradientStartPointX(20);
+    */
+
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
     'fillLinearGradientStartPointY',
     0
   );
+
   /**
    * get/set fill linear gradient start point y
    * @name fillLinearGradientStartPointY
@@ -9633,6 +9724,26 @@
    * // set fill linear gradient start point y
    * shape.fillLinearGradientStartPointY(20);
    */
+
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'strokeLinearGradientStartPointY',
+    0
+  );
+  /**
+    * get/set stroke linear gradient start point y
+    * @name strokeLinearGradientStartPointY
+    * @method
+    * @memberof Konva.Shape.prototype
+    * @param {Number} y
+    * @returns {Number}
+    * @example
+    * // get stroke linear gradient start point y
+    * var startPointY = shape.strokeLinearGradientStartPointY();
+    *
+    * // set stroke linear gradient start point y
+    * shape.strokeLinearGradientStartPointY(20);
+    */
 
   Konva.Factory.addComponentsGetterSetter(
     Konva.Shape,
@@ -9660,6 +9771,32 @@
    * });
    */
 
+  Konva.Factory.addComponentsGetterSetter(
+    Konva.Shape,
+    'strokeLinearGradientEndPoint',
+    ['x', 'y']
+  );
+
+  /**
+     * get/set stroke linear gradient end point
+     * @name strokeLinearGradientEndPoint
+     * @method
+     * @memberof Konva.Shape.prototype
+     * @param {Object} endPoint
+     * @param {Number} endPoint.x
+     * @param {Number} endPoint.y
+     * @returns {Object}
+     * @example
+     * // get stroke linear gradient end point
+     * var endPoint = shape.strokeLinearGradientEndPoint();
+     *
+     * // set stroke linear gradient end point
+     * shape.strokeLinearGradientEndPoint({
+     *   x: 20
+     *   y: 10
+     * });
+     */
+
   Konva.Factory.addGetterSetter(Konva.Shape, 'fillLinearGradientEndPointX', 0);
   /**
    * get/set fill linear gradient end point x
@@ -9676,6 +9813,22 @@
    * shape.fillLinearGradientEndPointX(20);
    */
 
+  Konva.Factory.addGetterSetter(Konva.Shape, 'strokeLinearGradientEndPointX', 0);
+  /**
+     * get/set fill linear gradient end point x
+     * @name strokeLinearGradientEndPointX
+     * @method
+     * @memberof Konva.Shape.prototype
+     * @param {Number} x
+     * @returns {Number}
+     * @example
+     * // get stroke linear gradient end point x
+     * var endPointX = shape.strokeLinearGradientEndPointX();
+     *
+     * // set stroke linear gradient end point x
+     * shape.strokeLinearGradientEndPointX(20);
+     */
+
   Konva.Factory.addGetterSetter(Konva.Shape, 'fillLinearGradientEndPointY', 0);
   /**
    * get/set fill linear gradient end point y
@@ -9691,6 +9844,22 @@
    * // set fill linear gradient end point y
    * shape.fillLinearGradientEndPointY(20);
    */
+
+  Konva.Factory.addGetterSetter(Konva.Shape, 'strokeLinearGradientEndPointY', 0);
+  /**
+     * get/set stroke linear gradient end point y
+     * @name strokeLinearGradientEndPointY
+     * @method
+     * @memberof Konva.Shape.prototype
+     * @param {Number} y
+     * @returns {Number}
+     * @example
+     * // get stroke linear gradient end point y
+     * var endPointY = shape.strokeLinearGradientEndPointY();
+     *
+     * // set stroke linear gradient end point y
+     * shape.strokeLinearGradientEndPointY(20);
+     */
 
   Konva.Factory.addComponentsGetterSetter(
     Konva.Shape,

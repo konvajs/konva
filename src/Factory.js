@@ -104,7 +104,10 @@
       };
     },
     addDeprecatedGetterSetter: function(constructor, attr, def, validator) {
+      Konva.Util.error('Adding deprecated ' + attr);
+
       var method = GET + Konva.Util._capitalize(attr);
+
       var message =
         attr +
         ' property is deprecated and will be removed soon. Look at Konva change log for more information.';
