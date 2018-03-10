@@ -175,11 +175,9 @@
     hasStroke: function() {
       return (
         this.strokeEnabled() &&
-        !!(
-          this.stroke() ||
-          this.getStrokeLinearGradientColorStops() ||
-          this.getStrokeRadialGradientColorStops()
-        )
+        !!(this.stroke() || this.getStrokeLinearGradientColorStops())
+        // TODO: do we need radial gradient
+        // this.getStrokeRadialGradientColorStops()
       );
     },
     /**
@@ -546,31 +544,6 @@
    * shape.stroke('rgba(0,255,0,0.5');
    */
 
-  Konva.Factory.addDeprecatedGetterSetter(
-    Konva.Shape,
-    'strokeRed',
-    0,
-    Konva.Validators.RGBComponent
-  );
-  Konva.Factory.addDeprecatedGetterSetter(
-    Konva.Shape,
-    'strokeGreen',
-    0,
-    Konva.Validators.RGBComponent
-  );
-  Konva.Factory.addDeprecatedGetterSetter(
-    Konva.Shape,
-    'strokeBlue',
-    0,
-    Konva.Validators.RGBComponent
-  );
-  Konva.Factory.addDeprecatedGetterSetter(
-    Konva.Shape,
-    'strokeAlpha',
-    1,
-    Konva.Validators.alphaComponent
-  );
-
   Konva.Factory.addGetterSetter(Konva.Shape, 'strokeWidth', 2);
 
   /**
@@ -786,31 +759,6 @@
    * shape.shadowColor('rgba(0,255,0,0.5');
    */
 
-  Konva.Factory.addDeprecatedGetterSetter(
-    Konva.Shape,
-    'shadowRed',
-    0,
-    Konva.Validators.RGBComponent
-  );
-  Konva.Factory.addDeprecatedGetterSetter(
-    Konva.Shape,
-    'shadowGreen',
-    0,
-    Konva.Validators.RGBComponent
-  );
-  Konva.Factory.addDeprecatedGetterSetter(
-    Konva.Shape,
-    'shadowBlue',
-    0,
-    Konva.Validators.RGBComponent
-  );
-  Konva.Factory.addDeprecatedGetterSetter(
-    Konva.Shape,
-    'shadowAlpha',
-    1,
-    Konva.Validators.alphaComponent
-  );
-
   Konva.Factory.addGetterSetter(Konva.Shape, 'shadowBlur');
 
   /**
@@ -953,31 +901,6 @@
    * // shape without fill
    * shape.fill(null);
    */
-
-  Konva.Factory.addDeprecatedGetterSetter(
-    Konva.Shape,
-    'fillRed',
-    0,
-    Konva.Validators.RGBComponent
-  );
-  Konva.Factory.addDeprecatedGetterSetter(
-    Konva.Shape,
-    'fillGreen',
-    0,
-    Konva.Validators.RGBComponent
-  );
-  Konva.Factory.addDeprecatedGetterSetter(
-    Konva.Shape,
-    'fillBlue',
-    0,
-    Konva.Validators.RGBComponent
-  );
-  Konva.Factory.addDeprecatedGetterSetter(
-    Konva.Shape,
-    'fillAlpha',
-    1,
-    Konva.Validators.alphaComponent
-  );
 
   Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternX', 0);
 
