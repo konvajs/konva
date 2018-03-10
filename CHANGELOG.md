@@ -10,8 +10,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * new `Konva.Transformer` group that allow simple resize, and rotate of a shape.
 * Add ability to remove event by callback `node.off('event', callback)`.
 * new `Konva.Filters.Contrast`.
-* new `Konva.Util.haveIntersection()` to detect collusion
+* new `Konva.Util.haveIntersection()` to detect simple collusion
 * add `Konva.Text.ellipsis` to add '…' to text string if width is fixed and wrap is set to 'none'
+* add gradients for strokes
 
 ## Changed
 
@@ -21,6 +22,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 * Some typescript fixes
 * Pixelate filter fixes
+
+## Removed
+
+* Some deprecated methods are removed. If previous version was working without deprecation warnings for you, this one will work fine too.
 
 ## [1.7.6][2017-11-01]
 

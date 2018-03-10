@@ -584,6 +584,20 @@
         this._fillRadialGradient(shape);
       }
     },
+    _strokeLinearGradient: function(shape) {
+      var start = shape.getStrokeLinearGradientStartPoint(),
+        end = shape.getStrokeLinearGradientEndPoint(),
+        colorStops = shape.getStrokeLinearGradientColorStops(),
+        grd = this.createLinearGradient(start.x, start.y, end.x, end.y);
+
+      if (colorStops) {
+        // build color stops
+        for (var n = 0; n < colorStops.length; n += 2) {
+          grd.addColorStop(colorStops[n], colorStops[n + 1]);
+        }
+        this.setAttr('strokeStyle', grd);
+      }
+    },
     _stroke: function(shape) {
       var dash = shape.dash(),
         // ignore strokeScaleEnabled for Text
@@ -608,6 +622,12 @@
         if (!shape.getShadowForStrokeEnabled()) {
           this.setAttr('shadowColor', 'rgba(0,0,0,0)');
         }
+
+        var hasLinearGradient = shape.getStrokeLinearGradientColorStops();
+        if (hasLinearGradient) {
+          this._strokeLinearGradient(shape);
+        }
+
         shape._strokeFunc(this);
 
         if (!strokeScaleEnabled) {
