@@ -1512,11 +1512,11 @@
   ];
 
   /**
-     * Canvas Context constructor
-     * @constructor
-     * @abstract
-     * @memberof Konva
-     */
+   * Canvas Context constructor
+   * @constructor
+   * @abstract
+   * @memberof Konva
+   */
   Konva.Context = function(canvas) {
     this.init(canvas);
   };
@@ -1532,33 +1532,33 @@
       }
     },
     /**
-         * fill shape
-         * @method
-         * @memberof Konva.Context.prototype
-         * @param {Konva.Shape} shape
-         */
+     * fill shape
+     * @method
+     * @memberof Konva.Context.prototype
+     * @param {Konva.Shape} shape
+     */
     fillShape: function(shape) {
       if (shape.getFillEnabled()) {
         this._fill(shape);
       }
     },
     /**
-         * stroke shape
-         * @method
-         * @memberof Konva.Context.prototype
-         * @param {Konva.Shape} shape
-         */
+     * stroke shape
+     * @method
+     * @memberof Konva.Context.prototype
+     * @param {Konva.Shape} shape
+     */
     strokeShape: function(shape) {
       if (shape.getStrokeEnabled()) {
         this._stroke(shape);
       }
     },
     /**
-         * fill then stroke
-         * @method
-         * @memberof Konva.Context.prototype
-         * @param {Konva.Shape} shape
-         */
+     * fill then stroke
+     * @method
+     * @memberof Konva.Context.prototype
+     * @param {Konva.Shape} shape
+     */
     fillStrokeShape: function(shape) {
       var fillEnabled = shape.getFillEnabled();
       if (fillEnabled) {
@@ -1569,14 +1569,14 @@
       }
     },
     /**
-         * get context trace if trace is enabled
-         * @method
-         * @memberof Konva.Context.prototype
-         * @param {Boolean} relaxed if false, return strict context trace, which includes method names, method parameters
-         *  properties, and property values.  If true, return relaxed context trace, which only returns method names and
-         *  properites.
-         * @returns {String}
-         */
+     * get context trace if trace is enabled
+     * @method
+     * @memberof Konva.Context.prototype
+     * @param {Boolean} relaxed if false, return strict context trace, which includes method names, method parameters
+     *  properties, and property values.  If true, return relaxed context trace, which only returns method names and
+     *  properites.
+     * @returns {String}
+     */
     getTrace: function(relaxed) {
       var traceArr = this.traceArr,
         len = traceArr.length,
@@ -1618,15 +1618,16 @@
       return str;
     },
     /**
-         * clear trace if trace is enabled
-         * @method
-         * @memberof Konva.Context.prototype
-         */
+     * clear trace if trace is enabled
+     * @method
+     * @memberof Konva.Context.prototype
+     */
     clearTrace: function() {
       this.traceArr = [];
     },
     _trace: function(str) {
-      var traceArr = this.traceArr, len;
+      var traceArr = this.traceArr,
+        len;
 
       traceArr.push(str);
       len = traceArr.length;
@@ -1636,33 +1637,33 @@
       }
     },
     /**
-         * reset canvas context transform
-         * @method
-         * @memberof Konva.Context.prototype
-         */
+     * reset canvas context transform
+     * @method
+     * @memberof Konva.Context.prototype
+     */
     reset: function() {
       var pixelRatio = this.getCanvas().getPixelRatio();
       this.setTransform(1 * pixelRatio, 0, 0, 1 * pixelRatio, 0, 0);
     },
     /**
-         * get canvas
-         * @method
-         * @memberof Konva.Context.prototype
-         * @returns {Konva.Canvas}
-         */
+     * get canvas
+     * @method
+     * @memberof Konva.Context.prototype
+     * @returns {Konva.Canvas}
+     */
     getCanvas: function() {
       return this.canvas;
     },
     /**
-         * clear canvas
-         * @method
-         * @memberof Konva.Context.prototype
-         * @param {Object} [bounds]
-         * @param {Number} [bounds.x]
-         * @param {Number} [bounds.y]
-         * @param {Number} [bounds.width]
-         * @param {Number} [bounds.height]
-         */
+     * clear canvas
+     * @method
+     * @memberof Konva.Context.prototype
+     * @param {Object} [bounds]
+     * @param {Number} [bounds.x]
+     * @param {Number} [bounds.y]
+     * @param {Number} [bounds.width]
+     * @param {Number} [bounds.height]
+     */
     clear: function(bounds) {
       var canvas = this.getCanvas();
 
@@ -1754,7 +1755,8 @@
       );
     },
     drawImage: function() {
-      var a = arguments, _context = this._context;
+      var a = arguments,
+        _context = this._context;
 
       if (a.length === 3) {
         _context.drawImage(a[0], a[1], a[2]);
@@ -1832,7 +1834,8 @@
       this._context.scale(a[0], a[1]);
     },
     setLineDash: function() {
-      var a = arguments, _context = this._context;
+      var a = arguments,
+        _context = this._context;
 
       // works for Chrome and IE11
       if (this._context.setLineDash) {
@@ -1879,7 +1882,8 @@
 
       // to prevent creating scope function at each loop
       var func = function(methodName) {
-        var origMethod = that[methodName], ret;
+        var origMethod = that[methodName],
+          ret;
 
         that[methodName] = function() {
           args = _simplifyArray(Array.prototype.slice.call(arguments, 0));
@@ -2066,15 +2070,18 @@
         }
 
         this.setAttr('lineWidth', shape.strokeWidth());
-        this.setAttr('strokeStyle', shape.stroke());
 
         if (!shape.getShadowForStrokeEnabled()) {
           this.setAttr('shadowColor', 'rgba(0,0,0,0)');
         }
 
+        // TODO - do we need to make like a fill function?
+
         var hasLinearGradient = shape.getStrokeLinearGradientColorStops();
         if (hasLinearGradient) {
           this._strokeLinearGradient(shape);
+        } else {
+          this.setAttr('strokeStyle', shape.stroke());
         }
 
         shape._strokeFunc(this);

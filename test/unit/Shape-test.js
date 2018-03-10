@@ -341,12 +341,13 @@ suite('Shape', function() {
 
   test('stroke gradient', function() {
     var stage = addStage();
-    var layer = new Konva.Layer();
-    stage.add(layer);
+    var layer = new Konva.Layer({
+      scaleY: 1.5
+    });
 
     var shape = new Konva.Rect({
-      x: 50,
-      y: 50,
+      x: 10,
+      y: 10,
       width: 100,
       height: 100,
       fillLinearGradientColorStops: [0, 'yellow', 0.5, 'red', 1, 'white'],
@@ -370,8 +371,14 @@ suite('Shape', function() {
       }
     });
     layer.add(shape);
+    stage.add(layer);
 
-    layer.draw();
+    var trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(3,0,0,1.5,10,15);beginPath();rect(0,0,100,100);closePath();createLinearGradient(0,0,100,100);fillStyle=[object CanvasGradient];fill();lineWidth=2;createLinearGradient(0,0,100,100);strokeStyle=[object CanvasGradient];stroke();restore();'
+    );
   });
 
   // ======================================================
@@ -1280,16 +1287,15 @@ suite('Shape', function() {
     context.lineWidth = 10;
     context.fill();
 
-    context.shadowColor = 'rgba(0,0,0, 0)';
+    context.shadowColor = 'rgba(0,0,0,0)';
     context.stroke();
 
     compareLayerAndCanvas(layer, canvas, 10);
 
     var trace = layer.getContext().getTrace();
-    //console.log(trace);
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);save();shadowColor=rgba(128,128,128,1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=10;strokeStyle=black;shadowColor=rgba(0,0,0,0);stroke();restore();restore();'
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);save();shadowColor=rgba(128,128,128,1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=10;shadowColor=rgba(0,0,0,0);strokeStyle=black;stroke();restore();restore();'
     );
   });
 
