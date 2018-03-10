@@ -12688,10 +12688,10 @@
   // Node extenders
 
   /**
-     * initiate drag and drop
-     * @method
-     * @memberof Konva.Node.prototype
-     */
+   * initiate drag and drop
+   * @method
+   * @memberof Konva.Node.prototype
+   */
   Konva.Node.prototype.startDrag = function() {
     var dd = Konva.DD,
       stage = this.getStage(),
@@ -12744,10 +12744,10 @@
   };
 
   /**
-     * stop drag and drop
-     * @method
-     * @memberof Konva.Node.prototype
-     */
+   * stop drag and drop
+   * @method
+   * @memberof Konva.Node.prototype
+   */
   Konva.Node.prototype.stopDrag = function() {
     var dd = Konva.DD,
       evt = {};
@@ -12775,10 +12775,10 @@
   };
 
   /**
-     * determine if node is currently in drag and drop mode
-     * @method
-     * @memberof Konva.Node.prototype
-     */
+   * determine if node is currently in drag and drop mode
+   * @method
+   * @memberof Konva.Node.prototype
+   */
   Konva.Node.prototype.isDragging = function() {
     var dd = Konva.DD;
     return !!(dd.node && dd.node._id === this._id && dd.isDragging);
@@ -12847,46 +12847,48 @@
   Konva.Factory.addGetterSetter(Konva.Node, 'dragBoundFunc');
 
   /**
-     * get/set drag bound function.  This is used to override the default
-     *  drag and drop position
-     * @name dragBoundFunc
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Function} dragBoundFunc
-     * @returns {Function}
-     * @example
-     * // get drag bound function
-     * var dragBoundFunc = node.dragBoundFunc();
-     *
-     * // create vertical drag and drop
-     * node.dragBoundFunc(function(pos){
-     *   return {
-     *     x: this.getAbsolutePosition().x,
-     *     y: pos.y
-     *   };
-     * });
-     */
+   * get/set drag bound function.  This is used to override the default
+   *  drag and drop position.
+   * @name dragBoundFunc
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Function} dragBoundFunc
+   * @returns {Function}
+   * @example
+   * // get drag bound function
+   * var dragBoundFunc = node.dragBoundFunc();
+   *
+   * // create vertical drag and drop
+   * node.dragBoundFunc(function(pos){
+   *   // important pos - is absolute position of the node
+   *   // you should return absolute position too
+   *   return {
+   *     x: this.getAbsolutePosition().x,
+   *     y: pos.y
+   *   };
+   * });
+   */
 
   Konva.Factory.addGetter(Konva.Node, 'draggable', false);
   Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'draggable');
 
   /**
-     * get/set draggable flag
-     * @name draggable
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Boolean} draggable
-     * @returns {Boolean}
-     * @example
-     * // get draggable flag
-     * var draggable = node.draggable();
-     *
-     * // enable drag and drop
-     * node.draggable(true);
-     *
-     * // disable drag and drop
-     * node.draggable(false);
-     */
+   * get/set draggable flag
+   * @name draggable
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Boolean} draggable
+   * @returns {Boolean}
+   * @example
+   * // get draggable flag
+   * var draggable = node.draggable();
+   *
+   * // enable drag and drop
+   * node.draggable(true);
+   *
+   * // disable drag and drop
+   * node.draggable(false);
+   */
 
   if (Konva.isBrowser) {
     var html = Konva.document.documentElement;
@@ -14365,7 +14367,9 @@
     LEFT = 'left',
     TEXT = 'text',
     TEXT_UPPER = 'Text',
+    TOP = 'top',
     MIDDLE = 'middle',
+    BOTTOM = 'bottom',
     NORMAL = 'normal',
     PX_SPACE = 'px ',
     SPACE = ' ',
@@ -14387,7 +14391,11 @@
       'height',
       'wrap',
       'ellipsis',
-      'letterSpacing'
+      'letterSpacing',
+      'resizeToFitX',
+      'resizeToFitY',
+      'resizeToFitMaxRatio',
+      'verticalAlign'
     ],
     // cached variables
     attrChangeListLen = ATTR_CHANGE_LIST.length;
@@ -14412,10 +14420,14 @@
    * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
    * @param {String} config.text
    * @param {String} [config.align] can be left, center, or right
+   * @param {String} [config.verticalAlign] can be top, middle or bottom
    * @param {Number} [config.padding]
    * @param {Number} [config.lineHeight] default is 1
    * @param {String} [config.wrap] can be word, char, or none. Default is word
    * @param {Boolean} [config.ellipsis] can be true or false. Default is false. if Konva.Text config is set to wrap="none" and ellipsis=true, then it will add "..." to the end
+   * @param {Number} [config.resizeToFitX] scale dynamically until either the maximum width is reached or the scaling factor resizeToFitX is hit. Forces one line text
+   * @param {Number} [config.resizeToFitY] scale dynamically until either the maximum height is reached or the scaling factor resizeToFitY is hit. Forces one line text
+   * @param {Number} [config.resizeToFitMaxRatio] Limits resizeToFitX/resizeToFitY to prevent text thinning or flattening. The default is 4
    * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
@@ -14533,6 +14545,16 @@
       this._strokeFunc = _strokeFunc;
       this.className = TEXT_UPPER;
 
+      this.resizeToFitX = config.resizeToFitX;
+      this.resizeToFitY = config.resizeToFitY;
+      this.resizeToFitMaxRatio = config.resizeToFitMaxRatio || 4;
+      this.verticalAlign = config.verticalAlign;
+
+      // Using both together would (logically) not work with wrapping
+      if (this.resizeToFitX && this.resizeToFitY) {
+        this.wrap(NONE);
+      }
+
       // update text data for certain attr changes
       for (var n = 0; n < attrChangeListLen; n++) {
         this.on(ATTR_CHANGE_LIST[n] + CHANGE_KONVA, this._setTextData);
@@ -14549,6 +14571,10 @@
         textArr = this.textArr,
         textArrLen = textArr.length,
         align = this.getAlign(),
+        verticalAlign = this.getVerticalAlign(),
+        alignY = 0,
+        sx = 1,
+        sy = 1,
         totalWidth = this.getWidth(),
         letterSpacing = this.getLetterSpacing(),
         textDecoration = this.textDecoration(),
@@ -14561,11 +14587,46 @@
       context.setAttr('textBaseline', MIDDLE);
       context.setAttr('textAlign', LEFT);
       context.save();
+
+      // handle resizeToFit
+      if (this.resizeToFitX) {
+        sx = (totalWidth - p * 2) / textArr[0].width;
+        if (sx > this.resizeToFitX) {
+          sx = this.resizeToFitX;
+        }
+      }
+      if (this.resizeToFitY) {
+        sy = (this.getHeight() - p * 2) / (textArrLen * lineHeightPx);
+        if (sy > this.resizeToFitY) {
+          sy = this.resizeToFitY;
+        }
+      }
+
+      // resizeToFitMaxRatio limits ratio of x to y to keep the chars readable
+      if (sx > sy) {
+        if (sx / sy > this.resizeToFitMaxRatio) {
+          sx = sy * this.resizeToFitMaxRatio;
+        }
+      } else {
+        if (sy / sx > this.resizeToFitMaxRatio) {
+          sy = sx * this.resizeToFitMaxRatio;
+        }
+      }
+
+      // handle vertical alignment
+      if (verticalAlign === MIDDLE) {
+        alignY = (this.getHeight() - textArrLen * lineHeightPx * sy - p * 2) / 2;
+      }
+         else if (verticalAlign === BOTTOM) {
+        alignY = this.getHeight() - textArrLen * lineHeightPx * sy - p * 2;
+      }
+
+      // execute vertical alignment and padding
       if (p) {
         context.translate(p, 0);
-        context.translate(0, p + textHeight / 2);
+        context.translate(0, alignY + p + textHeight / 2);
       } else {
-        context.translate(0, textHeight / 2);
+        context.translate(0, alignY + textHeight / 2);
       }
 
       // draw text lines
@@ -14576,17 +14637,25 @@
 
         // horizontal alignment
         context.save();
+
+        // only apply scaling (from resizeToFit) if requested
+        if (sx !== 1 || sy !== 1) {
+          context.translate(0, -(textHeight / 2));
+          context.scale(sx, sy);
+          context.translate(0, (textHeight / 2));
+        }
+
         if (align === RIGHT) {
-          context.translate(totalWidth - width - p * 2, 0);
+          context.translate((totalWidth - width * sx - p * 2) / sx, 0);
         } else if (align === CENTER) {
-          context.translate((totalWidth - width - p * 2) / 2, 0);
+          context.translate((totalWidth - width * sx - p * 2) / sx / 2, 0);
         }
 
         if (textDecoration.indexOf('underline') !== -1) {
           context.save();
           context.beginPath();
           context.moveTo(0, Math.round(lineHeightPx / 2));
-          context.lineTo(Math.round(width), Math.round(lineHeightPx / 2));
+          context.lineTo(Math.round(align === JUSTIFY && n !== textArrLen - 1 ? totalWidth - p * 2 : width), Math.round(lineHeightPx / 2));
           // TODO: I have no idea what is real ratio
           // just /20 looks good enough
           context.lineWidth = fontSize / 15;
@@ -14598,7 +14667,7 @@
           context.save();
           context.beginPath();
           context.moveTo(0, 0);
-          context.lineTo(Math.round(width), 0);
+          context.lineTo(Math.round(align === JUSTIFY && n !== textArrLen - 1 ? totalWidth - p * 2 : width), 0);
           context.lineWidth = fontSize / 15;
           context.strokeStyle = fill;
           context.stroke();
@@ -14612,7 +14681,7 @@
             // skip justify for the last line
             if (letter === ' ' && n !== textArrLen - 1 && align === JUSTIFY) {
               context.translate(
-                Math.floor((totalWidth - width) / spacesNumber),
+                Math.floor((totalWidth - width - p * 2) / spacesNumber),
                 0
               );
             }
@@ -14629,7 +14698,7 @@
           context.fillStrokeShape(this);
         }
         context.restore();
-        context.translate(0, lineHeightPx);
+        context.translate(0, lineHeightPx * sy);
       }
       context.restore();
     },
@@ -14781,7 +14850,7 @@
           : 0;
 
         var lineWidth = this._getTextWidth(line);
-        if (fixedWidth && lineWidth > maxWidth) {
+        if (fixedWidth && lineWidth > maxWidth && !this.resizeToFitX) {
           /*
                      * if width is fixed and line does not fit entirely
                      * break the line into multiple fitting lines
@@ -14982,6 +15051,26 @@
    *
    * // align text to right
    * text.align('right');
+   */
+
+  Konva.Factory.addGetterSetter(Konva.Text, 'verticalAlign', TOP);
+
+  /**
+   * get/set vertical align of text.  Can be 'top', 'middle' or 'bottom'
+   * @name verticalAlign
+   * @method
+   * @memberof Konva.Text.prototype
+   * @param {String} verticalAlign
+   * @returns {String}
+   * @example
+   * // get vertical text align
+   * var verticalAlign = text.verticalAlign();
+   *
+   * // vertically center text
+   * text.verticalAlign('middle');
+   *
+   * // align vertically at the bottom
+   * text.verticalAlign('bottom');
    */
 
   Konva.Factory.addGetterSetter(Konva.Text, 'lineHeight', 1);
@@ -15877,14 +15966,14 @@
 (function() {
   'use strict';
   /**
-     * Path constructor.
-     * @author Jason Follas
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {String} config.data SVG data string
-     * @param {String} [config.fill] fill color
+   * Path constructor.
+   * @author Jason Follas
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {String} config.data SVG data string
+   * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -15935,7 +16024,7 @@
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
      * @param {Array} [config.dash]
      * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-     * @param {Number} [config.x]
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -15955,15 +16044,15 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * var path = new Konva.Path({
-     *   x: 240,
-     *   y: 40,
-     *   data: 'M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-17.185,4.352-22.33c7.451-5.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.821,23.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z',
-     *   fill: 'green',
-     *   scale: 2
-     * });
-     */
+   * @example
+   * var path = new Konva.Path({
+   *   x: 240,
+   *   y: 40,
+   *   data: 'M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-17.185,4.352-22.33c7.451-5.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.821,23.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z',
+   *   fill: 'green',
+   *   scale: 2
+   * });
+   */
   Konva.Path = function(config) {
     this.___init(config);
   };
@@ -16180,7 +16269,8 @@
     };
   };
   Konva.Path.getPointOnEllipticalArc = function(cx, cy, rx, ry, theta, psi) {
-    var cosPsi = Math.cos(psi), sinPsi = Math.sin(psi);
+    var cosPsi = Math.cos(psi),
+      sinPsi = Math.sin(psi);
     var pt = {
       x: rx * Math.cos(theta),
       y: ry * Math.sin(theta)
@@ -16259,26 +16349,35 @@
     // create array
     var arr = cs.split('|');
     var ca = [];
+    var coords = [];
     // init context point
     var cpx = 0;
     var cpy = 0;
+
+    var re = /([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:e[-+]?\d+)?)/gi;
+    var match;
     for (n = 1; n < arr.length; n++) {
       var str = arr[n];
       var c = str.charAt(0);
       str = str.slice(1);
-      // remove ,- for consistency
-      str = str.replace(new RegExp(',-', 'g'), '-');
-      // add commas so that it's easy to split
-      str = str.replace(new RegExp('-', 'g'), ',-');
-      str = str.replace(new RegExp('e,-', 'g'), 'e-');
-      var p = str.split(',');
-      if (p.length > 0 && p[0] === '') {
-        p.shift();
+
+      coords.length = 0;
+      while ((match = re.exec(str))) {
+        coords.push(match[0]);
       }
-      // convert strings to floats
-      for (var i = 0; i < p.length; i++) {
-        p[i] = parseFloat(p[i]);
+
+      // while ((match = re.exec(str))) {
+      //   coords.push(match[0]);
+      // }
+      var p = [];
+
+      for (var j = 0, jlen = coords.length; j < jlen; j++) {
+        var parsed = parseFloat(coords[j]);
+        if (!isNaN(parsed)) {
+          p.push(parsed);
+        }
       }
+
       while (p.length > 0) {
         if (isNaN(p[0])) {
           // case for a trailing comma before next command
@@ -16287,7 +16386,8 @@
 
         var cmd = null;
         var points = [];
-        var startX = cpx, startY = cpy;
+        var startX = cpx,
+          startY = cpy;
         // Move var from within the switch to up here (jshint)
         var prevCmd, ctlPtx, ctlPty; // Ss, Tt
         var rx, ry, psi, fa, fs, x1, y1; // Aa
@@ -16716,22 +16816,22 @@
   Konva.Factory.addGetterSetter(Konva.Path, 'data');
 
   /**
-     * set SVG path data string.  This method
-     *  also automatically parses the data string
-     *  into a data array.  Currently supported SVG data:
-     *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
-     * @name setData
-     * @method
-     * @memberof Konva.Path.prototype
-     * @param {String} SVG path command string
-     */
+   * set SVG path data string.  This method
+   *  also automatically parses the data string
+   *  into a data array.  Currently supported SVG data:
+   *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
+   * @name setData
+   * @method
+   * @memberof Konva.Path.prototype
+   * @param {String} SVG path command string
+   */
 
   /**
-     * get SVG path data string
-     * @name getData
-     * @method
-     * @memberof Konva.Path.prototype
-     */
+   * get SVG path data string
+   * @name getData
+   * @method
+   * @memberof Konva.Path.prototype
+   */
 
   Konva.Collection.mapMethods(Konva.Path);
 })();
