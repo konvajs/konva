@@ -363,6 +363,7 @@ declare namespace Konva {
     shadowEnabled?: boolean;
     dash?: number[];
     dashEnabled?: boolean;
+    perfectDrawEnabled?: boolean;
   }
 
   class Shape extends Node {
