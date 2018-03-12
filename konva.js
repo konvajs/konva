@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Sat Mar 10 2018
+ * Date: Mon Mar 12 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2012,22 +2012,34 @@
     },
     _fill: function(shape) {
       var hasColor = shape.fill(),
-        hasPattern = shape.getFillPatternImage(),
-        hasLinearGradient = shape.getFillLinearGradientColorStops(),
-        hasRadialGradient = shape.getFillRadialGradientColorStops(),
         fillPriority = shape.getFillPriority();
 
       // priority fills
       if (hasColor && fillPriority === 'color') {
         this._fillColor(shape);
-      } else if (hasPattern && fillPriority === 'pattern') {
+        return;
+      }
+
+      var hasPattern = shape.getFillPatternImage();
+      if (hasPattern && fillPriority === 'pattern') {
         this._fillPattern(shape);
-      } else if (hasLinearGradient && fillPriority === 'linear-gradient') {
+        return;
+      }
+
+      var hasLinearGradient = shape.getFillLinearGradientColorStops();
+      if (hasLinearGradient && fillPriority === 'linear-gradient') {
         this._fillLinearGradient(shape);
-      } else if (hasRadialGradient && fillPriority === 'radial-gradient') {
+        return;
+      }
+
+      var hasRadialGradient = shape.getFillRadialGradientColorStops();
+      if (hasRadialGradient && fillPriority === 'radial-gradient') {
         this._fillRadialGradient(shape);
-      } else if (hasColor) {
-        // now just try and fill with whatever is available
+        return;
+      }
+
+      // now just try and fill with whatever is available
+      if (hasColor) {
         this._fillColor(shape);
       } else if (hasPattern) {
         this._fillPattern(shape);
@@ -2108,7 +2120,7 @@
       this.setAttr('shadowColor', color);
       this.setAttr(
         'shadowBlur',
-        blur * ratio * Math.min(Math.abs(scaleX), Math.abs(scaleY))
+        blur * Math.min(Math.abs(scaleX), Math.abs(scaleY))
       );
       this.setAttr('shadowOffsetX', offset.x * scaleX);
       this.setAttr('shadowOffsetY', offset.y * scaleY);
@@ -12688,10 +12700,10 @@
   // Node extenders
 
   /**
-     * initiate drag and drop
-     * @method
-     * @memberof Konva.Node.prototype
-     */
+   * initiate drag and drop
+   * @method
+   * @memberof Konva.Node.prototype
+   */
   Konva.Node.prototype.startDrag = function() {
     var dd = Konva.DD,
       stage = this.getStage(),
@@ -12744,10 +12756,10 @@
   };
 
   /**
-     * stop drag and drop
-     * @method
-     * @memberof Konva.Node.prototype
-     */
+   * stop drag and drop
+   * @method
+   * @memberof Konva.Node.prototype
+   */
   Konva.Node.prototype.stopDrag = function() {
     var dd = Konva.DD,
       evt = {};
@@ -12775,10 +12787,10 @@
   };
 
   /**
-     * determine if node is currently in drag and drop mode
-     * @method
-     * @memberof Konva.Node.prototype
-     */
+   * determine if node is currently in drag and drop mode
+   * @method
+   * @memberof Konva.Node.prototype
+   */
   Konva.Node.prototype.isDragging = function() {
     var dd = Konva.DD;
     return !!(dd.node && dd.node._id === this._id && dd.isDragging);
@@ -12847,46 +12859,48 @@
   Konva.Factory.addGetterSetter(Konva.Node, 'dragBoundFunc');
 
   /**
-     * get/set drag bound function.  This is used to override the default
-     *  drag and drop position
-     * @name dragBoundFunc
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Function} dragBoundFunc
-     * @returns {Function}
-     * @example
-     * // get drag bound function
-     * var dragBoundFunc = node.dragBoundFunc();
-     *
-     * // create vertical drag and drop
-     * node.dragBoundFunc(function(pos){
-     *   return {
-     *     x: this.getAbsolutePosition().x,
-     *     y: pos.y
-     *   };
-     * });
-     */
+   * get/set drag bound function.  This is used to override the default
+   *  drag and drop position.
+   * @name dragBoundFunc
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Function} dragBoundFunc
+   * @returns {Function}
+   * @example
+   * // get drag bound function
+   * var dragBoundFunc = node.dragBoundFunc();
+   *
+   * // create vertical drag and drop
+   * node.dragBoundFunc(function(pos){
+   *   // important pos - is absolute position of the node
+   *   // you should return absolute position too
+   *   return {
+   *     x: this.getAbsolutePosition().x,
+   *     y: pos.y
+   *   };
+   * });
+   */
 
   Konva.Factory.addGetter(Konva.Node, 'draggable', false);
   Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'draggable');
 
   /**
-     * get/set draggable flag
-     * @name draggable
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Boolean} draggable
-     * @returns {Boolean}
-     * @example
-     * // get draggable flag
-     * var draggable = node.draggable();
-     *
-     * // enable drag and drop
-     * node.draggable(true);
-     *
-     * // disable drag and drop
-     * node.draggable(false);
-     */
+   * get/set draggable flag
+   * @name draggable
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Boolean} draggable
+   * @returns {Boolean}
+   * @example
+   * // get draggable flag
+   * var draggable = node.draggable();
+   *
+   * // enable drag and drop
+   * node.draggable(true);
+   *
+   * // disable drag and drop
+   * node.draggable(false);
+   */
 
   if (Konva.isBrowser) {
     var html = Konva.document.documentElement;
@@ -15877,14 +15891,14 @@
 (function() {
   'use strict';
   /**
-     * Path constructor.
-     * @author Jason Follas
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {String} config.data SVG data string
-     * @param {String} [config.fill] fill color
+   * Path constructor.
+   * @author Jason Follas
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {String} config.data SVG data string
+   * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -15935,7 +15949,7 @@
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
      * @param {Array} [config.dash]
      * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-     * @param {Number} [config.x]
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -15955,15 +15969,15 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * var path = new Konva.Path({
-     *   x: 240,
-     *   y: 40,
-     *   data: 'M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-17.185,4.352-22.33c7.451-5.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.821,23.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z',
-     *   fill: 'green',
-     *   scale: 2
-     * });
-     */
+   * @example
+   * var path = new Konva.Path({
+   *   x: 240,
+   *   y: 40,
+   *   data: 'M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-17.185,4.352-22.33c7.451-5.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.821,23.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z',
+   *   fill: 'green',
+   *   scale: 2
+   * });
+   */
   Konva.Path = function(config) {
     this.___init(config);
   };
@@ -16180,7 +16194,8 @@
     };
   };
   Konva.Path.getPointOnEllipticalArc = function(cx, cy, rx, ry, theta, psi) {
-    var cosPsi = Math.cos(psi), sinPsi = Math.sin(psi);
+    var cosPsi = Math.cos(psi),
+      sinPsi = Math.sin(psi);
     var pt = {
       x: rx * Math.cos(theta),
       y: ry * Math.sin(theta)
@@ -16259,26 +16274,35 @@
     // create array
     var arr = cs.split('|');
     var ca = [];
+    var coords = [];
     // init context point
     var cpx = 0;
     var cpy = 0;
+
+    var re = /([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:e[-+]?\d+)?)/gi;
+    var match;
     for (n = 1; n < arr.length; n++) {
       var str = arr[n];
       var c = str.charAt(0);
       str = str.slice(1);
-      // remove ,- for consistency
-      str = str.replace(new RegExp(',-', 'g'), '-');
-      // add commas so that it's easy to split
-      str = str.replace(new RegExp('-', 'g'), ',-');
-      str = str.replace(new RegExp('e,-', 'g'), 'e-');
-      var p = str.split(',');
-      if (p.length > 0 && p[0] === '') {
-        p.shift();
+
+      coords.length = 0;
+      while ((match = re.exec(str))) {
+        coords.push(match[0]);
       }
-      // convert strings to floats
-      for (var i = 0; i < p.length; i++) {
-        p[i] = parseFloat(p[i]);
+
+      // while ((match = re.exec(str))) {
+      //   coords.push(match[0]);
+      // }
+      var p = [];
+
+      for (var j = 0, jlen = coords.length; j < jlen; j++) {
+        var parsed = parseFloat(coords[j]);
+        if (!isNaN(parsed)) {
+          p.push(parsed);
+        }
       }
+
       while (p.length > 0) {
         if (isNaN(p[0])) {
           // case for a trailing comma before next command
@@ -16287,7 +16311,8 @@
 
         var cmd = null;
         var points = [];
-        var startX = cpx, startY = cpy;
+        var startX = cpx,
+          startY = cpy;
         // Move var from within the switch to up here (jshint)
         var prevCmd, ctlPtx, ctlPty; // Ss, Tt
         var rx, ry, psi, fa, fs, x1, y1; // Aa
@@ -16716,22 +16741,22 @@
   Konva.Factory.addGetterSetter(Konva.Path, 'data');
 
   /**
-     * set SVG path data string.  This method
-     *  also automatically parses the data string
-     *  into a data array.  Currently supported SVG data:
-     *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
-     * @name setData
-     * @method
-     * @memberof Konva.Path.prototype
-     * @param {String} SVG path command string
-     */
+   * set SVG path data string.  This method
+   *  also automatically parses the data string
+   *  into a data array.  Currently supported SVG data:
+   *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
+   * @name setData
+   * @method
+   * @memberof Konva.Path.prototype
+   * @param {String} SVG path command string
+   */
 
   /**
-     * get SVG path data string
-     * @name getData
-     * @method
-     * @memberof Konva.Path.prototype
-     */
+   * get SVG path data string
+   * @name getData
+   * @method
+   * @memberof Konva.Path.prototype
+   */
 
   Konva.Collection.mapMethods(Konva.Path);
 })();

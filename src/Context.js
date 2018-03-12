@@ -563,22 +563,34 @@
     },
     _fill: function(shape) {
       var hasColor = shape.fill(),
-        hasPattern = shape.getFillPatternImage(),
-        hasLinearGradient = shape.getFillLinearGradientColorStops(),
-        hasRadialGradient = shape.getFillRadialGradientColorStops(),
         fillPriority = shape.getFillPriority();
 
       // priority fills
       if (hasColor && fillPriority === 'color') {
         this._fillColor(shape);
-      } else if (hasPattern && fillPriority === 'pattern') {
+        return;
+      }
+
+      var hasPattern = shape.getFillPatternImage();
+      if (hasPattern && fillPriority === 'pattern') {
         this._fillPattern(shape);
-      } else if (hasLinearGradient && fillPriority === 'linear-gradient') {
+        return;
+      }
+
+      var hasLinearGradient = shape.getFillLinearGradientColorStops();
+      if (hasLinearGradient && fillPriority === 'linear-gradient') {
         this._fillLinearGradient(shape);
-      } else if (hasRadialGradient && fillPriority === 'radial-gradient') {
+        return;
+      }
+
+      var hasRadialGradient = shape.getFillRadialGradientColorStops();
+      if (hasRadialGradient && fillPriority === 'radial-gradient') {
         this._fillRadialGradient(shape);
-      } else if (hasColor) {
-        // now just try and fill with whatever is available
+        return;
+      }
+
+      // now just try and fill with whatever is available
+      if (hasColor) {
         this._fillColor(shape);
       } else if (hasPattern) {
         this._fillPattern(shape);
@@ -659,7 +671,7 @@
       this.setAttr('shadowColor', color);
       this.setAttr(
         'shadowBlur',
-        blur * ratio * Math.min(Math.abs(scaleX), Math.abs(scaleY))
+        blur * Math.min(Math.abs(scaleX), Math.abs(scaleY))
       );
       this.setAttr('shadowOffsetX', offset.x * scaleX);
       this.setAttr('shadowOffsetY', offset.y * scaleY);
