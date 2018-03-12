@@ -753,7 +753,7 @@ declare namespace Konva {
     cropWidth(cropWidth: number): this;
     cropHeight(): number;
     cropHeight(cropHeight: number): this;
-    static fromURL(url: string, callback: Function): void;
+    static fromURL(url: string, callback: (image: Konva.Image) => void): void;
   }
 
   interface LineConfig extends ShapeConfig {
