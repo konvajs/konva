@@ -103,10 +103,10 @@
       // bindings
       this.handleMouseMove = this.handleMouseMove.bind(this);
       this.handleMouseUp = this.handleMouseUp.bind(this);
-      this._update = this._update.bind(this);
+      this.update = this.update.bind(this);
 
       // update transformer data for certain attr changes
-      this.on(ATTR_CHANGE_LIST, this._update);
+      this.on(ATTR_CHANGE_LIST, this.update);
 
       if (!warningShowed) {
         Konva.Util.warn(
@@ -121,10 +121,10 @@
         this.detach();
       }
       this.setNode(node);
-      node.on('dragmove.resizer', this._update);
-      node.on(TRANSFORM_CHANGE_STR, this._update);
+      node.on('dragmove.resizer', this.update);
+      node.on(TRANSFORM_CHANGE_STR, this.update);
 
-      this._update();
+      this.update();
     },
 
     detach: function() {
@@ -260,6 +260,9 @@
       window.addEventListener('touchend', this.handleMouseUp);
 
       this._transforming = true;
+
+      this.fire('transformstart');
+      this.getNode().fire('transformstart');
     },
 
     handleMouseMove: function(e) {
@@ -468,10 +471,10 @@
 
       this.fire('transform');
       this.getNode().fire('transform');
-      this._update();
+      this.update();
       this.getLayer().batchDraw();
     },
-    _update: function() {
+    update: function() {
       var attrs = this._getNodeRect();
       var x = attrs.x;
       var y = attrs.y;

@@ -333,12 +333,12 @@ declare namespace Konva {
     fillLinearGradientEndPointX?: number;
     fillLinearGradientEndPointY?: number;
     fillLinearGradientColorStops?: Array<number | string>;
-    fillLinearRadialStartPoint?: Vector2d;
-    fillLinearRadialStartPointX?: number;
-    fillLinearRadialStartPointY?: number;
-    fillLinearRadialEndPoint?: Vector2d;
-    fillLinearRadialEndPointX?: number;
-    fillLinearRadialEndPointY?: number;
+    fillRadialGradientStartPoint?: Vector2d;
+    fillRadialGradientStartPointX?: number;
+    fillRadialGradientStartPointY?: number;
+    fillRadialGradientEndPoint?: Vector2d;
+    fillRadialGradientEndPointX?: number;
+    fillRadialGradientEndPointY?: number;
     fillRadialGradientStartRadius?: number;
     fillRadialGradientEndRadius?: number;
     fillRadialGradientColorStops?: Array<number | string>;
@@ -363,6 +363,7 @@ declare namespace Konva {
     shadowEnabled?: boolean;
     dash?: number[];
     dashEnabled?: boolean;
+    perfectDrawEnabled?: boolean;
   }
 
   class Shape extends Node {
@@ -752,6 +753,7 @@ declare namespace Konva {
     cropWidth(cropWidth: number): this;
     cropHeight(): number;
     cropHeight(cropHeight: number): this;
+    static fromURL(url: string, callback: (image: Konva.Image) => void): void;
   }
 
   interface LineConfig extends ShapeConfig {

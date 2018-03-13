@@ -2,24 +2,24 @@
 (function() {
   'use strict';
   /**
-     * Path constructor.
-     * @author Jason Follas
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {String} config.data SVG data string
-     * @@shapeParams
-     * @@nodeParams
-     * @example
-     * var path = new Konva.Path({
-     *   x: 240,
-     *   y: 40,
-     *   data: 'M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-17.185,4.352-22.33c7.451-5.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.821,23.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z',
-     *   fill: 'green',
-     *   scale: 2
-     * });
-     */
+   * Path constructor.
+   * @author Jason Follas
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {String} config.data SVG data string
+   * @@shapeParams
+   * @@nodeParams
+   * @example
+   * var path = new Konva.Path({
+   *   x: 240,
+   *   y: 40,
+   *   data: 'M12.582,9.551C3.251,16.237,0.921,29.021,7.08,38.564l-2.36,1.689l4.893,2.262l4.893,2.262l-0.568-5.36l-0.567-5.359l-2.365,1.694c-4.657-7.375-2.83-17.185,4.352-22.33c7.451-5.338,17.817-3.625,23.156,3.824c5.337,7.449,3.625,17.813-3.821,23.152l2.857,3.988c9.617-6.893,11.827-20.277,4.935-29.896C35.591,4.87,22.204,2.658,12.582,9.551z',
+   *   fill: 'green',
+   *   scale: 2
+   * });
+   */
   Konva.Path = function(config) {
     this.___init(config);
   };
@@ -236,7 +236,8 @@
     };
   };
   Konva.Path.getPointOnEllipticalArc = function(cx, cy, rx, ry, theta, psi) {
-    var cosPsi = Math.cos(psi), sinPsi = Math.sin(psi);
+    var cosPsi = Math.cos(psi),
+      sinPsi = Math.sin(psi);
     var pt = {
       x: rx * Math.cos(theta),
       y: ry * Math.sin(theta)
@@ -315,26 +316,35 @@
     // create array
     var arr = cs.split('|');
     var ca = [];
+    var coords = [];
     // init context point
     var cpx = 0;
     var cpy = 0;
+
+    var re = /([-+]?((\d+\.\d+)|((\d+)|(\.\d+)))(?:e[-+]?\d+)?)/gi;
+    var match;
     for (n = 1; n < arr.length; n++) {
       var str = arr[n];
       var c = str.charAt(0);
       str = str.slice(1);
-      // remove ,- for consistency
-      str = str.replace(new RegExp(',-', 'g'), '-');
-      // add commas so that it's easy to split
-      str = str.replace(new RegExp('-', 'g'), ',-');
-      str = str.replace(new RegExp('e,-', 'g'), 'e-');
-      var p = str.split(',');
-      if (p.length > 0 && p[0] === '') {
-        p.shift();
+
+      coords.length = 0;
+      while ((match = re.exec(str))) {
+        coords.push(match[0]);
       }
-      // convert strings to floats
-      for (var i = 0; i < p.length; i++) {
-        p[i] = parseFloat(p[i]);
+
+      // while ((match = re.exec(str))) {
+      //   coords.push(match[0]);
+      // }
+      var p = [];
+
+      for (var j = 0, jlen = coords.length; j < jlen; j++) {
+        var parsed = parseFloat(coords[j]);
+        if (!isNaN(parsed)) {
+          p.push(parsed);
+        }
       }
+
       while (p.length > 0) {
         if (isNaN(p[0])) {
           // case for a trailing comma before next command
@@ -343,7 +353,8 @@
 
         var cmd = null;
         var points = [];
-        var startX = cpx, startY = cpy;
+        var startX = cpx,
+          startY = cpy;
         // Move var from within the switch to up here (jshint)
         var prevCmd, ctlPtx, ctlPty; // Ss, Tt
         var rx, ry, psi, fa, fs, x1, y1; // Aa
@@ -772,22 +783,22 @@
   Konva.Factory.addGetterSetter(Konva.Path, 'data');
 
   /**
-     * set SVG path data string.  This method
-     *  also automatically parses the data string
-     *  into a data array.  Currently supported SVG data:
-     *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
-     * @name setData
-     * @method
-     * @memberof Konva.Path.prototype
-     * @param {String} SVG path command string
-     */
+   * set SVG path data string.  This method
+   *  also automatically parses the data string
+   *  into a data array.  Currently supported SVG data:
+   *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
+   * @name setData
+   * @method
+   * @memberof Konva.Path.prototype
+   * @param {String} SVG path command string
+   */
 
   /**
-     * get SVG path data string
-     * @name getData
-     * @method
-     * @memberof Konva.Path.prototype
-     */
+   * get SVG path data string
+   * @name getData
+   * @method
+   * @memberof Konva.Path.prototype
+   */
 
   Konva.Collection.mapMethods(Konva.Path);
 })();

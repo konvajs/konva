@@ -279,9 +279,7 @@ suite('Shape', function() {
   });
 
   // ======================================================
-  test('set image fill to color then image then linear gradient then back to image', function(
-    done
-  ) {
+  test('set image fill to color then image then linear gradient then back to image', function(done) {
     var imageObj = new Image();
     imageObj.onload = function() {
       var stage = addStage();
@@ -339,6 +337,48 @@ suite('Shape', function() {
       done();
     };
     imageObj.src = 'assets/darth-vader.jpg';
+  });
+
+  test('stroke gradient', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      scaleY: 1.5
+    });
+
+    var shape = new Konva.Rect({
+      x: 10,
+      y: 10,
+      width: 100,
+      height: 100,
+      fillLinearGradientColorStops: [0, 'yellow', 0.5, 'red', 1, 'white'],
+      fillLinearGradientStartPoint: {
+        x: 0,
+        y: 0
+      },
+      scaleX: 3,
+      fillLinearGradientEndPoint: {
+        x: 100,
+        y: 100
+      },
+      strokeLinearGradientColorStops: [0, 'red', 0.5, 'blue', 1, 'green'],
+      strokeLinearGradientStartPoint: {
+        x: 0,
+        y: 0
+      },
+      strokeLinearGradientEndPoint: {
+        x: 100,
+        y: 100
+      }
+    });
+    layer.add(shape);
+    stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(3,0,0,1.5,10,15);beginPath();rect(0,0,100,100);closePath();createLinearGradient(0,0,100,100);fillStyle=[object CanvasGradient];fill();lineWidth=2;createLinearGradient(0,0,100,100);strokeStyle=[object CanvasGradient];stroke();restore();'
+    );
   });
 
   // ======================================================
@@ -464,7 +504,7 @@ suite('Shape', function() {
     context.shadowOffsetY = 10 * canvas.ratio;
     context.fill();
 
-    compareLayerAndCanvas(layer, canvas, 10);
+    compareLayerAndCanvas(layer, canvas, 30);
 
     var trace = layer.getContext().getTrace();
 
@@ -989,7 +1029,10 @@ suite('Shape', function() {
 
     assert.equal(rect.getY(), 50);
 
-    var trace = layer.getHitCanvas().getContext().getTrace(true);
+    var trace = layer
+      .getHitCanvas()
+      .getContext()
+      .getTrace(true);
     assert.equal(
       trace,
       'clearRect();save();transform();beginPath();rect();closePath();save();fillStyle;fill();restore();restore();'
@@ -1244,16 +1287,15 @@ suite('Shape', function() {
     context.lineWidth = 10;
     context.fill();
 
-    context.shadowColor = 'rgba(0,0,0, 0)';
+    context.shadowColor = 'rgba(0,0,0,0)';
     context.stroke();
 
     compareLayerAndCanvas(layer, canvas, 10);
 
     var trace = layer.getContext().getTrace();
-    //console.log(trace);
     assert.equal(
       trace,
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);save();shadowColor=rgba(128,128,128,1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=10;strokeStyle=black;shadowColor=rgba(0,0,0,0);stroke();restore();restore();'
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,100,50);save();shadowColor=rgba(128,128,128,1);shadowBlur=10;shadowOffsetX=20;shadowOffsetY=20;beginPath();rect(0,0,100,50);closePath();fillStyle=green;fill();lineWidth=10;shadowColor=rgba(0,0,0,0);strokeStyle=black;stroke();restore();restore();'
     );
   });
 
