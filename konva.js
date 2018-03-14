@@ -1,5 +1,5 @@
 /*
- * Konva JavaScript Framework v1.7.6
+ * Konva JavaScript Framework v1.8.0-unpublished
  * http://konvajs.github.io/
  * Licensed under the MIT
  * Date: Wed Mar 14 2018
@@ -21,7 +21,7 @@
 
   var Konva = {
     // public
-    version: '1.7.6',
+    version: '1.8.0-unpublished',
 
     // private
     stages: [],
@@ -18769,7 +18769,7 @@
 
       resizerNode.setAbsolutePosition(newAbsPos);
 
-      var keepProportion = this.keepProportion() || e.shiftKey;
+      var keepProportion = this.keepRatio() || e.shiftKey;
 
       if (this.movingResizer === 'top-left') {
         if (keepProportion) {
@@ -19075,7 +19075,7 @@
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotationSnaps', []);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateHandlerOffset', 50);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'lineEnabled', true);
-  Konva.Factory.addGetterSetter(Konva.Transformer, 'keepProportion', true);
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'keepRatio', true);
 
   Konva.Factory.addGetterSetter(Konva.Transformer, 'node');
 

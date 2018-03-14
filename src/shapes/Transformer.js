@@ -286,7 +286,7 @@
 
       resizerNode.setAbsolutePosition(newAbsPos);
 
-      var keepProportion = this.keepProportion() || e.shiftKey;
+      var keepProportion = this.keepRatio() || e.shiftKey;
 
       if (this.movingResizer === 'top-left') {
         if (keepProportion) {
@@ -592,7 +592,7 @@
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotationSnaps', []);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateHandlerOffset', 50);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'lineEnabled', true);
-  Konva.Factory.addGetterSetter(Konva.Transformer, 'keepProportion', true);
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'keepRatio', true);
 
   Konva.Factory.addGetterSetter(Konva.Transformer, 'node');
 
