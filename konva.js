@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v1.7.6
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Mon Mar 12 2018
+ * Date: Wed Mar 14 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -18769,30 +18769,36 @@
 
       resizerNode.setAbsolutePosition(newAbsPos);
 
+      var keepProportion = this.keepProportion() || e.shiftKey;
+
       if (this.movingResizer === 'top-left') {
-        newHypotenuse = Math.sqrt(
-          Math.pow(this.findOne('.bottom-right').x() - resizerNode.x(), 2) +
-            Math.pow(this.findOne('.bottom-right').y() - resizerNode.y(), 2)
-        );
+        if (keepProportion) {
+          newHypotenuse = Math.sqrt(
+            Math.pow(this.findOne('.bottom-right').x() - resizerNode.x(), 2) +
+              Math.pow(this.findOne('.bottom-right').y() - resizerNode.y(), 2)
+          );
 
-        x = newHypotenuse * this.cos;
-        y = newHypotenuse * this.sin;
+          x = newHypotenuse * this.cos;
+          y = newHypotenuse * this.sin;
 
-        this.findOne('.top-left').x(this.findOne('.bottom-right').x() - x);
-        this.findOne('.top-left').y(this.findOne('.bottom-right').y() - y);
+          this.findOne('.top-left').x(this.findOne('.bottom-right').x() - x);
+          this.findOne('.top-left').y(this.findOne('.bottom-right').y() - y);
+        }
       } else if (this.movingResizer === 'top-center') {
         this.findOne('.top-left').y(resizerNode.y());
       } else if (this.movingResizer === 'top-right') {
-        newHypotenuse = Math.sqrt(
-          Math.pow(this.findOne('.bottom-left').x() - resizerNode.x(), 2) +
-            Math.pow(this.findOne('.bottom-left').y() - resizerNode.y(), 2)
-        );
+        if (keepProportion) {
+          newHypotenuse = Math.sqrt(
+            Math.pow(this.findOne('.bottom-left').x() - resizerNode.x(), 2) +
+              Math.pow(this.findOne('.bottom-left').y() - resizerNode.y(), 2)
+          );
 
-        x = newHypotenuse * this.cos;
-        y = newHypotenuse * this.sin;
+          x = newHypotenuse * this.cos;
+          y = newHypotenuse * this.sin;
 
-        this.findOne('.top-right').x(x);
-        this.findOne('.top-right').y(this.findOne('.bottom-left').y() - y);
+          this.findOne('.top-right').x(x);
+          this.findOne('.top-right').y(this.findOne('.bottom-left').y() - y);
+        }
         var pos = resizerNode.position();
 
         this.findOne('.top-left').y(pos.y);
@@ -18802,16 +18808,18 @@
       } else if (this.movingResizer === 'middle-right') {
         this.findOne('.bottom-right').x(resizerNode.x());
       } else if (this.movingResizer === 'bottom-left') {
-        newHypotenuse = Math.sqrt(
-          Math.pow(this.findOne('.top-right').x() - resizerNode.x(), 2) +
-            Math.pow(this.findOne('.top-right').y() - resizerNode.y(), 2)
-        );
+        if (keepProportion) {
+          newHypotenuse = Math.sqrt(
+            Math.pow(this.findOne('.top-right').x() - resizerNode.x(), 2) +
+              Math.pow(this.findOne('.top-right').y() - resizerNode.y(), 2)
+          );
 
-        x = newHypotenuse * this.cos;
-        y = newHypotenuse * this.sin;
+          x = newHypotenuse * this.cos;
+          y = newHypotenuse * this.sin;
 
-        this.findOne('.bottom-left').x(this.findOne('.top-right').x() - x);
-        this.findOne('.bottom-left').y(y);
+          this.findOne('.bottom-left').x(this.findOne('.top-right').x() - x);
+          this.findOne('.bottom-left').y(y);
+        }
 
         pos = resizerNode.position();
 
@@ -18820,16 +18828,18 @@
       } else if (this.movingResizer === 'bottom-center') {
         this.findOne('.bottom-right').y(resizerNode.y());
       } else if (this.movingResizer === 'bottom-right') {
-        newHypotenuse = Math.sqrt(
-          Math.pow(this.findOne('.bottom-right').x(), 2) +
-            Math.pow(this.findOne('.bottom-right').y(), 2)
-        );
+        if (keepProportion) {
+          newHypotenuse = Math.sqrt(
+            Math.pow(this.findOne('.bottom-right').x(), 2) +
+              Math.pow(this.findOne('.bottom-right').y(), 2)
+          );
 
-        x = newHypotenuse * this.cos;
-        y = newHypotenuse * this.sin;
+          x = newHypotenuse * this.cos;
+          y = newHypotenuse * this.sin;
 
-        this.findOne('.bottom-right').x(x);
-        this.findOne('.bottom-right').y(y);
+          this.findOne('.bottom-right').x(x);
+          this.findOne('.bottom-right').y(y);
+        }
       } else if (this.movingResizer === 'rotater') {
         var attrs = this._getNodeRect();
         x = resizerNode.x() - attrs.width / 2;
@@ -19065,6 +19075,8 @@
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotationSnaps', []);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateHandlerOffset', 50);
   Konva.Factory.addGetterSetter(Konva.Transformer, 'lineEnabled', true);
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'keepProportion', true);
+
   Konva.Factory.addGetterSetter(Konva.Transformer, 'node');
 
   Konva.Collection.mapMethods(Konva.Transformer);

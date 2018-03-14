@@ -23,6 +23,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Some typescript fixes
 * Pixelate filter fixes
 * Fixes for path data parsing
+* Fixed shadow size calculation
 
 ## Removed
 
