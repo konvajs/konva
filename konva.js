@@ -18670,6 +18670,7 @@
         this.detach();
       }
       this._node = node;
+      this._clearCache(NODE_RECT);
 
       node.on(
         TRANSFORM_CHANGE_STR,
@@ -18691,7 +18692,9 @@
     },
 
     detach: function() {
-      this.getNode().off('.resizer');
+      if (this.getNode()) {
+        this.getNode().off('.resizer');
+      }
     },
 
     _getNodeRect: function() {
@@ -19150,7 +19153,7 @@
     },
     destroy: function() {
       Konva.Group.prototype.destroy.call(this);
-      this.getNode().off('.resizer');
+      this.detach();
       this._removeEvents();
     },
     // do not work as a container

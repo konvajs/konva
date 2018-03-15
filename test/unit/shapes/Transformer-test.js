@@ -642,4 +642,34 @@ suite('Transformer', function() {
 
     layer.draw();
   });
+
+  test('reset attrs on node set', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer();
+    layer.add(tr);
+    layer.draw();
+
+    assert.equal(tr.getWidth(), 0);
+
+    tr.attachTo(rect);
+    assert.equal(tr.getWidth(), 100);
+  });
+
+  test('can destroy without attached node', function() {
+    var tr = new Konva.Transformer();
+    tr.destroy();
+  });
 });
