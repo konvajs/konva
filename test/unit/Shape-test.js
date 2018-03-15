@@ -504,7 +504,7 @@ suite('Shape', function() {
     context.shadowOffsetY = 10 * canvas.ratio;
     context.fill();
 
-    compareLayerAndCanvas(layer, canvas, 10);
+    compareLayerAndCanvas(layer, canvas, 30);
 
     var trace = layer.getContext().getTrace();
 

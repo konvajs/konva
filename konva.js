@@ -1,8 +1,8 @@
 /*
- * Konva JavaScript Framework v1.7.6
+ * Konva JavaScript Framework v2.0.1
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Sat Mar 10 2018
+ * Date: Thu Mar 15 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -21,7 +21,7 @@
 
   var Konva = {
     // public
-    version: '1.7.6',
+    version: '2.0.1',
 
     // private
     stages: [],
@@ -2012,22 +2012,34 @@
     },
     _fill: function(shape) {
       var hasColor = shape.fill(),
-        hasPattern = shape.getFillPatternImage(),
-        hasLinearGradient = shape.getFillLinearGradientColorStops(),
-        hasRadialGradient = shape.getFillRadialGradientColorStops(),
         fillPriority = shape.getFillPriority();
 
       // priority fills
       if (hasColor && fillPriority === 'color') {
         this._fillColor(shape);
-      } else if (hasPattern && fillPriority === 'pattern') {
+        return;
+      }
+
+      var hasPattern = shape.getFillPatternImage();
+      if (hasPattern && fillPriority === 'pattern') {
         this._fillPattern(shape);
-      } else if (hasLinearGradient && fillPriority === 'linear-gradient') {
+        return;
+      }
+
+      var hasLinearGradient = shape.getFillLinearGradientColorStops();
+      if (hasLinearGradient && fillPriority === 'linear-gradient') {
         this._fillLinearGradient(shape);
-      } else if (hasRadialGradient && fillPriority === 'radial-gradient') {
+        return;
+      }
+
+      var hasRadialGradient = shape.getFillRadialGradientColorStops();
+      if (hasRadialGradient && fillPriority === 'radial-gradient') {
         this._fillRadialGradient(shape);
-      } else if (hasColor) {
-        // now just try and fill with whatever is available
+        return;
+      }
+
+      // now just try and fill with whatever is available
+      if (hasColor) {
         this._fillColor(shape);
       } else if (hasPattern) {
         this._fillPattern(shape);
@@ -2110,7 +2122,7 @@
       this.setAttr('shadowColor', color);
       this.setAttr(
         'shadowBlur',
-        blur * ratio * Math.min(Math.abs(scaleX), Math.abs(scaleY))
+        blur * Math.min(Math.abs(scaleX), Math.abs(scaleY))
       );
       this.setAttr('shadowOffsetX', offset.x * scaleX);
       this.setAttr('shadowOffsetY', offset.y * scaleY);
@@ -10724,6 +10736,12 @@
 
       if (shape && shape.isListening()) {
         shape._fireAndBubble(WHEEL, { evt: evt });
+      } else {
+        this._fire(WHEEL, {
+          evt: evt,
+          target: this,
+          currentTarget: this
+        });
       }
       this._fire(CONTENT_WHEEL, { evt: evt });
     },
@@ -18481,6 +18499,8 @@
     'rotateHandlerOffsetChange'
   ].join(' ');
 
+  var NODE_RECT = 'nodeRect';
+
   var TRANSFORM_CHANGE_STR = [
     'xChange.resizer',
     'yChange.resizer',
@@ -18550,6 +18570,56 @@
     }
   }
 
+  /**
+   * Transformer constructor.  Transformer is a special type of group that allow you transform Konva
+   * primitives and shapes.
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Container
+   * @param {Object} config
+   * @param {Boolean} [config.resizeEnabled] Default is true
+   * @param {Boolean} [config.rotateEnabled] Default is true
+   * @param {Array} [config.rotationSnaps] Array of angles for rotation snaps. Default is []
+   * @param {Number} [config.rotateHandlerOffset] Default is 50
+   * @param {Number} [config.lineEnabled] Should we draw border? Default is true
+   * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
+   * @param {Array} [config.enabledHandlers] Array of names of enabled handles
+   * @param {Number} [config.x]
+     * @param {Number} [config.y]
+     * @param {Number} [config.width]
+     * @param {Number} [config.height]
+     * @param {Boolean} [config.visible]
+     * @param {Boolean} [config.listening] whether or not the node is listening for events
+     * @param {String} [config.id] unique id
+     * @param {String} [config.name] non-unique name
+     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+     * @param {Object} [config.scale] set scale
+     * @param {Number} [config.scaleX] set scale x
+     * @param {Number} [config.scaleY] set scale y
+     * @param {Number} [config.rotation] rotation in degrees
+     * @param {Object} [config.offset] offset from center point and rotation point
+     * @param {Number} [config.offsetX] set offset x
+     * @param {Number} [config.offsetY] set offset y
+     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
+     *  the entire stage by dragging any portion of the stage
+     * @param {Number} [config.dragDistance]
+     * @param {Function} [config.dragBoundFunc]
+   * * @param {Object} [config.clip] set clip
+     * @param {Number} [config.clipX] set clip x
+     * @param {Number} [config.clipY] set clip y
+     * @param {Number} [config.clipWidth] set clip width
+     * @param {Number} [config.clipHeight] set clip height
+     * @param {Function} [config.clipFunc] set clip func
+
+   * @example
+   * var transformer = new Konva.Transformer({
+   *   node: rectangle,
+   *   rotateHandlerOffset: 60,
+   *   enabledHandlers: ['top-left', 'top-right', 'bottom-left', 'bottom-right']
+   * });
+   * layer.add(transformer);
+   */
+
   Konva.Transformer = function(config) {
     this.____init(config);
   };
@@ -18589,25 +18659,63 @@
         );
         warningShowed = true;
       }
+
+      if (this.getNode()) {
+        this.update();
+      }
     },
 
     attachTo: function(node) {
-      if (this.node()) {
+      this.setNode(node);
+    },
+
+    setNode: function(node) {
+      if (this._node) {
         this.detach();
       }
-      this.setNode(node);
-      node.on('dragmove.resizer', this.update);
-      node.on(TRANSFORM_CHANGE_STR, this.update);
+      this._node = node;
+      this._clearCache(NODE_RECT);
 
-      this.update();
+      node.on(
+        TRANSFORM_CHANGE_STR,
+        function() {
+          this._clearCache(NODE_RECT);
+        }.bind(this)
+      );
+      node.on(TRANSFORM_CHANGE_STR, this.requestUpdate.bind(this));
+      node.on('dragmove.resizer', this.requestUpdate);
+
+      var elementsCreated = !!this.findOne('.top-left');
+      if (elementsCreated) {
+        this.update();
+      }
+    },
+
+    getNode: function() {
+      return this._node;
     },
 
     detach: function() {
-      this.getNode().off('.resizer');
+      if (this.getNode()) {
+        this.getNode().off('.resizer');
+      }
     },
 
     _getNodeRect: function() {
+      return this._getCache(NODE_RECT, this.__getNodeRect);
+    },
+
+    __getNodeRect: function() {
       var node = this.getNode();
+      if (!node) {
+        return {
+          x: -Number.MAX_SAFE_INTEGER,
+          y: -Number.MAX_SAFE_INTEGER,
+          width: 0,
+          height: 0,
+          rotation: 0
+        };
+      }
       var rect = node.getClientRect({ skipTransform: true });
       var rotation = Konva.getAngle(node.rotation());
 
@@ -18761,30 +18869,36 @@
 
       resizerNode.setAbsolutePosition(newAbsPos);
 
+      var keepProportion = this.keepRatio() || e.shiftKey;
+
       if (this.movingResizer === 'top-left') {
-        newHypotenuse = Math.sqrt(
-          Math.pow(this.findOne('.bottom-right').x() - resizerNode.x(), 2) +
-            Math.pow(this.findOne('.bottom-right').y() - resizerNode.y(), 2)
-        );
+        if (keepProportion) {
+          newHypotenuse = Math.sqrt(
+            Math.pow(this.findOne('.bottom-right').x() - resizerNode.x(), 2) +
+              Math.pow(this.findOne('.bottom-right').y() - resizerNode.y(), 2)
+          );
 
-        x = newHypotenuse * this.cos;
-        y = newHypotenuse * this.sin;
+          x = newHypotenuse * this.cos;
+          y = newHypotenuse * this.sin;
 
-        this.findOne('.top-left').x(this.findOne('.bottom-right').x() - x);
-        this.findOne('.top-left').y(this.findOne('.bottom-right').y() - y);
+          this.findOne('.top-left').x(this.findOne('.bottom-right').x() - x);
+          this.findOne('.top-left').y(this.findOne('.bottom-right').y() - y);
+        }
       } else if (this.movingResizer === 'top-center') {
         this.findOne('.top-left').y(resizerNode.y());
       } else if (this.movingResizer === 'top-right') {
-        newHypotenuse = Math.sqrt(
-          Math.pow(this.findOne('.bottom-left').x() - resizerNode.x(), 2) +
-            Math.pow(this.findOne('.bottom-left').y() - resizerNode.y(), 2)
-        );
+        if (keepProportion) {
+          newHypotenuse = Math.sqrt(
+            Math.pow(this.findOne('.bottom-left').x() - resizerNode.x(), 2) +
+              Math.pow(this.findOne('.bottom-left').y() - resizerNode.y(), 2)
+          );
 
-        x = newHypotenuse * this.cos;
-        y = newHypotenuse * this.sin;
+          x = newHypotenuse * this.cos;
+          y = newHypotenuse * this.sin;
 
-        this.findOne('.top-right').x(x);
-        this.findOne('.top-right').y(this.findOne('.bottom-left').y() - y);
+          this.findOne('.top-right').x(x);
+          this.findOne('.top-right').y(this.findOne('.bottom-left').y() - y);
+        }
         var pos = resizerNode.position();
 
         this.findOne('.top-left').y(pos.y);
@@ -18794,16 +18908,18 @@
       } else if (this.movingResizer === 'middle-right') {
         this.findOne('.bottom-right').x(resizerNode.x());
       } else if (this.movingResizer === 'bottom-left') {
-        newHypotenuse = Math.sqrt(
-          Math.pow(this.findOne('.top-right').x() - resizerNode.x(), 2) +
-            Math.pow(this.findOne('.top-right').y() - resizerNode.y(), 2)
-        );
+        if (keepProportion) {
+          newHypotenuse = Math.sqrt(
+            Math.pow(this.findOne('.top-right').x() - resizerNode.x(), 2) +
+              Math.pow(this.findOne('.top-right').y() - resizerNode.y(), 2)
+          );
 
-        x = newHypotenuse * this.cos;
-        y = newHypotenuse * this.sin;
+          x = newHypotenuse * this.cos;
+          y = newHypotenuse * this.sin;
 
-        this.findOne('.bottom-left').x(this.findOne('.top-right').x() - x);
-        this.findOne('.bottom-left').y(y);
+          this.findOne('.bottom-left').x(this.findOne('.top-right').x() - x);
+          this.findOne('.bottom-left').y(y);
+        }
 
         pos = resizerNode.position();
 
@@ -18812,16 +18928,18 @@
       } else if (this.movingResizer === 'bottom-center') {
         this.findOne('.bottom-right').y(resizerNode.y());
       } else if (this.movingResizer === 'bottom-right') {
-        newHypotenuse = Math.sqrt(
-          Math.pow(this.findOne('.bottom-right').x(), 2) +
-            Math.pow(this.findOne('.bottom-right').y(), 2)
-        );
+        if (keepProportion) {
+          newHypotenuse = Math.sqrt(
+            Math.pow(this.findOne('.bottom-right').x(), 2) +
+              Math.pow(this.findOne('.bottom-right').y(), 2)
+          );
 
-        x = newHypotenuse * this.cos;
-        y = newHypotenuse * this.sin;
+          x = newHypotenuse * this.cos;
+          y = newHypotenuse * this.sin;
 
-        this.findOne('.bottom-right').x(x);
-        this.findOne('.bottom-right').y(y);
+          this.findOne('.bottom-right').x(x);
+          this.findOne('.bottom-right').y(y);
+        }
       } else if (this.movingResizer === 'rotater') {
         var attrs = this._getNodeRect();
         x = resizerNode.x() - attrs.width / 2;
@@ -18949,6 +19067,28 @@
       this.update();
       this.getLayer().batchDraw();
     },
+
+    requestUpdate: function() {
+      if (this.timeout) {
+        return;
+      }
+      this.timeout = setTimeout(
+        function() {
+          this.timeout = null;
+          this.update();
+        }.bind(this)
+      );
+    },
+
+    /**
+     * force update of Transformer
+     * @method
+     * @memberof Konva.Transformer.prototype
+     */
+    forceUpdate: function() {
+      this._clearCache(NODE_RECT);
+      this.update();
+    },
     update: function() {
       var attrs = this._getNodeRect();
       var x = attrs.x;
@@ -18959,48 +19099,48 @@
       this.y(y);
       this.rotation(attrs.rotation);
 
-      var enabledResizers = this.enabledResizers();
+      var enabledHandlers = this.enabledHandlers();
       var resizeEnabled = this.resizeEnabled();
 
       this.findOne('.top-left').setAttrs({
         x: 0,
         y: 0,
-        visible: resizeEnabled && enabledResizers.indexOf('top-left') >= 0
+        visible: resizeEnabled && enabledHandlers.indexOf('top-left') >= 0
       });
       this.findOne('.top-center').setAttrs({
         x: width / 2,
         y: 0,
-        visible: resizeEnabled && enabledResizers.indexOf('top-center') >= 0
+        visible: resizeEnabled && enabledHandlers.indexOf('top-center') >= 0
       });
       this.findOne('.top-right').setAttrs({
         x: width,
         y: 0,
-        visible: resizeEnabled && enabledResizers.indexOf('top-right') >= 0
+        visible: resizeEnabled && enabledHandlers.indexOf('top-right') >= 0
       });
       this.findOne('.middle-left').setAttrs({
         x: 0,
         y: height / 2,
-        visible: resizeEnabled && enabledResizers.indexOf('middle-left') >= 0
+        visible: resizeEnabled && enabledHandlers.indexOf('middle-left') >= 0
       });
       this.findOne('.middle-right').setAttrs({
         x: width,
         y: height / 2,
-        visible: resizeEnabled && enabledResizers.indexOf('middle-right') >= 0
+        visible: resizeEnabled && enabledHandlers.indexOf('middle-right') >= 0
       });
       this.findOne('.bottom-left').setAttrs({
         x: 0,
         y: height,
-        visible: resizeEnabled && enabledResizers.indexOf('bottom-left') >= 0
+        visible: resizeEnabled && enabledHandlers.indexOf('bottom-left') >= 0
       });
       this.findOne('.bottom-center').setAttrs({
         x: width / 2,
         y: height,
-        visible: resizeEnabled && enabledResizers.indexOf('bottom-center') >= 0
+        visible: resizeEnabled && enabledHandlers.indexOf('bottom-center') >= 0
       });
       this.findOne('.bottom-right').setAttrs({
         x: width,
         y: height,
-        visible: resizeEnabled && enabledResizers.indexOf('bottom-right') >= 0
+        visible: resizeEnabled && enabledHandlers.indexOf('bottom-right') >= 0
       });
 
       this.findOne('.rotater').setAttrs({
@@ -19017,15 +19157,20 @@
     },
     destroy: function() {
       Konva.Group.prototype.destroy.call(this);
-      this.getNode().off('.resizer');
+      this.detach();
       this._removeEvents();
+    },
+    // do not work as a container
+    // we will recreate inner nodes manually
+    toObject: function() {
+      return Konva.Node.prototype.toObject.call(this);
     }
   };
   Konva.Util.extend(Konva.Transformer, Konva.Group);
 
   function validateResizers(val) {
     if (!(val instanceof Array)) {
-      Konva.Util.warn('enabledResizers value should be an array');
+      Konva.Util.warn('enabledHandlers value should be an array');
     }
     if (val instanceof Array) {
       val.forEach(function(name) {
@@ -19041,23 +19186,125 @@
     }
     return val || [];
   }
+
+  /**
+   * get/set enabled handlers
+   * @name enabledHandlers
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Array} array
+   * @returns {Array}
+   * @example
+   * // get list of handlers
+   * var enabledHandlers = shape.enabledHandlers();
+   *
+   * // set handlers
+   * shape.enabledHandlers(['top-left', 'top-center', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-center', 'bottom-right']);
+   */
   Konva.Factory.addGetterSetter(
     Konva.Transformer,
-    'enabledResizers',
-    RESIZERS_NAMES
-  );
-  Konva.Factory.addGetterSetter(
-    Konva.Transformer,
-    'enabledResizers',
+    'enabledHandlers',
     RESIZERS_NAMES,
     validateResizers
   );
+
+  /**
+   * get/set resize ability. If false it will automatically hide resizing handlers
+   * @name resizeEnabled
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Array} array
+   * @returns {Array}
+   * @example
+   * // get
+   * var resizeEnabled = shape.resizeEnabled();
+   *
+   * // set
+   * shape.resizeEnabled(false);
+   */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'resizeEnabled', true);
+
+  /**
+   * get/set ability to rotate.
+   * @name rotateEnabled
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Array} array
+   * @returns {Array}
+   * @example
+   * // get
+   * var rotateEnabled = shape.rotateEnabled();
+   *
+   * // set
+   * shape.rotateEnabled(false);
+   */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateEnabled', true);
+
+  /**
+   * get/set rotation snaps angles.
+   * @name rotationSnaps
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Array} array
+   * @returns {Array}
+   * @example
+   * // get
+   * var rotationSnaps = shape.rotationSnaps();
+   *
+   * // set
+   * shape.rotationSnaps([0, 90, 180, 270]);
+   */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotationSnaps', []);
+
+  /**
+   * get/set distance for rotation handler
+   * @name rotateHandlerOffset
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Array} array
+   * @returns {Array}
+   * @example
+   * // get
+   * var rotateHandlerOffset = shape.rotateHandlerOffset();
+   *
+   * // set
+   * shape.rotateHandlerOffset(100);
+   */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateHandlerOffset', 50);
+
+  /**
+   * get/set visibility of border
+   * @name lineEnabled
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Array} array
+   * @returns {Array}
+   * @example
+   * // get
+   * var lineEnabled = shape.lineEnabled();
+   *
+   * // set
+   * shape.lineEnabled(false);
+   */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'lineEnabled', true);
-  Konva.Factory.addGetterSetter(Konva.Transformer, 'node');
+
+  /**
+   * get/set should we keep ration of resize?
+   * @name keepRatio
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Array} array
+   * @returns {Array}
+   * @example
+   * // get
+   * var keepRatio = shape.keepRatio();
+   *
+   * // set
+   * shape.keepRatio(false);
+   */
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'keepRatio', true);
+
+  Konva.Factory.addOverloadedGetterSetter(Konva.Transformer, 'node');
 
   Konva.Collection.mapMethods(Konva.Transformer);
 })(Konva);

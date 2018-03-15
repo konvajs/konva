@@ -725,10 +725,10 @@ suite('Caching', function() {
     group.cache();
     stage.draw();
 
-    cloneAndCompareLayer(layer, 150);
+    cloneAndCompareLayer(layer, 200);
   });
 
-  test('test group with opacir', function() {
+  test('test group with opacity', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -756,7 +756,7 @@ suite('Caching', function() {
     group.cache();
     stage.draw();
 
-    cloneAndCompareLayer(layer, 150);
+    cloneAndCompareLayer(layer, 210);
   });
 
   test('cache group with rectangle with fill and opacity', function() {
