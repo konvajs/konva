@@ -548,7 +548,7 @@ suite('Transformer', function() {
     assert.equal(tr.rotation(), 0);
   });
 
-  test.only('fit group', function() {
+  test('fit group', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);

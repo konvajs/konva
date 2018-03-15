@@ -1,6 +1,6 @@
 {
   "name": "konva",
-  "version": "1.8.0-unpublished",
+  "version": "2.0.0",
   "author": "Anton Lavrenov",
   "files": ["README.md", "konva.js", "konva.min.js", "src", "konva.d.ts"],
   "main": "konva.js",

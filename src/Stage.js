@@ -732,6 +732,12 @@
 
       if (shape && shape.isListening()) {
         shape._fireAndBubble(WHEEL, { evt: evt });
+      } else {
+        this._fire(WHEEL, {
+          evt: evt,
+          target: this,
+          currentTarget: this
+        });
       }
       this._fire(CONTENT_WHEEL, { evt: evt });
     },

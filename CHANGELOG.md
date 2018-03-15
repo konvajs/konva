@@ -3,11 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Not released][not released]
+## [2.0.0][2018-03-15]
 
 ### Added
 
-* new `Konva.Transformer` group that allow simple resize, and rotate of a shape.
+* new `Konva.Transformer`. It is a special group that allow simple resizing and rotation of a shape.
 * Add ability to remove event by callback `node.off('event', callback)`.
 * new `Konva.Filters.Contrast`.
 * new `Konva.Util.haveIntersection()` to detect simple collusion
@@ -16,7 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Changed
 
-* stage events are slightly changed. `mousedown`, `click`, `mouseup`, `dblclick`, `touchstart`, `touchend`, `tap`, `dbltap` will be triggered when clicked on empty areas.
+* stage events are slightly changed. `mousedown`, `click`, `mouseup`, `dblclick`, `touchstart`, `touchend`, `tap`, `dbltap` will be triggered when clicked on empty areas too
 
 ## Fixed
 

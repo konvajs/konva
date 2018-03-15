@@ -151,7 +151,7 @@
       this.setNode(node);
     },
 
-    setNode(node) {
+    setNode: function(node) {
       if (this._node) {
         this.detach();
       }
@@ -172,7 +172,7 @@
       }
     },
 
-    getNode() {
+    getNode: function() {
       return this._node;
     },
 
@@ -559,6 +559,11 @@
       );
     },
 
+    /**
+     * force update of Transformer
+     * @method
+     * @memberof Konva.Transformer.prototype
+     */
     forceUpdate: function() {
       this._clearCache(NODE_RECT);
       this.update();
