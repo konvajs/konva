@@ -994,6 +994,44 @@ declare namespace Konva {
     translate(x: number, y: Number): Transform;
   }
 
+  interface TransformerConfig extends NodeConfig {
+    resizeEnabled?: boolean;
+    rotateEnabled?: boolean;
+    rotationSnaps?: Array<number>;
+    rotateHandlerOffset?: number;
+    lineEnabled?: number;
+    keepRatio?: boolean;
+    enabledHandlers?: Array<string>;
+    node?: Rect;
+    clip?: Object;
+    clipX?: number;
+    clipY?: number;
+    clipWidth?: number;
+    clipHeight?: number;
+    clipFunc?: Function;
+  }
+
+  class Transformer extends Container {
+    constructor(config?: TransformerConfig);
+    attachTo(node: Node): void;
+    setNode(node: Node): void;
+    getNode(): Node;
+    detach(): void;
+    getX(): number;
+    getY(): number;
+    getRotation(): number;
+    getWidth(): number;
+    getHeight(): number;
+    handleResizerMouseDown(event: any) : void;
+    handleMouseMove(event: any): void;
+    handleMouseUp(): void;
+    requestUpdate(): void;
+    forceUpdate(): void;
+    update(): void;
+    destroy(): void;
+    toObject(): any;
+  }
+
   interface Vector2d {
     x: number;
     y: number;
