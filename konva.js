@@ -2767,11 +2767,11 @@
     },
     /**
      * bind events to the node. KonvaJS supports mouseover, mousemove,
-     *  mouseout, mouseenter, mouseleave, mousedown, mouseup, wheel, click, dblclick, touchstart, touchmove,
+     *  mouseout, mouseenter, mouseleave, mousedown, mouseup, wheel, contextmenu, click, dblclick, touchstart, touchmove,
      *  touchend, tap, dbltap, dragstart, dragmove, and dragend events. The Konva Stage supports
      *  contentMouseover, contentMousemove, contentMouseout, contentMousedown, contentMouseup, contentWheel, contentContextmenu
      *  contentClick, contentDblclick, contentTouchstart, contentTouchmove, contentTouchend, contentTap,
-     *  and contentDblTap.  Pass in a string of events delimmited by a space to bind multiple events at once
+     *  and contentDblTap.  Pass in a string of events delimited by a space to bind multiple events at once
      *  such as 'mousedown mouseup mousemove'. Include a namespace to bind an
      *  event by name such as 'click.foobar'.
      * @method
@@ -10612,6 +10612,18 @@
       }
     },
     _contextmenu: function(evt) {
+      this._setPointerPosition(evt);
+      var shape = this.getIntersection(this.getPointerPosition());
+
+      if (shape && shape.isListening()) {
+        shape._fireAndBubble(CONTEXTMENU, { evt: evt });
+      } else {
+        this._fire(CONTEXTMENU, {
+          evt: evt,
+          target: this,
+          currentTarget: this
+        });
+      }
       this._fire(CONTENT_CONTEXTMENU, { evt: evt });
     },
     _touchstart: function(evt) {

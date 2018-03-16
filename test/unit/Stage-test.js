@@ -902,6 +902,78 @@ suite('Stage', function() {
     assert.equal(dbltaps, 1, 'dbltap registered');
   });
 
+  test('pass context and wheel events to shape', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      width: 100,
+      height: 100,
+      fill: 'red'
+    });
+    layer.add(rect);
+    layer.draw();
+
+    var contextmenus = 0;
+    var wheels = 0;
+
+    // test on empty
+    stage.on('contextmenu', function(e) {
+      contextmenus += 1;
+      assert.equal(e.target, stage);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    stage.on('wheel', function(e) {
+      wheels += 1;
+      assert.equal(e.target, stage);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    var top = stage.content.getBoundingClientRect().top;
+    stage._contextmenu({
+      clientX: 0,
+      clientY: top + 0
+    });
+    stage._wheel({
+      clientX: 0,
+      clientY: top + 0
+    });
+
+    assert.equal(contextmenus, 1, 'first contextment registered');
+    assert.equal(wheels, 1, 'first wheel registered');
+
+    stage.off('contextmenu');
+    stage.off('wheel');
+
+    // test on shape
+    stage.on('contextmenu', function(e) {
+      contextmenus += 1;
+      assert.equal(e.target, rect);
+      assert.equal(e.currentTarget, stage);
+    });
+
+    stage.on('wheel', function(e) {
+      wheels += 1;
+      assert.equal(e.target, rect);
+      assert.equal(e.currentTarget, stage);
+    });
+    stage._contextmenu({
+      clientX: 60,
+      clientY: top + 60
+    });
+    stage._wheel({
+      clientX: 60,
+      clientY: top + 60
+    });
+
+    assert.equal(contextmenus, 2, 'second contextment registered');
+    assert.equal(wheels, 2, 'second wheel registered');
+  });
+
   test('make sure it does not trigger too many events', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -1027,7 +1099,7 @@ suite('Stage', function() {
     assert.equal(stage.toDataURL(), layer.toDataURL());
   });
 
-  test('check hit graph with stage listeting property', function() {
+  test('check hit graph with stage listening property', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
