@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+### Added
+
+* Typescript defs for `Konva.Transformer`
+
 ## Changes
 
 * Fixed flow for `contextmenu` event. Not it will be triggered on shapes too

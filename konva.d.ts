@@ -287,6 +287,10 @@ declare namespace Konva {
   interface ContainerConfig extends NodeConfig {
     clearBeforeDraw?: boolean;
     clipFunc?: (ctx: CanvasRenderingContext2D) => void;
+    clipX?: number;
+    clipY?: number;
+    clipWidth?: number;
+    clipHeight?: number;
   }
 
   class Container extends Node {
@@ -994,7 +998,7 @@ declare namespace Konva {
     translate(x: number, y: Number): Transform;
   }
 
-  interface TransformerConfig extends NodeConfig {
+  interface TransformerConfig extends ContainerConfig {
     resizeEnabled?: boolean;
     rotateEnabled?: boolean;
     rotationSnaps?: Array<number>;
@@ -1003,12 +1007,6 @@ declare namespace Konva {
     keepRatio?: boolean;
     enabledHandlers?: Array<string>;
     node?: Rect;
-    clip?: Object;
-    clipX?: number;
-    clipY?: number;
-    clipWidth?: number;
-    clipHeight?: number;
-    clipFunc?: Function;
   }
 
   class Transformer extends Container {
@@ -1017,19 +1015,8 @@ declare namespace Konva {
     setNode(node: Node): void;
     getNode(): Node;
     detach(): void;
-    getX(): number;
-    getY(): number;
-    getRotation(): number;
-    getWidth(): number;
-    getHeight(): number;
-    handleResizerMouseDown(event: any) : void;
-    handleMouseMove(event: any): void;
-    handleMouseUp(): void;
-    requestUpdate(): void;
     forceUpdate(): void;
     update(): void;
-    destroy(): void;
-    toObject(): any;
   }
 
   interface Vector2d {
