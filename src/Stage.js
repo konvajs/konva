@@ -612,7 +612,9 @@
       }
     },
     _contextmenu: function(evt) {
-      this._fire(CONTENT_CONTEXTMENU, { evt: evt });
+      this._setPointerPosition(evt);
+      var shape = this.getIntersection(this.getPointerPosition());
+      this._fire(CONTENT_CONTEXTMENU, { evt: evt, target: shape });
     },
     _touchstart: function(evt) {
       this._setPointerPosition(evt);
