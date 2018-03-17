@@ -612,6 +612,18 @@
       }
     },
     _contextmenu: function(evt) {
+      this._setPointerPosition(evt);
+      var shape = this.getIntersection(this.getPointerPosition());
+
+      if (shape && shape.isListening()) {
+        shape._fireAndBubble(CONTEXTMENU, { evt: evt });
+      } else {
+        this._fire(CONTEXTMENU, {
+          evt: evt,
+          target: this,
+          currentTarget: this
+        });
+      }
       this._fire(CONTENT_CONTEXTMENU, { evt: evt });
     },
     _touchstart: function(evt) {

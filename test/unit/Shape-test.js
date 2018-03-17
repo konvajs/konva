@@ -999,7 +999,7 @@ suite('Shape', function() {
     );
   });
 
-  test('class inherince', function() {
+  test('class inherence', function() {
     var rect = new Konva.Rect();
     assert.equal(rect instanceof Konva.Rect, true);
     assert.equal(rect instanceof Konva.Shape, true);

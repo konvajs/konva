@@ -672,4 +672,78 @@ suite('Transformer', function() {
     var tr = new Konva.Transformer();
     tr.destroy();
   });
+
+  test('can add padding', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect,
+      padding: 10
+    });
+    layer.add(tr);
+
+    tr._fitNodeInto({
+      x: 0,
+      y: 0,
+      width: 120,
+      height: 120
+    });
+
+    layer.draw();
+
+    assert.equal(rect.x(), 10);
+    assert.equal(rect.y(), 10);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.height(), 100);
+  });
+
+  test('can add padding with rotation', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect,
+      padding: 10
+    });
+    layer.add(tr);
+
+    tr._fitNodeInto({
+      x: 120,
+      y: 0,
+      width: 120,
+      height: 120,
+      rotation: 90
+    });
+
+    layer.draw();
+
+    assert.equal(rect.x(), 110);
+    assert.equal(rect.y(), 10);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.height(), 100);
+    assert.equal(rect.rotation(), 90);
+  });
 });

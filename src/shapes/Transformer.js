@@ -88,6 +88,7 @@
    * @param {Boolean} [config.rotateEnabled] Default is true
    * @param {Array} [config.rotationSnaps] Array of angles for rotation snaps. Default is []
    * @param {Number} [config.rotateHandlerOffset] Default is 50
+   * @param {Number} [config.padding] Default is 0
    * @param {Number} [config.lineEnabled] Should we draw border? Default is true
    * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
    * @param {Array} [config.enabledHandlers] Array of names of enabled handles
@@ -165,7 +166,7 @@
         }.bind(this)
       );
       node.on(TRANSFORM_CHANGE_STR, this.requestUpdate.bind(this));
-      node.on('dragmove.resizer', this.requestUpdate);
+      node.on('dragmove.resizer', this.requestUpdate.bind(this));
 
       var elementsCreated = !!this.findOne('.top-left');
       if (elementsCreated) {
@@ -292,14 +293,18 @@
         height: 0,
         listening: false,
         sceneFunc: function(ctx) {
+          var tr = this.getParent();
+          var padding = tr.getPadding();
           ctx.beginPath();
-          ctx.rect(0, 0, this.width(), this.height());
-          ctx.moveTo(this.width() / 2, 0);
-          if (this.getParent().rotateEnabled()) {
-            ctx.lineTo(
-              this.width() / 2,
-              -this.getParent().rotateHandlerOffset()
-            );
+          ctx.rect(
+            -padding,
+            -padding,
+            this.width() + padding * 2,
+            this.height() + padding * 2
+          );
+          ctx.moveTo(this.width() / 2, -padding);
+          if (tr.rotateEnabled()) {
+            ctx.lineTo(this.width() / 2, -tr.rotateHandlerOffset());
           }
 
           ctx.fillStrokeShape(this);
@@ -423,6 +428,7 @@
           this.findOne('.bottom-right').y(y);
         }
       } else if (this.movingResizer === 'rotater') {
+        var padding = this.getPadding();
         var attrs = this._getNodeRect();
         x = resizerNode.x() - attrs.width / 2;
         y = -resizerNode.y() + attrs.height / 2;
@@ -452,6 +458,9 @@
           }
         }
 
+        var dx = padding;
+        var dy = padding;
+
         this._fitNodeInto(
           Object.assign(attrs, {
             rotation: Konva.angleDeg
@@ -459,14 +468,20 @@
               : Konva.Util._degToRad(newRotation),
             x:
               attrs.x +
-              attrs.width / 2 * (Math.cos(alpha) - Math.cos(newAlpha)) +
-              attrs.height / 2 * (Math.sin(-alpha) - Math.sin(-newAlpha)),
+              (attrs.width / 2 + padding) *
+                (Math.cos(alpha) - Math.cos(newAlpha)) +
+              (attrs.height / 2 + padding) *
+                (Math.sin(-alpha) - Math.sin(-newAlpha)) -
+              (dx * Math.cos(rot) + dy * Math.sin(-rot)),
             y:
               attrs.y +
-              attrs.height / 2 * (Math.cos(alpha) - Math.cos(newAlpha)) +
-              attrs.width / 2 * (Math.sin(alpha) - Math.sin(newAlpha)),
-            width: attrs.width,
-            height: attrs.height
+              (attrs.height / 2 + padding) *
+                (Math.cos(alpha) - Math.cos(newAlpha)) +
+              (attrs.width / 2 + padding) *
+                (Math.sin(alpha) - Math.sin(newAlpha)) -
+              (dy * Math.cos(rot) + dx * Math.sin(rot)),
+            width: attrs.width + padding * 2,
+            height: attrs.height + padding * 2
           })
         );
       } else {
@@ -519,19 +534,21 @@
     },
 
     _fitNodeInto: function(attrs) {
+      // waring! in this attrs padding may be included
       this._settings = true;
       var node = this.getNode();
       if (attrs.rotation !== undefined) {
         this.getNode().rotation(attrs.rotation);
       }
       var pure = node.getClientRect({ skipTransform: true });
-      var scaleX = attrs.width / pure.width;
-      var scaleY = attrs.height / pure.height;
+      var padding = this.getPadding();
+      var scaleX = (attrs.width - padding * 2) / pure.width;
+      var scaleY = (attrs.height - padding * 2) / pure.height;
 
       var rotation = Konva.getAngle(node.getRotation());
       // debugger;
-      var dx = pure.x * scaleX;
-      var dy = pure.y * scaleY;
+      var dx = pure.x * scaleX - padding;
+      var dy = pure.y * scaleY - padding;
 
       // var dxo = node.offsetX() * scaleX;
       // var dyo = node.offsetY() * scaleY;
@@ -583,45 +600,46 @@
 
       var enabledHandlers = this.enabledHandlers();
       var resizeEnabled = this.resizeEnabled();
+      var padding = this.getPadding();
 
       this.findOne('.top-left').setAttrs({
-        x: 0,
-        y: 0,
+        x: -padding,
+        y: -padding,
         visible: resizeEnabled && enabledHandlers.indexOf('top-left') >= 0
       });
       this.findOne('.top-center').setAttrs({
         x: width / 2,
-        y: 0,
+        y: -padding,
         visible: resizeEnabled && enabledHandlers.indexOf('top-center') >= 0
       });
       this.findOne('.top-right').setAttrs({
-        x: width,
-        y: 0,
+        x: width + padding,
+        y: -padding,
         visible: resizeEnabled && enabledHandlers.indexOf('top-right') >= 0
       });
       this.findOne('.middle-left').setAttrs({
-        x: 0,
+        x: -padding,
         y: height / 2,
         visible: resizeEnabled && enabledHandlers.indexOf('middle-left') >= 0
       });
       this.findOne('.middle-right').setAttrs({
-        x: width,
+        x: width + padding,
         y: height / 2,
         visible: resizeEnabled && enabledHandlers.indexOf('middle-right') >= 0
       });
       this.findOne('.bottom-left').setAttrs({
-        x: 0,
-        y: height,
+        x: -padding,
+        y: height + padding,
         visible: resizeEnabled && enabledHandlers.indexOf('bottom-left') >= 0
       });
       this.findOne('.bottom-center').setAttrs({
         x: width / 2,
-        y: height,
+        y: height + padding,
         visible: resizeEnabled && enabledHandlers.indexOf('bottom-center') >= 0
       });
       this.findOne('.bottom-right').setAttrs({
-        x: width,
-        y: height,
+        x: width + padding,
+        y: height + padding,
         visible: resizeEnabled && enabledHandlers.indexOf('bottom-right') >= 0
       });
 
@@ -785,6 +803,22 @@
    * shape.keepRatio(false);
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'keepRatio', true);
+
+  /**
+   * get/set padding
+   * @name padding
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Array} array
+   * @returns {Array}
+   * @example
+   * // get
+   * var padding = shape.padding();
+   *
+   * // set
+   * shape.padding(10);
+   */
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'padding', 0);
 
   Konva.Factory.addOverloadedGetterSetter(Konva.Transformer, 'node');
 
