@@ -5,6 +5,16 @@ declare namespace Konva {
   var isDragReady: () => boolean;
   var DD: any;
 
+  type globalCompositeOperationType = '' |
+    'source-over' | 'source-in' | 'source-out' | 'source-atop' |
+    'destination-over' | 'destination-in' | 'destination-out' | 'destination-atop' |
+    'lighter' | 'copy' | 'xor' | 'multiply' |
+    'screen' | 'overlay' | 'darken' | 'lighten' |
+    'color-dodge' | 'color-burn' | 'hard-light' | 'soft-light' |
+    'difference' | 'exclusion' | 'hue' | 'saturation' |
+    'color' | 'luminosity'
+  ;
+
   export class Util {
     static getRandomColor(): string;
     static getRGB(color: string): string;
@@ -86,6 +96,7 @@ declare namespace Konva {
     dragDistance?: number;
     dragBoundFunc?: (pos: Vector2d) => Vector2d;
     preventDefault?: boolean;
+    globalCompositeOperation?: globalCompositeOperationType;
   }
 
   interface SizeConfig {
@@ -282,6 +293,8 @@ declare namespace Konva {
     x(x: number): this;
     y(): number;
     y(y: number): this;
+    globalCompositeOperation(): globalCompositeOperationType;
+    globalCompositeOperation(type: globalCompositeOperationType): this;
   }
 
   interface ContainerConfig extends NodeConfig {
