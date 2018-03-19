@@ -2092,8 +2092,8 @@
    * @name globalCompositeOperation
    * @method
    * @memberof Konva.Node.prototype
-   * @param {Number} blur
-   * @returns {Number}
+   * @param {String} type
+   * @returns {String}
    * @example
    * // get globalCompositeOperation
    * var globalCompositeOperation = shape.globalCompositeOperation();
