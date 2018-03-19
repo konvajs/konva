@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.0.2
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Sat Mar 17 2018
+ * Date: Mon Mar 19 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2070,12 +2070,12 @@
           shape.getStrokeScaleEnabled() || shape instanceof Konva.Text;
 
       if (shape.hasStroke()) {
-        if (!strokeScaleEnabled) {
+        /* if (!strokeScaleEnabled) {
           this.save();
           var pixelRatio = this.getCanvas().getPixelRatio();
           var transform = this._context.currentTransform;
           this.setTransform(pixelRatio, transform.b, transform.c, pixelRatio, transform.e, transform.f);
-        }
+        } */
 
         this._applyLineCap(shape);
         if (dash && shape.dashEnabled()) {
@@ -2083,7 +2083,13 @@
           this.setAttr('lineDashOffset', shape.dashOffset());
         }
 
-        this.setAttr('lineWidth', shape.strokeWidth());
+        if (!strokeScaleEnabled) {
+          var pixelRatio = this.getCanvas().getPixelRatio();
+          var scale = pixelRatio / (this._context.currentTransform ? this._context.currentTransform.a : 1);
+          this.setAttr('lineWidth', shape.strokeWidth() * scale);
+        } else {
+          this.setAttr('lineWidth', shape.strokeWidth());
+        }
 
         if (!shape.getShadowForStrokeEnabled()) {
           this.setAttr('shadowColor', 'rgba(0,0,0,0)');
@@ -2100,9 +2106,9 @@
 
         shape._strokeFunc(this);
 
-        if (!strokeScaleEnabled) {
+        /* if (!strokeScaleEnabled) {
           this.restore();
-        }
+        } */
       }
     },
     _applyShadow: function(shape) {
@@ -2152,19 +2158,25 @@
         // ignore strokeScaleEnabled for Text
         var strokeScaleEnabled =
           shape.getStrokeScaleEnabled() || shape instanceof Konva.Text;
-        if (!strokeScaleEnabled) {
+        /* if (!strokeScaleEnabled) {
           this.save();
           var pixelRatio = this.getCanvas().getPixelRatio();
           var transform = this._context.currentTransform;
           this.setTransform(pixelRatio, transform.b, transform.c, pixelRatio, transform.e, transform.f);
-        }
+        } */
         this._applyLineCap(shape);
-        this.setAttr('lineWidth', shape.strokeWidth());
+        if (!strokeScaleEnabled) {
+          var pixelRatio = this.getCanvas().getPixelRatio();
+          var scale = pixelRatio / (this._context.currentTransform ? this._context.currentTransform.a : 1);
+          this.setAttr('lineWidth', shape.strokeWidth() * scale);
+        } else {
+          this.setAttr('lineWidth', shape.strokeWidth());
+        }
         this.setAttr('strokeStyle', shape.colorKey);
         shape._strokeFuncHit(this);
-        if (!strokeScaleEnabled) {
+        /* if (!strokeScaleEnabled) {
           this.restore();
-        }
+        } */
       }
     }
   };
