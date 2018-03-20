@@ -2092,13 +2092,13 @@
    * @name globalCompositeOperation
    * @method
    * @memberof Konva.Node.prototype
-   * @param {Number} blur
-   * @returns {Number}
+   * @param {String} type
+   * @returns {String}
    * @example
-   * // get shadow blur
+   * // get globalCompositeOperation
    * var globalCompositeOperation = shape.globalCompositeOperation();
    *
-   * // set shadow blur
+   * // set globalCompositeOperation
    * shape.globalCompositeOperation('source-in');
    */
   Konva.Factory.addGetterSetter(Konva.Node, 'opacity', 1);

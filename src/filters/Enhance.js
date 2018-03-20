@@ -2,7 +2,9 @@
   'use strict';
   function remap(fromValue, fromMin, fromMax, toMin, toMax) {
     // Compute the range of the data
-    var fromRange = fromMax - fromMin, toRange = toMax - toMin, toValue;
+    var fromRange = fromMax - fromMin,
+      toRange = toMax - toMin,
+      toValue;
 
     // If either range is 0, then the value can only be mapped to 1 value
     if (fromRange === 0) {
@@ -20,19 +22,19 @@
   }
 
   /**
-    * Enhance Filter. Adjusts the colors so that they span the widest
-    *  possible range (ie 0-255). Performs w*h pixel reads and w*h pixel
-    *  writes.
-    * @function
-    * @name Enhance
-    * @memberof Konva.Filters
-    * @param {Object} imageData
-    * @author ippo615
-    * @example
-    * node.cache();
-    * node.filters([Konva.Filters.Enhance]);
-    * node.enhance(0.4);
-    */
+   * Enhance Filter. Adjusts the colors so that they span the widest
+   *  possible range (ie 0-255). Performs w*h pixel reads and w*h pixel
+   *  writes.
+   * @function
+   * @name Enhance
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @author ippo615
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Enhance]);
+   * node.enhance(0.4);
+   */
   Konva.Filters.Enhance = function(imageData) {
     var data = imageData.data,
       nSubPixels = data.length,
@@ -132,6 +134,14 @@
     }
   };
 
+  /**
+   * get/set enhance. Use with {@link Konva.Filters.Enhance} filter. -1 to 1 values
+   * @name enhance
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Float} amount
+   * @returns {Float}
+   */
   Konva.Factory.addGetterSetter(
     Konva.Node,
     'enhance',
@@ -139,13 +149,4 @@
     null,
     Konva.Factory.afterSetFilter
   );
-
-  /**
-    * get/set enhance. Use with {@link Konva.Filters.Enhance} filter.
-    * @name enhance
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Float} amount
-    * @returns {Float}
-    */
 })();
