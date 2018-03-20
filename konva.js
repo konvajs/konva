@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.0.2
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Mon Mar 19 2018
+ * Date: Tue Mar 20 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2069,6 +2069,9 @@
         strokeScaleEnabled =
           shape.getStrokeScaleEnabled() || shape instanceof Konva.Text;
 
+      var scale = 1;
+      var pixelRatio = this.getCanvas().getPixelRatio();
+
       if (shape.hasStroke()) {
         /* if (!strokeScaleEnabled) {
           this.save();
@@ -2079,13 +2082,21 @@
 
         this._applyLineCap(shape);
         if (dash && shape.dashEnabled()) {
-          this.setLineDash(dash);
+          if (!strokeScaleEnabled) {
+            scale = pixelRatio / (this._context.currentTransform ? this._context.currentTransform.a : 1);
+            var newDash = dash.slice();
+            for (var i = 0, len = dash.length; i < len; i++) {
+              newDash[i] *= scale;
+            }
+            this.setLineDash(newDash);
+          } else {
+            this.setLineDash(dash);
+          }
           this.setAttr('lineDashOffset', shape.dashOffset());
         }
 
         if (!strokeScaleEnabled) {
-          var pixelRatio = this.getCanvas().getPixelRatio();
-          var scale = pixelRatio / (this._context.currentTransform ? this._context.currentTransform.a : 1);
+          scale = pixelRatio / (this._context.currentTransform ? this._context.currentTransform.a : 1);
           this.setAttr('lineWidth', shape.strokeWidth() * scale);
         } else {
           this.setAttr('lineWidth', shape.strokeWidth());
