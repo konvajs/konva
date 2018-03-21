@@ -2140,7 +2140,6 @@ suite('Container', function() {
       y: 10
     });
     group.add(new Konva.Group());
-    console.log(group.getClientRect());
     assert.deepEqual(group.getClientRect(), {
       x: 10,
       y: 10,

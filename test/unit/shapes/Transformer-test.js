@@ -884,22 +884,19 @@ suite('Transformer', function() {
     });
   });
 
-  test('with strokes', function() {
+  test('on negative scaleY should move rotater', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
 
     var rect = new Konva.Rect({
-      x: 20,
-      y: 60,
+      x: 50,
+      y: 160,
       draggable: true,
-      width: 10,
-      height: 10,
+      width: 100,
+      height: 100,
       fill: 'yellow',
-      strokeWidth: 2,
-      stroke: 'black',
-      scaleX: 10,
-      scaleY: 10
+      scaleY: -1
     });
     layer.add(rect);
 
@@ -907,7 +904,91 @@ suite('Transformer', function() {
       node: rect
     });
     layer.add(tr);
-
     layer.draw();
+
+    var rotater = tr.findOne('.rotater');
+    var pos = rotater.getAbsolutePosition();
+
+    assert.equal(pos.x, 100);
+
+    assert.equal(pos.y, 210);
+  });
+
+  test('try rotated scaled rect', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 100,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+      scaleY: -1
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+    layer.draw();
+
+    var rotater = tr.findOne('.rotater');
+    var pos = rotater.getAbsolutePosition();
+
+    stage.simulateMouseDown({
+      x: pos.x,
+      y: pos.y
+    });
+    var top = stage.content.getBoundingClientRect().top;
+    tr._handleMouseMove({
+      target: rotater,
+      clientX: pos.x + 100,
+      clientY: pos.y - 100 + top
+    });
+
+    // here is duplicate, because transformer is listening window events
+    tr._handleMouseUp({
+      clientX: pos.x + 100,
+      clientY: pos.y - 50 + top
+    });
+    stage.simulateMouseUp({
+      x: 100,
+      y: 100
+    });
+
+    assert.equal(rect.rotation(), -90);
+  });
+
+  test('check correct cursor on scaled shape', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 100,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+      scaleY: -1
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+    layer.draw();
+
+    stage.simulateMouseMove({
+      x: 50,
+      y: 1
+    });
+    assert.equal(stage.content.style.cursor, 'nwse-resize');
   });
 });

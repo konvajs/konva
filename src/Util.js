@@ -498,6 +498,16 @@
         firstChar === firstChar.toUpperCase()
       );
     },
+    _sign: function(number) {
+      if (number === 0) {
+        return 0;
+      }
+      if (number > 0) {
+        return 1;
+      } else {
+        return -1;
+      }
+    },
     createCanvasElement: function() {
       var canvas = Konva.isBrowser
         ? Konva.document.createElement('canvas')
