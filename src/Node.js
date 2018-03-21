@@ -52,7 +52,6 @@
 
   Konva.Util.addMethods(Konva.Node, {
     _init: function(config) {
-      var that = this;
       this._id = Konva.idCounter++;
       this.eventListeners = {};
       this.attrs = {};
@@ -64,21 +63,21 @@
       // event bindings for cache handling
       this.on(TRANSFORM_CHANGE_STR, function() {
         this._clearCache(TRANSFORM);
-        that._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
+        this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
       });
 
       this.on(SCALE_CHANGE_STR, function() {
-        that._clearSelfAndDescendantCache(ABSOLUTE_SCALE);
+        this._clearSelfAndDescendantCache(ABSOLUTE_SCALE);
       });
 
       this.on('visibleChange.konva', function() {
-        that._clearSelfAndDescendantCache(VISIBLE);
+        this._clearSelfAndDescendantCache(VISIBLE);
       });
       this.on('listeningChange.konva', function() {
-        that._clearSelfAndDescendantCache(LISTENING);
+        this._clearSelfAndDescendantCache(LISTENING);
       });
       this.on('opacityChange.konva', function() {
-        that._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
+        this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
       });
     },
     _clearCache: function(attr) {

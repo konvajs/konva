@@ -1,15 +1,15 @@
 (function() {
   'use strict';
   /**
-     * Container constructor.&nbsp; Containers are used to contain nodes or other containers
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Node
-     * @abstract
-     * @param {Object} config
-     * @@nodeParams
-     * @@containerParams
-     */
+   * Container constructor.&nbsp; Containers are used to contain nodes or other containers
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Node
+   * @abstract
+   * @param {Object} config
+   * @@nodeParams
+   * @@containerParams
+   */
   Konva.Container = function(config) {
     this.__init(config);
   };
@@ -20,20 +20,20 @@
       Konva.Node.call(this, config);
     },
     /**
-         * returns a {@link Konva.Collection} of direct descendant nodes
-         * @method
-         * @memberof Konva.Container.prototype
-         * @param {Function} [filterFunc] filter function
-         * @returns {Konva.Collection}
-         * @example
-         * // get all children
-         * var children = layer.getChildren();
-         *
-         * // get only circles
-         * var circles = layer.getChildren(function(node){
-         *    return node.getClassName() === 'Circle';
-         * });
-         */
+     * returns a {@link Konva.Collection} of direct descendant nodes
+     * @method
+     * @memberof Konva.Container.prototype
+     * @param {Function} [filterFunc] filter function
+     * @returns {Konva.Collection}
+     * @example
+     * // get all children
+     * var children = layer.getChildren();
+     *
+     * // get only circles
+     * var circles = layer.getChildren(function(node){
+     *    return node.getClassName() === 'Circle';
+     * });
+     */
     getChildren: function(filterFunc) {
       if (!filterFunc) {
         return this.children;
@@ -48,19 +48,19 @@
       return results;
     },
     /**
-         * determine if node has children
-         * @method
-         * @memberof Konva.Container.prototype
-         * @returns {Boolean}
-         */
+     * determine if node has children
+     * @method
+     * @memberof Konva.Container.prototype
+     * @returns {Boolean}
+     */
     hasChildren: function() {
       return this.getChildren().length > 0;
     },
     /**
-         * remove all children
-         * @method
-         * @memberof Konva.Container.prototype
-         */
+     * remove all children
+     * @method
+     * @memberof Konva.Container.prototype
+     */
     removeChildren: function() {
       var children = Konva.Collection.toCollection(this.children);
       var child;
@@ -76,10 +76,10 @@
       return this;
     },
     /**
-         * destroy all children
-         * @method
-         * @memberof Konva.Container.prototype
-         */
+     * destroy all children
+     * @method
+     * @memberof Konva.Container.prototype
+     */
     destroyChildren: function() {
       var children = Konva.Collection.toCollection(this.children);
       var child;
@@ -95,14 +95,14 @@
       return this;
     },
     /**
-         * Add node or nodes to container.
-         * @method
-         * @memberof Konva.Container.prototype
-         * @param {...Konva.Node} child
-         * @returns {Container}
-         * @example
-         * layer.add(shape1, shape2, shape3);
-         */
+     * Add node or nodes to container.
+     * @method
+     * @memberof Konva.Container.prototype
+     * @param {...Konva.Node} child
+     * @returns {Container}
+     * @example
+     * layer.add(shape1, shape2, shape3);
+     */
     add: function(child) {
       if (arguments.length > 1) {
         for (var i = 0; i < arguments.length; i++) {
@@ -141,29 +141,29 @@
       return this;
     },
     /**
-         * return a {@link Konva.Collection} of nodes that match the selector.  Use '#' for id selections
-         * and '.' for name selections.  You can also select by type or class name. Pass multiple selectors
-         * separated by a space.
-         * @method
-         * @memberof Konva.Container.prototype
-         * @param {String} selector
-         * @returns {Collection}
-         * @example
-         * // select node with id foo
-         * var node = stage.find('#foo');
-         *
-         * // select nodes with name bar inside layer
-         * var nodes = layer.find('.bar');
-         *
-         * // select all groups inside layer
-         * var nodes = layer.find('Group');
-         *
-         * // select all rectangles inside layer
-         * var nodes = layer.find('Rect');
-         *
-         * // select node with an id of foo or a name of bar inside layer
-         * var nodes = layer.find('#foo, .bar');
-         */
+     * return a {@link Konva.Collection} of nodes that match the selector.  Use '#' for id selections
+     * and '.' for name selections.  You can also select by type or class name. Pass multiple selectors
+     * separated by a space.
+     * @method
+     * @memberof Konva.Container.prototype
+     * @param {String} selector
+     * @returns {Collection}
+     * @example
+     * // select node with id foo
+     * var node = stage.find('#foo');
+     *
+     * // select nodes with name bar inside layer
+     * var nodes = layer.find('.bar');
+     *
+     * // select all groups inside layer
+     * var nodes = layer.find('Group');
+     *
+     * // select all rectangles inside layer
+     * var nodes = layer.find('Rect');
+     *
+     * // select node with an id of foo or a name of bar inside layer
+     * var nodes = layer.find('#foo, .bar');
+     */
     find: function(selector) {
       var retArr = [],
         selectorArr = selector.replace(/ /g, '').split(','),
@@ -212,18 +212,18 @@
       return Konva.Collection.toCollection(retArr);
     },
     /**
-         * return a first node from `find` method
-         * @method
-         * @memberof Konva.Container.prototype
-         * @param {String} selector
-         * @returns {Konva.Node}
-         * @example
-         * // select node with id foo
-         * var node = stage.findOne('#foo');
-         *
-         * // select node with name bar inside layer
-         * var nodes = layer.findOne('.bar');
-         */
+     * return a first node from `find` method
+     * @method
+     * @memberof Konva.Container.prototype
+     * @param {String} selector
+     * @returns {Konva.Node}
+     * @example
+     * // select node with id foo
+     * var node = stage.findOne('#foo');
+     *
+     * // select node with name bar inside layer
+     * var nodes = layer.findOne('.bar');
+     */
     findOne: function(selector) {
       return this.find(selector)[0];
     },
@@ -276,12 +276,12 @@
       return retArr;
     },
     /**
-         * determine if node is an ancestor
-         * of descendant
-         * @method
-         * @memberof Konva.Container.prototype
-         * @param {Konva.Node} node
-         */
+     * determine if node is an ancestor
+     * of descendant
+     * @method
+     * @memberof Konva.Container.prototype
+     * @param {Konva.Node} node
+     */
     isAncestorOf: function(node) {
       var parent = node.getParent();
       while (parent) {
@@ -303,17 +303,17 @@
       return node;
     },
     /**
-         * get all shapes that intersect a point.  Note: because this method must clear a temporary
-         * canvas and redraw every shape inside the container, it should only be used for special sitations
-         * because it performs very poorly.  Please use the {@link Konva.Stage#getIntersection} method if at all possible
-         * because it performs much better
-         * @method
-         * @memberof Konva.Container.prototype
-         * @param {Object} pos
-         * @param {Number} pos.x
-         * @param {Number} pos.y
-         * @returns {Array} array of shapes
-         */
+     * get all shapes that intersect a point.  Note: because this method must clear a temporary
+     * canvas and redraw every shape inside the container, it should only be used for special sitations
+     * because it performs very poorly.  Please use the {@link Konva.Stage#getIntersection} method if at all possible
+     * because it performs much better
+     * @method
+     * @memberof Konva.Container.prototype
+     * @param {Object} pos
+     * @param {Number} pos.x
+     * @param {Number} pos.y
+     * @returns {Array} array of shapes
+     */
     getAllIntersections: function(pos) {
       var arr = [];
 
@@ -395,7 +395,10 @@
           context.rect(clipX, clipY, clipWidth, clipHeight);
         }
         context.clip();
-        m = transform.copy().invert().getMatrix();
+        m = transform
+          .copy()
+          .invert()
+          .getMatrix();
         context.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
       }
 
@@ -440,6 +443,7 @@
         if (!child.isVisible()) {
           return;
         }
+
         var rect = child.getClientRect({ relativeTo: that });
 
         // skip invisible children (like empty groups)
@@ -462,7 +466,18 @@
         }
       });
 
-      if (this.children.length !== 0) {
+      // if child is group we need to make sure it has visible shapes inside
+      var shapes = this.find('Shape');
+      var hasVisible = false;
+      for (var i = 0; i < shapes.length; i++) {
+        var shape = shapes[i];
+        if (shape.isVisible()) {
+          hasVisible = true;
+          break;
+        }
+      }
+
+      if (hasVisible) {
         selfRect = {
           x: minX,
           y: minY,
@@ -490,110 +505,110 @@
     'height'
   ]);
   /**
-     * get/set clip
-     * @method
-     * @name clip
-     * @memberof Konva.Container.prototype
-     * @param {Object} clip
-     * @param {Number} clip.x
-     * @param {Number} clip.y
-     * @param {Number} clip.width
-     * @param {Number} clip.height
-     * @returns {Object}
-     * @example
-     * // get clip
-     * var clip = container.clip();
-     *
-     * // set clip
-     * container.setClip({
-     *   x: 20,
-     *   y: 20,
-     *   width: 20,
-     *   height: 20
-     * });
-     */
+   * get/set clip
+   * @method
+   * @name clip
+   * @memberof Konva.Container.prototype
+   * @param {Object} clip
+   * @param {Number} clip.x
+   * @param {Number} clip.y
+   * @param {Number} clip.width
+   * @param {Number} clip.height
+   * @returns {Object}
+   * @example
+   * // get clip
+   * var clip = container.clip();
+   *
+   * // set clip
+   * container.setClip({
+   *   x: 20,
+   *   y: 20,
+   *   width: 20,
+   *   height: 20
+   * });
+   */
 
   Konva.Factory.addGetterSetter(Konva.Container, 'clipX');
   /**
-     * get/set clip x
-     * @name clipX
-     * @method
-     * @memberof Konva.Container.prototype
-     * @param {Number} x
-     * @returns {Number}
-     * @example
-     * // get clip x
-     * var clipX = container.clipX();
-     *
-     * // set clip x
-     * container.clipX(10);
-     */
+   * get/set clip x
+   * @name clipX
+   * @method
+   * @memberof Konva.Container.prototype
+   * @param {Number} x
+   * @returns {Number}
+   * @example
+   * // get clip x
+   * var clipX = container.clipX();
+   *
+   * // set clip x
+   * container.clipX(10);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Container, 'clipY');
   /**
-     * get/set clip y
-     * @name clipY
-     * @method
-     * @memberof Konva.Container.prototype
-     * @param {Number} y
-     * @returns {Number}
-     * @example
-     * // get clip y
-     * var clipY = container.clipY();
-     *
-     * // set clip y
-     * container.clipY(10);
-     */
+   * get/set clip y
+   * @name clipY
+   * @method
+   * @memberof Konva.Container.prototype
+   * @param {Number} y
+   * @returns {Number}
+   * @example
+   * // get clip y
+   * var clipY = container.clipY();
+   *
+   * // set clip y
+   * container.clipY(10);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Container, 'clipWidth');
   /**
-     * get/set clip width
-     * @name clipWidth
-     * @method
-     * @memberof Konva.Container.prototype
-     * @param {Number} width
-     * @returns {Number}
-     * @example
-     * // get clip width
-     * var clipWidth = container.clipWidth();
-     *
-     * // set clip width
-     * container.clipWidth(100);
-     */
+   * get/set clip width
+   * @name clipWidth
+   * @method
+   * @memberof Konva.Container.prototype
+   * @param {Number} width
+   * @returns {Number}
+   * @example
+   * // get clip width
+   * var clipWidth = container.clipWidth();
+   *
+   * // set clip width
+   * container.clipWidth(100);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Container, 'clipHeight');
   /**
-     * get/set clip height
-     * @name clipHeight
-     * @method
-     * @memberof Konva.Container.prototype
-     * @param {Number} height
-     * @returns {Number}
-     * @example
-     * // get clip height
-     * var clipHeight = container.clipHeight();
-     *
-     * // set clip height
-     * container.clipHeight(100);
-     */
+   * get/set clip height
+   * @name clipHeight
+   * @method
+   * @memberof Konva.Container.prototype
+   * @param {Number} height
+   * @returns {Number}
+   * @example
+   * // get clip height
+   * var clipHeight = container.clipHeight();
+   *
+   * // set clip height
+   * container.clipHeight(100);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Container, 'clipFunc');
   /**
-      * get/set clip function
-      * @name clipFunc
-      * @method
-      * @memberof Konva.Container.prototype
-      * @param {Function} function
-      * @returns {Function}
-      * @example
-      * // get clip function
-      * var clipFunction = container.clipFunc();
-      *
-      * // set clip height
-      * container.clipFunc(function(ctx) {
-      *   ctx.rect(0, 0, 100, 100);
-      * });
-      */
+   * get/set clip function
+   * @name clipFunc
+   * @method
+   * @memberof Konva.Container.prototype
+   * @param {Function} function
+   * @returns {Function}
+   * @example
+   * // get clip function
+   * var clipFunction = container.clipFunc();
+   *
+   * // set clip height
+   * container.clipFunc(function(ctx) {
+   *   ctx.rect(0, 0, 100, 100);
+   * });
+   */
 
   Konva.Collection.mapMethods(Konva.Container);
 })();
