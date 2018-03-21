@@ -624,22 +624,16 @@
       var pixelRatio = this.getCanvas().getPixelRatio();
 
       if (shape.hasStroke()) {
-        /* if (!strokeScaleEnabled) {
-          this.save();
-          var pixelRatio = this.getCanvas().getPixelRatio();
-          var transform = this._context.currentTransform;
-          this.setTransform(pixelRatio, transform.b, transform.c, pixelRatio, transform.e, transform.f);
-        } */
-
         this._applyLineCap(shape);
         if (dash && shape.dashEnabled()) {
           if (!strokeScaleEnabled) {
             scale = pixelRatio / (this._context.currentTransform ? this._context.currentTransform.a : 1);
-            var newDash = dash.slice();
-            for (var i = 0, len = dash.length; i < len; i++) {
-              newDash[i] *= scale;
+            var len = dash.length;
+            var scaledDash = new Array(len);
+            for (var i = 0; i < len; i++) {
+              scaledDash[i] = dash[i] * scale;
             }
-            this.setLineDash(newDash);
+            this.setLineDash(scaledDash);
           } else {
             this.setLineDash(dash);
           }
@@ -667,10 +661,6 @@
         }
 
         shape._strokeFunc(this);
-
-        /* if (!strokeScaleEnabled) {
-          this.restore();
-        } */
       }
     },
     _applyShadow: function(shape) {
@@ -720,12 +710,7 @@
         // ignore strokeScaleEnabled for Text
         var strokeScaleEnabled =
           shape.getStrokeScaleEnabled() || shape instanceof Konva.Text;
-        /* if (!strokeScaleEnabled) {
-          this.save();
-          var pixelRatio = this.getCanvas().getPixelRatio();
-          var transform = this._context.currentTransform;
-          this.setTransform(pixelRatio, transform.b, transform.c, pixelRatio, transform.e, transform.f);
-        } */
+
         this._applyLineCap(shape);
         if (!strokeScaleEnabled) {
           var pixelRatio = this.getCanvas().getPixelRatio();
@@ -736,9 +721,6 @@
         }
         this.setAttr('strokeStyle', shape.colorKey);
         shape._strokeFuncHit(this);
-        /* if (!strokeScaleEnabled) {
-          this.restore();
-        } */
       }
     }
   };
