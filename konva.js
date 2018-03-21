@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.0.2
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Mon Mar 19 2018
+ * Date: Wed Mar 21 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2407,7 +2407,6 @@
 
   Konva.Util.addMethods(Konva.Node, {
     _init: function(config) {
-      var that = this;
       this._id = Konva.idCounter++;
       this.eventListeners = {};
       this.attrs = {};
@@ -2419,21 +2418,21 @@
       // event bindings for cache handling
       this.on(TRANSFORM_CHANGE_STR, function() {
         this._clearCache(TRANSFORM);
-        that._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
+        this._clearSelfAndDescendantCache(ABSOLUTE_TRANSFORM);
       });
 
       this.on(SCALE_CHANGE_STR, function() {
-        that._clearSelfAndDescendantCache(ABSOLUTE_SCALE);
+        this._clearSelfAndDescendantCache(ABSOLUTE_SCALE);
       });
 
       this.on('visibleChange.konva', function() {
-        that._clearSelfAndDescendantCache(VISIBLE);
+        this._clearSelfAndDescendantCache(VISIBLE);
       });
       this.on('listeningChange.konva', function() {
-        that._clearSelfAndDescendantCache(LISTENING);
+        this._clearSelfAndDescendantCache(LISTENING);
       });
       this.on('opacityChange.konva', function() {
-        that._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
+        this._clearSelfAndDescendantCache(ABSOLUTE_OPACITY);
       });
     },
     _clearCache: function(attr) {
@@ -18690,10 +18689,12 @@
         TRANSFORM_CHANGE_STR,
         function() {
           this._clearCache(NODE_RECT);
+          this._clearCache('transform');
+          this._clearSelfAndDescendantCache('absoluteTransform');
         }.bind(this)
       );
-      node.on(TRANSFORM_CHANGE_STR, this.requestUpdate.bind(this));
-      node.on('dragmove.resizer', this.requestUpdate.bind(this));
+      // node.on(TRANSFORM_CHANGE_STR, this.requestUpdate.bind(this));
+      // node.on('dragmove.resizer', this.requestUpdate.bind(this));
 
       var elementsCreated = !!this.findOne('.top-left');
       if (elementsCreated) {
@@ -18708,7 +18709,11 @@
     detach: function() {
       if (this.getNode()) {
         this.getNode().off('.resizer');
+        this._node = undefined;
       }
+      this._clearCache(NODE_RECT);
+      this._clearCache('transform');
+      this._clearSelfAndDescendantCache('absoluteTransform');
     },
 
     _getNodeRect: function() {
@@ -19117,13 +19122,8 @@
     },
     update: function() {
       var attrs = this._getNodeRect();
-      var x = attrs.x;
-      var y = attrs.y;
       var width = attrs.width;
       var height = attrs.height;
-      this.x(x);
-      this.y(y);
-      this.rotation(attrs.rotation);
 
       var enabledHandlers = this.enabledHandlers();
       var resizeEnabled = this.resizeEnabled();

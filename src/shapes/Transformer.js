@@ -163,10 +163,12 @@
         TRANSFORM_CHANGE_STR,
         function() {
           this._clearCache(NODE_RECT);
+          this._clearCache('transform');
+          this._clearSelfAndDescendantCache('absoluteTransform');
         }.bind(this)
       );
-      node.on(TRANSFORM_CHANGE_STR, this.requestUpdate.bind(this));
-      node.on('dragmove.resizer', this.requestUpdate.bind(this));
+      // node.on(TRANSFORM_CHANGE_STR, this.requestUpdate.bind(this));
+      // node.on('dragmove.resizer', this.requestUpdate.bind(this));
 
       var elementsCreated = !!this.findOne('.top-left');
       if (elementsCreated) {
@@ -181,7 +183,11 @@
     detach: function() {
       if (this.getNode()) {
         this.getNode().off('.resizer');
+        this._node = undefined;
       }
+      this._clearCache(NODE_RECT);
+      this._clearCache('transform');
+      this._clearSelfAndDescendantCache('absoluteTransform');
     },
 
     _getNodeRect: function() {
@@ -590,13 +596,8 @@
     },
     update: function() {
       var attrs = this._getNodeRect();
-      var x = attrs.x;
-      var y = attrs.y;
       var width = attrs.width;
       var height = attrs.height;
-      this.x(x);
-      this.y(y);
-      this.rotation(attrs.rotation);
 
       var enabledHandlers = this.enabledHandlers();
       var resizeEnabled = this.resizeEnabled();
