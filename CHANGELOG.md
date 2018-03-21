@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 * Typescript defs for `Konva.Transformer`
+* Typescript defs for `globalCompositeOperation`
 
 ## Changes
 
