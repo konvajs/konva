@@ -14,6 +14,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 * Fixed flow for `contextmenu` event. Not it will be triggered on shapes too
 
+## Fixed
+
+* some bugs fixes for `group.getClientRect()`
+
 ## [2.0.2][2018-03-15]
 
 ## Fixed

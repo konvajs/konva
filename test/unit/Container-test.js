@@ -2140,11 +2140,52 @@ suite('Container', function() {
       y: 10
     });
     group.add(new Konva.Group());
+    console.log(group.getClientRect());
     assert.deepEqual(group.getClientRect(), {
       x: 10,
       y: 10,
       width: 0,
       height: 0
+    });
+  });
+
+  test('get client rect with deep nested hidden shape', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    var group = new Konva.Group({
+      draggable: true,
+      x: 100,
+      y: 40
+    });
+
+    var rect = new Konva.Rect({
+      height: 100,
+      width: 100,
+      fill: 'red'
+    });
+    group.add(rect);
+    layer.add(group);
+
+    var subGroup = new Konva.Group();
+    group.add(subGroup);
+
+    subGroup.add(
+      new Konva.Rect({
+        visible: false
+      })
+    );
+
+    stage.add(layer);
+    stage.draw();
+
+    var clientRect = group.getClientRect();
+
+    assert.deepEqual(clientRect, {
+      x: 100,
+      y: 40,
+      width: 100,
+      height: 100
     });
   });
 
@@ -2256,7 +2297,10 @@ suite('Container', function() {
         data[3]
     );
 
-    data = layer.getHitCanvas().getContext().getImageData(76, 50, 1, 1).data;
+    data = layer
+      .getHitCanvas()
+      .getContext()
+      .getImageData(76, 50, 1, 1).data;
     isTransparent = data[3] == 0;
 
     assert.equal(
@@ -2272,7 +2316,10 @@ suite('Container', function() {
         data[3]
     );
 
-    data = layer.getHitCanvas().getContext().getImageData(50, 76, 1, 1).data;
+    data = layer
+      .getHitCanvas()
+      .getContext()
+      .getImageData(50, 76, 1, 1).data;
     isTransparent = data[3] == 0;
     assert.equal(
       isTransparent,
@@ -2369,8 +2416,10 @@ suite('Container', function() {
     stage.scale({ x: 2, y: 2 });
     stage.draw();
 
-    var data = layer.getHitCanvas().getContext().getImageData(48, 100, 1, 1)
-      .data;
+    var data = layer
+      .getHitCanvas()
+      .getContext()
+      .getImageData(48, 100, 1, 1).data;
     var isTransparent = data[3] == 0;
     assert.equal(
       isTransparent,
@@ -2385,7 +2434,10 @@ suite('Container', function() {
         data[3]
     );
 
-    data = layer.getHitCanvas().getContext().getImageData(100, 48, 1, 1).data;
+    data = layer
+      .getHitCanvas()
+      .getContext()
+      .getImageData(100, 48, 1, 1).data;
     isTransparent = data[3] == 0;
     assert.equal(
       isTransparent,
@@ -2400,7 +2452,10 @@ suite('Container', function() {
         data[3]
     );
 
-    data = layer.getHitCanvas().getContext().getImageData(152, 100, 1, 1).data;
+    data = layer
+      .getHitCanvas()
+      .getContext()
+      .getImageData(152, 100, 1, 1).data;
     isTransparent = data[3] == 0;
     assert.equal(
       isTransparent,
@@ -2415,7 +2470,10 @@ suite('Container', function() {
         data[3]
     );
 
-    data = layer.getHitCanvas().getContext().getImageData(100, 152, 1, 1).data;
+    data = layer
+      .getHitCanvas()
+      .getContext()
+      .getImageData(100, 152, 1, 1).data;
     isTransparent = data[3] == 0;
     assert.equal(
       isTransparent,

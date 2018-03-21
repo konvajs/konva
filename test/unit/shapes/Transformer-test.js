@@ -883,4 +883,31 @@ suite('Transformer', function() {
       y: 30
     });
   });
+
+  test('with strokes', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 20,
+      y: 60,
+      draggable: true,
+      width: 10,
+      height: 10,
+      fill: 'yellow',
+      strokeWidth: 2,
+      stroke: 'black',
+      scaleX: 10,
+      scaleY: 10
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+
+    layer.draw();
+  });
 });
