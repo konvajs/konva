@@ -324,6 +324,7 @@ declare namespace Konva {
     clipFunc(ctx: CanvasRenderingContext2D | undefined | null): void;
     destroyChildren(): void;
     find(selector?: string): Collection;
+    findWhere(fn: (Node) => boolean): Collection;
     findOne<T extends Node>(selector: string): T;
     getAllIntersections(pos: Vector2d): Shape[];
     hasChildren(): boolean;

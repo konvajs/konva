@@ -227,6 +227,52 @@
     findOne: function(selector) {
       return this.find(selector)[0];
     },
+    /**
+     * return a {@link Konva.Collection} of nodes that return true when passed through your function argument.
+     * Your function has access to the currentNode argument, and should return a boolean type.
+     * See examples for more details.
+     * @method
+     * @memberof Konva.Container.prototype
+     * @param {Function} fn
+     * @returns {Collection}
+     * @example
+     * // get all Groups
+     * var groups = stage.findWhere(el => {
+     *  return el.getType() === 'Group';
+     * });
+     *
+     * // get only Nodes with partial opacity
+     * var alphaNodes = layer.findWhere(el => {
+     *  return el.getType() === 'Node' && el.getAbsoluteOpacity() < 1;
+     * });
+     */
+    findWhere: function(fn) {
+      if (typeof fn !== 'function') {
+        Konva.Util.warn(
+          'You must pass a function with a return value as your argument here.  Are you maybe looking for .find instead?'
+        );
+        Konva.Util.warn('Konva is awesome, right?');
+      }
+
+      var retArr = [];
+
+      var addItems = function(el) {
+        var children = el.getChildren();
+        var clen = children.length;
+
+        if (fn(el)) {
+          retArr = retArr.concat(el);
+        }
+
+        for (var i = 0; i < clen; i++) {
+          addItems(children[i]);
+        }
+      };
+
+      addItems(this);
+
+      return Konva.Collection.toCollection(retArr);
+    },
     _getNodeById: function(key) {
       var node = Konva.ids[key];
 
