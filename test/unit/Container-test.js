@@ -433,8 +433,8 @@ suite('Container', function() {
       return false;
     };
 
-    assert.equal(stage.findWhere(fn)[0], rect);
-    assert.equal(stage.findWhere(noOp).length, 0);
+    assert.equal(stage.find(fn)[0], rect);
+    assert.equal(stage.find(noOp).length, 0);
   });
 
   // ======================================================

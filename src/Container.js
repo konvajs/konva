@@ -141,14 +141,18 @@
       return this;
     },
     /**
-     * return a {@link Konva.Collection} of nodes that match the selector.  Use '#' for id selections
-     * and '.' for name selections.  You can also select by type or class name. Pass multiple selectors
+     * return a {@link Konva.Collection} of nodes that match the selector.
+     * You can provide a string with '#' for id selections and '.' for name selections.
+     * Or a function that will return true/false when a node is passed through.  See example below.
+     * With strings you can also select by type or class name. Pass multiple selectors
      * separated by a space.
      * @method
      * @memberof Konva.Container.prototype
-     * @param {String} selector
+     * @param {String | Function} selector
      * @returns {Collection}
      * @example
+     *
+     * Passing a string as a selector
      * // select node with id foo
      * var node = stage.find('#foo');
      *
@@ -163,8 +167,47 @@
      *
      * // select node with an id of foo or a name of bar inside layer
      * var nodes = layer.find('#foo, .bar');
+     *
+     * Passing a function as a selector
+     *
+     * // get all Groups
+     * var groups = stage.find(node => {
+     *  return node.getType() === 'Group';
+     * });
+     *
+     * // get only Nodes with partial opacity
+     * var alphaNodes = layer.find(node => {
+     *  return node.getType() === 'Node' && node.getAbsoluteOpacity() < 1;
+     * });
      */
     find: function(selector) {
+      var retArr = [];
+
+      if (typeof selector === 'string') {
+        retArr = this._findByString(selector);
+      } else if (typeof selector === 'function') {
+        retArr = this._findByFunction(selector);
+      }
+
+      return Konva.Collection.toCollection(retArr);
+    },
+    /**
+     * return a first node from `find` method
+     * @method
+     * @memberof Konva.Container.prototype
+     * @param {String} selector
+     * @returns {Konva.Node}
+     * @example
+     * // select node with id foo
+     * var node = stage.findOne('#foo');
+     *
+     * // select node with name bar inside layer
+     * var nodes = layer.findOne('.bar');
+     */
+    findOne: function(selector) {
+      return this.find(selector)[0];
+    },
+    _findByString: function(selector) {
       var retArr = [],
         selectorArr = selector.replace(/ /g, '').split(','),
         len = selectorArr.length,
@@ -209,51 +252,9 @@
         }
       }
 
-      return Konva.Collection.toCollection(retArr);
+      return retArr;
     },
-    /**
-     * return a first node from `find` method
-     * @method
-     * @memberof Konva.Container.prototype
-     * @param {String} selector
-     * @returns {Konva.Node}
-     * @example
-     * // select node with id foo
-     * var node = stage.findOne('#foo');
-     *
-     * // select node with name bar inside layer
-     * var nodes = layer.findOne('.bar');
-     */
-    findOne: function(selector) {
-      return this.find(selector)[0];
-    },
-    /**
-     * return a {@link Konva.Collection} of nodes that return true when passed through your function argument.
-     * Your function has access to the currentNode argument, and should return a boolean type.
-     * See examples for more details.
-     * @method
-     * @memberof Konva.Container.prototype
-     * @param {Function} fn
-     * @returns {Collection}
-     * @example
-     * // get all Groups
-     * var groups = stage.findWhere(el => {
-     *  return el.getType() === 'Group';
-     * });
-     *
-     * // get only Nodes with partial opacity
-     * var alphaNodes = layer.findWhere(el => {
-     *  return el.getType() === 'Node' && el.getAbsoluteOpacity() < 1;
-     * });
-     */
-    findWhere: function(fn) {
-      if (typeof fn !== 'function') {
-        Konva.Util.warn(
-          'You must pass a function with a return value as your argument here.  Are you maybe looking for .find instead?'
-        );
-        Konva.Util.warn('Konva is awesome, right?');
-      }
-
+    _findByFunction: function(fn) {
       var retArr = [];
 
       var addItems = function(el) {
@@ -271,7 +272,7 @@
 
       addItems(this);
 
-      return Konva.Collection.toCollection(retArr);
+      return retArr;
     },
     _getNodeById: function(key) {
       var node = Konva.ids[key];
