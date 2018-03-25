@@ -407,6 +407,37 @@ suite('Container', function() {
   });
 
   // ======================================================
+  test('select shape by function', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      x: 300,
+      y: 100,
+      width: 100,
+      height: 50,
+      fill: 'purple',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myRect'
+    });
+
+    layer.add(rect);
+    stage.add(layer);
+
+    var fn = function(node) {
+      return node.nodeType === 'Shape';
+    };
+
+    var noOp = function(node) {
+      return false;
+    };
+
+    assert.equal(stage.find(fn)[0], rect);
+    assert.equal(stage.find(noOp).length, 0);
+  });
+
+  // ======================================================
   test('set x on an array of nodes', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
