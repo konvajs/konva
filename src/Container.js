@@ -181,31 +181,42 @@
      * });
      */
     find: function(selector) {
-      var retArr = [];
-
-      if (typeof selector === 'string') {
-        retArr = this._findByString(selector);
-      } else if (typeof selector === 'function') {
-        retArr = this._findByFunction(selector);
-      }
-
-      return Konva.Collection.toCollection(retArr);
+      // protecting _findByType to prevent user from accidentally adding
+      // second argument and getting unexpected `findOne` result
+      return this._findByType(selector, false);
     },
     /**
      * return a first node from `find` method
      * @method
      * @memberof Konva.Container.prototype
-     * @param {String} selector
-     * @returns {Konva.Node}
+     * @param {String | Function} selector
+     * @returns {Konva.Node | Undefined}
      * @example
      * // select node with id foo
      * var node = stage.findOne('#foo');
      *
      * // select node with name bar inside layer
      * var nodes = layer.findOne('.bar');
+     *
+     * // select the first node to return true in a function
+     * var node = stage.findOne(node => {
+     *  return node.getType() === 'Shape'
+     * })
      */
     findOne: function(selector) {
-      return this.find(selector)[0];
+      var result = this._findByType(selector, true);
+      return result.length > 0 ? result[0] : undefined;
+    },
+    _findByType: function(selector, findOne) {
+      var retArr = [];
+
+      if (typeof selector === 'string') {
+        retArr = this._findByString(selector, findOne);
+      } else if (typeof selector === 'function') {
+        retArr = this._findByFunction(selector, findOne);
+      }
+
+      return Konva.Collection.toCollection(retArr);
     },
     _findByString: function(selector) {
       var retArr = [],
@@ -254,10 +265,16 @@
 
       return retArr;
     },
-    _findByFunction: function(fn) {
+    // (fn: ((Node) => boolean, findOne?: boolean)
+    _findByFunction: function(fn, findOne) {
       var retArr = [];
 
       var addItems = function(el) {
+        // escape function if we've already found one.
+        if (findOne && retArr.length > 0) {
+          return;
+        }
+
         var children = el.getChildren();
         var clen = children.length;
 
