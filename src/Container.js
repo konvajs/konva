@@ -141,14 +141,18 @@
       return this;
     },
     /**
-     * return a {@link Konva.Collection} of nodes that match the selector.  Use '#' for id selections
-     * and '.' for name selections.  You can also select by type or class name. Pass multiple selectors
+     * return a {@link Konva.Collection} of nodes that match the selector.
+     * You can provide a string with '#' for id selections and '.' for name selections.
+     * Or a function that will return true/false when a node is passed through.  See example below.
+     * With strings you can also select by type or class name. Pass multiple selectors
      * separated by a space.
      * @method
      * @memberof Konva.Container.prototype
-     * @param {String} selector
+     * @param {String | Function} selector
      * @returns {Collection}
      * @example
+     *
+     * Passing a string as a selector
      * // select node with id foo
      * var node = stage.find('#foo');
      *
@@ -163,8 +167,58 @@
      *
      * // select node with an id of foo or a name of bar inside layer
      * var nodes = layer.find('#foo, .bar');
+     *
+     * Passing a function as a selector
+     *
+     * // get all Groups
+     * var groups = stage.find(node => {
+     *  return node.getType() === 'Group';
+     * });
+     *
+     * // get only Nodes with partial opacity
+     * var alphaNodes = layer.find(node => {
+     *  return node.getType() === 'Node' && node.getAbsoluteOpacity() < 1;
+     * });
      */
     find: function(selector) {
+      // protecting _generalFind to prevent user from accidentally adding
+      // second argument and getting unexpected `findOne` result
+      return this._generalFind(selector, false);
+    },
+    /**
+     * return a first node from `find` method
+     * @method
+     * @memberof Konva.Container.prototype
+     * @param {String | Function} selector
+     * @returns {Konva.Node | Undefined}
+     * @example
+     * // select node with id foo
+     * var node = stage.findOne('#foo');
+     *
+     * // select node with name bar inside layer
+     * var nodes = layer.findOne('.bar');
+     *
+     * // select the first node to return true in a function
+     * var node = stage.findOne(node => {
+     *  return node.getType() === 'Shape'
+     * })
+     */
+    findOne: function(selector) {
+      var result = this._generalFind(selector, true);
+      return result.length > 0 ? result[0] : undefined;
+    },
+    _generalFind: function(selector, findOne) {
+      var retArr = [];
+
+      if (typeof selector === 'string') {
+        retArr = this._findByString(selector, findOne);
+      } else if (typeof selector === 'function') {
+        retArr = this._findByFunction(selector, findOne);
+      }
+
+      return Konva.Collection.toCollection(retArr);
+    },
+    _findByString: function(selector) {
       var retArr = [],
         selectorArr = selector.replace(/ /g, '').split(','),
         len = selectorArr.length,
@@ -209,23 +263,33 @@
         }
       }
 
-      return Konva.Collection.toCollection(retArr);
+      return retArr;
     },
-    /**
-     * return a first node from `find` method
-     * @method
-     * @memberof Konva.Container.prototype
-     * @param {String} selector
-     * @returns {Konva.Node}
-     * @example
-     * // select node with id foo
-     * var node = stage.findOne('#foo');
-     *
-     * // select node with name bar inside layer
-     * var nodes = layer.findOne('.bar');
-     */
-    findOne: function(selector) {
-      return this.find(selector)[0];
+    // (fn: ((Node) => boolean, findOne?: boolean)
+    _findByFunction: function(fn, findOne) {
+      var retArr = [];
+
+      var addItems = function(el) {
+        // escape function if we've already found one.
+        if (findOne && retArr.length > 0) {
+          return;
+        }
+
+        var children = el.getChildren();
+        var clen = children.length;
+
+        if (fn(el)) {
+          retArr = retArr.concat(el);
+        }
+
+        for (var i = 0; i < clen; i++) {
+          addItems(children[i]);
+        }
+      };
+
+      addItems(this);
+
+      return retArr;
     },
     _getNodeById: function(key) {
       var node = Konva.ids[key];

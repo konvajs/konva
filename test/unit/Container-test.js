@@ -291,7 +291,7 @@ suite('Container', function() {
   });
 
   // ======================================================
-  test('select shape by id and name with findOne', function() {
+  test('select shape with findOne', function() {
     var stage = addStage();
     var layer = new Konva.Layer({
       id: 'myLayer'
@@ -330,6 +330,10 @@ suite('Container', function() {
     assert.equal(node, undefined, 'node should be undefined');
     node = stage.findOne('#myLayer');
     assert.equal(node, layer, 'node type should be Layer');
+    node = stage.findOne(function(node) {
+      return node.getType() === 'Shape';
+    });
+    assert.equal(node, circle, 'findOne should work with functions');
   });
 
   // ======================================================
@@ -404,6 +408,37 @@ suite('Container', function() {
       rect._id,
       'rect id is wrong'
     );
+  });
+
+  // ======================================================
+  test('select shape by function', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      x: 300,
+      y: 100,
+      width: 100,
+      height: 50,
+      fill: 'purple',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myRect'
+    });
+
+    layer.add(rect);
+    stage.add(layer);
+
+    var fn = function(node) {
+      return node.nodeType === 'Shape';
+    };
+
+    var noOp = function(node) {
+      return false;
+    };
+
+    assert.equal(stage.find(fn)[0], rect);
+    assert.equal(stage.find(noOp).length, 0);
   });
 
   // ======================================================

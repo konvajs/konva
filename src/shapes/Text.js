@@ -363,14 +363,14 @@
         var lineWidth = this._getTextWidth(line);
         if (fixedWidth && lineWidth > maxWidth) {
           /*
-                     * if width is fixed and line does not fit entirely
-                     * break the line into multiple fitting lines
-                     */
+          * if width is fixed and line does not fit entirely
+          * break the line into multiple fitting lines
+          */
           while (line.length > 0) {
             /*
-                         * use binary search to find the longest substring that
-                         * that would fit in the specified width
-                         */
+            * use binary search to find the longest substring that
+            * that would fit in the specified width
+            */
             var low = 0,
               high = line.length,
               match = '',
@@ -414,9 +414,9 @@
                 (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx)
               ) {
                 /*
-                                 * stop wrapping if wrapping is disabled or if adding
-                                 * one more line would overflow the fixed height
-                                 */
+                * stop wrapping if wrapping is disabled or if adding
+                * one more line would overflow the fixed height
+                */
                 break;
               }
               line = line.slice(low);

@@ -5,15 +5,34 @@ declare namespace Konva {
   var isDragReady: () => boolean;
   var DD: any;
 
-  type globalCompositeOperationType = '' |
-    'source-over' | 'source-in' | 'source-out' | 'source-atop' |
-    'destination-over' | 'destination-in' | 'destination-out' | 'destination-atop' |
-    'lighter' | 'copy' | 'xor' | 'multiply' |
-    'screen' | 'overlay' | 'darken' | 'lighten' |
-    'color-dodge' | 'color-burn' | 'hard-light' | 'soft-light' |
-    'difference' | 'exclusion' | 'hue' | 'saturation' |
-    'color' | 'luminosity'
-  ;
+  type globalCompositeOperationType =
+    | ''
+    | 'source-over'
+    | 'source-in'
+    | 'source-out'
+    | 'source-atop'
+    | 'destination-over'
+    | 'destination-in'
+    | 'destination-out'
+    | 'destination-atop'
+    | 'lighter'
+    | 'copy'
+    | 'xor'
+    | 'multiply'
+    | 'screen'
+    | 'overlay'
+    | 'darken'
+    | 'lighten'
+    | 'color-dodge'
+    | 'color-burn'
+    | 'hard-light'
+    | 'soft-light'
+    | 'difference'
+    | 'exclusion'
+    | 'hue'
+    | 'saturation'
+    | 'color'
+    | 'luminosity';
 
   export class Util {
     static getRandomColor(): string;
@@ -323,8 +342,8 @@ declare namespace Konva {
     clipFunc(): (ctx: CanvasRenderingContext2D) => void;
     clipFunc(ctx: CanvasRenderingContext2D | undefined | null): void;
     destroyChildren(): void;
-    find(selector?: string): Collection;
-    findOne<T extends Node>(selector: string): T;
+    find(selector?: string | ((Node) => boolean)): Collection;
+    findOne<T extends Node>(selector: string | ((Node) => boolean)): T;
     getAllIntersections(pos: Vector2d): Shape[];
     hasChildren(): boolean;
     removeChildren(): void;
