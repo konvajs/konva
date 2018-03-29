@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Changes
 
 * Fixed flow for `contextmenu` event. Not it will be triggered on shapes too
+* `find()` method for Containers can use a function as a parameter
 
 ## Fixed
 
