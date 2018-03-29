@@ -181,9 +181,9 @@
      * });
      */
     find: function(selector) {
-      // protecting _findByType to prevent user from accidentally adding
+      // protecting _generalFind to prevent user from accidentally adding
       // second argument and getting unexpected `findOne` result
-      return this._findByType(selector, false);
+      return this._generalFind(selector, false);
     },
     /**
      * return a first node from `find` method
@@ -204,10 +204,10 @@
      * })
      */
     findOne: function(selector) {
-      var result = this._findByType(selector, true);
+      var result = this._generalFind(selector, true);
       return result.length > 0 ? result[0] : undefined;
     },
-    _findByType: function(selector, findOne) {
+    _generalFind: function(selector, findOne) {
       var retArr = [];
 
       if (typeof selector === 'string') {
