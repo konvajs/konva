@@ -74,6 +74,7 @@ declare namespace Konva {
     static Posterize(imageData: any): Filter;
     static RGB(imageData: any): Filter;
     static RGA(imageData: any): Filter;
+    static ColorBalance(imageData: any): Filter;
     static Sepia(imageData: any): Filter;
     static Solarize(imageData: any): Filter;
     static Threshold(imageData: any): Filter;
@@ -147,6 +148,7 @@ declare namespace Konva {
     addName(name: string): Node;
     blue(): number;
     blue(blue: number): this;
+    blueBalance(blue: number): this;
     brightness(): number;
     brightness(brightness: number): this;
     contrast(): number;
@@ -217,6 +219,7 @@ declare namespace Konva {
     getZIndex(): number;
     green(): number;
     green(green: number): this;
+    greenBalance(green: number): this;
     hasName(name: string): boolean;
     height(): number;
     height(height: number): this;
@@ -263,6 +266,7 @@ declare namespace Konva {
     position(position: Vector2d): this;
     red(): number;
     red(red: number): this;
+    redBalance(red: number): this;
     remove(): this;
     removeName(name: string): this;
     rotate(theta: number): this;

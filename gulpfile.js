@@ -40,6 +40,7 @@ var sourceFiles = [
   'src/filters/Mask.js',
   'src/filters/RGB.js',
   'src/filters/RGBA.js',
+  'src/filters/ColorBalance.js',
   'src/filters/HSV.js',
   'src/filters/HSL.js',
   'src/filters/Emboss.js',

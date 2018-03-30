@@ -2,7 +2,13 @@
   "name": "konva",
   "version": "2.0.2",
   "author": "Anton Lavrenov",
-  "files": ["README.md", "konva.js", "konva.min.js", "src", "konva.d.ts"],
+  "files": [
+    "README.md",
+    "konva.js",
+    "konva.min.js",
+    "src",
+    "konva.d.ts"
+  ],
   "main": "konva.js",
   "typings": "./konva.d.ts",
   "scripts": {
@@ -11,8 +17,7 @@
     "build": "gulp build",
     "full-build": "gulp lint test build",
     "test": "gulp test",
-    "prettier":
-      "prettier --write \"src/**/*.js\" \"test/**/*.js\" --single-quote"
+    "prettier": "prettier --write \"src/**/*.js\" \"test/**/*.js\" --single-quote"
   },
   "devDependencies": {
     "chai": "4.1.2",
@@ -30,7 +35,12 @@
     "mocha": "4.0.1",
     "prettier": "^1.9.2"
   },
-  "keywords": ["canvas", "animations", "graphic", "html5"],
+  "keywords": [
+    "canvas",
+    "animations",
+    "graphic",
+    "html5"
+  ],
   "prettier": {
     "singleQuote": true
   },

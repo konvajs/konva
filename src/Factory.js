@@ -159,7 +159,12 @@
         // chrome does not honor alpha values of 0
         return 0.0001;
       }
-
+      return val;
+    },
+    MultiplyComponent: function(val) {
+      if (val < 0) {
+        return 0;
+      }
       return val;
     }
   };
