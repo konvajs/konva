@@ -6361,11 +6361,7 @@
       i;
 
     function validate (val) {
-      if (val > 255) {
-        val = 255;
-        return val;
-      }
-      return val;
+      return (val > 255) ? 255 : val;
     }
 
     for (i = 0; i < nPixels; i += 4) {
