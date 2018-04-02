@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.0.2
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Thu Mar 29 2018
+ * Date: Mon Apr 02 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -18529,7 +18529,24 @@
         ctx.closePath();
         ctx.restore();
       }
+
+      // here is a tricky part
+      // we need to disable dash for arrow pointers
+      var isDashEnabled = this.dashEnabled();
+      if (isDashEnabled) {
+        // manually disable dash for head
+        // it is better not to use setter here,
+        // because it will trigger attr change event
+        this.attrs.dashEnabled = false;
+        ctx.setLineDash([]);
+      }
+
       ctx.fillStrokeShape(this);
+
+      // restore old value
+      if (isDashEnabled) {
+        this.attrs.dashEnabled = true;
+      }
     }
   };
 
