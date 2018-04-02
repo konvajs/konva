@@ -67,20 +67,23 @@
         ctx.restore();
       }
 
-      this._fillArrowHead(ctx);
-    },
-
-    // removing dash from arrow-head only, but putting it back to the
-    // intial value after render
-    _fillArrowHead: function(ctx) {
+      // here is a tricky part
+      // we need to disable dash for arrow pointers
       var isDashEnabled = this.dashEnabled();
       if (isDashEnabled) {
-        this.dashEnabled(false);
+        // manually disable dash for head
+        // it is better not to use setter here,
+        // because it will trigger attr change event
+        this.attrs.dashEnabled = false;
+        ctx.setLineDash([]);
       }
 
       ctx.fillStrokeShape(this);
 
-      this.dashEnabled(isDashEnabled);
+      // restore old value
+      if (isDashEnabled) {
+        this.attrs.dashEnabled = true;
+      }
     }
   };
 
