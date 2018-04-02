@@ -66,7 +66,21 @@
         ctx.closePath();
         ctx.restore();
       }
+
+      this._fillArrowHead(ctx);
+    },
+
+    // removing dash from arrow-head only, but putting it back to the
+    // intial value after render
+    _fillArrowHead: function(ctx) {
+      var isDashEnabled = this.dashEnabled();
+      if (isDashEnabled) {
+        this.dashEnabled(false);
+      }
+
       ctx.fillStrokeShape(this);
+
+      this.dashEnabled(isDashEnabled);
     }
   };
 
