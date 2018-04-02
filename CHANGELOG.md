@@ -18,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## Fixed
 
 * some bugs fixes for `group.getClientRect()`
+* `Konva.Arrow` will not draw dash for pointers
 
 ## [2.0.2][2018-03-15]
 
