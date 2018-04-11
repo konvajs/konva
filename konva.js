@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.0.2
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Mon Apr 02 2018
+ * Date: Wed Apr 11 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -14763,14 +14763,6 @@
       context.closePath();
       context.fillStrokeShape(this);
     },
-    // _useBufferCanvas: function(caching) {
-    //     var useIt = Konva.Shape.prototype._useBufferCanvas.call(this, caching);
-    //     if (useIt) {
-    //       return true;
-    //     }
-    //     return false;
-    //     // return isFirefox && this.hasFill() && this.hasShadow();
-    // },
     setText: function(text) {
       var str = Konva.Util._isString(text) ? text : (text || '').toString();
       this._setAttr(TEXT, str);
@@ -19184,31 +19176,32 @@
       }
     },
 
-    _fitNodeInto: function(attrs) {
+    _fitNodeInto: function(newAttrs) {
       // waring! in this attrs padding may be included
+      var boundBoxFunc = this.getBoundBoxFunc();
+      if (boundBoxFunc) {
+        var oldAttrs = this._getNodeRect();
+        newAttrs = boundBoxFunc.call(this, oldAttrs, newAttrs);
+      }
       this._settings = true;
       var node = this.getNode();
-      if (attrs.rotation !== undefined) {
-        this.getNode().rotation(attrs.rotation);
+      if (newAttrs.rotation !== undefined) {
+        this.getNode().rotation(newAttrs.rotation);
       }
       var pure = node.getClientRect({ skipTransform: true });
       var padding = this.getPadding();
-      var scaleX = (attrs.width - padding * 2) / pure.width;
-      var scaleY = (attrs.height - padding * 2) / pure.height;
+      var scaleX = (newAttrs.width - padding * 2) / pure.width;
+      var scaleY = (newAttrs.height - padding * 2) / pure.height;
 
       var rotation = Konva.getAngle(node.getRotation());
-      // debugger;
       var dx = pure.x * scaleX - padding;
       var dy = pure.y * scaleY - padding;
-
-      // var dxo = node.offsetX() * scaleX;
-      // var dyo = node.offsetY() * scaleY;
 
       this.getNode().setAttrs({
         scaleX: scaleX,
         scaleY: scaleY,
-        x: attrs.x - (dx * Math.cos(rotation) + dy * Math.sin(-rotation)),
-        y: attrs.y - (dy * Math.cos(rotation) + dx * Math.sin(rotation))
+        x: newAttrs.x - (dx * Math.cos(rotation) + dy * Math.sin(-rotation)),
+        y: newAttrs.y - (dy * Math.cos(rotation) + dx * Math.sin(rotation))
       });
       this._settings = false;
 
@@ -19300,6 +19293,14 @@
         height: height,
         visible: this.lineEnabled()
       });
+    },
+    isTransforming: function() {
+      return this._transforming;
+    },
+    stopTransform: function() {
+      if (this._transforming) {
+        this._removeEvents();
+      }
     },
     destroy: function() {
       Konva.Group.prototype.destroy.call(this);
@@ -19467,6 +19468,8 @@
   Konva.Factory.addGetterSetter(Konva.Transformer, 'padding', 0);
 
   Konva.Factory.addOverloadedGetterSetter(Konva.Transformer, 'node');
+
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'boundBoxFunc');
 
   Konva.Collection.mapMethods(Konva.Transformer);
 })(Konva);
