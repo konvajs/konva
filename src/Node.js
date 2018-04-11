@@ -1879,7 +1879,8 @@
     _setAttr: function(key, val) {
       var oldVal;
       oldVal = this.attrs[key];
-      if (oldVal === val) {
+      var same = oldVal === val;
+      if (same && !Konva.Util.isObject(val)) {
         return;
       }
       if (val === undefined || val === null) {

@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.0.2
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Sun Mar 25 2018
+ * Date: Wed Apr 11 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -352,7 +352,10 @@
     */
 
   /**
-   * Transform constructor
+   * Transform constructor. Transform object is a private class of Konva framework.
+   * In most of the cases you don't need to use it in your app.
+   * But there is a documentation for that class in case you still want
+   * to make some manual calculations.
    * @constructor
    * @param {Array} [m] Optional six-element matrix
    * @memberof Konva
@@ -731,6 +734,10 @@
     },
     _isString: function(obj) {
       return Object.prototype.toString.call(obj) === OBJECT_STRING;
+    },
+    // arrays are objects too
+    isObject: function(val) {
+      return val instanceof Object;
     },
     isValidSelector: function(selector) {
       if (typeof selector !== 'string') {
@@ -4253,7 +4260,8 @@
     _setAttr: function(key, val) {
       var oldVal;
       oldVal = this.attrs[key];
-      if (oldVal === val) {
+      var same = oldVal === val;
+      if (same && !Konva.Util.isObject(val)) {
         return;
       }
       if (val === undefined || val === null) {
@@ -7811,31 +7819,42 @@
      * });
      */
     find: function(selector) {
-      var retArr = [];
-
-      if (typeof selector === 'string') {
-        retArr = this._findByString(selector);
-      } else if (typeof selector === 'function') {
-        retArr = this._findByFunction(selector);
-      }
-
-      return Konva.Collection.toCollection(retArr);
+      // protecting _generalFind to prevent user from accidentally adding
+      // second argument and getting unexpected `findOne` result
+      return this._generalFind(selector, false);
     },
     /**
      * return a first node from `find` method
      * @method
      * @memberof Konva.Container.prototype
-     * @param {String} selector
-     * @returns {Konva.Node}
+     * @param {String | Function} selector
+     * @returns {Konva.Node | Undefined}
      * @example
      * // select node with id foo
      * var node = stage.findOne('#foo');
      *
      * // select node with name bar inside layer
      * var nodes = layer.findOne('.bar');
+     *
+     * // select the first node to return true in a function
+     * var node = stage.findOne(node => {
+     *  return node.getType() === 'Shape'
+     * })
      */
     findOne: function(selector) {
-      return this.find(selector)[0];
+      var result = this._generalFind(selector, true);
+      return result.length > 0 ? result[0] : undefined;
+    },
+    _generalFind: function(selector, findOne) {
+      var retArr = [];
+
+      if (typeof selector === 'string') {
+        retArr = this._findByString(selector, findOne);
+      } else if (typeof selector === 'function') {
+        retArr = this._findByFunction(selector, findOne);
+      }
+
+      return Konva.Collection.toCollection(retArr);
     },
     _findByString: function(selector) {
       var retArr = [],
@@ -7884,10 +7903,16 @@
 
       return retArr;
     },
-    _findByFunction: function(fn) {
+    // (fn: ((Node) => boolean, findOne?: boolean)
+    _findByFunction: function(fn, findOne) {
       var retArr = [];
 
       var addItems = function(el) {
+        // escape function if we've already found one.
+        if (findOne && retArr.length > 0) {
+          return;
+        }
+
         var children = el.getChildren();
         var clen = children.length;
 
@@ -10631,7 +10656,8 @@
 
         if (Konva.inDblClickWindow) {
           fireDblClick = true;
-          Konva.inDblClickWindow = false;
+          clearTimeout(this.dblTimeout);
+          // Konva.inDblClickWindow = false;
         } else if (!dd || !dd.justDragged) {
           // don't set inDblClickWindow after dragging
           Konva.inDblClickWindow = true;
@@ -10639,7 +10665,7 @@
           dd.justDragged = false;
         }
 
-        setTimeout(function() {
+        this.dblTimeout = setTimeout(function() {
           Konva.inDblClickWindow = false;
         }, Konva.dblClickWindow);
 
@@ -10738,12 +10764,13 @@
 
       if (Konva.inDblClickWindow) {
         fireDblClick = true;
-        Konva.inDblClickWindow = false;
+        clearTimeout(this.dblTimeout);
+        // Konva.inDblClickWindow = false;
       } else {
         Konva.inDblClickWindow = true;
       }
 
-      setTimeout(function() {
+      this.dblTimeout = setTimeout(function() {
         Konva.inDblClickWindow = false;
       }, Konva.dblClickWindow);
 
@@ -14755,14 +14782,6 @@
       context.closePath();
       context.fillStrokeShape(this);
     },
-    // _useBufferCanvas: function(caching) {
-    //     var useIt = Konva.Shape.prototype._useBufferCanvas.call(this, caching);
-    //     if (useIt) {
-    //       return true;
-    //     }
-    //     return false;
-    //     // return isFirefox && this.hasFill() && this.hasShadow();
-    // },
     setText: function(text) {
       var str = Konva.Util._isString(text) ? text : (text || '').toString();
       this._setAttr(TEXT, str);
@@ -14896,14 +14915,14 @@
         var lineWidth = this._getTextWidth(line);
         if (fixedWidth && lineWidth > maxWidth) {
           /*
-                     * if width is fixed and line does not fit entirely
-                     * break the line into multiple fitting lines
-                     */
+          * if width is fixed and line does not fit entirely
+          * break the line into multiple fitting lines
+          */
           while (line.length > 0) {
             /*
-                         * use binary search to find the longest substring that
-                         * that would fit in the specified width
-                         */
+            * use binary search to find the longest substring that
+            * that would fit in the specified width
+            */
             var low = 0,
               high = line.length,
               match = '',
@@ -14947,9 +14966,9 @@
                 (fixedHeight && currentHeightPx + lineHeightPx > maxHeightPx)
               ) {
                 /*
-                                 * stop wrapping if wrapping is disabled or if adding
-                                 * one more line would overflow the fixed height
-                                 */
+                * stop wrapping if wrapping is disabled or if adding
+                * one more line would overflow the fixed height
+                */
                 break;
               }
               line = line.slice(low);
@@ -18521,7 +18540,24 @@
         ctx.closePath();
         ctx.restore();
       }
+
+      // here is a tricky part
+      // we need to disable dash for arrow pointers
+      var isDashEnabled = this.dashEnabled();
+      if (isDashEnabled) {
+        // manually disable dash for head
+        // it is better not to use setter here,
+        // because it will trigger attr change event
+        this.attrs.dashEnabled = false;
+        ctx.setLineDash([]);
+      }
+
       ctx.fillStrokeShape(this);
+
+      // restore old value
+      if (isDashEnabled) {
+        this.attrs.dashEnabled = true;
+      }
     }
   };
 
@@ -19159,31 +19195,32 @@
       }
     },
 
-    _fitNodeInto: function(attrs) {
+    _fitNodeInto: function(newAttrs) {
       // waring! in this attrs padding may be included
+      var boundBoxFunc = this.getBoundBoxFunc();
+      if (boundBoxFunc) {
+        var oldAttrs = this._getNodeRect();
+        newAttrs = boundBoxFunc.call(this, oldAttrs, newAttrs);
+      }
       this._settings = true;
       var node = this.getNode();
-      if (attrs.rotation !== undefined) {
-        this.getNode().rotation(attrs.rotation);
+      if (newAttrs.rotation !== undefined) {
+        this.getNode().rotation(newAttrs.rotation);
       }
       var pure = node.getClientRect({ skipTransform: true });
       var padding = this.getPadding();
-      var scaleX = (attrs.width - padding * 2) / pure.width;
-      var scaleY = (attrs.height - padding * 2) / pure.height;
+      var scaleX = (newAttrs.width - padding * 2) / pure.width;
+      var scaleY = (newAttrs.height - padding * 2) / pure.height;
 
       var rotation = Konva.getAngle(node.getRotation());
-      // debugger;
       var dx = pure.x * scaleX - padding;
       var dy = pure.y * scaleY - padding;
-
-      // var dxo = node.offsetX() * scaleX;
-      // var dyo = node.offsetY() * scaleY;
 
       this.getNode().setAttrs({
         scaleX: scaleX,
         scaleY: scaleY,
-        x: attrs.x - (dx * Math.cos(rotation) + dy * Math.sin(-rotation)),
-        y: attrs.y - (dy * Math.cos(rotation) + dx * Math.sin(rotation))
+        x: newAttrs.x - (dx * Math.cos(rotation) + dy * Math.sin(-rotation)),
+        y: newAttrs.y - (dy * Math.cos(rotation) + dx * Math.sin(rotation))
       });
       this._settings = false;
 
@@ -19275,6 +19312,14 @@
         height: height,
         visible: this.lineEnabled()
       });
+    },
+    isTransforming: function() {
+      return this._transforming;
+    },
+    stopTransform: function() {
+      if (this._transforming) {
+        this._removeEvents();
+      }
     },
     destroy: function() {
       Konva.Group.prototype.destroy.call(this);
@@ -19442,6 +19487,8 @@
   Konva.Factory.addGetterSetter(Konva.Transformer, 'padding', 0);
 
   Konva.Factory.addOverloadedGetterSetter(Konva.Transformer, 'node');
+
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'boundBoxFunc');
 
   Konva.Collection.mapMethods(Konva.Transformer);
 })(Konva);

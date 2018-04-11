@@ -66,7 +66,24 @@
         ctx.closePath();
         ctx.restore();
       }
+
+      // here is a tricky part
+      // we need to disable dash for arrow pointers
+      var isDashEnabled = this.dashEnabled();
+      if (isDashEnabled) {
+        // manually disable dash for head
+        // it is better not to use setter here,
+        // because it will trigger attr change event
+        this.attrs.dashEnabled = false;
+        ctx.setLineDash([]);
+      }
+
       ctx.fillStrokeShape(this);
+
+      // restore old value
+      if (isDashEnabled) {
+        this.attrs.dashEnabled = true;
+      }
     }
   };
 

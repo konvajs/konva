@@ -392,9 +392,7 @@ suite('MouseEvents', function() {
   });
 
   // ======================================================
-  test('modify fill stroke and stroke width on hover with circle', function(
-    done
-  ) {
+  test('modify fill stroke and stroke width on hover with circle', function(done) {
     var stage = addStage();
     var layer = new Konva.Layer({
       throttle: 999
@@ -464,9 +462,7 @@ suite('MouseEvents', function() {
   });
 
   // ======================================================
-  test('mousedown mouseup mouseover mouseout mousemove click dblclick', function(
-    done
-  ) {
+  test('mousedown mouseup mouseover mouseout mousemove click dblclick', function(done) {
     var stage = addStage();
     var layer = new Konva.Layer();
     var circle = new Konva.Circle({
@@ -1191,14 +1187,14 @@ suite('MouseEvents', function() {
     var group22 = new Konva.Group({ name: 'group22' });
     group21.add(group22);
 
-    var smallRect = new Konva.Rect({
+    var smallShape = new Konva.Rect({
       x: 50,
       y: 50,
       width: 100,
       height: 100,
       fill: 'red'
     });
-    group22.add(smallRect);
+    group22.add(smallShape);
     stage.draw();
 
     var group1Mouseenter = 0;
@@ -1311,7 +1307,7 @@ suite('MouseEvents', function() {
   });
 
   // ======================================================
-  test('test dblclick to a wrong target', function () {
+  test('test dblclick to a wrong target', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -1340,13 +1336,13 @@ suite('MouseEvents', function() {
     var rightRectSingleClick = 0;
     var rightRectDblClick = 0;
 
-    leftRect.on('click', function () {
+    leftRect.on('click', function() {
       leftRectSingleClick++;
     });
-    rightRect.on('click', function () {
+    rightRect.on('click', function() {
       rightRectSingleClick++;
     });
-    rightRect.on('dblclick', function () {
+    rightRect.on('dblclick', function() {
       rightRectDblClick++;
     });
 
@@ -1369,11 +1365,7 @@ suite('MouseEvents', function() {
       y: 50
     });
     assert.equal(rightRectSingleClick, 1, 'rightRect trigger a click');
-    assert.equal(
-      rightRectDblClick,
-      0,
-      'rightRect dblClick should not trigger'
-    );
+    assert.equal(rightRectDblClick, 0, 'rightRect dblClick should not trigger');
   });
 
   // ======================================================
@@ -1701,7 +1693,10 @@ suite('MouseEvents', function() {
             context.fillStrokeShape(this);
           });
 
-          layer.getHitCanvas().getContext().clear();
+          layer
+            .getHitCanvas()
+            .getContext()
+            .clear();
           layer.drawHit();
 
           setTimeout(function() {
@@ -1786,5 +1781,90 @@ suite('MouseEvents', function() {
       y: stage.height() / 2
     });
     assert.equal(shape, circle);
+  });
+
+  it('double click after click should trigger event', function(done) {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var bigRect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 200,
+      height: 200,
+      fill: 'yellow'
+    });
+    layer.add(bigRect);
+
+    var smallShape = new Konva.Circle({
+      x: 100,
+      y: 100,
+      width: 100,
+      fill: 'red'
+    });
+    layer.add(smallShape);
+    layer.draw();
+
+    var bigClicks = 0;
+    var smallClicks = 0;
+    var smallDblClicks = 0;
+
+    bigRect.on('click', function() {
+      bigClicks += 1;
+    });
+
+    smallShape.on('click', function() {
+      smallClicks += 1;
+    });
+
+    smallShape.on('dblclick', function() {
+      smallDblClicks += 1;
+    });
+
+    stage.simulateMouseDown({
+      x: 10,
+      y: 10
+    });
+    stage.simulateMouseUp({
+      x: 10,
+      y: 10
+    });
+
+    assert.equal(bigClicks, 1, 'single click on big rect');
+    assert.equal(smallClicks, 0, 'no  click on small rect');
+    assert.equal(smallDblClicks, 0, 'no dblclick on small rect');
+
+    setTimeout(function() {
+      stage.simulateMouseDown({
+        x: 100,
+        y: 100
+      });
+      stage.simulateMouseUp({
+        x: 100,
+        y: 100
+      });
+
+      assert.equal(bigClicks, 1, 'single click on big rect');
+      assert.equal(smallClicks, 1, 'single click on small rect');
+      assert.equal(smallDblClicks, 0, 'no dblclick on small rect');
+
+      setTimeout(function() {
+        stage.simulateMouseDown({
+          x: 100,
+          y: 100
+        });
+        stage.simulateMouseUp({
+          x: 100,
+          y: 100
+        });
+
+        assert.equal(bigClicks, 1, 'single click on big rect');
+        assert.equal(smallClicks, 2, 'second click on small rect');
+        assert.equal(smallDblClicks, 1, 'single dblclick on small rect');
+
+        done();
+      }, 200);
+    }, 200);
   });
 });

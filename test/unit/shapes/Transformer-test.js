@@ -991,4 +991,59 @@ suite('Transformer', function() {
     });
     assert.equal(stage.content.style.cursor, 'nwse-resize');
   });
+
+  test('stopTransform method', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+    layer.draw();
+
+    stage.simulateMouseDown({
+      x: 50,
+      y: 50
+    });
+
+    var top = stage.content.getBoundingClientRect().top;
+    tr._handleMouseMove({
+      target: tr.findOne('.top-left'),
+      clientX: 60,
+      clientY: 60 + top
+    });
+
+    assert.equal(tr.isTransforming(), true);
+    assert.equal(rect.x(), 60);
+
+    var transformend = 0;
+    rect.on('transformend', function() {
+      transformend += 1;
+    });
+
+    tr.stopTransform();
+
+    assert.equal(transformend, 1);
+
+    assert.equal(tr.isTransforming(), false);
+    assert.equal(rect.x(), 60);
+
+    // here is duplicate, because transformer is listening window events
+    stage.simulateMouseUp({
+      x: 100,
+      y: 100
+    });
+  });
 });
