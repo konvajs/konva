@@ -352,7 +352,10 @@
     */
 
   /**
-   * Transform constructor
+   * Transform constructor. Transform object is a private class of Konva framework.
+   * In most of the cases you don't need to use it in your app.
+   * But there is a documentation for that class in case you still want
+   * to make some manual calculations.
    * @constructor
    * @param {Array} [m] Optional six-element matrix
    * @memberof Konva
@@ -731,6 +734,10 @@
     },
     _isString: function(obj) {
       return Object.prototype.toString.call(obj) === OBJECT_STRING;
+    },
+    // arrays are objects too
+    isObject: function(val) {
+      return val instanceof Object;
     },
     isValidSelector: function(selector) {
       if (typeof selector !== 'string') {
@@ -4244,7 +4251,8 @@
     _setAttr: function(key, val) {
       var oldVal;
       oldVal = this.attrs[key];
-      if (oldVal === val) {
+      var same = oldVal === val;
+      if (same && !Konva.Util.isObject(val)) {
         return;
       }
       if (val === undefined || val === null) {
