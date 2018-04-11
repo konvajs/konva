@@ -1783,7 +1783,7 @@ suite('MouseEvents', function() {
     assert.equal(shape, circle);
   });
 
-  it('double click after click should trigger event', function() {
+  it('double click after click should trigger event', function(done) {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -1835,30 +1835,36 @@ suite('MouseEvents', function() {
     assert.equal(smallClicks, 0, 'no  click on small rect');
     assert.equal(smallDblClicks, 0, 'no dblclick on small rect');
 
-    stage.simulateMouseDown({
-      x: 100,
-      y: 100
-    });
-    stage.simulateMouseUp({
-      x: 100,
-      y: 100
-    });
+    setTimeout(function() {
+      stage.simulateMouseDown({
+        x: 100,
+        y: 100
+      });
+      stage.simulateMouseUp({
+        x: 100,
+        y: 100
+      });
 
-    assert.equal(bigClicks, 1, 'single click on big rect');
-    assert.equal(smallClicks, 1, 'single click on small rect');
-    assert.equal(smallDblClicks, 0, 'no dblclick on small rect');
+      assert.equal(bigClicks, 1, 'single click on big rect');
+      assert.equal(smallClicks, 1, 'single click on small rect');
+      assert.equal(smallDblClicks, 0, 'no dblclick on small rect');
 
-    stage.simulateMouseDown({
-      x: 100,
-      y: 100
-    });
-    stage.simulateMouseUp({
-      x: 100,
-      y: 100
-    });
+      setTimeout(function() {
+        stage.simulateMouseDown({
+          x: 100,
+          y: 100
+        });
+        stage.simulateMouseUp({
+          x: 100,
+          y: 100
+        });
 
-    assert.equal(bigClicks, 1, 'single click on big rect');
-    assert.equal(smallClicks, 2, 'second click on small rect');
-    assert.equal(smallDblClicks, 1, 'single dblclick on small rect');
+        assert.equal(bigClicks, 1, 'single click on big rect');
+        assert.equal(smallClicks, 2, 'second click on small rect');
+        assert.equal(smallDblClicks, 1, 'single dblclick on small rect');
+
+        done();
+      }, 200);
+    }, 200);
   });
 });
