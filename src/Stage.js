@@ -550,7 +550,7 @@
 
         if (Konva.inDblClickWindow) {
           fireDblClick = true;
-          Konva.inDblClickWindow = false;
+          // Konva.inDblClickWindow = false;
         } else if (!dd || !dd.justDragged) {
           // don't set inDblClickWindow after dragging
           Konva.inDblClickWindow = true;
