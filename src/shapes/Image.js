@@ -239,7 +239,7 @@
       });
       callback(image);
     };
-    img.crossOrigin = "Anonymous";
+    img.crossOrigin = 'Anonymous';
     img.src = url;
   };
 })();
