@@ -19243,7 +19243,6 @@
       this.update();
     },
     update: function() {
-      console.log('update');
       var attrs = this._getNodeRect();
       var width = attrs.width;
       var height = attrs.height;
