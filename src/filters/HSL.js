@@ -8,13 +8,13 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set hsv hue in degrees. Use with {@link Konva.Filters.HSV} or {@link Konva.Filters.HSL} filter.
-    * @name hue
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Number} hue value between 0 and 359
-    * @returns {Number}
-    */
+   * get/set hsv hue in degrees. Use with {@link Konva.Filters.HSV} or {@link Konva.Filters.HSL} filter.
+   * @name hue
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} hue value between 0 and 359
+   * @returns {Number}
+   */
 
   Konva.Factory.addGetterSetter(
     Konva.Node,
@@ -24,13 +24,13 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set hsv saturation. Use with {@link Konva.Filters.HSV} or {@link Konva.Filters.HSL} filter.
-    * @name saturation
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Number} saturation 0 is no change, -1.0 halves the saturation, 1.0 doubles, etc..
-    * @returns {Number}
-    */
+   * get/set hsv saturation. Use with {@link Konva.Filters.HSV} or {@link Konva.Filters.HSL} filter.
+   * @name saturation
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} saturation 0 is no change, -1.0 halves the saturation, 1.0 doubles, etc..
+   * @returns {Number}
+   */
 
   Konva.Factory.addGetterSetter(
     Konva.Node,
@@ -40,24 +40,24 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set hsl luminance. Use with {@link Konva.Filters.HSL} filter.
-    * @name value
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Number} value 0 is no change, -1.0 halves the value, 1.0 doubles, etc..
-    * @returns {Number}
-    */
+   * get/set hsl luminance. Use with {@link Konva.Filters.HSL} filter.
+   * @name value
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} value from -1 to 1
+   * @returns {Number}
+   */
 
   /**
-    * HSL Filter. Adjusts the hue, saturation and luminance (or lightness)
-    * @function
-    * @memberof Konva.Filters
-    * @param {Object} imageData
-    * @author ippo615
-    * @example
-    * image.filters([Konva.Filters.HSL]);
-    * image.luminance(200);
-    */
+   * HSL Filter. Adjusts the hue, saturation and luminance (or lightness)
+   * @function
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @author ippo615
+   * @example
+   * image.filters([Konva.Filters.HSL]);
+   * image.luminance(200);
+   */
 
   Konva.Filters.HSL = function(imageData) {
     var data = imageData.data,
@@ -84,14 +84,14 @@
       vsw = v * s * Math.sin(h * Math.PI / 180);
     // (result spot)(source spot)
     var rr = 0.299 * v + 0.701 * vsu + 0.167 * vsw,
-      rg = 0.587 * v - 0.587 * vsu + 0.330 * vsw,
+      rg = 0.587 * v - 0.587 * vsu + 0.33 * vsw,
       rb = 0.114 * v - 0.114 * vsu - 0.497 * vsw;
     var gr = 0.299 * v - 0.299 * vsu - 0.328 * vsw,
       gg = 0.587 * v + 0.413 * vsu + 0.035 * vsw,
       gb = 0.114 * v - 0.114 * vsu + 0.293 * vsw;
-    var br = 0.299 * v - 0.300 * vsu + 1.250 * vsw,
-      bg = 0.587 * v - 0.586 * vsu - 1.050 * vsw,
-      bb = 0.114 * v + 0.886 * vsu - 0.200 * vsw;
+    var br = 0.299 * v - 0.3 * vsu + 1.25 * vsw,
+      bg = 0.587 * v - 0.586 * vsu - 1.05 * vsw,
+      bb = 0.114 * v + 0.886 * vsu - 0.2 * vsw;
 
     var r, g, b, a;
 
