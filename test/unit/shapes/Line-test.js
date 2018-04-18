@@ -1,4 +1,4 @@
-suite('Line', function() {
+suite.only('Line', function() {
   // ======================================================
   test('add line', function() {
     var stage = addStage();

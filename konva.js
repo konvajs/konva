@@ -2086,19 +2086,32 @@
         strokeScaleEnabled =
           shape.getStrokeScaleEnabled() || shape instanceof Konva.Text;
 
-      if (shape.hasStroke()) {
-        if (!strokeScaleEnabled) {
-          this.save();
-          this.setTransform(1, 0, 0, 1, 0, 0);
-        }
+      var scale = 1;
+      var pixelRatio = this.getCanvas().getPixelRatio();
 
+      if (shape.hasStroke()) {
         this._applyLineCap(shape);
         if (dash && shape.dashEnabled()) {
-          this.setLineDash(dash);
+          if (!strokeScaleEnabled) {
+            scale = pixelRatio / (this._context.currentTransform ? this._context.currentTransform.a : 1);
+            var len = dash.length;
+            var scaledDash = new Array(len);
+            for (var i = 0; i < len; i++) {
+              scaledDash[i] = dash[i] * scale;
+            }
+            this.setLineDash(scaledDash);
+          } else {
+            this.setLineDash(dash);
+          }
           this.setAttr('lineDashOffset', shape.dashOffset());
         }
 
-        this.setAttr('lineWidth', shape.strokeWidth());
+        if (!strokeScaleEnabled) {
+          scale = pixelRatio / (this._context.currentTransform ? this._context.currentTransform.a : 1);
+          this.setAttr('lineWidth', shape.strokeWidth() * scale);
+        } else {
+          this.setAttr('lineWidth', shape.strokeWidth());
+        }
 
         if (!shape.getShadowForStrokeEnabled()) {
           this.setAttr('shadowColor', 'rgba(0,0,0,0)');
@@ -2114,10 +2127,6 @@
         }
 
         shape._strokeFunc(this);
-
-        if (!strokeScaleEnabled) {
-          this.restore();
-        }
       }
     },
     _applyShadow: function(shape) {
@@ -2167,17 +2176,17 @@
         // ignore strokeScaleEnabled for Text
         var strokeScaleEnabled =
           shape.getStrokeScaleEnabled() || shape instanceof Konva.Text;
-        if (!strokeScaleEnabled) {
-          this.save();
-          this.setTransform(1, 0, 0, 1, 0, 0);
-        }
+
         this._applyLineCap(shape);
-        this.setAttr('lineWidth', shape.strokeWidth());
+        if (!strokeScaleEnabled) {
+          var pixelRatio = this.getCanvas().getPixelRatio();
+          var scale = pixelRatio / (this._context.currentTransform ? this._context.currentTransform.a : 1);
+          this.setAttr('lineWidth', shape.strokeWidth() * scale);
+        } else {
+          this.setAttr('lineWidth', shape.strokeWidth());
+        }
         this.setAttr('strokeStyle', shape.colorKey);
         shape._strokeFuncHit(this);
-        if (!strokeScaleEnabled) {
-          this.restore();
-        }
       }
     }
   };

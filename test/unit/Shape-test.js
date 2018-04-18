@@ -1445,4 +1445,47 @@ suite('Shape', function() {
       compareLayers(layer1, layer2, 30);
     }
   });
+
+  test('text shadow blur should take scale into account', function() {
+    var stage = addStage();
+    var layer1 = new Konva.Layer();
+    stage.add(layer1);
+
+    var rect1 = new Konva.Rect({
+      x: 10,
+      y: 10,
+      scaleX: 0.5,
+      scaleY: 0.5,
+      width: 80,
+      height: 80,
+      fill: 'black',
+      shadowColor: 'black',
+      shadowOffsetX: 0,
+      shadowOffsetY: 50,
+      shadowBlur: 10
+    });
+    layer1.add(rect1);
+    stage.add(layer1);
+
+    var layer2 = new Konva.Layer();
+    stage.add(layer2);
+
+    var rect2 = new Konva.Rect({
+      x: 10,
+      y: 10,
+      fill: 'black',
+      width: 40,
+      height: 40,
+      shadowColor: 'black',
+      shadowOffsetX: 0,
+      shadowOffsetY: 25,
+      shadowBlur: 5
+    });
+    layer2.add(rect2);
+    stage.add(layer2);
+
+    if (!window.isPhantomJS) {
+      compareLayers(layer1, layer2, 30);
+    }
+  });
 });
