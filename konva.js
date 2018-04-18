@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.0.2
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Tue Apr 17 2018
+ * Date: Wed Apr 18 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -8133,7 +8133,7 @@
       var that = this;
       this.children.each(function(child) {
         // skip invisible children
-        if (!child.isVisible()) {
+        if (!child.getVisible()) {
           return;
         }
 
@@ -8164,7 +8164,7 @@
       var hasVisible = false;
       for (var i = 0; i < shapes.length; i++) {
         var shape = shapes[i];
-        if (shape.isVisible()) {
+        if (shape.getVisible()) {
           hasVisible = true;
           break;
         }
@@ -14476,6 +14476,7 @@
       });
       callback(image);
     };
+    img.crossOrigin = 'Anonymous';
     img.src = url;
   };
 })();
