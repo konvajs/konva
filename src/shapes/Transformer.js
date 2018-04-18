@@ -344,8 +344,8 @@
 
       window.addEventListener('mousemove', this._handleMouseMove);
       window.addEventListener('touchmove', this._handleMouseMove);
-      window.addEventListener('mouseup', this._handleMouseUp);
-      window.addEventListener('touchend', this._handleMouseUp);
+      window.addEventListener('mouseup', this._handleMouseUp, true);
+      window.addEventListener('touchend', this._handleMouseUp, true);
 
       this._transforming = true;
 
@@ -545,8 +545,8 @@
         this._transforming = false;
         window.removeEventListener('mousemove', this._handleMouseMove);
         window.removeEventListener('touchmove', this._handleMouseMove);
-        window.removeEventListener('mouseup', this._handleMouseUp);
-        window.removeEventListener('touchend', this._handleMouseUp);
+        window.removeEventListener('mouseup', this._handleMouseUp, true);
+        window.removeEventListener('touchend', this._handleMouseUp, true);
         this.fire('transformend');
         this.getNode().fire('transformend');
       }

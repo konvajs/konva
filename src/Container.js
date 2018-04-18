@@ -504,7 +504,7 @@
       var that = this;
       this.children.each(function(child) {
         // skip invisible children
-        if (!child.isVisible()) {
+        if (!child.getVisible()) {
           return;
         }
 
@@ -535,7 +535,7 @@
       var hasVisible = false;
       for (var i = 0; i < shapes.length; i++) {
         var shape = shapes[i];
-        if (shape.isVisible()) {
+        if (shape.getVisible()) {
           hasVisible = true;
           break;
         }

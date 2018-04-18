@@ -2223,7 +2223,7 @@ suite('Container', function() {
     });
   });
 
-  test('getClientRect - test empty group with invisible child', function() {
+  test('getClientRect - test group with invisible child', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -2231,6 +2231,45 @@ suite('Container', function() {
       x: 10,
       y: 10
     });
+    layer.add(group);
+    layer.draw();
+    group.add(
+      new Konva.Rect({
+        x: 0,
+        y: 0,
+        width: 50,
+        height: 50
+      })
+    );
+    group.add(
+      new Konva.Rect({
+        x: 400,
+        y: 400,
+        width: 50,
+        height: 50,
+        visible: false
+      })
+    );
+    assert.deepEqual(group.getClientRect(), {
+      x: 10,
+      y: 10,
+      width: 50,
+      height: 50
+    });
+  });
+
+  test('getClientRect - test group with invisible child inside invisible parent', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      visible: false
+    });
+    stage.add(layer);
+    var group = new Konva.Group({
+      x: 10,
+      y: 10
+    });
+    layer.add(group);
+    layer.draw();
     group.add(
       new Konva.Rect({
         x: 0,
