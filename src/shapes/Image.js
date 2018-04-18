@@ -239,6 +239,7 @@
       });
       callback(image);
     };
+    img.crossOrigin = 'Anonymous';
     img.src = url;
   };
 })();
