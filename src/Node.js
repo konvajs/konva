@@ -763,24 +763,24 @@
       }
     },
     /**
-         * determine if node is visible by taking into account ancestors.
-         *
-         * Parent    | Self      | isVisible
-         * visible   | visible   |
-         * ----------+-----------+------------
-         * T         | T         | T
-         * T         | F         | F
-         * F         | T         | T
-         * F         | F         | F
-         * ----------+-----------+------------
-         * T         | I         | T
-         * F         | I         | F
-         * I         | I         | T
+     * determine if node is visible by taking into account ancestors.
+     *
+     * Parent    | Self      | isVisible
+     * visible   | visible   |
+     * ----------+-----------+------------
+     * T         | T         | T
+     * T         | F         | F
+     * F         | T         | T
+     * F         | F         | F
+     * ----------+-----------+------------
+     * T         | I         | T
+     * F         | I         | F
+     * I         | I         | T
 
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Boolean}
-         */
+      * @method
+      * @memberof Konva.Node.prototype
+      * @returns {Boolean}
+      */
     isVisible: function() {
       return this._getCache(VISIBLE, this._isVisible);
     },

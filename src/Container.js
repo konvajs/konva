@@ -401,7 +401,7 @@
         cachedCanvas = this._cache.canvas,
         cachedSceneCanvas = cachedCanvas && cachedCanvas.scene;
 
-      if (this.isVisible()) {
+      if (this.isVisible() || caching) {
         if (!caching && cachedSceneCanvas) {
           context.save();
           layer._applyTransform(this, context, top);
@@ -420,7 +420,7 @@
         cachedCanvas = this._cache.canvas,
         cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
-      if (this.shouldDrawHit(canvas)) {
+      if (this.shouldDrawHit(canvas) || caching) {
         if (layer) {
           layer.clearHitCache();
         }

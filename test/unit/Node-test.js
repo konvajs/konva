@@ -3291,6 +3291,7 @@ suite('Node', function() {
 
     layer.add(group);
     layer.draw();
+    showHit(layer);
     var shape = stage.getIntersection({
       x: 5,
       y: 5

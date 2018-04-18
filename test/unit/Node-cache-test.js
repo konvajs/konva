@@ -793,4 +793,125 @@ suite('Caching', function() {
     context.fill();
     compareLayerAndCanvas(layer, canvas, 5);
   });
+
+  test('even if parent is not visible cache should be created', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer({
+      visible: false
+    });
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 50,
+      width: 100,
+      height: 100,
+      fill: 'green'
+    });
+
+    layer.add(rect);
+    stage.add(layer);
+
+    rect.cache();
+    layer.visible(true);
+    layer.draw();
+
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+    context.beginPath();
+    context.rect(100, 50, 100, 100);
+    context.closePath();
+    context.fillStyle = 'green';
+    context.fill();
+    showHit(layer);
+    compareLayerAndCanvas(layer, canvas, 5);
+    assert.equal(stage.getIntersection({ x: 150, y: 100 }), rect);
+  });
+
+  test.skip('even if parent is not visible cache should be created - test for group', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer({
+      visible: false
+    });
+
+    var group = new Konva.Group({
+      opacity: 0.5
+    });
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 50,
+      width: 100,
+      height: 100,
+      fill: 'green'
+    });
+
+    group.add(rect);
+    layer.add(group);
+    stage.add(layer);
+
+    group.cache();
+    layer.visible(true);
+    layer.draw();
+
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+    context.globalAlpha = 0.5;
+    context.beginPath();
+    context.rect(100, 50, 100, 100);
+    context.closePath();
+    context.fillStyle = 'green';
+    context.fill();
+    compareLayerAndCanvas(layer, canvas, 5);
+    assert.equal(stage.getIntersection({ x: 150, y: 100 }), rect);
+  });
+
+  test.skip('caching should respect hit drawing', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+
+    var group = new Konva.Group({});
+
+    var bigRect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100,
+      fill: 'green'
+    });
+    group.add(bigRect);
+
+    var smallRect = new Konva.Rect({
+      x: 25,
+      y: 25,
+      width: 50,
+      height: 50,
+      fill: 'red',
+      listening: false
+    });
+    group.add(smallRect);
+
+    layer.add(group);
+    stage.add(layer);
+
+    group.cache();
+    layer.draw();
+
+    var canvas = createCanvas();
+    var context = canvas.getContext('2d');
+    context.beginPath();
+    context.rect(0, 0, 100, 100);
+    context.fillStyle = 'green';
+    context.fill();
+    context.beginPath();
+    context.rect(25, 25, 50, 50);
+    context.fillStyle = 'red';
+    context.fill();
+    showHit(layer);
+
+    assert.equal(stage.getIntersection({ x: 50, y: 50 }), bigRect);
+    compareLayerAndCanvas(layer, canvas, 5);
+  });
 });

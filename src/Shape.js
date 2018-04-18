@@ -308,7 +308,7 @@
         bufferCanvas,
         bufferContext;
 
-      if (!this.isVisible()) {
+      if (!this.isVisible() && !caching) {
         return this;
       }
       if (cachedCanvas) {
@@ -427,7 +427,7 @@
         cachedCanvas = this._cache.canvas,
         cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
-      if (!this.shouldDrawHit(canvas)) {
+      if (!this.shouldDrawHit(canvas) && !caching) {
         return this;
       }
       if (layer) {
