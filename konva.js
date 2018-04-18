@@ -3144,24 +3144,24 @@
       }
     },
     /**
-         * determine if node is visible by taking into account ancestors.
-         *
-         * Parent    | Self      | isVisible
-         * visible   | visible   |
-         * ----------+-----------+------------
-         * T         | T         | T
-         * T         | F         | F
-         * F         | T         | T
-         * F         | F         | F
-         * ----------+-----------+------------
-         * T         | I         | T
-         * F         | I         | F
-         * I         | I         | T
+     * determine if node is visible by taking into account ancestors.
+     *
+     * Parent    | Self      | isVisible
+     * visible   | visible   |
+     * ----------+-----------+------------
+     * T         | T         | T
+     * T         | F         | F
+     * F         | T         | T
+     * F         | F         | F
+     * ----------+-----------+------------
+     * T         | I         | T
+     * F         | I         | F
+     * I         | I         | T
 
-         * @method
-         * @memberof Konva.Node.prototype
-         * @returns {Boolean}
-         */
+      * @method
+      * @memberof Konva.Node.prototype
+      * @returns {Boolean}
+      */
     isVisible: function() {
       return this._getCache(VISIBLE, this._isVisible);
     },
@@ -8039,7 +8039,7 @@
         cachedCanvas = this._cache.canvas,
         cachedSceneCanvas = cachedCanvas && cachedCanvas.scene;
 
-      if (this.isVisible()) {
+      if (this.isVisible() || caching) {
         if (!caching && cachedSceneCanvas) {
           context.save();
           layer._applyTransform(this, context, top);
@@ -8058,7 +8058,7 @@
         cachedCanvas = this._cache.canvas,
         cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
-      if (this.shouldDrawHit(canvas)) {
+      if (this.shouldDrawHit(canvas) || caching) {
         if (layer) {
           layer.clearHitCache();
         }
@@ -8694,7 +8694,7 @@
         bufferCanvas,
         bufferContext;
 
-      if (!this.isVisible()) {
+      if (!this.isVisible() && !caching) {
         return this;
       }
       if (cachedCanvas) {
@@ -8813,7 +8813,7 @@
         cachedCanvas = this._cache.canvas,
         cachedHitCanvas = cachedCanvas && cachedCanvas.hit;
 
-      if (!this.shouldDrawHit(canvas)) {
+      if (!this.shouldDrawHit(canvas) && !caching) {
         return this;
       }
       if (layer) {
