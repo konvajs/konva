@@ -1131,7 +1131,7 @@ suite('Stage', function() {
     assert.equal(stage.getIntersection(pos), circle, 'circle again');
   });
 
-  test.only('toDataURL should use pixelRatio 1 by default', function(done) {
+  test('toDataURL should use pixelRatio 1 by default', function(done) {
     var stage = addStage();
 
     var url = stage.toDataURL();
