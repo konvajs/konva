@@ -232,22 +232,6 @@
     getContent: function() {
       return this.content;
     },
-    /**
-     * Creates a composite data URL
-     * @method
-     * @memberof Konva.Stage.prototype
-     * @param {Object} config
-     * @param {Function} [config.callback] function executed when the composite has completed. Deprecated as method is sync now.
-     * @param {String} [config.mimeType] can be "image/png" or "image/jpeg".
-     *  "image/png" is the default
-     * @param {Number} [config.x] x position of canvas section
-     * @param {Number} [config.y] y position of canvas section
-     * @param {Number} [config.width] width of canvas section
-     * @param {Number} [config.height] height of canvas section
-     * @param {Number} [config.quality] jpeg quality.  If using an "image/jpeg" mimeType,
-     *  you can specify the quality from 0 to 1, where 0 is very poor quality and 1
-     *  is very high quality
-     */
     toDataURL: function(config) {
       config = config || {};
 
@@ -258,7 +242,7 @@
         canvas = new Konva.SceneCanvas({
           width: config.width || this.getWidth(),
           height: config.height || this.getHeight(),
-          pixelRatio: config.pixelRatio
+          pixelRatio: config.pixelRatio || 1
         }),
         _context = canvas.getContext()._context,
         layers = this.children;
