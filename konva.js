@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.0.3
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Sat Apr 21 2018
+ * Date: Tue Apr 24 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -14659,7 +14659,7 @@
       this.hitFunc(this._hitFunc);
     },
     _sceneFunc: function(context) {
-      var p = this.getPadding(),
+      var padding = this.getPadding(),
         textHeight = this.getTextHeight(),
         lineHeightPx = this.getLineHeight() * textHeight,
         textArr = this.textArr,
@@ -14676,12 +14676,11 @@
 
       context.setAttr('textBaseline', MIDDLE);
       context.setAttr('textAlign', LEFT);
-      context.save();
-      if (p) {
-        context.translate(p, 0);
-        context.translate(0, p + textHeight / 2);
+      if (padding) {
+        context.translate(padding, 0);
+        context.translate(0, padding + lineHeightPx / 2);
       } else {
-        context.translate(0, textHeight / 2);
+        context.translate(0, lineHeightPx / 2);
       }
 
       // draw text lines
@@ -14693,9 +14692,9 @@
         // horizontal alignment
         context.save();
         if (align === RIGHT) {
-          context.translate(totalWidth - width - p * 2, 0);
+          context.translate(totalWidth - width - padding * 2, 0);
         } else if (align === CENTER) {
-          context.translate((totalWidth - width - p * 2) / 2, 0);
+          context.translate((totalWidth - width - padding * 2) / 2, 0);
         }
 
         if (textDecoration.indexOf('underline') !== -1) {
@@ -14704,7 +14703,7 @@
           context.moveTo(0, Math.round(lineHeightPx / 2));
           context.lineTo(Math.round(width), Math.round(lineHeightPx / 2));
           // TODO: I have no idea what is real ratio
-          // just /20 looks good enough
+          // just /15 looks good enough
           context.lineWidth = fontSize / 15;
           context.strokeStyle = fill;
           context.stroke();
@@ -14745,9 +14744,10 @@
           context.fillStrokeShape(this);
         }
         context.restore();
-        context.translate(0, lineHeightPx);
+        if (textArrLen > 1) {
+          context.translate(0, lineHeightPx);
+        }
       }
-      context.restore();
     },
     _hitFunc: function(context) {
       var width = this.getWidth(),
@@ -18617,11 +18617,23 @@
     'transformsEnabledChange.resizer'
   ].join(' ');
 
+  var ANGLES = {
+    'top-left': -45,
+    'top-center': 0,
+    'top-right': 45,
+    'middle-right': -90,
+    'middle-left': 90,
+    'bottom-left': -135,
+    'bottom-center': 180,
+    'bottom-right': 135
+  };
+
   function getCursor(anchorName, rad) {
     if (anchorName === 'rotater') {
       return 'crosshair';
     }
 
+    rad += Konva.Util._degToRad(ANGLES[anchorName] || 0);
     var angle = (Konva.Util._radToDeg(rad) % 360 + 360) % 360;
 
     if (
@@ -18888,23 +18900,23 @@
         // the basic idea is to find "angle" of handler
         var rad = Konva.getAngle(tr.rotation());
 
-        var cdx = tr.getWidth() / 2;
-        var cdy = tr.getHeight() / 2;
+        // var cdx = tr.getWidth() / 2;
+        // var cdy = tr.getHeight() / 2;
 
-        var parentPos = tr.getAbsolutePosition(tr.getParent());
-        var center = {
-          x: parentPos.x + (cdx * Math.cos(rad) + cdy * Math.sin(-rad)),
-          y: parentPos.y + (cdy * Math.cos(rad) + cdx * Math.sin(rad))
-        };
+        // var parentPos = tr.getAbsolutePosition(tr.getParent());
+        // var center = {
+        //   x: parentPos.x + (cdx * Math.cos(rad) + cdy * Math.sin(-rad)),
+        //   y: parentPos.y + (cdy * Math.cos(rad) + cdx * Math.sin(rad))
+        // };
 
-        var pos = this.getAbsolutePosition(tr.getParent());
+        // var pos = this.getAbsolutePosition(tr.getParent());
 
-        var dx = -pos.x + center.x;
-        var dy = -pos.y + center.y;
+        // var dx = -pos.x + center.x;
+        // var dy = -pos.y + center.y;
 
-        var angle = -Math.atan2(-dy, dx) - Math.PI / 2;
+        // var angle = -Math.atan2(-dy, dx) - Math.PI / 2;
 
-        var cursor = getCursor(name, angle);
+        var cursor = getCursor(name, rad);
         anchor.getStage().content.style.cursor = cursor;
         layer.batchDraw();
       });

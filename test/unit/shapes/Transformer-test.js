@@ -989,7 +989,7 @@ suite('Transformer', function() {
       x: 50,
       y: 1
     });
-    assert.equal(stage.content.style.cursor, 'nwse-resize');
+    assert.equal(stage.content.style.cursor, 'nesw-resize');
   });
 
   test('stopTransform method', function() {
