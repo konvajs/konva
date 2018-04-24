@@ -1130,4 +1130,17 @@ suite('Stage', function() {
     stage.draw();
     assert.equal(stage.getIntersection(pos), circle, 'circle again');
   });
+
+  test('toDataURL should use pixelRatio 1 by default', function(done) {
+    var stage = addStage();
+
+    var url = stage.toDataURL();
+    var image = new window.Image();
+    image.onload = function() {
+      assert.equal(image.width, stage.width());
+      assert.equal(image.height, stage.height());
+      done();
+    };
+    image.src = url;
+  });
 });

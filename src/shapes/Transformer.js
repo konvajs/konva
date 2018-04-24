@@ -23,11 +23,23 @@
     'transformsEnabledChange.resizer'
   ].join(' ');
 
+  var ANGLES = {
+    'top-left': -45,
+    'top-center': 0,
+    'top-right': 45,
+    'middle-right': -90,
+    'middle-left': 90,
+    'bottom-left': -135,
+    'bottom-center': 180,
+    'bottom-right': 135
+  };
+
   function getCursor(anchorName, rad) {
     if (anchorName === 'rotater') {
       return 'crosshair';
     }
 
+    rad += Konva.Util._degToRad(ANGLES[anchorName] || 0);
     var angle = (Konva.Util._radToDeg(rad) % 360 + 360) % 360;
 
     if (
@@ -269,23 +281,23 @@
         // the basic idea is to find "angle" of handler
         var rad = Konva.getAngle(tr.rotation());
 
-        var cdx = tr.getWidth() / 2;
-        var cdy = tr.getHeight() / 2;
+        // var cdx = tr.getWidth() / 2;
+        // var cdy = tr.getHeight() / 2;
 
-        var parentPos = tr.getAbsolutePosition(tr.getParent());
-        var center = {
-          x: parentPos.x + (cdx * Math.cos(rad) + cdy * Math.sin(-rad)),
-          y: parentPos.y + (cdy * Math.cos(rad) + cdx * Math.sin(rad))
-        };
+        // var parentPos = tr.getAbsolutePosition(tr.getParent());
+        // var center = {
+        //   x: parentPos.x + (cdx * Math.cos(rad) + cdy * Math.sin(-rad)),
+        //   y: parentPos.y + (cdy * Math.cos(rad) + cdx * Math.sin(rad))
+        // };
 
-        var pos = this.getAbsolutePosition(tr.getParent());
+        // var pos = this.getAbsolutePosition(tr.getParent());
 
-        var dx = -pos.x + center.x;
-        var dy = -pos.y + center.y;
+        // var dx = -pos.x + center.x;
+        // var dy = -pos.y + center.y;
 
-        var angle = -Math.atan2(-dy, dx) - Math.PI / 2;
+        // var angle = -Math.atan2(-dy, dx) - Math.PI / 2;
 
-        var cursor = getCursor(name, angle);
+        var cursor = getCursor(name, rad);
         anchor.getStage().content.style.cursor = cursor;
         layer.batchDraw();
       });

@@ -338,7 +338,8 @@ suite('Text', function() {
     var text = new Konva.Text({
       x: 10,
       y: 10,
-      text: "HEADING\n\nAll the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+      text:
+        "HEADING\n\nAll the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
       //text: 'HEADING\n\nThis is a really cool paragraph. \n And this is a footer.',
       fontSize: 14,
       fontFamily: 'Calibri',
@@ -364,41 +365,42 @@ suite('Text', function() {
     assert.equal(text.getLineHeight(), 20);
   });
 
-    // ======================================================
-    test('text single line with ellipsis', function() {
-        var stage = addStage();
-        var layer = new Konva.Layer();
+  // ======================================================
+  test('text single line with ellipsis', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
 
-        var rect = new Konva.Rect({
-            x: 10,
-            y: 10,
-            width: 380,
-            height: 300,
-            fill: 'red'
-        });
-
-        var text = new Konva.Text({
-            x: 10,
-            y: 10,
-            text: "HEADING\n\nAll the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
-            fontSize: 14,
-            fontFamily: 'Calibri',
-            fontStyle: 'normal',
-            fill: '#555',
-            width: 100,
-            padding: 0,
-            lineHeight: 20,
-            align: 'center',
-            wrap: 'none',
-            ellipsis: true
-        });
-
-        layer.add(rect).add(text);
-        stage.add(layer);
-
-        assert.equal(text.textArr.length, 3);
-        assert.equal(text.textArr[2].text.slice(-1), '…');
+    var rect = new Konva.Rect({
+      x: 10,
+      y: 10,
+      width: 380,
+      height: 300,
+      fill: 'red'
     });
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      text:
+        "HEADING\n\nAll the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+      fontSize: 14,
+      fontFamily: 'Calibri',
+      fontStyle: 'normal',
+      fill: '#555',
+      width: 100,
+      padding: 0,
+      lineHeight: 20,
+      align: 'center',
+      wrap: 'none',
+      ellipsis: true
+    });
+
+    layer.add(rect).add(text);
+    stage.add(layer);
+
+    assert.equal(text.textArr.length, 3);
+    assert.equal(text.textArr[2].text.slice(-1), '…');
+  });
 
   // ======================================================
   test('text multi line with justify align', function() {
@@ -416,7 +418,8 @@ suite('Text', function() {
     var text = new Konva.Text({
       x: 10,
       y: 10,
-      text: "HEADING\n\n    All the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+      text:
+        "HEADING\n\n    All the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
       fontSize: 14,
       fontFamily: 'Calibri',
       fontStyle: 'normal',
@@ -448,7 +451,7 @@ suite('Text', function() {
     stage.add(layer);
 
     var trace =
-      'fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();restore();translate();save();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();restore();translate();restore();restore();';
+      'translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();restore();translate();save();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();restore();translate();restore();';
 
     assert.equal(layer.getContext().getTrace(true), trace);
   });
@@ -463,7 +466,8 @@ suite('Text', function() {
       y: 10,
       //stroke: '#555',
       //strokeWidth: 5,
-      text: "HEADING\n\nAll the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+      text:
+        "HEADING\n\nAll the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
       //text: 'HEADING\n\nThis is a really cool paragraph. \n And this is a footer.',
       fontSize: 16,
       fontFamily: 'Calibri',
@@ -528,11 +532,11 @@ suite('Text', function() {
 
     layer.add(text);
     stage.add(layer);
-    // TODO
 
     var trace =
-      'clearRect();save();transform();font;textBaseline;textAlign;save();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();restore();restore();';
-    console.log(layer.getContext().getTrace(true));
+      'clearRect();save();transform();font;textBaseline;textAlign;translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();restore();';
+    // console.log(layer.getContext().getTrace(true));
+    // console.log(trace);
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
@@ -553,7 +557,7 @@ suite('Text', function() {
     stage.add(layer);
 
     var trace =
-      'clearRect();save();transform();font;textBaseline;textAlign;save();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();restore();restore();';
+      'clearRect();save();transform();font;textBaseline;textAlign;translate();save();save();beginPath();moveTo();lineTo();stroke();restore();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();restore();translate();restore();';
     assert.equal(layer.getContext().getTrace(true), trace);
   });
 
@@ -720,5 +724,28 @@ suite('Text', function() {
     assert.equal(data[1], 255, 'full red');
     assert.equal(data[2], 0, 'no blue');
     assert.equal(data[3], 255, '255 alpha - fully visible');
+  });
+
+  test('text should be centered in line height', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      fontSize: 40,
+      text: 'Some good text',
+      lineHeight: 3,
+      draggable: true
+    });
+    layer.add(text);
+    stage.add(layer);
+
+    // this text should look like it is positioned in y = 40
+
+    var trace =
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);font=normal normal 40px Arial;textBaseline=middle;textAlign=left;translate(0,60);save();fillStyle=black;fillText(Some good text,0,0);restore();restore();';
+
+    console.log(layer.getContext().getTrace());
+    console.log(trace);
+    assert.equal(layer.getContext().getTrace(), trace);
   });
 });

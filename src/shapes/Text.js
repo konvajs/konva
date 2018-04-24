@@ -123,7 +123,7 @@
       this.hitFunc(this._hitFunc);
     },
     _sceneFunc: function(context) {
-      var p = this.getPadding(),
+      var padding = this.getPadding(),
         textHeight = this.getTextHeight(),
         lineHeightPx = this.getLineHeight() * textHeight,
         textArr = this.textArr,
@@ -140,12 +140,11 @@
 
       context.setAttr('textBaseline', MIDDLE);
       context.setAttr('textAlign', LEFT);
-      context.save();
-      if (p) {
-        context.translate(p, 0);
-        context.translate(0, p + textHeight / 2);
+      if (padding) {
+        context.translate(padding, 0);
+        context.translate(0, padding + lineHeightPx / 2);
       } else {
-        context.translate(0, textHeight / 2);
+        context.translate(0, lineHeightPx / 2);
       }
 
       // draw text lines
@@ -157,9 +156,9 @@
         // horizontal alignment
         context.save();
         if (align === RIGHT) {
-          context.translate(totalWidth - width - p * 2, 0);
+          context.translate(totalWidth - width - padding * 2, 0);
         } else if (align === CENTER) {
-          context.translate((totalWidth - width - p * 2) / 2, 0);
+          context.translate((totalWidth - width - padding * 2) / 2, 0);
         }
 
         if (textDecoration.indexOf('underline') !== -1) {
@@ -168,7 +167,7 @@
           context.moveTo(0, Math.round(lineHeightPx / 2));
           context.lineTo(Math.round(width), Math.round(lineHeightPx / 2));
           // TODO: I have no idea what is real ratio
-          // just /20 looks good enough
+          // just /15 looks good enough
           context.lineWidth = fontSize / 15;
           context.strokeStyle = fill;
           context.stroke();
@@ -209,9 +208,10 @@
           context.fillStrokeShape(this);
         }
         context.restore();
-        context.translate(0, lineHeightPx);
+        if (textArrLen > 1) {
+          context.translate(0, lineHeightPx);
+        }
       }
-      context.restore();
     },
     _hitFunc: function(context) {
       var width = this.getWidth(),
@@ -344,7 +344,6 @@
         shouldAddEllipsis = this.getEllipsis() && !shouldWrap;
 
       this.textArr = [];
-      getDummyContext().save();
       getDummyContext().font = this._getContextFont();
       for (var i = 0, max = lines.length; i < max; ++i) {
         var line = lines[i];
@@ -380,10 +379,10 @@
               }
             }
             /*
-                         * 'low' is now the index of the substring end
-                         * 'match' is the substring
-                         * 'matchWidth' is the substring width in px
-                         */
+            * 'low' is now the index of the substring end
+            * 'match' is the substring
+            * 'matchWidth' is the substring width in px
+            */
             if (match) {
               // a fitting substring was found
               if (wrapAtWord) {
@@ -439,7 +438,6 @@
           break;
         }
       }
-      getDummyContext().restore();
       this.textHeight = fontSize;
       // var maxTextWidth = 0;
       // for(var j = 0; j < this.textArr.length; j++) {

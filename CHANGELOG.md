@@ -5,6 +5,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+## Fixed
+
+* Cursor fixes for `Konva.Transformer`
+* Fixed lineHeight behavior for `Konva.Text`
+* Some performance optimizations for `Konva.Text`
+
+## [2.0.3][2018-04-21]
+
 ### Added
 
 * Typescript defs for `Konva.Transformer`
@@ -12,7 +20,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Changes
 
-* Fixed flow for `contextmenu` event. Not it will be triggered on shapes too
+* Fixed flow for `contextmenu` event. Now it will be triggered on shapes too
 * `find()` method for Containers can use a function as a parameter
 
 ## Fixed
@@ -21,6 +29,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * `Konva.Arrow` will not draw dash for pointers
 * setAttr will trigger change event if new value is the same Object
 * better behavior of `dblclick` event when you click fast on different shapes
+* `stage.toDataURL` will use `pixelRatio = 1` by default.
 
 ## [2.0.2][2018-03-15]
 
