@@ -14880,7 +14880,6 @@
         shouldAddEllipsis = this.getEllipsis() && !shouldWrap;
 
       this.textArr = [];
-      getDummyContext().save();
       getDummyContext().font = this._getContextFont();
       for (var i = 0, max = lines.length; i < max; ++i) {
         var line = lines[i];
@@ -14916,10 +14915,10 @@
               }
             }
             /*
-                         * 'low' is now the index of the substring end
-                         * 'match' is the substring
-                         * 'matchWidth' is the substring width in px
-                         */
+            * 'low' is now the index of the substring end
+            * 'match' is the substring
+            * 'matchWidth' is the substring width in px
+            */
             if (match) {
               // a fitting substring was found
               if (wrapAtWord) {
@@ -14975,7 +14974,6 @@
           break;
         }
       }
-      getDummyContext().restore();
       this.textHeight = fontSize;
       // var maxTextWidth = 0;
       // for(var j = 0; j < this.textArr.length; j++) {
