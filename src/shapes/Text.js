@@ -387,9 +387,18 @@
               // a fitting substring was found
               if (wrapAtWord) {
                 // try to find a space or dash where wrapping could be done
-                var wrapIndex =
-                  Math.max(match.lastIndexOf(SPACE), match.lastIndexOf(DASH)) +
-                  1;
+                var wrapIndex;
+                var nextChar = line[match.length];
+                var nextIsSpaceOrDash = nextChar === SPACE || nextChar === DASH;
+                if (nextIsSpaceOrDash && matchWidth <= maxWidth) {
+                  wrapIndex = match.length;
+                } else {
+                  wrapIndex =
+                    Math.max(
+                      match.lastIndexOf(SPACE),
+                      match.lastIndexOf(DASH)
+                    ) + 1;
+                }
                 if (wrapIndex > 0) {
                   // re-cut the substring found at the space/dash position
                   low = wrapIndex;

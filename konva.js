@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.0.3
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Tue Apr 24 2018
+ * Date: Mon Apr 30 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -14923,9 +14923,18 @@
               // a fitting substring was found
               if (wrapAtWord) {
                 // try to find a space or dash where wrapping could be done
-                var wrapIndex =
-                  Math.max(match.lastIndexOf(SPACE), match.lastIndexOf(DASH)) +
-                  1;
+                var wrapIndex;
+                var nextChar = line[match.length];
+                var nextIsSpaceOrDash = nextChar === SPACE || nextChar === DASH;
+                if (nextIsSpaceOrDash && matchWidth <= maxWidth) {
+                  wrapIndex = match.length;
+                } else {
+                  wrapIndex =
+                    Math.max(
+                      match.lastIndexOf(SPACE),
+                      match.lastIndexOf(DASH)
+                    ) + 1;
+                }
                 if (wrapIndex > 0) {
                   // re-cut the substring found at the space/dash position
                   low = wrapIndex;

@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Cursor fixes for `Konva.Transformer`
 * Fixed lineHeight behavior for `Konva.Text`
 * Some performance optimizations for `Konva.Text`
+* Better wrap algorithm for `Konva.Text`
 
 ## [2.0.3][2018-04-21]
 
