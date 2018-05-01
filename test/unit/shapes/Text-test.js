@@ -744,8 +744,28 @@ suite('Text', function() {
     var trace =
       'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);font=normal normal 40px Arial;textBaseline=middle;textAlign=left;translate(0,60);save();fillStyle=black;fillText(Some good text,0,0);restore();restore();';
 
-    console.log(layer.getContext().getTrace());
-    console.log(trace);
     assert.equal(layer.getContext().getTrace(), trace);
+  });
+
+  test('check wrapping', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      fontSize: 40,
+      text: 'Hello, this is some good text',
+      width: 185,
+      draggable: true
+    });
+    layer.add(text);
+    stage.add(layer);
+
+    var lines = text.textArr;
+
+    // first line should fit "Hello, this"
+    // I faced this issue in large app
+    // we should draw as much text in one line, as possible
+    // so Konva.Text + textarea editing works better
+    assert.equal(lines[0].text, 'Hello, this');
   });
 });
