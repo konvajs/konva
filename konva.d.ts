@@ -796,6 +796,7 @@ declare namespace Konva {
     points: number[];
     tension?: number;
     closed?: boolean;
+    bezier?: boolean;
   }
 
   class Line extends Shape {
