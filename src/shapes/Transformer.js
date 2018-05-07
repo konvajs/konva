@@ -84,7 +84,6 @@
    * primitives and shapes.
    * @constructor
    * @memberof Konva
-   * @augments Konva.Container
    * @param {Object} config
    * @param {Boolean} [config.resizeEnabled] Default is true
    * @param {Boolean} [config.rotateEnabled] Default is true
@@ -94,8 +93,6 @@
    * @param {Number} [config.lineEnabled] Should we draw border? Default is true
    * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
    * @param {Array} [config.enabledHandlers] Array of names of enabled handles
-   * @@nodeParams
-   * @@containerParams
    * @example
    * var transformer = new Konva.Transformer({
    *   node: rectangle,
@@ -154,6 +151,14 @@
       this.setNode(node);
     },
 
+    /**
+     * attach transformer to a Konva.Node. Transformer will adapt it its size and listed events
+     * @method
+     * @memberof Konva.Transformer.prototype
+     * @returns {Konva.Transformer}
+     * @example
+     * transformer.attachTo(shape);
+     */
     setNode: function(node) {
       if (this._node) {
         this.detach();
@@ -169,19 +174,27 @@
           this._clearSelfAndDescendantCache('absoluteTransform');
         }.bind(this)
       );
-      // node.on(TRANSFORM_CHANGE_STR, this.requestUpdate.bind(this));
-      // node.on('dragmove.resizer', this.requestUpdate.bind(this));
 
+      // TODO: why do we need this?
       var elementsCreated = !!this.findOne('.top-left');
       if (elementsCreated) {
         this.update();
       }
+      return this;
     },
 
     getNode: function() {
       return this._node;
     },
 
+    /**
+     * detach transformer from a attached node
+     * @method
+     * @memberof Konva.Transformer.prototype
+     * @returns {Konva.Transformer}
+     * @example
+     * transformer.detach();
+     */
     detach: function() {
       if (this.getNode()) {
         this.getNode().off('.resizer');
@@ -598,21 +611,9 @@
       this.update();
       this.getLayer().batchDraw();
     },
-
-    requestUpdate: function() {
-      if (this.timeout) {
-        return;
-      }
-      this.timeout = setTimeout(
-        function() {
-          this.timeout = null;
-          this.update();
-        }.bind(this)
-      );
-    },
-
     /**
-     * force update of Transformer
+     * force update of Konva.Transformer.
+     * Use it when you updated attached Konva.Group and now you need to reset transformer size
      * @method
      * @memberof Konva.Transformer.prototype
      */
@@ -682,9 +683,21 @@
         visible: this.lineEnabled()
       });
     },
+    /**
+     * determine if transformer is in active transform
+     * @method
+     * @memberof Konva.Transformer.prototype
+     * @returns {Boolean}
+     */
     isTransforming: function() {
       return this._transforming;
     },
+    /**
+     * Stop active transform action
+     * @method
+     * @memberof Konva.Transformer.prototype
+     * @returns {Boolean}
+     */
     stopTransform: function() {
       if (this._transforming) {
         this._removeEvents();

@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.0.3
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Fri May 04 2018
+ * Date: Mon May 07 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -10636,6 +10636,7 @@
         } else if (!dd || !dd.justDragged) {
           // don't set inDblClickWindow after dragging
           Konva.inDblClickWindow = true;
+          clearTimeout(this.dblTimeout);
         } else if (dd) {
           dd.justDragged = false;
         }
@@ -10743,6 +10744,7 @@
         // Konva.inDblClickWindow = false;
       } else {
         Konva.inDblClickWindow = true;
+        clearTimeout(this.dblTimeout);
       }
 
       this.dblTimeout = setTimeout(function() {
@@ -18706,7 +18708,6 @@
    * primitives and shapes.
    * @constructor
    * @memberof Konva
-   * @augments Konva.Container
    * @param {Object} config
    * @param {Boolean} [config.resizeEnabled] Default is true
    * @param {Boolean} [config.rotateEnabled] Default is true
@@ -18716,33 +18717,6 @@
    * @param {Number} [config.lineEnabled] Should we draw border? Default is true
    * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
    * @param {Array} [config.enabledHandlers] Array of names of enabled handles
-   * @param {Number} [config.x]
-     * @param {Number} [config.y]
-     * @param {Number} [config.width]
-     * @param {Number} [config.height]
-     * @param {Boolean} [config.visible]
-     * @param {Boolean} [config.listening] whether or not the node is listening for events
-     * @param {String} [config.id] unique id
-     * @param {String} [config.name] non-unique name
-     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
-     * @param {Object} [config.scale] set scale
-     * @param {Number} [config.scaleX] set scale x
-     * @param {Number} [config.scaleY] set scale y
-     * @param {Number} [config.rotation] rotation in degrees
-     * @param {Object} [config.offset] offset from center point and rotation point
-     * @param {Number} [config.offsetX] set offset x
-     * @param {Number} [config.offsetY] set offset y
-     * @param {Boolean} [config.draggable] makes the node draggable.  When stages are draggable, you can drag and drop
-     *  the entire stage by dragging any portion of the stage
-     * @param {Number} [config.dragDistance]
-     * @param {Function} [config.dragBoundFunc]
-   * * @param {Object} [config.clip] set clip
-     * @param {Number} [config.clipX] set clip x
-     * @param {Number} [config.clipY] set clip y
-     * @param {Number} [config.clipWidth] set clip width
-     * @param {Number} [config.clipHeight] set clip height
-     * @param {Function} [config.clipFunc] set clip func
-
    * @example
    * var transformer = new Konva.Transformer({
    *   node: rectangle,
@@ -18801,6 +18775,14 @@
       this.setNode(node);
     },
 
+    /**
+     * attach transformer to a Konva.Node. Transformer will adapt it its size and listed events
+     * @method
+     * @memberof Konva.Transformer.prototype
+     * @returns {Konva.Transformer}
+     * @example
+     * transformer.attachTo(shape);
+     */
     setNode: function(node) {
       if (this._node) {
         this.detach();
@@ -18816,19 +18798,27 @@
           this._clearSelfAndDescendantCache('absoluteTransform');
         }.bind(this)
       );
-      // node.on(TRANSFORM_CHANGE_STR, this.requestUpdate.bind(this));
-      // node.on('dragmove.resizer', this.requestUpdate.bind(this));
 
+      // TODO: why do we need this?
       var elementsCreated = !!this.findOne('.top-left');
       if (elementsCreated) {
         this.update();
       }
+      return this;
     },
 
     getNode: function() {
       return this._node;
     },
 
+    /**
+     * detach transformer from a attached node
+     * @method
+     * @memberof Konva.Transformer.prototype
+     * @returns {Konva.Transformer}
+     * @example
+     * transformer.detach();
+     */
     detach: function() {
       if (this.getNode()) {
         this.getNode().off('.resizer');
@@ -19245,21 +19235,9 @@
       this.update();
       this.getLayer().batchDraw();
     },
-
-    requestUpdate: function() {
-      if (this.timeout) {
-        return;
-      }
-      this.timeout = setTimeout(
-        function() {
-          this.timeout = null;
-          this.update();
-        }.bind(this)
-      );
-    },
-
     /**
-     * force update of Transformer
+     * force update of Konva.Transformer.
+     * Use it when you updated attached Konva.Group and now you need to reset transformer size
      * @method
      * @memberof Konva.Transformer.prototype
      */
@@ -19329,9 +19307,21 @@
         visible: this.lineEnabled()
       });
     },
+    /**
+     * determine if transformer is in active transform
+     * @method
+     * @memberof Konva.Transformer.prototype
+     * @returns {Boolean}
+     */
     isTransforming: function() {
       return this._transforming;
     },
+    /**
+     * Stop active transform action
+     * @method
+     * @memberof Konva.Transformer.prototype
+     * @returns {Boolean}
+     */
     stopTransform: function() {
       if (this._transforming) {
         this._removeEvents();
