@@ -37,9 +37,24 @@
       Konva.Line.prototype._sceneFunc.apply(this, arguments);
       var PI2 = Math.PI * 2;
       var points = this.points();
+
+      var tp = points;
+      var fromTension = this.getTension() !== 0 && points.length > 4;
+      if (fromTension) {
+        tp = this.getTensionPoints();
+      }
+
       var n = points.length;
-      var dx = points[n - 2] - points[n - 4];
-      var dy = points[n - 1] - points[n - 3];
+
+      var dx, dy;
+      if (fromTension) {
+        dx = points[n - 2] - tp[n - 2];
+        dy = points[n - 1] - tp[n - 1];
+      } else {
+        dx = points[n - 2] - points[n - 4];
+        dy = points[n - 1] - points[n - 3];
+      }
+
       var radians = (Math.atan2(dy, dx) + PI2) % PI2;
       var length = this.pointerLength();
       var width = this.pointerWidth();
@@ -57,8 +72,14 @@
       if (this.pointerAtBeginning()) {
         ctx.save();
         ctx.translate(points[0], points[1]);
-        dx = points[2] - points[0];
-        dy = points[3] - points[1];
+        if (fromTension) {
+          dx = tp[0] - points[0];
+          dy = tp[1] - points[1];
+        } else {
+          dx = points[2] - points[0];
+          dy = points[3] - points[1];
+        }
+
         ctx.rotate((Math.atan2(-dy, -dx) + PI2) % PI2);
         ctx.moveTo(0, 0);
         ctx.lineTo(-length, width / 2);

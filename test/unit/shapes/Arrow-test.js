@@ -62,4 +62,27 @@ suite('Arrow', function() {
       'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(50,50);lineTo(100,100);setLineDash(5,5);lineDashOffset=0;lineWidth=5;strokeStyle=red;stroke();save();beginPath();translate(100,100);rotate(0.785);moveTo(0,0);lineTo(-20,10);lineTo(-20,-10);closePath();restore();setLineDash();fillStyle=blue;fill();lineWidth=5;strokeStyle=red;stroke();restore();'
     );
   });
+
+  test('direction with tension', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var arrow = new Konva.Arrow({
+      points: [50, 50, 100, 50, 100, 100],
+      stroke: 'red',
+      fill: 'red',
+      tension: 1,
+      pointerAtBeginning: true
+    });
+
+    layer.add(arrow);
+    stage.add(layer);
+
+    var trace = layer.getContext().getTrace();
+
+    assert.equal(
+      trace,
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,0,0);beginPath();moveTo(50,50);quadraticCurveTo(75,25,100,50);quadraticCurveTo(125,75,100,100);lineWidth=2;strokeStyle=red;stroke();save();beginPath();translate(100,100);rotate(2.356);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();save();translate(50,50);rotate(2.356);moveTo(0,0);lineTo(-10,5);lineTo(-10,-5);closePath();restore();setLineDash();fillStyle=red;fill();lineWidth=2;strokeStyle=red;stroke();restore();'
+    );
+  });
 });

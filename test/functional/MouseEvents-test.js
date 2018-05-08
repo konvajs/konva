@@ -1,7 +1,4 @@
 suite('MouseEvents', function() {
-  // NOTE: disable throttling so these tests can run synchronously
-  Konva.enableThrottling = false;
-
   // ======================================================
   test('stage content mouse events', function(done) {
     var stage = addStage();
@@ -1864,7 +1861,97 @@ suite('MouseEvents', function() {
         assert.equal(smallDblClicks, 1, 'single dblclick on small rect');
 
         done();
-      }, 200);
-    }, 200);
+      });
+    });
+  });
+
+  it('double click after drag should trigger event', function(done) {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var bigRect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 200,
+      height: 200,
+      fill: 'yellow',
+      draggable: true
+    });
+    layer.add(bigRect);
+
+    var smallShape = new Konva.Circle({
+      x: 100,
+      y: 100,
+      width: 100,
+      fill: 'red'
+    });
+    layer.add(smallShape);
+    layer.draw();
+
+    var bigClicks = 0;
+    var smallClicks = 0;
+    var smallDblClicks = 0;
+
+    bigRect.on('click', function() {
+      bigClicks += 1;
+    });
+
+    smallShape.on('click', function() {
+      smallClicks += 1;
+    });
+
+    smallShape.on('dblclick', function() {
+      smallDblClicks += 1;
+    });
+
+    stage.simulateMouseDown({
+      x: 10,
+      y: 10
+    });
+    stage.simulateMouseMove({
+      x: 15,
+      y: 15
+    });
+    stage.simulateMouseUp({
+      x: 15,
+      y: 15
+    });
+
+    assert.equal(bigClicks, 0, 'single click on big rect');
+    assert.equal(smallClicks, 0, 'no  click on small rect');
+    assert.equal(smallDblClicks, 0, 'no dblclick on small rect');
+
+    setTimeout(function() {
+      stage.simulateMouseDown({
+        x: 100,
+        y: 100
+      });
+      stage.simulateMouseUp({
+        x: 100,
+        y: 100
+      });
+
+      assert.equal(bigClicks, 0, 'single click on big rect');
+      assert.equal(smallClicks, 1, 'single click on small rect');
+      assert.equal(smallDblClicks, 0, 'no dblclick on small rect');
+
+      setTimeout(function() {
+        stage.simulateMouseDown({
+          x: 100,
+          y: 100
+        });
+        stage.simulateMouseUp({
+          x: 100,
+          y: 100
+        });
+
+        assert.equal(bigClicks, 0, 'single click on big rect');
+        assert.equal(smallClicks, 2, 'second click on small rect');
+        assert.equal(smallDblClicks, 1, 'single dblclick on small rect');
+
+        done();
+      });
+    });
   });
 });

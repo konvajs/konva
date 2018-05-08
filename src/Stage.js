@@ -539,6 +539,7 @@
         } else if (!dd || !dd.justDragged) {
           // don't set inDblClickWindow after dragging
           Konva.inDblClickWindow = true;
+          clearTimeout(this.dblTimeout);
         } else if (dd) {
           dd.justDragged = false;
         }
@@ -646,6 +647,7 @@
         // Konva.inDblClickWindow = false;
       } else {
         Konva.inDblClickWindow = true;
+        clearTimeout(this.dblTimeout);
       }
 
       this.dblTimeout = setTimeout(function() {
