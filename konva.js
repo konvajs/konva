@@ -1,5 +1,5 @@
 /*
- * Konva JavaScript Framework v2.1.0
+ * Konva JavaScript Framework v2.1.1
  * http://konvajs.github.io/
  * Licensed under the MIT
  * Date: Wed May 16 2018
@@ -21,7 +21,7 @@
 
   var Konva = {
     // public
-    version: '2.1.0',
+    version: '2.1.1',
 
     // private
     stages: [],
@@ -18790,14 +18790,7 @@
       this._node = node;
       this._clearCache(NODE_RECT);
 
-      node.on(
-        TRANSFORM_CHANGE_STR,
-        function() {
-          this._clearCache(NODE_RECT);
-          this._clearCache('transform');
-          this._clearSelfAndDescendantCache('absoluteTransform');
-        }.bind(this)
-      );
+      node.on(TRANSFORM_CHANGE_STR, this._resetTransformCache.bind(this));
 
       // TODO: why do we need this?
       var elementsCreated = !!this.findOne('.top-left');
@@ -18824,6 +18817,10 @@
         this.getNode().off('.resizer');
         this._node = undefined;
       }
+      this._resetTransformCache();
+    },
+
+    _resetTransformCache: function() {
       this._clearCache(NODE_RECT);
       this._clearCache('transform');
       this._clearSelfAndDescendantCache('absoluteTransform');
@@ -19241,7 +19238,7 @@
      * @memberof Konva.Transformer.prototype
      */
     forceUpdate: function() {
-      this._clearCache(NODE_RECT);
+      this._resetTransformCache();
       this.update();
     },
     update: function() {
