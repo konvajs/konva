@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.1.2
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Wed May 16 2018
+ * Date: Thu May 17 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -18647,6 +18647,18 @@
     'transformsEnabledChange.resizer'
   ].join(' ');
 
+  var REDRAW_CHANGE_STR = [
+    'widthChange.resizer',
+    'heightChange.resizer',
+    'scaleXChange.resizer',
+    'scaleYChange.resizer',
+    'skewXChange.resizer',
+    'skewYChange.resizer',
+    'rotationChange.resizer',
+    'offsetXChange.resizer',
+    'offsetYChange.resizer'
+  ].join(' ');
+
   var ANGLES = {
     'top-left': -45,
     'top-center': 0,
@@ -18791,6 +18803,14 @@
       this._clearCache(NODE_RECT);
 
       node.on(TRANSFORM_CHANGE_STR, this._resetTransformCache.bind(this));
+      node.on(
+        REDRAW_CHANGE_STR,
+        function() {
+          if (!this._transforming) {
+            this.update();
+          }
+        }.bind(this)
+      );
 
       // TODO: why do we need this?
       var elementsCreated = !!this.findOne('.top-left');

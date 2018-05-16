@@ -23,6 +23,18 @@
     'transformsEnabledChange.resizer'
   ].join(' ');
 
+  var REDRAW_CHANGE_STR = [
+    'widthChange.resizer',
+    'heightChange.resizer',
+    'scaleXChange.resizer',
+    'scaleYChange.resizer',
+    'skewXChange.resizer',
+    'skewYChange.resizer',
+    'rotationChange.resizer',
+    'offsetXChange.resizer',
+    'offsetYChange.resizer'
+  ].join(' ');
+
   var ANGLES = {
     'top-left': -45,
     'top-center': 0,
@@ -167,6 +179,14 @@
       this._clearCache(NODE_RECT);
 
       node.on(TRANSFORM_CHANGE_STR, this._resetTransformCache.bind(this));
+      node.on(
+        REDRAW_CHANGE_STR,
+        function() {
+          if (!this._transforming) {
+            this.update();
+          }
+        }.bind(this)
+      );
 
       // TODO: why do we need this?
       var elementsCreated = !!this.findOne('.top-left');

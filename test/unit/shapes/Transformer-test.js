@@ -100,6 +100,8 @@ suite('Transformer', function() {
     assert.equal(tr.y(), rect.y());
     assert.equal(tr.width(), rect.width());
     assert.equal(tr.height(), rect.height());
+    assert.equal(tr.findOne('.back').width(), rect.width());
+    console.log(tr);
   });
 
   test('add transformer for transformed rect', function() {
