@@ -277,7 +277,6 @@
         height: 10,
         offsetX: 5,
         offsetY: 5,
-        draggable: true,
         dragDistance: 0
       });
       var self = this;

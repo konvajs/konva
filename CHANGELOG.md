@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+## [2.1.0][2018-05-16]
+
 ## Fixed
 
 * Cursor fixes for `Konva.Transformer`

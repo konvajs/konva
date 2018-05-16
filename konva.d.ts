@@ -5,6 +5,10 @@ declare namespace Konva {
   var isDragReady: () => boolean;
   var DD: any;
 
+  type HandlerFunc = (
+    e: { target: Konva.Shape; evt: Event; currentTarget: Konva.Node }
+  ) => void;
+
   type globalCompositeOperationType =
     | ''
     | 'source-over'
@@ -254,7 +258,7 @@ declare namespace Konva {
     offsetX(offsetX: number): this;
     offsetY(): number;
     offsetY(offsetY: number): this;
-    on(evtStr: string, handler: Function): this;
+    on(evtStr: string, handler: HandlerFunc): this;
     opacity(): number;
     opacity(opacity: number): this;
     pixelSize(): number;
