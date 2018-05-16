@@ -1046,4 +1046,51 @@ suite('Transformer', function() {
       y: 100
     });
   });
+
+  test('on force update should clear transform', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group({
+      x: 50,
+      y: 50
+    });
+    layer.add(group);
+
+    var tr = new Konva.Transformer();
+    layer.add(tr);
+    tr.attachTo(group);
+
+    layer.draw();
+
+    assert.equal(tr._cache.transform.m[4], 50);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    group.add(rect);
+
+    tr.forceUpdate();
+    layer.draw();
+
+    assert.equal(tr._cache.transform.m[4], 100);
+
+    // tr._fitNodeInto({
+    //   x: 100,
+    //   y: 70,
+    //   width: 100,
+    //   height: 100
+    // });
+
+    // assert.equal(rect.x(), 100);
+    // assert.equal(rect.y(), 70);
+    // assert.equal(rect.width() * rect.scaleX(), 100);
+    // assert.equal(rect.height() * rect.scaleY(), 100);
+    // assert.equal(rect.rotation(), rect.rotation());
+  });
 });

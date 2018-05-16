@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
-## [2.1.0][2018-05-16]
+## [2.1.1][2018-05-16]
 
 ## Fixed
 
@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Some performance optimizations for `Konva.Text`
 * Better wrap algorithm for `Konva.Text`
 * fixed `Konva.Arrow` with tension != 0
+* Some fixes for `Konva.Transformer`
 
 ## [2.0.3][2018-04-21]
 
