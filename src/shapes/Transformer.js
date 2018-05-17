@@ -240,8 +240,8 @@
       var rect = node.getClientRect({ skipTransform: true });
       var rotation = Konva.getAngle(node.rotation());
 
-      var dx = rect.x * node.scaleX() - node.offsetX();
-      var dy = rect.y * node.scaleY() - node.offsetY();
+      var dx = rect.x * node.scaleX() - node.offsetX() * node.scaleX();
+      var dy = rect.y * node.scaleY() - node.offsetY() * node.scaleY();
 
       return {
         x: node.x() + dx * Math.cos(rotation) + dy * Math.sin(-rotation),
@@ -611,8 +611,8 @@
       var scaleY = (newAttrs.height - padding * 2) / pure.height;
 
       var rotation = Konva.getAngle(node.getRotation());
-      var dx = pure.x * scaleX - padding;
-      var dy = pure.y * scaleY - padding;
+      var dx = pure.x * scaleX - padding - node.offsetX() * scaleX;
+      var dy = pure.y * scaleY - padding - node.offsetY() * scaleY;
 
       this.getNode().setAttrs({
         scaleX: scaleX,

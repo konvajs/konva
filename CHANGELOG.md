@@ -5,6 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+## Fixed
+
+* `Konva.Transformer` automatically track shape changes
+* `Konva.Transformer` works with shapes with offset too
+
 ## [2.1.2][2018-05-16]
 
 ## Fixed

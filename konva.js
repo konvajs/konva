@@ -4922,16 +4922,19 @@
 (function() {
   'use strict';
   /**
-    * Grayscale Filter
-    * @function
-    * @memberof Konva.Filters
-    * @param {Object} imageData
-    * @example
-    * node.cache();
-    * node.filters([Konva.Filters.Grayscale]);
-    */
+   * Grayscale Filter
+   * @function
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Grayscale]);
+   */
   Konva.Filters.Grayscale = function(imageData) {
-    var data = imageData.data, len = data.length, i, brightness;
+    var data = imageData.data,
+      len = data.length,
+      i,
+      brightness;
 
     for (i = 0; i < len; i += 4) {
       brightness = 0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2];
@@ -4994,16 +4997,18 @@
 (function() {
   'use strict';
   /**
-    * Invert Filter
-    * @function
-    * @memberof Konva.Filters
-    * @param {Object} imageData
-    * @example
-    * node.cache();
-    * node.filters([Konva.Filters.Invert]);
-    */
+   * Invert Filter
+   * @function
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Invert]);
+   */
   Konva.Filters.Invert = function(imageData) {
-    var data = imageData.data, len = data.length, i;
+    var data = imageData.data,
+      len = data.length,
+      i;
 
     for (i = 0; i < len; i += 4) {
       // red
@@ -6923,17 +6928,17 @@
 (function() {
   'use strict';
   /**
-     * Noise Filter. Randomly adds or substracts to the color channels
-     * @function
-     * @name Noise
-     * @memberof Konva.Filters
-     * @param {Object} imageData
-     * @author ippo615
-     * @example
-     * node.cache();
-     * node.filters([Konva.Filters.Noise]);
-     * node.noise(0.8);
-     */
+   * Noise Filter. Randomly adds or substracts to the color channels
+   * @function
+   * @name Noise
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @author ippo615
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Noise]);
+   * node.noise(0.8);
+   */
   Konva.Filters.Noise = function(imageData) {
     var amount = this.noise() * 255,
       data = imageData.data,
@@ -6956,31 +6961,31 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set noise amount.  Must be a value between 0 and 1. Use with {@link Konva.Filters.Noise} filter.
-    * @name noise
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Number} noise
-    * @returns {Number}
-    */
+   * get/set noise amount.  Must be a value between 0 and 1. Use with {@link Konva.Filters.Noise} filter.
+   * @name noise
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} noise
+   * @returns {Number}
+   */
 })();
 
 /*eslint-disable max-depth */
 (function() {
   'use strict';
   /**
-     * Pixelate Filter. Averages groups of pixels and redraws
-     *  them as larger pixels
-     * @function
-     * @name Pixelate
-     * @memberof Konva.Filters
-     * @param {Object} imageData
-     * @author ippo615
-     * @example
-     * node.cache();
-     * node.filters([Konva.Filters.Pixelate]);
-     * node.pixelSize(10);
-     */
+   * Pixelate Filter. Averages groups of pixels and redraws
+   *  them as larger pixels
+   * @function
+   * @name Pixelate
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @author ippo615
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Pixelate]);
+   * node.pixelSize(10);
+   */
 
   Konva.Filters.Pixelate = function(imageData) {
     var pixelSize = Math.ceil(this.pixelSize()),
@@ -7077,31 +7082,31 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set pixel size. Use with {@link Konva.Filters.Pixelate} filter.
-    * @name pixelSize
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Integer} pixelSize
-    * @returns {Integer}
-    */
+   * get/set pixel size. Use with {@link Konva.Filters.Pixelate} filter.
+   * @name pixelSize
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Integer} pixelSize
+   * @returns {Integer}
+   */
 })();
 
 (function() {
   'use strict';
   /**
-     * Threshold Filter. Pushes any value above the mid point to
-     *  the max and any value below the mid point to the min.
-     *  This affects the alpha channel.
-     * @function
-     * @name Threshold
-     * @memberof Konva.Filters
-     * @param {Object} imageData
-     * @author ippo615
-     * @example
-     * node.cache();
-     * node.filters([Konva.Filters.Threshold]);
-     * node.threshold(0.1);
-     */
+   * Threshold Filter. Pushes any value above the mid point to
+   *  the max and any value below the mid point to the min.
+   *  This affects the alpha channel.
+   * @function
+   * @name Threshold
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @author ippo615
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Threshold]);
+   * node.threshold(0.1);
+   */
 
   Konva.Filters.Threshold = function(imageData) {
     var level = this.threshold() * 255,
@@ -7122,13 +7127,13 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set threshold.  Must be a value between 0 and 1. Use with {@link Konva.Filters.Threshold} or {@link Konva.Filters.Mask} filter.
-    * @name threshold
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Number} threshold
-    * @returns {Number}
-    */
+   * get/set threshold.  Must be a value between 0 and 1. Use with {@link Konva.Filters.Threshold} or {@link Konva.Filters.Mask} filter.
+   * @name threshold
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} threshold
+   * @returns {Number}
+   */
 })();
 
 (function() {
@@ -10946,14 +10951,14 @@
 (function(Konva) {
   'use strict';
   /**
-     * BaseLayer constructor.
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Container
-     * @param {Object} config
-     * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
-     * to clear the canvas before each layer draw.  The default value is true.
-     * @param {Number} [config.x]
+   * BaseLayer constructor.
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Container
+   * @param {Object} config
+   * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
+   * to clear the canvas before each layer draw.  The default value is true.
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -10973,14 +10978,14 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * * @param {Object} [config.clip] set clip
+   * * @param {Object} [config.clip] set clip
      * @param {Number} [config.clipX] set clip x
      * @param {Number} [config.clipY] set clip y
      * @param {Number} [config.clipWidth] set clip width
      * @param {Number} [config.clipHeight] set clip height
      * @param {Function} [config.clipFunc] set clip func
 
-     */
+   */
   Konva.BaseLayer = function(config) {
     this.___init(config);
   };
@@ -18864,8 +18869,8 @@
       var rect = node.getClientRect({ skipTransform: true });
       var rotation = Konva.getAngle(node.rotation());
 
-      var dx = rect.x * node.scaleX() - node.offsetX();
-      var dy = rect.y * node.scaleY() - node.offsetY();
+      var dx = rect.x * node.scaleX() - node.offsetX() * node.scaleX();
+      var dy = rect.y * node.scaleY() - node.offsetY() * node.scaleY();
 
       return {
         x: node.x() + dx * Math.cos(rotation) + dy * Math.sin(-rotation),
@@ -19235,8 +19240,8 @@
       var scaleY = (newAttrs.height - padding * 2) / pure.height;
 
       var rotation = Konva.getAngle(node.getRotation());
-      var dx = pure.x * scaleX - padding;
-      var dy = pure.y * scaleY - padding;
+      var dx = pure.x * scaleX - padding - node.offsetX() * scaleX;
+      var dy = pure.y * scaleY - padding - node.offsetY() * scaleY;
 
       this.getNode().setAttrs({
         scaleX: scaleX,

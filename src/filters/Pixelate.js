@@ -2,18 +2,18 @@
 (function() {
   'use strict';
   /**
-     * Pixelate Filter. Averages groups of pixels and redraws
-     *  them as larger pixels
-     * @function
-     * @name Pixelate
-     * @memberof Konva.Filters
-     * @param {Object} imageData
-     * @author ippo615
-     * @example
-     * node.cache();
-     * node.filters([Konva.Filters.Pixelate]);
-     * node.pixelSize(10);
-     */
+   * Pixelate Filter. Averages groups of pixels and redraws
+   *  them as larger pixels
+   * @function
+   * @name Pixelate
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @author ippo615
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Pixelate]);
+   * node.pixelSize(10);
+   */
 
   Konva.Filters.Pixelate = function(imageData) {
     var pixelSize = Math.ceil(this.pixelSize()),
@@ -110,11 +110,11 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set pixel size. Use with {@link Konva.Filters.Pixelate} filter.
-    * @name pixelSize
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Integer} pixelSize
-    * @returns {Integer}
-    */
+   * get/set pixel size. Use with {@link Konva.Filters.Pixelate} filter.
+   * @name pixelSize
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Integer} pixelSize
+   * @returns {Integer}
+   */
 })();

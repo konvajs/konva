@@ -178,11 +178,13 @@ suite('Transformer', function() {
     stage.add(layer);
 
     var rect = new Konva.Rect({
-      x: 50,
-      y: 50,
+      x: 100,
+      y: 100,
       draggable: true,
       width: 100,
       height: 100,
+      scaleX: 2,
+      scaleY: 2,
       fill: 'yellow',
       offsetX: 50,
       offsetY: 50
@@ -196,14 +198,14 @@ suite('Transformer', function() {
     layer.draw();
     assert.equal(tr.getClassName(), 'Transformer');
 
-    assert.equal(tr.x(), rect.x() - 50);
-    assert.equal(tr.y(), rect.y() - 50);
+    assert.equal(tr.x(), 0);
+    assert.equal(tr.y(), 0);
     assert.equal(tr.width(), rect.width() * rect.scaleX());
     assert.equal(tr.height(), rect.height() * rect.scaleY());
     assert.equal(tr.rotation(), rect.rotation());
   });
 
-  test.skip('fit rect with offset', function() {
+  test('fit rect with offset', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -225,19 +227,24 @@ suite('Transformer', function() {
     tr.attachTo(rect);
 
     tr._fitNodeInto({
-      x: 50,
-      y: 50,
+      x: 0,
+      y: 0,
       width: 200,
       height: 100
     });
+    layer.draw();
 
     assert.equal(rect.x(), 100);
-    assert.equal(rect.y(), 100);
+    assert.equal(rect.y(), 50);
     assert.equal(rect.width() * rect.scaleX(), 200);
     assert.equal(rect.height() * rect.scaleY(), 100);
     assert.equal(rect.rotation(), rect.rotation());
 
-    layer.draw();
+    assert.equal(tr.x(), 0);
+    assert.equal(tr.y(), 0);
+    assert.equal(tr.width(), 200);
+    assert.equal(tr.height(), 100);
+    assert.equal(rect.rotation(), rect.rotation());
   });
 
   test('add transformer for circle', function() {
