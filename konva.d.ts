@@ -401,6 +401,7 @@ declare namespace Konva {
     shadowOffsetY?: number;
     shadowOpacity?: number;
     shadowEnabled?: boolean;
+    shadowForStrokeEnabled?: boolean;
     dash?: number[];
     dashEnabled?: boolean;
     perfectDrawEnabled?: boolean;
@@ -483,12 +484,16 @@ declare namespace Konva {
     lineCap(lineCap: string): this;
     lineJoin(): string;
     lineJoin(lineJoin: string): this;
+    perfectDrawEnabled(): boolean;
+    perfectDrawEnabled(perfectDrawEnabled: boolean): this;
     sceneFunc(): Function;
     sceneFunc(func: (con: Context) => {}): this;
     shadowColor(): string;
     shadowColor(shadowColor: string): this;
     shadowEnabled(): boolean;
     shadowEnabled(shadowEnabled: boolean): this;
+    shadowForStrokeEnabled(): boolean;
+    shadowForStrokeEnabled(shadowForStrokeEnabled: boolean): this;
     shadowOffset(): Vector2d;
     shadowOffset(shadowOffset: Vector2d): this;
     shadowOffsetX(): number;
