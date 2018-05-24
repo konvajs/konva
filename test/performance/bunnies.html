@@ -11,31 +11,13 @@
   </head>
   <body>
     <div id='container'></div>
-    <script src='http://d3lp1msu2r81bx.cloudfront.net/kjs/js/lib/konva-v5.1.0.min.js'></script>
-    <script src='http://code.jquery.com/jquery-1.11.0.min.js'></script>
+    <script src='../../dist/konva-dev.js'></script>
     <script src='http://www.html5canvastutorials.com/lib/stats/stats.js'></script>
     <script defer='defer'>      
       var lastTime = 0;
-      var vendors = ['ms', 'moz', 'webkit', 'o'];
-      for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-          window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-          window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
-                                     || window[vendors[x]+'CancelRequestAnimationFrame'];
-      }
-      if (!window.requestAnimationFrame) {
-          window.requestAnimationFrame = function(callback) {
-              var currTime = new Date().getTime();
-              var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-              var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
-                timeToCall);
-              lastTime = currTime + timeToCall;
-              return id;
-          };
-      }
-      window.requestAnimFrame = window.requestAnimationFrame;
       
-      var width = $(window).width();
-      var height = $(window).height();
+      var width = window.innerWidth;
+      var height = window.innerHeight;
       
       var wabbitTexture;
       
@@ -56,7 +38,6 @@
       var amount = 10;
       var counter;
       
-      function onReady() {
           var stage = new Konva.Stage({
               container: 'container',
               width: width - 10,
@@ -91,17 +72,17 @@
           container = stage;
           // stage.addChild(container);
           
-          $(stage.getContainer()).mousedown(function(){
-              isAdding = true;
+          stage.on('mousedown', function() {
+            isAdding = true;
           });
-          
-          $(stage.getContainer()).mouseup(function(){
-              isAdding = false;
+
+          stage.on('mouseup', function() {
+            isAdding = false;
           });
+        
           
           document.addEventListener('touchstart', onTouchStart, true);
           document.addEventListener('touchend', onTouchEnd, true);
-      }
       
       function _handleTextureLoaded (event) {
           for (var i = 0; i < startBunnyCount; i++) 
@@ -196,11 +177,9 @@
               
           }
           layer.drawScene();
-          requestAnimFrame(update);
+          requestAnimationFrame(update);
           stats.end();
-      }
-
-      $(document).ready(onReady);
+        }
       
     </script>
   </body>

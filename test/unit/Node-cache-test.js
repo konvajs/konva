@@ -700,7 +700,7 @@ suite('Caching', function() {
     cloneAndCompareLayer(layer, 150);
   });
 
-  test('test group with circle + buffer canvas usage', function() {
+  test.only('test group with circle + buffer canvas usage', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
