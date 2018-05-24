@@ -24,21 +24,21 @@
   }
 
   /**
-     * Canvas Renderer constructor
-     * @constructor
-     * @abstract
-     * @memberof Konva
-     * @param {Object} config
-     * @param {Number} config.width
-     * @param {Number} config.height
-     * @param {Number} config.pixelRatio KonvaJS automatically handles pixel ratio adjustments in order to render crisp drawings
-     *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
-     *  of 1.  Some high end tablets and phones, like iPhones and iPads (not the mini) have a device pixel ratio
-     *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel
-     *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
-     *  specified, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
-     *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
-     */
+   * Canvas Renderer constructor
+   * @constructor
+   * @abstract
+   * @memberof Konva
+   * @param {Object} config
+   * @param {Number} config.width
+   * @param {Number} config.height
+   * @param {Number} config.pixelRatio KonvaJS automatically handles pixel ratio adjustments in order to render crisp drawings
+   *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
+   *  of 1.  Some high end tablets and phones, like iPhones and iPads (not the mini) have a device pixel ratio
+   *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel
+   *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
+   *  specified, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
+   *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
+   */
   Konva.Canvas = function(config) {
     this.init(config);
   };
@@ -63,35 +63,35 @@
       this._canvas.style.left = 0;
     },
     /**
-         * get canvas context
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @returns {CanvasContext} context
-         */
+     * get canvas context
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @returns {CanvasContext} context
+     */
     getContext: function() {
       return this.context;
     },
     /**
-         * get pixel ratio
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @returns {Number} pixel ratio
-         */
+     * get pixel ratio
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @returns {Number} pixel ratio
+     */
     getPixelRatio: function() {
       return this.pixelRatio;
     },
     /**
-         * get pixel ratio
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @param {Number} pixelRatio KonvaJS automatically handles pixel ratio adustments in order to render crisp drawings
-         *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
-         *  of 1.  Some high end tablets and phones, like iPhones and iPads have a device pixel ratio
-         *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel
-         *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
-         *  specificed, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
-         *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
-         */
+     * get pixel ratio
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @param {Number} pixelRatio KonvaJS automatically handles pixel ratio adustments in order to render crisp drawings
+     *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
+     *  of 1.  Some high end tablets and phones, like iPhones and iPads have a device pixel ratio
+     *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel
+     *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
+     *  specificed, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
+     *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
+     */
     setPixelRatio: function(pixelRatio) {
       var previousRatio = this.pixelRatio;
       this.pixelRatio = pixelRatio;
@@ -101,11 +101,11 @@
       );
     },
     /**
-         * set width
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @param {Number} width
-         */
+     * set width
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @param {Number} width
+     */
     setWidth: function(width) {
       // take into account pixel ratio
       this.width = this._canvas.width = width * this.pixelRatio;
@@ -116,11 +116,11 @@
       _context.scale(pixelRatio, pixelRatio);
     },
     /**
-         * set height
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @param {Number} height
-         */
+     * set height
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @param {Number} height
+     */
     setHeight: function(height) {
       // take into account pixel ratio
       this.height = this._canvas.height = height * this.pixelRatio;
@@ -130,42 +130,42 @@
       _context.scale(pixelRatio, pixelRatio);
     },
     /**
-         * get width
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @returns {Number} width
-         */
+     * get width
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @returns {Number} width
+     */
     getWidth: function() {
       return this.width;
     },
     /**
-         * get height
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @returns {Number} height
-         */
+     * get height
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @returns {Number} height
+     */
     getHeight: function() {
       return this.height;
     },
     /**
-         * set size
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @param {Number} width
-         * @param {Number} height
-         */
+     * set size
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @param {Number} width
+     * @param {Number} height
+     */
     setSize: function(width, height) {
       this.setWidth(width);
       this.setHeight(height);
     },
     /**
-         * to data url
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @param {String} mimeType
-         * @param {Number} quality between 0 and 1 for jpg mime types
-         * @returns {String} data url string
-         */
+     * to data url
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @param {String} mimeType
+     * @param {Number} quality between 0 and 1 for jpg mime types
+     * @returns {String} data url string
+     */
     toDataURL: function(mimeType, quality) {
       try {
         // If this call fails (due to browser bug, like in Firefox 3.6),

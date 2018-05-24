@@ -1,4 +1,5 @@
-var fs = require('fs'), Konva = require('../dist/konva-dev');
+var fs = require('fs'),
+  Konva = require('../dist/konva-dev');
 
 global.Konva = Konva;
 Konva.enableTrace = true;

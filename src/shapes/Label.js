@@ -2,14 +2,14 @@
   'use strict';
   // constants
   var ATTR_CHANGE_LIST = [
-    'fontFamily',
-    'fontSize',
-    'fontStyle',
-    'padding',
-    'lineHeight',
-    'text',
-    'width'
-  ],
+      'fontFamily',
+      'fontSize',
+      'fontStyle',
+      'padding',
+      'lineHeight',
+      'text',
+      'width'
+    ],
     CHANGE_KONVA = 'Change.konva',
     NONE = 'none',
     UP = 'up',
@@ -21,43 +21,43 @@
     attrChangeListLen = ATTR_CHANGE_LIST.length;
 
   /**
-     * Label constructor.&nbsp; Labels are groups that contain a Text and Tag shape
-     * @constructor
-     * @memberof Konva
-     * @param {Object} config
-     * @@nodeParams
-     * @example
-     * // create label
-     * var label = new Konva.Label({
-     *   x: 100,
-     *   y: 100,
-     *   draggable: true
-     * });
-     *
-     * // add a tag to the label
-     * label.add(new Konva.Tag({
-     *   fill: '#bbb',
-     *   stroke: '#333',
-     *   shadowColor: 'black',
-     *   shadowBlur: 10,
-     *   shadowOffset: [10, 10],
-     *   shadowOpacity: 0.2,
-     *   lineJoin: 'round',
-     *   pointerDirection: 'up',
-     *   pointerWidth: 20,
-     *   pointerHeight: 20,
-     *   cornerRadius: 5
-     * }));
-     *
-     * // add text to the label
-     * label.add(new Konva.Text({
-     *   text: 'Hello World!',
-     *   fontSize: 50,
-     *   lineHeight: 1.2,
-     *   padding: 10,
-     *   fill: 'green'
-     *  }));
-     */
+   * Label constructor.&nbsp; Labels are groups that contain a Text and Tag shape
+   * @constructor
+   * @memberof Konva
+   * @param {Object} config
+   * @@nodeParams
+   * @example
+   * // create label
+   * var label = new Konva.Label({
+   *   x: 100,
+   *   y: 100,
+   *   draggable: true
+   * });
+   *
+   * // add a tag to the label
+   * label.add(new Konva.Tag({
+   *   fill: '#bbb',
+   *   stroke: '#333',
+   *   shadowColor: 'black',
+   *   shadowBlur: 10,
+   *   shadowOffset: [10, 10],
+   *   shadowOpacity: 0.2,
+   *   lineJoin: 'round',
+   *   pointerDirection: 'up',
+   *   pointerWidth: 20,
+   *   pointerHeight: 20,
+   *   cornerRadius: 5
+   * }));
+   *
+   * // add text to the label
+   * label.add(new Konva.Text({
+   *   text: 'Hello World!',
+   *   fontSize: 50,
+   *   lineHeight: 1.2,
+   *   padding: 10,
+   *   fill: 'green'
+   *  }));
+   */
   Konva.Label = function(config) {
     this.____init(config);
   };
@@ -75,27 +75,28 @@
       });
     },
     /**
-         * get Text shape for the label.  You need to access the Text shape in order to update
-         * the text properties
-         * @name getText
-         * @method
-         * @memberof Konva.Label.prototype
-         */
+     * get Text shape for the label.  You need to access the Text shape in order to update
+     * the text properties
+     * @name getText
+     * @method
+     * @memberof Konva.Label.prototype
+     */
     getText: function() {
       return this.find('Text')[0];
     },
     /**
-         * get Tag shape for the label.  You need to access the Tag shape in order to update
-         * the pointer properties and the corner radius
-         * @name getTag
-         * @method
-         * @memberof Konva.Label.prototype
-         */
+     * get Tag shape for the label.  You need to access the Tag shape in order to update
+     * the pointer properties and the corner radius
+     * @name getTag
+     * @method
+     * @memberof Konva.Label.prototype
+     */
     getTag: function() {
       return this.find('Tag')[0];
     },
     _addListeners: function(text) {
-      var that = this, n;
+      var that = this,
+        n;
       var func = function() {
         that._sync();
       };
@@ -170,17 +171,17 @@
   Konva.Collection.mapMethods(Konva.Label);
 
   /**
-     * Tag constructor.&nbsp; A Tag can be configured
-     *  to have a pointer element that points up, right, down, or left
-     * @constructor
-     * @memberof Konva
-     * @param {Object} config
-     * @param {String} [config.pointerDirection] can be up, right, down, left, or none; the default
-     *  is none.  When a pointer is present, the positioning of the label is relative to the tip of the pointer.
-     * @param {Number} [config.pointerWidth]
-     * @param {Number} [config.pointerHeight]
-     * @param {Number} [config.cornerRadius]
-     */
+   * Tag constructor.&nbsp; A Tag can be configured
+   *  to have a pointer element that points up, right, down, or left
+   * @constructor
+   * @memberof Konva
+   * @param {Object} config
+   * @param {String} [config.pointerDirection] can be up, right, down, left, or none; the default
+   *  is none.  When a pointer is present, the positioning of the label is relative to the tip of the pointer.
+   * @param {Number} [config.pointerWidth]
+   * @param {Number} [config.pointerHeight]
+   * @param {Number} [config.cornerRadius]
+   */
   Konva.Tag = function(config) {
     this.___init(config);
   };
@@ -321,71 +322,71 @@
   Konva.Factory.addGetterSetter(Konva.Tag, 'pointerDirection', NONE);
 
   /**
-     * set pointer Direction
-     * @name setPointerDirection
-     * @method
-     * @memberof Konva.Tag.prototype
-     * @param {String} pointerDirection can be up, right, down, left, or none.  The
-     *  default is none
-     */
+   * set pointer Direction
+   * @name setPointerDirection
+   * @method
+   * @memberof Konva.Tag.prototype
+   * @param {String} pointerDirection can be up, right, down, left, or none.  The
+   *  default is none
+   */
 
   /**
-     * get pointer Direction
-     * @name getPointerDirection
-     * @method
-     * @memberof Konva.Tag.prototype
-     */
+   * get pointer Direction
+   * @name getPointerDirection
+   * @method
+   * @memberof Konva.Tag.prototype
+   */
 
   Konva.Factory.addGetterSetter(Konva.Tag, 'pointerWidth', 0);
 
   /**
-     * set pointer width
-     * @name setPointerWidth
-     * @method
-     * @memberof Konva.Tag.prototype
-     * @param {Number} pointerWidth
-     */
+   * set pointer width
+   * @name setPointerWidth
+   * @method
+   * @memberof Konva.Tag.prototype
+   * @param {Number} pointerWidth
+   */
 
   /**
-     * get pointer width
-     * @name getPointerWidth
-     * @method
-     * @memberof Konva.Tag.prototype
-     */
+   * get pointer width
+   * @name getPointerWidth
+   * @method
+   * @memberof Konva.Tag.prototype
+   */
 
   Konva.Factory.addGetterSetter(Konva.Tag, 'pointerHeight', 0);
 
   /**
-     * set pointer height
-     * @name setPointerHeight
-     * @method
-     * @memberof Konva.Tag.prototype
-     * @param {Number} pointerHeight
-     */
+   * set pointer height
+   * @name setPointerHeight
+   * @method
+   * @memberof Konva.Tag.prototype
+   * @param {Number} pointerHeight
+   */
 
   /**
-     * get pointer height
-     * @name getPointerHeight
-     * @method
-     * @memberof Konva.Tag.prototype
-     */
+   * get pointer height
+   * @name getPointerHeight
+   * @method
+   * @memberof Konva.Tag.prototype
+   */
 
   Konva.Factory.addGetterSetter(Konva.Tag, 'cornerRadius', 0);
 
   /**
-     * set corner radius
-     * @name setCornerRadius
-     * @method
-     * @memberof Konva.Tag.prototype
-     * @param {Number} corner radius
-     */
+   * set corner radius
+   * @name setCornerRadius
+   * @method
+   * @memberof Konva.Tag.prototype
+   * @param {Number} corner radius
+   */
 
   /**
-     * get corner radius
-     * @name getCornerRadius
-     * @method
-     * @memberof Konva.Tag.prototype
-     */
+   * get corner radius
+   * @name getCornerRadius
+   * @method
+   * @memberof Konva.Tag.prototype
+   */
 
   Konva.Collection.mapMethods(Konva.Tag);
 })();

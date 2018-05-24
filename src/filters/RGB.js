@@ -1,18 +1,18 @@
 (function() {
   'use strict';
   /**
-     * RGB Filter
-     * @function
-     * @name RGB
-     * @memberof Konva.Filters
-     * @param {Object} imageData
-     * @author ippo615
-     * @example
-     * node.cache();
-     * node.filters([Konva.Filters.RGB]);
-     * node.blue(120);
-     * node.green(200);
-     */
+   * RGB Filter
+   * @function
+   * @name RGB
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @author ippo615
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.RGB]);
+   * node.blue(120);
+   * node.green(200);
+   */
   Konva.Filters.RGB = function(imageData) {
     var data = imageData.data,
       nPixels = data.length,
@@ -43,13 +43,13 @@
     }
   });
   /**
-    * get/set filter red value. Use with {@link Konva.Filters.RGB} filter.
-    * @name red
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Integer} red value between 0 and 255
-    * @returns {Integer}
-    */
+   * get/set filter red value. Use with {@link Konva.Filters.RGB} filter.
+   * @name red
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Integer} red value between 0 and 255
+   * @returns {Integer}
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'green', 0, function(val) {
     this._filterUpToDate = false;
@@ -62,13 +62,13 @@
     }
   });
   /**
-    * get/set filter green value. Use with {@link Konva.Filters.RGB} filter.
-    * @name green
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Integer} green value between 0 and 255
-    * @returns {Integer}
-    */
+   * get/set filter green value. Use with {@link Konva.Filters.RGB} filter.
+   * @name green
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Integer} green value between 0 and 255
+   * @returns {Integer}
+   */
 
   Konva.Factory.addGetterSetter(
     Konva.Node,
@@ -78,11 +78,11 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set filter blue value. Use with {@link Konva.Filters.RGB} filter.
-    * @name blue
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Integer} blue value between 0 and 255
-    * @returns {Integer}
-    */
+   * get/set filter blue value. Use with {@link Konva.Filters.RGB} filter.
+   * @name blue
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Integer} blue value between 0 and 255
+   * @returns {Integer}
+   */
 })();

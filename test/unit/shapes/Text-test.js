@@ -82,7 +82,7 @@ suite('Text', function() {
     assert.equal(text.getClassName(), 'Text', 'getClassName should be Text');
   });
 
-  test.skip('text with fill and shadow', function() {
+  test('text with fill and shadow', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -182,7 +182,7 @@ suite('Text', function() {
 
     stage.draw();
 
-    compareLayers(layer1, layer2, 150);
+    compareLayers(layer1, layer2, 200);
   });
 
   // ======================================================
@@ -433,25 +433,52 @@ suite('Text', function() {
     rect.height(text.getHeight());
     layer.add(rect).add(text);
 
-    // var text2 = new Konva.Text({
-    //     x: 10,
-    //     y: 110,
-    //     text: 'HEADING\n\n    All the world\'s a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.',
-    //     fontSize: 14,
-    //     fontFamily: 'Calibri',
-    //     fontStyle: 'normal',
-    //     fill: '#555',
-    //     width: 380,
-    //     letterSpacing: 5,
-    //     draggable: true
-    // });
-
-    // layer.add(rect).add(text2);
-
     stage.add(layer);
 
     var trace =
       'translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();restore();translate();save();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();restore();translate();restore();';
+
+    assert.equal(layer.getContext().getTrace(true), trace);
+  });
+
+  // ======================================================
+  test('text multi line with justify align and decoration', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      x: 10,
+      y: 10,
+      width: 380,
+      height: 300,
+      fill: 'yellow'
+    });
+
+    var text = new Konva.Text({
+      x: 10,
+      y: 10,
+      text:
+        "HEADING\n\n    All the world's a stage, merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+      fontSize: 14,
+      fontFamily: 'Calibri',
+      fontStyle: 'normal',
+      fill: '#555',
+      width: 380,
+      align: 'justify',
+      letterSpacing: 5,
+      textDecoration: 'underline',
+      padding: 20,
+      draggable: true
+    });
+
+    rect.height(text.getHeight());
+
+    layer.add(rect).add(text);
+
+    stage.add(layer);
+
+    var trace =
+      'fillText();translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();restore();translate();save();save();beginPath();moveTo();lineTo();stroke();restore();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();fillStyle;fillText();translate();restore();translate();restore();';
 
     assert.equal(layer.getContext().getTrace(true), trace);
   });
@@ -493,7 +520,7 @@ suite('Text', function() {
   // ======================================================
   // skiping this test for now. It fails on travis. WHYYY??!?!?!
   // TODO: restore it
-  test.skip('text multi line with underline and spacing', function() {
+  test('text multi line with underline and spacing', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -512,8 +539,9 @@ suite('Text', function() {
     stage.add(layer);
 
     var trace =
-      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 15px Arial;textBaseline=middle;textAlign=left;save();translate(0,7.5);save();save();beginPath();moveTo(0,8);lineTo(52,8);stroke();restore();fillStyle=red;fillText(h,0,0);translate(13,0);fillStyle=red;fillText(e,0,0);translate(13,0);fillStyle=red;fillText(l,0,0);translate(8,0);fillStyle=red;fillText(l,0,0);translate(8,0);fillStyle=red;fillText(o,0,0);translate(13,0);restore();translate(0,15);save();save();beginPath();moveTo(0,8);lineTo(56,8);stroke();restore();fillStyle=red;fillText(w,0,0);translate(16,0);fillStyle=red;fillText(o,0,0);translate(13,0);fillStyle=red;fillText(r,0,0);translate(10,0);fillStyle=red;fillText(l,0,0);translate(8,0);fillStyle=red;fillText(d,0,0);translate(13,0);restore();translate(0,15);restore();restore();';
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);font=normal normal 80px Arial;textBaseline=middle;textAlign=left;translate(0,40);save();save();beginPath();moveTo(0,40);lineTo(189,40);stroke();restore();fillStyle=red;fillText(h,0,0);translate(49,0);fillStyle=red;fillText(e,0,0);translate(49,0);fillStyle=red;fillText(l,0,0);translate(23,0);fillStyle=red;fillText(l,0,0);translate(23,0);fillStyle=red;fillText(o,0,0);translate(49,0);restore();translate(0,80);save();save();beginPath();moveTo(0,40);lineTo(211,40);stroke();restore();fillStyle=red;fillText(w,0,0);translate(63,0);fillStyle=red;fillText(o,0,0);translate(49,0);fillStyle=red;fillText(r,0,0);translate(32,0);fillStyle=red;fillText(l,0,0);translate(23,0);fillStyle=red;fillText(d,0,0);translate(49,0);restore();translate(0,80);restore();';
 
+    // console.log(layer.getContext().getTrace());
     assert.equal(layer.getContext().getTrace(), trace);
   });
 
@@ -667,36 +695,6 @@ suite('Text', function() {
       width: text.width(),
       height: 50
     });
-  });
-
-  test.skip('cache text', function() {
-    var stage = addStage();
-    var layer = new Konva.Layer();
-
-    var text = new Konva.Text({
-      fontSize: 20,
-      y: 50,
-      x: 50,
-      fill: 'black',
-      text: 'Hello world with cache!\nHow are you?',
-      draggable: true
-    });
-
-    text.cache();
-    layer.add(text);
-
-    var text2 = new Konva.Text({
-      fontSize: 20,
-      y: 50,
-      x: 260,
-      fill: 'black',
-      text: 'Hello world without cache!\nHow are you?',
-      draggable: true
-    });
-
-    layer.add(text2);
-
-    stage.add(layer);
   });
 
   test('gradient', function() {

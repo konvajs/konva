@@ -104,6 +104,7 @@ suite('Label', function() {
     assert.equal(stage.find('Label')[0], label);
   });
 
+  // caching doesn't give exactly the same result. WHY?
   test.skip('cache label', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -239,7 +240,7 @@ suite('Label', function() {
 
     stage.add(layer);
 
-    cloneAndCompareLayer(layer, 254);
+    cloneAndCompareLayer(layer, 100);
   });
 
   it('tag should list text size changes', function() {

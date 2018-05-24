@@ -1,21 +1,21 @@
 (function() {
   'use strict';
   /**
-     * Emboss Filter.
-     * Pixastic Lib - Emboss filter - v0.1.0
-     * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
-     * License: [http://www.pixastic.com/lib/license.txt]
-     * @function
-     * @memberof Konva.Filters
-     * @param {Object} imageData
-     * @example
-     * node.cache();
-     * node.filters([Konva.Filters.Emboss]);
-     * node.embossStrength(0.8);
-     * node.embossWhiteLevel(0.3);
-     * node.embossDirection('right');
-     * node.embossBlend(true);
-     */
+   * Emboss Filter.
+   * Pixastic Lib - Emboss filter - v0.1.0
+   * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+   * License: [http://www.pixastic.com/lib/license.txt]
+   * @function
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Emboss]);
+   * node.embossStrength(0.8);
+   * node.embossWhiteLevel(0.3);
+   * node.embossDirection('right');
+   * node.embossBlend(true);
+   */
   Konva.Filters.Emboss = function(imageData) {
     // pixastic strength is between 0 and 10.  I want it between 0 and 1
     // pixastic greyLevel is between 0 and 255.  I want it between 0 and 1.  Also,
@@ -146,13 +146,13 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set emboss strength. Use with {@link Konva.Filters.Emboss} filter.
-    * @name embossStrength
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Number} level between 0 and 1.  Default is 0.5
-    * @returns {Number}
-    */
+   * get/set emboss strength. Use with {@link Konva.Filters.Emboss} filter.
+   * @name embossStrength
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} level between 0 and 1.  Default is 0.5
+   * @returns {Number}
+   */
 
   Konva.Factory.addGetterSetter(
     Konva.Node,
@@ -162,13 +162,13 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set emboss white level. Use with {@link Konva.Filters.Emboss} filter.
-    * @name embossWhiteLevel
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Number} embossWhiteLevel between 0 and 1.  Default is 0.5
-    * @returns {Number}
-    */
+   * get/set emboss white level. Use with {@link Konva.Filters.Emboss} filter.
+   * @name embossWhiteLevel
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} embossWhiteLevel between 0 and 1.  Default is 0.5
+   * @returns {Number}
+   */
 
   Konva.Factory.addGetterSetter(
     Konva.Node,
@@ -178,14 +178,14 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set emboss direction. Use with {@link Konva.Filters.Emboss} filter.
-    * @name embossDirection
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {String} embossDirection can be top-left, top, top-right, right, bottom-right, bottom, bottom-left or left
-    *   The default is top-left
-    * @returns {String}
-    */
+   * get/set emboss direction. Use with {@link Konva.Filters.Emboss} filter.
+   * @name embossDirection
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {String} embossDirection can be top-left, top, top-right, right, bottom-right, bottom, bottom-left or left
+   *   The default is top-left
+   * @returns {String}
+   */
 
   Konva.Factory.addGetterSetter(
     Konva.Node,
@@ -195,11 +195,11 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set emboss blend. Use with {@link Konva.Filters.Emboss} filter.
-    * @name embossBlend
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Boolean} embossBlend
-    * @returns {Boolean}
-    */
+   * get/set emboss blend. Use with {@link Konva.Filters.Emboss} filter.
+   * @name embossBlend
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Boolean} embossBlend
+   * @returns {Boolean}
+   */
 })();

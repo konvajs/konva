@@ -43,7 +43,10 @@ suite('Collection', function() {
     layer.add(circle1).add(circle2);
     stage.add(layer);
 
-    layer.find('Circle').fill('blue').stroke('green');
+    layer
+      .find('Circle')
+      .fill('blue')
+      .stroke('green');
     layer.draw();
 
     //console.log(layer.getContext().getTrace());

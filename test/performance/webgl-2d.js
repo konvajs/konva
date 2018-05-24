@@ -400,7 +400,8 @@
     stackDepth,
     sMask
   ) {
-    var w = 2 / this.canvas.width, h = -2 / this.canvas.height;
+    var w = 2 / this.canvas.width,
+      h = -2 / this.canvas.height;
 
     stackDepth = stackDepth || 1;
 
@@ -568,7 +569,8 @@
 
   // Extends gl context with Canvas2D API
   WebGL2D.prototype.initCanvas2DAPI = function initCanvas2DAPI() {
-    var gl2d = this, gl = this.gl;
+    var gl2d = this,
+      gl = this.gl;
 
     // Rendering Canvas for text fonts
     var textCanvas = document.createElement('canvas');
@@ -585,7 +587,7 @@
       var r, g, b, m1, m2;
 
       // Clamp and Normalize values
-      h = (h % 360 + 360) % 360 / 360;
+      h = ((h % 360 + 360) % 360) / 360;
       s = s > 100 ? 1 : s / 100;
       s = s < 0 ? 0 : s;
       l = l > 100 ? 1 : l / 100;
@@ -851,7 +853,8 @@
     };
 
     // Maintain drawing state params during gl.save and gl.restore. see saveDrawState() and restoreDrawState()
-    var drawState = {}, drawStateStack = [];
+    var drawState = {},
+      drawStateStack = [];
 
     // A fast simple shallow clone
     function cloneObject(obj) {
@@ -1128,7 +1131,8 @@
       var data = tempCtx.createImageData(width, height);
       var buffer = new Uint8Array(width * height * 4);
       gl.readPixels(x, y, width, height, gl.RGBA, gl.UNSIGNED_BYTE, buffer);
-      var w = width * 4, h = height;
+      var w = width * 4,
+        h = height;
       for (var i = 0, maxI = h / 2; i < maxI; ++i) {
         for (var j = 0, maxJ = w; j < maxJ; ++j) {
           var index1 = i * w + j;
@@ -1392,7 +1396,8 @@
 
     gl.drawFocusRing = function drawFocusRing() {};
 
-    var imageCache = [], textureCache = [];
+    var imageCache = [],
+      textureCache = [];
 
     function Texture(image) {
       this.obj = gl.createTexture();
@@ -1408,12 +1413,12 @@
       ) {
         var canvas = document.createElement('canvas');
 
-        canvas.width = image.width > gl2d.maxTextureSize
-          ? gl2d.maxTextureSize
-          : image.width;
-        canvas.height = image.height > gl2d.maxTextureSize
-          ? gl2d.maxTextureSize
-          : image.height;
+        canvas.width =
+          image.width > gl2d.maxTextureSize ? gl2d.maxTextureSize : image.width;
+        canvas.height =
+          image.height > gl2d.maxTextureSize
+            ? gl2d.maxTextureSize
+            : image.height;
 
         var ctx = canvas.getContext('2d');
 
@@ -1487,7 +1492,8 @@
 
       var shaderProgram = gl2d.initShaders(transform.c_stack, sMask);
 
-      var texture, cacheIndex = imageCache.indexOf(image);
+      var texture,
+        cacheIndex = imageCache.indexOf(image);
 
       if (cacheIndex !== -1) {
         texture = textureCache[cacheIndex];

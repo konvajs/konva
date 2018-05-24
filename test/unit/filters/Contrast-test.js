@@ -81,7 +81,7 @@ suite('Filter Contrast', function() {
         x: 10,
         y: 10,
         image: imageObj,
-        crop: {x: 128, y: 48, width: 256, height: 128},
+        crop: { x: 128, y: 48, width: 256, height: 128 },
         draggable: true
       });
 

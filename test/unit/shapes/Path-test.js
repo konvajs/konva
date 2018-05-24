@@ -450,7 +450,7 @@ suite('Path', function() {
   });
 
   // ======================================================
-  test.skip('Tiger (RAWR!) cached', function() {
+  test('Tiger (RAWR!) cached', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     var group = new Konva.Group();

@@ -72,7 +72,10 @@ suite('Layer', function() {
       'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(0,0,578,200);'
     );
 
-    var hitTrace = layer.getHitCanvas().getContext().getTrace();
+    var hitTrace = layer
+      .getHitCanvas()
+      .getContext()
+      .getTrace();
     //console.log(hitTrace);
     assert.equal(
       hitTrace,
@@ -114,7 +117,10 @@ suite('Layer', function() {
       'clearRect(0,0,578,200);save();transform(1,0,0,1,100,100);beginPath();arc(0,0,70,0,6.283,false);closePath();fillStyle=green;fill();lineWidth=4;strokeStyle=black;stroke();restore();clearRect(100,100,100,100);'
     );
 
-    var hitTrace = layer.getHitCanvas().getContext().getTrace();
+    var hitTrace = layer
+      .getHitCanvas()
+      .getContext()
+      .getTrace();
     //console.log(hitTrace);
     assert.equal(
       hitTrace,
@@ -379,6 +385,7 @@ suite('Layer', function() {
   });
 
   // ======================================================
+  // skip, because we don't use this caching. It is slow.
   test.skip('hit graph caching', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

@@ -99,7 +99,7 @@ suite('Blob', function() {
       x: 50,
       y: 50,
       points: [-25, 50, 250, -30, 150, 50, 250, 110],
-      stroke: 'blue',
+      stroke: 'black',
       strokeWidth: 10,
       draggable: true,
       fill: '#aaf',

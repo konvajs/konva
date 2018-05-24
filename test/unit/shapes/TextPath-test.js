@@ -65,7 +65,8 @@ suite('TextPath', function() {
     var textpath = new Konva.TextPath({
       fill: 'black',
       fontSize: '10',
-      text: "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+      text:
+        "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
       data: c
     });
 
@@ -146,7 +147,8 @@ suite('TextPath', function() {
       fill: 'orange',
       fontSize: '8',
       fontFamily: 'Arial',
-      text: "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+      text:
+        "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
       data: c
     });
 
@@ -171,7 +173,8 @@ suite('TextPath', function() {
     var textpath = new Konva.TextPath({
       fill: 'black',
       fontSize: '10',
-      text: "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+      text:
+        "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
       data: c
     });
 
@@ -214,7 +217,8 @@ suite('TextPath', function() {
       fill: 'orange',
       fontSize: 10,
       fontFamily: 'Arial',
-      text: "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
+      text:
+        "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
       data: c,
       draggable: true
     });
@@ -241,7 +245,8 @@ suite('TextPath', function() {
       fontSize: 10,
       fontFamily: 'Arial',
       letterSpacing: 5,
-      text: "All the world's a stage, and all the men and women merely players.",
+      text:
+        "All the world's a stage, and all the men and women merely players.",
       data: c
     });
 
@@ -377,31 +382,35 @@ suite('TextPath', function() {
 
     var layer = new Konva.Layer();
     var pairs = {
-      'A': {
-        'V': -0.07421875,
+      A: {
+        V: -0.07421875
       },
-      'V': {
-        'A': -0.07421875,
-      },
-    }
+      V: {
+        A: -0.07421875
+      }
+    };
 
     const kernedText = new Konva.TextPath({
-      x : 0, y : 30,
+      x: 0,
+      y: 30,
       fill: 'black',
       text: 'AV',
       fontSize: 60,
       data: 'M0,0 L200,0',
-      getKerning: function(leftChar, rightChar) {         
-        return pairs.hasOwnProperty(leftChar) ? pairs[leftChar][rightChar] || 0 : 0         
-      },
+      getKerning: function(leftChar, rightChar) {
+        return pairs.hasOwnProperty(leftChar)
+          ? pairs[leftChar][rightChar] || 0
+          : 0;
+      }
     });
 
     const unkernedText = new Konva.TextPath({
-      x : 0, y : 90,
+      x: 0,
+      y: 90,
       fill: 'black',
       text: 'AV',
       fontSize: 60,
-      data: 'M0,0 L200,0',
+      data: 'M0,0 L200,0'
     });
 
     layer.add(kernedText);
@@ -410,7 +419,8 @@ suite('TextPath', function() {
 
     assert(
       kernedText.getTextWidth() < unkernedText.getTextWidth(),
-      'kerned text lenght must be less then unkerned text length');
+      'kerned text lenght must be less then unkerned text length'
+    );
   });
 
   test('Text with invalid kerning getter should not fail (fallback to unkerned)', function() {
@@ -422,23 +432,25 @@ suite('TextPath', function() {
     var layer = new Konva.Layer();
 
     const kernedText = new Konva.TextPath({
-      x : 0, y : 30,
+      x: 0,
+      y: 30,
       fill: 'black',
       text: 'AV',
       fontSize: 60,
       data: 'M0,0 L200,0',
-      getKerning: function(leftChar, rightChar) {         
+      getKerning: function(leftChar, rightChar) {
         // getter that fails
-        throw new Error("something went wrong");
-      },
+        throw new Error('something went wrong');
+      }
     });
 
     const unkernedText = new Konva.TextPath({
-      x : 0, y : 90,
+      x: 0,
+      y: 90,
       fill: 'black',
       text: 'AV',
       fontSize: 60,
-      data: 'M0,0 L200,0',
+      data: 'M0,0 L200,0'
     });
 
     layer.add(kernedText);
@@ -446,7 +458,9 @@ suite('TextPath', function() {
     stage.add(layer);
 
     assert.equal(
-      kernedText.getTextWidth(), unkernedText.getTextWidth(),
-      'should gracefully fallback to unkerned text');
-  })
+      kernedText.getTextWidth(),
+      unkernedText.getTextWidth(),
+      'should gracefully fallback to unkerned text'
+    );
+  });
 });

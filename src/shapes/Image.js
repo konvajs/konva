@@ -4,28 +4,28 @@
   var IMAGE = 'Image';
 
   /**
-     * Image constructor
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {Image} config.image
-     * @param {Object} [config.crop]
-     * @@shapeParams
-     * @@nodeParams
-     * @example
-     * var imageObj = new Image();
-     * imageObj.onload = function() {
-     *   var image = new Konva.Image({
-     *     x: 200,
-     *     y: 50,
-     *     image: imageObj,
-     *     width: 100,
-     *     height: 100
-     *   });
-     * };
-     * imageObj.src = '/path/to/image.jpg'
-     */
+   * Image constructor
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {Image} config.image
+   * @param {Object} [config.crop]
+   * @@shapeParams
+   * @@nodeParams
+   * @example
+   * var imageObj = new Image();
+   * imageObj.onload = function() {
+   *   var image = new Konva.Image({
+   *     x: 200,
+   *     y: 50,
+   *     image: imageObj,
+   *     width: 100,
+   *     height: 100
+   *   });
+   * };
+   * imageObj.src = '/path/to/image.jpg'
+   */
   Konva.Image = function(config) {
     this.___init(config);
   };
@@ -85,7 +85,8 @@
       }
     },
     _hitFunc: function(context) {
-      var width = this.getWidth(), height = this.getHeight();
+      var width = this.getWidth(),
+        height = this.getHeight();
 
       context.beginPath();
       context.rect(0, 0, width, height);
@@ -107,20 +108,20 @@
   Konva.Factory.addGetterSetter(Konva.Image, 'image');
 
   /**
-     * set image
-     * @name setImage
-     * @method
-     * @memberof Konva.Image.prototype
-     * @param {Image} image
-     */
+   * set image
+   * @name setImage
+   * @method
+   * @memberof Konva.Image.prototype
+   * @param {Image} image
+   */
 
   /**
-     * get image
-     * @name getImage
-     * @method
-     * @memberof Konva.Image.prototype
-     * @returns {Image}
-     */
+   * get image
+   * @name getImage
+   * @method
+   * @memberof Konva.Image.prototype
+   * @returns {Image}
+   */
 
   Konva.Factory.addComponentsGetterSetter(Konva.Image, 'crop', [
     'x',
@@ -129,108 +130,108 @@
     'height'
   ]);
   /**
-     * get/set crop
-     * @method
-     * @name crop
-     * @memberof Konva.Image.prototype
-     * @param {Object} crop
-     * @param {Number} crop.x
-     * @param {Number} crop.y
-     * @param {Number} crop.width
-     * @param {Number} crop.height
-     * @returns {Object}
-     * @example
-     * // get crop
-     * var crop = image.crop();
-     *
-     * // set crop
-     * image.crop({
-     *   x: 20,
-     *   y: 20,
-     *   width: 20,
-     *   height: 20
-     * });
-     */
+   * get/set crop
+   * @method
+   * @name crop
+   * @memberof Konva.Image.prototype
+   * @param {Object} crop
+   * @param {Number} crop.x
+   * @param {Number} crop.y
+   * @param {Number} crop.width
+   * @param {Number} crop.height
+   * @returns {Object}
+   * @example
+   * // get crop
+   * var crop = image.crop();
+   *
+   * // set crop
+   * image.crop({
+   *   x: 20,
+   *   y: 20,
+   *   width: 20,
+   *   height: 20
+   * });
+   */
 
   Konva.Factory.addGetterSetter(Konva.Image, 'cropX', 0);
   /**
-     * get/set crop x
-     * @method
-     * @name cropX
-     * @memberof Konva.Image.prototype
-     * @param {Number} x
-     * @returns {Number}
-     * @example
-     * // get crop x
-     * var cropX = image.cropX();
-     *
-     * // set crop x
-     * image.cropX(20);
-     */
+   * get/set crop x
+   * @method
+   * @name cropX
+   * @memberof Konva.Image.prototype
+   * @param {Number} x
+   * @returns {Number}
+   * @example
+   * // get crop x
+   * var cropX = image.cropX();
+   *
+   * // set crop x
+   * image.cropX(20);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Image, 'cropY', 0);
   /**
-     * get/set crop y
-     * @name cropY
-     * @method
-     * @memberof Konva.Image.prototype
-     * @param {Number} y
-     * @returns {Number}
-     * @example
-     * // get crop y
-     * var cropY = image.cropY();
-     *
-     * // set crop y
-     * image.cropY(20);
-     */
+   * get/set crop y
+   * @name cropY
+   * @method
+   * @memberof Konva.Image.prototype
+   * @param {Number} y
+   * @returns {Number}
+   * @example
+   * // get crop y
+   * var cropY = image.cropY();
+   *
+   * // set crop y
+   * image.cropY(20);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Image, 'cropWidth', 0);
   /**
-     * get/set crop width
-     * @name cropWidth
-     * @method
-     * @memberof Konva.Image.prototype
-     * @param {Number} width
-     * @returns {Number}
-     * @example
-     * // get crop width
-     * var cropWidth = image.cropWidth();
-     *
-     * // set crop width
-     * image.cropWidth(20);
-     */
+   * get/set crop width
+   * @name cropWidth
+   * @method
+   * @memberof Konva.Image.prototype
+   * @param {Number} width
+   * @returns {Number}
+   * @example
+   * // get crop width
+   * var cropWidth = image.cropWidth();
+   *
+   * // set crop width
+   * image.cropWidth(20);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Image, 'cropHeight', 0);
   /**
-     * get/set crop height
-     * @name cropHeight
-     * @method
-     * @memberof Konva.Image.prototype
-     * @param {Number} height
-     * @returns {Number}
-     * @example
-     * // get crop height
-     * var cropHeight = image.cropHeight();
-     *
-     * // set crop height
-     * image.cropHeight(20);
-     */
+   * get/set crop height
+   * @name cropHeight
+   * @method
+   * @memberof Konva.Image.prototype
+   * @param {Number} height
+   * @returns {Number}
+   * @example
+   * // get crop height
+   * var cropHeight = image.cropHeight();
+   *
+   * // set crop height
+   * image.cropHeight(20);
+   */
 
   Konva.Collection.mapMethods(Konva.Image);
 
   /**
-     * load image from given url and create `Konva.Image` instance
-     * @method
-     * @memberof Konva.Image
-     * @param {String} url image source
-     * @param {Function} callback with Konva.Image instance as first argument
-     * @example
-     *  Konva.Image.fromURL(imageURL, function(image){
-     *    // image is Konva.Image instance
-     *    layer.add(image);
-     *    layer.draw();
-     *  });
-     */
+   * load image from given url and create `Konva.Image` instance
+   * @method
+   * @memberof Konva.Image
+   * @param {String} url image source
+   * @param {Function} callback with Konva.Image instance as first argument
+   * @example
+   *  Konva.Image.fromURL(imageURL, function(image){
+   *    // image is Konva.Image instance
+   *    layer.add(image);
+   *    layer.draw();
+   *  });
+   */
   Konva.Image.fromURL = function(url, callback) {
     var img = new Image();
     img.onload = function() {

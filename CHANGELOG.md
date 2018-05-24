@@ -5,6 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+## Fixed
+
+* Fixed `Konva.Text` justify drawing for a text with decoration
+
+
 ## [2.1.3][2018-05-17]
 
 ## Fixed

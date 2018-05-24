@@ -13,31 +13,27 @@
          */
     INTERSECTION_OFFSETS = [
       { x: 0, y: 0 }, // 0
-      { x: -1, y: 0 }, // 1
       { x: -1, y: -1 }, // 2
-      { x: 0, y: -1 }, // 3
       { x: 1, y: -1 }, // 4
-      { x: 1, y: 0 }, // 5
       { x: 1, y: 1 }, // 6
-      { x: 0, y: 1 }, // 7
       { x: -1, y: 1 } // 8
     ],
     INTERSECTION_OFFSETS_LEN = INTERSECTION_OFFSETS.length;
 
   /**
-     * Layer constructor.  Layers are tied to their own canvas element and are used
-     * to contain groups or shapes.
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.BaseLayer
-     * @param {Object} config
-     * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
-     * to clear the canvas before each layer draw.  The default value is true.
-     * @@nodeParams
-     * @@containerParams
-     * @example
-     * var layer = new Konva.Layer();
-     */
+   * Layer constructor.  Layers are tied to their own canvas element and are used
+   * to contain groups or shapes.
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.BaseLayer
+   * @param {Object} config
+   * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
+   * to clear the canvas before each layer draw.  The default value is true.
+   * @@nodeParams
+   * @@containerParams
+   * @example
+   * var layer = new Konva.Layer();
+   */
   Konva.Layer = function(config) {
     this.____init(config);
   };
@@ -63,21 +59,21 @@
       }
     },
     /**
-         * get visible intersection shape. This is the preferred
-         * method for determining if a point intersects a shape or not
-         * also you may pass optional selector parametr to return ancestor of intersected shape
-         * @method
-         * @memberof Konva.Layer.prototype
-         * @param {Object} pos
-         * @param {Number} pos.x
-         * @param {Number} pos.y
-         * @param {String} [selector]
-         * @returns {Konva.Node}
-         * @example
-         * var shape = layer.getIntersection({x: 50, y: 50});
-         * // or if you interested in shape parent:
-         * var group = layer.getIntersection({x: 50, y: 50}, 'Group');
-         */
+     * get visible intersection shape. This is the preferred
+     * method for determining if a point intersects a shape or not
+     * also you may pass optional selector parametr to return ancestor of intersected shape
+     * @method
+     * @memberof Konva.Layer.prototype
+     * @param {Object} pos
+     * @param {Number} pos.x
+     * @param {Number} pos.y
+     * @param {String} [selector]
+     * @returns {Konva.Node}
+     * @example
+     * var shape = layer.getIntersection({x: 50, y: 50});
+     * // or if you interested in shape parent:
+     * var group = layer.getIntersection({x: 50, y: 50}, 'Group');
+     */
     getIntersection: function(pos, selector) {
       var obj, i, intersectionOffset, shape;
 
@@ -142,11 +138,11 @@
     _getIntersection: function(pos) {
       var ratio = this.hitCanvas.pixelRatio;
       var p = this.hitCanvas.context.getImageData(
-        Math.round(pos.x * ratio),
-        Math.round(pos.y * ratio),
-        1,
-        1
-      ).data,
+          Math.round(pos.x * ratio),
+          Math.round(pos.y * ratio),
+          1,
+          1
+        ).data,
         p3 = p[3],
         colorKey,
         shape;
@@ -172,7 +168,8 @@
       return {};
     },
     drawScene: function(can, top) {
-      var layer = this.getLayer(), canvas = can || (layer && layer.getCanvas());
+      var layer = this.getLayer(),
+        canvas = can || (layer && layer.getCanvas());
 
       this._fire(BEFORE_DRAW, {
         node: this
@@ -191,10 +188,14 @@
       return this;
     },
     drawHit: function(can, top) {
-      var layer = this.getLayer(), canvas = can || (layer && layer.hitCanvas);
+      var layer = this.getLayer(),
+        canvas = can || (layer && layer.hitCanvas);
 
       if (layer && layer.getClearBeforeDraw()) {
-        layer.getHitCanvas().getContext().clear();
+        layer
+          .getHitCanvas()
+          .getContext()
+          .clear();
       }
 
       Konva.Container.prototype.drawHit.call(this, canvas, top);
@@ -203,7 +204,9 @@
     },
     clear: function(bounds) {
       Konva.BaseLayer.prototype.clear.call(this, bounds);
-      this.getHitCanvas().getContext().clear(bounds);
+      this.getHitCanvas()
+        .getContext()
+        .clear(bounds);
       this.imageData = null; // Clear getImageData cache
       return this;
     },
@@ -220,23 +223,23 @@
       return this;
     },
     /**
-         * enable hit graph
-         * @name enableHitGraph
-         * @method
-         * @memberof Konva.Layer.prototype
-         * @returns {Layer}
-         */
+     * enable hit graph
+     * @name enableHitGraph
+     * @method
+     * @memberof Konva.Layer.prototype
+     * @returns {Layer}
+     */
     enableHitGraph: function() {
       this.setHitGraphEnabled(true);
       return this;
     },
     /**
-         * disable hit graph
-         * @name disableHitGraph
-         * @method
-         * @memberof Konva.Layer.prototype
-         * @returns {Layer}
-         */
+     * disable hit graph
+     * @name disableHitGraph
+     * @method
+     * @memberof Konva.Layer.prototype
+     * @returns {Layer}
+     */
     disableHitGraph: function() {
       this.setHitGraphEnabled(false);
       return this;
@@ -251,23 +254,23 @@
 
   Konva.Factory.addGetterSetter(Konva.Layer, 'hitGraphEnabled', true);
   /**
-     * get/set hitGraphEnabled flag.  Disabling the hit graph will greatly increase
-     *  draw performance because the hit graph will not be redrawn each time the layer is
-     *  drawn.  This, however, also disables mouse/touch event detection
-     * @name hitGraphEnabled
-     * @method
-     * @memberof Konva.Layer.prototype
-     * @param {Boolean} enabled
-     * @returns {Boolean}
-     * @example
-     * // get hitGraphEnabled flag
-     * var hitGraphEnabled = layer.hitGraphEnabled();
-     *
-     * // disable hit graph
-     * layer.hitGraphEnabled(false);
-     *
-     * // enable hit graph
-     * layer.hitGraphEnabled(true);
-     */
+   * get/set hitGraphEnabled flag.  Disabling the hit graph will greatly increase
+   *  draw performance because the hit graph will not be redrawn each time the layer is
+   *  drawn.  This, however, also disables mouse/touch event detection
+   * @name hitGraphEnabled
+   * @method
+   * @memberof Konva.Layer.prototype
+   * @param {Boolean} enabled
+   * @returns {Boolean}
+   * @example
+   * // get hitGraphEnabled flag
+   * var hitGraphEnabled = layer.hitGraphEnabled();
+   *
+   * // disable hit graph
+   * layer.hitGraphEnabled(false);
+   *
+   * // enable hit graph
+   * layer.hitGraphEnabled(true);
+   */
   Konva.Collection.mapMethods(Konva.Layer);
 })();

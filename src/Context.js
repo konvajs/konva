@@ -662,7 +662,6 @@
           x: 0,
           y: 0
         }),
-        // TODO: get this info from transform??
         scale = shape.getAbsoluteScale(),
         ratio = this.canvas.getPixelRatio(),
         scaleX = scale.x * ratio,

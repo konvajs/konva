@@ -1,26 +1,27 @@
 (function(Konva) {
   'use strict';
   // the 0.0001 offset fixes a bug in Chrome 27
-  var PIx2 = Math.PI * 2 - 0.0001, CIRCLE = 'Circle';
+  var PIx2 = Math.PI * 2 - 0.0001,
+    CIRCLE = 'Circle';
 
   /**
-     * Circle constructor
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {Number} config.radius
-     * @@shapeParams
-     * @@nodeParams
-     * @example
-     * // create circle
-     * var circle = new Konva.Circle({
-     *   radius: 40,
-     *   fill: 'red',
-     *   stroke: 'black'
-     *   strokeWidth: 5
-     * });
-     */
+   * Circle constructor
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {Number} config.radius
+   * @@shapeParams
+   * @@nodeParams
+   * @example
+   * // create circle
+   * var circle = new Konva.Circle({
+   *   radius: 40,
+   *   fill: 'red',
+   *   stroke: 'black'
+   *   strokeWidth: 5
+   * });
+   */
   Konva.Circle = function(config) {
     this.___init(config);
   };
@@ -69,19 +70,19 @@
   Konva.Factory.addOverloadedGetterSetter(Konva.Circle, 'radius');
 
   /**
-     * get/set radius
-     * @name radius
-     * @method
-     * @memberof Konva.Circle.prototype
-     * @param {Number} radius
-     * @returns {Number}
-     * @example
-     * // get radius
-     * var radius = circle.radius();
-     *
-     * // set radius
-     * circle.radius(10);
-     */
+   * get/set radius
+   * @name radius
+   * @method
+   * @memberof Konva.Circle.prototype
+   * @param {Number} radius
+   * @returns {Number}
+   * @example
+   * // get radius
+   * var radius = circle.radius();
+   *
+   * // set radius
+   * circle.radius(10);
+   */
 
   Konva.Collection.mapMethods(Konva.Circle);
 })(Konva);

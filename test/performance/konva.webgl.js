@@ -12,7 +12,8 @@ Konva.Util.extend(Konva.WebGLLayer, Konva.Layer);
 
 Konva.SceneWebGLCanvas = function(config) {
   var conf = config || {};
-  var width = conf.width || 0, height = conf.height || 0;
+  var width = conf.width || 0,
+    height = conf.height || 0;
 
   Konva.Canvas.call(this, conf);
   WebGL2D.enable(this._canvas);

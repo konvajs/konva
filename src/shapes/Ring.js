@@ -3,24 +3,24 @@
   // the 0.0001 offset fixes a bug in Chrome 27
   var PIx2 = Math.PI * 2 - 0.0001;
   /**
-     * Ring constructor
-     * @constructor
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {Number} config.innerRadius
-     * @param {Number} config.outerRadius
-     * @param {Boolean} [config.clockwise]
-     * @@shapeParams
-     * @@nodeParams
-     * @example
-     * var ring = new Konva.Ring({
-     *   innerRadius: 40,
-     *   outerRadius: 80,
-     *   fill: 'red',
-     *   stroke: 'black',
-     *   strokeWidth: 5
-     * });
-     */
+   * Ring constructor
+   * @constructor
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {Number} config.innerRadius
+   * @param {Number} config.outerRadius
+   * @param {Boolean} [config.clockwise]
+   * @@shapeParams
+   * @@nodeParams
+   * @example
+   * var ring = new Konva.Ring({
+   *   innerRadius: 40,
+   *   outerRadius: 80,
+   *   fill: 'red',
+   *   stroke: 'black',
+   *   strokeWidth: 5
+   * });
+   */
   Konva.Ring = function(config) {
     this.___init(config);
   };
@@ -75,36 +75,36 @@
   Konva.Factory.addGetterSetter(Konva.Ring, 'innerRadius', 0);
 
   /**
-     * get/set innerRadius
-     * @name innerRadius
-     * @method
-     * @memberof Konva.Ring.prototype
-     * @param {Number} innerRadius
-     * @returns {Number}
-     * @example
-     * // get inner radius
-     * var innerRadius = ring.innerRadius();
-     *
-     * // set inner radius
-     * ring.innerRadius(20);
-     */
+   * get/set innerRadius
+   * @name innerRadius
+   * @method
+   * @memberof Konva.Ring.prototype
+   * @param {Number} innerRadius
+   * @returns {Number}
+   * @example
+   * // get inner radius
+   * var innerRadius = ring.innerRadius();
+   *
+   * // set inner radius
+   * ring.innerRadius(20);
+   */
   Konva.Factory.addGetter(Konva.Ring, 'outerRadius', 0);
   Konva.Factory.addOverloadedGetterSetter(Konva.Ring, 'outerRadius');
 
   /**
-     * get/set outerRadius
-     * @name outerRadius
-     * @method
-     * @memberof Konva.Ring.prototype
-     * @param {Number} outerRadius
-     * @returns {Number}
-     * @example
-     * // get outer radius
-     * var outerRadius = ring.outerRadius();
-     *
-     * // set outer radius
-     * ring.outerRadius(20);
-     */
+   * get/set outerRadius
+   * @name outerRadius
+   * @method
+   * @memberof Konva.Ring.prototype
+   * @param {Number} outerRadius
+   * @returns {Number}
+   * @example
+   * // get outer radius
+   * var outerRadius = ring.outerRadius();
+   *
+   * // set outer radius
+   * ring.outerRadius(20);
+   */
 
   Konva.Collection.mapMethods(Konva.Ring);
 })();

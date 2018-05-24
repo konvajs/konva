@@ -18,7 +18,10 @@ suite('RGB', function() {
 
       darth.cache();
       darth.filters([Konva.Filters.RGB]);
-      darth.red(255).green(0).blue(128);
+      darth
+        .red(255)
+        .green(0)
+        .blue(128);
       layer.draw();
 
       // Assert fails even though '[255,0,128] = [255,0,128]'
@@ -49,7 +52,10 @@ suite('RGB', function() {
 
       darth.cache();
       darth.filters([Konva.Filters.RGB]);
-      darth.red(0).green(255).blue(0);
+      darth
+        .red(0)
+        .green(255)
+        .blue(0);
       layer.draw();
 
       // assert.deepEqual(darth.getFilterColorizeColor(), [0,255,0]);
@@ -78,7 +84,8 @@ suite('RGB', function() {
       [128, 128, 128],
       [255, 255, 255]
     ];
-    var i, l = colors.length;
+    var i,
+      l = colors.length;
     var nAdded = 0;
     for (i = 0; i < l; i += 1) {
       var imageObj = new Image();
@@ -94,7 +101,10 @@ suite('RGB', function() {
 
           darth.cache();
           darth.filters([Konva.Filters.RGB]);
-          darth.red(color[0]).green(color[1]).blue(color[2]);
+          darth
+            .red(color[0])
+            .green(color[1])
+            .blue(color[2]);
 
           nAdded += 1;
           if (nAdded >= l) {

@@ -222,7 +222,8 @@ parseStatement: true, parseSourceElement: true */
       UnterminatedRegExp: 'Invalid regular expression: missing /',
       InvalidLHSInAssignment: 'Invalid left-hand side in assignment',
       InvalidLHSInForIn: 'Invalid left-hand side in for-in',
-      MultipleDefaultsInSwitch: 'More than one default clause in switch statement',
+      MultipleDefaultsInSwitch:
+        'More than one default clause in switch statement',
       NoCatchOrFinally: 'Missing catch or finally after try',
       UnknownLabel: "Undefined label '%0'",
       Redeclaration: "%0 '%1' has already been declared",
@@ -230,19 +231,30 @@ parseStatement: true, parseSourceElement: true */
       IllegalBreak: 'Illegal break statement',
       IllegalReturn: 'Illegal return statement',
       StrictModeWith: 'Strict mode code may not include a with statement',
-      StrictCatchVariable: 'Catch variable may not be eval or arguments in strict mode',
-      StrictVarName: 'Variable name may not be eval or arguments in strict mode',
-      StrictParamName: 'Parameter name eval or arguments is not allowed in strict mode',
-      StrictParamDupe: 'Strict mode function may not have duplicate parameter names',
-      StrictFunctionName: 'Function name may not be eval or arguments in strict mode',
+      StrictCatchVariable:
+        'Catch variable may not be eval or arguments in strict mode',
+      StrictVarName:
+        'Variable name may not be eval or arguments in strict mode',
+      StrictParamName:
+        'Parameter name eval or arguments is not allowed in strict mode',
+      StrictParamDupe:
+        'Strict mode function may not have duplicate parameter names',
+      StrictFunctionName:
+        'Function name may not be eval or arguments in strict mode',
       StrictOctalLiteral: 'Octal literals are not allowed in strict mode.',
       StrictDelete: 'Delete of an unqualified identifier in strict mode.',
-      StrictDuplicateProperty: 'Duplicate data property in object literal not allowed in strict mode',
-      AccessorDataProperty: 'Object literal may not have data and accessor property with the same name',
-      AccessorGetSet: 'Object literal may not have multiple get/set accessors with the same name',
-      StrictLHSAssignment: 'Assignment to eval or arguments is not allowed in strict mode',
-      StrictLHSPostfix: 'Postfix increment/decrement may not have eval or arguments operand in strict mode',
-      StrictLHSPrefix: 'Prefix increment/decrement may not have eval or arguments operand in strict mode',
+      StrictDuplicateProperty:
+        'Duplicate data property in object literal not allowed in strict mode',
+      AccessorDataProperty:
+        'Object literal may not have data and accessor property with the same name',
+      AccessorGetSet:
+        'Object literal may not have multiple get/set accessors with the same name',
+      StrictLHSAssignment:
+        'Assignment to eval or arguments is not allowed in strict mode',
+      StrictLHSPostfix:
+        'Postfix increment/decrement may not have eval or arguments operand in strict mode',
+      StrictLHSPrefix:
+        'Prefix increment/decrement may not have eval or arguments operand in strict mode',
       StrictReservedWord: 'Use of future reserved word in strict mode'
     };
 
@@ -632,7 +644,10 @@ parseStatement: true, parseSourceElement: true */
     }
 
     function scanHexEscape(prefix) {
-      var i, len, ch, code = 0;
+      var i,
+        len,
+        ch,
+        code = 0;
 
       len = prefix === 'u' ? 4 : 2;
       for (i = 0; i < len; ++i) {
@@ -718,9 +733,10 @@ parseStatement: true, parseSourceElement: true */
       start = index;
 
       // Backslash (U+005C) starts an escaped character.
-      id = source.charCodeAt(index) === 0x5c
-        ? getEscapedIdentifier()
-        : getIdentifier();
+      id =
+        source.charCodeAt(index) === 0x5c
+          ? getEscapedIdentifier()
+          : getIdentifier();
 
       // There is no keyword or literal with only one character.
       // Thus, it must be an identifier.
@@ -1496,9 +1512,8 @@ parseStatement: true, parseSourceElement: true */
       lineNumber = token.lineNumber;
       lineStart = token.lineStart;
 
-      lookahead = typeof extra.tokens !== 'undefined'
-        ? collectToken()
-        : advance();
+      lookahead =
+        typeof extra.tokens !== 'undefined' ? collectToken() : advance();
 
       index = token.end;
       lineNumber = token.lineNumber;
@@ -1513,9 +1528,8 @@ parseStatement: true, parseSourceElement: true */
       pos = index;
       line = lineNumber;
       start = lineStart;
-      lookahead = typeof extra.tokens !== 'undefined'
-        ? collectToken()
-        : advance();
+      lookahead =
+        typeof extra.tokens !== 'undefined' ? collectToken() : advance();
       index = pos;
       lineNumber = line;
       lineStart = start;
@@ -1649,9 +1663,10 @@ parseStatement: true, parseSourceElement: true */
       },
 
       createBinaryExpression: function(operator, left, right) {
-        var type = operator === '||' || operator === '&&'
-          ? Syntax.LogicalExpression
-          : Syntax.BinaryExpression;
+        var type =
+          operator === '||' || operator === '&&'
+            ? Syntax.LogicalExpression
+            : Syntax.BinaryExpression;
         return {
           type: type,
           operator: operator,
@@ -2144,7 +2159,8 @@ parseStatement: true, parseSourceElement: true */
     // 11.1.4 Array Initialiser
 
     function parseArrayInitialiser() {
-      var elements = [], startToken;
+      var elements = [],
+        startToken;
 
       startToken = lookahead;
       expect('[');
@@ -2294,9 +2310,12 @@ parseStatement: true, parseSourceElement: true */
         } else {
           name = toString(property.key.value);
         }
-        kind = property.kind === 'init'
-          ? PropertyKind.Data
-          : property.kind === 'get' ? PropertyKind.Get : PropertyKind.Set;
+        kind =
+          property.kind === 'init'
+            ? PropertyKind.Data
+            : property.kind === 'get'
+              ? PropertyKind.Get
+              : PropertyKind.Set;
 
         key = '$' + name;
         if (Object.prototype.hasOwnProperty.call(map, key)) {
@@ -2538,7 +2557,9 @@ parseStatement: true, parseSourceElement: true */
     // 11.3 Postfix Expressions
 
     function parsePostfixExpression() {
-      var expr, token, startToken = lookahead;
+      var expr,
+        token,
+        startToken = lookahead;
 
       expr = parseLeftHandSideExpressionAllowCall();
 
@@ -2833,7 +2854,8 @@ parseStatement: true, parseSourceElement: true */
     // 11.14 Comma Operator
 
     function parseExpression() {
-      var expr, startToken = lookahead;
+      var expr,
+        startToken = lookahead;
 
       expr = parseAssignmentExpression();
 
@@ -2857,7 +2879,8 @@ parseStatement: true, parseSourceElement: true */
     // 12.1 Block
 
     function parseStatementList() {
-      var list = [], statement;
+      var list = [],
+        statement;
 
       while (index < length) {
         if (match('}')) {
@@ -2905,7 +2928,9 @@ parseStatement: true, parseSourceElement: true */
     }
 
     function parseVariableDeclaration(kind) {
-      var init = null, id, startToken;
+      var init = null,
+        id,
+        startToken;
 
       startToken = lookahead;
       id = parseVariableIdentifier();
@@ -3153,7 +3178,8 @@ parseStatement: true, parseSourceElement: true */
     // 12.7 The continue statement
 
     function parseContinueStatement() {
-      var label = null, key;
+      var label = null,
+        key;
 
       expectKeyword('continue');
 
@@ -3197,7 +3223,8 @@ parseStatement: true, parseSourceElement: true */
     // 12.8 The break statement
 
     function parseBreakStatement() {
-      var label = null, key;
+      var label = null,
+        key;
 
       expectKeyword('break');
 
@@ -3300,7 +3327,10 @@ parseStatement: true, parseSourceElement: true */
     // 12.10 The swith statement
 
     function parseSwitchCase() {
-      var test, consequent = [], statement, startToken;
+      var test,
+        consequent = [],
+        statement,
+        startToken;
 
       startToken = lookahead;
       if (matchKeyword('default')) {
@@ -3417,7 +3447,9 @@ parseStatement: true, parseSourceElement: true */
     }
 
     function parseTryStatement() {
-      var block, handlers = [], finalizer = null;
+      var block,
+        handlers = [],
+        finalizer = null;
 
       expectKeyword('try');
 
@@ -3452,7 +3484,11 @@ parseStatement: true, parseSourceElement: true */
     // 12 Statements
 
     function parseStatement() {
-      var type = lookahead.type, expr, labeledBody, key, startToken;
+      var type = lookahead.type,
+        expr,
+        labeledBody,
+        key,
+        startToken;
 
       if (type === Token.EOF) {
         throwUnexpected(lookahead);
@@ -3615,7 +3651,13 @@ parseStatement: true, parseSourceElement: true */
     }
 
     function parseParams(firstRestricted) {
-      var param, params = [], token, stricted, paramSet, key, message;
+      var param,
+        params = [],
+        token,
+        stricted,
+        paramSet,
+        key,
+        message;
       expect('(');
 
       if (!match(')')) {
@@ -3797,7 +3839,11 @@ parseStatement: true, parseSourceElement: true */
     }
 
     function parseSourceElements() {
-      var sourceElement, sourceElements = [], token, directive, firstRestricted;
+      var sourceElement,
+        sourceElements = [],
+        token,
+        directive,
+        firstRestricted;
 
       while (index < length) {
         token = lookahead;
@@ -3848,7 +3894,10 @@ parseStatement: true, parseSourceElement: true */
     }
 
     function filterTokenLocation() {
-      var i, entry, token, tokens = [];
+      var i,
+        entry,
+        token,
+        tokens = [];
 
       for (i = 0; i < extra.tokens.length; ++i) {
         entry = extra.tokens[i];
@@ -4042,7 +4091,8 @@ parseStatement: true, parseSourceElement: true */
     // Deep copy.
     /* istanbul ignore next */
     exports.Syntax = (function() {
-      var name, types = {};
+      var name,
+        types = {};
 
       if (typeof Object.create === 'function') {
         types = Object.create(null);
@@ -4074,8 +4124,7 @@ parseStatement: true, parseSourceElement: true */
     Object.keys ||
     function(obj) {
       var keys = [];
-      for (var key in obj)
-        keys.push(key);
+      for (var key in obj) keys.push(key);
       return keys;
     };
   var forEach = function(xs, fn) {
@@ -4181,22 +4230,22 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
 
 (inBrowser ? window : exports).blanket = (function() {
   var linesToAddTracking = [
-    'ExpressionStatement',
-    'BreakStatement',
-    'ContinueStatement',
-    'VariableDeclaration',
-    'ReturnStatement',
-    'ThrowStatement',
-    'TryStatement',
-    'FunctionDeclaration',
-    'IfStatement',
-    'WhileStatement',
-    'DoWhileStatement',
-    'ForStatement',
-    'ForInStatement',
-    'SwitchStatement',
-    'WithStatement'
-  ],
+      'ExpressionStatement',
+      'BreakStatement',
+      'ContinueStatement',
+      'VariableDeclaration',
+      'ReturnStatement',
+      'ThrowStatement',
+      'TryStatement',
+      'FunctionDeclaration',
+      'IfStatement',
+      'WhileStatement',
+      'DoWhileStatement',
+      'ForStatement',
+      'ForInStatement',
+      'SwitchStatement',
+      'WithStatement'
+    ],
     linesToAddBrackets = [
       'IfStatement',
       'WhileStatement',
@@ -4285,7 +4334,8 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
     instrument: function(config, next) {
       //check instrumented hash table,
       //return instrumented code if available.
-      var inFile = config.inputFile, inFileName = config.inputFileName;
+      var inFile = config.inputFile,
+        inFileName = config.inputFileName;
       //check instrument cache
       if (
         _blanket.options('instrumentCache') &&
@@ -4790,9 +4840,10 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
       var fileLoader = function(event) {
         var fileContent = event.currentTarget.result;
         var file = files[sessionIndx];
-        var filename = file.webkitRelativePath && file.webkitRelativePath !== ''
-          ? file.webkitRelativePath
-          : file.name;
+        var filename =
+          file.webkitRelativePath && file.webkitRelativePath !== ''
+            ? file.webkitRelativePath
+            : file.name;
         sessionArray[filename] = fileContent;
         sessionIndx++;
         if (sessionIndx === sessionLength) {
@@ -4824,8 +4875,9 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
       var script = document.createElement('script');
       script.type = 'text/javascript';
       script.text = data;
-      (document.body || document.getElementsByTagName('head')[0])
-        .appendChild(script);
+      (document.body || document.getElementsByTagName('head')[0]).appendChild(
+        script
+      );
     },
     hasAdapter: function(callback) {
       return _blanket.options('adapter') !== null;
@@ -4930,13 +4982,11 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
     },
     beforeStartTestRunner: function(opts) {
       opts = opts || {};
-      opts.checkRequirejs = typeof opts.checkRequirejs === 'undefined'
-        ? true
-        : opts.checkRequirejs;
+      opts.checkRequirejs =
+        typeof opts.checkRequirejs === 'undefined' ? true : opts.checkRequirejs;
       opts.callback = opts.callback || function() {};
-      opts.coverage = typeof opts.coverage === 'undefined'
-        ? true
-        : opts.coverage;
+      opts.coverage =
+        typeof opts.coverage === 'undefined' ? true : opts.coverage;
       if (opts.coverage) {
         _blanket._bindStartTestRunner(opts.bindEvent, function() {
           _blanket._loadSourceFiles(function() {
@@ -4988,7 +5038,7 @@ var parseAndModify = inBrowser ? window.falafel : require('falafel');
 
 blanket.defaultReporter = function(coverage) {
   var cssSytle =
-    "#blanket-main {margin:2px;background:#EEE;color:#333;clear:both;font-family:'Helvetica Neue Light', 'HelveticaNeue-Light', 'Helvetica Neue', Calibri, Helvetica, Arial, sans-serif; font-size:17px;} #blanket-main a {color:#333;text-decoration:none;}  #blanket-main a:hover {text-decoration:underline;} .blanket {margin:0;padding:5px;clear:both;border-bottom: 1px solid #FFFFFF;} .bl-error {color:red;}.bl-success {color:#5E7D00;} .bl-file{width:auto;} .bl-cl{float:left;} .blanket div.rs {margin-left:50px; width:150px; float:right} .bl-nb {padding-right:10px;} #blanket-main a.bl-logo {color: #EB1764;cursor: pointer;font-weight: bold;text-decoration: none} .bl-source{ overflow-x:scroll; background-color: #FFFFFF; border: 1px solid #CBCBCB; color: #363636; margin: 25px 20px; width: 80%;} .bl-source div{white-space: pre;font-family: monospace;} .bl-source > div > span:first-child{background-color: #EAEAEA;color: #949494;display: inline-block;padding: 0 10px;text-align: center;width: 30px;} .bl-source .miss{background-color:#e6c3c7} .bl-source span.branchWarning{color:#000;background-color:yellow;} .bl-source span.branchOkay{color:#000;background-color:transparent;}",
+      "#blanket-main {margin:2px;background:#EEE;color:#333;clear:both;font-family:'Helvetica Neue Light', 'HelveticaNeue-Light', 'Helvetica Neue', Calibri, Helvetica, Arial, sans-serif; font-size:17px;} #blanket-main a {color:#333;text-decoration:none;}  #blanket-main a:hover {text-decoration:underline;} .blanket {margin:0;padding:5px;clear:both;border-bottom: 1px solid #FFFFFF;} .bl-error {color:red;}.bl-success {color:#5E7D00;} .bl-file{width:auto;} .bl-cl{float:left;} .blanket div.rs {margin-left:50px; width:150px; float:right} .bl-nb {padding-right:10px;} #blanket-main a.bl-logo {color: #EB1764;cursor: pointer;font-weight: bold;text-decoration: none} .bl-source{ overflow-x:scroll; background-color: #FFFFFF; border: 1px solid #CBCBCB; color: #363636; margin: 25px 20px; width: 80%;} .bl-source div{white-space: pre;font-family: monospace;} .bl-source > div > span:first-child{background-color: #EAEAEA;color: #949494;display: inline-block;padding: 0 10px;text-align: center;width: 30px;} .bl-source .miss{background-color:#e6c3c7} .bl-source span.branchWarning{color:#000;background-color:yellow;} .bl-source span.branchOkay{color:#000;background-color:transparent;}",
     successRate = 60,
     head = document.head,
     fileNumber = 0,
@@ -5553,7 +5603,8 @@ blanket.defaultReporter = function(coverage) {
       collectPageScripts: function() {
         var toArray = Array.prototype.slice;
         var scripts = toArray.call(document.scripts);
-        var selectedScripts = [], scriptNames = [];
+        var selectedScripts = [],
+          scriptNames = [];
         var filter = _blanket.options('filter');
         if (filter != null) {
           //global filter in place, data-cover-only
@@ -5592,10 +5643,10 @@ blanket.defaultReporter = function(coverage) {
       },
       loadAll: function(nextScript, cb, preprocessor) {
         /**
-                 * load dependencies
-                 * @param {nextScript} factory for priority level
-                 * @param {cb} the done callback
-                 */
+         * load dependencies
+         * @param {nextScript} factory for priority level
+         * @param {cb} the done callback
+         */
         var currScript = nextScript();
         var isLoaded = _blanket.utils.scriptIsLoaded(
           currScript,
@@ -5605,8 +5656,10 @@ blanket.defaultReporter = function(coverage) {
         );
 
         if (
-          !(_blanket.utils.cache[currScript] &&
-            _blanket.utils.cache[currScript].loaded)
+          !(
+            _blanket.utils.cache[currScript] &&
+            _blanket.utils.cache[currScript].loaded
+          )
         ) {
           var attach = function() {
             if (_blanket.options('debug')) {
@@ -5661,10 +5714,10 @@ blanket.defaultReporter = function(coverage) {
       },
       ifOrdered: function(nextScript, cb) {
         /**
-                 * ordered loading callback
-                 * @param {nextScript} factory for priority level
-                 * @param {cb} the done callback
-                 */
+         * ordered loading callback
+         * @param {nextScript} factory for priority level
+         * @param {cb} the done callback
+         */
         var currScript = nextScript(true);
         if (currScript) {
           _blanket.utils.loadAll(nextScript, cb);
@@ -5674,11 +5727,11 @@ blanket.defaultReporter = function(coverage) {
       },
       scriptIsLoaded: function(url, orderedCb, nextScript, cb) {
         /**
-                 * returns a callback that checks a loading list to see if a script is loaded.
-                 * @param {orderedCb} callback if ordered loading is being done
-                 * @param {nextScript} factory for next priority level
-                 * @param {cb} the done callback
-                 */
+         * returns a callback that checks a loading list to see if a script is loaded.
+         * @param {orderedCb} callback if ordered loading is being done
+         * @param {nextScript} factory for next priority level
+         * @param {cb} the done callback
+         */
         if (_blanket.options('debug')) {
           console.log('BLANKET-Returning function');
         }
@@ -5708,8 +5761,8 @@ blanket.defaultReporter = function(coverage) {
       cache: {},
       allLoaded: function() {
         /**
-                 * check if depdencies are loaded in cache
-                 */
+         * check if depdencies are loaded in cache
+         */
         var cached = Object.keys(_blanket.utils.cache);
         for (var i = 0; i < cached.length; i++) {
           if (!_blanket.utils.cache[cached[i]].loaded) {
@@ -5960,7 +6013,8 @@ blanket.defaultReporter = function(coverage) {
 
   mocha.reporter(BlanketReporter);
 
-  var oldRun = mocha.run, oldCallback = null;
+  var oldRun = mocha.run,
+    oldCallback = null;
 
   mocha.run = function(finishCallback) {
     oldCallback = finishCallback;

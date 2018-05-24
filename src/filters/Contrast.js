@@ -1,4 +1,4 @@
-(function (Konva) {
+(function(Konva) {
   'use strict';
   /**
    * Contrast Filter.
@@ -11,7 +11,7 @@
    * node.contrast(10);
    */
 
-  Konva.Filters.Contrast = function (imageData) {
+  Konva.Filters.Contrast = function(imageData) {
     var adjust = Math.pow((parseInt(this.contrast()) + 100) / 100, 2);
 
     var data = imageData.data,
@@ -47,9 +47,9 @@
       blue += 0.5;
       blue *= 255;
 
-      red = (red < 0 ? 0 : (red > 255 ? 255 : red));
-      green = (green < 0 ? 0 : (green > 255 ? 255 : green));
-      blue = (blue < 0 ? 0 : (blue > 255 ? 255 : blue));
+      red = red < 0 ? 0 : red > 255 ? 255 : red;
+      green = green < 0 ? 0 : green > 255 ? 255 : green;
+      blue = blue < 0 ? 0 : blue > 255 ? 255 : blue;
 
       data[i] = red;
       data[i + 1] = green;
@@ -66,5 +66,11 @@
    * @param {Number} contrast value between -100 and 100
    * @returns {Number}
    */
-  Konva.Factory.addGetterSetter(Konva.Node, 'contrast', 0, null, Konva.Factory.afterSetFilter);
+  Konva.Factory.addGetterSetter(
+    Konva.Node,
+    'contrast',
+    0,
+    null,
+    Konva.Factory.afterSetFilter
+  );
 })(Konva);

@@ -393,7 +393,6 @@ declare namespace Konva {
     lineCap?: string;
     sceneFunc?: (con: Context) => void;
     hitFunc?: (con: Context) => void;
-    drawFunc?: (con: Context) => void;
     shadowColor?: string;
     shadowBlur?: number;
     shadowOffset?: Vector2d;

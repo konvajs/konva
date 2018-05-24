@@ -31,7 +31,7 @@ suite('Container', function() {
     var layer = new Konva.Layer();
     stage.add(layer);
     var circle = new Konva.Circle({
-      fill: 'green',
+      fill: 'black',
       x: 50,
       y: 50,
       radius: 40
@@ -49,7 +49,7 @@ suite('Container', function() {
     var rect = new Konva.Rect({
       x: 10,
       y: 10,
-      fill: 'green',
+      fill: 'black',
       width: 200,
       height: 200
     });
@@ -2295,11 +2295,10 @@ suite('Container', function() {
     });
   });
 
-  test.skip('getClientRect - test layer', function() {
+  test('getClientRect - test layer', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
-    var group1 = new Konva.Group();
-    var group2 = new Konva.Group();
+    var group = new Konva.Group();
 
     var rect = new Konva.Rect({
       x: 50,
@@ -2309,9 +2308,8 @@ suite('Container', function() {
       fill: 'red'
     });
 
-    group1.add(rect);
-    layer.add(group1);
-    layer.add(group2);
+    group.add(rect);
+    layer.add(group);
     stage.add(layer);
 
     assert.deepEqual(layer.getClientRect(), {

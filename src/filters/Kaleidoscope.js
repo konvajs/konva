@@ -263,13 +263,13 @@
   };
 
   /**
-    * get/set kaleidoscope power. Use with {@link Konva.Filters.Kaleidoscope} filter.
-    * @name kaleidoscopePower
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Integer} power of kaleidoscope
-    * @returns {Integer}
-    */
+   * get/set kaleidoscope power. Use with {@link Konva.Filters.Kaleidoscope} filter.
+   * @name kaleidoscopePower
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Integer} power of kaleidoscope
+   * @returns {Integer}
+   */
   Konva.Factory.addGetterSetter(
     Konva.Node,
     'kaleidoscopePower',
@@ -279,13 +279,13 @@
   );
 
   /**
-    * get/set kaleidoscope angle. Use with {@link Konva.Filters.Kaleidoscope} filter.
-    * @name kaleidoscopeAngle
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Integer} degrees
-    * @returns {Integer}
-    */
+   * get/set kaleidoscope angle. Use with {@link Konva.Filters.Kaleidoscope} filter.
+   * @name kaleidoscopeAngle
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Integer} degrees
+   * @returns {Integer}
+   */
   Konva.Factory.addGetterSetter(
     Konva.Node,
     'kaleidoscopeAngle',

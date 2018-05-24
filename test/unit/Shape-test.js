@@ -669,6 +669,7 @@ suite('Shape', function() {
   });
 
   // ======================================================
+  // hard to emulate the same drawing
   test.skip('fill and stroke with shadow and opacity', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -734,7 +735,7 @@ suite('Shape', function() {
     // don't test in PhantomJS as it use old chrome engine
     // it it has opacity + shadow bug
     if (!window.mochaPhantomJS) {
-      compareLayerAndCanvas(layer, canvas, 240);
+      compareLayerAndCanvas(layer, canvas, 260);
     }
 
     var trace = layer.getContext().getTrace();
@@ -954,7 +955,7 @@ suite('Shape', function() {
   });
 
   // ======================================================
-  test.skip('hit graph when shape cached before adding to Layer', function() {
+  test('hit graph when shape cached before adding to Layer', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     var rect = new Konva.Rect({
@@ -984,12 +985,10 @@ suite('Shape', function() {
       y: 120
     });
 
-    // Konva.DD._endDragBefore();
     stage.simulateMouseUp({
       x: 300,
       y: 120
     });
-    // Konva.DD._endDragAfter({ dragEndNode: rect });
 
     //TODO: can't get this to pass
     assert.equal(

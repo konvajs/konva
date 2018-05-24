@@ -83,7 +83,11 @@ suite('Blur', function() {
       strokeWidth: 4
     });
 
-    group.add(top).add(right).add(bottom).add(left);
+    group
+      .add(top)
+      .add(right)
+      .add(bottom)
+      .add(left);
     layer.add(group);
     stage.add(layer);
 

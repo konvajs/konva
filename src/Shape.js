@@ -38,8 +38,8 @@
    *   x: 5,
    *   y: 10,
    *   fill: 'red',
-   *   // a Konva.Canvas renderer is passed into the drawFunc function
-   *   drawFunc: function(context) {
+   *   // a Konva.Canvas renderer is passed into the sceneFunc function
+   *   sceneFunc: function(context) {
    *     context.beginPath();
    *     context.moveTo(200, 50);
    *     context.lineTo(420, 80);

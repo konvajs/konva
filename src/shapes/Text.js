@@ -151,7 +151,11 @@
       for (n = 0; n < textArrLen; n++) {
         var obj = textArr[n],
           text = obj.text,
-          width = obj.width;
+          width = obj.width,
+          lastLine = n !== textArrLen - 1,
+          spacesNumber,
+          oneWord,
+          lineWidth;
 
         // horizontal alignment
         context.save();
@@ -164,8 +168,15 @@
         if (textDecoration.indexOf('underline') !== -1) {
           context.save();
           context.beginPath();
+
           context.moveTo(0, Math.round(lineHeightPx / 2));
-          context.lineTo(Math.round(width), Math.round(lineHeightPx / 2));
+          spacesNumber = text.split(' ').length - 1;
+          oneWord = spacesNumber === 0;
+          lineWidth =
+            align === JUSTIFY && lastLine && !oneWord
+              ? totalWidth - padding * 2
+              : width;
+          context.lineTo(Math.round(lineWidth), Math.round(lineHeightPx / 2));
           // TODO: I have no idea what is real ratio
           // just /15 looks good enough
           context.lineWidth = fontSize / 15;
@@ -177,7 +188,13 @@
           context.save();
           context.beginPath();
           context.moveTo(0, 0);
-          context.lineTo(Math.round(width), 0);
+          spacesNumber = text.split(' ').length - 1;
+          oneWord = spacesNumber === 0;
+          lineWidth =
+            align === JUSTIFY && lastLine && !oneWord
+              ? totalWidth - padding * 2
+              : width;
+          context.lineTo(Math.round(lineWidth), 0);
           context.lineWidth = fontSize / 15;
           context.strokeStyle = fill;
           context.stroke();
@@ -185,13 +202,13 @@
         }
         if (letterSpacing !== 0 || align === JUSTIFY) {
           //   var words = text.split(' ');
-          var spacesNumber = text.split(' ').length - 1;
+          spacesNumber = text.split(' ').length - 1;
           for (var li = 0; li < text.length; li++) {
             var letter = text[li];
             // skip justify for the last line
             if (letter === ' ' && n !== textArrLen - 1 && align === JUSTIFY) {
               context.translate(
-                Math.floor((totalWidth - width) / spacesNumber),
+                Math.floor((totalWidth - padding * 2 - width) / spacesNumber),
                 0
               );
             }

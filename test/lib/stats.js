@@ -56,10 +56,10 @@ var Stats = function() {
   e.style.cssText =
     'position:relative;width:74px;height:30px;background-color:#0f0';
   for (d.appendChild(e); 74 > e.children.length; )
-    (j = document.createElement('span')), (j.style.cssText =
-      'width:1px;height:30px;float:left;background-color:#131'), e.appendChild(
-      j
-    );
+    (j = document.createElement('span')),
+      (j.style.cssText =
+        'width:1px;height:30px;float:left;background-color:#131'),
+      e.appendChild(j);
   var t = function(b) {
     s = b;
     switch (s) {
@@ -88,15 +88,14 @@ var Stats = function() {
       e.appendChild(e.firstChild).style.height = a + 'px';
       r++;
       b > m + 1e3 &&
-        ((h = Math.round(1e3 * r / (b - m))), (p = Math.min(
-          p,
-          h
-        )), (q = Math.max(q, h)), (i.textContent =
-          h + ' FPS (' + p + '-' + q + ')'), (a = Math.min(
-          30,
-          30 - 30 * (h / 100)
-        )), (c.appendChild(c.firstChild).style.height =
-          a + 'px'), (m = b), (r = 0));
+        ((h = Math.round(1e3 * r / (b - m))),
+        (p = Math.min(p, h)),
+        (q = Math.max(q, h)),
+        (i.textContent = h + ' FPS (' + p + '-' + q + ')'),
+        (a = Math.min(30, 30 - 30 * (h / 100))),
+        (c.appendChild(c.firstChild).style.height = a + 'px'),
+        (m = b),
+        (r = 0));
       return b;
     },
     update: function() {
