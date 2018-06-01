@@ -212,7 +212,7 @@ declare namespace Konva {
     getCanvas(): Canvas;
     getClassName(): string;
     getClientRect(): SizeConfig;
-    getContext(): Context;
+    getContent(): HTMLDivElement;
     getDepth(): number;
     getHeight(): number;
     getHitCanvas(): Canvas;
