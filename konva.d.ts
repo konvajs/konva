@@ -129,7 +129,17 @@ declare namespace Konva {
     height?: number;
   }
 
+  interface ToCanvasConfig extends SizeConfig {
+    callback: Function;
+  }
+
   interface ToDataURLConfig extends SizeConfig {
+    mimeType?: string;
+    quality?: number;
+    pixelRatio?: number;
+  }
+
+  interface ToImageConfig extends SizeConfig {
     callback: Function;
     mimeType?: string;
     quality?: number;
@@ -299,8 +309,9 @@ declare namespace Konva {
     threshold(): number;
     threshold(threshold: number): this;
     to(params: any): void;
+    toCanvas(config: ToCanvasConfig): HTMLCanvasElement;
     toDataURL(config: ToDataURLConfig): string;
-    toImage(config: ToDataURLConfig): HTMLImageElement;
+    toImage(config: ToImageConfig): HTMLImageElement;
     toJSON(): string;
     toObject(): any;
     transformsEnabled(): string;
