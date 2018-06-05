@@ -75,6 +75,28 @@ suite('TextPath', function() {
   });
 
   // ======================================================
+  test('Check getter and setter', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var c = 'M 50 50 l 250 0';
+    var path = new Konva.TextPath({
+      text: 'some text',
+      stroke: 'red',
+      strokeWidth: 1
+    });
+
+    layer.add(path);
+    stage.add(layer);
+
+    assert.equal(path.getData(), undefined);
+    path.data(c);
+    assert.equal(path.getData(), c);
+
+    layer.draw();
+  });
+
+  // ======================================================
   test('Render Text Along Vertical Line', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

@@ -1060,6 +1060,38 @@ suite('Stage', function() {
     assert.equal(stage.toDataURL(), layer.toDataURL());
   });
 
+  test('toCanvas with large size', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var radius = stage.height() / 2 + 10;
+    var circle = new Konva.Circle({
+      x: stage.height() / 2,
+      y: stage.height() / 2,
+      fill: 'black',
+      radius: radius
+    });
+    layer.add(circle);
+    stage.add(layer);
+
+    var stageCanvas = stage.toCanvas({
+      x: -10,
+      y: -10,
+      width: stage.height() + 20,
+      height: stage.height() + 20
+    });
+
+    var canvas = createCanvas();
+    canvas.width = radius * 2;
+    canvas.height = radius * 2;
+    var context = canvas.getContext('2d');
+    context.beginPath();
+    context.arc(radius, radius, radius, 0, 2 * Math.PI);
+    context.fillStyle = 'black';
+    context.fill();
+    compareCanvases(stageCanvas, canvas, 100);
+  });
+
   test('check hit graph with stage listening property', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

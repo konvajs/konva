@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.1.3
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Thu May 24 2018
+ * Date: Tue Jun 05 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -218,7 +218,9 @@
       ? global
       : typeof window !== 'undefined'
         ? window
-        : typeof WorkerGlobalScope !== 'undefined' ? self : {};
+        : typeof WorkerGlobalScope !== 'undefined'
+          ? self
+          : {};
 
   Konva.UA = Konva._parseUA((glob.navigator && glob.navigator.userAgent) || '');
 
@@ -1281,21 +1283,21 @@
   }
 
   /**
-     * Canvas Renderer constructor
-     * @constructor
-     * @abstract
-     * @memberof Konva
-     * @param {Object} config
-     * @param {Number} config.width
-     * @param {Number} config.height
-     * @param {Number} config.pixelRatio KonvaJS automatically handles pixel ratio adjustments in order to render crisp drawings
-     *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
-     *  of 1.  Some high end tablets and phones, like iPhones and iPads (not the mini) have a device pixel ratio
-     *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel
-     *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
-     *  specified, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
-     *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
-     */
+   * Canvas Renderer constructor
+   * @constructor
+   * @abstract
+   * @memberof Konva
+   * @param {Object} config
+   * @param {Number} config.width
+   * @param {Number} config.height
+   * @param {Number} config.pixelRatio KonvaJS automatically handles pixel ratio adjustments in order to render crisp drawings
+   *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
+   *  of 1.  Some high end tablets and phones, like iPhones and iPads (not the mini) have a device pixel ratio
+   *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel
+   *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
+   *  specified, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
+   *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
+   */
   Konva.Canvas = function(config) {
     this.init(config);
   };
@@ -1320,35 +1322,35 @@
       this._canvas.style.left = 0;
     },
     /**
-         * get canvas context
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @returns {CanvasContext} context
-         */
+     * get canvas context
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @returns {CanvasContext} context
+     */
     getContext: function() {
       return this.context;
     },
     /**
-         * get pixel ratio
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @returns {Number} pixel ratio
-         */
+     * get pixel ratio
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @returns {Number} pixel ratio
+     */
     getPixelRatio: function() {
       return this.pixelRatio;
     },
     /**
-         * get pixel ratio
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @param {Number} pixelRatio KonvaJS automatically handles pixel ratio adustments in order to render crisp drawings
-         *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
-         *  of 1.  Some high end tablets and phones, like iPhones and iPads have a device pixel ratio
-         *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel
-         *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
-         *  specificed, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
-         *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
-         */
+     * get pixel ratio
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @param {Number} pixelRatio KonvaJS automatically handles pixel ratio adustments in order to render crisp drawings
+     *  on all devices. Most desktops, low end tablets, and low end phones, have device pixel ratios
+     *  of 1.  Some high end tablets and phones, like iPhones and iPads have a device pixel ratio
+     *  of 2.  Some Macbook Pros, and iMacs also have a device pixel ratio of 2.  Some high end Android devices have pixel
+     *  ratios of 2 or 3.  Some browsers like Firefox allow you to configure the pixel ratio of the viewport.  Unless otherwise
+     *  specificed, the pixel ratio will be defaulted to the actual device pixel ratio.  You can override the device pixel
+     *  ratio for special situations, or, if you don't want the pixel ratio to be taken into account, you can set it to 1.
+     */
     setPixelRatio: function(pixelRatio) {
       var previousRatio = this.pixelRatio;
       this.pixelRatio = pixelRatio;
@@ -1358,11 +1360,11 @@
       );
     },
     /**
-         * set width
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @param {Number} width
-         */
+     * set width
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @param {Number} width
+     */
     setWidth: function(width) {
       // take into account pixel ratio
       this.width = this._canvas.width = width * this.pixelRatio;
@@ -1373,11 +1375,11 @@
       _context.scale(pixelRatio, pixelRatio);
     },
     /**
-         * set height
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @param {Number} height
-         */
+     * set height
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @param {Number} height
+     */
     setHeight: function(height) {
       // take into account pixel ratio
       this.height = this._canvas.height = height * this.pixelRatio;
@@ -1387,42 +1389,42 @@
       _context.scale(pixelRatio, pixelRatio);
     },
     /**
-         * get width
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @returns {Number} width
-         */
+     * get width
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @returns {Number} width
+     */
     getWidth: function() {
       return this.width;
     },
     /**
-         * get height
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @returns {Number} height
-         */
+     * get height
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @returns {Number} height
+     */
     getHeight: function() {
       return this.height;
     },
     /**
-         * set size
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @param {Number} width
-         * @param {Number} height
-         */
+     * set size
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @param {Number} width
+     * @param {Number} height
+     */
     setSize: function(width, height) {
       this.setWidth(width);
       this.setHeight(height);
     },
     /**
-         * to data url
-         * @method
-         * @memberof Konva.Canvas.prototype
-         * @param {String} mimeType
-         * @param {Number} quality between 0 and 1 for jpg mime types
-         * @returns {String} data url string
-         */
+     * to data url
+     * @method
+     * @memberof Konva.Canvas.prototype
+     * @param {String} mimeType
+     * @param {Number} quality between 0 and 1 for jpg mime types
+     * @returns {String} data url string
+     */
     toDataURL: function(mimeType, quality) {
       try {
         // If this call fails (due to browser bug, like in Firefox 3.6),
@@ -4950,15 +4952,15 @@
 (function(Konva) {
   'use strict';
   /**
-     * Brighten Filter.
-     * @function
-     * @memberof Konva.Filters
-     * @param {Object} imageData
-     * @example
-     * node.cache();
-     * node.filters([Konva.Filters.Brighten]);
-     * node.brightness(0.8);
-     */
+   * Brighten Filter.
+   * @function
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Brighten]);
+   * node.brightness(0.8);
+   */
   Konva.Filters.Brighten = function(imageData) {
     var brightness = this.brightness() * 255,
       data = imageData.data,
@@ -4983,14 +4985,14 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set filter brightness.  The brightness is a number between -1 and 1.&nbsp; Positive values
-    *  brighten the pixels and negative values darken them. Use with {@link Konva.Filters.Brighten} filter.
-    * @name brightness
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Number} brightness value between -1 and 1
-    * @returns {Number}
-    */
+   * get/set filter brightness.  The brightness is a number between -1 and 1.&nbsp; Positive values
+   *  brighten the pixels and negative values darken them. Use with {@link Konva.Filters.Brighten} filter.
+   * @name brightness
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} brightness value between -1 and 1
+   * @returns {Number}
+   */
 })(Konva);
 
 (function() {
@@ -5839,16 +5841,16 @@
   }
 
   /**
-     * Blur Filter
-     * @function
-     * @name Blur
-     * @memberof Konva.Filters
-     * @param {Object} imageData
-     * @example
-     * node.cache();
-     * node.filters([Konva.Filters.Blur]);
-     * node.blurRadius(10);
-     */
+   * Blur Filter
+   * @function
+   * @name Blur
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Blur]);
+   * node.blurRadius(10);
+   */
   Konva.Filters.Blur = function Blur(imageData) {
     var radius = Math.round(this.blurRadius());
 
@@ -5866,13 +5868,13 @@
   );
 
   /**
-    * get/set blur radius. Use with {@link Konva.Filters.Blur} filter
-    * @name blurRadius
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Integer} radius
-    * @returns {Integer}
-    */
+   * get/set blur radius. Use with {@link Konva.Filters.Blur} filter
+   * @name blurRadius
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Integer} radius
+   * @returns {Integer}
+   */
 })(Konva);
 
 /*eslint-disable  max-depth */
@@ -6055,16 +6057,16 @@
   }
 
   /**
-	 * Mask Filter
-	 * @function
-	 * @name Mask
-	 * @memberof Konva.Filters
-	 * @param {Object} imageData
-	 * @example
-     * node.cache();
-     * node.filters([Konva.Filters.Mask]);
-     * node.threshold(200);
-	 */
+   * Mask Filter
+   * @function
+   * @name Mask
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Mask]);
+   * node.threshold(200);
+   */
   Konva.Filters.Mask = function(imageData) {
     // Detect pixels close to the background color
     var threshold = this.threshold(),
@@ -6100,18 +6102,18 @@
 (function() {
   'use strict';
   /**
-     * RGB Filter
-     * @function
-     * @name RGB
-     * @memberof Konva.Filters
-     * @param {Object} imageData
-     * @author ippo615
-     * @example
-     * node.cache();
-     * node.filters([Konva.Filters.RGB]);
-     * node.blue(120);
-     * node.green(200);
-     */
+   * RGB Filter
+   * @function
+   * @name RGB
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @author ippo615
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.RGB]);
+   * node.blue(120);
+   * node.green(200);
+   */
   Konva.Filters.RGB = function(imageData) {
     var data = imageData.data,
       nPixels = data.length,
@@ -6142,13 +6144,13 @@
     }
   });
   /**
-    * get/set filter red value. Use with {@link Konva.Filters.RGB} filter.
-    * @name red
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Integer} red value between 0 and 255
-    * @returns {Integer}
-    */
+   * get/set filter red value. Use with {@link Konva.Filters.RGB} filter.
+   * @name red
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Integer} red value between 0 and 255
+   * @returns {Integer}
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'green', 0, function(val) {
     this._filterUpToDate = false;
@@ -6161,13 +6163,13 @@
     }
   });
   /**
-    * get/set filter green value. Use with {@link Konva.Filters.RGB} filter.
-    * @name green
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Integer} green value between 0 and 255
-    * @returns {Integer}
-    */
+   * get/set filter green value. Use with {@link Konva.Filters.RGB} filter.
+   * @name green
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Integer} green value between 0 and 255
+   * @returns {Integer}
+   */
 
   Konva.Factory.addGetterSetter(
     Konva.Node,
@@ -6177,31 +6179,31 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set filter blue value. Use with {@link Konva.Filters.RGB} filter.
-    * @name blue
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Integer} blue value between 0 and 255
-    * @returns {Integer}
-    */
+   * get/set filter blue value. Use with {@link Konva.Filters.RGB} filter.
+   * @name blue
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Integer} blue value between 0 and 255
+   * @returns {Integer}
+   */
 })();
 
 (function() {
   'use strict';
   /**
-     * RGBA Filter
-     * @function
-     * @name RGBA
-     * @memberof Konva.Filters
-     * @param {Object} imageData
-     * @author codefo
-     * @example
-     * node.cache();
-     * node.filters([Konva.Filters.RGBA]);
-     * node.blue(120);
-     * node.green(200);
-     * node.alpha(0.3);
-     */
+   * RGBA Filter
+   * @function
+   * @name RGBA
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @author codefo
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.RGBA]);
+   * node.blue(120);
+   * node.green(200);
+   * node.alpha(0.3);
+   */
   Konva.Filters.RGBA = function(imageData) {
     var data = imageData.data,
       nPixels = data.length,
@@ -6232,13 +6234,13 @@
     }
   });
   /**
-    * get/set filter red value. Use with {@link Konva.Filters.RGBA} filter.
-    * @name red
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Integer} red value between 0 and 255
-    * @returns {Integer}
-    */
+   * get/set filter red value. Use with {@link Konva.Filters.RGBA} filter.
+   * @name red
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Integer} red value between 0 and 255
+   * @returns {Integer}
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'green', 0, function(val) {
     this._filterUpToDate = false;
@@ -6251,13 +6253,13 @@
     }
   });
   /**
-    * get/set filter green value. Use with {@link Konva.Filters.RGBA} filter.
-    * @name green
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Integer} green value between 0 and 255
-    * @returns {Integer}
-    */
+   * get/set filter green value. Use with {@link Konva.Filters.RGBA} filter.
+   * @name green
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Integer} green value between 0 and 255
+   * @returns {Integer}
+   */
 
   Konva.Factory.addGetterSetter(
     Konva.Node,
@@ -6267,13 +6269,13 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set filter blue value. Use with {@link Konva.Filters.RGBA} filter.
-    * @name blue
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Integer} blue value between 0 and 255
-    * @returns {Integer}
-    */
+   * get/set filter blue value. Use with {@link Konva.Filters.RGBA} filter.
+   * @name blue
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Integer} blue value between 0 and 255
+   * @returns {Integer}
+   */
 
   Konva.Factory.addGetterSetter(Konva.Node, 'alpha', 1, function(val) {
     this._filterUpToDate = false;
@@ -6286,28 +6288,28 @@
     }
   });
   /**
-     * get/set filter alpha value. Use with {@link Konva.Filters.RGBA} filter.
-     * @name alpha
-     * @method
-     * @memberof Konva.Node.prototype
-     * @param {Float} alpha value between 0 and 1
-     * @returns {Float}
-     */
+   * get/set filter alpha value. Use with {@link Konva.Filters.RGBA} filter.
+   * @name alpha
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Float} alpha value between 0 and 1
+   * @returns {Float}
+   */
 })();
 
 (function() {
   'use strict';
   /**
-    * HSV Filter. Adjusts the hue, saturation and value
-    * @function
-    * @name HSV
-    * @memberof Konva.Filters
-    * @param {Object} imageData
-    * @author ippo615
-    * @example
-    * image.filters([Konva.Filters.HSV]);
-    * image.value(200);
-    */
+   * HSV Filter. Adjusts the hue, saturation and value
+   * @function
+   * @name HSV
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @author ippo615
+   * @example
+   * image.filters([Konva.Filters.HSV]);
+   * image.value(200);
+   */
 
   Konva.Filters.HSV = function(imageData) {
     var data = imageData.data,
@@ -6333,14 +6335,14 @@
       vsw = v * s * Math.sin(h * Math.PI / 180);
     // (result spot)(source spot)
     var rr = 0.299 * v + 0.701 * vsu + 0.167 * vsw,
-      rg = 0.587 * v - 0.587 * vsu + 0.330 * vsw,
+      rg = 0.587 * v - 0.587 * vsu + 0.33 * vsw,
       rb = 0.114 * v - 0.114 * vsu - 0.497 * vsw;
     var gr = 0.299 * v - 0.299 * vsu - 0.328 * vsw,
       gg = 0.587 * v + 0.413 * vsu + 0.035 * vsw,
       gb = 0.114 * v - 0.114 * vsu + 0.293 * vsw;
-    var br = 0.299 * v - 0.300 * vsu + 1.250 * vsw,
-      bg = 0.587 * v - 0.586 * vsu - 1.050 * vsw,
-      bb = 0.114 * v + 0.886 * vsu - 0.200 * vsw;
+    var br = 0.299 * v - 0.3 * vsu + 1.25 * vsw,
+      bg = 0.587 * v - 0.586 * vsu - 1.05 * vsw,
+      bb = 0.114 * v + 0.886 * vsu - 0.2 * vsw;
 
     var r, g, b, a;
 
@@ -6365,13 +6367,13 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set hsv hue in degrees. Use with {@link Konva.Filters.HSV} or {@link Konva.Filters.HSL} filter.
-    * @name hue
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Number} hue value between 0 and 359
-    * @returns {Number}
-    */
+   * get/set hsv hue in degrees. Use with {@link Konva.Filters.HSV} or {@link Konva.Filters.HSL} filter.
+   * @name hue
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} hue value between 0 and 359
+   * @returns {Number}
+   */
 
   Konva.Factory.addGetterSetter(
     Konva.Node,
@@ -6381,13 +6383,13 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set hsv saturation. Use with {@link Konva.Filters.HSV} or {@link Konva.Filters.HSL} filter.
-    * @name saturation
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Number} saturation 0 is no change, -1.0 halves the saturation, 1.0 doubles, etc..
-    * @returns {Number}
-    */
+   * get/set hsv saturation. Use with {@link Konva.Filters.HSV} or {@link Konva.Filters.HSL} filter.
+   * @name saturation
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} saturation 0 is no change, -1.0 halves the saturation, 1.0 doubles, etc..
+   * @returns {Number}
+   */
 
   Konva.Factory.addGetterSetter(
     Konva.Node,
@@ -6397,13 +6399,13 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set hsv value. Use with {@link Konva.Filters.HSV} filter.
-    * @name value
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Number} value 0 is no change, -1.0 halves the value, 1.0 doubles, etc..
-    * @returns {Number}
-    */
+   * get/set hsv value. Use with {@link Konva.Filters.HSV} filter.
+   * @name value
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} value 0 is no change, -1.0 halves the value, 1.0 doubles, etc..
+   * @returns {Number}
+   */
 })();
 
 (function() {
@@ -6520,21 +6522,21 @@
 (function() {
   'use strict';
   /**
-     * Emboss Filter.
-     * Pixastic Lib - Emboss filter - v0.1.0
-     * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
-     * License: [http://www.pixastic.com/lib/license.txt]
-     * @function
-     * @memberof Konva.Filters
-     * @param {Object} imageData
-     * @example
-     * node.cache();
-     * node.filters([Konva.Filters.Emboss]);
-     * node.embossStrength(0.8);
-     * node.embossWhiteLevel(0.3);
-     * node.embossDirection('right');
-     * node.embossBlend(true);
-     */
+   * Emboss Filter.
+   * Pixastic Lib - Emboss filter - v0.1.0
+   * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+   * License: [http://www.pixastic.com/lib/license.txt]
+   * @function
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Emboss]);
+   * node.embossStrength(0.8);
+   * node.embossWhiteLevel(0.3);
+   * node.embossDirection('right');
+   * node.embossBlend(true);
+   */
   Konva.Filters.Emboss = function(imageData) {
     // pixastic strength is between 0 and 10.  I want it between 0 and 1
     // pixastic greyLevel is between 0 and 255.  I want it between 0 and 1.  Also,
@@ -6665,13 +6667,13 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set emboss strength. Use with {@link Konva.Filters.Emboss} filter.
-    * @name embossStrength
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Number} level between 0 and 1.  Default is 0.5
-    * @returns {Number}
-    */
+   * get/set emboss strength. Use with {@link Konva.Filters.Emboss} filter.
+   * @name embossStrength
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} level between 0 and 1.  Default is 0.5
+   * @returns {Number}
+   */
 
   Konva.Factory.addGetterSetter(
     Konva.Node,
@@ -6681,13 +6683,13 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set emboss white level. Use with {@link Konva.Filters.Emboss} filter.
-    * @name embossWhiteLevel
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Number} embossWhiteLevel between 0 and 1.  Default is 0.5
-    * @returns {Number}
-    */
+   * get/set emboss white level. Use with {@link Konva.Filters.Emboss} filter.
+   * @name embossWhiteLevel
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} embossWhiteLevel between 0 and 1.  Default is 0.5
+   * @returns {Number}
+   */
 
   Konva.Factory.addGetterSetter(
     Konva.Node,
@@ -6697,14 +6699,14 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set emboss direction. Use with {@link Konva.Filters.Emboss} filter.
-    * @name embossDirection
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {String} embossDirection can be top-left, top, top-right, right, bottom-right, bottom, bottom-left or left
-    *   The default is top-left
-    * @returns {String}
-    */
+   * get/set emboss direction. Use with {@link Konva.Filters.Emboss} filter.
+   * @name embossDirection
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {String} embossDirection can be top-left, top, top-right, right, bottom-right, bottom, bottom-left or left
+   *   The default is top-left
+   * @returns {String}
+   */
 
   Konva.Factory.addGetterSetter(
     Konva.Node,
@@ -6714,13 +6716,13 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set emboss blend. Use with {@link Konva.Filters.Emboss} filter.
-    * @name embossBlend
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Boolean} embossBlend
-    * @returns {Boolean}
-    */
+   * get/set emboss blend. Use with {@link Konva.Filters.Emboss} filter.
+   * @name embossBlend
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Boolean} embossBlend
+   * @returns {Boolean}
+   */
 })();
 
 (function() {
@@ -6879,19 +6881,19 @@
 (function() {
   'use strict';
   /**
-     * Posterize Filter. Adjusts the channels so that there are no more
-     *  than n different values for that channel. This is also applied
-     *  to the alpha channel.
-     * @function
-     * @name Posterize
-     * @author ippo615
-     * @memberof Konva.Filters
-     * @param {Object} imageData
-     * @example
-     * node.cache();
-     * node.filters([Konva.Filters.Posterize]);
-     * node.levels(0.8); // between 0 and 1
-     */
+   * Posterize Filter. Adjusts the channels so that there are no more
+   *  than n different values for that channel. This is also applied
+   *  to the alpha channel.
+   * @function
+   * @name Posterize
+   * @author ippo615
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Posterize]);
+   * node.levels(0.8); // between 0 and 1
+   */
 
   Konva.Filters.Posterize = function(imageData) {
     // level must be between 1 and 255
@@ -6915,13 +6917,13 @@
   );
 
   /**
-    * get/set levels.  Must be a number between 0 and 1.  Use with {@link Konva.Filters.Posterize} filter.
-    * @name levels
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Number} level between 0 and 1
-    * @returns {Number}
-    */
+   * get/set levels.  Must be a number between 0 and 1.  Use with {@link Konva.Filters.Posterize} filter.
+   * @name levels
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} level between 0 and 1
+   * @returns {Number}
+   */
 })();
 
 (function() {
@@ -7138,19 +7140,19 @@
 (function() {
   'use strict';
   /**
-     * Sepia Filter
-     * Based on: Pixastic Lib - Sepia filter - v0.1.0
-     * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
-     * @function
-     * @name Sepia
-     * @memberof Konva.Filters
-     * @param {Object} imageData
-     * @author Jacob Seidelin <jseidelin@nihilogic.dk>
-     * @license MPL v1.1 [http://www.pixastic.com/lib/license.txt]
-     * @example
-     * node.cache();
-     * node.filters([Konva.Filters.Sepia]);
-     */
+   * Sepia Filter
+   * Based on: Pixastic Lib - Sepia filter - v0.1.0
+   * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+   * @function
+   * @name Sepia
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @author Jacob Seidelin <jseidelin@nihilogic.dk>
+   * @license MPL v1.1 [http://www.pixastic.com/lib/license.txt]
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Sepia]);
+   */
   Konva.Filters.Sepia = function(imageData) {
     var data = imageData.data,
       w = imageData.width,
@@ -7192,18 +7194,18 @@
 (function() {
   'use strict';
   /**
-     * Solarize Filter
-     * Pixastic Lib - Solarize filter - v0.1.0
-     * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
-     * License: [http://www.pixastic.com/lib/license.txt]
-     * @function
-     * @name Solarize
-     * @memberof Konva.Filters
-     * @param {Object} imageData
-     * @example
-     * node.cache();
-     * node.filters([Konva.Filters.Solarize]);
-     */
+   * Solarize Filter
+   * Pixastic Lib - Solarize filter - v0.1.0
+   * Copyright (c) 2008 Jacob Seidelin, jseidelin@nihilogic.dk, http://blog.nihilogic.dk/
+   * License: [http://www.pixastic.com/lib/license.txt]
+   * @function
+   * @name Solarize
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Solarize]);
+   */
   Konva.Filters.Solarize = function(imageData) {
     var data = imageData.data,
       w = imageData.width,
@@ -7503,13 +7505,13 @@
   };
 
   /**
-    * get/set kaleidoscope power. Use with {@link Konva.Filters.Kaleidoscope} filter.
-    * @name kaleidoscopePower
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Integer} power of kaleidoscope
-    * @returns {Integer}
-    */
+   * get/set kaleidoscope power. Use with {@link Konva.Filters.Kaleidoscope} filter.
+   * @name kaleidoscopePower
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Integer} power of kaleidoscope
+   * @returns {Integer}
+   */
   Konva.Factory.addGetterSetter(
     Konva.Node,
     'kaleidoscopePower',
@@ -7519,13 +7521,13 @@
   );
 
   /**
-    * get/set kaleidoscope angle. Use with {@link Konva.Filters.Kaleidoscope} filter.
-    * @name kaleidoscopeAngle
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Integer} degrees
-    * @returns {Integer}
-    */
+   * get/set kaleidoscope angle. Use with {@link Konva.Filters.Kaleidoscope} filter.
+   * @name kaleidoscopeAngle
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Integer} degrees
+   * @returns {Integer}
+   */
   Konva.Factory.addGetterSetter(
     Konva.Node,
     'kaleidoscopeAngle',
@@ -7535,7 +7537,7 @@
   );
 })();
 
-(function (Konva) {
+(function(Konva) {
   'use strict';
   /**
    * Contrast Filter.
@@ -7548,7 +7550,7 @@
    * node.contrast(10);
    */
 
-  Konva.Filters.Contrast = function (imageData) {
+  Konva.Filters.Contrast = function(imageData) {
     var adjust = Math.pow((parseInt(this.contrast()) + 100) / 100, 2);
 
     var data = imageData.data,
@@ -7584,9 +7586,9 @@
       blue += 0.5;
       blue *= 255;
 
-      red = (red < 0 ? 0 : (red > 255 ? 255 : red));
-      green = (green < 0 ? 0 : (green > 255 ? 255 : green));
-      blue = (blue < 0 ? 0 : (blue > 255 ? 255 : blue));
+      red = red < 0 ? 0 : red > 255 ? 255 : red;
+      green = green < 0 ? 0 : green > 255 ? 255 : green;
+      blue = blue < 0 ? 0 : blue > 255 ? 255 : blue;
 
       data[i] = red;
       data[i + 1] = green;
@@ -7603,7 +7605,13 @@
    * @param {Number} contrast value between -100 and 100
    * @returns {Number}
    */
-  Konva.Factory.addGetterSetter(Konva.Node, 'contrast', 0, null, Konva.Factory.afterSetFilter);
+  Konva.Factory.addGetterSetter(
+    Konva.Node,
+    'contrast',
+    0,
+    null,
+    Konva.Factory.afterSetFilter
+  );
 })(Konva);
 
 (function() {
@@ -11532,30 +11540,30 @@
 (function() {
   'use strict';
   /**
-     * FastLayer constructor. Layers are tied to their own canvas element and are used
-     * to contain shapes only.  If you don't need node nesting, mouse and touch interactions,
-     * or event pub/sub, you should use FastLayer instead of Layer to create your layers.
-     * It renders about 2x faster than normal layers.
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.BaseLayer
-     * @param {Object} config
-     * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
-     * to clear the canvas before each layer draw.  The default value is true.
-     * @param {Boolean} [config.visible]
-     * @param {String} [config.id] unique id
-     * @param {String} [config.name] non-unique name
-     * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
-     * * @param {Object} [config.clip] set clip
+   * FastLayer constructor. Layers are tied to their own canvas element and are used
+   * to contain shapes only.  If you don't need node nesting, mouse and touch interactions,
+   * or event pub/sub, you should use FastLayer instead of Layer to create your layers.
+   * It renders about 2x faster than normal layers.
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.BaseLayer
+   * @param {Object} config
+   * @param {Boolean} [config.clearBeforeDraw] set this property to false if you don't want
+   * to clear the canvas before each layer draw.  The default value is true.
+   * @param {Boolean} [config.visible]
+   * @param {String} [config.id] unique id
+   * @param {String} [config.name] non-unique name
+   * @param {Number} [config.opacity] determines node opacity.  Can be any number between 0 and 1
+   * * @param {Object} [config.clip] set clip
      * @param {Number} [config.clipX] set clip x
      * @param {Number} [config.clipY] set clip y
      * @param {Number} [config.clipWidth] set clip width
      * @param {Number} [config.clipHeight] set clip height
      * @param {Function} [config.clipFunc] set clip func
 
-     * @example
-     * var layer = new Konva.FastLayer();
-     */
+   * @example
+   * var layer = new Konva.FastLayer();
+   */
   Konva.FastLayer = function(config) {
     this.____init(config);
   };
@@ -11583,7 +11591,8 @@
       return null;
     },
     drawScene: function(can) {
-      var layer = this.getLayer(), canvas = can || (layer && layer.getCanvas());
+      var layer = this.getLayer(),
+        canvas = can || (layer && layer.getCanvas());
 
       if (this.getClearBeforeDraw()) {
         canvas.getContext().clear();
@@ -11616,12 +11625,12 @@
 (function() {
   'use strict';
   /**
-     * Group constructor.  Groups are used to contain shapes or other groups.
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Container
-     * @param {Object} config
-     * @param {Number} [config.x]
+   * Group constructor.  Groups are used to contain shapes or other groups.
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Container
+   * @param {Object} config
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -11641,16 +11650,16 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * * @param {Object} [config.clip] set clip
+   * * @param {Object} [config.clip] set clip
      * @param {Number} [config.clipX] set clip x
      * @param {Number} [config.clipY] set clip y
      * @param {Number} [config.clipWidth] set clip width
      * @param {Number} [config.clipHeight] set clip height
      * @param {Function} [config.clipFunc] set clip func
 
-     * @example
-     * var group = new Konva.Group();
-     */
+   * @example
+   * var group = new Konva.Group();
+   */
   Konva.Group = function(config) {
     this.___init(config);
   };
@@ -11707,28 +11716,28 @@
   }
 
   /**
-     * Animation constructor.  A stage is used to contain multiple layers and handle
-     * @constructor
-     * @memberof Konva
-     * @param {Function} func function executed on each animation frame.  The function is passed a frame object, which contains
-     *  timeDiff, lastTime, time, and frameRate properties.  The timeDiff property is the number of milliseconds that have passed
-     *  since the last animation frame.  The lastTime property is time in milliseconds that elapsed from the moment the animation started
-     *  to the last animation frame.  The time property is the time in milliseconds that ellapsed from the moment the animation started
-     *  to the current animation frame.  The frameRate property is the current frame rate in frames / second. Return false from function,
-     *  if you don't need to redraw layer/layers on some frames.
-     * @param {Konva.Layer|Array} [layers] layer(s) to be redrawn on each animation frame. Can be a layer, an array of layers, or null.
-     *  Not specifying a node will result in no redraw.
-     * @example
-     * // move a node to the right at 50 pixels / second
-     * var velocity = 50;
-     *
-     * var anim = new Konva.Animation(function(frame) {
-     *   var dist = velocity * (frame.timeDiff / 1000);
-     *   node.move(dist, 0);
-     * }, layer);
-     *
-     * anim.start();
-     */
+   * Animation constructor.  A stage is used to contain multiple layers and handle
+   * @constructor
+   * @memberof Konva
+   * @param {Function} func function executed on each animation frame.  The function is passed a frame object, which contains
+   *  timeDiff, lastTime, time, and frameRate properties.  The timeDiff property is the number of milliseconds that have passed
+   *  since the last animation frame.  The lastTime property is time in milliseconds that elapsed from the moment the animation started
+   *  to the last animation frame.  The time property is the time in milliseconds that ellapsed from the moment the animation started
+   *  to the current animation frame.  The frameRate property is the current frame rate in frames / second. Return false from function,
+   *  if you don't need to redraw layer/layers on some frames.
+   * @param {Konva.Layer|Array} [layers] layer(s) to be redrawn on each animation frame. Can be a layer, an array of layers, or null.
+   *  Not specifying a node will result in no redraw.
+   * @example
+   * // move a node to the right at 50 pixels / second
+   * var velocity = 50;
+   *
+   * var anim = new Konva.Animation(function(frame) {
+   *   var dist = velocity * (frame.timeDiff / 1000);
+   *   node.move(dist, 0);
+   * }, layer);
+   *
+   * anim.start();
+   */
   Konva.Animation = function(func, layers) {
     var Anim = Konva.Animation;
     this.func = func;
@@ -11745,12 +11754,12 @@
      */
   Konva.Animation.prototype = {
     /**
-         * set layers to be redrawn on each animation frame
-         * @method
-         * @memberof Konva.Animation.prototype
-         * @param {Konva.Layer|Array} [layers] layer(s) to be redrawn.&nbsp; Can be a layer, an array of layers, or null.  Not specifying a node will result in no redraw.
-         * @return {Konva.Animation} this
-         */
+     * set layers to be redrawn on each animation frame
+     * @method
+     * @memberof Konva.Animation.prototype
+     * @param {Konva.Layer|Array} [layers] layer(s) to be redrawn.&nbsp; Can be a layer, an array of layers, or null.  Not specifying a node will result in no redraw.
+     * @return {Konva.Animation} this
+     */
     setLayers: function(layers) {
       var lays = [];
       // if passing in no layers
@@ -11770,23 +11779,25 @@
       return this;
     },
     /**
-         * get layers
-         * @method
-         * @memberof Konva.Animation.prototype
-         * @return {Array} Array of Konva.Layer
-         */
+     * get layers
+     * @method
+     * @memberof Konva.Animation.prototype
+     * @return {Array} Array of Konva.Layer
+     */
     getLayers: function() {
       return this.layers;
     },
     /**
-         * add layer.  Returns true if the layer was added, and false if it was not
-         * @method
-         * @memberof Konva.Animation.prototype
-         * @param {Konva.Layer} layer to add
-         * @return {Bool} true if layer is added to animation, otherwise false
-         */
+     * add layer.  Returns true if the layer was added, and false if it was not
+     * @method
+     * @memberof Konva.Animation.prototype
+     * @param {Konva.Layer} layer to add
+     * @return {Bool} true if layer is added to animation, otherwise false
+     */
     addLayer: function(layer) {
-      var layers = this.layers, len = layers.length, n;
+      var layers = this.layers,
+        len = layers.length,
+        n;
 
       // don't add the layer if it already exists
       for (n = 0; n < len; n++) {
@@ -11799,11 +11810,11 @@
       return true;
     },
     /**
-         * determine if animation is running or not.  returns true or false
-         * @method
-         * @memberof Konva.Animation.prototype
-         * @return {Bool} is animation running?
-         */
+     * determine if animation is running or not.  returns true or false
+     * @method
+     * @memberof Konva.Animation.prototype
+     * @return {Bool} is animation running?
+     */
     isRunning: function() {
       var a = Konva.Animation,
         animations = a.animations,
@@ -11818,11 +11829,11 @@
       return false;
     },
     /**
-         * start animation
-         * @method
-         * @memberof Konva.Animation.prototype
-         * @return {Konva.Animation} this
-         */
+     * start animation
+     * @method
+     * @memberof Konva.Animation.prototype
+     * @return {Konva.Animation} this
+     */
     start: function() {
       var Anim = Konva.Animation;
       this.stop();
@@ -11832,11 +11843,11 @@
       return this;
     },
     /**
-         * stop animation
-         * @method
-         * @memberof Konva.Animation.prototype
-         * @return {Konva.Animation} this
-         */
+     * stop animation
+     * @method
+     * @memberof Konva.Animation.prototype
+     * @return {Konva.Animation} this
+     */
     stop: function() {
       Konva.Animation._removeAnimation(this);
       return this;
@@ -11857,7 +11868,10 @@
     this._handleAnimation();
   };
   Konva.Animation._removeAnimation = function(anim) {
-    var id = anim.id, animations = this.animations, len = animations.length, n;
+    var id = anim.id,
+      animations = this.animations,
+      len = animations.length,
+      n;
 
     for (n = 0; n < len; n++) {
       if (animations[n].id === id) {
@@ -11942,14 +11956,15 @@
   };
 
   /**
-     * batch draw. this function will not do immediate draw
-     * but it will schedule drawing to next tick (requestAnimFrame)
-     * @method
-     * @return {Konva.Layer} this
-     * @memberof Konva.Base.prototype
-     */
+   * batch draw. this function will not do immediate draw
+   * but it will schedule drawing to next tick (requestAnimFrame)
+   * @method
+   * @return {Konva.Layer} this
+   * @memberof Konva.Base.prototype
+   */
   Konva.BaseLayer.prototype.batchDraw = function() {
-    var that = this, Anim = Konva.Animation;
+    var that = this,
+      Anim = Konva.Animation;
 
     if (!this.batchAnim) {
       this.batchAnim = new Anim(function() {
@@ -11965,11 +11980,11 @@
   };
 
   /**
-     * batch draw
-     * @method
-     * @return {Konva.Stage} this
-     * @memberof Konva.Stage.prototype
-     */
+   * batch draw
+   * @method
+   * @return {Konva.Stage} this
+   * @memberof Konva.Stage.prototype
+   */
   Konva.Stage.prototype.batchDraw = function() {
     this.getChildren().each(function(layer) {
       layer.batchDraw();
@@ -11981,12 +11996,12 @@
 (function() {
   'use strict';
   var blacklist = {
-    node: 1,
-    duration: 1,
-    easing: 1,
-    onFinish: 1,
-    yoyo: 1
-  },
+      node: 1,
+      duration: 1,
+      easing: 1,
+      onFinish: 1,
+      yoyo: 1
+    },
     PAUSED = 1,
     PLAYING = 2,
     REVERSING = 3,
@@ -12106,26 +12121,26 @@
   };
 
   /**
-     * Tween constructor.  Tweens enable you to animate a node between the current state and a new state.
-     *  You can play, pause, reverse, seek, reset, and finish tweens.  By default, tweens are animated using
-     *  a linear easing.  For more tweening options, check out {@link Konva.Easings}
-     * @constructor
-     * @memberof Konva
-     * @example
-     * // instantiate new tween which fully rotates a node in 1 second
-     * var tween = new Konva.Tween({
-     *   node: node,
-     *   rotationDeg: 360,
-     *   duration: 1,
-     *   easing: Konva.Easings.EaseInOut
-     * });
-     *
-     * // play tween
-     * tween.play();
-     *
-     * // pause tween
-     * tween.pause();
-     */
+   * Tween constructor.  Tweens enable you to animate a node between the current state and a new state.
+   *  You can play, pause, reverse, seek, reset, and finish tweens.  By default, tweens are animated using
+   *  a linear easing.  For more tweening options, check out {@link Konva.Easings}
+   * @constructor
+   * @memberof Konva
+   * @example
+   * // instantiate new tween which fully rotates a node in 1 second
+   * var tween = new Konva.Tween({
+   *   node: node,
+   *   rotationDeg: 360,
+   *   duration: 1,
+   *   easing: Konva.Easings.EaseInOut
+   * });
+   *
+   * // play tween
+   * tween.play();
+   *
+   * // pause tween
+   * tween.pause();
+   */
   Konva.Tween = function(config) {
     var that = this,
       node = config.node,
@@ -12352,71 +12367,71 @@
       };
     },
     /**
-         * play
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @returns {Tween}
-         */
+     * play
+     * @method
+     * @memberof Konva.Tween.prototype
+     * @returns {Tween}
+     */
     play: function() {
       this.tween.play();
       return this;
     },
     /**
-         * reverse
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @returns {Tween}
-         */
+     * reverse
+     * @method
+     * @memberof Konva.Tween.prototype
+     * @returns {Tween}
+     */
     reverse: function() {
       this.tween.reverse();
       return this;
     },
     /**
-         * reset
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @returns {Tween}
-         */
+     * reset
+     * @method
+     * @memberof Konva.Tween.prototype
+     * @returns {Tween}
+     */
     reset: function() {
       this.tween.reset();
       return this;
     },
     /**
-         * seek
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @param {Integer} t time in seconds between 0 and the duration
-         * @returns {Tween}
-         */
+     * seek
+     * @method
+     * @memberof Konva.Tween.prototype
+     * @param {Integer} t time in seconds between 0 and the duration
+     * @returns {Tween}
+     */
     seek: function(t) {
       this.tween.seek(t * 1000);
       return this;
     },
     /**
-         * pause
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @returns {Tween}
-         */
+     * pause
+     * @method
+     * @memberof Konva.Tween.prototype
+     * @returns {Tween}
+     */
     pause: function() {
       this.tween.pause();
       return this;
     },
     /**
-         * finish
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @returns {Tween}
-         */
+     * finish
+     * @method
+     * @memberof Konva.Tween.prototype
+     * @returns {Tween}
+     */
     finish: function() {
       this.tween.finish();
       return this;
     },
     /**
-         * destroy
-         * @method
-         * @memberof Konva.Tween.prototype
-         */
+     * destroy
+     * @method
+     * @memberof Konva.Tween.prototype
+     */
     destroy: function() {
       var nodeId = this.node._id,
         thisId = this._id,
@@ -12434,18 +12449,18 @@
   };
 
   /**
-     * Tween node properties. Shorter usage of {@link Konva.Tween} object.
-     *
-     * @method Konva.Node#to
-     * @memberof Konva.Node
-     * @param {Object} [params] tween params
-     * @example
-     *
-     * circle.to({
-     *  x : 50,
-     *  duration : 0.5
-     * });
-     */
+   * Tween node properties. Shorter usage of {@link Konva.Tween} object.
+   *
+   * @method Konva.Node#to
+   * @memberof Konva.Node
+   * @param {Object} [params] tween params
+   * @example
+   *
+   * circle.to({
+   *  x : 50,
+   *  duration : 0.5
+   * });
+   */
   Konva.Node.prototype.to = function(params) {
     var onFinish = params.onFinish;
     params.node = this;
@@ -12465,33 +12480,33 @@
     */
 
   /**
-     * @namespace Easings
-     * @memberof Konva
-     */
+   * @namespace Easings
+   * @memberof Konva
+   */
   Konva.Easings = {
     /**
-        * back ease in
-        * @function
-        * @memberof Konva.Easings
-        */
+     * back ease in
+     * @function
+     * @memberof Konva.Easings
+     */
     BackEaseIn: function(t, b, c, d) {
       var s = 1.70158;
       return c * (t /= d) * t * ((s + 1) * t - s) + b;
     },
     /**
-        * back ease out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * back ease out
+     * @function
+     * @memberof Konva.Easings
+     */
     BackEaseOut: function(t, b, c, d) {
       var s = 1.70158;
       return c * ((t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
     },
     /**
-        * back ease in out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * back ease in out
+     * @function
+     * @memberof Konva.Easings
+     */
     BackEaseInOut: function(t, b, c, d) {
       var s = 1.70158;
       if ((t /= d / 2) < 1) {
@@ -12500,10 +12515,10 @@
       return c / 2 * ((t -= 2) * t * (((s *= 1.525) + 1) * t + s) + 2) + b;
     },
     /**
-        * elastic ease in
-        * @function
-        * @memberof Konva.Easings
-        */
+     * elastic ease in
+     * @function
+     * @memberof Konva.Easings
+     */
     ElasticEaseIn: function(t, b, c, d, a, p) {
       // added s = 0
       var s = 0;
@@ -12523,16 +12538,18 @@
         s = p / (2 * Math.PI) * Math.asin(c / a);
       }
       return (
-        -(a *
+        -(
+          a *
           Math.pow(2, 10 * (t -= 1)) *
-          Math.sin((t * d - s) * (2 * Math.PI) / p)) + b
+          Math.sin((t * d - s) * (2 * Math.PI) / p)
+        ) + b
       );
     },
     /**
-        * elastic ease out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * elastic ease out
+     * @function
+     * @memberof Konva.Easings
+     */
     ElasticEaseOut: function(t, b, c, d, a, p) {
       // added s = 0
       var s = 0;
@@ -12558,10 +12575,10 @@
       );
     },
     /**
-        * elastic ease in out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * elastic ease in out
+     * @function
+     * @memberof Konva.Easings
+     */
     ElasticEaseInOut: function(t, b, c, d, a, p) {
       // added s = 0
       var s = 0;
@@ -12599,10 +12616,10 @@
       );
     },
     /**
-        * bounce ease out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * bounce ease out
+     * @function
+     * @memberof Konva.Easings
+     */
     BounceEaseOut: function(t, b, c, d) {
       if ((t /= d) < 1 / 2.75) {
         return c * (7.5625 * t * t) + b;
@@ -12615,18 +12632,18 @@
       }
     },
     /**
-        * bounce ease in
-        * @function
-        * @memberof Konva.Easings
-        */
+     * bounce ease in
+     * @function
+     * @memberof Konva.Easings
+     */
     BounceEaseIn: function(t, b, c, d) {
       return c - Konva.Easings.BounceEaseOut(d - t, 0, c, d) + b;
     },
     /**
-        * bounce ease in out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * bounce ease in out
+     * @function
+     * @memberof Konva.Easings
+     */
     BounceEaseInOut: function(t, b, c, d) {
       if (t < d / 2) {
         return Konva.Easings.BounceEaseIn(t * 2, 0, c, d) * 0.5 + b;
@@ -12637,26 +12654,26 @@
       }
     },
     /**
-        * ease in
-        * @function
-        * @memberof Konva.Easings
-        */
+     * ease in
+     * @function
+     * @memberof Konva.Easings
+     */
     EaseIn: function(t, b, c, d) {
       return c * (t /= d) * t + b;
     },
     /**
-        * ease out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * ease out
+     * @function
+     * @memberof Konva.Easings
+     */
     EaseOut: function(t, b, c, d) {
       return -c * (t /= d) * (t - 2) + b;
     },
     /**
-        * ease in out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * ease in out
+     * @function
+     * @memberof Konva.Easings
+     */
     EaseInOut: function(t, b, c, d) {
       if ((t /= d / 2) < 1) {
         return c / 2 * t * t + b;
@@ -12664,26 +12681,26 @@
       return -c / 2 * (--t * (t - 2) - 1) + b;
     },
     /**
-        * strong ease in
-        * @function
-        * @memberof Konva.Easings
-        */
+     * strong ease in
+     * @function
+     * @memberof Konva.Easings
+     */
     StrongEaseIn: function(t, b, c, d) {
       return c * (t /= d) * t * t * t * t + b;
     },
     /**
-        * strong ease out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * strong ease out
+     * @function
+     * @memberof Konva.Easings
+     */
     StrongEaseOut: function(t, b, c, d) {
       return c * ((t = t / d - 1) * t * t * t * t + 1) + b;
     },
     /**
-        * strong ease in out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * strong ease in out
+     * @function
+     * @memberof Konva.Easings
+     */
     StrongEaseInOut: function(t, b, c, d) {
       if ((t /= d / 2) < 1) {
         return c / 2 * t * t * t * t * t + b;
@@ -12691,10 +12708,10 @@
       return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
     },
     /**
-        * linear
-        * @function
-        * @memberof Konva.Easings
-        */
+     * linear
+     * @function
+     * @memberof Konva.Easings
+     */
     Linear: function(t, b, c, d) {
       return c * t / d + b;
     }
@@ -13035,13 +13052,13 @@
 (function() {
   'use strict';
   /**
-     * Rect constructor
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {Number} [config.cornerRadius]
-     * @param {String} [config.fill] fill color
+   * Rect constructor
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {Number} [config.cornerRadius]
+   * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -13092,7 +13109,7 @@
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
      * @param {Array} [config.dash]
      * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-     * @param {Number} [config.x]
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -13112,15 +13129,15 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * var rect = new Konva.Rect({
-     *   width: 100,
-     *   height: 50,
-     *   fill: 'red',
-     *   stroke: 'black',
-     *   strokeWidth: 5
-     * });
-     */
+   * @example
+   * var rect = new Konva.Rect({
+   *   width: 100,
+   *   height: 50,
+   *   fill: 'red',
+   *   stroke: 'black',
+   *   strokeWidth: 5
+   * });
+   */
   Konva.Rect = function(config) {
     this.___init(config);
   };
@@ -13191,19 +13208,19 @@
 
   Konva.Factory.addGetterSetter(Konva.Rect, 'cornerRadius', 0);
   /**
-     * get/set corner radius
-     * @name cornerRadius
-     * @method
-     * @memberof Konva.Rect.prototype
-     * @param {Number} cornerRadius
-     * @returns {Number}
-     * @example
-     * // get corner radius
-     * var cornerRadius = rect.cornerRadius();
-     *
-     * // set corner radius
-     * rect.cornerRadius(10);
-     */
+   * get/set corner radius
+   * @name cornerRadius
+   * @method
+   * @memberof Konva.Rect.prototype
+   * @param {Number} cornerRadius
+   * @returns {Number}
+   * @example
+   * // get corner radius
+   * var cornerRadius = rect.cornerRadius();
+   *
+   * // set corner radius
+   * rect.cornerRadius(10);
+   */
 
   Konva.Collection.mapMethods(Konva.Rect);
 })();
@@ -13211,16 +13228,17 @@
 (function(Konva) {
   'use strict';
   // the 0.0001 offset fixes a bug in Chrome 27
-  var PIx2 = Math.PI * 2 - 0.0001, CIRCLE = 'Circle';
+  var PIx2 = Math.PI * 2 - 0.0001,
+    CIRCLE = 'Circle';
 
   /**
-     * Circle constructor
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {Number} config.radius
-     * @param {String} [config.fill] fill color
+   * Circle constructor
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {Number} config.radius
+   * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -13271,7 +13289,7 @@
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
      * @param {Array} [config.dash]
      * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-     * @param {Number} [config.x]
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -13291,15 +13309,15 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * // create circle
-     * var circle = new Konva.Circle({
-     *   radius: 40,
-     *   fill: 'red',
-     *   stroke: 'black'
-     *   strokeWidth: 5
-     * });
-     */
+   * @example
+   * // create circle
+   * var circle = new Konva.Circle({
+   *   radius: 40,
+   *   fill: 'red',
+   *   stroke: 'black'
+   *   strokeWidth: 5
+   * });
+   */
   Konva.Circle = function(config) {
     this.___init(config);
   };
@@ -13348,19 +13366,19 @@
   Konva.Factory.addOverloadedGetterSetter(Konva.Circle, 'radius');
 
   /**
-     * get/set radius
-     * @name radius
-     * @method
-     * @memberof Konva.Circle.prototype
-     * @param {Number} radius
-     * @returns {Number}
-     * @example
-     * // get radius
-     * var radius = circle.radius();
-     *
-     * // set radius
-     * circle.radius(10);
-     */
+   * get/set radius
+   * @name radius
+   * @method
+   * @memberof Konva.Circle.prototype
+   * @param {Number} radius
+   * @returns {Number}
+   * @example
+   * // get radius
+   * var radius = circle.radius();
+   *
+   * // set radius
+   * circle.radius(10);
+   */
 
   Konva.Collection.mapMethods(Konva.Circle);
 })(Konva);
@@ -13368,15 +13386,16 @@
 (function() {
   'use strict';
   // the 0.0001 offset fixes a bug in Chrome 27
-  var PIx2 = Math.PI * 2 - 0.0001, ELLIPSE = 'Ellipse';
+  var PIx2 = Math.PI * 2 - 0.0001,
+    ELLIPSE = 'Ellipse';
 
   /**
-     * Ellipse constructor
-     * @constructor
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {Object} config.radius defines x and y radius
-     * @param {String} [config.fill] fill color
+   * Ellipse constructor
+   * @constructor
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {Object} config.radius defines x and y radius
+   * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -13427,7 +13446,7 @@
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
      * @param {Array} [config.dash]
      * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-     * @param {Number} [config.x]
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -13447,15 +13466,15 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * var ellipse = new Konva.Ellipse({
-     *   radius : {
-     *     x : 50,
-     *     y : 50
-     *   },
-     *   fill: 'red'
-     * });
-     */
+   * @example
+   * var ellipse = new Konva.Ellipse({
+   *   radius : {
+   *     x : 50,
+   *     y : 50
+   *   },
+   *   fill: 'red'
+   * });
+   */
   Konva.Ellipse = function(config) {
     this.___init(config);
   };
@@ -13469,7 +13488,8 @@
       this.sceneFunc(this._sceneFunc);
     },
     _sceneFunc: function(context) {
-      var rx = this.getRadiusX(), ry = this.getRadiusY();
+      var rx = this.getRadiusX(),
+        ry = this.getRadiusY();
 
       context.beginPath();
       context.save();
@@ -13510,56 +13530,56 @@
   Konva.Factory.addComponentsGetterSetter(Konva.Ellipse, 'radius', ['x', 'y']);
 
   /**
-     * get/set radius
-     * @name radius
-     * @method
-     * @memberof Konva.Ellipse.prototype
-     * @param {Object} radius
-     * @param {Number} radius.x
-     * @param {Number} radius.y
-     * @returns {Object}
-     * @example
-     * // get radius
-     * var radius = ellipse.radius();
-     *
-     * // set radius
-     * ellipse.radius({
-     *   x: 200,
-     *   y: 100
-     * });
-     */
+   * get/set radius
+   * @name radius
+   * @method
+   * @memberof Konva.Ellipse.prototype
+   * @param {Object} radius
+   * @param {Number} radius.x
+   * @param {Number} radius.y
+   * @returns {Object}
+   * @example
+   * // get radius
+   * var radius = ellipse.radius();
+   *
+   * // set radius
+   * ellipse.radius({
+   *   x: 200,
+   *   y: 100
+   * });
+   */
 
   Konva.Factory.addGetterSetter(Konva.Ellipse, 'radiusX', 0);
   /**
-     * get/set radius x
-     * @name radiusX
-     * @method
-     * @memberof Konva.Ellipse.prototype
-     * @param {Number} x
-     * @returns {Number}
-     * @example
-     * // get radius x
-     * var radiusX = ellipse.radiusX();
-     *
-     * // set radius x
-     * ellipse.radiusX(200);
-     */
+   * get/set radius x
+   * @name radiusX
+   * @method
+   * @memberof Konva.Ellipse.prototype
+   * @param {Number} x
+   * @returns {Number}
+   * @example
+   * // get radius x
+   * var radiusX = ellipse.radiusX();
+   *
+   * // set radius x
+   * ellipse.radiusX(200);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Ellipse, 'radiusY', 0);
   /**
-     * get/set radius y
-     * @name radiusY
-     * @method
-     * @memberof Konva.Ellipse.prototype
-     * @param {Number} y
-     * @returns {Number}
-     * @example
-     * // get radius y
-     * var radiusY = ellipse.radiusY();
-     *
-     * // set radius y
-     * ellipse.radiusY(200);
-     */
+   * get/set radius y
+   * @name radiusY
+   * @method
+   * @memberof Konva.Ellipse.prototype
+   * @param {Number} y
+   * @returns {Number}
+   * @example
+   * // get radius y
+   * var radiusY = ellipse.radiusY();
+   *
+   * // set radius y
+   * ellipse.radiusY(200);
+   */
 
   Konva.Collection.mapMethods(Konva.Ellipse);
 })();
@@ -13569,14 +13589,14 @@
   // the 0.0001 offset fixes a bug in Chrome 27
   var PIx2 = Math.PI * 2 - 0.0001;
   /**
-     * Ring constructor
-     * @constructor
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {Number} config.innerRadius
-     * @param {Number} config.outerRadius
-     * @param {Boolean} [config.clockwise]
-     * @param {String} [config.fill] fill color
+   * Ring constructor
+   * @constructor
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {Number} config.innerRadius
+   * @param {Number} config.outerRadius
+   * @param {Boolean} [config.clockwise]
+   * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -13627,7 +13647,7 @@
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
      * @param {Array} [config.dash]
      * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-     * @param {Number} [config.x]
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -13647,15 +13667,15 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * var ring = new Konva.Ring({
-     *   innerRadius: 40,
-     *   outerRadius: 80,
-     *   fill: 'red',
-     *   stroke: 'black',
-     *   strokeWidth: 5
-     * });
-     */
+   * @example
+   * var ring = new Konva.Ring({
+   *   innerRadius: 40,
+   *   outerRadius: 80,
+   *   fill: 'red',
+   *   stroke: 'black',
+   *   strokeWidth: 5
+   * });
+   */
   Konva.Ring = function(config) {
     this.___init(config);
   };
@@ -13710,36 +13730,36 @@
   Konva.Factory.addGetterSetter(Konva.Ring, 'innerRadius', 0);
 
   /**
-     * get/set innerRadius
-     * @name innerRadius
-     * @method
-     * @memberof Konva.Ring.prototype
-     * @param {Number} innerRadius
-     * @returns {Number}
-     * @example
-     * // get inner radius
-     * var innerRadius = ring.innerRadius();
-     *
-     * // set inner radius
-     * ring.innerRadius(20);
-     */
+   * get/set innerRadius
+   * @name innerRadius
+   * @method
+   * @memberof Konva.Ring.prototype
+   * @param {Number} innerRadius
+   * @returns {Number}
+   * @example
+   * // get inner radius
+   * var innerRadius = ring.innerRadius();
+   *
+   * // set inner radius
+   * ring.innerRadius(20);
+   */
   Konva.Factory.addGetter(Konva.Ring, 'outerRadius', 0);
   Konva.Factory.addOverloadedGetterSetter(Konva.Ring, 'outerRadius');
 
   /**
-     * get/set outerRadius
-     * @name outerRadius
-     * @method
-     * @memberof Konva.Ring.prototype
-     * @param {Number} outerRadius
-     * @returns {Number}
-     * @example
-     * // get outer radius
-     * var outerRadius = ring.outerRadius();
-     *
-     * // set outer radius
-     * ring.outerRadius(20);
-     */
+   * get/set outerRadius
+   * @name outerRadius
+   * @method
+   * @memberof Konva.Ring.prototype
+   * @param {Number} outerRadius
+   * @returns {Number}
+   * @example
+   * // get outer radius
+   * var outerRadius = ring.outerRadius();
+   *
+   * // set outer radius
+   * ring.outerRadius(20);
+   */
 
   Konva.Collection.mapMethods(Konva.Ring);
 })();
@@ -13747,14 +13767,14 @@
 (function() {
   'use strict';
   /**
-     * Wedge constructor
-     * @constructor
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {Number} config.angle in degrees
-     * @param {Number} config.radius
-     * @param {Boolean} [config.clockwise]
-     * @param {String} [config.fill] fill color
+   * Wedge constructor
+   * @constructor
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {Number} config.angle in degrees
+   * @param {Number} config.radius
+   * @param {Boolean} [config.clockwise]
+   * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -13805,7 +13825,7 @@
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
      * @param {Array} [config.dash]
      * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-     * @param {Number} [config.x]
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -13825,17 +13845,17 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * // draw a wedge that's pointing downwards
-     * var wedge = new Konva.Wedge({
-     *   radius: 40,
-     *   fill: 'red',
-     *   stroke: 'black'
-     *   strokeWidth: 5,
-     *   angleDeg: 60,
-     *   rotationDeg: -120
-     * });
-     */
+   * @example
+   * // draw a wedge that's pointing downwards
+   * var wedge = new Konva.Wedge({
+   *   radius: 40,
+   *   fill: 'red',
+   *   stroke: 'black'
+   *   strokeWidth: 5,
+   *   angleDeg: 60,
+   *   rotationDeg: -120
+   * });
+   */
   Konva.Wedge = function(config) {
     this.___init(config);
   };
@@ -13891,56 +13911,56 @@
   Konva.Factory.addGetterSetter(Konva.Wedge, 'radius', 0);
 
   /**
-     * get/set radius
-     * @name radius
-     * @method
-     * @memberof Konva.Wedge.prototype
-     * @param {Number} radius
-     * @returns {Number}
-     * @example
-     * // get radius
-     * var radius = wedge.radius();
-     *
-     * // set radius
-     * wedge.radius(10);
-     */
+   * get/set radius
+   * @name radius
+   * @method
+   * @memberof Konva.Wedge.prototype
+   * @param {Number} radius
+   * @returns {Number}
+   * @example
+   * // get radius
+   * var radius = wedge.radius();
+   *
+   * // set radius
+   * wedge.radius(10);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Wedge, 'angle', 0);
 
   /**
-     * get/set angle in degrees
-     * @name angle
-     * @method
-     * @memberof Konva.Wedge.prototype
-     * @param {Number} angle
-     * @returns {Number}
-     * @example
-     * // get angle
-     * var angle = wedge.angle();
-     *
-     * // set angle
-     * wedge.angle(20);
-     */
+   * get/set angle in degrees
+   * @name angle
+   * @method
+   * @memberof Konva.Wedge.prototype
+   * @param {Number} angle
+   * @returns {Number}
+   * @example
+   * // get angle
+   * var angle = wedge.angle();
+   *
+   * // set angle
+   * wedge.angle(20);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Wedge, 'clockwise', false);
 
   /**
-     * get/set clockwise flag
-     * @name clockwise
-     * @method
-     * @memberof Konva.Wedge.prototype
-     * @param {Number} clockwise
-     * @returns {Number}
-     * @example
-     * // get clockwise flag
-     * var clockwise = wedge.clockwise();
-     *
-     * // draw wedge counter-clockwise
-     * wedge.clockwise(false);
-     *
-     * // draw wedge clockwise
-     * wedge.clockwise(true);
-     */
+   * get/set clockwise flag
+   * @name clockwise
+   * @method
+   * @memberof Konva.Wedge.prototype
+   * @param {Number} clockwise
+   * @returns {Number}
+   * @example
+   * // get clockwise flag
+   * var clockwise = wedge.clockwise();
+   *
+   * // draw wedge counter-clockwise
+   * wedge.clockwise(false);
+   *
+   * // draw wedge clockwise
+   * wedge.clockwise(true);
+   */
 
   Konva.Factory.backCompat(Konva.Wedge, {
     angleDeg: 'angle',
@@ -13954,15 +13974,15 @@
 (function(Konva) {
   'use strict';
   /**
-     * Arc constructor
-     * @constructor
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {Number} config.angle in degrees
-     * @param {Number} config.innerRadius
-     * @param {Number} config.outerRadius
-     * @param {Boolean} [config.clockwise]
-     * @param {String} [config.fill] fill color
+   * Arc constructor
+   * @constructor
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {Number} config.angle in degrees
+   * @param {Number} config.innerRadius
+   * @param {Number} config.outerRadius
+   * @param {Boolean} [config.clockwise]
+   * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -14013,7 +14033,7 @@
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
      * @param {Array} [config.dash]
      * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-     * @param {Number} [config.x]
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -14033,18 +14053,18 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * // draw a Arc that's pointing downwards
-     * var arc = new Konva.Arc({
-     *   innerRadius: 40,
-     *   outerRadius: 80,
-     *   fill: 'red',
-     *   stroke: 'black'
-     *   strokeWidth: 5,
-     *   angle: 60,
-     *   rotationDeg: -120
-     * });
-     */
+   * @example
+   * // draw a Arc that's pointing downwards
+   * var arc = new Konva.Arc({
+   *   innerRadius: 40,
+   *   outerRadius: 80,
+   *   fill: 'red',
+   *   stroke: 'black'
+   *   strokeWidth: 5,
+   *   angle: 60,
+   *   rotationDeg: -120
+   * });
+   */
   Konva.Arc = function(config) {
     this.___init(config);
   };
@@ -14058,7 +14078,8 @@
       this.sceneFunc(this._sceneFunc);
     },
     _sceneFunc: function(context) {
-      var angle = Konva.getAngle(this.angle()), clockwise = this.clockwise();
+      var angle = Konva.getAngle(this.angle()),
+        clockwise = this.clockwise();
 
       context.beginPath();
       context.arc(0, 0, this.getOuterRadius(), 0, angle, clockwise);
@@ -14095,73 +14116,73 @@
   Konva.Factory.addGetterSetter(Konva.Arc, 'innerRadius', 0);
 
   /**
-     * get/set innerRadius
-     * @name innerRadius
-     * @method
-     * @memberof Konva.Arc.prototype
-     * @param {Number} innerRadius
-     * @returns {Number}
-     * @example
-     * // get inner radius
-     * var innerRadius = arc.innerRadius();
-     *
-     * // set inner radius
-     * arc.innerRadius(20);
-     */
+   * get/set innerRadius
+   * @name innerRadius
+   * @method
+   * @memberof Konva.Arc.prototype
+   * @param {Number} innerRadius
+   * @returns {Number}
+   * @example
+   * // get inner radius
+   * var innerRadius = arc.innerRadius();
+   *
+   * // set inner radius
+   * arc.innerRadius(20);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Arc, 'outerRadius', 0);
 
   /**
-     * get/set outerRadius
-     * @name outerRadius
-     * @method
-     * @memberof Konva.Arc.prototype
-     * @param {Number} outerRadius
-     * @returns {Number}
-     * @example
-     * // get outer radius
-     * var outerRadius = arc.outerRadius();
-     *
-     * // set outer radius
-     * arc.outerRadius(20);
-     */
+   * get/set outerRadius
+   * @name outerRadius
+   * @method
+   * @memberof Konva.Arc.prototype
+   * @param {Number} outerRadius
+   * @returns {Number}
+   * @example
+   * // get outer radius
+   * var outerRadius = arc.outerRadius();
+   *
+   * // set outer radius
+   * arc.outerRadius(20);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Arc, 'angle', 0);
 
   /**
-     * get/set angle in degrees
-     * @name angle
-     * @method
-     * @memberof Konva.Arc.prototype
-     * @param {Number} angle
-     * @returns {Number}
-     * @example
-     * // get angle
-     * var angle = arc.angle();
-     *
-     * // set angle
-     * arc.angle(20);
-     */
+   * get/set angle in degrees
+   * @name angle
+   * @method
+   * @memberof Konva.Arc.prototype
+   * @param {Number} angle
+   * @returns {Number}
+   * @example
+   * // get angle
+   * var angle = arc.angle();
+   *
+   * // set angle
+   * arc.angle(20);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Arc, 'clockwise', false);
 
   /**
-     * get/set clockwise flag
-     * @name clockwise
-     * @method
-     * @memberof Konva.Arc.prototype
-     * @param {Boolean} clockwise
-     * @returns {Boolean}
-     * @example
-     * // get clockwise flag
-     * var clockwise = arc.clockwise();
-     *
-     * // draw arc counter-clockwise
-     * arc.clockwise(false);
-     *
-     * // draw arc clockwise
-     * arc.clockwise(true);
-     */
+   * get/set clockwise flag
+   * @name clockwise
+   * @method
+   * @memberof Konva.Arc.prototype
+   * @param {Boolean} clockwise
+   * @returns {Boolean}
+   * @example
+   * // get clockwise flag
+   * var clockwise = arc.clockwise();
+   *
+   * // draw arc counter-clockwise
+   * arc.clockwise(false);
+   *
+   * // draw arc clockwise
+   * arc.clockwise(true);
+   */
 
   Konva.Collection.mapMethods(Konva.Arc);
 })(Konva);
@@ -14172,14 +14193,14 @@
   var IMAGE = 'Image';
 
   /**
-     * Image constructor
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {Image} config.image
-     * @param {Object} [config.crop]
-     * @param {String} [config.fill] fill color
+   * Image constructor
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {Image} config.image
+   * @param {Object} [config.crop]
+   * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -14230,7 +14251,7 @@
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
      * @param {Array} [config.dash]
      * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-     * @param {Number} [config.x]
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -14250,19 +14271,19 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * var imageObj = new Image();
-     * imageObj.onload = function() {
-     *   var image = new Konva.Image({
-     *     x: 200,
-     *     y: 50,
-     *     image: imageObj,
-     *     width: 100,
-     *     height: 100
-     *   });
-     * };
-     * imageObj.src = '/path/to/image.jpg'
-     */
+   * @example
+   * var imageObj = new Image();
+   * imageObj.onload = function() {
+   *   var image = new Konva.Image({
+   *     x: 200,
+   *     y: 50,
+   *     image: imageObj,
+   *     width: 100,
+   *     height: 100
+   *   });
+   * };
+   * imageObj.src = '/path/to/image.jpg'
+   */
   Konva.Image = function(config) {
     this.___init(config);
   };
@@ -14322,7 +14343,8 @@
       }
     },
     _hitFunc: function(context) {
-      var width = this.getWidth(), height = this.getHeight();
+      var width = this.getWidth(),
+        height = this.getHeight();
 
       context.beginPath();
       context.rect(0, 0, width, height);
@@ -14344,20 +14366,20 @@
   Konva.Factory.addGetterSetter(Konva.Image, 'image');
 
   /**
-     * set image
-     * @name setImage
-     * @method
-     * @memberof Konva.Image.prototype
-     * @param {Image} image
-     */
+   * set image
+   * @name setImage
+   * @method
+   * @memberof Konva.Image.prototype
+   * @param {Image} image
+   */
 
   /**
-     * get image
-     * @name getImage
-     * @method
-     * @memberof Konva.Image.prototype
-     * @returns {Image}
-     */
+   * get image
+   * @name getImage
+   * @method
+   * @memberof Konva.Image.prototype
+   * @returns {Image}
+   */
 
   Konva.Factory.addComponentsGetterSetter(Konva.Image, 'crop', [
     'x',
@@ -14366,108 +14388,108 @@
     'height'
   ]);
   /**
-     * get/set crop
-     * @method
-     * @name crop
-     * @memberof Konva.Image.prototype
-     * @param {Object} crop
-     * @param {Number} crop.x
-     * @param {Number} crop.y
-     * @param {Number} crop.width
-     * @param {Number} crop.height
-     * @returns {Object}
-     * @example
-     * // get crop
-     * var crop = image.crop();
-     *
-     * // set crop
-     * image.crop({
-     *   x: 20,
-     *   y: 20,
-     *   width: 20,
-     *   height: 20
-     * });
-     */
+   * get/set crop
+   * @method
+   * @name crop
+   * @memberof Konva.Image.prototype
+   * @param {Object} crop
+   * @param {Number} crop.x
+   * @param {Number} crop.y
+   * @param {Number} crop.width
+   * @param {Number} crop.height
+   * @returns {Object}
+   * @example
+   * // get crop
+   * var crop = image.crop();
+   *
+   * // set crop
+   * image.crop({
+   *   x: 20,
+   *   y: 20,
+   *   width: 20,
+   *   height: 20
+   * });
+   */
 
   Konva.Factory.addGetterSetter(Konva.Image, 'cropX', 0);
   /**
-     * get/set crop x
-     * @method
-     * @name cropX
-     * @memberof Konva.Image.prototype
-     * @param {Number} x
-     * @returns {Number}
-     * @example
-     * // get crop x
-     * var cropX = image.cropX();
-     *
-     * // set crop x
-     * image.cropX(20);
-     */
+   * get/set crop x
+   * @method
+   * @name cropX
+   * @memberof Konva.Image.prototype
+   * @param {Number} x
+   * @returns {Number}
+   * @example
+   * // get crop x
+   * var cropX = image.cropX();
+   *
+   * // set crop x
+   * image.cropX(20);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Image, 'cropY', 0);
   /**
-     * get/set crop y
-     * @name cropY
-     * @method
-     * @memberof Konva.Image.prototype
-     * @param {Number} y
-     * @returns {Number}
-     * @example
-     * // get crop y
-     * var cropY = image.cropY();
-     *
-     * // set crop y
-     * image.cropY(20);
-     */
+   * get/set crop y
+   * @name cropY
+   * @method
+   * @memberof Konva.Image.prototype
+   * @param {Number} y
+   * @returns {Number}
+   * @example
+   * // get crop y
+   * var cropY = image.cropY();
+   *
+   * // set crop y
+   * image.cropY(20);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Image, 'cropWidth', 0);
   /**
-     * get/set crop width
-     * @name cropWidth
-     * @method
-     * @memberof Konva.Image.prototype
-     * @param {Number} width
-     * @returns {Number}
-     * @example
-     * // get crop width
-     * var cropWidth = image.cropWidth();
-     *
-     * // set crop width
-     * image.cropWidth(20);
-     */
+   * get/set crop width
+   * @name cropWidth
+   * @method
+   * @memberof Konva.Image.prototype
+   * @param {Number} width
+   * @returns {Number}
+   * @example
+   * // get crop width
+   * var cropWidth = image.cropWidth();
+   *
+   * // set crop width
+   * image.cropWidth(20);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Image, 'cropHeight', 0);
   /**
-     * get/set crop height
-     * @name cropHeight
-     * @method
-     * @memberof Konva.Image.prototype
-     * @param {Number} height
-     * @returns {Number}
-     * @example
-     * // get crop height
-     * var cropHeight = image.cropHeight();
-     *
-     * // set crop height
-     * image.cropHeight(20);
-     */
+   * get/set crop height
+   * @name cropHeight
+   * @method
+   * @memberof Konva.Image.prototype
+   * @param {Number} height
+   * @returns {Number}
+   * @example
+   * // get crop height
+   * var cropHeight = image.cropHeight();
+   *
+   * // set crop height
+   * image.cropHeight(20);
+   */
 
   Konva.Collection.mapMethods(Konva.Image);
 
   /**
-     * load image from given url and create `Konva.Image` instance
-     * @method
-     * @memberof Konva.Image
-     * @param {String} url image source
-     * @param {Function} callback with Konva.Image instance as first argument
-     * @example
-     *  Konva.Image.fromURL(imageURL, function(image){
-     *    // image is Konva.Image instance
-     *    layer.add(image);
-     *    layer.draw();
-     *  });
-     */
+   * load image from given url and create `Konva.Image` instance
+   * @method
+   * @memberof Konva.Image
+   * @param {String} url image source
+   * @param {Function} callback with Konva.Image instance as first argument
+   * @example
+   *  Konva.Image.fromURL(imageURL, function(image){
+   *    // image is Konva.Image instance
+   *    layer.add(image);
+   *    layer.draw();
+   *  });
+   */
   Konva.Image.fromURL = function(url, callback) {
     var img = new Image();
     img.onload = function() {
@@ -15596,16 +15618,16 @@
 (function() {
   'use strict';
   /**
-     * Sprite constructor
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {String} config.animation animation key
-     * @param {Object} config.animations animation map
-     * @param {Integer} [config.frameIndex] animation frame index
-     * @param {Image} config.image image object
-     * @param {String} [config.fill] fill color
+   * Sprite constructor
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {String} config.animation animation key
+   * @param {Object} config.animations animation map
+   * @param {Integer} [config.frameIndex] animation frame index
+   * @param {Image} config.image image object
+   * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -15656,7 +15678,7 @@
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
      * @param {Array} [config.dash]
      * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-     * @param {Number} [config.x]
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -15676,40 +15698,40 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * var imageObj = new Image();
-     * imageObj.onload = function() {
-     *   var sprite = new Konva.Sprite({
-     *     x: 200,
-     *     y: 100,
-     *     image: imageObj,
-     *     animation: 'standing',
-     *     animations: {
-     *       standing: [
-     *         // x, y, width, height (6 frames)
-     *         0, 0, 49, 109,
-     *         52, 0, 49, 109,
-     *         105, 0, 49, 109,
-     *         158, 0, 49, 109,
-     *         210, 0, 49, 109,
-     *         262, 0, 49, 109
-     *       ],
-     *       kicking: [
-     *         // x, y, width, height (6 frames)
-     *         0, 109, 45, 98,
-     *         45, 109, 45, 98,
-     *         95, 109, 63, 98,
-     *         156, 109, 70, 98,
-     *         229, 109, 60, 98,
-     *         287, 109, 41, 98
-     *       ]
-     *     },
-     *     frameRate: 7,
-     *     frameIndex: 0
-     *   });
-     * };
-     * imageObj.src = '/path/to/image.jpg'
-     */
+   * @example
+   * var imageObj = new Image();
+   * imageObj.onload = function() {
+   *   var sprite = new Konva.Sprite({
+   *     x: 200,
+   *     y: 100,
+   *     image: imageObj,
+   *     animation: 'standing',
+   *     animations: {
+   *       standing: [
+   *         // x, y, width, height (6 frames)
+   *         0, 0, 49, 109,
+   *         52, 0, 49, 109,
+   *         105, 0, 49, 109,
+   *         158, 0, 49, 109,
+   *         210, 0, 49, 109,
+   *         262, 0, 49, 109
+   *       ],
+   *       kicking: [
+   *         // x, y, width, height (6 frames)
+   *         0, 109, 45, 98,
+   *         45, 109, 45, 98,
+   *         95, 109, 63, 98,
+   *         156, 109, 70, 98,
+   *         229, 109, 60, 98,
+   *         287, 109, 41, 98
+   *       ]
+   *     },
+   *     frameRate: 7,
+   *     frameIndex: 0
+   *   });
+   * };
+   * imageObj.src = '/path/to/image.jpg'
+   */
   Konva.Sprite = function(config) {
     this.___init(config);
   };
@@ -15768,7 +15790,8 @@
 
       if (image) {
         if (offsets) {
-          var offset = offsets[anim], ix2 = index * 2;
+          var offset = offsets[anim],
+            ix2 = index * 2;
           context.drawImage(
             image,
             x,
@@ -15818,10 +15841,10 @@
       }, 1000 / this.getFrameRate());
     },
     /**
-         * start sprite animation
-         * @method
-         * @memberof Konva.Sprite.prototype
-         */
+     * start sprite animation
+     * @method
+     * @memberof Konva.Sprite.prototype
+     */
     start: function() {
       var layer = this.getLayer();
 
@@ -15836,20 +15859,20 @@
       this.anim.start();
     },
     /**
-         * stop sprite animation
-         * @method
-         * @memberof Konva.Sprite.prototype
-         */
+     * stop sprite animation
+     * @method
+     * @memberof Konva.Sprite.prototype
+     */
     stop: function() {
       this.anim.stop();
       clearInterval(this.interval);
     },
     /**
-         * determine if animation of sprite is running or not.  returns true or false
-         * @method
-         * @memberof Konva.Animation.prototype
-         * @returns {Boolean}
-         */
+     * determine if animation of sprite is running or not.  returns true or false
+     * @method
+     * @memberof Konva.Animation.prototype
+     * @returns {Boolean}
+     */
     isRunning: function() {
       return this.anim.isRunning();
     },
@@ -15873,144 +15896,144 @@
   Konva.Factory.addGetterSetter(Konva.Sprite, 'animation');
 
   /**
-     * get/set animation key
-     * @name animation
-     * @method
-     * @memberof Konva.Sprite.prototype
-     * @param {String} anim animation key
-     * @returns {String}
-     * @example
-     * // get animation key
-     * var animation = sprite.animation();
-     *
-     * // set animation key
-     * sprite.animation('kicking');
-     */
+   * get/set animation key
+   * @name animation
+   * @method
+   * @memberof Konva.Sprite.prototype
+   * @param {String} anim animation key
+   * @returns {String}
+   * @example
+   * // get animation key
+   * var animation = sprite.animation();
+   *
+   * // set animation key
+   * sprite.animation('kicking');
+   */
 
   Konva.Factory.addGetterSetter(Konva.Sprite, 'animations');
 
   /**
-     * get/set animations map
-     * @name animations
-     * @method
-     * @memberof Konva.Sprite.prototype
-     * @param {Object} animations
-     * @returns {Object}
-     * @example
-     * // get animations map
-     * var animations = sprite.animations();
-     *
-     * // set animations map
-     * sprite.animations({
-     *   standing: [
-     *     // x, y, width, height (6 frames)
-     *     0, 0, 49, 109,
-     *     52, 0, 49, 109,
-     *     105, 0, 49, 109,
-     *     158, 0, 49, 109,
-     *     210, 0, 49, 109,
-     *     262, 0, 49, 109
-     *   ],
-     *   kicking: [
-     *     // x, y, width, height (6 frames)
-     *     0, 109, 45, 98,
-     *     45, 109, 45, 98,
-     *     95, 109, 63, 98,
-     *     156, 109, 70, 98,
-     *     229, 109, 60, 98,
-     *     287, 109, 41, 98
-     *   ]
-     * });
-     */
+   * get/set animations map
+   * @name animations
+   * @method
+   * @memberof Konva.Sprite.prototype
+   * @param {Object} animations
+   * @returns {Object}
+   * @example
+   * // get animations map
+   * var animations = sprite.animations();
+   *
+   * // set animations map
+   * sprite.animations({
+   *   standing: [
+   *     // x, y, width, height (6 frames)
+   *     0, 0, 49, 109,
+   *     52, 0, 49, 109,
+   *     105, 0, 49, 109,
+   *     158, 0, 49, 109,
+   *     210, 0, 49, 109,
+   *     262, 0, 49, 109
+   *   ],
+   *   kicking: [
+   *     // x, y, width, height (6 frames)
+   *     0, 109, 45, 98,
+   *     45, 109, 45, 98,
+   *     95, 109, 63, 98,
+   *     156, 109, 70, 98,
+   *     229, 109, 60, 98,
+   *     287, 109, 41, 98
+   *   ]
+   * });
+   */
 
   Konva.Factory.addGetterSetter(Konva.Sprite, 'frameOffsets');
 
   /**
-    * get/set offsets map
-    * @name offsets
-    * @method
-    * @memberof Konva.Sprite.prototype
-    * @param {Object} offsets
-    * @returns {Object}
-    * @example
-    * // get offsets map
-    * var offsets = sprite.offsets();
-    *
-    * // set offsets map
-    * sprite.offsets({
-    *   standing: [
-    *     // x, y (6 frames)
-    *     0, 0,
-    *     0, 0,
-    *     5, 0,
-    *     0, 0,
-    *     0, 3,
-    *     2, 0
-    *   ],
-    *   kicking: [
-    *     // x, y (6 frames)
-    *     0, 5,
-    *     5, 0,
-    *     10, 0,
-    *     0, 0,
-    *     2, 1,
-    *     0, 0
-    *   ]
-    * });
-    */
+   * get/set offsets map
+   * @name offsets
+   * @method
+   * @memberof Konva.Sprite.prototype
+   * @param {Object} offsets
+   * @returns {Object}
+   * @example
+   * // get offsets map
+   * var offsets = sprite.offsets();
+   *
+   * // set offsets map
+   * sprite.offsets({
+   *   standing: [
+   *     // x, y (6 frames)
+   *     0, 0,
+   *     0, 0,
+   *     5, 0,
+   *     0, 0,
+   *     0, 3,
+   *     2, 0
+   *   ],
+   *   kicking: [
+   *     // x, y (6 frames)
+   *     0, 5,
+   *     5, 0,
+   *     10, 0,
+   *     0, 0,
+   *     2, 1,
+   *     0, 0
+   *   ]
+   * });
+   */
 
   Konva.Factory.addGetterSetter(Konva.Sprite, 'image');
 
   /**
-     * get/set image
-     * @name image
-     * @method
-     * @memberof Konva.Sprite.prototype
-     * @param {Image} image
-     * @returns {Image}
-     * @example
-     * // get image
-     * var image = sprite.image();
-     *
-     * // set image
-     * sprite.image(imageObj);
-     */
+   * get/set image
+   * @name image
+   * @method
+   * @memberof Konva.Sprite.prototype
+   * @param {Image} image
+   * @returns {Image}
+   * @example
+   * // get image
+   * var image = sprite.image();
+   *
+   * // set image
+   * sprite.image(imageObj);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Sprite, 'frameIndex', 0);
 
   /**
-     * set/set animation frame index
-     * @name frameIndex
-     * @method
-     * @memberof Konva.Sprite.prototype
-     * @param {Integer} frameIndex
-     * @returns {Integer}
-     * @example
-     * // get animation frame index
-     * var frameIndex = sprite.frameIndex();
-     *
-     * // set animation frame index
-     * sprite.frameIndex(3);
-     */
+   * set/set animation frame index
+   * @name frameIndex
+   * @method
+   * @memberof Konva.Sprite.prototype
+   * @param {Integer} frameIndex
+   * @returns {Integer}
+   * @example
+   * // get animation frame index
+   * var frameIndex = sprite.frameIndex();
+   *
+   * // set animation frame index
+   * sprite.frameIndex(3);
+   */
 
   Konva.Factory.addGetterSetter(Konva.Sprite, 'frameRate', 17);
 
   /**
-     * get/set frame rate in frames per second.  Increase this number to make the sprite
-     *  animation run faster, and decrease the number to make the sprite animation run slower
-     *  The default is 17 frames per second
-     * @name frameRate
-     * @method
-     * @memberof Konva.Sprite.prototype
-     * @param {Integer} frameRate
-     * @returns {Integer}
-     * @example
-     * // get frame rate
-     * var frameRate = sprite.frameRate();
-     *
-     * // set frame rate to 2 frames per second
-     * sprite.frameRate(2);
-     */
+   * get/set frame rate in frames per second.  Increase this number to make the sprite
+   *  animation run faster, and decrease the number to make the sprite animation run slower
+   *  The default is 17 frames per second
+   * @name frameRate
+   * @method
+   * @memberof Konva.Sprite.prototype
+   * @param {Integer} frameRate
+   * @returns {Integer}
+   * @example
+   * // get frame rate
+   * var frameRate = sprite.frameRate();
+   *
+   * // set frame rate to 2 frames per second
+   * sprite.frameRate(2);
+   */
 
   Konva.Factory.backCompat(Konva.Sprite, {
     index: 'frameIndex',
@@ -17487,6 +17510,26 @@
   Konva.Util.extend(Konva.TextPath, Konva.Shape);
 
   // add setters and getters
+  Konva.Factory.addGetterSetter(Konva.TextPath, 'data');
+
+  /**
+   * set SVG path data string.  This method
+   *  also automatically parses the data string
+   *  into a data array.  Currently supported SVG data:
+   *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
+   * @name setData
+   * @method
+   * @memberof Konva.TextPath.prototype
+   * @param {String} SVG path command string
+   */
+
+  /**
+   * get SVG path data string
+   * @name getData
+   * @method
+   * @memberof Konva.TextPath.prototype
+   */
+
   Konva.Factory.addGetterSetter(Konva.TextPath, 'fontFamily', 'Arial');
 
   /**
@@ -17627,14 +17670,14 @@
 (function() {
   'use strict';
   /**
-     * RegularPolygon constructor.&nbsp; Examples include triangles, squares, pentagons, hexagons, etc.
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {Number} config.sides
-     * @param {Number} config.radius
-     * @param {String} [config.fill] fill color
+   * RegularPolygon constructor.&nbsp; Examples include triangles, squares, pentagons, hexagons, etc.
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {Number} config.sides
+   * @param {Number} config.radius
+   * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -17685,7 +17728,7 @@
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
      * @param {Array} [config.dash]
      * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-     * @param {Number} [config.x]
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -17705,17 +17748,17 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * var hexagon = new Konva.RegularPolygon({
-     *   x: 100,
-     *   y: 200,
-     *   sides: 6,
-     *   radius: 70,
-     *   fill: 'red',
-     *   stroke: 'black',
-     *   strokeWidth: 4
-     * });
-     */
+   * @example
+   * var hexagon = new Konva.RegularPolygon({
+   *   x: 100,
+   *   y: 200,
+   *   sides: 6,
+   *   radius: 70,
+   *   fill: 'red',
+   *   stroke: 'black',
+   *   strokeWidth: 4
+   * });
+   */
   Konva.RegularPolygon = function(config) {
     this.___init(config);
   };
@@ -17729,7 +17772,11 @@
       this.sceneFunc(this._sceneFunc);
     },
     _sceneFunc: function(context) {
-      var sides = this.attrs.sides, radius = this.attrs.radius, n, x, y;
+      var sides = this.attrs.sides,
+        radius = this.attrs.radius,
+        n,
+        x,
+        y;
 
       context.beginPath();
       context.moveTo(0, 0 - radius);
@@ -17770,36 +17817,36 @@
   Konva.Factory.addGetterSetter(Konva.RegularPolygon, 'radius', 0);
 
   /**
-     * set radius
-     * @name setRadius
-     * @method
-     * @memberof Konva.RegularPolygon.prototype
-     * @param {Number} radius
-     */
+   * set radius
+   * @name setRadius
+   * @method
+   * @memberof Konva.RegularPolygon.prototype
+   * @param {Number} radius
+   */
 
   /**
-     * get radius
-     * @name getRadius
-     * @method
-     * @memberof Konva.RegularPolygon.prototype
-     */
+   * get radius
+   * @name getRadius
+   * @method
+   * @memberof Konva.RegularPolygon.prototype
+   */
 
   Konva.Factory.addGetterSetter(Konva.RegularPolygon, 'sides', 0);
 
   /**
-     * set number of sides
-     * @name setSides
-     * @method
-     * @memberof Konva.RegularPolygon.prototype
-     * @param {int} sides
-     */
+   * set number of sides
+   * @name setSides
+   * @method
+   * @memberof Konva.RegularPolygon.prototype
+   * @param {int} sides
+   */
 
   /**
-     * get number of sides
-     * @name getSides
-     * @method
-     * @memberof Konva.RegularPolygon.prototype
-     */
+   * get number of sides
+   * @name getSides
+   * @method
+   * @memberof Konva.RegularPolygon.prototype
+   */
 
   Konva.Collection.mapMethods(Konva.RegularPolygon);
 })();
@@ -17807,15 +17854,15 @@
 (function() {
   'use strict';
   /**
-     * Star constructor
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {Integer} config.numPoints
-     * @param {Number} config.innerRadius
-     * @param {Number} config.outerRadius
-     * @param {String} [config.fill] fill color
+   * Star constructor
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {Integer} config.numPoints
+   * @param {Number} config.innerRadius
+   * @param {Number} config.outerRadius
+   * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
      * @param {Number} [config.fillPatternY]
@@ -17866,7 +17913,7 @@
      * @param {Boolean} [config.shadowEnabled] flag which enables or disables the shadow.  The default value is true
      * @param {Array} [config.dash]
      * @param {Boolean} [config.dashEnabled] flag which enables or disables the dashArray.  The default value is true
-     * @param {Number} [config.x]
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -17886,18 +17933,18 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * var star = new Konva.Star({
-     *   x: 100,
-     *   y: 200,
-     *   numPoints: 5,
-     *   innerRadius: 70,
-     *   outerRadius: 70,
-     *   fill: 'red',
-     *   stroke: 'black',
-     *   strokeWidth: 4
-     * });
-     */
+   * @example
+   * var star = new Konva.Star({
+   *   x: 100,
+   *   y: 200,
+   *   numPoints: 5,
+   *   innerRadius: 70,
+   *   outerRadius: 70,
+   *   fill: 'red',
+   *   stroke: 'black',
+   *   strokeWidth: 4
+   * });
+   */
   Konva.Star = function(config) {
     this.___init(config);
   };
@@ -17957,53 +18004,53 @@
   Konva.Factory.addGetterSetter(Konva.Star, 'numPoints', 5);
 
   /**
-     * set number of points
-     * @name setNumPoints
-     * @method
-     * @memberof Konva.Star.prototype
-     * @param {Integer} points
-     */
+   * set number of points
+   * @name setNumPoints
+   * @method
+   * @memberof Konva.Star.prototype
+   * @param {Integer} points
+   */
 
   /**
-     * get number of points
-     * @name getNumPoints
-     * @method
-     * @memberof Konva.Star.prototype
-     */
+   * get number of points
+   * @name getNumPoints
+   * @method
+   * @memberof Konva.Star.prototype
+   */
 
   Konva.Factory.addGetterSetter(Konva.Star, 'innerRadius', 0);
 
   /**
-     * set inner radius
-     * @name setInnerRadius
-     * @method
-     * @memberof Konva.Star.prototype
-     * @param {Number} radius
-     */
+   * set inner radius
+   * @name setInnerRadius
+   * @method
+   * @memberof Konva.Star.prototype
+   * @param {Number} radius
+   */
 
   /**
-     * get inner radius
-     * @name getInnerRadius
-     * @method
-     * @memberof Konva.Star.prototype
-     */
+   * get inner radius
+   * @name getInnerRadius
+   * @method
+   * @memberof Konva.Star.prototype
+   */
 
   Konva.Factory.addGetterSetter(Konva.Star, 'outerRadius', 0);
 
   /**
-     * set outer radius
-     * @name setOuterRadius
-     * @method
-     * @memberof Konva.Star.prototype
-     * @param {Number} radius
-     */
+   * set outer radius
+   * @name setOuterRadius
+   * @method
+   * @memberof Konva.Star.prototype
+   * @param {Number} radius
+   */
 
   /**
-     * get outer radius
-     * @name getOuterRadius
-     * @method
-     * @memberof Konva.Star.prototype
-     */
+   * get outer radius
+   * @name getOuterRadius
+   * @method
+   * @memberof Konva.Star.prototype
+   */
 
   Konva.Collection.mapMethods(Konva.Star);
 })();
@@ -18012,14 +18059,14 @@
   'use strict';
   // constants
   var ATTR_CHANGE_LIST = [
-    'fontFamily',
-    'fontSize',
-    'fontStyle',
-    'padding',
-    'lineHeight',
-    'text',
-    'width'
-  ],
+      'fontFamily',
+      'fontSize',
+      'fontStyle',
+      'padding',
+      'lineHeight',
+      'text',
+      'width'
+    ],
     CHANGE_KONVA = 'Change.konva',
     NONE = 'none',
     UP = 'up',
@@ -18031,11 +18078,11 @@
     attrChangeListLen = ATTR_CHANGE_LIST.length;
 
   /**
-     * Label constructor.&nbsp; Labels are groups that contain a Text and Tag shape
-     * @constructor
-     * @memberof Konva
-     * @param {Object} config
-     * @param {Number} [config.x]
+   * Label constructor.&nbsp; Labels are groups that contain a Text and Tag shape
+   * @constructor
+   * @memberof Konva
+   * @param {Object} config
+   * @param {Number} [config.x]
      * @param {Number} [config.y]
      * @param {Number} [config.width]
      * @param {Number} [config.height]
@@ -18055,38 +18102,38 @@
      *  the entire stage by dragging any portion of the stage
      * @param {Number} [config.dragDistance]
      * @param {Function} [config.dragBoundFunc]
-     * @example
-     * // create label
-     * var label = new Konva.Label({
-     *   x: 100,
-     *   y: 100,
-     *   draggable: true
-     * });
-     *
-     * // add a tag to the label
-     * label.add(new Konva.Tag({
-     *   fill: '#bbb',
-     *   stroke: '#333',
-     *   shadowColor: 'black',
-     *   shadowBlur: 10,
-     *   shadowOffset: [10, 10],
-     *   shadowOpacity: 0.2,
-     *   lineJoin: 'round',
-     *   pointerDirection: 'up',
-     *   pointerWidth: 20,
-     *   pointerHeight: 20,
-     *   cornerRadius: 5
-     * }));
-     *
-     * // add text to the label
-     * label.add(new Konva.Text({
-     *   text: 'Hello World!',
-     *   fontSize: 50,
-     *   lineHeight: 1.2,
-     *   padding: 10,
-     *   fill: 'green'
-     *  }));
-     */
+   * @example
+   * // create label
+   * var label = new Konva.Label({
+   *   x: 100,
+   *   y: 100,
+   *   draggable: true
+   * });
+   *
+   * // add a tag to the label
+   * label.add(new Konva.Tag({
+   *   fill: '#bbb',
+   *   stroke: '#333',
+   *   shadowColor: 'black',
+   *   shadowBlur: 10,
+   *   shadowOffset: [10, 10],
+   *   shadowOpacity: 0.2,
+   *   lineJoin: 'round',
+   *   pointerDirection: 'up',
+   *   pointerWidth: 20,
+   *   pointerHeight: 20,
+   *   cornerRadius: 5
+   * }));
+   *
+   * // add text to the label
+   * label.add(new Konva.Text({
+   *   text: 'Hello World!',
+   *   fontSize: 50,
+   *   lineHeight: 1.2,
+   *   padding: 10,
+   *   fill: 'green'
+   *  }));
+   */
   Konva.Label = function(config) {
     this.____init(config);
   };
@@ -18104,27 +18151,28 @@
       });
     },
     /**
-         * get Text shape for the label.  You need to access the Text shape in order to update
-         * the text properties
-         * @name getText
-         * @method
-         * @memberof Konva.Label.prototype
-         */
+     * get Text shape for the label.  You need to access the Text shape in order to update
+     * the text properties
+     * @name getText
+     * @method
+     * @memberof Konva.Label.prototype
+     */
     getText: function() {
       return this.find('Text')[0];
     },
     /**
-         * get Tag shape for the label.  You need to access the Tag shape in order to update
-         * the pointer properties and the corner radius
-         * @name getTag
-         * @method
-         * @memberof Konva.Label.prototype
-         */
+     * get Tag shape for the label.  You need to access the Tag shape in order to update
+     * the pointer properties and the corner radius
+     * @name getTag
+     * @method
+     * @memberof Konva.Label.prototype
+     */
     getTag: function() {
       return this.find('Tag')[0];
     },
     _addListeners: function(text) {
-      var that = this, n;
+      var that = this,
+        n;
       var func = function() {
         that._sync();
       };
@@ -18199,17 +18247,17 @@
   Konva.Collection.mapMethods(Konva.Label);
 
   /**
-     * Tag constructor.&nbsp; A Tag can be configured
-     *  to have a pointer element that points up, right, down, or left
-     * @constructor
-     * @memberof Konva
-     * @param {Object} config
-     * @param {String} [config.pointerDirection] can be up, right, down, left, or none; the default
-     *  is none.  When a pointer is present, the positioning of the label is relative to the tip of the pointer.
-     * @param {Number} [config.pointerWidth]
-     * @param {Number} [config.pointerHeight]
-     * @param {Number} [config.cornerRadius]
-     */
+   * Tag constructor.&nbsp; A Tag can be configured
+   *  to have a pointer element that points up, right, down, or left
+   * @constructor
+   * @memberof Konva
+   * @param {Object} config
+   * @param {String} [config.pointerDirection] can be up, right, down, left, or none; the default
+   *  is none.  When a pointer is present, the positioning of the label is relative to the tip of the pointer.
+   * @param {Number} [config.pointerWidth]
+   * @param {Number} [config.pointerHeight]
+   * @param {Number} [config.cornerRadius]
+   */
   Konva.Tag = function(config) {
     this.___init(config);
   };
@@ -18350,71 +18398,71 @@
   Konva.Factory.addGetterSetter(Konva.Tag, 'pointerDirection', NONE);
 
   /**
-     * set pointer Direction
-     * @name setPointerDirection
-     * @method
-     * @memberof Konva.Tag.prototype
-     * @param {String} pointerDirection can be up, right, down, left, or none.  The
-     *  default is none
-     */
+   * set pointer Direction
+   * @name setPointerDirection
+   * @method
+   * @memberof Konva.Tag.prototype
+   * @param {String} pointerDirection can be up, right, down, left, or none.  The
+   *  default is none
+   */
 
   /**
-     * get pointer Direction
-     * @name getPointerDirection
-     * @method
-     * @memberof Konva.Tag.prototype
-     */
+   * get pointer Direction
+   * @name getPointerDirection
+   * @method
+   * @memberof Konva.Tag.prototype
+   */
 
   Konva.Factory.addGetterSetter(Konva.Tag, 'pointerWidth', 0);
 
   /**
-     * set pointer width
-     * @name setPointerWidth
-     * @method
-     * @memberof Konva.Tag.prototype
-     * @param {Number} pointerWidth
-     */
+   * set pointer width
+   * @name setPointerWidth
+   * @method
+   * @memberof Konva.Tag.prototype
+   * @param {Number} pointerWidth
+   */
 
   /**
-     * get pointer width
-     * @name getPointerWidth
-     * @method
-     * @memberof Konva.Tag.prototype
-     */
+   * get pointer width
+   * @name getPointerWidth
+   * @method
+   * @memberof Konva.Tag.prototype
+   */
 
   Konva.Factory.addGetterSetter(Konva.Tag, 'pointerHeight', 0);
 
   /**
-     * set pointer height
-     * @name setPointerHeight
-     * @method
-     * @memberof Konva.Tag.prototype
-     * @param {Number} pointerHeight
-     */
+   * set pointer height
+   * @name setPointerHeight
+   * @method
+   * @memberof Konva.Tag.prototype
+   * @param {Number} pointerHeight
+   */
 
   /**
-     * get pointer height
-     * @name getPointerHeight
-     * @method
-     * @memberof Konva.Tag.prototype
-     */
+   * get pointer height
+   * @name getPointerHeight
+   * @method
+   * @memberof Konva.Tag.prototype
+   */
 
   Konva.Factory.addGetterSetter(Konva.Tag, 'cornerRadius', 0);
 
   /**
-     * set corner radius
-     * @name setCornerRadius
-     * @method
-     * @memberof Konva.Tag.prototype
-     * @param {Number} corner radius
-     */
+   * set corner radius
+   * @name setCornerRadius
+   * @method
+   * @memberof Konva.Tag.prototype
+   * @param {Number} corner radius
+   */
 
   /**
-     * get corner radius
-     * @name getCornerRadius
-     * @method
-     * @memberof Konva.Tag.prototype
-     */
+   * get corner radius
+   * @name getCornerRadius
+   * @method
+   * @memberof Konva.Tag.prototype
+   */
 
   Konva.Collection.mapMethods(Konva.Tag);
 })();

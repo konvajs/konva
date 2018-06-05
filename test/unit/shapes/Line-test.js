@@ -286,6 +286,29 @@ suite('Line', function() {
     });
   });
 
+  // TODO: FIX IT!!!
+  test.skip('getClientRect rotated', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var line = new Konva.Line({
+      x: 20,
+      y: 20,
+      rotation: 45,
+      points: [0, 0, 50, 50],
+      closed: true,
+      stroke: '#0f0'
+    });
+    layer.add(line);
+    stage.add(layer);
+
+    var rect = line.getClientRect();
+    assert.equal(rect.x, 19, 'check x');
+    assert.equal(rect.y, 19, 'check y');
+    // assert.equal(rect.width, 2, 'check width');
+    assert.equal(rect.height, 52, 'check height');
+  });
+
   test('line caching', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
