@@ -38,7 +38,7 @@ echo "commit change log updates"
 git commit -am "update CHANGELOG with new version" --allow-empty
 
 echo "npm version $1 --no-git-tag-version"
-npm version $1 --no-git-tag-version
+npm version $1 --no-git-tag-version --allow-same-version
 
 echo "build for $1"
 npm run build
