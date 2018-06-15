@@ -834,6 +834,7 @@ declare namespace Konva {
     closed?: boolean;
     pointerLength?: number;
     pointerWidth?: number;
+    pointerAtBeginning?: boolean;
   }
 
   class Arrow extends Shape {
@@ -1059,6 +1060,7 @@ declare namespace Konva {
     keepRatio?: boolean;
     enabledHandlers?: Array<string>;
     node?: Rect;
+    boundBoxFunc?: (oldBox: SizeConfig, newBox: SizeConfig) => SizeConfig;
   }
 
   class Transformer extends Container {
