@@ -48,11 +48,11 @@ echo "update CDN link in REAME"
 perl -i -pe "s|${old_cdn_min}|${new_cdn_min}|g" ./README.md
 git commit -am "update cdn link" --allow-empty
 
+echo "generate documentation"
+npm start api
+
 echo "create new git tag"
 git tag $1
-
-echo "generate documentation"
-npm run api
 
 echo "archive documentation"
 zip -r konva-v${new_version}-documentation.zip ./api/*
