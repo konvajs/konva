@@ -23,7 +23,7 @@ This repository began as a GitHub fork of [ericdrowell/KineticJS](https://github
 # Quick Look
 
 ```html
-<script src="https://cdn.rawgit.com/konvajs/konva/2.1.4/konva.min.js"></script>
+<script src="https://cdn.rawgit.com/konvajs/konva/2.1.5/konva.min.js"></script>
 <div id="container"></div>
 <script>
     var stage = new Konva.Stage({
