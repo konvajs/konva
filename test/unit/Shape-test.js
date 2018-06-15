@@ -1444,4 +1444,35 @@ suite('Shape', function() {
       compareLayers(layer1, layer2, 30);
     }
   });
+
+  // ======================================================
+  test('sceneFunc and hitFunc should have shape as second argument', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var shape = new Konva.Shape({
+      sceneFunc: function(context, shape) {
+        assert.equal(this, shape);
+        context.beginPath();
+        context.moveTo(0, 0);
+        context.lineTo(100, 0);
+        context.lineTo(100, 100);
+        context.closePath();
+        context.fillStrokeShape(shape);
+      },
+      x: 200,
+      y: 100,
+      fill: 'green',
+      stroke: 'blue',
+      strokeWidth: 5
+    });
+    layer.add(shape);
+
+    var rect = new Konva.Rect({
+      hitFunc: function(ctx, shape) {
+        assert.equal(this, shape);
+      }
+    });
+    layer.add(rect);
+    stage.add(layer);
+  });
 });
