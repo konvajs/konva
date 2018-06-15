@@ -8435,13 +8435,14 @@
    *   y: 10,
    *   fill: 'red',
    *   // a Konva.Canvas renderer is passed into the sceneFunc function
-   *   sceneFunc: function(context) {
+   *   sceneFunc: function(context, shape) {
    *     context.beginPath();
    *     context.moveTo(200, 50);
    *     context.lineTo(420, 80);
    *     context.quadraticCurveTo(300, 100, 260, 170);
    *     context.closePath();
-   *     context.fillStrokeShape(this);
+   *     // Konva specific method
+   *     context.fillStrokeShape(shape);
    *   }
    *});
    */
@@ -8736,7 +8737,7 @@
           }
         }
 
-        drawFunc.call(this, bufferContext);
+        drawFunc.call(this, bufferContext, this);
         bufferContext.restore();
 
         var ratio = bufferCanvas.pixelRatio;
@@ -8787,13 +8788,13 @@
           }
           context._applyShadow(this);
 
-          drawFunc.call(this, context);
+          drawFunc.call(this, context, this);
           context.restore();
           // if shape has stroke we need to redraw shape
           // otherwise we will see a shadow under stroke (and over fill)
           // but I think this is unexpected behavior
           if (this.hasFill() && this.getShadowForStrokeEnabled()) {
-            drawFunc.call(this, context);
+            drawFunc.call(this, context, this);
           }
         } else if (hasShadow && !canvas.hitCanvas) {
           context.save();
@@ -8802,14 +8803,14 @@
             context._applyGlobalCompositeOperation(this);
           }
           context._applyShadow(this);
-          drawFunc.call(this, context);
+          drawFunc.call(this, context, this);
           context.restore();
         } else {
           if (!caching) {
             context._applyOpacity(this);
             context._applyGlobalCompositeOperation(this);
           }
-          drawFunc.call(this, context);
+          drawFunc.call(this, context, this);
         }
       }
       context.restore();
@@ -8849,7 +8850,7 @@
           context.transform(o[0], o[1], o[2], o[3], o[4], o[5]);
         }
       }
-      drawFunc.call(this, context);
+      drawFunc.call(this, context, this);
       context.restore();
       return this;
     },

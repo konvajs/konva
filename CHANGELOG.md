@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+## [2.1.5][2018-06-15]
+
 ## Fixed
 
 * Typescript fixes
