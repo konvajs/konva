@@ -1101,4 +1101,36 @@ suite('Transformer', function() {
     // assert.equal(rect.height() * rect.scaleY(), 100);
     // assert.equal(rect.rotation(), rect.rotation());
   });
+
+  test('test cache reset on attach', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 20,
+      y: 20,
+      draggable: true,
+      width: 150,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer();
+    layer.add(tr);
+
+    // make draw to set all caches
+    layer.draw();
+    // then attach
+    tr.attachTo(rect);
+
+    layer.draw();
+
+    var shape = layer.getIntersection({
+      x: 20,
+      y: 20
+    });
+    assert.equal(shape.name(), 'top-left');
+  });
 });

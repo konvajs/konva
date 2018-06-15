@@ -176,7 +176,7 @@
         this.detach();
       }
       this._node = node;
-      this._clearCache(NODE_RECT);
+      this._resetTransformCache();
 
       node.on(TRANSFORM_CHANGE_STR, this._resetTransformCache.bind(this));
       node.on(

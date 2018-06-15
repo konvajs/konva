@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.1.3
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Tue Jun 05 2018
+ * Date: Fri Jun 15 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -18879,7 +18879,7 @@
         this.detach();
       }
       this._node = node;
-      this._clearCache(NODE_RECT);
+      this._resetTransformCache();
 
       node.on(TRANSFORM_CHANGE_STR, this._resetTransformCache.bind(this));
       node.on(
