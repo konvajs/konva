@@ -60,11 +60,13 @@
     return isType(object, TYPE_CONTEXT);
   }
   function isImageData(object) {
-    return !!(object &&
+    return !!(
+      object &&
       isType(object, TYPE_IMAGE_DATA) &&
       typeof object.width !== UNDEFINED &&
       typeof object.height !== UNDEFINED &&
-      typeof object.data !== UNDEFINED);
+      typeof object.data !== UNDEFINED
+    );
   }
   function isImageType(object) {
     return (
@@ -116,7 +118,8 @@
     }
   }
   function toImageDataFromImage(image) {
-    var height = image.height, width = image.width;
+    var height = image.height,
+      width = image.width;
     canvas.width = width;
     canvas.height = height;
     context.clearRect(0, 0, width, height);
@@ -130,7 +133,9 @@
     return context.getImageData(0, 0, width, height);
   }
   function toImageDataFromContext(context) {
-    var canvas = context.canvas, height = canvas.height, width = canvas.width;
+    var canvas = context.canvas,
+      height = canvas.height,
+      width = canvas.width;
     return context.getImageData(0, 0, width, height);
   }
   function toCanvas(object) {
@@ -153,7 +158,10 @@
     return equalHeight(a, b) && equalWidth(a, b);
   }
   function equal(a, b, tolerance) {
-    var aData = a.data, bData = b.data, length = aData.length, i;
+    var aData = a.data,
+      bData = b.data,
+      length = aData.length,
+      i;
 
     tolerance = tolerance || 0;
 
@@ -323,7 +331,9 @@
 
   // Image Output
   function imageDataToPNG(imageData, outputFile, callback) {
-    var canvas = toCanvas(imageData), base64Data, decodedImage;
+    var canvas = toCanvas(imageData),
+      base64Data,
+      decodedImage;
 
     callback = callback || Function;
 

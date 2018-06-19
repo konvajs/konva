@@ -1,12 +1,12 @@
 (function() {
   'use strict';
   var blacklist = {
-    node: 1,
-    duration: 1,
-    easing: 1,
-    onFinish: 1,
-    yoyo: 1
-  },
+      node: 1,
+      duration: 1,
+      easing: 1,
+      onFinish: 1,
+      yoyo: 1
+    },
     PAUSED = 1,
     PLAYING = 2,
     REVERSING = 3,
@@ -126,26 +126,26 @@
   };
 
   /**
-     * Tween constructor.  Tweens enable you to animate a node between the current state and a new state.
-     *  You can play, pause, reverse, seek, reset, and finish tweens.  By default, tweens are animated using
-     *  a linear easing.  For more tweening options, check out {@link Konva.Easings}
-     * @constructor
-     * @memberof Konva
-     * @example
-     * // instantiate new tween which fully rotates a node in 1 second
-     * var tween = new Konva.Tween({
-     *   node: node,
-     *   rotationDeg: 360,
-     *   duration: 1,
-     *   easing: Konva.Easings.EaseInOut
-     * });
-     *
-     * // play tween
-     * tween.play();
-     *
-     * // pause tween
-     * tween.pause();
-     */
+   * Tween constructor.  Tweens enable you to animate a node between the current state and a new state.
+   *  You can play, pause, reverse, seek, reset, and finish tweens.  By default, tweens are animated using
+   *  a linear easing.  For more tweening options, check out {@link Konva.Easings}
+   * @constructor
+   * @memberof Konva
+   * @example
+   * // instantiate new tween which fully rotates a node in 1 second
+   * var tween = new Konva.Tween({
+   *   node: node,
+   *   rotationDeg: 360,
+   *   duration: 1,
+   *   easing: Konva.Easings.EaseInOut
+   * });
+   *
+   * // play tween
+   * tween.play();
+   *
+   * // pause tween
+   * tween.pause();
+   */
   Konva.Tween = function(config) {
     var that = this,
       node = config.node,
@@ -372,71 +372,71 @@
       };
     },
     /**
-         * play
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @returns {Tween}
-         */
+     * play
+     * @method
+     * @memberof Konva.Tween.prototype
+     * @returns {Tween}
+     */
     play: function() {
       this.tween.play();
       return this;
     },
     /**
-         * reverse
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @returns {Tween}
-         */
+     * reverse
+     * @method
+     * @memberof Konva.Tween.prototype
+     * @returns {Tween}
+     */
     reverse: function() {
       this.tween.reverse();
       return this;
     },
     /**
-         * reset
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @returns {Tween}
-         */
+     * reset
+     * @method
+     * @memberof Konva.Tween.prototype
+     * @returns {Tween}
+     */
     reset: function() {
       this.tween.reset();
       return this;
     },
     /**
-         * seek
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @param {Integer} t time in seconds between 0 and the duration
-         * @returns {Tween}
-         */
+     * seek
+     * @method
+     * @memberof Konva.Tween.prototype
+     * @param {Integer} t time in seconds between 0 and the duration
+     * @returns {Tween}
+     */
     seek: function(t) {
       this.tween.seek(t * 1000);
       return this;
     },
     /**
-         * pause
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @returns {Tween}
-         */
+     * pause
+     * @method
+     * @memberof Konva.Tween.prototype
+     * @returns {Tween}
+     */
     pause: function() {
       this.tween.pause();
       return this;
     },
     /**
-         * finish
-         * @method
-         * @memberof Konva.Tween.prototype
-         * @returns {Tween}
-         */
+     * finish
+     * @method
+     * @memberof Konva.Tween.prototype
+     * @returns {Tween}
+     */
     finish: function() {
       this.tween.finish();
       return this;
     },
     /**
-         * destroy
-         * @method
-         * @memberof Konva.Tween.prototype
-         */
+     * destroy
+     * @method
+     * @memberof Konva.Tween.prototype
+     */
     destroy: function() {
       var nodeId = this.node._id,
         thisId = this._id,
@@ -454,18 +454,18 @@
   };
 
   /**
-     * Tween node properties. Shorter usage of {@link Konva.Tween} object.
-     *
-     * @method Konva.Node#to
-     * @memberof Konva.Node
-     * @param {Object} [params] tween params
-     * @example
-     *
-     * circle.to({
-     *  x : 50,
-     *  duration : 0.5
-     * });
-     */
+   * Tween node properties. Shorter usage of {@link Konva.Tween} object.
+   *
+   * @method Konva.Node#to
+   * @memberof Konva.Node
+   * @param {Object} [params] tween params
+   * @example
+   *
+   * circle.to({
+   *  x : 50,
+   *  duration : 0.5
+   * });
+   */
   Konva.Node.prototype.to = function(params) {
     var onFinish = params.onFinish;
     params.node = this;
@@ -485,33 +485,33 @@
     */
 
   /**
-     * @namespace Easings
-     * @memberof Konva
-     */
+   * @namespace Easings
+   * @memberof Konva
+   */
   Konva.Easings = {
     /**
-        * back ease in
-        * @function
-        * @memberof Konva.Easings
-        */
+     * back ease in
+     * @function
+     * @memberof Konva.Easings
+     */
     BackEaseIn: function(t, b, c, d) {
       var s = 1.70158;
       return c * (t /= d) * t * ((s + 1) * t - s) + b;
     },
     /**
-        * back ease out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * back ease out
+     * @function
+     * @memberof Konva.Easings
+     */
     BackEaseOut: function(t, b, c, d) {
       var s = 1.70158;
       return c * ((t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
     },
     /**
-        * back ease in out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * back ease in out
+     * @function
+     * @memberof Konva.Easings
+     */
     BackEaseInOut: function(t, b, c, d) {
       var s = 1.70158;
       if ((t /= d / 2) < 1) {
@@ -520,10 +520,10 @@
       return c / 2 * ((t -= 2) * t * (((s *= 1.525) + 1) * t + s) + 2) + b;
     },
     /**
-        * elastic ease in
-        * @function
-        * @memberof Konva.Easings
-        */
+     * elastic ease in
+     * @function
+     * @memberof Konva.Easings
+     */
     ElasticEaseIn: function(t, b, c, d, a, p) {
       // added s = 0
       var s = 0;
@@ -543,16 +543,18 @@
         s = p / (2 * Math.PI) * Math.asin(c / a);
       }
       return (
-        -(a *
+        -(
+          a *
           Math.pow(2, 10 * (t -= 1)) *
-          Math.sin((t * d - s) * (2 * Math.PI) / p)) + b
+          Math.sin((t * d - s) * (2 * Math.PI) / p)
+        ) + b
       );
     },
     /**
-        * elastic ease out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * elastic ease out
+     * @function
+     * @memberof Konva.Easings
+     */
     ElasticEaseOut: function(t, b, c, d, a, p) {
       // added s = 0
       var s = 0;
@@ -578,10 +580,10 @@
       );
     },
     /**
-        * elastic ease in out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * elastic ease in out
+     * @function
+     * @memberof Konva.Easings
+     */
     ElasticEaseInOut: function(t, b, c, d, a, p) {
       // added s = 0
       var s = 0;
@@ -619,10 +621,10 @@
       );
     },
     /**
-        * bounce ease out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * bounce ease out
+     * @function
+     * @memberof Konva.Easings
+     */
     BounceEaseOut: function(t, b, c, d) {
       if ((t /= d) < 1 / 2.75) {
         return c * (7.5625 * t * t) + b;
@@ -635,18 +637,18 @@
       }
     },
     /**
-        * bounce ease in
-        * @function
-        * @memberof Konva.Easings
-        */
+     * bounce ease in
+     * @function
+     * @memberof Konva.Easings
+     */
     BounceEaseIn: function(t, b, c, d) {
       return c - Konva.Easings.BounceEaseOut(d - t, 0, c, d) + b;
     },
     /**
-        * bounce ease in out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * bounce ease in out
+     * @function
+     * @memberof Konva.Easings
+     */
     BounceEaseInOut: function(t, b, c, d) {
       if (t < d / 2) {
         return Konva.Easings.BounceEaseIn(t * 2, 0, c, d) * 0.5 + b;
@@ -657,26 +659,26 @@
       }
     },
     /**
-        * ease in
-        * @function
-        * @memberof Konva.Easings
-        */
+     * ease in
+     * @function
+     * @memberof Konva.Easings
+     */
     EaseIn: function(t, b, c, d) {
       return c * (t /= d) * t + b;
     },
     /**
-        * ease out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * ease out
+     * @function
+     * @memberof Konva.Easings
+     */
     EaseOut: function(t, b, c, d) {
       return -c * (t /= d) * (t - 2) + b;
     },
     /**
-        * ease in out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * ease in out
+     * @function
+     * @memberof Konva.Easings
+     */
     EaseInOut: function(t, b, c, d) {
       if ((t /= d / 2) < 1) {
         return c / 2 * t * t + b;
@@ -684,26 +686,26 @@
       return -c / 2 * (--t * (t - 2) - 1) + b;
     },
     /**
-        * strong ease in
-        * @function
-        * @memberof Konva.Easings
-        */
+     * strong ease in
+     * @function
+     * @memberof Konva.Easings
+     */
     StrongEaseIn: function(t, b, c, d) {
       return c * (t /= d) * t * t * t * t + b;
     },
     /**
-        * strong ease out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * strong ease out
+     * @function
+     * @memberof Konva.Easings
+     */
     StrongEaseOut: function(t, b, c, d) {
       return c * ((t = t / d - 1) * t * t * t * t + 1) + b;
     },
     /**
-        * strong ease in out
-        * @function
-        * @memberof Konva.Easings
-        */
+     * strong ease in out
+     * @function
+     * @memberof Konva.Easings
+     */
     StrongEaseInOut: function(t, b, c, d) {
       if ((t /= d / 2) < 1) {
         return c / 2 * t * t * t * t * t + b;
@@ -711,10 +713,10 @@
       return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
     },
     /**
-        * linear
-        * @function
-        * @memberof Konva.Easings
-        */
+     * linear
+     * @function
+     * @memberof Konva.Easings
+     */
     Linear: function(t, b, c, d) {
       return c * t / d + b;
     }

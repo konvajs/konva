@@ -1444,7 +1444,12 @@ suite('Node', function() {
       scaleY: 2
     });
 
-    layer.add(rect1).add(rect2).add(rect3).add(rect4).add(rect5);
+    layer
+      .add(rect1)
+      .add(rect2)
+      .add(rect3)
+      .add(rect4)
+      .add(rect5);
     stage.add(layer);
 
     assert.equal(rect1.getScale().x, 2);
@@ -1495,7 +1500,11 @@ suite('Node', function() {
       fill: 'red'
     });
 
-    layer.add(rect1).add(rect2).add(rect3).add(rect4);
+    layer
+      .add(rect1)
+      .add(rect2)
+      .add(rect3)
+      .add(rect4);
     stage.add(layer);
 
     assert.equal(rect1.getPosition().x, 1);
@@ -1948,11 +1957,11 @@ suite('Node', function() {
 
     var callback1 = function() {
       event1 += 1;
-    }
+    };
     var callback2 = function() {
       event2 += 1;
-    }
-    
+    };
+
     circle.on('event', callback1);
     circle.on('event', callback2);
 
@@ -3337,7 +3346,6 @@ suite('Node', function() {
       radius: 10
     });
     Number.prototype.customFunc = function() {};
-    console.dir(node.toObject());
     assert.equal(node.toObject().attrs.radius, 10);
     delete Number.prototype.customFunc;
   });

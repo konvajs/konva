@@ -218,7 +218,9 @@
       ? global
       : typeof window !== 'undefined'
         ? window
-        : typeof WorkerGlobalScope !== 'undefined' ? self : {};
+        : typeof WorkerGlobalScope !== 'undefined'
+          ? self
+          : {};
 
   Konva.UA = Konva._parseUA((glob.navigator && glob.navigator.userAgent) || '');
 

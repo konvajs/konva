@@ -1,17 +1,17 @@
 (function() {
   'use strict';
   /**
-     * Noise Filter. Randomly adds or substracts to the color channels
-     * @function
-     * @name Noise
-     * @memberof Konva.Filters
-     * @param {Object} imageData
-     * @author ippo615
-     * @example
-     * node.cache();
-     * node.filters([Konva.Filters.Noise]);
-     * node.noise(0.8);
-     */
+   * Noise Filter. Randomly adds or substracts to the color channels
+   * @function
+   * @name Noise
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @author ippo615
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Noise]);
+   * node.noise(0.8);
+   */
   Konva.Filters.Noise = function(imageData) {
     var amount = this.noise() * 255,
       data = imageData.data,
@@ -34,11 +34,11 @@
     Konva.Factory.afterSetFilter
   );
   /**
-    * get/set noise amount.  Must be a value between 0 and 1. Use with {@link Konva.Filters.Noise} filter.
-    * @name noise
-    * @method
-    * @memberof Konva.Node.prototype
-    * @param {Number} noise
-    * @returns {Number}
-    */
+   * get/set noise amount.  Must be a value between 0 and 1. Use with {@link Konva.Filters.Noise} filter.
+   * @name noise
+   * @method
+   * @memberof Konva.Node.prototype
+   * @param {Number} noise
+   * @returns {Number}
+   */
 })();

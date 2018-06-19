@@ -496,8 +496,8 @@
 
       var minX, minY, maxX, maxY;
       var selfRect = {
-        x: 0,
-        y: 0,
+        x: Infinity,
+        y: Infinity,
         width: 0,
         height: 0
       };
@@ -547,6 +547,13 @@
           y: minY,
           width: maxX - minX,
           height: maxY - minY
+        };
+      } else {
+        selfRect = {
+          x: 0,
+          y: 0,
+          width: 0,
+          height: 0
         };
       }
 

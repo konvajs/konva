@@ -153,25 +153,28 @@ suite('Caching', function() {
     cloneAndCompareLayer(layer, 100);
   });
 
+  // skip, because opacity rendering of cached shape is different
+  // nothing we can do here
   test.skip('cache rectangle with fill, shadow and opacity', function() {
     var stage = addStage();
 
     var layer = new Konva.Layer();
 
     var rect = new Konva.Rect({
-      x: 100,
-      y: 50,
+      x: 10,
+      y: 10,
       width: 100,
       height: 50,
       fill: 'green',
       opacity: 0.5,
       shadowBlur: 10,
-      shadowColor: 'black'
+      shadowColor: 'black',
+      draggable: true
     });
-    rect.cache();
+    // rect.cache();
     // rect.opacity(0.3);
 
-    layer.add(rect.clone({ y: 75, x: 55 }));
+    layer.add(rect.clone({ y: 50, x: 50, shadowEnabled: false }));
     layer.add(rect);
     stage.add(layer);
 
@@ -716,7 +719,7 @@ suite('Caching', function() {
       fillRadialGradientStartRadius: 0,
       fillRadialGradientEndPoint: 0,
       fillRadialGradientEndRadius: 10,
-      fillRadialGradientColorStops: [0, 'red', 0.5, 'yellow', 1, 'blue'],
+      fillRadialGradientColorStops: [0, 'red', 0.5, 'yellow', 1, 'black'],
       opacity: 0.4,
       strokeHitEnabled: false,
       stroke: 'rgba(0,0,0,0)'
@@ -742,12 +745,11 @@ suite('Caching', function() {
 
     var circle = new Konva.Circle({
       radius: 10,
-      // fill: 'white',
       fillRadialGradientStartPoint: 0,
       fillRadialGradientStartRadius: 0,
       fillRadialGradientEndPoint: 0,
       fillRadialGradientEndRadius: 10,
-      fillRadialGradientColorStops: [0, 'red', 0.5, 'yellow', 1, 'blue'],
+      fillRadialGradientColorStops: [0, 'red', 0.5, 'yellow', 1, 'black'],
       opacity: 0.4,
       strokeHitEnabled: false,
       stroke: 'rgba(0,0,0,0)'
@@ -828,6 +830,7 @@ suite('Caching', function() {
     assert.equal(stage.getIntersection({ x: 150, y: 100 }), rect);
   });
 
+  // hard to fix
   test.skip('even if parent is not visible cache should be created - test for group', function() {
     var stage = addStage();
 
@@ -865,53 +868,5 @@ suite('Caching', function() {
     context.fill();
     compareLayerAndCanvas(layer, canvas, 5);
     assert.equal(stage.getIntersection({ x: 150, y: 100 }), rect);
-  });
-
-  test.skip('caching should respect hit drawing', function() {
-    var stage = addStage();
-
-    var layer = new Konva.Layer();
-
-    var group = new Konva.Group({});
-
-    var bigRect = new Konva.Rect({
-      x: 0,
-      y: 0,
-      width: 100,
-      height: 100,
-      fill: 'green'
-    });
-    group.add(bigRect);
-
-    var smallRect = new Konva.Rect({
-      x: 25,
-      y: 25,
-      width: 50,
-      height: 50,
-      fill: 'red',
-      listening: false
-    });
-    group.add(smallRect);
-
-    layer.add(group);
-    stage.add(layer);
-
-    group.cache();
-    layer.draw();
-
-    var canvas = createCanvas();
-    var context = canvas.getContext('2d');
-    context.beginPath();
-    context.rect(0, 0, 100, 100);
-    context.fillStyle = 'green';
-    context.fill();
-    context.beginPath();
-    context.rect(25, 25, 50, 50);
-    context.fillStyle = 'red';
-    context.fill();
-    showHit(layer);
-
-    assert.equal(stage.getIntersection({ x: 50, y: 50 }), bigRect);
-    compareLayerAndCanvas(layer, canvas, 5);
   });
 });

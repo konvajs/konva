@@ -521,6 +521,26 @@
   Konva.Util.extend(Konva.TextPath, Konva.Shape);
 
   // add setters and getters
+  Konva.Factory.addGetterSetter(Konva.TextPath, 'data');
+
+  /**
+   * set SVG path data string.  This method
+   *  also automatically parses the data string
+   *  into a data array.  Currently supported SVG data:
+   *  M, m, L, l, H, h, V, v, Q, q, T, t, C, c, S, s, A, a, Z, z
+   * @name setData
+   * @method
+   * @memberof Konva.TextPath.prototype
+   * @param {String} SVG path command string
+   */
+
+  /**
+   * get SVG path data string
+   * @name getData
+   * @method
+   * @memberof Konva.TextPath.prototype
+   */
+
   Konva.Factory.addGetterSetter(Konva.TextPath, 'fontFamily', 'Arial');
 
   /**

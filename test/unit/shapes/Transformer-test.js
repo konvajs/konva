@@ -100,6 +100,7 @@ suite('Transformer', function() {
     assert.equal(tr.y(), rect.y());
     assert.equal(tr.width(), rect.width());
     assert.equal(tr.height(), rect.height());
+    assert.equal(tr.findOne('.back').width(), rect.width());
   });
 
   test('add transformer for transformed rect', function() {
@@ -176,11 +177,13 @@ suite('Transformer', function() {
     stage.add(layer);
 
     var rect = new Konva.Rect({
-      x: 50,
-      y: 50,
+      x: 100,
+      y: 100,
       draggable: true,
       width: 100,
       height: 100,
+      scaleX: 2,
+      scaleY: 2,
       fill: 'yellow',
       offsetX: 50,
       offsetY: 50
@@ -194,14 +197,14 @@ suite('Transformer', function() {
     layer.draw();
     assert.equal(tr.getClassName(), 'Transformer');
 
-    assert.equal(tr.x(), rect.x() - 50);
-    assert.equal(tr.y(), rect.y() - 50);
+    assert.equal(tr.x(), 0);
+    assert.equal(tr.y(), 0);
     assert.equal(tr.width(), rect.width() * rect.scaleX());
     assert.equal(tr.height(), rect.height() * rect.scaleY());
     assert.equal(tr.rotation(), rect.rotation());
   });
 
-  test.skip('fit rect with offset', function() {
+  test('fit rect with offset', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -223,19 +226,24 @@ suite('Transformer', function() {
     tr.attachTo(rect);
 
     tr._fitNodeInto({
-      x: 50,
-      y: 50,
+      x: 0,
+      y: 0,
       width: 200,
       height: 100
     });
+    layer.draw();
 
     assert.equal(rect.x(), 100);
-    assert.equal(rect.y(), 100);
+    assert.equal(rect.y(), 50);
     assert.equal(rect.width() * rect.scaleX(), 200);
     assert.equal(rect.height() * rect.scaleY(), 100);
     assert.equal(rect.rotation(), rect.rotation());
 
-    layer.draw();
+    assert.equal(tr.x(), 0);
+    assert.equal(tr.y(), 0);
+    assert.equal(tr.width(), 200);
+    assert.equal(tr.height(), 100);
+    assert.equal(rect.rotation(), rect.rotation());
   });
 
   test('add transformer for circle', function() {
@@ -1045,5 +1053,84 @@ suite('Transformer', function() {
       x: 100,
       y: 100
     });
+  });
+
+  test('on force update should clear transform', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group({
+      x: 50,
+      y: 50
+    });
+    layer.add(group);
+
+    var tr = new Konva.Transformer();
+    layer.add(tr);
+    tr.attachTo(group);
+
+    layer.draw();
+
+    assert.equal(tr._cache.transform.m[4], 50);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    group.add(rect);
+
+    tr.forceUpdate();
+    layer.draw();
+
+    assert.equal(tr._cache.transform.m[4], 100);
+
+    // tr._fitNodeInto({
+    //   x: 100,
+    //   y: 70,
+    //   width: 100,
+    //   height: 100
+    // });
+
+    // assert.equal(rect.x(), 100);
+    // assert.equal(rect.y(), 70);
+    // assert.equal(rect.width() * rect.scaleX(), 100);
+    // assert.equal(rect.height() * rect.scaleY(), 100);
+    // assert.equal(rect.rotation(), rect.rotation());
+  });
+
+  test('test cache reset on attach', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 20,
+      y: 20,
+      draggable: true,
+      width: 150,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer();
+    layer.add(tr);
+
+    // make draw to set all caches
+    layer.draw();
+    // then attach
+    tr.attachTo(rect);
+
+    layer.draw();
+
+    var shape = layer.getIntersection({
+      x: 20,
+      y: 20
+    });
+    assert.equal(shape.name(), 'top-left');
   });
 });

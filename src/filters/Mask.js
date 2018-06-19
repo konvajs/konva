@@ -178,16 +178,16 @@
   }
 
   /**
-	 * Mask Filter
-	 * @function
-	 * @name Mask
-	 * @memberof Konva.Filters
-	 * @param {Object} imageData
-	 * @example
-     * node.cache();
-     * node.filters([Konva.Filters.Mask]);
-     * node.threshold(200);
-	 */
+   * Mask Filter
+   * @function
+   * @name Mask
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Mask]);
+   * node.threshold(200);
+   */
   Konva.Filters.Mask = function(imageData) {
     // Detect pixels close to the background color
     var threshold = this.threshold(),

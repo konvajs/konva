@@ -5,6 +5,30 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+## [2.1.5][2018-06-15]
+
+## Fixed
+
+* Typescript fixes
+* add shape as second argument for `sceneFunc` and `hitFunc`
+
+## [2.1.4][2018-06-15]
+
+## Fixed
+
+* Fixed `Konva.Text` justify drawing for a text with decoration
+* Added methods `data()`,`setData()`  and `getData()` methods to `Konva.TextPath`
+* Correct cache reset for `Konva.Transformer`
+
+## [2.1.3][2018-05-17]
+
+## Fixed
+
+* `Konva.Transformer` automatically track shape changes
+* `Konva.Transformer` works with shapes with offset too
+
+## [2.1.2][2018-05-16]
+
 ## Fixed
 
 * Cursor fixes for `Konva.Transformer`
@@ -12,6 +36,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Some performance optimizations for `Konva.Text`
 * Better wrap algorithm for `Konva.Text`
 * fixed `Konva.Arrow` with tension != 0
+* Some fixes for `Konva.Transformer`
 
 ## [2.0.3][2018-04-21]
 

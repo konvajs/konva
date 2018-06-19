@@ -1,23 +1,23 @@
 (function() {
   'use strict';
   /**
-     * Rect constructor
-     * @constructor
-     * @memberof Konva
-     * @augments Konva.Shape
-     * @param {Object} config
-     * @param {Number} [config.cornerRadius]
-     * @@shapeParams
-     * @@nodeParams
-     * @example
-     * var rect = new Konva.Rect({
-     *   width: 100,
-     *   height: 50,
-     *   fill: 'red',
-     *   stroke: 'black',
-     *   strokeWidth: 5
-     * });
-     */
+   * Rect constructor
+   * @constructor
+   * @memberof Konva
+   * @augments Konva.Shape
+   * @param {Object} config
+   * @param {Number} [config.cornerRadius]
+   * @@shapeParams
+   * @@nodeParams
+   * @example
+   * var rect = new Konva.Rect({
+   *   width: 100,
+   *   height: 50,
+   *   fill: 'red',
+   *   stroke: 'black',
+   *   strokeWidth: 5
+   * });
+   */
   Konva.Rect = function(config) {
     this.___init(config);
   };
@@ -88,19 +88,19 @@
 
   Konva.Factory.addGetterSetter(Konva.Rect, 'cornerRadius', 0);
   /**
-     * get/set corner radius
-     * @name cornerRadius
-     * @method
-     * @memberof Konva.Rect.prototype
-     * @param {Number} cornerRadius
-     * @returns {Number}
-     * @example
-     * // get corner radius
-     * var cornerRadius = rect.cornerRadius();
-     *
-     * // set corner radius
-     * rect.cornerRadius(10);
-     */
+   * get/set corner radius
+   * @name cornerRadius
+   * @method
+   * @memberof Konva.Rect.prototype
+   * @param {Number} cornerRadius
+   * @returns {Number}
+   * @example
+   * // get corner radius
+   * var cornerRadius = rect.cornerRadius();
+   *
+   * // set corner radius
+   * rect.cornerRadius(10);
+   */
 
   Konva.Collection.mapMethods(Konva.Rect);
 })();

@@ -5,6 +5,10 @@ declare namespace Konva {
   var isDragReady: () => boolean;
   var DD: any;
 
+  type HandlerFunc = (
+    e: { target: Konva.Shape; evt: Event; currentTarget: Konva.Node }
+  ) => void;
+
   type globalCompositeOperationType =
     | ''
     | 'source-over'
@@ -125,7 +129,17 @@ declare namespace Konva {
     height?: number;
   }
 
+  interface ToCanvasConfig extends SizeConfig {
+    callback: Function;
+  }
+
   interface ToDataURLConfig extends SizeConfig {
+    mimeType?: string;
+    quality?: number;
+    pixelRatio?: number;
+  }
+
+  interface ToImageConfig extends SizeConfig {
     callback: Function;
     mimeType?: string;
     quality?: number;
@@ -188,8 +202,8 @@ declare namespace Konva {
     ): Node[];
     fire(eventType: string, evt?: any, bubble?: boolean): this;
     getAbsoluteOpacity(): number;
-    getAbsolutePosition(): Vector2d;
-    getAbsoluteTransform(): Transform;
+    getAbsolutePosition(top?: Container): Vector2d;
+    getAbsoluteTransform(top?: Container): Transform;
     getAbsoluteZIndex(): number;
     getAncestors(): Collection;
     getAttr(attr: string): any;
@@ -198,7 +212,7 @@ declare namespace Konva {
     getCanvas(): Canvas;
     getClassName(): string;
     getClientRect(): SizeConfig;
-    getContext(): Context;
+    getContent(): HTMLDivElement;
     getDepth(): number;
     getHeight(): number;
     getHitCanvas(): Canvas;
@@ -254,7 +268,7 @@ declare namespace Konva {
     offsetX(offsetX: number): this;
     offsetY(): number;
     offsetY(offsetY: number): this;
-    on(evtStr: string, handler: Function): this;
+    on(evtStr: string, handler: HandlerFunc): this;
     opacity(): number;
     opacity(opacity: number): this;
     pixelSize(): number;
@@ -295,8 +309,9 @@ declare namespace Konva {
     threshold(): number;
     threshold(threshold: number): this;
     to(params: any): void;
+    toCanvas(config: ToCanvasConfig): HTMLCanvasElement;
     toDataURL(config: ToDataURLConfig): string;
-    toImage(config: ToDataURLConfig): HTMLImageElement;
+    toImage(config: ToImageConfig): HTMLImageElement;
     toJSON(): string;
     toObject(): any;
     transformsEnabled(): string;
@@ -389,7 +404,6 @@ declare namespace Konva {
     lineCap?: string;
     sceneFunc?: (con: Context) => void;
     hitFunc?: (con: Context) => void;
-    drawFunc?: (con: Context) => void;
     shadowColor?: string;
     shadowBlur?: number;
     shadowOffset?: Vector2d;
@@ -397,6 +411,7 @@ declare namespace Konva {
     shadowOffsetY?: number;
     shadowOpacity?: number;
     shadowEnabled?: boolean;
+    shadowForStrokeEnabled?: boolean;
     dash?: number[];
     dashEnabled?: boolean;
     perfectDrawEnabled?: boolean;
@@ -408,6 +423,7 @@ declare namespace Konva {
     dash(dash: number[]): this;
     dashEnabled(): boolean;
     dashEnabled(dashEnabled: boolean): this;
+    drawHit(canvas?: Canvas, top?: Container, caching?: boolean): this;
     drawHitFromCache(alphaThreshold: number): this;
     fill(): string;
     fill(fill: string): this;
@@ -469,6 +485,7 @@ declare namespace Konva {
     fillPatternY(y: number): this;
     fillPriority(): string;
     fillPriority(priority: string): this;
+    getSelfRect(): SizeConfig;
     hasFill(): boolean;
     hasShadow(): boolean;
     hasStroke(): boolean;
@@ -479,12 +496,16 @@ declare namespace Konva {
     lineCap(lineCap: string): this;
     lineJoin(): string;
     lineJoin(lineJoin: string): this;
+    perfectDrawEnabled(): boolean;
+    perfectDrawEnabled(perfectDrawEnabled: boolean): this;
     sceneFunc(): Function;
     sceneFunc(func: (con: Context) => {}): this;
     shadowColor(): string;
     shadowColor(shadowColor: string): this;
     shadowEnabled(): boolean;
     shadowEnabled(shadowEnabled: boolean): this;
+    shadowForStrokeEnabled(): boolean;
+    shadowForStrokeEnabled(shadowForStrokeEnabled: boolean): this;
     shadowOffset(): Vector2d;
     shadowOffset(shadowOffset: Vector2d): this;
     shadowOffsetX(): number;
@@ -815,6 +836,7 @@ declare namespace Konva {
     closed?: boolean;
     pointerLength?: number;
     pointerWidth?: number;
+    pointerAtBeginning?: boolean;
   }
 
   class Arrow extends Shape {
@@ -1040,6 +1062,7 @@ declare namespace Konva {
     keepRatio?: boolean;
     enabledHandlers?: Array<string>;
     node?: Rect;
+    boundBoxFunc?: (oldBox: SizeConfig, newBox: SizeConfig) => SizeConfig;
   }
 
   class Transformer extends Container {

@@ -1,16 +1,18 @@
 (function() {
   'use strict';
   /**
-    * Invert Filter
-    * @function
-    * @memberof Konva.Filters
-    * @param {Object} imageData
-    * @example
-    * node.cache();
-    * node.filters([Konva.Filters.Invert]);
-    */
+   * Invert Filter
+   * @function
+   * @memberof Konva.Filters
+   * @param {Object} imageData
+   * @example
+   * node.cache();
+   * node.filters([Konva.Filters.Invert]);
+   */
   Konva.Filters.Invert = function(imageData) {
-    var data = imageData.data, len = data.length, i;
+    var data = imageData.data,
+      len = data.length,
+      i;
 
     for (i = 0; i < len; i += 4) {
       // red

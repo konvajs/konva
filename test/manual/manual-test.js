@@ -315,9 +315,7 @@ suite('Manual', function() {
   });
 
   // ======================================================
-  test('create image hit region with pixelRatio, look at hit, test hit with mouseover', function(
-    done
-  ) {
+  test('create image hit region with pixelRatio, look at hit, test hit with mouseover', function(done) {
     var imageObj = new Image();
 
     Konva.pixelRatio = 2;
@@ -357,9 +355,7 @@ suite('Manual', function() {
   });
 
   // ======================================================
-  test('image hit region with alpha threshold, mouseover circle', function(
-    done
-  ) {
+  test('image hit region with alpha threshold, mouseover circle', function(done) {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);

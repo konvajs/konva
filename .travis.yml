@@ -1,13 +1,13 @@
 language: node_js
 node_js:
-- '6.0.0'
+- '8.0.0'
 branches:
   only:
   - master
 before_script:
 - npm install -g gulp
 script:
-- gulp lint test
+- npm run lint test
 deploy:
   provider: npm
   email: lavrton@gmail.com

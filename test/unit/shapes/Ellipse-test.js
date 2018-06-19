@@ -105,6 +105,6 @@ suite('Ellipse', function() {
     context.fill();
     context.lineWidth = 8;
     context.stroke();
-    compareLayerAndCanvas(layer, canvas, 80);
+    compareLayerAndCanvas(layer, canvas, 150);
   });
 });

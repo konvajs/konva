@@ -1046,45 +1046,6 @@ suite('Stage', function() {
     assert.equal(dblicks, 1, 'first dbclick registered');
   });
 
-  test.skip('toDataURL + HDPI', function(done) {
-    Konva.pixelRatio = 2;
-
-    var stage = addStage();
-    var layer = new Konva.Layer();
-
-    var image = new Image();
-    image.onload = function() {
-      var lion = new Konva.Image({
-        image: image,
-        draggable: true
-      });
-
-      lion.cache();
-      lion.drawHitFromCache();
-
-      layer.add(lion);
-      stage.add(layer);
-      stage.draw();
-
-      var snapshotStage = addStage();
-
-      stage.toImage({
-        callback: function(image) {
-          var imageNode = new Konva.Image({
-            image: image
-          });
-          var snapshotLayer = new Konva.Layer();
-          snapshotLayer.add(imageNode);
-          snapshotStage.add(snapshotLayer);
-          snapshotStage.draw();
-          Konva.pixelRatio = undefined;
-          done();
-        }
-      });
-    };
-    image.src = 'assets/lion.png';
-  });
-
   test('toDataURL in sync way', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -1097,6 +1058,38 @@ suite('Stage', function() {
     layer.add(circle);
     stage.add(layer);
     assert.equal(stage.toDataURL(), layer.toDataURL());
+  });
+
+  test('toCanvas with large size', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var radius = stage.height() / 2 + 10;
+    var circle = new Konva.Circle({
+      x: stage.height() / 2,
+      y: stage.height() / 2,
+      fill: 'black',
+      radius: radius
+    });
+    layer.add(circle);
+    stage.add(layer);
+
+    var stageCanvas = stage.toCanvas({
+      x: -10,
+      y: -10,
+      width: stage.height() + 20,
+      height: stage.height() + 20
+    });
+
+    var canvas = createCanvas();
+    canvas.width = radius * 2;
+    canvas.height = radius * 2;
+    var context = canvas.getContext('2d');
+    context.beginPath();
+    context.arc(radius, radius, radius, 0, 2 * Math.PI);
+    context.fillStyle = 'black';
+    context.fill();
+    compareCanvases(stageCanvas, canvas, 100);
   });
 
   test('check hit graph with stage listening property', function() {
@@ -1143,4 +1136,15 @@ suite('Stage', function() {
     };
     image.src = url;
   });
+
+  // test.only('Warn when styles or stage are applied', function() {
+  //   var stage = addStage();
+  //   // var layer = new Konva.Layer();
+  //   // stage.add(layer);
+  //   var container = stage.content;
+  //   console.log(
+  //     getComputedStyle(container).width,
+  //     getComputedStyle(container).height
+  //   );
+  // });
 });

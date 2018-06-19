@@ -31,27 +31,28 @@ echo "Pulling"
 git pull
 
 echo "lint and test"
-npm start lint test
+npm run lint
+npm run build
 
 echo "commit change log updates"
 git commit -am "update CHANGELOG with new version" --allow-empty
 
 echo "npm version $1 --no-git-tag-version"
-npm version $1 --no-git-tag-version
+npm version $1 --no-git-tag-version --allow-same-version
 
 echo "build for $1"
-npm start build
+npm run build
 git commit -am "build for $1" --allow-empty
 
 echo "update CDN link in REAME"
 perl -i -pe "s|${old_cdn_min}|${new_cdn_min}|g" ./README.md
 git commit -am "update cdn link" --allow-empty
 
-echo "create new git tag"
-git tag $1
-
 echo "generate documentation"
 npm start api
+
+echo "create new git tag"
+git tag $1
 
 echo "archive documentation"
 zip -r konva-v${new_version}-documentation.zip ./api/*

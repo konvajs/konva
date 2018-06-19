@@ -1987,7 +1987,7 @@
    *  shape drawing functions, images, or event handlers (this would make the
    *  serialized object huge).  If your app uses custom shapes, images, and
    *  event handlers (it probably does), then you need to select the appropriate
-   *  shapes after loading the stage and set these properties via on(), setDrawFunc(),
+   *  shapes after loading the stage and set these properties via on(), setSceneFunc(),
    *  and setImage() methods
    * @method
    * @memberof Konva.Node

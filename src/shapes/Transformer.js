@@ -23,6 +23,18 @@
     'transformsEnabledChange.resizer'
   ].join(' ');
 
+  var REDRAW_CHANGE_STR = [
+    'widthChange.resizer',
+    'heightChange.resizer',
+    'scaleXChange.resizer',
+    'scaleYChange.resizer',
+    'skewXChange.resizer',
+    'skewYChange.resizer',
+    'rotationChange.resizer',
+    'offsetXChange.resizer',
+    'offsetYChange.resizer'
+  ].join(' ');
+
   var ANGLES = {
     'top-left': -45,
     'top-center': 0,
@@ -93,6 +105,7 @@
    * @param {Number} [config.lineEnabled] Should we draw border? Default is true
    * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
    * @param {Array} [config.enabledHandlers] Array of names of enabled handles
+   * @param {Function} [config.boundBoxFunc] Bounding box function
    * @example
    * var transformer = new Konva.Transformer({
    *   node: rectangle,
@@ -147,31 +160,40 @@
       }
     },
 
-    attachTo: function(node) {
-      this.setNode(node);
-    },
-
     /**
-     * attach transformer to a Konva.Node. Transformer will adapt it its size and listed events
+     * alias to `setNode`
      * @method
      * @memberof Konva.Transformer.prototype
      * @returns {Konva.Transformer}
      * @example
      * transformer.attachTo(shape);
      */
+    attachTo: function(node) {
+      this.setNode(node);
+    },
+
+    /**
+     * attach transformer to a Konva.Node. Transformer will adapt to its size and listen its events
+     * @method
+     * @memberof Konva.Transformer.prototype
+     * @returns {Konva.Transformer}
+     * @example
+     * transformer.setNode(shape);
+     */
     setNode: function(node) {
       if (this._node) {
         this.detach();
       }
       this._node = node;
-      this._clearCache(NODE_RECT);
+      this._resetTransformCache();
 
+      node.on(TRANSFORM_CHANGE_STR, this._resetTransformCache.bind(this));
       node.on(
-        TRANSFORM_CHANGE_STR,
+        REDRAW_CHANGE_STR,
         function() {
-          this._clearCache(NODE_RECT);
-          this._clearCache('transform');
-          this._clearSelfAndDescendantCache('absoluteTransform');
+          if (!this._transforming) {
+            this.update();
+          }
         }.bind(this)
       );
 
@@ -200,6 +222,10 @@
         this.getNode().off('.resizer');
         this._node = undefined;
       }
+      this._resetTransformCache();
+    },
+
+    _resetTransformCache: function() {
       this._clearCache(NODE_RECT);
       this._clearCache('transform');
       this._clearSelfAndDescendantCache('absoluteTransform');
@@ -223,8 +249,8 @@
       var rect = node.getClientRect({ skipTransform: true });
       var rotation = Konva.getAngle(node.rotation());
 
-      var dx = rect.x * node.scaleX() - node.offsetX();
-      var dy = rect.y * node.scaleY() - node.offsetY();
+      var dx = rect.x * node.scaleX() - node.offsetX() * node.scaleX();
+      var dy = rect.y * node.scaleY() - node.offsetY() * node.scaleY();
 
       return {
         x: node.x() + dx * Math.cos(rotation) + dy * Math.sin(-rotation),
@@ -277,7 +303,6 @@
         height: 10,
         offsetX: 5,
         offsetY: 5,
-        draggable: true,
         dragDistance: 0
       });
       var self = this;
@@ -595,8 +620,8 @@
       var scaleY = (newAttrs.height - padding * 2) / pure.height;
 
       var rotation = Konva.getAngle(node.getRotation());
-      var dx = pure.x * scaleX - padding;
-      var dy = pure.y * scaleY - padding;
+      var dx = pure.x * scaleX - padding - node.offsetX() * scaleX;
+      var dy = pure.y * scaleY - padding - node.offsetY() * scaleY;
 
       this.getNode().setAttrs({
         scaleX: scaleX,
@@ -618,7 +643,7 @@
      * @memberof Konva.Transformer.prototype
      */
     forceUpdate: function() {
-      this._clearCache(NODE_RECT);
+      this._resetTransformCache();
       this.update();
     },
     update: function() {
@@ -744,10 +769,10 @@
    * @returns {Array}
    * @example
    * // get list of handlers
-   * var enabledHandlers = shape.enabledHandlers();
+   * var enabledHandlers = transformer.enabledHandlers();
    *
    * // set handlers
-   * shape.enabledHandlers(['top-left', 'top-center', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-center', 'bottom-right']);
+   * transformer.enabledHandlers(['top-left', 'top-center', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-center', 'bottom-right']);
    */
   Konva.Factory.addGetterSetter(
     Konva.Transformer,
@@ -765,10 +790,10 @@
    * @returns {Array}
    * @example
    * // get
-   * var resizeEnabled = shape.resizeEnabled();
+   * var resizeEnabled = transformer.resizeEnabled();
    *
    * // set
-   * shape.resizeEnabled(false);
+   * transformer.resizeEnabled(false);
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'resizeEnabled', true);
 
@@ -777,14 +802,14 @@
    * @name rotateEnabled
    * @method
    * @memberof Konva.Transformer.prototype
-   * @param {Array} array
-   * @returns {Array}
+   * @param {Boolean} enabled
+   * @returns {Boolean}
    * @example
    * // get
-   * var rotateEnabled = shape.rotateEnabled();
+   * var rotateEnabled = transformer.rotateEnabled();
    *
    * // set
-   * shape.rotateEnabled(false);
+   * transformer.rotateEnabled(false);
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateEnabled', true);
 
@@ -797,10 +822,10 @@
    * @returns {Array}
    * @example
    * // get
-   * var rotationSnaps = shape.rotationSnaps();
+   * var rotationSnaps = transformer.rotationSnaps();
    *
    * // set
-   * shape.rotationSnaps([0, 90, 180, 270]);
+   * transformer.rotationSnaps([0, 90, 180, 270]);
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotationSnaps', []);
 
@@ -809,14 +834,14 @@
    * @name rotateHandlerOffset
    * @method
    * @memberof Konva.Transformer.prototype
-   * @param {Array} array
-   * @returns {Array}
+   * @param {Number} offset
+   * @returns {Number}
    * @example
    * // get
-   * var rotateHandlerOffset = shape.rotateHandlerOffset();
+   * var rotateHandlerOffset = transformer.rotateHandlerOffset();
    *
    * // set
-   * shape.rotateHandlerOffset(100);
+   * transformer.rotateHandlerOffset(100);
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateHandlerOffset', 50);
 
@@ -825,14 +850,14 @@
    * @name lineEnabled
    * @method
    * @memberof Konva.Transformer.prototype
-   * @param {Array} array
-   * @returns {Array}
+   * @param {Boolean} enabled
+   * @returns {Boolean}
    * @example
    * // get
-   * var lineEnabled = shape.lineEnabled();
+   * var lineEnabled = transformer.lineEnabled();
    *
    * // set
-   * shape.lineEnabled(false);
+   * transformer.lineEnabled(false);
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'lineEnabled', true);
 
@@ -841,14 +866,14 @@
    * @name keepRatio
    * @method
    * @memberof Konva.Transformer.prototype
-   * @param {Array} array
-   * @returns {Array}
+   * @param {Boolean} keepRatio
+   * @returns {Boolean}
    * @example
    * // get
-   * var keepRatio = shape.keepRatio();
+   * var keepRatio = transformer.keepRatio();
    *
    * // set
-   * shape.keepRatio(false);
+   * transformer.keepRatio(false);
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'keepRatio', true);
 
@@ -857,19 +882,38 @@
    * @name padding
    * @method
    * @memberof Konva.Transformer.prototype
-   * @param {Array} array
-   * @returns {Array}
+   * @param {Number} padding
+   * @returns {Number}
    * @example
    * // get
-   * var padding = shape.padding();
+   * var padding = transformer.padding();
    *
    * // set
-   * shape.padding(10);
+   * transformer.padding(10);
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'padding', 0);
 
   Konva.Factory.addOverloadedGetterSetter(Konva.Transformer, 'node');
 
+  /**
+   * get/set bounding box function
+   * @name boundBoxFunc
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Function} func
+   * @returns {Function}
+   * @example
+   * // get
+   * var boundBoxFunc = transformer.boundBoxFunc();
+   *
+   * // set
+   * transformer.boundBoxFunc(function(oldBox, newBox) {
+   *   if (newBox.width > 200) {
+   *     return oldBox;
+   *   }
+   *   return newBox;
+   * });
+   */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'boundBoxFunc');
 
   Konva.Collection.mapMethods(Konva.Transformer);

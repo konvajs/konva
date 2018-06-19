@@ -9,11 +9,11 @@ suite('Mask', function() {
         throttle: 999
       });
       var bamoon = new Konva.Image({
-        x: 0,
-        y: 0,
-        image: imageObj,
-        draggable: true
-      }),
+          x: 0,
+          y: 0,
+          image: imageObj,
+          draggable: true
+        }),
         filtered = new Konva.Image({
           x: 300,
           y: 0,

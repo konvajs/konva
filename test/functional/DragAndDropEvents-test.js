@@ -356,7 +356,7 @@ suite('DragAndDropEvents', function() {
   test('drag and drop layer', function(done) {
     var stage = addStage();
     var layer = new Konva.Layer({
-      drawFunc: function() {
+      sceneFunc: function() {
         var context = this.getContext();
         context.beginPath();
         context.moveTo(200, 50);

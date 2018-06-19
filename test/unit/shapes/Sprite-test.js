@@ -333,6 +333,7 @@ suite('Sprite', function() {
     imageObj.src = 'assets/scorpion-sprite.png';
   });
 
+  // need fix, but who is using sprites??
   test.skip('can change frame rate on fly', function(done) {
     var imageObj = new Image();
     imageObj.onload = function() {
@@ -386,18 +387,16 @@ suite('Sprite', function() {
       setTimeout(function() {
         sprite.frameRate(100);
         assert.equal(sprite.frameRate(), 100);
-        // don't run animation after change frame rate
-        assert.equal(sprite.anim.isRunning(), false);
-
-        sprite.start();
+        assert.equal(sprite.anim.isRunning(), false, '1');
       }, 23);
 
       setTimeout(function() {
+        sprite.start();
         sprite.frameRate(52);
         assert.equal(sprite.anim.isRunning(), true);
         // for this moment should tick more than 2 times
         // make sure that sprite is not restating after set frame rate
-        assert.equal(sprite.frameIndex() > 2, true);
+        assert.equal(sprite.frameIndex() > 2, true, '2');
         done();
       }, 68);
     };
