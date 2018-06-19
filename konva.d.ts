@@ -202,8 +202,8 @@ declare namespace Konva {
     ): Node[];
     fire(eventType: string, evt?: any, bubble?: boolean): this;
     getAbsoluteOpacity(): number;
-    getAbsolutePosition(): Vector2d;
-    getAbsoluteTransform(): Transform;
+    getAbsolutePosition(top?: Container): Vector2d;
+    getAbsoluteTransform(top?: Container): Transform;
     getAbsoluteZIndex(): number;
     getAncestors(): Collection;
     getAttr(attr: string): any;
@@ -423,6 +423,7 @@ declare namespace Konva {
     dash(dash: number[]): this;
     dashEnabled(): boolean;
     dashEnabled(dashEnabled: boolean): this;
+    drawHit(canvas?: Canvas, top?: Container, caching?: boolean): this;
     drawHitFromCache(alphaThreshold: number): this;
     fill(): string;
     fill(fill: string): this;
@@ -484,6 +485,7 @@ declare namespace Konva {
     fillPatternY(y: number): this;
     fillPriority(): string;
     fillPriority(priority: string): this;
+    getSelfRect(): SizeConfig;
     hasFill(): boolean;
     hasShadow(): boolean;
     hasStroke(): boolean;
