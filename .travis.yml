@@ -7,7 +7,7 @@ branches:
 before_script:
 - npm install -g gulp
 script:
-- gulp lint test
+- npm run lint test
 deploy:
   provider: npm
   email: lavrton@gmail.com
