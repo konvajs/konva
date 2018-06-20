@@ -4,6 +4,7 @@ node_js:
 branches:
   only:
   - master
+sudo: required
 before_script:
 - npm install -g gulp
 script:
