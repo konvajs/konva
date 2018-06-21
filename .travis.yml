@@ -4,10 +4,11 @@ node_js:
 branches:
   only:
   - master
+sudo: required
 before_script:
 - npm install -g gulp
 script:
-- npm run lint test
+- npm run lint && npm test
 deploy:
   provider: npm
   email: lavrton@gmail.com

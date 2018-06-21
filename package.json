@@ -1,6 +1,6 @@
 {
   "name": "konva",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "author": "Anton Lavrenov",
   "files": [
     "README.md",
@@ -27,13 +27,13 @@
     "gulp-eslint": "^4.0.0",
     "gulp-jscpd": "0.0.8",
     "gulp-jsdoc3": "^1.0.1",
-    "gulp-mocha-phantomjs": "^0.12.2",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.6.1",
     "gulp-uglify": "^3.0.0",
     "gulp-util": "^3.0.8",
     "mocha": "4.0.1",
-    "prettier": "^1.9.2"
+    "prettier": "^1.9.2",
+    "mocha-headless-chrome": "^2.0.0"
   },
   "keywords": [
     "canvas",
@@ -58,7 +58,5 @@
     "url": "git://github.com/konvajs/konva.git"
   },
   "license": "MIT",
-  "dependencies": {
-    "mocha-headless-chrome": "^2.0.0"
-  }
+  "dependencies": {}
 }

@@ -3,7 +3,7 @@ var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 var replace = require('gulp-replace');
-var mochaPhantomJS = require('gulp-mocha-phantomjs');
+// var mochaPhantomJS = require('gulp-mocha-phantomjs');
 var jsdoc = require('gulp-jsdoc3');
 var connect = require('gulp-connect');
 var jscpd = require('gulp-jscpd');
@@ -114,11 +114,6 @@ gulp.task('build', function() {
     .pipe(gulp.dest('./'));
 });
 
-// tun tests
-gulp.task('test', ['dev-build'], function() {
-  return gulp.src('test/runner.html').pipe(mochaPhantomJS());
-});
-
 // local server for better development
 gulp.task('server', function() {
   connect.server();
@@ -126,7 +121,8 @@ gulp.task('server', function() {
 
 // lint files
 gulp.task('lint', function() {
-  return (gulp
+  return (
+    gulp
       .src('./src/**/*.js')
       .pipe(
         eslint({
@@ -138,7 +134,8 @@ gulp.task('lint', function() {
       .pipe(eslint.format())
       // To have the process exit with an error code (1) on
       // lint error, return the stream and pipe to failOnError last.
-      .pipe(eslint.failOnError()) );
+      .pipe(eslint.failOnError())
+  );
 });
 
 // check code for duplication
