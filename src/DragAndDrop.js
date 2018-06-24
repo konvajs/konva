@@ -20,25 +20,27 @@
       var dd = Konva.DD,
         node = dd.node;
       if (node) {
+        var stage = node.getStage();
         if (!dd.isDragging) {
-          var pos = node.getStage().getPointerPosition();
-          // it is possible that pos is undefined
-          // reattach it
-          if (!pos) {
-            node.getStage()._setPointerPosition(evt);
-            pos = node.getStage().getPointerPosition();
-          }
           var dragDistance = node.dragDistance();
-          var distance = Math.max(
-            Math.abs(pos.x - dd.startPointerPos.x),
-            Math.abs(pos.y - dd.startPointerPos.y)
-          );
-          if (distance < dragDistance) {
-            return;
+          if (dragDistance) {
+            var pos = stage.getPointerPosition();
+            // it is possible that pos is undefined
+            // reattach it
+            if (!pos) {
+              stage._setPointerPosition(evt);
+              pos = stage.getPointerPosition();
+            }
+            var dx = pos.x - dd.startPointerPos.x;
+            var dy = pos.y - dd.startPointerPos.y;
+
+            if (dx * dx + dy * dy < dragDistance * dragDistance) {
+              return;
+            }
           }
         }
 
-        node.getStage()._setPointerPosition(evt);
+        stage._setPointerPosition(evt);
         node._setDragPosition(evt);
         if (!dd.isDragging) {
           dd.isDragging = true;
