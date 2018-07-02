@@ -1000,6 +1000,37 @@ suite('Transformer', function() {
     assert.equal(stage.content.style.cursor, 'nesw-resize');
   });
 
+  test('check correct cursor on scaled parent', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer({
+      y: 100,
+      scaleY: -1,
+    });
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 100,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+    layer.draw();
+
+    stage.simulateMouseMove({
+      x: 50,
+      y: 1
+    });
+    assert.equal(stage.content.style.cursor, 'nesw-resize');
+  });
+
   test('stopTransform method', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
