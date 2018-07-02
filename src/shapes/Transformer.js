@@ -46,12 +46,17 @@
     'bottom-right': 135
   };
 
-  function getCursor(anchorName, rad) {
+  function getCursor(anchorName, rad, isMirrored) {
     if (anchorName === 'rotater') {
       return 'crosshair';
     }
 
     rad += Konva.Util._degToRad(ANGLES[anchorName] || 0);
+    // If we are mirrored, we need to mirror the angle (this is not the same as
+    // rotate).
+    if (isMirrored) {
+      rad *= -1;
+    }
     var angle = (Konva.Util._radToDeg(rad) % 360 + 360) % 360;
 
     if (
@@ -334,8 +339,10 @@
         // var dy = -pos.y + center.y;
 
         // var angle = -Math.atan2(-dy, dx) - Math.PI / 2;
-
-        var cursor = getCursor(name, rad);
+        var scale = tr.getAbsoluteScale();
+        // If scale.y < 0 xor scale.x < 0 we need to flip (not rotate).
+        var isMirrored = (scale.y * scale.x) < 0;
+        var cursor = getCursor(name, rad, isMirrored);
         anchor.getStage().content.style.cursor = cursor;
         layer.batchDraw();
       });
