@@ -317,14 +317,13 @@
    */
 
   if (Konva.isBrowser) {
-    var html = Konva.document.documentElement;
-    html.addEventListener('mouseup', Konva.DD._endDragBefore, true);
-    html.addEventListener('touchend', Konva.DD._endDragBefore, true);
+    window.addEventListener('mouseup', Konva.DD._endDragBefore, true);
+    window.addEventListener('touchend', Konva.DD._endDragBefore, true);
 
-    html.addEventListener('mousemove', Konva.DD._drag);
-    html.addEventListener('touchmove', Konva.DD._drag);
+    window.addEventListener('mousemove', Konva.DD._drag);
+    window.addEventListener('touchmove', Konva.DD._drag);
 
-    html.addEventListener('mouseup', Konva.DD._endDragAfter, false);
-    html.addEventListener('touchend', Konva.DD._endDragAfter, false);
+    window.addEventListener('mouseup', Konva.DD._endDragAfter, false);
+    window.addEventListener('touchend', Konva.DD._endDragAfter, false);
   }
 })();
