@@ -138,8 +138,6 @@
     'bottom-right'
   ];
 
-  var warningShowed = false;
-
   Konva.Transformer.prototype = {
     _centroid: false,
     ____init: function(config) {
@@ -155,13 +153,6 @@
 
       // update transformer data for certain attr changes
       this.on(ATTR_CHANGE_LIST, this.update);
-
-      if (!warningShowed) {
-        Konva.Util.warn(
-          'Konva.Transformer is currently experimental and may have bugs. Please report any issues to GitHub repo.'
-        );
-        warningShowed = true;
-      }
 
       if (this.getNode()) {
         this.update();
@@ -344,7 +335,7 @@
         // var angle = -Math.atan2(-dy, dx) - Math.PI / 2;
         var scale = tr.getNode().getAbsoluteScale();
         // If scale.y < 0 xor scale.x < 0 we need to flip (not rotate).
-        var isMirrored = (scale.y * scale.x) < 0;
+        var isMirrored = scale.y * scale.x < 0;
         var cursor = getCursor(name, rad, isMirrored);
         anchor.getStage().content.style.cursor = cursor;
         layer.batchDraw();
@@ -659,7 +650,7 @@
     update: function() {
       var attrs = this._getNodeRect();
       var node = this.getNode();
-      var scale = node ? node.getAbsoluteScale() : {x: 1, y: 1};
+      var scale = node ? node.getAbsoluteScale() : { x: 1, y: 1 };
       var invertedScale = {
         x: 1 / scale.x,
         y: 1 / scale.y
@@ -721,7 +712,7 @@
       });
 
       var scaledRotateHandlerOffset =
-          -this.rotateHandlerOffset() * Math.abs(invertedScale.y);
+        -this.rotateHandlerOffset() * Math.abs(invertedScale.y);
       this.findOne('.rotater').setAttrs({
         x: width / 2,
         y: scaledRotateHandlerOffset * Konva.Util._sign(height),
