@@ -650,7 +650,10 @@
     update: function() {
       var attrs = this._getNodeRect();
       var node = this.getNode();
-      var scale = node ? node.getAbsoluteScale() : { x: 1, y: 1 };
+      var scale = { x: 1, y: 1 };
+      if (node && node.getParent()) {
+        scale = node.getParent().getAbsoluteScale();
+      }
       var invertedScale = {
         x: 1 / scale.x,
         y: 1 / scale.y
