@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.1.7
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Tue Jul 03 2018
+ * Date: Wed Jul 04 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -18707,6 +18707,9 @@
 (function(Konva) {
   'use strict';
 
+  var BASE_BOX_WIDTH = 10;
+  var BASE_BOX_HEIGHT = 10;
+
   var ATTR_CHANGE_LIST = [
     'resizeEnabledChange',
     'rotateHandlerOffsetChange'
@@ -18752,12 +18755,17 @@
     'bottom-right': 135
   };
 
-  function getCursor(anchorName, rad) {
+  function getCursor(anchorName, rad, isMirrored) {
     if (anchorName === 'rotater') {
       return 'crosshair';
     }
 
     rad += Konva.Util._degToRad(ANGLES[anchorName] || 0);
+    // If we are mirrored, we need to mirror the angle (this is not the same as
+    // rotate).
+    if (isMirrored) {
+      rad *= -1;
+    }
     var angle = (Konva.Util._radToDeg(rad) % 360 + 360) % 360;
 
     if (
@@ -18836,8 +18844,6 @@
     'bottom-right'
   ];
 
-  var warningShowed = false;
-
   Konva.Transformer.prototype = {
     _centroid: false,
     ____init: function(config) {
@@ -18853,13 +18859,6 @@
 
       // update transformer data for certain attr changes
       this.on(ATTR_CHANGE_LIST, this.update);
-
-      if (!warningShowed) {
-        Konva.Util.warn(
-          'Konva.Transformer is currently experimental and may have bugs. Please report any issues to GitHub repo.'
-        );
-        warningShowed = true;
-      }
 
       if (this.getNode()) {
         this.update();
@@ -19005,10 +19004,10 @@
         fill: 'white',
         strokeWidth: 1,
         name: name,
-        width: 10,
-        height: 10,
-        offsetX: 5,
-        offsetY: 5,
+        width: BASE_BOX_WIDTH,
+        height: BASE_BOX_HEIGHT,
+        offsetX: BASE_BOX_WIDTH / 2,
+        offsetY: BASE_BOX_HEIGHT / 2,
         dragDistance: 0
       });
       var self = this;
@@ -19040,8 +19039,10 @@
         // var dy = -pos.y + center.y;
 
         // var angle = -Math.atan2(-dy, dx) - Math.PI / 2;
-
-        var cursor = getCursor(name, rad);
+        var scale = tr.getNode().getAbsoluteScale();
+        // If scale.y < 0 xor scale.x < 0 we need to flip (not rotate).
+        var isMirrored = scale.y * scale.x < 0;
+        var cursor = getCursor(name, rad, isMirrored);
         anchor.getStage().content.style.cursor = cursor;
         layer.batchDraw();
       });
@@ -19354,6 +19355,15 @@
     },
     update: function() {
       var attrs = this._getNodeRect();
+      var node = this.getNode();
+      var scale = { x: 1, y: 1 };
+      if (node && node.getParent()) {
+        scale = node.getParent().getAbsoluteScale();
+      }
+      var invertedScale = {
+        x: 1 / scale.x,
+        y: 1 / scale.y
+      };
       var width = attrs.width;
       var height = attrs.height;
 
@@ -19364,53 +19374,65 @@
       this.findOne('.top-left').setAttrs({
         x: -padding,
         y: -padding,
+        scale: invertedScale,
         visible: resizeEnabled && enabledHandlers.indexOf('top-left') >= 0
       });
       this.findOne('.top-center').setAttrs({
         x: width / 2,
         y: -padding,
+        scale: invertedScale,
         visible: resizeEnabled && enabledHandlers.indexOf('top-center') >= 0
       });
       this.findOne('.top-right').setAttrs({
         x: width + padding,
         y: -padding,
+        scale: invertedScale,
         visible: resizeEnabled && enabledHandlers.indexOf('top-right') >= 0
       });
       this.findOne('.middle-left').setAttrs({
         x: -padding,
         y: height / 2,
+        scale: invertedScale,
         visible: resizeEnabled && enabledHandlers.indexOf('middle-left') >= 0
       });
       this.findOne('.middle-right').setAttrs({
         x: width + padding,
         y: height / 2,
+        scale: invertedScale,
         visible: resizeEnabled && enabledHandlers.indexOf('middle-right') >= 0
       });
       this.findOne('.bottom-left').setAttrs({
         x: -padding,
         y: height + padding,
+        scale: invertedScale,
         visible: resizeEnabled && enabledHandlers.indexOf('bottom-left') >= 0
       });
       this.findOne('.bottom-center').setAttrs({
         x: width / 2,
         y: height + padding,
+        scale: invertedScale,
         visible: resizeEnabled && enabledHandlers.indexOf('bottom-center') >= 0
       });
       this.findOne('.bottom-right').setAttrs({
         x: width + padding,
         y: height + padding,
+        scale: invertedScale,
         visible: resizeEnabled && enabledHandlers.indexOf('bottom-right') >= 0
       });
 
+      var scaledRotateHandlerOffset =
+        -this.rotateHandlerOffset() * Math.abs(invertedScale.y);
       this.findOne('.rotater').setAttrs({
         x: width / 2,
-        y: -this.rotateHandlerOffset() * Konva.Util._sign(height),
+        y: scaledRotateHandlerOffset * Konva.Util._sign(height),
+        scale: invertedScale,
         visible: this.rotateEnabled()
       });
 
       this.findOne('.back').setAttrs({
-        width: width,
-        height: height,
+        width: width * scale.x,
+        height: height * scale.y,
+        scale: invertedScale,
         visible: this.lineEnabled()
       });
     },
