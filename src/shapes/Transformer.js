@@ -599,7 +599,10 @@
         window.removeEventListener('mouseup', this._handleMouseUp, true);
         window.removeEventListener('touchend', this._handleMouseUp, true);
         this.fire('transformend');
-        this.getNode().fire('transformend');
+        var node = this.getNode();
+        if (node) {
+          node.fire('transformend');
+        }
       }
     },
 

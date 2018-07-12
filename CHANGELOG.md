@@ -5,6 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+## Fixed
+
+* Some `Konva.Transformer` fixes
+
+
 ## [2.1.7][2018-07-03]
 
 ## Fixed

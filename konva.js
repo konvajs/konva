@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.1.7
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Thu Jul 05 2018
+ * Date: Thu Jul 12 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -19305,7 +19305,10 @@
         window.removeEventListener('mouseup', this._handleMouseUp, true);
         window.removeEventListener('touchend', this._handleMouseUp, true);
         this.fire('transformend');
-        this.getNode().fire('transformend');
+        var node = this.getNode();
+        if (node) {
+          node.fire('transformend');
+        }
       }
     },
 

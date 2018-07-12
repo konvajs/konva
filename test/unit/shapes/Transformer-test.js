@@ -681,6 +681,42 @@ suite('Transformer', function() {
     tr.destroy();
   });
 
+  test.only('can destroy with attached node while resize', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 100,
+      y: 60,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+
+    layer.draw();
+
+    stage.simulateMouseDown({
+      x: 100,
+      y: 60
+    });
+
+    assert.equal(tr.isTransforming(), true);
+
+    tr.destroy();
+
+    assert.equal(tr.isTransforming(), false);
+
+    assert.equal(tr.getNode(), undefined);
+  });
+
   test('can add padding', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -1004,7 +1040,7 @@ suite('Transformer', function() {
     var stage = addStage();
     var layer = new Konva.Layer({
       y: 100,
-      scaleY: -1,
+      scaleY: -1
     });
     stage.add(layer);
 
@@ -1179,12 +1215,12 @@ suite('Transformer', function() {
       draggable: true,
       width: 10,
       height: 10,
-      fill: 'yellow',
+      fill: 'yellow'
     });
     layer.add(rect);
 
     var tr = new Konva.Transformer({
-      node: rect,
+      node: rect
     });
     layer.add(tr);
     layer.draw();
