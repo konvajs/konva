@@ -681,7 +681,7 @@ suite('Transformer', function() {
     tr.destroy();
   });
 
-  test.only('can destroy with attached node while resize', function() {
+  test('can destroy with attached node while resize', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
