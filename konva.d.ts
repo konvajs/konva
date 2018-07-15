@@ -50,7 +50,7 @@ declare namespace Konva {
 
   type KonvaEvent = KonvaNodeEvent & KonvaStageEvent;
 
-  type KonveEventString = KonvaEvent | string;
+  type KonvaEventString = KonvaEvent | string;
 
   type globalCompositeOperationType =
     | ''
@@ -304,14 +304,14 @@ declare namespace Konva {
     name(name: string): this;
     noise(): number;
     noise(noise: number): this;
-    off(evtStr: KonveEventString): this;
+    off(evtStr: KonvaEventString): this;
     offset(): Vector2d;
     offset(offset: Vector2d): this;
     offsetX(): number;
     offsetX(offsetX: number): this;
     offsetY(): number;
     offsetY(offsetY: number): this;
-    on(evtStr: KonveEventString, handler: HandlerFunc): this;
+    on(evtStr: KonvaEventString, handler: HandlerFunc): this;
     opacity(): number;
     opacity(opacity: number): this;
     pixelSize(): number;
