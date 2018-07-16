@@ -6,7 +6,7 @@ declare namespace Konva {
   var DD: any;
 
   type HandlerFunc = (
-    e: { target: Konva.Shape; evt: Event; currentTarget: Konva.Node }
+    e: { target?: Konva.Shape; evt: Event; currentTarget: Konva.Node }
   ) => void;
 
   type globalCompositeOperationType =
