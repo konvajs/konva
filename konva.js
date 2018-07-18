@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.1.7
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Thu Jul 12 2018
+ * Date: Wed Jul 18 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -10369,6 +10369,9 @@
       }
 
       layers.each(function(layer) {
+        if (!layer.isVisible()) {
+          return;
+        }
         var width = layer.getCanvas().getWidth();
         var height = layer.getCanvas().getHeight();
         var ratio = layer.getCanvas().getPixelRatio();

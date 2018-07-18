@@ -252,6 +252,9 @@
       }
 
       layers.each(function(layer) {
+        if (!layer.isVisible()) {
+          return;
+        }
         var width = layer.getCanvas().getWidth();
         var height = layer.getCanvas().getHeight();
         var ratio = layer.getCanvas().getPixelRatio();
