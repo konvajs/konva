@@ -9,6 +9,49 @@ declare namespace Konva {
     e: { target: Konva.Shape; evt: Event; currentTarget: Konva.Node; cancelBubble: boolean }
   ) => void;
 
+  enum KonvaNodeEvent {
+    mouseover = 'mouseover',
+    mouseout = 'mouseout',
+    mousemove = 'mousemove',
+    mouseleave = 'mouseleave',
+    mouseenter = 'mouseenter',
+    mousedown = 'mousedown',
+    mouseup = 'mouseup',
+    wheel = 'wheel',
+    contextmenu = 'contextmenu',
+    click = 'click',
+    dblclick = 'dblclick',
+    touchstart = 'touchstart',
+    touchmove = 'touchmove',
+    touchend = 'touchend',
+    tap = 'tap',
+    dbltap = 'dbltap',
+    dragstart = 'dragstart',
+    dragmove = 'dragmove',
+    dragend = 'dragend',
+  }
+
+  enum KonvaStageEvent {
+    contentMouseover = 'contentMouseover',
+    contentMousemove = 'contentMousemove',
+    contentMouseout = 'contentMouseout',
+    contentMousedown = 'contentMousedown',
+    contentMouseup = 'contentMouseup',
+    contentWheel = 'contentWheel',
+    contentContextmenu = 'contentContextmenu',
+    contentClick = 'contentClick',
+    contentDblclick = 'contentDblclick',
+    contentTouchstart = 'contentTouchstart',
+    contentTouchmove = 'contentTouchmove',
+    contentTouchend = 'contentTouchend',
+    contentTap = 'contentTap',
+    contentDblTap = 'contentDblTap',
+  }
+
+  type KonvaEvent = KonvaNodeEvent & KonvaStageEvent;
+
+  type KonvaEventString = KonvaEvent | string;
+
   type globalCompositeOperationType =
     | ''
     | 'source-over'
@@ -303,7 +346,7 @@ declare namespace Konva {
     name(name: string): this;
     noise(): number;
     noise(noise: number): this;
-    off(evtStr: string): this;
+    off(evtStr: KonvaEventString): this;
     offset(): Vector2d;
     offset(offset: Vector2d): this;
     offsetX(): number;
@@ -311,7 +354,7 @@ declare namespace Konva {
     offsetY(): number;
     offsetY(offsetY: number): this;
     on<K extends keyof KonvaNodeEventMap>(evtStr: K, handler: (e: { target: Konva.Shape; evt: KonvaNodeEventMap[K]; currentTarget: Konva.Node; cancelBubble: boolean }) => void): this;
-    on(evtStr: string, handler: HandlerFunc): this;
+    on(evtStr: KonvaEventString, handler: HandlerFunc): this;
     opacity(): number;
     opacity(opacity: number): this;
     pixelSize(): number;
