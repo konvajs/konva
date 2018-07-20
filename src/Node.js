@@ -1427,17 +1427,16 @@
       }
     },
     _getAbsoluteTransform: function(top) {
-      var at = new Konva.Transform(),
-        transformsEnabled;
+      var at = new Konva.Transform();
 
       // start with stage and traverse downwards to self
       this._eachAncestorReverse(function(node) {
-        transformsEnabled = node.transformsEnabled();
+        var transformsEnabled = node.transformsEnabled();
 
         if (transformsEnabled === 'all') {
           at.multiply(node.getTransform());
         } else if (transformsEnabled === 'position') {
-          at.translate(node.x(), node.y());
+          at.translate(node.getX() - node.getOffsetX(), node.getY() - node.getOffsetY());
         }
       }, top);
       return at;
