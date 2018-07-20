@@ -2,11 +2,7 @@
  * Konva JavaScript Framework v2.1.7
  * http://konvajs.github.io/
  * Licensed under the MIT
-<<<<<<< HEAD
- * Date: Mon Jun 25 2018
-=======
  * Date: Fri Jul 20 2018
->>>>>>> master
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -12769,14 +12765,6 @@
               stage._setPointerPosition(evt);
               pos = stage.getPointerPosition();
             }
-            /*var dragDistance = node.dragDistance();
-            var distance = Math.max(
-              Math.abs(pos.x - dd.startPointerPos.x),
-              Math.abs(pos.y - dd.startPointerPos.y)
-            );
-            if (distance < dragDistance) {
-              return;
-            }*/
             var dx = pos.x - dd.startPointerPos.x;
             var dy = pos.y - dd.startPointerPos.y;
 
