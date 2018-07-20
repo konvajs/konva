@@ -3350,6 +3350,16 @@ suite('Node', function() {
     delete Number.prototype.customFunc;
   });
 
+  test('toObject with property in attrs and instanse', function() {
+    var node = new Konva.Circle({
+      id: 'foo',
+      radius: 10,
+      filled: true
+    });
+    node.filled = true;
+    assert.equal(node.toObject().attrs.filled, true);
+  });
+
   test('test findAncestor', function() {
     var stage = addStage();
     stage.setAttrs({

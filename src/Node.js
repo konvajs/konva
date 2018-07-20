@@ -597,7 +597,7 @@
       });
     },
     /**
-     * remove self from parent, but don't destroy
+     * remove self from parent, but don't destroy. You can reuse node later.
      * @method
      * @memberof Konva.Node.prototype
      * @returns {Konva.Node}
@@ -624,7 +624,7 @@
       return this;
     },
     /**
-     * remove and destroy self
+     * remove and destroy a node. Kill it forever! You should not reuse node after destroy().
      * @method
      * @memberof Konva.Node.prototype
      * @example
@@ -1231,7 +1231,7 @@
 
       for (key in attrs) {
         val = attrs[key];
-        getter = this[key];
+        getter = typeof this[key] === 'function' && this[key];
         // remove attr value so that we can extract the default value from the getter
         delete attrs[key];
         defaultValue = getter ? getter.call(this) : null;
@@ -1428,16 +1428,14 @@
     },
     _getAbsoluteTransform: function(top) {
       var at = new Konva.Transform(),
-        transformsEnabled,
-        trans;
+        transformsEnabled;
 
       // start with stage and traverse downwards to self
       this._eachAncestorReverse(function(node) {
         transformsEnabled = node.transformsEnabled();
-        trans = node.getTransform();
 
         if (transformsEnabled === 'all') {
-          at.multiply(trans);
+          at.multiply(node.getTransform());
         } else if (transformsEnabled === 'position') {
           at.translate(node.x(), node.y());
         }

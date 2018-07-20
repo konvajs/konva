@@ -1060,6 +1060,23 @@ suite('Stage', function() {
     assert.equal(stage.toDataURL(), layer.toDataURL());
   });
 
+  test('toDataURL with hidden layer', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var circle = new Konva.Circle({
+      x: stage.width() / 2,
+      y: stage.height() / 2,
+      fill: 'red',
+      radius: 50
+    });
+    layer.add(circle);
+    stage.add(layer);
+
+    var stageDataUrl = stage.toDataURL();
+    layer.visible(false);
+    assert.equal(stage.toDataURL() === stageDataUrl, false);
+  });
+
   test('toCanvas with large size', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

@@ -6,8 +6,51 @@ declare namespace Konva {
   var DD: any;
 
   type HandlerFunc = (
-    e: { target: Konva.Shape; evt: Event; currentTarget: Konva.Node }
+    e: { target: Konva.Shape; evt: Event; currentTarget: Konva.Node; cancelBubble: boolean }
   ) => void;
+
+  enum KonvaNodeEvent {
+    mouseover = 'mouseover',
+    mouseout = 'mouseout',
+    mousemove = 'mousemove',
+    mouseleave = 'mouseleave',
+    mouseenter = 'mouseenter',
+    mousedown = 'mousedown',
+    mouseup = 'mouseup',
+    wheel = 'wheel',
+    contextmenu = 'contextmenu',
+    click = 'click',
+    dblclick = 'dblclick',
+    touchstart = 'touchstart',
+    touchmove = 'touchmove',
+    touchend = 'touchend',
+    tap = 'tap',
+    dbltap = 'dbltap',
+    dragstart = 'dragstart',
+    dragmove = 'dragmove',
+    dragend = 'dragend',
+  }
+
+  enum KonvaStageEvent {
+    contentMouseover = 'contentMouseover',
+    contentMousemove = 'contentMousemove',
+    contentMouseout = 'contentMouseout',
+    contentMousedown = 'contentMousedown',
+    contentMouseup = 'contentMouseup',
+    contentWheel = 'contentWheel',
+    contentContextmenu = 'contentContextmenu',
+    contentClick = 'contentClick',
+    contentDblclick = 'contentDblclick',
+    contentTouchstart = 'contentTouchstart',
+    contentTouchmove = 'contentTouchmove',
+    contentTouchend = 'contentTouchend',
+    contentTap = 'contentTap',
+    contentDblTap = 'contentDblTap',
+  }
+
+  type KonvaEvent = KonvaNodeEvent & KonvaStageEvent;
+
+  type KonvaEventString = KonvaEvent | string;
 
   type globalCompositeOperationType =
     | ''
@@ -96,7 +139,48 @@ declare namespace Konva {
     start(): Animation;
     stop(): Animation;
   }
+  
+  interface KonvaNodeEventMap extends KonvaStageEventMap {
+    'mouseover': MouseEvent,
+    'mouseout': MouseEvent,
+    'mousemove': MouseEvent,
+    'mouseleave': MouseEvent,
+    'mouseenter': MouseEvent,
+    'mousedown': MouseEvent,
+    'mouseup': MouseEvent,
+    'wheel': WheelEvent,
+    'contextmenu': PointerEvent,
+    'click': MouseEvent,
+    'dblclick': MouseEvent,
+    'touchstart': TouchEvent,
+    'touchmove': TouchEvent,
+    'touchend': TouchEvent,
+    'tap': Event,
+    'dbltap': Event,
+    'dragstart': DragEvent,
+    'dragmove': DragEvent,
+    'dragend': DragEvent,
+    'dragover': DragEvent,
+    'drop': DragEvent,
+  }
 
+  interface KonvaStageEventMap {
+    'contentMouseover': MouseEvent,
+    'contentMousemove': MouseEvent,
+    'contentMouseout': MouseEvent,
+    'contentMousedown': MouseEvent,
+    'contentMouseup': MouseEvent,
+    'contentWheel': WheelEvent,
+    'contentContextmenu': PointerEvent,
+    'contentClick': MouseEvent,
+    'contentDblclick': MouseEvent,
+    'contentTouchstart': TouchEvent,
+    'contentTouchmove': TouchEvent,
+    'contentTouchend': TouchEvent,
+    'contentTap': Event,
+    'contentDblTap': Event,
+  }
+    
   interface NodeConfig {
     x?: number;
     y?: number;
@@ -205,13 +289,14 @@ declare namespace Konva {
     getAbsolutePosition(top?: Container): Vector2d;
     getAbsoluteTransform(top?: Container): Transform;
     getAbsoluteZIndex(): number;
+    getAbsoluteScale(): Vector2d;
     getAncestors(): Collection;
     getAttr(attr: string): any;
     getAttrs(): NodeConfig;
     // CHECK
     getCanvas(): Canvas;
     getClassName(): string;
-    getClientRect(): SizeConfig;
+    getClientRect(attrs? : { skipTransform?: boolean, relativeTo?: object }): SizeConfig;
     getContent(): HTMLDivElement;
     getDepth(): number;
     getHeight(): number;
@@ -261,14 +346,15 @@ declare namespace Konva {
     name(name: string): this;
     noise(): number;
     noise(noise: number): this;
-    off(evtStr: string): this;
+    off(evtStr: KonvaEventString): this;
     offset(): Vector2d;
     offset(offset: Vector2d): this;
     offsetX(): number;
     offsetX(offsetX: number): this;
     offsetY(): number;
     offsetY(offsetY: number): this;
-    on(evtStr: string, handler: HandlerFunc): this;
+    on<K extends keyof KonvaNodeEventMap>(evtStr: K, handler: (e: { target: Konva.Shape; evt: KonvaNodeEventMap[K]; currentTarget: Konva.Node; cancelBubble: boolean }) => void): this;
+    on(evtStr: KonvaEventString, handler: HandlerFunc): this;
     opacity(): number;
     opacity(opacity: number): this;
     pixelSize(): number;
@@ -897,6 +983,7 @@ declare namespace Konva {
     padding?: number;
     lineHeight?: number;
     wrap?: string;
+    ellipsis?: boolean;
   }
 
   class Text extends Shape {

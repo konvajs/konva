@@ -5,6 +5,24 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+## Fixed
+
+* Some `Konva.Transformer` fixes
+* Typescript fixes
+* `stage.toDataURL()` fixes when it has hidden layers
+
+## [2.1.7][2018-07-03]
+
+## Fixed
+
+* `toObject` fixes
+
+## [2.1.7][2018-07-03]
+
+## Fixed
+
+* Some drag&drop fixes
+
 ## [2.1.6][2018-06-16]
 
 ## Fixed
