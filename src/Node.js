@@ -1428,16 +1428,14 @@
     },
     _getAbsoluteTransform: function(top) {
       var at = new Konva.Transform(),
-        transformsEnabled,
-        trans;
+        transformsEnabled;
 
       // start with stage and traverse downwards to self
       this._eachAncestorReverse(function(node) {
         transformsEnabled = node.transformsEnabled();
-        trans = node.getTransform();
 
         if (transformsEnabled === 'all') {
-          at.multiply(trans);
+          at.multiply(node.getTransform());
         } else if (transformsEnabled === 'position') {
           at.translate(node.x(), node.y());
         }
