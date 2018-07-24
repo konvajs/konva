@@ -1695,62 +1695,68 @@ suite('Node', function() {
   });
 
   // ======================================================
-  test('results of getAbsoluteTransform limited to position and offset transformations are the same' +
-       ' when used with transformsEnabled = \'all\' and transformsEnabled = \'position\'', function() {
-    var stage = addStage();
-    var layer1 = new Konva.Layer({
-      name: 'layerName',
-      id: 'layerId',
-      x:  90,
-      y: 110,
-      offsetX: 50,
-      offsetY: 50,
-      transformsEnabled: 'all'
-    });
-    var group1 = new Konva.Group({
-      name: 'groupName',
-      id: 'groupId',
-      x: 30,
-      y: 30,
-      offsetX: -60,
-      offsetY: -80,
-      transformsEnabled: 'all'
-    });
-    var rect1 = new Konva.Rect({
-      x: -50,
-      y: -60,
-      offsetX: 50,
-      offsetY: 50,
-      width: 50,
-      height: 50,
-      fill: 'red',
-      name: 'rectName',
-      id: 'rectId1',
-      transformsEnabled: 'all'
-    });
+  test(
+    'results of getAbsoluteTransform limited to position and offset transformations are the same' +
+      " when used with transformsEnabled = 'all' and transformsEnabled = 'position'",
+    function() {
+      var stage = addStage();
+      var layer1 = new Konva.Layer({
+        name: 'layerName',
+        id: 'layerId',
+        x: 90,
+        y: 110,
+        offsetX: 50,
+        offsetY: 50,
+        transformsEnabled: 'all'
+      });
+      var group1 = new Konva.Group({
+        name: 'groupName',
+        id: 'groupId',
+        x: 30,
+        y: 30,
+        offsetX: -60,
+        offsetY: -80,
+        transformsEnabled: 'all'
+      });
+      var rect1 = new Konva.Rect({
+        x: -50,
+        y: -60,
+        offsetX: 50,
+        offsetY: 50,
+        width: 50,
+        height: 50,
+        fill: 'red',
+        name: 'rectName',
+        id: 'rectId1',
+        transformsEnabled: 'all'
+      });
 
-    var layer2 = layer1.clone({ transformsEnabled: 'position' });
-    var group2 = group1.clone({ transformsEnabled: 'position' });
-    var rect2  =  rect1.clone({ transformsEnabled: 'position' });
+      var layer2 = layer1.clone({ transformsEnabled: 'position' });
+      var group2 = group1.clone({ transformsEnabled: 'position' });
+      var rect2 = rect1.clone({ transformsEnabled: 'position' });
 
-    group1.add(rect1);
-    layer1.add(group1);
-    stage.add(layer1);
+      group1.add(rect1);
+      layer1.add(group1);
+      stage.add(layer1);
 
-    group2.add(rect2);
-    layer2.add(group2);
-    stage.add(layer2);
+      group2.add(rect2);
+      layer2.add(group2);
+      stage.add(layer2);
 
-    assert.equal(layer1.getTransformsEnabled(), 'all');
-    assert.equal(group1.getTransformsEnabled(), 'all');
-    assert.equal( rect1.getTransformsEnabled(), 'all');
+      assert.equal(layer1.getTransformsEnabled(), 'all');
+      assert.equal(group1.getTransformsEnabled(), 'all');
+      assert.equal(rect1.getTransformsEnabled(), 'all');
 
-    assert.equal(layer2.getTransformsEnabled(), 'position');
-    assert.equal(group2.getTransformsEnabled(), 'position');
-    assert.equal( rect2.getTransformsEnabled(), 'position');
+      assert.equal(layer2.getTransformsEnabled(), 'position');
+      assert.equal(group2.getTransformsEnabled(), 'position');
+      assert.equal(rect2.getTransformsEnabled(), 'position');
 
-    assert.deepEqual(rect2.getAbsoluteTransform(), rect1.getAbsoluteTransform());
-  });
+      assert.deepEqual(
+        rect2.getAbsoluteTransform(),
+        rect1.getAbsoluteTransform()
+      );
+    }
+  );
 
   // ======================================================
   test('test dragDistance', function() {
