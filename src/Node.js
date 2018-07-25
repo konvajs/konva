@@ -1052,7 +1052,7 @@
       // func with this because it will be the only node
       if (top && top._id === this._id) {
         func(this);
-        return true;
+        return;
       }
 
       family.unshift(this);
