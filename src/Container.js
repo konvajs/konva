@@ -389,10 +389,11 @@
 
       return arr;
     },
-    _setChildrenIndices: function() {
-      this.children.each(function(child, n) {
-        child.index = n;
-      });
+    _setChildrenIndicesBetween: function(idx, maxIdx) {
+      var children = this.children;
+      for (; idx <= maxIdx; ++idx) {
+        children[idx].index = idx;
+      }
     },
     drawScene: function(can, top, caching) {
       var layer = this.getLayer(),
@@ -680,6 +681,7 @@
    *   ctx.rect(0, 0, 100, 100);
    * });
    */
+
 
   Konva.Collection.mapMethods(Konva.Container);
 })();

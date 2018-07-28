@@ -609,7 +609,7 @@
 
       if (parent && parent.children) {
         parent.children.splice(this.index, 1);
-        parent._setChildrenIndices();
+        parent._setChildrenIndicesBetween(this.index, parent.children.length - 1);
         delete this.parent;
       }
 
@@ -1089,10 +1089,11 @@
         Konva.Util.warn('Node has no parent. moveToTop function is ignored.');
         return false;
       }
+      var children = this.parent.children;
       var index = this.index;
-      this.parent.children.splice(index, 1);
-      this.parent.children.push(this);
-      this.parent._setChildrenIndices();
+      children.splice(index, 1);
+      children.push(this);
+      this.parent._setChildrenIndicesBetween(index, children.length - 1);
       return true;
     },
     /**
@@ -1111,7 +1112,7 @@
       if (index < len - 1) {
         this.parent.children.splice(index, 1);
         this.parent.children.splice(index + 1, 0, this);
-        this.parent._setChildrenIndices();
+        this.parent._setChildrenIndicesBetween(index, index + 1);
         return true;
       }
       return false;
@@ -1131,7 +1132,7 @@
       if (index > 0) {
         this.parent.children.splice(index, 1);
         this.parent.children.splice(index - 1, 0, this);
-        this.parent._setChildrenIndices();
+        this.parent._setChildrenIndicesBetween(index - 1, index);
         return true;
       }
       return false;
@@ -1153,7 +1154,7 @@
       if (index > 0) {
         this.parent.children.splice(index, 1);
         this.parent.children.unshift(this);
-        this.parent._setChildrenIndices();
+        this.parent._setChildrenIndicesBetween(0, index);
         return true;
       }
       return false;
@@ -1170,10 +1171,19 @@
         Konva.Util.warn('Node has no parent. zIndex parameter is ignored.');
         return false;
       }
+      var children = this.parent.children;
+      zIndex = Math.max(0, Math.min(zIndex, children.length - 1));
+
       var index = this.index;
-      this.parent.children.splice(index, 1);
-      this.parent.children.splice(zIndex, 0, this);
-      this.parent._setChildrenIndices();
+      if (zIndex !== index) {
+        children.splice(index, 1);
+        children.splice(zIndex, 0, this);
+        if (index < zIndex) {
+          this.parent._setChildrenIndicesBetween(index, zIndex);
+        } else {
+          this.parent._setChildrenIndicesBetween(zIndex, index);
+        }
+      }
       return this;
     },
     /**
