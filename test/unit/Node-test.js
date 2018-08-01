@@ -292,7 +292,7 @@ suite('Node', function() {
 
   // ======================================================
   test('toDataURL + HDPI', function(done) {
-    this.timeout(5000);
+    // this.timeout(5000);
     var oldRatio = Konva.pixelRatio;
     Konva.pixelRatio = 2;
 
@@ -336,6 +336,49 @@ suite('Node', function() {
         img.src = url;
       }
     });
+  });
+
+  // ======================================================
+  test('toDataURL of moved shape', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var circle = new Konva.Circle({
+      fill: 'green',
+      radius: 50
+    });
+    layer.add(circle);
+
+    var oldURL = circle.toDataURL();
+
+    circle.x(100);
+    circle.y(100);
+
+    var newURL = circle.toDataURL();
+    assert.equal(oldURL, newURL);
+  });
+
+  // ======================================================
+  test('toDataURL of transformer shape', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var text = new Konva.Text({
+      fill: 'green',
+      text: 'hello, test',
+      rotation: 45
+    });
+    layer.add(text);
+
+    var oldURL = text.toDataURL();
+
+    text.x(100);
+    text.y(100);
+
+    var newURL = text.toDataURL();
+    assert.equal(oldURL, newURL);
   });
 
   // ======================================================

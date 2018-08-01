@@ -1057,7 +1057,8 @@ suite('Stage', function() {
     });
     layer.add(circle);
     stage.add(layer);
-    assert.equal(stage.toDataURL(), layer.toDataURL());
+
+    compareCanvases(stage.toCanvas(), layer.toCanvas());
   });
 
   test('toDataURL with hidden layer', function() {
