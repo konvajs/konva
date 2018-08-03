@@ -5,11 +5,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+## [2.1.8][2018-08-01]
+
 ## Fixed
 
 * Some `Konva.Transformer` fixes
 * Typescript fixes
 * `stage.toDataURL()` fixes when it has hidden layers
+* `shape.toDataURL()` automatically adjust position and size of resulted image
 
 ## [2.1.7][2018-07-03]
 

@@ -1,8 +1,8 @@
 /*
- * Konva JavaScript Framework v2.1.7
+ * Konva JavaScript Framework v2.1.8
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Tue Jul 24 2018
+ * Date: Wed Aug 01 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -21,7 +21,7 @@
 
   var Konva = {
     // public
-    version: '2.1.7',
+    version: '2.1.8',
 
     // private
     stages: [],
@@ -3425,7 +3425,7 @@
       // func with this because it will be the only node
       if (top && top._id === this._id) {
         func(this);
-        return true;
+        return;
       }
 
       family.unshift(this);
@@ -3955,17 +3955,16 @@
     _toKonvaCanvas: function(config) {
       config = config || {};
 
+      var box = this.getClientRect();
+
       var stage = this.getStage(),
-        x = config.x || 0,
-        y = config.y || 0,
+        x = config.x || box.x,
+        y = config.y || box.y,
         pixelRatio = config.pixelRatio || 1,
         canvas = new Konva.SceneCanvas({
-          width:
-            config.width || this.getWidth() || (stage ? stage.getWidth() : 0),
+          width: config.width || box.width || (stage ? stage.getWidth() : 0),
           height:
-            config.height ||
-            this.getHeight() ||
-            (stage ? stage.getHeight() : 0),
+            config.height || box.height || (stage ? stage.getHeight() : 0),
           pixelRatio: pixelRatio
         }),
         context = canvas.getContext();

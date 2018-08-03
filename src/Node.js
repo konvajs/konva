@@ -1592,17 +1592,16 @@
     _toKonvaCanvas: function(config) {
       config = config || {};
 
+      var box = this.getClientRect();
+
       var stage = this.getStage(),
-        x = config.x || 0,
-        y = config.y || 0,
+        x = config.x || box.x,
+        y = config.y || box.y,
         pixelRatio = config.pixelRatio || 1,
         canvas = new Konva.SceneCanvas({
-          width:
-            config.width || this.getWidth() || (stage ? stage.getWidth() : 0),
+          width: config.width || box.width || (stage ? stage.getWidth() : 0),
           height:
-            config.height ||
-            this.getHeight() ||
-            (stage ? stage.getHeight() : 0),
+            config.height || box.height || (stage ? stage.getHeight() : 0),
           pixelRatio: pixelRatio
         }),
         context = canvas.getContext();
