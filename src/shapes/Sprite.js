@@ -10,6 +10,7 @@
    * @param {Object} config.animations animation map
    * @param {Integer} [config.frameIndex] animation frame index
    * @param {Image} config.image image object
+   * @param {Integer} [config.frameRate] animation frame rate
    * @@shapeParams
    * @@nodeParams
    * @example
