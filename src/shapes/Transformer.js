@@ -823,7 +823,7 @@
 
   function validateAnchors(val) {
     if (isNaN(val)) {
-      Konva.Util.warn('enabledHandlers value should be an array');
+      Konva.Util.warn('anchorBoxSize value should be a Number');
     }
     if (val < 10) {
       Konva.Util.warn('Anchor must be a minimum of 10');
