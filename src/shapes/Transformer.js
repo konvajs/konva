@@ -111,7 +111,7 @@
    * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
    * @param {Array} [config.enabledHandlers] Array of names of enabled handles
    * @param {Function} [config.boundBoxFunc] Bounding box function
-   * @param {Number} [config.anchorBoxSize] Default is 10
+   * @param {Number} [config.anchorSize] Default is 10
    * @example
    * var transformer = new Konva.Transformer({
    *   node: rectangle,
@@ -291,16 +291,16 @@
     },
 
     _createAnchor: function(name) {
-      var anchorBoxSize = this.anchorBoxSize();
+      var anchorSize = this.anchorSize();
       var anchor = new Konva.Rect({
         stroke: 'rgb(0, 161, 255)',
         fill: 'white',
         strokeWidth: 1,
         name: name,
-        width: anchorBoxSize,
-        height: anchorBoxSize,
-        offsetX: anchorBoxSize / 2,
-        offsetY: anchorBoxSize / 2,
+        width: anchorSize,
+        height: anchorSize,
+        offsetX: anchorSize / 2,
+        offsetY: anchorSize / 2,
         dragDistance: 0
       });
       var self = this;
@@ -823,7 +823,7 @@
 
   function validateAnchors(val) {
     if (isNaN(val)) {
-      Konva.Util.warn('anchorBoxSize value should be a Number');
+      Konva.Util.warn('anchorSize value should be a Number');
     }
     if (val < 10) {
       Konva.Util.warn('Anchor must be a minimum of 10');
@@ -833,7 +833,7 @@
   }
 
   /**
-   * get/set anchor box size. Default is 10
+   * get/set anchor size. Default is 10
    * @name validateAnchors
    * @method
    * @memberof Konva.Transformer.prototype
@@ -841,12 +841,12 @@
    * @returns {Number}
    * @example
    * // get
-   * var anchorBoxSize = transformer.anchorBoxSize();
+   * var anchorSize = transformer.anchorSize();
    *
    * // set
-   * transformer.anchorBoxSize(20)
+   * transformer.anchorSize(20)
    */
-  Konva.Factory.addGetterSetter(Konva.Transformer, 'anchorBoxSize', 10, validateAnchors);
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'anchorSize', 10, validateAnchors);
 
   /**
    * get/set ability to rotate.
