@@ -956,6 +956,7 @@ declare namespace Konva {
     animations: any;
     frameIndex?: number;
     image: HTMLImageElement;
+    frameRate?: number;
   }
 
   class Sprite extends Shape {
