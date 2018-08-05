@@ -114,6 +114,7 @@
    * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
    * @param {Array} [config.enabledHandlers] Array of names of enabled handles
    * @param {Function} [config.boundBoxFunc] Bounding box function
+   * @param {Function} [config.customAnchorFunc] Custom anchor function
    * @example
    * var transformer = new Konva.Transformer({
    *   node: rectangle,
@@ -293,17 +294,26 @@
     },
 
     _createAnchor: function(name) {
-      var anchor = new Konva.Rect({
-        stroke: 'rgb(0, 161, 255)',
-        fill: 'white',
-        strokeWidth: 1,
-        name: name,
-        width: BASE_BOX_WIDTH,
-        height: BASE_BOX_HEIGHT,
-        offsetX: BASE_BOX_WIDTH / 2,
-        offsetY: BASE_BOX_HEIGHT / 2,
-        dragDistance: 0
-      });
+      var anchor = null;
+      var customAnchorFunc = this.getCustomAnchorFunc();
+      if (customAnchorFunc) {
+        anchor = customAnchorFunc.call(this);
+        anchor.dragDistance(0);
+        anchor.name(name);
+      }
+      else {
+        anchor = new Konva.Rect({
+          stroke: 'rgb(0, 161, 255)',
+          fill: 'white',
+          strokeWidth: 1,
+          name: name,
+          width: BASE_BOX_WIDTH,
+          height: BASE_BOX_HEIGHT,
+          offsetX: BASE_BOX_WIDTH / 2,
+          offsetY: BASE_BOX_HEIGHT / 2,
+          dragDistance: 0
+        });
+      }
       var self = this;
       anchor.on('mousedown touchstart', function(e) {
         self._handleMouseDown(e);
@@ -940,6 +950,31 @@
    * });
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'boundBoxFunc');
+
+  /**
+   * get/set custom anchor function
+   * @name customAnchorFunc
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Function} func
+   * @returns {Function}
+   * @example
+   * // get
+   * var customAnchorFunc = transformer.customAnchorFunc();
+   *
+   * // set
+   * transformer.customAnchorFunc(function() {
+   *   return new Konva.Circle({
+   *     stroke: "rgb(138, 138, 138)",
+   *     fill: "rgb(49, 49, 49)",
+   *     strokeWidth: 2,
+   *     radius: 8,
+   *     offsetX: 0,
+   *     offsetY: 0
+   *   })
+   * });
+   */
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'customAnchorFunc');
 
   Konva.Collection.mapMethods(Konva.Transformer);
 })(Konva);
