@@ -1198,7 +1198,7 @@ suite('Transformer', function() {
       x: 20,
       y: 20
     });
-    assert.equal(shape.name(), 'top-left');
+    assert.equal(shape.name(), 'top-left _anchor');
   });
 
   test('check rotator size on scaled transformer', function() {
