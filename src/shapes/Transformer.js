@@ -1,12 +1,10 @@
 (function(Konva) {
   'use strict';
 
-  var BASE_BOX_WIDTH = 10;
-  var BASE_BOX_HEIGHT = 10;
-
   var ATTR_CHANGE_LIST = [
     'resizeEnabledChange',
-    'rotateHandlerOffsetChange'
+    'rotateHandlerOffsetChange',
+    'anchorSizeChange'
   ].join(' ');
 
   var NODE_RECT = 'nodeRect';
@@ -114,6 +112,7 @@
    * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
    * @param {Array} [config.enabledHandlers] Array of names of enabled handles
    * @param {Function} [config.boundBoxFunc] Bounding box function
+   * @param {Number} [config.anchorSize] Default is 10
    * @example
    * var transformer = new Konva.Transformer({
    *   node: rectangle,
@@ -297,11 +296,7 @@
         stroke: 'rgb(0, 161, 255)',
         fill: 'white',
         strokeWidth: 1,
-        name: name,
-        width: BASE_BOX_WIDTH,
-        height: BASE_BOX_HEIGHT,
-        offsetX: BASE_BOX_WIDTH / 2,
-        offsetY: BASE_BOX_HEIGHT / 2,
+        name: name + ' _anchor',
         dragDistance: 0,
         draggable: true
       });
@@ -387,7 +382,7 @@
     },
 
     _handleMouseDown: function(e) {
-      this.movingResizer = e.target.name();
+      this.movingResizer = e.target.name().split(' ')[0];
 
       // var node = this.getNode();
       var attrs = this._getNodeRect();
@@ -672,6 +667,14 @@
       var resizeEnabled = this.resizeEnabled();
       var padding = this.getPadding();
 
+      var anchorSize = this.getAnchorSize();
+      this.find('._anchor').setAttrs({
+        width: anchorSize,
+        height: anchorSize,
+        offsetX: anchorSize / 2,
+        offsetY: anchorSize / 2
+      });
+
       this.findOne('.top-left').setAttrs({
         x: -padding,
         y: -padding,
@@ -825,6 +828,38 @@
    * transformer.resizeEnabled(false);
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'resizeEnabled', true);
+
+  function validateAnchors(val) {
+    if (isNaN(val)) {
+      Konva.Util.warn('anchorSize value should be a Number');
+    }
+    if (val < 10) {
+      Konva.Util.warn('Anchor must be a minimum of 10');
+      return 10;
+    }
+    return val;
+  }
+
+  /**
+   * get/set anchor size. Default is 10
+   * @name validateAnchors
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Number} 10
+   * @returns {Number}
+   * @example
+   * // get
+   * var anchorSize = transformer.anchorSize();
+   *
+   * // set
+   * transformer.anchorSize(20)
+   */
+  Konva.Factory.addGetterSetter(
+    Konva.Transformer,
+    'anchorSize',
+    10,
+    validateAnchors
+  );
 
   /**
    * get/set ability to rotate.
