@@ -1,9 +1,6 @@
 (function(Konva) {
   'use strict';
 
-  var BASE_BOX_WIDTH = 10;
-  var BASE_BOX_HEIGHT = 10;
-
   var ATTR_CHANGE_LIST = [
     'resizeEnabledChange',
     'rotateHandlerOffsetChange'
@@ -114,6 +111,7 @@
    * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
    * @param {Array} [config.enabledHandlers] Array of names of enabled handles
    * @param {Function} [config.boundBoxFunc] Bounding box function
+   * @param {Number} [config.anchorSize] Default is 10
    * @example
    * var transformer = new Konva.Transformer({
    *   node: rectangle,
@@ -293,15 +291,16 @@
     },
 
     _createAnchor: function(name) {
+      var anchorSize = this.anchorSize();
       var anchor = new Konva.Rect({
         stroke: 'rgb(0, 161, 255)',
         fill: 'white',
         strokeWidth: 1,
         name: name,
-        width: BASE_BOX_WIDTH,
-        height: BASE_BOX_HEIGHT,
-        offsetX: BASE_BOX_WIDTH / 2,
-        offsetY: BASE_BOX_HEIGHT / 2,
+        width: anchorSize,
+        height: anchorSize,
+        offsetX: anchorSize / 2,
+        offsetY: anchorSize / 2,
         dragDistance: 0
       });
       var self = this;
@@ -821,6 +820,33 @@
    * transformer.resizeEnabled(false);
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'resizeEnabled', true);
+
+  function validateAnchors(val) {
+    if (isNaN(val)) {
+      Konva.Util.warn('anchorSize value should be a Number');
+    }
+    if (val < 10) {
+      Konva.Util.warn('Anchor must be a minimum of 10');
+      return 10;
+    }
+    return val;
+  }
+
+  /**
+   * get/set anchor size. Default is 10
+   * @name validateAnchors
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Number} 10
+   * @returns {Number}
+   * @example
+   * // get
+   * var anchorSize = transformer.anchorSize();
+   *
+   * // set
+   * transformer.anchorSize(20)
+   */
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'anchorSize', 10, validateAnchors);
 
   /**
    * get/set ability to rotate.
