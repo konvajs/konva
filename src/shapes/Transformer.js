@@ -302,11 +302,15 @@
         height: BASE_BOX_HEIGHT,
         offsetX: BASE_BOX_WIDTH / 2,
         offsetY: BASE_BOX_HEIGHT / 2,
-        dragDistance: 0
+        dragDistance: 0,
+        draggable: true
       });
       var self = this;
       anchor.on('mousedown touchstart', function(e) {
         self._handleMouseDown(e);
+      });
+      anchor.on('dragstart', function(e) {
+        e.cancelBubble = true;
       });
 
       // add hover styling
