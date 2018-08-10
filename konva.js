@@ -18727,7 +18727,8 @@
     'borderStrokeChange',
     'borderStrokeWidthChange',
     'anchorStrokeChange',
-    'anchorStrokeWidthChange'
+    'anchorStrokeWidthChange',
+    'anchorFillChange'
   ].join(' ');
 
   var NODE_RECT = 'nodeRect';
@@ -18822,7 +18823,8 @@
 
   /**
    * Transformer constructor.  Transformer is a special type of group that allow you transform Konva
-   * primitives and shapes.
+   * primitives and shapes. Transforming tool is not changing `width` and `height` properties of nodes
+   * when you resize them. Instead it changes `scaleX` and `scaleY` properties.
    * @constructor
    * @memberof Konva
    * @param {Object} config
@@ -18835,7 +18837,8 @@
    * @param {String} [config.borderStroke] Border stroke color
    * @param {Number} [config.borderStrokeWidth] Border stroke size
    * @param {Array} [config.borderDash] Array for border dash.
-   * @param {Number} [config.anchorStroke] Anchor stroke color
+   * @param {String} [config.anchorFill] Anchor fill color
+   * @param {String} [config.anchorStroke] Anchor stroke color
    * @param {Number} [config.anchorStrokeWidth] Anchor stroke size
    * @param {Number} [config.anchorSize] Default is 10
    * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
@@ -19033,6 +19036,12 @@
         self._handleMouseDown(e);
       });
       anchor.on('dragstart', function(e) {
+        e.cancelBubble = true;
+      });
+      anchor.on('dragmove', function(e) {
+        e.cancelBubble = true;
+      });
+      anchor.on('dragend', function(e) {
         e.cancelBubble = true;
       });
 
@@ -19491,6 +19500,10 @@
     stopTransform: function() {
       if (this._transforming) {
         this._removeEvents();
+        var resizerNode = this.findOne('.' + this.movingResizer);
+        if (resizerNode) {
+          resizerNode.stopDrag();
+        }
       }
     },
     destroy: function() {
