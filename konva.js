@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.1.8
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Thu Aug 09 2018
+ * Date: Fri Aug 10 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2311,15 +2311,23 @@
     backCompat: function(constructor, methods) {
       Konva.Util.each(methods, function(oldMethodName, newMethodName) {
         var method = constructor.prototype[newMethodName];
-        constructor.prototype[oldMethodName] = function() {
+        var oldGetter = GET + Konva.Util._capitalize(oldMethodName);
+        var oldSetter = SET + Konva.Util._capitalize(oldMethodName);
+
+        function deprecated() {
           method.apply(this, arguments);
           Konva.Util.error(
-            oldMethodName +
-              ' method is deprecated and will be removed soon. Use ' +
+            '"' +
+              oldMethodName +
+              '" method is deprecated and will be removed soon. Use ""' +
               newMethodName +
-              ' instead'
+              '" instead.'
           );
-        };
+        }
+
+        constructor.prototype[oldMethodName] = deprecated;
+        constructor.prototype[oldGetter] = deprecated;
+        constructor.prototype[oldSetter] = deprecated;
       });
     },
     afterSetFilter: function() {
@@ -18712,8 +18720,14 @@
 
   var ATTR_CHANGE_LIST = [
     'resizeEnabledChange',
-    'rotateHandlerOffsetChange',
-    'anchorSizeChange'
+    'rotateAnchorOffsetChange',
+    'enabledAnchorsChange',
+    'anchorSizeChange',
+    'borderEnabledChange',
+    'borderStrokeChange',
+    'borderStrokeWidthChange',
+    'anchorStrokeChange',
+    'anchorStrokeWidthChange'
   ].join(' ');
 
   var NODE_RECT = 'nodeRect';
@@ -18815,18 +18829,23 @@
    * @param {Boolean} [config.resizeEnabled] Default is true
    * @param {Boolean} [config.rotateEnabled] Default is true
    * @param {Array} [config.rotationSnaps] Array of angles for rotation snaps. Default is []
-   * @param {Number} [config.rotateHandlerOffset] Default is 50
+   * @param {Number} [config.rotateAnchorOffset] Default is 50
    * @param {Number} [config.padding] Default is 0
-   * @param {Number} [config.lineEnabled] Should we draw border? Default is true
-   * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
-   * @param {Array} [config.enabledHandlers] Array of names of enabled handles
-   * @param {Function} [config.boundBoxFunc] Bounding box function
+   * @param {Number} [config.borderEnabled] Should we draw border? Default is true
+   * @param {String} [config.borderStroke] Border stroke color
+   * @param {Number} [config.borderStrokeWidth] Border stroke size
+   * @param {Array} [config.borderDash] Array for border dash.
+   * @param {Number} [config.anchorStroke] Anchor stroke color
+   * @param {Number} [config.anchorStrokeWidth] Anchor stroke size
    * @param {Number} [config.anchorSize] Default is 10
+   * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
+   * @param {Array} [config.enabledAnchors] Array of names of enabled handles
+   * @param {Function} [config.boundBoxFunc] Bounding box function
    * @example
    * var transformer = new Konva.Transformer({
    *   node: rectangle,
-   *   rotateHandlerOffset: 60,
-   *   enabledHandlers: ['top-left', 'top-right', 'bottom-left', 'bottom-right']
+   *   rotateAnchorOffset: 60,
+   *   enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right']
    * });
    * layer.add(transformer);
    */
@@ -19061,7 +19080,6 @@
 
     _createBack: function() {
       var back = new Konva.Shape({
-        stroke: 'rgb(0, 161, 255)',
         name: 'back',
         width: 0,
         height: 0,
@@ -19080,7 +19098,7 @@
           if (tr.rotateEnabled()) {
             ctx.lineTo(
               this.width() / 2,
-              -tr.rotateHandlerOffset() * Konva.Util._sign(this.height())
+              -tr.rotateAnchorOffset() * Konva.Util._sign(this.height())
             );
           }
 
@@ -19372,7 +19390,7 @@
       var width = attrs.width;
       var height = attrs.height;
 
-      var enabledHandlers = this.enabledHandlers();
+      var enabledAnchors = this.enabledAnchors();
       var resizeEnabled = this.resizeEnabled();
       var padding = this.getPadding();
 
@@ -19381,63 +19399,66 @@
         width: anchorSize,
         height: anchorSize,
         offsetX: anchorSize / 2,
-        offsetY: anchorSize / 2
+        offsetY: anchorSize / 2,
+        stroke: this.getAnchorStroke(),
+        strokeWidth: this.getAnchorStrokeWidth(),
+        fill: this.getAnchorFill()
       });
 
       this.findOne('.top-left').setAttrs({
         x: -padding,
         y: -padding,
         scale: invertedScale,
-        visible: resizeEnabled && enabledHandlers.indexOf('top-left') >= 0
+        visible: resizeEnabled && enabledAnchors.indexOf('top-left') >= 0
       });
       this.findOne('.top-center').setAttrs({
         x: width / 2,
         y: -padding,
         scale: invertedScale,
-        visible: resizeEnabled && enabledHandlers.indexOf('top-center') >= 0
+        visible: resizeEnabled && enabledAnchors.indexOf('top-center') >= 0
       });
       this.findOne('.top-right').setAttrs({
         x: width + padding,
         y: -padding,
         scale: invertedScale,
-        visible: resizeEnabled && enabledHandlers.indexOf('top-right') >= 0
+        visible: resizeEnabled && enabledAnchors.indexOf('top-right') >= 0
       });
       this.findOne('.middle-left').setAttrs({
         x: -padding,
         y: height / 2,
         scale: invertedScale,
-        visible: resizeEnabled && enabledHandlers.indexOf('middle-left') >= 0
+        visible: resizeEnabled && enabledAnchors.indexOf('middle-left') >= 0
       });
       this.findOne('.middle-right').setAttrs({
         x: width + padding,
         y: height / 2,
         scale: invertedScale,
-        visible: resizeEnabled && enabledHandlers.indexOf('middle-right') >= 0
+        visible: resizeEnabled && enabledAnchors.indexOf('middle-right') >= 0
       });
       this.findOne('.bottom-left').setAttrs({
         x: -padding,
         y: height + padding,
         scale: invertedScale,
-        visible: resizeEnabled && enabledHandlers.indexOf('bottom-left') >= 0
+        visible: resizeEnabled && enabledAnchors.indexOf('bottom-left') >= 0
       });
       this.findOne('.bottom-center').setAttrs({
         x: width / 2,
         y: height + padding,
         scale: invertedScale,
-        visible: resizeEnabled && enabledHandlers.indexOf('bottom-center') >= 0
+        visible: resizeEnabled && enabledAnchors.indexOf('bottom-center') >= 0
       });
       this.findOne('.bottom-right').setAttrs({
         x: width + padding,
         y: height + padding,
         scale: invertedScale,
-        visible: resizeEnabled && enabledHandlers.indexOf('bottom-right') >= 0
+        visible: resizeEnabled && enabledAnchors.indexOf('bottom-right') >= 0
       });
 
-      var scaledRotateHandlerOffset =
-        -this.rotateHandlerOffset() * Math.abs(invertedScale.y);
+      var scaledRotateAnchorOffset =
+        -this.rotateAnchorOffset() * Math.abs(invertedScale.y);
       this.findOne('.rotater').setAttrs({
         x: width / 2,
-        y: scaledRotateHandlerOffset * Konva.Util._sign(height),
+        y: scaledRotateAnchorOffset * Konva.Util._sign(height),
         scale: invertedScale,
         visible: this.rotateEnabled()
       });
@@ -19446,7 +19467,10 @@
         width: width * scale.x,
         height: height * scale.y,
         scale: invertedScale,
-        visible: this.lineEnabled()
+        visible: this.borderEnabled(),
+        stroke: this.getBorderStroke(),
+        strokeWidth: this.getBorderStrokeWidth(),
+        dash: this.getBorderDash()
       });
     },
     /**
@@ -19484,7 +19508,7 @@
 
   function validateResizers(val) {
     if (!(val instanceof Array)) {
-      Konva.Util.warn('enabledHandlers value should be an array');
+      Konva.Util.warn('enabledAnchors value should be an array');
     }
     if (val instanceof Array) {
       val.forEach(function(name) {
@@ -19503,21 +19527,21 @@
 
   /**
    * get/set enabled handlers
-   * @name enabledHandlers
+   * @name enabledAnchors
    * @method
    * @memberof Konva.Transformer.prototype
    * @param {Array} array
    * @returns {Array}
    * @example
    * // get list of handlers
-   * var enabledHandlers = transformer.enabledHandlers();
+   * var enabledAnchors = transformer.enabledAnchors();
    *
    * // set handlers
-   * transformer.enabledHandlers(['top-left', 'top-center', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-center', 'bottom-right']);
+   * transformer.enabledAnchors(['top-left', 'top-center', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-center', 'bottom-right']);
    */
   Konva.Factory.addGetterSetter(
     Konva.Transformer,
-    'enabledHandlers',
+    'enabledAnchors',
     RESIZERS_NAMES,
     validateResizers
   );
@@ -19537,18 +19561,6 @@
    * transformer.resizeEnabled(false);
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'resizeEnabled', true);
-
-  function validateAnchors(val) {
-    if (isNaN(val)) {
-      Konva.Util.warn('anchorSize value should be a Number');
-    }
-    if (val < 10) {
-      Konva.Util.warn('Anchor must be a minimum of 10');
-      return 10;
-    }
-    return val;
-  }
-
   /**
    * get/set anchor size. Default is 10
    * @name validateAnchors
@@ -19563,12 +19575,7 @@
    * // set
    * transformer.anchorSize(20)
    */
-  Konva.Factory.addGetterSetter(
-    Konva.Transformer,
-    'anchorSize',
-    10,
-    validateAnchors
-  );
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'anchorSize', 10);
 
   /**
    * get/set ability to rotate.
@@ -19604,35 +19611,139 @@
 
   /**
    * get/set distance for rotation handler
-   * @name rotateHandlerOffset
+   * @name rotateAnchorOffset
    * @method
    * @memberof Konva.Transformer.prototype
    * @param {Number} offset
    * @returns {Number}
    * @example
    * // get
-   * var rotateHandlerOffset = transformer.rotateHandlerOffset();
+   * var rotateAnchorOffset = transformer.rotateAnchorOffset();
    *
    * // set
-   * transformer.rotateHandlerOffset(100);
+   * transformer.rotateAnchorOffset(100);
    */
-  Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateHandlerOffset', 50);
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateAnchorOffset', 50);
 
   /**
    * get/set visibility of border
-   * @name lineEnabled
+   * @name borderEnabled
    * @method
    * @memberof Konva.Transformer.prototype
    * @param {Boolean} enabled
    * @returns {Boolean}
    * @example
    * // get
-   * var lineEnabled = transformer.lineEnabled();
+   * var borderEnabled = transformer.borderEnabled();
    *
    * // set
-   * transformer.lineEnabled(false);
+   * transformer.borderEnabled(false);
    */
-  Konva.Factory.addGetterSetter(Konva.Transformer, 'lineEnabled', true);
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'borderEnabled', true);
+
+  /**
+   * get/set anchor stroke color
+   * @name anchorStroke
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Boolean} enabled
+   * @returns {Boolean}
+   * @example
+   * // get
+   * var anchorStroke = transformer.anchorStroke();
+   *
+   * // set
+   * transformer.anchorStroke('red');
+   */
+  Konva.Factory.addGetterSetter(
+    Konva.Transformer,
+    'anchorStroke',
+    'rgb(0, 161, 255)'
+  );
+
+  /**
+   * get/set anchor stroke width
+   * @name anchorStrokeWidth
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Boolean} enabled
+   * @returns {Boolean}
+   * @example
+   * // get
+   * var anchorStrokeWidth = transformer.anchorStrokeWidth();
+   *
+   * // set
+   * transformer.anchorStrokeWidth(3);
+   */
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'anchorStrokeWidth', 1);
+
+  /**
+   * get/set anchor fill color
+   * @name anchorFill
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Boolean} enabled
+   * @returns {Boolean}
+   * @example
+   * // get
+   * var anchorFill = transformer.anchorFill();
+   *
+   * // set
+   * transformer.anchorFill('red');
+   */
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'anchorFill', 'white');
+
+  /**
+   * get/set border stroke color
+   * @name borderStroke
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Boolean} enabled
+   * @returns {Boolean}
+   * @example
+   * // get
+   * var borderStroke = transformer.borderStroke();
+   *
+   * // set
+   * transformer.borderStroke('red');
+   */
+  Konva.Factory.addGetterSetter(
+    Konva.Transformer,
+    'borderStroke',
+    'rgb(0, 161, 255)'
+  );
+
+  /**
+   * get/set border stroke width
+   * @name borderStrokeWidth
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Boolean} enabled
+   * @returns {Boolean}
+   * @example
+   * // get
+   * var borderStrokeWidth = transformer.borderStrokeWidth();
+   *
+   * // set
+   * transformer.borderStrokeWidth(3);
+   */
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'borderStrokeWidth', 1);
+
+  /**
+   * get/set border dash array
+   * @name borderDash
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Boolean} enabled
+   * @returns {Boolean}
+   * @example
+   * // get
+   * var borderDash = transformer.borderDash();
+   *
+   * // set
+   * transformer.borderDash([2, 2]);
+   */
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'borderDash');
 
   /**
    * get/set should we keep ration of resize?
@@ -19688,6 +19799,12 @@
    * });
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'boundBoxFunc');
+
+  Konva.Factory.backCompat(Konva.Transformer, {
+    lineEnabled: 'borderEnabled',
+    rotateHandlerOffset: 'rotateAnchorOffset',
+    enabledHandlers: 'enabledAnchors'
+  });
 
   Konva.Collection.mapMethods(Konva.Transformer);
 })(Konva);
