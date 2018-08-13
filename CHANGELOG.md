@@ -5,6 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+### Changed
+
+* Default duration for tweens and `node.to()` methods is now 300ms
+
+
 ## [2.2.1][2018-08-10]
 
 ### Added

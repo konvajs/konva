@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.2.1
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Fri Aug 10 2018
+ * Date: Mon Aug 13 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -7881,15 +7881,13 @@
       for (n = 0; n < len; n++) {
         sel = selectorArr[n];
         if (!Konva.Util.isValidSelector(sel)) {
-          Konva.Util.warn(
+          var message =
             'Selector "' +
-              sel +
-              '" is invalid. Allowed selectors examples are "#foo", ".bar" or "Group".'
-          );
-          Konva.Util.warn(
-            'If you have a custom shape with such className, please change it to start with upper letter like "Triangle".'
-          );
-          Konva.Util.warn('Konva is awesome, right?');
+            sel +
+            '" is invalid. Allowed selectors examples are "#foo", ".bar" or "Group".\n' +
+            'If you have a custom shape with such className, please change it to start with upper letter like "Triangle".\n' +
+            'Konva is awesome, right?';
+          Konva.Util.warn(message);
         }
         // id selector
         if (sel.charAt(0) === '#') {
@@ -12165,7 +12163,7 @@
       key;
 
     if (typeof config.duration === 'undefined') {
-      duration = 1;
+      duration = 0.3;
     } else if (config.duration === 0) {
       // zero is bad value for duration
       duration = 0.001;

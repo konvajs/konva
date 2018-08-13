@@ -156,7 +156,7 @@
       key;
 
     if (typeof config.duration === 'undefined') {
-      duration = 1;
+      duration = 0.3;
     } else if (config.duration === 0) {
       // zero is bad value for duration
       duration = 0.001;
