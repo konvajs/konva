@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.2.1
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Mon Aug 13 2018
+ * Date: Thu Aug 16 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2561,12 +2561,9 @@
         drawBorder = conf.drawBorder || false;
 
       if (!width || !height) {
-        // make throw async, because we don't need to stop funcion
-        setTimeout(function() {
-          Konva.Util.throw(
-            'Width or height of caching configuration equals 0. Caching is ignored.'
-          );
-        });
+        Konva.Util.error(
+          'Can not cache the node. Width or height of the node equals 0. Caching is skipped.'
+        );
         return;
       }
 
@@ -3966,8 +3963,8 @@
       var box = this.getClientRect();
 
       var stage = this.getStage(),
-        x = config.x || box.x,
-        y = config.y || box.y,
+        x = config.x !== undefined ? config.x : box.x,
+        y = config.y !== undefined ? config.y : box.y,
         pixelRatio = config.pixelRatio || 1,
         canvas = new Konva.SceneCanvas({
           width: config.width || box.width || (stage ? stage.getWidth() : 0),
@@ -4028,7 +4025,11 @@
       config = config || {};
       var mimeType = config.mimeType || null,
         quality = config.quality || null;
-      return this._toKonvaCanvas(config).toDataURL(mimeType, quality);
+      var url = this._toKonvaCanvas(config).toDataURL(mimeType, quality);
+      if (config.callback) {
+        config.callback(url);
+      }
+      return url;
     },
     /**
      * converts node into an image.  Since the toImage
@@ -4059,8 +4060,10 @@
       if (!config || !config.callback) {
         throw 'callback required for toImage method config argument';
       }
+      var callback = config.callback;
+      delete config.callback;
       Konva.Util._getImage(this.toDataURL(config), function(img) {
-        config.callback(img);
+        callback(img);
       });
     },
     setSize: function(size) {
@@ -10354,12 +10357,10 @@
     getContent: function() {
       return this.content;
     },
-    toDataURL: function(config) {
+    _toKonvaCanvas: function(config) {
       config = config || {};
 
-      var mimeType = config.mimeType || null,
-        quality = config.quality || null,
-        x = config.x || 0,
+      var x = config.x || 0,
         y = config.y || 0,
         canvas = new Konva.SceneCanvas({
           width: config.width || this.getWidth(),
@@ -10377,24 +10378,16 @@
         if (!layer.isVisible()) {
           return;
         }
-        var width = layer.getCanvas().getWidth();
-        var height = layer.getCanvas().getHeight();
-        var ratio = layer.getCanvas().getPixelRatio();
+        var layerCanvas = layer._toKonvaCanvas(config);
         _context.drawImage(
-          layer.getCanvas()._canvas,
-          0,
-          0,
-          width / ratio,
-          height / ratio
+          layerCanvas._canvas,
+          x,
+          y,
+          layerCanvas.getWidth() / layerCanvas.getPixelRatio(),
+          layerCanvas.getHeight() / layerCanvas.getPixelRatio()
         );
       });
-      var src = canvas.toDataURL(mimeType, quality);
-
-      if (config.callback) {
-        config.callback(src);
-      }
-
-      return src;
+      return canvas;
     },
     /**
      * converts stage into an image.
@@ -11172,6 +11165,15 @@
     setSize: function(width, height) {
       this.canvas.setSize(width, height);
       return this;
+    },
+    _toKonvaCanvas: function(config) {
+      config = config || {};
+      config.width = config.width || this.getWidth();
+      config.height = config.height || this.getHeight();
+      config.x = config.x !== undefined ? config.x : this.getX();
+      config.y = config.y !== undefined ? config.y : this.getY();
+
+      return Konva.Node.prototype._toKonvaCanvas.call(this, config);
     },
     /**
      * get/set width of layer.getter return width of stage. setter doing nothing.

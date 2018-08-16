@@ -180,12 +180,9 @@
         drawBorder = conf.drawBorder || false;
 
       if (!width || !height) {
-        // make throw async, because we don't need to stop funcion
-        setTimeout(function() {
-          Konva.Util.throw(
-            'Width or height of caching configuration equals 0. Caching is ignored.'
-          );
-        });
+        Konva.Util.error(
+          'Can not cache the node. Width or height of the node equals 0. Caching is skipped.'
+        );
         return;
       }
 
@@ -1585,8 +1582,8 @@
       var box = this.getClientRect();
 
       var stage = this.getStage(),
-        x = config.x || box.x,
-        y = config.y || box.y,
+        x = config.x !== undefined ? config.x : box.x,
+        y = config.y !== undefined ? config.y : box.y,
         pixelRatio = config.pixelRatio || 1,
         canvas = new Konva.SceneCanvas({
           width: config.width || box.width || (stage ? stage.getWidth() : 0),
@@ -1647,7 +1644,11 @@
       config = config || {};
       var mimeType = config.mimeType || null,
         quality = config.quality || null;
-      return this._toKonvaCanvas(config).toDataURL(mimeType, quality);
+      var url = this._toKonvaCanvas(config).toDataURL(mimeType, quality);
+      if (config.callback) {
+        config.callback(url);
+      }
+      return url;
     },
     /**
      * converts node into an image.  Since the toImage
@@ -1678,8 +1679,10 @@
       if (!config || !config.callback) {
         throw 'callback required for toImage method config argument';
       }
+      var callback = config.callback;
+      delete config.callback;
       Konva.Util._getImage(this.toDataURL(config), function(img) {
-        config.callback(img);
+        callback(img);
       });
     },
     setSize: function(size) {

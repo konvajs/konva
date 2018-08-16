@@ -1,4 +1,4 @@
-suite('Node', function() {
+suite.only('Node', function() {
   // ======================================================
   test('getType and getClassName', function() {
     var stage = addStage();
