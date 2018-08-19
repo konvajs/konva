@@ -988,6 +988,40 @@ suite('Path', function() {
   });
 
   // ======================================================
+  test('get path length', function() {
+    var path = new Konva.Path({ data: 'M 10,10 L 20,10 L 20,20' });
+    assert.equal(path.getLength(), 20);
+  });
+
+  // ======================================================
+
+  test('get point at path', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var path = new Konva.Path({
+      stroke: 'red',
+      strokeWidth: 3,
+      data: 'M 300,10 L 250,100 A 100 40 30 1 0 150 150 C 160,100, 290,100, 300,150'
+    });
+    layer.add(path);
+
+    for (var i = 0; i < path.getLength(); i += 20) {
+      var p = path.getPointAtLength(i);
+      var circle = new Konva.Circle({
+        x: p.x,
+        y: p.y,
+        radius: 2,
+        fill: 'black',
+        stroke: 'black'
+      });
+      layer.add(circle);
+    }
+
+    stage.add(layer);
+  });
+
+  // ======================================================
   test('Borneo Map (has scientific notation: -10e-4)', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
