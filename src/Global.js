@@ -39,6 +39,10 @@
         // electron case
         {}.toString.call(window) === '[object global]'),
 
+    isUnminified: /comment/.test(function() {
+      /* comment */
+    }),
+
     // configurations
     enableTrace: false,
     traceArrMax: 100,

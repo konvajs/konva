@@ -39,6 +39,10 @@
         // electron case
         {}.toString.call(window) === '[object global]'),
 
+    isUnminified: /comment/.test(function() {
+      /* comment */
+    }),
+
     // configurations
     enableTrace: false,
     traceArrMax: 100,
@@ -742,7 +746,11 @@
       return Object.prototype.toString.call(obj) === OBJECT_ARRAY;
     },
     _isNumber: function(obj) {
-      return Object.prototype.toString.call(obj) === OBJECT_NUMBER;
+      return (
+        Object.prototype.toString.call(obj) === OBJECT_NUMBER &&
+        !isNaN(obj) &&
+        isFinite(obj)
+      );
     },
     _isString: function(obj) {
       return Object.prototype.toString.call(obj) === OBJECT_STRING;
@@ -2377,7 +2385,7 @@
       if (Konva.Util._isString(val)) {
         return '"' + val + '"';
       }
-      if (Konva.Util._isNumber(val)) {
+      if (Object.prototype.toString.call(val) === '[object Number]') {
         return val;
       }
       if (Konva.Util._isBoolean(val)) {
@@ -2386,100 +2394,110 @@
       return Object.prototype.toString.call(val);
     },
     getNumberValidator: function() {
-      return function(val, attr) {
-        if (!Konva.Util._isNumber(val) || isNaN(val)) {
-          Konva.Util.warn(
-            Konva.Validators._formatValue(val) +
-              ' is a not valid value for "' +
-              attr +
-              '" attribute. The value should be a number.'
-          );
-          return 0;
-        }
-        return val;
-      };
+      if (Konva.isUnminified) {
+        return function(val, attr) {
+          if (!Konva.Util._isNumber(val)) {
+            Konva.Util.warn(
+              Konva.Validators._formatValue(val) +
+                ' is a not valid value for "' +
+                attr +
+                '" attribute. The value should be a number.'
+            );
+          }
+          return val;
+        };
+      }
     },
     getNumberOrAutoValidator: function() {
-      return function(val, attr) {
-        var isNumber = Konva.Util._isNumber(val) && !isNaN(val);
-        var isAuto = val === 'auto';
+      if (Konva.isUnminified) {
+        return function(val, attr) {
+          var isNumber = Konva.Util._isNumber(val);
+          var isAuto = val === 'auto';
 
-        if (!(isNumber || isAuto)) {
-          Konva.Util.warn(
-            Konva.Validators._formatValue(val) +
-              ' is a not valid value for "' +
-              attr +
-              '" attribute. The value should be a number or "auto".'
-          );
-          return 0;
-        }
-        return val;
-      };
+          if (!(isNumber || isAuto)) {
+            Konva.Util.warn(
+              Konva.Validators._formatValue(val) +
+                ' is a not valid value for "' +
+                attr +
+                '" attribute. The value should be a number or "auto".'
+            );
+          }
+          return val;
+        };
+      }
     },
     getStringValidator: function() {
-      return function(val, attr) {
-        if (!Konva.Util._isString(val)) {
-          Konva.Util.warn(
-            Konva.Validators._formatValue(val) +
-              ' is a not valid value for "' +
-              attr +
-              '" attribute. The value should be a string.'
-          );
-        }
-        return val;
-      };
+      if (Konva.isUnminified) {
+        return function(val, attr) {
+          if (!Konva.Util._isString(val)) {
+            Konva.Util.warn(
+              Konva.Validators._formatValue(val) +
+                ' is a not valid value for "' +
+                attr +
+                '" attribute. The value should be a string.'
+            );
+          }
+          return val;
+        };
+      }
     },
     getFunctionValidator: function() {
-      return function(val, attr) {
-        if (!Konva.Util._isFunction(val)) {
-          Konva.Util.warn(
-            Konva.Validators._formatValue(val) +
-              ' is a not valid value for "' +
-              attr +
-              '" attribute. The value should be a function.'
-          );
-        }
-        return val;
-      };
+      if (Konva.isUnminified) {
+        return function(val, attr) {
+          if (!Konva.Util._isFunction(val)) {
+            Konva.Util.warn(
+              Konva.Validators._formatValue(val) +
+                ' is a not valid value for "' +
+                attr +
+                '" attribute. The value should be a function.'
+            );
+          }
+          return val;
+        };
+      }
     },
     getNumberArrayValidator: function() {
-      return function(val, attr) {
-        if (!Konva.Util._isArray(val)) {
-          Konva.Util.warn(
-            Konva.Validators._formatValue(val) +
-              ' is a not valid value for "' +
-              attr +
-              '" attribute. The value should be a array of numbers.'
-          );
-        } else {
-          val.forEach(function(item) {
-            if (!Konva.Util._isNumber(item) || isNaN(item)) {
-              Konva.Util.warn(
-                '"' +
-                  attr +
-                  '" attribute has non numeric element ' +
-                  item +
-                  '. Make sure that all elements are numbers.'
-              );
-            }
-          });
-        }
-        return val;
-      };
+      if (Konva.isUnminified) {
+        return function(val, attr) {
+          if (!Konva.Util._isArray(val)) {
+            Konva.Util.warn(
+              Konva.Validators._formatValue(val) +
+                ' is a not valid value for "' +
+                attr +
+                '" attribute. The value should be a array of numbers.'
+            );
+          } else {
+            val.forEach(function(item) {
+              if (!Konva.Util._isNumber(item)) {
+                Konva.Util.warn(
+                  '"' +
+                    attr +
+                    '" attribute has non numeric element ' +
+                    item +
+                    '. Make sure that all elements are numbers.'
+                );
+              }
+            });
+          }
+          return val;
+        };
+      }
     },
     getBooleanValidator: function() {
-      return function(val, attr) {
-        var isBool = val === true || val === false;
-        if (!isBool) {
-          Konva.Util.warn(
-            Konva.Validators._formatValue(val) +
-              ' is a not valid value for "' +
-              attr +
-              '" attribute. The value should be a boolean.'
-          );
-        }
-        return val;
-      };
+      if (Konva.isUnminified) {
+        return function(val, attr) {
+          var isBool = val === true || val === false;
+          if (!isBool) {
+            Konva.Util.warn(
+              Konva.Validators._formatValue(val) +
+                ' is a not valid value for "' +
+                attr +
+                '" attribute. The value should be a boolean.'
+            );
+          }
+          return val;
+        };
+      }
     }
   };
 })();
