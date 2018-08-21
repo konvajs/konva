@@ -925,7 +925,7 @@ suite('Container', function() {
       stroke: 'black',
       strokeWidth: 1,
       fill: 'orange',
-      fontSize: '18',
+      fontSize: 18,
       fontFamily: 'Arial',
       text: "The quick brown fox jumped over the lazy dog's back",
       data: 'M 10,10 300,150 550,150'

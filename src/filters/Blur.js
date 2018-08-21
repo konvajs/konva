@@ -839,7 +839,7 @@
     Konva.Node,
     'blurRadius',
     0,
-    null,
+    Konva.Validators.getNumberValidator(),
     Konva.Factory.afterSetFilter
   );
 

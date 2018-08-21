@@ -19,11 +19,14 @@
       };
     },
     addSetter: function(constructor, attr, validator, after) {
+      // if (!validator && validator !== null) {
+      //   console.error(constructor, attr, 'has no validator.');
+      // }
       var method = SET + Konva.Util._capitalize(attr);
 
       constructor.prototype[method] = function(val) {
-        if (validator) {
-          val = validator.call(this, val);
+        if (validator && val !== undefined && val !== null) {
+          val = validator.call(this, val, attr);
         }
 
         this._setAttr(attr, val);
@@ -169,6 +172,112 @@
       }
 
       return val;
+    },
+    _formatValue: function(val) {
+      if (Konva.Util._isString(val)) {
+        return '"' + val + '"';
+      }
+      if (Object.prototype.toString.call(val) === '[object Number]') {
+        return val;
+      }
+      if (Konva.Util._isBoolean(val)) {
+        return val;
+      }
+      return Object.prototype.toString.call(val);
+    },
+    getNumberValidator: function() {
+      return function(val, attr) {
+        if (!Konva.Util._isNumber(val)) {
+          Konva.Util.warn(
+            Konva.Validators._formatValue(val) +
+              ' is a not valid value for "' +
+              attr +
+              '" attribute. The value should be a number.'
+          );
+        }
+        return val;
+      };
+    },
+    getNumberOrAutoValidator: function() {
+      return function(val, attr) {
+        var isNumber = Konva.Util._isNumber(val);
+        var isAuto = val === 'auto';
+
+        if (!(isNumber || isAuto)) {
+          Konva.Util.warn(
+            Konva.Validators._formatValue(val) +
+              ' is a not valid value for "' +
+              attr +
+              '" attribute. The value should be a number or "auto".'
+          );
+        }
+        return val;
+      };
+    },
+    getStringValidator: function() {
+      return function(val, attr) {
+        if (!Konva.Util._isString(val)) {
+          Konva.Util.warn(
+            Konva.Validators._formatValue(val) +
+              ' is a not valid value for "' +
+              attr +
+              '" attribute. The value should be a string.'
+          );
+        }
+        return val;
+      };
+    },
+    getFunctionValidator: function() {
+      return function(val, attr) {
+        if (!Konva.Util._isFunction(val)) {
+          Konva.Util.warn(
+            Konva.Validators._formatValue(val) +
+              ' is a not valid value for "' +
+              attr +
+              '" attribute. The value should be a function.'
+          );
+        }
+        return val;
+      };
+    },
+    getNumberArrayValidator: function() {
+      return function(val, attr) {
+        if (!Konva.Util._isArray(val)) {
+          Konva.Util.warn(
+            Konva.Validators._formatValue(val) +
+              ' is a not valid value for "' +
+              attr +
+              '" attribute. The value should be a array of numbers.'
+          );
+        } else {
+          val.forEach(function(item) {
+            if (!Konva.Util._isNumber(item)) {
+              Konva.Util.warn(
+                '"' +
+                  attr +
+                  '" attribute has non numeric element ' +
+                  item +
+                  '. Make sure that all elements are numbers.'
+              );
+            }
+          });
+        }
+        return val;
+      };
+    },
+    getBooleanValidator: function() {
+      return function(val, attr) {
+        var isBool = val === true || val === false;
+        if (!isBool) {
+          Konva.Util.warn(
+            Konva.Validators._formatValue(val) +
+              ' is a not valid value for "' +
+              attr +
+              '" attribute. The value should be a boolean.'
+          );
+        }
+        return val;
+      };
     }
   };
 })();

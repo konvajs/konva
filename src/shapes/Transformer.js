@@ -871,7 +871,12 @@
    * // set
    * transformer.anchorSize(20)
    */
-  Konva.Factory.addGetterSetter(Konva.Transformer, 'anchorSize', 10);
+  Konva.Factory.addGetterSetter(
+    Konva.Transformer,
+    'anchorSize',
+    10,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set ability to rotate.
@@ -919,7 +924,12 @@
    * // set
    * transformer.rotateAnchorOffset(100);
    */
-  Konva.Factory.addGetterSetter(Konva.Transformer, 'rotateAnchorOffset', 50);
+  Konva.Factory.addGetterSetter(
+    Konva.Transformer,
+    'rotateAnchorOffset',
+    50,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set visibility of border
@@ -971,7 +981,12 @@
    * // set
    * transformer.anchorStrokeWidth(3);
    */
-  Konva.Factory.addGetterSetter(Konva.Transformer, 'anchorStrokeWidth', 1);
+  Konva.Factory.addGetterSetter(
+    Konva.Transformer,
+    'anchorStrokeWidth',
+    1,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set anchor fill color
@@ -1023,7 +1038,12 @@
    * // set
    * transformer.borderStrokeWidth(3);
    */
-  Konva.Factory.addGetterSetter(Konva.Transformer, 'borderStrokeWidth', 1);
+  Konva.Factory.addGetterSetter(
+    Konva.Transformer,
+    'borderStrokeWidth',
+    1,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set border dash array
@@ -1071,7 +1091,12 @@
    * // set
    * transformer.padding(10);
    */
-  Konva.Factory.addGetterSetter(Konva.Transformer, 'padding', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Transformer,
+    'padding',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   Konva.Factory.addOverloadedGetterSetter(Konva.Transformer, 'node');
 

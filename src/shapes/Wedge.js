@@ -73,7 +73,12 @@
   Konva.Util.extend(Konva.Wedge, Konva.Shape);
 
   // add getters setters
-  Konva.Factory.addGetterSetter(Konva.Wedge, 'radius', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Wedge,
+    'radius',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set radius
@@ -90,7 +95,12 @@
    * wedge.radius(10);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Wedge, 'angle', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Wedge,
+    'angle',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set angle in degrees

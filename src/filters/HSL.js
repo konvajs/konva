@@ -4,7 +4,7 @@
     Konva.Node,
     'hue',
     0,
-    null,
+    Konva.Validators.getNumberValidator(),
     Konva.Factory.afterSetFilter
   );
   /**
@@ -20,7 +20,7 @@
     Konva.Node,
     'saturation',
     0,
-    null,
+    Konva.Validators.getNumberValidator(),
     Konva.Factory.afterSetFilter
   );
   /**
@@ -36,7 +36,7 @@
     Konva.Node,
     'luminance',
     0,
-    null,
+    Konva.Validators.getNumberValidator(),
     Konva.Factory.afterSetFilter
   );
   /**

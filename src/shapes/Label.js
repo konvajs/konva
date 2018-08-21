@@ -337,7 +337,12 @@
    * @memberof Konva.Tag.prototype
    */
 
-  Konva.Factory.addGetterSetter(Konva.Tag, 'pointerWidth', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Tag,
+    'pointerWidth',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * set pointer width
@@ -354,7 +359,12 @@
    * @memberof Konva.Tag.prototype
    */
 
-  Konva.Factory.addGetterSetter(Konva.Tag, 'pointerHeight', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Tag,
+    'pointerHeight',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * set pointer height
@@ -371,7 +381,12 @@
    * @memberof Konva.Tag.prototype
    */
 
-  Konva.Factory.addGetterSetter(Konva.Tag, 'cornerRadius', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Tag,
+    'cornerRadius',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * set corner radius

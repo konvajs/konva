@@ -76,7 +76,12 @@
   Konva.Util.extend(Konva.RegularPolygon, Konva.Shape);
 
   // add getters setters
-  Konva.Factory.addGetterSetter(Konva.RegularPolygon, 'radius', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.RegularPolygon,
+    'radius',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * set radius
@@ -93,7 +98,12 @@
    * @memberof Konva.RegularPolygon.prototype
    */
 
-  Konva.Factory.addGetterSetter(Konva.RegularPolygon, 'sides', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.RegularPolygon,
+    'sides',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * set number of sides

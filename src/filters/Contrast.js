@@ -70,7 +70,7 @@
     Konva.Node,
     'contrast',
     0,
-    null,
+    Konva.Validators.getNumberValidator(),
     Konva.Factory.afterSetFilter
   );
 })(Konva);

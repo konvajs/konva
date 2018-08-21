@@ -519,7 +519,12 @@
   Konva.Util.extend(Konva.Shape, Konva.Node);
 
   // add getters and setters
-  Konva.Factory.addGetterSetter(Konva.Shape, 'stroke');
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'stroke',
+    undefined,
+    Konva.Validators.getStringValidator()
+  );
 
   /**
    * get/set stroke color
@@ -545,7 +550,12 @@
    * shape.stroke('rgba(0,255,0,0.5');
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'strokeWidth', 2);
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'strokeWidth',
+    2,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set stroke width
@@ -562,7 +572,12 @@
    * shape.strokeWidth();
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'strokeHitEnabled', true);
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'strokeHitEnabled',
+    true,
+    Konva.Validators.getBooleanValidator()
+  );
 
   /**
    * get/set strokeHitEnabled property. Useful for performance optimization.
@@ -583,7 +598,12 @@
    * shape.strokeHitEnabled();
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'perfectDrawEnabled', true);
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'perfectDrawEnabled',
+    true,
+    Konva.Validators.getBooleanValidator()
+  );
 
   /**
    * get/set perfectDrawEnabled. If a shape has fill, stroke and opacity you may set `perfectDrawEnabled` to false to improve performance.
@@ -602,7 +622,12 @@
    * shape.perfectDrawEnabled();
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'shadowForStrokeEnabled', true);
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'shadowForStrokeEnabled',
+    true,
+    Konva.Validators.getBooleanValidator()
+  );
 
   /**
    * get/set shadowForStrokeEnabled. Useful for performance optimization.
@@ -719,7 +744,12 @@
    *  line.dash([10, 20, 0.001, 20]);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'dashOffset', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'dashOffset',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set dash offset for stroke.
@@ -734,7 +764,12 @@
    *  line.dashOffset(5);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'shadowColor');
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'shadowColor',
+    undefined,
+    Konva.Validators.getStringValidator()
+  );
 
   /**
    * get/set shadow color
@@ -760,7 +795,12 @@
    * shape.shadowColor('rgba(0,255,0,0.5');
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'shadowBlur');
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'shadowBlur',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set shadow blur
@@ -777,7 +817,12 @@
    * shape.shadowBlur(10);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'shadowOpacity');
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'shadowOpacity',
+    1,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set shadow opacity.  must be a value between 0 and 1
@@ -819,7 +864,12 @@
    * });
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'shadowOffsetX', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'shadowOffsetX',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set shadow offset x
@@ -836,7 +886,12 @@
    * shape.shadowOffsetX(5);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'shadowOffsetY', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'shadowOffsetY',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set shadow offset y
@@ -874,7 +929,12 @@
    * imageObj.src = 'path/to/image/jpg';
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'fill');
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'fill',
+    undefined,
+    Konva.Validators.getStringValidator()
+  );
 
   /**
    * get/set fill color
@@ -903,7 +963,12 @@
    * shape.fill(null);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternX', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'fillPatternX',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set fill pattern x
@@ -919,7 +984,12 @@
    * shape.fillPatternX(20);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternY', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'fillPatternY',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set fill pattern y
@@ -1190,7 +1260,12 @@
    * });
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternOffsetX', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'fillPatternOffsetX',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set fill pattern offset x
@@ -1207,7 +1282,12 @@
    * shape.fillPatternOffsetX(20);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternOffsetY', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'fillPatternOffsetY',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set fill pattern offset y
@@ -1249,7 +1329,12 @@
    * });
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternScaleX', 1);
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'fillPatternScaleX',
+    1,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set fill pattern scale x
@@ -1266,7 +1351,12 @@
    * shape.fillPatternScaleX(2);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Shape, 'fillPatternScaleY', 1);
+  Konva.Factory.addGetterSetter(
+    Konva.Shape,
+    'fillPatternScaleY',
+    1,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set fill pattern scale y

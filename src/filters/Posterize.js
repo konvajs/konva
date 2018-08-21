@@ -32,7 +32,7 @@
     Konva.Node,
     'levels',
     0.5,
-    null,
+    Konva.Validators.getNumberValidator(),
     Konva.Factory.afterSetFilter
   );
 

@@ -95,7 +95,12 @@
    * });
    */
 
-  Konva.Factory.addGetterSetter(Konva.Ellipse, 'radiusX', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Ellipse,
+    'radiusX',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
   /**
    * get/set radius x
    * @name radiusX
@@ -111,7 +116,12 @@
    * ellipse.radiusX(200);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Ellipse, 'radiusY', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Ellipse,
+    'radiusY',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
   /**
    * get/set radius y
    * @name radiusY

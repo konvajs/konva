@@ -8,7 +8,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 
 * Default duration for tweens and `node.to()` methods is now 300ms
-
+* Typescript fixes
+* Automatic validations for many attributes
 
 ## [2.2.1][2018-08-10]
 

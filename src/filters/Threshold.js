@@ -30,7 +30,7 @@
     Konva.Node,
     'threshold',
     0.5,
-    null,
+    Konva.Validators.getNumberValidator(),
     Konva.Factory.afterSetFilter
   );
   /**

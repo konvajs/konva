@@ -314,7 +314,12 @@
    * sprite.image(imageObj);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Sprite, 'frameIndex', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Sprite,
+    'frameIndex',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * set/set animation frame index
@@ -331,7 +336,12 @@
    * sprite.frameIndex(3);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Sprite, 'frameRate', 17);
+  Konva.Factory.addGetterSetter(
+    Konva.Sprite,
+    'frameRate',
+    17,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set frame rate in frames per second.  Increase this number to make the sprite

@@ -303,6 +303,7 @@
     OBJECT_ARRAY = '[object Array]',
     OBJECT_NUMBER = '[object Number]',
     OBJECT_STRING = '[object String]',
+    OBJECT_BOOLEAN = '[object Boolean]',
     PI_OVER_DEG180 = Math.PI / 180,
     DEG180_OVER_PI = 180 / Math.PI,
     HASH = '#',
@@ -485,10 +486,17 @@
       return Object.prototype.toString.call(obj) === OBJECT_ARRAY;
     },
     _isNumber: function(obj) {
-      return Object.prototype.toString.call(obj) === OBJECT_NUMBER;
+      return (
+        Object.prototype.toString.call(obj) === OBJECT_NUMBER &&
+        !isNaN(obj) &&
+        isFinite(obj)
+      );
     },
     _isString: function(obj) {
       return Object.prototype.toString.call(obj) === OBJECT_STRING;
+    },
+    _isBoolean: function(obj) {
+      return Object.prototype.toString.call(obj) === OBJECT_BOOLEAN;
     },
     // arrays are objects too
     isObject: function(val) {

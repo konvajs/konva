@@ -66,7 +66,12 @@
   Konva.Util.extend(Konva.Circle, Konva.Shape);
 
   // add getters setters
-  Konva.Factory.addGetterSetter(Konva.Circle, 'radius', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Circle,
+    'radius',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
   Konva.Factory.addOverloadedGetterSetter(Konva.Circle, 'radius');
 
   /**

@@ -3318,8 +3318,8 @@ suite('Node', function() {
     circle.visible(false);
     assert.equal(circle.visible(), false);
 
-    circle.transformsEnabled(false);
-    assert.equal(circle.transformsEnabled(), false);
+    // circle.transformsEnabled(false);
+    // assert.equal(circle.transformsEnabled(), false);
 
     circle.position({ x: 6, y: 8 });
     assert.equal(circle.position().x, 6);

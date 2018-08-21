@@ -79,7 +79,12 @@
   Konva.Util.extend(Konva.Star, Konva.Shape);
 
   // add getters setters
-  Konva.Factory.addGetterSetter(Konva.Star, 'numPoints', 5);
+  Konva.Factory.addGetterSetter(
+    Konva.Star,
+    'numPoints',
+    5,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * set number of points
@@ -96,7 +101,12 @@
    * @memberof Konva.Star.prototype
    */
 
-  Konva.Factory.addGetterSetter(Konva.Star, 'innerRadius', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Star,
+    'innerRadius',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * set inner radius
@@ -113,7 +123,12 @@
    * @memberof Konva.Star.prototype
    */
 
-  Konva.Factory.addGetterSetter(Konva.Star, 'outerRadius', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Star,
+    'outerRadius',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * set outer radius

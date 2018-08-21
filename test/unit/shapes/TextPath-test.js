@@ -16,7 +16,7 @@ suite('TextPath', function() {
 
     var textpath = new Konva.TextPath({
       fill: 'orange',
-      fontSize: '24',
+      fontSize: 24,
       fontFamily: 'Arial',
       text: "The quick brown fox jumped over the lazy dog's back",
       data: c
@@ -64,7 +64,7 @@ suite('TextPath', function() {
 
     var textpath = new Konva.TextPath({
       fill: 'black',
-      fontSize: '10',
+      fontSize: 10,
       text:
         "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
       data: c
@@ -116,7 +116,7 @@ suite('TextPath', function() {
       stroke: 'black',
       strokeWidth: 1,
       fill: 'orange',
-      fontSize: '18',
+      fontSize: 18,
       fontFamily: 'Arial',
       text: "The quick brown fox jumped over the lazy dog's back",
       data: c
@@ -139,7 +139,7 @@ suite('TextPath', function() {
       stroke: 'black',
       strokeWidth: 1,
       fill: 'orange',
-      fontSize: '18',
+      fontSize: 18,
       fontFamily: 'Arial',
       text: "The quick brown fox jumped over the lazy dog's back",
       data: c
@@ -167,7 +167,7 @@ suite('TextPath', function() {
       stroke: 'black',
       strokeWidth: 1,
       fill: 'orange',
-      fontSize: '8',
+      fontSize: 8,
       fontFamily: 'Arial',
       text:
         "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
@@ -194,7 +194,7 @@ suite('TextPath', function() {
 
     var textpath = new Konva.TextPath({
       fill: 'black',
-      fontSize: '10',
+      fontSize: 10,
       text:
         "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts.",
       data: c
@@ -215,7 +215,7 @@ suite('TextPath', function() {
     var textpath = new Konva.TextPath({
       y: 50,
       fill: 'black',
-      fontSize: '24',
+      fontSize: 24,
       text: Array(4).join(
         "All the world's a stage, and all the men and women merely players. They have their exits and their entrances; And one man in his time plays many parts."
       ),
@@ -376,7 +376,7 @@ suite('TextPath', function() {
 
     var textpath = new Konva.TextPath({
       fill: 'orange',
-      fontSize: '24',
+      fontSize: 24,
       fontFamily: 'Arial',
       text: "The quick brown fox jumped over the lazy dog's back",
       data: c,

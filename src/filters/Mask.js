@@ -215,7 +215,7 @@
     Konva.Node,
     'threshold',
     0,
-    null,
+    Konva.Validators.getNumberValidator(),
     Konva.Factory.afterSetFilter
   );
 })();
