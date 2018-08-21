@@ -135,7 +135,7 @@
         return null;
       }
 
-      while (length > this.dataArray[i].pathLength && i < ii) {
+      while (i < ii && length > this.dataArray[i].pathLength) {
         length -= this.dataArray[i].pathLength;
         ++i;
       }
