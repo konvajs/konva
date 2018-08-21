@@ -1,4 +1,4 @@
-suite.only('Node', function() {
+suite('Node', function() {
   // ======================================================
   test('getType and getClassName', function() {
     var stage = addStage();
@@ -117,6 +117,22 @@ suite.only('Node', function() {
     assert.equal(circle.getAbsoluteOpacity(), 0.25);
     assert.equal(layer.getAbsoluteOpacity(), 0.5);
   });
+
+  test.skip('warn on duplicate id', function() {
+    var oldWarn = Konva.Util.warn;
+    var called = false;
+    Konva.Util.warn = function() {
+      called = true;
+    }
+    var circle = new Konva.Circle({
+      id: 'circle'
+    });
+    var circle = new Konva.Circle({
+      id: 'circle'
+    });
+    assert.equal(called, true);
+    Konva.Util.warn = oldWarn;
+  })
 
   // ======================================================
   test('transform cache', function() {
@@ -1650,7 +1666,6 @@ suite.only('Node', function() {
     var stage = addStage();
     var layer = new Konva.Layer({
       name: 'layerName',
-      id: 'layerId'
     });
     var group = new Konva.Group({
       name: 'groupName',
@@ -1667,7 +1682,6 @@ suite.only('Node', function() {
       height: side,
       fill: 'red',
       name: 'rectName',
-      id: 'rectId'
     });
     var marker = new Konva.Rect({
       x: side,
@@ -1709,13 +1723,11 @@ suite.only('Node', function() {
     var stage = addStage();
     var layer = new Konva.Layer({
       name: 'layerName',
-      id: 'layerId',
       x: 100,
       y: 100
     });
     var group = new Konva.Group({
       name: 'groupName',
-      id: 'groupId',
       x: 100,
       y: 100
     });
@@ -1726,7 +1738,6 @@ suite.only('Node', function() {
       height: 50,
       fill: 'red',
       name: 'rectName',
-      id: 'rectId'
     });
 
     group.add(rect);
@@ -1745,7 +1756,6 @@ suite.only('Node', function() {
       var stage = addStage();
       var layer1 = new Konva.Layer({
         name: 'layerName',
-        id: 'layerId',
         x: 90,
         y: 110,
         offsetX: 50,
@@ -1754,7 +1764,6 @@ suite.only('Node', function() {
       });
       var group1 = new Konva.Group({
         name: 'groupName',
-        id: 'groupId',
         x: 30,
         y: 30,
         offsetX: -60,
@@ -2642,11 +2651,11 @@ suite.only('Node', function() {
       context.fillStrokeShape(this);
     };
     var json =
-      '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle","customAttrObj":{"x":1,"y":5,"size":{"width":10,"height":20}}},"className":"Shape"}]}]}]}';
+      '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle1","customAttrObj":{"x":1,"y":5,"size":{"width":10,"height":20}}},"className":"Shape"}]}]}]}';
 
     var stage = Konva.Node.create(json, container);
 
-    stage.find('#myTriangle').each(function(node) {
+    stage.find('#myTriangle1').each(function(node) {
       node.sceneFunc(drawTriangle);
     });
 
@@ -2690,11 +2699,11 @@ suite.only('Node', function() {
     var container = addContainer();
     imageObj.onload = function() {
       var json =
-        '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"x":200,"y":60,"offsetX":50,"offsetY":150,"id":"darth"},"className":"Image"}]}]}';
+        '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"x":200,"y":60,"offsetX":50,"offsetY":150,"id":"darth1"},"className":"Image"}]}]}';
       var stage = Konva.Node.create(json, container);
 
       assert.equal(stage.toJSON(), json);
-      stage.find('#darth').each(function(node) {
+      stage.find('#darth1').each(function(node) {
         node.setImage(imageObj);
       });
       stage.draw();
@@ -3459,7 +3468,7 @@ suite.only('Node', function() {
 
   test('toObject with property in attrs and instanse', function() {
     var node = new Konva.Circle({
-      id: 'foo',
+      id: 'foo1',
       radius: 10,
       filled: true
     });

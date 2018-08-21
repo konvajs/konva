@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.2.1
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Thu Aug 16 2018
+ * Date: Tue Aug 21 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -122,9 +122,18 @@
       return false;
     },
     _addId: function(node, id) {
-      if (id !== undefined) {
-        this.ids[id] = node;
+      if (!id) {
+        return;
       }
+      // do we need this warning?
+      // if (this.ids[id]) {
+      //   Konva.Util.warn(
+      //     'Duplicate id "' +
+      //       id +
+      //       '". Please don not use same id several times. It may break find() method look up.'
+      //   );
+      // }
+      this.ids[id] = node;
     },
     _removeId: function(id) {
       if (id !== undefined) {

@@ -122,9 +122,18 @@
       return false;
     },
     _addId: function(node, id) {
-      if (id !== undefined) {
-        this.ids[id] = node;
+      if (!id) {
+        return;
       }
+      // do we need this warning?
+      // if (this.ids[id]) {
+      //   Konva.Util.warn(
+      //     'Duplicate id "' +
+      //       id +
+      //       '". Please don not use same id several times. It may break find() method look up.'
+      //   );
+      // }
+      this.ids[id] = node;
     },
     _removeId: function(id) {
       if (id !== undefined) {
