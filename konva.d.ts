@@ -506,8 +506,8 @@ declare namespace Konva {
     strokeEnabled?: boolean;
     lineJoin?: string;
     lineCap?: string;
-    sceneFunc?: (con: Context) => void;
-    hitFunc?: (con: Context) => void;
+    sceneFunc?: (con: Context, shape: Shape) => void;
+    hitFunc?: (con: Context, shape: Shape) => void;
     shadowColor?: string;
     shadowBlur?: number;
     shadowOffset?: Vector2d;
@@ -594,7 +594,7 @@ declare namespace Konva {
     hasShadow(): boolean;
     hasStroke(): boolean;
     hitFunc(): Function;
-    hitFunc(func: Function): this;
+    hitFunc(func: (con: Context, shape: Shape) => {}): this;
     intersects(point: Vector2d): boolean;
     lineCap(): string;
     lineCap(lineCap: string): this;
@@ -603,7 +603,7 @@ declare namespace Konva {
     perfectDrawEnabled(): boolean;
     perfectDrawEnabled(perfectDrawEnabled: boolean): this;
     sceneFunc(): Function;
-    sceneFunc(func: (con: Context) => {}): this;
+    sceneFunc(func: (con: Context, shape: Shape) => {}): this;
     shadowColor(): string;
     shadowColor(shadowColor: string): this;
     shadowEnabled(): boolean;
