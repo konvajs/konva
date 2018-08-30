@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 * new methods `path.getLength()` and `path.getPointAtLength(val)`
+* `verticalAlign` for `Konva.Text`
 
 ## [2.2.2][2018-08-21]
 
