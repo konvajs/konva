@@ -280,7 +280,7 @@
       return this.textWidth;
     },
     /**
-     * get text height
+     * get height of one line text
      * @method
      * @memberof Konva.Text.prototype
      * @returns {Number}

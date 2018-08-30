@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+### Added
+
+* new methods `path.getLength()` and `path.getPointAtLength(val)`
+
 ## [2.2.2][2018-08-21]
 
 ### Changed
