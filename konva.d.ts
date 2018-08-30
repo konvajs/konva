@@ -5,10 +5,10 @@ declare namespace Konva {
   var isDragReady: () => boolean;
   var DD: any;
 
-  type HandlerFunc = (
+  type HandlerFunc<E = Event> = (
     e: {
       target: Konva.Shape;
-      evt: Event;
+      evt: E;
       currentTarget: Konva.Node;
       cancelBubble: boolean;
     }
@@ -1137,12 +1137,13 @@ declare namespace Konva {
     fontStyle(fontStyle: string): this;
   }
 
-  class Collection {
-    [i: number]: any;
-    static toCollection(arr: any[]): Collection;
-    each(f: (el: Node) => void): void;
-    toArray(): any[];
+  class Collection<T extends Node = Node> {
+    [i: number]: T;
+    each(f: (el: T) => void): void;
+    toArray(): T[];
     length: number;
+
+    static toCollection<T extends Node = Node>(arr: T[]): Collection<T>;
   }
 
   class Transform {
