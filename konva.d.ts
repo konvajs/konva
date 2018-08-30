@@ -5,10 +5,10 @@ declare namespace Konva {
   var isDragReady: () => boolean;
   var DD: any;
 
-  type HandlerFunc = (
+  type HandlerFunc<E = Event> = (
     e: {
       target: Konva.Shape;
-      evt: Event;
+      evt: E;
       currentTarget: Konva.Node;
       cancelBubble: boolean;
     }
