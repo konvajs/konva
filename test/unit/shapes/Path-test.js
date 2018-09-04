@@ -1140,7 +1140,7 @@ suite('Path', function() {
     );
   });
 
-  it('getClientRect', function() {
+  test('getClientRect', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);

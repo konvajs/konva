@@ -243,7 +243,7 @@ suite('Label', function() {
     cloneAndCompareLayer(layer, 100);
   });
 
-  it('tag should list text size changes', function() {
+  test('tag should list text size changes', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
