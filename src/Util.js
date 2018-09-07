@@ -463,8 +463,8 @@
       yellow: [255, 255, 0],
       yellowgreen: [154, 205, 5]
     },
-    RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
-
+    RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/,
+    TEXT_FONTS = {};
   /**
    * @namespace Util
    * @memberof Konva
@@ -532,6 +532,15 @@
         canvas.style = canvas.style || {};
       } catch (e) {}
       return canvas;
+    },
+    getFont: function(name) {
+      return TEXT_FONTS[name];
+    },
+    getAllFont: function() {
+      return TEXT_FONTS;
+    },
+    setFont: function(name, font) {
+      TEXT_FONTS[name] = font;
     },
     _isInDocument: function(el) {
       while ((el = el.parentNode)) {

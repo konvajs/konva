@@ -94,7 +94,9 @@
   Konva.Text.prototype = {
     ___init: function(config) {
       config = config || {};
-
+      if (config.fontFamily && Konva.Util.getFont(config.fontFamily)) {
+        getDummyContext().addFont(Konva.Util.getFont(config.fontFamily));
+      }
       // set default color to black
       if (
         !config.fillLinearGradientColorStops &&

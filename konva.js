@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.3.0
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Thu Aug 30 2018
+ * Date: Fri Sep 07 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -723,8 +723,8 @@
       yellow: [255, 255, 0],
       yellowgreen: [154, 205, 5]
     },
-    RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/;
-
+    RGB_REGEX = /rgb\((\d{1,3}),(\d{1,3}),(\d{1,3})\)/,
+    TEXT_FONTS = {};
   /**
    * @namespace Util
    * @memberof Konva
@@ -792,6 +792,15 @@
         canvas.style = canvas.style || {};
       } catch (e) {}
       return canvas;
+    },
+    getFont: function(name) {
+      return TEXT_FONTS[name];
+    },
+    getAllFont: function() {
+      return TEXT_FONTS;
+    },
+    setFont: function(name, font) {
+      TEXT_FONTS[name] = font;
     },
     _isInDocument: function(el) {
       while ((el = el.parentNode)) {
@@ -4115,7 +4124,10 @@
           pixelRatio: pixelRatio
         }),
         context = canvas.getContext();
-
+      var customFont = Konva.Util.getAllFont();
+      for (var customFontItem in customFont) {
+        canvas._canvas.getContext('2d').addFont(customFont[customFontItem]);
+      }
       context.save();
 
       if (x || y) {
@@ -15101,7 +15113,9 @@
   Konva.Text.prototype = {
     ___init: function(config) {
       config = config || {};
-
+      if (config.fontFamily && Konva.Util.getFont(config.fontFamily)) {
+        getDummyContext().addFont(Konva.Util.getFont(config.fontFamily));
+      }
       // set default color to black
       if (
         !config.fillLinearGradientColorStops &&

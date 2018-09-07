@@ -1592,7 +1592,10 @@
           pixelRatio: pixelRatio
         }),
         context = canvas.getContext();
-
+      var customFont = Konva.Util.getAllFont();
+      for (var customFontItem in customFont) {
+        canvas._canvas.getContext('2d').addFont(customFont[customFontItem]);
+      }
       context.save();
 
       if (x || y) {

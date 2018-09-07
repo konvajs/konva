@@ -89,6 +89,7 @@ declare namespace Konva {
   export class Util {
     static getRandomColor(): string;
     static getRGB(color: string): string;
+    static setFont(name: string, font: Konva.Font): void;
   }
 
   export class Easings {
