@@ -116,7 +116,7 @@
    * @param {Array} [config.rotationSnaps] Array of angles for rotation snaps. Default is []
    * @param {Number} [config.rotateAnchorOffset] Default is 50
    * @param {Number} [config.padding] Default is 0
-   * @param {Number} [config.borderEnabled] Should we draw border? Default is true
+   * @param {Boolean} [config.borderEnabled] Should we draw border? Default is true
    * @param {String} [config.borderStroke] Border stroke color
    * @param {Number} [config.borderStrokeWidth] Border stroke size
    * @param {Array} [config.borderDash] Array for border dash.

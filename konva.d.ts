@@ -1165,7 +1165,7 @@ declare namespace Konva {
     rotateEnabled?: boolean;
     rotationSnaps?: Array<number>;
     rotateAnchorOffset?: number;
-    borderEnabled?: number;
+    borderEnabled?: boolean;
     borderStroke?: string;
     borderStrokeWidth?: number;
     borderDash?: Array<number>;
