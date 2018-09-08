@@ -3530,209 +3530,209 @@ suite('Node', function() {
 
     assert.equal(rect.findAncestor(), null, 'return null if no selector');
   });
-});
 
-test('moveToTop() properly changes z-indices of the node and its siblings', function() {
-  var stage = addStage();
-  var layer = new Konva.Layer();
-  stage.add(layer);
+  test('moveToTop() properly changes z-indices of the node and its siblings', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
 
-  var rect1 = new Konva.Rect();
-  var rect2 = new Konva.Rect();
-  var rect3 = new Konva.Rect();
-  var rect4 = new Konva.Rect();
-  layer.add(rect1, rect2, rect3, rect4);
+    var rect1 = new Konva.Rect();
+    var rect2 = new Konva.Rect();
+    var rect3 = new Konva.Rect();
+    var rect4 = new Konva.Rect();
+    layer.add(rect1, rect2, rect3, rect4);
 
-  assert.equal(rect1.getZIndex(), 0);
-  assert.equal(rect2.getZIndex(), 1);
-  assert.equal(rect3.getZIndex(), 2);
-  assert.equal(rect4.getZIndex(), 3);
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect3.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
 
-  rect2.moveToTop();
+    rect2.moveToTop();
 
-  assert.equal(rect1.getZIndex(), 0);
-  assert.equal(rect3.getZIndex(), 1);
-  assert.equal(rect4.getZIndex(), 2);
-  assert.equal(rect2.getZIndex(), 3);
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect3.getZIndex(), 1);
+    assert.equal(rect4.getZIndex(), 2);
+    assert.equal(rect2.getZIndex(), 3);
 
-  rect1.moveToTop();
+    rect1.moveToTop();
 
-  assert.equal(rect3.getZIndex(), 0);
-  assert.equal(rect4.getZIndex(), 1);
-  assert.equal(rect2.getZIndex(), 2);
-  assert.equal(rect1.getZIndex(), 3);
-});
+    assert.equal(rect3.getZIndex(), 0);
+    assert.equal(rect4.getZIndex(), 1);
+    assert.equal(rect2.getZIndex(), 2);
+    assert.equal(rect1.getZIndex(), 3);
+  });
 
-test('moveToBottom() properly changes z-indices of the node and its siblings', function() {
-  var stage = addStage();
-  var layer = new Konva.Layer();
-  stage.add(layer);
+  test('moveToBottom() properly changes z-indices of the node and its siblings', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
 
-  var rect1 = new Konva.Rect();
-  var rect2 = new Konva.Rect();
-  var rect3 = new Konva.Rect();
-  var rect4 = new Konva.Rect();
-  layer.add(rect1, rect2, rect3, rect4);
+    var rect1 = new Konva.Rect();
+    var rect2 = new Konva.Rect();
+    var rect3 = new Konva.Rect();
+    var rect4 = new Konva.Rect();
+    layer.add(rect1, rect2, rect3, rect4);
 
-  assert.equal(rect1.getZIndex(), 0);
-  assert.equal(rect2.getZIndex(), 1);
-  assert.equal(rect3.getZIndex(), 2);
-  assert.equal(rect4.getZIndex(), 3);
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect3.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
 
-  rect3.moveToBottom();
+    rect3.moveToBottom();
 
-  assert.equal(rect3.getZIndex(), 0);
-  assert.equal(rect1.getZIndex(), 1);
-  assert.equal(rect2.getZIndex(), 2);
-  assert.equal(rect4.getZIndex(), 3);
+    assert.equal(rect3.getZIndex(), 0);
+    assert.equal(rect1.getZIndex(), 1);
+    assert.equal(rect2.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
 
-  rect4.moveToBottom();
+    rect4.moveToBottom();
 
-  assert.equal(rect4.getZIndex(), 0);
-  assert.equal(rect3.getZIndex(), 1);
-  assert.equal(rect1.getZIndex(), 2);
-  assert.equal(rect2.getZIndex(), 3);
-});
+    assert.equal(rect4.getZIndex(), 0);
+    assert.equal(rect3.getZIndex(), 1);
+    assert.equal(rect1.getZIndex(), 2);
+    assert.equal(rect2.getZIndex(), 3);
+  });
 
-test('moveUp() properly changes z-indices of the node and its siblings', function() {
-  var stage = addStage();
-  var layer = new Konva.Layer();
-  stage.add(layer);
+  test('moveUp() properly changes z-indices of the node and its siblings', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
 
-  var rect1 = new Konva.Rect();
-  var rect2 = new Konva.Rect();
-  var rect3 = new Konva.Rect();
-  var rect4 = new Konva.Rect();
-  layer.add(rect1, rect2, rect3, rect4);
+    var rect1 = new Konva.Rect();
+    var rect2 = new Konva.Rect();
+    var rect3 = new Konva.Rect();
+    var rect4 = new Konva.Rect();
+    layer.add(rect1, rect2, rect3, rect4);
 
-  assert.equal(rect1.getZIndex(), 0);
-  assert.equal(rect2.getZIndex(), 1);
-  assert.equal(rect3.getZIndex(), 2);
-  assert.equal(rect4.getZIndex(), 3);
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect3.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
 
-  rect1.moveUp();
+    rect1.moveUp();
 
-  assert.equal(rect2.getZIndex(), 0);
-  assert.equal(rect1.getZIndex(), 1);
-  assert.equal(rect3.getZIndex(), 2);
-  assert.equal(rect4.getZIndex(), 3);
+    assert.equal(rect2.getZIndex(), 0);
+    assert.equal(rect1.getZIndex(), 1);
+    assert.equal(rect3.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
 
-  rect3.moveUp();
+    rect3.moveUp();
 
-  assert.equal(rect2.getZIndex(), 0);
-  assert.equal(rect1.getZIndex(), 1);
-  assert.equal(rect4.getZIndex(), 2);
-  assert.equal(rect3.getZIndex(), 3);
-});
+    assert.equal(rect2.getZIndex(), 0);
+    assert.equal(rect1.getZIndex(), 1);
+    assert.equal(rect4.getZIndex(), 2);
+    assert.equal(rect3.getZIndex(), 3);
+  });
 
-test('moveDown() properly changes z-indices of the node and its siblings', function() {
-  var stage = addStage();
-  var layer = new Konva.Layer();
-  stage.add(layer);
+  test('moveDown() properly changes z-indices of the node and its siblings', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
 
-  var rect1 = new Konva.Rect();
-  var rect2 = new Konva.Rect();
-  var rect3 = new Konva.Rect();
-  var rect4 = new Konva.Rect();
-  layer.add(rect1, rect2, rect3, rect4);
+    var rect1 = new Konva.Rect();
+    var rect2 = new Konva.Rect();
+    var rect3 = new Konva.Rect();
+    var rect4 = new Konva.Rect();
+    layer.add(rect1, rect2, rect3, rect4);
 
-  assert.equal(rect1.getZIndex(), 0);
-  assert.equal(rect2.getZIndex(), 1);
-  assert.equal(rect3.getZIndex(), 2);
-  assert.equal(rect4.getZIndex(), 3);
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect3.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
 
-  rect4.moveDown();
+    rect4.moveDown();
 
-  assert.equal(rect1.getZIndex(), 0);
-  assert.equal(rect2.getZIndex(), 1);
-  assert.equal(rect4.getZIndex(), 2);
-  assert.equal(rect3.getZIndex(), 3);
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect4.getZIndex(), 2);
+    assert.equal(rect3.getZIndex(), 3);
 
-  rect2.moveDown();
+    rect2.moveDown();
 
-  assert.equal(rect2.getZIndex(), 0);
-  assert.equal(rect1.getZIndex(), 1);
-  assert.equal(rect4.getZIndex(), 2);
-  assert.equal(rect3.getZIndex(), 3);
-});
+    assert.equal(rect2.getZIndex(), 0);
+    assert.equal(rect1.getZIndex(), 1);
+    assert.equal(rect4.getZIndex(), 2);
+    assert.equal(rect3.getZIndex(), 3);
+  });
 
-test('setZIndex() properly changes z-indices of the node and its siblings', function() {
-  var stage = addStage();
-  var layer = new Konva.Layer();
-  stage.add(layer);
+  test('setZIndex() properly changes z-indices of the node and its siblings', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
 
-  var rect1 = new Konva.Rect();
-  var rect2 = new Konva.Rect();
-  var rect3 = new Konva.Rect();
-  var rect4 = new Konva.Rect();
-  layer.add(rect1, rect2, rect3, rect4);
+    var rect1 = new Konva.Rect();
+    var rect2 = new Konva.Rect();
+    var rect3 = new Konva.Rect();
+    var rect4 = new Konva.Rect();
+    layer.add(rect1, rect2, rect3, rect4);
 
-  assert.equal(rect1.getZIndex(), 0);
-  assert.equal(rect2.getZIndex(), 1);
-  assert.equal(rect3.getZIndex(), 2);
-  assert.equal(rect4.getZIndex(), 3);
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect3.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
 
-  rect1.setZIndex(2);
+    rect1.setZIndex(2);
 
-  assert.equal(rect2.getZIndex(), 0);
-  assert.equal(rect3.getZIndex(), 1);
-  assert.equal(rect1.getZIndex(), 2);
-  assert.equal(rect4.getZIndex(), 3);
+    assert.equal(rect2.getZIndex(), 0);
+    assert.equal(rect3.getZIndex(), 1);
+    assert.equal(rect1.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
 
-  rect2.setZIndex(3);
+    rect2.setZIndex(3);
 
-  assert.equal(rect3.getZIndex(), 0);
-  assert.equal(rect1.getZIndex(), 1);
-  assert.equal(rect4.getZIndex(), 2);
-  assert.equal(rect2.getZIndex(), 3);
+    assert.equal(rect3.getZIndex(), 0);
+    assert.equal(rect1.getZIndex(), 1);
+    assert.equal(rect4.getZIndex(), 2);
+    assert.equal(rect2.getZIndex(), 3);
 
-  rect2.setZIndex(1);
+    rect2.setZIndex(1);
 
-  assert.equal(rect3.getZIndex(), 0);
-  assert.equal(rect2.getZIndex(), 1);
-  assert.equal(rect1.getZIndex(), 2);
-  assert.equal(rect4.getZIndex(), 3);
+    assert.equal(rect3.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect1.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
 
-  rect4.setZIndex(0);
+    rect4.setZIndex(0);
 
-  assert.equal(rect4.getZIndex(), 0);
-  assert.equal(rect3.getZIndex(), 1);
-  assert.equal(rect2.getZIndex(), 2);
-  assert.equal(rect1.getZIndex(), 3);
-});
+    assert.equal(rect4.getZIndex(), 0);
+    assert.equal(rect3.getZIndex(), 1);
+    assert.equal(rect2.getZIndex(), 2);
+    assert.equal(rect1.getZIndex(), 3);
+  });
 
-test('remove() removes the node and properly changes z-indices of its siblings', function() {
-  var stage = addStage();
-  var layer = new Konva.Layer();
-  stage.add(layer);
+  test('remove() removes the node and properly changes z-indices of its siblings', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
 
-  var rect1 = new Konva.Rect();
-  var rect2 = new Konva.Rect();
-  var rect3 = new Konva.Rect();
-  var rect4 = new Konva.Rect();
-  layer.add(rect1, rect2, rect3, rect4);
+    var rect1 = new Konva.Rect();
+    var rect2 = new Konva.Rect();
+    var rect3 = new Konva.Rect();
+    var rect4 = new Konva.Rect();
+    layer.add(rect1, rect2, rect3, rect4);
 
-  assert.equal(layer.getChildren().length, 4);
-  assert.equal(rect1.getZIndex(), 0);
-  assert.equal(rect2.getZIndex(), 1);
-  assert.equal(rect3.getZIndex(), 2);
-  assert.equal(rect4.getZIndex(), 3);
+    assert.equal(layer.getChildren().length, 4);
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect3.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
 
-  rect4.remove();
+    rect4.remove();
 
-  assert.equal(layer.getChildren().length, 3);
-  assert.equal(rect1.getZIndex(), 0);
-  assert.equal(rect2.getZIndex(), 1);
-  assert.equal(rect3.getZIndex(), 2);
+    assert.equal(layer.getChildren().length, 3);
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect3.getZIndex(), 2);
 
-  rect2.remove();
+    rect2.remove();
 
-  assert.equal(layer.getChildren().length, 2);
-  assert.equal(rect1.getZIndex(), 0);
-  assert.equal(rect3.getZIndex(), 1);
+    assert.equal(layer.getChildren().length, 2);
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect3.getZIndex(), 1);
 
-  rect1.remove();
+    rect1.remove();
 
-  assert.equal(layer.getChildren().length, 1);
-  assert.equal(rect3.getZIndex(), 0);
+    assert.equal(layer.getChildren().length, 1);
+    assert.equal(rect3.getZIndex(), 0);
+  });
 });
