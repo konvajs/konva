@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.3.0
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Thu Aug 30 2018
+ * Date: Sat Sep 08 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -19502,7 +19502,7 @@
    * @param {Array} [config.rotationSnaps] Array of angles for rotation snaps. Default is []
    * @param {Number} [config.rotateAnchorOffset] Default is 50
    * @param {Number} [config.padding] Default is 0
-   * @param {Number} [config.borderEnabled] Should we draw border? Default is true
+   * @param {Boolean} [config.borderEnabled] Should we draw border? Default is true
    * @param {String} [config.borderStroke] Border stroke color
    * @param {Number} [config.borderStrokeWidth] Border stroke size
    * @param {Array} [config.borderDash] Array for border dash.
