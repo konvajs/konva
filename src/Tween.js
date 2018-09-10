@@ -232,7 +232,8 @@
         n,
         len,
         trueEnd,
-        trueStart;
+        trueStart,
+        endRGBA;
 
       // remove conflict from tween map if it exists
       tweenId = Konva.Tween.tweens[nodeId][key];
@@ -263,12 +264,30 @@
           }
         }
 
-        for (n = 0; n < len; n++) {
-          diff.push(end[n] - start[n]);
+        if (key.indexOf('fill') === 0) {
+          for (n = 0; n < len; n++) {
+            if (n % 2 === 0) {
+              diff.push(end[n] - start[n]);
+            } else {
+              var startRGBA = Konva.Util.colorToRGBA(start[n]);
+              endRGBA = Konva.Util.colorToRGBA(end[n]);
+              start[n] = startRGBA;
+              diff.push({
+                r: endRGBA.r - startRGBA.r,
+                g: endRGBA.g - startRGBA.g,
+                b: endRGBA.b - startRGBA.b,
+                a: endRGBA.a - startRGBA.a
+              });
+            }
+          }
+        } else {
+          for (n = 0; n < len; n++) {
+            diff.push(end[n] - start[n]);
+          }
         }
       } else if (colorAttrs.indexOf(key) !== -1) {
         start = Konva.Util.colorToRGBA(start);
-        var endRGBA = Konva.Util.colorToRGBA(end);
+        endRGBA = Konva.Util.colorToRGBA(end);
         diff = {
           r: endRGBA.r - start.r,
           g: endRGBA.g - start.g,
@@ -309,8 +328,28 @@
         if (Konva.Util._isArray(start)) {
           newVal = [];
           len = Math.max(start.length, end.length);
-          for (n = 0; n < len; n++) {
-            newVal.push((start[n] || 0) + diff[n] * i);
+          if (key.indexOf('fill') === 0) {
+            for (n = 0; n < len; n++) {
+              if (n % 2 === 0) {
+                newVal.push((start[n] || 0) + diff[n] * i);
+              } else {
+                newVal.push(
+                  'rgba(' +
+                    Math.round(start[n].r + diff[n].r * i) +
+                    ',' +
+                    Math.round(start[n].g + diff[n].g * i) +
+                    ',' +
+                    Math.round(start[n].b + diff[n].b * i) +
+                    ',' +
+                    (start[n].a + diff[n].a * i) +
+                    ')'
+                );
+              }
+            }
+          } else {
+            for (n = 0; n < len; n++) {
+              newVal.push((start[n] || 0) + diff[n] * i);
+            }
           }
         } else if (colorAttrs.indexOf(key) !== -1) {
           newVal =
