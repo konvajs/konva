@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.3.0
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Mon Sep 10 2018
+ * Date: Tue Sep 11 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -19565,7 +19565,7 @@
     this.____init(config);
   };
 
-  var RESIZERS_NAMES = [
+  var ANCHORS_NAMES = [
     'top-left',
     'top-center',
     'top-right',
@@ -19721,7 +19721,7 @@
     _createElements: function() {
       this._createBack();
 
-      RESIZERS_NAMES.forEach(
+      ANCHORS_NAMES.forEach(
         function(name) {
           this._createAnchor(name);
         }.bind(this)
@@ -19758,25 +19758,8 @@
         var layer = this.getLayer();
         var tr = this.getParent();
 
-        // TODO: I guess there are some ways to simplify that calculations
-        // the basic idea is to find "angle" of handler
         var rad = Konva.getAngle(tr.rotation());
 
-        // var cdx = tr.getWidth() / 2;
-        // var cdy = tr.getHeight() / 2;
-
-        // var parentPos = tr.getAbsolutePosition(tr.getParent());
-        // var center = {
-        //   x: parentPos.x + (cdx * Math.cos(rad) + cdy * Math.sin(-rad)),
-        //   y: parentPos.y + (cdy * Math.cos(rad) + cdx * Math.sin(rad))
-        // };
-
-        // var pos = this.getAbsolutePosition(tr.getParent());
-
-        // var dx = -pos.x + center.x;
-        // var dy = -pos.y + center.y;
-
-        // var angle = -Math.atan2(-dy, dx) - Math.PI / 2;
         var scale = tr.getNode().getAbsoluteScale();
         // If scale.y < 0 xor scale.x < 0 we need to flip (not rotate).
         var isMirrored = scale.y * scale.x < 0;
@@ -20014,6 +19997,43 @@
         this.getParent()
       );
 
+      // we need to refactor that centeredScaling ASAP!
+      if (e.altKey) {
+        var topLeft = this.findOne('.top-left');
+        var bottomRight = this.findOne('.bottom-right');
+        var topOffsetX = topLeft.x();
+        var topOffsetY = topLeft.y();
+
+        var bottomOffsetX = this.getWidth() - bottomRight.x();
+        var bottomOffsetY = this.getHeight() - bottomRight.y();
+
+        bottomRight.move({
+          x: -topOffsetX,
+          y: -topOffsetY
+        });
+
+        topLeft.move({
+          x: bottomOffsetX,
+          y: bottomOffsetY
+        });
+
+        absPos = topLeft.getAbsolutePosition(this.getParent());
+
+        // if (topOffsetX) {
+        // }
+        // var pos = this.findOne('.top-left').position();
+        // if (pos.x === 0 && pos.y === 0) {
+        //   this.findOne('.top-left').setAttrs({
+        //     x: this.getWidth() - this.findOne('.bottom-right').x(),
+        //     y: this.getWidth() - this.findOne('.bottom-right').y()
+        //   });
+        //   absPos = this.findOne('.top-left').getAbsolutePosition(
+        //     this.getParent()
+        //   );
+        // } else {
+        // }
+      }
+
       x = absPos.x;
       y = absPos.y;
       var width =
@@ -20233,12 +20253,12 @@
     }
     if (val instanceof Array) {
       val.forEach(function(name) {
-        if (RESIZERS_NAMES.indexOf(name) === -1) {
+        if (ANCHORS_NAMES.indexOf(name) === -1) {
           Konva.Util.warn(
-            'Unknown resizer name: ' +
+            'Unknown anchor name: ' +
               name +
               '. Available names are: ' +
-              RESIZERS_NAMES.join(', ')
+              ANCHORS_NAMES.join(', ')
           );
         }
       });
@@ -20263,7 +20283,7 @@
   Konva.Factory.addGetterSetter(
     Konva.Transformer,
     'enabledAnchors',
-    RESIZERS_NAMES,
+    ANCHORS_NAMES,
     validateResizers
   );
 
@@ -20487,7 +20507,7 @@
   Konva.Factory.addGetterSetter(Konva.Transformer, 'borderDash');
 
   /**
-   * get/set should we keep ration of resize?
+   * get/set should we keep ratio while resize anchors at corners
    * @name keepRatio
    * @method
    * @memberof Konva.Transformer.prototype

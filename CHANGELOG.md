@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 * Tween support for gradient properties
 
+### Added
+
+* Centered resize with ALT key for `Konva.Transformer`
+
 ## [2.3.0][2018-08-30]
 
 ### Added
