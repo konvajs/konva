@@ -401,8 +401,8 @@
 
       this._transforming = true;
 
-      this.fire('transformstart');
-      this.getNode().fire('transformstart');
+      this._fire('transformstart', { evt: e });
+      this.getNode()._fire('transformstart', { evt: e });
     },
 
     _handleMouseMove: function(e) {
@@ -534,27 +534,30 @@
         var dx = padding;
         var dy = padding;
 
-        this._fitNodeInto({
-          rotation: Konva.angleDeg
-            ? newRotation
-            : Konva.Util._degToRad(newRotation),
-          x:
-            attrs.x +
-            (attrs.width / 2 + padding) *
-              (Math.cos(alpha) - Math.cos(newAlpha)) +
-            (attrs.height / 2 + padding) *
-              (Math.sin(-alpha) - Math.sin(-newAlpha)) -
-            (dx * Math.cos(rot) + dy * Math.sin(-rot)),
-          y:
-            attrs.y +
-            (attrs.height / 2 + padding) *
-              (Math.cos(alpha) - Math.cos(newAlpha)) +
-            (attrs.width / 2 + padding) *
-              (Math.sin(alpha) - Math.sin(newAlpha)) -
-            (dy * Math.cos(rot) + dx * Math.sin(rot)),
-          width: attrs.width + padding * 2,
-          height: attrs.height + padding * 2
-        });
+        this._fitNodeInto(
+          {
+            rotation: Konva.angleDeg
+              ? newRotation
+              : Konva.Util._degToRad(newRotation),
+            x:
+              attrs.x +
+              (attrs.width / 2 + padding) *
+                (Math.cos(alpha) - Math.cos(newAlpha)) +
+              (attrs.height / 2 + padding) *
+                (Math.sin(-alpha) - Math.sin(-newAlpha)) -
+              (dx * Math.cos(rot) + dy * Math.sin(-rot)),
+            y:
+              attrs.y +
+              (attrs.height / 2 + padding) *
+                (Math.cos(alpha) - Math.cos(newAlpha)) +
+              (attrs.width / 2 + padding) *
+                (Math.sin(alpha) - Math.sin(newAlpha)) -
+              (dy * Math.cos(rot) + dx * Math.sin(rot)),
+            width: attrs.width + padding * 2,
+            height: attrs.height + padding * 2
+          },
+          e
+        );
       } else {
         console.error(
           new Error(
@@ -602,34 +605,37 @@
       var height =
         this.findOne('.bottom-right').y() - this.findOne('.top-left').y();
 
-      this._fitNodeInto({
-        x: x + this.offsetX(),
-        y: y + this.offsetY(),
-        width: width,
-        height: height
-      });
+      this._fitNodeInto(
+        {
+          x: x + this.offsetX(),
+          y: y + this.offsetY(),
+          width: width,
+          height: height
+        },
+        e
+      );
     },
 
-    _handleMouseUp: function() {
-      this._removeEvents();
+    _handleMouseUp: function(e) {
+      this._removeEvents(e);
     },
 
-    _removeEvents: function() {
+    _removeEvents: function(e) {
       if (this._transforming) {
         this._transforming = false;
         window.removeEventListener('mousemove', this._handleMouseMove);
         window.removeEventListener('touchmove', this._handleMouseMove);
         window.removeEventListener('mouseup', this._handleMouseUp, true);
         window.removeEventListener('touchend', this._handleMouseUp, true);
-        this.fire('transformend');
+        this._fire('transformend', { evt: e });
         var node = this.getNode();
         if (node) {
-          node.fire('transformend');
+          node.fire('transformend', { evt: e });
         }
       }
     },
 
-    _fitNodeInto: function(newAttrs) {
+    _fitNodeInto: function(newAttrs, evt) {
       // waring! in this attrs padding may be included
       var boundBoxFunc = this.getBoundBoxFunc();
       if (boundBoxFunc) {
@@ -658,8 +664,8 @@
       });
       this._settings = false;
 
-      this.fire('transform');
-      this.getNode().fire('transform');
+      this._fire('transform', { evt: evt });
+      this.getNode()._fire('transform', { evt: evt });
       this.update();
       this.getLayer().batchDraw();
     },
