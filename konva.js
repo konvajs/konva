@@ -19997,7 +19997,6 @@
         this.getParent()
       );
 
-      // we need to refactor that centeredScaling ASAP!
       if (e.altKey) {
         var topLeft = this.findOne('.top-left');
         var bottomRight = this.findOne('.bottom-right');
@@ -20018,20 +20017,6 @@
         });
 
         absPos = topLeft.getAbsolutePosition(this.getParent());
-
-        // if (topOffsetX) {
-        // }
-        // var pos = this.findOne('.top-left').position();
-        // if (pos.x === 0 && pos.y === 0) {
-        //   this.findOne('.top-left').setAttrs({
-        //     x: this.getWidth() - this.findOne('.bottom-right').x(),
-        //     y: this.getWidth() - this.findOne('.bottom-right').y()
-        //   });
-        //   absPos = this.findOne('.top-left').getAbsolutePosition(
-        //     this.getParent()
-        //   );
-        // } else {
-        // }
       }
 
       x = absPos.x;

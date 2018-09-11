@@ -1235,7 +1235,7 @@ suite('Transformer', function() {
     assert.equal(pos.y, 110);
   });
 
-  test.only('if alt is pressed should transform around center', function() {
+  test('if alt is pressed should transform around center', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
