@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+## [2.4.0][2018-09-19]
+
 ### Fixed
 
 * Tween support for gradient properties
