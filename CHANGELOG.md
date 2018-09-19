@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 * Tween support for gradient properties
+* Add `user-select: none` to the stage container to fix some "selected contend around" issues
 
 ### Added
 

@@ -631,7 +631,7 @@
    * var verticalAlign = text.verticalAlign();
    *
    * // center text
-   * text.verticalAlign('center');
+   * text.verticalAlign('middle');
    */
 
   Konva.Factory.addGetterSetter(

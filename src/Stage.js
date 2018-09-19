@@ -508,11 +508,11 @@
 
       // always call preventDefault for desktop events because some browsers
       // try to drag and drop the canvas element
-      // TODO: if we preventDefault() it will cancel event detection outside of window
+      // TODO: if we preventDefault() it will cancel event detection outside of window inside iframe
       // but we need it for better drag&drop
       // can we disable native drag&drop somehow differently?
       // if (evt.cancelable) {
-      //   evt.preventDefault();
+      // evt.preventDefault();
       // }
     },
     _mouseup: function(evt) {
@@ -793,7 +793,9 @@
       // content
       this.content = Konva.document.createElement(DIV);
       this.content.style.position = RELATIVE;
+      this.content.style.userSelect = 'none';
       this.content.className = KONVA_CONTENT;
+
       this.content.setAttribute('role', 'presentation');
 
       container.appendChild(this.content);

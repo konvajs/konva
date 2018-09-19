@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.3.0
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Tue Sep 11 2018
+ * Date: Wed Sep 19 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -10978,11 +10978,11 @@
 
       // always call preventDefault for desktop events because some browsers
       // try to drag and drop the canvas element
-      // TODO: if we preventDefault() it will cancel event detection outside of window
+      // TODO: if we preventDefault() it will cancel event detection outside of window inside iframe
       // but we need it for better drag&drop
       // can we disable native drag&drop somehow differently?
       // if (evt.cancelable) {
-      //   evt.preventDefault();
+      // evt.preventDefault();
       // }
     },
     _mouseup: function(evt) {
@@ -11263,7 +11263,9 @@
       // content
       this.content = Konva.document.createElement(DIV);
       this.content.style.position = RELATIVE;
+      this.content.style.userSelect = 'none';
       this.content.className = KONVA_CONTENT;
+
       this.content.setAttribute('role', 'presentation');
 
       container.appendChild(this.content);
@@ -15677,7 +15679,7 @@
    * var verticalAlign = text.verticalAlign();
    *
    * // center text
-   * text.verticalAlign('center');
+   * text.verticalAlign('middle');
    */
 
   Konva.Factory.addGetterSetter(
