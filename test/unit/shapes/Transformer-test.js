@@ -1235,6 +1235,113 @@ suite('Transformer', function() {
     assert.equal(pos.y, 110);
   });
 
+  var tests = [
+    {
+      name: 'top-left',
+      startPos: {
+        x: 0,
+        y: 0
+      },
+      endPos: {
+        x: 25,
+        y: 25
+      },
+      expectedWidth: 50,
+      expectedHeight: 50
+    },
+    {
+      name: 'top-center',
+      startPos: {
+        x: 50,
+        y: 0
+      },
+      endPos: {
+        x: 50,
+        y: 25
+      },
+      expectedWidth: 100,
+      expectedHeight: 50
+    },
+    {
+      name: 'top-right',
+      startPos: {
+        x: 100,
+        y: 0
+      },
+      endPos: {
+        x: 75,
+        y: 25
+      },
+      expectedWidth: 50,
+      expectedHeight: 50
+    },
+    {
+      name: 'middle-left',
+      startPos: {
+        x: 0,
+        y: 50
+      },
+      endPos: {
+        x: 25,
+        y: 50
+      },
+      expectedWidth: 50,
+      expectedHeight: 100
+    },
+    {
+      name: 'middle-right',
+      startPos: {
+        x: 100,
+        y: 50
+      },
+      endPos: {
+        x: 75,
+        y: 50
+      },
+      expectedWidth: 50,
+      expectedHeight: 100
+    },
+    {
+      name: 'bottom-left',
+      startPos: {
+        x: 0,
+        y: 100
+      },
+      endPos: {
+        x: 25,
+        y: 75
+      },
+      expectedWidth: 50,
+      expectedHeight: 50
+    },
+    {
+      name: 'bottom-center',
+      startPos: {
+        x: 50,
+        y: 100
+      },
+      endPos: {
+        x: 50,
+        y: 75
+      },
+      expectedWidth: 100,
+      expectedHeight: 50
+    },
+    {
+      name: 'bottom-right',
+      startPos: {
+        x: 100,
+        y: 100
+      },
+      endPos: {
+        x: 75,
+        y: 75
+      },
+      expectedWidth: 50,
+      expectedHeight: 50
+    }
+  ];
+
   test('if alt is pressed should transform around center', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
@@ -1250,113 +1357,6 @@ suite('Transformer', function() {
       node: rect
     });
     layer.add(tr);
-
-    var tests = [
-      {
-        name: 'top-left',
-        startPos: {
-          x: 0,
-          y: 0
-        },
-        endPos: {
-          x: 25,
-          y: 25
-        },
-        expectedWidth: 50,
-        expectedHeight: 50
-      },
-      {
-        name: 'top-center',
-        startPos: {
-          x: 50,
-          y: 0
-        },
-        endPos: {
-          x: 50,
-          y: 25
-        },
-        expectedWidth: 100,
-        expectedHeight: 50
-      },
-      {
-        name: 'top-right',
-        startPos: {
-          x: 100,
-          y: 0
-        },
-        endPos: {
-          x: 75,
-          y: 25
-        },
-        expectedWidth: 50,
-        expectedHeight: 50
-      },
-      {
-        name: 'middle-left',
-        startPos: {
-          x: 0,
-          y: 50
-        },
-        endPos: {
-          x: 25,
-          y: 50
-        },
-        expectedWidth: 50,
-        expectedHeight: 100
-      },
-      {
-        name: 'middle-right',
-        startPos: {
-          x: 100,
-          y: 50
-        },
-        endPos: {
-          x: 75,
-          y: 50
-        },
-        expectedWidth: 50,
-        expectedHeight: 100
-      },
-      {
-        name: 'bottom-left',
-        startPos: {
-          x: 0,
-          y: 100
-        },
-        endPos: {
-          x: 25,
-          y: 75
-        },
-        expectedWidth: 50,
-        expectedHeight: 50
-      },
-      {
-        name: 'bottom-center',
-        startPos: {
-          x: 50,
-          y: 100
-        },
-        endPos: {
-          x: 50,
-          y: 75
-        },
-        expectedWidth: 100,
-        expectedHeight: 50
-      },
-      {
-        name: 'bottom-right',
-        startPos: {
-          x: 100,
-          y: 100
-        },
-        endPos: {
-          x: 75,
-          y: 75
-        },
-        expectedWidth: 50,
-        expectedHeight: 50
-      }
-    ];
 
     tests.forEach(test => {
       rect.setAttrs({
@@ -1380,6 +1380,70 @@ suite('Transformer', function() {
         clientX: test.endPos.x,
         clientY: test.endPos.y + top,
         altKey: true
+      });
+
+      // here is duplicate, because transformer is listening window events
+      tr._handleMouseUp({
+        clientX: test.endPos.x,
+        clientY: test.endPos.y + top
+      });
+      stage.simulateMouseUp({
+        x: test.endPos.x,
+        y: test.endPos.y
+      });
+      layer.draw();
+
+      assert.equal(
+        rect.width() * rect.scaleX(),
+        test.expectedWidth,
+        test.name + ' width check'
+      );
+      assert.equal(
+        rect.height() * rect.scaleY(),
+        test.expectedHeight,
+        test.name + ' height check'
+      );
+    });
+  });
+
+  test('centered scaling', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      draggable: true,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect,
+      centeredScaling: true
+    });
+    layer.add(tr);
+
+    tests.forEach(test => {
+      rect.setAttrs({
+        x: 0,
+        y: 0,
+        width: 100,
+        height: 100,
+        scaleX: 1,
+        scaleY: 1
+      });
+      tr.update();
+
+      layer.draw();
+
+      stage.simulateMouseDown(test.startPos);
+
+      var target = stage.getIntersection(test.startPos);
+      var top = stage.content.getBoundingClientRect().top;
+      tr._handleMouseMove({
+        target: target,
+        clientX: test.endPos.x,
+        clientY: test.endPos.y + top
       });
 
       // here is duplicate, because transformer is listening window events

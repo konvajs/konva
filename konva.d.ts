@@ -1174,6 +1174,7 @@ declare namespace Konva {
     anchorStrokeWidth?: number;
     anchorSize?: number;
     keepRatio?: boolean;
+    centeredScaling?: boolean;
     enabledAnchors?: Array<string>;
     node?: Rect;
     boundBoxFunc?: (oldBox: SizeConfig, newBox: SizeConfig) => SizeConfig;
@@ -1187,8 +1188,12 @@ declare namespace Konva {
     detach(): void;
     forceUpdate(): void;
 
-    resizeEnabled(): boolean;
-    resizeEnabled(enabled: boolean): this;
+    keepRatio(): boolean;
+    keepRatio(enabled: boolean): this;
+    keepRatio(): boolean;
+    keepRatio(enabled: boolean): this;
+    centeredScaling(): boolean;
+    centeredScaling(enabled: boolean): this;
     rotateEnabled(): boolean;
     rotateEnabled(enabled: boolean): this;
     rotationSnaps(): Array<number>;

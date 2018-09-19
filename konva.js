@@ -19552,6 +19552,7 @@
    * @param {Number} [config.anchorStrokeWidth] Anchor stroke size
    * @param {Number} [config.anchorSize] Default is 10
    * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
+   * @param {Boolean} [config.centeredScaling] Should we resize relative to node's center? Default is false
    * @param {Array} [config.enabledAnchors] Array of names of enabled handles
    * @param {Function} [config.boundBoxFunc] Bounding box function
    * @example
@@ -20002,7 +20003,8 @@
         this.getParent()
       );
 
-      if (e.altKey) {
+      var centeredScaling = this.getCenteredScaling() || e.altKey;
+      if (centeredScaling) {
         var topLeft = this.findOne('.top-left');
         var bottomRight = this.findOne('.bottom-right');
         var topOffsetX = topLeft.x();
@@ -20514,6 +20516,22 @@
    * transformer.keepRatio(false);
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'keepRatio', true);
+
+  /**
+   * get/set should we resize relative to node's center?
+   * @name centeredScaling
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Boolean} centeredScaling
+   * @returns {Boolean}
+   * @example
+   * // get
+   * var centeredScaling = transformer.centeredScaling();
+   *
+   * // set
+   * transformer.centeredScaling(true);
+   */
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'centeredScaling', false);
 
   /**
    * get/set padding
