@@ -999,6 +999,7 @@ declare namespace Konva {
     fontSize?: number;
     fontStyle?: string;
     align?: string;
+    verticalAlign?: string;
     padding?: number;
     lineHeight?: number;
     wrap?: string;
