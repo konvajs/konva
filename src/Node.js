@@ -180,12 +180,9 @@
         drawBorder = conf.drawBorder || false;
 
       if (!width || !height) {
-        // make throw async, because we don't need to stop funcion
-        setTimeout(function() {
-          Konva.Util.throw(
-            'Width or height of caching configuration equals 0. Caching is ignored.'
-          );
-        });
+        Konva.Util.error(
+          'Can not cache the node. Width or height of the node equals 0. Caching is skipped.'
+        );
         return;
       }
 
@@ -1052,7 +1049,7 @@
       // func with this because it will be the only node
       if (top && top._id === this._id) {
         func(this);
-        return true;
+        return;
       }
 
       family.unshift(this);
@@ -1427,17 +1424,19 @@
       }
     },
     _getAbsoluteTransform: function(top) {
-      var at = new Konva.Transform(),
-        transformsEnabled;
+      var at = new Konva.Transform();
 
       // start with stage and traverse downwards to self
       this._eachAncestorReverse(function(node) {
-        transformsEnabled = node.transformsEnabled();
+        var transformsEnabled = node.transformsEnabled();
 
         if (transformsEnabled === 'all') {
           at.multiply(node.getTransform());
         } else if (transformsEnabled === 'position') {
-          at.translate(node.x(), node.y());
+          at.translate(
+            node.getX() - node.getOffsetX(),
+            node.getY() - node.getOffsetY()
+          );
         }
       }, top);
       return at;
@@ -1580,17 +1579,16 @@
     _toKonvaCanvas: function(config) {
       config = config || {};
 
+      var box = this.getClientRect();
+
       var stage = this.getStage(),
-        x = config.x || 0,
-        y = config.y || 0,
+        x = config.x !== undefined ? config.x : box.x,
+        y = config.y !== undefined ? config.y : box.y,
         pixelRatio = config.pixelRatio || 1,
         canvas = new Konva.SceneCanvas({
-          width:
-            config.width || this.getWidth() || (stage ? stage.getWidth() : 0),
+          width: config.width || box.width || (stage ? stage.getWidth() : 0),
           height:
-            config.height ||
-            this.getHeight() ||
-            (stage ? stage.getHeight() : 0),
+            config.height || box.height || (stage ? stage.getHeight() : 0),
           pixelRatio: pixelRatio
         }),
         context = canvas.getContext();
@@ -1646,7 +1644,11 @@
       config = config || {};
       var mimeType = config.mimeType || null,
         quality = config.quality || null;
-      return this._toKonvaCanvas(config).toDataURL(mimeType, quality);
+      var url = this._toKonvaCanvas(config).toDataURL(mimeType, quality);
+      if (config.callback) {
+        config.callback(url);
+      }
+      return url;
     },
     /**
      * converts node into an image.  Since the toImage
@@ -1677,8 +1679,10 @@
       if (!config || !config.callback) {
         throw 'callback required for toImage method config argument';
       }
+      var callback = config.callback;
+      delete config.callback;
       Konva.Util._getImage(this.toDataURL(config), function(img) {
-        config.callback(img);
+        callback(img);
       });
     },
     setSize: function(size) {
@@ -2045,7 +2049,12 @@
    * });
    */
 
-  Konva.Factory.addGetterSetter(Konva.Node, 'x', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Node,
+    'x',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set x position
@@ -2062,7 +2071,12 @@
    * node.x(5);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Node, 'y', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Node,
+    'y',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set y position
@@ -2082,7 +2096,8 @@
   Konva.Factory.addGetterSetter(
     Konva.Node,
     'globalCompositeOperation',
-    'source-over'
+    'source-over',
+    Konva.Validators.getStringValidator()
   );
 
   /**
@@ -2099,7 +2114,12 @@
    * // set globalCompositeOperation
    * shape.globalCompositeOperation('source-in');
    */
-  Konva.Factory.addGetterSetter(Konva.Node, 'opacity', 1);
+  Konva.Factory.addGetterSetter(
+    Konva.Node,
+    'opacity',
+    1,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set opacity.  Opacity values range from 0 to 1.
@@ -2157,7 +2177,12 @@
    * node.id('foo');
    */
 
-  Konva.Factory.addGetterSetter(Konva.Node, 'rotation', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Node,
+    'rotation',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set rotation in degrees
@@ -2196,7 +2221,12 @@
    * });
    */
 
-  Konva.Factory.addGetterSetter(Konva.Node, 'scaleX', 1);
+  Konva.Factory.addGetterSetter(
+    Konva.Node,
+    'scaleX',
+    1,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set scale x
@@ -2213,7 +2243,12 @@
    * node.scaleX(2);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Node, 'scaleY', 1);
+  Konva.Factory.addGetterSetter(
+    Konva.Node,
+    'scaleY',
+    1,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set scale y
@@ -2252,7 +2287,12 @@
    * });
    */
 
-  Konva.Factory.addGetterSetter(Konva.Node, 'skewX', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Node,
+    'skewX',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set skew x
@@ -2269,7 +2309,12 @@
    * node.skewX(3);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Node, 'skewY', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Node,
+    'skewY',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set skew y
@@ -2307,7 +2352,12 @@
    * });
    */
 
-  Konva.Factory.addGetterSetter(Konva.Node, 'offsetX', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Node,
+    'offsetX',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set offset x
@@ -2324,7 +2374,12 @@
    * node.offsetX(3);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Node, 'offsetY', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Node,
+    'offsetY',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set offset y
@@ -2341,7 +2396,11 @@
    * node.offsetY(3);
    */
 
-  Konva.Factory.addSetter(Konva.Node, 'dragDistance');
+  Konva.Factory.addSetter(
+    Konva.Node,
+    'dragDistance',
+    Konva.Validators.getNumberValidator()
+  );
   Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'dragDistance');
 
   /**
@@ -2362,7 +2421,11 @@
    * Konva.dragDistance = 3;
    */
 
-  Konva.Factory.addSetter(Konva.Node, 'width', 0);
+  Konva.Factory.addSetter(
+    Konva.Node,
+    'width',
+    Konva.Validators.getNumberValidator()
+  );
   Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'width');
   /**
    * get/set width
@@ -2379,7 +2442,11 @@
    * node.width(100);
    */
 
-  Konva.Factory.addSetter(Konva.Node, 'height', 0);
+  Konva.Factory.addSetter(
+    Konva.Node,
+    'height',
+    Konva.Validators.getNumberValidator()
+  );
   Konva.Factory.addOverloadedGetterSetter(Konva.Node, 'height');
   /**
    * get/set height
@@ -2396,7 +2463,18 @@
    * node.height(100);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Node, 'listening', 'inherit');
+  Konva.Factory.addGetterSetter(Konva.Node, 'listening', 'inherit', function(
+    val
+  ) {
+    var isValid = val === true || val === false || val === 'inherit';
+    if (!isValid) {
+      Konva.Util.warn(
+        val +
+          ' is a not valid value for "listening" attribute. The value may be true, false or "inherit".'
+      );
+    }
+    return val;
+  });
   /**
    * get/set listenig attr.  If you need to determine if a node is listening or not
    *   by taking into account its parents, use the isListening() method
@@ -2439,11 +2517,14 @@
    * shape.preventDefault(false);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Node, 'preventDefault', true);
+  Konva.Factory.addGetterSetter(
+    Konva.Node,
+    'preventDefault',
+    true,
+    Konva.Validators.getBooleanValidator()
+  );
 
-  Konva.Factory.addGetterSetter(Konva.Node, 'filters', undefined, function(
-    val
-  ) {
+  Konva.Factory.addGetterSetter(Konva.Node, 'filters', null, function(val) {
     this._filterUpToDate = false;
     return val;
   });
@@ -2471,7 +2552,18 @@
    * ]);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Node, 'visible', 'inherit');
+  Konva.Factory.addGetterSetter(Konva.Node, 'visible', 'inherit', function(
+    val
+  ) {
+    var isValid = val === true || val === false || val === 'inherit';
+    if (!isValid) {
+      Konva.Util.warn(
+        val +
+          ' is a not valid value for "visible" attribute. The value may be true, false or "inherit".'
+      );
+    }
+    return val;
+  });
   /**
    * get/set visible attr.  Can be "inherit", true, or false.  The default is "inherit".
    *   If you need to determine if a node is visible or not
@@ -2495,7 +2587,12 @@
    * node.visible('inherit');
    */
 
-  Konva.Factory.addGetterSetter(Konva.Node, 'transformsEnabled', 'all');
+  Konva.Factory.addGetterSetter(
+    Konva.Node,
+    'transformsEnabled',
+    'all',
+    Konva.Validators.getStringValidator()
+  );
 
   /**
    * get/set transforms that are enabled.  Can be "all", "none", or "position".  The default

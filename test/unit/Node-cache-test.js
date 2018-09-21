@@ -1,5 +1,5 @@
 suite('Caching', function() {
-  this.timeout(5000);
+  // this.timeout(5000);
   // CACHING SHAPE
 
   test('cache simple rectangle', function() {
@@ -423,8 +423,8 @@ suite('Caching', function() {
       radius: 25,
       fill: 'red',
       // rotation on circle should not have any effects
+      stroke: 'black',
       rotation: 45,
-      stroke: 2,
       scaleX: 2,
       scaleY: 2
     });
@@ -537,7 +537,7 @@ suite('Caching', function() {
       fill: 'red',
       // rotation on circle should not have any effects
       rotation: 45,
-      stroke: 2,
+      stroke: 'black',
       scaleX: 2,
       scaleY: 2
     });

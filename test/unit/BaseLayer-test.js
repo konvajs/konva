@@ -1,6 +1,7 @@
 suite('BaseLayer', function() {
   // ======================================================
   test('width and height', function() {
+    Konva.showWarnings = false;
     var stage = addStage();
 
     var layer = new Konva.FastLayer();
@@ -52,5 +53,6 @@ suite('BaseLayer', function() {
       stage.height(),
       'while layer is on stage changing height doing nothing'
     );
+    Konva.showWarnings = true;
   });
 });

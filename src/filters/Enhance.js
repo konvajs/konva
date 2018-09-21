@@ -146,7 +146,7 @@
     Konva.Node,
     'enhance',
     0,
-    null,
+    Konva.Validators.getNumberValidator(),
     Konva.Factory.afterSetFilter
   );
 })();

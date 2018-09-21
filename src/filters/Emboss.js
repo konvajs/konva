@@ -142,7 +142,7 @@
     Konva.Node,
     'embossStrength',
     0.5,
-    null,
+    Konva.Validators.getNumberValidator(),
     Konva.Factory.afterSetFilter
   );
   /**
@@ -158,7 +158,7 @@
     Konva.Node,
     'embossWhiteLevel',
     0.5,
-    null,
+    Konva.Validators.getNumberValidator(),
     Konva.Factory.afterSetFilter
   );
   /**

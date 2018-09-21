@@ -71,7 +71,12 @@
   Konva.Util.extend(Konva.Arc, Konva.Shape);
 
   // add getters setters
-  Konva.Factory.addGetterSetter(Konva.Arc, 'innerRadius', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Arc,
+    'innerRadius',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set innerRadius
@@ -88,7 +93,12 @@
    * arc.innerRadius(20);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Arc, 'outerRadius', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Arc,
+    'outerRadius',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set outerRadius
@@ -105,7 +115,12 @@
    * arc.outerRadius(20);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Arc, 'angle', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Arc,
+    'angle',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set angle in degrees

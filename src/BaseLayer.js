@@ -172,6 +172,15 @@
       this.canvas.setSize(width, height);
       return this;
     },
+    _toKonvaCanvas: function(config) {
+      config = config || {};
+      config.width = config.width || this.getWidth();
+      config.height = config.height || this.getHeight();
+      config.x = config.x !== undefined ? config.x : this.getX();
+      config.y = config.y !== undefined ? config.y : this.getY();
+
+      return Konva.Node.prototype._toKonvaCanvas.call(this, config);
+    },
     /**
      * get/set width of layer.getter return width of stage. setter doing nothing.
      * if you want change width use `stage.width(value);`

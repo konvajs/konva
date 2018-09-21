@@ -125,7 +125,12 @@
    * line.pointerLength(15);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Arrow, 'pointerLength', 10);
+  Konva.Factory.addGetterSetter(
+    Konva.Arrow,
+    'pointerLength',
+    10,
+    Konva.Validators.getNumberValidator()
+  );
   /**
    * get/set pointerWidth
    * @name pointerWidth
@@ -142,7 +147,12 @@
    * line.pointerWidth(15);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Arrow, 'pointerWidth', 10);
+  Konva.Factory.addGetterSetter(
+    Konva.Arrow,
+    'pointerWidth',
+    10,
+    Konva.Validators.getNumberValidator()
+  );
   /**
    * get/set pointerAtBeginning
    * @name pointerAtBeginning

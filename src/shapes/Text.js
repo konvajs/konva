@@ -14,6 +14,8 @@
     LEFT = 'left',
     TEXT = 'text',
     TEXT_UPPER = 'Text',
+    TOP = 'top',
+    BOTTOM = 'bottom',
     MIDDLE = 'middle',
     NORMAL = 'normal',
     PX_SPACE = 'px ',
@@ -30,6 +32,7 @@
       'fontVariant',
       'padding',
       'align',
+      'verticalAlign',
       'lineHeight',
       'text',
       'width',
@@ -61,6 +64,7 @@
    * @param {String} [config.fontVariant] can be normal or small-caps.  Default is normal
    * @param {String} config.text
    * @param {String} [config.align] can be left, center, or right
+   * @param {String} [config.verticalAlign] can be top, middle or bottom
    * @param {Number} [config.padding]
    * @param {Number} [config.lineHeight] default is 1
    * @param {String} [config.wrap] can be word, char, or none. Default is word
@@ -128,6 +132,8 @@
         lineHeightPx = this.getLineHeight() * textHeight,
         textArr = this.textArr,
         textArrLen = textArr.length,
+        verticalAlign = this.getVerticalAlign(),
+        alignY = 0,
         align = this.getAlign(),
         totalWidth = this.getWidth(),
         letterSpacing = this.getLetterSpacing(),
@@ -140,11 +146,20 @@
 
       context.setAttr('textBaseline', MIDDLE);
       context.setAttr('textAlign', LEFT);
+
+      // handle vertical alignment
+      if (verticalAlign === MIDDLE) {
+        alignY =
+          (this.getHeight() - textArrLen * lineHeightPx - padding * 2) / 2;
+      } else if (verticalAlign === BOTTOM) {
+        alignY = this.getHeight() - textArrLen * lineHeightPx - padding * 2;
+      }
+
       if (padding) {
         context.translate(padding, 0);
-        context.translate(0, padding + lineHeightPx / 2);
+        context.translate(0, alignY + padding + lineHeightPx / 2);
       } else {
-        context.translate(0, lineHeightPx / 2);
+        context.translate(0, alignY + lineHeightPx / 2);
       }
 
       // draw text lines
@@ -280,7 +295,7 @@
       return this.textWidth;
     },
     /**
-     * get text height
+     * get height of one line text
      * @method
      * @memberof Konva.Text.prototype
      * @returns {Number}
@@ -474,6 +489,18 @@
   };
   Konva.Util.extend(Konva.Text, Konva.Shape);
 
+  Konva.Factory.addSetter(
+    Konva.Node,
+    'width',
+    Konva.Validators.getNumberOrAutoValidator()
+  );
+
+  Konva.Factory.addSetter(
+    Konva.Node,
+    'height',
+    Konva.Validators.getNumberOrAutoValidator()
+  );
+
   // add getters setters
   Konva.Factory.addGetterSetter(Konva.Text, 'fontFamily', 'Arial');
 
@@ -492,7 +519,12 @@
    * text.fontFamily('Arial');
    */
 
-  Konva.Factory.addGetterSetter(Konva.Text, 'fontSize', 12);
+  Konva.Factory.addGetterSetter(
+    Konva.Text,
+    'fontSize',
+    12,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set font size in pixels
@@ -543,7 +575,12 @@
    * text.fontVariant('small-caps');
    */
 
-  Konva.Factory.addGetterSetter(Konva.Text, 'padding', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Text,
+    'padding',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * set padding
@@ -580,7 +617,29 @@
    * text.align('right');
    */
 
-  Konva.Factory.addGetterSetter(Konva.Text, 'lineHeight', 1);
+  Konva.Factory.addGetterSetter(Konva.Text, 'verticalAlign', TOP);
+
+  /**
+   * get/set vertical align of text.  Can be 'top', 'middle', 'bottom'.
+   * @name verticalAlign
+   * @method
+   * @memberof Konva.Text.prototype
+   * @param {String} verticalAlign
+   * @returns {String}
+   * @example
+   * // get text vertical align
+   * var verticalAlign = text.verticalAlign();
+   *
+   * // center text
+   * text.verticalAlign('middle');
+   */
+
+  Konva.Factory.addGetterSetter(
+    Konva.Text,
+    'lineHeight',
+    1,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set line height.  The default is 1.
@@ -632,7 +691,12 @@
    * text.ellipsis(true);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Text, 'letterSpacing', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Text,
+    'letterSpacing',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * set letter spacing property. Default value is 0.

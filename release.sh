@@ -61,6 +61,11 @@ rm -r ./api
 echo "documentation is generated"
 echo "include konva-v${new_version}-documentation.zip into version in github"
 
+cd ../konva
+git push
+git push --tags
+npm publish
+
 echo "copy konva.js into konva-site"
 cp ./konva.js ../konva-site/
 cd ../konva-site
@@ -74,11 +79,6 @@ find source themes -exec perl -i -pe "s|${old_cdn_min}|${new_cdn_min}|g" {} +
 
 echo "regenerate site"
 ./deploy.sh
-
-cd ../konva
-git push
-git push --tags
-npm publish
 
 echo "DONE!"
 

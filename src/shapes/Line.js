@@ -244,7 +244,12 @@
    * line.bezier(true);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Line, 'tension', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Line,
+    'tension',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set tension
@@ -262,7 +267,12 @@
    * line.tension(3);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Line, 'points', []);
+  Konva.Factory.addGetterSetter(
+    Konva.Line,
+    'points',
+    [],
+    Konva.Validators.getNumberArrayValidator()
+  );
   /**
    * get/set points array
    * @name points

@@ -106,7 +106,7 @@
     Konva.Node,
     'pixelSize',
     8,
-    null,
+    Konva.Validators.getNumberValidator(),
     Konva.Factory.afterSetFilter
   );
   /**

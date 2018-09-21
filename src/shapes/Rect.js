@@ -86,7 +86,12 @@
 
   Konva.Util.extend(Konva.Rect, Konva.Shape);
 
-  Konva.Factory.addGetterSetter(Konva.Rect, 'cornerRadius', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Rect,
+    'cornerRadius',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
   /**
    * get/set corner radius
    * @name cornerRadius

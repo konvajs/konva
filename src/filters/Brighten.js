@@ -30,7 +30,7 @@
     Konva.Node,
     'brightness',
     0,
-    null,
+    Konva.Validators.getNumberValidator(),
     Konva.Factory.afterSetFilter
   );
   /**

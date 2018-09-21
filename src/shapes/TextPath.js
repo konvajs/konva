@@ -558,7 +558,12 @@
    * @memberof Konva.TextPath.prototype
    */
 
-  Konva.Factory.addGetterSetter(Konva.TextPath, 'fontSize', 12);
+  Konva.Factory.addGetterSetter(
+    Konva.TextPath,
+    'fontSize',
+    12,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * set font size
@@ -604,7 +609,12 @@
    * text.align('right');
    */
 
-  Konva.Factory.addGetterSetter(Konva.TextPath, 'letterSpacing', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.TextPath,
+    'letterSpacing',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * set letter spacing property. Default value is 0.

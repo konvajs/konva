@@ -153,7 +153,12 @@
    * });
    */
 
-  Konva.Factory.addGetterSetter(Konva.Image, 'cropX', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Image,
+    'cropX',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
   /**
    * get/set crop x
    * @method
@@ -169,7 +174,12 @@
    * image.cropX(20);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Image, 'cropY', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Image,
+    'cropY',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
   /**
    * get/set crop y
    * @name cropY
@@ -185,7 +195,12 @@
    * image.cropY(20);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Image, 'cropWidth', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Image,
+    'cropWidth',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
   /**
    * get/set crop width
    * @name cropWidth
@@ -201,7 +216,12 @@
    * image.cropWidth(20);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Image, 'cropHeight', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Image,
+    'cropHeight',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
   /**
    * get/set crop height
    * @name cropHeight

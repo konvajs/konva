@@ -274,7 +274,7 @@
     Konva.Node,
     'kaleidoscopePower',
     2,
-    null,
+    Konva.Validators.getNumberValidator(),
     Konva.Factory.afterSetFilter
   );
 
@@ -290,7 +290,7 @@
     Konva.Node,
     'kaleidoscopeAngle',
     0,
-    null,
+    Konva.Validators.getNumberValidator(),
     Konva.Factory.afterSetFilter
   );
 })();

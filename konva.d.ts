@@ -5,8 +5,13 @@ declare namespace Konva {
   var isDragReady: () => boolean;
   var DD: any;
 
-  type HandlerFunc = (
-    e: { target: Konva.Shape; evt: Event; currentTarget: Konva.Node; cancelBubble: boolean }
+  type HandlerFunc<E = Event> = (
+    e: {
+      target: Konva.Shape;
+      evt: E;
+      currentTarget: Konva.Node;
+      cancelBubble: boolean;
+    }
   ) => void;
 
   enum KonvaNodeEvent {
@@ -28,7 +33,7 @@ declare namespace Konva {
     dbltap = 'dbltap',
     dragstart = 'dragstart',
     dragmove = 'dragmove',
-    dragend = 'dragend',
+    dragend = 'dragend'
   }
 
   enum KonvaStageEvent {
@@ -45,7 +50,7 @@ declare namespace Konva {
     contentTouchmove = 'contentTouchmove',
     contentTouchend = 'contentTouchend',
     contentTap = 'contentTap',
-    contentDblTap = 'contentDblTap',
+    contentDblTap = 'contentDblTap'
   }
 
   type KonvaEvent = KonvaNodeEvent & KonvaStageEvent;
@@ -139,48 +144,48 @@ declare namespace Konva {
     start(): Animation;
     stop(): Animation;
   }
-  
+
   interface KonvaNodeEventMap extends KonvaStageEventMap {
-    'mouseover': MouseEvent,
-    'mouseout': MouseEvent,
-    'mousemove': MouseEvent,
-    'mouseleave': MouseEvent,
-    'mouseenter': MouseEvent,
-    'mousedown': MouseEvent,
-    'mouseup': MouseEvent,
-    'wheel': WheelEvent,
-    'contextmenu': PointerEvent,
-    'click': MouseEvent,
-    'dblclick': MouseEvent,
-    'touchstart': TouchEvent,
-    'touchmove': TouchEvent,
-    'touchend': TouchEvent,
-    'tap': Event,
-    'dbltap': Event,
-    'dragstart': DragEvent,
-    'dragmove': DragEvent,
-    'dragend': DragEvent,
-    'dragover': DragEvent,
-    'drop': DragEvent,
+    mouseover: MouseEvent;
+    mouseout: MouseEvent;
+    mousemove: MouseEvent;
+    mouseleave: MouseEvent;
+    mouseenter: MouseEvent;
+    mousedown: MouseEvent;
+    mouseup: MouseEvent;
+    wheel: WheelEvent;
+    contextmenu: PointerEvent;
+    click: MouseEvent;
+    dblclick: MouseEvent;
+    touchstart: TouchEvent;
+    touchmove: TouchEvent;
+    touchend: TouchEvent;
+    tap: Event;
+    dbltap: Event;
+    dragstart: DragEvent;
+    dragmove: DragEvent;
+    dragend: DragEvent;
+    dragover: DragEvent;
+    drop: DragEvent;
   }
 
   interface KonvaStageEventMap {
-    'contentMouseover': MouseEvent,
-    'contentMousemove': MouseEvent,
-    'contentMouseout': MouseEvent,
-    'contentMousedown': MouseEvent,
-    'contentMouseup': MouseEvent,
-    'contentWheel': WheelEvent,
-    'contentContextmenu': PointerEvent,
-    'contentClick': MouseEvent,
-    'contentDblclick': MouseEvent,
-    'contentTouchstart': TouchEvent,
-    'contentTouchmove': TouchEvent,
-    'contentTouchend': TouchEvent,
-    'contentTap': Event,
-    'contentDblTap': Event,
+    contentMouseover: MouseEvent;
+    contentMousemove: MouseEvent;
+    contentMouseout: MouseEvent;
+    contentMousedown: MouseEvent;
+    contentMouseup: MouseEvent;
+    contentWheel: WheelEvent;
+    contentContextmenu: PointerEvent;
+    contentClick: MouseEvent;
+    contentDblclick: MouseEvent;
+    contentTouchstart: TouchEvent;
+    contentTouchmove: TouchEvent;
+    contentTouchend: TouchEvent;
+    contentTap: Event;
+    contentDblTap: Event;
   }
-    
+
   interface NodeConfig {
     x?: number;
     y?: number;
@@ -296,7 +301,10 @@ declare namespace Konva {
     // CHECK
     getCanvas(): Canvas;
     getClassName(): string;
-    getClientRect(attrs? : { skipTransform?: boolean, relativeTo?: object }): SizeConfig;
+    getClientRect(attrs?: {
+      skipTransform?: boolean;
+      relativeTo?: object;
+    }): SizeConfig;
     getContent(): HTMLDivElement;
     getDepth(): number;
     getHeight(): number;
@@ -353,7 +361,17 @@ declare namespace Konva {
     offsetX(offsetX: number): this;
     offsetY(): number;
     offsetY(offsetY: number): this;
-    on<K extends keyof KonvaNodeEventMap>(evtStr: K, handler: (e: { target: Konva.Shape; evt: KonvaNodeEventMap[K]; currentTarget: Konva.Node; cancelBubble: boolean }) => void): this;
+    on<K extends keyof KonvaNodeEventMap>(
+      evtStr: K,
+      handler: (
+        e: {
+          target: Konva.Shape;
+          evt: KonvaNodeEventMap[K];
+          currentTarget: Konva.Node;
+          cancelBubble: boolean;
+        }
+      ) => void
+    ): this;
     on(evtStr: KonvaEventString, handler: HandlerFunc): this;
     opacity(): number;
     opacity(opacity: number): this;
@@ -488,8 +506,8 @@ declare namespace Konva {
     strokeEnabled?: boolean;
     lineJoin?: string;
     lineCap?: string;
-    sceneFunc?: (con: Context) => void;
-    hitFunc?: (con: Context) => void;
+    sceneFunc?: (con: Context, shape: Shape) => void;
+    hitFunc?: (con: Context, shape: Shape) => void;
     shadowColor?: string;
     shadowBlur?: number;
     shadowOffset?: Vector2d;
@@ -576,7 +594,7 @@ declare namespace Konva {
     hasShadow(): boolean;
     hasStroke(): boolean;
     hitFunc(): Function;
-    hitFunc(func: Function): this;
+    hitFunc(func: (con: Context, shape: Shape) => {}): this;
     intersects(point: Vector2d): boolean;
     lineCap(): string;
     lineCap(lineCap: string): this;
@@ -585,7 +603,7 @@ declare namespace Konva {
     perfectDrawEnabled(): boolean;
     perfectDrawEnabled(perfectDrawEnabled: boolean): this;
     sceneFunc(): Function;
-    sceneFunc(func: (con: Context) => {}): this;
+    sceneFunc(func: (con: Context, shape: Shape) => {}): this;
     shadowColor(): string;
     shadowColor(shadowColor: string): this;
     shadowEnabled(): boolean;
@@ -956,6 +974,7 @@ declare namespace Konva {
     animations: any;
     frameIndex?: number;
     image: HTMLImageElement;
+    frameRate?: number;
   }
 
   class Sprite extends Shape {
@@ -1118,12 +1137,13 @@ declare namespace Konva {
     fontStyle(fontStyle: string): this;
   }
 
-  class Collection {
-    [i: number]: any;
-    static toCollection(arr: any[]): Collection;
-    each(f: (el: Node) => void): void;
-    toArray(): any[];
+  class Collection<T extends Node = Node> {
+    [i: number]: T;
+    each(f: (el: T) => void): void;
+    toArray(): T[];
     length: number;
+
+    static toCollection<T extends Node = Node>(arr: T[]): Collection<T>;
   }
 
   class Transform {
@@ -1144,10 +1164,18 @@ declare namespace Konva {
     resizeEnabled?: boolean;
     rotateEnabled?: boolean;
     rotationSnaps?: Array<number>;
-    rotateHandlerOffset?: number;
-    lineEnabled?: number;
+    rotateAnchorOffset?: number;
+    borderEnabled?: boolean;
+    borderStroke?: string;
+    borderStrokeWidth?: number;
+    borderDash?: Array<number>;
+    anchorFill?: string;
+    anchorStroke?: string;
+    anchorStrokeWidth?: number;
+    anchorSize?: number;
     keepRatio?: boolean;
-    enabledHandlers?: Array<string>;
+    centeredScaling?: boolean;
+    enabledAnchors?: Array<string>;
     node?: Rect;
     boundBoxFunc?: (oldBox: SizeConfig, newBox: SizeConfig) => SizeConfig;
   }
@@ -1159,7 +1187,37 @@ declare namespace Konva {
     getNode(): Node;
     detach(): void;
     forceUpdate(): void;
-    update(): void;
+
+    keepRatio(): boolean;
+    keepRatio(enabled: boolean): this;
+    keepRatio(): boolean;
+    keepRatio(enabled: boolean): this;
+    centeredScaling(): boolean;
+    centeredScaling(enabled: boolean): this;
+    rotateEnabled(): boolean;
+    rotateEnabled(enabled: boolean): this;
+    rotationSnaps(): Array<number>;
+    rotationSnaps(snaps: Array<number>): this;
+    rotateAnchorOffset(): number;
+    rotateAnchorOffset(offset: number): this;
+    borderEnabled(): boolean;
+    borderEnabled(enabled: boolean): this;
+    borderStroke(): string;
+    borderStroke(color: string): this;
+    borderStrokeWidth(): number;
+    borderStrokeWidth(width: number): this;
+    borderDash(): Array<number>;
+    borderDash(snaps: Array<number>): this;
+    anchorFill(): string;
+    anchorFill(color: string): this;
+    anchorStroke(): string;
+    anchorStroke(color: string): this;
+    anchorStrokeWidth(): number;
+    anchorStrokeWidth(width: number): this;
+    anchorSize(): number;
+    anchorSize(width: number): this;
+    enabledAnchors(): Array<string>;
+    enabledAnchors(names: Array<string>): this;
   }
 
   interface Vector2d {

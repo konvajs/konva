@@ -72,7 +72,12 @@
   Konva.Util.extend(Konva.Ring, Konva.Shape);
 
   // add getters setters
-  Konva.Factory.addGetterSetter(Konva.Ring, 'innerRadius', 0);
+  Konva.Factory.addGetterSetter(
+    Konva.Ring,
+    'innerRadius',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set innerRadius
@@ -88,7 +93,12 @@
    * // set inner radius
    * ring.innerRadius(20);
    */
-  Konva.Factory.addGetter(Konva.Ring, 'outerRadius', 0);
+  Konva.Factory.addGetter(
+    Konva.Ring,
+    'outerRadius',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
   Konva.Factory.addOverloadedGetterSetter(Konva.Ring, 'outerRadius');
 
   /**

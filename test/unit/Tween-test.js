@@ -170,6 +170,49 @@ suite('Tween', function() {
     tween.play();
   });
 
+  test('gradient tweening', function(done) {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+
+    var circle = new Konva.Circle({
+      x: 100,
+      y: stage.getHeight() / 2,
+      radius: 70,
+      fillLinearGradientStartPoint: { x: -50, y: -50 },
+      fillLinearGradientEndPoint: { x: 50, y: 50 },
+      fillLinearGradientColorStops: [0, 'red', 0.5, 'blue']
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    var duration = 0.1;
+    var endFill = [0.5, 'red', 1, 'black'];
+
+    var tween = new Konva.Tween({
+      node: circle,
+      duration: duration,
+      fillLinearGradientColorStops: endFill,
+      onFinish: function() {
+        assert.deepEqual(
+          [0.5, 'rgba(255,0,0,1)', 1, 'rgba(0,0,0,1)'],
+          circle.fillLinearGradientColorStops()
+        );
+        done();
+      }
+    });
+
+    tween.seek(duration * 0.5);
+    assert.deepEqual(
+      [0.25, 'rgba(255,0,0,1)', 0.75, 'rgba(0,0,128,1)'],
+      circle.fillLinearGradientColorStops()
+    );
+
+    tween.seek(0);
+    tween.play();
+  });
+
   test('to method', function(done) {
     var stage = addStage();
 

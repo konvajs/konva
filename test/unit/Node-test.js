@@ -118,6 +118,22 @@ suite('Node', function() {
     assert.equal(layer.getAbsoluteOpacity(), 0.5);
   });
 
+  test.skip('warn on duplicate id', function() {
+    var oldWarn = Konva.Util.warn;
+    var called = false;
+    Konva.Util.warn = function() {
+      called = true;
+    }
+    var circle = new Konva.Circle({
+      id: 'circle'
+    });
+    var circle = new Konva.Circle({
+      id: 'circle'
+    });
+    assert.equal(called, true);
+    Konva.Util.warn = oldWarn;
+  })
+
   // ======================================================
   test('transform cache', function() {
     var stage = addStage();
@@ -292,7 +308,7 @@ suite('Node', function() {
 
   // ======================================================
   test('toDataURL + HDPI', function(done) {
-    this.timeout(5000);
+    // this.timeout(5000);
     var oldRatio = Konva.pixelRatio;
     Konva.pixelRatio = 2;
 
@@ -336,6 +352,49 @@ suite('Node', function() {
         img.src = url;
       }
     });
+  });
+
+  // ======================================================
+  test('toDataURL of moved shape', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var circle = new Konva.Circle({
+      fill: 'green',
+      radius: 50
+    });
+    layer.add(circle);
+
+    var oldURL = circle.toDataURL();
+
+    circle.x(100);
+    circle.y(100);
+
+    var newURL = circle.toDataURL();
+    assert.equal(oldURL, newURL);
+  });
+
+  // ======================================================
+  test('toDataURL of transformer shape', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var text = new Konva.Text({
+      fill: 'green',
+      text: 'hello, test',
+      rotation: 45
+    });
+    layer.add(text);
+
+    var oldURL = text.toDataURL();
+
+    text.x(100);
+    text.y(100);
+
+    var newURL = text.toDataURL();
+    assert.equal(oldURL, newURL);
   });
 
   // ======================================================
@@ -1607,7 +1666,6 @@ suite('Node', function() {
     var stage = addStage();
     var layer = new Konva.Layer({
       name: 'layerName',
-      id: 'layerId'
     });
     var group = new Konva.Group({
       name: 'groupName',
@@ -1624,7 +1682,6 @@ suite('Node', function() {
       height: side,
       fill: 'red',
       name: 'rectName',
-      id: 'rectId'
     });
     var marker = new Konva.Rect({
       x: side,
@@ -1666,13 +1723,11 @@ suite('Node', function() {
     var stage = addStage();
     var layer = new Konva.Layer({
       name: 'layerName',
-      id: 'layerId',
       x: 100,
       y: 100
     });
     var group = new Konva.Group({
       name: 'groupName',
-      id: 'groupId',
       x: 100,
       y: 100
     });
@@ -1683,7 +1738,6 @@ suite('Node', function() {
       height: 50,
       fill: 'red',
       name: 'rectName',
-      id: 'rectId'
     });
 
     group.add(rect);
@@ -1693,6 +1747,68 @@ suite('Node', function() {
     assert.equal(rect.getAbsolutePosition(layer).x, 150);
     assert.equal(rect.getAbsolutePosition(layer).y, 160);
   });
+
+  // ======================================================
+  test(
+    'results of getAbsoluteTransform limited to position and offset transformations are the same' +
+      " when used with transformsEnabled = 'all' and transformsEnabled = 'position'",
+    function() {
+      var stage = addStage();
+      var layer1 = new Konva.Layer({
+        name: 'layerName',
+        x: 90,
+        y: 110,
+        offsetX: 50,
+        offsetY: 50,
+        transformsEnabled: 'all'
+      });
+      var group1 = new Konva.Group({
+        name: 'groupName',
+        x: 30,
+        y: 30,
+        offsetX: -60,
+        offsetY: -80,
+        transformsEnabled: 'all'
+      });
+      var rect1 = new Konva.Rect({
+        x: -50,
+        y: -60,
+        offsetX: 50,
+        offsetY: 50,
+        width: 50,
+        height: 50,
+        fill: 'red',
+        name: 'rectName',
+        id: 'rectId1',
+        transformsEnabled: 'all'
+      });
+
+      var layer2 = layer1.clone({ transformsEnabled: 'position' });
+      var group2 = group1.clone({ transformsEnabled: 'position' });
+      var rect2 = rect1.clone({ transformsEnabled: 'position' });
+
+      group1.add(rect1);
+      layer1.add(group1);
+      stage.add(layer1);
+
+      group2.add(rect2);
+      layer2.add(group2);
+      stage.add(layer2);
+
+      assert.equal(layer1.getTransformsEnabled(), 'all');
+      assert.equal(group1.getTransformsEnabled(), 'all');
+      assert.equal(rect1.getTransformsEnabled(), 'all');
+
+      assert.equal(layer2.getTransformsEnabled(), 'position');
+      assert.equal(group2.getTransformsEnabled(), 'position');
+      assert.equal(rect2.getTransformsEnabled(), 'position');
+
+      assert.deepEqual(
+        rect2.getAbsoluteTransform(),
+        rect1.getAbsoluteTransform()
+      );
+    }
+  );
 
   // ======================================================
   test('test dragDistance', function() {
@@ -2535,11 +2651,11 @@ suite('Node', function() {
       context.fillStrokeShape(this);
     };
     var json =
-      '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle","customAttrObj":{"x":1,"y":5,"size":{"width":10,"height":20}}},"className":"Shape"}]}]}]}';
+      '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{},"className":"Group","children":[{"attrs":{"fill":"#00D2FF","stroke":"black","strokeWidth":4,"id":"myTriangle1","customAttrObj":{"x":1,"y":5,"size":{"width":10,"height":20}}},"className":"Shape"}]}]}]}';
 
     var stage = Konva.Node.create(json, container);
 
-    stage.find('#myTriangle').each(function(node) {
+    stage.find('#myTriangle1').each(function(node) {
       node.sceneFunc(drawTriangle);
     });
 
@@ -2583,11 +2699,11 @@ suite('Node', function() {
     var container = addContainer();
     imageObj.onload = function() {
       var json =
-        '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"x":200,"y":60,"offsetX":50,"offsetY":150,"id":"darth"},"className":"Image"}]}]}';
+        '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"x":200,"y":60,"offsetX":50,"offsetY":150,"id":"darth1"},"className":"Image"}]}]}';
       var stage = Konva.Node.create(json, container);
 
       assert.equal(stage.toJSON(), json);
-      stage.find('#darth').each(function(node) {
+      stage.find('#darth1').each(function(node) {
         node.setImage(imageObj);
       });
       stage.draw();
@@ -3202,8 +3318,8 @@ suite('Node', function() {
     circle.visible(false);
     assert.equal(circle.visible(), false);
 
-    circle.transformsEnabled(false);
-    assert.equal(circle.transformsEnabled(), false);
+    // circle.transformsEnabled(false);
+    // assert.equal(circle.transformsEnabled(), false);
 
     circle.position({ x: 6, y: 8 });
     assert.equal(circle.position().x, 6);
@@ -3352,7 +3468,7 @@ suite('Node', function() {
 
   test('toObject with property in attrs and instanse', function() {
     var node = new Konva.Circle({
-      id: 'foo',
+      id: 'foo1',
       radius: 10,
       filled: true
     });
@@ -3413,5 +3529,210 @@ suite('Node', function() {
     assert.equal(rect.findAncestor('Group'), group);
 
     assert.equal(rect.findAncestor(), null, 'return null if no selector');
+  });
+
+  test('moveToTop() properly changes z-indices of the node and its siblings', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect();
+    var rect2 = new Konva.Rect();
+    var rect3 = new Konva.Rect();
+    var rect4 = new Konva.Rect();
+    layer.add(rect1, rect2, rect3, rect4);
+
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect3.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
+
+    rect2.moveToTop();
+
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect3.getZIndex(), 1);
+    assert.equal(rect4.getZIndex(), 2);
+    assert.equal(rect2.getZIndex(), 3);
+
+    rect1.moveToTop();
+
+    assert.equal(rect3.getZIndex(), 0);
+    assert.equal(rect4.getZIndex(), 1);
+    assert.equal(rect2.getZIndex(), 2);
+    assert.equal(rect1.getZIndex(), 3);
+  });
+
+  test('moveToBottom() properly changes z-indices of the node and its siblings', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect();
+    var rect2 = new Konva.Rect();
+    var rect3 = new Konva.Rect();
+    var rect4 = new Konva.Rect();
+    layer.add(rect1, rect2, rect3, rect4);
+
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect3.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
+
+    rect3.moveToBottom();
+
+    assert.equal(rect3.getZIndex(), 0);
+    assert.equal(rect1.getZIndex(), 1);
+    assert.equal(rect2.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
+
+    rect4.moveToBottom();
+
+    assert.equal(rect4.getZIndex(), 0);
+    assert.equal(rect3.getZIndex(), 1);
+    assert.equal(rect1.getZIndex(), 2);
+    assert.equal(rect2.getZIndex(), 3);
+  });
+
+  test('moveUp() properly changes z-indices of the node and its siblings', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect();
+    var rect2 = new Konva.Rect();
+    var rect3 = new Konva.Rect();
+    var rect4 = new Konva.Rect();
+    layer.add(rect1, rect2, rect3, rect4);
+
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect3.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
+
+    rect1.moveUp();
+
+    assert.equal(rect2.getZIndex(), 0);
+    assert.equal(rect1.getZIndex(), 1);
+    assert.equal(rect3.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
+
+    rect3.moveUp();
+
+    assert.equal(rect2.getZIndex(), 0);
+    assert.equal(rect1.getZIndex(), 1);
+    assert.equal(rect4.getZIndex(), 2);
+    assert.equal(rect3.getZIndex(), 3);
+  });
+
+  test('moveDown() properly changes z-indices of the node and its siblings', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect();
+    var rect2 = new Konva.Rect();
+    var rect3 = new Konva.Rect();
+    var rect4 = new Konva.Rect();
+    layer.add(rect1, rect2, rect3, rect4);
+
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect3.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
+
+    rect4.moveDown();
+
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect4.getZIndex(), 2);
+    assert.equal(rect3.getZIndex(), 3);
+
+    rect2.moveDown();
+
+    assert.equal(rect2.getZIndex(), 0);
+    assert.equal(rect1.getZIndex(), 1);
+    assert.equal(rect4.getZIndex(), 2);
+    assert.equal(rect3.getZIndex(), 3);
+  });
+
+  test('setZIndex() properly changes z-indices of the node and its siblings', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect();
+    var rect2 = new Konva.Rect();
+    var rect3 = new Konva.Rect();
+    var rect4 = new Konva.Rect();
+    layer.add(rect1, rect2, rect3, rect4);
+
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect3.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
+
+    rect1.setZIndex(2);
+
+    assert.equal(rect2.getZIndex(), 0);
+    assert.equal(rect3.getZIndex(), 1);
+    assert.equal(rect1.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
+
+    rect2.setZIndex(3);
+
+    assert.equal(rect3.getZIndex(), 0);
+    assert.equal(rect1.getZIndex(), 1);
+    assert.equal(rect4.getZIndex(), 2);
+    assert.equal(rect2.getZIndex(), 3);
+
+    rect2.setZIndex(1);
+
+    assert.equal(rect3.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect1.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
+
+    rect4.setZIndex(0);
+
+    assert.equal(rect4.getZIndex(), 0);
+    assert.equal(rect3.getZIndex(), 1);
+    assert.equal(rect2.getZIndex(), 2);
+    assert.equal(rect1.getZIndex(), 3);
+  });
+
+  test('remove() removes the node and properly changes z-indices of its siblings', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect1 = new Konva.Rect();
+    var rect2 = new Konva.Rect();
+    var rect3 = new Konva.Rect();
+    var rect4 = new Konva.Rect();
+    layer.add(rect1, rect2, rect3, rect4);
+
+    assert.equal(layer.getChildren().length, 4);
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect3.getZIndex(), 2);
+    assert.equal(rect4.getZIndex(), 3);
+
+    rect4.remove();
+
+    assert.equal(layer.getChildren().length, 3);
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect2.getZIndex(), 1);
+    assert.equal(rect3.getZIndex(), 2);
+
+    rect2.remove();
+
+    assert.equal(layer.getChildren().length, 2);
+    assert.equal(rect1.getZIndex(), 0);
+    assert.equal(rect3.getZIndex(), 1);
+
+    rect1.remove();
+
+    assert.equal(layer.getChildren().length, 1);
+    assert.equal(rect3.getZIndex(), 0);
   });
 });

@@ -34,8 +34,16 @@
       this.className = 'Path';
 
       this.dataArray = Konva.Path.parsePathData(this.getData());
+      this.pathLength = 0;
+      for (var i = 0; i < this.dataArray.length; ++i) {
+        this.pathLength += this.dataArray[i].pathLength;
+      }
       this.on('dataChange.konva', function() {
         that.dataArray = Konva.Path.parsePathData(this.getData());
+        this.pathLength = 0;
+        for (var i = 0; i < this.dataArray.length; ++i) {
+          this.pathLength += this.dataArray[i].pathLength;
+        }
       });
 
       this.sceneFunc(this._sceneFunc);
@@ -116,6 +124,103 @@
         width: Math.round(maxX - minX),
         height: Math.round(maxY - minY)
       };
+    },
+    /**
+     * Return length of the path.
+     * @method
+     * @memberof Konva.Path.prototype
+     * @returns {Number} length
+     * @example
+     * var length = path.getLength();
+     */
+    getLength: function() {
+      return this.pathLength;
+    },
+    /**
+     * Get point on path at specific length of the path
+     * @method
+     * @memberof Konva.Path.prototype
+     * @param {Number} length length
+     * @returns {Object} point {x,y} point
+     * @example
+     * var point = path.getPointAtLength(10);
+     */
+    getPointAtLength: function(length) {
+      var point,
+        i = 0,
+        ii = this.dataArray.length;
+
+      if (!ii) {
+        return null;
+      }
+
+      while (i < ii && length > this.dataArray[i].pathLength) {
+        length -= this.dataArray[i].pathLength;
+        ++i;
+      }
+
+      if (i === ii) {
+        point = this.dataArray[i - 1].points.slice(-2);
+        return {
+          x: point[0],
+          y: point[1]
+        };
+      }
+
+      if (length < 0.01) {
+        point = this.dataArray[i].points.slice(0, 2);
+        return {
+          x: point[0],
+          y: point[1]
+        };
+      }
+
+      var cp = this.dataArray[i];
+      var p = cp.points;
+      switch (cp.command) {
+        case 'L':
+          return Konva.Path.getPointOnLine(
+            length,
+            cp.start.x,
+            cp.start.y,
+            p[0],
+            p[1]
+          );
+        case 'C':
+          return Konva.Path.getPointOnCubicBezier(
+            length / cp.pathLength,
+            cp.start.x,
+            cp.start.y,
+            p[0],
+            p[1],
+            p[2],
+            p[3],
+            p[4],
+            p[5]
+          );
+        case 'Q':
+          return Konva.Path.getPointOnQuadraticBezier(
+            length / cp.pathLength,
+            cp.start.x,
+            cp.start.y,
+            p[0],
+            p[1],
+            p[2],
+            p[3]
+          );
+        case 'A':
+          var cx = p[0],
+            cy = p[1],
+            rx = p[2],
+            ry = p[3],
+            theta = p[4],
+            dTheta = p[5],
+            psi = p[6];
+          theta += dTheta * length / cp.pathLength;
+          return Konva.Path.getPointOnEllipticalArc(cx, cy, rx, ry, theta, psi);
+      }
+
+      return null;
     }
   };
   Konva.Util.extend(Konva.Path, Konva.Shape);

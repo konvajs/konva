@@ -30,7 +30,7 @@
     Konva.Node,
     'noise',
     0.2,
-    null,
+    Konva.Validators.getNumberValidator(),
     Konva.Factory.afterSetFilter
   );
   /**

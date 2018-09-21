@@ -1780,7 +1780,7 @@ suite('MouseEvents', function() {
     assert.equal(shape, circle);
   });
 
-  it('double click after click should trigger event', function(done) {
+  test('double click after click should trigger event', function(done) {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -1865,7 +1865,7 @@ suite('MouseEvents', function() {
     });
   });
 
-  it('double click after drag should trigger event', function(done) {
+  test('double click after drag should trigger event', function(done) {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);

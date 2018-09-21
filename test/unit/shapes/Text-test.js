@@ -621,6 +621,46 @@ suite('Text', function() {
     assert(text.getWidth() > width, 'width should have increased');
     assert(text.getHeight() > height, 'height should have increased');
   });
+
+  test('text vertical align', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var rect = new Konva.Rect({
+      x: 10,
+      y: 10,
+      width: 200,
+      height: 100,
+      stroke: 'black'
+    });
+    layer.add(rect);
+
+    var text = new Konva.Text({
+      x: rect.x(),
+      y: rect.y(),
+      width: rect.width(),
+      height: rect.height(),
+      text: 'Some awesome text',
+      fontSize: 16,
+      fill: '#555',
+      align: 'center',
+      padding: 10,
+      draggable: true
+    });
+
+    assert.equal(text.verticalAlign(), 'top');
+
+    text.verticalAlign('middle');
+
+    layer.add(text);
+    stage.add(layer);
+
+    var trace =
+      'clearRect(0,0,578,200);save();transform(1,0,0,1,10,10);beginPath();rect(0,0,200,100);closePath();lineWidth=2;strokeStyle=black;stroke();restore();save();transform(1,0,0,1,10,10);font=normal normal 16px Arial;textBaseline=middle;textAlign=left;translate(10,0);translate(0,50);save();translate(17.523,0);fillStyle=#555;fillText(Some awesome text,0,0);restore();restore();';
+
+    assert.equal(layer.getContext().getTrace(), trace);
+  });
+
   test('get text width', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

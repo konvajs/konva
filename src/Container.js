@@ -233,15 +233,13 @@
       for (n = 0; n < len; n++) {
         sel = selectorArr[n];
         if (!Konva.Util.isValidSelector(sel)) {
-          Konva.Util.warn(
+          var message =
             'Selector "' +
-              sel +
-              '" is invalid. Allowed selectors examples are "#foo", ".bar" or "Group".'
-          );
-          Konva.Util.warn(
-            'If you have a custom shape with such className, please change it to start with upper letter like "Triangle".'
-          );
-          Konva.Util.warn('Konva is awesome, right?');
+            sel +
+            '" is invalid. Allowed selectors examples are "#foo", ".bar" or "Group".\n' +
+            'If you have a custom shape with such className, please change it to start with upper letter like "Triangle".\n' +
+            'Konva is awesome, right?';
+          Konva.Util.warn(message);
         }
         // id selector
         if (sel.charAt(0) === '#') {
@@ -599,7 +597,12 @@
    * });
    */
 
-  Konva.Factory.addGetterSetter(Konva.Container, 'clipX');
+  Konva.Factory.addGetterSetter(
+    Konva.Container,
+    'clipX',
+    undefined,
+    Konva.Validators.getNumberValidator()
+  );
   /**
    * get/set clip x
    * @name clipX
@@ -615,7 +618,12 @@
    * container.clipX(10);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Container, 'clipY');
+  Konva.Factory.addGetterSetter(
+    Konva.Container,
+    'clipY',
+    undefined,
+    Konva.Validators.getNumberValidator()
+  );
   /**
    * get/set clip y
    * @name clipY
@@ -631,7 +639,12 @@
    * container.clipY(10);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Container, 'clipWidth');
+  Konva.Factory.addGetterSetter(
+    Konva.Container,
+    'clipWidth',
+    undefined,
+    Konva.Validators.getNumberValidator()
+  );
   /**
    * get/set clip width
    * @name clipWidth
@@ -647,7 +660,12 @@
    * container.clipWidth(100);
    */
 
-  Konva.Factory.addGetterSetter(Konva.Container, 'clipHeight');
+  Konva.Factory.addGetterSetter(
+    Konva.Container,
+    'clipHeight',
+    undefined,
+    Konva.Validators.getNumberValidator()
+  );
   /**
    * get/set clip height
    * @name clipHeight

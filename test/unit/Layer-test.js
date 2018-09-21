@@ -451,7 +451,7 @@ suite('Layer', function() {
     );
   });
 
-  it('get/set layer size', function() {
+  test('get/set layer size', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
