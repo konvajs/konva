@@ -429,6 +429,8 @@
 
       var keepProportion = this.keepRatio() || e.shiftKey;
 
+      // console.log(keepProportion);
+
       if (this.movingResizer === 'top-left') {
         if (keepProportion) {
           newHypotenuse = Math.sqrt(
@@ -586,6 +588,8 @@
         var bottomOffsetX = this.getWidth() - bottomRight.x();
         var bottomOffsetY = this.getHeight() - bottomRight.y();
 
+        console.log(topOffsetX, topOffsetY, bottomOffsetX, bottomOffsetY);
+
         bottomRight.move({
           x: -topOffsetX,
           y: -topOffsetY
@@ -606,6 +610,8 @@
 
       var height =
         this.findOne('.bottom-right').y() - this.findOne('.top-left').y();
+
+      // console.log(x, y, width, height);
 
       this._fitNodeInto(
         {

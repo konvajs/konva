@@ -781,15 +781,20 @@
     isVisible: function() {
       return this._getCache(VISIBLE, this._isVisible);
     },
-    _isVisible: function() {
+    _isVisible: function(relativeTo) {
       var visible = this.getVisible(),
         parent = this.getParent();
 
+      if (relativeTo === parent && visible === 'inherit') {
+        return true;
+      } else if (relativeTo === parent) {
+        return visible;
+      }
       // the following conditions are a simplification of the truth table above.
       // please modify carefully
       if (visible === 'inherit') {
         if (parent) {
-          return parent.isVisible();
+          return parent._isVisible(relativeTo);
         } else {
           return true;
         }

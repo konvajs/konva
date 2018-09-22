@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.4.0
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Wed Sep 19 2018
+ * Date: Sat Sep 22 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -3304,15 +3304,20 @@
     isVisible: function() {
       return this._getCache(VISIBLE, this._isVisible);
     },
-    _isVisible: function() {
+    _isVisible: function(relativeTo) {
       var visible = this.getVisible(),
         parent = this.getParent();
 
+      if (relativeTo === parent && visible === 'inherit') {
+        return true;
+      } else if (relativeTo === parent) {
+        return visible;
+      }
       // the following conditions are a simplification of the truth table above.
       // please modify carefully
       if (visible === 'inherit') {
         if (parent) {
-          return parent.isVisible();
+          return parent._isVisible(relativeTo);
         } else {
           return true;
         }
@@ -8419,7 +8424,7 @@
       var hasVisible = false;
       for (var i = 0; i < shapes.length; i++) {
         var shape = shapes[i];
-        if (shape.getVisible()) {
+        if (shape._isVisible(this)) {
           hasVisible = true;
           break;
         }
@@ -19856,6 +19861,8 @@
 
       var keepProportion = this.keepRatio() || e.shiftKey;
 
+      // console.log(keepProportion);
+
       if (this.movingResizer === 'top-left') {
         if (keepProportion) {
           newHypotenuse = Math.sqrt(
@@ -20013,6 +20020,8 @@
         var bottomOffsetX = this.getWidth() - bottomRight.x();
         var bottomOffsetY = this.getHeight() - bottomRight.y();
 
+        console.log(topOffsetX, topOffsetY, bottomOffsetX, bottomOffsetY);
+
         bottomRight.move({
           x: -topOffsetX,
           y: -topOffsetY
@@ -20033,6 +20042,8 @@
 
       var height =
         this.findOne('.bottom-right').y() - this.findOne('.top-left').y();
+
+      // console.log(x, y, width, height);
 
       this._fitNodeInto(
         {

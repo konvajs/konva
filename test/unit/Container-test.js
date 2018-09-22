@@ -2295,6 +2295,32 @@ suite('Container', function() {
     });
   });
 
+  test('get client rect with deep nested hidden shape 2', function() {
+    var layer = new Konva.Layer();
+    var group = new Konva.Group({
+      visible: false,
+      x: 100,
+      y: 40
+    });
+
+    var rect = new Konva.Rect({
+      height: 100,
+      width: 100,
+      fill: 'red'
+    });
+    group.add(rect);
+    layer.add(group);
+
+    var clientRect = layer.getClientRect();
+
+    assert.deepEqual(clientRect, {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0
+    });
+  });
+
   test('getClientRect - test layer', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

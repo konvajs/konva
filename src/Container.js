@@ -533,7 +533,7 @@
       var hasVisible = false;
       for (var i = 0; i < shapes.length; i++) {
         var shape = shapes[i];
-        if (shape.getVisible()) {
+        if (shape._isVisible(this)) {
           hasVisible = true;
           break;
         }
