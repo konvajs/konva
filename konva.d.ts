@@ -999,6 +999,7 @@ declare namespace Konva {
     fontSize?: number;
     fontStyle?: string;
     align?: string;
+    verticalAlign?: string;
     padding?: number;
     lineHeight?: number;
     wrap?: string;
@@ -1021,6 +1022,8 @@ declare namespace Konva {
     fontVariant(fontVariant: string): this;
     align(): string;
     align(align: string): this;
+    verticalAlign(): string;
+    verticalAlign(verticalAlign: string): this;
     padding(): number;
     padding(padding: number): this;
     lineHeight(): number;
