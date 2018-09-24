@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.4.0
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Sat Sep 22 2018
+ * Date: Mon Sep 24 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -15424,6 +15424,7 @@
         maxHeightPx = height - padding * 2,
         currentHeightPx = 0,
         wrap = this.getWrap(),
+        // align = this.getAlign(),
         shouldWrap = wrap !== NONE,
         wrapAtWord = wrap !== CHAR && shouldWrap,
         shouldAddEllipsis = this.getEllipsis() && !shouldWrap;
@@ -15491,6 +15492,9 @@
                   matchWidth = this._getTextWidth(match);
                 }
               }
+              // if (align === 'right') {
+              match = match.trimRight();
+              // }
               this._addTextLine(match);
               textWidth = Math.max(textWidth, matchWidth);
               currentHeightPx += lineHeightPx;
@@ -15505,6 +15509,7 @@
                 break;
               }
               line = line.slice(low);
+              line = line.trimStart();
               if (line.length > 0) {
                 // Check if the remaining text would fit on one line
                 lineWidth = this._getTextWidth(line);

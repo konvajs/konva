@@ -5,17 +5,22 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+### Changed
+
+* Added some text trim logic to wrap in better
+
 ## [2.4.0][2018-09-19]
+
+### Added
+
+* Centered resize with ALT key for `Konva.Transformer`
+* New `centeredScaling` for `Konva.Transformer`
 
 ### Fixed
 
 * Tween support for gradient properties
 * Add `user-select: none` to the stage container to fix some "selected contend around" issues
 
-### Added
-
-* Centered resize with ALT key for `Konva.Transformer`
-* New `centeredScaling` for `Konva.Transformer`
 
 ## [2.3.0][2018-08-30]
 
