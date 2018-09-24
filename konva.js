@@ -15509,7 +15509,7 @@
                 break;
               }
               line = line.slice(low);
-              line = line.trimStart();
+              line = line.trimLeft();
               if (line.length > 0) {
                 // Check if the remaining text would fit on one line
                 lineWidth = this._getTextWidth(line);
