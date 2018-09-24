@@ -2346,6 +2346,47 @@ suite('Container', function() {
     });
   });
 
+  test.only('getClientRect - nested group with a hidden shapes', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group1 = new Konva.Group();
+    layer.add(group1);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 100,
+      width: 200,
+      height: 75,
+      fill: 'red'
+    });
+    group1.add(rect);
+
+    var group2 = new Konva.Group();
+    layer.add(group2);
+
+    var rect2 = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 200,
+      height: 75,
+      fill: 'red',
+      visible: false
+    });
+    group1.add(rect2);
+    
+    
+
+    assert.deepEqual(layer.getClientRect(), {
+      x: 50,
+      y: 100,
+      width: 200,
+      height: 75
+    });
+  });
+
   test('clip-cache', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 * Added some text trim logic to wrap in better
 
+### Fixed
+
+* `getClientRect` calculation fix for groups
+
 ## [2.4.0][2018-09-19]
 
 ### Added
