@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.4.0
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Mon Sep 24 2018
+ * Date: Thu Sep 27 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -11040,7 +11040,10 @@
           }
         } else {
           this._fire(MOUSEUP, { evt: evt, target: this, currentTarget: this });
-          this._fire(CLICK, { evt: evt, target: this, currentTarget: this });
+          if (Konva.listenClickTap) {
+            this._fire(CLICK, { evt: evt, target: this, currentTarget: this });
+          }
+
           if (fireDblClick) {
             this._fire(DBL_CLICK, {
               evt: evt,
@@ -11145,7 +11148,9 @@
         }
       } else {
         this._fire(TOUCHEND, { evt: evt, target: this, currentTarget: this });
-        this._fire(TAP, { evt: evt, target: this, currentTarget: this });
+        if (Konva.listenClickTap) {
+          this._fire(TAP, { evt: evt, target: this, currentTarget: this });
+        }
         if (fireDblClick) {
           this._fire(DBL_TAP, {
             evt: evt,
@@ -19440,6 +19445,7 @@
   var ATTR_CHANGE_LIST = [
     'resizeEnabledChange',
     'rotateAnchorOffsetChange',
+    'rotateEnabledChange',
     'enabledAnchorsChange',
     'anchorSizeChange',
     'borderEnabledChange',
@@ -19767,7 +19773,6 @@
 
       // add hover styling
       anchor.on('mouseenter', function() {
-        var layer = this.getLayer();
         var tr = this.getParent();
 
         var rad = Konva.getAngle(tr.rotation());
@@ -19777,15 +19782,14 @@
         var isMirrored = scale.y * scale.x < 0;
         var cursor = getCursor(name, rad, isMirrored);
         anchor.getStage().content.style.cursor = cursor;
-        layer.batchDraw();
+        tr._cursorChange = true;
       });
       anchor.on('mouseout', function() {
-        var layer = this.getLayer();
-        if (!layer) {
+        if (!anchor.getStage() || !this.getParent()) {
           return;
         }
         anchor.getStage().content.style.cursor = '';
-        layer.batchDraw();
+        this.getParent()._cursorChange = false;
       });
       this.add(anchor);
     },
@@ -20245,6 +20249,10 @@
       }
     },
     destroy: function() {
+      // console.log(this.isTransforming() && this.getStage());
+      if (this.getStage() && this._cursorChange) {
+        this.getStage().content.style.cursor = '';
+      }
       Konva.Group.prototype.destroy.call(this);
       this.detach();
       this._removeEvents();

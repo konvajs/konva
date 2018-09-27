@@ -4,6 +4,7 @@
   var ATTR_CHANGE_LIST = [
     'resizeEnabledChange',
     'rotateAnchorOffsetChange',
+    'rotateEnabledChange',
     'enabledAnchorsChange',
     'anchorSizeChange',
     'borderEnabledChange',
@@ -331,7 +332,6 @@
 
       // add hover styling
       anchor.on('mouseenter', function() {
-        var layer = this.getLayer();
         var tr = this.getParent();
 
         var rad = Konva.getAngle(tr.rotation());
@@ -341,15 +341,14 @@
         var isMirrored = scale.y * scale.x < 0;
         var cursor = getCursor(name, rad, isMirrored);
         anchor.getStage().content.style.cursor = cursor;
-        layer.batchDraw();
+        tr._cursorChange = true;
       });
       anchor.on('mouseout', function() {
-        var layer = this.getLayer();
-        if (!layer) {
+        if (!anchor.getStage() || !this.getParent()) {
           return;
         }
         anchor.getStage().content.style.cursor = '';
-        layer.batchDraw();
+        this.getParent()._cursorChange = false;
       });
       this.add(anchor);
     },
@@ -809,6 +808,10 @@
       }
     },
     destroy: function() {
+      // console.log(this.isTransforming() && this.getStage());
+      if (this.getStage() && this._cursorChange) {
+        this.getStage().content.style.cursor = '';
+      }
       Konva.Group.prototype.destroy.call(this);
       this.detach();
       this._removeEvents();

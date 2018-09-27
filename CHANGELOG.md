@@ -12,6 +12,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 * `getClientRect` calculation fix for groups
+* Update of `Konva.Transformer` on `rotateEnabled` change
+* Fix click stage event on dragend
+* Fix some Transformer cursor behavior
 
 ## [2.4.0][2018-09-19]
 

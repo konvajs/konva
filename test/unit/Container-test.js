@@ -2346,7 +2346,7 @@ suite('Container', function() {
     });
   });
 
-  test.only('getClientRect - nested group with a hidden shapes', function() {
+  test('getClientRect - nested group with a hidden shapes', function() {
     var stage = addStage();
 
     var layer = new Konva.Layer();
@@ -2376,8 +2376,6 @@ suite('Container', function() {
       visible: false
     });
     group1.add(rect2);
-    
-    
 
     assert.deepEqual(layer.getClientRect(), {
       x: 50,
