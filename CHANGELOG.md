@@ -11,8 +11,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
+* `getClientRect` for complex paths fixes
 * `getClientRect` calculation fix for groups
-* Update of `Konva.Transformer` on `rotateEnabled` change
+* Update `Konva.Transformer` on `rotateEnabled` change
 * Fix click stage event on dragend
 * Fix some Transformer cursor behavior
 

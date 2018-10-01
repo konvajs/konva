@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.4.0
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Thu Sep 27 2018
+ * Date: Mon Oct 01 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -16409,6 +16409,9 @@
      * @memberof Konva.Sprite.prototype
      */
     start: function() {
+      if (this.isRunning()) {
+        return;
+      }
       var layer = this.getLayer();
 
       /*
@@ -16801,10 +16804,17 @@
       for (var i = 0; i < points.length / 2; i++) {
         x = points[i * 2];
         y = points[i * 2 + 1];
-        minX = Math.min(minX, x);
-        maxX = Math.max(maxX, x);
-        minY = Math.min(minY, y);
-        maxY = Math.max(maxY, y);
+
+        // skip bad values
+        // TODO: prevent them from parsing function
+        if (!isNaN(x)) {
+          minX = Math.min(minX, x);
+          maxX = Math.max(maxX, x);
+        }
+        if (!isNaN(y)) {
+          minY = Math.min(minY, y);
+          maxY = Math.max(maxY, y);
+        }
       }
       return {
         x: Math.round(minX),
@@ -17135,6 +17145,8 @@
         var parsed = parseFloat(coords[j]);
         if (!isNaN(parsed)) {
           p.push(parsed);
+        } else {
+          p.push(0);
         }
       }
 

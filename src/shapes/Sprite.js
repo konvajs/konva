@@ -161,6 +161,9 @@
      * @memberof Konva.Sprite.prototype
      */
     start: function() {
+      if (this.isRunning()) {
+        return;
+      }
       var layer = this.getLayer();
 
       /*

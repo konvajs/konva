@@ -333,6 +333,73 @@ suite('Sprite', function() {
     imageObj.src = 'assets/scorpion-sprite.png';
   });
 
+  test('start do nothing if animation is already running', function(done) {
+    var imageObj = new Image();
+    imageObj.onload = function() {
+      var stage = addStage();
+      var layer = new Konva.Layer();
+
+      var sprite = new Konva.Sprite({
+        x: 200,
+        y: 50,
+        image: imageObj,
+        animation: 'standing',
+        animations: {
+          standing: [
+            0,
+            0,
+            49,
+            109,
+            52,
+            0,
+            49,
+            109,
+            105,
+            0,
+            49,
+            109,
+            158,
+            0,
+            49,
+            109,
+            210,
+            0,
+            49,
+            109,
+            262,
+            0,
+            49,
+            109
+          ]
+        },
+        frameRate: 50,
+        draggable: true,
+        shadowColor: 'black',
+        shadowBlur: 3,
+        shadowOffset: { x: 3, y: 1 },
+        shadowOpacity: 0.3
+      });
+
+      layer.add(sprite);
+      stage.add(layer);
+
+      var counter = 0;
+      sprite.on('frameIndexChange.konva', event => {
+        counter += 1;
+      });
+
+      sprite.start();
+      sprite.start();
+      sprite.stop();
+
+      setTimeout(function() {
+        assert.equal(counter, 0);
+        done();
+      }, 200);
+    };
+    imageObj.src = 'assets/scorpion-sprite.png';
+  });
+
   // need fix, but who is using sprites??
   test.skip('can change frame rate on fly', function(done) {
     var imageObj = new Image();
