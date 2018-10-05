@@ -520,17 +520,21 @@
         var newAlpha = Konva.Util._degToRad(newRotation);
 
         var snaps = this.rotationSnaps();
-        var offset = 0.1;
+        var max = Math.PI * 2;
+        var currentSnap=-1;
         for (var i = 0; i < snaps.length; i++) {
           var angle = Konva.getAngle(snaps[i]);
-
           var dif =
             Math.abs(angle - Konva.Util._degToRad(newRotation)) % (Math.PI * 2);
-
-          if (dif < offset) {
-            newRotation = Konva.Util._radToDeg(angle);
-            newAlpha = Konva.Util._degToRad(newRotation);
+          if (dif <= max) {
+            max = dif;
+            currentSnap = i;
           }
+        }
+        if (snaps.length > 0 && currentSnap >=0) {
+          var angle = Konva.getAngle(snaps[currentSnap]);
+          newRotation = Konva.Util._radToDeg(angle);
+          newAlpha = Konva.Util._degToRad(newRotation);
         }
 
         var dx = padding;
