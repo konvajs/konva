@@ -521,7 +521,7 @@
 
         var snaps = this.rotationSnaps();
         var max = Math.PI * 2;
-        var currentSnap=-1;
+        var currentSnap = -1;
         for (var i = 0; i < snaps.length; i++) {
           var angle = Konva.getAngle(snaps[i]);
           var dif =
@@ -532,7 +532,7 @@
           }
         }
         if (snaps.length > 0 && currentSnap >=0) {
-          var angle = Konva.getAngle(snaps[currentSnap]);
+          angle = Konva.getAngle(snaps[currentSnap]);
           newRotation = Konva.Util._radToDeg(angle);
           newAlpha = Konva.Util._degToRad(newRotation);
         }
