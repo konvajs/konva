@@ -531,7 +531,7 @@
             currentSnap = i;
           }
         }
-        if (snaps.length > 0 && currentSnap >=0) {
+        if (snaps.length > 0 && currentSnap >= 0) {
           angle = Konva.getAngle(snaps[currentSnap]);
           newRotation = Konva.Util._radToDeg(angle);
           newAlpha = Konva.Util._degToRad(newRotation);
