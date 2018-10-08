@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+## [2.4.1][2018-10-08]
+
 ### Changed
 
 * Added some text trim logic to wrap in better
