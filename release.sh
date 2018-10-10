@@ -4,11 +4,12 @@ set -e
 old_version="$(git describe --abbrev=0 --tags)"
 new_version=$1
 
-old_cdn="https://cdn.rawgit.com/konvajs/konva/${old_version}/konva.js"
-new_cdn="https://cdn.rawgit.com/konvajs/konva/${new_version}/konva.js"
 
-old_cdn_min="https://cdn.rawgit.com/konvajs/konva/${old_version}/konva.min.js"
-new_cdn_min="https://cdn.rawgit.com/konvajs/konva/${new_version}/konva.min.js"
+old_cdn="https://unpkg.com/konva@${old_version}/konva.js"
+new_cdn="https://unpkg.com/konva@${new_version}/konva.js"
+
+old_cdn_min="https://unpkg.com/konva@${old_version}/konva.min.js"
+new_cdn_min="https://unpkg.com/konva@${old_version}/konva.min.js"
 
 # make sure new version parameter is passed
 if [ -z "$1" ]
