@@ -5,13 +5,15 @@ declare namespace Konva {
   var isDragReady: () => boolean;
   var DD: any;
 
+  export interface KonvaEventObject<E> {
+    target: Konva.Shape;
+    evt: E;
+    currentTarget: Konva.Node;
+    cancelBubble: boolean;
+  }
+
   type HandlerFunc<E = Event> = (
-    e: {
-      target: Konva.Shape;
-      evt: E;
-      currentTarget: Konva.Node;
-      cancelBubble: boolean;
-    }
+    e: KonvaEventObject<E>
   ) => void;
 
   enum KonvaNodeEvent {
@@ -364,12 +366,7 @@ declare namespace Konva {
     on<K extends keyof KonvaNodeEventMap>(
       evtStr: K,
       handler: (
-        e: {
-          target: Konva.Shape;
-          evt: KonvaNodeEventMap[K];
-          currentTarget: Konva.Node;
-          cancelBubble: boolean;
-        }
+        e: KonvaEventObject<KonvaNodeEventMap[K]>
       ) => void
     ): this;
     on(evtStr: KonvaEventString, handler: HandlerFunc): this;
