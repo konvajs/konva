@@ -869,4 +869,105 @@ suite('Caching', function() {
     compareLayerAndCanvas(layer, canvas, 5);
     assert.equal(stage.getIntersection({ x: 150, y: 100 }), rect);
   });
+
+  it('listening false on a shape should not create hit area', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var bigCircle = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 100,
+      fill: 'green'
+    });
+
+    layer.add(bigCircle);
+
+    var smallCircle = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 50,
+      fill: 'red',
+      listening: false
+    });
+
+    layer.add(smallCircle);
+    smallCircle.cache();
+    layer.draw();
+
+    var shape = stage.getIntersection({ x: 100, y: 100 });
+    assert.equal(shape, bigCircle);
+  });
+
+  it('listening false on a shape inside group should not create hit area', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group();
+    layer.add(group);
+
+    var bigCircle = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 100,
+      fill: 'green'
+    });
+
+    group.add(bigCircle);
+
+    var smallCircle = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 50,
+      fill: 'red',
+      listening: false
+    });
+
+    group.add(smallCircle);
+    group.cache();
+
+    layer.draw();
+    var shape = stage.getIntersection({ x: 100, y: 100 });
+    assert.equal(shape, bigCircle);
+  });
+  it('listening false on a group inside a group should not create hit area', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group();
+    layer.add(group);
+
+    var bigCircle = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 100,
+      fill: 'green'
+    });
+    group.add(bigCircle);
+
+    var innerGroup = new Konva.Group({
+      listening: false
+    });
+    group.add(innerGroup);
+
+    var smallCircle = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 50,
+      fill: 'red'
+    });
+
+    innerGroup.add(smallCircle);
+    group.cache();
+
+    layer.draw();
+    var shape = stage.getIntersection({ x: 100, y: 100 });
+    assert.equal(shape, bigCircle);
+  });
 });

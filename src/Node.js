@@ -809,10 +809,11 @@
      * @memberof Konva.Node.prototype
      * @returns {Boolean}
      */
-    shouldDrawHit: function(canvas) {
+    shouldDrawHit: function() {
       var layer = this.getLayer();
+
       return (
-        (canvas && canvas.isCache) ||
+        (!layer && this.isListening() && this.isVisible()) ||
         (layer &&
           layer.hitGraphEnabled() &&
           this.isListening() &&
