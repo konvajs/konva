@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+## [2.4.2][2018-10-12]
+
 ### Fixed
 
 * Fixed a wrong cache when a shape inside group has `listening = false`
