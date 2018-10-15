@@ -371,6 +371,7 @@
         maxHeightPx = height - padding * 2,
         currentHeightPx = 0,
         wrap = this.getWrap(),
+        // align = this.getAlign(),
         shouldWrap = wrap !== NONE,
         wrapAtWord = wrap !== CHAR && shouldWrap,
         shouldAddEllipsis = this.getEllipsis() && !shouldWrap;
@@ -438,6 +439,9 @@
                   matchWidth = this._getTextWidth(match);
                 }
               }
+              // if (align === 'right') {
+              match = match.trimRight();
+              // }
               this._addTextLine(match);
               textWidth = Math.max(textWidth, matchWidth);
               currentHeightPx += lineHeightPx;
@@ -452,6 +456,7 @@
                 break;
               }
               line = line.slice(low);
+              line = line.trimLeft();
               if (line.length > 0) {
                 // Check if the remaining text would fit on one line
                 lineWidth = this._getTextWidth(line);

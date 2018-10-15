@@ -5,13 +5,15 @@ declare namespace Konva {
   var isDragReady: () => boolean;
   var DD: any;
 
+  export interface KonvaEventObject<E> {
+    target: Konva.Shape;
+    evt: E;
+    currentTarget: Konva.Node;
+    cancelBubble: boolean;
+  }
+
   type HandlerFunc<E = Event> = (
-    e: {
-      target: Konva.Shape;
-      evt: E;
-      currentTarget: Konva.Node;
-      cancelBubble: boolean;
-    }
+    e: KonvaEventObject<E>
   ) => void;
 
   enum KonvaNodeEvent {
@@ -91,23 +93,26 @@ declare namespace Konva {
     static getRGB(color: string): string;
   }
 
+  type EasingFn = (elapsed: number, startValue: number, diff: number, duration: number) => number;
+  type ElasticEasingFn = (elapsed: number, startValue: number, diff: number, duration: number, a?: number, p?: number) => number;
+
   export class Easings {
-    static BackEaseIn(): any;
-    static BackEaseInOut(): any;
-    static BackEaseOut(): any;
-    static BounceEaseIn(): any;
-    static BounceEaseInOut(): any;
-    static BounceEaseOut(): any;
-    static EaseIn(): any;
-    static EaseInOut(): any;
-    static EaseOut(): any;
-    static ElasticEaseIn(): any;
-    static ElasticEaseInOut(): any;
-    static ElasticEaseOut(): any;
-    static Linear(): any;
-    static StrongEaseIn(): any;
-    static StrongEaseInOut(): any;
-    static StrongEaseOut(): any;
+    static BackEaseIn: EasingFn;
+    static BackEaseInOut: EasingFn;
+    static BackEaseOut: EasingFn;
+    static BounceEaseIn: EasingFn;
+    static BounceEaseInOut: EasingFn;
+    static BounceEaseOut: EasingFn;
+    static EaseIn: EasingFn;
+    static EaseInOut: EasingFn;
+    static EaseOut: EasingFn;
+    static ElasticEaseIn: ElasticEasingFn;
+    static ElasticEaseInOut: ElasticEasingFn;
+    static ElasticEaseOut: ElasticEasingFn;
+    static Linear: EasingFn;
+    static StrongEaseIn: EasingFn;
+    static StrongEaseInOut: EasingFn;
+    static StrongEaseOut: EasingFn;
   }
 
   class Filter {}
@@ -364,12 +369,7 @@ declare namespace Konva {
     on<K extends keyof KonvaNodeEventMap>(
       evtStr: K,
       handler: (
-        e: {
-          target: Konva.Shape;
-          evt: KonvaNodeEventMap[K];
-          currentTarget: Konva.Node;
-          cancelBubble: boolean;
-        }
+        e: KonvaEventObject<KonvaNodeEventMap[K]>
       ) => void
     ): this;
     on(evtStr: KonvaEventString, handler: HandlerFunc): this;
@@ -999,6 +999,7 @@ declare namespace Konva {
     fontSize?: number;
     fontStyle?: string;
     align?: string;
+    verticalAlign?: string;
     padding?: number;
     lineHeight?: number;
     wrap?: string;
@@ -1021,6 +1022,8 @@ declare namespace Konva {
     fontVariant(fontVariant: string): this;
     align(): string;
     align(align: string): this;
+    verticalAlign(): string;
+    verticalAlign(verticalAlign: string): this;
     padding(): number;
     padding(padding: number): this;
     lineHeight(): number;

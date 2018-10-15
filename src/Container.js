@@ -509,10 +509,9 @@
         var rect = child.getClientRect({ relativeTo: that });
 
         // skip invisible children (like empty groups)
-        // or don't skip... hmmm...
-        // if (rect.width === 0 && rect.height === 0) {
-        //     return;
-        // }
+        if (rect.width === 0 && rect.height === 0) {
+          return;
+        }
 
         if (minX === undefined) {
           // initial value for first child
@@ -533,7 +532,7 @@
       var hasVisible = false;
       for (var i = 0; i < shapes.length; i++) {
         var shape = shapes[i];
-        if (shape.getVisible()) {
+        if (shape._isVisible(this)) {
           hasVisible = true;
           break;
         }

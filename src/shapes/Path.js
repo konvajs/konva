@@ -113,10 +113,17 @@
       for (var i = 0; i < points.length / 2; i++) {
         x = points[i * 2];
         y = points[i * 2 + 1];
-        minX = Math.min(minX, x);
-        maxX = Math.max(maxX, x);
-        minY = Math.min(minY, y);
-        maxY = Math.max(maxY, y);
+
+        // skip bad values
+        // TODO: prevent them from parsing function
+        if (!isNaN(x)) {
+          minX = Math.min(minX, x);
+          maxX = Math.max(maxX, x);
+        }
+        if (!isNaN(y)) {
+          minY = Math.min(minY, y);
+          maxY = Math.max(maxY, y);
+        }
       }
       return {
         x: Math.round(minX),
@@ -447,6 +454,8 @@
         var parsed = parseFloat(coords[j]);
         if (!isNaN(parsed)) {
           p.push(parsed);
+        } else {
+          p.push(0);
         }
       }
 

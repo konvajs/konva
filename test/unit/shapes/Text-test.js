@@ -806,4 +806,33 @@ suite('Text', function() {
     // so Konva.Text + textarea editing works better
     assert.equal(lines[0].text, 'Hello, this');
   });
+
+  test('check trip when go to new line', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var text = new Konva.Text({
+      text: 'Hello, this is some good text',
+      fontSize: 30
+    });
+    layer.add(text);
+    stage.add(layer);
+
+    text.setWidth(245);
+
+    var lines = text.textArr;
+
+    // remove all trimming spaces
+    // it also looks better in many cases
+    // it will work as text in div
+    assert.equal(lines[0].text, 'Hello, this is some');
+    assert.equal(lines[1].text, 'good text');
+
+    text.setWidth(261);
+    var lines = text.textArr;
+
+    assert.equal(lines[0].text, 'Hello, this is some');
+    assert.equal(lines[1].text, 'good text');
+    layer.draw();
+  });
 });

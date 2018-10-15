@@ -733,6 +733,52 @@ suite('Stage', function() {
     assert.equal(Konva.DD.node, undefined);
   });
 
+  // ======================================================
+  test('do not trigger stage click after dragend', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    var rect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: 50,
+      height: 50,
+      fill: 'red',
+      draggable: true
+    });
+
+    layer.add(rect);
+    stage.add(layer);
+
+    var clicks = 0;
+
+    stage.on('click', function() {
+      debugger;
+      clicks += 1;
+    });
+
+    // simulate dragging
+    stage.simulateMouseDown({
+      x: 25,
+      y: 25
+    });
+
+    stage.simulateMouseMove({
+      x: 100,
+      y: 100
+    });
+
+    // move rect out of mouse
+    rect.x(-30);
+    rect.y(-30);
+
+    stage.simulateMouseUp({
+      x: 100,
+      y: 100
+    });
+
+    assert.equal(clicks, 0);
+  });
+
   test('can listen click on empty areas', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

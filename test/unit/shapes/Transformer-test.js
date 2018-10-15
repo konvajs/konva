@@ -1036,6 +1036,67 @@ suite('Transformer', function() {
     assert.equal(stage.content.style.cursor, 'nwse-resize');
   });
 
+  test('check correct cursor off on Transformer destroy', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 0,
+      y: 0,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+    layer.draw();
+
+    stage.simulateMouseMove({
+      x: 100,
+      y: 100
+    });
+    stage.simulateMouseDown({
+      x: 100,
+      y: 100
+    });
+
+    assert.equal(stage.content.style.cursor, 'nwse-resize');
+
+    var target = stage.getIntersection({
+      x: 100,
+      y: 100
+    });
+    var top = stage.content.getBoundingClientRect().top;
+    tr._handleMouseMove({
+      target: target,
+      clientX: 120,
+      clientY: 100 + top
+    });
+
+    // here is duplicate, because transformer is listening window events
+    tr._handleMouseUp({
+      clientX: 120,
+      clientY: 100 + top
+    });
+    stage.simulateMouseUp({
+      x: 120,
+      y: 100
+    });
+
+    tr.destroy();
+    stage.simulateMouseMove({
+      x: 140,
+      y: 100
+    });
+    assert.equal(stage.content.style.cursor, '');
+  });
+
   test('check correct cursor on scaled parent', function() {
     var stage = addStage();
     var layer = new Konva.Layer({

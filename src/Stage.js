@@ -566,7 +566,10 @@
           }
         } else {
           this._fire(MOUSEUP, { evt: evt, target: this, currentTarget: this });
-          this._fire(CLICK, { evt: evt, target: this, currentTarget: this });
+          if (Konva.listenClickTap) {
+            this._fire(CLICK, { evt: evt, target: this, currentTarget: this });
+          }
+
           if (fireDblClick) {
             this._fire(DBL_CLICK, {
               evt: evt,
@@ -671,7 +674,9 @@
         }
       } else {
         this._fire(TOUCHEND, { evt: evt, target: this, currentTarget: this });
-        this._fire(TAP, { evt: evt, target: this, currentTarget: this });
+        if (Konva.listenClickTap) {
+          this._fire(TAP, { evt: evt, target: this, currentTarget: this });
+        }
         if (fireDblClick) {
           this._fire(DBL_TAP, {
             evt: evt,
