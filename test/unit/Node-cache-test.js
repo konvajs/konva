@@ -970,4 +970,38 @@ suite('Caching', function() {
     var shape = stage.getIntersection({ x: 100, y: 100 });
     assert.equal(shape, bigCircle);
   });
+
+  // for performance reasons
+  it('do no call client rect calculation, if we do not need it', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var group = new Konva.Group();
+    layer.add(group);
+
+    var bigCircle = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 100,
+      fill: 'green'
+    });
+    group.add(bigCircle);
+
+    layer.draw();
+
+    var called = false;
+    group.getClientRect = function() {
+      called = true;
+    };
+    group.cache({
+      x: 0,
+      y: 0,
+      width: 100,
+      height: 100
+    });
+
+    assert.equal(called, false);
+  });
 });

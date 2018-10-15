@@ -166,16 +166,27 @@
      * });
      */
     cache: function(config) {
-      var conf = config || {},
+      var conf = config || {};
+      var rect = {};
+
+      // don't call getClientRect if we have all attributes
+      // it means call it only if have one undefined
+      if (
+        conf.x === undefined ||
+        conf.y === undefined ||
+        conf.width === undefined ||
+        conf.height === undefined
+      ) {
         rect = this.getClientRect({
           skipTransform: true,
           relativeTo: this.getParent()
-        }),
-        width = conf.width || rect.width,
+        });
+      }
+      var width = conf.width || rect.width,
         height = conf.height || rect.height,
         pixelRatio = conf.pixelRatio,
-        x = conf.x || rect.x,
-        y = conf.y || rect.y,
+        x = conf.x === undefined ? rect.x : conf.x,
+        y = conf.y === undefined ? rect.y : conf.y,
         offset = conf.offset || 0,
         drawBorder = conf.drawBorder || false;
 

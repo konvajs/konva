@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+### Fixed
+* Performance fixes for caching
+
 ## [2.4.2][2018-10-12]
 
 ### Fixed
