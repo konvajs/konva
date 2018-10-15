@@ -93,23 +93,26 @@ declare namespace Konva {
     static getRGB(color: string): string;
   }
 
+  type EasingFn = (elapsed: number, startValue: number, diff: number, duration: number) => number;
+  type ElasticEasingFn = (elapsed: number, startValue: number, diff: number, duration: number, a?: number, p?: number) => number;
+
   export class Easings {
-    static BackEaseIn(): any;
-    static BackEaseInOut(): any;
-    static BackEaseOut(): any;
-    static BounceEaseIn(): any;
-    static BounceEaseInOut(): any;
-    static BounceEaseOut(): any;
-    static EaseIn(): any;
-    static EaseInOut(): any;
-    static EaseOut(): any;
-    static ElasticEaseIn(): any;
-    static ElasticEaseInOut(): any;
-    static ElasticEaseOut(): any;
-    static Linear(): any;
-    static StrongEaseIn(): any;
-    static StrongEaseInOut(): any;
-    static StrongEaseOut(): any;
+    static BackEaseIn: EasingFn;
+    static BackEaseInOut: EasingFn;
+    static BackEaseOut: EasingFn;
+    static BounceEaseIn: EasingFn;
+    static BounceEaseInOut: EasingFn;
+    static BounceEaseOut: EasingFn;
+    static EaseIn: EasingFn;
+    static EaseInOut: EasingFn;
+    static EaseOut: EasingFn;
+    static ElasticEaseIn: ElasticEasingFn;
+    static ElasticEaseInOut: ElasticEasingFn;
+    static ElasticEaseOut: ElasticEasingFn;
+    static Linear: EasingFn;
+    static StrongEaseIn: EasingFn;
+    static StrongEaseInOut: EasingFn;
+    static StrongEaseOut: EasingFn;
   }
 
   class Filter {}
