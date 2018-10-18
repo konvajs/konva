@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.4.2
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Mon Oct 15 2018
+ * Date: Thu Oct 18 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -19477,7 +19477,8 @@
     'borderStrokeWidthChange',
     'anchorStrokeChange',
     'anchorStrokeWidthChange',
-    'anchorFillChange'
+    'anchorFillChange',
+    'anchorCornerRadiusChange'
   ].join(' ');
 
   var NODE_RECT = 'nodeRect';
@@ -19588,6 +19589,7 @@
    * @param {Array} [config.borderDash] Array for border dash.
    * @param {String} [config.anchorFill] Anchor fill color
    * @param {String} [config.anchorStroke] Anchor stroke color
+   * @param {String} [config.anchorCornerRadius] Anchor corner radius
    * @param {Number} [config.anchorStrokeWidth] Anchor stroke size
    * @param {Number} [config.anchorSize] Default is 10
    * @param {Boolean} [config.keepRatio] Should we keep ratio when we are moving edges? Default is true
@@ -20177,7 +20179,8 @@
         offsetY: anchorSize / 2,
         stroke: this.getAnchorStroke(),
         strokeWidth: this.getAnchorStrokeWidth(),
-        fill: this.getAnchorFill()
+        fill: this.getAnchorFill(),
+        cornerRadius: this.getAnchorCornerRadius()
       });
 
       this.findOne('.top-left').setAttrs({
@@ -20490,6 +20493,27 @@
    * transformer.anchorFill('red');
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'anchorFill', 'white');
+
+  /**
+   * get/set anchor corner radius
+   * @name anchorCornerRadius
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Number} enabled
+   * @returns {Number}
+   * @example
+   * // get
+   * var anchorCornerRadius = transformer.anchorCornerRadius();
+   *
+   * // set
+   * transformer.anchorCornerRadius(3);
+   */
+  Konva.Factory.addGetterSetter(
+    Konva.Transformer,
+    'anchorCornerRadius',
+    0,
+    Konva.Validators.getNumberValidator()
+  );
 
   /**
    * get/set border stroke color

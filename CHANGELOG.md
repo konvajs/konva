@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+### Added
+
+* New `anchorCornerRadius` for `Konva.Transformer`
+
 ### Fixed
 * Performance fixes for caching
 
