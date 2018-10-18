@@ -589,7 +589,7 @@
         var bottomOffsetX = this.getWidth() - bottomRight.x();
         var bottomOffsetY = this.getHeight() - bottomRight.y();
 
-        console.log(topOffsetX, topOffsetY, bottomOffsetX, bottomOffsetY);
+        // console.log(topOffsetX, topOffsetY, bottomOffsetX, bottomOffsetY);
 
         bottomRight.move({
           x: -topOffsetX,

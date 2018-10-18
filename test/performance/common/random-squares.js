@@ -39,7 +39,7 @@ $(function() {
   var colorIndex = 0;
 
   circles = [];
-  for (var n = 0; n < 1500; n++) {
+  for (var n = 0; n < 2500; n++) {
     (function() {
       var color = colors[colorIndex++];
       if (colorIndex >= colors.length) {
@@ -81,7 +81,10 @@ function animate(lastTime) {
 
 function make_shape(color) {
   return new Konva.Rect({
-    fill: color,
+    fillLinearGradientStartPoint: { x: -50, y: -50 },
+    fillLinearGradientEndPoint: { x: 50, y: 50 },
+    fillLinearGradientColorStops: [0, 'black', 1, color],
+    // fill: color,
     width: 10,
     height: 10
   });
@@ -94,11 +97,8 @@ function make_stage() {
     height: height
   });
 
-  if (VERSION === 'new') {
-    console.log('create fast layer');
-    circlesLayer = new Konva.FastLayer();
-  } else {
-    console.log('create normal layer');
-    circlesLayer = new Konva.Layer();
-  }
+  // circlesLayer = new Konva.FastLayer();
+  circlesLayer = new Konva.Layer({
+    hitGraphEnabled: false
+  });
 }
