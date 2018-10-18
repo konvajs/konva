@@ -431,4 +431,87 @@ suite('DragAndDrop', function() {
       y: 112
     });
   });
+
+  test('drag start should trigger before movement', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var circle = new Konva.Circle({
+      x: 70,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    circle.on('dragstart', function() {
+      assert.equal(circle.x(), 70);
+      assert.equal(circle.y(), 70);
+    });
+
+    stage.simulateMouseDown({
+      x: 70,
+      y: 70
+    });
+
+    stage.simulateMouseMove({
+      x: 100,
+      y: 100
+    });
+
+    stage.simulateMouseUp({
+      x: 100,
+      y: 100
+    });
+  });
+
+  test('can stop drag on dragstart without changing position later', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+
+    var circle = new Konva.Circle({
+      x: 70,
+      y: 70,
+      radius: 70,
+      fill: 'green',
+      stroke: 'black',
+      strokeWidth: 4,
+      name: 'myCircle',
+      draggable: true
+    });
+
+    layer.add(circle);
+    stage.add(layer);
+
+    circle.on('dragstart', function() {
+      circle.stopDrag();
+    });
+    circle.on('dragmove', function() {
+      assert.equal(false, true, 'dragmove called!');
+    });
+
+    stage.simulateMouseDown({
+      x: 70,
+      y: 70
+    });
+
+    stage.simulateMouseMove({
+      x: 100,
+      y: 100
+    });
+
+    stage.simulateMouseUp({
+      x: 100,
+      y: 100
+    });
+
+    assert.equal(circle.x(), 70);
+    assert.equal(circle.y(), 70);
+  });
 });

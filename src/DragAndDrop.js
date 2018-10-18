@@ -39,7 +39,6 @@
         }
 
         node.getStage()._setPointerPosition(evt);
-        node._setDragPosition(evt);
         if (!dd.isDragging) {
           dd.isDragging = true;
           node.fire(
@@ -51,7 +50,12 @@
             },
             true
           );
+          // a user can stop dragging inside `dragstart`
+          if (!node.isDragging()) {
+            return;
+          }
         }
+        node._setDragPosition(evt);
 
         // execute ondragmove if defined
         node.fire(

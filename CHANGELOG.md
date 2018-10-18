@@ -12,6 +12,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 * Performance fixes for caching
 
+### Changed
+
+* ``dragstart` event behaviour is a bit changed. It will fire BEFORE actual position of a node is changed.
+
 ## [2.4.2][2018-10-12]
 
 ### Fixed
