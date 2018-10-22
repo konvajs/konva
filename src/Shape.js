@@ -254,6 +254,7 @@
     getClientRect: function(attrs) {
       attrs = attrs || {};
       var skipTransform = attrs.skipTransform;
+
       var relativeTo = attrs.relativeTo;
 
       var fillRect = this.getSelfRect();
@@ -262,13 +263,14 @@
       var fillAndStrokeWidth = fillRect.width + strokeWidth;
       var fillAndStrokeHeight = fillRect.height + strokeWidth;
 
-      var shadowOffsetX = this.hasShadow() ? this.shadowOffsetX() : 0;
-      var shadowOffsetY = this.hasShadow() ? this.shadowOffsetY() : 0;
+      var applyShadow = !attrs.skipShadow && this.hasShadow();
+      var shadowOffsetX = applyShadow ? this.shadowOffsetX() : 0;
+      var shadowOffsetY = applyShadow ? this.shadowOffsetY() : 0;
 
       var preWidth = fillAndStrokeWidth + Math.abs(shadowOffsetX);
       var preHeight = fillAndStrokeHeight + Math.abs(shadowOffsetY);
 
-      var blurRadius = (this.hasShadow() && this.shadowBlur()) || 0;
+      var blurRadius = (applyShadow && this.shadowBlur()) || 0;
 
       var width = preWidth + blurRadius * 2;
       var height = preHeight + blurRadius * 2;

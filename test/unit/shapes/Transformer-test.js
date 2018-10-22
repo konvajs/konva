@@ -1530,4 +1530,93 @@ suite('Transformer', function() {
       );
     });
   });
+
+  test('transformer should ignore shadow', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 100,
+      height: 100,
+      fill: 'yellow',
+      shadowBlur: 10
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+    layer.draw();
+
+    assert.equal(tr.x(), 50);
+    assert.equal(tr.y(), 50);
+
+    assert.equal(tr.width(), 100);
+    assert.equal(tr.height(), 100);
+
+    tr._fitNodeInto({
+      x: 50,
+      y: 50,
+      width: 100,
+      height: 100
+    });
+
+    assert.equal(rect.x(), 50);
+    assert.equal(rect.y(), 50);
+
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.height(), 100);
+  });
+
+  // TODO: current I am not sure how to better resolve that task
+  test.skip('transformer should skip scale on stroke if strokeScaleEnabled = false', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      draggable: true,
+      width: 10,
+      height: 10,
+      scaleX: 10,
+      scaleY: 10,
+      fill: 'yellow',
+      strokeWidth: 10,
+      stroke: 'red',
+      strokeScaleEnabled: false
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect
+    });
+    layer.add(tr);
+    layer.draw();
+
+    assert.equal(tr.x(), 50);
+    assert.equal(tr.y(), 50);
+
+    assert.equal(tr.width(), 100);
+    assert.equal(tr.height(), 100);
+
+    tr._fitNodeInto({
+      x: 50,
+      y: 50,
+      width: 100,
+      height: 100
+    });
+
+    assert.equal(rect.x(), 50);
+    assert.equal(rect.y(), 50);
+
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.height(), 100);
+  });
 });

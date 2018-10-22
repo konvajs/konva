@@ -273,6 +273,7 @@
      * @memberof Konva.Node.prototype
      * @param {Object} config
      * @param {Boolean} [config.skipTransform] should we apply transform to node for calculating rect?
+     * @param {Boolean} [config.skipShadow] should we apply shadow to the node for calculating bound box?
      * @param {Object} [config.relativeTo] calculate client rect relative to one of the parents
      * @returns {Object} rect with {x, y, width, height} properties
      * @example

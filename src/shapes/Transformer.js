@@ -262,7 +262,7 @@
           rotation: 0
         };
       }
-      var rect = node.getClientRect({ skipTransform: true });
+      var rect = node.getClientRect({ skipTransform: true, skipShadow: true });
       var rotation = Konva.getAngle(node.rotation());
 
       var dx = rect.x * node.scaleX() - node.offsetX() * node.scaleX();
@@ -656,7 +656,7 @@
       if (newAttrs.rotation !== undefined) {
         this.getNode().rotation(newAttrs.rotation);
       }
-      var pure = node.getClientRect({ skipTransform: true });
+      var pure = node.getClientRect({ skipTransform: true, skipShadow: true });
       var padding = this.getPadding();
       var scaleX = (newAttrs.width - padding * 2) / pure.width;
       var scaleY = (newAttrs.height - padding * 2) / pure.height;

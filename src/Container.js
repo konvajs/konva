@@ -506,7 +506,10 @@
           return;
         }
 
-        var rect = child.getClientRect({ relativeTo: that });
+        var rect = child.getClientRect({
+          relativeTo: that,
+          skipShadow: attrs.skipShadow
+        });
 
         // skip invisible children (like empty groups)
         if (rect.width === 0 && rect.height === 0) {
