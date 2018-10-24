@@ -1,8 +1,14 @@
 {
   "name": "konva",
-  "version": "2.4.2",
+  "version": "2.5.0",
   "author": "Anton Lavrenov",
-  "files": ["README.md", "konva.js", "konva.min.js", "src", "konva.d.ts"],
+  "files": [
+    "README.md",
+    "konva.js",
+    "konva.min.js",
+    "src",
+    "konva.d.ts"
+  ],
   "main": "konva.js",
   "typings": "./konva.d.ts",
   "scripts": {
@@ -10,10 +16,8 @@
     "lint": "gulp lint",
     "build": "gulp build",
     "full-build": "gulp lint && npm t && gulp build",
-    "test":
-      "mocha-headless-chrome -f ./test/runner.html -a disable-web-security",
-    "prettier":
-      "prettier --write \"src/**/*.js\" \"test/**/*.js\" --single-quote",
+    "test": "mocha-headless-chrome -f ./test/runner.html -a disable-web-security",
+    "prettier": "prettier --write \"src/**/*.js\" \"test/**/*.js\" --single-quote",
     "typescript": "tsc"
   },
   "devDependencies": {
@@ -33,7 +37,12 @@
     "mocha-headless-chrome": "^2.0.0",
     "typescript": "^3.1.3"
   },
-  "keywords": ["canvas", "animations", "graphic", "html5"],
+  "keywords": [
+    "canvas",
+    "animations",
+    "graphic",
+    "html5"
+  ],
   "prettier": {
     "singleQuote": true
   },
