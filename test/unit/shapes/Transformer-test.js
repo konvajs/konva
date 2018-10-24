@@ -753,6 +753,59 @@ suite('Transformer', function() {
     assert.equal(rect.height(), 100);
   });
 
+  test.skip('test padding + keep ratio', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    const rect = new Konva.Rect({
+      x: 50,
+      y: 50,
+      width: 200,
+      height: 10,
+      fill: 'red'
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer({
+      node: rect,
+      padding: 50,
+      keepRatio: true
+    });
+    layer.add(tr);
+    layer.draw();
+
+    stage.simulateMouseDown({
+      x: 200,
+      y: 150
+    });
+    var top = stage.content.getBoundingClientRect().top;
+    tr._handleMouseMove({
+      target: tr.findOne('.bottom-right'),
+      clientX: 200,
+      clientY: 150 + top
+    });
+
+    // here is duplicate, because transformer is listening window events
+    tr._handleMouseUp({
+      clientX: 200,
+      clientY: 150 + top
+    });
+    stage.simulateMouseUp({
+      x: 200,
+      y: 150
+    });
+
+    layer.draw();
+
+    assert.equal(rect.x(), 50);
+    assert.equal(rect.y(), 50);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.height(), 50);
+    assert.equal(rect.scaleX(), 1);
+    assert.equal(rect.scaleY(), 1);
+  });
+
   test('can add padding with rotation', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

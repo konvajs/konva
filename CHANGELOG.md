@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+## [2.5.0][2018-10-24]
+
 ### Added
 
 * New `anchorCornerRadius` for `Konva.Transformer`
@@ -14,7 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-* ``dragstart` event behaviour is a bit changed. It will fire BEFORE actual position of a node is changed.
+* `dragstart` event behavior is a bit changed. It will fire BEFORE actual position of a node is changed.
 
 ## [2.4.2][2018-10-12]
 
