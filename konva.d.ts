@@ -444,10 +444,10 @@ declare namespace Konva {
     clipHeight?: number;
   }
 
-  class Container extends Node {
+  class Container<T extends Node = Node> extends Node {
     constructor(params?: ContainerConfig);
     add(...children: Node[]): this;
-    getChildren(filterfunc?: Function): Collection;
+    getChildren(filterfunc?: Function): Collection<T>;
     clip(): SizeConfig;
     clip(clip: SizeConfig | undefined | null): this;
     clipHeight(): number;
@@ -461,7 +461,7 @@ declare namespace Konva {
     clipFunc(): (ctx: CanvasRenderingContext2D) => void;
     clipFunc(ctx: CanvasRenderingContext2D | undefined | null): void;
     destroyChildren(): void;
-    find(selector?: string | ((node: Node) => boolean)): Collection;
+    find<T extends Node = Node>(selector?: string | ((node: Node) => boolean)): Collection<T>;
     findOne<T extends Node>(selector: string | ((node: Node) => boolean)): T;
     getAllIntersections(pos: Vector2d): Shape[];
     hasChildren(): boolean;
@@ -677,7 +677,7 @@ declare namespace Konva {
     drawScene(): void;
   }
 
-  class Group extends Container {}
+  class Group<T extends Node = Node> extends Container<T> {}
 
   interface CanvasConfig {
     width: number;
@@ -1072,7 +1072,7 @@ declare namespace Konva {
 
   interface LabelInterface extends ContainerConfig {}
 
-  class Label extends Group {
+  class Label extends Group<Shape> {
     constructor(LabelInterface: LabelInterface);
     getText(): Text;
     getTag(): Rect;
