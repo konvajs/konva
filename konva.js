@@ -1025,10 +1025,10 @@
       return retObj;
     },
     trimRight: function(str) {
-      return str.replace(/\s+$/, "");
+      return str.replace(/\s+$/, '');
     },
     trimLeft: function(str) {
-      return str.replace(/^\s+/, "");
+      return str.replace(/^\s+/, '');
     },
     /**
      * check intersection of two client rectangles

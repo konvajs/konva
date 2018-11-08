@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+## [2.5.1][2018-11-08]
+
 ### Changed
 
 * Use custom functions for `trimRight` and `trimLeft` (for better browsers support)
