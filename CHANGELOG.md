@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+### Changed
+
+* Use custom functions for `trimRight` and `trimLeft` (for better browsers support)
+
 ## [2.5.0][2018-10-24]
 
 ### Added
@@ -12,6 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * New `anchorCornerRadius` for `Konva.Transformer`
 
 ### Fixed
+
 * Performance fixes for caching
 
 ### Changed

@@ -440,7 +440,7 @@
                 }
               }
               // if (align === 'right') {
-              match = match.trimRight();
+              match = Konva.Util.trimRight(match);
               // }
               this._addTextLine(match);
               textWidth = Math.max(textWidth, matchWidth);
@@ -456,7 +456,7 @@
                 break;
               }
               line = line.slice(low);
-              line = line.trimLeft();
+              line = Konva.Util.trimLeft(line);
               if (line.length > 0) {
                 // Check if the remaining text would fit on one line
                 lineWidth = this._getTextWidth(line);

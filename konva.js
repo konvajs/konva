@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.5.0
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Wed Oct 24 2018
+ * Date: Thu Nov 08 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -1023,6 +1023,12 @@
         }
       }
       return retObj;
+    },
+    trimRight: function(str) {
+      return str.replace(/\s+$/, "");
+    },
+    trimLeft: function(str) {
+      return str.replace(/^\s+/, "");
     },
     /**
      * check intersection of two client rectangles
@@ -15519,7 +15525,7 @@
                 }
               }
               // if (align === 'right') {
-              match = match.trimRight();
+              match = Konva.Util.trimRight(match);
               // }
               this._addTextLine(match);
               textWidth = Math.max(textWidth, matchWidth);
@@ -15535,7 +15541,7 @@
                 break;
               }
               line = line.slice(low);
-              line = line.trimLeft();
+              line = Konva.Util.trimLeft(line);
               if (line.length > 0) {
                 // Check if the remaining text would fit on one line
                 lineWidth = this._getTextWidth(line);
