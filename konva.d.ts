@@ -536,7 +536,7 @@ declare namespace Konva {
     fillLinearGradientColorStops(): Array<number | string>;
     fillLinearGradientColorStops(colors: Array<number | string>): this;
     fillLinearGradientStartPoint(): Vector2d;
-    fillLinearGradientStartPoint(point: Vector2d): Vector2d;
+    fillLinearGradientStartPoint(point: Vector2d): this;
     fillLinearGradientStartPointX(): number;
     fillLinearGradientStartPointX(x: number): this;
     fillLinearGradientStartPointY(): number;
