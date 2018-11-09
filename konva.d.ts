@@ -459,7 +459,7 @@ declare namespace Konva {
     clipY(): number;
     clipY(clipY: number | undefined | null): this;
     clipFunc(): (ctx: CanvasRenderingContext2D) => void;
-    clipFunc(ctx: CanvasRenderingContext2D | undefined | null): void;
+    clipFunc(clipFunc: (ctx: CanvasRenderingContext2D) => void): void;
     destroyChildren(): void;
     find<T extends Node = Node>(selector?: string | ((node: Node) => boolean)): Collection<T>;
     findOne<T extends Node>(selector: string | ((node: Node) => boolean)): T;
