@@ -485,4 +485,34 @@ suite('TextPath', function() {
       'should gracefully fallback to unkerned text'
     );
   });
+
+  test('can set kerning after initialization', function() {
+    var stage = addStage();
+
+    // simulate lack of kerning support
+    stage.getContainer().style.fontKerning = 'none';
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    const kernedText = new Konva.TextPath({
+      x: 0,
+      y: 30,
+      fill: 'black',
+      text: 'AV',
+      fontSize: 60,
+      data: 'M0,0 L200,0'
+    });
+    layer.add(kernedText);
+    layer.draw();
+
+    var called = false;
+    kernedText.kerningFunc(() => {
+      called = true;
+      return 1;
+    });
+
+    layer.draw();
+    assert.equal(called, true);
+  });
 });

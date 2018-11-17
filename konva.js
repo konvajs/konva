@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.5.1
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Thu Nov 08 2018
+ * Date: Sat Nov 17 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -17656,6 +17656,7 @@
    * @param {String} config.text
    * @param {String} config.data SVG data string
    * @param {Function} config.getKerning a getter for kerning values for the specified characters
+   * @param {Function} config.kerningFunc a getter for kerning values for the specified characters
    * @param {String} [config.fill] fill color
      * @param {Image} [config.fillPatternImage] fill pattern image
      * @param {Number} [config.fillPatternX]
@@ -17749,7 +17750,7 @@
    *   fontFamily: 'Arial',
    *   text: 'All the world\'s a stage, and all the men and women merely players.',
    *   data: 'M10,10 C0,0 10,150 100,100 S300,150 400,50',
-   *   getKerning: function(leftChar, rightChar) {
+   *   kerningFunc: function(leftChar, rightChar) {
    *     return kerningPairs.hasOwnProperty(leftChar) ? pairs[leftChar][rightChar] || 0 : 0
    *   }
    * });
@@ -17770,7 +17771,6 @@
       var that = this;
       this.dummyCanvas = Konva.Util.createCanvasElement();
       this.dataArray = [];
-      this.getKerning = config && config.getKerning;
 
       // call super constructor
       Konva.Shape.call(this, config);
@@ -17792,9 +17792,17 @@
 
       // update text data for certain attr changes
       this.on(
-        'textChange.konva alignChange.konva letterSpacingChange.konva',
+        'textChange.konva alignChange.konva letterSpacingChange.konva kerningFuncChange.konva',
         that._setTextData
       );
+
+      if (config && config.getKerning) {
+        Konva.Util.warn(
+          'getKerning TextPath API is deprecated. Please use "kerningFunc" instead.'
+        );
+        this.setKerningFunc(config.getKerning);
+      }
+
       that._setTextData();
       this.sceneFunc(this._sceneFunc);
       this.hitFunc(this._hitFunc);
@@ -17913,6 +17921,7 @@
       var size = this._getTextSize(this.attrs.text);
       var letterSpacing = this.getLetterSpacing();
       var align = this.align();
+      var kerningFunc = this.getKerningFunc();
 
       this.textWidth = size.width;
       this.textHeight = size.height;
@@ -18044,9 +18053,9 @@
                 currentT = start + 0.00000001;
               } else if (glyphWidth > currLen) {
                 // Just in case start is 0
-                currentT += Math.PI / 180.0 * dTheta / Math.abs(dTheta);
+                currentT += ((Math.PI / 180.0) * dTheta) / Math.abs(dTheta);
               } else {
-                currentT -= Math.PI / 360.0 * dTheta / Math.abs(dTheta);
+                currentT -= ((Math.PI / 360.0) * dTheta) / Math.abs(dTheta);
               }
 
               // Credit for bug fix: @therth https://github.com/ericdrowell/KonvaJS/issues/249
@@ -18155,11 +18164,10 @@
         var width = Konva.Path.getLineLength(p0.x, p0.y, p1.x, p1.y);
 
         var kern = 0;
-        if (this.getKerning) {
+        if (kerningFunc) {
           try {
             // getKerning is a user provided getter. Make sure it never breaks our logic
-            kern =
-              this.getKerning(charArr[i - 1], charArr[i]) * this.fontSize();
+            kern = kerningFunc(charArr[i - 1], charArr[i]) * this.fontSize();
           } catch (e) {
             kern = 0;
           }
@@ -18390,6 +18398,25 @@
    *
    * // center text
    * text.textDecoration('underline');
+   */
+
+  Konva.Factory.addGetterSetter(Konva.TextPath, 'kerningFunc', null);
+
+  /**
+   * get/set kerning function.
+   * @name kerningFunc
+   * @method
+   * @memberof Konva.Text.prototype
+   * @param {String} kerningFunc
+   * @returns {String}
+   * @example
+   * // get text decoration
+   * var kerningFunc = text.kerningFunc();
+   *
+   * // center text
+   * text.kerningFunc(function(leftChar, rightChar) {
+   *   return 1;
+   * });
    */
 
   Konva.Collection.mapMethods(Konva.TextPath);

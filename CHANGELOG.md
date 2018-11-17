@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+### Changed
+
+* getKerning TextPath API is deprecated. Use "kerningFunc" instead.
+
 ## [2.5.1][2018-11-08]
 
 ### Changed

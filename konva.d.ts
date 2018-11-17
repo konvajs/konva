@@ -12,9 +12,7 @@ declare namespace Konva {
     cancelBubble: boolean;
   }
 
-  type HandlerFunc<E = Event> = (
-    e: KonvaEventObject<E>
-  ) => void;
+  type HandlerFunc<E = Event> = (e: KonvaEventObject<E>) => void;
 
   enum KonvaNodeEvent {
     mouseover = 'mouseover',
@@ -93,8 +91,20 @@ declare namespace Konva {
     static getRGB(color: string): string;
   }
 
-  type EasingFn = (elapsed: number, startValue: number, diff: number, duration: number) => number;
-  type ElasticEasingFn = (elapsed: number, startValue: number, diff: number, duration: number, a?: number, p?: number) => number;
+  type EasingFn = (
+    elapsed: number,
+    startValue: number,
+    diff: number,
+    duration: number
+  ) => number;
+  type ElasticEasingFn = (
+    elapsed: number,
+    startValue: number,
+    diff: number,
+    duration: number,
+    a?: number,
+    p?: number
+  ) => number;
 
   export class Easings {
     static BackEaseIn: EasingFn;
@@ -368,9 +378,7 @@ declare namespace Konva {
     offsetY(offsetY: number): this;
     on<K extends keyof KonvaNodeEventMap>(
       evtStr: K,
-      handler: (
-        e: KonvaEventObject<KonvaNodeEventMap[K]>
-      ) => void
+      handler: (e: KonvaEventObject<KonvaNodeEventMap[K]>) => void
     ): this;
     on(evtStr: KonvaEventString, handler: HandlerFunc): this;
     opacity(): number;
@@ -461,7 +469,9 @@ declare namespace Konva {
     clipFunc(): (ctx: CanvasRenderingContext2D) => void;
     clipFunc(clipFunc: (ctx: CanvasRenderingContext2D) => void): void;
     destroyChildren(): void;
-    find<T extends Node = Node>(selector?: string | ((node: Node) => boolean)): Collection<T>;
+    find<T extends Node = Node>(
+      selector?: string | ((node: Node) => boolean)
+    ): Collection<T>;
     findOne<T extends Node>(selector: string | ((node: Node) => boolean)): T;
     getAllIntersections(pos: Vector2d): Shape[];
     hasChildren(): boolean;
