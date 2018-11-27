@@ -71,6 +71,47 @@ suite('Transformer', function() {
     assert.equal(tr.rotation(), rect.rotation());
   });
 
+  test.skip('try to fit rectangle with strokeScaleEnabled = false', function() {
+    var stage = addStage();
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var rect = new Konva.Rect({
+      x: 20,
+      y: 20,
+      width: 100,
+      height: 100,
+      fill: 'green',
+      stroke: 'rgba(0,0,0,0.5)',
+      strokeWidth: 40,
+      name: 'myCircle',
+      draggable: true,
+      strokeScaleEnabled: false
+    });
+    layer.add(rect);
+
+    var tr = new Konva.Transformer();
+    layer.add(tr);
+    tr.attachTo(rect);
+
+    layer.draw();
+
+    tr._fitNodeInto({
+      x: 0,
+      y: 0,
+      width: 200,
+      height: 200
+    });
+
+    var scale = 200 / 140;
+
+    assert.equal(rect.x(), 0);
+    assert.equal(rect.y(), 0);
+    assert.equal(rect.width(), 100);
+    assert.equal(rect.height(), 100);
+    assert.equal(rect.scaleX(), scale);
+  });
+
   test('listen shape changes', function() {
     var stage = addStage();
     var layer = new Konva.Layer();

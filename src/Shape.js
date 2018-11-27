@@ -260,6 +260,18 @@
       var fillRect = this.getSelfRect();
 
       var strokeWidth = (this.hasStroke() && this.strokeWidth()) || 0;
+
+      // var scale = {
+      //   x: 1,
+      //   y: 1
+      // };
+      // if (!this.strokeScaleEnabled()) {
+      //   var scale = this.getAbsoluteScale();
+      //   // scale = {
+      //   //   x: Math.abs(scale.x)
+      //   // }
+      // }
+
       var fillAndStrokeWidth = fillRect.width + strokeWidth;
       var fillAndStrokeHeight = fillRect.height + strokeWidth;
 

@@ -167,11 +167,11 @@
       var layer = this.getLayer();
 
       /*
-             * animation object has no executable function because
-             *  the updates are done with a fixed FPS with the setInterval
-             *  below.  The anim object only needs the layer reference for
-             *  redraw
-             */
+       * animation object has no executable function because
+       *  the updates are done with a fixed FPS with the setInterval
+       *  below.  The anim object only needs the layer reference for
+       *  redraw
+       */
       this.anim.setLayers(layer);
       this._setInterval();
       this.anim.start();
@@ -188,7 +188,7 @@
     /**
      * determine if animation of sprite is running or not.  returns true or false
      * @method
-     * @memberof Konva.Animation.prototype
+     * @memberof Konva.Sprite.prototype
      * @returns {Boolean}
      */
     isRunning: function() {

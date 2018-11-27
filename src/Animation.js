@@ -66,8 +66,8 @@
     };
   };
   /*
-     * Animation methods
-     */
+   * Animation methods
+   */
   Konva.Animation.prototype = {
     /**
      * set layers to be redrawn on each animation frame
@@ -210,16 +210,16 @@
       key,
       needRedraw;
     /*
-         * loop through all animations and execute animation
-         *  function.  if the animation object has specified node,
-         *  we can add the node to the nodes hash to eliminate
-         *  drawing the same node multiple times.  The node property
-         *  can be the stage itself or a layer
-         */
+     * loop through all animations and execute animation
+     *  function.  if the animation object has specified node,
+     *  we can add the node to the nodes hash to eliminate
+     *  drawing the same node multiple times.  The node property
+     *  can be the stage itself or a layer
+     */
     /*
-         * WARNING: don't cache animations.length because it could change while
-         * the for loop is running, causing a JS error
-         */
+     * WARNING: don't cache animations.length because it could change while
+     * the for loop is running, causing a JS error
+     */
 
     for (n = 0; n < animations.length; n++) {
       anim = animations[n];
@@ -275,8 +275,9 @@
    * batch draw. this function will not do immediate draw
    * but it will schedule drawing to next tick (requestAnimFrame)
    * @method
+   * @name batchDraw
    * @return {Konva.Layer} this
-   * @memberof Konva.Base.prototype
+   * @memberof Konva.BaseLayer.prototype
    */
   Konva.BaseLayer.prototype.batchDraw = function() {
     var that = this,
@@ -298,6 +299,7 @@
   /**
    * batch draw
    * @method
+   * @name batchDraw
    * @return {Konva.Stage} this
    * @memberof Konva.Stage.prototype
    */

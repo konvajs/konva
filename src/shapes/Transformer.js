@@ -67,7 +67,7 @@
     if (isMirrored) {
       rad *= -1;
     }
-    var angle = (Konva.Util._radToDeg(rad) % 360 + 360) % 360;
+    var angle = ((Konva.Util._radToDeg(rad) % 360) + 360) % 360;
 
     if (
       Konva.Util._inRange(angle, 315 + 22.5, 360) ||
@@ -657,6 +657,7 @@
         this.getNode().rotation(newAttrs.rotation);
       }
       var pure = node.getClientRect({ skipTransform: true, skipShadow: true });
+
       var padding = this.getPadding();
       var scaleX = (newAttrs.width - padding * 2) / pure.width;
       var scaleY = (newAttrs.height - padding * 2) / pure.height;

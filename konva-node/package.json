@@ -1,6 +1,6 @@
 {
   "name": "konva-node",
-  "version": "0.5.5",
+  "version": "0.9.0",
   "description": "Konva framework for NodeJS env",
   "main": "index.js",
   "files": [
@@ -26,6 +26,6 @@
   "license": "MIT",
   "dependencies": {
     "canvas": "^1.6.7",
-    "konva": "^1.7.3"
+    "konva": "^2.5.1"
   }
 }
