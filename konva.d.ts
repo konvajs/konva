@@ -667,14 +667,14 @@ declare namespace Konva {
     hitGraphEnabled?: boolean;
   }
 
-  class FastLayer extends Container {
+  class FastLayer<T extends Node = Node> extends Container<T> {
     constructor(config?: LayerConfig);
     drawScene(): void;
     hitGraphEnabled(val: boolean): this;
     batchDraw(): void;
   }
 
-  class Layer extends Container {
+  class Layer<T extends Node = Node> extends Container<T> {
     constructor(config?: LayerConfig);
     getIntersection(pos: Vector2d, selector?: string): Shape;
     enableHitGraph(): this;
