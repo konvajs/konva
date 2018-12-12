@@ -11,7 +11,7 @@ declare namespace Konva {
     currentTarget: Konva.Node;
     cancelBubble: boolean;
   }
-
+  
   type HandlerFunc<E = Event> = (e: KonvaEventObject<E>) => void;
 
   enum KonvaNodeEvent {
@@ -85,10 +85,16 @@ declare namespace Konva {
     | 'saturation'
     | 'color'
     | 'luminosity';
+                   
+  export interface RGB {
+    r: number;
+    g: number;
+    b: number;
+  }
 
   export class Util {
     static getRandomColor(): string;
-    static getRGB(color: string): string;
+    static getRGB(color: string): RGB;
   }
 
   type EasingFn = (
