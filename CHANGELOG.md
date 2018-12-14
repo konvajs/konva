@@ -5,9 +5,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+## [2.6.0][2018-12-14]
+
 ### Changed
 
 * Performance fixes when cached node has many children
+* Better drawing for shape with `strokeScaleEnabled = false` on HDPI devices
 
 ### Added
 
