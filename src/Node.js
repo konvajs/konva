@@ -104,6 +104,10 @@
     _clearSelfAndDescendantCache: function(attr) {
       this._clearCache(attr);
 
+      // skip clearing of node is cached with canvas
+      if (this._cache.canvas) {
+        return;
+      }
       if (this.children) {
         this.getChildren().each(function(node) {
           node._clearSelfAndDescendantCache(attr);
@@ -121,6 +125,7 @@
     clearCache: function() {
       delete this._cache.canvas;
       this._filterUpToDate = false;
+      this._clearSelfAndDescendantCache();
       return this;
     },
     /**
@@ -275,6 +280,7 @@
      * @param {Object} config
      * @param {Boolean} [config.skipTransform] should we apply transform to node for calculating rect?
      * @param {Boolean} [config.skipShadow] should we apply shadow to the node for calculating bound box?
+     * @param {Boolean} [config.skipStroke] should we apply stroke to the node for calculating bound box?
      * @param {Object} [config.relativeTo] calculate client rect relative to one of the parents
      * @returns {Object} rect with {x, y, width, height} properties
      * @example

@@ -508,7 +508,8 @@
 
         var rect = child.getClientRect({
           relativeTo: that,
-          skipShadow: attrs.skipShadow
+          skipShadow: attrs.skipShadow,
+          skipStroke: attrs.skipStroke
         });
 
         // skip invisible children (like empty groups)

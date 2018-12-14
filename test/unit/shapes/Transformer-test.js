@@ -71,7 +71,7 @@ suite('Transformer', function() {
     assert.equal(tr.rotation(), rect.rotation());
   });
 
-  test.skip('try to fit rectangle with strokeScaleEnabled = false', function() {
+  test('try to fit rectangle with ignoreStroke = false', function() {
     var stage = addStage();
     var layer = new Konva.Layer();
     stage.add(layer);
@@ -90,26 +90,26 @@ suite('Transformer', function() {
     });
     layer.add(rect);
 
-    var tr = new Konva.Transformer();
+    var tr = new Konva.Transformer({
+      ignoreStroke: true
+    });
     layer.add(tr);
     tr.attachTo(rect);
 
     layer.draw();
 
     tr._fitNodeInto({
-      x: 0,
-      y: 0,
+      x: 20,
+      y: 20,
       width: 200,
       height: 200
     });
 
-    var scale = 200 / 140;
-
-    assert.equal(rect.x(), 0);
-    assert.equal(rect.y(), 0);
+    assert.equal(rect.x(), 20);
+    assert.equal(rect.y(), 20);
     assert.equal(rect.width(), 100);
     assert.equal(rect.height(), 100);
-    assert.equal(rect.scaleX(), scale);
+    assert.equal(rect.scaleX(), 2);
   });
 
   test('listen shape changes', function() {

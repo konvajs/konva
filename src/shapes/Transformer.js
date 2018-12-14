@@ -10,10 +10,12 @@
     'borderEnabledChange',
     'borderStrokeChange',
     'borderStrokeWidthChange',
+    'borderDashChange',
     'anchorStrokeChange',
     'anchorStrokeWidthChange',
     'anchorFillChange',
-    'anchorCornerRadiusChange'
+    'anchorCornerRadiusChange',
+    'ignoreStrokeChange'
   ].join(' ');
 
   var NODE_RECT = 'nodeRect';
@@ -262,7 +264,11 @@
           rotation: 0
         };
       }
-      var rect = node.getClientRect({ skipTransform: true, skipShadow: true });
+      var rect = node.getClientRect({
+        skipTransform: true,
+        skipShadow: true,
+        skipStroke: this.ignoreStroke()
+      });
       var rotation = Konva.getAngle(node.rotation());
 
       var dx = rect.x * node.scaleX() - node.offsetX() * node.scaleX();
@@ -656,7 +662,11 @@
       if (newAttrs.rotation !== undefined) {
         this.getNode().rotation(newAttrs.rotation);
       }
-      var pure = node.getClientRect({ skipTransform: true, skipShadow: true });
+      var pure = node.getClientRect({
+        skipTransform: true,
+        skipShadow: true,
+        skipStroke: this.ignoreStroke()
+      });
 
       var padding = this.getPadding();
       var scaleX = (newAttrs.width - padding * 2) / pure.width;
@@ -1139,6 +1149,23 @@
    * transformer.centeredScaling(true);
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'centeredScaling', false);
+
+  /**
+   * get/set should we think about stroke while resize? Good to use when a shape has strokeScaleEnabled = false
+   * default is false
+   * @name ignoreStroke
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Boolean} ignoreStroke
+   * @returns {Boolean}
+   * @example
+   * // get
+   * var ignoreStroke = transformer.ignoreStroke();
+   *
+   * // set
+   * transformer.ignoreStroke(true);
+   */
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'ignoreStroke', false);
 
   /**
    * get/set padding

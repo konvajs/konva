@@ -259,7 +259,8 @@
 
       var fillRect = this.getSelfRect();
 
-      var strokeWidth = (this.hasStroke() && this.strokeWidth()) || 0;
+      var applyStroke = !attrs.skipStroke && this.hasStroke();
+      var strokeWidth = (applyStroke && this.strokeWidth()) || 0;
 
       // var scale = {
       //   x: 1,

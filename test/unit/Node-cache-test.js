@@ -1004,4 +1004,33 @@ suite('Caching', function() {
 
     assert.equal(called, false);
   });
+
+  // for performance reasons
+  it('caching should skip clearing internal caching for perf boos', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    var bigCircle = new Konva.Circle({
+      x: 100,
+      y: 100,
+      radius: 100,
+      fill: 'green'
+    });
+    layer.add(bigCircle);
+
+    layer.cache();
+
+    var callCount = 0;
+    bigCircle._clearSelfAndDescendantCache = function() {
+      callCount += 1;
+    };
+
+    layer.x(10);
+    assert.equal(callCount, 0);
+    layer.clearCache();
+    // make sure all cleared for children
+    assert.equal(callCount, 1);
+  });
 });

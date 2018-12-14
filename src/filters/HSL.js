@@ -41,7 +41,7 @@
   );
   /**
    * get/set hsl luminance. Use with {@link Konva.Filters.HSL} filter.
-   * @name value
+   * @name luminance
    * @method
    * @memberof Konva.Node.prototype
    * @param {Number} value from -1 to 1
@@ -56,7 +56,7 @@
    * @author ippo615
    * @example
    * image.filters([Konva.Filters.HSL]);
-   * image.luminance(200);
+   * image.luminance(0.2);
    */
 
   Konva.Filters.HSL = function(imageData) {
@@ -80,8 +80,8 @@
     //[ .299V-.300vsu+1.25vsw    .587V-.588vsu-1.05vsw    .114V+.886vsu-.203vsw ] [B]
 
     // Precompute the values in the matrix:
-    var vsu = v * s * Math.cos(h * Math.PI / 180),
-      vsw = v * s * Math.sin(h * Math.PI / 180);
+    var vsu = v * s * Math.cos((h * Math.PI) / 180),
+      vsw = v * s * Math.sin((h * Math.PI) / 180);
     // (result spot)(source spot)
     var rr = 0.299 * v + 0.701 * vsu + 0.167 * vsw,
       rg = 0.587 * v - 0.587 * vsu + 0.33 * vsw,

@@ -7,6 +7,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+* Performance fixes when cached node has many children
+
+### Added
+
+* New `ignoreStroke` for `Konva.Transformer`. Good to use when a shape has `strokeScaleEnabled = false`
+
+### Changed
+
 * getKerning TextPath API is deprecated. Use "kerningFunc" instead.
 
 ## [2.5.1][2018-11-08]

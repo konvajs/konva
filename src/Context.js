@@ -623,8 +623,8 @@
       if (shape.hasStroke()) {
         if (!strokeScaleEnabled) {
           this.save();
-          // set 2, because otherwise stroke will be 1/2 of its size
-          this.setTransform(2, 0, 0, 2, 0, 0);
+          var pixelRatio = this.getCanvas().getPixelRatio();
+          this.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
         }
 
         this._applyLineCap(shape);

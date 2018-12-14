@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.5.1
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Thu Nov 22 2018
+ * Date: Fri Dec 14 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -2118,7 +2118,8 @@
       if (shape.hasStroke()) {
         if (!strokeScaleEnabled) {
           this.save();
-          this.setTransform(1, 0, 0, 1, 0, 0);
+          var pixelRatio = this.getCanvas().getPixelRatio();
+          this.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
         }
 
         this._applyLineCap(shape);
@@ -2633,6 +2634,10 @@
     _clearSelfAndDescendantCache: function(attr) {
       this._clearCache(attr);
 
+      // skip clearing of node is cached with canvas
+      if (this._cache.canvas) {
+        return;
+      }
       if (this.children) {
         this.getChildren().each(function(node) {
           node._clearSelfAndDescendantCache(attr);
@@ -2650,6 +2655,7 @@
     clearCache: function() {
       delete this._cache.canvas;
       this._filterUpToDate = false;
+      this._clearSelfAndDescendantCache();
       return this;
     },
     /**
@@ -2804,6 +2810,7 @@
      * @param {Object} config
      * @param {Boolean} [config.skipTransform] should we apply transform to node for calculating rect?
      * @param {Boolean} [config.skipShadow] should we apply shadow to the node for calculating bound box?
+     * @param {Boolean} [config.skipStroke] should we apply stroke to the node for calculating bound box?
      * @param {Object} [config.relativeTo] calculate client rect relative to one of the parents
      * @returns {Object} rect with {x, y, width, height} properties
      * @example
@@ -6721,7 +6728,7 @@
   );
   /**
    * get/set hsl luminance. Use with {@link Konva.Filters.HSL} filter.
-   * @name value
+   * @name luminance
    * @method
    * @memberof Konva.Node.prototype
    * @param {Number} value from -1 to 1
@@ -6736,7 +6743,7 @@
    * @author ippo615
    * @example
    * image.filters([Konva.Filters.HSL]);
-   * image.luminance(200);
+   * image.luminance(0.2);
    */
 
   Konva.Filters.HSL = function(imageData) {
@@ -6760,8 +6767,8 @@
     //[ .299V-.300vsu+1.25vsw    .587V-.588vsu-1.05vsw    .114V+.886vsu-.203vsw ] [B]
 
     // Precompute the values in the matrix:
-    var vsu = v * s * Math.cos(h * Math.PI / 180),
-      vsw = v * s * Math.sin(h * Math.PI / 180);
+    var vsu = v * s * Math.cos((h * Math.PI) / 180),
+      vsw = v * s * Math.sin((h * Math.PI) / 180);
     // (result spot)(source spot)
     var rr = 0.299 * v + 0.701 * vsu + 0.167 * vsw,
       rg = 0.587 * v - 0.587 * vsu + 0.33 * vsw,
@@ -8419,7 +8426,8 @@
 
         var rect = child.getClientRect({
           relativeTo: that,
-          skipShadow: attrs.skipShadow
+          skipShadow: attrs.skipShadow,
+          skipStroke: attrs.skipStroke
         });
 
         // skip invisible children (like empty groups)
@@ -8945,7 +8953,20 @@
 
       var fillRect = this.getSelfRect();
 
-      var strokeWidth = (this.hasStroke() && this.strokeWidth()) || 0;
+      var applyStroke = !attrs.skipStroke && this.hasStroke();
+      var strokeWidth = (applyStroke && this.strokeWidth()) || 0;
+
+      // var scale = {
+      //   x: 1,
+      //   y: 1
+      // };
+      // if (!this.strokeScaleEnabled()) {
+      //   var scale = this.getAbsoluteScale();
+      //   // scale = {
+      //   //   x: Math.abs(scale.x)
+      //   // }
+      // }
+
       var fillAndStrokeWidth = fillRect.width + strokeWidth;
       var fillAndStrokeHeight = fillRect.height + strokeWidth;
 
@@ -19521,10 +19542,12 @@
     'borderEnabledChange',
     'borderStrokeChange',
     'borderStrokeWidthChange',
+    'borderDashChange',
     'anchorStrokeChange',
     'anchorStrokeWidthChange',
     'anchorFillChange',
-    'anchorCornerRadiusChange'
+    'anchorCornerRadiusChange',
+    'ignoreStrokeChange'
   ].join(' ');
 
   var NODE_RECT = 'nodeRect';
@@ -19578,7 +19601,7 @@
     if (isMirrored) {
       rad *= -1;
     }
-    var angle = (Konva.Util._radToDeg(rad) % 360 + 360) % 360;
+    var angle = ((Konva.Util._radToDeg(rad) % 360) + 360) % 360;
 
     if (
       Konva.Util._inRange(angle, 315 + 22.5, 360) ||
@@ -19773,7 +19796,11 @@
           rotation: 0
         };
       }
-      var rect = node.getClientRect({ skipTransform: true, skipShadow: true });
+      var rect = node.getClientRect({
+        skipTransform: true,
+        skipShadow: true,
+        skipStroke: this.ignoreStroke()
+      });
       var rotation = Konva.getAngle(node.rotation());
 
       var dx = rect.x * node.scaleX() - node.offsetX() * node.scaleX();
@@ -20167,7 +20194,12 @@
       if (newAttrs.rotation !== undefined) {
         this.getNode().rotation(newAttrs.rotation);
       }
-      var pure = node.getClientRect({ skipTransform: true, skipShadow: true });
+      var pure = node.getClientRect({
+        skipTransform: true,
+        skipShadow: true,
+        skipStroke: this.ignoreStroke()
+      });
+
       var padding = this.getPadding();
       var scaleX = (newAttrs.width - padding * 2) / pure.width;
       var scaleY = (newAttrs.height - padding * 2) / pure.height;
@@ -20649,6 +20681,23 @@
    * transformer.centeredScaling(true);
    */
   Konva.Factory.addGetterSetter(Konva.Transformer, 'centeredScaling', false);
+
+  /**
+   * get/set should we think about stroke while resize? Good to use when a shape has strokeScaleEnabled = false
+   * default is false
+   * @name ignoreStroke
+   * @method
+   * @memberof Konva.Transformer.prototype
+   * @param {Boolean} ignoreStroke
+   * @returns {Boolean}
+   * @example
+   * // get
+   * var ignoreStroke = transformer.ignoreStroke();
+   *
+   * // set
+   * transformer.ignoreStroke(true);
+   */
+  Konva.Factory.addGetterSetter(Konva.Transformer, 'ignoreStroke', false);
 
   /**
    * get/set padding
