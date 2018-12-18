@@ -2,7 +2,7 @@
  * Konva JavaScript Framework v2.6.0
  * http://konvajs.github.io/
  * Licensed under the MIT
- * Date: Fri Dec 14 2018
+ * Date: Tue Dec 18 2018
  *
  * Original work Copyright (C) 2011 - 2013 by Eric Rowell (KineticJS)
  * Modified work Copyright (C) 2014 - present by Anton Lavrenov (Konva)
@@ -10916,43 +10916,23 @@
       }
     },
     _mouseover: function(evt) {
-      if (!Konva.UA.mobile) {
-        this._setPointerPosition(evt);
-        this._fire(CONTENT_MOUSEOVER, { evt: evt });
-      }
+      this._setPointerPosition(evt);
+      this._fire(CONTENT_MOUSEOVER, { evt: evt });
     },
     _mouseout: function(evt) {
-      if (!Konva.UA.mobile) {
-        this._setPointerPosition(evt);
-        var targetShape = this.targetShape;
+      this._setPointerPosition(evt);
+      var targetShape = this.targetShape;
 
-        if (targetShape && !Konva.isDragging()) {
-          targetShape._fireAndBubble(MOUSEOUT, { evt: evt });
-          targetShape._fireAndBubble(MOUSELEAVE, { evt: evt });
-          this.targetShape = null;
-        }
-        this.pointerPos = undefined;
-
-        this._fire(CONTENT_MOUSEOUT, { evt: evt });
+      if (targetShape && !Konva.isDragging()) {
+        targetShape._fireAndBubble(MOUSEOUT, { evt: evt });
+        targetShape._fireAndBubble(MOUSELEAVE, { evt: evt });
+        this.targetShape = null;
       }
+      this.pointerPos = undefined;
+
+      this._fire(CONTENT_MOUSEOUT, { evt: evt });
     },
     _mousemove: function(evt) {
-      // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
-      if (Konva.UA.ieMobile) {
-        return this._touchmove(evt);
-      }
-      // workaround fake mousemove event in chrome browser https://code.google.com/p/chromium/issues/detail?id=161464
-      if (
-        (typeof evt.movementX !== 'undefined' ||
-          typeof evt.movementY !== 'undefined') &&
-        evt.movementY === 0 &&
-        evt.movementX === 0
-      ) {
-        return null;
-      }
-      if (Konva.UA.mobile) {
-        return null;
-      }
       this._setPointerPosition(evt);
       var shape;
 
@@ -10975,9 +10955,9 @@
           }
         } else {
           /*
-                 * if no shape was detected, clear target shape and try
-                 * to run mouseout from previous target shape
-                 */
+           * if no shape was detected, clear target shape and try
+           * to run mouseout from previous target shape
+           */
           if (this.targetShape && !Konva.isDragging()) {
             this.targetShape._fireAndBubble(MOUSEOUT, { evt: evt });
             this.targetShape._fireAndBubble(MOUSELEAVE, { evt: evt });
@@ -11001,30 +10981,24 @@
       }
     },
     _mousedown: function(evt) {
-      // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
-      if (Konva.UA.ieMobile) {
-        return this._touchstart(evt);
+      this._setPointerPosition(evt);
+      var shape = this.getIntersection(this.getPointerPosition());
+
+      Konva.listenClickTap = true;
+
+      if (shape && shape.isListening()) {
+        this.clickStartShape = shape;
+        shape._fireAndBubble(MOUSEDOWN, { evt: evt });
+      } else {
+        this._fire(MOUSEDOWN, {
+          evt: evt,
+          target: this,
+          currentTarget: this
+        });
       }
-      if (!Konva.UA.mobile) {
-        this._setPointerPosition(evt);
-        var shape = this.getIntersection(this.getPointerPosition());
 
-        Konva.listenClickTap = true;
-
-        if (shape && shape.isListening()) {
-          this.clickStartShape = shape;
-          shape._fireAndBubble(MOUSEDOWN, { evt: evt });
-        } else {
-          this._fire(MOUSEDOWN, {
-            evt: evt,
-            target: this,
-            currentTarget: this
-          });
-        }
-
-        // content event
-        this._fire(CONTENT_MOUSEDOWN, { evt: evt });
-      }
+      // content event
+      this._fire(CONTENT_MOUSEDOWN, { evt: evt });
 
       // always call preventDefault for desktop events because some browsers
       // try to drag and drop the canvas element
@@ -11036,79 +11010,73 @@
       // }
     },
     _mouseup: function(evt) {
-      // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
-      if (Konva.UA.ieMobile) {
-        return this._touchend(evt);
+      this._setPointerPosition(evt);
+      var shape = this.getIntersection(this.getPointerPosition()),
+        clickStartShape = this.clickStartShape,
+        clickEndShape = this.clickEndShape,
+        fireDblClick = false,
+        dd = Konva.DD;
+
+      if (Konva.inDblClickWindow) {
+        fireDblClick = true;
+        clearTimeout(this.dblTimeout);
+        // Konva.inDblClickWindow = false;
+      } else if (!dd || !dd.justDragged) {
+        // don't set inDblClickWindow after dragging
+        Konva.inDblClickWindow = true;
+        clearTimeout(this.dblTimeout);
+      } else if (dd) {
+        dd.justDragged = false;
       }
-      if (!Konva.UA.mobile) {
-        this._setPointerPosition(evt);
-        var shape = this.getIntersection(this.getPointerPosition()),
-          clickStartShape = this.clickStartShape,
-          clickEndShape = this.clickEndShape,
-          fireDblClick = false,
-          dd = Konva.DD;
 
-        if (Konva.inDblClickWindow) {
-          fireDblClick = true;
-          clearTimeout(this.dblTimeout);
-          // Konva.inDblClickWindow = false;
-        } else if (!dd || !dd.justDragged) {
-          // don't set inDblClickWindow after dragging
-          Konva.inDblClickWindow = true;
-          clearTimeout(this.dblTimeout);
-        } else if (dd) {
-          dd.justDragged = false;
-        }
+      this.dblTimeout = setTimeout(function() {
+        Konva.inDblClickWindow = false;
+      }, Konva.dblClickWindow);
 
-        this.dblTimeout = setTimeout(function() {
-          Konva.inDblClickWindow = false;
-        }, Konva.dblClickWindow);
+      if (shape && shape.isListening()) {
+        this.clickEndShape = shape;
+        shape._fireAndBubble(MOUSEUP, { evt: evt });
 
-        if (shape && shape.isListening()) {
-          this.clickEndShape = shape;
-          shape._fireAndBubble(MOUSEUP, { evt: evt });
+        // detect if click or double click occurred
+        if (
+          Konva.listenClickTap &&
+          clickStartShape &&
+          clickStartShape._id === shape._id
+        ) {
+          shape._fireAndBubble(CLICK, { evt: evt });
 
-          // detect if click or double click occurred
           if (
-            Konva.listenClickTap &&
-            clickStartShape &&
-            clickStartShape._id === shape._id
+            fireDblClick &&
+            clickEndShape &&
+            clickEndShape._id === shape._id
           ) {
-            shape._fireAndBubble(CLICK, { evt: evt });
-
-            if (
-              fireDblClick &&
-              clickEndShape &&
-              clickEndShape._id === shape._id
-            ) {
-              shape._fireAndBubble(DBL_CLICK, { evt: evt });
-            }
-          }
-        } else {
-          this._fire(MOUSEUP, { evt: evt, target: this, currentTarget: this });
-          if (Konva.listenClickTap) {
-            this._fire(CLICK, { evt: evt, target: this, currentTarget: this });
-          }
-
-          if (fireDblClick) {
-            this._fire(DBL_CLICK, {
-              evt: evt,
-              target: this,
-              currentTarget: this
-            });
+            shape._fireAndBubble(DBL_CLICK, { evt: evt });
           }
         }
-        // content events
-        this._fire(CONTENT_MOUSEUP, { evt: evt });
+      } else {
+        this._fire(MOUSEUP, { evt: evt, target: this, currentTarget: this });
         if (Konva.listenClickTap) {
-          this._fire(CONTENT_CLICK, { evt: evt });
-          if (fireDblClick) {
-            this._fire(CONTENT_DBL_CLICK, { evt: evt });
-          }
+          this._fire(CLICK, { evt: evt, target: this, currentTarget: this });
         }
 
-        Konva.listenClickTap = false;
+        if (fireDblClick) {
+          this._fire(DBL_CLICK, {
+            evt: evt,
+            target: this,
+            currentTarget: this
+          });
+        }
       }
+      // content events
+      this._fire(CONTENT_MOUSEUP, { evt: evt });
+      if (Konva.listenClickTap) {
+        this._fire(CONTENT_CLICK, { evt: evt });
+        if (fireDblClick) {
+          this._fire(CONTENT_DBL_CLICK, { evt: evt });
+        }
+      }
+
+      Konva.listenClickTap = false;
 
       // always call preventDefault for desktop events because some browsers
       // try to drag and drop the canvas element

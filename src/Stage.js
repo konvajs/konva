@@ -413,10 +413,6 @@
       this._fire(CONTENT_MOUSEOUT, { evt: evt });
     },
     _mousemove: function(evt) {
-      // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
-      if (Konva.UA.ieMobile) {
-        return this._touchmove(evt);
-      }
       this._setPointerPosition(evt);
       var shape;
 
@@ -439,9 +435,9 @@
           }
         } else {
           /*
-                 * if no shape was detected, clear target shape and try
-                 * to run mouseout from previous target shape
-                 */
+           * if no shape was detected, clear target shape and try
+           * to run mouseout from previous target shape
+           */
           if (this.targetShape && !Konva.isDragging()) {
             this.targetShape._fireAndBubble(MOUSEOUT, { evt: evt });
             this.targetShape._fireAndBubble(MOUSELEAVE, { evt: evt });
@@ -465,10 +461,6 @@
       }
     },
     _mousedown: function(evt) {
-      // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
-      if (Konva.UA.ieMobile) {
-        return this._touchstart(evt);
-      }
       this._setPointerPosition(evt);
       var shape = this.getIntersection(this.getPointerPosition());
 
@@ -498,10 +490,6 @@
       // }
     },
     _mouseup: function(evt) {
-      // workaround for mobile IE to force touch event when unhandled pointer event elevates into a mouse event
-      if (Konva.UA.ieMobile) {
-        return this._touchend(evt);
-      }
       this._setPointerPosition(evt);
       var shape = this.getIntersection(this.getPointerPosition()),
         clickStartShape = this.clickStartShape,
