@@ -11,7 +11,7 @@ declare namespace Konva {
     currentTarget: Konva.Node;
     cancelBubble: boolean;
   }
-  
+
   type HandlerFunc<E = Event> = (e: KonvaEventObject<E>) => void;
 
   enum KonvaNodeEvent {
@@ -85,7 +85,7 @@ declare namespace Konva {
     | 'saturation'
     | 'color'
     | 'luminosity';
-                   
+
   export interface RGB {
     r: number;
     g: number;
@@ -324,9 +324,10 @@ declare namespace Konva {
     getClassName(): string;
     getClientRect(attrs?: {
       skipTransform?: boolean;
-      relativeTo?: object;
+      skipShadow?: boolean;
+      skipStroke?: boolean;
+      relativeTo?: Konva.Node;
     }): SizeConfig;
-    getContent(): HTMLDivElement;
     getDepth(): number;
     getHeight(): number;
     getHitCanvas(): Canvas;
@@ -666,6 +667,7 @@ declare namespace Konva {
     setContainer(con: HTMLElement): void;
     setHeight(height: number): void;
     setWidth(width: number): void;
+    getContent(): HTMLDivElement;
   }
 
   interface LayerConfig extends ContainerConfig {
