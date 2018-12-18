@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [new version][unreleased]
 
+### Fixed
+
+* Better mouse support on mobile devices (yes, that is possible to connect mouse to mobile)
+
 ## [2.6.0][2018-12-14]
 
 ### Changed
