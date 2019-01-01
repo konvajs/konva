@@ -515,4 +515,57 @@ suite('TextPath', function() {
     layer.draw();
     assert.equal(called, true);
   });
+
+  test('visual check for text path', function() {
+    var stage = addStage();
+
+    var layer = new Konva.Layer();
+    stage.add(layer);
+
+    layer.add(
+      new Konva.TextPath({
+        fill: '#333',
+        fontSize: 20,
+        x: 80,
+        y: 300,
+        fontFamily: 'Calibri',
+        text: 'Hello World',
+        align: 'center',
+        textBaseline: 'bottom',
+        data:
+          'M -80.34441853748636 -247.27469423673992 A 260 260 0 0 1 80.34441853748628 -247.27469423673995'
+      })
+    );
+
+    layer.add(
+      new Konva.TextPath({
+        fill: '#333',
+        fontSize: 20,
+        x: 80,
+        y: 350,
+        fontFamily: 'Calibri',
+        text: 'Hello World',
+        align: 'center',
+        // textBaseline: 'bottom',
+        data:
+          'M -80.34441853748636 -247.27469423673992 A 260 260 0 0 1 80.34441853748628 -247.27469423673995'
+      })
+    );
+
+    layer.add(
+      new Konva.Text({
+        text: 'Hello world'
+      })
+    );
+
+    layer.add(
+      new Konva.TextPath({
+        fill: '#333',
+        text: 'Hello world',
+        y: 20,
+        data: 'M 0 0 L100 0'
+      })
+    );
+    layer.draw();
+  });
 });

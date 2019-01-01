@@ -237,8 +237,8 @@ suite('Text', function() {
     stage.add(layer);
 
     /*
-         * test getters and setters
-         */
+     * test getters and setters
+     */
 
     assert.equal(text.getX(), stage.getWidth() / 2);
     assert.equal(text.getY(), stage.getHeight() / 2);
@@ -738,6 +738,7 @@ suite('Text', function() {
   });
 
   test('gradient', function() {
+    Konva.pixelRatio = 1;
     var stage = addStage();
     var layer = new Konva.Layer();
 
@@ -758,6 +759,7 @@ suite('Text', function() {
     //    console.log(stage.getPointerPosition());
     //});
     var data = layer.getContext().getImageData(41, 50, 1, 1).data;
+    delete Konva.pixelRatio;
     assert.equal(data[0], 255, 'full green');
     assert.equal(data[1], 255, 'full red');
     assert.equal(data[2], 0, 'no blue');

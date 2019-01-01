@@ -1,14 +1,14 @@
 language: node_js
 node_js:
-- '8.0.0'
+  - '8.0.0'
 branches:
   only:
-  - master
+    - master
 sudo: required
 before_script:
-- npm install -g gulp
+  - npm install -g gulp
 script:
-- npm run lint && npm test
+  - npm run full-build
 deploy:
   provider: npm
   email: lavrton@gmail.com
