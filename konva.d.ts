@@ -864,6 +864,7 @@ declare namespace Konva {
 
   class Ring extends Shape {
     constructor(RingConfig: RingConfig);
+    setAttrs(attrs: RingConfig): void;
     innerRadius(): number;
     innerRadius(innerRadius: number): this;
     outerRadius(): number;
@@ -879,6 +880,7 @@ declare namespace Konva {
 
   class Arc extends Shape {
     constructor(ArcConfig: ArcConfig);
+    setAttrs(attrs: ArcConfig): void;
     angle(): number;
     angle(angle: number): this;
     clockwise(): boolean;
@@ -895,6 +897,7 @@ declare namespace Konva {
 
   class Circle extends Shape {
     constructor(CircleConfig: CircleConfig);
+    setAttrs(attrs: CircleConfig): void;
     radius(): number;
     radius(radius: number): this;
   }
@@ -905,6 +908,7 @@ declare namespace Konva {
 
   class Ellipse extends Shape {
     constructor(EllipseConfig: EllipseConfig);
+    setAttrs(attrs: EllipseConfig): void;
     radius(): any;
     radius(radius: any): this;
     radiusX(): number;
@@ -920,6 +924,7 @@ declare namespace Konva {
 
   class Image extends Shape {
     constructor(ImageConfig: ImageConfig);
+    setAttrs(attrs: ImageConfig): void;
     image(): HTMLImageElement;
     image(image: HTMLImageElement): this;
     crop(): SizeConfig;
@@ -944,6 +949,7 @@ declare namespace Konva {
 
   class Line extends Shape {
     constructor(LineConfig: LineConfig);
+    setAttrs(attrs: LineConfig): void;
     closed(): boolean;
     closed(closed: boolean): this;
     tension(): number;
@@ -963,6 +969,7 @@ declare namespace Konva {
 
   class Arrow extends Shape {
     constructor(ArrowConfig: ArrowConfig);
+    setAttrs(attrs: ArrowConfig): void;
     closed(): boolean;
     closed(closed: boolean): this;
     tension(): number;
@@ -983,6 +990,7 @@ declare namespace Konva {
 
   class Rect extends Shape {
     constructor(RectConfig: RectConfig);
+    setAttrs(attrs: RectConfig): void;
     cornerRadius(): number;
     cornerRadius(cornerRadius: number): this;
   }
@@ -997,6 +1005,7 @@ declare namespace Konva {
 
   class Sprite extends Shape {
     constructor(SpriteConfig: SpriteConfig);
+    setAttrs(attrs: SpriteConfig): void;
     start(): void;
     stop(): void;
     animation(): string;
@@ -1026,6 +1035,7 @@ declare namespace Konva {
 
   class Text extends Shape {
     constructor(TextConfig: TextConfig);
+    setAttrs(attrs: TextConfig): void;
     getTextWidth(): number;
     getTextHeight(): number;
     text(): string;
@@ -1060,6 +1070,7 @@ declare namespace Konva {
 
   class Wedge extends Shape {
     constructor(WedgeConfig: WedgeConfig);
+    setAttrs(attrs: WedgeConfig): void;
     angle(): number;
     angle(angle: number): this;
     radius(): number;
@@ -1078,6 +1089,7 @@ declare namespace Konva {
 
   class Tag extends Shape {
     constructor(config: TagConfig);
+    setAttrs(attrs: TagConfig): void;
     pointerDirection(): string;
     pointerDirection(pointerDirection: string): this;
     pointerWidth(): number;
@@ -1102,6 +1114,7 @@ declare namespace Konva {
 
   class Path extends Shape {
     constructor(PathConfig: PathConfig);
+    setAttrs(attrs: PathConfig): void;
     data(): string;
     data(data: string): this;
   }
@@ -1113,6 +1126,7 @@ declare namespace Konva {
 
   class RegularPolygon extends Shape {
     constructor(RegularPolygonConfig: RegularPolygonConfig);
+    setAttrs(attrs: RegularPolygonConfig): void;
     sides(): number;
     sides(sides: number): this;
     radius(): number;
@@ -1127,6 +1141,7 @@ declare namespace Konva {
 
   class Star extends Shape {
     constructor(StarConfig: StarConfig);
+    setAttrs(attrs: StarConfig): void;
     numPoints(): number;
     numPoints(numPoints: number): this;
     innerRadius(): number;
@@ -1145,6 +1160,7 @@ declare namespace Konva {
 
   class TextPath extends Shape {
     constructor(TextPathConfig: TextPathConfig);
+    setAttrs(attrs: TextPathConfig): void;
     getTextWidth(): number;
     getTextHeight(): number;
     setText(text: string): void;
